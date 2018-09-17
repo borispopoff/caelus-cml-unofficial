@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------*\
  Copyright 2009 TU Delft
  Copyright 2009 FSB Zagreb
- Copyright 2013 Applied CCM Pty Ltd
+ Copyright 2013-2018 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -69,6 +69,9 @@ SourceFiles
 #include "point.hpp"
 #include "Switch.hpp"
 #include "simpleMatrix.hpp"
+#include "ListListOps.hpp"
+#include "OPstream.hpp"
+#include "IPstream.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,8 +89,11 @@ class RBFInterpolation
         //- Dictionary
         const dictionary& dict_;
 
-        //- Reference to control points
+        //- Reference to control points on this processor
         const vectorField& controlPoints_;
+
+        //- control points on all processors
+        mutable vectorField allControlPoints_;
 
         //- Rerefence to all points
         const vectorField& allPoints_;
@@ -118,6 +124,9 @@ class RBFInterpolation
 
         //- Return interpolation matrix
         const scalarSquareMatrix& B() const;
+
+        // Update allControlPoints
+        void updateAllControlPoints() const; 
 
         //- Calculate interpolation matrix
         void calcB() const;
@@ -171,19 +180,72 @@ CML::tmp<CML::Field<Type> > CML::RBFInterpolation::interpolate
     const Field<Type>& ctrlField
 ) const
 {
+
+    Field<Type> allCtrlField = ctrlField;
+
     // Collect the values from ALL control points to all CPUs
     // Then, each CPU will do interpolation only on local allPoints_
+    if (Pstream::parRun())
+    {
+        // Collect ALL control points from ALL CPUs
+        // Create an identical inverse for all CPUs
+        label totalCtrlField = ctrlField.size();
+        reduce(totalCtrlField, sumOp<label>());
 
-    if (ctrlField.size() != controlPoints_.size())
+        allCtrlField.resize(totalCtrlField);
+
+        // Collect data from all processors
+        List<Field<Type> > gatheredField(Pstream::nProcs());
+        gatheredField[Pstream::myProcNo()] = ctrlField;
+        Pstream::gatherList(gatheredField);
+
+        if (Pstream::master())
+        {
+            Field<Type> allCtrlFieldMaster
+            (
+                ListListOps::combine<Field<Type> >
+                (
+                    gatheredField,
+                    CML::accessOp<Field<Type> >()
+                )
+            );
+
+            // Update field on master
+            allCtrlField = allCtrlFieldMaster;
+
+            // Parallel data exchange - send
+            for
+            (
+                int slave=Pstream::firstSlave();
+                slave<=Pstream::lastSlave();
+                slave++
+            )
+            {
+                OPstream toSlave(Pstream::blocking, slave, allCtrlField.size()*sizeof(Type));
+                toSlave << allCtrlField;
+            }
+        }
+        else
+        {
+            // Parallel data exchange - receive
+            IPstream fromMaster(Pstream::blocking, Pstream::masterNo(), allCtrlField.size()*sizeof(Type));
+            fromMaster >> allCtrlField;
+        }
+    }
+
+    // Call for B(). This forces an update of allControlPoints if B does not exist
+    const scalarSquareMatrix& mat = this->B();
+
+    if (allCtrlField.size() != allControlPoints_.size())
     {
         FatalErrorIn
         (
             "tmp<Field<Type> > RBFInterpolation::interpolate\n"
             "(\n"
-            "    const Field<Type>& ctrlField\n"
+            "    const Field<Type>& allCtrlField\n"
             ") const"
-        )   << "Incorrect size of source field.  Size = " << ctrlField.size()
-            << " nControlPoints = " << controlPoints_.size()
+        )   << "Incorrect size of source field.  Size = " << allCtrlField.size()
+            << " nControlPoints = " << allControlPoints_.size()
             << abort(FatalError);
     }
 
@@ -200,8 +262,7 @@ CML::tmp<CML::Field<Type> > CML::RBFInterpolation::interpolate
     //    alpha's and beta's
     // 3) Return displacements using tresult()
 
-    const label nControlPoints = controlPoints_.size();
-    const scalarSquareMatrix& mat = this->B();
+    const label nControlPoints = allControlPoints_.size();
 
     // Determine interpolation coefficients
     Field<Type> alpha(nControlPoints, pTraits<Type>::zero);
@@ -211,7 +272,7 @@ CML::tmp<CML::Field<Type> > CML::RBFInterpolation::interpolate
     {
         for (label col = 0; col < nControlPoints; col++)
         {
-            alpha[row] += mat[row][col]*ctrlField[col];
+            alpha[row] += mat[row][col]*allCtrlField[col];
         }
     }
 
@@ -226,7 +287,7 @@ CML::tmp<CML::Field<Type> > CML::RBFInterpolation::interpolate
         {
             for (label col = 0; col < nControlPoints; col++)
             {
-                beta[row - nControlPoints] += mat[row][col]*ctrlField[col];
+                beta[row - nControlPoints] += mat[row][col]*allCtrlField[col];
             }
         }
     }
@@ -250,9 +311,9 @@ CML::tmp<CML::Field<Type> > CML::RBFInterpolation::interpolate
         else
         {
             // Full calculation of weights
-            scalarField weights(RBF_->weights(controlPoints_, allPoints_[flPoint]));
+            scalarField weights(RBF_->weights(allControlPoints_, allPoints_[flPoint]));
 
-            forAll (controlPoints_, i)
+            forAll (allControlPoints_, i)
             {
                 result[flPoint] += weights[i]*alpha[i];
             }

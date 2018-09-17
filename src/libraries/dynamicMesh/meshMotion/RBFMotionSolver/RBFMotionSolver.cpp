@@ -74,8 +74,10 @@ void CML::RBFMotionSolver::makeControlIDs()
 
     // Mark moving points and select control points from moving patches
     movingIDs_.setSize(nMovingPoints);
+    label totalnMovingPoints = nMovingPoints;
 
-    Info<< "Total points on moving boundaries: " << nMovingPoints << endl;
+    reduce(totalnMovingPoints, sumOp<label>());
+    Info<< "Total points on moving boundaries: " << totalnMovingPoints << endl;
 
     const pointField& points = mesh().points();
 
@@ -126,7 +128,10 @@ void CML::RBFMotionSolver::makeControlIDs()
         }
     }
 
-    Info<< "Total points on static boundaries: " << nStaticPoints << endl;
+    label totalnStaticPoints = nStaticPoints;
+    reduce(totalnStaticPoints, sumOp<label>());
+
+    Info<< "Total points on static boundaries: " << totalnStaticPoints << endl;
     staticIDs_.setSize(nStaticPoints);
 
     // Re-use counter
@@ -174,7 +179,10 @@ void CML::RBFMotionSolver::makeControlIDs()
         }
     }
 
-    Info<< "Selected " << nControlPoints
+    label totalnControlPoints =  nControlPoints;
+    reduce(totalnControlPoints, sumOp<label>());
+
+    Info<< "Selected " << totalnControlPoints
         << " control points on moving boundaries" << endl;
 
     if (includeStaticPatches_)
@@ -203,6 +211,8 @@ void CML::RBFMotionSolver::makeControlIDs()
                 nControlPoints++;
             }
         }
+        totalnControlPoints =  nControlPoints;
+        reduce(totalnControlPoints, sumOp<label>());
 
         Info<< "Selected " << nControlPoints
             << " total control points" << endl;
@@ -238,7 +248,9 @@ void CML::RBFMotionSolver::makeControlIDs()
         }
     }
 
-    Info << "Number of internal points: " << nInternalPoints << endl;
+    label totalnInternalPoints  =  nInternalPoints ;
+    reduce(totalnInternalPoints , sumOp<label>());
+    Info << "Number of internal points: " << totalnInternalPoints << endl;
 
     // Resize the lists
     internalIDs_.setSize(nInternalPoints);
@@ -381,6 +393,7 @@ CML::tmp<CML::pointField> CML::RBFMotionSolver::curPoints() const
 
     // Call interpolation
     vectorField interpolatedMotion(interpolation_.interpolate(motionOfControl));
+//Pout <<"interpolated motion" <<interpolatedMotion<<endl;
 
     // 3. Insert RBF interpolated motion
     forAll (internalIDs_, i)
