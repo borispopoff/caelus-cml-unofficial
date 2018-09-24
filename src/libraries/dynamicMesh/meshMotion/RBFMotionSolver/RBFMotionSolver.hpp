@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2009 Frank Bos
-Copyright (C) 2016 Applied CCM Pty Ltd
+Copyright (C) 2018 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,6 +27,7 @@ Description
 Author
     Frank Bos, TU Delft.
     Darrin Stephens, Applied CCM Pty Ltd
+    Chris Sideroff, Applied CCM, Inc
 
 SourceFiles
     RBFMotionSolver.cpp
@@ -86,6 +87,9 @@ class RBFMotionSolver
         //- Control point IDs
         labelList controlIDs_;
 
+        //- Control point IDs
+        labelList allControlIDs_;
+
         //- Control points on the boundary
         mutable vectorField controlPoints_;
 
@@ -116,6 +120,9 @@ class RBFMotionSolver
 
         //- Make control point IDs.  Constructor helper
         void makeControlIDs();
+
+        //- Global list of unique control point IDs
+        void makeGlobalControlIDs();
 
         //- Set location of points
         void setMovingPoints() const;

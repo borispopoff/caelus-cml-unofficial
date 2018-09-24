@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2009 Frank Bos
-Copyright (C) 2016 Applied CCM Pty Ltd
+Copyright (C) 2018 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -23,6 +23,7 @@ License
 #include "RBFMotionSolver.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 #include "transformField.hpp"
+#include "ListListOps.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -39,6 +40,60 @@ namespace CML
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void CML::RBFMotionSolver::makeGlobalControlIDs()
+{
+    allControlIDs_ = controlIDs_;
+
+    // Collect ALL control IDs from ALL CPUs
+    if (Pstream::parRun())
+    {
+        // Collect data from all processors
+        List<labelList> gatheredIDs(Pstream::nProcs());
+        gatheredIDs[Pstream::myProcNo()] = controlIDs_;
+        Pstream::gatherList(gatheredIDs);
+
+        if (Pstream::master())
+        {
+            labelList allControlIDsMaster
+            (
+                ListListOps::combine<labelList>
+                (
+                    gatheredIDs,
+                    CML::accessOp<labelList>()
+                )
+            );
+
+            // Create list of unique control IDs
+            labelList allUniqueControlIDs;
+            CML::uniqueOrder(allControlIDsMaster, allUniqueControlIDs);
+            allControlIDs_.resize(allUniqueControlIDs.size());
+
+            forAll(allUniqueControlIDs, i)
+            {
+                allControlIDs_[i] = allControlIDsMaster[allUniqueControlIDs[i]];
+            }
+
+            // Parallel data exchange - send
+            for
+            (
+                int slave=Pstream::firstSlave();
+                slave<=Pstream::lastSlave();
+                slave++
+            )
+            {
+                OPstream toSlave(Pstream::blocking, slave, allControlIDs_.size()*sizeof(label));
+                toSlave << allControlIDs_;
+            }
+        }
+        else
+        {
+            // Parallel data exchange - receive
+            IPstream fromMaster(Pstream::blocking, Pstream::masterNo(), allControlIDs_.size()*sizeof(label));
+            fromMaster >> allControlIDs_;
+        }
+    }
+}
 
 void CML::RBFMotionSolver::makeControlIDs()
 {
@@ -221,13 +276,17 @@ void CML::RBFMotionSolver::makeControlIDs()
     // Resize control IDs
     controlIDs_.setSize(nControlPoints);
 
-    // Pick up point locations
-    controlPoints_.setSize(nControlPoints);
+    // Unique list of control ids
+    makeGlobalControlIDs();
+
+    // Send point values from ALL control points to all CPUs
+    // Then, each CPU will do interpolation using same controlPoints_
+    controlPoints_.setSize(allControlIDs_.size());
 
     // Set control points
-    forAll (controlIDs_, i)
+    forAll (allControlIDs_, i)
     {
-        controlPoints_[i] = points[controlIDs_[i]];
+        controlPoints_[i] = points[allControlIDs_[i]];
     }
 
     // Pick up all internal points
@@ -301,6 +360,10 @@ CML::RBFMotionSolver::RBFMotionSolver
     )
 {
     makeControlIDs();
+
+    //Pout << "debug: all control ids: " << allControlIDs_ << endl;
+    //Pout << "debug: all control points: " << controlPoints_ << endl;
+
     undisplacedPoints_ = movingPoints();
 }
 
@@ -383,17 +446,17 @@ CML::tmp<CML::pointField> CML::RBFMotionSolver::curPoints() const
     }
 
     // Set motion of control
-    vectorField motionOfControl(controlIDs_.size());
+    vectorField motionOfControl(allControlIDs_.size());
 
     // 2. Capture positions of control points
-    forAll (controlIDs_, i)
+    forAll (allControlIDs_, i)
     {
-        motionOfControl[i] = curPoints[controlIDs_[i]];
+        motionOfControl[i] = curPoints[allControlIDs_[i]];
     }
 
     // Call interpolation
     vectorField interpolatedMotion(interpolation_.interpolate(motionOfControl));
-//Pout <<"interpolated motion" <<interpolatedMotion<<endl;
+    //Pout <<"interpolated motion" <<interpolatedMotion<<endl;
 
     // 3. Insert RBF interpolated motion
     forAll (internalIDs_, i)

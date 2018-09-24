@@ -1,7 +1,6 @@
 /*---------------------------------------------------------------------------*\
  Copyright 2009 TU Delft
  Copyright 2009 FSB Zagreb
- Copyright 2018 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,65 +26,8 @@ Author
 
 #include "RBFInterpolation.hpp"
 #include "demandDrivenData.hpp"
-#include "ListListOps.hpp"
-#include "OPstream.hpp"
-#include "IPstream.hpp"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void CML::RBFInterpolation::updateAllControlPoints() const 
-{ 
-    allControlPoints_ = controlPoints_;
-
-    // Collect ALL control points from ALL CPUs
-    // Create an identical inverse for all CPUs
-    if (Pstream::parRun())
-    {
-        label totalControlPoints = controlPoints_.size();
-        reduce(totalControlPoints, sumOp<label>());
-
-        allControlPoints_.resize(totalControlPoints);
-
-        // Collect data from all processors
-        List<vectorField> gatheredData(Pstream::nProcs());
-        gatheredData[Pstream::myProcNo()] = controlPoints_;
-        Pstream::gatherList(gatheredData);
-
-        if (Pstream::master())
-        {
-            vectorField allControlPointsMaster
-            (
-                ListListOps::combine<vectorField>
-                (
-                    gatheredData,
-                    CML::accessOp<vectorField>()
-                )
-            );
-
-            // Update field on master
-            allControlPoints_ = allControlPointsMaster;
-
-            // Parallel data exchange - send
-            for
-            (
-                int slave=Pstream::firstSlave();
-                slave<=Pstream::lastSlave();
-                slave++
-            )
-            {
-                OPstream toSlave(Pstream::blocking, slave, allControlPoints_.size()*sizeof(vector));
-                toSlave << allControlPoints_;
-            }
-        }
-        else
-        {
-            // Parallel data exchange - receive
-            IPstream fromMaster(Pstream::blocking, Pstream::masterNo(), allControlPoints_.size()*sizeof(vector));
-            fromMaster >> allControlPoints_;
-        }
-    }
-}
-
 
 const CML::scalarSquareMatrix& CML::RBFInterpolation::B() const
 {
@@ -100,9 +42,6 @@ const CML::scalarSquareMatrix& CML::RBFInterpolation::B() const
 
 void CML::RBFInterpolation::calcB() const
 { 
-    // Update allControlPoints
-    updateAllControlPoints();
-
     // Determine inverse of boundary connectivity matrix
     label polySize(4);
 
@@ -112,12 +51,12 @@ void CML::RBFInterpolation::calcB() const
     }
 
     // Fill Nb x Nb matrix
-    simpleMatrix<scalar> A(allControlPoints_.size()+polySize);
+    simpleMatrix<scalar> A(controlPoints_.size()+polySize);
 
-    const label nControlPoints = allControlPoints_.size();
+    const label nControlPoints = controlPoints_.size();
     for (label i = 0; i < nControlPoints; i++)
     {
-        scalarField weights(RBF_->weights(allControlPoints_, allControlPoints_[i]));
+        scalarField weights(RBF_->weights(controlPoints_, controlPoints_[i]));
 
         for (label col = 0; col < nControlPoints; col++)
         {
@@ -141,8 +80,8 @@ void CML::RBFInterpolation::calcB() const
         {
             for (label col = 0; col < nControlPoints; col++)
             {
-                A[col][row] = allControlPoints_[col].x();
-                A[row][col] = allControlPoints_[col].x();
+                A[col][row] = controlPoints_[col].x();
+                A[row][col] = controlPoints_[col].x();
             }
         }
 
@@ -151,8 +90,8 @@ void CML::RBFInterpolation::calcB() const
         {
             for (label col = 0; col < nControlPoints; col++)
             {
-                A[col][row] = allControlPoints_[col].y();
-                A[row][col] = allControlPoints_[col].y();
+                A[col][row] = controlPoints_[col].y();
+                A[row][col] = controlPoints_[col].y();
             }
         }
         // Fill in Z components of polynomial part of matrix
@@ -160,8 +99,8 @@ void CML::RBFInterpolation::calcB() const
         {
             for (label col = 0; col < nControlPoints; col++)
             {
-                A[col][row] = allControlPoints_[col].z();
-                A[row][col] = allControlPoints_[col].z();
+                A[col][row] = controlPoints_[col].z();
+                A[row][col] = controlPoints_[col].z();
             }
         }
 
@@ -205,9 +144,7 @@ CML::RBFInterpolation::RBFInterpolation
     innerRadius_(readScalar(dict.lookup("innerRadius"))),
     outerRadius_(readScalar(dict.lookup("outerRadius"))),
     polynomials_(dict.lookup("polynomials"))
-{
-    updateAllControlPoints();
-}
+{}
 
 
 CML::RBFInterpolation::RBFInterpolation
@@ -224,9 +161,7 @@ CML::RBFInterpolation::RBFInterpolation
     innerRadius_(rbf.innerRadius_),
     outerRadius_(rbf.outerRadius_),
     polynomials_(rbf.polynomials_)
-{
-    updateAllControlPoints();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
