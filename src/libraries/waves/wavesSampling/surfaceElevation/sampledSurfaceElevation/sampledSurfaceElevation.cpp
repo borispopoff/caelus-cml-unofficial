@@ -200,7 +200,7 @@ CML::sampledSurfaceElevation::sampledSurfaceElevation
     fieldNames_(),
     interpolationScheme_(word::null),
     writeFormat_(word::null),
-    surfaceElevationFilePtr_( NULL )
+    surfaceElevationFilePtr_(nullptr)
 {
     if (Pstream::parRun())
     {

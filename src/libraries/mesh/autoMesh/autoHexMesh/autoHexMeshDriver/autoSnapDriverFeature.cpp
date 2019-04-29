@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -355,10 +355,8 @@ void CML::autoSnapDriver::calcNearestFace
         label zoneI = mesh.faceZones().findZoneID(faceZoneNames[zoneSurfI]);
         if (zoneI == -1)
         {
-            FatalErrorIn
-            (
-                "autoSnapDriver::calcNearestFace(..)"
-            )   << "Problem. Cannot find zone " << faceZoneNames[zoneSurfI]
+            FatalErrorInFunction
+                << "Problem. Cannot find zone " << faceZoneNames[zoneSurfI]
                 << exit(FatalError);
         }
         const faceZone& fZone = mesh.faceZones()[zoneI];
@@ -2104,16 +2102,8 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
 
     // Get search domain and extend it a bit
     treeBoundBox bb(pp.localPoints());
-    {
-        // Random number generator. Bit dodgy since not exactly random ;-)
-        Random rndGen(65431);
 
-        // Slightly extended bb. Slightly off-centred just so on symmetric
-        // geometry there are less face/edge aligned items.
-        bb = bb.extend(rndGen, 1e-4);
-        bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-        bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-    }
+    bb = bb.extend(1e-4);
 
     indexedOctree<treeDataPoint> ppTree
     (

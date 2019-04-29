@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -181,11 +181,8 @@ CML::refinementSurfaces::refinementSurfaces
                     && !allGeometry_[surfaces_[surfI]].hasVolumeType()
                     )
                     {
-                        IOWarningIn
-                        (
-                            "refinementSurfaces::refinementSurfaces(..)",
-                            dict
-                        )   << "Illegal entry zoneInside "
+                        IOWarningInFunction(dict)
+                            << "Illegal entry zoneInside "
                             << areaSelectionAlgoNames[zoneInside_[surfI]]
                             << " for faceZone "
                             << faceZoneNames_[surfI]
@@ -195,11 +192,8 @@ CML::refinementSurfaces::refinementSurfaces
                 }
                 else if (hasSide)
                 {
-                    IOWarningIn
-                    (
-                        "refinementSurfaces::refinementSurfaces(..)",
-                        dict
-                    )   << "Unused entry zoneInside for faceZone "
+                    IOWarningInFunction(dict)
+                        << "Unused entry zoneInside for faceZone "
                         << faceZoneNames_[surfI]
                         << " since no cellZone specified."
                         << endl;
@@ -342,11 +336,8 @@ CML::refinementSurfaces::refinementSurfaces
              || maxLevel_[globalRegionI] < minLevel_[globalRegionI]
             )
             {
-                FatalErrorIn
-                (
-                    "refinementSurfaces::refinementSurfaces"
-                    "(const searchableSurfaces&, const dictionary>&"
-                )   << "Illegal level or layer specification for surface "
+                FatalErrorInFunction
+                    << "Illegal level or layer specification for surface "
                     << names_[surfI]
                     << " : minLevel:" << minLevel_[globalRegionI]
                     << " maxLevel:" << maxLevel_[globalRegionI]
@@ -1308,7 +1299,7 @@ void CML::refinementSurfaces::findInside
 
         if (zoneInside_[surfI] != INSIDE && zoneInside_[surfI] != OUTSIDE)
         {
-            FatalErrorIn("refinementSurfaces::findInside(..)")
+            FatalErrorInFunction
                 << "Trying to use surface "
                 << allGeometry_[surfaces_[surfI]].name()
                 << " which has non-geometric inside selection method "

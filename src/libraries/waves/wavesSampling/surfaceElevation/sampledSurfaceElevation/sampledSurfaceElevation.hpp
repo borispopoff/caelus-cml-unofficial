@@ -80,7 +80,7 @@ class sampledSurfaceElevation
             fieldGroup()
             :
                 wordList(0),
-                formatter(NULL)
+                formatter(nullptr)
             {}
 
             void clear()

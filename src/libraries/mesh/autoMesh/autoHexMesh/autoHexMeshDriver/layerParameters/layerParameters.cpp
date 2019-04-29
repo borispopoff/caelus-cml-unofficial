@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -279,7 +279,7 @@ CML::layerParameters::layerParameters
 
             if (patchIDs.size() == 0)
             {
-                IOWarningIn("layerParameters::layerParameters(..)", layersDict)
+                IOWarningInFunction(layersDict)
                     << "Layer specification for " << key
                     << " does not match any patch." << endl
                     << "Valid patches are " << boundaryMesh.names() << endl;

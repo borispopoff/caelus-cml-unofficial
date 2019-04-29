@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -217,7 +217,7 @@ bool CML::outputFilterOutputControl::output()
         default:
         {
             // this error should not actually be possible
-            FatalErrorIn("bool CML::outputFilterOutputControl::output()")
+            FatalErrorInFunction
                 << "Undefined output control: "
                 << outputControlNames_[outputControl_] << nl
                 << abort(FatalError);

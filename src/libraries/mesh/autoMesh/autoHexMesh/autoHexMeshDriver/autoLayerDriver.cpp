@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -721,7 +721,7 @@ void CML::autoLayerDriver::setNumLayers
     {
         if (maxLayers[i] == labelMin || minLayers[i] == labelMax)
         {
-            FatalErrorIn("setNumLayers(..)")
+            FatalErrorInFunction
                 << "Patchpoint:" << i << " coord:" << pp.localPoints()[i]
                 << " maxLayers:" << maxLayers
                 << " minLayers:" << minLayers
@@ -1162,7 +1162,7 @@ void CML::autoLayerDriver::calculateLayerThickness
          || max(layerParams.minThickness()) > 2
         )
         {
-            FatalErrorIn("calculateLayerThickness(..)")
+            FatalErrorInFunction
                 << "Thickness should be factor of local undistorted cell size."
                 << " Valid values are [0..2]." << nl
                 << " minThickness:" << layerParams.minThickness()
@@ -1590,7 +1590,7 @@ void CML::autoLayerDriver::getVertexString
 
     if (fp == -1)
     {
-        FatalErrorIn("autoLayerDriver::getVertexString(..)")
+        FatalErrorInFunction
             << "problem." << abort(FatalError);
     }
 
@@ -1678,7 +1678,7 @@ CML::label CML::autoLayerDriver::truncateDisplacement
 
         if (mesh.isInternalFace(faceI))
         {
-            FatalErrorIn("truncateDisplacement(..)")
+            FatalErrorInFunction
                 << "Faceset " << illegalPatchFaces.name()
                 << " contains internal face " << faceI << nl
                 << "It should only contain patch faces" << abort(FatalError);
@@ -3278,7 +3278,7 @@ void CML::autoLayerDriver::doLayers
             }
             else
             {
-                WarningIn("autoLayerDriver::doLayers(..)")
+                WarningInFunction
                     << "Ignoring layers on coupled patch " << pp.name()
                     << endl;
             }

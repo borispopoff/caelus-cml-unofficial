@@ -40,6 +40,12 @@ Usage
       - \par -set \<value\>
         Adds or replaces the entry
 
+      - \par -merge \<value\>
+        Merges the entry
+
+      - \par -dict
+        Set, add or merge entry from a dictionary
+
       - \par -remove
         Remove the selected entry
 
@@ -56,9 +62,6 @@ Usage
 
       - \par -disableFunctionEntries
         Do not expand macros or directives (#include etc)
-
-      - \par -additional
-        Reports additional entries
 
     Example usage:
       - Change simulation to run for one timestep only:
@@ -206,7 +209,6 @@ void remove(dictionary& dict, const dictionary& removeDict, fileName dictName)
             false
         );
 
-
         if (entPtr)
         {
             if (entPtr->isDict())
@@ -293,6 +295,17 @@ int main(int argc, char *argv[])
         "value",
         "Add a new entry"
     );
+    argList::addOption
+    (
+        "merge",
+        "value",
+        "Merge entry"
+    );
+    argList::addBoolOption
+    (
+        "dict",
+        "Set, add or merge entry from a dictionary."
+    );
     argList::addBoolOption
     (
         "remove",
@@ -320,16 +333,10 @@ int main(int argc, char *argv[])
         "disableFunctionEntries",
         "Disable expansion of dictionary directives - #include, etc"
     );
-    argList::addBoolOption
-    (
-        "additional",
-        "Reports additional entries"
-    );
 
     argList args(argc, argv);
 
     const bool listIncludes = args.optionFound("includes");
-    const bool listAdditional = args.optionFound("additional");
 
     if (listIncludes)
     {
@@ -352,12 +359,12 @@ int main(int argc, char *argv[])
             << exit(FatalError, 1);
     }
 
-
-    bool changed = false;
-
     // Read but preserve headers
     dictionary dict;
     dict.read(dictFile(), true);
+
+
+    bool changed = false;
 
     if (listIncludes)
     {
@@ -402,15 +409,55 @@ int main(int argc, char *argv[])
         (
             args.optionReadIfPresent("set", newValue)
          || args.optionReadIfPresent("add", newValue)
+         || args.optionReadIfPresent("merge", newValue)
         )
         {
             const bool overwrite = args.optionFound("set");
+            const bool merge = args.optionFound("merge");
 
             Pair<word> dAk(dictAndKeyword(scopedName));
-
-            IStringStream str(string(dAk.second()) + ' ' + newValue + ';');
-            entry* ePtr(entry::New(str).ptr());
             const dictionary& d(lookupScopedDict(dict, dAk.first()));
+
+            entry* ePtr = nullptr;
+
+            if (args.optionFound("dict"))
+            {
+                const fileName fromDictFileName(newValue);
+                autoPtr<IFstream> fromDictFile(new IFstream(fromDictFileName));
+                if (!fromDictFile().good())
+                {
+                    FatalErrorInFunction
+                        << "Cannot open file " << fromDictFileName
+                        << exit(FatalError, 1);
+                }
+
+                dictionary fromDict(fromDictFile());
+
+                const entry* fePtr
+                (
+                    fromDict.lookupScopedEntryPtr
+                    (
+                        scopedName,
+                        false,
+                        true            // Support wildcards
+                    )
+                );
+
+                if (!fePtr)
+                {
+                    FatalErrorInFunction
+                        << "Cannot find entry " << entryName
+                        << " in file " << fromDictFileName
+                        << exit(FatalError, 1);
+                }
+
+                ePtr = fePtr->clone().ptr();
+            }
+            else
+            {
+                IStringStream str(string(dAk.second()) + ' ' + newValue + ';');
+                ePtr = entry::New(str).ptr();
+            }
 
             if (overwrite)
             {
@@ -418,7 +465,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                const_cast<dictionary&>(d).add(ePtr, false);
+                const_cast<dictionary&>(d).add(ePtr, merge);
             }
             changed = true;
 
@@ -542,13 +589,10 @@ int main(int argc, char *argv[])
     {
         fileName dictName;
         remove(dict, diffDict, dictName);
-        if (listAdditional)
+        if (dict.size())
         {
-            if (dict.size())
-            {
-                Info<<"Additional entries found in dictionary:"<<endl;
-                dict.write(Info, false);
-            }
+            Info<<"Addtional entries found in dictionary:"<<endl;
+            dict.write(Info, false);
         }
     }
     else
