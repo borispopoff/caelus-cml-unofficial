@@ -89,10 +89,10 @@ class RBFInterpolation
         //- Dictionary
         const dictionary& dict_;
 
-        //- Reference to control points
+        //- Reference to control points (all processors)
         const vectorField& controlPoints_;
 
-        //- Rerefence to all points
+        //- Rerefence to all points (this processor only)
         const vectorField& allPoints_;
 
         //- RBF function

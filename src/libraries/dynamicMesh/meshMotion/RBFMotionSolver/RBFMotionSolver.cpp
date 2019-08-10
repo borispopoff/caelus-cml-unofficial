@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2009 Frank Bos
-Copyright (C) 2018 Applied CCM Pty Ltd
+Copyright (C) 2016-2019 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,6 +24,8 @@ License
 #include "addToRunTimeSelectionTable.hpp"
 #include "transformField.hpp"
 #include "ListListOps.hpp"
+#include "mergePoints.hpp"
+
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -41,40 +43,74 @@ namespace CML
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void CML::RBFMotionSolver::makeGlobalControlIDs()
+void CML::RBFMotionSolver::mergeControlPoints()
 {
-    allControlIDs_ = controlIDs_;
-
-    // Collect ALL control IDs from ALL CPUs
+    // Collect all control points from all processors
     if (Pstream::parRun())
     {
-        // Collect data from all processors
-        List<labelList> gatheredIDs(Pstream::nProcs());
-        gatheredIDs[Pstream::myProcNo()] = controlIDs_;
-        Pstream::gatherList(gatheredIDs);
+        // Initialise label to hold final size of allControlPoints list
+        label allControlPointsSize(0);
 
+        // Gather data from all processors
+        List<vectorField> gatheredData(Pstream::nProcs());
+        gatheredData[Pstream::myProcNo()] = controlPoints_;
+        Pstream::gatherList(gatheredData);
+
+        // Assemble a single list of all control points on the master.
+        // May contain duplicate entries due to processor boundaries.
         if (Pstream::master())
         {
-            labelList allControlIDsMaster
+            vectorField allControlPointsMaster
             (
-                ListListOps::combine<labelList>
+                ListListOps::combine<vectorField>
                 (
-                    gatheredIDs,
-                    CML::accessOp<labelList>()
+                    gatheredData,
+                    CML::accessOp<vectorField>()
                 )
             );
 
-            // Create list of unique control IDs
-            labelList allUniqueControlIDs;
-            CML::uniqueOrder(allControlIDsMaster, allUniqueControlIDs);
-            allControlIDs_.resize(allUniqueControlIDs.size());
+            // Merge duplicates, sort and update field on master
+            labelList oldToNew;
+            bool hasMerged = mergePoints
+            (
+                allControlPointsMaster, // combined field before merging
+                SMALL,                  // tolerance for merge
+                false,                  // verbosity
+                oldToNew,               // mapping - not used
+                allControlPoints_       // updated field
+            );
 
-            forAll(allUniqueControlIDs, i)
+            // Make reverse map. A labelListList because duplicates in the 
+            // original list will result in multiple mapping.
+            labelListList newToOldLL
+            (
+                invertOneToMany(allControlPoints_.size(), oldToNew)
+            );
+
+            // Reverse map that removes duplicate mapping by selecting the
+            // lowest entry from duplicates
+            map_.setSize(allControlPoints_.size());
+
+            forAll(map_, i)
             {
-                allControlIDs_[i] = allControlIDsMaster[allUniqueControlIDs[i]];
+                labelList oldIndicies = newToOldLL[i];
+                map_[i] = oldIndicies[findMin(oldIndicies)];
             }
 
-            // Parallel data exchange - send
+            // Sort map to keep origianl order before merging of duplicates
+            map_.sort();
+
+            forAll(map_, i)
+            {
+                allControlPoints_[i] = allControlPointsMaster[map_[i]];
+            }
+
+            if (debug)
+            {
+                Info<<"Control points have been merged  = "<< hasMerged << endl;            
+            }
+
+            // Parallel data exchange - send size of control points
             for
             (
                 int slave=Pstream::firstSlave();
@@ -82,18 +118,53 @@ void CML::RBFMotionSolver::makeGlobalControlIDs()
                 slave++
             )
             {
-                OPstream toSlave(Pstream::blocking, slave, allControlIDs_.size()*sizeof(label));
-                toSlave << allControlIDs_;
+                OPstream toSlaveSize(Pstream::blocking, slave, sizeof(label));
+                toSlaveSize << allControlPoints_.size();
+            }
+
+            // Parallel data exchange - send control points
+            for
+            (
+                int slave=Pstream::firstSlave();
+                slave<=Pstream::lastSlave();
+                slave++
+            )
+            {
+                OPstream toSlaveData
+                (
+                    Pstream::blocking,
+                    slave,
+                    allControlPoints_.size()*sizeof(vector)
+                );
+                toSlaveData << allControlPoints_;
             }
         }
         else
         {
-            // Parallel data exchange - receive
-            IPstream fromMaster(Pstream::blocking, Pstream::masterNo(), allControlIDs_.size()*sizeof(label));
-            fromMaster >> allControlIDs_;
+            // Parallel data exchange - receive size of control points
+            IPstream fromMasterSize
+            (
+                Pstream::blocking, Pstream::masterNo(), sizeof(label)
+            );
+            fromMasterSize >> allControlPointsSize;
+
+            // Parallel data exchange - receive all control points
+            IPstream fromMasterData
+            (
+                Pstream::blocking,
+                Pstream::masterNo(),
+                allControlPointsSize*sizeof(vector)
+            );
+            fromMasterData >> allControlPoints_;
         }
     }
+    else
+    {
+        allControlPoints_ = controlPoints_;
+    }
+
 }
+
 
 void CML::RBFMotionSolver::makeControlIDs()
 {
@@ -152,6 +223,7 @@ void CML::RBFMotionSolver::makeControlIDs()
         }
     }
 
+    // Allocate size
     movingIDs_.setSize(nMovingPoints);
 
     // Actual location of moving points will be set later on request
@@ -183,6 +255,8 @@ void CML::RBFMotionSolver::makeControlIDs()
         }
     }
 
+    // Calculate total number of static points. Note: could contain duplicates
+    // from processor boundaries
     label totalnStaticPoints = nStaticPoints;
     reduce(totalnStaticPoints, sumOp<label>());
 
@@ -234,6 +308,8 @@ void CML::RBFMotionSolver::makeControlIDs()
         }
     }
 
+    // Calculate total number of control points. Note: Could contain duplicates
+    // because of processor boundaries
     label totalnControlPoints =  nControlPoints;
     reduce(totalnControlPoints, sumOp<label>());
 
@@ -266,6 +342,9 @@ void CML::RBFMotionSolver::makeControlIDs()
                 nControlPoints++;
             }
         }
+
+        // Calculate total number of control points. Note: Could contain
+        // duplicates because of processor boundaries
         totalnControlPoints =  nControlPoints;
         reduce(totalnControlPoints, sumOp<label>());
 
@@ -276,18 +355,18 @@ void CML::RBFMotionSolver::makeControlIDs()
     // Resize control IDs
     controlIDs_.setSize(nControlPoints);
 
-    // Unique list of control ids
-    makeGlobalControlIDs();
-
-    // Send point values from ALL control points to all CPUs
-    // Then, each CPU will do interpolation using same controlPoints_
-    controlPoints_.setSize(allControlIDs_.size());
+    // Pick up point locations
+    controlPoints_.setSize(nControlPoints);
 
     // Set control points
-    forAll (allControlIDs_, i)
+    forAll (controlIDs_, i)
     {
-        controlPoints_[i] = points[allControlIDs_[i]];
+        controlPoints_[i] = points[controlIDs_[i]];
     }
+
+    // Merge control points. Handles duplicate points that may exisit in
+    // parallel simulations
+    mergeControlPoints();
 
     // Pick up all internal points
     internalIDs_.setSize(points.size());
@@ -348,21 +427,20 @@ CML::RBFMotionSolver::RBFMotionSolver
     movingPoints_(0),
     staticIDs_(0),
     controlIDs_(0),
+    map_(0),
     controlPoints_(0),
+    allControlPoints_(0),
     internalIDs_(0),
     internalPoints_(0),
     motion_(0),
     interpolation_
     (
         coeffDict().subDict("interpolation"),
-        controlPoints_,
+        allControlPoints_,
         internalPoints_
     )
 {
     makeControlIDs();
-
-    //Pout << "debug: all control ids: " << allControlIDs_ << endl;
-    //Pout << "debug: all control points: " << controlPoints_ << endl;
 
     undisplacedPoints_ = movingPoints();
 }
@@ -407,6 +485,10 @@ void CML::RBFMotionSolver::setMotion(const vectorField& m)
             controlPoints_[i] = points[controlIDs_[i]];
         }
 
+        // Merge control points. Handles duplicate points that may exisit in
+        // parallel simulations
+        mergeControlPoints();
+
         // Re-calculate interpolation
         interpolation_.movePoints();
     }
@@ -445,26 +527,113 @@ CML::tmp<CML::pointField> CML::RBFMotionSolver::curPoints() const
         curPoints[staticIDs_[i]] = vector::zero;
     }
 
-    // Set motion of control
-    vectorField motionOfControl(allControlIDs_.size());
+    // Set motion of control points
+    vectorField motionOfControl(controlIDs_.size());
 
-    // 2. Capture positions of control points
-    forAll (allControlIDs_, i)
+    // 3. Capture positions of control points
+    forAll (controlIDs_, i)
     {
-        motionOfControl[i] = curPoints[allControlIDs_[i]];
+        motionOfControl[i] = curPoints[controlIDs_[i]];
+    }
+
+    // Motion of all control points
+    vectorField motionOfAllControl(motionOfControl);
+
+    // Collect motion of all control points from all CPUs
+    if (Pstream::parRun())
+    {
+        // Size of list 
+        label motionOfAllControlSize(motionOfAllControl.size());
+
+        // Gather motion lists from all processors
+        List<vectorField> gatheredData(Pstream::nProcs());
+        gatheredData[Pstream::myProcNo()] = motionOfControl;
+        Pstream::gatherList(gatheredData);
+
+        if (Pstream::master())
+        {
+            // Assemble single list on master
+            vectorField motionOfAllControlMaster
+            (
+                ListListOps::combine<vectorField>
+                (
+                    gatheredData,
+                    CML::accessOp<vectorField>()
+                )
+            );
+
+            // Allocate final combined list size. Should be the size of the map
+            // from the control points
+            motionOfAllControl.setSize(map_.size());
+
+            // Map original to final, removing duplicates.
+            forAll(map_, i)
+            {
+                motionOfAllControl[i] = motionOfAllControlMaster[map_[i]];
+            }
+
+            // Parallel data exchange - send size of motion data
+            for
+            (
+                int slave=Pstream::firstSlave();
+                slave<=Pstream::lastSlave();
+                slave++
+            )
+            {
+                OPstream toSlaveSize(Pstream::blocking, slave, sizeof(label));
+                toSlaveSize << motionOfAllControl.size();
+            }
+
+            // Parallel data exchange - send motion data
+            for
+            (
+                int slave=Pstream::firstSlave();
+                slave<=Pstream::lastSlave();
+                slave++
+            )
+            {
+                OPstream toSlaveData
+                (
+                    Pstream::blocking,
+                    slave,
+                    motionOfAllControl.size()*sizeof(vector)
+                );
+                toSlaveData << motionOfAllControl;
+            }
+        }
+        else
+        {
+            // Parallel data exchange - receive size of motion data
+            IPstream fromMasterSize
+            (
+                Pstream::blocking, Pstream::masterNo(), sizeof(label)
+            );
+            fromMasterSize >> motionOfAllControlSize;
+
+            // Parallel data exchange - receive motion data
+            IPstream fromMasterData
+            (
+                Pstream::blocking,
+                Pstream::masterNo(),
+                motionOfAllControlSize*sizeof(vector)
+            );
+            fromMasterData >> motionOfAllControl;
+        }
     }
 
     // Call interpolation
-    vectorField interpolatedMotion(interpolation_.interpolate(motionOfControl));
-    //Pout <<"interpolated motion" <<interpolatedMotion<<endl;
+    vectorField interpolatedMotion
+    (
+        interpolation_.interpolate(motionOfAllControl)
+    );
 
-    // 3. Insert RBF interpolated motion
+    // 4. Insert RBF interpolated motion
     forAll (internalIDs_, i)
     {
         curPoints[internalIDs_[i]] = interpolatedMotion[i];
     }
 
-    // 4. Add old point positions
+    // 5. Add old point positions
     curPoints += mesh().points();
 
     twoDCorrectPoints(tcurPoints());
@@ -503,6 +672,3 @@ void CML::RBFMotionSolver::updateMesh(const mapPolyMesh&)
     // Recalculate control point IDs
     makeControlIDs();
 }
-
-
-// ************************************************************************* //

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2009 Frank Bos
-Copyright (C) 2018 Applied CCM Pty Ltd
+Copyright (C) 2016-2019 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -41,6 +41,8 @@ SourceFiles
 #include "polyMesh.hpp"
 #include "RBFInterpolation.hpp"
 #include "solidBodyMotionFunction.hpp"
+#include "SortableList.hpp"
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -87,11 +89,14 @@ class RBFMotionSolver
         //- Control point IDs
         labelList controlIDs_;
 
-        //- Control point IDs
-        labelList allControlIDs_;
+        //- Map to handle duplicate that can occur in parallel
+        SortableList<label> map_;
 
-        //- Control points on the boundary
+        //- Control points on the boundary (this processor)
         mutable vectorField controlPoints_;
+
+        //- All control points on the boundary
+        mutable vectorField allControlPoints_;
 
         //- Internal point IDs
         labelList internalIDs_;
@@ -117,12 +122,11 @@ class RBFMotionSolver
         //- Disallow default bitwise assignment
         void operator=(const RBFMotionSolver&);
 
+        //- Merge control points when running in parallel.  Constructor helper
+        void mergeControlPoints();
 
         //- Make control point IDs.  Constructor helper
         void makeControlIDs();
-
-        //- Global list of unique control point IDs
-        void makeGlobalControlIDs();
 
         //- Set location of points
         void setMovingPoints() const;
