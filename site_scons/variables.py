@@ -18,7 +18,7 @@ import utils
 
 ### General Variables
 PROJECT_NAME     = "caelus"
-PROJECT_VERSION  = '8.04'
+PROJECT_VERSION  = '9.04'
 METIS_VERSION    = '5.1.0'
 GSL_VERSION      = '2.3'
 SCOTCH_VERSION   = '6.0.4'
@@ -136,6 +136,12 @@ def init_dependent_vars(env):
 
     BUILD_OPTION = (ostype + env['BUILD_ARCH'] +
                     env['CXX'] + env['PRECISION'] + env['BUILD_TYPE'])
+    if env['INT_TYPE'] == '64':
+        LABEL_TYPE = ('Int' + env['INT_TYPE'])
+        BUILD_OPTION = (ostype + env['BUILD_ARCH'] +
+                        env['CXX'] + env['PRECISION'] + LABEL_TYPE +
+                        env['BUILD_TYPE'])
+
     PLATFORM_INSTALL = os.path.join(
         prj_dir,'platforms',BUILD_OPTION)
     BIN_PLATFORM_INSTALL = os.path.join(PLATFORM_INSTALL,'bin')
@@ -147,7 +153,7 @@ def init_dependent_vars(env):
 
     user_dir = env['USER_DIR']
     CAELUS_USER_LIB_SRC = os.path.join(user_dir, 'src', 'libraries')
-    CAELUS_USER_APP_SRC = os.path.join(user_dir, 'src', 'libraries')
+    CAELUS_USER_APP_SRC = os.path.join(user_dir, 'src', 'applications')
     CAELUS_USER_APPBIN = os.path.join(user_dir, 'platforms',
                                       BUILD_OPTION, 'bin')
     CAELUS_USER_LIBBIN = os.path.join(user_dir, 'platforms',

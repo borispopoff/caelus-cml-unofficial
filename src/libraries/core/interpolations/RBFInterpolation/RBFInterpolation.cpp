@@ -41,7 +41,7 @@ const CML::scalarSquareMatrix& CML::RBFInterpolation::B() const
 
 
 void CML::RBFInterpolation::calcB() const
-{
+{ 
     // Determine inverse of boundary connectivity matrix
     label polySize(4);
 
@@ -114,12 +114,9 @@ void CML::RBFInterpolation::calcB() const
         }
     }
 
-    // Collect ALL control points from ALL CPUs
-    // Create an identical inverse for all CPUs
-
     Info<< "Inverting RBF motion matrix" << endl;
 
-    BPtr_ = new scalarSquareMatrix(A.LUinvert());
+    BPtr_ = new scalarSquareMatrix(LUinvert(A));
 }
 
 
@@ -142,7 +139,7 @@ CML::RBFInterpolation::RBFInterpolation
     controlPoints_(controlPoints),
     allPoints_(allPoints),
     RBF_(RBFFunction::New(word(dict.lookup("RBF")), dict)),
-    BPtr_(NULL),
+    BPtr_(nullptr),
     focalPoint_(dict.lookup("focalPoint")),
     innerRadius_(readScalar(dict.lookup("innerRadius"))),
     outerRadius_(readScalar(dict.lookup("outerRadius"))),
@@ -159,7 +156,7 @@ CML::RBFInterpolation::RBFInterpolation
     controlPoints_(rbf.controlPoints_),
     allPoints_(rbf.allPoints_),
     RBF_(rbf.RBF_->clone()),
-    BPtr_(NULL),
+    BPtr_(nullptr),
     focalPoint_(rbf.focalPoint_),
     innerRadius_(rbf.innerRadius_),
     outerRadius_(rbf.outerRadius_),

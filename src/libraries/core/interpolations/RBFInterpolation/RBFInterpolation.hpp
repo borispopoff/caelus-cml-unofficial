@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------*\
  Copyright 2009 TU Delft
  Copyright 2009 FSB Zagreb
- Copyright 2013 Applied CCM Pty Ltd
+ Copyright 2013-2018 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -69,6 +69,9 @@ SourceFiles
 #include "point.hpp"
 #include "Switch.hpp"
 #include "simpleMatrix.hpp"
+#include "ListListOps.hpp"
+#include "OPstream.hpp"
+#include "IPstream.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,10 +89,10 @@ class RBFInterpolation
         //- Dictionary
         const dictionary& dict_;
 
-        //- Reference to control points
+        //- Reference to control points (all processors)
         const vectorField& controlPoints_;
 
-        //- Rerefence to all points
+        //- Rerefence to all points (this processor only)
         const vectorField& allPoints_;
 
         //- RBF function
@@ -171,18 +174,11 @@ CML::tmp<CML::Field<Type> > CML::RBFInterpolation::interpolate
     const Field<Type>& ctrlField
 ) const
 {
-    // Collect the values from ALL control points to all CPUs
-    // Then, each CPU will do interpolation only on local allPoints_
 
     if (ctrlField.size() != controlPoints_.size())
     {
-        FatalErrorIn
-        (
-            "tmp<Field<Type> > RBFInterpolation::interpolate\n"
-            "(\n"
-            "    const Field<Type>& ctrlField\n"
-            ") const"
-        )   << "Incorrect size of source field.  Size = " << ctrlField.size()
+        FatalErrorInFunction
+            << "Incorrect size of source field.  Size = " << ctrlField.size()
             << " nControlPoints = " << controlPoints_.size()
             << abort(FatalError);
     }
