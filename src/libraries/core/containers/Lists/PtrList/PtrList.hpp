@@ -131,7 +131,7 @@ public:
         PtrList(const Xfer<PtrList<T> >&);
 
         //- Construct as copy or re-use as specified.
-        PtrList(PtrList<T>&, bool reUse);
+        PtrList(PtrList<T>&, bool reuse);
 
         //- Construct as copy of SLPtrList<T>
         explicit PtrList(const SLPtrList<T>&);
@@ -726,20 +726,11 @@ CML::PtrList<T>::PtrList(const Xfer<PtrList<T> >& lst)
 
 
 template<class T>
-CML::PtrList<T>::PtrList(PtrList<T>& a, bool reUse)
+CML::PtrList<T>::PtrList(PtrList<T>& a, bool reuse)
 :
-    ptrs_(a.size())
+    ptrs_(a.ptrs_, reuse)
 {
-    if (reUse)
-    {
-        forAll(*this, i)
-        {
-            ptrs_[i] = a.ptrs_[i];
-            a.ptrs_[i] = nullptr;
-        }
-        a.setSize(0);
-    }
-    else
+    if (!reuse)
     {
         forAll(*this, i)
         {

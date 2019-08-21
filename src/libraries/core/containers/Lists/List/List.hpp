@@ -105,7 +105,7 @@ public:
         List(const Xfer<List<T> >&);
 
         //- Construct as copy or re-use as specified.
-        List(List<T>&, bool reUse);
+        List(List<T>&, bool reuse);
 
         //- Construct as subset.
         List(const UList<T>&, const labelUList& mapAddressing);
@@ -439,13 +439,13 @@ CML::List<T>::List(const List<T>& a)
     {
         this->v_ = new T[this->size_];
 
-#       ifdef USEMEMCPY
+        #ifdef USEMEMCPY
         if (contiguous<T>())
         {
             memcpy(this->v_, a.v_, this->byteSize());
         }
         else
-#       endif
+        #endif
         {
             List_ACCESS(T, (*this), vp);
             List_CONST_ACCESS(T, a, ap);
@@ -467,11 +467,11 @@ CML::List<T>::List(const Xfer<List<T> >& lst)
 
 // Construct as copy or re-use as specified.
 template<class T>
-CML::List<T>::List(List<T>& a, bool reUse)
+CML::List<T>::List(List<T>& a, bool reuse)
 :
     UList<T>(nullptr, a.size_)
 {
-    if (reUse)
+    if (reuse)
     {
         this->v_ = a.v_;
         a.v_ = 0;
@@ -481,13 +481,13 @@ CML::List<T>::List(List<T>& a, bool reUse)
     {
         this->v_ = new T[this->size_];
 
-#       ifdef USEMEMCPY
+        #ifdef USEMEMCPY
         if (contiguous<T>())
         {
             memcpy(this->v_, a.v_, this->byteSize());
         }
         else
-#       endif
+        #endif
         {
             List_ACCESS(T, (*this), vp);
             List_CONST_ACCESS(T, a, ap);
@@ -680,13 +680,13 @@ void CML::List<T>::setSize(const label newSize)
             {
                 register label i = min(this->size_, newSize);
 
-#               ifdef USEMEMCPY
+                #ifdef USEMEMCPY
                 if (contiguous<T>())
                 {
                     memcpy(nv, this->v_, i*sizeof(T));
                 }
                 else
-#               endif
+                #endif
                 {
                     register T* vv = &this->v_[i];
                     register T* av = &nv[i];
@@ -750,7 +750,7 @@ template<class T>
 template<unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 void CML::List<T>::transfer(DynamicList<T, SizeInc, SizeMult, SizeDiv>& a)
 {
-    // shrink the allocated space to the number of elements used
+    // Shrink the allocated space to the number of elements used
     a.shrink();
     transfer(static_cast<List<T>&>(a));
     a.clearStorage();
@@ -762,7 +762,7 @@ void CML::List<T>::transfer(DynamicList<T, SizeInc, SizeMult, SizeDiv>& a)
 template<class T>
 void CML::List<T>::transfer(SortableList<T>& a)
 {
-    // shrink away the sort indices
+    // Shrink away the sort indices
     a.shrink();
     transfer(static_cast<List<T>&>(a));
 }
@@ -784,13 +784,13 @@ void CML::List<T>::operator=(const UList<T>& a)
 
     if (this->size_)
     {
-#       ifdef USEMEMCPY
+        #ifdef USEMEMCPY
         if (contiguous<T>())
         {
             memcpy(this->v_, a.v_, this->byteSize());
         }
         else
-#       endif
+        #endif
         {
             List_ACCESS(T, (*this), vp);
             List_CONST_ACCESS(T, a, ap);
@@ -1033,12 +1033,12 @@ CML::List<T> CML::readList(Istream& is)
                 << exit(FatalIOError);
         }
 
-        // read via a singly-linked list
+        // Read via a singly-linked list
         L = SLList<T>(is);
     }
     else
     {
-        // create list with a single item
+        // Create list with a single item
         L.setSize(1);
 
         is >> L[0];

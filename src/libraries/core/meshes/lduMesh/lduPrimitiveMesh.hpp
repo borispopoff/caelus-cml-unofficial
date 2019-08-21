@@ -84,12 +84,12 @@ public:
             const label nCells,
             labelList& l,
             labelList& u,
-            bool reUse
+            bool reuse
         )
         :
             lduAddressing(nCells),
-            lowerAddr_(l, reUse),
-            upperAddr_(u, reUse)
+            lowerAddr_(l, reuse),
+            upperAddr_(u, reuse)
         {}
 
         //- Add interfaces to a mesh constructed without
@@ -146,14 +146,14 @@ public:
             labelListList& pa,
             lduInterfacePtrsList interfaces,
             const lduSchedule& ps,
-            bool reUse
+            bool reuse
         )
         :
             lduAddressing(nCells),
-            lowerAddr_(l, reUse),
-            upperAddr_(u, reUse),
-            patchAddr_(pa, reUse),
-            interfaces_(interfaces, reUse),
+            lowerAddr_(l, reuse),
+            upperAddr_(u, reuse),
+            patchAddr_(pa, reuse),
+            interfaces_(interfaces, reuse),
             patchSchedule_(ps)
         {}
 

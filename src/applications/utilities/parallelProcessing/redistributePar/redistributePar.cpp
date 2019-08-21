@@ -264,15 +264,15 @@ void writeDecomposition
         ),
         mesh,
         dimensionedScalar(name, dimless, -1),
-        zeroGradientFvPatchScalarField::typeName
+        extrapolatedCalculatedFvPatchScalarField::typeName
     );
 
     forAll(procCells, cI)
     {
         procCells[cI] = decomp[cI];
     }
-
     procCells.correctBoundaryConditions();
+
     procCells.write();
 }
 

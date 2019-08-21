@@ -480,7 +480,6 @@ int main(int argc, char *argv[])
                     ),
                     mesh,
                     dimensionedScalar("cellDist", dimless, -1),
-                    zeroGradientFvPatchScalarField::typeName
                 );
 
                 forAll(procIds, celli)

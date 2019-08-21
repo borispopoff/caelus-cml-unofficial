@@ -295,7 +295,7 @@ tmp<Field<Type> > calculatedFvPatchField<Type>::valueInternalCoeffs
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
@@ -315,7 +315,7 @@ tmp<Field<Type> > calculatedFvPatchField<Type>::valueBoundaryCoeffs
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
@@ -332,7 +332,7 @@ tmp<Field<Type> > calculatedFvPatchField<Type>::gradientInternalCoeffs() const
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
@@ -349,7 +349,7 @@ tmp<Field<Type> > calculatedFvPatchField<Type>::gradientBoundaryCoeffs() const
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }

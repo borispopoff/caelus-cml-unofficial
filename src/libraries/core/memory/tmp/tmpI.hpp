@@ -167,7 +167,7 @@ inline T* CML::tmp<T>::ptr() const
 template<class T>
 inline void CML::tmp<T>::clear() const
 {
-    if (isTmp_ && ptr_)  // skip this bit:  && ptr_->okToDelete())
+    if (isTmp_ && ptr_)  // Skip this bit:  && ptr_->okToDelete())
     {
         delete ptr_;
         ptr_ = 0;

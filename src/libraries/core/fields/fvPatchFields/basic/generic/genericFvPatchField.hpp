@@ -840,7 +840,7 @@ CML::genericFvPatchField<Type>::valueInternalCoeffs
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
@@ -862,7 +862,7 @@ CML::genericFvPatchField<Type>::valueBoundaryCoeffs
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
@@ -881,7 +881,7 @@ CML::genericFvPatchField<Type>::gradientInternalCoeffs() const
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
@@ -899,7 +899,7 @@ CML::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
         << " in file " << this->dimensionedInternalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }

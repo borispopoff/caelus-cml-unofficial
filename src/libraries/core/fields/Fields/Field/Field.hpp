@@ -208,7 +208,7 @@ public:
         Field(const Field<Type>&);
 
         //- Construct as copy or re-use as specified.
-        Field(Field<Type>&, bool reUse);
+        Field(Field<Type>&, bool reuse);
 
         //- Construct by transferring the Field contents
         Field(const Xfer<Field<Type> >&);
@@ -594,9 +594,9 @@ CML::Field<Type>::Field(const Field<Type>& f)
 
 
 template<class Type>
-CML::Field<Type>::Field(Field<Type>& f, bool reUse)
+CML::Field<Type>::Field(Field<Type>& f, bool reuse)
 :
-    List<Type>(f, reUse)
+    List<Type>(f, reuse)
 {}
 
 
@@ -637,7 +637,7 @@ CML::Field<Type>::Field(const tmp<Field<Type> >& tf)
 :
     List<Type>(const_cast<Field<Type>&>(tf()), tf.isTmp())
 {
-    const_cast<Field<Type>&>(tf()).resetRefCount();
+    tf.clear();
 }
 #endif
 

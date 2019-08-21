@@ -159,7 +159,7 @@ public:
         DimensionedField
         (
             DimensionedField<Type, GeoMesh>&,
-            bool reUse
+            bool reuse
         );
 
         //- Construct by transferring the DimensionedField
@@ -188,7 +188,7 @@ public:
         (
             const IOobject&,
             DimensionedField<Type, GeoMesh>&,
-            bool reUse
+            bool reuse
         );
 
         //- Construct as copy resetting name
@@ -203,7 +203,7 @@ public:
         (
             const word& newName,
             DimensionedField<Type, GeoMesh>&,
-            bool reUse
+            bool reuse
         );
 
         //- Construct by transferring the DimensionedField with a new name
@@ -503,11 +503,11 @@ template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (
     DimensionedField<Type, GeoMesh>& df,
-    bool reUse
+    bool reuse
 )
 :
-    regIOobject(df, reUse),
-    Field<Type>(df, reUse),
+    regIOobject(df, reuse),
+    Field<Type>(df, reuse),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
 {}
@@ -566,11 +566,11 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 (
     const IOobject& io,
     DimensionedField<Type, GeoMesh>& df,
-    bool reUse
+    bool reuse
 )
 :
     regIOobject(io, df),
-    Field<Type>(df, reUse),
+    Field<Type>(df, reuse),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
 {}
@@ -595,11 +595,11 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 (
     const word& newName,
     DimensionedField<Type, GeoMesh>& df,
-    bool reUse
+    bool reuse
 )
 :
     regIOobject(newName, df, true),
-    Field<Type>(df, reUse),
+    Field<Type>(df, reuse),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
 {}

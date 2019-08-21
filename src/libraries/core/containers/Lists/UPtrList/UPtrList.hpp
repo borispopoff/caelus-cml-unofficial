@@ -109,7 +109,7 @@ public:
         UPtrList(const Xfer<UPtrList<T> >&);
 
         //- Construct as copy or re-use as specified.
-        UPtrList(UPtrList<T>&, bool reUse);
+        UPtrList(UPtrList<T>&, bool reuse);
 
 
     // Member functions
@@ -572,9 +572,9 @@ CML::UPtrList<T>::UPtrList(const Xfer<UPtrList<T> >& lst)
 
 
 template<class T>
-CML::UPtrList<T>::UPtrList(UPtrList<T>& a, bool reUse)
+CML::UPtrList<T>::UPtrList(UPtrList<T>& a, bool reuse)
 :
-    ptrs_(a.ptrs_, reUse)
+    ptrs_(a.ptrs_, reuse)
 {}
 
 

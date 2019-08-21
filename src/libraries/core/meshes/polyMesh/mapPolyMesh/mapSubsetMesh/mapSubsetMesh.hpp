@@ -108,7 +108,7 @@ public:
             const label exposedPatchID,
             labelList& oldPatchStarts,
             labelList& oldPatchNMeshPoints,
-            const bool reUse
+            const bool reuse
         );
 
 
