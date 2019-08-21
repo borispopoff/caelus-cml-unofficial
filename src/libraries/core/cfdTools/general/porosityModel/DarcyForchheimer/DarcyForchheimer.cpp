@@ -59,7 +59,7 @@ CML::porosityModels::DarcyForchheimer::DarcyForchheimer
     adjustNegativeResistance(dXYZ_);
     adjustNegativeResistance(fXYZ_);
 
-    calcTranformModelData();
+    calcTransformModelData();
 }
 
 
@@ -71,7 +71,7 @@ CML::porosityModels::DarcyForchheimer::~DarcyForchheimer()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void CML::porosityModels::DarcyForchheimer::calcTranformModelData()
+void CML::porosityModels::DarcyForchheimer::calcTransformModelData()
 {
     if (coordSys_.R().uniform())
     {

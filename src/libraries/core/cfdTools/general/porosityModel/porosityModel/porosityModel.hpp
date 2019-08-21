@@ -97,7 +97,7 @@ protected:
 
 
         //- Transform the model data wrt mesh changes
-        virtual void calcTranformModelData() = 0;
+        virtual void calcTransformModelData() = 0;
 
         //- Adjust negative resistance values to be multiplier of max value
         void adjustNegativeResistance(dimensionedVector& resist);

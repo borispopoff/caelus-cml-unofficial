@@ -115,7 +115,7 @@ CML::porosityModels::fixedCoeff::fixedCoeff
     adjustNegativeResistance(alphaXYZ_);
     adjustNegativeResistance(betaXYZ_);
 
-    calcTranformModelData();
+    calcTransformModelData();
 }
 
 
@@ -127,7 +127,7 @@ CML::porosityModels::fixedCoeff::~fixedCoeff()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void CML::porosityModels::fixedCoeff::calcTranformModelData()
+void CML::porosityModels::fixedCoeff::calcTransformModelData()
 {
     if (coordSys_.R().uniform())
     {

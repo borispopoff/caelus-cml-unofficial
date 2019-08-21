@@ -56,6 +56,7 @@ Usage
 #include "Time.hpp"
 #include "fvMesh.hpp"
 #include "fvMeshTools.hpp"
+#include "fvCFD.hpp"
 #include "fvMeshDistribute.hpp"
 #include "decompositionMethod.hpp"
 #include "timeSelector.hpp"
