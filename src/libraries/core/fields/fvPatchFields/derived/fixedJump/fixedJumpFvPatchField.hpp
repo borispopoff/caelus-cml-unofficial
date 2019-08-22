@@ -193,7 +193,7 @@ CML::fixedJumpFvPatchField<Type>::fixedJumpFvPatchField
 )
 :
     jumpCyclicFvPatchField<Type>(p, iF),
-    jump_(this->size(), pTraits<Type>::zero)
+    jump_(this->size(), Zero)
 {}
 
 

@@ -334,7 +334,7 @@ tmp<Field<Type> > uniformFixedValueFvPatchField<Type>::gradientInternalCoeffs() 
     {
         return tmp<Field<Type> >
         (
-            new Field<Type>(this->size(), pTraits<Type>::zero)
+            new Field<Type>(this->size(), Zero)
         );
     }
 }
@@ -351,7 +351,7 @@ tmp<Field<Type> > uniformFixedValueFvPatchField<Type>::gradientBoundaryCoeffs() 
     {
         return tmp<Field<Type> >
         (
-            new Field<Type>(this->size(), pTraits<Type>::zero)
+            new Field<Type>(this->size(), Zero)
         );
     }
 }

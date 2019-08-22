@@ -285,7 +285,7 @@ void CML::mappedFixedInternalValueFvPatchField<Type>::updateCoeffs()
         }
         case mappedPatchBase::NEARESTFACE:
         {
-            Field<Type> allValues(nbrMesh.nFaces(), pTraits<Type>::zero);
+            Field<Type> allValues(nbrMesh.nFaces(), Zero);
 
             const FieldType& nbrField = this->sampleField();
 

@@ -705,14 +705,14 @@ CML::fvPatchField<Type>::fvPatchField
 {
     if (dict.found("value"))
     {
-        fvPatchField<Type>::operator=
+        Field<Type>::operator=
         (
             Field<Type>("value", dict, p.size())
         );
     }
     else if (!valueRequired)
     {
-        fvPatchField<Type>::operator=(pTraits<Type>::zero);
+        Field<Type>::operator=(pTraits<Type>::zero);
     }
     else
     {

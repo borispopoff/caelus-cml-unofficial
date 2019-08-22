@@ -221,7 +221,7 @@ fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 )
 :
     fvPatchField<Type>(p, iF),
-    gradient_(p.size(), pTraits<Type>::zero)
+    gradient_(p.size(), Zero)
 {}
 
 
@@ -349,7 +349,7 @@ gradientInternalCoeffs() const
 {
     return tmp<Field<Type> >
     (
-        new Field<Type>(this->size(), pTraits<Type>::zero)
+        new Field<Type>(this->size(), Zero)
     );
 }
 

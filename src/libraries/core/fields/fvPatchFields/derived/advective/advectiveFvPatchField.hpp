@@ -246,11 +246,11 @@ CML::advectiveFvPatchField<Type>::advectiveFvPatchField
     mixedFvPatchField<Type>(p, iF),
     phiName_("phi"),
     rhoName_("rho"),
-    fieldInf_(pTraits<Type>::zero),
+    fieldInf_(Zero),
     lInf_(-GREAT)
 {
-    this->refValue() = pTraits<Type>::zero;
-    this->refGrad() = pTraits<Type>::zero;
+    this->refValue() = Zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
 
@@ -283,7 +283,7 @@ CML::advectiveFvPatchField<Type>::advectiveFvPatchField
     mixedFvPatchField<Type>(p, iF),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    fieldInf_(pTraits<Type>::zero),
+    fieldInf_(Zero),
     lInf_(-GREAT)
 {
     if (dict.found("value"))
@@ -299,7 +299,7 @@ CML::advectiveFvPatchField<Type>::advectiveFvPatchField
     }
 
     this->refValue() = *this;
-    this->refGrad() = pTraits<Type>::zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 
     if (dict.readIfPresent("lInf", lInf_))

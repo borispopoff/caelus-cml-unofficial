@@ -129,7 +129,7 @@ public:
             {
                 return tmp<Field<Type> >
                 (
-                    new Field<Type>(this->size(), pTraits<Type>::zero)
+                    new Field<Type>(this->size(), Zero)
                 );
             }
 
@@ -283,7 +283,7 @@ tmp<Field<Type> > zeroGradientFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return tmp<Field<Type> >
     (
-        new Field<Type>(this->size(), pTraits<Type>::zero)
+        new Field<Type>(this->size(), Zero)
     );
 }
 
@@ -293,7 +293,7 @@ tmp<Field<Type> > zeroGradientFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return tmp<Field<Type> >
     (
-        new Field<Type>(this->size(), pTraits<Type>::zero)
+        new Field<Type>(this->size(), Zero)
     );
 }
 

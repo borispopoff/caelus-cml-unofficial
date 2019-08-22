@@ -184,7 +184,7 @@ CML::outletInletFvPatchField<Type>::outletInletFvPatchField
     phiName_("phi")
 {
     this->refValue() = *this;
-    this->refGrad() = pTraits<Type>::zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
 
@@ -228,7 +228,7 @@ CML::outletInletFvPatchField<Type>::outletInletFvPatchField
         fvPatchField<Type>::operator=(this->refValue());
     }
 
-    this->refGrad() = pTraits<Type>::zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
 
