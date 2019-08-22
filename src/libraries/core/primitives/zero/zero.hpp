@@ -130,19 +130,19 @@ inline zero operator*(const zero&, const zero&)
 template <typename Type>
 inline zero operator*(const Type& t, const zero&)
 {
-    return zero();
+    return Zero;
 }
 
 template <typename Type>
 inline zero operator*(const zero&, const Type& t)
 {
-    return zero();
+    return Zero;
 }
 
 template <typename Type>
 inline zero operator/(const zero&, const Type& t)
 {
-    return zero();
+    return Zero;
 }
 
 } // End namespace CML
