@@ -153,6 +153,9 @@ public:
             >&
         );
 
+        //- Clone
+        tmp<SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>>
+            clone() const;
 
     //- Destructor
     ~SlicedGeometricField();
@@ -519,6 +522,33 @@ SlicedGeometricField
 {
     // Set the internalField to the supplied internal field
     UList<Type>::operator=(gf.internalField());
+}
+
+
+template
+<
+    class Type,
+    template<class> class PatchField,
+    template<class> class SlicedPatchField,
+    class GeoMesh
+>
+CML::tmp
+<
+    CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
+>
+CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
+clone() const
+{
+    return tmp
+    <
+        SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
+    >
+    (
+        new SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
+        (
+            *this
+        )
+    );
 }
 
 

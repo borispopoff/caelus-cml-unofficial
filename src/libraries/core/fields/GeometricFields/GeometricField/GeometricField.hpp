@@ -398,6 +398,8 @@ public:
             const wordList& actualPatchTypes = wordList()
         );
 
+        //- Clone
+        tmp<GeometricField<Type, PatchField, GeoMesh> > clone() const;
 
     //- Destructor
     virtual ~GeometricField();
@@ -1305,6 +1307,16 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     }
 }
 
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::tmp<CML::GeometricField<Type, PatchField, GeoMesh>>
+CML::GeometricField<Type, PatchField, GeoMesh>::clone() const
+{
+    return tmp<GeometricField<Type, PatchField, GeoMesh>>
+    (
+        new GeometricField<Type, PatchField, GeoMesh>(*this)
+    );
+}
 
 // * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * * //
 

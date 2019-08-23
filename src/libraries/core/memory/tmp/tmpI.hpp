@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -159,7 +159,7 @@ inline T* CML::tmp<T>::ptr() const
     }
     else
     {
-        return new T(ref_);
+        return ptr_->clone().ptr();
     }
 }
 

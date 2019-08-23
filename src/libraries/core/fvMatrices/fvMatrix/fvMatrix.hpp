@@ -254,6 +254,9 @@ public:
         //- Construct from Istream given field to solve for
         fvMatrix(const GeometricField<Type, fvPatchField, volMesh>&, Istream&);
 
+        //- Clone
+        tmp<fvMatrix<Type>> clone() const;
+
 
     //- Destructor
     virtual ~fvMatrix();
@@ -1505,6 +1508,17 @@ CML::fvMatrix<Type>::fvMatrix
 }
 
 
+template<class Type>
+CML::tmp<CML::fvMatrix<Type>> CML::fvMatrix<Type>::clone() const
+{
+    return tmp<fvMatrix<Type>>
+    (
+        new fvMatrix<Type>(*this)
+    );
+}
+
+
+// * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * * //
 template<class Type>
 CML::fvMatrix<Type>::~fvMatrix()
 {

@@ -99,11 +99,11 @@ public:
         DataEntry(const DataEntry<Type>& de);
 
         //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new DataEntry<Type>(*this));
-        }
-//        virtual tmp<DataEntry<Type> > clone() const = 0;
+//        virtual tmp<DataEntry<Type> > clone() const
+//        {
+//            return tmp<DataEntry<Type> >(new DataEntry<Type>(*this));
+//        }
+        virtual tmp<DataEntry<Type> > clone() const = 0;
 
 
     //- Selector
