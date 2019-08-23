@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -48,6 +48,12 @@ CML::compressibilityModels::Wallis::Wallis
 )
 :
     barotropicCompressibilityModel(compressibilityProperties, gamma, psiName),
+    pSat_
+    (
+        "pSat",
+        dimPressure,
+        compressibilityProperties_.lookup("pSat")
+    ),
     psiv_
     (
         "psiv",
@@ -60,12 +66,7 @@ CML::compressibilityModels::Wallis::Wallis
         dimCompressibility,
         compressibilityProperties_.lookup("psil")
     ),
-    rhovSat_
-    (
-        "rhovSat",
-        dimDensity,
-        compressibilityProperties_.lookup("rhovSat")
-    ),
+    rhovSat_(psiv_*pSat_),
     rholSat_
     (
         "rholSat",
@@ -83,7 +84,7 @@ void CML::compressibilityModels::Wallis::correct()
 {
     psi_ =
         (gamma_*rhovSat_ + (scalar(1) - gamma_)*rholSat_)
-       *(gamma_*psiv_/rhovSat_ + (scalar(1) - gamma_)*psil_/rholSat_);
+       *(gamma_/pSat_ + (scalar(1) - gamma_)*psil_/rholSat_);
 }
 
 
@@ -94,9 +95,10 @@ bool CML::compressibilityModels::Wallis::read
 {
     barotropicCompressibilityModel::read(compressibilityProperties);
 
+    compressibilityProperties_.lookup("pSat") >> pSat_;
     compressibilityProperties_.lookup("psiv") >> psiv_;
     compressibilityProperties_.lookup("psil") >> psil_;
-    compressibilityProperties_.lookup("rhovSat") >> rhovSat_;
+    rhovSat_ = psiv_*pSat_;
     compressibilityProperties_.lookup("rholSat") >> rholSat_;
 
     return true;
