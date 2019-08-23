@@ -55,7 +55,7 @@ Description
         \f]
         \f[
             \Delta \phi_i = (\alpha_i - \beta_i \phi^n) \Delta t -
-            (A - B \phi^n) \int_0^{\Delta t} t_e dt
+            \beta_i (A - B \phi^n) \int_0^{\Delta t} t_e dt
         \f]
 
     These partial calculations are defined in terms of the integral of the
