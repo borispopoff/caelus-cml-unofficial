@@ -712,7 +712,7 @@ CML::ThermoCloud<CloudType>::sigmap() const
         const scalar f = constProps_.f0();
         const scalarField& sumAreaP = radAreaP_->field();
 
-        sigmap *= sumAreaP*(1.0 - f)*(1.0 - epsilon)/V/dt;
+        sigmap = sumAreaP*(1.0 - f)*(1.0 - epsilon)/V/dt;
     }
 
     return tsigmap;
