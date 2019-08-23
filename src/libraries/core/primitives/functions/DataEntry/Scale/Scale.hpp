@@ -21,8 +21,9 @@ Class
     CML::DataEntryTypes::Scale
 
 Description
-    DataEntry which scales a given 'value' function by a scalar 'scale'
-    function.
+    DataEntry which scales a given 'value' function by a 'scale' scalar function
+    and scales the 'x' argument of the 'value' and 'scale' functions by the
+    optional 'xScale' scalar function.
 
     This is particularly useful to ramp a time-varying value by one of the
     monotonic ramp functions.
@@ -53,11 +54,46 @@ Description
         }
     \endverbatim
 
+    Simplified usage to scale by a constant factor, e.g. 2:
+    \verbatim
+        <entryName>
+        {
+            type      scale;
+            scale     2;
+            value
+            {
+                type        sine;
+                frequency   10;
+                amplitude   1;
+                scale       (1 0.1 0);
+                level       (10 1 0);
+            }
+        }
+    \endverbatim
+    Usage including the optional 'xScale' function:
+    \verbatim
+        <entryName>
+        {
+            type      scale;
+            xScale    0.5;
+            scale     2;
+            value
+            {
+                type        sine;
+                frequency   10;
+                amplitude   1;
+                scale       (1 0.1 0);
+                level       (10 1 0);
+            }
+        }
+    \endverbatim
+
     Where:
     \table
-        Property | Description                                  | Required
-        value    | Function of type DataEntry<Type>             | yes
-        scale    | Scaling function of type DataEntry<scalar>   | yes
+        Property | Description                                    | Required
+        value    | Function of type Function1<Type>               | yes
+        scale    | Scaling function of type Function1<scalar>     | yes
+        xScale   | 'x' scaling function of type Function1<scalar> | no
     \endtable
 
 
@@ -85,6 +121,9 @@ class Scale
     public DataEntry<Type>
 {
     // Private data
+
+        //- Argument scaling function
+        autoPtr<DataEntry<scalar> > xScale_;
 
         //- Scalar scaling function
         autoPtr<DataEntry<scalar> > scale_;
@@ -146,6 +185,10 @@ public:
 template<class Type>
 void CML::DataEntryTypes::Scale<Type>::read(const dictionary& coeffs)
 {
+    xScale_ = coeffs.found("xScale")
+        ? DataEntry<scalar>::New("xScale", coeffs)
+        : autoPtr<DataEntry<scalar>>(new Constant<scalar>("xScale", 1));
+
     scale_ = DataEntry<scalar>::New("scale", coeffs);
     value_ = DataEntry<Type>::New("value", coeffs);
 }
@@ -168,6 +211,7 @@ template<class Type>
 CML::DataEntryTypes::Scale<Type>::Scale(const Scale<Type>& se)
 :
     DataEntry<Type>(se),
+    xScale_(se.xScale_, false),
     scale_(se.scale_, false),
     value_(se.value_, false)
 {}
@@ -185,7 +229,8 @@ CML::DataEntryTypes::Scale<Type>::~Scale()
 template<class Type>
 inline Type CML::DataEntryTypes::Scale<Type>::value(const scalar t) const
 {
-    return scale_->value(t)*value_->value(t);
+    const scalar st = xScale_->value(t)*t;
+    return scale_->value(st)*value_->value(st);
 }
 
 
@@ -196,6 +241,7 @@ void CML::DataEntryTypes::Scale<Type>::writeData(Ostream& os) const
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
+    xScale_->writeData(os);
     scale_->writeData(os);
     value_->writeData(os);
     os  << decrIndent << indent << token::END_BLOCK << endl;
