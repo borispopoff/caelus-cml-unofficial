@@ -196,6 +196,9 @@ public:
 
         // Evaluation
 
+            using DataEntryType::value;
+            using DataEntryType::integrate;
+
             //- Return value as a function of (scalar) independent variable
             virtual tmp<Field<Type> > value(const scalarField& x) const;
 
