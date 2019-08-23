@@ -94,12 +94,6 @@ public:
         //- Copy constructor
         Polynomial(const Polynomial& poly);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new Polynomial(*this));
-        }
-
 
     //- Destructor
     virtual ~Polynomial();
@@ -116,10 +110,10 @@ public:
         // Evaluation
 
             //- Return Polynomial value
-            Type value(const scalar x) const;
+            virtual inline Type value(const scalar x) const;
 
             //- Integrate between two (scalar) values
-            Type integrate(const scalar x1, const scalar x2) const;
+            virtual inline Type integrate(const scalar x1, const scalar x2) const;
 
 
         //- Write in dictionary format
@@ -253,7 +247,7 @@ void CML::DataEntryTypes::Polynomial<Type>::convertTimeBase(const Time& t)
 
 
 template<class Type>
-Type CML::DataEntryTypes::Polynomial<Type>::value(const scalar x) const
+inline Type CML::DataEntryTypes::Polynomial<Type>::value(const scalar x) const
 {
     Type y(Zero);
     forAll(coeffs_, i)
@@ -270,7 +264,7 @@ Type CML::DataEntryTypes::Polynomial<Type>::value(const scalar x) const
 
 
 template<class Type>
-Type CML::DataEntryTypes::Polynomial<Type>::integrate
+inline Type CML::DataEntryTypes::Polynomial<Type>::integrate
 (
     const scalar x1,
     const scalar x2

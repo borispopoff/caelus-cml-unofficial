@@ -73,12 +73,6 @@ public:
             const dictionary& dict
         );
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<scalar> > clone() const
-        {
-            return tmp<DataEntry<scalar> >(new quarterCosineRamp(*this));
-        }
-
 
     //- Destructor
     virtual ~quarterCosineRamp();
@@ -87,7 +81,7 @@ public:
     // Member Functions
 
         //- Return value for time t
-        scalar value(const scalar t) const;
+        virtual inline scalar value(const scalar t) const;
 };
 
 
@@ -95,6 +89,18 @@ public:
 
 } // End namespace DataEntryTypes
 } // End namespace CML
+
+#include "mathematicalConstants.hpp"
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline CML::scalar CML::DataEntryTypes::quarterCosineRamp::value
+(
+    const scalar t
+) const
+{
+    return 1 - cos(0.5*constant::mathematical::pi*linearRamp(t));
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

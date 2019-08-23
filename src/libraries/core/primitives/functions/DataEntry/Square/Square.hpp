@@ -139,12 +139,6 @@ public:
         //- Copy constructor
         Square(const Square<Type>& se);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new Square<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~Square();
@@ -153,7 +147,7 @@ public:
     // Member Functions
 
         //- Return value for time t
-        Type value(const scalar t) const;
+        virtual inline Type value(const scalar t) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -216,7 +210,7 @@ CML::DataEntryTypes::Square<Type>::~Square()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type CML::DataEntryTypes::Square<Type>::value(const scalar t) const
+inline Type CML::DataEntryTypes::Square<Type>::value(const scalar t) const
 {
     // Number of waves including fractions
     scalar waves = frequency_->value(t)*(t - t0_);

@@ -73,12 +73,6 @@ public:
             const dictionary& dict
         );
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<scalar> > clone() const
-        {
-            return tmp<DataEntry<scalar> >(new linearRamp(*this));
-        }
-
 
     //- Destructor
     virtual ~linearRamp();
@@ -87,7 +81,7 @@ public:
     // Member Functions
 
         //- Return value for time t
-        scalar value(const scalar t) const;
+        virtual inline scalar value(const scalar t) const;
 };
 
 
@@ -95,6 +89,13 @@ public:
 
 } // End namespace DataEntryTypes
 } // End namespace CML
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline CML::scalar CML::DataEntryTypes::linearRamp::value(const scalar t) const
+{
+    return ramp::linearRamp(t);
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

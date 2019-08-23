@@ -80,12 +80,6 @@ public:
         //- Copy constructor
         Table(const Table<Type>& tbl);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new Table<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~Table();

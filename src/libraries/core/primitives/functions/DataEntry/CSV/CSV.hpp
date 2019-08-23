@@ -123,12 +123,6 @@ public:
         //- Copy constructor
         CSV(const CSV<Type>& tbl);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new CSV<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~CSV();

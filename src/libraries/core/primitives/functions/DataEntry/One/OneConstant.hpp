@@ -72,12 +72,6 @@ public:
         //- Construct from entry name and dictionary
         OneConstant(const word& entryName, const dictionary& dict);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new OneConstant<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~OneConstant();
@@ -86,10 +80,20 @@ public:
     // Member Functions
 
         //- Return constant value
-        Type value(const scalar) const;
+        virtual inline Type value(const scalar) const;
 
         //- Integrate between two values
-        Type integrate(const scalar x1, const scalar x2) const;
+        virtual inline Type integrate(const scalar x1, const scalar x2) const;
+
+        //- Return value as a function of (scalar) independent variable
+        virtual tmp<Field<Type> > value(const scalarField& x) const;
+
+        //- Integrate between two (scalar) values
+        virtual tmp<Field<Type> > integrate
+        (
+            const scalarField& x1,
+            const scalarField& x2
+        ) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -132,17 +136,38 @@ CML::DataEntryTypes::OneConstant<Type>::~OneConstant()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type CML::DataEntryTypes::OneConstant<Type>::value(const scalar x) const
+inline Type CML::DataEntryTypes::OneConstant<Type>::value(const scalar x) const
 {
     return pTraits<Type>::one;
 }
 
 
 template<class Type>
-Type CML::DataEntryTypes::OneConstant<Type>::integrate
+inline Type CML::DataEntryTypes::OneConstant<Type>::integrate
 (
     const scalar x1,
     const scalar x2
+) const
+{
+    return (x2 - x1)*pTraits<Type>::one;
+}
+
+
+template<class Type>
+CML::tmp<CML::Field<Type> > CML::DataEntryTypes::OneConstant<Type>::value
+(
+    const scalarField& x
+) const
+{
+    return tmp<Field<Type> >(new Field<Type>(x.size(), pTraits<Type>::one));
+}
+
+
+template<class Type>
+CML::tmp<CML::Field<Type> > CML::DataEntryTypes::OneConstant<Type>::integrate
+(
+    const scalarField& x1,
+    const scalarField& x2
 ) const
 {
     return (x2 - x1)*pTraits<Type>::one;

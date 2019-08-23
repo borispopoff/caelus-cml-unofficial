@@ -95,12 +95,6 @@ public:
         //- Copy constructor
         TableFile(const TableFile<Type>& tbl);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new TableFile<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~TableFile();

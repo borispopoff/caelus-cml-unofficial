@@ -120,12 +120,6 @@ public:
         //- Copy constructor
         Scale(const Scale<Type>& se);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new Scale<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~Scale();
@@ -134,7 +128,7 @@ public:
     // Member Functions
 
         //- Return value for time t
-        Type value(const scalar t) const;
+        virtual inline Type value(const scalar t) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -189,7 +183,7 @@ CML::DataEntryTypes::Scale<Type>::~Scale()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type CML::DataEntryTypes::Scale<Type>::value(const scalar t) const
+inline Type CML::DataEntryTypes::Scale<Type>::value(const scalar t) const
 {
     return scale_->value(t)*value_->value(t);
 }

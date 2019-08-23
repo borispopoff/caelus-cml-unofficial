@@ -112,9 +112,18 @@ public:
         //- Return constant value
         Type value(const scalar) const;
 
-    //- Integrate between two values
-    Type integrate(const scalar x1, const scalar x2) const;
+        //- Integrate between two values
+        Type integrate(const scalar x1, const scalar x2) const;
 
+        //- Return value as a function of (scalar) independent variable
+        tmp<Field<Type> > value(const scalarField& x) const;
+
+        //- Integrate between two (scalar) values
+        tmp<Field<Type> > integrate
+        (
+            const scalarField& x1,
+            const scalarField& x2
+        ) const;
 
     // I/O
 
@@ -231,6 +240,41 @@ Type swakDataEntry<Type>::integrate(const scalar x1,const scalar x2) const
     //     << x2 << " -> " << result << endl;
 
     return result;
+}
+
+
+template<class Type>
+tmp<Field<Type> > swakDataEntry<Type>::value
+(
+    const scalarField& x
+) const
+{
+    tmp<Field<Type> > tfld(new Field<Type>(x.size()));
+    Field<Type>& fld = const_cast<Field<Type>&>(tfld());
+
+    forAll(x, i)
+    {
+        fld[i] = this->value(x[i]);
+    }
+    return tfld;
+}
+
+
+template<class Type>
+tmp<Field<Type> > swakDataEntry<Type>::integrate
+(
+    const scalarField& x1,
+    const scalarField& x2
+) const
+{
+    tmp<Field<Type> > tfld(new Field<Type>(x1.size()));
+    Field<Type>& fld = const_cast<Field<Type>&>(tfld());
+
+    forAll(x1, i)
+    {
+        fld[i] = this->integrate(x1[i], x2[i]);
+    }
+    return tfld;
 }
 
 // * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //

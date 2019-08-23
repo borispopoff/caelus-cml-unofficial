@@ -132,12 +132,6 @@ public:
         //- Copy constructor
         Sine(const Sine<Type>& se);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new Sine<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~Sine();
@@ -146,7 +140,7 @@ public:
     // Member Functions
 
         //- Return value for time t
-        Type value(const scalar t) const;
+        virtual inline Type value(const scalar t) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
