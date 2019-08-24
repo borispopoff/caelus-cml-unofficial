@@ -33,7 +33,7 @@ int CML::sigStopAtWriteNow::signal_
     debug::optimisationSwitch("stopAtWriteNowSignal", -1)
 );
 
-static CML::Time const* runTimePtr_ = nullptr;
+CML::Time const* CML::sigStopAtWriteNow::runTimePtr_ = nullptr;
 
 
 struct sigaction CML::sigStopAtWriteNow::oldAction_;
