@@ -73,7 +73,7 @@ protected:
         tmp<surfaceInterpolationScheme<GType> > tinterpGammaScheme_;
         tmp<snGradScheme<Type> > tsnGradScheme_;
 
-
+private:
     // Private Member Functions
 
         //- Disallow copy construct
