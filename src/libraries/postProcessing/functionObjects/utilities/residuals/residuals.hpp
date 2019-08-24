@@ -99,6 +99,11 @@ protected:
         //- Fields to write residuals
         wordList fieldSet_;
 
+        //- Output file header information
+        virtual void writeFileHeader(const label i);
+
+
+private:
 
     // Private Member Functions
 
@@ -107,9 +112,6 @@ protected:
 
         //- Disallow default bitwise assignment
         void operator=(const residuals&);
-
-        //- Output file header information
-        virtual void writeFileHeader(const label i);
 
 
 public:

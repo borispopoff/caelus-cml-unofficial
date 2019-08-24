@@ -38,10 +38,10 @@ SourceFiles
 #ifndef STARCDMeshReader_H
 #define STARCDMeshReader_H
 
-# include "meshReader.hpp"
-# include "boundaryRegion.hpp"
-# include "cellShape.hpp"
-# include "IFstream.hpp"
+#include "meshReader.hpp"
+#include "boundaryRegion.hpp"
+#include "cellShape.hpp"
+#include "IFstream.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,6 +59,16 @@ class STARCD
 :
     public meshReader
 {
+private:
+
+    // Private member functions
+
+        //- Disallow default bitwise copy construct
+        STARCD(const STARCD&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const STARCD&);
+
 
 protected:
 
@@ -84,12 +94,6 @@ protected:
 
 
     // Protected Member Functions
-
-        //- Disallow default bitwise copy construct
-        STARCD(const STARCD&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const STARCD&);
 
         //- Read the mesh from the file(s)
         virtual bool readGeometry(const scalar scaleFactor = 1.0);

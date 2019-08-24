@@ -60,6 +60,7 @@ Description
     \endverbatim
 
 SeeAlso
+    CML::DataEntryTypes
     CML::fixedValueFvPatchField
 
 SourceFiles

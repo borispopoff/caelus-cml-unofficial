@@ -58,7 +58,7 @@ Note
 
 
 SeeAlso
-    CML::DataEntry
+    CML::DataEntryTypes
     CML::uniformFixedValueFvPatchField
     CML::totalPressureFvPatchField
 

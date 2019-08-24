@@ -47,6 +47,10 @@ protected:
 
     bool criteriaSatisfied();
 
+private:
+
+    // Private member functions
+
     simplecControl(const simplecControl&);
 
     void operator=(const simplecControl&);

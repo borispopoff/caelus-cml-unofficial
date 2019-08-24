@@ -114,12 +114,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Disallow default bitwise copy construct
-        readFields(const readFields&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const readFields&);
-
         template<class Type>
         void loadField
         (
@@ -128,7 +122,15 @@ protected:
             PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >&
         ) const;
 
+private:
 
+    // Private member functions
+
+        //- Disallow default bitwise copy construct
+        readFields(const readFields&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const readFields&);
 public:
 
     //- Runtime type information

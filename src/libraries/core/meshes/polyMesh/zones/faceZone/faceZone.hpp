@@ -68,6 +68,13 @@ class faceZone
         //- The name associated with the zone-labels dictionary entry
         static const word labelsName_;
 
+    // Private Member Functions
+
+        //- Disallow default bitwise copy construct
+        faceZone(const faceZone&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const faceZone&);
 protected:
 
     // Protected data
@@ -93,15 +100,6 @@ protected:
 
             //- Global edge addressing
             mutable labelList* mePtr_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        faceZone(const faceZone&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceZone&);
 
         //- Build primitive patch
         void calcFaceZonePatch() const;

@@ -111,6 +111,10 @@ protected:
         //- File header information
         virtual void writeFileHeader(const label i);
 
+private:
+
+    // Private member functions
+
         //- Disallow default bitwise copy construct
         cloudInfo(const cloudInfo&);
 

@@ -79,7 +79,7 @@ class removeRegisteredObject
 {
 protected:
 
-    // Private data
+    // Protected data
 
         //- Name of this set of removeRegisteredObject
         word name_;
@@ -91,6 +91,8 @@ protected:
             //- Names of objects to control
             wordList objectNames_;
 
+
+private:
 
     // Private Member Functions
 

@@ -98,6 +98,11 @@ protected:
             scalarListList& tgtToTgtWght
         ) const;
 
+
+private:
+
+    // Private member functions
+
         //- Disallow default bitwise copy construct
         meshToMeshMethod(const meshToMeshMethod&);
 

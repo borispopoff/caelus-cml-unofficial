@@ -68,7 +68,7 @@ protected:
         //- Reference to zone list
         const cellZoneMesh& zoneMesh_;
 
-
+private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct

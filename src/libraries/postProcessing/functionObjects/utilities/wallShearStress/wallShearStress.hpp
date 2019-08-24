@@ -123,6 +123,11 @@ protected:
             volVectorField& shearStress
         );
 
+
+private:
+
+    // Private member functions
+
         //- Disallow default bitwise copy construct
         wallShearStress(const wallShearStress&);
 

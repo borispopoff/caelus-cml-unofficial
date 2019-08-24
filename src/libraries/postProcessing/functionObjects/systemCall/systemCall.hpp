@@ -119,6 +119,8 @@ protected:
         stringList writeCalls_;
 
 
+private:
+
     // Private Member Functions
 
         //- Disallow default bitwise copy construct

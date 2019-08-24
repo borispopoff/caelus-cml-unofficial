@@ -89,6 +89,11 @@ protected:
             labelList& seedCells
         ) const;
 
+
+private:
+
+    // Private member functions
+
         //- Disallow default bitwise copy construct
         cellVolumeWeightMethod(const cellVolumeWeightMethod&);
 

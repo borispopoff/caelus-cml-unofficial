@@ -92,7 +92,9 @@ protected:
         bool active_;
 
 
-    // Protected Member Functions
+private:
+
+    // Private Member Functions
 
         //- Disallow default bitwise copy construct
         processorField(const processorField&);

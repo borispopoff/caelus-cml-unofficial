@@ -58,7 +58,7 @@ class writeDictionary
 {
 protected:
 
-    // Private data
+    // Protected data
 
         //- Name of this set of writeDictionary
         word name_;
@@ -73,8 +73,6 @@ protected:
         List<SHA1Digest> digests_;
 
 
-    // Private Member Functions
-
         //- Helper function to write the dictionary if found at location
         bool tryDirectory
         (
@@ -82,6 +80,10 @@ protected:
             const word& location,
             bool& firstDict
         );
+
+private:
+
+    // Private Member Functions
 
         //- Disallow default bitwise copy construct
         writeDictionary(const writeDictionary&);

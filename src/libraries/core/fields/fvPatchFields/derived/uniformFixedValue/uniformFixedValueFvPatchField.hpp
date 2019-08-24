@@ -47,7 +47,7 @@ Note
     constant value.
 
 SeeAlso
-    CML::DataEntry
+    CML::DataEntryTypes
     CML::fixedValueFvPatchField
 
 SourceFiles

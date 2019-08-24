@@ -57,6 +57,7 @@ Note
     - the value is positive into the domain
 
 SeeAlso
+    CML::DataEntryTypes
     CML::fixedValueFvPatchField
 
 SourceFiles

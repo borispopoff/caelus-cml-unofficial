@@ -50,7 +50,7 @@ Description
     functions.
     
 SeeAlso
-    CML::DataEntry
+    CML::DataEntryTypes
     CML::fixedValueFvPatchField
 
 SourceFiles
