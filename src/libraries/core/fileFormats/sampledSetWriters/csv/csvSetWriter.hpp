@@ -266,17 +266,24 @@ void CML::csvSetWriter<Type>::writeCoordHeader
     Ostream& os
 ) const
 {
+    const word axisName(points.axis());
+
     if (points.hasVectorAxis())
     {
-        forAll(points, i)
+        for
+        (
+            word::const_iterator iter = axisName.begin();
+            iter != axisName.end();
+            ++iter
+        )
         {
-            os << points.axis()[i];
+            os << *iter;
             writeSeparator(os);
         }
     }
     else
     {
-        os << points.axis();
+        os << axisName;
         writeSeparator(os);
     }
 }
