@@ -35,7 +35,7 @@ inline CML::autoPtr<T>::autoPtr(const autoPtr<T>& ap)
 :
     ptr_(ap.ptr_)
 {
-    ap.ptr_ = 0;
+    ap.ptr_ = nullptr;
 }
 
 
@@ -45,7 +45,7 @@ inline CML::autoPtr<T>::autoPtr(const autoPtr<T>& ap, const bool reuse)
     if (reuse)
     {
         ptr_ = ap.ptr_;
-        ap.ptr_ = 0;
+        ap.ptr_ = nullptr;
     }
     else if (ap.valid())
     {
@@ -53,7 +53,7 @@ inline CML::autoPtr<T>::autoPtr(const autoPtr<T>& ap, const bool reuse)
     }
     else
     {
-        ptr_ = 0;
+        ptr_ = nullptr;
     }
 }
 
