@@ -32,7 +32,7 @@ Note
     gcc 2.95.2 so it has to be instantiated for T when an instantiation of
     DictionaryBase is requested
 
-See Also
+See also
     Dictionary and UDictionary
 
 
@@ -88,7 +88,7 @@ public:
         //- Construct given initial table size
         DictionaryBase(const label size = 128);
 
-        //- Copy construct
+        //- Copy constructor
         DictionaryBase(const DictionaryBase&);
 
         //- Construct from Istream using given Istream constructor class
@@ -99,7 +99,7 @@ public:
         DictionaryBase(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         // Search and lookup
 
@@ -145,7 +145,7 @@ public:
             void transfer(DictionaryBase<IDLListType, T>&);
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const DictionaryBase&);
 

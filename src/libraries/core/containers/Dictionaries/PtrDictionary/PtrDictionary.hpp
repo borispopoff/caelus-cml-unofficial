@@ -21,11 +21,10 @@ Class
     CML::PtrDictionary
 
 Description
-    Template dictionary class which does not manages the storage
-    associated with it.
+    Template dictionary class which manages the storage associated with it.
 
-    It is derived from DictionaryBase instantiated on a non-memory managed
-    form of intrusive doubly-linked list of T.
+    It is derived from DictionaryBase instantiated on a memory managed form of
+    intrusive doubly-linked list of \<T\>.
 
 
 \*---------------------------------------------------------------------------*/
@@ -58,7 +57,7 @@ public:
         //- Null constructor
         PtrDictionary();
 
-        //- Copy construct
+        //- Copy constructor
         PtrDictionary(const PtrDictionary&);
 
         //- Construct from Istream using given Istream constructor class
