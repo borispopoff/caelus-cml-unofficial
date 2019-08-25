@@ -81,6 +81,7 @@ Description
        average       | ensemble average
        weightedAverage | weighted average
        volAverage    | volume weighted average
+       weightedVolAverage | weighted volume average
        volIntegrate  | volume integral
        min           | minimum
        max           | maximum
@@ -145,6 +146,7 @@ public:
             opAverage,
             opWeightedAverage,
             opVolAverage,
+            opWeightedVolAverage,
             opVolIntegrate,
             opMin,
             opMax,
@@ -152,7 +154,7 @@ public:
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 10> operationTypeNames_;
+        static const NamedEnum<operationType, 11> operationTypeNames_;
 
 
 private:
@@ -357,17 +359,22 @@ Type CML::fieldValues::cellSource::processValues
         }
         case opWeightedAverage:
         {
-            result = sum(values)/sum(weightField);
+            result = sum(weightField*values)/sum(weightField);
             break;
         }
         case opVolAverage:
         {
-            result = sum(values*V)/sum(V);
+            result = sum(V*values)/sum(V);
+            break;
+        }
+        case opWeightedVolAverage:
+        {
+            result = sum(weightField*V*values)/sum(weightField*V);
             break;
         }
         case opVolIntegrate:
         {
-            result = sum(values*V);
+            result = sum(V*values);
             break;
         }
         case opMin:
@@ -430,14 +437,12 @@ bool CML::fieldValues::cellSource::writeValues(const word& fieldName)
         combineFields(V);
         combineFields(weightField);
 
-        // apply weight field
-        values *= weightField;
 
         if (Pstream::master())
         {
             Type result = processValues(values, V, weightField);
 
-            // add to result dictionary, over-writing any previous entry
+            // Add to result dictionary, over-writing any previous entry
             resultDict_.add(fieldName, result, true);
 
             if (valueOutput_)
@@ -453,7 +458,7 @@ bool CML::fieldValues::cellSource::writeValues(const word& fieldName)
                         IOobject::NO_READ,
                         IOobject::NO_WRITE
                     ),
-                    values
+                    weightField*values
                 ).write();
             }
 

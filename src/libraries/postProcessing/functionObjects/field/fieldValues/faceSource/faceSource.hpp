@@ -93,6 +93,7 @@ Description
        average       | ensemble average
        weightedAverage | weighted average
        areaAverage   | area weighted average
+       weightedAreaAverage | weighted area average
        areaIntegrate | area integral
        min           | minimum
        max           | maximum
@@ -185,6 +186,7 @@ public:
             opAverage,
             opWeightedAverage,
             opAreaAverage,
+            opWeightedAreaAverage,
             opAreaIntegrate,
             opMin,
             opMax,
@@ -194,7 +196,7 @@ public:
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 14> operationTypeNames_;
+        static const NamedEnum<operationType, 15> operationTypeNames_;
 
 
 private:
@@ -575,7 +577,7 @@ Type CML::fieldValues::faceSource::processSameTypeValues
         {
             if (weightField.size())
             {
-                result = sum(values)/sum(weightField);
+                result = sum(weightField*values)/sum(weightField);
             }
             else
             {
@@ -587,14 +589,28 @@ Type CML::fieldValues::faceSource::processSameTypeValues
         {
             const scalarField magSf(mag(Sf));
 
-            result = sum(values*magSf)/sum(magSf);
+            result = sum(magSf*values)/sum(magSf);
+            break;
+        }
+        case opWeightedAreaAverage:
+        {
+            const scalarField magSf(mag(Sf));
+
+            if (weightField.size())
+            {
+                result = sum(weightField*magSf*values)/sum(magSf*weightField);
+            }
+            else
+            {
+                result = sum(magSf*values)/sum(magSf);
+            }
             break;
         }
         case opAreaIntegrate:
         {
             const scalarField magSf(mag(Sf));
 
-            result = sum(values*magSf);
+            result = sum(magSf*values);
             break;
         }
         case opMin:
@@ -715,18 +731,14 @@ bool CML::fieldValues::faceSource::writeValues
         }
 
 
-        // apply scale factor and weight field
+        // Apply scale factor and weight field
         values *= scaleFactor_;
-        if (weightField.size())
-        {
-            values *= weightField;
-        }
 
         if (Pstream::master())
         {
             Type result = processValues(values, Sf, weightField);
 
-            // add to result dictionary, over-writing any previous entry
+            // Add to result dictionary, over-writing any previous entry
             resultDict_.add(fieldName, result, true);
 
             file()<< tab << result;

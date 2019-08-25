@@ -37,13 +37,14 @@ namespace CML
 
 
     template<>
-    const char* NamedEnum<fieldValues::cellSource::operationType, 10>::names[] =
+    const char* NamedEnum<fieldValues::cellSource::operationType, 11>::names[] =
     {
         "none",
         "sum",
         "sumMag",
         "average",
         "weightedAverage",
+        "weightedVolAverage",
         "volAverage",
         "volIntegrate",
         "min",
@@ -62,7 +63,7 @@ namespace CML
 const CML::NamedEnum<CML::fieldValues::cellSource::sourceType, 2>
     CML::fieldValues::cellSource::sourceTypeNames_;
 
-const CML::NamedEnum<CML::fieldValues::cellSource::operationType, 10>
+const CML::NamedEnum<CML::fieldValues::cellSource::operationType, 11>
     CML::fieldValues::cellSource::operationTypeNames_;
 
 
