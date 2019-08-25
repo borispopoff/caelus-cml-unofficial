@@ -852,22 +852,8 @@ void CML::UList<T>::operator=(const zero)
 template<class T>
 void CML::UList<T>::swap(UList<T>& a)
 {
-    if (a.size_ != this->size_)
-    {
-        FatalErrorInFunction
-            << "ULists have different sizes: "
-            << this->size_ << " " << a.size_
-            << abort(FatalError);
-    }
-
-    List_ACCESS(T, (*this), vp);
-    List_ACCESS(T, a, ap);
-    T tmp;
-    List_FOR_ALL((*this), i)
-        tmp = List_CELEM((*this), vp, i);
-        List_ELEM((*this), vp, i) = List_CELEM(a, ap, i);
-        List_ELEM(a, ap, i) = tmp;
-    List_END_FOR_ALL
+    Swap(size_, a.size_);
+    Swap(v_, a.v_);
 }
 
 
