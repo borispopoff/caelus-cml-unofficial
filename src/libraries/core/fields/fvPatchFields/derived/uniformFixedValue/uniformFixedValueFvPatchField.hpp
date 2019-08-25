@@ -251,15 +251,8 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
     uniformValue_(DataEntry<Type>::New("uniformValue", dict)),
     inletDiffusion_(dict.lookupOrDefault("inlet-diffusion", true))
 {
-    if (dict.found("value"))
-    {
-        fvPatchField<Type>::operator==(Field<Type>("value", dict, p.size()));
-    }
-    else
-    {
-        const scalar t = this->db().time().timeOutputValue();
-        fvPatchField<Type>::operator==(uniformValue_->value(t));
-    }
+    const scalar t = this->db().time().timeOutputValue();
+    fvPatchField<Type>::operator==(uniformValue_->value(t));
 }
 
 
