@@ -45,12 +45,12 @@ namespace CML
 
 // Forward declaration of classes
 
-template<class T> class SLPtrList;
 template<class T> class autoPtr;
 template<class T> class tmp;
 
 // Forward declaration of friend functions and operators
 template<class T> class PtrList;
+template<class T> class SLPtrList;
 
 template<class T>
 inline typename PtrList<T>::iterator operator+
@@ -78,6 +78,34 @@ inline label operator-
 (
     const typename PtrList<T>::iterator&,
     const typename PtrList<T>::iterator&
+);
+
+template<class T>
+inline typename PtrList<T>::const_iterator operator+
+(
+    const typename PtrList<T>::const_iterator&,
+    label
+);
+
+template<class T>
+inline typename PtrList<T>::const_iterator operator+
+(
+    label,
+    const typename PtrList<T>::const_iterator&
+);
+
+template<class T>
+inline typename PtrList<T>::const_iterator operator-
+(
+    const typename PtrList<T>::const_iterator&,
+    label
+);
+
+template<class T>
+inline label operator-
+(
+    const typename PtrList<T>::const_iterator&,
+    const typename PtrList<T>::const_iterator&
 );
 
 template<class T>
@@ -252,7 +280,9 @@ public:
     // Random access iterator for traversing PtrList.
 
         class iterator;
+        class const_iterator;
         friend class iterator;
+        friend class const_iterator;
 
         //- An STL-conforming iterator
         class iterator
@@ -260,6 +290,8 @@ public:
             T** ptr_;
 
         public:
+
+            friend class const_iterator;
 
             //- Construct for a given PtrList entry
             inline iterator(T**);
@@ -309,6 +341,86 @@ public:
         //- Return an iterator to end traversing the PtrList.
         inline iterator end();
 
+    // STL const_iterator
+    // Random access iterator for traversing PtrList.
+
+        //- An STL-conforming const_iterator
+        class const_iterator
+        {
+            const T* const* ptr_;
+
+        public:
+
+            //- Construct for a given PtrList entry
+            inline const_iterator(const T* const*);
+
+            //- Construct from an iterator
+            inline const_iterator(const iterator&);
+
+
+            // Member operators
+
+                inline bool operator==(const const_iterator&) const;
+                inline bool operator!=(const const_iterator&) const;
+
+                typedef const T& Tref;
+                inline Tref operator*();
+                inline Tref operator()();
+
+                inline const_iterator operator++();
+                inline const_iterator operator++(int);
+
+                inline const_iterator operator--();
+                inline const_iterator operator--(int);
+
+                inline const_iterator operator+=(label);
+
+                friend const_iterator operator+ <T>
+                (
+                    const const_iterator&,
+                    label
+                );
+                friend const_iterator operator+ <T>
+                (
+                    label,
+                    const const_iterator&
+                );
+
+                inline const_iterator operator-=(label);
+
+                friend const_iterator operator- <T>
+                (
+                    const const_iterator&,
+                    label
+                );
+
+                friend label operator- <T>
+                (
+                    const const_iterator&,
+                    const const_iterator&
+                );
+
+                inline const T& operator[](label);
+
+                inline bool operator<(const const_iterator&) const;
+                inline bool operator>(const const_iterator&) const;
+
+                inline bool operator<=(const const_iterator&) const;
+                inline bool operator>=(const const_iterator&) const;
+        };
+
+        //- Return an const_iterator to begin traversing the PtrList.
+        inline const_iterator cbegin() const;
+
+        //- Return an const_iterator to end traversing the PtrList.
+        inline const_iterator cend() const;
+
+        //- Return an const_iterator to begin traversing the PtrList.
+        inline const_iterator begin() const;
+
+        //- Return an const_iterator to end traversing the PtrList.
+        inline const_iterator end() const;
+
 
     // IOstream operator
 
@@ -325,8 +437,6 @@ public:
 } // End namespace CML
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "error.hpp"
 
 #include "autoPtr.hpp"
 #include "tmp.hpp"
@@ -668,6 +778,228 @@ inline typename CML::PtrList<T>::iterator CML::PtrList<T>::end()
     return ptrs_.end();
 }
 
+
+// * * * * * * * * * * * * * * * STL const_iterator  * * * * * * * * * * * * //
+
+template<class T>
+inline CML::PtrList<T>::const_iterator::const_iterator(const T* const* ptr)
+:
+    ptr_(ptr)
+{}
+
+
+template<class T>
+inline CML::PtrList<T>::const_iterator::const_iterator(const iterator& iter)
+:
+    ptr_(iter.ptr_)
+{}
+
+
+template<class T>
+inline bool CML::PtrList<T>::const_iterator::operator==
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ == iter.ptr_;
+}
+
+
+template<class T>
+inline bool CML::PtrList<T>::const_iterator::operator!=
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ != iter.ptr_;
+}
+
+
+template<class T>
+inline const T& CML::PtrList<T>::const_iterator::operator*()
+{
+    return **ptr_;
+}
+
+
+template<class T>
+inline const T& CML::PtrList<T>::const_iterator::operator()()
+{
+    return operator*();
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::PtrList<T>::const_iterator::operator++()
+{
+    ++ptr_;
+    return *this;
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::PtrList<T>::const_iterator::operator++(int)
+{
+    const_iterator tmp = *this;
+    ++ptr_;
+    return tmp;
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::PtrList<T>::const_iterator::operator--()
+{
+    --ptr_;
+    return *this;
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::PtrList<T>::const_iterator::operator--(int)
+{
+    const_iterator tmp = *this;
+    --ptr_;
+    return tmp;
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::PtrList<T>::const_iterator::operator+=(label n)
+{
+    ptr_ += n;
+    return *this;
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::operator+(const typename PtrList<T>::const_iterator& iter, label n)
+{
+    typename PtrList<T>::const_iterator tmp = iter;
+    return tmp += n;
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::operator+(label n, const typename PtrList<T>::const_iterator& iter)
+{
+    typename PtrList<T>::const_iterator tmp = iter;
+    return tmp += n;
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::PtrList<T>::const_iterator::operator-=(label n)
+{
+    ptr_ -= n;
+    return *this;
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::operator-(const typename PtrList<T>::const_iterator& iter, label n)
+{
+    typename PtrList<T>::const_iterator tmp = iter;
+    return tmp -= n;
+}
+
+
+template<class T>
+inline CML::label CML::operator-
+(
+    const typename PtrList<T>::const_iterator& iter1,
+    const typename PtrList<T>::const_iterator& iter2
+)
+{
+    return (iter1.ptr_ - iter2.ptr_)/sizeof(T*);
+}
+
+
+template<class T>
+inline const T& CML::PtrList<T>::const_iterator::operator[](label n)
+{
+    return *(*this + n);
+}
+
+
+template<class T>
+inline bool CML::PtrList<T>::const_iterator::operator<
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ < iter.ptr_;
+}
+
+
+template<class T>
+inline bool CML::PtrList<T>::const_iterator::operator>
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ > iter.ptr_;
+}
+
+
+template<class T>
+inline bool CML::PtrList<T>::const_iterator::operator<=
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ <= iter.ptr_;
+}
+
+
+template<class T>
+inline bool CML::PtrList<T>::const_iterator::operator>=
+(
+    const const_iterator& iter
+) const
+{
+    return ptr_ >= iter.ptr_;
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::PtrList<T>::begin() const
+{
+    return ptrs_.begin();
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::PtrList<T>::end() const
+{
+    return ptrs_.end();
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::PtrList<T>::cbegin() const
+{
+    return ptrs_.begin();
+}
+
+
+template<class T>
+inline typename CML::PtrList<T>::const_iterator
+CML::PtrList<T>::cend() const
+{
+    return ptrs_.end();
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
