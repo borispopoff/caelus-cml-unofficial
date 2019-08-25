@@ -22,7 +22,7 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ContainerType>
-CML::const_circulator<ContainerType>::const_circulator()
+CML::ConstCirculator<ContainerType>::ConstCirculator()
 :
     CirculatorBase(),
     begin_(0),
@@ -33,7 +33,7 @@ CML::const_circulator<ContainerType>::const_circulator()
 
 
 template<class ContainerType>
-CML::const_circulator<ContainerType>::const_circulator
+CML::ConstCirculator<ContainerType>::ConstCirculator
 (
     const ContainerType& container
 )
@@ -47,7 +47,7 @@ CML::const_circulator<ContainerType>::const_circulator
 
 
 template<class ContainerType>
-CML::const_circulator<ContainerType>::const_circulator
+CML::ConstCirculator<ContainerType>::ConstCirculator
 (
     const const_iterator& begin,
     const const_iterator& end
@@ -62,9 +62,9 @@ CML::const_circulator<ContainerType>::const_circulator
 
 
 template<class ContainerType>
-CML::const_circulator<ContainerType>::const_circulator
+CML::ConstCirculator<ContainerType>::ConstCirculator
 (
-    const const_circulator<ContainerType>& rhs
+    const ConstCirculator<ContainerType>& rhs
 )
 :
     CirculatorBase(),
@@ -78,22 +78,22 @@ CML::const_circulator<ContainerType>::const_circulator
 // * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
 
 template<class ContainerType>
-CML::const_circulator<ContainerType>::~const_circulator()
+CML::ConstCirculator<ContainerType>::~ConstCirculator()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ContainerType>
-typename CML::const_circulator<ContainerType>::size_type
-CML::const_circulator<ContainerType>::size() const
+typename CML::ConstCirculator<ContainerType>::size_type
+CML::ConstCirculator<ContainerType>::size() const
 {
     return end_ - begin_;
 }
 
 
 template<class ContainerType>
-bool CML::const_circulator<ContainerType>::circulate
+bool CML::ConstCirculator<ContainerType>::circulate
 (
     const CirculatorBase::direction dir
 )
@@ -112,30 +112,30 @@ bool CML::const_circulator<ContainerType>::circulate
 
 
 template<class ContainerType>
-void CML::const_circulator<ContainerType>::setFulcrumToIterator()
+void CML::ConstCirculator<ContainerType>::setFulcrumToIterator()
 {
     fulcrum_ = iter_;
 }
 
 
 template<class ContainerType>
-void CML::const_circulator<ContainerType>::setIteratorToFulcrum()
+void CML::ConstCirculator<ContainerType>::setIteratorToFulcrum()
 {
     iter_ = fulcrum_;
 }
 
 
 template<class ContainerType>
-typename CML::const_circulator<ContainerType>::difference_type
-CML::const_circulator<ContainerType>::nRotations() const
+typename CML::ConstCirculator<ContainerType>::difference_type
+CML::ConstCirculator<ContainerType>::nRotations() const
 {
     return (iter_ - fulcrum_);
 }
 
 
 template<class ContainerType>
-typename CML::const_circulator<ContainerType>::const_reference
-CML::const_circulator<ContainerType>::next() const
+typename CML::ConstCirculator<ContainerType>::const_reference
+CML::ConstCirculator<ContainerType>::next() const
 {
     if (iter_ == end_ - 1)
     {
@@ -147,8 +147,8 @@ CML::const_circulator<ContainerType>::next() const
 
 
 template<class ContainerType>
-typename CML::const_circulator<ContainerType>::const_reference
-CML::const_circulator<ContainerType>::prev() const
+typename CML::ConstCirculator<ContainerType>::const_reference
+CML::ConstCirculator<ContainerType>::prev() const
 {
     if (iter_ == begin_)
     {
@@ -162,9 +162,9 @@ CML::const_circulator<ContainerType>::prev() const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class ContainerType>
-void CML::const_circulator<ContainerType>::operator=
+void CML::ConstCirculator<ContainerType>::operator=
 (
-    const const_circulator<ContainerType>& rhs
+    const ConstCirculator<ContainerType>& rhs
 )
 {
     // Check for assignment to self
@@ -183,8 +183,8 @@ void CML::const_circulator<ContainerType>::operator=
 
 
 template<class ContainerType>
-CML::const_circulator<ContainerType>&
-CML::const_circulator<ContainerType>::operator++()
+CML::ConstCirculator<ContainerType>&
+CML::ConstCirculator<ContainerType>::operator++()
 {
     ++iter_;
     if (iter_ == end_)
@@ -197,18 +197,18 @@ CML::const_circulator<ContainerType>::operator++()
 
 
 template<class ContainerType>
-CML::const_circulator<ContainerType>
-CML::const_circulator<ContainerType>::operator++(int)
+CML::ConstCirculator<ContainerType>
+CML::ConstCirculator<ContainerType>::operator++(int)
 {
-    const_circulator<ContainerType> tmp = *this;
+    ConstCirculator<ContainerType> tmp = *this;
     ++(*this);
     return tmp;
 }
 
 
 template<class ContainerType>
-CML::const_circulator<ContainerType>&
-CML::const_circulator<ContainerType>::operator--()
+CML::ConstCirculator<ContainerType>&
+CML::ConstCirculator<ContainerType>::operator--()
 {
     if (iter_ == begin_)
     {
@@ -221,19 +221,19 @@ CML::const_circulator<ContainerType>::operator--()
 
 
 template<class ContainerType>
-CML::const_circulator<ContainerType>
-CML::const_circulator<ContainerType>::operator--(int)
+CML::ConstCirculator<ContainerType>
+CML::ConstCirculator<ContainerType>::operator--(int)
 {
-    const_circulator<ContainerType> tmp = *this;
+    ConstCirculator<ContainerType> tmp = *this;
     --(*this);
     return tmp;
 }
 
 
 template<class ContainerType>
-bool CML::const_circulator<ContainerType>::operator==
+bool CML::ConstCirculator<ContainerType>::operator==
 (
-    const const_circulator<ContainerType>& c
+    const ConstCirculator<ContainerType>& c
 ) const
 {
     return
@@ -247,9 +247,9 @@ bool CML::const_circulator<ContainerType>::operator==
 
 
 template<class ContainerType>
-bool CML::const_circulator<ContainerType>::operator!=
+bool CML::ConstCirculator<ContainerType>::operator!=
 (
-    const const_circulator<ContainerType>& c
+    const ConstCirculator<ContainerType>& c
 ) const
 {
     return !(*this == c);
@@ -257,26 +257,26 @@ bool CML::const_circulator<ContainerType>::operator!=
 
 
 template<class ContainerType>
-typename CML::const_circulator<ContainerType>::const_reference
-CML::const_circulator<ContainerType>::operator*() const
+typename CML::ConstCirculator<ContainerType>::const_reference
+CML::ConstCirculator<ContainerType>::operator*() const
 {
     return *iter_;
 }
 
 
 template<class ContainerType>
-typename CML::const_circulator<ContainerType>::const_reference
-CML::const_circulator<ContainerType>::operator()() const
+typename CML::ConstCirculator<ContainerType>::const_reference
+CML::ConstCirculator<ContainerType>::operator()() const
 {
     return operator*();
 }
 
 
 template<class ContainerType>
-typename CML::const_circulator<ContainerType>::difference_type
-CML::const_circulator<ContainerType>::operator-
+typename CML::ConstCirculator<ContainerType>::difference_type
+CML::ConstCirculator<ContainerType>::operator-
 (
-    const const_circulator<ContainerType>& c
+    const ConstCirculator<ContainerType>& c
 ) const
 {
     return iter_ - c.iter_;

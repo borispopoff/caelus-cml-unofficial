@@ -24,7 +24,7 @@ License
 #include "triPointRef.hpp"
 #include "mathematicalConstants.hpp"
 #include "Swap.hpp"
-#include "const_circulator.hpp"
+#include "ConstCirculator.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -321,8 +321,8 @@ int CML::face::compare(const face& a, const face& b)
         }
     }
 
-    const_circulator<face> aCirc(a);
-    const_circulator<face> bCirc(b);
+    ConstCirculator<face> aCirc(a);
+    ConstCirculator<face> bCirc(b);
 
     // Rotate face b until its element matches the starting element of face a.
     do
