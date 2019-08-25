@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,7 +22,7 @@ License
 #include "transformFvPatchField.hpp"
 #include "volMesh.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 namespace CML
 {
@@ -30,9 +30,21 @@ namespace CML
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<>
-tmp<scalarField > transformFvPatchField<scalar>::gradientInternalCoeffs() const
+tmp<scalarField>
+transformFvPatchField<scalar>::valueInternalCoeffs
+(
+    const tmp<scalarField>&
+) const
 {
-    return tmp<scalarField >(new scalarField(size(), 0.0));
+     return tmp<scalarField>(new scalarField(size(), 1.0));
+}
+
+
+template<>
+tmp<scalarField>
+transformFvPatchField<scalar>::gradientInternalCoeffs() const
+{
+    return tmp<scalarField>(new scalarField(size(), 0.0));
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

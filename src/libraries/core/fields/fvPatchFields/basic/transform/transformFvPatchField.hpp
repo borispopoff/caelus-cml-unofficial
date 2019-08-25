@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,16 +80,16 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         transformFvPatchField
         (
             const transformFvPatchField<Type>&
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const = 0;
+        virtual tmp<fvPatchField<Type>> clone() const = 0;
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         transformFvPatchField
         (
             const transformFvPatchField<Type>&,
@@ -97,13 +97,13 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>&
         ) const = 0;
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -114,38 +114,39 @@ public:
                 return true;
             }
 
+
         // Evaluation functions
 
             //- Return gradient at boundary
-            virtual tmp<Field<Type> > snGrad() const = 0;
+            virtual tmp<Field<Type>> snGrad() const = 0;
 
             //- Return face-gradient transform diagonal
-            virtual tmp<Field<Type> > snGradTransformDiag() const = 0;
+            virtual tmp<Field<Type>> snGradTransformDiag() const = 0;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const;
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const fvPatchField<Type>&);
 };
@@ -154,7 +155,13 @@ public:
 // * * * * * * * * * * * Template Specialisations  * * * * * * * * * * * * * //
 
 template<>
-tmp<scalarField > transformFvPatchField<scalar>::gradientInternalCoeffs() const;
+tmp<scalarField> transformFvPatchField<scalar>::valueInternalCoeffs
+(
+    const tmp<scalarField>&
+) const;
+
+template<>
+tmp<scalarField> transformFvPatchField<scalar>::gradientInternalCoeffs() const;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -233,7 +240,8 @@ transformFvPatchField<Type>::transformFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > transformFvPatchField<Type>::valueInternalCoeffs
+tmp<Field<Type>>
+transformFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -243,7 +251,8 @@ tmp<Field<Type> > transformFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > transformFvPatchField<Type>::valueBoundaryCoeffs
+tmp<Field<Type>>
+transformFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -259,14 +268,16 @@ tmp<Field<Type> > transformFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > transformFvPatchField<Type>::gradientInternalCoeffs() const
+tmp<Field<Type>>
+transformFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return -this->patch().deltaCoeffs()*snGradTransformDiag();
 }
 
 
 template<class Type>
-tmp<Field<Type> > transformFvPatchField<Type>::gradientBoundaryCoeffs() const
+tmp<Field<Type>>
+transformFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return
         snGrad()
