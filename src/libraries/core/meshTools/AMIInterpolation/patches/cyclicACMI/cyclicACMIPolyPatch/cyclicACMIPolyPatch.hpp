@@ -372,7 +372,7 @@ inline const CML::word& CML::cyclicACMIPolyPatch::nonOverlapPatchName() const
 
 inline const CML::polyPatch& CML::cyclicACMIPolyPatch::nonOverlapPatch() const
 {
-    // note: use nonOverlapPatchID() as opposed to patch name to initialise
+    // Note: use nonOverlapPatchID() as opposed to patch name to initialise
     // demand-driven data
 
     return this->boundaryMesh()[nonOverlapPatchID()];
@@ -381,7 +381,7 @@ inline const CML::polyPatch& CML::cyclicACMIPolyPatch::nonOverlapPatch() const
 
 inline CML::polyPatch& CML::cyclicACMIPolyPatch::nonOverlapPatch()
 {
-    // note: use nonOverlapPatchID() as opposed to patch name to initialise
+    // Note: use nonOverlapPatchID() as opposed to patch name to initialise
     // demand-driven data
 
     return const_cast<polyPatch&>(this->boundaryMesh()[nonOverlapPatchID()]);
@@ -417,27 +417,20 @@ CML::tmp<CML::Field<Type> > CML::cyclicACMIPolyPatch::interpolate
     const Field<Type>& fldNonOverlap
 ) const
 {
-    // note: do not scale AMI field as face areas have already been taken
-    // into account
+    // Note: do not scale AMI field as face areas have already been taken into
+    // account
 
     if (owner())
     {
-        const scalarField& w = srcMask_;
-
-        tmp<Field<Type> > interpField(AMI().interpolateToSource(fldCouple));
-
-        return interpField + (1.0 - w)*fldNonOverlap;
+        return
+            AMI().interpolateToSource(fldCouple)
+          + (1.0 - AMI().srcWeightsSum())*fldNonOverlap;
     }
     else
     {
-        const scalarField& w = neighbPatch().tgtMask();
-
-        tmp<Field<Type> > interpField
-        (
+        return
             neighbPatch().AMI().interpolateToTarget(fldCouple)
-        );
-
-        return interpField + (1.0 - w)*fldNonOverlap;
+          + (1.0 - neighbPatch().AMI().tgtWeightsSum())*fldNonOverlap;
     }
 }
 
@@ -462,22 +455,18 @@ void CML::cyclicACMIPolyPatch::interpolate
     List<Type>& result
 ) const
 {
-    // note: do not scale AMI field as face areas have already been taken
-    // into account
+    // Note: do not scale AMI field as face areas have already been taken into
+    // account
 
     if (owner())
     {
-        const scalarField& w = srcMask_;
-
         AMI().interpolateToSource(fldCouple, cop, result);
-        result = result + (1.0 - w)*fldNonOverlap;
+        result += (1.0 - AMI().srcWeightsSum())*fldNonOverlap;
     }
     else
     {
-        const scalarField& w = neighbPatch().tgtMask();
-
         neighbPatch().AMI().interpolateToTarget(fldCouple, cop, result);
-        result = result + (1.0 - w)*fldNonOverlap;
+        result += (1.0 - neighbPatch().AMI().tgtWeightsSum())*fldNonOverlap;
     }
 }
 
