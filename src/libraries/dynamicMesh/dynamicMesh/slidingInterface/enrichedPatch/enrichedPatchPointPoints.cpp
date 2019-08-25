@@ -47,7 +47,7 @@ void CML::enrichedPatch::calcPointPoints() const
 
     const faceList& lf = localFaces();
 
-    register bool found = false;
+    bool found = false;
 
     forAll(lf, faceI)
     {

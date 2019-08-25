@@ -58,18 +58,18 @@ void CML::USGSPreconditioner::approximateInverse
     const scalar* const RESTRICT upperPtr = matrix.upper().begin();
     const scalar* const RESTRICT lowerPtr = matrix.lower().begin();
 
-    register label nFaces = matrix.upper().size();
+    label nFaces = matrix.upper().size();
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         rDPtr[uPtr[face]] -=
             upperPtr[face]*lowerPtr[face]/(DPtr[lPtr[face]]+SMALL);
     }
  
     // Calculate the reciprocal of the preconditioned diagonal
-    register label nCells = rD.size();
+    label nCells = rD.size();
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         rDPtr[cell] = scalar(1.0)/rDPtr[cell];
     }
@@ -98,25 +98,25 @@ void CML::USGSPreconditioner::precondition
     const scalar* const RESTRICT lowerPtr =
         solver_.matrix().lower().begin();
 
-    register label nCells = w.size();
-    register label nFaces = solver_.matrix().upper().size();
-    register label nFacesM1 = nFaces - 1;
+    label nCells = w.size();
+    label nFaces = solver_.matrix().upper().size();
+    label nFacesM1 = nFaces - 1;
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         wPtr[cell] = rDPtr[cell]*rPtr[cell];
     }
 
-    register label sface;
+    label sface;
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         sface = losortPtr[face];
         wPtr[uPtr[sface]] -=
             rDPtr[uPtr[sface]]*lowerPtr[sface]*wPtr[lPtr[sface]];
     }
 
-    for (register label face=nFacesM1; face>=0; face--)
+    for (label face=nFacesM1; face>=0; face--)
     {
         wPtr[lPtr[face]] -=
             rDPtr[lPtr[face]]*upperPtr[face]*wPtr[uPtr[face]];
@@ -146,24 +146,24 @@ void CML::USGSPreconditioner::preconditionT
     const scalar* const RESTRICT lowerPtr =
         solver_.matrix().lower().begin();
 
-    register label nCells = wT.size();
-    register label nFaces = solver_.matrix().upper().size();
-    register label nFacesM1 = nFaces - 1;
+    label nCells = wT.size();
+    label nFaces = solver_.matrix().upper().size();
+    label nFacesM1 = nFaces - 1;
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         wTPtr[cell] = rDPtr[cell]*rTPtr[cell];
     }
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         wTPtr[uPtr[face]] -=
             rDPtr[uPtr[face]]*upperPtr[face]*wTPtr[lPtr[face]];
     }
 
-    register label sface;
+    label sface;
 
-    for (register label face=nFacesM1; face>=0; face--)
+    for (label face=nFacesM1; face>=0; face--)
     {
         sface = losortPtr[face];
         wTPtr[lPtr[sface]] -=

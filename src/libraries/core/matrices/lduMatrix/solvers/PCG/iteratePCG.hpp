@@ -20,7 +20,7 @@
 
             if (solverPerf.nIterations() == 0)
             {
-                for (register label cell=0; cell<nCells; ++cell)
+                for (label cell=0; cell<nCells; ++cell)
                 {
                     pPtr[cell] = wPtr[cell];
                 }
@@ -29,7 +29,7 @@
             {
                 scalar beta = rho/rhoOld;
 
-                for (register label cell=0; cell<nCells; ++cell)
+                for (label cell=0; cell<nCells; ++cell)
                 {
                     pPtr[cell] = wPtr[cell] + beta*pPtr[cell];
                 }
@@ -49,7 +49,7 @@
             // Update solution and residual:
             scalar alpha = rho/wApA;
 
-            for (register label cell=0; cell<nCells; ++cell)
+            for (label cell=0; cell<nCells; ++cell)
             {
                 xPtr[cell] += alpha*pPtr[cell];
                 rPtr[cell] -= alpha*wPtr[cell];

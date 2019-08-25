@@ -75,7 +75,7 @@ inline bool CML::string::stripInvalid(string& str)
 {
     if (!valid<String>(str))
     {
-        register size_type nValid = 0;
+        size_type nValid = 0;
         iterator iter2 = str.begin();
 
         for
@@ -85,7 +85,7 @@ inline bool CML::string::stripInvalid(string& str)
             iter1++
         )
         {
-            register char c = *iter1;
+            char c = *iter1;
 
             if (String::valid(c))
             {

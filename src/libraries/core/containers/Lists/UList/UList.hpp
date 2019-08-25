@@ -1210,7 +1210,7 @@ CML::Istream& CML::operator>>(Istream& is, UList<T>& L)
                 << " expected " << L.size()
                 << exit(FatalIOError);
         }
-        for (register label i=0; i<s; i++)
+        for (label i=0; i<s; i++)
         {
             L[i] = elems[i];
         }
@@ -1239,7 +1239,7 @@ CML::Istream& CML::operator>>(Istream& is, UList<T>& L)
             {
                 if (delimiter == token::BEGIN_LIST)
                 {
-                    for (register label i=0; i<s; i++)
+                    for (label i=0; i<s; i++)
                     {
                         is >> L[i];
 
@@ -1260,7 +1260,7 @@ CML::Istream& CML::operator>>(Istream& is, UList<T>& L)
                         "reading the single entry"
                     );
 
-                    for (register label i=0; i<s; i++)
+                    for (label i=0; i<s; i++)
                     {
                         L[i] = element;
                     }

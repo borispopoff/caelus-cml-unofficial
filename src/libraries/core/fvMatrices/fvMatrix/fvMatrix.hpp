@@ -2022,7 +2022,7 @@ CML::fvMatrix<Type>::Ac() const
         )
     );
 
-    register const label nCells = psi_.mesh().V().size();
+    const label nCells = psi_.mesh().V().size();
     scalarField s(nCells);
     lduMatrix::rowSum(s);
     tAphi().internalField() = s/psi_.mesh().V();
@@ -2052,7 +2052,7 @@ CML::fvMatrix<Type>::spai0() const
         )
     );
 
-    register const label nCells = psi_.mesh().V().size();
+    const label nCells = psi_.mesh().V().size();
     scalarField s(nCells);
     lduMatrix::spai0(s);
     tAphi().internalField() = s/psi_.mesh().V();

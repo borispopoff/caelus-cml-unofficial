@@ -65,23 +65,23 @@ void CML::GaussSeidelSmoother::smooth
     const label nSweeps
 )
 {
-    register scalar* RESTRICT xPtr = x.begin();
+    scalar* RESTRICT xPtr = x.begin();
 
-    register const label nCells = x.size();
+    const label nCells = x.size();
 
     scalarField bPrime(nCells);
-    register scalar* RESTRICT bPrimePtr = bPrime.begin();
+    scalar* RESTRICT bPrimePtr = bPrime.begin();
 
-    register const scalar* const RESTRICT diagPtr = matrix_.diag().begin();
-    register const scalar* const RESTRICT upperPtr =
+    const scalar* const RESTRICT diagPtr = matrix_.diag().begin();
+    const scalar* const RESTRICT upperPtr =
         matrix_.upper().begin();
-    register const scalar* const RESTRICT lowerPtr =
+    const scalar* const RESTRICT lowerPtr =
         matrix_.lower().begin();
 
-    register const label* const RESTRICT uPtr =
+    const label* const RESTRICT uPtr =
         matrix_.lduAddr().upperAddr().begin();
 
-    register const label* const RESTRICT ownStartPtr =
+    const label* const RESTRICT ownStartPtr =
         matrix_.lduAddr().ownerStartAddr().begin();
 
 
@@ -129,11 +129,11 @@ void CML::GaussSeidelSmoother::smooth
             cmpt
         );
 
-        register scalar curX;
-        register label fStart;
-        register label fEnd = ownStartPtr[0];
+        scalar curX;
+        label fStart;
+        label fEnd = ownStartPtr[0];
 
-        for (register label cellI=0; cellI<nCells; cellI++)
+        for (label cellI=0; cellI<nCells; cellI++)
         {
             // Start and end of this row
             fStart = fEnd;
@@ -143,7 +143,7 @@ void CML::GaussSeidelSmoother::smooth
             curX = bPrimePtr[cellI];
 
             // Accumulate the owner product side
-            for (register label curFace=fStart; curFace<fEnd; curFace++)
+            for (label curFace=fStart; curFace<fEnd; curFace++)
             {
                 curX -= upperPtr[curFace]*xPtr[uPtr[curFace]];
             }
@@ -152,7 +152,7 @@ void CML::GaussSeidelSmoother::smooth
             curX /= diagPtr[cellI];
 
             // Distribute the neighbour side using current x
-            for (register label curFace=fStart; curFace<fEnd; curFace++)
+            for (label curFace=fStart; curFace<fEnd; curFace++)
             {
                 bPrimePtr[uPtr[curFace]] -= lowerPtr[curFace]*curX;
             }

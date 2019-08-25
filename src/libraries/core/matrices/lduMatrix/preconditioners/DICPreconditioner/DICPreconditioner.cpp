@@ -59,11 +59,11 @@ void CML::DICPreconditioner::approximateInverse()
     const scalar* const RESTRICT upperPtr =
         solver_.matrix().upper().begin();
 
-    register label nCells = rD_.size();
-    register label nFaces = solver_.matrix().upper().size();
+    label nCells = rD_.size();
+    label nFaces = solver_.matrix().upper().size();
 
     bool zeroPivot = false;
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         scalar const Djj = rDPtr[lPtr[face]];
         if (Djj >= SMALL)
@@ -79,7 +79,7 @@ void CML::DICPreconditioner::approximateInverse()
 
     if (zeroPivot)
     {
-        for (register label cell=0; cell<nCells; cell++)
+        for (label cell=0; cell<nCells; cell++)
         {
             rDPtr[cell] = solver_.matrix().diag()[cell];
         }
@@ -87,12 +87,12 @@ void CML::DICPreconditioner::approximateInverse()
     }
 
     // Generate reciprocal DIC
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         rDPtr[cell] = scalar(1.0)/rDPtr[cell];
     }
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         rDuUpperPtr[face] = rDPtr[uPtr[face]]*upperPtr[face];
         rDlUpperPtr[face] = rDPtr[lPtr[face]]*upperPtr[face];
@@ -118,21 +118,21 @@ void CML::DICPreconditioner::precondition
     const scalar* const RESTRICT rDuUpperPtr = rDuUpper_.begin();
     const scalar* const RESTRICT rDlUpperPtr = rDlUpper_.begin();
 
-    register label nCells = w.size();
-    register label nFaces = solver_.matrix().upper().size();
-    register label nFacesM1 = nFaces - 1;
+    label nCells = w.size();
+    label nFaces = solver_.matrix().upper().size();
+    label nFacesM1 = nFaces - 1;
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         wPtr[cell] = rDPtr[cell]*rPtr[cell];
     }
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         wPtr[uPtr[face]] -= rDuUpperPtr[face]*wPtr[lPtr[face]];
     }
 
-    for (register label face=nFacesM1; face>=0; face--)
+    for (label face=nFacesM1; face>=0; face--)
     {
         wPtr[lPtr[face]] -= rDlUpperPtr[face]*wPtr[uPtr[face]];
     }

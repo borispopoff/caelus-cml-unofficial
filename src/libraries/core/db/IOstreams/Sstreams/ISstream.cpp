@@ -379,8 +379,8 @@ CML::Istream& CML::ISstream::read(word& str)
     static const int errLen = 80; // truncate error message for readability
     static char buf[maxLen];
 
-    register int nChar = 0;
-    register int listDepth = 0;
+    int nChar = 0;
+    int listDepth = 0;
     char c;
 
     while (get(c) && word::valid(c))
@@ -471,7 +471,7 @@ CML::Istream& CML::ISstream::read(string& str)
         return *this;
     }
 
-    register int nChar = 0;
+    int nChar = 0;
     bool escaped = false;
 
     while (get(c))
@@ -553,7 +553,7 @@ CML::Istream& CML::ISstream::readVerbatim(string& str)
 
     char c;
 
-    register int nChar = 0;
+    int nChar = 0;
 
     while (get(c))
     {

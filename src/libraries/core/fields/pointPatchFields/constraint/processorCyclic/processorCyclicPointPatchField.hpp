@@ -124,8 +124,7 @@ public:
 
 
     // Destructor
-
-        ~processorCyclicPointPatchField();
+    virtual ~processorCyclicPointPatchField();
 
 
     // Member functions

@@ -55,7 +55,7 @@ CML::Istream& CML::operator>>(Istream& is, long long& l)
 
 long long CML::readLongLong(Istream& is)
 {
-    register long long result = 0;
+    long long result = 0;
 
     char c = 0;
 

@@ -42,7 +42,7 @@ void CML::lduMatrix::sumDiag()
     const labelUList& l = lduAddr().lowerAddr();
     const labelUList& u = lduAddr().upperAddr();
 
-    for (register label face=0; face<l.size(); face++)
+    for (label face=0; face<l.size(); face++)
     {
         Diag[l[face]] += Lower[face];
         Diag[u[face]] += Upper[face];
@@ -64,7 +64,7 @@ void CML::lduMatrix::negSumDiag()
     const labelUList& l = lduAddr().lowerAddr();
     const labelUList& u = lduAddr().upperAddr();
 
-    for (register label face=0; face<l.size(); face++)
+    for (label face=0; face<l.size(); face++)
     {
         Diag[l[face]] -= Lower[face];
         Diag[u[face]] -= Upper[face];
@@ -88,7 +88,7 @@ void CML::lduMatrix::sumMagOffDiag
     const labelUList& l = lduAddr().lowerAddr();
     const labelUList& u = lduAddr().upperAddr();
 
-    for (register label face = 0; face < l.size(); face++)
+    for (label face = 0; face < l.size(); face++)
     {
         sumOff[u[face]] += mag(Upper[face]);
         sumOff[l[face]] += mag(Lower[face]);
@@ -106,7 +106,7 @@ void CML::lduMatrix::rowSum(scalarField& s) const
     const labelUList& l = lduAddr().lowerAddr();
     const labelUList& u = lduAddr().upperAddr();
 
-    for (register label face = 0; face < l.size(); face++)
+    for (label face = 0; face < l.size(); face++)
     {
         s[u[face]] += Upper[face];
         s[l[face]] += Lower[face];
@@ -125,7 +125,7 @@ void CML::lduMatrix::spai0(scalarField& s) const
     const labelUList& l = lduAddr().lowerAddr();
     const labelUList& u = lduAddr().upperAddr();
 
-    for (register label face = 0; face < l.size(); face++)
+    for (label face = 0; face < l.size(); face++)
     {
         s[u[face]] += Upper[face]*Upper[face];
         s[l[face]] += Lower[face]*Lower[face];
@@ -351,12 +351,12 @@ void CML::lduMatrix::operator*=(const scalarField& sf)
         const labelUList& l = lduAddr().lowerAddr();
         const labelUList& u = lduAddr().upperAddr();
 
-        for (register label face=0; face<upper.size(); face++)
+        for (label face=0; face<upper.size(); face++)
         {
             upper[face] *= sf[l[face]];
         }
 
-        for (register label face=0; face<lower.size(); face++)
+        for (label face=0; face<lower.size(); face++)
         {
             lower[face] *= sf[u[face]];
         }
@@ -402,9 +402,9 @@ CML::tmp<CML::scalarField > CML::lduMatrix::H1() const
         const scalar* RESTRICT lowerPtr = lower().begin();
         const scalar* RESTRICT upperPtr = upper().begin();
 
-        register const label nFaces = upper().size();
+        const label nFaces = upper().size();
 
-        for (register label face=0; face<nFaces; face++)
+        for (label face=0; face<nFaces; face++)
         {
             H1Ptr[uPtr[face]] -= upperPtr[face];
             H1Ptr[lPtr[face]] -= lowerPtr[face];

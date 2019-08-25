@@ -60,8 +60,8 @@ void CML::lduMatrix::Amul
     {
         const scalar* const RESTRICT diagPtr = diag().begin();
 
-        register const label nCells = diag().size();
-        for (register label cell=0; cell<nCells; cell++)
+        const label nCells = diag().size();
+        for (label cell=0; cell<nCells; cell++)
         {
             ApsiPtr[cell] += diagPtr[cell]*psiPtr[cell];
         }
@@ -75,9 +75,9 @@ void CML::lduMatrix::Amul
         const scalar* const RESTRICT upperPtr = upper().begin();
         const scalar* const RESTRICT lowerPtr = lower().begin();
 
-        register const label nFaces = upper().size();
+        const label nFaces = upper().size();
 
-        for (register label face=0; face<nFaces; face++)
+        for (label face=0; face<nFaces; face++)
         {
             ApsiPtr[uPtr[face]] += lowerPtr[face]*psiPtr[lPtr[face]];
             ApsiPtr[lPtr[face]] += upperPtr[face]*psiPtr[uPtr[face]];
@@ -130,8 +130,8 @@ void CML::lduMatrix::Tmul
     {
         const scalar* const RESTRICT diagPtr = diag().begin();
 
-        register const label nCells = diag().size();
-        for (register label cell=0; cell<nCells; cell++)
+        const label nCells = diag().size();
+        for (label cell=0; cell<nCells; cell++)
         {
             TpsiPtr[cell] += diagPtr[cell]*psiPtr[cell];
         }
@@ -145,8 +145,8 @@ void CML::lduMatrix::Tmul
         const scalar* const RESTRICT lowerPtr = lower().begin();
         const scalar* const RESTRICT upperPtr = upper().begin();
 
-        register const label nFaces = upper().size();
-        for (register label face=0; face<nFaces; face++)
+        const label nFaces = upper().size();
+        for (label face=0; face<nFaces; face++)
         {
             TpsiPtr[uPtr[face]] += upperPtr[face]*psiPtr[lPtr[face]];
             TpsiPtr[lPtr[face]] += lowerPtr[face]*psiPtr[uPtr[face]];
@@ -184,15 +184,15 @@ void CML::lduMatrix::sumA
     const scalar* RESTRICT lowerPtr = lower().begin();
     const scalar* RESTRICT upperPtr = upper().begin();
 
-    register const label nCells = diag().size();
-    register const label nFaces = upper().size();
+    const label nCells = diag().size();
+    const label nFaces = upper().size();
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         sumAPtr[cell] = diagPtr[cell];
     }
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         sumAPtr[uPtr[face]] += lowerPtr[face];
         sumAPtr[lPtr[face]] += upperPtr[face];
@@ -271,8 +271,8 @@ void CML::lduMatrix::residual
     {
         const scalar* const RESTRICT diagPtr = diag().begin();
 
-        register const label nCells = diag().size();
-        for (register label cell=0; cell<nCells; cell++)
+        const label nCells = diag().size();
+        for (label cell=0; cell<nCells; cell++)
         {
             rAPtr[cell] += diagPtr[cell]*psiPtr[cell]; // Aditive part from initMatrixInterfaces
             rAPtr[cell] = sourcePtr[cell] - rAPtr[cell];
@@ -287,9 +287,9 @@ void CML::lduMatrix::residual
         const scalar* const RESTRICT upperPtr = upper().begin();
         const scalar* const RESTRICT lowerPtr = lower().begin();
 
-        register const label nFaces = upper().size();
+        const label nFaces = upper().size();
 
-        for (register label face=0; face<nFaces; face++)
+        for (label face=0; face<nFaces; face++)
         {
             rAPtr[uPtr[face]] -= lowerPtr[face]*psiPtr[lPtr[face]];
             rAPtr[lPtr[face]] -= upperPtr[face]*psiPtr[uPtr[face]];

@@ -65,7 +65,7 @@ CML::solverPerformance CML::PCG::solve
         fieldName_
     );
 
-    register label nCells = x.size();
+    label nCells = x.size();
 
     scalar* RESTRICT xPtr = x.begin();
 
