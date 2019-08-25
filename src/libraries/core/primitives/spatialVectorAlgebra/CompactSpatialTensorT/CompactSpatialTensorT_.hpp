@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
