@@ -422,6 +422,8 @@ void CML::pairPatchAgglomeration:: agglomerate()
 
         nCoarseFacesOld = nCoarseFaces;
     }
+
+    compactLevels(nCreatedLevels);
 }
 
 
