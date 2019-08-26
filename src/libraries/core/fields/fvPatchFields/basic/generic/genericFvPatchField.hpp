@@ -175,8 +175,6 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
 
@@ -960,5 +958,3 @@ void CML::genericFvPatchField<Type>::write(Ostream& os) const
 
 
 #endif
-
-// ************************************************************************* //

@@ -180,23 +180,16 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "processorPolyPatch.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * //
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+CML::processorPointPatchField<Type>::processorPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -208,7 +201,7 @@ processorPointPatchField<Type>::processorPointPatchField
 
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+CML::processorPointPatchField<Type>::processorPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -221,7 +214,7 @@ processorPointPatchField<Type>::processorPointPatchField
 
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+CML::processorPointPatchField<Type>::processorPointPatchField
 (
     const processorPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -235,7 +228,7 @@ processorPointPatchField<Type>::processorPointPatchField
 
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+CML::processorPointPatchField<Type>::processorPointPatchField
 (
     const processorPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -249,16 +242,8 @@ processorPointPatchField<Type>::processorPointPatchField
 // * * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
 
 template<class Type>
-processorPointPatchField<Type>::~processorPointPatchField()
+CML::processorPointPatchField<Type>::~processorPointPatchField()
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

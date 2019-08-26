@@ -136,24 +136,17 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fvPatchFieldMapper.hpp"
 #include "surfaceMesh.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-emptyFvsPatchField<Type>::emptyFvsPatchField
+CML::emptyFvsPatchField<Type>::emptyFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -164,7 +157,7 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
 
 
 template<class Type>
-emptyFvsPatchField<Type>::emptyFvsPatchField
+CML::emptyFvsPatchField<Type>::emptyFvsPatchField
 (
     const emptyFvsPatchField<Type>&,
     const fvPatch& p,
@@ -187,7 +180,7 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
 
 
 template<class Type>
-emptyFvsPatchField<Type>::emptyFvsPatchField
+CML::emptyFvsPatchField<Type>::emptyFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -207,7 +200,7 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
 
 
 template<class Type>
-emptyFvsPatchField<Type>::emptyFvsPatchField
+CML::emptyFvsPatchField<Type>::emptyFvsPatchField
 (
     const emptyFvsPatchField<Type>& ptf
 )
@@ -222,7 +215,7 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
 
 
 template<class Type>
-emptyFvsPatchField<Type>::emptyFvsPatchField
+CML::emptyFvsPatchField<Type>::emptyFvsPatchField
 (
     const emptyFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -232,13 +225,4 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

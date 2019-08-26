@@ -754,19 +754,14 @@ Ostream& operator<<(Ostream& os, const fvsPatchField<Type>& ptf)
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+CML::tmp<CML::fvsPatchField<Type>>
+CML::fvsPatchField<Type>::New
 (
     const word& patchFieldType,
     const word& actualPatchType,
@@ -821,7 +816,8 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
 
 
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+CML::tmp<CML::fvsPatchField<Type>>
+CML::fvsPatchField<Type>::New
 (
     const word& patchFieldType,
     const fvPatch& p,
@@ -833,7 +829,8 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
 
 
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+CML::tmp<CML::fvsPatchField<Type>>
+CML::fvsPatchField<Type>::New
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -901,7 +898,8 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
 // Return a pointer to a new patch created on freestore from
 // a given fvsPatchField<Type> mapped onto a new patch
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+CML::tmp<CML::fvsPatchField<Type>>
+CML::fvsPatchField<Type>::New
 (
     const fvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -943,10 +941,6 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
     }
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
 
 #   include "calculatedFvsPatchField.hpp"
 
@@ -1011,5 +1005,3 @@ typedef type##FvsPatchField<tensor> type##FvsPatchTensorField;
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-// ************************************************************************* //

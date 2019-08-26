@@ -230,19 +230,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
+CML::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -258,7 +252,7 @@ turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 
 
 template<class Type>
-turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
+CML::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 (
     const turbulentInletFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -276,7 +270,7 @@ turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 
 
 template<class Type>
-turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
+CML::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -305,7 +299,7 @@ turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 
 
 template<class Type>
-turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
+CML::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 (
     const turbulentInletFvPatchField<Type>& ptf
 )
@@ -320,7 +314,7 @@ turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 
 
 template<class Type>
-turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
+CML::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 (
     const turbulentInletFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -338,7 +332,7 @@ turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void turbulentInletFvPatchField<Type>::autoMap
+void CML::turbulentInletFvPatchField<Type>::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -349,7 +343,7 @@ void turbulentInletFvPatchField<Type>::autoMap
 
 
 template<class Type>
-void turbulentInletFvPatchField<Type>::rmap
+void CML::turbulentInletFvPatchField<Type>::rmap
 (
     const fvPatchField<Type>& ptf,
     const labelList& addr
@@ -365,7 +359,7 @@ void turbulentInletFvPatchField<Type>::rmap
 
 
 template<class Type>
-void turbulentInletFvPatchField<Type>::updateCoeffs()
+void CML::turbulentInletFvPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
     {
@@ -407,7 +401,7 @@ void turbulentInletFvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void turbulentInletFvPatchField<Type>::write(Ostream& os) const
+void CML::turbulentInletFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     os.writeKeyword("fluctuationScale")
@@ -418,13 +412,4 @@ void turbulentInletFvPatchField<Type>::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

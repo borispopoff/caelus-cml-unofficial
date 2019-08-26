@@ -219,11 +219,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "addToRunTimeSelectionTable.hpp"
 #include "fvPatchFieldMapper.hpp"
@@ -559,9 +556,4 @@ void CML::advectiveFvPatchField<Type>::write(Ostream& os) const
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

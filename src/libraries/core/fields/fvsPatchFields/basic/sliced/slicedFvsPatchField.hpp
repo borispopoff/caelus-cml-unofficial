@@ -155,19 +155,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -182,7 +176,7 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
 
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -193,7 +187,7 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
 
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const slicedFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -208,7 +202,7 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
 
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -222,7 +216,7 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
 
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const slicedFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -235,7 +229,8 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
 }
 
 template<class Type>
-tmp<fvsPatchField<Type> > slicedFvsPatchField<Type>::clone() const
+CML::tmp<CML::fvsPatchField<Type>>
+CML::slicedFvsPatchField<Type>::clone() const
 {
     return tmp<fvsPatchField<Type> >
     (
@@ -245,7 +240,7 @@ tmp<fvsPatchField<Type> > slicedFvsPatchField<Type>::clone() const
 
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const slicedFvsPatchField<Type>& ptf
 )
@@ -263,7 +258,8 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
 
 
 template<class Type>
-tmp<fvsPatchField<Type> > slicedFvsPatchField<Type>::clone
+CML::tmp<CML::fvsPatchField<Type>>
+CML::slicedFvsPatchField<Type>::clone
 (
     const DimensionedField<Type, surfaceMesh>& iF
 ) const
@@ -276,7 +272,7 @@ tmp<fvsPatchField<Type> > slicedFvsPatchField<Type>::clone
 
 
 template<class Type>
-slicedFvsPatchField<Type>::~slicedFvsPatchField<Type>()
+CML::slicedFvsPatchField<Type>::~slicedFvsPatchField<Type>()
 {
     // Set the fvsPatchField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
@@ -284,13 +280,4 @@ slicedFvsPatchField<Type>::~slicedFvsPatchField<Type>()
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

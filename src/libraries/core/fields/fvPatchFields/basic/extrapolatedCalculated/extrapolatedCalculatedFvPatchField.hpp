@@ -225,7 +225,5 @@ void CML::extrapolatedCalculatedFvPatchField<Type>::evaluate
     calculatedFvPatchField<Type>::evaluate();
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-

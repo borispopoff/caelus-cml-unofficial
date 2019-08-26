@@ -124,19 +124,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
+CML::coupledFvsPatchField<Type>::coupledFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -147,7 +141,7 @@ coupledFvsPatchField<Type>::coupledFvsPatchField
 
 
 template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
+CML::coupledFvsPatchField<Type>::coupledFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -159,7 +153,7 @@ coupledFvsPatchField<Type>::coupledFvsPatchField
 
 
 template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
+CML::coupledFvsPatchField<Type>::coupledFvsPatchField
 (
     const coupledFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -172,7 +166,7 @@ coupledFvsPatchField<Type>::coupledFvsPatchField
 
 
 template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
+CML::coupledFvsPatchField<Type>::coupledFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -184,7 +178,7 @@ coupledFvsPatchField<Type>::coupledFvsPatchField
 
 
 template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
+CML::coupledFvsPatchField<Type>::coupledFvsPatchField
 (
     const coupledFvsPatchField<Type>& ptf
 )
@@ -194,7 +188,7 @@ coupledFvsPatchField<Type>::coupledFvsPatchField
 
 
 template<class Type>
-coupledFvsPatchField<Type>::coupledFvsPatchField
+CML::coupledFvsPatchField<Type>::coupledFvsPatchField
 (
     const coupledFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -204,11 +198,4 @@ coupledFvsPatchField<Type>::coupledFvsPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

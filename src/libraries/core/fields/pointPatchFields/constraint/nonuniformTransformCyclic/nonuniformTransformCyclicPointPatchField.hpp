@@ -129,11 +129,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "transformField.hpp"
 #include "symmTransformField.hpp"
@@ -217,9 +214,4 @@ void CML::nonuniformTransformCyclicPointPatchField<Type>::evaluate
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

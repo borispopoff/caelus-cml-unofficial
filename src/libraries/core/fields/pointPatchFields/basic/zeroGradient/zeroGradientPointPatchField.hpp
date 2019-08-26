@@ -115,19 +115,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
+CML::zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -138,7 +132,7 @@ zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 
 
 template<class Type>
-zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
+CML::zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -150,7 +144,7 @@ zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 
 
 template<class Type>
-zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
+CML::zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 (
     const zeroGradientPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -163,7 +157,7 @@ zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 
 
 template<class Type>
-zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
+CML::zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 (
     const zeroGradientPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -173,11 +167,4 @@ zeroGradientPointPatchField<Type>::zeroGradientPointPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

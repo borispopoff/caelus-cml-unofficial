@@ -583,17 +583,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "IOobject.hpp"
 #include "dictionary.hpp"
 #include "fvMesh.hpp"
 #include "fvPatchFieldMapper.hpp"
-//#include "fvMatrices.hpp"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -1167,8 +1163,6 @@ CML::Ostream& CML::operator<<(Ostream& os, const fvPatchField<Type>& ptf)
     return os;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 

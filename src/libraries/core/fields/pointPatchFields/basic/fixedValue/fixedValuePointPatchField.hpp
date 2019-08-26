@@ -139,23 +139,16 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "boolList.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+CML::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -166,7 +159,7 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
 
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+CML::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -179,7 +172,7 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
 
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+CML::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const fixedValuePointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -192,7 +185,7 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
 
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+CML::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const fixedValuePointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -202,13 +195,4 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

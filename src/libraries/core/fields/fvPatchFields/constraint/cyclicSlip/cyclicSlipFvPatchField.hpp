@@ -118,19 +118,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
+CML::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -141,7 +135,7 @@ cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 
 
 template<class Type>
-cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
+CML::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 (
     const cyclicSlipFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -154,7 +148,7 @@ cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 
 
 template<class Type>
-cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
+CML::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -166,7 +160,7 @@ cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 
 
 template<class Type>
-cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
+CML::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 (
     const cyclicSlipFvPatchField<Type>& ptf
 )
@@ -176,7 +170,7 @@ cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 
 
 template<class Type>
-cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
+CML::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 (
     const cyclicSlipFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -186,12 +180,4 @@ cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

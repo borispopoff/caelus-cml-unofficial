@@ -177,19 +177,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+CML::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -200,7 +194,7 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+CML::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fixedValueFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -213,7 +207,7 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+CML::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -225,7 +219,7 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+CML::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fixedValueFvsPatchField<Type>& ptf
 )
@@ -235,7 +229,7 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+CML::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fixedValueFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -248,7 +242,8 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::valueInternalCoeffs
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvsPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -261,7 +256,8 @@ tmp<Field<Type> > fixedValueFvsPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::valueBoundaryCoeffs
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvsPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -271,24 +267,19 @@ tmp<Field<Type> > fixedValueFvsPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvsPatchField<Type>::gradientInternalCoeffs() const
 {
     return -pTraits<Type>::one*this->patch().deltaCoeffs();
 }
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvsPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return this->patch().deltaCoeffs()*(*this);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

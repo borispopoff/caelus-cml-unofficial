@@ -147,11 +147,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fvPatchFieldMapper.hpp"
 #include "fvMatrix.hpp"
@@ -228,9 +225,4 @@ void CML::fixedInternalValueFvPatchField<Type>::manipulateMatrix
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

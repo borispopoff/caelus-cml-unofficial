@@ -151,19 +151,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-genericPointPatchField<Type>::genericPointPatchField
+CML::genericPointPatchField<Type>::genericPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -176,7 +170,7 @@ genericPointPatchField<Type>::genericPointPatchField
 
 
 template<class Type>
-genericPointPatchField<Type>::genericPointPatchField
+CML::genericPointPatchField<Type>::genericPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -423,7 +417,7 @@ genericPointPatchField<Type>::genericPointPatchField
 
 
 template<class Type>
-genericPointPatchField<Type>::genericPointPatchField
+CML::genericPointPatchField<Type>::genericPointPatchField
 (
     const genericPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -508,7 +502,7 @@ genericPointPatchField<Type>::genericPointPatchField
 
 
 template<class Type>
-genericPointPatchField<Type>::genericPointPatchField
+CML::genericPointPatchField<Type>::genericPointPatchField
 (
     const genericPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -528,7 +522,7 @@ genericPointPatchField<Type>::genericPointPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void genericPointPatchField<Type>::autoMap
+void CML::genericPointPatchField<Type>::autoMap
 (
     const pointPatchFieldMapper& m
 )
@@ -586,7 +580,7 @@ void genericPointPatchField<Type>::autoMap
 
 
 template<class Type>
-void genericPointPatchField<Type>::rmap
+void CML::genericPointPatchField<Type>::rmap
 (
     const pointPatchField<Type>& ptf,
     const labelList& addr
@@ -678,7 +672,7 @@ void genericPointPatchField<Type>::rmap
 
 
 template<class Type>
-void genericPointPatchField<Type>::write(Ostream& os) const
+void CML::genericPointPatchField<Type>::write(Ostream& os) const
 {
     os.writeKeyword("type") << actualTypeName_ << token::END_STATEMENT << nl;
 
@@ -729,11 +723,4 @@ void genericPointPatchField<Type>::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
 #endif
-
-// ************************************************************************* //

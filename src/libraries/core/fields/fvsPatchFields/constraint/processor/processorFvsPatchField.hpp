@@ -148,19 +148,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * //
 
 template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
+CML::processorFvsPatchField<Type>::processorFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -172,7 +166,7 @@ processorFvsPatchField<Type>::processorFvsPatchField
 
 
 template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
+CML::processorFvsPatchField<Type>::processorFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -186,7 +180,7 @@ processorFvsPatchField<Type>::processorFvsPatchField
 
 // Construct by mapping given processorFvsPatchField<Type>
 template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
+CML::processorFvsPatchField<Type>::processorFvsPatchField
 (
     const processorFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -210,7 +204,7 @@ processorFvsPatchField<Type>::processorFvsPatchField
 
 
 template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
+CML::processorFvsPatchField<Type>::processorFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -231,7 +225,7 @@ processorFvsPatchField<Type>::processorFvsPatchField
 
 
 template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
+CML::processorFvsPatchField<Type>::processorFvsPatchField
 (
     const processorFvsPatchField<Type>& ptf
 )
@@ -242,7 +236,7 @@ processorFvsPatchField<Type>::processorFvsPatchField
 
 
 template<class Type>
-processorFvsPatchField<Type>::processorFvsPatchField
+CML::processorFvsPatchField<Type>::processorFvsPatchField
 (
     const processorFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -256,17 +250,8 @@ processorFvsPatchField<Type>::processorFvsPatchField
 // * * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
 
 template<class Type>
-processorFvsPatchField<Type>::~processorFvsPatchField()
+CML::processorFvsPatchField<Type>::~processorFvsPatchField()
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

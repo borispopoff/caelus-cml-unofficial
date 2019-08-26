@@ -121,17 +121,11 @@ public:
 
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-slipPointPatchField<Type>::slipPointPatchField
+CML::slipPointPatchField<Type>::slipPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -142,7 +136,7 @@ slipPointPatchField<Type>::slipPointPatchField
 
 
 template<class Type>
-slipPointPatchField<Type>::slipPointPatchField
+CML::slipPointPatchField<Type>::slipPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -154,7 +148,7 @@ slipPointPatchField<Type>::slipPointPatchField
 
 
 template<class Type>
-slipPointPatchField<Type>::slipPointPatchField
+CML::slipPointPatchField<Type>::slipPointPatchField
 (
     const slipPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -167,7 +161,7 @@ slipPointPatchField<Type>::slipPointPatchField
 
 
 template<class Type>
-slipPointPatchField<Type>::slipPointPatchField
+CML::slipPointPatchField<Type>::slipPointPatchField
 (
     const slipPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -177,13 +171,4 @@ slipPointPatchField<Type>::slipPointPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

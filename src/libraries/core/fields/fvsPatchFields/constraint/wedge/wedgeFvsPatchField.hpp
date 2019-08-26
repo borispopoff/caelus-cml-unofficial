@@ -116,19 +116,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-wedgeFvsPatchField<Type>::wedgeFvsPatchField
+CML::wedgeFvsPatchField<Type>::wedgeFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -139,7 +133,7 @@ wedgeFvsPatchField<Type>::wedgeFvsPatchField
 
 
 template<class Type>
-wedgeFvsPatchField<Type>::wedgeFvsPatchField
+CML::wedgeFvsPatchField<Type>::wedgeFvsPatchField
 (
     const wedgeFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -162,7 +156,7 @@ wedgeFvsPatchField<Type>::wedgeFvsPatchField
 
 
 template<class Type>
-wedgeFvsPatchField<Type>::wedgeFvsPatchField
+CML::wedgeFvsPatchField<Type>::wedgeFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -182,7 +176,7 @@ wedgeFvsPatchField<Type>::wedgeFvsPatchField
 
 
 template<class Type>
-wedgeFvsPatchField<Type>::wedgeFvsPatchField
+CML::wedgeFvsPatchField<Type>::wedgeFvsPatchField
 (
     const wedgeFvsPatchField<Type>& ptf
 )
@@ -192,7 +186,7 @@ wedgeFvsPatchField<Type>::wedgeFvsPatchField
 
 
 template<class Type>
-wedgeFvsPatchField<Type>::wedgeFvsPatchField
+CML::wedgeFvsPatchField<Type>::wedgeFvsPatchField
 (
     const wedgeFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -202,13 +196,4 @@ wedgeFvsPatchField<Type>::wedgeFvsPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

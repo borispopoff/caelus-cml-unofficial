@@ -127,11 +127,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "transformField.hpp"
 #include "symmTransformField.hpp"
@@ -208,9 +205,4 @@ void CML::cyclicSlipPointPatchField<Type>::evaluate(const Pstream::commsTypes)
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

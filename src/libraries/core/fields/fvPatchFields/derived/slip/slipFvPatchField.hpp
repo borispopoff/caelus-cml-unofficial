@@ -135,19 +135,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+CML::slipFvPatchField<Type>::slipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -158,7 +152,7 @@ slipFvPatchField<Type>::slipFvPatchField
 
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+CML::slipFvPatchField<Type>::slipFvPatchField
 (
     const slipFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -171,7 +165,7 @@ slipFvPatchField<Type>::slipFvPatchField
 
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+CML::slipFvPatchField<Type>::slipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -183,7 +177,7 @@ slipFvPatchField<Type>::slipFvPatchField
 
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+CML::slipFvPatchField<Type>::slipFvPatchField
 (
     const slipFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -194,7 +188,7 @@ slipFvPatchField<Type>::slipFvPatchField
 
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+CML::slipFvPatchField<Type>::slipFvPatchField
 (
     const slipFvPatchField<Type>& ptf
 )
@@ -203,13 +197,4 @@ slipFvPatchField<Type>::slipFvPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

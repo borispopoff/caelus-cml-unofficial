@@ -167,11 +167,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
 CML::outletInletFvPatchField<Type>::outletInletFvPatchField
@@ -291,9 +288,4 @@ void CML::outletInletFvPatchField<Type>::write(Ostream& os) const
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

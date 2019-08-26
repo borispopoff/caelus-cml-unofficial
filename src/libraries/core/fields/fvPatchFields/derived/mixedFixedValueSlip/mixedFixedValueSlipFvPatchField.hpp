@@ -207,23 +207,16 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "symmTransformField.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+CML::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -236,7 +229,7 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 
 
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+CML::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const mixedFixedValueSlipFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -251,7 +244,7 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 
 
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+CML::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -265,7 +258,7 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 
 
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+CML::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const mixedFixedValueSlipFvPatchField<Type>& ptf
 )
@@ -276,7 +269,7 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 {}
 
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+CML::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const mixedFixedValueSlipFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -291,7 +284,7 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 
 // Map from self
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::autoMap
+void CML::mixedFixedValueSlipFvPatchField<Type>::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -304,7 +297,7 @@ void mixedFixedValueSlipFvPatchField<Type>::autoMap
 
 // Reverse-map the given fvPatchField onto this fvPatchField
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::rmap
+void CML::mixedFixedValueSlipFvPatchField<Type>::rmap
 (
     const fvPatchField<Type>& ptf,
     const labelList& addr
@@ -322,7 +315,8 @@ void mixedFixedValueSlipFvPatchField<Type>::rmap
 
 // Return gradient at boundary
 template<class Type>
-tmp<Field<Type> > mixedFixedValueSlipFvPatchField<Type>::snGrad() const
+CML::tmp<CML::Field<Type>>
+CML::mixedFixedValueSlipFvPatchField<Type>::snGrad() const
 {
     tmp<vectorField> nHat = this->patch().nf();
     Field<Type> pif(this->patchInternalField());
@@ -337,7 +331,7 @@ tmp<Field<Type> > mixedFixedValueSlipFvPatchField<Type>::snGrad() const
 
 // Evaluate the field on the patch
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::evaluate(const Pstream::commsTypes)
+void CML::mixedFixedValueSlipFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     if (!this->updated())
     {
@@ -360,8 +354,8 @@ void mixedFixedValueSlipFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 // Return defining fields
 template<class Type>
-tmp<Field<Type> >
-mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
+CML::tmp<CML::Field<Type>>
+CML::mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
 {
     vectorField nHat(this->patch().nf());
     vectorField diag(nHat.size());
@@ -391,7 +385,7 @@ mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
 
 // Write
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::write(Ostream& os) const
+void CML::mixedFixedValueSlipFvPatchField<Type>::write(Ostream& os) const
 {
     transformFvPatchField<Type>::write(os);
     refValue_.writeEntry("refValue", os);
@@ -399,13 +393,4 @@ void mixedFixedValueSlipFvPatchField<Type>::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

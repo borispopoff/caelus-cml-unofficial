@@ -116,19 +116,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-symmetryFvPatchField<Type>::symmetryFvPatchField
+CML::symmetryFvPatchField<Type>::symmetryFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -139,7 +133,7 @@ symmetryFvPatchField<Type>::symmetryFvPatchField
 
 
 template<class Type>
-symmetryFvPatchField<Type>::symmetryFvPatchField
+CML::symmetryFvPatchField<Type>::symmetryFvPatchField
 (
     const symmetryFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -163,7 +157,7 @@ symmetryFvPatchField<Type>::symmetryFvPatchField
 
 
 template<class Type>
-symmetryFvPatchField<Type>::symmetryFvPatchField
+CML::symmetryFvPatchField<Type>::symmetryFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -186,7 +180,7 @@ symmetryFvPatchField<Type>::symmetryFvPatchField
 
 
 template<class Type>
-symmetryFvPatchField<Type>::symmetryFvPatchField
+CML::symmetryFvPatchField<Type>::symmetryFvPatchField
 (
     const symmetryFvPatchField<Type>& ptf
 )
@@ -196,7 +190,7 @@ symmetryFvPatchField<Type>::symmetryFvPatchField
 
 
 template<class Type>
-symmetryFvPatchField<Type>::symmetryFvPatchField
+CML::symmetryFvPatchField<Type>::symmetryFvPatchField
 (
     const symmetryFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -206,13 +200,4 @@ symmetryFvPatchField<Type>::symmetryFvPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

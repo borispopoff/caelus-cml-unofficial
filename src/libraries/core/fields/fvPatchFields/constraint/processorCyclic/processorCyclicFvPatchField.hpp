@@ -152,11 +152,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "processorCyclicFvPatch.hpp"
 #include "demandDrivenData.hpp"
@@ -282,8 +279,4 @@ CML::processorCyclicFvPatchField<Type>::~processorCyclicFvPatchField()
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

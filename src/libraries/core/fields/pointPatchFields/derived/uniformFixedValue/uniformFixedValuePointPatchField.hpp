@@ -162,19 +162,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * //
 
 template<class Type>
-uniformFixedValuePointPatchField<Type>::
+CML::uniformFixedValuePointPatchField<Type>::
 uniformFixedValuePointPatchField
 (
     const pointPatch& p,
@@ -187,7 +181,7 @@ uniformFixedValuePointPatchField
 
 
 template<class Type>
-uniformFixedValuePointPatchField<Type>::
+CML::uniformFixedValuePointPatchField<Type>::
 uniformFixedValuePointPatchField
 (
     const pointPatch& p,
@@ -214,7 +208,7 @@ uniformFixedValuePointPatchField
 
 
 template<class Type>
-uniformFixedValuePointPatchField<Type>::
+CML::uniformFixedValuePointPatchField<Type>::
 uniformFixedValuePointPatchField
 (
     const uniformFixedValuePointPatchField<Type>& ptf,
@@ -233,7 +227,7 @@ uniformFixedValuePointPatchField
 
 
 template<class Type>
-uniformFixedValuePointPatchField<Type>::
+CML::uniformFixedValuePointPatchField<Type>::
 uniformFixedValuePointPatchField
 (
     const uniformFixedValuePointPatchField<Type>& ptf
@@ -245,7 +239,7 @@ uniformFixedValuePointPatchField
 
 
 template<class Type>
-uniformFixedValuePointPatchField<Type>::
+CML::uniformFixedValuePointPatchField<Type>::
 uniformFixedValuePointPatchField
 (
     const uniformFixedValuePointPatchField<Type>& ptf,
@@ -264,7 +258,7 @@ uniformFixedValuePointPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void uniformFixedValuePointPatchField<Type>::updateCoeffs()
+void CML::uniformFixedValuePointPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
     {
@@ -279,7 +273,7 @@ void uniformFixedValuePointPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void uniformFixedValuePointPatchField<Type>::
+void CML::uniformFixedValuePointPatchField<Type>::
 write(Ostream& os) const
 {
     // Note: write value
@@ -288,14 +282,4 @@ write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// ******************************
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

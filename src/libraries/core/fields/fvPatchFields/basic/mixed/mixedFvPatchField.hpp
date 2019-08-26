@@ -255,19 +255,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+CML::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -281,7 +275,7 @@ mixedFvPatchField<Type>::mixedFvPatchField
 
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+CML::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const mixedFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -297,7 +291,7 @@ mixedFvPatchField<Type>::mixedFvPatchField
 
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+CML::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -314,7 +308,7 @@ mixedFvPatchField<Type>::mixedFvPatchField
 
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+CML::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const mixedFvPatchField<Type>& ptf
 )
@@ -327,7 +321,7 @@ mixedFvPatchField<Type>::mixedFvPatchField
 
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+CML::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const mixedFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -343,7 +337,7 @@ mixedFvPatchField<Type>::mixedFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void mixedFvPatchField<Type>::autoMap
+void CML::mixedFvPatchField<Type>::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -356,7 +350,7 @@ void mixedFvPatchField<Type>::autoMap
 
 
 template<class Type>
-void mixedFvPatchField<Type>::rmap
+void CML::mixedFvPatchField<Type>::rmap
 (
     const fvPatchField<Type>& ptf,
     const labelList& addr
@@ -374,7 +368,7 @@ void mixedFvPatchField<Type>::rmap
 
 
 template<class Type>
-void mixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
+void CML::mixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     if (!this->updated())
     {
@@ -397,7 +391,8 @@ void mixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::snGrad() const
+CML::tmp<CML::Field<Type>>
+CML::mixedFvPatchField<Type>::snGrad() const
 {
     return
         valueFraction_
@@ -408,7 +403,8 @@ tmp<Field<Type> > mixedFvPatchField<Type>::snGrad() const
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::valueInternalCoeffs
+CML::tmp<CML::Field<Type>>
+CML::mixedFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -419,7 +415,8 @@ tmp<Field<Type> > mixedFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::valueBoundaryCoeffs
+CML::tmp<CML::Field<Type>>
+CML::mixedFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -431,14 +428,16 @@ tmp<Field<Type> > mixedFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::mixedFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return -Type(pTraits<Type>::one)*valueFraction_*this->patch().deltaCoeffs();
 }
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::mixedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return
         valueFraction_*this->patch().deltaCoeffs()*refValue_
@@ -447,7 +446,7 @@ tmp<Field<Type> > mixedFvPatchField<Type>::gradientBoundaryCoeffs() const
 
 
 template<class Type>
-void mixedFvPatchField<Type>::write(Ostream& os) const
+void CML::mixedFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     refValue_.writeEntry("refValue", os);
@@ -457,12 +456,4 @@ void mixedFvPatchField<Type>::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

@@ -145,11 +145,8 @@ void wedgeFvPatchField<scalar>::evaluate
 );
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "wedgeFvPatchField.hpp"
 #include "transformField.hpp"
@@ -301,9 +298,4 @@ CML::wedgeFvPatchField<Type>::snGradTransformDiag() const
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

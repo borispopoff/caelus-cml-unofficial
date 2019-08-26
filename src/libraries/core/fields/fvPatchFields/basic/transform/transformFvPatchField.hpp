@@ -164,24 +164,17 @@ template<>
 tmp<scalarField> transformFvPatchField<scalar>::gradientInternalCoeffs() const;
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "IOstreams.hpp"
 #include "transformField.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-transformFvPatchField<Type>::transformFvPatchField
+CML::transformFvPatchField<Type>::transformFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -192,7 +185,7 @@ transformFvPatchField<Type>::transformFvPatchField
 
 
 template<class Type>
-transformFvPatchField<Type>::transformFvPatchField
+CML::transformFvPatchField<Type>::transformFvPatchField
 (
     const transformFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -205,7 +198,7 @@ transformFvPatchField<Type>::transformFvPatchField
 
 
 template<class Type>
-transformFvPatchField<Type>::transformFvPatchField
+CML::transformFvPatchField<Type>::transformFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -217,7 +210,7 @@ transformFvPatchField<Type>::transformFvPatchField
 
 
 template<class Type>
-transformFvPatchField<Type>::transformFvPatchField
+CML::transformFvPatchField<Type>::transformFvPatchField
 (
     const transformFvPatchField<Type>& ptf
 )
@@ -227,7 +220,7 @@ transformFvPatchField<Type>::transformFvPatchField
 
 
 template<class Type>
-transformFvPatchField<Type>::transformFvPatchField
+CML::transformFvPatchField<Type>::transformFvPatchField
 (
     const transformFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -240,8 +233,8 @@ transformFvPatchField<Type>::transformFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type>>
-transformFvPatchField<Type>::valueInternalCoeffs
+CML::tmp<CML::Field<Type>>
+CML::transformFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -251,8 +244,8 @@ transformFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type>>
-transformFvPatchField<Type>::valueBoundaryCoeffs
+CML::tmp<CML::Field<Type>>
+CML::transformFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -268,16 +261,16 @@ transformFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type>>
-transformFvPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::transformFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return -this->patch().deltaCoeffs()*snGradTransformDiag();
 }
 
 
 template<class Type>
-tmp<Field<Type>>
-transformFvPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::transformFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return
         snGrad()
@@ -288,7 +281,7 @@ transformFvPatchField<Type>::gradientBoundaryCoeffs() const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
-void transformFvPatchField<Type>::operator=
+void CML::transformFvPatchField<Type>::operator=
 (
     const fvPatchField<Type>& ptf
 )
@@ -297,13 +290,4 @@ void transformFvPatchField<Type>::operator=
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

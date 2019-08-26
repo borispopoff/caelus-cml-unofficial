@@ -146,11 +146,8 @@ void basicSymmetryFvPatchField<scalar>::evaluate
 );
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "symmTransformField.hpp"
 
@@ -269,8 +266,4 @@ CML::basicSymmetryFvPatchField<Type>::snGradTransformDiag() const
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

@@ -121,19 +121,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-cyclicFvsPatchField<Type>::cyclicFvsPatchField
+CML::cyclicFvsPatchField<Type>::cyclicFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -145,7 +139,7 @@ cyclicFvsPatchField<Type>::cyclicFvsPatchField
 
 
 template<class Type>
-cyclicFvsPatchField<Type>::cyclicFvsPatchField
+CML::cyclicFvsPatchField<Type>::cyclicFvsPatchField
 (
     const cyclicFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -169,7 +163,7 @@ cyclicFvsPatchField<Type>::cyclicFvsPatchField
 
 
 template<class Type>
-cyclicFvsPatchField<Type>::cyclicFvsPatchField
+CML::cyclicFvsPatchField<Type>::cyclicFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -190,7 +184,7 @@ cyclicFvsPatchField<Type>::cyclicFvsPatchField
 
 
 template<class Type>
-cyclicFvsPatchField<Type>::cyclicFvsPatchField
+CML::cyclicFvsPatchField<Type>::cyclicFvsPatchField
 (
     const cyclicFvsPatchField<Type>& ptf
 )
@@ -201,7 +195,7 @@ cyclicFvsPatchField<Type>::cyclicFvsPatchField
 
 
 template<class Type>
-cyclicFvsPatchField<Type>::cyclicFvsPatchField
+CML::cyclicFvsPatchField<Type>::cyclicFvsPatchField
 (
     const cyclicFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -212,13 +206,4 @@ cyclicFvsPatchField<Type>::cyclicFvsPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

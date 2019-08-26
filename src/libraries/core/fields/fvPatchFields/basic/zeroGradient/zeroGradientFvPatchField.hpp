@@ -163,23 +163,16 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fvPatchFieldMapper.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
+CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -190,7 +183,7 @@ zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 
 
 template<class Type>
-zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
+CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 (
     const zeroGradientFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -203,7 +196,7 @@ zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 
 
 template<class Type>
-zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
+CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -217,7 +210,7 @@ zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 
 
 template<class Type>
-zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
+CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 (
     const zeroGradientFvPatchField& zgpf
 )
@@ -227,7 +220,7 @@ zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 
 
 template<class Type>
-zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
+CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 (
     const zeroGradientFvPatchField& zgpf,
     const DimensionedField<Type, volMesh>& iF
@@ -240,7 +233,7 @@ zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void zeroGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
+void CML::zeroGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     if (!this->updated())
     {
@@ -253,7 +246,8 @@ void zeroGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 
 template<class Type>
-tmp<Field<Type> > zeroGradientFvPatchField<Type>::valueInternalCoeffs
+CML::tmp<CML::Field<Type>>
+CML::zeroGradientFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -266,7 +260,8 @@ tmp<Field<Type> > zeroGradientFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > zeroGradientFvPatchField<Type>::valueBoundaryCoeffs
+CML::tmp<CML::Field<Type>>
+CML::zeroGradientFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -279,7 +274,8 @@ tmp<Field<Type> > zeroGradientFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > zeroGradientFvPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::zeroGradientFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return tmp<Field<Type> >
     (
@@ -289,7 +285,8 @@ tmp<Field<Type> > zeroGradientFvPatchField<Type>::gradientInternalCoeffs() const
 
 
 template<class Type>
-tmp<Field<Type> > zeroGradientFvPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::zeroGradientFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return tmp<Field<Type> >
     (
@@ -298,13 +295,4 @@ tmp<Field<Type> > zeroGradientFvPatchField<Type>::gradientBoundaryCoeffs() const
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

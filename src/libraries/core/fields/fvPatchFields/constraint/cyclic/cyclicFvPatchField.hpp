@@ -212,23 +212,16 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "transformField.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-cyclicFvPatchField<Type>::cyclicFvPatchField
+CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -240,7 +233,7 @@ cyclicFvPatchField<Type>::cyclicFvPatchField
 
 
 template<class Type>
-cyclicFvPatchField<Type>::cyclicFvPatchField
+CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 (
     const cyclicFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -265,7 +258,7 @@ cyclicFvPatchField<Type>::cyclicFvPatchField
 
 
 template<class Type>
-cyclicFvPatchField<Type>::cyclicFvPatchField
+CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -291,7 +284,7 @@ cyclicFvPatchField<Type>::cyclicFvPatchField
 
 
 template<class Type>
-cyclicFvPatchField<Type>::cyclicFvPatchField
+CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 (
     const cyclicFvPatchField<Type>& ptf
 )
@@ -303,7 +296,7 @@ cyclicFvPatchField<Type>::cyclicFvPatchField
 
 
 template<class Type>
-cyclicFvPatchField<Type>::cyclicFvPatchField
+CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 (
     const cyclicFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -317,7 +310,8 @@ cyclicFvPatchField<Type>::cyclicFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > cyclicFvPatchField<Type>::patchNeighbourField() const
+CML::tmp<CML::Field<Type>>
+CML::cyclicFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
     const labelUList& nbrFaceCells =
@@ -350,7 +344,8 @@ tmp<Field<Type> > cyclicFvPatchField<Type>::patchNeighbourField() const
 
 
 template<class Type>
-const cyclicFvPatchField<Type>& cyclicFvPatchField<Type>::neighbourPatchField()
+const CML::cyclicFvPatchField<Type>& 
+CML::cyclicFvPatchField<Type>::neighbourPatchField()
 const
 {
     const GeometricField<Type, fvPatchField, volMesh>& fld =
@@ -367,7 +362,7 @@ const
 
 
 template<class Type>
-void cyclicFvPatchField<Type>::updateInterfaceMatrix
+void CML::cyclicFvPatchField<Type>::updateInterfaceMatrix
 (
     const scalarField& psiInternal,
     scalarField& result,
@@ -401,18 +396,10 @@ void cyclicFvPatchField<Type>::updateInterfaceMatrix
 
 
 template<class Type>
-void cyclicFvPatchField<Type>::write(Ostream& os) const
+void CML::cyclicFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

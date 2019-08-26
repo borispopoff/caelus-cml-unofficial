@@ -179,23 +179,16 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fvPatchFieldMapper.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+CML::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -206,7 +199,7 @@ emptyFvPatchField<Type>::emptyFvPatchField
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+CML::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const emptyFvPatchField<Type>&,
     const fvPatch& p,
@@ -230,7 +223,7 @@ emptyFvPatchField<Type>::emptyFvPatchField
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+CML::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -253,7 +246,7 @@ emptyFvPatchField<Type>::emptyFvPatchField
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+CML::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const emptyFvPatchField<Type>& ptf
 )
@@ -268,7 +261,7 @@ emptyFvPatchField<Type>::emptyFvPatchField
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+CML::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const emptyFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -281,7 +274,7 @@ emptyFvPatchField<Type>::emptyFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void emptyFvPatchField<Type>::updateCoeffs()
+void CML::emptyFvPatchField<Type>::updateCoeffs()
 {
     //- Check moved to checkMesh. Test here breaks down if multiple empty
     //  patches.
@@ -301,12 +294,4 @@ void emptyFvPatchField<Type>::updateCoeffs()
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

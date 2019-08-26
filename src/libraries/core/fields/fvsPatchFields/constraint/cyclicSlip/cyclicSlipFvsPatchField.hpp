@@ -116,19 +116,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
+CML::cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -139,7 +133,7 @@ cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 
 
 template<class Type>
-cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
+CML::cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 (
     const cyclicSlipFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -152,7 +146,7 @@ cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 
 
 template<class Type>
-cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
+CML::cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -164,7 +158,7 @@ cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 
 
 template<class Type>
-cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
+CML::cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 (
     const cyclicSlipFvsPatchField<Type>& ptf
 )
@@ -174,7 +168,7 @@ cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 
 
 template<class Type>
-cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
+CML::cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 (
     const cyclicSlipFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -184,13 +178,4 @@ cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

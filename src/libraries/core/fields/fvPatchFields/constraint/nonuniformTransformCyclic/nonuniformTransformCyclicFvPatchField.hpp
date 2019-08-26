@@ -119,19 +119,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-nonuniformTransformCyclicFvPatchField<Type>::
+CML::nonuniformTransformCyclicFvPatchField<Type>::
 nonuniformTransformCyclicFvPatchField
 (
     const fvPatch& p,
@@ -143,7 +137,7 @@ nonuniformTransformCyclicFvPatchField
 
 
 template<class Type>
-nonuniformTransformCyclicFvPatchField<Type>::
+CML::nonuniformTransformCyclicFvPatchField<Type>::
 nonuniformTransformCyclicFvPatchField
 (
     const nonuniformTransformCyclicFvPatchField<Type>& ptf,
@@ -157,7 +151,7 @@ nonuniformTransformCyclicFvPatchField
 
 
 template<class Type>
-nonuniformTransformCyclicFvPatchField<Type>::
+CML::nonuniformTransformCyclicFvPatchField<Type>::
 nonuniformTransformCyclicFvPatchField
 (
     const fvPatch& p,
@@ -170,7 +164,7 @@ nonuniformTransformCyclicFvPatchField
 
 
 template<class Type>
-nonuniformTransformCyclicFvPatchField<Type>::
+CML::nonuniformTransformCyclicFvPatchField<Type>::
 nonuniformTransformCyclicFvPatchField
 (
     const nonuniformTransformCyclicFvPatchField<Type>& ptf
@@ -181,7 +175,7 @@ nonuniformTransformCyclicFvPatchField
 
 
 template<class Type>
-nonuniformTransformCyclicFvPatchField<Type>::
+CML::nonuniformTransformCyclicFvPatchField<Type>::
 nonuniformTransformCyclicFvPatchField
 (
     const nonuniformTransformCyclicFvPatchField<Type>& ptf,
@@ -192,13 +186,4 @@ nonuniformTransformCyclicFvPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

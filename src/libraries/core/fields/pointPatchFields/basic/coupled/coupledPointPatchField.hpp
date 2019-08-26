@@ -130,19 +130,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * //
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+CML::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -153,7 +147,7 @@ coupledPointPatchField<Type>::coupledPointPatchField
 
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+CML::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -165,7 +159,7 @@ coupledPointPatchField<Type>::coupledPointPatchField
 
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+CML::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const coupledPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -178,7 +172,7 @@ coupledPointPatchField<Type>::coupledPointPatchField
 
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+CML::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const coupledPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -188,13 +182,4 @@ coupledPointPatchField<Type>::coupledPointPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

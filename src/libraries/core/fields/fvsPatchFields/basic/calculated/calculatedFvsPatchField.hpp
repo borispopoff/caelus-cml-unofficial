@@ -128,21 +128,14 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fvPatchFieldMapper.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 template<class Type>
-const word& fvsPatchField<Type>::calculatedType()
+const CML::word& CML::fvsPatchField<Type>::calculatedType()
 {
     return calculatedFvsPatchField<Type>::typeName;
 }
@@ -150,7 +143,7 @@ const word& fvsPatchField<Type>::calculatedType()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-calculatedFvsPatchField<Type>::calculatedFvsPatchField
+CML::calculatedFvsPatchField<Type>::calculatedFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -161,7 +154,7 @@ calculatedFvsPatchField<Type>::calculatedFvsPatchField
 
 
 template<class Type>
-calculatedFvsPatchField<Type>::calculatedFvsPatchField
+CML::calculatedFvsPatchField<Type>::calculatedFvsPatchField
 (
     const calculatedFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -174,7 +167,7 @@ calculatedFvsPatchField<Type>::calculatedFvsPatchField
 
 
 template<class Type>
-calculatedFvsPatchField<Type>::calculatedFvsPatchField
+CML::calculatedFvsPatchField<Type>::calculatedFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -186,7 +179,7 @@ calculatedFvsPatchField<Type>::calculatedFvsPatchField
 
 
 template<class Type>
-calculatedFvsPatchField<Type>::calculatedFvsPatchField
+CML::calculatedFvsPatchField<Type>::calculatedFvsPatchField
 (
     const calculatedFvsPatchField<Type>& ptf
 )
@@ -196,7 +189,7 @@ calculatedFvsPatchField<Type>::calculatedFvsPatchField
 
 
 template<class Type>
-calculatedFvsPatchField<Type>::calculatedFvsPatchField
+CML::calculatedFvsPatchField<Type>::calculatedFvsPatchField
 (
     const calculatedFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -207,7 +200,8 @@ calculatedFvsPatchField<Type>::calculatedFvsPatchField
 
 
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::NewCalculatedType
+CML::tmp<CML::fvsPatchField<Type>>
+CML::fvsPatchField<Type>::NewCalculatedType
 (
     const fvPatch& p
 )
@@ -239,7 +233,8 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::NewCalculatedType
 
 template<class Type>
 template<class Type2>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::NewCalculatedType
+CML::tmp<CML::fvsPatchField<Type>>
+CML::fvsPatchField<Type>::NewCalculatedType
 (
     const fvsPatchField<Type2>& pf
 )
@@ -248,12 +243,4 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::NewCalculatedType
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

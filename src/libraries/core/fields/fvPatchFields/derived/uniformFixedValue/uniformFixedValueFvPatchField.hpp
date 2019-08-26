@@ -182,19 +182,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -207,7 +201,7 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 
 
 template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -221,7 +215,7 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 
 
 template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const uniformFixedValueFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -240,7 +234,7 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 
 
 template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -257,7 +251,7 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 
 
 template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const uniformFixedValueFvPatchField<Type>& ptf
 )
@@ -274,7 +268,7 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 
 
 template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const uniformFixedValueFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -302,7 +296,7 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void uniformFixedValueFvPatchField<Type>::updateCoeffs()
+void CML::uniformFixedValueFvPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
     {
@@ -317,7 +311,8 @@ void uniformFixedValueFvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-tmp<Field<Type> > uniformFixedValueFvPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::uniformFixedValueFvPatchField<Type>::gradientInternalCoeffs() const
 {
     if (inletDiffusion_)
     {
@@ -334,7 +329,8 @@ tmp<Field<Type> > uniformFixedValueFvPatchField<Type>::gradientInternalCoeffs() 
 
 
 template<class Type>
-tmp<Field<Type> > uniformFixedValueFvPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::uniformFixedValueFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     if (inletDiffusion_)
     {
@@ -351,7 +347,7 @@ tmp<Field<Type> > uniformFixedValueFvPatchField<Type>::gradientBoundaryCoeffs() 
 
 
 template<class Type>
-void uniformFixedValueFvPatchField<Type>::write(Ostream& os) const
+void CML::uniformFixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     // Note: do not write value
     fvPatchField<Type>::write(os);
@@ -359,12 +355,5 @@ void uniformFixedValueFvPatchField<Type>::write(Ostream& os) const
     os.writeKeyword("inlet-diffusion") << inletDiffusion_ << token::END_STATEMENT << nl;
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-// ************************************************************************* //

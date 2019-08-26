@@ -158,21 +158,16 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fvPatchFieldMapper.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace CML
-{
 
 template<class Type>
-const word& fvPatchField<Type>::calculatedType()
+const CML::word& CML::fvPatchField<Type>::calculatedType()
 {
     return calculatedFvPatchField<Type>::typeName;
 }
@@ -180,7 +175,7 @@ const word& fvPatchField<Type>::calculatedType()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-calculatedFvPatchField<Type>::calculatedFvPatchField
+CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -191,7 +186,7 @@ calculatedFvPatchField<Type>::calculatedFvPatchField
 
 
 template<class Type>
-calculatedFvPatchField<Type>::calculatedFvPatchField
+CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const calculatedFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -204,7 +199,7 @@ calculatedFvPatchField<Type>::calculatedFvPatchField
 
 
 template<class Type>
-calculatedFvPatchField<Type>::calculatedFvPatchField
+CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -217,7 +212,7 @@ calculatedFvPatchField<Type>::calculatedFvPatchField
 
 
 template<class Type>
-calculatedFvPatchField<Type>::calculatedFvPatchField
+CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const calculatedFvPatchField<Type>& ptf
 )
@@ -227,7 +222,7 @@ calculatedFvPatchField<Type>::calculatedFvPatchField
 
 
 template<class Type>
-calculatedFvPatchField<Type>::calculatedFvPatchField
+CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const calculatedFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -238,7 +233,8 @@ calculatedFvPatchField<Type>::calculatedFvPatchField
 
 
 template<class Type>
-tmp<fvPatchField<Type> > fvPatchField<Type>::NewCalculatedType
+CML::tmp<CML::fvPatchField<Type>>
+CML::fvPatchField<Type>::NewCalculatedType
 (
     const fvPatch& p
 )
@@ -270,7 +266,8 @@ tmp<fvPatchField<Type> > fvPatchField<Type>::NewCalculatedType
 
 template<class Type>
 template<class Type2>
-tmp<fvPatchField<Type> > fvPatchField<Type>::NewCalculatedType
+CML::tmp<CML::fvPatchField<Type>>
+CML::fvPatchField<Type>::NewCalculatedType
 (
     const fvPatchField<Type2>& pf
 )
@@ -282,7 +279,8 @@ tmp<fvPatchField<Type> > fvPatchField<Type>::NewCalculatedType
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > calculatedFvPatchField<Type>::valueInternalCoeffs
+CML::tmp<CML::Field<Type>>
+CML::calculatedFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -302,7 +300,8 @@ tmp<Field<Type> > calculatedFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > calculatedFvPatchField<Type>::valueBoundaryCoeffs
+CML::tmp<CML::Field<Type>>
+CML::calculatedFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -321,7 +320,8 @@ tmp<Field<Type> > calculatedFvPatchField<Type>::valueBoundaryCoeffs
 }
 
 template<class Type>
-tmp<Field<Type> > calculatedFvPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::calculatedFvPatchField<Type>::gradientInternalCoeffs() const
 {
     FatalErrorInFunction
         << "\n    "
@@ -338,7 +338,8 @@ tmp<Field<Type> > calculatedFvPatchField<Type>::gradientInternalCoeffs() const
 }
 
 template<class Type>
-tmp<Field<Type> > calculatedFvPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::calculatedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     FatalErrorInFunction
         << "\n    "
@@ -357,19 +358,11 @@ tmp<Field<Type> > calculatedFvPatchField<Type>::gradientBoundaryCoeffs() const
 
 // Write
 template<class Type>
-void calculatedFvPatchField<Type>::write(Ostream& os) const
+void CML::calculatedFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     this->writeEntry("value", os);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

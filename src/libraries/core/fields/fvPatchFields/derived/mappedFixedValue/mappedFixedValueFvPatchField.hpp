@@ -196,25 +196,18 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "mappedPatchBase.hpp"
 #include "volFields.hpp"
 #include "interpolationCell.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
+CML::mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -229,7 +222,7 @@ mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 
 
 template<class Type>
-mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
+CML::mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 (
     const mappedFixedValueFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -257,7 +250,7 @@ mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 
 
 template<class Type>
-mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
+CML::mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -293,7 +286,7 @@ mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 
 
 template<class Type>
-mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
+CML::mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 (
     const mappedFixedValueFvPatchField<Type>& ptf
 )
@@ -307,7 +300,7 @@ mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 
 
 template<class Type>
-mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
+CML::mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 (
     const mappedFixedValueFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -324,8 +317,8 @@ mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-const GeometricField<Type, fvPatchField, volMesh>&
-mappedFixedValueFvPatchField<Type>::sampleField() const
+const CML::GeometricField<Type, CML::fvPatchField, CML::volMesh>&
+CML::mappedFixedValueFvPatchField<Type>::sampleField() const
 {	
     typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
 	
@@ -360,7 +353,7 @@ mappedFixedValueFvPatchField<Type>::sampleField() const
 
 
 template<class Type>
-void mappedFixedValueFvPatchField<Type>::updateCoeffs()
+void CML::mappedFixedValueFvPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
     {
@@ -526,7 +519,7 @@ void mappedFixedValueFvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void mappedFixedValueFvPatchField<Type>::write(Ostream& os) const
+void CML::mappedFixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     os.writeKeyword("fieldName") << fieldName_ << token::END_STATEMENT << nl;
@@ -538,12 +531,4 @@ void mappedFixedValueFvPatchField<Type>::write(Ostream& os) const
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //
