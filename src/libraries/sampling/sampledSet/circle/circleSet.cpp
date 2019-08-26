@@ -114,7 +114,10 @@ void CML::circleSet::calcSamples
             samplingCells.append(cellI);
             samplingFaces.append(-1);
             samplingSegments.append(nPoint);
-            samplingCurveDist.append(mag(pt - startPoint_));
+            samplingCurveDist.append
+            (
+                radius*constant::mathematical::pi/180.0*theta
+            );
 
             nPoint++;
         }
