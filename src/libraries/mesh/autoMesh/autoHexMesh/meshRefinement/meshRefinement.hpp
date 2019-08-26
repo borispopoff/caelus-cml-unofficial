@@ -283,7 +283,7 @@ private:
                 const labelList& globalToPatch
             ) const;
 
-            //- Determine patches for baffles
+            //- Determine patches for baffles on all intersected unnamed faces
             void getBafflePatches
             (
                 const labelList& globalToPatch,
@@ -418,6 +418,8 @@ private:
                 labelList& cellToZone
             ) const;
 
+            //- Make namedSurfaceIndex consistent with cellToZone
+            //  - clear out any blocked faces in between same cell zone.
             void makeConsistentFaceIndex
             (
                 const labelList& cellToZone,

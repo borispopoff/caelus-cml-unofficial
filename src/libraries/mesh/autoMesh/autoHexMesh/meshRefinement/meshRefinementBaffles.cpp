@@ -42,25 +42,22 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Repatches external face or creates baffle for internal face
-// with user specified patches (might be different for both sides).
-// Returns label of added face.
 CML::label CML::meshRefinement::createBaffle
 (
-    const label faceI,
+    const label facei,
     const label ownPatch,
     const label neiPatch,
     polyTopoChange& meshMod
 ) const
 {
-    const face& f = mesh_.faces()[faceI];
-    label zoneID = mesh_.faceZones().whichZone(faceI);
+    const face& f = mesh_.faces()[facei];
+    label zoneID = mesh_.faceZones().whichZone(facei);
     bool zoneFlip = false;
 
     if (zoneID >= 0)
     {
         const faceZone& fZone = mesh_.faceZones()[zoneID];
-        zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
     }
 
     meshMod.setAction
@@ -68,8 +65,8 @@ CML::label CML::meshRefinement::createBaffle
         polyModifyFace
         (
             f,                          // modified face
-            faceI,                      // label of face
-            mesh_.faceOwner()[faceI],   // owner
+            facei,                      // label of face
+            mesh_.faceOwner()[facei],   // owner
             -1,                         // neighbour
             false,                      // face flip
             ownPatch,                   // patch for face
@@ -80,15 +77,15 @@ CML::label CML::meshRefinement::createBaffle
     );
 
 
-    label dupFaceI = -1;
+    label dupFacei = -1;
 
-    if (mesh_.isInternalFace(faceI))
+    if (mesh_.isInternalFace(facei))
     {
         if (neiPatch == -1)
         {
             FatalErrorInFunction
-                << "No neighbour patch for internal face " << faceI
-                << " fc:" << mesh_.faceCentres()[faceI]
+                << "No neighbour patch for internal face " << facei
+                << " fc:" << mesh_.faceCentres()[facei]
                 << " ownPatch:" << ownPatch << abort(FatalError);
         }
 
@@ -98,16 +95,16 @@ CML::label CML::meshRefinement::createBaffle
             reverseFlip = !zoneFlip;
         }
 
-        dupFaceI = meshMod.setAction
+        dupFacei = meshMod.setAction
         (
             polyAddFace
             (
                 f.reverseFace(),            // modified face
-                mesh_.faceNeighbour()[faceI],// owner
+                mesh_.faceNeighbour()[facei],// owner
                 -1,                         // neighbour
                 -1,                         // masterPointID
                 -1,                         // masterEdgeID
-                faceI,                      // masterFaceID,
+                facei,                      // masterFaceID,
                 true,                       // face flip
                 neiPatch,                   // patch for face
                 zoneID,                     // zone for face
@@ -115,7 +112,7 @@ CML::label CML::meshRefinement::createBaffle
             )
         );
     }
-    return dupFaceI;
+    return dupFacei;
 }
 
 
@@ -213,7 +210,6 @@ void CML::meshRefinement::getBafflePatches
     const labelList& globalToPatch,
     const labelList& neiLevel,
     const pointField& neiCc,
-
     labelList& ownPatch,
     labelList& neiPatch
 ) const
@@ -258,19 +254,19 @@ void CML::meshRefinement::getBafflePatches
 
     forAll(testFaces, i)
     {
-        label faceI = testFaces[i];
+        label facei = testFaces[i];
 
-        label own = mesh_.faceOwner()[faceI];
+        label own = mesh_.faceOwner()[facei];
 
-        if (mesh_.isInternalFace(faceI))
+        if (mesh_.isInternalFace(facei))
         {
             start[i] = cellCentres[own];
-            end[i] = cellCentres[mesh_.faceNeighbour()[faceI]];
+            end[i] = cellCentres[mesh_.faceNeighbour()[facei]];
         }
         else
         {
             start[i] = cellCentres[own];
-            end[i] = neiCc[faceI-mesh_.nInternalFaces()];
+            end[i] = neiCc[facei-mesh_.nInternalFaces()];
         }
     }
 
@@ -307,7 +303,7 @@ void CML::meshRefinement::getBafflePatches
 
     forAll(testFaces, i)
     {
-        label faceI = testFaces[i];
+        label facei = testFaces[i];
 
         if (hit1[i].hit() && hit2[i].hit())
         {
@@ -327,16 +323,16 @@ void CML::meshRefinement::getBafflePatches
             }
 
             // Pick up the patches
-            ownPatch[faceI] = globalToPatch
+            ownPatch[facei] = globalToPatch
             [
                 surfaces_.globalRegion(surface1[i], region1[i])
             ];
-            neiPatch[faceI] = globalToPatch
+            neiPatch[facei] = globalToPatch
             [
                 surfaces_.globalRegion(surface2[i], region2[i])
             ];
 
-            if (ownPatch[faceI] == -1 || neiPatch[faceI] == -1)
+            if (ownPatch[facei] == -1 || neiPatch[facei] == -1)
             {
                 FatalErrorInFunction
                     << "problem." << abort(FatalError);
@@ -388,7 +384,6 @@ CML::Map<CML::label> CML::meshRefinement::getZoneBafflePatches
                 << " found faceZone " << fZone.name()
                 << " and patch " << mesh_.boundaryMesh()[patchI].name()
                 << endl;
-
 
             forAll(fZone, i)
             {
@@ -449,22 +444,22 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::createBaffles
         labelList syncedNeiPatch(neiPatch);
         syncTools::syncFaceList(mesh_, syncedNeiPatch, maxEqOp<label>());
 
-        forAll(syncedOwnPatch, faceI)
+        forAll(syncedOwnPatch, facei)
         {
             if
             (
-                (ownPatch[faceI] == -1 && syncedOwnPatch[faceI] != -1)
-             || (neiPatch[faceI] == -1 && syncedNeiPatch[faceI] != -1)
+                (ownPatch[facei] == -1 && syncedOwnPatch[facei] != -1)
+             || (neiPatch[facei] == -1 && syncedNeiPatch[facei] != -1)
             )
             {
                 FatalErrorInFunction
-                    << "Non synchronised at face:" << faceI
-                    << " on patch:" << mesh_.boundaryMesh().whichPatch(faceI)
-                    << " fc:" << mesh_.faceCentres()[faceI] << endl
-                    << "ownPatch:" << ownPatch[faceI]
-                    << " syncedOwnPatch:" << syncedOwnPatch[faceI]
-                    << " neiPatch:" << neiPatch[faceI]
-                    << " syncedNeiPatch:" << syncedNeiPatch[faceI]
+                    << "Non synchronised at face:" << facei
+                    << " on patch:" << mesh_.boundaryMesh().whichPatch(facei)
+                    << " fc:" << mesh_.faceCentres()[facei] << endl
+                    << "ownPatch:" << ownPatch[facei]
+                    << " syncedOwnPatch:" << syncedOwnPatch[facei]
+                    << " neiPatch:" << neiPatch[facei]
+                    << " syncedNeiPatch:" << syncedNeiPatch[facei]
                     << abort(FatalError);
             }
         }
@@ -475,17 +470,17 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::createBaffles
 
     label nBaffles = 0;
 
-    forAll(ownPatch, faceI)
+    forAll(ownPatch, facei)
     {
-        if (ownPatch[faceI] != -1)
+        if (ownPatch[facei] != -1)
         {
             // Create baffle or repatch face. Return label of inserted baffle
             // face.
             createBaffle
             (
-                faceI,
-                ownPatch[faceI],   // owner side patch
-                neiPatch[faceI],   // neighbour side patch
+                facei,
+                ownPatch[facei],   // owner side patch
+                neiPatch[facei],   // neighbour side patch
                 meshMod
             );
             nBaffles++;
@@ -521,13 +516,13 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::createBaffles
     const labelList& faceMap = map().faceMap();
 
     // Pick up owner side of baffle
-    forAll(ownPatch, oldFaceI)
+    forAll(ownPatch, oldFacei)
     {
-        label faceI = reverseFaceMap[oldFaceI];
+        label facei = reverseFaceMap[oldFacei];
 
-        if (ownPatch[oldFaceI] != -1 && faceI >= 0)
+        if (ownPatch[oldFacei] != -1 && facei >= 0)
         {
-            const cell& ownFaces = mesh_.cells()[mesh_.faceOwner()[faceI]];
+            const cell& ownFaces = mesh_.cells()[mesh_.faceOwner()[facei]];
 
             forAll(ownFaces, i)
             {
@@ -536,13 +531,13 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::createBaffles
         }
     }
     // Pick up neighbour side of baffle (added faces)
-    forAll(faceMap, faceI)
+    forAll(faceMap, facei)
     {
-        label oldFaceI = faceMap[faceI];
+        label oldFacei = faceMap[facei];
 
-        if (oldFaceI >= 0 && reverseFaceMap[oldFaceI] != faceI)
+        if (oldFacei >= 0 && reverseFaceMap[oldFacei] != facei)
         {
-            const cell& ownFaces = mesh_.cells()[mesh_.faceOwner()[faceI]];
+            const cell& ownFaces = mesh_.cells()[mesh_.faceOwner()[facei]];
 
             forAll(ownFaces, i)
             {
@@ -681,19 +676,19 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::createZoneBaffles
             const labelList& faceMap = map().faceMap();
             const labelList& reverseFaceMap = map().reverseFaceMap();
 
-            forAll(faceMap, faceI)
+            forAll(faceMap, facei)
             {
-                label oldFaceI = faceMap[faceI];
+                label oldFacei = faceMap[facei];
 
                 // Does face originate from face-to-patch
-                Map<label>::const_iterator iter = faceToPatch.find(oldFaceI);
+                Map<label>::const_iterator iter = faceToPatch.find(oldFacei);
 
                 if (iter != faceToPatch.end())
                 {
-                    label masterFaceI = reverseFaceMap[oldFaceI];
-                    if (faceI != masterFaceI)
+                    label masterFacei = reverseFaceMap[oldFacei];
+                    if (facei != masterFacei)
                     {
-                        baffles[baffleI++] = labelPair(masterFaceI, faceI);
+                        baffles[baffleI++] = labelPair(masterFacei, facei);
                     }
                 }
             }
@@ -732,6 +727,10 @@ CML::List<CML::labelPair> CML::meshRefinement::filterDuplicateFaces
     const List<labelPair>& couples
 ) const
 {
+    // Done by counting the number of baffles faces per mesh edge. If edge
+    // has 2 boundary faces and both are baffle faces it is the edge of a baffle
+    // region.
+
     // All duplicate faces on edge of the patch are to be merged.
     // So we count for all edges of duplicate faces how many duplicate
     // faces use them.
@@ -744,24 +743,24 @@ CML::List<CML::labelPair> CML::meshRefinement::filterDuplicateFaces
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         // Count number of boundary faces. Discard coupled boundary faces.
         if (!pp.coupled())
         {
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                const labelList& fEdges = mesh_.faceEdges(faceI);
+                const labelList& fEdges = mesh_.faceEdges(facei);
 
                 forAll(fEdges, fEdgeI)
                 {
                     nBafflesPerEdge[fEdges[fEdgeI]]++;
                 }
-                faceI++;
+                facei++;
             }
         }
     }
@@ -999,15 +998,15 @@ void CML::meshRefinement::findCellZoneGeometric
         insideSurfaces
     );
 
-    forAll(insideSurfaces, cellI)
+    forAll(insideSurfaces, celli)
     {
-        if (cellToZone[cellI] == -2)
+        if (cellToZone[celli] == -2)
         {
-            label surfI = insideSurfaces[cellI];
+            label surfI = insideSurfaces[celli];
 
             if (surfI != -1)
             {
-                cellToZone[cellI] = surfaceToCellZone[surfI];
+                cellToZone[celli] = surfaceToCellZone[surfI];
             }
         }
     }
@@ -1021,13 +1020,13 @@ void CML::meshRefinement::findCellZoneGeometric
 
     // Count points to test.
     label nCandidates = 0;
-    forAll(namedSurfaceIndex, faceI)
+    forAll(namedSurfaceIndex, facei)
     {
-        label surfI = namedSurfaceIndex[faceI];
+        label surfI = namedSurfaceIndex[facei];
 
         if (surfI != -1)
         {
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
                 nCandidates += 2;
             }
@@ -1041,29 +1040,29 @@ void CML::meshRefinement::findCellZoneGeometric
     // Collect points.
     pointField candidatePoints(nCandidates);
     nCandidates = 0;
-    forAll(namedSurfaceIndex, faceI)
+    forAll(namedSurfaceIndex, facei)
     {
-        label surfI = namedSurfaceIndex[faceI];
+        label surfI = namedSurfaceIndex[facei];
 
         if (surfI != -1)
         {
-            label own = faceOwner[faceI];
+            label own = faceOwner[facei];
             const point& ownCc = cellCentres[own];
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
-                label nei = faceNeighbour[faceI];
+                label nei = faceNeighbour[facei];
                 const point& neiCc = cellCentres[nei];
                 // Perturbed cc
-                const vector d = 1E-4*(neiCc - ownCc);
+                const vector d = 1e-4*(neiCc - ownCc);
                 candidatePoints[nCandidates++] = ownCc-d;
                 candidatePoints[nCandidates++] = neiCc+d;
             }
             else
             {
-                const point& neiFc = mesh_.faceCentres()[faceI];
+                const point& neiFc = mesh_.faceCentres()[facei];
                 // Perturbed cc
-                const vector d = 1E-4*(neiFc - ownCc);
+                const vector d = 1e-4*(neiFc - ownCc);
                 candidatePoints[nCandidates++] = ownCc-d;
             }
         }
@@ -1083,15 +1082,15 @@ void CML::meshRefinement::findCellZoneGeometric
     // 3. Update zone information
 
     nCandidates = 0;
-    forAll(namedSurfaceIndex, faceI)
+    forAll(namedSurfaceIndex, facei)
     {
-        label surfI = namedSurfaceIndex[faceI];
+        label surfI = namedSurfaceIndex[facei];
 
         if (surfI != -1)
         {
-            label own = faceOwner[faceI];
+            label own = faceOwner[facei];
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
                 label ownSurfI = insideSurfaces[nCandidates++];
                 if (ownSurfI != -1)
@@ -1102,7 +1101,7 @@ void CML::meshRefinement::findCellZoneGeometric
                 label neiSurfI = insideSurfaces[nCandidates++];
                 if (neiSurfI != -1)
                 {
-                    label nei = faceNeighbour[faceI];
+                    label nei = faceNeighbour[facei];
 
                     cellToZone[nei] = surfaceToCellZone[neiSurfI];
                 }
@@ -1123,15 +1122,15 @@ void CML::meshRefinement::findCellZoneGeometric
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // for if any cells were not completely covered.
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        label ownZone = cellToZone[mesh_.faceOwner()[faceI]];
-        label neiZone = cellToZone[mesh_.faceNeighbour()[faceI]];
+        label ownZone = cellToZone[mesh_.faceOwner()[facei]];
+        label neiZone = cellToZone[mesh_.faceNeighbour()[facei]];
 
-        if (namedSurfaceIndex[faceI] == -1 && (ownZone != neiZone))
+        if (namedSurfaceIndex[facei] == -1 && (ownZone != neiZone))
         {
             // Give face the zone of max cell zone
-            namedSurfaceIndex[faceI] = findIndex
+            namedSurfaceIndex[facei] = findIndex
             (
                 surfaceToCellZone,
                 max(ownZone, neiZone)
@@ -1142,38 +1141,38 @@ void CML::meshRefinement::findCellZoneGeometric
     labelList neiCellZone(mesh_.nFaces()-mesh_.nInternalFaces());
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
             forAll(pp, i)
             {
-                label faceI = pp.start()+i;
-                label ownZone = cellToZone[mesh_.faceOwner()[faceI]];
-                neiCellZone[faceI-mesh_.nInternalFaces()] = ownZone;
+                label facei = pp.start()+i;
+                label ownZone = cellToZone[mesh_.faceOwner()[facei]];
+                neiCellZone[facei-mesh_.nInternalFaces()] = ownZone;
             }
         }
     }
     syncTools::swapBoundaryFaceList(mesh_, neiCellZone);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
             forAll(pp, i)
             {
-                label faceI = pp.start()+i;
-                label ownZone = cellToZone[mesh_.faceOwner()[faceI]];
-                label neiZone = neiCellZone[faceI-mesh_.nInternalFaces()];
+                label facei = pp.start()+i;
+                label ownZone = cellToZone[mesh_.faceOwner()[facei]];
+                label neiZone = neiCellZone[facei-mesh_.nInternalFaces()];
 
-                if (namedSurfaceIndex[faceI] == -1 && (ownZone != neiZone))
+                if (namedSurfaceIndex[facei] == -1 && (ownZone != neiZone))
                 {
                     // Give face the max cell zone
-                    namedSurfaceIndex[faceI] = findIndex
+                    namedSurfaceIndex[facei] = findIndex
                     (
                         surfaceToCellZone,
                         max(ownZone, neiZone)
@@ -1186,7 +1185,8 @@ void CML::meshRefinement::findCellZoneGeometric
     // Sync
     syncTools::syncFaceList(mesh_, namedSurfaceIndex, maxEqOp<label>());
 }
-//XXXXXXXXX
+
+
 void CML::meshRefinement::findCellZoneInsideWalk
 (
     const labelList& locationSurfaces,  // indices of surfaces with inside point
@@ -1199,15 +1199,15 @@ void CML::meshRefinement::findCellZoneInsideWalk
     // Analyse regions. Reuse regionsplit
     boolList blockedFace(mesh_.nFaces());
 
-    forAll(namedSurfaceIndex, faceI)
+    forAll(namedSurfaceIndex, facei)
     {
-        if (namedSurfaceIndex[faceI] == -1)
+        if (namedSurfaceIndex[facei] == -1)
         {
-            blockedFace[faceI] = false;
+            blockedFace[facei] = false;
         }
         else
         {
-            blockedFace[faceI] = true;
+            blockedFace[facei] = true;
         }
     }
     // No need to sync since namedSurfaceIndex already is synced
@@ -1230,16 +1230,16 @@ void CML::meshRefinement::findCellZoneInsideWalk
         // Find the region containing the insidePoint
         label keepRegionI = -1;
 
-        label cellI = mesh_.findCell(insidePoint);
+        label celli = mesh_.findCell(insidePoint);
 
-        if (cellI != -1)
+        if (celli != -1)
         {
-            keepRegionI = cellRegion[cellI];
+            keepRegionI = cellRegion[celli];
         }
         reduce(keepRegionI, maxOp<label>());
 
         Info<< "For surface " << surfaces_.names()[surfI]
-            << " found point " << insidePoint << " in cell " << cellI
+            << " found point " << insidePoint << " in cell " << celli
             << " in global region " << keepRegionI
             << " out of " << cellRegion.nRegions() << " regions." << endl;
 
@@ -1253,22 +1253,22 @@ void CML::meshRefinement::findCellZoneInsideWalk
         }
 
         // Set all cells with this region
-        forAll(cellRegion, cellI)
+        forAll(cellRegion, celli)
         {
-            if (cellRegion[cellI] == keepRegionI)
+            if (cellRegion[celli] == keepRegionI)
             {
-                if (cellToZone[cellI] == -2)
+                if (cellToZone[celli] == -2)
                 {
-                    cellToZone[cellI] = surfaceToCellZone[surfI];
+                    cellToZone[celli] = surfaceToCellZone[surfI];
                 }
-                else if (cellToZone[cellI] != surfaceToCellZone[surfI])
+                else if (cellToZone[celli] != surfaceToCellZone[surfI])
                 {
                     WarningInFunction
-                        << "Cell " << cellI
-                        << " at " << mesh_.cellCentres()[cellI]
+                        << "Cell " << celli
+                        << " at " << mesh_.cellCentres()[celli]
                         << " is inside surface " << surfaces_.names()[surfI]
                         << " but already marked as being in zone "
-                        << cellToZone[cellI] << endl
+                        << cellToZone[celli] << endl
                         << "This can happen if your surfaces are not"
                         << " (sufficiently) closed."
                         << endl;
@@ -1277,7 +1277,6 @@ void CML::meshRefinement::findCellZoneInsideWalk
         }
     }
 }
-//XXXXXXXXX
 
 
 bool CML::meshRefinement::calcRegionToZone
@@ -1291,7 +1290,7 @@ bool CML::meshRefinement::calcRegionToZone
 {
     bool changed = false;
 
-    // Check whether inbetween different regions
+    // Check whether in between different regions
     if (ownRegion != neiRegion)
     {
         // Jump. Change one of the sides to my type.
@@ -1353,15 +1352,15 @@ void CML::meshRefinement::findCellZoneTopo
     // Analyse regions. Reuse regionsplit
     boolList blockedFace(mesh_.nFaces());
 
-    forAll(namedSurfaceIndex, faceI)
+    forAll(namedSurfaceIndex, facei)
     {
-        if (namedSurfaceIndex[faceI] == -1)
+        if (namedSurfaceIndex[facei] == -1)
         {
-            blockedFace[faceI] = false;
+            blockedFace[facei] = false;
         }
         else
         {
-            blockedFace[faceI] = true;
+            blockedFace[facei] = true;
         }
     }
     // No need to sync since namedSurfaceIndex already is synced
@@ -1379,11 +1378,11 @@ void CML::meshRefinement::findCellZoneTopo
     // See which cells already are set in the cellToZone (from geometric
     // searching) and use these to take over their zones.
     // Note: could be improved to count number of cells per region.
-    forAll(cellToZone, cellI)
+    forAll(cellToZone, celli)
     {
-        if (cellToZone[cellI] != -2)
+        if (cellToZone[celli] != -2)
         {
-            regionToCellZone[cellRegion[cellI]] = cellToZone[cellI];
+            regionToCellZone[cellRegion[celli]] = cellToZone[celli];
         }
     }
 
@@ -1392,15 +1391,15 @@ void CML::meshRefinement::findCellZoneTopo
     // Find the region containing the keepPoint
     label keepRegionI = -1;
 
-    label cellI = mesh_.findCell(keepPoint);
+    label celli = mesh_.findCell(keepPoint);
 
-    if (cellI != -1)
+    if (celli != -1)
     {
-        keepRegionI = cellRegion[cellI];
+        keepRegionI = cellRegion[celli];
     }
     reduce(keepRegionI, maxOp<label>());
 
-    Info<< "Found point " << keepPoint << " in cell " << cellI
+    Info<< "Found point " << keepPoint << " in cell " << celli
         << " in global region " << keepRegionI
         << " out of " << cellRegion.nRegions() << " regions." << endl;
 
@@ -1439,9 +1438,9 @@ void CML::meshRefinement::findCellZoneTopo
 
         // Internal faces
 
-        for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+        for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
         {
-            label surfI = namedSurfaceIndex[faceI];
+            label surfI = namedSurfaceIndex[facei];
 
             // Connected even if no cellZone defined for surface
             if (surfI != -1)
@@ -1451,8 +1450,8 @@ void CML::meshRefinement::findCellZoneTopo
                 bool changedCell = calcRegionToZone
                 (
                     surfaceToCellZone[surfI],
-                    cellRegion[mesh_.faceOwner()[faceI]],
-                    cellRegion[mesh_.faceNeighbour()[faceI]],
+                    cellRegion[mesh_.faceOwner()[facei]],
+                    cellRegion[mesh_.faceNeighbour()[facei]],
                     regionToCellZone
                 );
 
@@ -1466,17 +1465,17 @@ void CML::meshRefinement::findCellZoneTopo
 
         // Get coupled neighbour cellRegion
         labelList neiCellRegion(mesh_.nFaces()-mesh_.nInternalFaces());
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if (pp.coupled())
             {
                 forAll(pp, i)
                 {
-                    label faceI = pp.start()+i;
-                    neiCellRegion[faceI-mesh_.nInternalFaces()] =
-                        cellRegion[mesh_.faceOwner()[faceI]];
+                    label facei = pp.start()+i;
+                    neiCellRegion[facei-mesh_.nInternalFaces()] =
+                        cellRegion[mesh_.faceOwner()[facei]];
                 }
             }
         }
@@ -1484,17 +1483,17 @@ void CML::meshRefinement::findCellZoneTopo
 
         // Calculate region to zone from cellRegions on either side of coupled
         // face.
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if (pp.coupled())
             {
                 forAll(pp, i)
                 {
-                    label faceI = pp.start()+i;
+                    label facei = pp.start()+i;
 
-                    label surfI = namedSurfaceIndex[faceI];
+                    label surfI = namedSurfaceIndex[facei];
 
                     // Connected even if no cellZone defined for surface
                     if (surfI != -1)
@@ -1502,8 +1501,8 @@ void CML::meshRefinement::findCellZoneTopo
                         bool changedCell = calcRegionToZone
                         (
                             surfaceToCellZone[surfI],
-                            cellRegion[mesh_.faceOwner()[faceI]],
-                            neiCellRegion[faceI-mesh_.nInternalFaces()],
+                            cellRegion[mesh_.faceOwner()[facei]],
+                            neiCellRegion[facei-mesh_.nInternalFaces()],
                             regionToCellZone
                         );
 
@@ -1543,9 +1542,9 @@ void CML::meshRefinement::findCellZoneTopo
     }
 
     // Rework into cellToZone
-    forAll(cellToZone, cellI)
+    forAll(cellToZone, celli)
     {
-        cellToZone[cellI] = regionToCellZone[cellRegion[cellI]];
+        cellToZone[celli] = regionToCellZone[cellRegion[celli]];
     }
 }
 
@@ -1561,20 +1560,20 @@ void CML::meshRefinement::makeConsistentFaceIndex
     const labelList& faceOwner = mesh_.faceOwner();
     const labelList& faceNeighbour = mesh_.faceNeighbour();
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        label ownZone = cellToZone[faceOwner[faceI]];
-        label neiZone = cellToZone[faceNeighbour[faceI]];
+        label ownZone = cellToZone[faceOwner[facei]];
+        label neiZone = cellToZone[faceNeighbour[facei]];
 
-        if (ownZone == neiZone && namedSurfaceIndex[faceI] != -1)
+        if (ownZone == neiZone && namedSurfaceIndex[facei] != -1)
         {
-            namedSurfaceIndex[faceI] = -1;
+            namedSurfaceIndex[facei] = -1;
         }
-        else if (ownZone != neiZone && namedSurfaceIndex[faceI] == -1)
+        else if (ownZone != neiZone && namedSurfaceIndex[facei] == -1)
         {
             FatalErrorInFunction
-                << "Different cell zones on either side of face " << faceI
-                << " at " << mesh_.faceCentres()[faceI]
+                << "Different cell zones on either side of face " << facei
+                << " at " << mesh_.faceCentres()[facei]
                 << " but face not marked with a surface."
                 << abort(FatalError);
         }
@@ -1584,45 +1583,45 @@ void CML::meshRefinement::makeConsistentFaceIndex
 
     // Get coupled neighbour cellZone
     labelList neiCellZone(mesh_.nFaces()-mesh_.nInternalFaces());
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
             forAll(pp, i)
             {
-                label faceI = pp.start()+i;
-                neiCellZone[faceI-mesh_.nInternalFaces()] =
-                    cellToZone[mesh_.faceOwner()[faceI]];
+                label facei = pp.start()+i;
+                neiCellZone[facei-mesh_.nInternalFaces()] =
+                    cellToZone[mesh_.faceOwner()[facei]];
             }
         }
     }
     syncTools::swapBoundaryFaceList(mesh_, neiCellZone);
 
     // Use coupled cellZone to do check
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
             forAll(pp, i)
             {
-                label faceI = pp.start()+i;
+                label facei = pp.start()+i;
 
-                label ownZone = cellToZone[faceOwner[faceI]];
-                label neiZone = neiCellZone[faceI-mesh_.nInternalFaces()];
+                label ownZone = cellToZone[faceOwner[facei]];
+                label neiZone = neiCellZone[facei-mesh_.nInternalFaces()];
 
-                if (ownZone == neiZone && namedSurfaceIndex[faceI] != -1)
+                if (ownZone == neiZone && namedSurfaceIndex[facei] != -1)
                 {
-                    namedSurfaceIndex[faceI] = -1;
+                    namedSurfaceIndex[facei] = -1;
                 }
-                else if (ownZone != neiZone && namedSurfaceIndex[faceI] == -1)
+                else if (ownZone != neiZone && namedSurfaceIndex[facei] == -1)
                 {
                     FatalErrorInFunction
                         << "Different cell zones on either side of face "
-                        << faceI << " at " << mesh_.faceCentres()[faceI]
+                        << facei << " at " << mesh_.faceCentres()[facei]
                         << " but face not marked with a surface."
                         << abort(FatalError);
                 }
@@ -1633,8 +1632,8 @@ void CML::meshRefinement::makeConsistentFaceIndex
             // Unzonify boundary faces
             forAll(pp, i)
             {
-                label faceI = pp.start()+i;
-                namedSurfaceIndex[faceI] = -1;
+                label facei = pp.start()+i;
+                namedSurfaceIndex[facei] = -1;
             }
         }
     }
@@ -1911,11 +1910,11 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMesh
     // Analyse regions. Reuse regionsplit
     boolList blockedFace(mesh_.nFaces(), false);
 
-    forAll(ownPatch, faceI)
+    forAll(ownPatch, facei)
     {
-        if (ownPatch[faceI] != -1 || neiPatch[faceI] != -1)
+        if (ownPatch[facei] != -1 || neiPatch[facei] != -1)
         {
-            blockedFace[faceI] = true;
+            blockedFace[facei] = true;
         }
     }
     syncTools::syncFaceList(mesh_, blockedFace, orEqOp<bool>());
@@ -1927,15 +1926,15 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMesh
     // Find the region containing the keepPoint
     label keepRegionI = -1;
 
-    label cellI = mesh_.findCell(keepPoint);
+    label celli = mesh_.findCell(keepPoint);
 
-    if (cellI != -1)
+    if (celli != -1)
     {
-        keepRegionI = cellRegion[cellI];
+        keepRegionI = cellRegion[celli];
     }
     reduce(keepRegionI, maxOp<label>());
 
-    Info<< "Found point " << keepPoint << " in cell " << cellI
+    Info<< "Found point " << keepPoint << " in cell " << celli
         << " in global region " << keepRegionI
         << " out of " << cellRegion.nRegions() << " regions." << endl;
 
@@ -1971,12 +1970,12 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMesh
 
         labelList pointBaffle(mesh_.nPoints(), -1);
 
-        forAll(faceNeighbour, faceI)
+        forAll(faceNeighbour, facei)
         {
-            const face& f = mesh_.faces()[faceI];
+            const face& f = mesh_.faces()[facei];
 
-            label ownRegion = cellRegion[faceOwner[faceI]];
-            label neiRegion = cellRegion[faceNeighbour[faceI]];
+            label ownRegion = cellRegion[faceOwner[facei]];
+            label neiRegion = cellRegion[faceNeighbour[facei]];
 
             if (ownRegion == keepRegionI && neiRegion != keepRegionI)
             {
@@ -1985,38 +1984,38 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMesh
                 // happen for boundary faces?
                 forAll(f, fp)
                 {
-                    pointBaffle[f[fp]] = max(defaultPatch, ownPatch[faceI]);
+                    pointBaffle[f[fp]] = max(defaultPatch, ownPatch[facei]);
                 }
             }
             else if (ownRegion != keepRegionI && neiRegion == keepRegionI)
             {
-                label newPatchI = neiPatch[faceI];
-                if (newPatchI == -1)
+                label newPatchi = neiPatch[facei];
+                if (newPatchi == -1)
                 {
-                    newPatchI = max(defaultPatch, ownPatch[faceI]);
+                    newPatchi = max(defaultPatch, ownPatch[facei]);
                 }
                 forAll(f, fp)
                 {
-                    pointBaffle[f[fp]] = newPatchI;
+                    pointBaffle[f[fp]] = newPatchi;
                 }
             }
         }
         for
         (
-            label faceI = mesh_.nInternalFaces();
-            faceI < mesh_.nFaces();
-            faceI++
+            label facei = mesh_.nInternalFaces();
+            facei < mesh_.nFaces();
+            facei++
         )
         {
-            const face& f = mesh_.faces()[faceI];
+            const face& f = mesh_.faces()[facei];
 
-            label ownRegion = cellRegion[faceOwner[faceI]];
+            label ownRegion = cellRegion[faceOwner[facei]];
 
             if (ownRegion == keepRegionI)
             {
                 forAll(f, fp)
                 {
-                    pointBaffle[f[fp]] = max(defaultPatch, ownPatch[faceI]);
+                    pointBaffle[f[fp]] = max(defaultPatch, ownPatch[facei]);
                 }
             }
         }
@@ -2035,19 +2034,19 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMesh
 
         const labelListList& pointFaces = mesh_.pointFaces();
 
-        forAll(pointFaces, pointI)
+        forAll(pointFaces, pointi)
         {
-            if (pointBaffle[pointI] != -1)
+            if (pointBaffle[pointi] != -1)
             {
-                const labelList& pFaces = pointFaces[pointI];
+                const labelList& pFaces = pointFaces[pointi];
 
-                forAll(pFaces, pFaceI)
+                forAll(pFaces, pFacei)
                 {
-                    label faceI = pFaces[pFaceI];
+                    label facei = pFaces[pFacei];
 
-                    if (ownPatch[faceI] == -1)
+                    if (ownPatch[facei] == -1)
                     {
-                        ownPatch[faceI] = pointBaffle[pointI];
+                        ownPatch[facei] = pointBaffle[pointi];
                     }
                 }
             }
@@ -2059,11 +2058,11 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMesh
 
         labelList newOwnPatch(ownPatch);
 
-        forAll(ownPatch, faceI)
+        forAll(ownPatch, facei)
         {
-            if (ownPatch[faceI] != -1)
+            if (ownPatch[facei] != -1)
             {
-                label own = faceOwner[faceI];
+                label own = faceOwner[facei];
 
                 if (cellRegion[own] != keepRegionI)
                 {
@@ -2074,13 +2073,13 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMesh
                     {
                         if (ownPatch[ownFaces[j]] == -1)
                         {
-                            newOwnPatch[ownFaces[j]] = ownPatch[faceI];
+                            newOwnPatch[ownFaces[j]] = ownPatch[facei];
                         }
                     }
                 }
-                if (mesh_.isInternalFace(faceI))
+                if (mesh_.isInternalFace(facei))
                 {
-                    label nei = faceNeighbour[faceI];
+                    label nei = faceNeighbour[facei];
 
                     if (cellRegion[nei] != keepRegionI)
                     {
@@ -2091,7 +2090,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMesh
                         {
                             if (ownPatch[neiFaces[j]] == -1)
                             {
-                                newOwnPatch[neiFaces[j]] = ownPatch[faceI];
+                                newOwnPatch[neiFaces[j]] = ownPatch[facei];
                             }
                         }
                     }
@@ -2111,11 +2110,11 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMesh
 
     // Get cells to remove
     DynamicList<label> cellsToRemove(mesh_.nCells());
-    forAll(cellRegion, cellI)
+    forAll(cellRegion, celli)
     {
-        if (cellRegion[cellI] != keepRegionI)
+        if (cellRegion[celli] != keepRegionI)
         {
-            cellsToRemove.append(cellI);
+            cellsToRemove.append(celli);
         }
     }
     cellsToRemove.shrink();
@@ -2138,17 +2137,17 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMesh
 
     forAll(exposedFaces, i)
     {
-        label faceI = exposedFaces[i];
+        label facei = exposedFaces[i];
 
-        if (ownPatch[faceI] != -1)
+        if (ownPatch[facei] != -1)
         {
-            exposedPatches[i] = ownPatch[faceI];
+            exposedPatches[i] = ownPatch[facei];
         }
         else
         {
             WarningInFunction
-                << "For exposed face " << faceI
-                << " fc:" << mesh_.faceCentres()[faceI]
+                << "For exposed face " << facei
+                << " fc:" << mesh_.faceCentres()[facei]
                 << " found no patch." << endl
                 << "    Taking patch " << defaultPatch
                 << " instead." << endl;
@@ -2412,17 +2411,17 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
 
         forAll(testFaces, i)
         {
-            label faceI = testFaces[i];
+            label facei = testFaces[i];
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
-                start[i] = cellCentres[faceOwner[faceI]];
-                end[i] = cellCentres[faceNeighbour[faceI]];
+                start[i] = cellCentres[faceOwner[facei]];
+                end[i] = cellCentres[faceNeighbour[facei]];
             }
             else
             {
-                start[i] = cellCentres[faceOwner[faceI]];
-                end[i] = neiCc[faceI-mesh_.nInternalFaces()];
+                start[i] = cellCentres[faceOwner[facei]];
+                end[i] = neiCc[facei-mesh_.nInternalFaces()];
             }
         }
 
@@ -2463,17 +2462,17 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
 
         forAll(testFaces, i)
         {
-            label faceI = testFaces[i];
+            label facei = testFaces[i];
 
             if (surface1[i] != -1)
             {
                 // If both hit should probably choose nearest. For later.
-                namedSurfaceIndex[faceI] = surface1[i];
+                namedSurfaceIndex[facei] = surface1[i];
                 nSurfFaces[surface1[i]]++;
             }
             else if (surface2[i] != -1)
             {
-                namedSurfaceIndex[faceI] = surface2[i];
+                namedSurfaceIndex[facei] = surface2[i];
                 nSurfFaces[surface2[i]]++;
             }
         }
@@ -2597,15 +2596,15 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
     // Put the faces into the correct zone
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        label surfI = namedSurfaceIndex[faceI];
+        label surfI = namedSurfaceIndex[facei];
 
         if (surfI != -1)
         {
             // Orient face zone to have slave cells in max cell zone.
-            label ownZone = cellToZone[faceOwner[faceI]];
-            label neiZone = cellToZone[faceNeighbour[faceI]];
+            label ownZone = cellToZone[faceOwner[facei]];
+            label neiZone = cellToZone[faceNeighbour[facei]];
 
             bool flip;
             if (ownZone == max(ownZone, neiZone))
@@ -2621,10 +2620,10 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
             (
                 polyModifyFace
                 (
-                    mesh_.faces()[faceI],           // modified face
-                    faceI,                          // label of face
-                    faceOwner[faceI],               // owner
-                    faceNeighbour[faceI],           // neighbour
+                    mesh_.faces()[facei],           // modified face
+                    facei,                          // label of face
+                    faceOwner[facei],               // owner
+                    faceNeighbour[facei],           // neighbour
                     false,                          // face flip
                     -1,                             // patch for face
                     false,                          // remove from zone
@@ -2657,20 +2656,20 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
     PackedBoolList isMasterFace(syncTools::getMasterFaces(mesh_));
 
     // Set owner as no-flip
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
-        label faceI = pp.start();
+        label facei = pp.start();
 
         forAll(pp, i)
         {
-            label surfI = namedSurfaceIndex[faceI];
+            label surfI = namedSurfaceIndex[facei];
 
             if (surfI != -1)
             {
-                label ownZone = cellToZone[faceOwner[faceI]];
-                label neiZone = neiCellZone[faceI-mesh_.nInternalFaces()];
+                label ownZone = cellToZone[faceOwner[facei]];
+                label neiZone = neiCellZone[facei-mesh_.nInternalFaces()];
 
                 bool flip;
 
@@ -2684,7 +2683,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
                 {
                     // Free-standing zone face or coupled boundary. Keep master
                     // face unflipped.
-                    flip = !isMasterFace[faceI];
+                    flip = !isMasterFace[facei];
                 }
                 else if (neiZone == maxZone)
                 {
@@ -2699,19 +2698,19 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
                 (
                     polyModifyFace
                     (
-                        mesh_.faces()[faceI],           // modified face
-                        faceI,                          // label of face
-                        faceOwner[faceI],               // owner
+                        mesh_.faces()[facei],           // modified face
+                        facei,                          // label of face
+                        faceOwner[facei],               // owner
                         -1,                             // neighbour
                         false,                          // face flip
-                        patchI,                         // patch for face
+                        patchi,                         // patch for face
                         false,                          // remove from zone
                         surfaceToFaceZone[surfI],       // zone for face
                         flip                            // face flip in zone
                     )
                 );
             }
-            faceI++;
+            facei++;
         }
     }
 
@@ -2719,9 +2718,9 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
     // Put the cells into the correct zone
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    forAll(cellToZone, cellI)
+    forAll(cellToZone, celli)
     {
-        label zoneI = cellToZone[cellI];
+        label zoneI = cellToZone[celli];
 
         if (zoneI >= 0)
         {
@@ -2729,7 +2728,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
             (
                 polyModifyCell
                 (
-                    cellI,
+                    celli,
                     false,          // removeFromZone
                     zoneI
                 )
