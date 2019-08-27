@@ -562,6 +562,7 @@ src_core = Split("""
     meshTools/indexedOctree/treeDataTriSurface.cpp
     meshTools/searchableSurface/searchableBox.cpp
     meshTools/searchableSurface/searchableRotatedBox.cpp
+    meshTools/searchableSurface/searchableCone.cpp
     meshTools/searchableSurface/searchableCylinder.cpp
     meshTools/searchableSurface/searchableDisk.cpp
     meshTools/searchableSurface/searchablePlane.cpp
