@@ -223,13 +223,13 @@ public:
             //- Assignment of all addressed entries to the given value
             inline void operator=(const Type&);
 
-            //- Assignment from DynamicField
+            //- Assignment to DynamicField
             inline void operator=
             (
                 const DynamicField<Type, SizeInc, SizeMult, SizeDiv>&
             );
 
-            //- Assignment from UList
+            //- Assignment to UList
             inline void operator=(const UList<Type>&);
 };
 

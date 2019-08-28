@@ -78,7 +78,7 @@ class DynamicList
     //- Avoid invalid sizing parameters
     StaticAssert((SizeInc || SizeMult) && SizeDiv);
 
-    // Private data
+    // Private Data
 
         //- The capacity (allocated size) of the underlying list.
         label capacity_;
@@ -97,7 +97,7 @@ public:
         //- Construct null
         inline DynamicList();
 
-        //- Construct given size.
+        //- Construct given size
         explicit inline DynamicList(const label);
 
         //- Construct copy.
@@ -123,6 +123,7 @@ public:
 
             //- Size of the underlying storage.
             inline label capacity() const;
+
 
         // Edit
 
@@ -207,21 +208,21 @@ public:
             //- Assignment of all addressed entries to the given value
             inline void operator=(const T&);
 
-            //- Assignment from DynamicList
+            //- Assignment operator
             inline void operator=
             (
                 const DynamicList<T, SizeInc, SizeMult, SizeDiv>&
             );
 
-            //- Assignment from UList
+            //- Assignment to UList
             inline void operator=(const UList<T>&);
 
-            //- Assignment from UIndirectList
+            //- Assignment to UIndirectList
             inline void operator=(const UIndirectList<T>&);
 
 
 
-        // IOstream operators
+        // IOstream Operators
 
             // Write DynamicList to Ostream.
             friend Ostream& operator<< <T, SizeInc, SizeMult, SizeDiv>

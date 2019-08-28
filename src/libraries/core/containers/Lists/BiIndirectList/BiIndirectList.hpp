@@ -45,7 +45,7 @@ namespace CML
 template<class T>
 class BiIndirectList
 {
-    // Private data
+    // Private Data
 
         UList<T>& posList_;
         UList<T>& negList_;
@@ -111,7 +111,7 @@ public:
             //- Return const access to an element
             inline const T& operator[](const label) const;
 
-            //- Assignment from UList of addressed elements
+            //- Assignment to UList of addressed elements
             inline void operator=(const UList<T>&);
 
             //- Assignment of all entries to the given value
