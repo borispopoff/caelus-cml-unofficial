@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,7 +22,40 @@ Class
     CML::mixedFvPatchField
 
 Description
-    CML::mixedFvPatchField
+    This boundary condition provides a base class for 'mixed' type boundary
+    conditions, i.e. conditions that mix fixed value and patch-normal gradient
+    conditions.
+
+    The respective contributions from each is determined by a weight field:
+
+        \f[
+            x_p = w x_p + (1-w) \left(x_c + \frac{\nabla_\perp x}{\Delta}\right)
+        \f]
+
+    where
+    \vartable
+        x_p   | patch values
+        x_c   | patch internal cell values
+        w     | weight field
+        \Delta| inverse distance from face centre to internal cell centre
+        w     | weighting (0-1)
+    \endvartable
+
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        valueFraction | weight field           | yes         |
+        refValue     | fixed value             | yes         |
+        refGrad      | patch normal gradient   | yes         |
+    \endtable
+
+Note
+    This condition is not usually applied directly; instead, use a derived
+    mixed condition such as \c inletOutlet
+
+See also
+    CML::inletOutletFvPatchField
 
 
 \*---------------------------------------------------------------------------*/
@@ -38,7 +71,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class mixedFvPatch Declaration
+                      Class mixedFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -46,7 +79,7 @@ class mixedFvPatchField
 :
     public fvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Value field
         Field<Type> refValue_;
@@ -90,7 +123,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         mixedFvPatchField
         (
             const mixedFvPatchField<Type>&
@@ -105,7 +138,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         mixedFvPatchField
         (
             const mixedFvPatchField<Type>&,
@@ -125,7 +158,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -180,17 +213,12 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchField<Type>&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchField<Type>&, const labelList&);
 
 
         // Evaluation functions
@@ -201,7 +229,8 @@ public:
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::blocking
             );
 
             //- Return the matrix diagonal coefficients corresponding to the
@@ -231,7 +260,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
 

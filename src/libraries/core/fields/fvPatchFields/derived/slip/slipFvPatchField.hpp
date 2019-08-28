@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -89,7 +89,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         slipFvPatchField
         (
             const slipFvPatchField<Type>&
@@ -104,7 +104,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         slipFvPatchField
         (
             const slipFvPatchField<Type>&,
@@ -123,7 +123,8 @@ public:
             );
         }
 
-    // Member functions
+
+    // Member Functions
 
         // Attributes
 

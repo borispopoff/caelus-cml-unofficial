@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014 - 2016 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2014-2016 Applied CCM
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,7 +22,23 @@ Class
     CML::fixedValueFvPatchField
 
 Description
-    CML::fixedValueFvPatchField
+    This boundary condition supplies a fixed value constraint, and is the base
+    class for a number of other boundary conditions.
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        value        | Patch face values       | yes         |
+    \endtable
+
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            fixedValue;
+        value           uniform 0;  // Example for scalar field usage
+    }
+    \endverbatim
 
 
 \*---------------------------------------------------------------------------*/
@@ -38,7 +54,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class fixedValueFvPatch Declaration
+                   Class fixedValueFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -88,7 +104,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fixedValueFvPatchField
         (
             const fixedValueFvPatchField<Type>&
@@ -103,7 +119,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fixedValueFvPatchField
         (
             const fixedValueFvPatchField<Type>&,
@@ -123,9 +139,9 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
-        // Access
+        // Attributes
 
             //- Return true if this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving
@@ -171,7 +187,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
 

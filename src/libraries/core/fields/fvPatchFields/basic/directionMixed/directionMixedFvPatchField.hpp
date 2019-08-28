@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -40,7 +40,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class directionMixedFvPatch Declaration
+                  Class directionMixedFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -48,7 +48,7 @@ class directionMixedFvPatchField
 :
     public transformFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Value field
         Field<Type> refValue_;
@@ -122,11 +122,11 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
-        // Access
+        // Attributes
 
-            //- Return true if this patch field fixes a value.
+            //- Return true: this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving
             //  Poissons equations.
             virtual bool fixesValue() const
@@ -144,17 +144,12 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchField<Type>&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchField<Type>&, const labelList&);
 
 
         // Return defining fields
@@ -198,7 +193,8 @@ public:
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::blocking
             );
 
             //- Return face-gradient transform diagonal
@@ -209,7 +205,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const fvPatchField<Type>&) {}
         virtual void operator+=(const fvPatchField<Type>&) {}

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -44,7 +44,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class slicedFvPatch Declaration
+                        Class slicedFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -94,13 +94,13 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         slicedFvPatchField(const slicedFvPatchField<Type>&);
 
         //- Construct and return a clone
         virtual tmp<fvPatchField<Type>> clone() const;
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         slicedFvPatchField
         (
             const slicedFvPatchField<Type>&,
@@ -118,9 +118,9 @@ public:
     virtual ~slicedFvPatchField<Type>();
 
 
-    // Member functions
+    // Member Functions
 
-        // Access
+        // Attributes
 
             //- Return true if this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving
@@ -162,14 +162,16 @@ public:
             //- Initialise the evaluation of the patch field
             virtual void initEvaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::blocking
             )
             {}
 
             //- Evaluate the patch field, sets Updated to false
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::blocking
             )
             {}
 
@@ -200,7 +202,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
 

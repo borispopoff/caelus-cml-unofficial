@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,6 +24,16 @@ Class
 Description
     CML::calculatedFvPatchField
 
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            calculated;
+        value           uniform (0 0 0);    // Required value entry
+    }
+    \endverbatim
+
 
 \*---------------------------------------------------------------------------*/
 
@@ -38,7 +48,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class calculatedFvPatch Declaration
+                   Class calculatedFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -68,7 +78,7 @@ public:
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
             const dictionary&,
-            const bool valueRequired=false
+            const bool valueRequired=true
         );
 
         //- Construct by mapping given patchField<Type> onto a new patch
@@ -80,7 +90,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         calculatedFvPatchField
         (
             const calculatedFvPatchField<Type>&
@@ -95,7 +105,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         calculatedFvPatchField
         (
             const calculatedFvPatchField<Type>&,
@@ -115,9 +125,9 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
-        // Access
+        // Attributes
 
             //- Return true if this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving
@@ -171,6 +181,7 @@ const CML::word& CML::fvPatchField<Type>::calculatedType()
 {
     return calculatedFvPatchField<Type>::typeName;
 }
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -319,6 +330,7 @@ CML::calculatedFvPatchField<Type>::valueBoundaryCoeffs
     return *this;
 }
 
+
 template<class Type>
 CML::tmp<CML::Field<Type>>
 CML::calculatedFvPatchField<Type>::gradientInternalCoeffs() const
@@ -336,6 +348,7 @@ CML::calculatedFvPatchField<Type>::gradientInternalCoeffs() const
 
     return *this;
 }
+
 
 template<class Type>
 CML::tmp<CML::Field<Type>>

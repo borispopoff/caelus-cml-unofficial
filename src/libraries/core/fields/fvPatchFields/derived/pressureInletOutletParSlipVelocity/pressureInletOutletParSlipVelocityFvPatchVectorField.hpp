@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,7 +80,7 @@ class pressureInletOutletParSlipVelocityFvPatchVectorField
 :
     public mixedFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Flux field name
         word phiName_;
@@ -123,7 +123,7 @@ public:
             const dictionary&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         pressureInletOutletParSlipVelocityFvPatchVectorField
         (
             const pressureInletOutletParSlipVelocityFvPatchVectorField&
@@ -141,7 +141,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         pressureInletOutletParSlipVelocityFvPatchVectorField
         (
             const pressureInletOutletParSlipVelocityFvPatchVectorField&,
@@ -165,7 +165,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -174,6 +174,7 @@ public:
             {
                 return true;
             }
+
 
         // Access
 
@@ -209,7 +210,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const fvPatchField<vector>& pvf);
 };

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -78,7 +78,7 @@ class pressureInletOutletVelocityFvPatchVectorField
 :
     public directionMixedFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Flux field name
         word phiName_;
@@ -120,7 +120,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         pressureInletOutletVelocityFvPatchVectorField
         (
             const pressureInletOutletVelocityFvPatchVectorField&
@@ -135,7 +135,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         pressureInletOutletVelocityFvPatchVectorField
         (
             const pressureInletOutletVelocityFvPatchVectorField&,
@@ -155,7 +155,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -164,6 +164,7 @@ public:
             {
                 return true;
             }
+
 
         // Access
 
@@ -192,17 +193,12 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchVectorField&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchVectorField&, const labelList&);
 
 
         //- Update the coefficients associated with the patch field
@@ -212,7 +208,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const fvPatchField<vector>& pvf);
 };

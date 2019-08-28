@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014-2016 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -82,7 +82,7 @@ class fvPatchField
 :
     public Field<Type>
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch
         const fvPatch& patch_;
@@ -209,7 +209,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fvPatchField(const fvPatchField<Type>&);
 
         //- Construct and return a clone
@@ -218,7 +218,7 @@ public:
             return tmp<fvPatchField<Type>>(new fvPatchField<Type>(*this));
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fvPatchField
         (
             const fvPatchField<Type>&,
@@ -299,19 +299,12 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
             //- Return the type of the calculated for of fvPatchField
             static const word& calculatedType();
-
-            //- Return true if the value of the patch field
-            //  is altered by assignment (the default)
-            virtual bool assignable() const
-            {
-                return true;
-            }
 
             //- Return true if this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving
@@ -319,6 +312,13 @@ public:
             virtual bool fixesValue() const
             {
                 return false;
+            }
+
+            //- Return true if the value of the patch field
+            //  is altered by assignment (the default)
+            virtual bool assignable() const
+            {
+                return true;
             }
 
             //- Return true if this patch field is coupled
@@ -385,17 +385,12 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchField<Type>&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchField<Type>&, const labelList&);
 
 
         // Evaluation functions
@@ -439,14 +434,16 @@ public:
             //- Initialise the evaluation of the patch field
             virtual void initEvaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::blocking
             )
             {}
 
             //- Evaluate the patch field, sets Updated to false
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::blocking
             );
 
 
@@ -547,7 +544,7 @@ public:
             void check(const fvPatchField<Type>&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const UList<Type>&);
 

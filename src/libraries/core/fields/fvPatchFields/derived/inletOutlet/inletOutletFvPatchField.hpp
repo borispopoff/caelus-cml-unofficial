@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -122,7 +122,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         inletOutletFvPatchField
         (
             const inletOutletFvPatchField<Type>&
@@ -137,7 +137,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         inletOutletFvPatchField
         (
             const inletOutletFvPatchField<Type>&,
@@ -157,7 +157,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -167,6 +167,7 @@ public:
                 return true;
             }
 
+
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();
 
@@ -174,7 +175,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const fvPatchField<Type>& pvf);
 };
