@@ -86,7 +86,7 @@ class rotatingWallVelocityFvPatchVectorField
         vector axis_;
 
         //- Rotational speed
-        autoPtr<DataEntry<scalar> > omega_;
+        autoPtr<DataEntry<scalar>> omega_;
 
 
 public:

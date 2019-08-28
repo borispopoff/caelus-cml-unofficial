@@ -29,7 +29,7 @@ Author
 
 #define makeBlendedCorrection(limiterType)                                     \
 template<class Type>                                                           \
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >     \
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>      \
 CML::blended##limiterType<Type>::correction                                    \
 (                                                                              \
     GeometricField<Type, fvPatchField, volMesh> const& vf                      \
@@ -37,7 +37,7 @@ CML::blended##limiterType<Type>::correction                                    \
 {                                                                              \
     fvMesh const& mesh = this->mesh();                                         \
                                                                                \
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsfCorr             \
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr              \
     (                                                                          \
         new GeometricField<Type, fvsPatchField, surfaceMesh>                   \
         (                                                                      \
@@ -113,7 +113,7 @@ CML::blended##limiterType<Type>::correction                                    \
                                                                                \
         sfCorr[facei] -= 0.5*vf[cellC];                                        \
         sfCorr[facei] += 0.5*sLimiter*(Cf[facei] - C[cellC]) & gradVf[cellC];  \
-	sfCorr[facei] += 0.5*vf[cellD];                                        \
+	sfCorr[facei] += 0.5*vf[cellD];                                            \
         sfCorr[facei] += 0.5*sLimiter*(Cf[facei] - C[cellD]) & gradVf[cellD];  \
         sfCorr[facei]  = beta_*sfCorr[facei] + (1-beta_)*corr1;                \
     }                                                                          \

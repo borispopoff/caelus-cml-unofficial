@@ -47,7 +47,7 @@ namespace CML
         (
             const vectorTensorTransform& vt,
             const bool forward,
-            List<List<point> >& fld
+            List<List<point>>& fld
         ) const
         {
             const tensor T
@@ -529,9 +529,9 @@ void CML::autoSnapDriver::calcNearestFacePointProperties
     const vectorField& faceSurfaceNormal,
     const labelList& faceSurfaceGlobalRegion,
 
-    List<List<point> >& pointFaceSurfNormals,
-    List<List<point> >& pointFaceDisp,
-    List<List<point> >& pointFaceCentres,
+    List<List<point>>& pointFaceSurfNormals,
+    List<List<point>>& pointFaceDisp,
+    List<List<point>>& pointFaceCentres,
     List<labelList>&    pointFacePatchID
 ) const
 {
@@ -848,9 +848,9 @@ void CML::autoSnapDriver::binFeatureFaces
 
     const label pointI,
 
-    const List<List<point> >& pointFaceSurfNormals,
-    const List<List<point> >& pointFaceDisp,
-    const List<List<point> >& pointFaceCentres,
+    const List<List<point>>& pointFaceSurfNormals,
+    const List<List<point>>& pointFaceDisp,
+    const List<List<point>>& pointFaceCentres,
 
     DynamicList<point>& surfacePoints,
     DynamicList<vector>& surfaceNormals,
@@ -893,9 +893,9 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
     const scalarField& snapDist,
     const label pointI,
 
-    const List<List<point> >& pointFaceSurfNormals,
-    const List<List<point> >& pointFaceDisp,
-    const List<List<point> >& pointFaceCentres,
+    const List<List<point>>& pointFaceSurfNormals,
+    const List<List<point>>& pointFaceDisp,
+    const List<List<point>>& pointFaceCentres,
     const labelListList& pointFacePatchID,
 
     vector& patchAttraction,
@@ -1029,9 +1029,9 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
     const indirectPrimitivePatch& pp,
     const scalarField& snapDist,
 
-    const List<List<point> >& pointFaceSurfNormals,
-    const List<List<point> >& pointFaceDisp,
-    const List<List<point> >& pointFaceCentres,
+    const List<List<point>>& pointFaceSurfNormals,
+    const List<List<point>>& pointFaceDisp,
+    const List<List<point>>& pointFaceCentres,
     const labelListList& pointFacePatchID,
 
     vectorField& patchAttraction,
@@ -1321,8 +1321,8 @@ CML::pointIndexHit CML::autoSnapDriver::findNearFeatureEdge
     const point& estimatedPt,
 
     label& featI,
-    List<List<DynamicList<point> > >& edgeAttractors,
-    List<List<DynamicList<pointConstraint> > >& edgeConstraints,
+    List<List<DynamicList<point>>>& edgeAttractors,
+    List<List<DynamicList<pointConstraint>>>& edgeConstraints,
     vectorField& patchAttraction,
     List<pointConstraint>& patchConstraints
 ) const
@@ -1374,10 +1374,10 @@ CML::labelPair CML::autoSnapDriver::findNearFeaturePoint
 
     // Feature-point to pp point
     List<labelList>& pointAttractor,
-    List<List<pointConstraint> >& pointConstraints,
+    List<List<pointConstraint>>& pointConstraints,
     // Feature-edge to pp point
-    List<List<DynamicList<point> > >& edgeAttractors,
-    List<List<DynamicList<pointConstraint> > >& edgeConstraints,
+    List<List<DynamicList<point>>>& edgeAttractors,
+    List<List<DynamicList<pointConstraint>>>& edgeConstraints,
     // pp point to nearest feature
     vectorField& patchAttraction,
     List<pointConstraint>& patchConstraints
@@ -1480,17 +1480,17 @@ void CML::autoSnapDriver::determineFeatures
     const indirectPrimitivePatch& pp,
     const scalarField& snapDist,
 
-    const List<List<point> >& pointFaceSurfNormals,
-    const List<List<point> >& pointFaceDisp,
-    const List<List<point> >& pointFaceCentres,
+    const List<List<point>>& pointFaceSurfNormals,
+    const List<List<point>>& pointFaceDisp,
+    const List<List<point>>& pointFaceCentres,
     const labelListList& pointFacePatchID,
 
     // Feature-point to pp point
     List<labelList>& pointAttractor,
-    List<List<pointConstraint> >& pointConstraints,
+    List<List<pointConstraint>>& pointConstraints,
     // Feature-edge to pp point
-    List<List<DynamicList<point> > >& edgeAttractors,
-    List<List<DynamicList<pointConstraint> > >& edgeConstraints,
+    List<List<DynamicList<point>>>& edgeAttractors,
+    List<List<DynamicList<pointConstraint>>>& edgeConstraints,
     // pp point to nearest feature
     vectorField& patchAttraction,
     List<pointConstraint>& patchConstraints
@@ -1768,9 +1768,9 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
     const indirectPrimitivePatch& pp,
     const scalarField& snapDist,
 
-    const List<List<point> >& pointFaceSurfNormals,
-    const List<List<point> >& pointFaceDisp,
-    const List<List<point> >& pointFaceCentres,
+    const List<List<point>>& pointFaceSurfNormals,
+    const List<List<point>>& pointFaceDisp,
+    const List<List<point>>& pointFaceCentres,
     const labelListList& pointFacePatchID,
 
     vectorField& patchAttraction,
@@ -1784,8 +1784,8 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
 
     // Per feature, per feature-edge a list of attraction points and their
     // originating vertex.
-    List<List<DynamicList<point> > > edgeAttractors(features.size());
-    List<List<DynamicList<pointConstraint> > > edgeConstraints
+    List<List<DynamicList<point>>> edgeAttractors(features.size());
+    List<List<DynamicList<pointConstraint>>> edgeConstraints
     (
         features.size()
     );
@@ -1800,7 +1800,7 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
     // This list is only used to subset the feature-points that are actually
     // used.
     List<labelList> pointAttractor(features.size());
-    List<List<pointConstraint> > pointConstraints(features.size());
+    List<List<pointConstraint>> pointConstraints(features.size());
     forAll(features, featI)
     {
         label nFeatPoints = features[featI].points().size();
@@ -1854,7 +1854,7 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
         const fvMesh& mesh = meshRefiner_.mesh();
 
         // Calculate edge-faces
-        List<List<point> > edgeFaceNormals(pp.nEdges());
+        List<List<point>> edgeFaceNormals(pp.nEdges());
 
         // Fill local data
         forAll(pp.edgeFaces(), edgeI)
@@ -2122,8 +2122,8 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
 
     forAll(edgeAttractors, featI)
     {
-        const List<DynamicList<point> >& edgeAttr = edgeAttractors[featI];
-        const List<DynamicList<pointConstraint> >& edgeConstr =
+        const List<DynamicList<point>>& edgeAttr = edgeAttractors[featI];
+        const List<DynamicList<pointConstraint>>& edgeConstr =
             edgeConstraints[featI];
 
         forAll(edgeAttr, featEdgeI)
@@ -2704,9 +2704,9 @@ CML::vectorField CML::autoSnapDriver::calcNearestSurfaceFeature
     // - faceSurfaceNormal
     // - faceDisp
     // - faceCentres&faceNormal
-    List<List<point> > pointFaceSurfNormals(pp.nPoints());
-    List<List<point> > pointFaceDisp(pp.nPoints());
-    List<List<point> > pointFaceCentres(pp.nPoints());
+    List<List<point>> pointFaceSurfNormals(pp.nPoints());
+    List<List<point>> pointFaceDisp(pp.nPoints());
+    List<List<point>> pointFaceCentres(pp.nPoints());
     List<labelList>    pointFacePatchID(pp.nPoints());
 
     calcNearestFacePointProperties

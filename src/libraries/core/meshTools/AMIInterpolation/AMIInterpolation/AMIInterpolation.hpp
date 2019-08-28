@@ -443,7 +443,7 @@ public:
 
             //- Interpolate from target to source with supplied op
             template<class Type, class CombineOp>
-            tmp<Field<Type> > interpolateToSource
+            tmp<Field<Type>> interpolateToSource
             (
                 const Field<Type>& fld,
                 const CombineOp& cop,
@@ -452,16 +452,16 @@ public:
 
             //- Interpolate from target tmp field to source with supplied op
             template<class Type, class CombineOp>
-            tmp<Field<Type> > interpolateToSource
+            tmp<Field<Type>> interpolateToSource
             (
-                const tmp<Field<Type> >& tFld,
+                const tmp<Field<Type>>& tFld,
                 const CombineOp& cop,
                 const UList<Type>& defaultValues = UList<Type>::null()
             ) const;
 
             //- Interpolate from source to target with supplied op
             template<class Type, class CombineOp>
-            tmp<Field<Type> > interpolateToTarget
+            tmp<Field<Type>> interpolateToTarget
             (
                 const Field<Type>& fld,
                 const CombineOp& cop,
@@ -470,16 +470,16 @@ public:
 
             //- Interpolate from source tmp field to target with supplied op
             template<class Type, class CombineOp>
-            tmp<Field<Type> > interpolateToTarget
+            tmp<Field<Type>> interpolateToTarget
             (
-                const tmp<Field<Type> >& tFld,
+                const tmp<Field<Type>>& tFld,
                 const CombineOp& cop,
                 const UList<Type>& defaultValues = UList<Type>::null()
             ) const;
 
             //- Interpolate from target to source
             template<class Type>
-            tmp<Field<Type> > interpolateToSource
+            tmp<Field<Type>> interpolateToSource
             (
                 const Field<Type>& fld,
                 const UList<Type>& defaultValues = UList<Type>::null()
@@ -487,15 +487,15 @@ public:
 
             //- Interpolate from target tmp field
             template<class Type>
-            tmp<Field<Type> > interpolateToSource
+            tmp<Field<Type>> interpolateToSource
             (
-                const tmp<Field<Type> >& tFld,
+                const tmp<Field<Type>>& tFld,
                 const UList<Type>& defaultValues = UList<Type>::null()
             ) const;
 
             //- Interpolate from source to target
             template<class Type>
-            tmp<Field<Type> > interpolateToTarget
+            tmp<Field<Type>> interpolateToTarget
             (
                 const Field<Type>& fld,
                 const UList<Type>& defaultValues = UList<Type>::null()
@@ -503,9 +503,9 @@ public:
 
             //- Interpolate from source tmp field
             template<class Type>
-            tmp<Field<Type> > interpolateToTarget
+            tmp<Field<Type>> interpolateToTarget
             (
-                const tmp<Field<Type> >& tFld,
+                const tmp<Field<Type>>& tFld,
                 const UList<Type>& defaultValues = UList<Type>::null()
             ) const;
 
@@ -1542,7 +1542,7 @@ void CML::AMIInterpolation<SourcePatch, TargetPatch>::update
             );
 
         // Calculate AMI interpolation
-        autoPtr<AMIMethod<SourcePatch, TargetPatch> > AMIPtr
+        autoPtr<AMIMethod<SourcePatch, TargetPatch>> AMIPtr
         (
             AMIMethod<SourcePatch, TargetPatch>::New
             (
@@ -1653,7 +1653,7 @@ void CML::AMIInterpolation<SourcePatch, TargetPatch>::update
         );
 
         // Cache maps and reset addresses
-        List<Map<label> > cMap;
+        List<Map<label>> cMap;
         srcMapPtr_.reset(new mapDistribute(globalSrcFaces, tgtAddress_, cMap));
         tgtMapPtr_.reset(new mapDistribute(globalTgtFaces, srcAddress_, cMap));
 
@@ -1665,7 +1665,7 @@ void CML::AMIInterpolation<SourcePatch, TargetPatch>::update
     else
     {
         // Calculate AMI interpolation
-        autoPtr<AMIMethod<SourcePatch, TargetPatch> > AMIPtr
+        autoPtr<AMIMethod<SourcePatch, TargetPatch>> AMIPtr
         (
             AMIMethod<SourcePatch, TargetPatch>::New
             (
@@ -1897,7 +1897,7 @@ void CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 
 template<class SourcePatch, class TargetPatch>
 template<class Type, class CombineOp>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 (
     const Field<Type>& fld,
@@ -1905,7 +1905,7 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
     const UList<Type>& defaultValues
 ) const
 {
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>
         (
@@ -1928,10 +1928,10 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 
 template<class SourcePatch, class TargetPatch>
 template<class Type, class CombineOp>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 (
-    const tmp<Field<Type> >& tFld,
+    const tmp<Field<Type>>& tFld,
     const CombineOp& cop,
     const UList<Type>& defaultValues
 ) const
@@ -1942,7 +1942,7 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 
 template<class SourcePatch, class TargetPatch>
 template<class Type, class CombineOp>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
 (
     const Field<Type>& fld,
@@ -1950,7 +1950,7 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
     const UList<Type>& defaultValues
 ) const
 {
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>
         (
@@ -1973,10 +1973,10 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
 
 template<class SourcePatch, class TargetPatch>
 template<class Type, class CombineOp>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
 (
-    const tmp<Field<Type> >& tFld,
+    const tmp<Field<Type>>& tFld,
     const CombineOp& cop,
     const UList<Type>& defaultValues
 ) const
@@ -1987,7 +1987,7 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
 
 template<class SourcePatch, class TargetPatch>
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 (
     const Field<Type>& fld,
@@ -2000,10 +2000,10 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 
 template<class SourcePatch, class TargetPatch>
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 (
-    const tmp<Field<Type> >& tFld,
+    const tmp<Field<Type>>& tFld,
     const UList<Type>& defaultValues
 ) const
 {
@@ -2013,7 +2013,7 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 
 template<class SourcePatch, class TargetPatch>
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
 (
     const Field<Type>& fld,
@@ -2026,10 +2026,10 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
 
 template<class SourcePatch, class TargetPatch>
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
 (
-    const tmp<Field<Type> >& tFld,
+    const tmp<Field<Type>>& tFld,
     const UList<Type>& defaultValues
 ) const
 {
@@ -2529,7 +2529,7 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
 
     {
         // Per processor indices into all segments to send
-        List<DynamicList<label> > dynSendMap(Pstream::nProcs());
+        List<DynamicList<label>> dynSendMap(Pstream::nProcs());
 
         // Work array - whether processor bb overlaps the face bounds
         boolList procBbOverlaps(Pstream::nProcs());

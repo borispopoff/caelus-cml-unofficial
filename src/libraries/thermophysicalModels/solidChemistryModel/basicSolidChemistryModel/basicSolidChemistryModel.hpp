@@ -120,10 +120,10 @@ public:
     }
 
     //- Return total gases mass source term [kg/m3/s]
-    virtual tmp<DimensionedField<scalar, volMesh> > RRg() const = 0;
+    virtual tmp<DimensionedField<scalar, volMesh>> RRg() const = 0;
 
     //- Return total solids mass source term [kg/m3/s]
-    virtual tmp<DimensionedField<scalar, volMesh> > RRs() const = 0;
+    virtual tmp<DimensionedField<scalar, volMesh>> RRs() const = 0;
 
     //- Return chemical source terms for solids [kg/m3/s]
     virtual const DimensionedField<scalar, volMesh>& RRs
@@ -138,7 +138,7 @@ public:
     ) const = 0;
 
     //- Returns the reaction rate of the speciei in reactionI
-    virtual tmp<DimensionedField<scalar, volMesh> > calculateRR
+    virtual tmp<DimensionedField<scalar, volMesh>> calculateRR
     (
         const label reactionI,
         const label speciei

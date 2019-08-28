@@ -110,7 +110,7 @@ public:
         }
 
         //- Return the face-interpolate of the given cell field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -118,7 +118,7 @@ public:
         {
             const fvMesh& mesh = vf.mesh();
 
-            tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tvff
+            tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tvff
             (
                 new GeometricField<Type, fvsPatchField, surfaceMesh>
                 (

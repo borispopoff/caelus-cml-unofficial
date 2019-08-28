@@ -71,33 +71,33 @@ class distributionFunctionObject
     bool writeDistribution_;
 
     template<class Type>
-    void writeATimeline(const autoPtr<SimpleDistribution<Type> > &pDist);
+    void writeATimeline(const autoPtr<SimpleDistribution<Type>> &pDist);
 
     template<class Type>
-    void writeADistribution(const autoPtr<SimpleDistribution<Type> > &pDist);
+    void writeADistribution(const autoPtr<SimpleDistribution<Type>> &pDist);
 
     template<class Type>
-    void reportADistribution(const autoPtr<SimpleDistribution<Type> > &pDist);
+    void reportADistribution(const autoPtr<SimpleDistribution<Type>> &pDist);
 
     bool startup_;
     word startTime_;
 protected:
 
-    autoPtr<SimpleDistribution<scalar> > distScalar_;
-    autoPtr<SimpleDistribution<vector> > distVector_;
-    autoPtr<SimpleDistribution<tensor> > distTensor_;
-    autoPtr<SimpleDistribution<symmTensor> > distSymmTensor_;
-    autoPtr<SimpleDistribution<sphericalTensor> > distSphericalTensor_;
+    autoPtr<SimpleDistribution<scalar>> distScalar_;
+    autoPtr<SimpleDistribution<vector>> distVector_;
+    autoPtr<SimpleDistribution<tensor>> distTensor_;
+    autoPtr<SimpleDistribution<symmTensor>> distSymmTensor_;
+    autoPtr<SimpleDistribution<sphericalTensor>> distSphericalTensor_;
 
     template<class Type>
-    autoPtr<SimpleDistribution<Type> > setData(
+    autoPtr<SimpleDistribution<Type>> setData(
         const Field<Type> &values,
         const Field<Type> &weights,
         const scalar binWidth=-1
     );
 
     template<class Type>
-    autoPtr<SimpleDistribution<Type> > setData(
+    autoPtr<SimpleDistribution<Type>> setData(
         const Field<Type> &values,
         const Field<Type> &weights,
         const Field<bool> &mask,
@@ -105,14 +105,14 @@ protected:
     );
 
     template<class Type>
-    autoPtr<SimpleDistribution<Type> > setDataScalar(
+    autoPtr<SimpleDistribution<Type>> setDataScalar(
         const Field<Type> &values,
         const Field<scalar> &weights,
         const scalar binWidth=-1
     );
 
     template<class Type>
-    autoPtr<SimpleDistribution<Type> > setDataScalar(
+    autoPtr<SimpleDistribution<Type>> setDataScalar(
         const Field<Type> &values,
         const Field<scalar> &weights,
         const Field<bool> &mask,
@@ -184,7 +184,7 @@ namespace CML {
 \*---------------------------------------------------------------------------*/
 
 template <typename Type>
-autoPtr<SimpleDistribution<Type> > distributionFunctionObject::setData(
+autoPtr<SimpleDistribution<Type>> distributionFunctionObject::setData(
     const Field<Type> &values,
     const Field<Type> &weights,
         const scalar binWidth
@@ -201,7 +201,7 @@ autoPtr<SimpleDistribution<Type> > distributionFunctionObject::setData(
 }
 
 template <typename Type>
-autoPtr<SimpleDistribution<Type> > distributionFunctionObject::setDataScalar(
+autoPtr<SimpleDistribution<Type>> distributionFunctionObject::setDataScalar(
     const Field<Type> &values,
     const Field<scalar> &weights,
         const scalar binWidth
@@ -218,7 +218,7 @@ autoPtr<SimpleDistribution<Type> > distributionFunctionObject::setDataScalar(
 }
 
 template <typename Type>
-autoPtr<SimpleDistribution<Type> > distributionFunctionObject::setData(
+autoPtr<SimpleDistribution<Type>> distributionFunctionObject::setData(
     const Field<Type> &values,
     const Field<Type> &weights,
     const Field<bool> &mask,
@@ -235,7 +235,7 @@ autoPtr<SimpleDistribution<Type> > distributionFunctionObject::setData(
         1000
     );
 
-    autoPtr<SimpleDistribution<Type> > pDist;
+    autoPtr<SimpleDistribution<Type>> pDist;
 
     bool goOn=true;
     while(goOn) {
@@ -270,7 +270,7 @@ autoPtr<SimpleDistribution<Type> > distributionFunctionObject::setData(
 }
 
 template <typename Type>
-autoPtr<SimpleDistribution<Type> > distributionFunctionObject::setDataScalar(
+autoPtr<SimpleDistribution<Type>> distributionFunctionObject::setDataScalar(
     const Field<Type> &values,
     const Field<scalar> &weights,
     const Field<bool> &mask,
@@ -287,7 +287,7 @@ autoPtr<SimpleDistribution<Type> > distributionFunctionObject::setDataScalar(
         1000
     );
 
-    autoPtr<SimpleDistribution<Type> > pDist;
+    autoPtr<SimpleDistribution<Type>> pDist;
 
     bool goOn=true;
     while(goOn) {
@@ -323,7 +323,7 @@ autoPtr<SimpleDistribution<Type> > distributionFunctionObject::setDataScalar(
 
 template<class Type>
 void distributionFunctionObject::writeATimeline(
-    const autoPtr<SimpleDistribution<Type> > &pDist
+    const autoPtr<SimpleDistribution<Type>> &pDist
 ) {
     if(!pDist.valid()) {
         return;
@@ -351,7 +351,7 @@ void distributionFunctionObject::writeATimeline(
 
 template<class Type>
 void distributionFunctionObject::writeADistribution(
-    const autoPtr<SimpleDistribution<Type> > &pDist
+    const autoPtr<SimpleDistribution<Type>> &pDist
 ) {
     if(!pDist.valid()) {
         return;
@@ -368,7 +368,7 @@ void distributionFunctionObject::writeADistribution(
 
 template<class Type>
 void distributionFunctionObject::reportADistribution(
-    const autoPtr<SimpleDistribution<Type> > &pDist
+    const autoPtr<SimpleDistribution<Type>> &pDist
 ) {
     if(!pDist.valid()) {
         return;

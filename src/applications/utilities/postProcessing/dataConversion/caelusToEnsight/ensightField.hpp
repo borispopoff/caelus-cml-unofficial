@@ -37,7 +37,7 @@ SourceFiles
 
 //- Wrapper to get hold of the field or the subsetted field
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh>>
 volField
 (
     const CML::fvMeshSubset&,
@@ -91,7 +91,7 @@ using namespace CML;
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 volField
 (
     const fvMeshSubset& meshSubsetter,
@@ -100,7 +100,7 @@ volField
 {
     if (meshSubsetter.hasSubMesh())
     {
-        tmp<GeometricField<Type, fvPatchField, volMesh> > tfld
+        tmp<GeometricField<Type, fvPatchField, volMesh>> tfld
         (
             meshSubsetter.interpolate(vf)
         );
@@ -776,7 +776,7 @@ void ensightField
 {
     if (nodeValues)
     {
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > pfld
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> pfld
         (
             volPointInterpolation::New(vf.mesh()).interpolate(vf)
         );

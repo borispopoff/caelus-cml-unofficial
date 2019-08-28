@@ -62,13 +62,13 @@ class sampledPatchInternalField
 
         //- sample field on faces
         template<class Type>
-        tmp<Field<Type> > sampleField
+        tmp<Field<Type>> sampleField
         (
             const GeometricField<Type, fvPatchField, volMesh>& vField
         ) const;
 
         template<class Type>
-        tmp<Field<Type> > interpolateField(const interpolation<Type>&) const;
+        tmp<Field<Type>> interpolateField(const interpolation<Type>&) const;
 
 
 public:
@@ -177,14 +177,14 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledPatchInternalField::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
 {
     // One value per face
-    tmp<Field<Type> > tvalues(new Field<Type>(patchFaceLabels().size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels().size()));
     Field<Type>& values = tvalues();
 
     forAll(patchStart(), i)
@@ -212,7 +212,7 @@ CML::sampledPatchInternalField::sampleField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledPatchInternalField::interpolateField
 (
     const interpolation<Type>& interpolator

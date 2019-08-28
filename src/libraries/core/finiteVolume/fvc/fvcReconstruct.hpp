@@ -61,7 +61,7 @@ namespace fvc
         <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
     > reconstruct
     (
-        const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+        const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>&
     );
 }
 
@@ -119,7 +119,7 @@ reconstruct
         }
     }
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > treconField
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> treconField
     (
         new GeometricField<GradType, fvPatchField, volMesh>
         (
@@ -152,11 +152,11 @@ tmp
 >
 reconstruct
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >& tssf
+    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tssf
 )
 {
     typedef typename outerProduct<vector, Type>::type GradType;
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tvf
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tvf
     (
         fvc::reconstruct(tssf())
     );

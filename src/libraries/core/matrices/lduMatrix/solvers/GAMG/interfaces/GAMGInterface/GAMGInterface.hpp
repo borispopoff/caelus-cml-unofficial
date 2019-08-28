@@ -179,7 +179,7 @@ public:
 
             //- Return the interface internal field of the given field
             template<class Type>
-            tmp<Field<Type> > interfaceInternalField
+            tmp<Field<Type>> interfaceInternalField
             (
                 const UList<Type>& internalData
             ) const;
@@ -214,12 +214,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::GAMGInterface::interfaceInternalField
+CML::tmp<CML::Field<Type>> CML::GAMGInterface::interfaceInternalField
 (
     const UList<Type>& iF
 ) const
 {
-    tmp<Field<Type> > tresult(new Field<Type>(size()));
+    tmp<Field<Type>> tresult(new Field<Type>(size()));
     Field<Type>& result = tresult();
 
     forAll(result, elemI)

@@ -42,7 +42,7 @@ addToRunTimeSelectionTable
 
 void rawForcesAndMoments::resizeFields
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     vectorField& field0,
     vectorField& field1,
     label N
@@ -59,7 +59,7 @@ void rawForcesAndMoments::resizeFields
 
 void rawForcesAndMoments::writeRawData
 (
-    const List<std::pair<scalar, label> >& timeLabel,
+    const List<std::pair<scalar, label>>& timeLabel,
     const vectorField& forces,
     const vectorField& moments
 )
@@ -144,7 +144,7 @@ rawForcesAndMoments::~rawForcesAndMoments()
 
 void rawForcesAndMoments::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     vectorField forces, moments;
 
     readForceAndMomentData(timeLabel, forces, moments);
@@ -155,7 +155,7 @@ void rawForcesAndMoments::evaluate()
 
 void rawForcesAndMoments::readForceAndMomentData
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     vectorField& forces,
     vectorField& moments
 )

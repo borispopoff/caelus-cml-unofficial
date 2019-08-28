@@ -198,7 +198,7 @@ public:
         //- Map volField. Internal field set to average, patch fields straight
         //  copies.
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> >
+        tmp<GeometricField<Type, fvPatchField, volMesh>>
         interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -224,13 +224,13 @@ namespace CML
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> > singleCellFvMesh::interpolate
+tmp<GeometricField<Type, fvPatchField, volMesh>> singleCellFvMesh::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvPatchField<Type> > patchFields(vf.boundaryField().size());
+    PtrList<fvPatchField<Type>> patchFields(vf.boundaryField().size());
 
     forAll(patchFields, patchI)
     {
@@ -247,7 +247,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > singleCellFvMesh::interpolate
     }
 
     // Create the complete field from the pieces
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tresF
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tresF
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (

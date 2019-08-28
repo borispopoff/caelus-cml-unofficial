@@ -193,10 +193,10 @@ public:
     );
 
     //- Construct and return a clone
-    virtual autoPtr<Reaction<ReactionThermo> > clone() const = 0;
+    virtual autoPtr<Reaction<ReactionThermo>> clone() const = 0;
 
     //- Construct and return a clone with new speciesTable
-    virtual autoPtr<Reaction<ReactionThermo> > clone
+    virtual autoPtr<Reaction<ReactionThermo>> clone
     (
         const speciesTable& species
     ) const = 0;
@@ -214,7 +214,7 @@ public:
     // Selectors
 
     //- Return a pointer to new patchField created on freestore from dict
-    static autoPtr<Reaction<ReactionThermo> > New
+    static autoPtr<Reaction<ReactionThermo>> New
     (
         const speciesTable& species,
         const HashPtrTable<ReactionThermo>& thermoDatabase,
@@ -391,7 +391,7 @@ public:
     //- Third-body efficiencies (beta = 1-alpha)
     //  non-empty only for third-body reactions
     //  with enhanced molecularity (alpha != 1)
-    virtual const List<Tuple2<label, scalar> >& beta() const = 0;
+    virtual const List<Tuple2<label, scalar>>& beta() const = 0;
 
     //- Species concentration derivative of the pressure dependent term
     virtual void dcidc
@@ -767,7 +767,7 @@ CML::Reaction<ReactionThermo>::Reaction
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-CML::autoPtr<CML::Reaction<ReactionThermo> >
+CML::autoPtr<CML::Reaction<ReactionThermo>>
 CML::Reaction<ReactionThermo>::New
 (
     const speciesTable& species,
@@ -790,7 +790,7 @@ CML::Reaction<ReactionThermo>::New
             << exit(FatalError);
     }
 
-    return autoPtr<Reaction<ReactionThermo> >
+    return autoPtr<Reaction<ReactionThermo>>
     (
         cstrIter()(species, thermoDatabase, dict)
     );
@@ -1108,7 +1108,7 @@ void CML::Reaction<ReactionThermo>::dwdc
 
     // When third-body species are involved, additional terms are added
     // beta function returns an empty list when third-body are not involved
-    const List<Tuple2<label, scalar> >& beta = this->beta();
+    const List<Tuple2<label, scalar>>& beta = this->beta();
     if (notNull(beta))
     {
         // This temporary array needs to be cached for efficiency

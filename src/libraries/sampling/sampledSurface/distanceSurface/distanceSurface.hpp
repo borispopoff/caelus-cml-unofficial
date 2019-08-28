@@ -101,14 +101,14 @@ class distanceSurface
 
         //- sample field on faces
         template<class Type>
-        tmp<Field<Type> > sampleField
+        tmp<Field<Type>> sampleField
         (
             const GeometricField<Type, fvPatchField, volMesh>& vField
         ) const;
 
 
         template<class Type>
-        tmp<Field<Type> >
+        tmp<Field<Type>>
         interpolateField(const interpolation<Type>&) const;
 
 
@@ -276,7 +276,7 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::distanceSurface::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
@@ -284,14 +284,14 @@ CML::distanceSurface::sampleField
 {
     if (cell_)
     {
-        return tmp<Field<Type> >
+        return tmp<Field<Type>>
         (
             new Field<Type>(vField, isoSurfCellPtr_().meshCells())
         );
     }
     else
     {
-        return tmp<Field<Type> >
+        return tmp<Field<Type>>
         (
             new Field<Type>(vField, isoSurfPtr_().meshCells())
         );
@@ -300,7 +300,7 @@ CML::distanceSurface::sampleField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::distanceSurface::interpolateField
 (
     const interpolation<Type>& interpolator
@@ -312,7 +312,7 @@ CML::distanceSurface::interpolateField
     const GeometricField<Type, fvPatchField, volMesh>& volFld =
         interpolator.psi();
 
-    tmp<GeometricField<Type, pointPatchField, pointMesh> > pointFld
+    tmp<GeometricField<Type, pointPatchField, pointMesh>> pointFld
     (
         volPointInterpolation::New(fvm).interpolate(volFld)
     );

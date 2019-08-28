@@ -105,9 +105,9 @@ public:
     // Selectors
 
         //- Read file and return surface
-        static autoPtr<UnsortedMeshedSurface<Face> > New(const fileName& name)
+        static autoPtr<UnsortedMeshedSurface<Face>> New(const fileName& name)
         {
-            return autoPtr<UnsortedMeshedSurface<Face> >
+            return autoPtr<UnsortedMeshedSurface<Face>>
             (
                 new FTRsurfaceFormat<Face>(name)
             );
@@ -172,7 +172,7 @@ bool CML::fileFormats::FTRsurfaceFormat<Face>::read
     is >> this->storedPoints();
 
     // triFaces read with attached keys
-    List< Keyed<triFace> > facesRead(is);
+    List< Keyed<triFace>> facesRead(is);
 
     List<Face>  faceLst(facesRead.size());
     List<label> zoneIds(facesRead.size());

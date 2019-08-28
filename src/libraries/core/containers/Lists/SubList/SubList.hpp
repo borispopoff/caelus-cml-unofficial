@@ -146,7 +146,7 @@ UList<T>(&(list.v_[startIndex]), subSize)
 template<class T>
 inline const CML::SubList<T>& CML::SubList<T>::null()
 {
-    return NullSingletonRef< SubList<T> >();
+    return NullSingletonRef< SubList<T>>();
 }
 
 

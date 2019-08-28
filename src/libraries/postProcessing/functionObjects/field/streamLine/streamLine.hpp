@@ -210,22 +210,22 @@ private:
             word sampledSetAxis_;
 
             //- File writer for scalar data
-            autoPtr<writer<scalar> > scalarFormatterPtr_;
+            autoPtr<writer<scalar>> scalarFormatterPtr_;
 
             //- File writer for vector data
-            autoPtr<writer<vector> > vectorFormatterPtr_;
+            autoPtr<writer<vector>> vectorFormatterPtr_;
 
 
         // Generated data
 
             //- All tracks. Per particle the points it passed through
-            DynamicList<List<point> > allTracks_;
+            DynamicList<List<point>> allTracks_;
 
             //- Per scalarField, per particle, the sampled value.
-            List<DynamicList<scalarList> > allScalars_;
+            List<DynamicList<scalarList>> allScalars_;
 
             //- Per scalarField, per particle, the sampled value.
-            List<DynamicList<vectorList> > allVectors_;
+            List<DynamicList<vectorList>> allVectors_;
 
 
         //- Construct patch out of all wall patch faces

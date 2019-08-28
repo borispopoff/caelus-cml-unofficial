@@ -44,7 +44,7 @@ void subsetVolFields
 (
     const fvMeshSubset& subsetter,
     const wordList& fieldNames,
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& subFields
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();
@@ -78,7 +78,7 @@ void subsetSurfaceFields
 (
     const fvMeshSubset& subsetter,
     const wordList& fieldNames,
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& subFields
+    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();
@@ -113,7 +113,7 @@ void subsetPointFields
     const fvMeshSubset& subsetter,
     const pointMesh& pMesh,
     const wordList& fieldNames,
-    PtrList<GeometricField<Type, pointPatchField, pointMesh> >& subFields
+    PtrList<GeometricField<Type, pointPatchField, pointMesh>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();
@@ -147,7 +147,7 @@ void subsetDimensionedFields
 (
     const fvMeshSubset& subsetter,
     const wordList& fieldNames,
-    PtrList<DimensionedField<Type, volMesh> >& subFields
+    PtrList<DimensionedField<Type, volMesh>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();

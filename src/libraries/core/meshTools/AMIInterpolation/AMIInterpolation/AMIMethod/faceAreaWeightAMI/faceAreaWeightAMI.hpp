@@ -68,10 +68,10 @@ protected:
             //- Calculate addressing and weights using temporary storage
             virtual void calcAddressing
             (
-                List<DynamicList<label> >& srcAddress,
-                List<DynamicList<scalar> >& srcWeights,
-                List<DynamicList<label> >& tgtAddress,
-                List<DynamicList<scalar> >& tgtWeights,
+                List<DynamicList<label>>& srcAddress,
+                List<DynamicList<scalar>>& srcWeights,
+                List<DynamicList<label>>& tgtAddress,
+                List<DynamicList<scalar>>& tgtWeights,
                 label srcFaceI,
                 label tgtFaceI
             );
@@ -83,19 +83,19 @@ protected:
                 const label tgtStartFaceI,
                 DynamicList<label>& nbrFaces,
                 DynamicList<label>& visitedFaces,
-                List<DynamicList<label> >& srcAddr,
-                List<DynamicList<scalar> >& srcWght,
-                List<DynamicList<label> >& tgtAddr,
-                List<DynamicList<scalar> >& tgtWght
+                List<DynamicList<label>>& srcAddr,
+                List<DynamicList<scalar>>& srcWght,
+                List<DynamicList<label>>& tgtAddr,
+                List<DynamicList<scalar>>& tgtWght
             );
 
             //- Attempt to re-evaluate source faces that have not been included
             virtual void restartUncoveredSourceFace
             (
-                List<DynamicList<label> >& srcAddr,
-                List<DynamicList<scalar> >& srcWght,
-                List<DynamicList<label> >& tgtAddr,
-                List<DynamicList<scalar> >& tgtWght
+                List<DynamicList<label>>& srcAddr,
+                List<DynamicList<scalar>>& srcWght,
+                List<DynamicList<label>>& tgtAddr,
+                List<DynamicList<scalar>>& tgtWght
             );
 
             //- Set the source and target seed faces
@@ -175,10 +175,10 @@ public:
 template<class SourcePatch, class TargetPatch>
 void CML::faceAreaWeightAMI<SourcePatch, TargetPatch>::calcAddressing
 (
-    List<DynamicList<label> >& srcAddr,
-    List<DynamicList<scalar> >& srcWght,
-    List<DynamicList<label> >& tgtAddr,
-    List<DynamicList<scalar> >& tgtWght,
+    List<DynamicList<label>>& srcAddr,
+    List<DynamicList<scalar>>& srcWght,
+    List<DynamicList<label>>& tgtAddr,
+    List<DynamicList<scalar>>& tgtWght,
     label srcFaceI,
     label tgtFaceI
 )
@@ -262,10 +262,10 @@ bool CML::faceAreaWeightAMI<SourcePatch, TargetPatch>::processSourceFace
     DynamicList<label>& visitedFaces,
 
     // temporary storage for addressing and weights
-    List<DynamicList<label> >& srcAddr,
-    List<DynamicList<scalar> >& srcWght,
-    List<DynamicList<label> >& tgtAddr,
-    List<DynamicList<scalar> >& tgtWght
+    List<DynamicList<label>>& srcAddr,
+    List<DynamicList<scalar>>& srcWght,
+    List<DynamicList<label>>& tgtAddr,
+    List<DynamicList<scalar>>& tgtWght
 )
 {
     if (tgtStartFaceI == -1)
@@ -503,10 +503,10 @@ template<class SourcePatch, class TargetPatch>
 void CML::faceAreaWeightAMI<SourcePatch, TargetPatch>::
 restartUncoveredSourceFace
 (
-    List<DynamicList<label> >& srcAddr,
-    List<DynamicList<scalar> >& srcWght,
-    List<DynamicList<label> >& tgtAddr,
-    List<DynamicList<scalar> >& tgtWght
+    List<DynamicList<label>>& srcAddr,
+    List<DynamicList<scalar>>& srcWght,
+    List<DynamicList<label>>& tgtAddr,
+    List<DynamicList<scalar>>& tgtWght
 )
 {
     // Collect all src faces with a low weight
@@ -663,10 +663,10 @@ void CML::faceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
     }
 
     // temporary storage for addressing and weights
-    List<DynamicList<label> > srcAddr(this->srcPatch_.size());
-    List<DynamicList<scalar> > srcWght(srcAddr.size());
-    List<DynamicList<label> > tgtAddr(this->tgtPatch_.size());
-    List<DynamicList<scalar> > tgtWght(tgtAddr.size());
+    List<DynamicList<label>> srcAddr(this->srcPatch_.size());
+    List<DynamicList<scalar>> srcWght(srcAddr.size());
+    List<DynamicList<label>> tgtAddr(this->tgtPatch_.size());
+    List<DynamicList<scalar>> tgtWght(tgtAddr.size());
 
     calcAddressing
     (

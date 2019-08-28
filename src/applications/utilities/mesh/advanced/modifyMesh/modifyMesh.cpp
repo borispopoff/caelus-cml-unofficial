@@ -348,9 +348,9 @@ int main(int argc, char *argv[])
     );
 
     // Read all from the dictionary.
-    List<Pair<point> > pointsToMove(dict.lookup("pointsToMove"));
-    List<Pair<point> > edgesToSplit(dict.lookup("edgesToSplit"));
-    List<Pair<point> > facesToTriangulate
+    List<Pair<point>> pointsToMove(dict.lookup("pointsToMove"));
+    List<Pair<point>> edgesToSplit(dict.lookup("edgesToSplit"));
+    List<Pair<point>> facesToTriangulate
     (
         dict.lookup("facesToTriangulate")
     );
@@ -362,15 +362,15 @@ int main(int argc, char *argv[])
      || facesToTriangulate.size()
     );
 
-    List<Pair<point> > edgesToCollapse(dict.lookup("edgesToCollapse"));
+    List<Pair<point>> edgesToCollapse(dict.lookup("edgesToCollapse"));
 
     bool collapseEdge = edgesToCollapse.size();
 
-    List<Pair<point> > cellsToPyramidise(dict.lookup("cellsToSplit"));
+    List<Pair<point>> cellsToPyramidise(dict.lookup("cellsToSplit"));
 
     bool cellsToSplit = cellsToPyramidise.size();
 
-    // List<Tuple2<pointField,point> >
+    // List<Tuple2<pointField,point>>
     //     cellsToCreate(dict.lookup("cellsToCreate"));
 
     Info<< "Read from " << dict.name() << nl
@@ -435,7 +435,7 @@ int main(int argc, char *argv[])
 
 
     Info<< nl << "Looking up edges to split ..." << nl << endl;
-    Map<List<point> > edgeToCuts(edgesToSplit.size());
+    Map<List<point>> edgeToCuts(edgesToSplit.size());
     forAll(edgesToSplit, i)
     {
         const Pair<point>& pts = edgesToSplit[i];

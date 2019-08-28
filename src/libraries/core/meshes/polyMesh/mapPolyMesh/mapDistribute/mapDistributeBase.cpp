@@ -46,7 +46,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
     List<labelPair> allComms;
 
     {
-        HashSet<labelPair, labelPair::Hash<> > commsSet(Pstream::nProcs());
+        HashSet<labelPair, labelPair::Hash<>> commsSet(Pstream::nProcs());
 
         // Find what communication is required
         forAll(subMap, proci)
@@ -282,7 +282,7 @@ void CML::mapDistributeBase::calcCompactAddressing
 (
     const globalIndex& globalNumbering,
     const labelList& elements,
-    List<Map<label> >& compactMap
+    List<Map<label>>& compactMap
 ) const
 {
     compactMap.setSize(Pstream::nProcs());
@@ -331,7 +331,7 @@ void CML::mapDistributeBase::calcCompactAddressing
 (
     const globalIndex& globalNumbering,
     const labelListList& cellCells,
-    List<Map<label> >& compactMap
+    List<Map<label>>& compactMap
 ) const
 {
     compactMap.setSize(Pstream::nProcs());
@@ -391,7 +391,7 @@ void CML::mapDistributeBase::exchangeAddressing
     const int tag,
     const globalIndex& globalNumbering,
     labelList& elements,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     labelList& compactStart
 )
 {
@@ -468,7 +468,7 @@ void CML::mapDistributeBase::exchangeAddressing
     const int tag,
     const globalIndex& globalNumbering,
     labelListList& cellCells,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     labelList& compactStart
 )
 {
@@ -654,7 +654,7 @@ CML::mapDistributeBase::mapDistributeBase
 (
     const globalIndex& globalNumbering,
     labelList& elements,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -714,7 +714,7 @@ CML::mapDistributeBase::mapDistributeBase
 (
     const globalIndex& globalNumbering,
     labelListList& cellCells,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -820,7 +820,7 @@ CML::Xfer<CML::mapDistributeBase> CML::mapDistributeBase::xfer()
 CML::label CML::mapDistributeBase::renumber
 (
     const globalIndex& globalNumbering,
-    const List<Map<label> >& compactMap,
+    const List<Map<label>>& compactMap,
     const label globalI
 )
 {

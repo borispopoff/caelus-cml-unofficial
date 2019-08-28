@@ -57,7 +57,7 @@ CML::hashedWordList::hashedWordList(const hashedWordList& names)
 }
 
 
-CML::hashedWordList::hashedWordList(const Xfer< List<word> >& names)
+CML::hashedWordList::hashedWordList(const Xfer<List<word>>& names)
 :
     List<word>(names)
 {

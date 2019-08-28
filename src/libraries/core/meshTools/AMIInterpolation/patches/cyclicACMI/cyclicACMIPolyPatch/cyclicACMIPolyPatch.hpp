@@ -276,7 +276,7 @@ public:
 
                 //- Interpolate field
                 template<class Type>
-                tmp<Field<Type> > interpolate
+                tmp<Field<Type>> interpolate
                 (
                     const Field<Type>& fldCouple,
                     const Field<Type>& fldNonOverlap
@@ -284,10 +284,10 @@ public:
 
                 //- Interpolate tmp field
                 template<class Type>
-                tmp<Field<Type> > interpolate
+                tmp<Field<Type>> interpolate
                 (
-                    const tmp<Field<Type> >& tFldCouple,
-                    const tmp<Field<Type> >& tFldNonOverlap
+                    const tmp<Field<Type>>& tFldCouple,
+                    const tmp<Field<Type>>& tFldNonOverlap
                 ) const;
 
                 //- Low-level interpolate List
@@ -411,7 +411,7 @@ inline CML::scalar CML::cyclicACMIPolyPatch::tolerance()
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::cyclicACMIPolyPatch::interpolate
+CML::tmp<CML::Field<Type>> CML::cyclicACMIPolyPatch::interpolate
 (
     const Field<Type>& fldCouple,
     const Field<Type>& fldNonOverlap
@@ -436,10 +436,10 @@ CML::tmp<CML::Field<Type> > CML::cyclicACMIPolyPatch::interpolate
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::cyclicACMIPolyPatch::interpolate
+CML::tmp<CML::Field<Type>> CML::cyclicACMIPolyPatch::interpolate
 (
-    const tmp<Field<Type> >& tFldCouple,
-    const tmp<Field<Type> >& tFldNonOverlap
+    const tmp<Field<Type>>& tFldCouple,
+    const tmp<Field<Type>>& tFldNonOverlap
 ) const
 {
     return interpolate(tFldCouple(), tFldNonOverlap());

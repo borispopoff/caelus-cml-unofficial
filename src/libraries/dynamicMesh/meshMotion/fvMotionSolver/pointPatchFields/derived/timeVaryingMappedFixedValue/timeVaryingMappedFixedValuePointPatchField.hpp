@@ -92,7 +92,7 @@ class timeVaryingMappedFixedValuePointPatchField
         Type endAverage_;
 
         //- Time varying offset values to interpolated data
-        autoPtr<DataEntry<Type> > offset_;
+        autoPtr<DataEntry<Type>> offset_;
 
 
 public:
@@ -134,9 +134,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new timeVaryingMappedFixedValuePointPatchField<Type>(*this)
             );
@@ -150,12 +150,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new timeVaryingMappedFixedValuePointPatchField<Type>(*this, iF)
             );
@@ -412,7 +412,7 @@ void CML::timeVaryingMappedFixedValuePointPatchField<Type>::rmap
     fixedValuePointPatchField<Type>::rmap(ptf, addr);
 
     const timeVaryingMappedFixedValuePointPatchField<Type>& tiptf =
-        refCast<const timeVaryingMappedFixedValuePointPatchField<Type> >(ptf);
+        refCast<const timeVaryingMappedFixedValuePointPatchField<Type>>(ptf);
 
     startSampledValues_.rmap(tiptf.startSampledValues_, addr);
     endSampledValues_.rmap(tiptf.endSampledValues_, addr);

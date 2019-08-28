@@ -51,16 +51,16 @@ void stabilise
 );
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > stabilise
+tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
 (
     const GeometricField<scalar, PatchField, GeoMesh>&,
     const dimensioned<scalar>&
 );
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > stabilise
+tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
 (
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >&,
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>&,
     const dimensioned<scalar>&
 );
 
@@ -129,17 +129,17 @@ void func                                                                      \
 );                                                                             \
                                                                                \
 template<template<class> class PatchField, class GeoMesh>                      \
-tmp<GeometricField<scalar, PatchField, GeoMesh> > func                         \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                         \
 (                                                                              \
     const int n,                                                               \
     const GeometricField<scalar, PatchField, GeoMesh>&                         \
 );                                                                             \
                                                                                \
 template<template<class> class PatchField, class GeoMesh>                      \
-tmp<GeometricField<scalar, PatchField, GeoMesh> > func                         \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                         \
 (                                                                              \
     const int n,                                                               \
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >&                   \
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>&                   \
 );
 
 BesselFunc(jn)
@@ -180,13 +180,13 @@ void stabilise
 
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > stabilise
+tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
 (
     const GeometricField<scalar, PatchField, GeoMesh>& gsf,
     const dimensioned<scalar>& ds
 )
 {
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tRes
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tRes
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -210,15 +210,15 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > stabilise
 
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > stabilise
+tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
 (
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >& tgsf,
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf,
     const dimensioned<scalar>& ds
 )
 {
     const GeometricField<scalar, PatchField, GeoMesh>& gsf = tgsf();
 
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tRes
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tRes
     (
         reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
         (
@@ -262,13 +262,13 @@ void pow
 
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
     const GeometricField<scalar, PatchField, GeoMesh>& gsf1,
     const GeometricField<scalar, PatchField, GeoMesh>& gsf2
 )
 {
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -296,15 +296,15 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
 
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >& tgsf1,
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf1,
     const GeometricField<scalar, PatchField, GeoMesh>& gsf2
 )
 {
     const GeometricField<scalar, PatchField, GeoMesh>& gsf1 = tgsf1();
 
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
         (
@@ -327,15 +327,15 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
 
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
     const GeometricField<scalar, PatchField, GeoMesh>& gsf1,
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >& tgsf2
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf2
 )
 {
     const GeometricField<scalar, PatchField, GeoMesh>& gsf2 = tgsf2();
 
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
         (
@@ -357,16 +357,16 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
 }
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >& tgsf1,
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >& tgsf2
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf1,
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf2
 )
 {
     const GeometricField<scalar, PatchField, GeoMesh>& gsf1 = tgsf1();
     const GeometricField<scalar, PatchField, GeoMesh>& gsf2 = tgsf2();
 
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         reuseTmpTmpGeometricField
             <scalar, scalar, scalar, scalar, PatchField, GeoMesh>::New
@@ -406,13 +406,13 @@ void pow
 
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
     const GeometricField<scalar, PatchField, GeoMesh>& gsf,
     const dimensionedScalar& ds
 )
 {
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -435,15 +435,15 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
 }
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >& tgsf,
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf,
     const dimensionedScalar& ds
 )
 {
     const GeometricField<scalar, PatchField, GeoMesh>& gsf = tgsf();
 
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
         (
@@ -461,7 +461,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
 }
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
     const GeometricField<scalar, PatchField, GeoMesh>& gsf,
     const scalar& s
@@ -471,9 +471,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
 }
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >& tgsf,
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf,
     const scalar& s
 )
 {
@@ -495,13 +495,13 @@ void pow
 
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
     const dimensionedScalar& ds,
     const GeometricField<scalar, PatchField, GeoMesh>& gsf
 )
 {
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -525,15 +525,15 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
 
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
     const dimensionedScalar& ds,
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >& tgsf
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf
 )
 {
     const GeometricField<scalar, PatchField, GeoMesh>& gsf = tgsf();
 
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
         (
@@ -551,7 +551,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
 }
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
     const scalar& s,
     const GeometricField<scalar, PatchField, GeoMesh>& gsf
@@ -561,10 +561,10 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
 }
 
 template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
+tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 (
     const scalar& s,
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >& tgsf
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf
 )
 {
     return pow(dimensionedScalar(s), tgsf);
@@ -625,7 +625,7 @@ void func                                                                   \
 }                                                                           \
                                                                             \
 template<template<class> class PatchField, class GeoMesh>                   \
-tmp<GeometricField<scalar, PatchField, GeoMesh> > func                      \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                      \
 (                                                                           \
     const int n,                                                            \
     const GeometricField<scalar, PatchField, GeoMesh>& gsf                  \
@@ -638,7 +638,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > func                      \
             << abort(FatalError);                                           \
     }                                                                       \
                                                                             \
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tFunc                 \
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tFunc                 \
     (                                                                       \
         new GeometricField<scalar, PatchField, GeoMesh>                     \
         (                                                                   \
@@ -661,10 +661,10 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > func                      \
 }                                                                           \
                                                                             \
 template<template<class> class PatchField, class GeoMesh>                   \
-tmp<GeometricField<scalar, PatchField, GeoMesh> > func                      \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                      \
 (                                                                           \
     const int n,                                                            \
-    const tmp<GeometricField<scalar, PatchField, GeoMesh> >& tgsf           \
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf           \
 )                                                                           \
 {                                                                           \
     const GeometricField<scalar, PatchField, GeoMesh>& gsf = tgsf();        \
@@ -676,7 +676,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > func                      \
             << abort(FatalError);                                           \
     }                                                                       \
                                                                             \
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tFunc                 \
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tFunc                 \
     (                                                                       \
         reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New    \
         (                                                                   \

@@ -26,7 +26,7 @@ License
 template<class Type>
 void CML::nearWallFields::createFields
 (
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& sflds
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;
@@ -117,7 +117,7 @@ void CML::nearWallFields::sampleBoundaryField
 template<class Type>
 void CML::nearWallFields::sampleFields
 (
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& sflds
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;

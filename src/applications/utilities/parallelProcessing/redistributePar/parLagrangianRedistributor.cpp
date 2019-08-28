@@ -142,7 +142,7 @@ CML::parLagrangianRedistributor::redistributeLagrangianPositions
     {
         // List of lists of particles to be transferred for all of the
         // neighbour processors
-        List<IDLList<passivePositionParticle> > particleTransferLists
+        List<IDLList<passivePositionParticle>> particleTransferLists
         (
             Pstream::nProcs()
         );

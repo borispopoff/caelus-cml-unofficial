@@ -114,10 +114,10 @@ CML::refinementSurfaces::refinementSurfaces
     labelList globalMaxLevel(surfI, 0);
     scalarField globalAngle(surfI, -GREAT);
     PtrList<dictionary> globalPatchInfo(surfI);
-    List<Map<label> > regionMinLevel(surfI);
-    List<Map<label> > regionMaxLevel(surfI);
-    List<Map<scalar> > regionAngle(surfI);
-    List<Map<autoPtr<dictionary> > > regionPatchInfo(surfI);
+    List<Map<label>> regionMinLevel(surfI);
+    List<Map<label>> regionMaxLevel(surfI);
+    List<Map<scalar>> regionAngle(surfI);
+    List<Map<autoPtr<dictionary>>> regionPatchInfo(surfI);
 
 
     HashSet<word> unmatchedKeys(surfacesDict.toc());
@@ -351,8 +351,8 @@ CML::refinementSurfaces::refinementSurfaces
             perpendicularAngle_[globalRegionI] = regionAngle[surfI][iter.key()];
         }
 
-        const Map<autoPtr<dictionary> >& localInfo = regionPatchInfo[surfI];
-        forAllConstIter(Map<autoPtr<dictionary> >, localInfo, iter)
+        const Map<autoPtr<dictionary>>& localInfo = regionPatchInfo[surfI];
+        forAllConstIter(Map<autoPtr<dictionary>>, localInfo, iter)
         {
             label globalRegionI = regionOffset_[surfI] + iter.key();
 
@@ -733,7 +733,7 @@ void CML::refinementSurfaces::findAllHigherIntersections
     }
 
     // Work arrays
-    List<List<pointIndexHit> > hitInfo;
+    List<List<pointIndexHit>> hitInfo;
     labelList pRegions;
     vectorField pNormals;
 

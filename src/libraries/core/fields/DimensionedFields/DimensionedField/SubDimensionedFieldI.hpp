@@ -77,12 +77,12 @@ template<class Type, class GeoMesh>
 inline const SubDimensionedField<Type, GeoMesh>&
 SubDimensionedField<Type, GeoMesh>::null()
 {
-    return NullSingletonRef< SubDimensionedField<Type, GeoMesh> >();
+    return NullSingletonRef< SubDimensionedField<Type, GeoMesh>>();
 }
 
 
 template<class Type, class GeoMesh>
-inline tmp<Field<typename SubDimensionedField<Type, GeoMesh>::cmptType> >
+inline tmp<Field<typename SubDimensionedField<Type, GeoMesh>::cmptType>>
 SubDimensionedField<Type, GeoMesh>::component
 (
     const direction d
@@ -96,7 +96,7 @@ SubDimensionedField<Type, GeoMesh>::component
 
 
 template<class Type, class GeoMesh>
-inline tmp<DimensionedField<Type, GeoMesh> >
+inline tmp<DimensionedField<Type, GeoMesh>>
 SubDimensionedField<Type, GeoMesh>::T() const
 {
     return

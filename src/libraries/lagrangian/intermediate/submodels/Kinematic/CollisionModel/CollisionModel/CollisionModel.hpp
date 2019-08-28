@@ -102,7 +102,7 @@ public:
 
 
     //- Selector
-    static autoPtr<CollisionModel<CloudType> > New
+    static autoPtr<CollisionModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -147,7 +147,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<collidingCloudType>, 0);            \
                                                                                \
     CollisionModel<collidingCloudType>::                                       \
-        adddictionaryConstructorToTable<SS<collidingCloudType> >               \
+        adddictionaryConstructorToTable<SS<collidingCloudType>>                \
             add##SS##CloudType##collidingCloudType##ConstructorToTable_;
 
 
@@ -192,7 +192,7 @@ CML::CollisionModel<CloudType>::~CollisionModel()
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::CollisionModel<CloudType> >
+CML::autoPtr<CML::CollisionModel<CloudType>>
 CML::CollisionModel<CloudType>::New
 (
     const dictionary& dict,
@@ -215,7 +215,7 @@ CML::CollisionModel<CloudType>::New
             << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);
     }
 
-    return autoPtr<CollisionModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<CollisionModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

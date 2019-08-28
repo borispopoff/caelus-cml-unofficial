@@ -143,7 +143,7 @@ private:
         // Polygon collector
 
             //- Triangulation of faces
-            List<List<face> > faceTris_;
+            List<List<face>> faceTris_;
 
         // Concentric circles collector
 
@@ -208,7 +208,7 @@ private:
         );
 
         //- Initialise polygon collectors
-        void initPolygons(const List<Field<point> >& polygons);
+        void initPolygons(const List<Field<point>>& polygons);
 
         //- Initialise concentric circle collectors
         void initConcentricCircles();
@@ -256,9 +256,9 @@ public:
         ParticleCollector(const ParticleCollector<CloudType>& pc);
 
         //- Construct and return a clone
-        virtual autoPtr<CloudFunctionObject<CloudType> > clone() const
+        virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
-            return autoPtr<CloudFunctionObject<CloudType> >
+            return autoPtr<CloudFunctionObject<CloudType>>
             (
                 new ParticleCollector<CloudType>(*this)
             );
@@ -390,7 +390,7 @@ void CML::ParticleCollector<CloudType>::makeLogFile
 template<class CloudType>
 void CML::ParticleCollector<CloudType>::initPolygons
 (
-    const List<Field<point> >& polygons
+    const List<Field<point>>& polygons
 )
 {
     mode_ = mtPolygon;
@@ -824,7 +824,7 @@ CML::ParticleCollector<CloudType>::ParticleCollector
     word mode(this->coeffDict().lookup("mode"));
     if (mode == "polygon")
     {
-        List<Field<point> > polygons(this->coeffDict().lookup("polygons"));
+        List<Field<point>> polygons(this->coeffDict().lookup("polygons"));
 
         initPolygons(polygons);
 
@@ -833,12 +833,12 @@ CML::ParticleCollector<CloudType>::ParticleCollector
     }
     else if (mode == "polygonWithNormal")
     {
-        List<Tuple2<Field<point>, vector> > polygonAndNormal
+        List<Tuple2<Field<point>, vector>> polygonAndNormal
         (
             this->coeffDict().lookup("polygons")
         );
 
-        List<Field<point> > polygons(polygonAndNormal.size());
+        List<Field<point>> polygons(polygonAndNormal.size());
         normal_.setSize(polygonAndNormal.size());
 
         forAll(polygons, polyI)

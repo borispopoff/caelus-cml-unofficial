@@ -241,15 +241,15 @@ CML::tmp<CML::surfaceScalarField> CML::MRFZoneList::relative
 }
 
 
-CML::tmp<CML::FieldField<CML::fvsPatchField, CML::scalar> >
+CML::tmp<CML::FieldField<CML::fvsPatchField, CML::scalar>>
 CML::MRFZoneList::relative
 (
-    const tmp<FieldField<fvsPatchField, scalar> >& tphi
+    const tmp<FieldField<fvsPatchField, scalar>>& tphi
 ) const
 {
     if (size())
     {
-        tmp<FieldField<fvsPatchField, scalar> > rphi
+        tmp<FieldField<fvsPatchField, scalar>> rphi
         (
             reuseTmpFieldField<fvsPatchField, scalar, scalar>::New(tphi)
         );
@@ -265,21 +265,21 @@ CML::MRFZoneList::relative
     }
     else
     {
-        return tmp<FieldField<fvsPatchField, scalar> >(tphi, true);
+        return tmp<FieldField<fvsPatchField, scalar>>(tphi, true);
     }
 }
 
 
-CML::tmp<CML::Field<CML::scalar> >
+CML::tmp<CML::Field<CML::scalar>>
 CML::MRFZoneList::relative
 (
-    const tmp<Field<scalar> >& tphi,
+    const tmp<Field<scalar>>& tphi,
     const label patchi
 ) const
 {
     if (size())
     {
-        tmp<Field<scalar> > rphi
+        tmp<Field<scalar>> rphi
         (
             reuseTmp<scalar, scalar>
             ::New(tphi)
@@ -296,7 +296,7 @@ CML::MRFZoneList::relative
     }
     else
     {
-        return tmp<Field<scalar> >(tphi, true);
+        return tmp<Field<scalar>>(tphi, true);
     }
 }
 

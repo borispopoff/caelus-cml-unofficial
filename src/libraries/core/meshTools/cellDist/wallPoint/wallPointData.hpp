@@ -160,37 +160,37 @@ public:
 //  ones.
 
 template <>
-inline bool contiguous<wallPointData<bool> >()
+inline bool contiguous<wallPointData<bool>>()
 {
     return contiguous<wallPoint>();
 }
 template <>
-inline bool contiguous<wallPointData<label> >()
+inline bool contiguous<wallPointData<label>>()
 {
     return contiguous<wallPoint>();
 }
 template <>
-inline bool contiguous<wallPointData<scalar> >()
+inline bool contiguous<wallPointData<scalar>>()
 {
     return contiguous<wallPoint>();
 }
 template <>
-inline bool contiguous<wallPointData<vector> >()
+inline bool contiguous<wallPointData<vector>>()
 {
     return contiguous<wallPoint>();
 }
 template <>
-inline bool contiguous<wallPointData<sphericalTensor> >()
+inline bool contiguous<wallPointData<sphericalTensor>>()
 {
     return contiguous<wallPoint>();
 }
 template <>
-inline bool contiguous<wallPointData<symmTensor> >()
+inline bool contiguous<wallPointData<symmTensor>>()
 {
     return contiguous<wallPoint>();
 }
 template <>
-inline bool contiguous<wallPointData<tensor> >()
+inline bool contiguous<wallPointData<tensor>>()
 {
     return contiguous<wallPoint>();
 }

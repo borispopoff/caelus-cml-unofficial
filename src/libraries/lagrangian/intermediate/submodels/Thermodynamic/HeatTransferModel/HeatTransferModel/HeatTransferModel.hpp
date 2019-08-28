@@ -94,7 +94,7 @@ public:
         HeatTransferModel(const HeatTransferModel<CloudType>& htm);
 
         //- Construct and return a clone
-        virtual autoPtr<HeatTransferModel<CloudType> > clone() const = 0;
+        virtual autoPtr<HeatTransferModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -102,7 +102,7 @@ public:
 
 
     //- Selector
-    static autoPtr<HeatTransferModel<CloudType> > New
+    static autoPtr<HeatTransferModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -165,7 +165,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<thermoCloudType>, 0);               \
                                                                                \
     HeatTransferModel<thermoCloudType>::                                       \
-        adddictionaryConstructorToTable<SS<thermoCloudType> >                  \
+        adddictionaryConstructorToTable<SS<thermoCloudType>>                   \
             add##SS##CloudType##thermoCloudType##ConstructorToTable_;
 
 
@@ -249,7 +249,7 @@ CML::scalar CML::HeatTransferModel<CloudType>::htc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::HeatTransferModel<CloudType> >
+CML::autoPtr<CML::HeatTransferModel<CloudType>>
 CML::HeatTransferModel<CloudType>::New
 (
     const dictionary& dict,
@@ -273,7 +273,7 @@ CML::HeatTransferModel<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<HeatTransferModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<HeatTransferModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

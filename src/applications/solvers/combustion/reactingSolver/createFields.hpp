@@ -76,7 +76,7 @@ autoPtr<compressible::turbulenceModel> turbulence
 );
 
 Info<< "Creating reaction model\n" << endl;
-autoPtr<CombustionModel<psiReactionThermo> > reaction
+autoPtr<CombustionModel<psiReactionThermo>> reaction
 (
     CombustionModel<psiReactionThermo>::New(thermo, turbulence())
 );

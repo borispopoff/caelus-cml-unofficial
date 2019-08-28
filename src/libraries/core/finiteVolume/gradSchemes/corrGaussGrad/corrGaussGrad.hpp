@@ -46,7 +46,7 @@ template<class Type>
 class CorrGaussGrad : public fv::gradScheme<Type>
 {
 
-    tmp<surfaceInterpolationScheme<Type> > tinterpScheme_;
+    tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
     //- Number of iteration for correction loop
     label corrIter_;
@@ -73,7 +73,7 @@ public:
         if (is.eof())
         {
             tinterpScheme_ =
-                tmp<surfaceInterpolationScheme<Type> >
+                tmp<surfaceInterpolationScheme<Type>>
                 (
                     new linear<Type>(mesh)
                 );
@@ -81,7 +81,7 @@ public:
         else
         {
             
-            tinterpScheme_ = tmp<surfaceInterpolationScheme<Type> >
+            tinterpScheme_ = tmp<surfaceInterpolationScheme<Type>>
             (
                 surfaceInterpolationScheme<Type>::New(mesh, is)
             );
@@ -159,7 +159,7 @@ CML::fv::CorrGaussGrad<Type>::gradf
 
     fvMesh const& mesh = ssf.mesh();
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tgGrad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tgGrad
     (
         new GeometricField<GradType, fvPatchField, volMesh>
         (
@@ -281,7 +281,7 @@ CML::fv::CorrGaussGrad<Type>::calcGrad
 {
     typedef typename outerProduct<vector, Type>::type GradType;
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tgGrad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tgGrad
     (
         gradf(tinterpScheme_().interpolate(vsf), name, vsf, corrIter_)
     );

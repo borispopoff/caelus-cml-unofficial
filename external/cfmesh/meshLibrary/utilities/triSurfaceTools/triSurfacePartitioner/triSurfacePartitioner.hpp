@@ -55,7 +55,7 @@ class triSurfacePartitioner
 
         //- corner nodes
         labelList corners_;
-        List<DynList<label> > cornerPatches_;
+        List<DynList<label>> cornerPatches_;
 
         //- information which partitions share an edge with a given partition
         List<labelHashSet> patchPatches_;
@@ -115,7 +115,7 @@ public:
         const labelList& corners() const;
 
         //- return corner patches
-        const List<DynList<label> >& cornerPatches() const;
+        const List<DynList<label>>& cornerPatches() const;
 
         //- return patch-patches addressing
         const List<labelHashSet>& patchPatches() const;

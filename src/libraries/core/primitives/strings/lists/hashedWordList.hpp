@@ -79,7 +79,7 @@ public:
         hashedWordList(const UList<word>& names);
 
         //- Construct by transferring the parameter contents
-        hashedWordList(const Xfer< List<word> >& names);
+        hashedWordList(const Xfer<List<word>>& names);
 
         //- Construct from number and list of names
         hashedWordList(const label nNames, const char** names);

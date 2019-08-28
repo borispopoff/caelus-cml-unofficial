@@ -98,9 +98,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mixedFixedValueSlipFvPatchField<Type>(*this)
             );
@@ -114,12 +114,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mixedFixedValueSlipFvPatchField<Type>(*this, iF)
             );
@@ -167,7 +167,7 @@ public:
         // Evaluation functions
 
             //- Return gradient at boundary
-            virtual tmp<Field<Type> > snGrad() const;
+            virtual tmp<Field<Type>> snGrad() const;
 
             //- Evaluate the patch field
             virtual void evaluate
@@ -176,7 +176,7 @@ public:
             );
 
             //- Return face-gradient transform diagonal
-            virtual tmp<Field<Type> > snGradTransformDiag() const;
+            virtual tmp<Field<Type>> snGradTransformDiag() const;
 
 
         //- Write
@@ -306,7 +306,7 @@ void CML::mixedFixedValueSlipFvPatchField<Type>::rmap
     transformFvPatchField<Type>::rmap(ptf, addr);
 
     const mixedFixedValueSlipFvPatchField<Type>& dmptf =
-        refCast<const mixedFixedValueSlipFvPatchField<Type> >(ptf);
+        refCast<const mixedFixedValueSlipFvPatchField<Type>>(ptf);
 
     refValue_.rmap(dmptf.refValue_, addr);
     valueFraction_.rmap(dmptf.valueFraction_, addr);
@@ -368,7 +368,7 @@ CML::mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
 #   ifdef _WIN32
     typedef typename powProduct<vector, pTraits<Type>::rank>::type prodType;
 
-     tmp<Field<prodType> > a =
+     tmp<Field<prodType>> a =
           pow<vector, pTraits<Type>::rank>(diag, pTraits<prodType>::zero);
 
     return

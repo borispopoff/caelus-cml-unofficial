@@ -101,7 +101,7 @@ private:
         //- Mapping from patch index to which transform it matches (or
         //  -1 for none) (.first()) and what sign to use for it,
         //  i.e. +/- 1 (.second()).
-        List<Pair<label> > patchTransformSign_;
+        List<Pair<label>> patchTransformSign_;
 
 
     // Private static data
@@ -260,7 +260,7 @@ public:
             inline label nullTransformIndex() const;
 
             //- Return access to the per-patch transform-sign pairs
-            inline const List<Pair<label> >& patchTransformSign() const;
+            inline const List<Pair<label>>& patchTransformSign() const;
 
             //- Access the overall (permuted) transform corresponding
             //  to the transformIndex

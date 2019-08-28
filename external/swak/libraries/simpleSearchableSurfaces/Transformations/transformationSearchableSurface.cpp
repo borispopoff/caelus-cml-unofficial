@@ -296,12 +296,12 @@ void CML::transformationSearchableSurface::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     pointField iStart(start.size());
     pointField iEnd(end.size());
-    List<List<pointIndexHit> > iInfo;
+    List<List<pointIndexHit>> iInfo;
 
     forAll(start,i) {
         iStart[i]=inverseTransform(start[i]);

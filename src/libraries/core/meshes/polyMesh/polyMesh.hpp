@@ -143,7 +143,7 @@ private:
             mutable autoPtr<labelIOList> tetBasePtIsPtr_;
 
             //- Search tree to allow spatial cell searching
-            mutable autoPtr<indexedOctree<treeDataCell> > cellTreePtr_;
+            mutable autoPtr<indexedOctree<treeDataCell>> cellTreePtr_;
 
 
         // Zoning information

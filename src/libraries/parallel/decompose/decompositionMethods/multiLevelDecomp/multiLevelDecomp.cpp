@@ -65,7 +65,7 @@ void CML::multiLevelDecomp::subsetGlobalCellCells
     subCellCells = UIndirectList<labelList>(cellCells, set);
 
     // Get new indices for neighbouring processors
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
     mapDistribute map(globalCells, subCellCells, compactMap);
     map.distribute(oldToNew);
     labelList allDist(dist);

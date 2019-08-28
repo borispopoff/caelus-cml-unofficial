@@ -81,12 +81,12 @@ inline CML::SubField<Type>::SubField
 template<class Type>
 inline const CML::SubField<Type>& CML::SubField<Type>::null()
 {
-    return NullSingletonRef< SubField<Type> >();
+    return NullSingletonRef< SubField<Type>>();
 }
 
 
 template<class Type>
-inline CML::tmp<CML::Field<typename CML::SubField<Type>::cmptType> >
+inline CML::tmp<CML::Field<typename CML::SubField<Type>::cmptType>>
 CML::SubField<Type>::component
 (
     const direction d
@@ -97,7 +97,7 @@ CML::SubField<Type>::component
 
 
 template<class Type>
-inline CML::tmp<CML::Field<Type> > CML::SubField<Type>::T() const
+inline CML::tmp<CML::Field<Type>> CML::SubField<Type>::T() const
 {
     return (reinterpret_cast<const Field<Type>&>(*this)).T();
 }

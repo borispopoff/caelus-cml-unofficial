@@ -109,7 +109,7 @@ class fvMeshDistribute
             template<class T, class Mesh>
             void saveBoundaryFields
             (
-                PtrList<FieldField<fvsPatchField, T> >& bflds
+                PtrList<FieldField<fvsPatchField, T>>& bflds
             ) const;
 
             //- Map boundary fields
@@ -117,19 +117,19 @@ class fvMeshDistribute
             void mapBoundaryFields
             (
                 const mapPolyMesh& map,
-                const PtrList<FieldField<fvsPatchField, T> >& oldBflds
+                const PtrList<FieldField<fvsPatchField, T>>& oldBflds
             );
 
             //- Save internal fields of surfaceFields
             template<class T>
-            void saveInternalFields(PtrList<Field<T> >& iflds) const;
+            void saveInternalFields(PtrList<Field<T>>& iflds) const;
 
             //- Set value of patch faces resulting from internal faces
             template<class T>
             void mapExposedFaces
             (
                 const mapPolyMesh& map,
-                const PtrList<Field<T> >& oldFlds
+                const PtrList<Field<T>>& oldFlds
             );
 
             //- Init patch fields of certain type
@@ -247,7 +247,7 @@ class fvMeshDistribute
             (
                 const labelList&, // processor that neighbour is now on
                 const labelList&, // -1 or patch that face originated from
-                List<Map<label> >& procPatchID
+                List<Map<label>>& procPatchID
             );
 
             //- Get boundary faces to be repatched. Is -1 or new patchID
@@ -255,7 +255,7 @@ class fvMeshDistribute
             (
                 const labelList& neighbourNewProc,  // new processor per b. face
                 const labelList& referPatchID,      // -1 or original patch
-                const List<Map<label> >& procPatchID// patchID
+                const List<Map<label>>& procPatchID// patchID
             );
 
             //- Send mesh and coupling data.
@@ -394,7 +394,7 @@ void CML::fvMeshDistribute::printFieldInfo(const fvMesh& mesh)
 template <class T, class Mesh>
 void CML::fvMeshDistribute::saveBoundaryFields
 (
-    PtrList<FieldField<fvsPatchField, T> >& bflds
+    PtrList<FieldField<fvsPatchField, T>>& bflds
 ) const
 {
     // Save whole boundary field
@@ -425,7 +425,7 @@ template <class T, class Mesh>
 void CML::fvMeshDistribute::mapBoundaryFields
 (
     const mapPolyMesh& map,
-    const PtrList<FieldField<fvsPatchField, T> >& oldBflds
+    const PtrList<FieldField<fvsPatchField, T>>& oldBflds
 )
 {
     // Map boundary field
@@ -485,7 +485,7 @@ void CML::fvMeshDistribute::mapBoundaryFields
 template<class T>
 void CML::fvMeshDistribute::saveInternalFields
 (
-    PtrList<Field<T> >& iflds
+    PtrList<Field<T>>& iflds
 ) const
 {
     typedef GeometricField<T, fvsPatchField, surfaceMesh> fldType;
@@ -514,7 +514,7 @@ template<class T>
 void CML::fvMeshDistribute::mapExposedFaces
 (
     const mapPolyMesh& map,
-    const PtrList<Field<T> >& oldFlds
+    const PtrList<Field<T>>& oldFlds
 )
 {
     // Set boundary values of exposed internal faces

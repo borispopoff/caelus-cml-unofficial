@@ -81,10 +81,10 @@ public:
     );
 
     //- Construct and return a clone
-    virtual autoPtr<Reaction<ReactionThermo> > clone() const;
+    virtual autoPtr<Reaction<ReactionThermo>> clone() const;
 
     //- Construct and return a clone with new speciesTable
-    virtual autoPtr<Reaction<ReactionThermo> > clone
+    virtual autoPtr<Reaction<ReactionThermo>> clone
     (
         const speciesTable& species
     ) const;
@@ -147,7 +147,7 @@ public:
     //- Third-body efficiencies (beta = 1-alpha)
     //  non-empty only for third-body reactions
     //  with enhanced molecularity (alpha != 1)
-    virtual const List<Tuple2<label, scalar> >& beta() const;
+    virtual const List<Tuple2<label, scalar>>& beta() const;
 
     //- Species concentration derivative of the pressure dependent term
     virtual void dcidc
@@ -225,23 +225,23 @@ CML::ReactionProxy<ReactionThermo>::ReactionProxy
 
 
 template<class ReactionThermo>
-CML::autoPtr<CML::Reaction<ReactionThermo> >
+CML::autoPtr<CML::Reaction<ReactionThermo>>
 CML::ReactionProxy<ReactionThermo>::clone() const
 {
     NotImplemented;
-    return autoPtr<CML::Reaction<ReactionThermo> >();
+    return autoPtr<CML::Reaction<ReactionThermo>>();
 }
 
 
 template<class ReactionThermo>
-CML::autoPtr<CML::Reaction<ReactionThermo> >
+CML::autoPtr<CML::Reaction<ReactionThermo>>
 CML::ReactionProxy<ReactionThermo>::clone
 (
     const speciesTable& species
 ) const
 {
     NotImplemented;
-    return autoPtr<Reaction<ReactionThermo> >();
+    return autoPtr<Reaction<ReactionThermo>>();
 }
 
 
@@ -316,11 +316,11 @@ CML::scalar CML::ReactionProxy<ReactionThermo>::dkrdT
 
 
 template<class ReactionThermo>
-const CML::List<CML::Tuple2<CML::label, CML::scalar> >&
+const CML::List<CML::Tuple2<CML::label, CML::scalar>>&
 CML::ReactionProxy<ReactionThermo>::beta() const
 {
     NotImplemented;
-    return NullSingletonRef<List<Tuple2<label, scalar> > >();
+    return NullSingletonRef<List<Tuple2<label, scalar>>>();
 }
 
 

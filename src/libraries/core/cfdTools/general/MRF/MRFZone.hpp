@@ -99,7 +99,7 @@ class MRFZone
         vector axis_;
 
         //- Angular velocty (rad/sec)
-        autoPtr<DataEntry<scalar> > omega_;
+        autoPtr<DataEntry<scalar>> omega_;
 
 
     // Private Member Functions

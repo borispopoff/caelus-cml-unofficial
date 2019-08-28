@@ -225,10 +225,10 @@ void CML::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
     }
 
     // temporary storage for addressing and weights
-    List<DynamicList<label> > srcAddr(this->srcPatch_.size());
-    List<DynamicList<scalar> > srcWght(srcAddr.size());
-    List<DynamicList<label> > tgtAddr(this->tgtPatch_.size());
-    List<DynamicList<scalar> > tgtWght(tgtAddr.size());
+    List<DynamicList<label>> srcAddr(this->srcPatch_.size());
+    List<DynamicList<scalar>> srcWght(srcAddr.size());
+    List<DynamicList<label>> tgtAddr(this->tgtPatch_.size());
+    List<DynamicList<scalar>> tgtWght(tgtAddr.size());
 
     faceAreaWeightAMI<SourcePatch, TargetPatch>::calcAddressing
     (

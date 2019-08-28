@@ -120,7 +120,7 @@ protected:
             mutable wordList interRegionAMINames_;
 
             //- List of AMI objects per coupled region
-            mutable PtrList<PtrList<AMIPatchToPatchInterpolation> >
+            mutable PtrList<PtrList<AMIPatchToPatchInterpolation>>
                 interRegionAMI_;
 
 
@@ -249,7 +249,7 @@ public:
 
             //- Map patch field from another region model to local patch
             template<class Type>
-            tmp<CML::Field<Type> > mapRegionPatchField
+            tmp<CML::Field<Type>> mapRegionPatchField
             (
                 const regionModel& nbrRegion,
                 const label regionPatchi,
@@ -260,7 +260,7 @@ public:
 
             //- Map patch field from another region model to local patch
             template<class Type>
-            tmp<Field<Type> > mapRegionPatchField
+            tmp<Field<Type>> mapRegionPatchField
             (
                 const regionModel& nbrRegion,
                 const word& fieldName,
@@ -271,7 +271,7 @@ public:
             //- Map patch internal field from another region model to local
             //  patch
             template<class Type>
-            tmp<Field<Type> > mapRegionPatchInternalField
+            tmp<Field<Type>> mapRegionPatchInternalField
             (
                 const regionModel& nbrRegion,
                 const word& fieldName,
@@ -518,7 +518,7 @@ inline CML::label CML::regionModels::regionModel::regionPatchID
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::regionModels::regionModel::mapRegionPatchField
 (
     const regionModel& nbrRegion,
@@ -534,7 +534,7 @@ CML::regionModels::regionModel::mapRegionPatchField
     const AMIPatchToPatchInterpolation& ami =
         interRegionAMI(nbrRegion, regionPatchi, nbrPatchi, flip);
 
-    tmp<Field<Type> > tresult(ami.interpolateToSource(nbrField));
+    tmp<Field<Type>> tresult(ami.interpolateToSource(nbrField));
 
     UPstream::msgType() = oldTag;
 
@@ -543,7 +543,7 @@ CML::regionModels::regionModel::mapRegionPatchField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::regionModels::regionModel::mapRegionPatchField
 (
     const regionModel& nbrRegion,
@@ -571,7 +571,7 @@ CML::regionModels::regionModel::mapRegionPatchField
 
         const Field<Type>& nbrFieldp = nbrField.boundaryField()[nbrPatchi];
 
-        tmp<Field<Type> > tresult(ami.interpolateToSource(nbrFieldp));
+        tmp<Field<Type>> tresult(ami.interpolateToSource(nbrFieldp));
 
         UPstream::msgType() = oldTag;
 
@@ -582,7 +582,7 @@ CML::regionModels::regionModel::mapRegionPatchField
         const polyPatch& p = regionMesh().boundaryMesh()[regionPatchi];
 
         return
-            tmp<Field<Type> >
+            tmp<Field<Type>>
             (
                 new Field<Type>
                 (
@@ -595,7 +595,7 @@ CML::regionModels::regionModel::mapRegionPatchField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::regionModels::regionModel::mapRegionPatchInternalField
 (
     const regionModel& nbrRegion,
@@ -624,7 +624,7 @@ CML::regionModels::regionModel::mapRegionPatchInternalField
         const fvPatchField<Type>& nbrFieldp =
             nbrField.boundaryField()[nbrPatchi];
 
-        tmp<Field<Type> > tresult
+        tmp<Field<Type>> tresult
         (
             ami.interpolateToSource(nbrFieldp.patchInternalField())
         );
@@ -638,7 +638,7 @@ CML::regionModels::regionModel::mapRegionPatchInternalField
         const polyPatch& p = regionMesh().boundaryMesh()[regionPatchi];
 
         return
-            tmp<Field<Type> >
+            tmp<Field<Type>>
             (
                 new Field<Type>
                 (

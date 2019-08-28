@@ -207,7 +207,7 @@ void CML::slidingInterface::calcAttachedAddressing() const
         // Ditto for cut point edge map.  This is a rough guess of its size
         //
         cutPointEdgePairMapPtr_ =
-            new Map<Pair<edge> >
+            new Map<Pair<edge>>
             (
                 faceZones[slaveFaceZoneID_.index()]().nEdges()
             );
@@ -388,10 +388,10 @@ void CML::slidingInterface::renumberAttachedAddressing
     }
 
     // Renumber the cut point edge pair map. Need to take a copy!
-    const Map<Pair<edge> > cpepm = cutPointEdgePairMap();
+    const Map<Pair<edge>> cpepm = cutPointEdgePairMap();
 
-    Map<Pair<edge> >* newCpepmPtr = new Map<Pair<edge> >(cpepm.size());
-    Map<Pair<edge> >& newCpepm = *newCpepmPtr;
+    Map<Pair<edge>>* newCpepmPtr = new Map<Pair<edge>>(cpepm.size());
+    Map<Pair<edge>>& newCpepm = *newCpepmPtr;
 
     const labelList cpepmToc = cpepm.toc();
 
@@ -537,7 +537,7 @@ const CML::Map<CML::label>& CML::slidingInterface::retiredPointMap() const
 }
 
 
-const CML::Map<CML::Pair<CML::edge> >&
+const CML::Map<CML::Pair<CML::edge>>&
 CML::slidingInterface::cutPointEdgePairMap() const
 {
     if (!cutPointEdgePairMapPtr_)

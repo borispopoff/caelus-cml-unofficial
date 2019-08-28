@@ -123,12 +123,12 @@ public:
                 }
         };
 
-        tmp<surfaceInterpolationScheme<Type> > operator()
+        tmp<surfaceInterpolationScheme<Type>> operator()
         (
             const GeometricField<Type, fvPatchField, volMesh>& field
         ) const
         {
-            return tmp<surfaceInterpolationScheme<Type> >
+            return tmp<surfaceInterpolationScheme<Type>>
             (
                 new fieldScheme(field, weights_)
             );
@@ -175,7 +175,7 @@ multivariateSurfaceInterpolationScheme<scalar>::addIstreamConstructorToTable   \
 typedef multivariateScheme                                                     \
 <                                                                              \
     scalar,                                                                    \
-    LimitedScheme<scalar, LLIMITER<LIMITER<NVDTVD> >, limitFuncs::LIMFUNC>     \
+    LimitedScheme<scalar, LLIMITER<LIMITER<NVDTVD>>, limitFuncs::LIMFUNC>      \
 >                                                                              \
     multivariateScheme##LLIMITER##LIMITER##NVDTVD##LIMFUNC##_;                 \
 defineTemplateTypeNameAndDebugWithName                                         \
@@ -190,7 +190,7 @@ multivariateSurfaceInterpolationScheme<scalar>::addIstreamConstructorToTable   \
     multivariateScheme                                                         \
     <                                                                          \
         scalar,                                                                \
-        LimitedScheme<scalar, LLIMITER<LIMITER<NVDTVD> >, limitFuncs::LIMFUNC> \
+        LimitedScheme<scalar, LLIMITER<LIMITER<NVDTVD>>, limitFuncs::LIMFUNC>  \
     >                                                                          \
 >                                                                              \
     addMultivariate##SS##ConstructorToTable_;

@@ -56,7 +56,7 @@ void FUNC(Field<typeF1>& f1, const UList<typeF2>& f2)                         \
 }                                                                             \
                                                                               \
                                                                               \
-void FUNC(Field<typeF1>& f1, const tmp<Field<typeF2> >& tf2)                  \
+void FUNC(Field<typeF1>& f1, const tmp<Field<typeF2>>& tf2)                   \
 {                                                                             \
      FUNC(f1, tf2());                                                         \
      tf2.clear();                                                             \

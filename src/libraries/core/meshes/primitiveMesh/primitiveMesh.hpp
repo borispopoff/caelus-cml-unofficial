@@ -218,7 +218,7 @@ class primitiveMesh
             //- Helper: return (after optional creation) edge between two points
             static label getEdge
             (
-                List<DynamicList<label> >&,
+                List<DynamicList<label>>&,
                 DynamicList<edge>&,
                 const label,
                 const label

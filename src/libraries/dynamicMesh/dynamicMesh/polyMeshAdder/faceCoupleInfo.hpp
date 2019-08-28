@@ -138,7 +138,7 @@ SourceFiles
 namespace CML
 {
 
-typedef HashTable<labelList, edge, Hash<edge> > edgeLookup;
+typedef HashTable<labelList, edge, Hash<edge>> edgeLookup;
 
 
 // Forward declaration of classes

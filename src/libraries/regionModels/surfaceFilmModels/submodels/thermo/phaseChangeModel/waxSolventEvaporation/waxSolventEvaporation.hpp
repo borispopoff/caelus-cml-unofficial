@@ -91,7 +91,7 @@ protected:
         Switch YInfZero_;
 
         //- Activity coefficient as a function of solvent mole fraction
-        autoPtr<DataEntry<scalar> > activityCoeff_;
+        autoPtr<DataEntry<scalar>> activityCoeff_;
 
 
     // Protected member functions

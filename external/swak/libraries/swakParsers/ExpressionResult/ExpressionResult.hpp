@@ -216,7 +216,7 @@ public:
     inline void setObjectResult(autoPtr<T> o);
 
     template<class Type>
-    inline tmp<Field<Type> > getResult(bool keep=false);
+    inline tmp<Field<Type>> getResult(bool keep=false);
 
     // couldn't get specialisation with Field<Type> to work. Maybe later. Maybe forbidden
     template<class Type>

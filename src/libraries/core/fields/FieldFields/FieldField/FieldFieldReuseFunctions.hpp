@@ -34,18 +34,18 @@ class reuseTmpFieldField
 {
 public:
 
-    static tmp<FieldField<Field, TypeR> > New
+    static tmp<FieldField<Field, TypeR>> New
     (
-        const tmp<FieldField<Field, Type1> >& tf1
+        const tmp<FieldField<Field, Type1>>& tf1
     )
     {
-        return tmp<FieldField<Field, TypeR> >
+        return tmp<FieldField<Field, TypeR>>
         (
             FieldField<Field, TypeR>::NewCalculatedType(tf1())
         );
     }
 
-    static void clear(const tmp<FieldField<Field, Type1> >& tf1)
+    static void clear(const tmp<FieldField<Field, Type1>>& tf1)
     {
         tf1.clear();
     }
@@ -57,9 +57,9 @@ class reuseTmpFieldField<Field, TypeR, TypeR>
 {
 public:
 
-    static tmp<FieldField<Field, TypeR> > New
+    static tmp<FieldField<Field, TypeR>> New
     (
-        const tmp<FieldField<Field, TypeR> >& tf1,
+        const tmp<FieldField<Field, TypeR>>& tf1,
         const bool initRet = false
     )
     {
@@ -69,7 +69,7 @@ public:
         }
         else
         {
-            tmp<FieldField<Field, TypeR> > rtf
+            tmp<FieldField<Field, TypeR>> rtf
             (
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
@@ -83,7 +83,7 @@ public:
         }
     }
 
-    static void clear(const tmp<FieldField<Field, TypeR> >& tf1)
+    static void clear(const tmp<FieldField<Field, TypeR>>& tf1)
     {
         if (tf1.isTmp())
         {
@@ -105,13 +105,13 @@ class reuseTmpTmpFieldField
 {
 public:
 
-    static tmp<FieldField<Field, TypeR> > New
+    static tmp<FieldField<Field, TypeR>> New
     (
-        const tmp<FieldField<Field, Type1> >& tf1,
-        const tmp<FieldField<Field, Type2> >& tf2
+        const tmp<FieldField<Field, Type1>>& tf1,
+        const tmp<FieldField<Field, Type2>>& tf2
     )
     {
-        return tmp<FieldField<Field, TypeR> >
+        return tmp<FieldField<Field, TypeR>>
         (
             FieldField<Field, TypeR>::NewCalculatedType(tf1())
         );
@@ -119,8 +119,8 @@ public:
 
     static void clear
     (
-        const tmp<FieldField<Field, Type1> >& tf1,
-        const tmp<FieldField<Field, Type2> >& tf2
+        const tmp<FieldField<Field, Type1>>& tf1,
+        const tmp<FieldField<Field, Type2>>& tf2
     )
     {
         tf1.clear();
@@ -134,10 +134,10 @@ class reuseTmpTmpFieldField<Field, TypeR, Type1, Type12, TypeR>
 {
 public:
 
-    static tmp<FieldField<Field, TypeR> > New
+    static tmp<FieldField<Field, TypeR>> New
     (
-        const tmp<FieldField<Field, Type1> >& tf1,
-        const tmp<FieldField<Field, TypeR> >& tf2
+        const tmp<FieldField<Field, Type1>>& tf1,
+        const tmp<FieldField<Field, TypeR>>& tf2
     )
     {
         if (tf2.isTmp())
@@ -146,7 +146,7 @@ public:
         }
         else
         {
-            return tmp<FieldField<Field, TypeR> >
+            return tmp<FieldField<Field, TypeR>>
             (
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
@@ -155,8 +155,8 @@ public:
 
     static void clear
     (
-        const tmp<FieldField<Field, Type1> >& tf1,
-        const tmp<FieldField<Field, TypeR> >& tf2
+        const tmp<FieldField<Field, Type1>>& tf1,
+        const tmp<FieldField<Field, TypeR>>& tf2
     )
     {
         tf1.clear();
@@ -173,10 +173,10 @@ class reuseTmpTmpFieldField<Field, TypeR, TypeR, TypeR, Type2>
 {
 public:
 
-    static tmp<FieldField<Field, TypeR> > New
+    static tmp<FieldField<Field, TypeR>> New
     (
-        const tmp<FieldField<Field, TypeR> >& tf1,
-        const tmp<FieldField<Field, Type2> >& tf2
+        const tmp<FieldField<Field, TypeR>>& tf1,
+        const tmp<FieldField<Field, Type2>>& tf2
     )
     {
         if (tf1.isTmp())
@@ -185,7 +185,7 @@ public:
         }
         else
         {
-            return tmp<FieldField<Field, TypeR> >
+            return tmp<FieldField<Field, TypeR>>
             (
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
@@ -194,8 +194,8 @@ public:
 
     static void clear
     (
-        const tmp<FieldField<Field, TypeR> >& tf1,
-        const tmp<FieldField<Field, Type2> >& tf2
+        const tmp<FieldField<Field, TypeR>>& tf1,
+        const tmp<FieldField<Field, Type2>>& tf2
     )
     {
         if (tf1.isTmp())
@@ -212,10 +212,10 @@ class reuseTmpTmpFieldField<Field, TypeR, TypeR, TypeR, TypeR>
 {
 public:
 
-    static tmp<FieldField<Field, TypeR> > New
+    static tmp<FieldField<Field, TypeR>> New
     (
-        const tmp<FieldField<Field, TypeR> >& tf1,
-        const tmp<FieldField<Field, TypeR> >& tf2
+        const tmp<FieldField<Field, TypeR>>& tf1,
+        const tmp<FieldField<Field, TypeR>>& tf2
     )
     {
         if (tf1.isTmp())
@@ -228,7 +228,7 @@ public:
         }
         else
         {
-            return tmp<FieldField<Field, TypeR> >
+            return tmp<FieldField<Field, TypeR>>
             (
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
@@ -237,8 +237,8 @@ public:
 
     static void clear
     (
-        const tmp<FieldField<Field, TypeR> >& tf1,
-        const tmp<FieldField<Field, TypeR> >& tf2
+        const tmp<FieldField<Field, TypeR>>& tf1,
+        const tmp<FieldField<Field, TypeR>>& tf2
     )
     {
         if (tf1.isTmp())

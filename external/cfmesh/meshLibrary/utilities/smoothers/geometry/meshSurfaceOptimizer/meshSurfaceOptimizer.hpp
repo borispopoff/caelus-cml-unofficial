@@ -223,7 +223,7 @@ class meshSurfaceOptimizer
         void exchangeData
         (
             const labelLongList& nodesToSmooth,
-            std::map<label, DynList<parTriFace> >& m
+            std::map<label, DynList<parTriFace>>& m
         ) const;
 
         //- laplacian smoothing of points at processor boundaries

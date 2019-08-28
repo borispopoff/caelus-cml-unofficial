@@ -150,7 +150,7 @@ public:
 
         //- Decompose point field
         template<class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh> >
+        tmp<GeometricField<Type, pointPatchField, pointMesh>>
         decomposeField
         (
             const GeometricField<Type, pointPatchField, pointMesh>&
@@ -172,7 +172,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh> >
+CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh>>
 CML::pointFieldDecomposer::decomposeField
 (
     const GeometricField<Type, pointPatchField, pointMesh>& field
@@ -182,7 +182,7 @@ CML::pointFieldDecomposer::decomposeField
     Field<Type> internalField(field.internalField(), pointAddressing_);
 
     // Create a list of pointers for the patchFields
-    PtrList<pointPatchField<Type> > patchFields(boundaryAddressing_.size());
+    PtrList<pointPatchField<Type>> patchFields(boundaryAddressing_.size());
 
     // Create and map the patch field values
     forAll(boundaryAddressing_, patchi)
@@ -216,7 +216,7 @@ CML::pointFieldDecomposer::decomposeField
     }
 
     // Create the field for the processor
-    return tmp<GeometricField<Type, pointPatchField, pointMesh> >
+    return tmp<GeometricField<Type, pointPatchField, pointMesh>>
     (
         new GeometricField<Type, pointPatchField, pointMesh>
         (

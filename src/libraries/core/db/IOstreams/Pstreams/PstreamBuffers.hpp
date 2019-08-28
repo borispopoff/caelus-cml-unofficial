@@ -97,10 +97,10 @@ class PstreamBuffers
         const IOstream::versionNumber version_;
 
         //- Send buffer
-        List<DynamicList<char> > sendBuf_;
+        List<DynamicList<char>> sendBuf_;
 
         //- Receive buffer
-        List<DynamicList<char> > recvBuf_;
+        List<DynamicList<char>> recvBuf_;
 
         //- Read position in recvBuf_
         labelList recvBufPos_;

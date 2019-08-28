@@ -61,7 +61,7 @@ interpolateAlphaProbes::~interpolateAlphaProbes()
 
 void interpolateAlphaProbes::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     scalarField x, y, z;
     List<scalarField> alphas;
 

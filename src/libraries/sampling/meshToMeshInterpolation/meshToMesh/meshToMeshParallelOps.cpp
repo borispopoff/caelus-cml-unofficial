@@ -152,7 +152,7 @@ CML::autoPtr<CML::mapDistribute> CML::meshToMesh::calcProcMap
 
     {
         // per processor indices into all segments to send
-        List<DynamicList<label> > dynSendMap(Pstream::nProcs());
+        List<DynamicList<label>> dynSendMap(Pstream::nProcs());
         label iniSize = floor(tgt.nCells()/Pstream::nProcs());
 
         forAll(dynSendMap, procI)
@@ -575,7 +575,7 @@ void CML::meshToMesh::distributeAndMergeCells
 
     // Count any coupled faces
     typedef FixedList<label, 3> label3;
-    typedef HashTable<label, label3, label3::Hash<> > procCoupleInfo;
+    typedef HashTable<label, label3, label3::Hash<>> procCoupleInfo;
     procCoupleInfo procFaceToGlobalCell;
 
     forAll(allNbrProcIDs, procI)

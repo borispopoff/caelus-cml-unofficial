@@ -59,7 +59,7 @@ class cyclicFvPatchField
 
         //- Return neighbour side field given internal fields
         template<class Type2>
-        tmp<Field<Type2> > neighbourSideField
+        tmp<Field<Type2>> neighbourSideField
         (
             const Field<Type2>&
         ) const;
@@ -104,9 +104,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicFvPatchField<Type>(*this)
             );
@@ -120,12 +120,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicFvPatchField<Type>(*this, iF)
             );
@@ -146,7 +146,7 @@ public:
         // Evaluation functions
 
             //- Return neighbour coupled internal cell data
-            tmp<Field<Type> > patchNeighbourField() const;
+            tmp<Field<Type>> patchNeighbourField() const;
 
             //- Return reference to neighbour patchField
             const cyclicFvPatchField<Type>& neighbourPatchField() const;
@@ -317,7 +317,7 @@ CML::cyclicFvPatchField<Type>::patchNeighbourField() const
     const labelUList& nbrFaceCells =
         cyclicPatch().cyclicPatch().neighbPatch().faceCells();
 
-    tmp<Field<Type> > tpnf(new Field<Type>(this->size()));
+    tmp<Field<Type>> tpnf(new Field<Type>(this->size()));
     Field<Type>& pnf = tpnf();
 
 
@@ -354,7 +354,7 @@ const
         this->internalField()
     );
 
-    return refCast<const cyclicFvPatchField<Type> >
+    return refCast<const cyclicFvPatchField<Type>>
     (
         fld.boundaryField()[this->cyclicPatch().neighbPatchID()]
     );

@@ -38,7 +38,7 @@ namespace CML
     bool fieldOk(const IOobjectList& cloudObjs, const word& name);
 
     template<class Type>
-    tmp<Field<Type> > readParticleField
+    tmp<Field<Type>> readParticleField
     (
         const word& name,
         const IOobjectList cloudObjs
@@ -47,7 +47,7 @@ namespace CML
     template<class Type>
     void readFields
     (
-        PtrList<List<Type> >& values,
+        PtrList<List<Type>>& values,
         const List<word>& fields,
         const IOobjectList& cloudObjs
     );
@@ -59,15 +59,15 @@ namespace CML
     void writeVTKFields
     (
         OFstream& os,
-        const PtrList<List<Type> >& values,
-        const List<SortableList<scalar> >& agePerTrack,
+        const PtrList<List<Type>>& values,
+        const List<SortableList<scalar>>& agePerTrack,
         const List<word>& fieldNames
     );
 
     void processFields
     (
         OFstream& os,
-        const List<SortableList<scalar> >& agePerTrack,
+        const List<SortableList<scalar>>& agePerTrack,
         const List<word>& userFieldNames,
         const IOobjectList& cloudObjs
     );
@@ -93,7 +93,7 @@ bool fieldOk(const IOobjectList& cloudObjs, const word& name)
 
 
 template<class Type>
-tmp<Field<Type> > readParticleField
+tmp<Field<Type>> readParticleField
 (
     const word& name,
     const IOobjectList cloudObjs
@@ -105,7 +105,7 @@ tmp<Field<Type> > readParticleField
     if (obj != nullptr)
     {
         IOField<Type> newField(*obj);
-        return tmp<Field<Type> >(new Field<Type>(newField.xfer()));
+        return tmp<Field<Type>>(new Field<Type>(newField.xfer()));
     }
 
     FatalErrorInFunction
@@ -119,7 +119,7 @@ tmp<Field<Type> > readParticleField
 template<class Type>
 void readFields
 (
-    PtrList<List<Type> >& values,
+    PtrList<List<Type>>& values,
     const List<word>& fieldNames,
     const IOobjectList& cloudObjs
 )
@@ -160,8 +160,8 @@ template<class Type>
 void writeVTKFields
 (
     OFstream& os,
-    const PtrList<List<Type> >& values,
-    const List<List<label> >& addr,
+    const PtrList<List<Type>>& values,
+    const List<List<label>>& addr,
     const List<word>& fieldNames
 )
 {
@@ -201,7 +201,7 @@ template<class Type>
 void processFields
 (
     OFstream& os,
-    const List<List<label> >& addr,
+    const List<List<label>>& addr,
     const List<word>& userFieldNames,
     const IOobjectList& cloudObjs
 )
@@ -221,7 +221,7 @@ void processFields
         }
         fieldNames.shrink();
 
-        PtrList<List<Type> > values(fieldNames.size());
+        PtrList<List<Type>> values(fieldNames.size());
         readFields<Type>(values, fieldNames, cloudObjs);
 
         writeVTKFields<Type>

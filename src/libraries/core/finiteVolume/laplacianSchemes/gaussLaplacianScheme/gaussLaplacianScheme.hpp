@@ -52,13 +52,13 @@ class gaussLaplacianScheme
 {
     // Private Member Functions
 
-        tmp<fvMatrix<Type> > fvmLaplacianUncorrected
+        tmp<fvMatrix<Type>> fvmLaplacianUncorrected
         (
             const surfaceScalarField& gammaMagSf,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > gammaSnGradCorr
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> gammaSnGradCorr
         (
             const surfaceVectorField& SfGammaCorr,
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -95,8 +95,8 @@ public:
         gaussLaplacianScheme
         (
             const fvMesh& mesh,
-            const tmp<surfaceInterpolationScheme<GType> >& igs,
-            const tmp<snGradScheme<Type> >& sngs
+            const tmp<surfaceInterpolationScheme<GType>>& igs,
+            const tmp<snGradScheme<Type>>& sngs
         )
         :
             laplacianScheme<Type, GType>(mesh, igs, sngs)
@@ -110,18 +110,18 @@ public:
 
     // Member Functions
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcLaplacian
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmLaplacian
+        tmp<fvMatrix<Type>> fvmLaplacian
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcLaplacian
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -135,14 +135,14 @@ public:
 #define defineFvmLaplacianScalarGamma(Type)                                    \
                                                                                \
 template<>                                                                     \
-tmp<fvMatrix<Type> > gaussLaplacianScheme<Type, scalar>::fvmLaplacian          \
+tmp<fvMatrix<Type>> gaussLaplacianScheme<Type, scalar>::fvmLaplacian          \
 (                                                                              \
     const GeometricField<scalar, fvsPatchField, surfaceMesh>&,                 \
     const GeometricField<Type, fvPatchField, volMesh>&                         \
 );                                                                             \
                                                                                \
 template<>                                                                     \
-tmp<GeometricField<Type, fvPatchField, volMesh> >                              \
+tmp<GeometricField<Type, fvPatchField, volMesh>>                              \
 gaussLaplacianScheme<Type, scalar>::fvcLaplacian                               \
 (                                                                              \
     const GeometricField<scalar, fvsPatchField, surfaceMesh>&,                 \
@@ -185,7 +185,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type, class GType>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 gaussLaplacianScheme<Type, GType>::fvmLaplacianUncorrected
 (
     const surfaceScalarField& gammaMagSf,
@@ -196,7 +196,7 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacianUncorrected
         this->tsnGradScheme_().deltaCoeffs(vf);
     const surfaceScalarField& deltaCoeffs = tdeltaCoeffs();
 
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -236,7 +236,7 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacianUncorrected
 
 
 template<class Type, class GType>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 gaussLaplacianScheme<Type, GType>::gammaSnGradCorr
 (
     const surfaceVectorField& SfGammaCorr,
@@ -245,7 +245,7 @@ gaussLaplacianScheme<Type, GType>::gammaSnGradCorr
 {
     const fvMesh& mesh = this->mesh();
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tgammaSnGradCorr
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tgammaSnGradCorr
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -279,7 +279,7 @@ gaussLaplacianScheme<Type, GType>::gammaSnGradCorr
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type, class GType>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 gaussLaplacianScheme<Type, GType>::fvcLaplacian
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -287,7 +287,7 @@ gaussLaplacianScheme<Type, GType>::fvcLaplacian
 {
     const fvMesh& mesh = this->mesh();
 
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tLaplacian
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tLaplacian
     (
         fvc::div(this->tsnGradScheme_().snGrad(vf)*mesh.magSf())
     );
@@ -299,7 +299,7 @@ gaussLaplacianScheme<Type, GType>::fvcLaplacian
 
 
 template<class Type, class GType>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 gaussLaplacianScheme<Type, GType>::fvmLaplacian
 (
     const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
@@ -317,10 +317,10 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacian
     );
     const surfaceVectorField SfGammaCorr(SfGamma - SfGammaSn*Sn);
 
-    tmp<fvMatrix<Type> > tfvm = fvmLaplacianUncorrected(SfGammaSn, vf);
+    tmp<fvMatrix<Type>> tfvm = fvmLaplacianUncorrected(SfGammaSn, vf);
     fvMatrix<Type>& fvm = tfvm();
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tfaceFluxCorrection
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tfaceFluxCorrection
         = gammaSnGradCorr(SfGammaCorr, vf);
 
     if (this->tsnGradScheme_().corrected())
@@ -341,7 +341,7 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacian
 
 
 template<class Type, class GType>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 gaussLaplacianScheme<Type, GType>::fvcLaplacian
 (
     const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
@@ -358,7 +358,7 @@ gaussLaplacianScheme<Type, GType>::fvcLaplacian
     );
     const surfaceVectorField SfGammaCorr(SfGamma - SfGammaSn*Sn);
 
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tLaplacian
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tLaplacian
     (
         fvc::div
         (

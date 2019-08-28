@@ -106,7 +106,7 @@ class flowRateInletVelocityFvPatchVectorField
     // Private data
 
         //- Inlet integral flow rate
-        autoPtr<DataEntry<scalar> > flowRate_;
+        autoPtr<DataEntry<scalar>> flowRate_;
 
         //- Is volumetric?
         bool volumetric_;

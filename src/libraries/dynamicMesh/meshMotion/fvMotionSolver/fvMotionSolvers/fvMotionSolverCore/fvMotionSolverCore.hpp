@@ -108,7 +108,7 @@ CML::wordList CML::fvMotionSolverCore::cellMotionBoundaryTypes
 
     forAll(cmUbf, patchi)
     {
-        if (isA<fixedValuePointPatchField<Type> >(pmUbf[patchi]))
+        if (isA<fixedValuePointPatchField<Type>>(pmUbf[patchi]))
         {
             cmUbf[patchi] = cellMotionFvPatchField<Type>::typeName;
         }

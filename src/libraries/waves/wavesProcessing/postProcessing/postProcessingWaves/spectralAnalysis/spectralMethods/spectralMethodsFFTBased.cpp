@@ -254,12 +254,12 @@ Field<complex> spectralMethodsFFTBased::fft
 }
 
 
-List<Field<complex> > spectralMethodsFFTBased::fft
+List<Field<complex>> spectralMethodsFFTBased::fft
 (
     const List<scalarField>& input
 )
 {
-    List<Field<complex> > res(0);
+    List<Field<complex>> res(0);
 
     if (sweepCount_ < sweeps_)
     {

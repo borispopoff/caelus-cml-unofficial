@@ -212,7 +212,7 @@ public:
         InjectionModel(const InjectionModel<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<InjectionModel<CloudType> > clone() const = 0;
+        virtual autoPtr<InjectionModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -222,14 +222,14 @@ public:
     // Selectors
 
         //- Selector with lookup from dictionary
-        static autoPtr<InjectionModel<CloudType> > New
+        static autoPtr<InjectionModel<CloudType>> New
         (
             const dictionary& dict,
             CloudType& owner
         );
 
         //- Selector with name and type
-        static autoPtr<InjectionModel<CloudType> > New
+        static autoPtr<InjectionModel<CloudType>> New
         (
             const dictionary& dict,
             const word& modelName,
@@ -372,7 +372,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<kinematicCloudType>, 0);            \
                                                                                \
     CML::InjectionModel<kinematicCloudType>::                                  \
-        adddictionaryConstructorToTable<SS<kinematicCloudType> >               \
+        adddictionaryConstructorToTable<SS<kinematicCloudType>>                \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 
@@ -1028,7 +1028,7 @@ void CML::InjectionModel<CloudType>::info(Ostream& os)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::InjectionModel<CloudType> >
+CML::autoPtr<CML::InjectionModel<CloudType>>
 CML::InjectionModel<CloudType>::New
 (
     const dictionary& dict,
@@ -1056,7 +1056,7 @@ CML::InjectionModel<CloudType>::New
 
 
 template<class CloudType>
-CML::autoPtr<CML::InjectionModel<CloudType> >
+CML::autoPtr<CML::InjectionModel<CloudType>>
 CML::InjectionModel<CloudType>::New
 (
     const dictionary& dict,
@@ -1080,7 +1080,7 @@ CML::InjectionModel<CloudType>::New
     }
 
     return
-        autoPtr<InjectionModel<CloudType> >
+        autoPtr<InjectionModel<CloudType>>
         (
             cstrIter()
             (

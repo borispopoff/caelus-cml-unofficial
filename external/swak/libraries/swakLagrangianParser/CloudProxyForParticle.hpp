@@ -62,7 +62,7 @@ class CloudProxyForParticle
 
 protected:
     template<class RType,class Func>
-    tmp<Field<RType> > mapToParticles(
+    tmp<Field<RType>> mapToParticles(
         const Func &f
     ) const;
 
@@ -273,35 +273,35 @@ public:
     const cloudType &theCloud() const
         { return cloud_; }
 
-    virtual tmp<Field<scalar> > getScalarField(
+    virtual tmp<Field<scalar>> getScalarField(
         const word &name
     ) const;
 
-    virtual tmp<Field<bool> > getBoolField(
+    virtual tmp<Field<bool>> getBoolField(
         const word &name
     ) const;
 
-     virtual tmp<Field<vector> > getVectorField(
+     virtual tmp<Field<vector>> getVectorField(
         const word &name
     ) const;
 
-    virtual tmp<Field<tensor> > getTensorField(
+    virtual tmp<Field<tensor>> getTensorField(
         const word &name
     ) const;
 
-    virtual tmp<Field<symmTensor> > getSymmTensorField(
+    virtual tmp<Field<symmTensor>> getSymmTensorField(
         const word &name
     ) const;
 
-    virtual tmp<Field<sphericalTensor> > getSphericalTensorField(
+    virtual tmp<Field<sphericalTensor>> getSphericalTensorField(
         const word &name
     ) const;
 
-    tmp<Field<vector> > getPositions() const;
+    tmp<Field<vector>> getPositions() const;
 
-    tmp<Field<label> > getCells() const;
+    tmp<Field<label>> getCells() const;
 
-    tmp<Field<scalar> > weights() const;
+    tmp<Field<scalar>> weights() const;
 
     label size() const;
 
@@ -500,7 +500,7 @@ void CloudProxyForParticle<CloudType>::addSphericalTensorFunction(
 }
 
 template<class CloudType>
-tmp<Field<scalar> > CloudProxyForParticle<CloudType>::getScalarField(
+tmp<Field<scalar>> CloudProxyForParticle<CloudType>::getScalarField(
     const word &name
 ) const
 {
@@ -516,13 +516,13 @@ tmp<Field<scalar> > CloudProxyForParticle<CloudType>::getScalarField(
         << cloud_.name() << " of type " // << cloud_.CloudTyptype()
         << endl
         << exit(FatalError);
-    return tmp<Field<scalar> >(
+    return tmp<Field<scalar>>(
         new Field<scalar>(0)
     );
 }
 
 template<class CloudType>
-tmp<Field<bool> > CloudProxyForParticle<CloudType>::getBoolField(
+tmp<Field<bool>> CloudProxyForParticle<CloudType>::getBoolField(
     const word &name
 ) const
 {
@@ -538,13 +538,13 @@ tmp<Field<bool> > CloudProxyForParticle<CloudType>::getBoolField(
         << cloud_.name() << " of type " // << cloud_.CloudTyptype()
         << endl
         << exit(FatalError);
-    return tmp<Field<bool> >(
+    return tmp<Field<bool>>(
         new Field<bool>(0)
     );
 }
 
 template<class CloudType>
-tmp<Field<vector> > CloudProxyForParticle<CloudType>::getVectorField(
+tmp<Field<vector>> CloudProxyForParticle<CloudType>::getVectorField(
     const word &name
 ) const
 {
@@ -560,13 +560,13 @@ tmp<Field<vector> > CloudProxyForParticle<CloudType>::getVectorField(
         << cloud_.name() << " of type " // << cloud_.CloudTyptype()
         << endl
         << exit(FatalError);
-    return tmp<Field<vector> >(
+    return tmp<Field<vector>>(
         new Field<vector>(0)
     );
 }
 
 template<class CloudType>
-tmp<Field<tensor> > CloudProxyForParticle<CloudType>::getTensorField(
+tmp<Field<tensor>> CloudProxyForParticle<CloudType>::getTensorField(
     const word &name
 ) const
 {
@@ -582,13 +582,13 @@ tmp<Field<tensor> > CloudProxyForParticle<CloudType>::getTensorField(
         << cloud_.name() << " of type " // << cloud_.CloudTyptype()
         << endl
         << exit(FatalError);
-    return tmp<Field<tensor> >(
+    return tmp<Field<tensor>>(
         new Field<tensor>(0)
     );
 }
 
 template<class CloudType>
-tmp<Field<symmTensor> > CloudProxyForParticle<CloudType>::getSymmTensorField(
+tmp<Field<symmTensor>> CloudProxyForParticle<CloudType>::getSymmTensorField(
     const word &name
 ) const
 {
@@ -604,13 +604,13 @@ tmp<Field<symmTensor> > CloudProxyForParticle<CloudType>::getSymmTensorField(
         << cloud_.name() << " of type " // << cloud_.CloudTyptype()
         << endl
         << exit(FatalError);
-    return tmp<Field<symmTensor> >(
+    return tmp<Field<symmTensor>>(
         new Field<symmTensor>(0)
     );
 }
 
 template<class CloudType>
-tmp<Field<sphericalTensor> > CloudProxyForParticle<CloudType>::getSphericalTensorField(
+tmp<Field<sphericalTensor>> CloudProxyForParticle<CloudType>::getSphericalTensorField(
     const word &name
 ) const
 {
@@ -626,26 +626,26 @@ tmp<Field<sphericalTensor> > CloudProxyForParticle<CloudType>::getSphericalTenso
         << cloud_.name() << " of type " // << cloud_.CloudTyptype()
         << endl
         << exit(FatalError);
-    return tmp<Field<sphericalTensor> >(
+    return tmp<Field<sphericalTensor>>(
         new Field<sphericalTensor>(0)
     );
 }
 
 template<class CloudType>
-tmp<Field<scalar> > CloudProxyForParticle<CloudType>::weights() const
+tmp<Field<scalar>> CloudProxyForParticle<CloudType>::weights() const
 {
-    return tmp<Field<scalar> >(
+    return tmp<Field<scalar>>(
         new Field<scalar>(theCloud().size(),1.0)
     );
 }
 
 template<class CloudType>
 template<class RType,class Func>
-tmp<Field<RType> > CloudProxyForParticle<CloudType>::mapToParticles(
+tmp<Field<RType>> CloudProxyForParticle<CloudType>::mapToParticles(
     const Func &f
 ) const
 {
-    tmp<Field<RType> > tResult(
+    tmp<Field<RType>> tResult(
         new Field<RType>(theCloud().size())
     );
     Field<RType> &result=tResult();
@@ -661,7 +661,7 @@ tmp<Field<RType> > CloudProxyForParticle<CloudType>::mapToParticles(
 }
 
 template<class CloudType>
-tmp<Field<vector> > CloudProxyForParticle<CloudType>::getPositions() const
+tmp<Field<vector>> CloudProxyForParticle<CloudType>::getPositions() const
 {
     return mapToParticles<vector>(
         const_mem_fun(
@@ -671,7 +671,7 @@ tmp<Field<vector> > CloudProxyForParticle<CloudType>::getPositions() const
 }
 
 template<class CloudType>
-tmp<Field<label> > CloudProxyForParticle<CloudType>::getCells() const
+tmp<Field<label>> CloudProxyForParticle<CloudType>::getCells() const
 {
     return mapToParticles<label>(
         const_mem_fun(

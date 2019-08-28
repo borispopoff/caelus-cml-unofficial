@@ -330,7 +330,7 @@ CML::extendedFeatureEdgeMesh::extendedFeatureEdgeMesh
 
     // Reorder the edges by classification
 
-    List<DynamicList<label> > allEds(nEdgeTypes);
+    List<DynamicList<label>> allEds(nEdgeTypes);
 
     DynamicList<label>& externalEds(allEds[0]);
     DynamicList<label>& internalEds(allEds[1]);
@@ -409,7 +409,7 @@ CML::extendedFeatureEdgeMesh::extendedFeatureEdgeMesh
 
     // Reorder the feature points by classification
 
-    List<DynamicList<label> > allPts(3);
+    List<DynamicList<label>> allPts(3);
 
     DynamicList<label>& convexPts(allPts[0]);
     DynamicList<label>& concavePts(allPts[1]);
@@ -709,7 +709,7 @@ void CML::extendedFeatureEdgeMesh::nearestFeatureEdgeByType
     List<pointIndexHit>& info
 ) const
 {
-    const PtrList<indexedOctree<treeDataEdge> >& edgeTrees = edgeTreesByType();
+    const PtrList<indexedOctree<treeDataEdge>>& edgeTrees = edgeTreesByType();
 
     info.setSize(edgeTrees.size());
 
@@ -772,7 +772,7 @@ CML::extendedFeatureEdgeMesh::edgeTree() const
 }
 
 
-const CML::PtrList<CML::indexedOctree<CML::treeDataEdge> >&
+const CML::PtrList<CML::indexedOctree<CML::treeDataEdge>>&
 CML::extendedFeatureEdgeMesh::edgeTreesByType() const
 {
     if (edgeTreesByType_.size() == 0)

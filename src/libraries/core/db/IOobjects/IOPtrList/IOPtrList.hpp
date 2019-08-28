@@ -70,7 +70,7 @@ public:
         IOPtrList(const IOobject&, const PtrList<T>&);
 
         //- Construct by transferring the PtrList contents
-        IOPtrList(const IOobject&, const Xfer<PtrList<T> >&);
+        IOPtrList(const IOobject&, const Xfer<PtrList<T>>&);
 
 
     //- Destructor
@@ -177,7 +177,7 @@ CML::IOPtrList<T>::IOPtrList(const IOobject& io, const PtrList<T>& list)
 
 
 template<class T>
-CML::IOPtrList<T>::IOPtrList(const IOobject& io, const Xfer<PtrList<T> >& list)
+CML::IOPtrList<T>::IOPtrList(const IOobject& io, const Xfer<PtrList<T>>& list)
 :
     regIOobject(io)
 {

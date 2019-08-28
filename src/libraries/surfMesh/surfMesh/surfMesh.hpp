@@ -167,7 +167,7 @@ public:
         surfMesh
         (
             const IOobject&,
-            const Xfer<MeshedSurface<face> >& surf,
+            const Xfer<MeshedSurface<face>>& surf,
             const word& surfName=""
         );
 
@@ -267,7 +267,7 @@ public:
         //  Storage management
 
             //- Transfer contents to the Xfer container as a MeshedSurface
-            Xfer<MeshedSurface<face> > xfer();
+            Xfer<MeshedSurface<face>> xfer();
 
             //- Clear geometry
             void clearGeom();

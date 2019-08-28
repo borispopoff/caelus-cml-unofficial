@@ -98,7 +98,7 @@ public:
     // Selectors
 
         //- Return new tmp interpolation scheme
-        static tmp<snGradScheme<Type> > New
+        static tmp<snGradScheme<Type>> New
         (
             const fvMesh& mesh,
             Istream& schemeData
@@ -119,7 +119,7 @@ public:
 
 
         //- Return the snGrad of the given cell field with the given deltaCoeffs
-        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         snGrad
         (
             const GeometricField<Type, fvPatchField, volMesh>&,
@@ -141,23 +141,23 @@ public:
 
         //- Return the explicit correction to the snGrad
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const
         {
-            return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >(nullptr);
+            return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>(nullptr);
         }
 
         //- Return the snGrad of the given cell field
         //  with explicit correction
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         snGrad(const GeometricField<Type, fvPatchField, volMesh>&) const;
 
         //- Return the snGrad of the given tmp cell field
         //  with explicit correction
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         snGrad
         (
-            const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+            const tmp<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
 };
 
@@ -181,7 +181,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            snGradScheme<Type>::addMeshConstructorToTable<SS<Type> >           \
+            snGradScheme<Type>::addMeshConstructorToTable<SS<Type>>           \
                 add##SS##Type##MeshConstructorToTable_;                        \
         }                                                                      \
     }
@@ -216,7 +216,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<snGradScheme<Type> > snGradScheme<Type>::New
+tmp<snGradScheme<Type>> snGradScheme<Type>::New
 (
     const fvMesh& mesh,
     Istream& schemeData
@@ -268,7 +268,7 @@ snGradScheme<Type>::~snGradScheme()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 snGradScheme<Type>::snGrad
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
@@ -279,7 +279,7 @@ snGradScheme<Type>::snGrad
     const fvMesh& mesh = vf.mesh();
 
     // construct GeometricField<Type, fvsPatchField, surfaceMesh>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsf
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -332,13 +332,13 @@ snGradScheme<Type>::snGrad
 //- Return the face-snGrad of the given cell field
 //  with explicit correction
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 snGradScheme<Type>::snGrad
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsf
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf
         = snGrad(vf, deltaCoeffs(vf));
 
     if (corrected())
@@ -353,13 +353,13 @@ snGradScheme<Type>::snGrad
 //- Return the face-snGrad of the given cell field
 //  with explicit correction
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 snGradScheme<Type>::snGrad
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvf
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 ) const
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tinterpVf
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tinterpVf
         = snGrad(tvf());
     tvf.clear();
     return tinterpVf;

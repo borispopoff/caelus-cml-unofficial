@@ -76,13 +76,13 @@ class swakExpressionAverageDistributionFunctionObject
     exprString weightExpression_;
 
     //- the weight values
-    autoPtr<Field<scalar> > weightValues_;
+    autoPtr<Field<scalar>> weightValues_;
 
     //- the expression for the mask
     exprString maskExpression_;
 
     //- the mask values
-    autoPtr<Field<bool> > maskValues_;
+    autoPtr<Field<bool>> maskValues_;
 
     //- the expression for the abscissa
     exprString abscissaExpression_;
@@ -91,13 +91,13 @@ class swakExpressionAverageDistributionFunctionObject
     autoPtr<CommonValueExpressionDriver> driver_;
 
     template <typename T>
-    void getDistributionInternal(PtrList<SimpleDistribution<T> > &dist);
+    void getDistributionInternal(PtrList<SimpleDistribution<T>> &dist);
 
     template <typename T>
-    void writeADistribution(const PtrList<SimpleDistribution<T> > &dist);
+    void writeADistribution(const PtrList<SimpleDistribution<T>> &dist);
 
     template <typename T>
-    void reportADistribution(const PtrList<SimpleDistribution<T> > &dist);
+    void reportADistribution(const PtrList<SimpleDistribution<T>> &dist);
 
 protected:
 
@@ -105,23 +105,23 @@ protected:
 
     virtual word baseName();
 
-    PtrList<SimpleDistribution<scalar> > distScalar_;
-    PtrList<SimpleDistribution<vector> > distVector_;
-    PtrList<SimpleDistribution<tensor> > distTensor_;
-    PtrList<SimpleDistribution<symmTensor> > distSymmTensor_;
-    PtrList<SimpleDistribution<sphericalTensor> > distSphericalTensor_;
+    PtrList<SimpleDistribution<scalar>> distScalar_;
+    PtrList<SimpleDistribution<vector>> distVector_;
+    PtrList<SimpleDistribution<tensor>> distTensor_;
+    PtrList<SimpleDistribution<symmTensor>> distSymmTensor_;
+    PtrList<SimpleDistribution<sphericalTensor>> distSphericalTensor_;
 
     wordList componentNames_;
 
     template<class Type,class AType>
-    autoPtr<PtrList<SimpleDistribution<AType> > > setData(
+    autoPtr<PtrList<SimpleDistribution<AType>>> setData(
         const Field<AType> &xValues,
         const Field<Type> &values,
         const Field<scalar> &weights
     );
 
     template<class Type,class AType>
-    autoPtr<PtrList<SimpleDistribution<AType> > > setData(
+    autoPtr<PtrList<SimpleDistribution<AType>>> setData(
         const Field<AType> &xValues,
         const Field<Type> &values,
         const Field<scalar> &weights,
@@ -184,7 +184,7 @@ namespace CML
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template <typename Type,typename AType>
-autoPtr<PtrList<SimpleDistribution<AType> > >
+autoPtr<PtrList<SimpleDistribution<AType>>>
 swakExpressionAverageDistributionFunctionObject::setData(
         const Field<AType> &xValues,
         const Field<Type> &values,
@@ -201,7 +201,7 @@ swakExpressionAverageDistributionFunctionObject::setData(
 }
 
 template <typename Type,typename AType>
-autoPtr<PtrList<SimpleDistribution<AType> > >
+autoPtr<PtrList<SimpleDistribution<AType>>>
 swakExpressionAverageDistributionFunctionObject::setData(
         const Field<AType> &xValues,
         const Field<Type> &values,
@@ -235,11 +235,11 @@ swakExpressionAverageDistributionFunctionObject::setData(
             << " binSize: " << binSize << endl;
     }
 
-    autoPtr<PtrList<SimpleDistribution<AType> > > pDists(
-        new PtrList<SimpleDistribution<AType> >(pTraits<Type>::nComponents)
+    autoPtr<PtrList<SimpleDistribution<AType>>> pDists(
+        new PtrList<SimpleDistribution<AType>>(pTraits<Type>::nComponents)
     );
-    PtrList<SimpleDistribution<AType> > &dists=pDists();
-    PtrList<SimpleDistribution<AType> > wDists(pTraits<Type>::nComponents);
+    PtrList<SimpleDistribution<AType>> &dists=pDists();
+    PtrList<SimpleDistribution<AType>> wDists(pTraits<Type>::nComponents);
 
     for(direction i=0;i<pTraits<Type>::nComponents;i++) {
         dists.set(
@@ -266,8 +266,8 @@ swakExpressionAverageDistributionFunctionObject::setData(
             Info << "Dist: " << dist << endl
                 << "Weight: " << wDist << endl;
         }
-        reduce(dist,plusOp<SimpleDistribution<AType> >());
-        reduce(wDist,plusOp<SimpleDistribution<AType> >());
+        reduce(dist,plusOp<SimpleDistribution<AType>>());
+        reduce(wDist,plusOp<SimpleDistribution<AType>>());
         dist.divideByDistribution(
             wDist,
             valueIfZero
@@ -282,7 +282,7 @@ swakExpressionAverageDistributionFunctionObject::setData(
 
 template <typename Type>
 void swakExpressionAverageDistributionFunctionObject::getDistributionInternal(
-    PtrList<SimpleDistribution<Type> > &dist
+    PtrList<SimpleDistribution<Type>> &dist
 ) {
     Field<Type> values(driver_->getResult<Type>());
 
@@ -344,7 +344,7 @@ void swakExpressionAverageDistributionFunctionObject::getDistributionInternal(
 
 template <typename Type>
 void swakExpressionAverageDistributionFunctionObject::writeADistribution(
-    const PtrList<SimpleDistribution<Type> > &dist
+    const PtrList<SimpleDistribution<Type>> &dist
 )
 {
     if(dist.size()<=0) {
@@ -374,7 +374,7 @@ void swakExpressionAverageDistributionFunctionObject::writeADistribution(
 
 template <typename Type>
 void swakExpressionAverageDistributionFunctionObject::reportADistribution(
-    const PtrList<SimpleDistribution<Type> > &dist
+    const PtrList<SimpleDistribution<Type>> &dist
 )
 {
     if(dist.size()<=0) {

@@ -73,7 +73,7 @@ private:
 
         //- Slice the given field and a create a PtrList of SlicedPatchField
         //  from which the boundary field is built
-        tmp<FieldField<PatchField, Type> >  slicedBoundaryField
+        tmp<FieldField<PatchField, Type>>  slicedBoundaryField
         (
             const Mesh& mesh,
             const Field<Type>& completeField,
@@ -83,7 +83,7 @@ private:
 
         //- Slice the given field and a create a PtrList of SlicedPatchField
         //  from which the boundary field is built
-        tmp<FieldField<PatchField, Type> >  slicedBoundaryField
+        tmp<FieldField<PatchField, Type>>  slicedBoundaryField
         (
             const Mesh& mesh,
             const FieldField<PatchField, Type>& bField,
@@ -102,7 +102,7 @@ private:
 
         //- Disallow standard assignment to tmp<GeometricField>,
         //  == assignment is allowed.
-        void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh> >&);
+        void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
 
 
 public:
@@ -220,7 +220,7 @@ template
     template<class> class SlicedPatchField,
     class GeoMesh
 >
-CML::tmp<CML::FieldField<PatchField, Type> >
+CML::tmp<CML::FieldField<PatchField, Type>>
 CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 slicedBoundaryField
 (
@@ -230,7 +230,7 @@ slicedBoundaryField
     const bool preserveProcessorOnly
 )
 {
-    tmp<FieldField<PatchField, Type> > tbf
+    tmp<FieldField<PatchField, Type>> tbf
     (
         new FieldField<PatchField, Type>(mesh.boundary().size())
     );
@@ -298,7 +298,7 @@ template
     template<class> class SlicedPatchField,
     class GeoMesh
 >
-CML::tmp<CML::FieldField<PatchField, Type> >
+CML::tmp<CML::FieldField<PatchField, Type>>
 CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 slicedBoundaryField
 (
@@ -307,7 +307,7 @@ slicedBoundaryField
     const bool preserveCouples
 )
 {
-    tmp<FieldField<PatchField, Type> > tbf
+    tmp<FieldField<PatchField, Type>> tbf
     (
         new FieldField<PatchField, Type>(mesh.boundary().size())
     );

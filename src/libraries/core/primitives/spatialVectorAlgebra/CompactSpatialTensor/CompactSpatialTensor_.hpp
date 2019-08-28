@@ -93,7 +93,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfInnerProduct<Cmpt, CompactSpatialTensor<Cmpt>, Tensor<Cmpt> >
+class typeOfInnerProduct<Cmpt, CompactSpatialTensor<Cmpt>, Tensor<Cmpt>>
 {
 public:
 
@@ -102,7 +102,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfInnerProduct<Cmpt, CompactSpatialTensor<Cmpt>, Vector<Cmpt> >
+class typeOfInnerProduct<Cmpt, CompactSpatialTensor<Cmpt>, Vector<Cmpt>>
 {
 public:
 
@@ -111,7 +111,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfInnerProduct<Cmpt, SpatialTensor<Cmpt>, CompactSpatialTensor<Cmpt> >
+class typeOfInnerProduct<Cmpt, SpatialTensor<Cmpt>, CompactSpatialTensor<Cmpt>>
 {
 public:
 

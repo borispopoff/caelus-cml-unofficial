@@ -58,7 +58,7 @@ Ostream& operator<<(Ostream&, const Distribution<Type>&);
 template<class Type>
 class Distribution
 :
-    public List< List<scalar> >
+    public List< List<scalar>>
 {
     // Private data
 
@@ -121,18 +121,18 @@ public:
 
         //- Return the normalised distribution (probability density)
         //  and bins
-        List< List<Pair<scalar> > > normalised() const;
+        List< List<Pair<scalar>>> normalised() const;
 
         //- Return the distribution of the total bin weights
-        List< List < Pair<scalar> > > raw() const;
+        List< List < Pair<scalar>>> raw() const;
 
         //- Return the cumulative normalised distribution and
         //  integration locations (at end of bins)
-        List< List<Pair<scalar> > > cumulativeNormalised() const;
+        List< List<Pair<scalar>>> cumulativeNormalised() const;
 
         //- Return the cumulative total bin weights and integration
         //  locations (at end of bins)
-        List< List<Pair<scalar> > > cumulativeRaw() const;
+        List< List<Pair<scalar>>> cumulativeRaw() const;
 
         //- Resets the Distribution by clearing the stored lists.
         //  Leaves the same number of them and the same binWidth.
@@ -213,7 +213,7 @@ CML::List<CML::label>& CML::Distribution<Type>::listStarts() const
 template<class Type>
 CML::Distribution<Type>::Distribution()
 :
-    List< List<scalar> >(pTraits<Type>::nComponents),
+    List< List<scalar>>(pTraits<Type>::nComponents),
     binWidth_(pTraits<Type>::one),
     listStarts_(pTraits<Type>::nComponents, 0)
 {}
@@ -222,7 +222,7 @@ CML::Distribution<Type>::Distribution()
 template<class Type>
 CML::Distribution<Type>::Distribution(const Type& binWidth)
 :
-    List< List<scalar> >(pTraits<Type>::nComponents),
+    List< List<scalar>>(pTraits<Type>::nComponents),
     binWidth_(binWidth),
     listStarts_(pTraits<Type>::nComponents, 0)
 {}
@@ -231,7 +231,7 @@ CML::Distribution<Type>::Distribution(const Type& binWidth)
 template<class Type>
 CML::Distribution<Type>::Distribution(const Distribution<Type>& d)
 :
-    List< List<scalar> >(static_cast< const List< List<scalar> >& >(d)),
+    List< List<scalar>>(static_cast< const List< List<scalar>>& >(d)),
     binWidth_(d.binWidth()),
     listStarts_(d.listStarts())
 {}
@@ -408,11 +408,11 @@ Type CML::Distribution<Type>::median() const
 {
     Type medianValue(pTraits<Type>::zero);
 
-    List< List < Pair<scalar> > > normDistribution = normalised();
+    List< List < Pair<scalar>>> normDistribution = normalised();
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
-        List< Pair<scalar> >& normDist = normDistribution[cmpt];
+        List< Pair<scalar>>& normDist = normDistribution[cmpt];
 
         if (normDist.size())
         {
@@ -512,10 +512,10 @@ void CML::Distribution<Type>::add
 
 
 template<class Type>
-CML::List< CML::List< CML::Pair<CML::scalar> > >CML::
+CML::List< CML::List< CML::Pair<CML::scalar>>>CML::
 Distribution<Type>::normalised() const
 {
-    List< List < Pair<scalar> > > normDistribution(pTraits<Type>::nComponents);
+    List< List < Pair<scalar>>> normDistribution(pTraits<Type>::nComponents);
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
@@ -530,7 +530,7 @@ Distribution<Type>::normalised() const
 
         List<label> cmptKeys = keys(cmpt);
 
-        List< Pair<scalar> >& normDist = normDistribution[cmpt];
+        List< Pair<scalar>>& normDist = normDistribution[cmpt];
 
         Pair<label> limits = validLimits(cmpt);
 
@@ -560,10 +560,10 @@ Distribution<Type>::normalised() const
 
 
 template<class Type>
-CML::List< CML::List< CML::Pair<CML::scalar> > >CML::
+CML::List< CML::List< CML::Pair<CML::scalar>>>CML::
 Distribution<Type>::raw() const
 {
-    List< List < Pair<scalar> > > rawDistribution(pTraits<Type>::nComponents);
+    List< List < Pair<scalar>>> rawDistribution(pTraits<Type>::nComponents);
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
@@ -576,7 +576,7 @@ Distribution<Type>::raw() const
 
         List<label> cmptKeys = keys(cmpt);
 
-        List< Pair<scalar> >& rawDist = rawDistribution[cmpt];
+        List< Pair<scalar>>& rawDist = rawDistribution[cmpt];
 
         Pair<label> limits = validLimits(cmpt);
 
@@ -602,20 +602,20 @@ Distribution<Type>::raw() const
 
 
 template<class Type>
-CML::List< CML::List< CML::Pair<CML::scalar> > >CML::
+CML::List< CML::List< CML::Pair<CML::scalar>>>CML::
 Distribution<Type>::cumulativeNormalised() const
 {
-    List< List< Pair<scalar> > > normalisedDistribution = normalised();
+    List< List< Pair<scalar>>> normalisedDistribution = normalised();
 
-    List< List < Pair<scalar> > > cumulativeNormalisedDistribution =
+    List< List < Pair<scalar>>> cumulativeNormalisedDistribution =
         normalisedDistribution;
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
-        const List< Pair<scalar> >& normalisedCmpt =
+        const List< Pair<scalar>>& normalisedCmpt =
             normalisedDistribution[cmpt];
 
-        List< Pair<scalar> >& cumNormalisedCmpt =
+        List< Pair<scalar>>& cumNormalisedCmpt =
             cumulativeNormalisedDistribution[cmpt];
 
         scalar sum = 0.0;
@@ -638,18 +638,18 @@ Distribution<Type>::cumulativeNormalised() const
 
 
 template<class Type>
-CML::List< CML::List< CML::Pair<CML::scalar> > >CML::
+CML::List< CML::List< CML::Pair<CML::scalar>>>CML::
 Distribution<Type>::cumulativeRaw() const
 {
-    List< List< Pair<scalar> > > rawDistribution = raw();
+    List< List< Pair<scalar>>> rawDistribution = raw();
 
-    List< List < Pair<scalar> > > cumulativeRawDistribution = rawDistribution;
+    List< List < Pair<scalar>>> cumulativeRawDistribution = rawDistribution;
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
-        const List< Pair<scalar> >& rawCmpt = rawDistribution[cmpt];
+        const List< Pair<scalar>>& rawCmpt = rawDistribution[cmpt];
 
-        List< Pair<scalar> >& cumRawCmpt = cumulativeRawDistribution[cmpt];
+        List< Pair<scalar>>& cumRawCmpt = cumulativeRawDistribution[cmpt];
 
         scalar sum = 0.0;
 
@@ -684,15 +684,15 @@ void CML::Distribution<Type>::clear()
 template<class Type>
 void CML::Distribution<Type>::write(const fileName& filePrefix) const
 {
-    List< List< Pair<scalar> > > rawDistribution = raw();
+    List< List< Pair<scalar>>> rawDistribution = raw();
 
-    List< List < Pair<scalar> > > normDistribution = normalised();
+    List< List < Pair<scalar>>> normDistribution = normalised();
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
-        const List< Pair<scalar> >& rawPairs = rawDistribution[cmpt];
+        const List< Pair<scalar>>& rawPairs = rawDistribution[cmpt];
 
-        const List< Pair<scalar> >& normPairs = normDistribution[cmpt];
+        const List< Pair<scalar>>& normPairs = normDistribution[cmpt];
 
         OFstream os(filePrefix + '_' + pTraits<Type>::componentNames[cmpt]);
 
@@ -707,15 +707,15 @@ void CML::Distribution<Type>::write(const fileName& filePrefix) const
         }
     }
 
-    List< List< Pair<scalar> > > rawCumDist = cumulativeRaw();
+    List< List< Pair<scalar>>> rawCumDist = cumulativeRaw();
 
-    List< List < Pair<scalar> > > normCumDist = cumulativeNormalised();
+    List< List < Pair<scalar>>> normCumDist = cumulativeNormalised();
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
-        const List< Pair<scalar> >& rawPairs = rawCumDist[cmpt];
+        const List< Pair<scalar>>& rawPairs = rawCumDist[cmpt];
 
-        const List< Pair<scalar> >& normPairs = normCumDist[cmpt];
+        const List< Pair<scalar>>& normPairs = normCumDist[cmpt];
 
         OFstream os
         (
@@ -751,7 +751,7 @@ void CML::Distribution<Type>::operator=
             << abort(FatalError);
     }
 
-    List< List<scalar> >::operator=(rhs);
+    List< List<scalar>>::operator=(rhs);
 
     binWidth_ = rhs.binWidth();
 
@@ -768,7 +768,7 @@ CML::Istream& CML::operator>>
     Distribution<Type>& d
 )
 {
-    is  >> static_cast<List< List<scalar> >&>(d)
+    is  >> static_cast<List< List<scalar>>&>(d)
         >> d.binWidth_
         >> d.listStarts_;
 
@@ -786,7 +786,7 @@ CML::Ostream& CML::operator<<
     const Distribution<Type>& d
 )
 {
-    os  <<  static_cast<const List< List<scalar> >& >(d)
+    os  <<  static_cast<const List< List<scalar>>& >(d)
         << d.binWidth_ << token::SPACE
         << d.listStarts_;
 
@@ -809,7 +809,7 @@ CML::Distribution<Type> CML::operator+
     // The coarsest binWidth is the sensible choice
     Distribution<Type> d(max(d1.binWidth(), d2.binWidth()));
 
-    List< List< List < Pair<scalar> > > > rawDists(2);
+    List< List< List < Pair<scalar>>>> rawDists(2);
 
     rawDists[0] = d1.raw();
     rawDists[1] = d2.raw();
@@ -820,7 +820,7 @@ CML::Distribution<Type> CML::operator+
         {
             List<scalar>& cmptDistribution = d[cmpt];
 
-            const List < Pair<scalar> >& cmptRaw = rawDists[rDI][cmpt];
+            const List < Pair<scalar>>& cmptRaw = rawDists[rDI][cmpt];
 
             forAll(cmptRaw, rI)
             {

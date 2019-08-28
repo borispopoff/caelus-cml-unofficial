@@ -70,7 +70,7 @@ public:
 
     virtual ~CloudProxyForKinematicParcel();
 
-    tmp<Field<scalar> > weights() const;
+    tmp<Field<scalar>> weights() const;
 
 };
 
@@ -230,9 +230,9 @@ CloudProxyForKinematicParcel<CloudType>::~CloudProxyForKinematicParcel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-tmp<Field<scalar> > CloudProxyForKinematicParcel<CloudType>::weights() const
+tmp<Field<scalar>> CloudProxyForKinematicParcel<CloudType>::weights() const
 {
-    tmp<Field<scalar> > tWeight(
+    tmp<Field<scalar>> tWeight(
         new Field<scalar>(this->theCloud().size())
     );
     Field<scalar> &weight=tWeight();

@@ -52,7 +52,7 @@ wordList ReadFields
 (
     const typename GeoMesh::Mesh& mesh,
     const IOobjectList& objects,
-    PtrList<GeometricField<Type, PatchField, GeoMesh> >& fields,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
     const bool syncPar = true,
     const bool readOldTime = false
 );
@@ -116,7 +116,7 @@ CML::wordList CML::ReadFields
 (
     const typename GeoMesh::Mesh& mesh,
     const IOobjectList& objects,
-    PtrList<GeometricField<Type, PatchField, GeoMesh> >& fields,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
     const bool syncPar,
     const bool readOldTime
 )

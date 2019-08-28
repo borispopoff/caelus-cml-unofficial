@@ -65,7 +65,7 @@ class patchExpressionDistributionFunctionObject
     labelList patchIDs_;
 
     template <typename T>
-    void getDistributionInternal(autoPtr<SimpleDistribution<T> > &dist);
+    void getDistributionInternal(autoPtr<SimpleDistribution<T>> &dist);
 protected:
 
     word dirName();
@@ -124,7 +124,7 @@ namespace CML
 
 template <typename T>
 void patchExpressionDistributionFunctionObject::getDistributionInternal(
-    autoPtr<SimpleDistribution<T> > &dist
+    autoPtr<SimpleDistribution<T>> &dist
 ) {
     if(drivers_[0].getResultType()!=pTraits<T>::typeName) {
         return;
@@ -132,7 +132,7 @@ void patchExpressionDistributionFunctionObject::getDistributionInternal(
     bool firstTime=true;
 
     forAll(patchIDs_,i) {
-        autoPtr<SimpleDistribution<T> > partial;
+        autoPtr<SimpleDistribution<T>> partial;
 
         partial=setDataScalar(
             drivers_[i].getResult<T>()(),

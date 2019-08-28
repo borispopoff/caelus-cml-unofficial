@@ -87,7 +87,7 @@ void polyMeshGenCells::calculateOwnersAndNeighbours() const
 
     label nInternalFaces(0);
 
-    List<List<LongList<labelPair> > > dataForOtherThreads(nThreads);
+    List<List<LongList<labelPair>>> dataForOtherThreads(nThreads);
 
     # ifdef USE_OMP
     # pragma omp parallel num_threads(nThreads) reduction(+ : nInternalFaces)
@@ -103,7 +103,7 @@ void polyMeshGenCells::calculateOwnersAndNeighbours() const
         const label endFace =
             CML::min(startingFace + chunkSize, faces_.size());
 
-        List<LongList<labelPair> >& dot = dataForOtherThreads[threadI];
+        List<LongList<labelPair>>& dot = dataForOtherThreads[threadI];
         dot.setSize(nThreads);
 
         for(label faceI=startingFace;faceI<endFace;++faceI)

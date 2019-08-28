@@ -114,7 +114,7 @@ private:
         mutable bool needsUpdate_;
 
         //- Search tree for all non-coupled boundary faces
-        mutable autoPtr<indexedOctree<treeDataFace> > boundaryTreePtr_;
+        mutable autoPtr<indexedOctree<treeDataFace>> boundaryTreePtr_;
 
         //- From local surface triangle to mesh cell/face.
         labelList sampleElements_;
@@ -130,14 +130,14 @@ private:
 
         //- sample field on faces
         template<class Type>
-        tmp<Field<Type> > sampleField
+        tmp<Field<Type>> sampleField
         (
             const GeometricField<Type, fvPatchField, volMesh>& vField
         ) const;
 
 
         template<class Type>
-        tmp<Field<Type> >
+        tmp<Field<Type>>
         interpolateField(const interpolation<Type>&) const;
 
         bool update(const meshSearch& meshSearcher);
@@ -289,14 +289,14 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledTriSurfaceMesh::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
 {
     // One value per face
-    tmp<Field<Type> > tvalues(new Field<Type>(sampleElements_.size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(sampleElements_.size()));
     Field<Type>& values = tvalues();
 
     if (sampleSource_ == cells || sampleSource_ == insideCells)
@@ -345,14 +345,14 @@ CML::sampledTriSurfaceMesh::sampleField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledTriSurfaceMesh::interpolateField
 (
     const interpolation<Type>& interpolator
 ) const
 {
     // One value per vertex
-    tmp<Field<Type> > tvalues(new Field<Type>(sampleElements_.size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(sampleElements_.size()));
     Field<Type>& values = tvalues();
 
     if (sampleSource_ == cells || sampleSource_ == insideCells)

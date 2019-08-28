@@ -70,7 +70,7 @@ void triSurfAddressing::calculateEdges() const
         # endif
         forAll(pFacets, pI)
         {
-            std::set<std::pair<label, label> > edgesAtPoint;
+            std::set<std::pair<label, label>> edgesAtPoint;
 
             forAllRow(pFacets, pI, pfI)
             {
@@ -95,7 +95,7 @@ void triSurfAddressing::calculateEdges() const
                 }
             }
 
-            std::set<std::pair<label, label> >::const_iterator it;
+            std::set<std::pair<label, label>>::const_iterator it;
             for(it=edgesAtPoint.begin();it!=edgesAtPoint.end();++it)
                 edgesHelper.append(edge(it->first, it->second));
         }

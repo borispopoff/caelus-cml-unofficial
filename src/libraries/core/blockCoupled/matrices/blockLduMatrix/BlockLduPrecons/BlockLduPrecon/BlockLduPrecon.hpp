@@ -99,7 +99,7 @@ public:
 
     // Selectors
     //- Select given matrix and dictionary
-    static autoPtr<BlockLduPrecon<Type> > New
+    static autoPtr<BlockLduPrecon<Type>> New
     (
         const BlockLduMatrix<Type>& matrix,
         const dictionary& dict,
@@ -139,7 +139,7 @@ class BlockNoPrecon;
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::autoPtr<CML::BlockLduPrecon<Type> > CML::BlockLduPrecon<Type>::New
+CML::autoPtr<CML::BlockLduPrecon<Type>> CML::BlockLduPrecon<Type>::New
 (
     const BlockLduMatrix<Type>& matrix,
     const dictionary& dict,
@@ -164,7 +164,7 @@ CML::autoPtr<CML::BlockLduPrecon<Type> > CML::BlockLduPrecon<Type>::New
     if (matrix.diagonal())
     {
         // No preconditioning for the diagonal matrix
-        return autoPtr<BlockLduPrecon<Type> >
+        return autoPtr<BlockLduPrecon<Type>>
         (
             new BlockNoPrecon<Type>
             (
@@ -188,7 +188,7 @@ CML::autoPtr<CML::BlockLduPrecon<Type> > CML::BlockLduPrecon<Type>::New
                 << exit(FatalIOError);
         }
 
-        return autoPtr<BlockLduPrecon<Type> >
+        return autoPtr<BlockLduPrecon<Type>>
         (
             constructorIter()
             (

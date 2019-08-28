@@ -74,7 +74,7 @@ class sampledSurfaceElevation
         public:
 
             //- Set formatter
-            autoPtr<writer<Type> > formatter;
+            autoPtr<writer<Type>> formatter;
 
             //- Construct null
             fieldGroup()
@@ -95,7 +95,7 @@ class sampledSurfaceElevation
         template <class Type>
         class volFieldSampler
         :
-            public List<Field<Type> >
+            public List<Field<Type>>
         {
             //- Name of this collection of values
             const word name_;
@@ -120,7 +120,7 @@ class sampledSurfaceElevation
             //- Construct from components
             volFieldSampler
             (
-                const List<Field<Type> >& values,
+                const List<Field<Type>>& values,
                 const word& name
             );
 
@@ -210,9 +210,9 @@ class sampledSurfaceElevation
         template<class T>
         void combineSampledValues
         (
-            const PtrList<volFieldSampler<T> >& sampledFields,
+            const PtrList<volFieldSampler<T>>& sampledFields,
             const labelListList& indexSets,
-            PtrList<volFieldSampler<T> >& masterFields
+            PtrList<volFieldSampler<T>>& masterFields
         );
 
         void sampleIntegrateAndWrite(fieldGroup<scalar>& fields);
@@ -305,10 +305,10 @@ CML::sampledSurfaceElevation::volFieldSampler<Type>::volFieldSampler
     const PtrList<sampledSet>& samplers
 )
 :
-    List<Field<Type> >(samplers.size()),
+    List<Field<Type>>(samplers.size()),
     name_(field.name())
 {
-    autoPtr<interpolation<Type> > interpolator
+    autoPtr<interpolation<Type>> interpolator
     (
         interpolation<Type>::New(interpolationScheme, field)
     );
@@ -351,7 +351,7 @@ CML::sampledSurfaceElevation::volFieldSampler<Type>::volFieldSampler
     const PtrList<sampledSet>& samplers
 )
 :
-    List<Field<Type> >(samplers.size()),
+    List<Field<Type>>(samplers.size()),
     name_(field.name())
 {
     forAll (samplers, seti)
@@ -380,11 +380,11 @@ CML::sampledSurfaceElevation::volFieldSampler<Type>::volFieldSampler
 template <class Type>
 CML::sampledSurfaceElevation::volFieldSampler<Type>::volFieldSampler
 (
-    const List<Field<Type> >& values,
+    const List<Field<Type>>& values,
     const word& name
 )
 :
-    List<Field<Type> >(values),
+    List<Field<Type>>(values),
     name_(name)
 {}
 
@@ -421,19 +421,19 @@ CML::label CML::sampledSurfaceElevation::grep
 template<class T>
 void CML::sampledSurfaceElevation::combineSampledValues
 (
-    const PtrList<volFieldSampler<T> >& sampledFields,
+    const PtrList<volFieldSampler<T>>& sampledFields,
     const labelListList& indexSets,
-    PtrList<volFieldSampler<T> >& masterFields
+    PtrList<volFieldSampler<T>>& masterFields
 )
 {
     forAll (sampledFields, fieldi)
     {
-        List<Field<T> > masterValues(indexSets.size());
+        List<Field<T>> masterValues(indexSets.size());
 
         forAll (indexSets, seti)
         {
             // Collect data from all processors
-            List<Field<T> > gatheredData(Pstream::nProcs());
+            List<Field<T>> gatheredData(Pstream::nProcs());
             gatheredData[Pstream::myProcNo()] = sampledFields[fieldi][seti];
             Pstream::gatherList(gatheredData);
 
@@ -441,10 +441,10 @@ void CML::sampledSurfaceElevation::combineSampledValues
             {
                 Field<T> allData
                 (
-                    ListListOps::combine<Field<T> >
+                    ListListOps::combine<Field<T>>
                     (
                         gatheredData,
-                        CML::accessOp<Field<T> >()
+                        CML::accessOp<Field<T>>()
                     )
                 );
 

@@ -692,10 +692,10 @@ CML::tmp<CML::volScalarField> CML::radiation::viewFactor::Rp() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::radiation::viewFactor::Ru() const
 {
-    return tmp<DimensionedField<scalar, volMesh> >
+    return tmp<DimensionedField<scalar, volMesh>>
     (
         new DimensionedField<scalar, volMesh>
         (

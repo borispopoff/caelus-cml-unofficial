@@ -341,7 +341,7 @@ public:
 
                 //- Interpolate field
                 template<class Type>
-                tmp<Field<Type> > interpolate
+                tmp<Field<Type>> interpolate
                 (
                     const Field<Type>& fld,
                     const UList<Type>& defaultValues = UList<Type>()
@@ -349,9 +349,9 @@ public:
 
                 //- Interpolate tmp field
                 template<class Type>
-                tmp<Field<Type> > interpolate
+                tmp<Field<Type>> interpolate
                 (
-                    const tmp<Field<Type> >& tFld,
+                    const tmp<Field<Type>>& tFld,
                     const UList<Type>& defaultValues = UList<Type>()
                 ) const;
 
@@ -455,7 +455,7 @@ inline const CML::vector& CML::cyclicAMIPolyPatch::separationVector() const
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::cyclicAMIPolyPatch::interpolate
+CML::tmp<CML::Field<Type>> CML::cyclicAMIPolyPatch::interpolate
 (
     const Field<Type>& fld,
     const UList<Type>& defaultValues
@@ -473,9 +473,9 @@ CML::tmp<CML::Field<Type> > CML::cyclicAMIPolyPatch::interpolate
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::cyclicAMIPolyPatch::interpolate
+CML::tmp<CML::Field<Type>> CML::cyclicAMIPolyPatch::interpolate
 (
-    const tmp<Field<Type> >& tFld,
+    const tmp<Field<Type>>& tFld,
     const UList<Type>& defaultValues
 ) const
 {

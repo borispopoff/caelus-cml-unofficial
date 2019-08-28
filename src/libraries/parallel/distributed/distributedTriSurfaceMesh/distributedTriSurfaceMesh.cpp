@@ -176,7 +176,7 @@ void CML::distributedTriSurfaceMesh::distributeSegment
 
     DynamicList<segment>& allSegments,
     DynamicList<label>& allSegmentMap,
-    List<DynamicList<label> >& sendMap
+    List<DynamicList<label>>& sendMap
 ) const
 {
     // Work points
@@ -274,7 +274,7 @@ CML::distributedTriSurfaceMesh::distributeSegments
         // Original index of segment
         DynamicList<label> dynAllSegmentMap(start.size());
         // Per processor indices into allSegments to send
-        List<DynamicList<label> > dynSendMap(Pstream::nProcs());
+        List<DynamicList<label>> dynSendMap(Pstream::nProcs());
 
         forAll(start, segmentI)
         {
@@ -694,7 +694,7 @@ CML::distributedTriSurfaceMesh::calcLocalQueries
         // Original index of segment
         DynamicList<label> dynAllSegmentMap(centres.size());
         // Per processor indices into allSegments to send
-        List<DynamicList<label> > dynSendMap(Pstream::nProcs());
+        List<DynamicList<label>> dynSendMap(Pstream::nProcs());
 
         // Work array - whether processor bb overlaps the bounding sphere.
         boolList procBbOverlaps(Pstream::nProcs());
@@ -790,7 +790,7 @@ CML::distributedTriSurfaceMesh::calcLocalQueries
 // Returns a per processor a list of bounding boxes that most accurately
 // describe the shape. For now just a single bounding box per processor but
 // optimisation might be to determine a better fitting shape.
-CML::List<CML::List<CML::treeBoundBox> >
+CML::List<CML::List<CML::treeBoundBox>>
 CML::distributedTriSurfaceMesh::independentlyDistributedBbs
 (
     const triSurface& s
@@ -849,7 +849,7 @@ CML::distributedTriSurfaceMesh::independentlyDistributedBbs
     // Find bounding box for all triangles on new distribution.
 
     // Initialise to inverted box (VGREAT, -VGREAT)
-    List<List<treeBoundBox> > bbs(Pstream::nProcs());
+    List<List<treeBoundBox>> bbs(Pstream::nProcs());
     forAll(bbs, proci)
     {
         bbs[proci].setSize(1);
@@ -1655,7 +1655,7 @@ void CML::distributedTriSurfaceMesh::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     // Reuse fineLine. We could modify all of findLine to do multiple
@@ -1995,7 +1995,7 @@ void CML::distributedTriSurfaceMesh::distribute
     // ~~~~~~~~~~~~~~~~~~~~~~
 
     {
-        List<List<treeBoundBox> > newProcBb(Pstream::nProcs());
+        List<List<treeBoundBox>> newProcBb(Pstream::nProcs());
 
         switch(distType_)
         {

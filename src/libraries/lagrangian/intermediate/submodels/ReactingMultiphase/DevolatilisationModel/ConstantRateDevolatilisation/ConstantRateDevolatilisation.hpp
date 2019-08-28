@@ -50,7 +50,7 @@ class ConstantRateDevolatilisation
         // Model constants
 
             //- List of volatile data - (name A0)
-            List<Tuple2<word, scalar> > volatileData_;
+            List<Tuple2<word, scalar>> volatileData_;
 
             //- List of initial volatile mass fractions
             List<scalar> YVolatile0_;
@@ -82,9 +82,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<DevolatilisationModel<CloudType> > clone() const
+        virtual autoPtr<DevolatilisationModel<CloudType>> clone() const
         {
-            return autoPtr<DevolatilisationModel<CloudType> >
+            return autoPtr<DevolatilisationModel<CloudType>>
             (
                 new ConstantRateDevolatilisation<CloudType>(*this)
             );

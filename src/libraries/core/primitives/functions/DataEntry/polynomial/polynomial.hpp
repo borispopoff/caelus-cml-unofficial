@@ -72,7 +72,7 @@ class polynomial
     // Private data
 
         //- Polynomial coefficients - list of prefactor, exponent
-        List<Tuple2<scalar, scalar> > coeffs_;
+        List<Tuple2<scalar, scalar>> coeffs_;
 
         //- Flag to indicate whether poly can be integrated
         bool canIntegrate_;
@@ -98,7 +98,7 @@ public:
         polynomial(const word& entryName, const dictionary& dict);
 
         //- Construct from components
-        polynomial(const word& entryName, const List<Tuple2<scalar, scalar> >&);
+        polynomial(const word& entryName, const List<Tuple2<scalar, scalar>>&);
 
         //- Copy constructor
         polynomial(const polynomial& poly);

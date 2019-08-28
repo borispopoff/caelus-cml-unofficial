@@ -308,7 +308,7 @@ void CML::meshToMesh::calculate(const word& methodName)
         );
 
         // cache maps and reset addresses
-        List<Map<label> > cMap;
+        List<Map<label>> cMap;
         srcMapPtr_.reset
         (
             new mapDistribute(globalSrcCells, tgtToSrcCellAddr_, cMap)

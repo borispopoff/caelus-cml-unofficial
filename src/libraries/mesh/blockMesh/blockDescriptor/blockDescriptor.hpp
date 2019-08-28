@@ -73,7 +73,7 @@ class blockDescriptor
         Vector<label> meshDensity_;
 
         //- Block edge points
-        List< List<point> > edgePoints_;
+        List< List<point>> edgePoints_;
 
         //- Block edge weighting factors
         scalarListList edgeWeights_;
@@ -146,7 +146,7 @@ public:
         const cellShape& blockShape() const;
 
         //- Return the block points along each edge
-        const List< List<point> >& blockEdgePoints() const;
+        const List< List<point>>& blockEdgePoints() const;
 
         //- Return the weightings along each edge
         const scalarListList& blockEdgeWeights() const;

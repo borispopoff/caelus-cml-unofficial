@@ -81,9 +81,9 @@ public:
     );
 
     //- Construct and return a clone
-    virtual tmp<fvPatchField<vector> > clone() const
+    virtual tmp<fvPatchField<vector>> clone() const
     {
-        return tmp<fvPatchField<vector> >
+        return tmp<fvPatchField<vector>>
         (
             new noSlipWallFvPatchVectorField(*this)
         );
@@ -97,12 +97,12 @@ public:
     );
 
     //- Construct and return a clone setting internal field reference
-    virtual tmp<fvPatchField<vector> > clone
+    virtual tmp<fvPatchField<vector>> clone
     (
         DimensionedField<vector, volMesh> const& iF
     ) const
     {
-        return tmp<fvPatchField<vector> >
+        return tmp<fvPatchField<vector>>
         (
             new noSlipWallFvPatchVectorField(*this, iF)
         );
@@ -114,25 +114,25 @@ public:
 
     //- Return the matrix diagonal coefficients corresponding to the
     //  evaluation of the value of this patchField with given weights
-    virtual tmp<Field<vector> > valueInternalCoeffs
+    virtual tmp<Field<vector>> valueInternalCoeffs
     (
         tmp<scalarField> const&
     ) const;
 
     //- Return the matrix source coefficients corresponding to the
     //  evaluation of the value of this patchField with given weights
-    virtual tmp<Field<vector> > valueBoundaryCoeffs
+    virtual tmp<Field<vector>> valueBoundaryCoeffs
     (
         tmp<scalarField> const&
     ) const;
 
     //- Return the matrix diagonal coefficients corresponding to the
     //  evaluation of the gradient of this patchField
-    virtual tmp<Field<vector> > gradientInternalCoeffs() const;
+    virtual tmp<Field<vector>> gradientInternalCoeffs() const;
 
     //- Return the matrix source coefficients corresponding to the
     //  evaluation of the gradient of this patchField
-    virtual tmp<Field<vector> > gradientBoundaryCoeffs() const;
+    virtual tmp<Field<vector>> gradientBoundaryCoeffs() const;
 
     //- Write
     virtual void write(Ostream&) const;

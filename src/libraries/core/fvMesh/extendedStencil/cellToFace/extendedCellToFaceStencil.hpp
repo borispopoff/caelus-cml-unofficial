@@ -98,18 +98,18 @@ public:
             const mapDistribute& map,
             const labelListList& stencil,
             const GeometricField<T, fvPatchField, volMesh>& fld,
-            List<List<T> >& stencilFld
+            List<List<T>>& stencilFld
         );
 
         //- Sum vol field contributions to create face values
         template<class Type>
-        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         weightedSum
         (
             const mapDistribute& map,
             const labelListList& stencil,
             const GeometricField<Type, fvPatchField, volMesh>& fld,
-            const List<List<scalar> >& stencilWeights
+            const List<List<scalar>>& stencilWeights
         );
 };
 
@@ -128,7 +128,7 @@ void CML::extendedCellToFaceStencil::collectData
     const mapDistribute& map,
     const labelListList& stencil,
     const GeometricField<Type, fvPatchField, volMesh>& fld,
-    List<List<Type> >& stencilFld
+    List<List<Type>>& stencilFld
 )
 {
     // 1. Construct cell data in compact addressing
@@ -172,22 +172,22 @@ void CML::extendedCellToFaceStencil::collectData
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::extendedCellToFaceStencil::weightedSum
 (
     const mapDistribute& map,
     const labelListList& stencil,
     const GeometricField<Type, fvPatchField, volMesh>& fld,
-    const List<List<scalar> >& stencilWeights
+    const List<List<scalar>>& stencilWeights
 )
 {
     const fvMesh& mesh = fld.mesh();
 
     // Collect internal and boundary values
-    List<List<Type> > stencilFld;
+    List<List<Type>> stencilFld;
     collectData(map, stencil, fld, stencilFld);
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsfCorr
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (

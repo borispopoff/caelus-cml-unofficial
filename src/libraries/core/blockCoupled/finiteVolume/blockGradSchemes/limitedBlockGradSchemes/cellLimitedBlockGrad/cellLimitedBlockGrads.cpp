@@ -47,7 +47,7 @@ namespace fv
 {
 
 template<>
-tmp<BlockLduSystem<vector, vector> >
+tmp<BlockLduSystem<vector, vector>>
 cellLimitedBlockGrad<scalar>::fvmGrad
 (
     const volScalarField& vsf
@@ -55,7 +55,7 @@ cellLimitedBlockGrad<scalar>::fvmGrad
 {
     const fvMesh& mesh = vsf.mesh();
 
-    tmp<BlockLduSystem<vector, vector> > tbs =
+    tmp<BlockLduSystem<vector, vector>> tbs =
         basicBlockGradScheme_().fvmGrad(vsf);
 
     if (k_ < SMALL)
@@ -266,7 +266,7 @@ cellLimitedBlockGrad<scalar>::fvmGrad
 
 
 template<>
-tmp<BlockLduSystem<vector, outerProduct<vector, vector>::type> >
+tmp<BlockLduSystem<vector, outerProduct<vector, vector>::type>>
 cellLimitedBlockGrad<vector>::fvmGrad
 (
     const volVectorField& vsf
@@ -279,7 +279,7 @@ cellLimitedBlockGrad<vector>::fvmGrad
 
     typedef outerProduct<vector, vector>::type GradType;
 
-    tmp<BlockLduSystem<vector, GradType> > tbs
+    tmp<BlockLduSystem<vector, GradType>> tbs
     (
         new BlockLduSystem<vector, GradType>(vsf.mesh())
     );

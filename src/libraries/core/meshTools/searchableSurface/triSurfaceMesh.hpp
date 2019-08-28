@@ -73,7 +73,7 @@ private:
         scalar minQuality_;
 
         //- Search tree for boundary edges.
-        mutable autoPtr<indexedOctree<treeDataEdge> > edgeTree_;
+        mutable autoPtr<indexedOctree<treeDataEdge>> edgeTree_;
 
         //- Names of regions
         mutable wordList regions_;
@@ -232,7 +232,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const;
 
             //- From a set of points and indices get the region

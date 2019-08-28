@@ -27,7 +27,7 @@ License
 template<>
 CML::volumeType CML::treeDataPrimitivePatch<CML::triSurface>::getVolumeType
 (
-    const indexedOctree<treeDataPrimitivePatch<triSurface> >& oc,
+    const indexedOctree<treeDataPrimitivePatch<triSurface>>& oc,
     const point& sample
 ) const
 {

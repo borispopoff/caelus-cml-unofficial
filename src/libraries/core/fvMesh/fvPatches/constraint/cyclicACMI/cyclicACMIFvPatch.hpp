@@ -174,7 +174,7 @@ public:
             virtual tmp<vectorField> deltaFull() const;
 
             template<class Type>
-            tmp<Field<Type> > interpolate
+            tmp<Field<Type>> interpolate
             (
                 const Field<Type>& fldCoupled
             ) const
@@ -189,9 +189,9 @@ public:
             }
 
             template<class Type>
-            tmp<Field<Type> > interpolate
+            tmp<Field<Type>> interpolate
             (
-                const tmp<Field<Type> >& tfldCoupled
+                const tmp<Field<Type>>& tfldCoupled
             ) const
             {
                 updateAreas();
@@ -204,7 +204,7 @@ public:
             }
 
             template<class Type>
-            tmp<Field<Type> > interpolate
+            tmp<Field<Type>> interpolate
             (
                 const Field<Type>& fldCoupled,
                 const Field<Type>& fldNonOverlap
@@ -221,10 +221,10 @@ public:
             }
 
             template<class Type>
-            tmp<Field<Type> > interpolate
+            tmp<Field<Type>> interpolate
             (
-                const tmp<Field<Type> >& tFldCoupled,
-                const tmp<Field<Type> >& tFldNonOverlap
+                const tmp<Field<Type>>& tFldCoupled,
+                const tmp<Field<Type>>& tFldNonOverlap
             ) const
             {
                 updateAreas();

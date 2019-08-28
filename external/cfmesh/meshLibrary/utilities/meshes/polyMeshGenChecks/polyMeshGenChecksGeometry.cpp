@@ -1847,7 +1847,7 @@ bool checkFaceFlatness
         const PtrList<processorBoundaryPatch>& procBoundaries =
             mesh.procBoundaries();
 
-        List<DynList<label> > markedFaces(procBoundaries.size());
+        List<DynList<label>> markedFaces(procBoundaries.size());
         forAll(procBoundaries, patchI)
         {
             const label start = procBoundaries[patchI].patchStart();

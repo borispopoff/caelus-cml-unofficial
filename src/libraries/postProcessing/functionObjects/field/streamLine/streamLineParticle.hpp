@@ -67,9 +67,9 @@ public:
 
         // Public data
 
-            const PtrList<interpolation<scalar> >& vsInterp_;
+            const PtrList<interpolation<scalar>>& vsInterp_;
 
-            const PtrList<interpolation<vector> >& vvInterp_;
+            const PtrList<interpolation<vector>>& vvInterp_;
 
             const label UIndex_;
 
@@ -81,9 +81,9 @@ public:
 
             DynamicList<vectorList>& allPositions_;
 
-            List<DynamicList<scalarList> >& allScalars_;
+            List<DynamicList<scalarList>>& allScalars_;
 
-            List<DynamicList<vectorList> >& allVectors_;
+            List<DynamicList<vectorList>>& allVectors_;
 
 
         // Constructors
@@ -92,16 +92,16 @@ public:
             trackingData
             (
                 streamLineParticleCloud& cloud,
-                const PtrList<interpolation<scalar> >& vsInterp,
-                const PtrList<interpolation<vector> >& vvInterp,
+                const PtrList<interpolation<scalar>>& vsInterp,
+                const PtrList<interpolation<vector>>& vvInterp,
                 const label UIndex,
                 const bool trackForward,
                 const label nSubCycle,
                 const scalar trackLength,
 
-                DynamicList<List<point> >& allPositions,
-                List<DynamicList<scalarList> >& allScalars,
-                List<DynamicList<vectorList> >& allVectors
+                DynamicList<List<point>>& allPositions,
+                List<DynamicList<scalarList>>& allScalars,
+                List<DynamicList<vectorList>>& allVectors
             )
             :
                 particle::trackingData(cloud),
@@ -129,10 +129,10 @@ private:
         DynamicList<point> sampledPositions_;
 
         //- Sampled scalars
-        List<DynamicList<scalar> > sampledScalars_;
+        List<DynamicList<scalar>> sampledScalars_;
 
         //- Sampled vectors
-        List<DynamicList<vector> > sampledVectors_;
+        List<DynamicList<vector>> sampledVectors_;
 
 
     // Private Member Functions

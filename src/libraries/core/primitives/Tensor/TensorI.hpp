@@ -76,7 +76,7 @@ inline CML::Tensor<Cmpt>::Tensor(const SymmTensor<Cmpt>& st)
 
 
 template<class Cmpt>
-inline CML::Tensor<Cmpt>::Tensor(const Vector<Vector<Cmpt> >& tr)
+inline CML::Tensor<Cmpt>::Tensor(const Vector<Vector<Cmpt>>& tr)
 {
     this->v_[XX] = tr.x().x();
     this->v_[XY] = tr.x().y();
@@ -380,7 +380,7 @@ inline void CML::Tensor<Cmpt>::operator=(const SymmTensor<Cmpt>& st)
 
 
 template<class Cmpt>
-inline void CML::Tensor<Cmpt>::operator=(const Vector<Vector<Cmpt> >& tr)
+inline void CML::Tensor<Cmpt>::operator=(const Vector<Vector<Cmpt>>& tr)
 {
     this->v_[XX] = tr.x().x();
     this->v_[XY] = tr.x().y();
@@ -426,7 +426,7 @@ inline Tensor<Cmpt> operator*(const Vector<Cmpt>& v)
 
 //- Inner-product between two tensors
 template<class Cmpt>
-inline typename innerProduct<Tensor<Cmpt>, Tensor<Cmpt> >::type
+inline typename innerProduct<Tensor<Cmpt>, Tensor<Cmpt>>::type
 operator&(const Tensor<Cmpt>& t1, const Tensor<Cmpt>& t2)
 {
     return Tensor<Cmpt>
@@ -448,7 +448,7 @@ operator&(const Tensor<Cmpt>& t1, const Tensor<Cmpt>& t2)
 
 //- Inner-product between a tensor and a vector
 template<class Cmpt>
-inline typename innerProduct<Tensor<Cmpt>, Vector<Cmpt> >::type
+inline typename innerProduct<Tensor<Cmpt>, Vector<Cmpt>>::type
 operator&(const Tensor<Cmpt>& t, const Vector<Cmpt>& v)
 {
     return Vector<Cmpt>
@@ -462,7 +462,7 @@ operator&(const Tensor<Cmpt>& t, const Vector<Cmpt>& v)
 
 //- Inner-product between a vector and a tensor
 template<class Cmpt>
-inline typename innerProduct<Vector<Cmpt>, Tensor<Cmpt> >::type
+inline typename innerProduct<Vector<Cmpt>, Tensor<Cmpt>>::type
 operator&(const Vector<Cmpt>& v, const Tensor<Cmpt>& t)
 {
     return Vector<Cmpt>
@@ -476,7 +476,7 @@ operator&(const Vector<Cmpt>& v, const Tensor<Cmpt>& t)
 
 //- Outer-product between two vectors
 template<class Cmpt>
-inline typename outerProduct<Vector<Cmpt>, Vector<Cmpt> >::type
+inline typename outerProduct<Vector<Cmpt>, Vector<Cmpt>>::type
 operator*(const Vector<Cmpt>& v1, const Vector<Cmpt>& v2)
 {
     return Tensor<Cmpt>
@@ -490,7 +490,7 @@ operator*(const Vector<Cmpt>& v1, const Vector<Cmpt>& v2)
 
 //- Division of a vector by a tensor, i.e. dot-product with the tensor inverse
 template<class Cmpt>
-inline typename innerProduct<Vector<Cmpt>, Tensor<Cmpt> >::type
+inline typename innerProduct<Vector<Cmpt>, Tensor<Cmpt>>::type
 operator/(const Vector<Cmpt>& v, const Tensor<Cmpt>& t)
 {
     return inv(t) & v;
@@ -777,7 +777,7 @@ operator&&(const Tensor<Cmpt>& t1, const SphericalTensor<Cmpt>& st2)
 
 
 template<class Cmpt>
-class typeOfSum<SphericalTensor<Cmpt>, Tensor<Cmpt> >
+class typeOfSum<SphericalTensor<Cmpt>, Tensor<Cmpt>>
 {
 public:
 
@@ -786,7 +786,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfSum<Tensor<Cmpt>, SphericalTensor<Cmpt> >
+class typeOfSum<Tensor<Cmpt>, SphericalTensor<Cmpt>>
 {
 public:
 
@@ -795,7 +795,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<SphericalTensor<Cmpt>, Tensor<Cmpt> >
+class innerProduct<SphericalTensor<Cmpt>, Tensor<Cmpt>>
 {
 public:
 
@@ -804,7 +804,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<Tensor<Cmpt>, SphericalTensor<Cmpt> >
+class innerProduct<Tensor<Cmpt>, SphericalTensor<Cmpt>>
 {
 public:
 
@@ -939,7 +939,7 @@ operator&&(const Tensor<Cmpt>& t1, const SymmTensor<Cmpt>& st2)
 
 
 template<class Cmpt>
-class typeOfSum<SymmTensor<Cmpt>, Tensor<Cmpt> >
+class typeOfSum<SymmTensor<Cmpt>, Tensor<Cmpt>>
 {
 public:
 
@@ -948,7 +948,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfSum<Tensor<Cmpt>, SymmTensor<Cmpt> >
+class typeOfSum<Tensor<Cmpt>, SymmTensor<Cmpt>>
 {
 public:
 
@@ -957,7 +957,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<SymmTensor<Cmpt>, Tensor<Cmpt> >
+class innerProduct<SymmTensor<Cmpt>, Tensor<Cmpt>>
 {
 public:
 
@@ -966,7 +966,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<Tensor<Cmpt>, SymmTensor<Cmpt> >
+class innerProduct<Tensor<Cmpt>, SymmTensor<Cmpt>>
 {
 public:
 

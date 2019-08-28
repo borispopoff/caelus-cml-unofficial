@@ -295,7 +295,7 @@ CML::slidingInterface::slidingInterface
 
         retiredPointMapPtr_ = new Map<label>(dict.lookup("retiredPointMap"));
         cutPointEdgePairMapPtr_ =
-            new Map<Pair<edge> >(dict.lookup("cutPointEdgePairMap"));
+            new Map<Pair<edge>>(dict.lookup("cutPointEdgePairMap"));
     }
     else
     {
@@ -431,7 +431,7 @@ void CML::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
 
         const Map<label>& rpm = retiredPointMap();
 
-        const Map<Pair<edge> >& cpepm = cutPointEdgePairMap();
+        const Map<Pair<edge>>& cpepm = cutPointEdgePairMap();
 
         const Map<label>& slaveZonePointMap =
             mesh.faceZones()[slaveFaceZoneID_.index()]().meshPointMap();
@@ -468,7 +468,7 @@ void CML::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
                 // A cut point is not a projected slave point.  Therefore, it
                 // must be an edge-to-edge intersection.
 
-                Map<Pair<edge> >::const_iterator cpepmIter =
+                Map<Pair<edge>>::const_iterator cpepmIter =
                     cpepm.find(cutPoints[pointI]);
 
                 if (cpepmIter != cpepm.end())

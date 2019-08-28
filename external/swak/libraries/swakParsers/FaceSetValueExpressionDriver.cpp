@@ -145,7 +145,7 @@ inline label SubsetValueExpressionDriver::getIndexFromIterator(
     return it.key();
 }
 
-tmp<Field<scalar> > FaceSetValueExpressionDriver::getScalarField(
+tmp<Field<scalar>> FaceSetValueExpressionDriver::getScalarField(
     const word &name,bool oldTime
 )
 {
@@ -157,7 +157,7 @@ tmp<Field<scalar> > FaceSetValueExpressionDriver::getScalarField(
         );
 }
 
-tmp<Field<vector> > FaceSetValueExpressionDriver::getVectorField(
+tmp<Field<vector>> FaceSetValueExpressionDriver::getVectorField(
     const word &name,bool oldTime
 )
 {
@@ -169,7 +169,7 @@ tmp<Field<vector> > FaceSetValueExpressionDriver::getVectorField(
         );
 }
 
-tmp<Field<tensor> > FaceSetValueExpressionDriver::getTensorField(
+tmp<Field<tensor>> FaceSetValueExpressionDriver::getTensorField(
     const word &name,bool oldTime
 )
 {
@@ -181,7 +181,7 @@ tmp<Field<tensor> > FaceSetValueExpressionDriver::getTensorField(
         );
 }
 
-tmp<Field<symmTensor> > FaceSetValueExpressionDriver::getSymmTensorField(
+tmp<Field<symmTensor>> FaceSetValueExpressionDriver::getSymmTensorField(
     const word &name,bool oldTime
 )
 {
@@ -193,7 +193,7 @@ tmp<Field<symmTensor> > FaceSetValueExpressionDriver::getSymmTensorField(
         );
 }
 
-tmp<Field<sphericalTensor> >
+tmp<Field<sphericalTensor>>
 FaceSetValueExpressionDriver::getSphericalTensorField(
     const word &name,bool oldTime
 )

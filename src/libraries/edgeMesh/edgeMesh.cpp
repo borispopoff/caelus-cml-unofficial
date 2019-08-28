@@ -350,7 +350,7 @@ void CML::edgeMesh::mergePoints(const scalar mergeDist)
         }
 
         // Compact using a hashtable and commutative hash of edge.
-        HashTable<label, edge, Hash<edge> > edgeToLabel
+        HashTable<label, edge, Hash<edge>> edgeToLabel
         (
             2*edges_.size()
         );
@@ -374,7 +374,7 @@ void CML::edgeMesh::mergePoints(const scalar mergeDist)
 
         for
         (
-            HashTable<label, edge, Hash<edge> >::const_iterator iter =
+            HashTable<label, edge, Hash<edge>>::const_iterator iter =
                 edgeToLabel.begin();
             iter != edgeToLabel.end();
             ++iter

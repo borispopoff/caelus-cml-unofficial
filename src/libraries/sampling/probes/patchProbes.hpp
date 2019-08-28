@@ -88,7 +88,7 @@ class patchProbes
 
         //- Sample a volume field at all locations
         template<class Type>
-        tmp<Field<Type> > sample
+        tmp<Field<Type>> sample
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
@@ -96,7 +96,7 @@ class patchProbes
 
         //- Sample a surface field at all locations
         template<class Type>
-        tmp<Field<Type> > sample
+        tmp<Field<Type>> sample
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>&
         ) const;
@@ -104,7 +104,7 @@ class patchProbes
 
         //- Sample a single field on all sample locations
         template<class Type>
-        tmp<Field<Type> > sample(const word& fieldName) const;
+        tmp<Field<Type>> sample(const word& fieldName) const;
 
 
         //- Disallow default bitwise copy construct
@@ -253,7 +253,7 @@ void CML::patchProbes::sampleAndWrite
                 sampleAndWrite
                 (
                     mesh_.lookupObject
-                    <GeometricField<Type, fvPatchField, volMesh> >
+                    <GeometricField<Type, fvPatchField, volMesh>>
                     (
                         fields[fieldI]
                     )
@@ -305,7 +305,7 @@ void CML::patchProbes::sampleAndWriteSurfaceFields
                 sampleAndWrite
                 (
                     mesh_.lookupObject
-                    <GeometricField<Type, fvsPatchField, surfaceMesh> >
+                    <GeometricField<Type, fvsPatchField, surfaceMesh>>
                     (
                         fields[fieldI]
                     )
@@ -319,7 +319,7 @@ void CML::patchProbes::sampleAndWriteSurfaceFields
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::patchProbes::sample
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
@@ -327,7 +327,7 @@ CML::patchProbes::sample
 {
     const Type unsetVal(-VGREAT*pTraits<Type>::one);
 
-    tmp<Field<Type> > tValues
+    tmp<Field<Type>> tValues
     (
         new Field<Type>(this->size(), unsetVal)
     );
@@ -356,12 +356,12 @@ CML::patchProbes::sample
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::patchProbes::sample(const word& fieldName) const
 {
     return sample
     (
-        mesh_.lookupObject<GeometricField<Type, fvPatchField, volMesh> >
+        mesh_.lookupObject<GeometricField<Type, fvPatchField, volMesh>>
         (
             fieldName
         )
@@ -370,7 +370,7 @@ CML::patchProbes::sample(const word& fieldName) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::patchProbes::sample
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
@@ -378,7 +378,7 @@ CML::patchProbes::sample
 {
     const Type unsetVal(-VGREAT*pTraits<Type>::one);
 
-    tmp<Field<Type> > tValues
+    tmp<Field<Type>> tValues
     (
         new Field<Type>(this->size(), unsetVal)
     );

@@ -192,7 +192,7 @@ CML::chemistryTabulationMethod<CompType, ThermoType>::chemistryTabulationMethod
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class CompType, class ThermoType>
-CML::autoPtr<CML::chemistryTabulationMethod<CompType, ThermoType> >
+CML::autoPtr<CML::chemistryTabulationMethod<CompType, ThermoType>>
 CML::chemistryTabulationMethod<CompType, ThermoType>::New
 (
     const IOdictionary& dict,
@@ -271,7 +271,7 @@ CML::chemistryTabulationMethod<CompType, ThermoType>::New
         FatalErrorInFunction << exit(FatalError);
     }
 
-    return autoPtr<chemistryTabulationMethod<CompType, ThermoType> >
+    return autoPtr<chemistryTabulationMethod<CompType, ThermoType>>
     (
         cstrIter()(dict, chemistry)
     );

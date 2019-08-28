@@ -159,7 +159,7 @@ sampledSet &SetsRepository::getSet(
             word format(dict.lookup("setFormat"));
 
             // Just to check whether the format actually exists
-            autoPtr<writer<scalar> > theWriter(
+            autoPtr<writer<scalar>> theWriter(
                 writer<scalar>::New(format)
             );
 
@@ -247,7 +247,7 @@ bool SetsRepository::writeData(Ostream &f) const
 
         const sampledSet &set=*sets_[name];
 
-        autoPtr<writer<scalar> > theWriter(
+        autoPtr<writer<scalar>> theWriter(
             writer<scalar>::New(format)
         );
 

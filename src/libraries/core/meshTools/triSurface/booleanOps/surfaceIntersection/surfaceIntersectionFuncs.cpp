@@ -180,7 +180,7 @@ CML::edgeList CML::surfaceIntersection::filterEdges
     labelList& map
 )
 {
-    HashSet<edge, Hash<edge> > uniqueEdges(10*edges.size());
+    HashSet<edge, Hash<edge>> uniqueEdges(10*edges.size());
 
     edgeList newEdges(edges.size());
 

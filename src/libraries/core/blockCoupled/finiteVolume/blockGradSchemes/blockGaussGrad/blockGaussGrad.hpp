@@ -55,7 +55,7 @@ class blockGaussGrad
     public fv::blockGradScheme<Type>
 {
 
-    tmp<surfaceInterpolationScheme<Type> > tinterpScheme_;
+    tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
     //- Disallow default bitwise copy construct
     blockGaussGrad(const blockGaussGrad&);
@@ -85,7 +85,7 @@ public:
         if (is.eof())
         {
             tinterpScheme_ =
-                tmp<surfaceInterpolationScheme<Type> >
+                tmp<surfaceInterpolationScheme<Type>>
                 (
                     new linear<Type>(mesh)
                 );
@@ -93,7 +93,7 @@ public:
         else
         {
             tinterpScheme_ =
-                tmp<surfaceInterpolationScheme<Type> >
+                tmp<surfaceInterpolationScheme<Type>>
                 (
                     surfaceInterpolationScheme<Type>::New(mesh, is)
                 );
@@ -104,7 +104,7 @@ public:
     // Member Functions
     //- Return the BlockLduSystem corresponding to the implicit grad
     // discretization. For block coupled systems.
-    tmp<BlockLduSystem<vector, typename outerProduct<vector, Type>::type> >
+    tmp<BlockLduSystem<vector, typename outerProduct<vector, Type>::type>>
     fvmGrad
     (
         const GeometricField<Type, fvPatchField, volMesh>&
@@ -125,7 +125,7 @@ namespace fv
 {
 
 template<class Type>
-tmp<BlockLduSystem<vector, typename outerProduct<vector, Type>::type> >
+tmp<BlockLduSystem<vector, typename outerProduct<vector, Type>::type>>
 blockGaussGrad<Type>::fvmGrad
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -137,7 +137,7 @@ blockGaussGrad<Type>::fvmGrad
 
     typedef typename outerProduct<vector, Type>::type GradType;
 
-    tmp<BlockLduSystem<vector, GradType> > tbs
+    tmp<BlockLduSystem<vector, GradType>> tbs
     (
         new BlockLduSystem<vector, GradType>(vf.mesh())
     );

@@ -91,7 +91,7 @@ public:
         CompactIOList(const IOobject&, const List<T>&);
 
         //- Construct by transferring the List contents
-        CompactIOList(const IOobject&, const Xfer<List<T> >&);
+        CompactIOList(const IOobject&, const Xfer<List<T>>&);
 
 
     // Destructor
@@ -243,7 +243,7 @@ template<class T, class BaseType>
 CML::CompactIOList<T, BaseType>::CompactIOList
 (
     const IOobject& io,
-    const Xfer<List<T> >& list
+    const Xfer<List<T>>& list
 )
 :
     regIOobject(io)

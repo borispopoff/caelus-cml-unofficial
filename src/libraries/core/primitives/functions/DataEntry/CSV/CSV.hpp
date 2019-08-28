@@ -225,7 +225,7 @@ void CML::DataEntryTypes::CSV<Type>::read()
             << exit(FatalIOError);
     }
 
-    DynamicList<Tuple2<scalar, Type> > values;
+    DynamicList<Tuple2<scalar, Type>> values;
 
     // Skip header
     for (label i = 0; i < nHeaderLine_; i++)

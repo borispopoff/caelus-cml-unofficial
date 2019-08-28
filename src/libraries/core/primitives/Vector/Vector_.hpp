@@ -119,7 +119,7 @@ public:
         //- Return *this (used for point which is a typedef to Vector<scalar>.
         inline const Vector<Cmpt>& centre
         (
-            const CML::List<Vector<Cmpt> >&
+            const CML::List<Vector<Cmpt>>&
         ) const;
 };
 

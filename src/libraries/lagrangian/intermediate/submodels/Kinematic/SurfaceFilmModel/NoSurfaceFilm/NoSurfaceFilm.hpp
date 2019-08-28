@@ -70,9 +70,9 @@ public:
         NoSurfaceFilm(const NoSurfaceFilm<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<SurfaceFilmModel<CloudType> > clone() const
+        virtual autoPtr<SurfaceFilmModel<CloudType>> clone() const
         {
-            return autoPtr<SurfaceFilmModel<CloudType> >
+            return autoPtr<SurfaceFilmModel<CloudType>>
             (
                 new NoSurfaceFilm<CloudType>(*this)
             );

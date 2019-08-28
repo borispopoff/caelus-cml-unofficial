@@ -230,7 +230,7 @@ void refineBoundaryLayers::storeFacesIntoCells
     DynList<DynList<DynList<label, 4>, 6>, 256>& cellsFromCell
 ) const
 {
-    DynList<DynList<label> > faceFaces;
+    DynList<DynList<label>> faceFaces;
     sortFaceFaces(faceI, faceFaces, reverseOrientation);
 
     const label maxI = nLayersI - 1;
@@ -507,7 +507,7 @@ void refineBoundaryLayers::refineEdgeHexCell::generateMissingFaces()
 
     //- fill up the matrix of points for this cell
     //- the matrix is used for generation of new cells
-    FixedList<DynList<DynList<label> >, 2> cellPoints;
+    FixedList<DynList<DynList<label>>, 2> cellPoints;
 
     //- fill in the data for a cross-split faces
     bndLayers_.sortFacePoints
@@ -1055,12 +1055,12 @@ void refineBoundaryLayers::refineCornerHexCell::generateMissingFaces()
 
         //- this face might not be a quad
         //- add points fom the last face in direction j
-        const DynList<DynList<label> >& f3 = facePoints_[3];
+        const DynList<DynList<label>>& f3 = facePoints_[3];
         for(label index=nLayersK_-1;index<f3.size()-1;++index)
             mf.append(f3[index][i]);
 
         //- add points from the last face in direction k
-        const DynList<DynList<label> >& f1 = facePoints_[1];
+        const DynList<DynList<label>>& f1 = facePoints_[1];
         for(label index=f1[i].size()-1;index>=nLayersJ_-1;--index)
             mf.append(f1[i][index]);
 
@@ -1128,12 +1128,12 @@ void refineBoundaryLayers::refineCornerHexCell::generateMissingFaces()
         mf.append(cellPoints_[nLayersI_-1][j][nLayersK_-1]);
 
         //- add points from the last face in direction k
-        const DynList<DynList<label> >& fp1 = facePoints_[1];
+        const DynList<DynList<label>>& fp1 = facePoints_[1];
         for(label index=nLayersI_-1;index<fp1.size()-1;++index)
             mf.append(fp1[index][j]);
 
         //- add points from the last face in direction i
-        const DynList<DynList<label> >& fp5 = facePoints_[5];
+        const DynList<DynList<label>>& fp5 = facePoints_[5];
         for(label index=fp5[j].size()-1;index>=nLayersK_-1;--index)
             mf.append(fp5[j][index]);
 
@@ -1207,12 +1207,12 @@ void refineBoundaryLayers::refineCornerHexCell::generateMissingFaces()
 
         //- this face might not be a quad
         //- add points from the last face in direction i
-        const DynList<DynList<label> >& fp5 = facePoints_[5];
+        const DynList<DynList<label>>& fp5 = facePoints_[5];
         for(label index=nLayersJ_-1;index<fp5.size()-1;++index)
             mf.append(fp5[index][k]);
 
         //- add points from the last face in direction j
-        const DynList<DynList<label> >& fp3 = facePoints_[3];
+        const DynList<DynList<label>>& fp3 = facePoints_[3];
         for(label index=fp3[k].size()-1;index>=nLayersI_-1;--index)
             mf.append(fp3[k][index]);
 

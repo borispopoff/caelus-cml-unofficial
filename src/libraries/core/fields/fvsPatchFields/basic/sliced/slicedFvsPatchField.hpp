@@ -98,7 +98,7 @@ public:
         slicedFvsPatchField(const slicedFvsPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type> > clone() const;
+        virtual tmp<fvsPatchField<Type>> clone() const;
 
         //- Construct as copy setting internal field reference
         slicedFvsPatchField
@@ -108,7 +108,7 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type> > clone
+        virtual tmp<fvsPatchField<Type>> clone
         (
             const DimensionedField<Type, surfaceMesh>& iF
         ) const;
@@ -232,7 +232,7 @@ template<class Type>
 CML::tmp<CML::fvsPatchField<Type>>
 CML::slicedFvsPatchField<Type>::clone() const
 {
-    return tmp<fvsPatchField<Type> >
+    return tmp<fvsPatchField<Type>>
     (
         new slicedFvsPatchField<Type>(*this)
     );
@@ -264,7 +264,7 @@ CML::slicedFvsPatchField<Type>::clone
     const DimensionedField<Type, surfaceMesh>& iF
 ) const
 {
-    return tmp<fvsPatchField<Type> >
+    return tmp<fvsPatchField<Type>>
     (
         new slicedFvsPatchField<Type>(*this, iF)
     );

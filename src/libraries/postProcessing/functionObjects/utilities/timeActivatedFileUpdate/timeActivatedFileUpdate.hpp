@@ -87,7 +87,7 @@ class timeActivatedFileUpdate
         fileName fileToUpdate_;
 
         //- List of times vs filenames
-        List<Tuple2<scalar, fileName> > timeVsFile_;
+        List<Tuple2<scalar, fileName>> timeVsFile_;
 
         //- Index of last file copied
         label lastIndex_;

@@ -65,14 +65,14 @@ public:
     // Static Members
 
         //- Add labels to a list of values
-        inline static List<Keyed<T> > createList
+        inline static List<Keyed<T>> createList
         (
             const List<T>&,
             const label key=0
         );
 
         //- Add labels to a list of values
-        inline static List<Keyed<T> > createList
+        inline static List<Keyed<T>> createList
         (
             const List<T>&,
             const labelUList& keys

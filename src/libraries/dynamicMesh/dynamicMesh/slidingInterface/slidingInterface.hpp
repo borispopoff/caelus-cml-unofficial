@@ -181,7 +181,7 @@ private:
             //- Cut edge pairs
             //  For cut points created by intersection two edges,
             //  store the master-slave edge pair used in creation
-            mutable Map<Pair<edge> >* cutPointEdgePairMapPtr_;
+            mutable Map<Pair<edge>>* cutPointEdgePairMapPtr_;
 
             //- Slave point hit.  The index of master point hit by the
             //  slave point in projection.  For no point hit, set to -1
@@ -246,7 +246,7 @@ private:
             const Map<label>& retiredPointMap() const;
 
             //- Cut point edge pair map
-            const Map<Pair<edge> >& cutPointEdgePairMap() const;
+            const Map<Pair<edge>>& cutPointEdgePairMap() const;
 
              //- Clear addressing
              void clearAddressing() const;

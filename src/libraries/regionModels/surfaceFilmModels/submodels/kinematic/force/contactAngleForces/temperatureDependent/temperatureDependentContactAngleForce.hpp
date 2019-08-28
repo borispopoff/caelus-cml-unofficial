@@ -61,7 +61,7 @@ class temperatureDependentContactAngleForce
     // Private Data
 
         //- Contact angle function
-        autoPtr<DataEntry<scalar> > thetaPtr_;
+        autoPtr<DataEntry<scalar>> thetaPtr_;
 
 
     // Private member functions

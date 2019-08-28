@@ -86,7 +86,7 @@ public:
             const bool writeTracks,
             const PtrList<coordSet>&,
             const wordList& valueSetNames,
-            const List<List<Field<Type> > >&,
+            const List<List<Field<Type>>>&,
             Ostream&
         ) const
         {

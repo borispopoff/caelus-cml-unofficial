@@ -93,7 +93,7 @@ private:
         void decomposeAmplitudes
         (
             const scalarField&,
-            const List<Field<complex> >&,
+            const List<Field<complex>>&,
             Field<complex>&,
             Field<complex>&,
             scalarField&

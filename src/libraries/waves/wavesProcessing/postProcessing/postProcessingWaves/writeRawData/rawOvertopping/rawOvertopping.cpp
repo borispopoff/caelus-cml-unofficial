@@ -42,7 +42,7 @@ addToRunTimeSelectionTable
 
 void rawOvertopping::resizeFields
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     List<vectorField>& Us,
     label N
 )
@@ -60,7 +60,7 @@ void rawOvertopping::resizeFields
 
 void rawOvertopping::writeRawData
 (
-    const List<std::pair<scalar, label> >& timeLabel,
+    const List<std::pair<scalar, label>>& timeLabel,
     const wordList& OTnames,
     const List<vectorField>& OTs
 )
@@ -140,7 +140,7 @@ rawOvertopping::~rawOvertopping()
 
 void rawOvertopping::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     wordList OTnames;
     List<vectorField> OTs;
 
@@ -152,7 +152,7 @@ void rawOvertopping::evaluate()
 
 void rawOvertopping::readOvertoppingData
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     wordList& OTnames,
     List<vectorField>& OTs
 )

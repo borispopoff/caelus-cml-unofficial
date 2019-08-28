@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
     // Additional patches
     if (args.optionFound("additionalPatches"))
     {
-        const List<Pair<word> > patchNames
+        const List<Pair<word>> patchNames
         (
             args.optionLookup("additionalPatches")()
         );

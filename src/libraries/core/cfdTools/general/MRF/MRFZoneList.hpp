@@ -122,16 +122,16 @@ public:
 
         //- Return the given absolute boundary flux relative within
         //  the MRF region
-        tmp<FieldField<fvsPatchField, scalar> > relative
+        tmp<FieldField<fvsPatchField, scalar>> relative
         (
-            const tmp<FieldField<fvsPatchField, scalar> >& tphi
+            const tmp<FieldField<fvsPatchField, scalar>>& tphi
         ) const;
 
         //- Return the given absolute patch flux relative within
         //  the MRF region
-        tmp<Field<scalar> > relative
+        tmp<Field<scalar>> relative
         (
-            const tmp<Field<scalar> >& tphi,
+            const tmp<Field<scalar>>& tphi,
             const label patchi
         ) const;
 
@@ -174,9 +174,9 @@ public:
         //- Filter-out the MRF region contribution from the given field
         // setting the corresponding values to zero
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > zeroFilter
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> zeroFilter
         (
-            const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >& tphi
+            const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tphi
         ) const;
 
         //- Update MRFZone faces if the mesh topology changes
@@ -205,10 +205,10 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::MRFZoneList::zeroFilter
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >& tphi
+    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tphi
 ) const
 {
     if (size())

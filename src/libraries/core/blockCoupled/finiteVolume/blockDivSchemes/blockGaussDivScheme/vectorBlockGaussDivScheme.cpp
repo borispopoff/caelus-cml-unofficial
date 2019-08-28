@@ -36,7 +36,7 @@ namespace fv
 {
 
 template<>
-tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
+tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
 (
     const GeometricField<vector, fvPatchField, volMesh>& vf
 ) const
@@ -54,7 +54,7 @@ tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
 
     const fvMesh& mesh = vf.mesh();
 
-    tmp<BlockLduSystem<vector, scalar> > tbs
+    tmp<BlockLduSystem<vector, scalar>> tbs
     (
         new BlockLduSystem<vector, scalar>(mesh)
     );
@@ -124,7 +124,7 @@ tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
 
 
 template<>
-tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
+tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
 (
     const surfaceScalarField& flux,
     const GeometricField<vector, fvPatchField, volMesh>& vf
@@ -143,7 +143,7 @@ tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
 
     const fvMesh& mesh = vf.mesh();
 
-    tmp<BlockLduSystem<vector, scalar> > tbs
+    tmp<BlockLduSystem<vector, scalar>> tbs
     (
         new BlockLduSystem<vector, scalar>(mesh)
     );

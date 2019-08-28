@@ -148,7 +148,7 @@ void isentropicTotalTemperatureFvPatchScalarField::updateCoeffs()
 
     tmp<volScalarField> gamma = thermo.Cp()/thermo.Cv();
 
-    tmp<fvPatchField<scalar> > const& gammap =
+    tmp<fvPatchField<scalar>> const& gammap =
       patch().patchField<volScalarField, scalar>(gamma());
 
     tmp<scalarField> gM1ByG = (gammap() - 1.0)/gammap();

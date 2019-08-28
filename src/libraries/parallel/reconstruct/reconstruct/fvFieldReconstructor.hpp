@@ -152,46 +152,46 @@ public:
 
         //- Reconstruct volume internal field
         template<class Type>
-        tmp<DimensionedField<Type, volMesh> >
+        tmp<DimensionedField<Type, volMesh>>
         reconstructFvVolumeInternalField
         (
             const IOobject& fieldIoObject,
-            const PtrList<DimensionedField<Type, volMesh> >& procFields
+            const PtrList<DimensionedField<Type, volMesh>>& procFields
         ) const;
 
         //- Read and reconstruct volume internal field
         template<class Type>
-        tmp<DimensionedField<Type, volMesh> >
+        tmp<DimensionedField<Type, volMesh>>
         reconstructFvVolumeInternalField(const IOobject& fieldIoObject) const;
 
 
         //- Reconstruct volume field
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> >
+        tmp<GeometricField<Type, fvPatchField, volMesh>>
         reconstructFvVolumeField
         (
             const IOobject& fieldIoObject,
-            const PtrList<GeometricField<Type, fvPatchField, volMesh> >&
+            const PtrList<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
 
         //- Read and reconstruct volume field
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> >
+        tmp<GeometricField<Type, fvPatchField, volMesh>>
         reconstructFvVolumeField(const IOobject& fieldIoObject) const;
 
 
         //- Reconstruct surface field
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         reconstructFvSurfaceField
         (
             const IOobject& fieldIoObject,
-            const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+            const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
         ) const;
 
         //- Read and reconstruct surface field
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         reconstructFvSurfaceField(const IOobject& fieldIoObject) const;
 
         //- Read, reconstruct and write all/selected volume internal fields
@@ -228,11 +228,11 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::DimensionedField<Type, CML::volMesh> >
+CML::tmp<CML::DimensionedField<Type, CML::volMesh>>
 CML::fvFieldReconstructor::reconstructFvVolumeInternalField
 (
     const IOobject& fieldIoObject,
-    const PtrList<DimensionedField<Type, volMesh> >& procFields
+    const PtrList<DimensionedField<Type, volMesh>>& procFields
 ) const
 {
     // Create the internalField
@@ -250,7 +250,7 @@ CML::fvFieldReconstructor::reconstructFvVolumeInternalField
         );
     }
 
-    return tmp<DimensionedField<Type, volMesh> >
+    return tmp<DimensionedField<Type, volMesh>>
     (
         new DimensionedField<Type, volMesh>
         (
@@ -264,14 +264,14 @@ CML::fvFieldReconstructor::reconstructFvVolumeInternalField
 
 
 template<class Type>
-CML::tmp<CML::DimensionedField<Type, CML::volMesh> >
+CML::tmp<CML::DimensionedField<Type, CML::volMesh>>
 CML::fvFieldReconstructor::reconstructFvVolumeInternalField
 (
     const IOobject& fieldIoObject
 ) const
 {
     // Read the field for all the processors
-    PtrList<DimensionedField<Type, volMesh> > procFields
+    PtrList<DimensionedField<Type, volMesh>> procFields
     (
         procMeshes_.size()
     );
@@ -313,18 +313,18 @@ CML::fvFieldReconstructor::reconstructFvVolumeInternalField
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh>>
 CML::fvFieldReconstructor::reconstructFvVolumeField
 (
     const IOobject& fieldIoObject,
-    const PtrList<GeometricField<Type, fvPatchField, volMesh> >& procFields
+    const PtrList<GeometricField<Type, fvPatchField, volMesh>>& procFields
 ) const
 {
     // Create the internalField
     Field<Type> internalField(mesh_.nCells());
 
     // Create the patch fields
-    PtrList<fvPatchField<Type> > patchFields(mesh_.boundary().size());
+    PtrList<fvPatchField<Type>> patchFields(mesh_.boundary().size());
 
     forAll(procFields, procI)
     {
@@ -476,7 +476,7 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
 
     // Now construct and write the field
     // setting the internalField and patchFields
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -491,14 +491,14 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh>>
 CML::fvFieldReconstructor::reconstructFvVolumeField
 (
     const IOobject& fieldIoObject
 ) const
 {
     // Read the field for all the processors
-    PtrList<GeometricField<Type, fvPatchField, volMesh> > procFields
+    PtrList<GeometricField<Type, fvPatchField, volMesh>> procFields
     (
         procMeshes_.size()
     );
@@ -539,18 +539,18 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::fvFieldReconstructor::reconstructFvSurfaceField
 (
     const IOobject& fieldIoObject,
-    const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& procFields
+    const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& procFields
 ) const
 {
     // Create the internalField
     Field<Type> internalField(mesh_.nInternalFaces());
 
     // Create the patch fields
-    PtrList<fvsPatchField<Type> > patchFields(mesh_.boundary().size());
+    PtrList<fvsPatchField<Type>> patchFields(mesh_.boundary().size());
 
 
     forAll(procMeshes_, procI)
@@ -717,7 +717,7 @@ CML::fvFieldReconstructor::reconstructFvSurfaceField
 
     // Now construct and write the field
     // setting the internalField and patchFields
-    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -732,14 +732,14 @@ CML::fvFieldReconstructor::reconstructFvSurfaceField
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::fvFieldReconstructor::reconstructFvSurfaceField
 (
     const IOobject& fieldIoObject
 ) const
 {
     // Read the field for all the processors
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> > procFields
+    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>> procFields
     (
         procMeshes_.size()
     );

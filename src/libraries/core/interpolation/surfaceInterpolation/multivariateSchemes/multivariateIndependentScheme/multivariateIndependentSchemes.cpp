@@ -33,7 +33,7 @@ namespace CML
 defineNamedTemplateTypeNameAndDebug(multivariateIndependentScheme<scalar>, 0);
 
 multivariateSurfaceInterpolationScheme<scalar>::addIstreamConstructorToTable
-    <multivariateIndependentScheme<scalar> >
+    <multivariateIndependentScheme<scalar>>
     addMultivariateIndependentSchemeScalarConstructorToTable_;
 
 

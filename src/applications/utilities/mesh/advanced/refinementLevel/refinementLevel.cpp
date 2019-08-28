@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     SortableList<scalar> sortedVols(vols);
 
     // All cell labels, sorted per bin.
-    DynamicList<DynamicList<label> > bins;
+    DynamicList<DynamicList<label>> bins;
 
     // Lower/upper limits
     DynamicList<scalar> lowerLimits;

@@ -267,22 +267,22 @@ public:
 
         //- Sample a volume field at all locations
         template<class Type>
-        tmp<Field<Type> > sample
+        tmp<Field<Type>> sample
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
         //- Sample a single vol field on all sample locations
         template<class Type>
-        tmp<Field<Type> > sample(const word& fieldName) const;
+        tmp<Field<Type>> sample(const word& fieldName) const;
 
         //- Sample a single scalar field on all sample locations
         template<class Type>
-        tmp<Field<Type> > sampleSurfaceFields(const word& fieldName) const;
+        tmp<Field<Type>> sampleSurfaceFields(const word& fieldName) const;
 
         //- Sample a surface field at all locations
         template<class Type>
-        tmp<Field<Type> > sample
+        tmp<Field<Type>> sample
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>&
         ) const;
@@ -421,7 +421,7 @@ void CML::probes::sampleAndWrite(const fieldGroup<Type>& fields)
                 sampleAndWrite
                 (
                     mesh_.lookupObject
-                    <GeometricField<Type, fvPatchField, volMesh> >
+                    <GeometricField<Type, fvPatchField, volMesh>>
                     (
                         fields[fieldI]
                     )
@@ -470,7 +470,7 @@ void CML::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
                 sampleAndWrite
                 (
                     mesh_.lookupObject
-                    <GeometricField<Type, fvsPatchField, surfaceMesh> >
+                    <GeometricField<Type, fvsPatchField, surfaceMesh>>
                     (
                         fields[fieldI]
                     )
@@ -483,7 +483,7 @@ void CML::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::probes::sample
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
@@ -491,7 +491,7 @@ CML::probes::sample
 {
     const Type unsetVal(-VGREAT*pTraits<Type>::one);
 
-    tmp<Field<Type> > tValues
+    tmp<Field<Type>> tValues
     (
         new Field<Type>(this->size(), unsetVal)
     );
@@ -500,7 +500,7 @@ CML::probes::sample
 
     if (fixedLocations_)
     {
-        autoPtr<interpolation<Type> > interpolator
+        autoPtr<interpolation<Type>> interpolator
         (
             interpolation<Type>::New(interpolationScheme_, vField)
         );
@@ -539,12 +539,12 @@ CML::probes::sample
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::probes::sample(const word& fieldName) const
 {
     return sample
     (
-        mesh_.lookupObject<GeometricField<Type, fvPatchField, volMesh> >
+        mesh_.lookupObject<GeometricField<Type, fvPatchField, volMesh>>
         (
             fieldName
         )
@@ -553,7 +553,7 @@ CML::probes::sample(const word& fieldName) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::probes::sample
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
@@ -561,7 +561,7 @@ CML::probes::sample
 {
     const Type unsetVal(-VGREAT*pTraits<Type>::one);
 
-    tmp<Field<Type> > tValues
+    tmp<Field<Type>> tValues
     (
         new Field<Type>(this->size(), unsetVal)
     );
@@ -584,12 +584,12 @@ CML::probes::sample
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::probes::sampleSurfaceFields(const word& fieldName) const
 {
     return sample
     (
-        mesh_.lookupObject<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        mesh_.lookupObject<GeometricField<Type, fvsPatchField, surfaceMesh>>
         (
             fieldName
         )

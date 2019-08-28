@@ -78,9 +78,9 @@ public:
         csvTableReader(const dictionary& dict);
 
         //- Construct and return a copy
-        virtual autoPtr<tableReader<Type> > clone() const
+        virtual autoPtr<tableReader<Type>> clone() const
         {
-            return autoPtr<tableReader<Type> >
+            return autoPtr<tableReader<Type>>
             (
                 new csvTableReader<Type>
                 (
@@ -97,13 +97,13 @@ public:
     // Member Functions
 
         //- Read the table
-        virtual void operator()(const fileName&, List<Tuple2<scalar, Type> >&);
+        virtual void operator()(const fileName&, List<Tuple2<scalar, Type>>&);
 
         //- Read 2D table
         virtual void operator()
         (
             const fileName&,
-            List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >&
+            List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>&
         );
 
         //- write the remaining parameters
@@ -198,12 +198,12 @@ template<class Type>
 void CML::csvTableReader<Type>::operator()
 (
     const fileName& fName,
-    List<Tuple2<scalar, Type> >& data
+    List<Tuple2<scalar, Type>>& data
 )
 {
     IFstream in(fName);
 
-    DynamicList<Tuple2<scalar, Type> > values;
+    DynamicList<Tuple2<scalar, Type>> values;
 
     // Skip header
     if (headerLine_)
@@ -255,7 +255,7 @@ template<class Type>
 void CML::csvTableReader<Type>::operator()
 (
     const fileName& fName,
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >& data
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>& data
 )
 {
     NotImplemented;

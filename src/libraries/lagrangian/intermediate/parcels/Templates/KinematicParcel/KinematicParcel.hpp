@@ -172,13 +172,13 @@ public:
             // Interpolators for continuous phase fields
 
                 //- Density interpolator
-                autoPtr<interpolation<scalar> > rhoInterp_;
+                autoPtr<interpolation<scalar>> rhoInterp_;
 
                 //- Velocity interpolator
-                autoPtr<interpolation<vector> > UInterp_;
+                autoPtr<interpolation<vector>> UInterp_;
 
                 //- Dynamic viscosity interpolator
-                autoPtr<interpolation<scalar> > muInterp_;
+                autoPtr<interpolation<scalar>> muInterp_;
 
 
             // Cached continuous phase properties
@@ -413,9 +413,9 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<KinematicParcel<ParcelType> > operator()(Istream& is) const
+            autoPtr<KinematicParcel<ParcelType>> operator()(Istream& is) const
             {
-                return autoPtr<KinematicParcel<ParcelType> >
+                return autoPtr<KinematicParcel<ParcelType>>
                 (
                     new KinematicParcel<ParcelType>(mesh_, is, true)
                 );

@@ -65,7 +65,7 @@ public:
     null()
     {}
 
-    inline tmp<GeometricField<Type, fvPatchField, volMesh> > operator()
+    inline tmp<GeometricField<Type, fvPatchField, volMesh>> operator()
     (
         const GeometricField<Type, fvPatchField, volMesh>& phi
     ) const

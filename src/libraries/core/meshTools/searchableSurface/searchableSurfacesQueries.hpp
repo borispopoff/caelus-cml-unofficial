@@ -106,7 +106,7 @@ class searchableSurfacesQueries
         //    const pointField& start,
         //    const pointField& end,
         //    const vectorField& smallVec,
-        //    List<List<pointIndexHit> >&
+        //    List<List<pointIndexHit>>&
         //);
 
         static void mergeHits
@@ -151,7 +151,7 @@ public:
                 const pointField& start,
                 const pointField& end,
                 labelListList& surfaces,
-                List<List<pointIndexHit> >& surfaceHits
+                List<List<pointIndexHit>>& surfaceHits
             );
 
             //Find intersections of edge nearest to both endpoints.

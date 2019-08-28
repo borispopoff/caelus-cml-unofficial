@@ -125,7 +125,7 @@ protected:
         scalar VDash_;
 
         //- Source field values
-        List<Tuple2<Type, scalar> > injectionRate_;
+        List<Tuple2<Type, scalar>> injectionRate_;
 
 
     // Protected functions
@@ -166,7 +166,7 @@ public:
             inline const volumeModeType& volumeMode() const;
 
             //- Return const access to the source field values
-            inline const List<Tuple2<Type, scalar> >& injectionRate() const;
+            inline const List<Tuple2<Type, scalar>>& injectionRate() const;
 
 
         // Edit
@@ -175,7 +175,7 @@ public:
             inline volumeModeType& volumeMode();
 
             //- Return access to the source field values
-            inline List<Tuple2<Type, scalar> >& injectionRate();
+            inline List<Tuple2<Type, scalar>>& injectionRate();
 
 
         // Evaluation
@@ -436,7 +436,7 @@ CML::fv::SemiImplicitSource<Type>::volumeMode() const
 
 
 template<class Type>
-inline const CML::List<CML::Tuple2<Type, CML::scalar> >&
+inline const CML::List<CML::Tuple2<Type, CML::scalar>>&
 CML::fv::SemiImplicitSource<Type>::injectionRate() const
 {
     return injectionRate_;
@@ -453,7 +453,7 @@ CML::fv::SemiImplicitSource<Type>::volumeMode()
 
 template<class Type>
 inline CML::List<CML::Tuple2<Type,
-CML::scalar> >& CML::fv::SemiImplicitSource<Type>::injectionRate()
+CML::scalar>>& CML::fv::SemiImplicitSource<Type>::injectionRate()
 {
     return injectionRate_;
 }

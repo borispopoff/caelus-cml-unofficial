@@ -122,7 +122,7 @@ UNARY_FUNCTION(tensor, symmTensor, eigenVectors)
 
 
 template<>
-tmp<Field<tensor> > transformFieldMask<tensor>
+tmp<Field<tensor>> transformFieldMask<tensor>
 (
     const symmTensorField& stf
 )
@@ -134,12 +134,12 @@ tmp<Field<tensor> > transformFieldMask<tensor>
 }
 
 template<>
-tmp<Field<tensor> > transformFieldMask<tensor>
+tmp<Field<tensor>> transformFieldMask<tensor>
 (
     const tmp<symmTensorField>& tstf
 )
 {
-    tmp<Field<tensor> > ret = transformFieldMask<tensor>(tstf());
+    tmp<Field<tensor>> ret = transformFieldMask<tensor>(tstf());
     tstf.clear();
     return ret;
 }

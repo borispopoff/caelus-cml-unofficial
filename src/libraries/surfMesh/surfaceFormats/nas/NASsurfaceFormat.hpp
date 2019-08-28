@@ -81,9 +81,9 @@ public:
     // Selectors
 
         //- Read file and return surface
-        static autoPtr<MeshedSurface<Face> > New(const fileName& name)
+        static autoPtr<MeshedSurface<Face>> New(const fileName& name)
         {
-            return autoPtr<MeshedSurface<Face> >
+            return autoPtr<MeshedSurface<Face>>
             (
                 new NASsurfaceFormat<Face>(name)
             );

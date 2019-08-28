@@ -98,10 +98,10 @@ CML::tmp<CML::volScalarField> CML::radiation::noRadiation::Rp() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::radiation::noRadiation::Ru() const
 {
-    return tmp<DimensionedField<scalar, volMesh> >
+    return tmp<DimensionedField<scalar, volMesh>>
     (
         new DimensionedField<scalar, volMesh>
         (

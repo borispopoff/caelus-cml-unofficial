@@ -361,7 +361,7 @@ public:
             //- Write isoface points to .obj file
             void writeIsoFaces
             (
-                const DynamicList<List<point> >& isoFacePts
+                const DynamicList<List<point>>& isoFacePts
             ) const;
 };
 

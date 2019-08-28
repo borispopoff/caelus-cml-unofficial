@@ -392,7 +392,7 @@ int main(int argc, char *argv[])
     
     // Write patches
     // Create patch addressing
-    List<DynamicList<label> > patchAddr(patches.size());
+    List<DynamicList<label>> patchAddr(patches.size());
     
     forAll(facets, faceI)
     {

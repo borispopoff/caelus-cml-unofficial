@@ -117,7 +117,7 @@ void meshSurfaceCheckInvertedVertices::checkVertices()
         const DynList<label>& neiProcs = mse.bpNeiProcs();
         const VRWGraph& bpAtProcs = mse.bpAtProcs();
 
-        std::map<label, LongList<refLabelledPoint> > exchangeData;
+        std::map<label, LongList<refLabelledPoint>> exchangeData;
         forAll(neiProcs, i)
             exchangeData[neiProcs[i]].clear();
 

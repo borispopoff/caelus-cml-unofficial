@@ -203,7 +203,7 @@ private:
         static void collectReceives
         (
             const label procID,
-            const List<DynamicList<label> >& receives,
+            const List<DynamicList<label>>& receives,
             DynamicList<label>& allReceives
         );
 

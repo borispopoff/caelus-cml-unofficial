@@ -67,7 +67,7 @@ class setTimeStepFunctionObject
             bool enabled_;
 
             //- Time step
-            autoPtr<DataEntry<scalar> > timeStepPtr_;
+            autoPtr<DataEntry<scalar>> timeStepPtr_;
 
 
         //- Disallow default bitwise copy construct

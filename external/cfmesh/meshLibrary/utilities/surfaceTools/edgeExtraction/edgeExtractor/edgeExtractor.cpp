@@ -79,7 +79,7 @@ void edgeExtractor::calculateValence()
         const VRWGraph& bpAtProcs = mse.bpAtProcs();
         const DynList<label>& bpNeiProcs = mse.bpNeiProcs();
 
-        std::map<label, LongList<labelPair> > exchangeData;
+        std::map<label, LongList<labelPair>> exchangeData;
         forAll(bpNeiProcs, i)
             exchangeData.insert
             (
@@ -765,7 +765,7 @@ void edgeExtractor::moveVerticesTowardsDiscontinuities(const label nIterations)
             const DynList<label>& neiProcs = mse.bpNeiProcs();
             const VRWGraph& bpAtProcs = mse.bpAtProcs();
 
-            std::map<label, LongList<refLabelledPoint> > exchangeData;
+            std::map<label, LongList<refLabelledPoint>> exchangeData;
             forAll(neiProcs, i)
                 exchangeData[i] = LongList<refLabelledPoint>();
 
@@ -1109,7 +1109,7 @@ void edgeExtractor::findEdgeCandidates()
     const VRWGraph& pEdges = mse.boundaryPointEdges();
     const edgeList& edges = mse.edges();
 
-    List<List<labelledScalar> > featureEdgesNearPoint(bPoints.size());
+    List<List<labelledScalar>> featureEdgesNearPoint(bPoints.size());
 
     DynList<label> containedTriangles;
     # ifdef USE_OMP
@@ -1205,7 +1205,7 @@ void edgeExtractor::findEdgeCandidates()
     //- start post-processing gathered data
     const labelList& edgeGroup = partitioner.edgeGroups();
 
-    List<List<labelledScalar> > edgeGroupAndWeights(edges.size());
+    List<List<labelledScalar>> edgeGroupAndWeights(edges.size());
 
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 40) \
@@ -1851,7 +1851,7 @@ class featureEdgesNeiOp
                 const DynList<label>& neiProcs = mse_.bpNeiProcs();
                 const VRWGraph& bpAtProcs = mse_.bpAtProcs();
 
-                std::map<label, DynList<labelPair> > exchangeData;
+                std::map<label, DynList<labelPair>> exchangeData;
                 forAll(neiProcs, i)
                     exchangeData[neiProcs[i]].clear();
 
@@ -1951,7 +1951,7 @@ public:
     template<class labelListType>
     void collectGroups
     (
-        std::map<label, DynList<label> >& neiGroups,
+        std::map<label, DynList<label>>& neiGroups,
         const labelListType& elementInGroup,
         const DynList<label>& localGroupLabel
     ) const
@@ -1962,7 +1962,7 @@ public:
 
         const DynList<label>& neiProcs = mse_.beNeiProcs();
 
-        std::map<label, DynList<labelPair> > exchangeData;
+        std::map<label, DynList<labelPair>> exchangeData;
         forAll(neiProcs, i)
             exchangeData[neiProcs[i]].clear();
 
@@ -2231,7 +2231,7 @@ bool edgeExtractor::checkFacePatchesGeometry()
 
 void edgeExtractor::projectDeterminedFeatureVertices()
 {
-    List<DynList<label, 5> > pointPatches;
+    List<DynList<label, 5>> pointPatches;
     pointPatches.setSize(pointValence_.size());
 
     const meshSurfaceEngine& mse = surfaceEngine();
@@ -2257,7 +2257,7 @@ void edgeExtractor::projectDeterminedFeatureVertices()
         const VRWGraph& bpAtProcs = mse.bpAtProcs();
         const DynList<label>& bpNeiProcs = mse.bpNeiProcs();
 
-        std::map<label, LongList<labelPair> > exchangeData;
+        std::map<label, LongList<labelPair>> exchangeData;
         forAll(bpNeiProcs, i)
             exchangeData.insert
             (

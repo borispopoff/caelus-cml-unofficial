@@ -92,7 +92,7 @@ public:
         DispersionRASModel(const DispersionRASModel<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<DispersionModel<CloudType> > clone() const = 0;
+        virtual autoPtr<DispersionModel<CloudType>> clone() const = 0;
 
 
     //- Destructor

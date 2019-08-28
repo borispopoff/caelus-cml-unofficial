@@ -46,10 +46,10 @@ CML::CoeffField<CML::scalar>::activeType() const
 }
 
 
-CML::tmp<CML::CoeffField<CML::scalar> >
+CML::tmp<CML::CoeffField<CML::scalar>>
 CML::CoeffField<CML::scalar>::transpose() const
 {
-    return tmp<CoeffField<scalar> >(new CoeffField<scalar>(*this));
+    return tmp<CoeffField<scalar>>(new CoeffField<scalar>(*this));
 }
 
 
@@ -287,7 +287,7 @@ CML::Ostream& CML::operator<<(Ostream& os, const CoeffField<scalar>& f)
 CML::Ostream& CML::operator<<
 (
     Ostream& os,
-    const tmp<CoeffField<scalar> >& tf
+    const tmp<CoeffField<scalar>>& tf
 )
 {
     os << tf();
@@ -298,10 +298,10 @@ CML::Ostream& CML::operator<<
 /* * * * * * * * * * * * * * * * Global functions  * * * * * * * * * * * * * */
 
 template<>
-CML::tmp<CML::CoeffField<CML::scalar> >
+CML::tmp<CML::CoeffField<CML::scalar>>
 CML::inv(const CoeffField<scalar>& f)
 {
-    tmp<CoeffField<scalar> > tresult(new CoeffField<scalar>(f.size()));
+    tmp<CoeffField<scalar>> tresult(new CoeffField<scalar>(f.size()));
     scalarField& result = tresult();
     result = 1.0/f;
 

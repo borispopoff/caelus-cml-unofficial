@@ -90,7 +90,7 @@ public:
     {
         if (dict.found("coeffs"))
         {
-            List<Tuple2<word, scalar> > coeffs(dict.lookup("coeffs"));
+            List<Tuple2<word, scalar>> coeffs(dict.lookup("coeffs"));
             if (coeffs.size() != species_.size())
             {
                 FatalErrorInFunction
@@ -129,7 +129,7 @@ public:
     //- Write to stream
     inline void write(Ostream& os) const
     {
-        List<Tuple2<word, scalar> > coeffs(species_.size());
+        List<Tuple2<word, scalar>> coeffs(species_.size());
         forAll(coeffs, i)
         {
             coeffs[i].first() = species_[i];

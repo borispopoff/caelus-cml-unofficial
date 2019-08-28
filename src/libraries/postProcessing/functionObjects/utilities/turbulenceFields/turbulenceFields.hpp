@@ -149,7 +149,7 @@ protected:
         void processField
         (
             const word& fieldName,
-            const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvalue
+            const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvalue
         );
 
 
@@ -234,7 +234,7 @@ template<class Type>
 void CML::turbulenceFields::processField
 (
     const word& fieldName,
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvalue
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvalue
 )
 {
     typedef GeometricField<Type, fvPatchField, volMesh> FieldType;

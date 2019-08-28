@@ -238,7 +238,7 @@ public:
 
             //- Return given internal field next to patch as patch field
             template<class Type>
-            tmp<Field<Type> > patchInternalField(const UList<Type>&) const;
+            tmp<Field<Type>> patchInternalField(const UList<Type>&) const;
 
             //- Return given internal field next to patch as patch field
             template<class Type>
@@ -274,12 +274,12 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fvPatch::patchInternalField
+CML::tmp<CML::Field<Type>> CML::fvPatch::patchInternalField
 (
     const UList<Type>& f
 ) const
 {
-    tmp<Field<Type> > tpif(new Field<Type>(size()));
+    tmp<Field<Type>> tpif(new Field<Type>(size()));
     Field<Type>& pif = tpif();
 
     const labelUList& faceCells = this->faceCells();

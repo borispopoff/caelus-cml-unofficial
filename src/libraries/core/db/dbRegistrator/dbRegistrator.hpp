@@ -49,7 +49,7 @@ Description
         // (Now don't let myObject and myIOobject go out of scope)
 
         // In another part of your solver, e.g. in a custom boundary condition:
-        Type const& myConstObject = registry.lookupObject<dbRegistrator<Type> >
+        Type const& myConstObject = registry.lookupObject<dbRegistrator<Type>>
         (
             "lookupName"
         )();

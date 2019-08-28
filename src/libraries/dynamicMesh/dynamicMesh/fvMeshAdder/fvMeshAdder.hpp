@@ -389,14 +389,14 @@ void CML::fvMeshAdder::MapVolFields
     HashTable<const GeometricField<Type, fvPatchField, volMesh>*> fields
     (
         mesh.objectRegistry::lookupClass
-        <GeometricField<Type, fvPatchField, volMesh> >
+        <GeometricField<Type, fvPatchField, volMesh>>
         ()
     );
 
     HashTable<const GeometricField<Type, fvPatchField, volMesh>*> fieldsToAdd
     (
         meshToAdd.objectRegistry::lookupClass
-        <GeometricField<Type, fvPatchField, volMesh> >
+        <GeometricField<Type, fvPatchField, volMesh>>
         ()
     );
 

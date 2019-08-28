@@ -133,9 +133,9 @@ void CML::streamLine::track()
 
     // Read or lookup fields
     PtrList<volScalarField> vsFlds;
-    PtrList<interpolation<scalar> > vsInterp;
+    PtrList<interpolation<scalar>> vsInterp;
     PtrList<volVectorField> vvFlds;
-    PtrList<interpolation<vector> > vvInterp;
+    PtrList<interpolation<vector>> vvInterp;
 
     label UIndex = -1;
 
@@ -712,7 +712,7 @@ void CML::streamLine::write()
 
             if (allScalars_.size() > 0)
             {
-                List<List<scalarField> > scalarValues(allScalars_.size());
+                List<List<scalarField>> scalarValues(allScalars_.size());
 
                 forAll(allScalars_, scalarI)
                 {
@@ -753,7 +753,7 @@ void CML::streamLine::write()
 
             if (allVectors_.size() > 0)
             {
-                List<List<vectorField> > vectorValues(allVectors_.size());
+                List<List<vectorField>> vectorValues(allVectors_.size());
 
                 forAll(allVectors_, vectorI)
                 {

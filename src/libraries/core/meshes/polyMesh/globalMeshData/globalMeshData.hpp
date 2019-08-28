@@ -168,7 +168,7 @@ class globalMeshData
             //      edges : meshEdges(), meshEdgeMap()
             mutable autoPtr<indirectPrimitivePatch> coupledPatchPtr_;
             mutable autoPtr<labelList> coupledPatchMeshEdgesPtr_;
-            mutable autoPtr<Map<label> > coupledPatchMeshEdgeMapPtr_;
+            mutable autoPtr<Map<label>> coupledPatchMeshEdgeMapPtr_;
 
             //- Global numbering for coupledPatch points
             mutable autoPtr<globalIndex> globalPointNumberingPtr_;

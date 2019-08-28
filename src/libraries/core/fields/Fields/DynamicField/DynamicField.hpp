@@ -105,7 +105,7 @@ public:
         explicit inline DynamicField(const UList<Type>&);
 
         //- Construct by transferring the parameter contents
-        explicit inline DynamicField(const Xfer<List<Type> >&);
+        explicit inline DynamicField(const Xfer<List<Type>>&);
 
         //- Construct by 1 to 1 mapping from the given field
         inline DynamicField
@@ -135,14 +135,14 @@ public:
         //- Construct by transferring the Field contents
         inline DynamicField
         (
-            const Xfer<DynamicField<Type, SizeInc, SizeMult, SizeDiv> >&
+            const Xfer<DynamicField<Type, SizeInc, SizeMult, SizeDiv>>&
         );
 
         //- Construct from Istream. Size set to size of list read.
         explicit DynamicField(Istream&);
 
         //- Clone
-        tmp<DynamicField<Type, SizeInc, SizeMult, SizeDiv> > clone() const;
+        tmp<DynamicField<Type, SizeInc, SizeMult, SizeDiv>> clone() const;
 
 
     // Member Functions
@@ -196,7 +196,7 @@ public:
             inline DynamicField<Type, SizeInc, SizeMult, SizeDiv>& shrink();
 
             //- Transfer contents to the Xfer container as a plain List
-            inline Xfer<List<Type> > xfer();
+            inline Xfer<List<Type>> xfer();
 
 
         // Member Operators
@@ -278,7 +278,7 @@ inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField
 template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField
 (
-    const Xfer<List<Type> >& lst
+    const Xfer<List<Type>>& lst
 )
 :
     Field<Type>(lst),
@@ -338,7 +338,7 @@ inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField
 template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField
 (
-    const Xfer<DynamicField<Type, SizeInc, SizeMult, SizeDiv> >& lst
+    const Xfer<DynamicField<Type, SizeInc, SizeMult, SizeDiv>>& lst
 )
 :
     Field<Type>(lst),
@@ -525,10 +525,10 @@ CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::shrink()
 
 
 template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-inline CML::Xfer<CML::List<Type> >
+inline CML::Xfer<CML::List<Type>>
 CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::xfer()
 {
-    return xferMoveTo< List<Type> >(*this);
+    return xferMoveTo< List<Type>>(*this);
 }
 
 
@@ -682,10 +682,10 @@ CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField(Istream& is)
 
 
 template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-CML::tmp<CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv> >
+CML::tmp<CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>>
 CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::clone() const
 {
-    return tmp<DynamicField<Type, SizeInc, SizeMult, SizeDiv> >
+    return tmp<DynamicField<Type, SizeInc, SizeMult, SizeDiv>>
     (
         new DynamicField<Type, SizeInc, SizeMult, SizeDiv>(*this)
     );

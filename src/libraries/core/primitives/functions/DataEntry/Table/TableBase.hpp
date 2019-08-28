@@ -81,7 +81,7 @@ protected:
         const word interpolationScheme_;
 
         //- Table data
-        List<Tuple2<scalar, Type> > table_;
+        List<Tuple2<scalar, Type>> table_;
 
         //- Extracted values
         mutable autoPtr<scalarField> tableSamplesPtr_;
@@ -155,7 +155,7 @@ public:
         virtual tmp<scalarField> x() const;
 
         //- Return the dependent values
-        virtual tmp<Field<Type> > y() const;
+        virtual tmp<Field<Type>> y() const;
 
         //- Write all table data in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -539,9 +539,9 @@ CML::tmp<CML::scalarField> CML::DataEntryTypes::TableBase<Type>::x() const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::DataEntryTypes::TableBase<Type>::y() const
+CML::tmp<CML::Field<Type>> CML::DataEntryTypes::TableBase<Type>::y() const
 {
-    tmp<Field<Type> > tfld(new Field<Type>(table_.size(), Zero));
+    tmp<Field<Type>> tfld(new Field<Type>(table_.size(), Zero));
     Field<Type>& fld = tfld();
 
     forAll(table_, i)

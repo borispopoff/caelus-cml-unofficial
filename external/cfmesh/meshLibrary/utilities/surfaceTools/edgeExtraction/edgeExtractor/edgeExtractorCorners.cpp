@@ -456,7 +456,7 @@ void edgeExtractor::cornerEvaluator::createParallelAddressing()
     const VRWGraph& bpAtProcs = mse.bpAtProcs();
     const DynList<label>& neiProcs = mse.bpNeiProcs();
 
-    typedef std::map<label, LongList<labelledPoint> > exchangeMapType;
+    typedef std::map<label, LongList<labelledPoint>> exchangeMapType;
     exchangeMapType exchangeData;
     forAll(neiProcs, i)
         exchangeData[neiProcs[i]].clear();
@@ -523,12 +523,12 @@ void edgeExtractor::cornerEvaluator::createParallelAddressing()
         }
     }
 
-    std::map<label, List<labelledPoint> > receivedDataMap;
+    std::map<label, List<labelledPoint>> receivedDataMap;
     help::exchangeMap(exchangeData, receivedDataMap);
 
     for
     (
-        std::map<label, List<labelledPoint> >::const_iterator it=receivedDataMap.begin();
+        std::map<label, List<labelledPoint>>::const_iterator it=receivedDataMap.begin();
         it!=receivedDataMap.end();
         ++it
     )
@@ -561,7 +561,7 @@ void edgeExtractor::cornerEvaluator::createParallelAddressing()
     //- srot the faces in the counter-clockwise order
     for
     (
-        std::map<label, DynList<label> >::iterator it=faceAtProc_.begin();
+        std::map<label, DynList<label>>::iterator it=faceAtProc_.begin();
         it!=faceAtProc_.end();
         ++it
     )
@@ -570,7 +570,7 @@ void edgeExtractor::cornerEvaluator::createParallelAddressing()
 
         DynList<label>& faceProc = it->second;
         DynList<label>& fPatches = facePatches_[bpI];
-        DynList<DynList<labelledPoint, 6> >& pFaces = faceMap_[bpI];
+        DynList<DynList<labelledPoint, 6>>& pFaces = faceMap_[bpI];
 
         forAll(pFaces, i)
         {
@@ -858,7 +858,7 @@ bool edgeExtractor::findCornerCandidates()
         const Map<label>& globalToLocal =
             mse.globalToLocalBndPointAddressing();
 
-        std::map<label, LongList<labelledScalar> > exchangeData;
+        std::map<label, LongList<labelledScalar>> exchangeData;
         forAll(bpNeiProcs, i)
             exchangeData.insert
             (
@@ -999,7 +999,7 @@ bool edgeExtractor::checkCorners()
         const VRWGraph& pPatches = mPart.pointPatches();
 
         typedef std::map<label, label> mapType;
-        typedef std::map<label, std::pair<point, scalar> > distMapType;
+        typedef std::map<label, std::pair<point, scalar>> distMapType;
 
         mapType cornerIndex;
         distMapType nearestToCorner;
@@ -1029,7 +1029,7 @@ bool edgeExtractor::checkCorners()
             cornerIndex[bpI] = nsp;
         }
 
-        std::map<label, DynList<label> > bpMappedAtSurfaceCorner;
+        std::map<label, DynList<label>> bpMappedAtSurfaceCorner;
         forAllConstIter(mapType, cornerIndex, mIt)
         {
             if( mIt->second < 0 )
@@ -1170,14 +1170,14 @@ bool edgeExtractor::checkCorners()
 
         //- check the vicinity of the corner point and check whether
         //- it shall be replaced by some other point in the vicinity
-        std::map<label, DynList<labelPair> > facesAtCornerNewPatches;
+        std::map<label, DynList<labelPair>> facesAtCornerNewPatches;
         forAllConstIter(distMapType, nearestToCorner, it)
         {
             const label bpI = it->first;
 
             //- find all points connected to the corner point via a face
             labelHashSet nearPoints;
-            std::map<label, DynList<label> > facesContainingPoint;
+            std::map<label, DynList<label>> facesContainingPoint;
             forAllRow(pointFaces, bpI, pfI)
             {
                 const label bfI = pointFaces(bpI, pfI);
@@ -1749,7 +1749,7 @@ bool edgeExtractor::checkCorners()
         }
 
         labelHashSet changedPatch;
-        typedef std::map<label, DynList<labelPair> > labelToPairMap;
+        typedef std::map<label, DynList<labelPair>> labelToPairMap;
         forAllConstIter(labelToPairMap, facesAtCornerNewPatches, it)
         {
             const DynList<labelPair>& lp = it->second;

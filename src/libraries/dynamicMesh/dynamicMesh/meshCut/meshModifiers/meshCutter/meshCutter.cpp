@@ -439,7 +439,7 @@ CML::face CML::meshCutter::addEdgeCutsToFace(const label facei) const
         // Check if edge has been cut.
         label fp1 = f.fcIndex(fp);
 
-        HashTable<label, edge, Hash<edge> >::const_iterator fnd =
+        HashTable<label, edge, Hash<edge>>::const_iterator fnd =
             addedPoints_.find(edge(f[fp], f[fp1]));
 
         if (fnd != addedPoints_.end())
@@ -501,7 +501,7 @@ CML::face CML::meshCutter::loopToFace
                 if (edgeI != -1)
                 {
                     // Existing edge. Insert split-edge point if any.
-                    HashTable<label, edge, Hash<edge> >::const_iterator fnd =
+                    HashTable<label, edge, Hash<edge>>::const_iterator fnd =
                         addedPoints_.find(mesh().edges()[edgeI]);
 
                     if (fnd != addedPoints_.end())
@@ -1087,11 +1087,11 @@ void CML::meshCutter::updateMesh(const mapPolyMesh& morphMap)
     }
 
     {
-        HashTable<label, edge, Hash<edge> > newAddedPoints(addedPoints_.size());
+        HashTable<label, edge, Hash<edge>> newAddedPoints(addedPoints_.size());
 
         for
         (
-            HashTable<label, edge, Hash<edge> >::const_iterator iter =
+            HashTable<label, edge, Hash<edge>>::const_iterator iter =
                 addedPoints_.begin();
             iter != addedPoints_.end();
             ++iter

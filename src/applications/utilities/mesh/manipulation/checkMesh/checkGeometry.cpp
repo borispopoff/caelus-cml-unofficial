@@ -486,7 +486,7 @@ CML::label CML::checkGeometry
     const polyMesh& mesh,
     const bool allGeometry,
     const autoPtr<surfaceWriter>& surfWriter,
-    const autoPtr<writer<scalar> >& setWriter
+    const autoPtr<writer<scalar>>& setWriter
 )
 {
     label noFailedChecks = 0;

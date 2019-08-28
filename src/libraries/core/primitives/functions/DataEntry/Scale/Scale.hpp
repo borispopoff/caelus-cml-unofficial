@@ -123,13 +123,13 @@ class Scale
     // Private data
 
         //- Argument scaling function
-        autoPtr<DataEntry<scalar> > xScale_;
+        autoPtr<DataEntry<scalar>> xScale_;
 
         //- Scalar scaling function
-        autoPtr<DataEntry<scalar> > scale_;
+        autoPtr<DataEntry<scalar>> scale_;
 
         //- Value function
-        autoPtr<DataEntry<Type> > value_;
+        autoPtr<DataEntry<Type>> value_;
 
 
     // Private Member Functions

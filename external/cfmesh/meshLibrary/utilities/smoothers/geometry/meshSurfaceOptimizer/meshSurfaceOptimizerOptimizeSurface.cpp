@@ -157,7 +157,7 @@ void meshSurfaceOptimizer::smoothEdgePoints
     const labelLongList& procEdgePoints
 )
 {
-    List<LongList<labelledPoint> > newPositions(1);
+    List<LongList<labelledPoint>> newPositions(1);
     # ifdef USE_OMP
     newPositions.setSize(omp_get_num_procs());
     # endif
@@ -214,7 +214,7 @@ void meshSurfaceOptimizer::smoothLaplacianFC
     const bool transform
 )
 {
-    List<LongList<labelledPoint> > newPositions(1);
+    List<LongList<labelledPoint>> newPositions(1);
     # ifdef USE_OMP
     newPositions.setSize(omp_get_num_procs());
     # endif

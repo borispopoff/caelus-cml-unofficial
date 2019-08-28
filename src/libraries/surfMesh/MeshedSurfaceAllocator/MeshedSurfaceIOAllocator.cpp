@@ -81,7 +81,7 @@ void CML::MeshedSurfaceIOAllocator::clear()
 
 void CML::MeshedSurfaceIOAllocator::resetFaces
 (
-    const Xfer<List<face> >& faces,
+    const Xfer<List<face>>& faces,
     const Xfer<surfZoneList>& zones
 )
 {
@@ -117,7 +117,7 @@ void CML::MeshedSurfaceIOAllocator::reset
 
 void CML::MeshedSurfaceIOAllocator::reset
 (
-    const Xfer<List<point> >& points,
+    const Xfer<List<point>>& points,
     const Xfer<faceList>& faces,
     const Xfer<surfZoneList>& zones
 )

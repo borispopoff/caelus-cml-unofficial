@@ -64,19 +64,19 @@ CML::noSlipWallFvPatchVectorField::noSlipWallFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf, iF)
 {}
 
-CML::tmp<CML::Field<CML::vector> >
+CML::tmp<CML::Field<CML::vector>>
 CML::noSlipWallFvPatchVectorField::valueInternalCoeffs
 (
     tmp<scalarField> const&
 ) const
 {
-    return CML::tmp<CML::Field<vector> >
+    return CML::tmp<CML::Field<vector>>
     (
         new CML::Field<vector>(this->size(), pTraits<vector>::zero)
     );
 }
 
-CML::tmp<CML::Field<CML::vector> >
+CML::tmp<CML::Field<CML::vector>>
 CML::noSlipWallFvPatchVectorField::valueBoundaryCoeffs
 (
     tmp<scalarField> const&
@@ -85,7 +85,7 @@ CML::noSlipWallFvPatchVectorField::valueBoundaryCoeffs
     return *this;
 }
 
-CML::tmp<CML::Field<CML::vector> >
+CML::tmp<CML::Field<CML::vector>>
 CML::noSlipWallFvPatchVectorField::gradientInternalCoeffs() const
 {
     // Field of normal vectors
@@ -104,7 +104,7 @@ CML::noSlipWallFvPatchVectorField::gradientInternalCoeffs() const
     return -coeffs*this->patch().deltaCoeffs();
 }
 
-CML::tmp<CML::Field<CML::vector> >
+CML::tmp<CML::Field<CML::vector>>
 CML::noSlipWallFvPatchVectorField::gradientBoundaryCoeffs() const
 {
     // Field of normal vectors

@@ -168,9 +168,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mappedFieldFvPatchField<Type>
                 (
@@ -187,12 +187,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mappedFieldFvPatchField<Type>
                 (
@@ -426,7 +426,7 @@ void mappedFieldFvPatchField<Type>::updateCoeffs()
                 );
 
 
-                autoPtr<interpolation<Type> > interpolator
+                autoPtr<interpolation<Type>> interpolator
                 (
                     interpolation<Type>::New
                     (

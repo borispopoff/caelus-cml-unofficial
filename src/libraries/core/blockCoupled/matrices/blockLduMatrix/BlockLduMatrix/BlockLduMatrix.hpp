@@ -1684,7 +1684,7 @@ void BlockLduMatrix<Type>::setValue
 
 
 template<class Type>
-tmp<Field<Type> > BlockLduMatrix<Type>::residual
+tmp<Field<Type>> BlockLduMatrix<Type>::residual
 (
     const Field<Type>& x
 ) const
@@ -1696,7 +1696,7 @@ tmp<Field<Type> > BlockLduMatrix<Type>::residual
 
 
 template<class Type>
-typename CML::tmp<Field<Type> > BlockLduMatrix<Type>::residual
+typename CML::tmp<Field<Type>> BlockLduMatrix<Type>::residual
 (
     const Field<Type>& x,
     const Field<Type>& b
@@ -2708,7 +2708,7 @@ void BlockLduMatrix<Type>::segregateB
 
 // BlockLduMatrixHOps.C
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 BlockLduMatrix<Type>::H(const Field<Type>& x) const
 {
     typedef typename TypeCoeffField::scalarTypeField scalarTypeField;
@@ -2716,7 +2716,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
     typedef typename TypeCoeffField::squareTypeField squareTypeField;
 
     // Create result
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>(lduAddr().size(), pTraits<Type>::zero)
     );
@@ -2837,7 +2837,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
 
 
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 BlockLduMatrix<Type>::faceH(const Field<Type>& x) const
 {
     typedef typename TypeCoeffField::scalarTypeField scalarTypeField;
@@ -2848,7 +2848,7 @@ BlockLduMatrix<Type>::faceH(const Field<Type>& x) const
     const unallocLabelList& l = lduAddr().lowerAddr();
 
     // Create result
-    tmp<Field<Type> > tresult(new Field<Type>(u.size(), pTraits<Type>::zero));
+    tmp<Field<Type>> tresult(new Field<Type>(u.size(), pTraits<Type>::zero));
     Field<Type>& result = tresult();
 
     if (this->thereIsUpper())
@@ -3699,14 +3699,14 @@ void BlockLduMatrix<Type>::decoupledTmulCore
 
 // BlockLduMatrixDecoupledHOps.C
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 BlockLduMatrix<Type>::decoupledH(const Field<Type>& x) const
 {
     typedef typename TypeCoeffField::scalarTypeField scalarTypeField;
     typedef typename TypeCoeffField::linearTypeField linearTypeField;
 
     // Create result
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>(lduAddr().size(), pTraits<Type>::zero)
     );
@@ -3791,7 +3791,7 @@ BlockLduMatrix<Type>::decoupledH(const Field<Type>& x) const
 
 
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 BlockLduMatrix<Type>::decoupledFaceH(const Field<Type>& x) const
 {
     typedef typename TypeCoeffField::scalarTypeField scalarTypeField;
@@ -3801,7 +3801,7 @@ BlockLduMatrix<Type>::decoupledFaceH(const Field<Type>& x) const
     const unallocLabelList& l = lduAddr().lowerAddr();
 
     // Create result
-    tmp<Field<Type> > tresult(new Field<Type>(u.size(), pTraits<Type>::zero));
+    tmp<Field<Type>> tresult(new Field<Type>(u.size(), pTraits<Type>::zero));
     Field<Type>& result = tresult();
 
     const TypeCoeffField& Upper = this->upper();

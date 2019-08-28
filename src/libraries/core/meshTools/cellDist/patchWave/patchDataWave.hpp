@@ -74,7 +74,7 @@ private:
         labelHashSet patchIDs_;
 
         //- Reference to initial extra data at patch faces
-        const UPtrList<Field<Type> >& initialPatchValuePtrs_;
+        const UPtrList<Field<Type>>& initialPatchValuePtrs_;
 
         //- Do accurate distance calculation for near-wall cells.
         bool correctWalls_;
@@ -125,7 +125,7 @@ public:
         (
             const polyMesh& mesh,
             const labelHashSet& patchIDs,
-            const UPtrList<Field<Type> >& initialPatchValuePtrs,
+            const UPtrList<Field<Type>>& initialPatchValuePtrs,
             bool correctWalls = true
         );
 
@@ -341,7 +341,7 @@ CML::patchDataWave<TransferType>::patchDataWave
 (
     const polyMesh& mesh,
     const labelHashSet& patchIDs,
-    const UPtrList<Field<Type> >& initialPatchValuePtrs,
+    const UPtrList<Field<Type>>& initialPatchValuePtrs,
     const bool correctWalls
 )
 :

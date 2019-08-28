@@ -232,7 +232,7 @@ CML::HashTable<T, Key, Hash>::HashTable(const HashTable<T, Key, Hash>& ht)
 template<class T, class Key, class Hash>
 CML::HashTable<T, Key, Hash>::HashTable
 (
-    const Xfer<HashTable<T, Key, Hash> >& ht
+    const Xfer<HashTable<T, Key, Hash>>& ht
 )
 :
     HashTableCore(),

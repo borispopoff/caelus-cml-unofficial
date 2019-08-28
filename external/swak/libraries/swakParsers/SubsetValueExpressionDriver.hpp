@@ -103,7 +103,7 @@ protected:
 
     //- General Method to get the values
     template<class FieldType,class Subset,class T>
-    tmp<Field<T> > getFieldInternal(
+    tmp<Field<T>> getFieldInternal(
         const word &name,
         const Subset &sub,
         bool oldTime=false
@@ -111,7 +111,7 @@ protected:
 
     //- General Method to get the values and interpolate
     template<class FieldType,class IFieldType,class Subset,class T>
-    tmp<Field<T> > getFieldInternalAndInterpolate(
+    tmp<Field<T>> getFieldInternalAndInterpolate(
         const word &name,
         const Subset &sub,
         bool oldTime=false
@@ -119,13 +119,13 @@ protected:
 
     //- General Method to get values from a field
     template<class Subset,class T>
-    tmp<Field<T> > getFromFieldInternal(
+    tmp<Field<T>> getFromFieldInternal(
         const Field<T> &original,const Subset &sub
     ) const;
 
     //- General Method to get values from a field
     template<class Subset,class T>
-    tmp<Field<T> > getFromSurfaceFieldInternal(
+    tmp<Field<T>> getFromSurfaceFieldInternal(
         const GeometricField<T,fvsPatchField,surfaceMesh> &original,
         const Subset &sub
     ) const;
@@ -190,27 +190,27 @@ public:
 //     template<class Type>
 //     Field<Type> *getField(const string &name);
 
-    virtual tmp<Field<scalar> > getScalarField(
+    virtual tmp<Field<scalar>> getScalarField(
         const word &name,
         bool oldTime=false
     )=0;
 
-    virtual tmp<Field<vector> > getVectorField(
+    virtual tmp<Field<vector>> getVectorField(
         const word &name,
         bool oldTime=false
     )=0;
 
-    virtual tmp<Field<tensor> > getTensorField(
+    virtual tmp<Field<tensor>> getTensorField(
         const word &name,
         bool oldTime=false
     )=0;
 
-    virtual tmp<Field<symmTensor> > getSymmTensorField(
+    virtual tmp<Field<symmTensor>> getSymmTensorField(
         const word &name,
         bool oldTime=false
     )=0;
 
-    virtual tmp<Field<sphericalTensor> > getSphericalTensorField(
+    virtual tmp<Field<sphericalTensor>> getSphericalTensorField(
         const word &name,
         bool oldTime=false
     )=0;
@@ -220,7 +220,7 @@ public:
 
     //- execute a plugin-function
     template<class T>
-    autoPtr<Field<T> > evaluatePluginFunction(
+    autoPtr<Field<T>> evaluatePluginFunction(
         const word &name,
         const parserSubset::location &loc,
         int &scanned,

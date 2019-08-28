@@ -79,7 +79,7 @@ public:
         public particle::trackingData
     {
         labelListList& cellToData_;
-        List<List<point> >& cellToEnd_;
+        List<List<point>>& cellToEnd_;
 
     public:
 
@@ -89,7 +89,7 @@ public:
             (
                 Cloud<findCellParticle>& cloud,
                 labelListList& cellToData,
-                List<List<point> >& cellToEnd
+                List<List<point>>& cellToEnd
             )
             :
                 particle::trackingData(cloud),
@@ -105,7 +105,7 @@ public:
                 return cellToData_;
             }
 
-            List<List<point> >& cellToEnd()
+            List<List<point>>& cellToEnd()
             {
                 return cellToEnd_;
             }

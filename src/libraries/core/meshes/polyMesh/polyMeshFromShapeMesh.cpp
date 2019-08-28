@@ -38,7 +38,7 @@ CML::labelListList CML::polyMesh::cellShapePointCells
     const cellShapeList& c
 ) const
 {
-    List<DynamicList<label, primitiveMesh::cellsPerPoint_> >
+    List<DynamicList<label, primitiveMesh::cellsPerPoint_>>
         pc(points().size());
 
     // For each cell

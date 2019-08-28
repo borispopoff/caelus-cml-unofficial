@@ -163,7 +163,7 @@ private:
         );
 
         //- Calculate point-edge addressing for single face only.
-        static Map<DynamicList<label> > calcPointEdgeAddressing
+        static Map<DynamicList<label>> calcPointEdgeAddressing
         (
             const edgeSurface&,
             const label faceI
@@ -177,7 +177,7 @@ private:
             const Map<label>& visited,
             const label faceI,
             const vector& n,                // original triangle normal
-            const Map<DynamicList<label> >& facePointEdges,
+            const Map<DynamicList<label>>& facePointEdges,
             const label prevEdgeI,
             const label prevVertI
         );
@@ -188,7 +188,7 @@ private:
             const edgeSurface& eSurf,
             const label faceI,
             const vector& n,
-            const Map<DynamicList<label> >& facePointEdges,
+            const Map<DynamicList<label>>& facePointEdges,
 
             const label startEdgeI,
             const label startVertI,
@@ -202,7 +202,7 @@ private:
         (
             const edgeSurface& eSurf,
             const label faceI,
-            const Map<DynamicList<label> >& facePointEdges,
+            const Map<DynamicList<label>>& facePointEdges,
             const Map<label>& pointVisited,
             const point& pt,
             const label excludeFaceI,
@@ -217,7 +217,7 @@ private:
         (
             const triSurface& surf,
             const label faceI,
-            const Map<DynamicList<label> >& facePointEdges,
+            const Map<DynamicList<label>>& facePointEdges,
             const Map<label>& visited,
             edgeSurface& eSurf
         );

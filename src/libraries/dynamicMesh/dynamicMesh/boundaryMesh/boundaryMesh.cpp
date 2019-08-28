@@ -922,7 +922,7 @@ CML::labelList CML::boundaryMesh::getNearest
     bbMax.z() += 2*tol;
 
     const scalar planarTol =
-        indexedOctree<treeDataPrimitivePatch<uindirectPrimitivePatch> >::
+        indexedOctree<treeDataPrimitivePatch<uindirectPrimitivePatch>>::
         perturbTol();
 
 
@@ -1256,7 +1256,7 @@ void CML::boundaryMesh::patchify
 
     if (newPatchPtrList.size())
     {
-        List<DynamicList<label> > patchFaces(nNewPatches);
+        List<DynamicList<label>> patchFaces(nNewPatches);
 
         // Give reasonable estimate for size of patches
         label nAvgFaces =

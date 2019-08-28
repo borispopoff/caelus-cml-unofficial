@@ -107,13 +107,13 @@ public:
             }
 
             //- Return the "jump" across the patch as a "half" field
-            virtual tmp<Field<Type> > jump() const = 0;
+            virtual tmp<Field<Type>> jump() const = 0;
 
 
         // Evaluation functions
 
             //- Return neighbour coupled given internal cell data
-            tmp<Field<Type> > patchNeighbourField() const;
+            tmp<Field<Type>> patchNeighbourField() const;
 
             //- Update result field based on interface functionality
             virtual void updateInterfaceMatrix
@@ -211,7 +211,7 @@ CML::jumpCyclicAMIFvPatchField<Type>::jumpCyclicAMIFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::jumpCyclicAMIFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
@@ -219,7 +219,7 @@ CML::jumpCyclicAMIFvPatchField<Type>::patchNeighbourField() const
         this->cyclicAMIPatch().cyclicAMIPatch().neighbPatch().faceCells();
 
     Field<Type> pnf(iField, nbrFaceCells);
-    tmp<Field<Type> > tpnf;
+    tmp<Field<Type>> tpnf;
 
     if (this->cyclicAMIPatch().applyLowWeightCorrection())
     {
@@ -240,7 +240,7 @@ CML::jumpCyclicAMIFvPatchField<Type>::patchNeighbourField() const
         tpnf = transform(this->forwardT(), tpnf);
     }
 
-    tmp<Field<Type> > tjf = jump();
+    tmp<Field<Type>> tjf = jump();
     if (!this->cyclicAMIPatch().owner())
     {
         tjf = -tjf;

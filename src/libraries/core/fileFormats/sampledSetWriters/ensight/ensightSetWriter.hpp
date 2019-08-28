@@ -82,7 +82,7 @@ public:
             const bool writeTracks,
             const PtrList<coordSet>&,
             const wordList& valueSetNames,
-            const List<List<Field<Type> > >&,
+            const List<List<Field<Type>>>&,
             Ostream&
         ) const;
 };
@@ -251,7 +251,7 @@ void CML::ensightSetWriter<Type>::write
     const bool writeTracks,
     const PtrList<coordSet>& tracks,
     const wordList& valueSetNames,
-    const List<List<Field<Type> > >& valueSets,
+    const List<List<Field<Type>>>& valueSets,
     Ostream& os
 ) const
 {
@@ -349,7 +349,7 @@ void CML::ensightSetWriter<Type>::write
         {
             os  << pTraits<Type>::typeName << nl;
 
-            const List<Field<Type> >& fieldVals = valueSets[setI];
+            const List<Field<Type>>& fieldVals = valueSets[setI];
             forAll(fieldVals, trackI)
             {
                 os  << "part" << nl

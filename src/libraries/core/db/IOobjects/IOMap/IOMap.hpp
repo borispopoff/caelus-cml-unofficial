@@ -71,7 +71,7 @@ public:
         IOMap(const IOobject&, const Map<T>&);
 
         //- Construct by transferring the Map contents
-        IOMap(const IOobject&, const Xfer<Map<T> >&);
+        IOMap(const IOobject&, const Xfer<Map<T>>&);
 
 
     //- Destructor
@@ -169,7 +169,7 @@ CML::IOMap<T>::IOMap(const IOobject& io, const Map<T>& map)
 
 
 template<class T>
-CML::IOMap<T>::IOMap(const IOobject& io, const Xfer<Map<T> >& map)
+CML::IOMap<T>::IOMap(const IOobject& io, const Xfer<Map<T>>& map)
 :
     regIOobject(io)
 {

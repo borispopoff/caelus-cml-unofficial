@@ -176,7 +176,7 @@ namespace CML
     inline void setSnGrad
     (
         volScalarField::GeometricBoundaryField& bf,
-        const tmp<FieldField<fvsPatchField, scalar> >& tsnGrad
+        const tmp<FieldField<fvsPatchField, scalar>>& tsnGrad
     )
     {
         setSnGrad<GradBC>(bf, tsnGrad());

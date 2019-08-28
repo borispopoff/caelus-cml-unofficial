@@ -34,7 +34,7 @@ Contributors/Copyright:
 
 namespace CML {
     template<class Type,class volField,class surfField>
-    tmp<Field<Type> >
+    tmp<Field<Type>>
     SampledSurfaceValueExpressionDriver::sampleOrInterpolateInternal(
         const word &name,
         bool oldTime
@@ -47,7 +47,7 @@ namespace CML {
         ) {
             return this->variable(name).getResult<Type>(true);
         }
-        autoPtr<Field<Type> > result;
+        autoPtr<Field<Type>> result;
 
         if(
             this->searchInMemory()
@@ -55,7 +55,7 @@ namespace CML {
             this->mesh().foundObject<volField>(name)
         ) {
             if(interpolate_) {
-                autoPtr<interpolation<Type> > inter(
+                autoPtr<interpolation<Type>> inter(
                     interpolation<Type>::New(
                         interpolationType_,
                         (
@@ -94,7 +94,7 @@ namespace CML {
             );
 
             if(interpolate_) {
-                autoPtr<interpolation<Type> > inter(
+                autoPtr<interpolation<Type>> inter(
                     interpolation<Type>::New(
                         interpolationType_,
                         (
@@ -143,7 +143,7 @@ namespace CML {
                 << endl;
         }
 
-        return tmp<Field<Type> >(result.ptr());
+        return tmp<Field<Type>>(result.ptr());
     }
 
 }

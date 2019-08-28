@@ -57,7 +57,7 @@ void reconstructLagrangianPositions
 
 
 template<class Type>
-tmp<IOField<Type> > reconstructLagrangianField
+tmp<IOField<Type>> reconstructLagrangianField
 (
     const word& cloudName,
     const polyMesh& mesh,
@@ -67,7 +67,7 @@ tmp<IOField<Type> > reconstructLagrangianField
 
 
 template<class Type>
-tmp<CompactIOField<Field<Type>, Type> > reconstructLagrangianFieldField
+tmp<CompactIOField<Field<Type>, Type>> reconstructLagrangianFieldField
 (
     const word& cloudName,
     const polyMesh& mesh,
@@ -106,7 +106,7 @@ void reconstructLagrangianFieldFields
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::IOField<Type> > CML::reconstructLagrangianField
+CML::tmp<CML::IOField<Type>> CML::reconstructLagrangianField
 (
     const word& cloudName,
     const polyMesh& mesh,
@@ -115,7 +115,7 @@ CML::tmp<CML::IOField<Type> > CML::reconstructLagrangianField
 )
 {
     // Construct empty field on mesh
-    tmp<IOField<Type> > tfield
+    tmp<IOField<Type>> tfield
     (
         new IOField<Type>
         (
@@ -165,7 +165,7 @@ CML::tmp<CML::IOField<Type> > CML::reconstructLagrangianField
 
 
 template<class Type>
-CML::tmp<CML::CompactIOField<CML::Field<Type>, Type> >
+CML::tmp<CML::CompactIOField<CML::Field<Type>, Type>>
 CML::reconstructLagrangianFieldField
 (
     const word& cloudName,
@@ -175,7 +175,7 @@ CML::reconstructLagrangianFieldField
 )
 {
     // Construct empty field on mesh
-    tmp<CompactIOField<Field<Type>, Type > > tfield
+    tmp<CompactIOField<Field<Type>, Type >> tfield
     (
         new CompactIOField<Field<Type>, Type>
         (
@@ -188,10 +188,10 @@ CML::reconstructLagrangianFieldField
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            Field<Field<Type> >(0)
+            Field<Field<Type>>(0)
         )
     );
-    Field<Field<Type> >& field = tfield();
+    Field<Field<Type>>& field = tfield();
 
     forAll(meshes, i)
     {
@@ -312,7 +312,7 @@ void CML::reconstructLagrangianFieldFields
     }
 
     {
-        const word fieldClassName(IOField<Field<Type> >::typeName);
+        const word fieldClassName(IOField<Field<Type>>::typeName);
 
         IOobjectList fields = objects.lookupClass(fieldClassName);
 

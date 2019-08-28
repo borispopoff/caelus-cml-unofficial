@@ -44,13 +44,13 @@ namespace CML
 namespace fvc
 {
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > d2dt2
+    tmp<GeometricField<Type, fvPatchField, volMesh>> d2dt2
     (
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > d2dt2
+    tmp<GeometricField<Type, fvPatchField, volMesh>> d2dt2
     (
         const volScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
@@ -80,7 +80,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 d2dt2
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -95,7 +95,7 @@ d2dt2
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 d2dt2
 (
     const volScalarField& rho,

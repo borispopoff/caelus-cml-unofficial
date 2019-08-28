@@ -87,9 +87,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new cyclicPointPatchField<Type>
                 (
@@ -106,12 +106,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new cyclicPointPatchField<Type>
                 (
@@ -268,13 +268,13 @@ void CML::cyclicPointPatchField<Type>::swapAddSeparated
 
         // Get neighbouring pointPatchField	
 		const GeometricField<Type, pointPatchField, pointMesh>& fld =
-            refCast<const GeometricField<Type, pointPatchField, pointMesh> >
+            refCast<const GeometricField<Type, pointPatchField, pointMesh>>
             (
                 this->dimensionedInternalField()
             );	
 		
         const cyclicPointPatchField<Type>& nbr =
-            refCast<const cyclicPointPatchField<Type> >
+            refCast<const cyclicPointPatchField<Type>>
             (
                 fld.boundaryField()[nbrPatch.index()]
             );

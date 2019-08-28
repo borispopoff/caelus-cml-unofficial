@@ -426,7 +426,7 @@ inline CML::UList<T>::UList(T* RESTRICT v, label size)
 template<class T>
 inline const CML::UList<T>& CML::UList<T>::null()
 {
-    return NullSingletonRef< UList<T> >();
+    return NullSingletonRef< UList<T>>();
 }
 
 
@@ -1195,7 +1195,7 @@ CML::Istream& CML::operator>>(Istream& is, UList<T>& L)
         List<T> elems;
         elems.transfer
         (
-            dynamicCast<token::Compound<List<T> > >
+            dynamicCast<token::Compound<List<T>>>
             (
                 firstToken.transferCompoundToken(is)
             )

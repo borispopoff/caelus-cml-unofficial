@@ -114,7 +114,7 @@ public:
         label parent_;
 
         //- Cells this cell was refined into
-        autoPtr<FixedList<label, 8> > addedCellsPtr_;
+        autoPtr<FixedList<label, 8>> addedCellsPtr_;
 
         //- Construct null (parent = -1)
         splitCell8();

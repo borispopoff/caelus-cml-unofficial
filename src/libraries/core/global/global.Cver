@@ -1640,7 +1640,7 @@ void CML::UPstream::calcLinearComm(const label nProcs)
 void CML::UPstream::collectReceives
 (
     const label procID,
-    const List<DynamicList<label> >& receives,
+    const List<DynamicList<label>>& receives,
     DynamicList<label>& allReceives
 )
 {
@@ -1688,7 +1688,7 @@ void CML::UPstream::calcTreeComm(label nProcs)
         nLevels++;
     }
 
-    List<DynamicList<label> > receives(nProcs);
+    List<DynamicList<label>> receives(nProcs);
     labelList sends(nProcs, -1);
 
     // Info<< "Using " << nLevels << " communication levels" << endl;
@@ -1719,7 +1719,7 @@ void CML::UPstream::calcTreeComm(label nProcs)
 
     // For all processors find the processors it receives data from
     // (and the processors they receive data from etc.)
-    List<DynamicList<label> > allReceives(nProcs);
+    List<DynamicList<label>> allReceives(nProcs);
     for (label procID = 0; procID < nProcs; procID++)
     {
         collectReceives(procID, receives, allReceives[procID]);

@@ -85,9 +85,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new valuePointPatchField<Type>
                 (
@@ -104,12 +104,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new valuePointPatchField<Type>
                 (
@@ -203,7 +203,7 @@ public:
 // which enables simple backward compatability with verions using
 // referenceLevel in GeometicField
 template<class Type>
-tmp<Field<Type> > operator+
+tmp<Field<Type>> operator+
 (
     const valuePointPatchField<Type>& vsppf,
     const Type& t
@@ -327,7 +327,7 @@ void CML::valuePointPatchField<Type>::rmap
 {
     Field<Type>::rmap
     (
-        refCast<const valuePointPatchField<Type> >
+        refCast<const valuePointPatchField<Type>>
         (
             ptf
         ),

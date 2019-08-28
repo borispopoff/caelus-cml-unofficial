@@ -80,9 +80,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new calculatedPointPatchField<Type>
                 (
@@ -99,10 +99,10 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> >
+        virtual autoPtr<pointPatchField<Type>>
         clone(const DimensionedField<Type, pointMesh>& iF) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new calculatedPointPatchField<Type>
                 (
@@ -175,7 +175,7 @@ CML::calculatedPointPatchField<Type>::calculatedPointPatchField
 
 template<class Type>
 template<class Type2>
-CML::autoPtr<CML::pointPatchField<Type> >
+CML::autoPtr<CML::pointPatchField<Type>>
 CML::pointPatchField<Type>::NewCalculatedType
 (
     const pointPatchField<Type2>& pf
@@ -186,7 +186,7 @@ CML::pointPatchField<Type>::NewCalculatedType
 
     if (patchTypeCstrIter != pointPatchConstructorTablePtr_->end())
     {
-        return autoPtr<pointPatchField<Type> >
+        return autoPtr<pointPatchField<Type>>
         (
             patchTypeCstrIter()
             (
@@ -197,7 +197,7 @@ CML::pointPatchField<Type>::NewCalculatedType
     }
     else
     {
-        return autoPtr<pointPatchField<Type> >
+        return autoPtr<pointPatchField<Type>>
         (
             new calculatedPointPatchField<Type>
             (

@@ -439,14 +439,14 @@ void CML::Cloud<ParticleType>::move
 
     // List of lists of particles to be transfered for all of the
     // neighbour processors
-    List<IDLList<ParticleType> > particleTransferLists
+    List<IDLList<ParticleType>> particleTransferLists
     (
         neighbourProcs.size()
     );
 
     // List of destination processorPatches indices for all of the
     // neighbour processors
-    List<DynamicList<label> > patchIndexTransferLists
+    List<DynamicList<label>> patchIndexTransferLists
     (
         neighbourProcs.size()
     );
@@ -763,7 +763,7 @@ void CML::Cloud<ParticleType>::initCloud(const bool checkClass)
 {
     readCloudUniformProperties();
 
-    IOPosition<Cloud<ParticleType> > ioP(*this);
+    IOPosition<Cloud<ParticleType>> ioP(*this);
 
     if (ioP.headerOk())
     {

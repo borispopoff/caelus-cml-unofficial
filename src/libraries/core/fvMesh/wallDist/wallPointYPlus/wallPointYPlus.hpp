@@ -144,7 +144,7 @@ public:
 template<>
 inline bool contiguous<wallPointYPlus>()
 {
-    return contiguous<wallPointData<scalar> >();
+    return contiguous<wallPointData<scalar>>();
 }
 
 

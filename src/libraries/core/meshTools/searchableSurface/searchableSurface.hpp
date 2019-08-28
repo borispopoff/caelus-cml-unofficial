@@ -300,7 +300,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const = 0;
 
             //- From a set of points and indices get the region

@@ -78,7 +78,7 @@ private:
     // Private data
 
         //- Cloud copy pointer
-        autoPtr<ReactingCloud<CloudType> > cloudCopyPtr_;
+        autoPtr<ReactingCloud<CloudType>> cloudCopyPtr_;
 
 
     // Private member functions
@@ -101,18 +101,18 @@ protected:
         // References to the cloud sub-models
 
             //- Reacting composition model
-            autoPtr<CompositionModel<ReactingCloud<CloudType> > >
+            autoPtr<CompositionModel<ReactingCloud<CloudType>>>
                 compositionModel_;
 
             //- Reacting phase change model
-            autoPtr<PhaseChangeModel<ReactingCloud<CloudType> > >
+            autoPtr<PhaseChangeModel<ReactingCloud<CloudType>>>
                 phaseChangeModel_;
 
 
         // Sources
 
             //- Mass transfer fields - one per carrier phase specie
-            PtrList<DimensionedField<scalar, volMesh> > rhoTrans_;
+            PtrList<DimensionedField<scalar, volMesh>> rhoTrans_;
 
 
     // Protected Member Functions
@@ -167,18 +167,18 @@ public:
         );
 
         //- Construct and return clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > clone(const word& name)
+        virtual autoPtr<Cloud<parcelType>> clone(const word& name)
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new ReactingCloud(*this, name)
             );
         }
 
         //- Construct and return bare clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > cloneBare(const word& name) const
+        virtual autoPtr<Cloud<parcelType>> cloneBare(const word& name) const
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new ReactingCloud(this->mesh(), name, *this)
             );
@@ -207,15 +207,15 @@ public:
             // Sub-models
 
                 //- Return const access to reacting composition model
-                inline const CompositionModel<ReactingCloud<CloudType> >&
+                inline const CompositionModel<ReactingCloud<CloudType>>&
                     composition() const;
 
                 //- Return const access to reacting phase change model
-                inline const PhaseChangeModel<ReactingCloud<CloudType> >&
+                inline const PhaseChangeModel<ReactingCloud<CloudType>>&
                     phaseChange() const;
 
                 //- Return reference to reacting phase change model
-                inline PhaseChangeModel<ReactingCloud<CloudType> >&
+                inline PhaseChangeModel<ReactingCloud<CloudType>>&
                     phaseChange();
 
 
@@ -228,11 +228,11 @@ public:
                         rhoTrans(const label i);
 
                     //- Return const access to mass source fields
-                    inline const PtrList<DimensionedField<scalar, volMesh> >&
+                    inline const PtrList<DimensionedField<scalar, volMesh>>&
                         rhoTrans() const;
 
                     //- Return reference to mass source fields
-                    inline PtrList<DimensionedField<scalar, volMesh> >&
+                    inline PtrList<DimensionedField<scalar, volMesh>>&
                         rhoTrans();
 
                     //- Return mass source term for specie i - specie eqn
@@ -243,12 +243,12 @@ public:
                     ) const;
 
                     //- Return tmp mass source for field i - fully explicit
-                    inline tmp<DimensionedField<scalar, volMesh> >
+                    inline tmp<DimensionedField<scalar, volMesh>>
                         Srho(const label i) const;
 
                     //- Return tmp total mass source for carrier phase
                     //  - fully explicit
-                    inline tmp<DimensionedField<scalar, volMesh> > Srho() const;
+                    inline tmp<DimensionedField<scalar, volMesh>> Srho() const;
 
                     //- Return total mass source term [kg/m3/s]
                     inline tmp<fvScalarMatrix> Srho(volScalarField& rho) const;
@@ -338,7 +338,7 @@ CML::ReactingCloud<CloudType>::constProps()
 
 
 template<class CloudType>
-inline const CML::CompositionModel<CML::ReactingCloud<CloudType> >&
+inline const CML::CompositionModel<CML::ReactingCloud<CloudType>>&
 CML::ReactingCloud<CloudType>::composition() const
 {
     return compositionModel_;
@@ -346,7 +346,7 @@ CML::ReactingCloud<CloudType>::composition() const
 
 
 template<class CloudType>
-inline const CML::PhaseChangeModel<CML::ReactingCloud<CloudType> >&
+inline const CML::PhaseChangeModel<CML::ReactingCloud<CloudType>>&
 CML::ReactingCloud<CloudType>::phaseChange() const
 {
     return phaseChangeModel_;
@@ -354,7 +354,7 @@ CML::ReactingCloud<CloudType>::phaseChange() const
 
 
 template<class CloudType>
-inline CML::PhaseChangeModel<CML::ReactingCloud<CloudType> >&
+inline CML::PhaseChangeModel<CML::ReactingCloud<CloudType>>&
 CML::ReactingCloud<CloudType>::phaseChange()
 {
     return phaseChangeModel_();
@@ -371,7 +371,7 @@ CML::ReactingCloud<CloudType>::rhoTrans(const label i)
 
 template<class CloudType>
 inline
-const CML::PtrList<CML::DimensionedField<CML::scalar, CML::volMesh> >&
+const CML::PtrList<CML::DimensionedField<CML::scalar, CML::volMesh>>&
 CML::ReactingCloud<CloudType>::rhoTrans() const
 {
     return rhoTrans_;
@@ -379,7 +379,7 @@ CML::ReactingCloud<CloudType>::rhoTrans() const
 
 
 template<class CloudType>
-inline CML::PtrList<CML::DimensionedField<CML::scalar, CML::volMesh> >&
+inline CML::PtrList<CML::DimensionedField<CML::scalar, CML::volMesh>>&
 CML::ReactingCloud<CloudType>::rhoTrans()
 {
     return rhoTrans_;
@@ -442,10 +442,10 @@ inline CML::tmp<CML::fvScalarMatrix> CML::ReactingCloud<CloudType>::SYi
 
 
 template<class CloudType>
-inline CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+inline CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::ReactingCloud<CloudType>::Srho(const label i) const
 {
-    tmp<DimensionedField<scalar, volMesh> > tRhoi
+    tmp<DimensionedField<scalar, volMesh>> tRhoi
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -479,10 +479,10 @@ CML::ReactingCloud<CloudType>::Srho(const label i) const
 
 
 template<class CloudType>
-inline CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+inline CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::ReactingCloud<CloudType>::Srho() const
 {
-    tmp<DimensionedField<scalar, volMesh> > trhoTrans
+    tmp<DimensionedField<scalar, volMesh>> trhoTrans
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -584,7 +584,7 @@ void CML::ReactingCloud<CloudType>::setModels()
 {
     compositionModel_.reset
     (
-        CompositionModel<ReactingCloud<CloudType> >::New
+        CompositionModel<ReactingCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -593,7 +593,7 @@ void CML::ReactingCloud<CloudType>::setModels()
 
     phaseChangeModel_.reset
     (
-        PhaseChangeModel<ReactingCloud<CloudType> >::New
+        PhaseChangeModel<ReactingCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this

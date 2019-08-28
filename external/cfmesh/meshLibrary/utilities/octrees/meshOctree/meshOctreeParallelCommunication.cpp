@@ -45,7 +45,7 @@ void meshOctree::exchangeRequestsWithNeighbourProcessors
         return;
     }
 
-    List<LongList<meshOctreeCubeCoordinates> > toProcs
+    List<LongList<meshOctreeCubeCoordinates>> toProcs
     (
         neiProcs_.size(),
         LongList<meshOctreeCubeCoordinates>()
@@ -198,12 +198,12 @@ void meshOctree::exchangeRequestsWithNeighbourProcessors
         return;
     }
 
-    List<LongList<meshOctreeCubeCoordinates> > toProcs
+    List<LongList<meshOctreeCubeCoordinates>> toProcs
     (
         neiProcs_.size(),
         LongList<meshOctreeCubeCoordinates>()
     );
-    List<LongList<scalar> > attributesToProcs
+    List<LongList<scalar>> attributesToProcs
     (
         neiProcs_.size(),
         LongList<scalar>()

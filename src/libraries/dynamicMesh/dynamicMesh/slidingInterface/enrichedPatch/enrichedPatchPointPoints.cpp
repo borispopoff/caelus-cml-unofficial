@@ -42,7 +42,7 @@ void CML::enrichedPatch::calcPointPoints() const
     // Go through all faces and add the previous and next point as the
     // neighbour for each point. While inserting points, reject the
     // duplicates (as every internal edge will be visited twice).
-    List<DynamicList<label, primitiveMesh::edgesPerPoint_> >
+    List<DynamicList<label, primitiveMesh::edgesPerPoint_>>
         pp(meshPoints().size());
 
     const faceList& lf = localFaces();

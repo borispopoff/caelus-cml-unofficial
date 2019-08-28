@@ -295,7 +295,7 @@ protected:
 
         //- Return field values by looking up field name
         template<class Type>
-        tmp<Field<Type> > getFieldValues
+        tmp<Field<Type>> getFieldValues
         (
             const word& fieldName,
             const bool mustGet = false,
@@ -382,7 +382,7 @@ public:
 
             //- Filter a surface field according to faceIds
             template<class Type>
-            tmp<Field<Type> > filterField
+            tmp<Field<Type>> filterField
             (
                 const GeometricField<Type, fvsPatchField, surfaceMesh>& field,
                 const bool applyOrientation
@@ -390,7 +390,7 @@ public:
 
             //- Filter a volume field according to faceIds
             template<class Type>
-            tmp<Field<Type> > filterField
+            tmp<Field<Type>> filterField
             (
                 const GeometricField<Type, fvPatchField, volMesh>& field,
                 const bool applyOrientation
@@ -457,7 +457,7 @@ bool CML::fieldValues::faceSource::validField(const word& fieldName) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::getFieldValues
+CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::getFieldValues
 (
     const word& fieldName,
     const bool mustGet,
@@ -480,12 +480,12 @@ CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::getFieldValues
             if (surfacePtr_().interpolate())
             {
                 const interpolationCellPoint<Type> interp(fld);
-                tmp<Field<Type> > tintFld(surfacePtr_().interpolate(interp));
+                tmp<Field<Type>> tintFld(surfacePtr_().interpolate(interp));
                 const Field<Type>& intFld = tintFld();
 
                 // Average
                 const faceList& faces = surfacePtr_().faces();
-                tmp<Field<Type> > tavg
+                tmp<Field<Type>> tavg
                 (
                     new Field<Type>(faces.size(), pTraits<Type>::zero)
                 );
@@ -521,7 +521,7 @@ CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::getFieldValues
             << abort(FatalError);
     }
 
-    return tmp<Field<Type> >(new Field<Type>(0));
+    return tmp<Field<Type>>(new Field<Type>(0));
 }
 
 
@@ -754,13 +754,13 @@ bool CML::fieldValues::faceSource::writeValues
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::filterField
+CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
 (
     const GeometricField<Type, fvPatchField, volMesh>& field,
     const bool applyOrientation
 ) const
 {
-    tmp<Field<Type> > tvalues(new Field<Type>(faceId_.size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));
     Field<Type>& values = tvalues();
 
     forAll(values, i)
@@ -795,13 +795,13 @@ CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::filterField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::filterField
+CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field,
     const bool applyOrientation
 ) const
 {
-    tmp<Field<Type> > tvalues(new Field<Type>(faceId_.size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));
     Field<Type>& values = tvalues();
 
     forAll(values, i)

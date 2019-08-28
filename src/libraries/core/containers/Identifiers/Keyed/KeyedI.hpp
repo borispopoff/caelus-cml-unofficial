@@ -71,10 +71,10 @@ inline CML::label& CML::Keyed<T>::key()
 
 
 template<class T>
-inline CML::List<CML::Keyed<T> >
+inline CML::List<CML::Keyed<T>>
 CML::Keyed<T>::createList(const List<T>& lst, const label key)
 {
-    List<Keyed<T> > newList(lst.size());
+    List<Keyed<T>> newList(lst.size());
 
     forAll(lst, elemI)
     {
@@ -85,7 +85,7 @@ CML::Keyed<T>::createList(const List<T>& lst, const label key)
 
 
 template<class T>
-inline CML::List<CML::Keyed<T> >
+inline CML::List<CML::Keyed<T>>
 CML::Keyed<T>::createList(const List<T>& lst, const labelUList& keys)
 {
     if (lst.size() != keys.size())
@@ -97,7 +97,7 @@ CML::Keyed<T>::createList(const List<T>& lst, const labelUList& keys)
             << abort(FatalError);
     }
 
-    List<Keyed<T> > newList(lst.size());
+    List<Keyed<T>> newList(lst.size());
 
     forAll(lst, elemI)
     {

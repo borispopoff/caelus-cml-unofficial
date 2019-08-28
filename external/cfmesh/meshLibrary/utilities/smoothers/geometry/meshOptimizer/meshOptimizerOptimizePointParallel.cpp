@@ -65,7 +65,7 @@ void meshOptimizer::laplaceSmoother::laplacianParallel
     std::map<label, labelledPoint> localData;
 
     //- create data which shall be exchanged with other processors
-    std::map<label, LongList<refLabelledPoint> > exchangeData;
+    std::map<label, LongList<refLabelledPoint>> exchangeData;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];
@@ -150,7 +150,7 @@ void meshOptimizer::laplaceSmoother::laplacianParallel
 
     # ifdef DEBUGSmooth
     //- check
-    std::map<label, LongList<labelledPoint> > check;
+    std::map<label, LongList<labelledPoint>> check;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];
@@ -209,7 +209,7 @@ void meshOptimizer::laplaceSmoother::laplacianPCParallel
     std::map<label, labelledPoint> localData;
 
     //- create data which shall be exchanged with other processors
-    std::map<label, LongList<refLabelledPoint> > exchangeData;
+    std::map<label, LongList<refLabelledPoint>> exchangeData;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];
@@ -280,7 +280,7 @@ void meshOptimizer::laplaceSmoother::laplacianPCParallel
 
     # ifdef DEBUGSmooth
     //- check
-    std::map<label, LongList<labelledPoint> > check;
+    std::map<label, LongList<labelledPoint>> check;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];
@@ -340,7 +340,7 @@ void meshOptimizer::laplaceSmoother::laplacianWPCParallel
     std::map<label, labelledPointScalar> localData;
 
     //- create data which shall be exchanged with other processors
-    std::map<label, LongList<labelledPointScalar> > exchangeData;
+    std::map<label, LongList<labelledPointScalar>> exchangeData;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];
@@ -422,7 +422,7 @@ void meshOptimizer::laplaceSmoother::laplacianWPCParallel
 
     # ifdef DEBUGSmooth
     //- check
-    std::map<label, LongList<labelledPoint> > check;
+    std::map<label, LongList<labelledPoint>> check;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];

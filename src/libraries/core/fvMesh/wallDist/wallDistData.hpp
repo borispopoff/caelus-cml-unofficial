@@ -190,7 +190,7 @@ void CML::wallDistData<TransferType>::correct()
     labelHashSet wallPatchIDs(getPatchIDs<wallPolyPatch>());
 
     // Collect pointers to data on patches
-    UPtrList<Field<Type> > patchData(mesh.boundaryMesh().size());
+    UPtrList<Field<Type>> patchData(mesh.boundaryMesh().size());
 
     forAll(field_.boundaryField(), patchI)
     {

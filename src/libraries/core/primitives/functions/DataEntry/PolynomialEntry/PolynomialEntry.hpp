@@ -62,7 +62,7 @@ class Polynomial
     // Private data
 
         //- Polynomial coefficients - list of prefactor, exponent
-        List<Tuple2<Type, Type> > coeffs_;
+        List<Tuple2<Type, Type>> coeffs_;
 
         //- Flag to indicate whether poly can be integrated
         bool canIntegrate_;
@@ -88,7 +88,7 @@ public:
         Polynomial
         (
             const word& entryName,
-            const List<Tuple2<Type, Type> >&
+            const List<Tuple2<Type, Type>>&
         );
 
         //- Copy constructor
@@ -178,7 +178,7 @@ template<class Type>
 CML::DataEntryTypes::Polynomial<Type>::Polynomial
 (
     const word& entryName,
-    const List<Tuple2<Type, Type> >& coeffs
+    const List<Tuple2<Type, Type>>& coeffs
 )
 :
     DataEntry<Type>(entryName),

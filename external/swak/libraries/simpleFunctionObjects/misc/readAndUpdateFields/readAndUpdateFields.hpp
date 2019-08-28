@@ -106,8 +106,8 @@ protected:
         bool loadField
         (
             const word&,
-            PtrList<GeometricField<Type, fvPatchField, volMesh> >&,
-            PtrList<GeometricField<Type, pointPatchField, pointMesh> >&
+            PtrList<GeometricField<Type, fvPatchField, volMesh>>&,
+            PtrList<GeometricField<Type, pointPatchField, pointMesh>>&
         );
 
         template <class FType>
@@ -204,8 +204,8 @@ template<class Type>
 bool CML::readAndUpdateFields::loadField
 (
     const word& fieldName,
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& vflds,
-    PtrList<GeometricField<Type, pointPatchField, pointMesh> >& pflds
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& vflds,
+    PtrList<GeometricField<Type, pointPatchField, pointMesh>>& pflds
 )
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;

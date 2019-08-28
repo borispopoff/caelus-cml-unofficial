@@ -60,7 +60,7 @@ class blendedMG : public upwind<Type>
     // Private Data
 
     word gradSchemeName_;
-    tmp<fv::gradScheme<Type> > gradScheme_;
+    tmp<fv::gradScheme<Type>> gradScheme_;
     scalar beta_;
 
     // Private Member Functions
@@ -169,7 +169,7 @@ public:
     }
 
     //- Return the explicit correction to the face-interpolate
-    virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+    virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
     correction
     (
         GeometricField<Type, fvPatchField, volMesh> const& vf

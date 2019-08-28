@@ -473,7 +473,7 @@ void boundaryLayerOptimisation::optimiseThicknessVariation
             const DynList<label>& eNeiProcs =
                 mesh_.addressingData().edgeNeiProcs();
 
-            std::map<label, LongList<labelledScalar> > exchangeData;
+            std::map<label, LongList<labelledScalar>> exchangeData;
             forAll(eNeiProcs, i)
                 exchangeData[eNeiProcs[i]].clear();
 

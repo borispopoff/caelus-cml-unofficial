@@ -133,7 +133,7 @@ public:
     //  - point+local index
     //  - sqr(distance)
     //  - processor
-    typedef Tuple2<pointIndexHit, Tuple2<scalar, label> > nearInfo;
+    typedef Tuple2<pointIndexHit, Tuple2<scalar, label>> nearInfo;
 
     class nearestEqOp
     {

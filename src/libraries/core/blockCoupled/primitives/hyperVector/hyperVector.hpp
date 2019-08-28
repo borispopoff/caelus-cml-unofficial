@@ -209,7 +209,7 @@ inline hyperVector<Cmpt, length> transform
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
 template<class Cmpt, int length>
-class outerProduct<Cmpt, hyperVector<Cmpt, length> >
+class outerProduct<Cmpt, hyperVector<Cmpt, length>>
 {
 public:
 
@@ -227,7 +227,7 @@ public:
 
 
 template<class Cmpt, int length>
-class outerProduct<hyperVector<Cmpt, length>, hyperVector<Cmpt, length> >
+class outerProduct<hyperVector<Cmpt, length>, hyperVector<Cmpt, length>>
 {
 public:
 

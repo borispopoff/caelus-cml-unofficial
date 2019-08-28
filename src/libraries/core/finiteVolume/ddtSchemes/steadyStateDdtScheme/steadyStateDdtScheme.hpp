@@ -88,53 +88,53 @@ public:
             return fv::ddtScheme<Type>::mesh();
         }
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const dimensioned<Type>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const volScalarField& alpha,
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& psi
         );
 
-        tmp<fvMatrix<Type> > fvmDdt
+        tmp<fvMatrix<Type>> fvmDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmDdt
+        tmp<fvMatrix<Type>> fvmDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmDdt
+        tmp<fvMatrix<Type>> fvmDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmDdt
+        tmp<fvMatrix<Type>> fvmDdt
         (
             const volScalarField& alpha,
             const volScalarField& rho,
@@ -233,13 +233,13 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 steadyStateDdtScheme<Type>::fvcDdt
 (
     const dimensioned<Type>& dt
 )
 {
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -262,13 +262,13 @@ steadyStateDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 steadyStateDdtScheme<Type>::fvcDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -291,14 +291,14 @@ steadyStateDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 steadyStateDdtScheme<Type>::fvcDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -321,14 +321,14 @@ steadyStateDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 steadyStateDdtScheme<Type>::fvcDdt
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -351,7 +351,7 @@ steadyStateDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 steadyStateDdtScheme<Type>::fvcDdt
 (
     const volScalarField& alpha,
@@ -359,7 +359,7 @@ steadyStateDdtScheme<Type>::fvcDdt
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -382,13 +382,13 @@ steadyStateDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 steadyStateDdtScheme<Type>::fvmDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -402,14 +402,14 @@ steadyStateDdtScheme<Type>::fvmDdt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 steadyStateDdtScheme<Type>::fvmDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -423,14 +423,14 @@ steadyStateDdtScheme<Type>::fvmDdt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 steadyStateDdtScheme<Type>::fvmDdt
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -444,7 +444,7 @@ steadyStateDdtScheme<Type>::fvmDdt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 steadyStateDdtScheme<Type>::fvmDdt
 (
     const volScalarField& alpha,
@@ -452,7 +452,7 @@ steadyStateDdtScheme<Type>::fvmDdt
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (

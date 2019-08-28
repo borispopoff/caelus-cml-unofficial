@@ -247,7 +247,7 @@ public:
 
             //- Map volume field
             template<class Type>
-            static tmp<GeometricField<Type, fvPatchField, volMesh> >
+            static tmp<GeometricField<Type, fvPatchField, volMesh>>
             interpolate
             (
                 const GeometricField<Type, fvPatchField, volMesh>&,
@@ -258,7 +258,7 @@ public:
             );
 
             template<class Type>
-            tmp<GeometricField<Type, fvPatchField, volMesh> >
+            tmp<GeometricField<Type, fvPatchField, volMesh>>
             interpolate
             (
                 const GeometricField<Type, fvPatchField, volMesh>&
@@ -267,7 +267,7 @@ public:
             //- Map surface field. Optionally negates value if flipping
             //  a face (from exposing an internal face)
             template<class Type>
-            static tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+            static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
             interpolate
             (
                 const GeometricField<Type, fvsPatchField, surfaceMesh>&,
@@ -279,7 +279,7 @@ public:
             );
 
             template<class Type>
-            tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+            tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
             interpolate
             (
                 const GeometricField<Type, fvsPatchField, surfaceMesh>&,
@@ -288,7 +288,7 @@ public:
 
             //- Map point field
             template<class Type>
-            static tmp<GeometricField<Type, pointPatchField, pointMesh> >
+            static tmp<GeometricField<Type, pointPatchField, pointMesh>>
             interpolate
             (
                 const GeometricField<Type, pointPatchField, pointMesh>&,
@@ -298,7 +298,7 @@ public:
             );
 
             template<class Type>
-            tmp<GeometricField<Type, pointPatchField, pointMesh> >
+            tmp<GeometricField<Type, pointPatchField, pointMesh>>
             interpolate
             (
                 const GeometricField<Type, pointPatchField, pointMesh>&
@@ -306,7 +306,7 @@ public:
 
             //- Map dimensioned fields
             template<class Type>
-            static tmp<DimensionedField<Type, volMesh> >
+            static tmp<DimensionedField<Type, volMesh>>
             interpolate
             (
                 const DimensionedField<Type, volMesh>&,
@@ -315,7 +315,7 @@ public:
             );
 
             template<class Type>
-            tmp<DimensionedField<Type, volMesh> >
+            tmp<DimensionedField<Type, volMesh>>
             interpolate(const DimensionedField<Type, volMesh>&) const;
 };
 
@@ -341,7 +341,7 @@ namespace CML
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> > fvMeshSubset::interpolate
+tmp<GeometricField<Type, fvPatchField, volMesh>> fvMeshSubset::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
     const fvMesh& sMesh,
@@ -351,7 +351,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > fvMeshSubset::interpolate
 )
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvPatchField<Type> > patchFields(patchMap.size());
+    PtrList<fvPatchField<Type>> patchFields(patchMap.size());
 
     forAll(patchFields, patchi)
     {
@@ -385,7 +385,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > fvMeshSubset::interpolate
         }
     }
 
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tresF
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tresF
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -459,7 +459,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > fvMeshSubset::interpolate
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> > fvMeshSubset::interpolate
+tmp<GeometricField<Type, fvPatchField, volMesh>> fvMeshSubset::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
@@ -476,7 +476,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > fvMeshSubset::interpolate
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > fvMeshSubset::interpolate
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvMeshSubset::interpolate
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& vf,
     const fvMesh& sMesh,
@@ -487,7 +487,7 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > fvMeshSubset::interpolate
 )
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvsPatchField<Type> > patchFields(patchMap.size());
+    PtrList<fvsPatchField<Type>> patchFields(patchMap.size());
 
     forAll(patchFields, patchi)
     {
@@ -522,7 +522,7 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > fvMeshSubset::interpolate
     }
 
     // Create the complete field from the pieces
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tresF
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tresF
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -642,7 +642,7 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > fvMeshSubset::interpolate
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > fvMeshSubset::interpolate
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvMeshSubset::interpolate
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sf,
     const bool negateIfFlipped
@@ -661,7 +661,7 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > fvMeshSubset::interpolate
 
 
 template<class Type>
-tmp<GeometricField<Type, pointPatchField, pointMesh> >
+tmp<GeometricField<Type, pointPatchField, pointMesh>>
 fvMeshSubset::interpolate
 (
     const GeometricField<Type, pointPatchField, pointMesh>& vf,
@@ -671,7 +671,7 @@ fvMeshSubset::interpolate
 )
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<pointPatchField<Type> > patchFields(patchMap.size());
+    PtrList<pointPatchField<Type>> patchFields(patchMap.size());
 
     forAll(patchFields, patchi)
     {
@@ -706,7 +706,7 @@ fvMeshSubset::interpolate
     }
 
     // Create the complete field from the pieces
-    tmp<GeometricField<Type, pointPatchField, pointMesh> > tresF
+    tmp<GeometricField<Type, pointPatchField, pointMesh>> tresF
     (
         new GeometricField<Type, pointPatchField, pointMesh>
         (
@@ -792,7 +792,7 @@ fvMeshSubset::interpolate
 
 
 template<class Type>
-tmp<GeometricField<Type, pointPatchField, pointMesh> > fvMeshSubset::interpolate
+tmp<GeometricField<Type, pointPatchField, pointMesh>> fvMeshSubset::interpolate
 (
     const GeometricField<Type, pointPatchField, pointMesh>& sf
 ) const
@@ -808,7 +808,7 @@ tmp<GeometricField<Type, pointPatchField, pointMesh> > fvMeshSubset::interpolate
 
 
 template<class Type>
-tmp<DimensionedField<Type, volMesh> > fvMeshSubset::interpolate
+tmp<DimensionedField<Type, volMesh>> fvMeshSubset::interpolate
 (
     const DimensionedField<Type, volMesh>& df,
     const fvMesh& sMesh,
@@ -816,7 +816,7 @@ tmp<DimensionedField<Type, volMesh> > fvMeshSubset::interpolate
 )
 {
     // Create the complete field from the pieces
-    tmp<DimensionedField<Type, volMesh> > tresF
+    tmp<DimensionedField<Type, volMesh>> tresF
     (
         new DimensionedField<Type, volMesh>
         (
@@ -839,7 +839,7 @@ tmp<DimensionedField<Type, volMesh> > fvMeshSubset::interpolate
 
 
 template<class Type>
-tmp<DimensionedField<Type, volMesh> > fvMeshSubset::interpolate
+tmp<DimensionedField<Type, volMesh>> fvMeshSubset::interpolate
 (
     const DimensionedField<Type, volMesh>& df
 ) const

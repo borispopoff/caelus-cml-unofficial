@@ -72,17 +72,17 @@ public:
             const mapDistribute& map,
             const labelListList& stencil,
             const GeometricField<T, fvsPatchField, surfaceMesh>& fld,
-            List<List<T> >& stencilFld
+            List<List<T>>& stencilFld
         );
 
         //- Sum surface field contributions to create cell values
         template<class Type>
-        static tmp<GeometricField<Type, fvPatchField, volMesh> > weightedSum
+        static tmp<GeometricField<Type, fvPatchField, volMesh>> weightedSum
         (
             const mapDistribute& map,
             const labelListList& stencil,
             const GeometricField<Type, fvsPatchField, surfaceMesh>& fld,
-            const List<List<scalar> >& stencilWeights
+            const List<List<scalar>>& stencilWeights
         );
 };
 
@@ -101,7 +101,7 @@ void CML::extendedFaceToCellStencil::collectData
     const mapDistribute& map,
     const labelListList& stencil,
     const GeometricField<Type, fvsPatchField, surfaceMesh>& fld,
-    List<List<Type> >& stencilFld
+    List<List<Type>>& stencilFld
 )
 {
     // 1. Construct face data in compact addressing
@@ -145,22 +145,22 @@ void CML::extendedFaceToCellStencil::collectData
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh>>
 CML::extendedFaceToCellStencil::weightedSum
 (
     const mapDistribute& map,
     const labelListList& stencil,
     const GeometricField<Type, fvsPatchField, surfaceMesh>& fld,
-    const List<List<scalar> >& stencilWeights
+    const List<List<scalar>>& stencilWeights
 )
 {
     const fvMesh& mesh = fld.mesh();
 
     // Collect internal and boundary values
-    List<List<Type> > stencilFld;
+    List<List<Type>> stencilFld;
     collectData(map, stencil, fld, stencilFld);
 
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tsfCorr
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tsfCorr
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (

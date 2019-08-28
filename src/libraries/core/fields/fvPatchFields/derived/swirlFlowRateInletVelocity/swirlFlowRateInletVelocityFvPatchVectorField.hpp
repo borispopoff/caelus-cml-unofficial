@@ -92,10 +92,10 @@ class swirlFlowRateInletVelocityFvPatchVectorField
         const word rhoName_;
 
         //- Inlet integral flow rate
-        autoPtr<DataEntry<scalar> > flowRate_;
+        autoPtr<DataEntry<scalar>> flowRate_;
 
         //- Angular speed in revolutions per minute (RPM)
-        autoPtr<DataEntry<scalar> > rpm_;
+        autoPtr<DataEntry<scalar>> rpm_;
 
 
 public:

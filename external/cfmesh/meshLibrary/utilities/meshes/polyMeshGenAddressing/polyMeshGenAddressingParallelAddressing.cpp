@@ -62,14 +62,14 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
         mesh_.procBoundaries();
 
     //- find which processors contain a given bnd point
-    List<std::map<label, std::pair<label, label> > > patchPoints;
+    List<std::map<label, std::pair<label, label>>> patchPoints;
     patchPoints.setSize(procBoundaries.size());
     forAll(procBoundaries, patchI)
     {
         const label start = procBoundaries[patchI].patchStart();
         const label end = start + procBoundaries[patchI].patchSize();
 
-        std::map<label, std::pair<label, label> >& patchPointsMap =
+        std::map<label, std::pair<label, label>>& patchPointsMap =
             patchPoints[patchI];
 
         for(label faceI=start;faceI<end;++faceI)
@@ -78,7 +78,7 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
 
             forAll(f, pI)
             {
-                std::map<label, std::pair<label, label> >::iterator it =
+                std::map<label, std::pair<label, label>>::iterator it =
                     patchPointsMap.find(f[pI]);
 
                 if( it != patchPointsMap.end() )
@@ -106,9 +106,9 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
 
         forAll(procBoundaries, patchI)
         {
-            const std::map<label, std::pair<label, label> >& patchPointsMap =
+            const std::map<label, std::pair<label, label>>& patchPointsMap =
                 patchPoints[patchI];
-            std::map<label, std::pair<label, label> >::const_iterator it;
+            std::map<label, std::pair<label, label>>::const_iterator it;
 
             labelLongList dataToSend;
             for(it=patchPointsMap.begin();it!=patchPointsMap.end();++it)
@@ -211,9 +211,9 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
 
         forAll(procBoundaries, patchI)
         {
-            const std::map<label, std::pair<label, label> >& patchPointsMap =
+            const std::map<label, std::pair<label, label>>& patchPointsMap =
                 patchPoints[patchI];
-            std::map<label, std::pair<label, label> >::const_iterator it;
+            std::map<label, std::pair<label, label>>::const_iterator it;
 
             labelLongList dataToSend;
             for(it=patchPointsMap.begin();it!=patchPointsMap.end();++it)

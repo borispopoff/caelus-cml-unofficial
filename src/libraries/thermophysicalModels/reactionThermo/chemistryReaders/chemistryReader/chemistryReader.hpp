@@ -42,7 +42,7 @@ SourceFiles
 namespace CML
 {
 
-typedef HashTable<List<specieElement> > speciesCompositionTable;
+typedef HashTable<List<specieElement>> speciesCompositionTable;
 
 
 /*---------------------------------------------------------------------------*\
@@ -122,7 +122,7 @@ public:
 
 
 template<class ThermoType>
-CML::autoPtr<CML::chemistryReader<ThermoType> >
+CML::autoPtr<CML::chemistryReader<ThermoType>>
 CML::chemistryReader<ThermoType>::New
 (
     const dictionary& thermoDict,
@@ -151,7 +151,7 @@ CML::chemistryReader<ThermoType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<chemistryReader<ThermoType> >
+    return autoPtr<chemistryReader<ThermoType>>
     (
         cstrIter()(thermoDict, species)
     );
@@ -165,7 +165,7 @@ CML::chemistryReader<ThermoType>::New
 
 #define makeChemistryReaderType(Reader, Thermo)                                \
     defineNamedTemplateTypeNameAndDebug(Reader<Thermo>, 0);                    \
-    chemistryReader<Thermo>::adddictionaryConstructorToTable<Reader<Thermo> >  \
+    chemistryReader<Thermo>::adddictionaryConstructorToTable<Reader<Thermo>>   \
         add##Reader##Thermo##ConstructorToTable_
 
 

@@ -1575,7 +1575,7 @@ int main(int argc, char *argv[])
 
         // List of patch names and the cellZone(s) they border
         // this is just an info file to make MRF easier to setup
-        List<DynamicList<word> > boundaryZones
+        List<DynamicList<word>> boundaryZones
         (
             pShapeMesh.boundaryMesh().size()
         );

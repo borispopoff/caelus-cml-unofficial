@@ -84,7 +84,7 @@ void tetMeshOptimisation::unifyNegativePoints(boolList& negativeNode) const
 
 void tetMeshOptimisation::exchangeData
 (
-    std::map<label, DynList<parPartTet> >& m,
+    std::map<label, DynList<parPartTet>>& m,
     boolList* negativeNodePtr
 )
 {
@@ -100,7 +100,7 @@ void tetMeshOptimisation::exchangeData
     const LongList<partTet>& tets = tetMesh_.tets();
 
     //- create the map holding data which will be sent to other procs
-    std::map<label, LongList<parPartTet> > exchangeData;
+    std::map<label, LongList<parPartTet>> exchangeData;
     forAll(neiProcs, procI)
         exchangeData.insert
         (
@@ -212,7 +212,7 @@ void tetMeshOptimisation::updateBufferLayerPoints()
     const DynList<label>& neiProcs = tetMesh_.neiProcs();
 
     //- create the map
-    std::map<label, LongList<labelledPoint> > exchangeData;
+    std::map<label, LongList<labelledPoint>> exchangeData;
     forAll(neiProcs, i)
         exchangeData.insert
         (
@@ -268,7 +268,7 @@ void tetMeshOptimisation::unifyCoordinatesParallel
         tetMesh_.pointsAtProcessorBoundaries();
 
     //- create the map
-    std::map<label, LongList<labelledPoint> > exchangeData;
+    std::map<label, LongList<labelledPoint>> exchangeData;
     forAll(neiProcs, procI)
         exchangeData.insert
         (

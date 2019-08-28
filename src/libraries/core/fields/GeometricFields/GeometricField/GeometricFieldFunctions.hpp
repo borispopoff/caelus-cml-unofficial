@@ -97,7 +97,7 @@ tmp
 >
 pow
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf,
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf,
     typename powProduct<Type, r>::type
 );
 
@@ -131,7 +131,7 @@ tmp
         GeoMesh
     >
 >
-sqr(const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf);
+sqr(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void magSqr
@@ -141,15 +141,15 @@ void magSqr
 );
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > magSqr
+tmp<GeometricField<scalar, PatchField, GeoMesh>> magSqr
 (
     const GeometricField<Type, PatchField, GeoMesh>& gf
 );
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > magSqr
+tmp<GeometricField<scalar, PatchField, GeoMesh>> magSqr
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 );
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -160,15 +160,15 @@ void mag
 );
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > mag
+tmp<GeometricField<scalar, PatchField, GeoMesh>> mag
 (
     const GeometricField<Type, PatchField, GeoMesh>& gf
 );
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > mag
+tmp<GeometricField<scalar, PatchField, GeoMesh>> mag
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 );
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -205,7 +205,7 @@ tmp
         GeoMesh
     >
 >
-cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf);
+cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf);
 
 
 #define UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY(returnType, func, gFunc)       \
@@ -219,7 +219,7 @@ dimensioned<returnType> func                                                  \
 template<class Type, template<class> class PatchField, class GeoMesh>         \
 dimensioned<returnType> func                                                  \
 (                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
 );
 
 UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY(Type, max, gMax)
@@ -239,7 +239,7 @@ dimensioned<returnType> func                                                  \
 template<class Type, template<class> class PatchField, class GeoMesh>         \
 dimensioned<returnType> func                                                  \
 (                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
 );
 
 UNARY_REDUCTION_FUNCTION(Type, sum, gSum)
@@ -313,7 +313,7 @@ tmp                                                                           \
 operator op                                                                   \
 (                                                                             \
     const GeometricField<Type1, PatchField, GeoMesh>& gf1,                    \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh> >& tgf2              \
+    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2              \
 );                                                                            \
                                                                               \
 template                                                                      \
@@ -325,7 +325,7 @@ tmp                                                                           \
 >                                                                             \
 operator op                                                                   \
 (                                                                             \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1,             \
+    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,             \
     const GeometricField<Type2, PatchField, GeoMesh>& gf2                     \
 );                                                                            \
                                                                               \
@@ -338,8 +338,8 @@ tmp                                                                           \
 >                                                                             \
 operator op                                                                   \
 (                                                                             \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1,             \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh> >& tgf2              \
+    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,             \
+    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2              \
 );                                                                            \
                                                                               \
 template                                                                      \
@@ -393,7 +393,7 @@ tmp                                                                           \
 >                                                                             \
 operator op                                                                   \
 (                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1,              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,              \
     const dimensioned<Form>& dvs                                              \
 );                                                                            \
                                                                               \
@@ -412,7 +412,7 @@ tmp                                                                           \
 >                                                                             \
 operator op                                                                   \
 (                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1,              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs                                    \
 );                                                                            \
                                                                               \
@@ -468,7 +468,7 @@ tmp                                                                           \
 operator op                                                                   \
 (                                                                             \
     const dimensioned<Form>& dvs,                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
 );                                                                            \
                                                                               \
 template                                                                      \
@@ -487,7 +487,7 @@ tmp                                                                           \
 operator op                                                                   \
 (                                                                             \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                   \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
 );
 
 PRODUCT_OPERATOR(typeOfSum, +, add)

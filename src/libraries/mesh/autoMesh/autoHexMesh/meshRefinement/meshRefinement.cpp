@@ -818,7 +818,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRemoveCells
 //
 //
 //    // Transfer lists.
-//    PtrList<HashSet<edge, Hash<edge> > > regionConnectivity
+//    PtrList<HashSet<edge, Hash<edge>>> regionConnectivity
 //    (Pstream::nProcs());
 //    forAll(regionConnectivity, proci)
 //    {
@@ -827,7 +827,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRemoveCells
 //            regionConnectivity.set
 //            (
 //                proci,
-//                new HashSet<edge, Hash<edge> >
+//                new HashSet<edge, Hash<edge>>
 //                (
 //                    coupledRegionToShifted.size()
 //                  / Pstream::nProcs()
@@ -926,7 +926,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRemoveCells
 //        {
 //            for
 //            (
-//                HashSet<edge, Hash<edge> >::const_iterator iter =
+//                HashSet<edge, Hash<edge>>::const_iterator iter =
 //                    regionConnectivity[proci].begin();
 //                iter != regionConnectivity[proci].end();
 //                ++iter

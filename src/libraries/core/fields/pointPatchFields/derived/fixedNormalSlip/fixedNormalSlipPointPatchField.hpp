@@ -99,9 +99,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new fixedNormalSlipPointPatchField<Type>
                 (
@@ -118,12 +118,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new fixedNormalSlipPointPatchField<Type>
                 (
@@ -213,7 +213,7 @@ void CML::fixedNormalSlipPointPatchField<Type>::evaluate
     const Pstream::commsTypes
 )
 {
-    tmp<Field<Type> > tvalues =
+    tmp<Field<Type>> tvalues =
         transform(I - n_*n_, this->patchInternalField());
 
     // Get internal field to insert values into

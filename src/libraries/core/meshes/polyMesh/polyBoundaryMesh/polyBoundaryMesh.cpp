@@ -288,7 +288,7 @@ CML::polyBoundaryMesh::neighbourEdges() const
 
         // From mesh edge (expressed as a point pair so as not to construct
         // point addressing) to patch + relative edge index.
-        HashTable<labelPair, edge, Hash<edge> > pointsToEdge(nEdgePairs);
+        HashTable<labelPair, edge, Hash<edge>> pointsToEdge(nEdgePairs);
 
         forAll(*this, patchi)
         {
@@ -309,7 +309,7 @@ CML::polyBoundaryMesh::neighbourEdges() const
                 // Edge in mesh points.
                 edge meshEdge(pp.meshPoints()[e[0]], pp.meshPoints()[e[1]]);
 
-                HashTable<labelPair, edge, Hash<edge> >::iterator fnd =
+                HashTable<labelPair, edge, Hash<edge>>::iterator fnd =
                     pointsToEdge.find(meshEdge);
 
                 if (fnd == pointsToEdge.end())

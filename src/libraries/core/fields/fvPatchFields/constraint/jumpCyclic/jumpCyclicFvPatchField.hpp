@@ -105,13 +105,13 @@ public:
             }
 
             //- Return the "jump" across the patch as a "half" field
-            virtual tmp<Field<Type> > jump() const = 0;
+            virtual tmp<Field<Type>> jump() const = 0;
 
 
         // Evaluation functions
 
             //- Return neighbour coupled given internal cell data
-            tmp<Field<Type> > patchNeighbourField() const;
+            tmp<Field<Type>> patchNeighbourField() const;
 
             //- Update result field based on interface functionality
             virtual void updateInterfaceMatrix
@@ -206,14 +206,14 @@ CML::jumpCyclicFvPatchField<Type>::jumpCyclicFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::jumpCyclicFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
     const labelUList& nbrFaceCells =
         this->cyclicPatch().neighbFvPatch().faceCells();
 
-    tmp<Field<Type> > tpnf(new Field<Type>(this->size()));
+    tmp<Field<Type>> tpnf(new Field<Type>(this->size()));
     Field<Type>& pnf = tpnf();
 
     Field<Type> jf(this->jump());

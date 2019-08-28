@@ -27,7 +27,7 @@ License
 template<class T>
 inline const CML::Xfer<T>& CML::Xfer<T>::null()
 {
-    return NullSingletonRef< Xfer<T> >();
+    return NullSingletonRef< Xfer<T>>();
 }
 
 

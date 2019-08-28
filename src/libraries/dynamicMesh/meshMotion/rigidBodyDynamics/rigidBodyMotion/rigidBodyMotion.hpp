@@ -182,7 +182,7 @@ public:
             //- Write the status of the motion of the given body
             void writeState(const label bodyID, autoPtr<OFstream> &stateFilePtr);
             //- Write the status of the Restraints
-            void writeRestState(List<autoPtr<OFstream> > &restraintStateFilePtrs);
+            void writeRestState(List<autoPtr<OFstream>> &restraintStateFilePtrs);
 
 
         // Transformations

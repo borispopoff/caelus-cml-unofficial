@@ -99,9 +99,9 @@ public:
         LiquidEvaporationBoil(const LiquidEvaporationBoil<CloudType>& pcm);
 
         //- Construct and return a clone
-        virtual autoPtr<PhaseChangeModel<CloudType> > clone() const
+        virtual autoPtr<PhaseChangeModel<CloudType>> clone() const
         {
-            return autoPtr<PhaseChangeModel<CloudType> >
+            return autoPtr<PhaseChangeModel<CloudType>>
             (
                 new LiquidEvaporationBoil<CloudType>(*this)
             );

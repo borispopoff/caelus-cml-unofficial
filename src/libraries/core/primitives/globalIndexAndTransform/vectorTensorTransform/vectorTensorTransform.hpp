@@ -145,7 +145,7 @@ public:
 
             //- Transform the given field
             template<class Type>
-            tmp<Field<Type> > transform(const Field<Type>&) const;
+            tmp<Field<Type>> transform(const Field<Type>&) const;
 
             //- Inverse transform the given type
             template<class Type>
@@ -153,7 +153,7 @@ public:
 
             //- Inverse transform the given field
             template<class Type>
-            tmp<Field<Type> > invTransform(const Field<Type>&) const;
+            tmp<Field<Type>> invTransform(const Field<Type>&) const;
 
 
     // Member operators
@@ -193,11 +193,11 @@ inline bool contiguous<vectorTensorTransform>() {return true;}
 
 //- Template specialisations
 template<>
-tmp<Field<bool> > vectorTensorTransform::transform(const Field<bool>&) const;
+tmp<Field<bool>> vectorTensorTransform::transform(const Field<bool>&) const;
 template<>
-tmp<Field<label> > vectorTensorTransform::transform(const Field<label>&) const;
+tmp<Field<label>> vectorTensorTransform::transform(const Field<label>&) const;
 template<>
-tmp<Field<scalar> > vectorTensorTransform::transform(const Field<scalar>&)
+tmp<Field<scalar>> vectorTensorTransform::transform(const Field<scalar>&)
 const;
 
 
@@ -552,7 +552,7 @@ Type CML::vectorTensorTransform::transform(const Type& x) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::vectorTensorTransform::transform
+CML::tmp<CML::Field<Type>> CML::vectorTensorTransform::transform
 (
     const Field<Type>& fld
 ) const
@@ -583,7 +583,7 @@ Type CML::vectorTensorTransform::invTransform(const Type& x) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::vectorTensorTransform::invTransform
+CML::tmp<CML::Field<Type>> CML::vectorTensorTransform::invTransform
 (
     const Field<Type>& fld
 ) const

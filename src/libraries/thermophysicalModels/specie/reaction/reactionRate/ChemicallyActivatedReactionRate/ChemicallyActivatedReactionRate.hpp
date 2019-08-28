@@ -62,7 +62,7 @@ class ChemicallyActivatedReactionRate
     ReactionRate kInf_;
     ChemicallyActivationFunction F_;
     thirdBodyEfficiencies thirdBodyEfficiencies_;
-    List<Tuple2<label, scalar> > beta_;
+    List<Tuple2<label, scalar>> beta_;
 
 
 public:
@@ -155,7 +155,7 @@ public:
     //- Third-body efficiencies (beta = 1-alpha)
     //  non-empty only for third-body reactions
     //  with enhanced molecularity (alpha != 1)
-    inline const List<Tuple2<label, scalar> >& beta() const
+    inline const List<Tuple2<label, scalar>>& beta() const
     {
         return beta_;
     }

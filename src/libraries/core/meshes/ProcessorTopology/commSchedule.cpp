@@ -70,7 +70,7 @@ CML::commSchedule::commSchedule
     procSchedule_(nProcs)
 {
     // Determine comms per processor.
-    List<DynamicList<label> > procToComms(nProcs);
+    List<DynamicList<label>> procToComms(nProcs);
 
     forAll(comms, commI)
     {

@@ -114,16 +114,16 @@ public:
         // Primary region source fields
 
             //- Return total mass source - Eulerian phase only
-            virtual tmp<DimensionedField<scalar, volMesh> > Srho() const = 0;
+            virtual tmp<DimensionedField<scalar, volMesh>> Srho() const = 0;
 
             //- Return mass source for specie i - Eulerian phase only
-            virtual tmp<DimensionedField<scalar, volMesh> > Srho
+            virtual tmp<DimensionedField<scalar, volMesh>> Srho
             (
                 const label i
             ) const = 0;
 
             //- Return enthalpy source - Eulerian phase only
-            virtual tmp<DimensionedField<scalar, volMesh> > Sh() const = 0;
+            virtual tmp<DimensionedField<scalar, volMesh>> Sh() const = 0;
 
 
         // Evolution

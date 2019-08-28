@@ -194,7 +194,7 @@ void meshOctreeModifier::addLayerFromNeighbouringProcessors()
 
     const LongList<meshOctreeCube*>& leaves = octree_.leaves_;
     const labelList& neiProcs = octree_.neiProcs_;
-    const List<Pair<meshOctreeCubeCoordinates> >& neiRange = octree_.neiRange_;
+    const List<Pair<meshOctreeCubeCoordinates>>& neiRange = octree_.neiRange_;
 
     forAll(leaves, leafI)
         if( leaves[leafI]->procNo() != Pstream::myProcNo() )
@@ -203,7 +203,7 @@ void meshOctreeModifier::addLayerFromNeighbouringProcessors()
     Info << "Adding an additional layer of cells" << endl;
 
     meshOctreeCubeCoordinates minCoord, maxCoord;
-    std::map<label, LongList<meshOctreeCubeBasic> > toProcs;
+    std::map<label, LongList<meshOctreeCubeBasic>> toProcs;
     forAll(neiProcs, i)
         toProcs.insert
         (
@@ -230,7 +230,7 @@ void meshOctreeModifier::addLayerFromNeighbouringProcessors()
     {
         if( i == Pstream::myProcNo() )
         {
-            std::map<label, LongList<meshOctreeCubeBasic> >::iterator it;
+            std::map<label, LongList<meshOctreeCubeBasic>>::iterator it;
             for(it=toProcs.begin();it!=toProcs.end();++it)
             {
                 Pout << "Sending " << it->second.size() << " cubes to proc "

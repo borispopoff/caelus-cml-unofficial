@@ -69,7 +69,7 @@ protected:
         autoPtr<filmViscosityModel> viscosity_;
 
         //- Viscosity factor as a function of temperature
-        autoPtr<DataEntry<scalar> > function_;
+        autoPtr<DataEntry<scalar>> function_;
 
 
 public:

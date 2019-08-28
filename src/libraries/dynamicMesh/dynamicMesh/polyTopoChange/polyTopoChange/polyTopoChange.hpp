@@ -198,7 +198,7 @@ class polyTopoChange
         template<class T>
         static void reorder(const labelList& map, DynamicList<T>&);
         template<class T>
-        static void reorder(const labelList& map, List<DynamicList<T> >&);
+        static void reorder(const labelList& map, List<DynamicList<T>>&);
         template<class T>
         static void renumberKey(const labelList& map, Map<T>&);
 
@@ -319,7 +319,7 @@ class polyTopoChange
         //- Calculate mapping for patchpoints only
         void calcPatchPointMap
         (
-            const List<Map<label> >&,
+            const List<Map<label>>&,
             const polyBoundaryMesh&,
             labelListList&
         ) const;
@@ -353,7 +353,7 @@ class polyTopoChange
         void calcFaceZonePointMap
         (
             const polyMesh&,
-            const List<Map<label> >&,
+            const List<Map<label>>&,
             labelListList&
         ) const;
 
@@ -391,10 +391,10 @@ class polyTopoChange
             List<objectMap>& cellsFromEdges,
             List<objectMap>& cellsFromFaces,
             List<objectMap>& cellsFromCells,
-            List<Map<label> >& oldPatchMeshPointMaps,
+            List<Map<label>>& oldPatchMeshPointMaps,
             labelList& oldPatchNMeshPoints,
             labelList& oldPatchStarts,
-            List<Map<label> >& oldFaceZoneMeshPointMaps
+            List<Map<label>>& oldFaceZoneMeshPointMaps
         );
 
 public:
@@ -663,11 +663,11 @@ template <class T>
 void CML::polyTopoChange::reorder
 (
     const labelList& oldToNew,
-    List<DynamicList<T> >& lst
+    List<DynamicList<T>>& lst
 )
 {
     // Create copy
-    List<DynamicList<T> > oldLst(lst);
+    List<DynamicList<T>> oldLst(lst);
 
     forAll(oldToNew, elemI)
     {

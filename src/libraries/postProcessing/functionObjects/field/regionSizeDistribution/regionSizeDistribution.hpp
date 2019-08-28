@@ -162,7 +162,7 @@ class regionSizeDistribution
         wordReList fields_;
 
         //- Output formatter to write
-        autoPtr<writer<scalar> > formatterPtr_;
+        autoPtr<writer<scalar>> formatterPtr_;
 
         //- Optional coordinate system
         autoPtr<coordinateSystem> coordSysPtr_;

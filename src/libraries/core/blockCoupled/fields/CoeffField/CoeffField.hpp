@@ -59,7 +59,7 @@ template<class Type>
 Ostream& operator<<(Ostream&, const CoeffField<Type>&);
 
 template<class Type>
-Ostream& operator<<(Ostream&, const tmp<CoeffField<Type> >&);
+Ostream& operator<<(Ostream&, const tmp<CoeffField<Type>>&);
 
 
 /*---------------------------------------------------------------------------*\
@@ -127,7 +127,7 @@ public:
     explicit CoeffField(Istream&);
 
     //- Clone
-    tmp<CoeffField<Type> > clone() const;
+    tmp<CoeffField<Type>> clone() const;
 
     ~CoeffField();
 
@@ -148,7 +148,7 @@ public:
     void negate();
 
     //- Return the field transpose
-    tmp<CoeffField<Type> > transpose() const;
+    tmp<CoeffField<Type>> transpose() const;
 
     // Return as typed.  Fails when asked for the incorrect type
     //- Return as scalar field
@@ -239,7 +239,7 @@ public:
 
     // Member operators
     void operator=(const CoeffField<Type>&);
-    void operator=(const tmp<CoeffField<Type> >&);
+    void operator=(const tmp<CoeffField<Type>>&);
 
     void operator=(const scalarTypeField&);
     void operator=(const tmp<scalarTypeField>&);
@@ -251,7 +251,7 @@ public:
     void operator=(const tmp<squareTypeField>&);
 
     void operator+=(const CoeffField<Type>&);
-    void operator+=(const tmp<CoeffField<Type> >&);
+    void operator+=(const tmp<CoeffField<Type>>&);
 
     void operator+=(const scalarTypeField&);
     void operator+=(const tmp<scalarTypeField>&);
@@ -263,7 +263,7 @@ public:
     void operator+=(const tmp<squareTypeField>&);
 
     void operator-=(const CoeffField<Type>&);
-    void operator-=(const tmp<CoeffField<Type> >&);
+    void operator-=(const tmp<CoeffField<Type>>&);
 
     void operator-=(const scalarTypeField&);
     void operator-=(const tmp<scalarTypeField>&);
@@ -275,14 +275,14 @@ public:
     void operator-=(const tmp<squareTypeField>&);
 
     void operator*=(const UList<scalar>&);
-    void operator*=(const tmp<Field<scalar> >&);
+    void operator*=(const tmp<Field<scalar>>&);
     void operator*=(const scalar&);
 
     void operator/=(const UList<scalar>&);
-    void operator/=(const tmp<Field<scalar> >&);
+    void operator/=(const tmp<Field<scalar>>&);
     void operator/=(const scalar&);
 
-    tmp<CoeffField<Type> > operator-();
+    tmp<CoeffField<Type>> operator-();
 
     // IOstream operators
     friend Ostream& operator<< <Type>
@@ -294,7 +294,7 @@ public:
     friend Ostream& operator<< <Type>
     (
         Ostream&,
-        const tmp<CoeffField<Type> >&
+        const tmp<CoeffField<Type>>&
     );
 };
 
@@ -499,9 +499,9 @@ CoeffField<Type>::CoeffField(Istream& is)
 
 
 template<class Type>
-tmp<CoeffField<Type> > CoeffField<Type>::clone() const
+tmp<CoeffField<Type>> CoeffField<Type>::clone() const
 {
-    return tmp<CoeffField<Type> >(new CoeffField<Type>(*this));
+    return tmp<CoeffField<Type>>(new CoeffField<Type>(*this));
 }
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -549,9 +549,9 @@ void CoeffField<Type>::negate()
 
 
 template<class Type>
-tmp<CoeffField<Type> > CoeffField<Type>::transpose() const
+tmp<CoeffField<Type>> CoeffField<Type>::transpose() const
 {
-    tmp<CoeffField<Type> > tt(new CoeffField<Type>(this->size()));
+    tmp<CoeffField<Type>> tt(new CoeffField<Type>(this->size()));
     CoeffField<Type>& t = tt();
 
     if (scalarCoeffPtr_)
@@ -1452,7 +1452,7 @@ void CoeffField<Type>::operator=(const CoeffField<Type>& f)
 
 
 template<class Type>
-void CoeffField<Type>::operator=(const tmp<CoeffField<Type> >& tf)
+void CoeffField<Type>::operator=(const tmp<CoeffField<Type>>& tf)
 {
     if (this == &(tf()))
     {
@@ -1467,9 +1467,9 @@ void CoeffField<Type>::operator=(const tmp<CoeffField<Type> >& tf)
 
 
 template<class Type>
-tmp<CoeffField<Type> > CoeffField<Type>::operator-()
+tmp<CoeffField<Type>> CoeffField<Type>::operator-()
 {
-    tmp<CoeffField<Type> > tf(new CoeffField<Type>(*this));
+    tmp<CoeffField<Type>> tf(new CoeffField<Type>(*this));
     tf->negate();
     return tf;
 }
@@ -1564,7 +1564,7 @@ void CML::CoeffField<Type>::operator op(const CoeffField<Type>& f)           \
                                                                               \
                                                                               \
 template<class Type>                                                          \
-void CML::CoeffField<Type>::operator op(const tmp<CoeffField<Type> >& tf)    \
+void CML::CoeffField<Type>::operator op(const tmp<CoeffField<Type>>& tf)    \
 {                                                                             \
     operator op(tf());                                                        \
     tf.clear();                                                               \
@@ -1700,7 +1700,7 @@ void CML::CoeffField<Type>::operator op(const UList<TYPE>& tf)               \
                                                                               \
                                                                               \
 template<class Type>                                                          \
-void CML::CoeffField<Type>::operator op(const tmp<Field<TYPE> >& tf)         \
+void CML::CoeffField<Type>::operator op(const tmp<Field<TYPE>>& tf)         \
 {                                                                             \
     operator op(tf());                                                        \
     tf.clear();                                                               \
@@ -1757,7 +1757,7 @@ CML::Ostream& CML::operator<<(Ostream& os, const CoeffField<Type>& f)
 
 
 template<class Type>
-CML::Ostream& CML::operator<<(Ostream& os, const tmp<CoeffField<Type> >& tf)
+CML::Ostream& CML::operator<<(Ostream& os, const tmp<CoeffField<Type>>& tf)
 {
     os << tf();
     tf.clear();

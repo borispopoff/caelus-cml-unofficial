@@ -152,10 +152,10 @@ private:
         labelList regionEdges_;
 
         //- Search tree for all edges
-        mutable autoPtr<indexedOctree<treeDataEdge> > edgeTree_;
+        mutable autoPtr<indexedOctree<treeDataEdge>> edgeTree_;
 
         //- Individual search trees for each type of edge
-        mutable PtrList<indexedOctree<treeDataEdge> > edgeTreesByType_;
+        mutable PtrList<indexedOctree<treeDataEdge>> edgeTreesByType_;
 
 
     // Private Member Functions
@@ -341,7 +341,7 @@ public:
             const indexedOctree<treeDataEdge>& edgeTree() const;
 
             //- Demand driven construction of octree for boundary edges by type
-            const PtrList<indexedOctree<treeDataEdge> >&
+            const PtrList<indexedOctree<treeDataEdge>>&
             edgeTreesByType() const;
 
 

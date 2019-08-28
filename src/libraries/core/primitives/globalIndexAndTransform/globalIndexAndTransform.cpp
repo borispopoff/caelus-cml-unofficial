@@ -232,7 +232,7 @@ void CML::globalIndexAndTransform::determineTransforms()
 
     // Collect transforms on master
 
-    List<List<vectorTensorTransform> > allTransforms(Pstream::nProcs());
+    List<List<vectorTensorTransform>> allTransforms(Pstream::nProcs());
     allTransforms[Pstream::myProcNo()] = transforms_;
     Pstream::gatherList(allTransforms);
 

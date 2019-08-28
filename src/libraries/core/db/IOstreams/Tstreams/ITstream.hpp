@@ -85,7 +85,7 @@ public:
         ITstream
         (
             const string& name,
-            const Xfer<List<token> >& tokens,
+            const Xfer<List<token>>& tokens,
             streamFormat format=ASCII,
             versionNumber version=currentVersion
         )

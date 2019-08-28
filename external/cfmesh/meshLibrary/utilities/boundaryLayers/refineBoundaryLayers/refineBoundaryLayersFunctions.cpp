@@ -134,7 +134,7 @@ bool refineBoundaryLayers::analyseLayers()
     layerAtPatch_.setSize(boundaries.size());
     forAll(layerAtPatch_, i)
         layerAtPatch_[i].clear();
-    List<DynList<label> > groupsAtPatch(boundaries.size());
+    List<DynList<label>> groupsAtPatch(boundaries.size());
     forAll(faceInLayer, bfI)
         groupsAtPatch[facePatch[bfI]].appendIfNotIn(faceInLayer[bfI]);
 
@@ -428,10 +428,10 @@ void refineBoundaryLayers::generateNewVertices()
         const VRWGraph& pointEdges = mesh_.addressingData().pointEdges();
 
         //- exchange point number of layers
-        std::map<label, LongList<labelPair> > exchangeNumLayers;
-        std::map<label, LongList<labelPair> > exchangeNumNodesAtEdge;
-        std::map<label, LongList<labelledScalar> > exchangeThickness;
-        std::map<label, LongList<labelledScalar> > exchangeRatio;
+        std::map<label, LongList<labelPair>> exchangeNumLayers;
+        std::map<label, LongList<labelPair>> exchangeNumNodesAtEdge;
+        std::map<label, LongList<labelledScalar>> exchangeThickness;
+        std::map<label, LongList<labelledScalar>> exchangeRatio;
         forAll(neiProcs, i)
         {
             exchangeNumNodesAtEdge.insert

@@ -101,7 +101,7 @@ void meshSurfaceMapper2D::preMapVertices(const label nIterations)
                 surfaceEngine_.globalToLocalBndEdgeAddressing();
 
             //- collect data to be sent to other processors
-            std::map<label, LongList<refLabelledPoint> > exchangeData;
+            std::map<label, LongList<refLabelledPoint>> exchangeData;
             forAll(surfaceEngine_.beNeiProcs(), i)
                 exchangeData.insert
                 (

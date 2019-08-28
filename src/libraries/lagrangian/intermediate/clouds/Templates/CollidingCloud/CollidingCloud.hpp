@@ -76,7 +76,7 @@ private:
     // Private data
 
         //- Cloud copy pointer
-        autoPtr<CollidingCloud<CloudType> > cloudCopyPtr_;
+        autoPtr<CollidingCloud<CloudType>> cloudCopyPtr_;
 
 
     // Private Member Functions
@@ -99,7 +99,7 @@ protected:
         // References to the cloud sub-models
 
             //- Collision model
-            autoPtr<CollisionModel<CollidingCloud<CloudType> > >
+            autoPtr<CollisionModel<CollidingCloud<CloudType>>>
                 collisionModel_;
 
 
@@ -155,18 +155,18 @@ public:
         );
 
         //- Construct and return clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > clone(const word& name)
+        virtual autoPtr<Cloud<parcelType>> clone(const word& name)
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new CollidingCloud(*this, name)
             );
         }
 
         //- Construct and return bare clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > cloneBare(const word& name) const
+        virtual autoPtr<Cloud<parcelType>> cloneBare(const word& name) const
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new CollidingCloud(this->mesh(), name, *this)
             );
@@ -192,11 +192,11 @@ public:
             // Sub-models
 
                 //- Return const access to the collision model
-                inline const CollisionModel<CollidingCloud<CloudType> >&
+                inline const CollisionModel<CollidingCloud<CloudType>>&
                     collision() const;
 
                 //- Return reference to the collision model
-                inline CollisionModel<CollidingCloud<CloudType> >&
+                inline CollisionModel<CollidingCloud<CloudType>>&
                     collision();
 
         // Check
@@ -256,7 +256,7 @@ CML::CollidingCloud<CloudType>::constProps() const
 
 
 template<class CloudType>
-inline const CML::CollisionModel<CML::CollidingCloud<CloudType> >&
+inline const CML::CollisionModel<CML::CollidingCloud<CloudType>>&
 CML::CollidingCloud<CloudType>::collision() const
 {
     return collisionModel_();
@@ -264,7 +264,7 @@ CML::CollidingCloud<CloudType>::collision() const
 
 
 template<class CloudType>
-inline CML::CollisionModel<CML::CollidingCloud<CloudType> >&
+inline CML::CollisionModel<CML::CollidingCloud<CloudType>>&
 CML::CollidingCloud<CloudType>::collision()
 {
     return collisionModel_();
@@ -296,7 +296,7 @@ void CML::CollidingCloud<CloudType>::setModels()
 {
     collisionModel_.reset
     (
-        CollisionModel<CollidingCloud<CloudType> >::New
+        CollisionModel<CollidingCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this

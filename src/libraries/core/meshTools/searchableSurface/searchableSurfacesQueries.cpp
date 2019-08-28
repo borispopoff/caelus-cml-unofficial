@@ -260,7 +260,7 @@ bool CML::searchableSurfacesQueries::morphTet
 //    const pointField& start,
 //    const pointField& end,
 //    const vectorField& smallVec,
-//    List<List<pointIndexHit> >& surfaceHitInfo
+//    List<List<pointIndexHit>>& surfaceHitInfo
 //)
 //{
 //    surfaceHitInfo.setSize(start.size());
@@ -457,7 +457,7 @@ void CML::searchableSurfacesQueries::findAllIntersections
     const pointField& start,
     const pointField& end,
     labelListList& hitSurfaces,
-    List<List<pointIndexHit> >& hitInfo
+    List<List<pointIndexHit>>& hitInfo
 )
 {
     // Note: maybe move the single-surface all intersections test into
@@ -502,7 +502,7 @@ void CML::searchableSurfacesQueries::findAllIntersections
         // Test the other surfaces and merge (according to distance from start).
         for (label testI = 1; testI < surfacesToTest.size(); testI++)
         {
-            List<List<pointIndexHit> > surfHits;
+            List<List<pointIndexHit>> surfHits;
             allSurfaces[surfacesToTest[testI]].findLineAll
             (
                 start,

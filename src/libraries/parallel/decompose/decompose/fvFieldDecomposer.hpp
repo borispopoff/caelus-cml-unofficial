@@ -257,7 +257,7 @@ public:
 
         //- Decompose volume field
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> >
+        tmp<GeometricField<Type, fvPatchField, volMesh>>
         decomposeField
         (
             const GeometricField<Type, fvPatchField, volMesh>& field,
@@ -266,7 +266,7 @@ public:
 
         //- Decompose surface field
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         decomposeField
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>& field
@@ -285,7 +285,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh>>
 CML::fvFieldDecomposer::decomposeField
 (
     const GeometricField<Type, fvPatchField, volMesh>& field,
@@ -293,7 +293,7 @@ CML::fvFieldDecomposer::decomposeField
 ) const
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvPatchField<Type> > patchFields(boundaryAddressing_.size());
+    PtrList<fvPatchField<Type>> patchFields(boundaryAddressing_.size());
 
     forAll(boundaryAddressing_, patchi)
     {
@@ -310,7 +310,7 @@ CML::fvFieldDecomposer::decomposeField
     }
 
     // Create the field for the processor
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tresF
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tresF
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -412,7 +412,7 @@ CML::fvFieldDecomposer::decomposeField
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::fvFieldDecomposer::decomposeField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field
@@ -464,7 +464,7 @@ CML::fvFieldDecomposer::decomposeField
 
 
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvsPatchField<Type> > patchFields(boundaryAddressing_.size());
+    PtrList<fvsPatchField<Type>> patchFields(boundaryAddressing_.size());
 
     forAll(boundaryAddressing_, patchi)
     {
@@ -480,7 +480,7 @@ CML::fvFieldDecomposer::decomposeField
         );
     }
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tresF
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tresF
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (

@@ -117,7 +117,7 @@ protected:
 
 
         //- Schedule
-        mutable autoPtr<List<labelPair> > schedulePtr_;
+        mutable autoPtr<List<labelPair>> schedulePtr_;
 
 
     // Private Member Functions
@@ -136,14 +136,14 @@ protected:
         (
             const globalIndex& globalNumbering,
             const labelList& elements,
-            List<Map<label> >& compactMap
+            List<Map<label>>& compactMap
         ) const;
 
         void calcCompactAddressing
         (
             const globalIndex& globalNumbering,
             const labelListList& elements,
-            List<Map<label> >& compactMap
+            List<Map<label>>& compactMap
         ) const;
 
         void exchangeAddressing
@@ -151,7 +151,7 @@ protected:
             const int tag,
             const globalIndex& globalNumbering,
             labelList& elements,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             labelList& compactStart
         );
         void exchangeAddressing
@@ -159,7 +159,7 @@ protected:
             const int tag,
             const globalIndex& globalNumbering,
             labelListList& elements,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             labelList& compactStart
         );
 
@@ -221,7 +221,7 @@ public:
         (
             const globalIndex&,
             labelList& elements,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -232,7 +232,7 @@ public:
         (
             const globalIndex&,
             labelListList& cellCells,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -335,7 +335,7 @@ public:
             static label renumber
             (
                 const globalIndex&,
-                const List<Map<label> >& compactMap,
+                const List<Map<label>>& compactMap,
                 const label globalElement
             );
 
@@ -944,7 +944,7 @@ void CML::mapDistributeBase::distribute
         {
             // Set up sends to neighbours
 
-            List<List<T > > sendFields(Pstream::nProcs());
+            List<List<T >> sendFields(Pstream::nProcs());
 
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {
@@ -978,7 +978,7 @@ void CML::mapDistributeBase::distribute
 
             // Set up receives from neighbours
 
-            List<List<T > > recvFields(Pstream::nProcs());
+            List<List<T >> recvFields(Pstream::nProcs());
 
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {
@@ -1445,7 +1445,7 @@ void CML::mapDistributeBase::distribute
         {
             // Set up sends to neighbours
 
-            List<List<T > > sendFields(Pstream::nProcs());
+            List<List<T >> sendFields(Pstream::nProcs());
 
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {
@@ -1479,7 +1479,7 @@ void CML::mapDistributeBase::distribute
 
             // Set up receives from neighbours
 
-            List<List<T > > recvFields(Pstream::nProcs());
+            List<List<T >> recvFields(Pstream::nProcs());
 
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {

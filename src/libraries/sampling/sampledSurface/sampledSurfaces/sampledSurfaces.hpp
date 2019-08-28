@@ -264,7 +264,7 @@ void CML::sampledSurfaces::writeSurface
     if (Pstream::parRun())
     {
         // Collect values from all processors
-        List<Field<Type> > gatheredValues(Pstream::nProcs());
+        List<Field<Type>> gatheredValues(Pstream::nProcs());
         gatheredValues[Pstream::myProcNo()] = values;
         Pstream::gatherList(gatheredValues);
 
@@ -273,10 +273,10 @@ void CML::sampledSurfaces::writeSurface
             // Combine values into single field
             Field<Type> allValues
             (
-                ListListOps::combine<Field<Type> >
+                ListListOps::combine<Field<Type>>
                 (
                     gatheredValues,
-                    accessOp<Field<Type> >()
+                    accessOp<Field<Type>>()
                 )
             );
 
@@ -332,7 +332,7 @@ void CML::sampledSurfaces::sampleAndWrite
 )
 {
     // interpolator for this field
-    autoPtr<interpolation<Type> > interpolatorPtr;
+    autoPtr<interpolation<Type>> interpolatorPtr;
 
     const word& fieldName = vField.name();
     const fileName outputDir = outputPath_/vField.time().timeName();

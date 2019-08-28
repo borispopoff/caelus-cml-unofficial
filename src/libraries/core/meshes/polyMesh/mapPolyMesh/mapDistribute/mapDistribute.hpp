@@ -220,7 +220,7 @@ public:
             (
                 const vectorTensorTransform& vt,
                 const bool forward,
-                List<List<Type> >& flds
+                List<List<Type>>& flds
             ) const
             {
                 forAll(flds, i)
@@ -277,7 +277,7 @@ public:
             (
                 const vectorTensorTransform& vt,
                 const bool forward,
-                List<List<point> >& flds
+                List<List<point>>& flds
             ) const
             {
                 forAll(flds, i)
@@ -358,7 +358,7 @@ public:
         (
             const globalIndex&,
             labelList& elements,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -369,7 +369,7 @@ public:
         (
             const globalIndex&,
             labelListList& cellCells,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -386,7 +386,7 @@ public:
             const globalIndexAndTransform&,
             const labelPairList& transformedElements,
             labelList& transformedIndices,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -398,7 +398,7 @@ public:
             const globalIndexAndTransform&,
             const List<labelPairList>& transformedElements,
             labelListList& transformedIndices,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 

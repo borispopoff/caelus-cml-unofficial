@@ -82,9 +82,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new nonuniformTransformCyclicPointPatchField<Type>
                 (
@@ -101,12 +101,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new nonuniformTransformCyclicPointPatchField<Type>
                 (
@@ -199,7 +199,7 @@ void CML::nonuniformTransformCyclicPointPatchField<Type>::evaluate
 {
     const vectorField& nHat = this->patch().pointNormals();
 
-    tmp<Field<Type> > tvalues =
+    tmp<Field<Type>> tvalues =
     (
         (
             this->patchInternalField()

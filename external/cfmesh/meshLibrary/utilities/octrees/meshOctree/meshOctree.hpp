@@ -66,7 +66,7 @@ class meshOctree
         //- this list contains the first the last octree box coordinates on
         //- a neighbour processor. They are used for parallel runs when the
         //- leaves are sorted in Morton's Z-order
-        List<Pair<meshOctreeCubeCoordinates> > neiRange_;
+        List<Pair<meshOctreeCubeCoordinates>> neiRange_;
 
         //- Root cube of the octree structure
         meshOctreeCube* initialCubePtr_;

@@ -30,7 +30,7 @@ License
 // Returns edgeI between two points.
 CML::label CML::primitiveMesh::getEdge
 (
-    List<DynamicList<label> >& pe,
+    List<DynamicList<label>>& pe,
     DynamicList<edge>& es,
 
     const label pointI,
@@ -100,7 +100,7 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
         // ~~~~~~~~~~~~~
 
         // Estimate pointEdges storage
-        List<DynamicList<label> > pe(nPoints());
+        List<DynamicList<label>> pe(nPoints());
         forAll(pe, pointI)
         {
             pe[pointI].setCapacity(primitiveMesh::edgesPerPoint_);

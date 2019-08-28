@@ -77,7 +77,7 @@ private:
     // Private data
 
         //- Cloud copy pointer
-        autoPtr<SprayCloud<CloudType> > cloudCopyPtr_;
+        autoPtr<SprayCloud<CloudType>> cloudCopyPtr_;
 
         //- Average parcel mass
         scalar averageParcelMass_;
@@ -99,11 +99,11 @@ protected:
         // References to the cloud sub-models
 
             //- Atomization model
-            autoPtr<AtomizationModel<SprayCloud<CloudType> > >
+            autoPtr<AtomizationModel<SprayCloud<CloudType>>>
                 atomizationModel_;
 
             //- Break-up model
-            autoPtr<BreakupModel<SprayCloud<CloudType> > > breakupModel_;
+            autoPtr<BreakupModel<SprayCloud<CloudType>>> breakupModel_;
 
 
     // Protected Member Functions
@@ -148,18 +148,18 @@ public:
 
 
         //- Construct and return clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > clone(const word& name)
+        virtual autoPtr<Cloud<parcelType>> clone(const word& name)
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new SprayCloud(*this, name)
             );
         }
 
         //- Construct and return bare clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > cloneBare(const word& name) const
+        virtual autoPtr<Cloud<parcelType>> cloneBare(const word& name) const
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new SprayCloud(this->mesh(), name, *this)
             );
@@ -190,18 +190,18 @@ public:
             // Sub-models
 
                 //- Return const-access to the atomization model
-                inline const AtomizationModel<SprayCloud<CloudType> >&
+                inline const AtomizationModel<SprayCloud<CloudType>>&
                     atomization() const;
 
                 //- Return reference to the atomization model
-                inline AtomizationModel<SprayCloud<CloudType> >& atomization();
+                inline AtomizationModel<SprayCloud<CloudType>>& atomization();
 
                 //- Return const-access to the breakup model
-                inline const BreakupModel<SprayCloud<CloudType> >&
+                inline const BreakupModel<SprayCloud<CloudType>>&
                     breakup() const;
 
                 //- Return reference to the breakup model
-                inline BreakupModel<SprayCloud<CloudType> >& breakup();
+                inline BreakupModel<SprayCloud<CloudType>>& breakup();
 
 
         // Cloud evolution functions
@@ -253,7 +253,7 @@ CML::SprayCloud<CloudType>::cloudCopy() const
 
 
 template<class CloudType>
-inline const CML::AtomizationModel<CML::SprayCloud<CloudType> >&
+inline const CML::AtomizationModel<CML::SprayCloud<CloudType>>&
 CML::SprayCloud<CloudType>::atomization() const
 {
     return atomizationModel_;
@@ -261,7 +261,7 @@ CML::SprayCloud<CloudType>::atomization() const
 
 
 template<class CloudType>
-inline CML::AtomizationModel<CML::SprayCloud<CloudType> >&
+inline CML::AtomizationModel<CML::SprayCloud<CloudType>>&
 CML::SprayCloud<CloudType>::atomization()
 {
     return atomizationModel_();
@@ -269,7 +269,7 @@ CML::SprayCloud<CloudType>::atomization()
 
 
 template<class CloudType>
-inline const CML::BreakupModel<CML::SprayCloud<CloudType> >&
+inline const CML::BreakupModel<CML::SprayCloud<CloudType>>&
 CML::SprayCloud<CloudType>::breakup() const
 {
     return breakupModel_;
@@ -277,7 +277,7 @@ CML::SprayCloud<CloudType>::breakup() const
 
 
 template<class CloudType>
-inline CML::BreakupModel<CML::SprayCloud<CloudType> >&
+inline CML::BreakupModel<CML::SprayCloud<CloudType>>&
 CML::SprayCloud<CloudType>::breakup()
 {
     return breakupModel_();
@@ -432,7 +432,7 @@ void CML::SprayCloud<CloudType>::setModels()
 {
     atomizationModel_.reset
     (
-        AtomizationModel<SprayCloud<CloudType> >::New
+        AtomizationModel<SprayCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -441,7 +441,7 @@ void CML::SprayCloud<CloudType>::setModels()
 
     breakupModel_.reset
     (
-        BreakupModel<SprayCloud<CloudType> >::New
+        BreakupModel<SprayCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this

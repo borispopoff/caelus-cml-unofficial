@@ -145,7 +145,7 @@ void turbulentInletFvPatchField<Type>::rmap
     fixedValueFvPatchField<Type>::rmap(ptf, addr);
 
     const turbulentInletFvPatchField<Type>& tiptf =
-        refCast<const turbulentInletFvPatchField<Type> >(ptf);
+        refCast<const turbulentInletFvPatchField<Type>>(ptf);
 
     referenceField_.rmap(tiptf.referenceField_, addr);
 }

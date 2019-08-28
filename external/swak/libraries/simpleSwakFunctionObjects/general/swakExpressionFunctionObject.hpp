@@ -136,7 +136,7 @@ void swakExpressionFunctionObject::writeTheData(
 {
     Field<T> result(driver.getResult<T>());
 
-    autoPtr<AccumulationCalculation<T> > pCalculator;
+    autoPtr<AccumulationCalculation<T>> pCalculator;
 
     if(maskExpression_=="") {
         pCalculator.set(
@@ -151,7 +151,7 @@ void swakExpressionFunctionObject::writeTheData(
 
         driver.parse(maskExpression_);
 
-        autoPtr<Field<bool> > maskValues;
+        autoPtr<Field<bool>> maskValues;
         if(
             driver.CommonValueExpressionDriver::getResultType()
             ==

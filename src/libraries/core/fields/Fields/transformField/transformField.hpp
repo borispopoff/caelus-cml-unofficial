@@ -46,56 +46,56 @@ template<class Type>
 void transform(Field<Type>&, const tensorField&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tensorField&, const Field<Type>&);
+tmp<Field<Type>> transform(const tensorField&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tensorField&, const tmp<Field<Type> >&);
+tmp<Field<Type>> transform(const tensorField&, const tmp<Field<Type>>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tmp<tensorField>&, const Field<Type>&);
+tmp<Field<Type>> transform(const tmp<tensorField>&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tmp<tensorField>&, const tmp<Field<Type> >&);
+tmp<Field<Type>> transform(const tmp<tensorField>&, const tmp<Field<Type>>&);
 
 
 template<class Type>
 void transform(Field<Type>&, const tensor&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tensor&, const Field<Type>&);
+tmp<Field<Type>> transform(const tensor&, const Field<Type>&);
 
 template<class Type>
-tmp<Field<Type> > transform(const tensor&, const tmp<Field<Type> >&);
+tmp<Field<Type>> transform(const tensor&, const tmp<Field<Type>>&);
 
 
 template<class Type1, class Type2>
-tmp<Field<Type1> > transformFieldMask(const Field<Type2>&);
+tmp<Field<Type1>> transformFieldMask(const Field<Type2>&);
 
 template<class Type1, class Type2>
-tmp<Field<Type1> > transformFieldMask(const tmp<Field<Type2> >&);
+tmp<Field<Type1>> transformFieldMask(const tmp<Field<Type2>>&);
 
 
 template<>
-tmp<Field<symmTensor> > transformFieldMask<symmTensor>
+tmp<Field<symmTensor>> transformFieldMask<symmTensor>
 (
     const tensorField&
 );
 
 template<>
-tmp<Field<symmTensor> > transformFieldMask<symmTensor>
+tmp<Field<symmTensor>> transformFieldMask<symmTensor>
 (
     const tmp<tensorField>&
 );
 
 
 template<>
-tmp<Field<sphericalTensor> > transformFieldMask<sphericalTensor>
+tmp<Field<sphericalTensor>> transformFieldMask<sphericalTensor>
 (
     const tensorField&
 );
 
 template<>
-tmp<Field<sphericalTensor> > transformFieldMask<sphericalTensor>
+tmp<Field<sphericalTensor>> transformFieldMask<sphericalTensor>
 (
     const tmp<tensorField>&
 );
@@ -159,26 +159,26 @@ void transform
 
 
 template<class Type>
-tmp<Field<Type> > transform
+tmp<Field<Type>> transform
 (
     const tensorField& trf,
     const Field<Type>& tf
 )
 {
-    tmp<Field<Type> > tranf(new Field<Type> (tf.size()));
+    tmp<Field<Type>> tranf(new Field<Type> (tf.size()));
     transform(tranf(), trf, tf);
     return tranf;
 }
 
 
 template<class Type>
-tmp<Field<Type> > transform
+tmp<Field<Type>> transform
 (
     const tensorField& trf,
-    const tmp<Field<Type> >& ttf
+    const tmp<Field<Type>>& ttf
 )
 {
-    tmp<Field<Type> > tranf = reuseTmp<Type, Type>::New(ttf);
+    tmp<Field<Type>> tranf = reuseTmp<Type, Type>::New(ttf);
     transform(tranf(), trf, ttf());
     reuseTmp<Type, Type>::clear(ttf);
     return tranf;
@@ -186,13 +186,13 @@ tmp<Field<Type> > transform
 
 
 template<class Type>
-tmp<Field<Type> > transform
+tmp<Field<Type>> transform
 (
     const tmp<tensorField>& ttrf,
     const Field<Type>& tf
 )
 {
-    tmp<Field<Type> > tranf(new Field<Type> (tf.size()));
+    tmp<Field<Type>> tranf(new Field<Type> (tf.size()));
     transform(tranf(), ttrf(), tf);
     ttrf.clear();
     return tranf;
@@ -200,13 +200,13 @@ tmp<Field<Type> > transform
 
 
 template<class Type>
-tmp<Field<Type> > transform
+tmp<Field<Type>> transform
 (
     const tmp<tensorField>& ttrf,
-    const tmp<Field<Type> >& ttf
+    const tmp<Field<Type>>& ttf
 )
 {
-    tmp<Field<Type> > tranf = reuseTmp<Type, Type>::New(ttf);
+    tmp<Field<Type>> tranf = reuseTmp<Type, Type>::New(ttf);
     transform(tranf(), ttrf(), ttf());
     reuseTmp<Type, Type>::clear(ttf);
     ttrf.clear();
@@ -227,26 +227,26 @@ void transform
 
 
 template<class Type>
-tmp<Field<Type> > transform
+tmp<Field<Type>> transform
 (
     const tensor& t,
     const Field<Type>& tf
 )
 {
-    tmp<Field<Type> > tranf(new Field<Type>(tf.size()));
+    tmp<Field<Type>> tranf(new Field<Type>(tf.size()));
     transform(tranf(), t, tf);
     return tranf;
 }
 
 
 template<class Type>
-tmp<Field<Type> > transform
+tmp<Field<Type>> transform
 (
     const tensor& t,
-    const tmp<Field<Type> >& ttf
+    const tmp<Field<Type>>& ttf
 )
 {
-    tmp<Field<Type> > tranf = reuseTmp<Type, Type>::New(ttf);
+    tmp<Field<Type>> tranf = reuseTmp<Type, Type>::New(ttf);
     transform(tranf(), t, ttf());
     reuseTmp<Type, Type>::clear(ttf);
     return tranf;
@@ -254,15 +254,15 @@ tmp<Field<Type> > transform
 
 
 template<class Type1, class Type2>
-tmp<Field<Type1> > transformFieldMask(const Field<Type2>& f)
+tmp<Field<Type1>> transformFieldMask(const Field<Type2>& f)
 {
     return f;
 }
 
 template<class Type1, class Type2>
-tmp<Field<Type1> > transformFieldMask(const tmp<Field<Type2> >& tf)
+tmp<Field<Type1>> transformFieldMask(const tmp<Field<Type2>>& tf)
 {
-    return tmp<Field<Type1> >(tf.ptr());
+    return tmp<Field<Type1>>(tf.ptr());
 }
 
 

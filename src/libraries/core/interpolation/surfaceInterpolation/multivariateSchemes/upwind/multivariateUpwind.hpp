@@ -131,12 +131,12 @@ public:
                 }
         };
 
-        tmp<surfaceInterpolationScheme<Type> > operator()
+        tmp<surfaceInterpolationScheme<Type>> operator()
         (
             const GeometricField<Type, fvPatchField, volMesh>& field
         ) const
         {
-            return tmp<surfaceInterpolationScheme<Type> >
+            return tmp<surfaceInterpolationScheme<Type>>
             (
                 new fieldScheme(field, faceFlux_)
             );

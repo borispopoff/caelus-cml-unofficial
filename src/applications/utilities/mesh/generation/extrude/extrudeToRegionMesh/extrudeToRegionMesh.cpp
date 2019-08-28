@@ -1718,7 +1718,7 @@ int main(int argc, char *argv[])
             extrudeMeshEdges
         )
     );
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
     const mapDistribute extrudeEdgeFacesMap
     (
         globalExtrudeFaces,

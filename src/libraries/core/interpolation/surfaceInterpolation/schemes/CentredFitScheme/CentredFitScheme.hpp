@@ -106,7 +106,7 @@ public:
         }
 
         //- Return the explicit correction to the face-interpolate
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -157,11 +157,11 @@ defineTemplateTypeNameAndDebugWithName                                        \
     (CentredFitScheme##TYPE##POLYNOMIAL##STENCIL##_, #SS, 0);                 \
                                                                               \
 surfaceInterpolationScheme<TYPE>::addMeshConstructorToTable                   \
-<CentredFitScheme<TYPE, POLYNOMIAL, STENCIL> >                                \
+<CentredFitScheme<TYPE, POLYNOMIAL, STENCIL>>                                \
     add##SS##STENCIL##TYPE##MeshConstructorToTable_;                          \
                                                                               \
 surfaceInterpolationScheme<TYPE>::addMeshFluxConstructorToTable               \
-<CentredFitScheme<TYPE, POLYNOMIAL, STENCIL> >                                \
+<CentredFitScheme<TYPE, POLYNOMIAL, STENCIL>>                                \
     add##SS##STENCIL##TYPE##MeshFluxConstructorToTable_;
 
 #define makeCentredFitSurfaceInterpolationScheme(SS, POLYNOMIAL, STENCIL)     \

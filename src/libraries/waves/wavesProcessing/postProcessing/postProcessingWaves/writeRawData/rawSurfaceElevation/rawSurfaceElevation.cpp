@@ -42,7 +42,7 @@ addToRunTimeSelectionTable
 
 void rawSurfaceElevation::resizeFields
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     List<scalarField>& etas,
     label N
 )
@@ -60,7 +60,7 @@ void rawSurfaceElevation::resizeFields
 
 void rawSurfaceElevation::writeRawData
 (
-    const List<std::pair<scalar, label> >& timeLabel,
+    const List<std::pair<scalar, label>>& timeLabel,
     const scalarField& x,
     const scalarField& y,
     const scalarField& z,
@@ -136,7 +136,7 @@ rawSurfaceElevation::~rawSurfaceElevation()
 
 void rawSurfaceElevation::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     scalarField x, y, z;
     List<scalarField> etas;
 
@@ -148,7 +148,7 @@ void rawSurfaceElevation::evaluate()
 
 void rawSurfaceElevation::readSurfaceElevationData
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     scalarField& x,
     scalarField& y,
     scalarField& z,

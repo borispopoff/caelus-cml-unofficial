@@ -101,11 +101,11 @@ public:
         DataEntry(const DataEntry<Type>& de);
 
         //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const = 0;
+        virtual tmp<DataEntry<Type>> clone() const = 0;
 
 
     //- Selector
-    static autoPtr<DataEntry<Type> > New
+    static autoPtr<DataEntry<Type>> New
     (
         const word& entryName,
         const dictionary& dict
@@ -136,13 +136,13 @@ public:
             virtual Type value(const scalar x) const;
 
             //- Return value as a function of (scalar) independent variable
-            virtual tmp<Field<Type> > value(const scalarField& x) const = 0;
+            virtual tmp<Field<Type>> value(const scalarField& x) const = 0;
 
             //- Integrate between two (scalar) values
             virtual Type integrate(const scalar x1, const scalar x2) const;
 
             //- Integrate between two (scalar) values
-            virtual tmp<Field<Type> > integrate
+            virtual tmp<Field<Type>> integrate
             (
                 const scalarField& x1,
                 const scalarField& x2
@@ -184,7 +184,7 @@ public:
         FieldDataEntry(const word& entryName, const dictionary& dict);
 
         //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const;
+        virtual tmp<DataEntry<Type>> clone() const;
 
 
     //- Destructor
@@ -200,10 +200,10 @@ public:
             using DataEntryType::integrate;
 
             //- Return value as a function of (scalar) independent variable
-            virtual tmp<Field<Type> > value(const scalarField& x) const;
+            virtual tmp<Field<Type>> value(const scalarField& x) const;
 
             //- Integrate between two (scalar) values
-            virtual tmp<Field<Type> > integrate
+            virtual tmp<Field<Type>> integrate
             (
                 const scalarField& x1,
                 const scalarField& x2
@@ -233,7 +233,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(DataEntryTypes::SS<Type>, 0);          \
                                                                                \
     DataEntry<Type>::adddictionaryConstructorToTable                           \
-        <FieldDataEntry<DataEntryTypes::SS<Type> > >                           \
+        <FieldDataEntry<DataEntryTypes::SS<Type>>>                             \
         add##SS##Type##ConstructorToTable_;
 
 
@@ -241,7 +241,7 @@ public:
                                                                                \
     defineTypeNameAndDebug(SS, 0);                                             \
                                                                                \
-    DataEntry<scalar>::adddictionaryConstructorToTable<FieldDataEntry<SS> >    \
+    DataEntry<scalar>::adddictionaryConstructorToTable<FieldDataEntry<SS>>    \
         add##SS##ConstructorToTable_;
 
 // * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
@@ -305,13 +305,13 @@ Type CML::DataEntry<Type>::integrate(const scalar x1, const scalar x2) const
 
 
 template<class DataEntryType>
-CML::tmp<CML::Field<typename DataEntryType::returnType> >
+CML::tmp<CML::Field<typename DataEntryType::returnType>>
 CML::FieldDataEntry<DataEntryType>::value
 (
     const scalarField& x
 ) const
 {
-    tmp<Field<Type> > tfld(new Field<Type>(x.size()));
+    tmp<Field<Type>> tfld(new Field<Type>(x.size()));
     Field<Type>& fld = tfld();
 
     forAll(x, i)
@@ -334,10 +334,10 @@ CML::FieldDataEntry<DataEntryType>::FieldDataEntry
 
 
 template<class DataEntryType>
-CML::tmp<CML::DataEntry<typename DataEntryType::returnType> >
+CML::tmp<CML::DataEntry<typename DataEntryType::returnType>>
 CML::FieldDataEntry<DataEntryType>::clone() const
 {
-    return tmp<DataEntry<Type> >
+    return tmp<DataEntry<Type>>
     (
         new FieldDataEntry<DataEntryType>(*this)
     );
@@ -345,14 +345,14 @@ CML::FieldDataEntry<DataEntryType>::clone() const
 
 
 template<class DataEntryType>
-CML::tmp<CML::Field<typename DataEntryType::returnType> > 
+CML::tmp<CML::Field<typename DataEntryType::returnType>> 
 CML::FieldDataEntry<DataEntryType>::integrate
 (
     const scalarField& x1,
     const scalarField& x2
 ) const
 {
-    tmp<Field<Type> > tfld(new Field<Type>(x1.size()));
+    tmp<Field<Type>> tfld(new Field<Type>(x1.size()));
     Field<Type>& fld = tfld();
 
     forAll(x1, i)

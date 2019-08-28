@@ -73,7 +73,7 @@ class cyclicACMIFvPatchField
 
         //- Return neighbour side field given internal fields
         template<class Type2>
-        tmp<Field<Type2> > neighbourSideField
+        tmp<Field<Type2>> neighbourSideField
         (
             const Field<Type2>&
         ) const;
@@ -115,9 +115,9 @@ public:
         cyclicACMIFvPatchField(const cyclicACMIFvPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicACMIFvPatchField<Type>(*this)
             );
@@ -131,12 +131,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicACMIFvPatchField<Type>(*this, iF)
             );
@@ -182,7 +182,7 @@ public:
 
 
             //- Return neighbour coupled internal cell data
-            virtual tmp<Field<Type> > patchNeighbourField() const;
+            virtual tmp<Field<Type>> patchNeighbourField() const;
 
             //- Return reference to neighbour patchField
             const cyclicACMIFvPatchField<Type>& neighbourPatchField() const;
@@ -202,7 +202,7 @@ public:
             ) const;
 
             //- Return patch-normal gradient
-            virtual tmp<Field<Type> > snGrad
+            virtual tmp<Field<Type>> snGrad
             (
                 const scalarField& deltaCoeffs
             ) const;
@@ -224,39 +224,39 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs
+            virtual tmp<Field<Type>> gradientInternalCoeffs
             (
                 const scalarField& deltaCoeffs
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const;
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs
             (
                 const scalarField& deltaCoeffs
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
             //- Manipulate matrix
             virtual void manipulateMatrix(fvMatrix<Type>& matrix);
@@ -408,7 +408,7 @@ bool CML::cyclicACMIFvPatchField<Type>::coupled() const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::cyclicACMIFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
@@ -420,7 +420,7 @@ CML::cyclicACMIFvPatchField<Type>::patchNeighbourField() const
     Field<Type> pnfCoupled(iField, nbrFaceCellsCoupled);
     Field<Type> pfNonOverlap(iField, faceCellsNonOverlap);
 
-    tmp<Field<Type> > tpnf
+    tmp<Field<Type>> tpnf
     (
         new Field<Type>
         (
@@ -451,7 +451,7 @@ CML::cyclicACMIFvPatchField<Type>::neighbourPatchField() const
             this->internalField()
         );
 
-    return refCast<const cyclicACMIFvPatchField<Type> >
+    return refCast<const cyclicACMIFvPatchField<Type>>
     (
         fld.boundaryField()[cyclicACMIPatch_.neighbPatchID()]
     );
@@ -505,7 +505,7 @@ void CML::cyclicACMIFvPatchField<Type>::updateInterfaceMatrix
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::cyclicACMIFvPatchField<Type>::snGrad
+CML::tmp<CML::Field<Type>> CML::cyclicACMIFvPatchField<Type>::snGrad
 (
     const scalarField& deltaCoeffs
 ) const
@@ -576,7 +576,7 @@ void CML::cyclicACMIFvPatchField<Type>::evaluate
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::cyclicACMIFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>& w
@@ -589,7 +589,7 @@ CML::cyclicACMIFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::cyclicACMIFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>& w
@@ -602,7 +602,7 @@ CML::cyclicACMIFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::cyclicACMIFvPatchField<Type>::gradientInternalCoeffs
 (
     const scalarField& deltaCoeffs
@@ -615,7 +615,7 @@ CML::cyclicACMIFvPatchField<Type>::gradientInternalCoeffs
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::cyclicACMIFvPatchField<Type>::gradientInternalCoeffs() const
 {
     // note: do not blend based on mask field
@@ -625,7 +625,7 @@ CML::cyclicACMIFvPatchField<Type>::gradientInternalCoeffs() const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::cyclicACMIFvPatchField<Type>::gradientBoundaryCoeffs
 (
     const scalarField& deltaCoeffs
@@ -638,7 +638,7 @@ CML::cyclicACMIFvPatchField<Type>::gradientBoundaryCoeffs
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::cyclicACMIFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     // note: do not blend based on mask field

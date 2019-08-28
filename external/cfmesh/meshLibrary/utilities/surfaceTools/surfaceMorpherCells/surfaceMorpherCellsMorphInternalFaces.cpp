@@ -394,7 +394,7 @@ bool surfaceMorpherCells::morphInternalFaces()
                     //- create new boundary faces from the removed part
                     label mat(1);
                     DynList<direction> nodeMaterial(f.size(), direction(0));
-                    DynList< DynList<edge> > edgeMats;
+                    DynList< DynList<edge>> edgeMats;
                     forAll(nodeMaterial, nI)
                         if( !nodeMaterial[nI] && removeFaceVertex[nI] )
                         {

@@ -912,7 +912,7 @@ void CML::polyMeshAdder::mergePointZones
 
     DynamicList<word>& zoneNames,
     labelList& from1ToAll,
-    List<DynamicList<label> >& pzPoints
+    List<DynamicList<label>>& pzPoints
 )
 {
     zoneNames.setCapacity(pz0.size() + pz1.size());
@@ -935,7 +935,7 @@ void CML::polyMeshAdder::mergePointZones
     }
 
     // Get sorted zone contents for duplicate element recognition
-    PtrList<SortableList<label> > pzPointsSorted(pzPoints.size());
+    PtrList<SortableList<label>> pzPointsSorted(pzPoints.size());
     forAll(pzPoints, zoneI)
     {
         pzPointsSorted.set
@@ -976,8 +976,8 @@ void CML::polyMeshAdder::mergeFaceZones
 
     DynamicList<word>& zoneNames,
     labelList& from1ToAll,
-    List<DynamicList<label> >& fzFaces,
-    List<DynamicList<bool> >& fzFlips
+    List<DynamicList<label>>& fzFaces,
+    List<DynamicList<bool>>& fzFlips
 )
 {
     zoneNames.setCapacity(fz0.size() + fz1.size());
@@ -1019,7 +1019,7 @@ void CML::polyMeshAdder::mergeFaceZones
     }
 
     // Get sorted zone contents for duplicate element recognition
-    PtrList<SortableList<label> > fzFacesSorted(fzFaces.size());
+    PtrList<SortableList<label>> fzFacesSorted(fzFaces.size());
     forAll(fzFaces, zoneI)
     {
         fzFacesSorted.set
@@ -1077,7 +1077,7 @@ void CML::polyMeshAdder::mergeCellZones
 
     DynamicList<word>& zoneNames,
     labelList& from1ToAll,
-    List<DynamicList<label> >& czCells
+    List<DynamicList<label>>& czCells
 )
 {
     zoneNames.setCapacity(cz0.size() + cz1.size());
@@ -1127,14 +1127,14 @@ void CML::polyMeshAdder::mergeZones
     const labelList& from1ToAllCells,
 
     DynamicList<word>& pointZoneNames,
-    List<DynamicList<label> >& pzPoints,
+    List<DynamicList<label>>& pzPoints,
 
     DynamicList<word>& faceZoneNames,
-    List<DynamicList<label> >& fzFaces,
-    List<DynamicList<bool> >& fzFlips,
+    List<DynamicList<label>>& fzFaces,
+    List<DynamicList<bool>>& fzFlips,
 
     DynamicList<word>& cellZoneNames,
-    List<DynamicList<label> >& czCells
+    List<DynamicList<label>>& czCells
 )
 {
     labelList from1ToAllPZones;
@@ -1181,14 +1181,14 @@ void CML::polyMeshAdder::mergeZones
 void CML::polyMeshAdder::addZones
 (
     const DynamicList<word>& pointZoneNames,
-    const List<DynamicList<label> >& pzPoints,
+    const List<DynamicList<label>>& pzPoints,
 
     const DynamicList<word>& faceZoneNames,
-    const List<DynamicList<label> >& fzFaces,
-    const List<DynamicList<bool> >& fzFlips,
+    const List<DynamicList<label>>& fzFaces,
+    const List<DynamicList<bool>>& fzFlips,
 
     const DynamicList<word>& cellZoneNames,
-    const List<DynamicList<label> >& czCells,
+    const List<DynamicList<label>>& czCells,
 
     polyMesh& mesh
 )
@@ -1334,14 +1334,14 @@ CML::autoPtr<CML::polyMesh> CML::polyMeshAdder::add
     // ~~~~~
 
     DynamicList<word> pointZoneNames;
-    List<DynamicList<label> > pzPoints;
+    List<DynamicList<label>> pzPoints;
 
     DynamicList<word> faceZoneNames;
-    List<DynamicList<label> > fzFaces;
-    List<DynamicList<bool> > fzFlips;
+    List<DynamicList<label>> fzFaces;
+    List<DynamicList<bool>> fzFlips;
 
     DynamicList<word> cellZoneNames;
-    List<DynamicList<label> > czCells;
+    List<DynamicList<label>> czCells;
 
     mergeZones
     (
@@ -1547,14 +1547,14 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
     // ~~~~~
 
     DynamicList<word> pointZoneNames;
-    List<DynamicList<label> > pzPoints;
+    List<DynamicList<label>> pzPoints;
 
     DynamicList<word> faceZoneNames;
-    List<DynamicList<label> > fzFaces;
-    List<DynamicList<bool> > fzFlips;
+    List<DynamicList<label>> fzFaces;
+    List<DynamicList<bool>> fzFlips;
 
     DynamicList<word> cellZoneNames;
-    List<DynamicList<label> > czCells;
+    List<DynamicList<label>> czCells;
 
     mergeZones
     (

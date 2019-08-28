@@ -159,7 +159,7 @@ public:
     ) = 0;
 
     //- Return reaction rate of the speciei in reactioni
-    virtual tmp<DimensionedField<scalar, volMesh> > calculateRR
+    virtual tmp<DimensionedField<scalar, volMesh>> calculateRR
     (
         const label reactioni,
         const label speciei

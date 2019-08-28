@@ -55,10 +55,10 @@ class cyclicACMIPointPatchField
         const cyclicACMIPointPatch& cyclicACMIPatch_;
 
         //- Owner side patch interpolation pointer
-        mutable autoPtr<PrimitivePatchInterpolation<primitivePatch> > ppiPtr_;
+        mutable autoPtr<PrimitivePatchInterpolation<primitivePatch>> ppiPtr_;
 
         //- Neighbour side patch interpolation pointer
-        mutable autoPtr<PrimitivePatchInterpolation<primitivePatch> >
+        mutable autoPtr<PrimitivePatchInterpolation<primitivePatch>>
             nbrPpiPtr_;
 
 
@@ -132,9 +132,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new cyclicACMIPointPatchField<Type>
                 (
@@ -151,12 +151,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new cyclicACMIPointPatchField<Type>
                 (
@@ -330,13 +330,13 @@ void CML::cyclicACMIPointPatchField<Type>::swapAddSeparated
 
         // Get neighbouring pointPatchField
         const GeometricField<Type, pointPatchField, pointMesh>& fld =
-            refCast<const GeometricField<Type, pointPatchField, pointMesh> >
+            refCast<const GeometricField<Type, pointPatchField, pointMesh>>
             (
                 this->dimensionedInternalField()
             );
 
         const cyclicACMIPointPatchField<Type>& nbr =
-            refCast<const cyclicACMIPointPatchField<Type> >
+            refCast<const cyclicACMIPointPatchField<Type>>
             (
                 fld.boundaryField()[nbrPatch.index()]
             );

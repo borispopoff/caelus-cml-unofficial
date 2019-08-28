@@ -109,9 +109,9 @@ public:
         PatchFlowRateInjection(const PatchFlowRateInjection<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<InjectionModel<CloudType> > clone() const
+        virtual autoPtr<InjectionModel<CloudType>> clone() const
         {
-            return autoPtr<InjectionModel<CloudType> >
+            return autoPtr<InjectionModel<CloudType>>
             (
                 new PatchFlowRateInjection<CloudType>(*this)
             );

@@ -66,7 +66,7 @@ class meshCutAndRemove
 
         //- Points added in last setRefinement. Per split edge label of added
         //  point
-        HashTable<label, edge, Hash<edge> > addedPoints_;
+        HashTable<label, edge, Hash<edge>> addedPoints_;
 
 
     // Private Static Functions
@@ -221,7 +221,7 @@ public:
             //- Points added. Per split edge label of added point.
             //  (note: fairly useless across topology changes since one of the
             //  points of the edge will probably disappear)
-            const HashTable<label, edge, Hash<edge> >& addedPoints() const
+            const HashTable<label, edge, Hash<edge>>& addedPoints() const
             {
                 return addedPoints_;
             }

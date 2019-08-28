@@ -55,7 +55,7 @@ class gaussGrad
 {
     // Private data
 
-        tmp<surfaceInterpolationScheme<Type> > tinterpScheme_;
+        tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
 
     // Private Member Functions
@@ -91,7 +91,7 @@ public:
             if (is.eof())
             {
                 tinterpScheme_ =
-                    tmp<surfaceInterpolationScheme<Type> >
+                    tmp<surfaceInterpolationScheme<Type>>
                     (
                         new linear<Type>(mesh)
                     );
@@ -99,7 +99,7 @@ public:
             else
             {
                 tinterpScheme_ =
-                    tmp<surfaceInterpolationScheme<Type> >
+                    tmp<surfaceInterpolationScheme<Type>>
                     (
                         surfaceInterpolationScheme<Type>::New(mesh, is)
                     );
@@ -179,7 +179,7 @@ CML::fv::gaussGrad<Type>::gradf
 
     const fvMesh& mesh = ssf.mesh();
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tgGrad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tgGrad
     (
         new GeometricField<GradType, fvPatchField, volMesh>
         (
@@ -259,7 +259,7 @@ CML::fv::gaussGrad<Type>::calcGrad
 {
     typedef typename outerProduct<vector, Type>::type GradType;
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tgGrad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tgGrad
     (
         gradf(tinterpScheme_().interpolate(vsf), name)
     );

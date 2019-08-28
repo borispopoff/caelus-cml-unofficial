@@ -112,7 +112,7 @@ void thermoSingleLayer::correctHsForMappedT()
     forAll(T_.boundaryField(), patchi)
     {
         const fvPatchField<scalar>& Tp = T_.boundaryField()[patchi];
-        if (isA<mappedFieldFvPatchField<scalar> >(Tp))
+        if (isA<mappedFieldFvPatchField<scalar>>(Tp))
         {
             hs_.boundaryField()[patchi] == hs(Tp, patchi);
         }
@@ -717,9 +717,9 @@ void thermoSingleLayer::info()
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho() const
+tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tSrho
+    tmp<DimensionedField<scalar, volMesh>> tSrho
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -764,14 +764,14 @@ tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho() const
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho
+tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho
 (
     const label i
 ) const
 {
     const label vapId = thermo_.carrierId(filmThermo_->name());
 
-    tmp<DimensionedField<scalar, volMesh> > tSrho
+    tmp<DimensionedField<scalar, volMesh>> tSrho
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -819,9 +819,9 @@ tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Sh() const
+tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Sh() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tSh
+    tmp<DimensionedField<scalar, volMesh>> tSh
     (
         new DimensionedField<scalar, volMesh>
         (

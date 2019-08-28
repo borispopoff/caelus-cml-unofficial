@@ -92,7 +92,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfTranspose<Cmpt, CompactSpatialTensor<Cmpt> >
+class typeOfTranspose<Cmpt, CompactSpatialTensor<Cmpt>>
 {
 public:
 
@@ -101,7 +101,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfTranspose<Cmpt, CompactSpatialTensorT<Cmpt> >
+class typeOfTranspose<Cmpt, CompactSpatialTensorT<Cmpt>>
 {
 public:
 

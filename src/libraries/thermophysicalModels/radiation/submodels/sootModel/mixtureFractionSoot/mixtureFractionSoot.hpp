@@ -166,7 +166,7 @@ CML::radiation::mixtureFractionSoot<ThermoType>::checkThermo
     const fluidThermo& thermo
 )
 {
-    if (isA<singleStepReactingMixture<ThermoType> >(thermo))
+    if (isA<singleStepReactingMixture<ThermoType>>(thermo))
     {
         return dynamic_cast<const singleStepReactingMixture<ThermoType>& >
         (

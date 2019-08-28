@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
     // Read in a list of dictionaries for the merge patch pairs
     if (meshDict.found("mergePatchPairs"))
     {
-        List<Pair<word> > mergePatchPairs
+        List<Pair<word>> mergePatchPairs
         (
             meshDict.lookup("mergePatchPairs")
         );
@@ -251,7 +251,7 @@ int main(int argc, char *argv[])
         HashTable<label> zoneMap(nZones);
 
         // Cells per zone.
-        List<DynamicList<label> > zoneCells(nZones);
+        List<DynamicList<label>> zoneCells(nZones);
 
         // Running cell counter
         label cellI = 0;

@@ -130,7 +130,7 @@ inline Cmpt& CML::Vector<Cmpt>::operator()
 template<class Cmpt>
 inline const CML::Vector<Cmpt>& CML::Vector<Cmpt>::centre
 (
-    const CML::List<Vector<Cmpt> >&
+    const CML::List<Vector<Cmpt>>&
 )const
 {
     return *this;
@@ -157,7 +157,7 @@ public:
 
 
 template<class Cmpt>
-inline typename innerProduct<Vector<Cmpt>, Vector<Cmpt> >::type
+inline typename innerProduct<Vector<Cmpt>, Vector<Cmpt>>::type
 operator&(const Vector<Cmpt>& v1, const Vector<Cmpt>& v2)
 {
     return Cmpt(v1.x()*v2.x() + v1.y()*v2.y() + v1.z()*v2.z());

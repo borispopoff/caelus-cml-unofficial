@@ -1052,7 +1052,7 @@ void CML::globalPoints::calculateSharedPoints
     }
 
 
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
     map_.reset
     (
         new mapDistribute

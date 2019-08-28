@@ -65,7 +65,7 @@ inline void faceLimitedBlockGrad<Type>::limitFace
 
 
 template<>
-tmp<BlockLduSystem<vector, vector> > faceLimitedBlockGrad<scalar>::fvmGrad
+tmp<BlockLduSystem<vector, vector>> faceLimitedBlockGrad<scalar>::fvmGrad
 (
     const volScalarField& vsf
 ) const
@@ -74,7 +74,7 @@ tmp<BlockLduSystem<vector, vector> > faceLimitedBlockGrad<scalar>::fvmGrad
     // grad use almost the same procedure to calculate limiter. VV, 9/June/2014
     const fvMesh& mesh = vsf.mesh();
 
-    tmp<BlockLduSystem<vector, vector> > tbs =
+    tmp<BlockLduSystem<vector, vector>> tbs =
         basicBlockGradScheme_().fvmGrad(vsf);
 
     if (k_ < SMALL)
@@ -285,7 +285,7 @@ faceLimitedBlockGrad<vector>::fvmGrad
 
     typedef outerProduct<vector, vector>::type GradType;
 
-    tmp<BlockLduSystem<vector, GradType> > tbs
+    tmp<BlockLduSystem<vector, GradType>> tbs
     (
         new BlockLduSystem<vector, GradType>(vsf.mesh())
     );

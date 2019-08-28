@@ -123,9 +123,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedJumpAMIFvPatchField<Type>(*this)
             );
@@ -139,12 +139,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedJumpAMIFvPatchField<Type>(*this, iF)
             );
@@ -156,7 +156,7 @@ public:
         // Access
 
             //- Return the "jump" across the patch
-            virtual tmp<Field<Type> > jump() const;
+            virtual tmp<Field<Type>> jump() const;
 
 
         // Mapping functions
@@ -259,7 +259,7 @@ CML::fixedJumpAMIFvPatchField<Type>::fixedJumpAMIFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fixedJumpAMIFvPatchField<Type>::jump() const
+CML::tmp<CML::Field<Type>> CML::fixedJumpAMIFvPatchField<Type>::jump() const
 {
     if (this->cyclicAMIPatch().owner())
     {
@@ -268,7 +268,7 @@ CML::tmp<CML::Field<Type> > CML::fixedJumpAMIFvPatchField<Type>::jump() const
     else
     {
         const fixedJumpAMIFvPatchField& nbrPatch =
-            refCast<const fixedJumpAMIFvPatchField<Type> >
+            refCast<const fixedJumpAMIFvPatchField<Type>>
             (
                 this->neighbourPatchField()
             );
@@ -310,7 +310,7 @@ void CML::fixedJumpAMIFvPatchField<Type>::rmap
     jumpCyclicAMIFvPatchField<Type>::rmap(ptf, addr);
 
     const fixedJumpAMIFvPatchField<Type>& tiptf =
-        refCast<const fixedJumpAMIFvPatchField<Type> >(ptf);
+        refCast<const fixedJumpAMIFvPatchField<Type>>(ptf);
     jump_.rmap(tiptf.jump_, addr);
 }
 

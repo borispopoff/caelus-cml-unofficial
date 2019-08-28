@@ -104,9 +104,9 @@ public:
     );
 
     //- Construct and return a clone
-    virtual tmp<fvPatchField<Type> > clone() const
+    virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
                 (
                     new groovyBCJumpFvPatchField<Type>(*this)
                 );
@@ -120,12 +120,12 @@ public:
     );
 
     //- Construct and return a clone setting internal field reference
-    virtual tmp<fvPatchField<Type> > clone
+    virtual tmp<fvPatchField<Type>> clone
     (
         const DimensionedField<Type, volMesh>& iF
     ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
                 (
                     new groovyBCJumpFvPatchField<Type>(*this, iF)
                 );

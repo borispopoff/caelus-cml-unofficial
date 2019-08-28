@@ -194,7 +194,7 @@ public:
 };
 
 template<class Cmpt>
-class outerProduct<Cmpt, SphericalTensor<Cmpt> >
+class outerProduct<Cmpt, SphericalTensor<Cmpt>>
 {
 public:
 
@@ -203,7 +203,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<SphericalTensor<Cmpt>, SphericalTensor<Cmpt> >
+class innerProduct<SphericalTensor<Cmpt>, SphericalTensor<Cmpt>>
 {
 public:
 
@@ -212,7 +212,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<SphericalTensor<Cmpt>, Vector<Cmpt> >
+class innerProduct<SphericalTensor<Cmpt>, Vector<Cmpt>>
 {
 public:
 
@@ -220,7 +220,7 @@ public:
 };
 
 template<class Cmpt>
-class innerProduct<Vector<Cmpt>, SphericalTensor<Cmpt> >
+class innerProduct<Vector<Cmpt>, SphericalTensor<Cmpt>>
 {
 public:
 

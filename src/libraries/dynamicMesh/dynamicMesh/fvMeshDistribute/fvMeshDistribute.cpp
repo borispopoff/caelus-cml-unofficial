@@ -501,15 +501,15 @@ CML::autoPtr<CML::mapPolyMesh> CML::fvMeshDistribute::repatch
     // is currently not supported by updateMesh.
 
     // Store boundary fields (we only do this for surfaceFields)
-    PtrList<FieldField<fvsPatchField, scalar> > sFlds;
+    PtrList<FieldField<fvsPatchField, scalar>> sFlds;
     saveBoundaryFields<scalar, surfaceMesh>(sFlds);
-    PtrList<FieldField<fvsPatchField, vector> > vFlds;
+    PtrList<FieldField<fvsPatchField, vector>> vFlds;
     saveBoundaryFields<vector, surfaceMesh>(vFlds);
-    PtrList<FieldField<fvsPatchField, sphericalTensor> > sptFlds;
+    PtrList<FieldField<fvsPatchField, sphericalTensor>> sptFlds;
     saveBoundaryFields<sphericalTensor, surfaceMesh>(sptFlds);
-    PtrList<FieldField<fvsPatchField, symmTensor> > sytFlds;
+    PtrList<FieldField<fvsPatchField, symmTensor>> sytFlds;
     saveBoundaryFields<symmTensor, surfaceMesh>(sytFlds);
-    PtrList<FieldField<fvsPatchField, tensor> > tFlds;
+    PtrList<FieldField<fvsPatchField, tensor>> tFlds;
     saveBoundaryFields<tensor, surfaceMesh>(tFlds);
 
     // Change the mesh (no inflation). Note: parallel comms allowed.
@@ -873,7 +873,7 @@ void CML::fvMeshDistribute::findCouples
 {
     // Store domain neighbour as map so we can easily look for pair
     // with same face+proc.
-    HashTable<label, labelPair, labelPair::Hash<> > map(domainFace.size());
+    HashTable<label, labelPair, labelPair::Hash<>> map(domainFace.size());
 
     forAll(domainProc, bFacei)
     {
@@ -900,7 +900,7 @@ void CML::fvMeshDistribute::findCouples
         {
             labelPair myData(sourceFace[bFacei], sourceProc[bFacei]);
 
-            HashTable<label, labelPair, labelPair::Hash<> >::const_iterator
+            HashTable<label, labelPair, labelPair::Hash<>>::const_iterator
                 iter = map.find(myData);
 
             if (iter != map.end())
@@ -1000,15 +1000,15 @@ CML::autoPtr<CML::mapPolyMesh> CML::fvMeshDistribute::doRemoveCells
 
     // Save internal fields (note: not as DimensionedFields since would
     // get mapped)
-    PtrList<Field<scalar> > sFlds;
+    PtrList<Field<scalar>> sFlds;
     saveInternalFields(sFlds);
-    PtrList<Field<vector> > vFlds;
+    PtrList<Field<vector>> vFlds;
     saveInternalFields(vFlds);
-    PtrList<Field<sphericalTensor> > sptFlds;
+    PtrList<Field<sphericalTensor>> sptFlds;
     saveInternalFields(sptFlds);
-    PtrList<Field<symmTensor> > sytFlds;
+    PtrList<Field<symmTensor>> sytFlds;
     saveInternalFields(sytFlds);
-    PtrList<Field<tensor> > tFlds;
+    PtrList<Field<tensor>> tFlds;
     saveInternalFields(tFlds);
 
     // Change the mesh. No inflation. Note: no parallel comms allowed.
@@ -1049,7 +1049,7 @@ void CML::fvMeshDistribute::addProcPatches
 (
     const labelList& nbrProc,       // processor that neighbour is now on
     const labelList& referPatchID,  // patchID (or -1) I originated from
-    List<Map<label> >& procPatchID
+    List<Map<label>>& procPatchID
 )
 {
     // Now use the neighbourFace/Proc to repatch the mesh. These lists
@@ -1167,7 +1167,7 @@ CML::labelList CML::fvMeshDistribute::getBoundaryPatch
 (
     const labelList& nbrProc,               // new processor per boundary face
     const labelList& referPatchID,          // patchID (or -1) I originated from
-    const List<Map<label> >& procPatchID    // per proc the new procPatches
+    const List<Map<label>>& procPatchID    // per proc the new procPatches
 )
 {
     labelList patchIDs(nbrProc);
@@ -2548,7 +2548,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     // Per neighbour processor, per originating patch, the patchID
     // For faces resulting from internal faces or normal processor patches
     // the originating patch is -1. For cyclics this is the cyclic patchID.
-    List<Map<label> > procPatchID;
+    List<Map<label>> procPatchID;
 
     // Add processor and processorCyclic patches.
     addProcPatches(sourceNewNbrProc, sourcePatch, procPatchID);
@@ -2582,11 +2582,11 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
 
     // Bit of hack: processorFvPatchField does not get reset since created
     // from nothing so explicitly reset.
-    initPatchFields<volScalarField, processorFvPatchField<scalar> >
+    initPatchFields<volScalarField, processorFvPatchField<scalar>>
     (
         Zero
     );
-    initPatchFields<volVectorField, processorFvPatchField<vector> >
+    initPatchFields<volVectorField, processorFvPatchField<vector>>
     (
         Zero
     );
@@ -2598,11 +2598,11 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     (
         Zero
     );
-    initPatchFields<volSymmTensorField, processorFvPatchField<symmTensor> >
+    initPatchFields<volSymmTensorField, processorFvPatchField<symmTensor>>
     (
         Zero
     );
-    initPatchFields<volTensorField, processorFvPatchField<tensor> >
+    initPatchFields<volTensorField, processorFvPatchField<tensor>>
     (
         Zero
     );

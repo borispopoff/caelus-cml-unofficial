@@ -25,7 +25,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::linearUpwind<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -33,7 +33,7 @@ CML::linearUpwind<Type>::correction
 {
     const fvMesh& mesh = this->mesh();
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsfCorr
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (

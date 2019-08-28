@@ -52,7 +52,7 @@ void stabilise
 
 
 template<template<class> class Field>
-tmp<FieldField<Field, scalar> > stabilise
+tmp<FieldField<Field, scalar>> stabilise
 (
     const FieldField<Field, scalar>&,
     const scalar s
@@ -60,9 +60,9 @@ tmp<FieldField<Field, scalar> > stabilise
 
 
 template<template<class> class Field>
-tmp<FieldField<Field, scalar> > stabilise
+tmp<FieldField<Field, scalar>> stabilise
 (
-    const tmp<FieldField<Field, scalar> >&,
+    const tmp<FieldField<Field, scalar>>&,
     const scalar s
 );
 
@@ -128,7 +128,7 @@ void func                                                                     \
     const FieldField<Field, scalar>& sf                                       \
 );                                                                            \
 tmp<scalarField> func(const int n, const FieldField<Field, scalar>&);         \
-tmp<scalarField> func(const int n, const tmp<FieldField<Field, scalar> >&);
+tmp<scalarField> func(const int n, const tmp<FieldField<Field, scalar>>&);
 
 BesselFunc(jn)
 BesselFunc(yn)
@@ -169,13 +169,13 @@ void stabilise
 }
 
 template<template<class> class Field>
-tmp<FieldField<Field, scalar> > stabilise
+tmp<FieldField<Field, scalar>> stabilise
 (
     const FieldField<Field, scalar>& f1,
     const scalar s
 )
 {
-    tmp<FieldField<Field, scalar> > tf
+    tmp<FieldField<Field, scalar>> tf
     (
         FieldField<Field, scalar>::NewCalculatedType(f1)
     );
@@ -184,13 +184,13 @@ tmp<FieldField<Field, scalar> > stabilise
 }
 
 template<template<class> class Field>
-tmp<FieldField<Field, scalar> > stabilise
+tmp<FieldField<Field, scalar>> stabilise
 (
-    const tmp<FieldField<Field, scalar> >& tf1,
+    const tmp<FieldField<Field, scalar>>& tf1,
     const scalar s
 )
 {
-    tmp<FieldField<Field, scalar> > tf(tf1.ptr());
+    tmp<FieldField<Field, scalar>> tf(tf1.ptr());
     stabilise(tf(), tf(), s);
     return tf;
 }
@@ -266,13 +266,13 @@ void func                                                                     \
 }                                                                             \
                                                                               \
 template<template<class> class Field>                                         \
-tmp<FieldField<Field, scalar> > func                                          \
+tmp<FieldField<Field, scalar>> func                                          \
 (                                                                             \
     const int n,                                                              \
     const FieldField<Field, scalar>& sf                                       \
 )                                                                             \
 {                                                                             \
-    tmp<FieldField<Field, scalar> > tRes                                      \
+    tmp<FieldField<Field, scalar>> tRes                                      \
     (                                                                         \
         FieldField<Field, scalar>::NewCalculatedType(sf)                      \
     );                                                                        \
@@ -281,13 +281,13 @@ tmp<FieldField<Field, scalar> > func                                          \
 }                                                                             \
                                                                               \
 template<template<class> class Field>                                         \
-tmp<FieldField<Field, scalar> > func                                          \
+tmp<FieldField<Field, scalar>> func                                          \
 (                                                                             \
     const int n,                                                              \
-    const tmp<FieldField<Field, scalar> >& tsf                                \
+    const tmp<FieldField<Field, scalar>>& tsf                                \
 )                                                                             \
 {                                                                             \
-    tmp<FieldField<Field, scalar> > tRes                                      \
+    tmp<FieldField<Field, scalar>> tRes                                      \
     (                                                                         \
         reuseTmpFieldField<Field, scalar, scalar>::New(tsf)                   \
     );                                                                        \

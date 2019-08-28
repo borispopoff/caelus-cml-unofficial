@@ -88,13 +88,13 @@ public:
         {}
 
         //- Construct by transferring the parameter contents
-        HashSet(const Xfer<HashSet<Key, Hash> >& hs)
+        HashSet(const Xfer<HashSet<Key, Hash>>& hs)
         :
             HashTable<nil, Key, Hash>(hs)
         {}
 
         //- Construct by transferring the parameter contents
-        HashSet(const Xfer<HashTable<nil, Key, Hash> >& hs)
+        HashSet(const Xfer<HashTable<nil, Key, Hash>>& hs)
         :
             HashTable<nil, Key, Hash>(hs)
         {}
@@ -204,7 +204,7 @@ HashSet<Key,Hash> operator^
 typedef HashSet<> wordHashSet;
 
 //- A HashSet with label keys.
-typedef HashSet<label, Hash<label> > labelHashSet;
+typedef HashSet<label, Hash<label>> labelHashSet;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -122,9 +122,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedJumpFvPatchField<Type>(*this)
             );
@@ -138,12 +138,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedJumpFvPatchField<Type>(*this, iF)
             );
@@ -155,7 +155,7 @@ public:
         // Access
 
             //- Return the "jump" across the patch
-            virtual tmp<Field<Type> > jump() const;
+            virtual tmp<Field<Type>> jump() const;
 
 
         // Mapping functions
@@ -265,7 +265,7 @@ CML::fixedJumpFvPatchField<Type>::fixedJumpFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fixedJumpFvPatchField<Type>::jump() const
+CML::tmp<CML::Field<Type>> CML::fixedJumpFvPatchField<Type>::jump() const
 {
     if (this->cyclicPatch().owner())
     {
@@ -273,7 +273,7 @@ CML::tmp<CML::Field<Type> > CML::fixedJumpFvPatchField<Type>::jump() const
     }
     else
     {
-        return refCast<const fixedJumpFvPatchField<Type> >
+        return refCast<const fixedJumpFvPatchField<Type>>
         (
             this->neighbourPatchField()
         ).jump();
@@ -302,7 +302,7 @@ void CML::fixedJumpFvPatchField<Type>::rmap
     jumpCyclicFvPatchField<Type>::rmap(ptf, addr);
 
     const fixedJumpFvPatchField<Type>& tiptf =
-        refCast<const fixedJumpFvPatchField<Type> >(ptf);
+        refCast<const fixedJumpFvPatchField<Type>>(ptf);
     jump_.rmap(tiptf.jump_, addr);
 }
 

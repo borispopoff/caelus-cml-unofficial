@@ -75,7 +75,7 @@ class limitedSnGrad
 {
     // Private data
 
-        tmp<snGradScheme<Type> > correctedScheme_;
+        tmp<snGradScheme<Type>> correctedScheme_;
 
         scalar limitCoeff_;
 
@@ -87,14 +87,14 @@ class limitedSnGrad
 
         //- Lookup function for the corrected to support backward compatibility
         //  of dictionary specification
-        tmp<snGradScheme<Type> > lookupCorrectedScheme(Istream& is)
+        tmp<snGradScheme<Type>> lookupCorrectedScheme(Istream& is)
         {
             token nextToken(is);
 
             if (nextToken.isNumber())
             {
                 limitCoeff_ = nextToken.number();
-                return tmp<snGradScheme<Type> >
+                return tmp<snGradScheme<Type>>
                 (
                     new correctedSnGrad<Type>(this->mesh())
                 );
@@ -102,7 +102,7 @@ class limitedSnGrad
             else
             {
                 is.putBack(nextToken);
-                tmp<snGradScheme<Type> > tcorrectedScheme
+                tmp<snGradScheme<Type>> tcorrectedScheme
                 (
                     fv::snGradScheme<Type>::New(this->mesh(), is)
                 );
@@ -170,7 +170,7 @@ public:
 
         //- Return the explicit correction to the limitedSnGrad
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const;
 };
 
@@ -204,7 +204,7 @@ limitedSnGrad<Type>::~limitedSnGrad()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 limitedSnGrad<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf

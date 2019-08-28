@@ -591,7 +591,7 @@ void CML::triSurfaceMesh::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     triSurfaceSearch::findLineAll(start, end, info);

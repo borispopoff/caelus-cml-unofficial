@@ -183,7 +183,7 @@ autoPtr<triSurf> mergeSurfacePatches
     word newPatchType = origPatches[patchIds[0]].geometricType();
     
     // Create patch addressing
-    List<DynamicList<label> > patchAddr(origPatches.size()+1);
+    List<DynamicList<label>> patchAddr(origPatches.size()+1);
     
     forAll(origFacets, faceI)
     {

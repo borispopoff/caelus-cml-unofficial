@@ -326,7 +326,7 @@ void CML::searchableSurfaces::findAllIntersections
     const pointField& start,
     const pointField& end,
     labelListList& hitSurfaces,
-    List<List<pointIndexHit> >& hitInfo
+    List<List<pointIndexHit>>& hitInfo
 ) const
 {
     searchableSurfacesQueries::findAllIntersections
@@ -603,7 +603,7 @@ bool CML::searchableSurfaces::checkSizes
 bool CML::searchableSurfaces::checkIntersection
 (
     const scalar tolerance,
-    const autoPtr<writer<scalar> >& setWriter,
+    const autoPtr<writer<scalar>>& setWriter,
     const bool report
 ) const
 {
@@ -831,7 +831,7 @@ CML::label CML::searchableSurfaces::checkGeometry
 (
     const scalar maxRatio,
     const scalar tol,
-    const autoPtr<writer<scalar> >& setWriter,
+    const autoPtr<writer<scalar>>& setWriter,
     const scalar minQuality,
     const bool report
 ) const

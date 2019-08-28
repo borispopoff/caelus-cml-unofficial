@@ -198,7 +198,7 @@ public:
         HashTable(const HashTable<T, Key, Hash>&);
 
         //- Construct by transferring the parameter contents
-        HashTable(const Xfer<HashTable<T, Key, Hash> >&);
+        HashTable(const Xfer<HashTable<T, Key, Hash>>&);
 
 
     //- Destructor
@@ -283,7 +283,7 @@ public:
             void transfer(HashTable<T, Key, Hash>&);
 
             //- Transfer contents to the Xfer container
-            inline Xfer<HashTable<T, Key, Hash> > xfer();
+            inline Xfer<HashTable<T, Key, Hash>> xfer();
 
 
     // Member Operators
@@ -614,7 +614,7 @@ inline bool CML::HashTable<T, Key, Hash>::set
 
 
 template<class T, class Key, class Hash>
-inline CML::Xfer<CML::HashTable<T, Key, Hash> >
+inline CML::Xfer<CML::HashTable<T, Key, Hash>>
 CML::HashTable<T, Key, Hash>::xfer()
 {
     return xferMove(*this);
@@ -1099,7 +1099,7 @@ CML::HashTable<T, Key, Hash>::HashTable(const HashTable<T, Key, Hash>& ht)
 template<class T, class Key, class Hash>
 CML::HashTable<T, Key, Hash>::HashTable
 (
-    const Xfer<HashTable<T, Key, Hash> >& ht
+    const Xfer<HashTable<T, Key, Hash>>& ht
 )
 :
     HashTableCore(),

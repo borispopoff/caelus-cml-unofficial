@@ -1478,7 +1478,7 @@ void CommonValueExpressionDriver::addVariables(
 
 void CommonValueExpressionDriver::readTables(
     Istream &is,
-    HashTable<interpolationTable<scalar> > &tables,
+    HashTable<interpolationTable<scalar>> &tables,
     bool clear
 )
 {
@@ -1495,11 +1495,11 @@ void CommonValueExpressionDriver::readTables(
 
 void CommonValueExpressionDriver::writeTables(
     Ostream &os,
-    const HashTable<interpolationTable<scalar> > &tables
+    const HashTable<interpolationTable<scalar>> &tables
 ) const
 {
     os << token::BEGIN_LIST << nl;
-    forAllConstIter(HashTable<interpolationTable<scalar> >,tables,it) {
+    forAllConstIter(HashTable<interpolationTable<scalar>>,tables,it) {
         os << token::BEGIN_BLOCK << nl;
         os.writeKeyword("name") << it.key() << token::END_STATEMENT << nl;
         (*it).write(os);

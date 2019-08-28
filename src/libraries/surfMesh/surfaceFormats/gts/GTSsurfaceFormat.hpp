@@ -71,9 +71,9 @@ public:
     // Selectors
 
         //- Read file and return surface
-        static autoPtr<UnsortedMeshedSurface<Face> > New(const fileName& name)
+        static autoPtr<UnsortedMeshedSurface<Face>> New(const fileName& name)
         {
-            return autoPtr<UnsortedMeshedSurface<Face> >
+            return autoPtr<UnsortedMeshedSurface<Face>>
             (
                 new GTSsurfaceFormat<Face>(name)
             );

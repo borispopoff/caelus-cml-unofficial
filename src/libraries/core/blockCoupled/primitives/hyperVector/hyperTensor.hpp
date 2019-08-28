@@ -294,7 +294,7 @@ inline Cmpt& hyperTensor<Cmpt, length>::operator()
 //- Inner-product between two tensors
 template <class Cmpt, int length>
 inline typename
-innerProduct<hyperTensor<Cmpt, length>, hyperTensor<Cmpt, length> >::type
+innerProduct<hyperTensor<Cmpt, length>, hyperTensor<Cmpt, length>>::type
 operator&
 (
     const hyperTensor<Cmpt, length>& t1,
@@ -339,7 +339,7 @@ operator&
 //- Inner-product between a tensor and a vector
 template <class Cmpt, int length>
 inline typename
-innerProduct<hyperTensor<Cmpt, length>, hyperVector<Cmpt, length> >::type
+innerProduct<hyperTensor<Cmpt, length>, hyperVector<Cmpt, length>>::type
 operator&
 (
     const hyperTensor<Cmpt, length>& t,
@@ -367,7 +367,7 @@ operator&
 //- Inner-product between a vector and a tensor
 template <class Cmpt, int length>
 inline typename
-innerProduct<hyperVector<Cmpt, length>, hyperTensor<Cmpt, length> >::type
+innerProduct<hyperVector<Cmpt, length>, hyperTensor<Cmpt, length>>::type
 operator&
 (
     const hyperVector<Cmpt, length>& v,
@@ -395,7 +395,7 @@ operator&
 //- Outer-product between two vectors
 template <class Cmpt, int length>
 inline typename
-outerProduct<hyperVector<Cmpt, length>, hyperVector<Cmpt, length> >::type
+outerProduct<hyperVector<Cmpt, length>, hyperVector<Cmpt, length>>::type
 operator*
 (
     const hyperVector<Cmpt, length>& v1,
@@ -753,7 +753,7 @@ public:
 
 
 template<class Cmpt, int length>
-class outerProduct<Cmpt, hyperTensor<Cmpt, length> >
+class outerProduct<Cmpt, hyperTensor<Cmpt, length>>
 {
 public:
 
@@ -762,7 +762,7 @@ public:
 
 
 template<class Cmpt, int length>
-class innerProduct<hyperVector<Cmpt, length>, hyperTensor<Cmpt, length> >
+class innerProduct<hyperVector<Cmpt, length>, hyperTensor<Cmpt, length>>
 {
 public:
 
@@ -771,7 +771,7 @@ public:
 
 
 template<class Cmpt, int length>
-class innerProduct<hyperTensor<Cmpt, length>, hyperVector<Cmpt, length> >
+class innerProduct<hyperTensor<Cmpt, length>, hyperVector<Cmpt, length>>
 {
 public:
 
@@ -780,7 +780,7 @@ public:
 
 
 template<class Cmpt, int length>
-class innerProduct<hyperTensor<Cmpt, length>, hyperTensor<Cmpt, length> >
+class innerProduct<hyperTensor<Cmpt, length>, hyperTensor<Cmpt, length>>
 {
 public:
 

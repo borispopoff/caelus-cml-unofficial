@@ -149,7 +149,7 @@ class dictionary
         DLList<entry*> patternEntries_;
 
         //- Patterns as precompiled regular expressions
-        DLList<autoPtr<regExp> > patternRegexps_;
+        DLList<autoPtr<regExp>> patternRegexps_;
 
 
    // Private Member Functions
@@ -160,7 +160,7 @@ class dictionary
             const bool patternMatch,
             const word& Keyword,
             DLList<entry*>::const_iterator& wcLink,
-            DLList<autoPtr<regExp> >::const_iterator& reLink
+            DLList<autoPtr<regExp>>::const_iterator& reLink
         ) const;
 
         //- Search patterns table for exact match or regular expression match
@@ -169,7 +169,7 @@ class dictionary
             const bool patternMatch,
             const word& Keyword,
             DLList<entry*>::iterator& wcLink,
-            DLList<autoPtr<regExp> >::iterator& reLink
+            DLList<autoPtr<regExp>>::iterator& reLink
         );
 
 

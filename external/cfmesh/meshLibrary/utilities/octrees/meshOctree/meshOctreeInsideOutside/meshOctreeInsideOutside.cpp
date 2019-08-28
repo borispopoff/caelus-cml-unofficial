@@ -151,7 +151,7 @@ void meshOctreeInsideOutside::frontalMarking()
     private(frontCubes, neighbours)
     # endif
     {
-        LongList<std::pair<label, label> > threadCommPairs;
+        LongList<std::pair<label, label>> threadCommPairs;
 
         # ifdef USE_OMP
         const label threadI = omp_get_thread_num();
@@ -250,7 +250,7 @@ void meshOctreeInsideOutside::frontalMarking()
         # endif
 
         //- find group to neighbouring groups addressing
-        List<DynList<label> > localNeiGroups(nGroup);
+        List<DynList<label>> localNeiGroups(nGroup);
         forAll(threadCommPairs, cfI)
         {
             const std::pair<label, label>& lp = threadCommPairs[cfI];

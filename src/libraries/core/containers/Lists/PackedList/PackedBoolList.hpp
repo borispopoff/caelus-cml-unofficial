@@ -109,7 +109,7 @@ public:
         inline PackedBoolList(const Xfer<PackedBoolList>&);
 
         //- Construct by transferring the parameter contents
-        inline PackedBoolList(const Xfer<PackedList<1> >&);
+        inline PackedBoolList(const Xfer<PackedList<1>>&);
 
         //- Construct from a list of bools
         explicit inline PackedBoolList(const CML::UList<bool>&);

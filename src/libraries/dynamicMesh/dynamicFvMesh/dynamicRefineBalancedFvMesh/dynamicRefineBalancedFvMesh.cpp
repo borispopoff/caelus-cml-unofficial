@@ -234,7 +234,7 @@ void CML::dynamicRefineBalancedFvMesh::readRefinementDict()
             // Read HashTable of gradient-refinement scalars
             if (refineControlDict.found("gradients"))
             {
-                gradFields_ = HashTable< Pair<scalar> >
+                gradFields_ = HashTable<Pair<scalar>>
                 (
                     refineControlDict.lookup("gradients")
                 );

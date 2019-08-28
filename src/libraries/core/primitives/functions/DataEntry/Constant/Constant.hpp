@@ -89,9 +89,9 @@ public:
         Constant(const Constant<Type>& cnst);
 
         //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
+        virtual tmp<DataEntry<Type>> clone() const
         {
-            return tmp<DataEntry<Type> >(new Constant<Type>(*this));
+            return tmp<DataEntry<Type>>(new Constant<Type>(*this));
         }
 
 
@@ -108,10 +108,10 @@ public:
         virtual inline Type integrate(const scalar x1, const scalar x2) const;
 
         //- Return value as a function of (scalar) independent variable
-        virtual tmp<Field<Type> > value(const scalarField& x) const;
+        virtual tmp<Field<Type>> value(const scalarField& x) const;
 
         //- Integrate between two (scalar) values
-        virtual tmp<Field<Type> > integrate
+        virtual tmp<Field<Type>> integrate
         (
             const scalarField& x1,
             const scalarField& x2
@@ -203,7 +203,7 @@ inline Type CML::DataEntryTypes::Constant<Type>::value(const scalar x) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::DataEntryTypes::Constant<Type>::value
+CML::tmp<CML::Field<Type>> CML::DataEntryTypes::Constant<Type>::value
 (
     const scalarField& x
 ) const
@@ -224,7 +224,7 @@ inline Type CML::DataEntryTypes::Constant<Type>::integrate
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::DataEntryTypes::Constant<Type>::integrate
+CML::tmp<CML::Field<Type>> CML::DataEntryTypes::Constant<Type>::integrate
 (
     const scalarField& x1,
     const scalarField& x2
@@ -244,7 +244,7 @@ void CML::DataEntryTypes::Constant<Type>::writeData(Ostream& os) const
 
 
 template<class Type>
-CML::autoPtr<CML::DataEntry<Type> > CML::DataEntry<Type>::New
+CML::autoPtr<CML::DataEntry<Type>> CML::DataEntry<Type>::New
 (
     const word& entryName,
     const dictionary& dict
@@ -282,7 +282,7 @@ CML::autoPtr<CML::DataEntry<Type> > CML::DataEntry<Type>::New
         if (!firstToken.isWord())
         {
             is.putBack(firstToken);
-            return autoPtr<DataEntry<Type> >
+            return autoPtr<DataEntry<Type>>
             (
                 new DataEntryTypes::Constant<Type>(entryName, is)
             );

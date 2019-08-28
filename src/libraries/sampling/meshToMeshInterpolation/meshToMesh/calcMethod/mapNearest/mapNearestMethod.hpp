@@ -104,7 +104,7 @@ protected:
         virtual label findMappedSrcCell
         (
             const label tgtCellI,
-            const List<DynamicList<label> >& tgtToSrc
+            const List<DynamicList<label>>& tgtToSrc
         ) const;
 
         //- Disallow default bitwise copy construct

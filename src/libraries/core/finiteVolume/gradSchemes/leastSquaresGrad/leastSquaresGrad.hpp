@@ -136,7 +136,7 @@ CML::fv::leastSquaresGrad<Type>::calcGrad
 
     const fvMesh& mesh = vsf.mesh();
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tlsGrad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tlsGrad
     (
         new GeometricField<GradType, fvPatchField, volMesh>
         (

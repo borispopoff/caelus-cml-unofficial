@@ -47,7 +47,7 @@ void meshOctreeModifier::updateCommunicationPattern()
     const LongList<meshOctreeCube*>& leaves = octree_.leaves_;
 
     //- create the list which contains ranges of addresses at a given processor
-    List<Pair<meshOctreeCubeCoordinates> > range(Pstream::nProcs());
+    List<Pair<meshOctreeCubeCoordinates>> range(Pstream::nProcs());
 
     //- create the range for the current processor
     range[Pstream::myProcNo()].first() = leaves[0]->coordinates();

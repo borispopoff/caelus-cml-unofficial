@@ -73,7 +73,7 @@ public:
 //class dummyTransformList
 //{
 //public:
-//    void operator()(const coupledPolyPatch&, Field<List<T> >&) const
+//    void operator()(const coupledPolyPatch&, Field<List<T>>&) const
 //    {}
 //};
 //// Dummy template specialisation. Used in synchronisation.

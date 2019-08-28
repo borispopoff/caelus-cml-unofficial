@@ -174,7 +174,7 @@ void CML::isoAdvection::timeIntegratedFlux()
     const pointField& points = mesh_.points();
 
     // Storage for isoFace points. Only used if writeIsoFacesToFile_
-    DynamicList<List<point> > isoFacePts;
+    DynamicList<List<point>> isoFacePts;
 
     // Interpolating alpha1 cell centre values to mesh points (vertices)
     ap_ = volPointInterpolation::New(mesh_).interpolate(alpha1_);
@@ -1099,7 +1099,7 @@ void CML::isoAdvection::writeBoundedCells() const
 
 void CML::isoAdvection::writeIsoFaces
 (
-    const DynamicList<List<point> >& faces
+    const DynamicList<List<point>>& faces
 ) const
 {
     // Writing isofaces to obj file for inspection, e.g. in paraview
@@ -1117,7 +1117,7 @@ void CML::isoAdvection::writeIsoFaces
     if (Pstream::parRun())
     {
         // Collect points from all the processors
-        List<DynamicList<List<point> > > allProcFaces(Pstream::nProcs());
+        List<DynamicList<List<point>>> allProcFaces(Pstream::nProcs());
         allProcFaces[Pstream::myProcNo()] = faces;
         Pstream::gatherList(allProcFaces);
 
@@ -1131,7 +1131,7 @@ void CML::isoAdvection::writeIsoFaces
             face f;
             forAll(allProcFaces, proci)
             {
-                const DynamicList<List<point> >& procFacePts =
+                const DynamicList<List<point>>& procFacePts =
                     allProcFaces[proci];
 
                 forAll(procFacePts, i)

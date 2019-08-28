@@ -257,7 +257,7 @@ void CML::nastranSurfaceWriter::writeGeometry
 (
     const pointField& points,
     const faceList& faces,
-    List<DynamicList<face> >& decomposedFaces,
+    List<DynamicList<face>>& decomposedFaces,
     OFstream& os
 ) const
 {
@@ -335,7 +335,7 @@ CML::nastranSurfaceWriter::nastranSurfaceWriter(const dictionary& options)
         writeFormat_ = writeFormatNames_.read(options.lookup("format"));
     }
 
-    List<Tuple2<word, word> > fieldSet(options.lookup("fields"));
+    List<Tuple2<word, word>> fieldSet(options.lookup("fields"));
 
     forAll(fieldSet, i)
     {
@@ -378,7 +378,7 @@ void CML::nastranSurfaceWriter::write
         << "$" << nl
         << "BEGIN BULK" << nl;
 
-    List<DynamicList<face> > decomposedFaces(faces.size());
+    List<DynamicList<face>> decomposedFaces(faces.size());
 
     writeGeometry(points, faces, decomposedFaces, os);
 

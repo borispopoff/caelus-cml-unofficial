@@ -69,7 +69,7 @@ void exchangeMap
 //- sends the data stored in a map to other processors and receives the data
 //- received from other processors into another map
 template<class T, class ListType>
-void exchangeMap(const std::map<label, ListType>&, std::map<label, List<T> >&);
+void exchangeMap(const std::map<label, ListType>&, std::map<label, List<T>>&);
 
 //- calculates the reverse addressing of the graph by transposing the graph
 template<class RowType, template<class ListTypeArg> class GraphType>
@@ -103,7 +103,7 @@ namespace help
 template<class sendOp, class combineOp, class T, class ListType>
 void combineData(const sendOp& sop, combineOp& cop)
 {
-    std::map<label, LongList<T> > sMap;
+    std::map<label, LongList<T>> sMap;
     sop(sMap);
 
     LongList<T> data;
@@ -350,7 +350,7 @@ template<class T, class ListType>
 void exchangeMap
 (
     const std::map<label, ListType>& m,
-    std::map<label, List<T> >&mOut
+    std::map<label, List<T>>&mOut
 )
 {
     mOut.clear();
@@ -396,7 +396,7 @@ void reverseAddressingSMP
     labelList nAppearances;
 
     label minRow(INT_MAX), maxRow(0);
-    DynList<std::map<label, DynList<labelPair, 64> > > dataForOtherThreads;
+    DynList<std::map<label, DynList<labelPair, 64>>> dataForOtherThreads;
 
     # ifdef USE_OMP
     # pragma omp parallel
@@ -500,10 +500,10 @@ void reverseAddressingSMP
         //- count the appearances which are not local to the processor
         for(label i=0;i<nProcs;++i)
         {
-            const std::map<label, DynList<labelPair, 64> >& data =
+            const std::map<label, DynList<labelPair, 64>>& data =
                 dataForOtherThreads[i];
 
-            std::map<label, DynList<labelPair, 64> >::const_iterator it =
+            std::map<label, DynList<labelPair, 64>>::const_iterator it =
                 data.find(procNo);
 
             if( it != data.end() )
@@ -530,9 +530,9 @@ void reverseAddressingSMP
         //- update data from processors with smaller labels
         for(label i=0;i<procNo;++i)
         {
-            const std::map<label, DynList<labelPair, 64> >& data =
+            const std::map<label, DynList<labelPair, 64>>& data =
                 dataForOtherThreads[i];
-            std::map<label, DynList<labelPair, 64> >::const_iterator it =
+            std::map<label, DynList<labelPair, 64>>::const_iterator it =
                 data.find(procNo);
 
             if( it != data.end() )
@@ -570,9 +570,9 @@ void reverseAddressingSMP
         //- update data from the processors with higher labels
         for(label i=procNo+1;i<nProcs;++i)
         {
-            const std::map<label, DynList<labelPair, 64> >& data =
+            const std::map<label, DynList<labelPair, 64>>& data =
                 dataForOtherThreads[i];
-            std::map<label, DynList<labelPair, 64> >::const_iterator it =
+            std::map<label, DynList<labelPair, 64>>::const_iterator it =
                 data.find(procNo);
 
             if( it != data.end() )

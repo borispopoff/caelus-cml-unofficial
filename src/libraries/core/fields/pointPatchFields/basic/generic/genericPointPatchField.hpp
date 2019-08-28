@@ -93,9 +93,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new genericPointPatchField<Type>
                 (
@@ -112,12 +112,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new genericPointPatchField<Type>
                 (
@@ -234,13 +234,13 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<scalar> >::typeName
+                     == token::Compound<List<scalar>>::typeName
                     )
                     {
                         scalarField* fPtr = new scalarField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<scalar> > >
+                            dynamicCast<token::Compound<List<scalar>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -266,13 +266,13 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<vector> >::typeName
+                     == token::Compound<List<vector>>::typeName
                     )
                     {
                         vectorField* fPtr = new vectorField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<vector> > >
+                            dynamicCast<token::Compound<List<vector>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -298,7 +298,7 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<sphericalTensor> >::typeName
+                     == token::Compound<List<sphericalTensor>>::typeName
                     )
                     {
                         sphericalTensorField* fPtr = new sphericalTensorField;
@@ -306,7 +306,7 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                         (
                             dynamicCast
                             <
-                                token::Compound<List<sphericalTensor> >
+                                token::Compound<List<sphericalTensor>>
                             >
                             (
                                 fieldToken.transferCompoundToken(is)
@@ -333,7 +333,7 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<symmTensor> >::typeName
+                     == token::Compound<List<symmTensor>>::typeName
                     )
                     {
                         symmTensorField* fPtr = new symmTensorField;
@@ -341,7 +341,7 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                         (
                             dynamicCast
                             <
-                                token::Compound<List<symmTensor> >
+                                token::Compound<List<symmTensor>>
                             >
                             (
                                 fieldToken.transferCompoundToken(is)
@@ -368,13 +368,13 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<tensor> >::typeName
+                     == token::Compound<List<tensor>>::typeName
                     )
                     {
                         tensorField* fPtr = new tensorField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<tensor> > >
+                            dynamicCast<token::Compound<List<tensor>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -587,7 +587,7 @@ void CML::genericPointPatchField<Type>::rmap
 )
 {
     const genericPointPatchField<Type>& dptf =
-        refCast<const genericPointPatchField<Type> >(ptf);
+        refCast<const genericPointPatchField<Type>>(ptf);
 
     forAllIter
     (

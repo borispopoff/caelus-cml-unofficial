@@ -232,7 +232,7 @@ class isoSurface
         //- Return input field with coupled (and empty) patch values rewritten
         template<class Type>
         tmp<SlicedGeometricField
-        <Type, fvPatchField, slicedFvPatchField, volMesh> >
+        <Type, fvPatchField, slicedFvPatchField, volMesh>>
         adaptPatchFields
         (
             const GeometricField<Type, fvPatchField, volMesh>& fld
@@ -334,7 +334,7 @@ class isoSurface
         void calcAddressing
         (
             const triSurface& surf,
-            List<FixedList<label, 3> >& faceEdges,
+            List<FixedList<label, 3>>& faceEdges,
             labelList& edgeFace0,
             labelList& edgeFace1,
             Map<labelList>& edgeFacesRest
@@ -344,7 +344,7 @@ class isoSurface
         static void walkOrientation
         (
             const triSurface& surf,
-            const List<FixedList<label, 3> >& faceEdges,
+            const List<FixedList<label, 3>>& faceEdges,
             const labelList& edgeFace0,
             const labelList& edgeFace1,
             const label seedTriI,
@@ -355,7 +355,7 @@ class isoSurface
         static void orientSurface
         (
             triSurface&,
-            const List<FixedList<label, 3> >& faceEdges,
+            const List<FixedList<label, 3>>& faceEdges,
             const labelList& edgeFace0,
             const labelList& edgeFace1,
             const Map<labelList>& edgeFacesRest
@@ -371,7 +371,7 @@ class isoSurface
         //- Mark all non-fully connected triangles
         static label markDanglingTriangles
         (
-            const List<FixedList<label, 3> >& faceEdges,
+            const List<FixedList<label, 3>>& faceEdges,
             const labelList& edgeFace0,
             const labelList& edgeFace1,
             const Map<labelList>& edgeFacesRest,
@@ -424,7 +424,7 @@ public:
         //- Interpolates cCoords,pCoords. Uses the references to the original
         //  fields used to create the iso surface.
         template<class Type>
-        tmp<Field<Type> > interpolate
+        tmp<Field<Type>> interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>& cCoords,
             const Field<Type>& pCoords
@@ -454,7 +454,7 @@ CML::tmp<CML::SlicedGeometricField
     CML::fvPatchField,
     CML::slicedFvPatchField,
     CML::volMesh
-> >
+>>
 CML::isoSurface::adaptPatchFields
 (
     const GeometricField<Type, fvPatchField, volMesh>& fld
@@ -540,7 +540,7 @@ CML::isoSurface::adaptPatchFields
 
             const scalarField& w = mesh.weights().boundaryField()[patchI];
 
-            tmp<Field<Type> > f =
+            tmp<Field<Type>> f =
                 w*pfld.patchInternalField()
               + (1.0-w)*pfld.patchNeighbourField();
 
@@ -1097,15 +1097,15 @@ void CML::isoSurface::generateTriPoints
 
 
 //template<class Type>
-//CML::tmp<CML::Field<Type> >
+//CML::tmp<CML::Field<Type>>
 //CML::isoSurface::sample(const Field<Type>& vField) const
 //{
-//    return tmp<Field<Type> >(new Field<Type>(vField, meshCells()));
+//    return tmp<Field<Type>>(new Field<Type>(vField, meshCells()));
 //}
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::isoSurface::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& cCoords,
@@ -1119,7 +1119,7 @@ CML::isoSurface::interpolate
         fvPatchField,
         slicedFvPatchField,
         volMesh
-    > > c2(adaptPatchFields(cCoords));
+    >> c2(adaptPatchFields(cCoords));
 
 
     DynamicList<Type> triPoints(nCutCells_);
@@ -1148,7 +1148,7 @@ CML::isoSurface::interpolate
 
 
     // One value per point
-    tmp<Field<Type> > tvalues
+    tmp<Field<Type>> tvalues
     (
         new Field<Type>(points().size(), pTraits<Type>::zero)
     );

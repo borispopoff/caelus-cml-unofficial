@@ -94,9 +94,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new mixedPointPatchField<Type>
                 (
@@ -113,12 +113,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new mixedPointPatchField<Type>
                 (
@@ -302,7 +302,7 @@ void CML::mixedPointPatchField<Type>::rmap
 )
 {
     const mixedPointPatchField<Type>& mptf =
-        refCast<const mixedPointPatchField<Type> >(ptf);
+        refCast<const mixedPointPatchField<Type>>(ptf);
 
     Field<Type>::rmap(mptf, addr);
     refValue_.rmap(mptf.refValue_, addr);

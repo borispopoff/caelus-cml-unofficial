@@ -164,7 +164,7 @@ protected:
 
     //- Rotor RPM as a DataEntry class 
     //  Positive anti-clockwise when looking along -ve lift direction
-    autoPtr<DataEntry<scalar> > rpm_;
+    autoPtr<DataEntry<scalar>> rpm_;
 
     //- Number of blades
     label nBlades_;

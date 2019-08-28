@@ -105,7 +105,7 @@ protected:
         // Read from dictionary
 
             //- Fields to process
-            List<Tuple2<word, word> > fieldSet_;
+            List<Tuple2<word, word>> fieldSet_;
 
             //- Patches to sample
             labelHashSet patchSet_;
@@ -126,7 +126,7 @@ protected:
             labelListList cellToWalls_;
 
             //- From cell to tracked end point
-            List<List<point> > cellToSamples_;
+            List<List<point>> cellToSamples_;
 
             //- Map from cell based data back to patch based data
             autoPtr<mapDistribute> getPatchDataMapPtr_;
@@ -149,7 +149,7 @@ protected:
         template<class Type>
         void createFields
         (
-            PtrList<GeometricField<Type, fvPatchField, volMesh> >&
+            PtrList<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
 
         //- Override boundary fields with sampled values
@@ -163,7 +163,7 @@ protected:
         template<class Type>
         void sampleFields
         (
-            PtrList<GeometricField<Type, fvPatchField, volMesh> >&
+            PtrList<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
 
 
@@ -244,7 +244,7 @@ public:
 template<class Type>
 void CML::nearWallFields::createFields
 (
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& sflds
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;
@@ -335,7 +335,7 @@ void CML::nearWallFields::sampleBoundaryField
 template<class Type>
 void CML::nearWallFields::sampleFields
 (
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& sflds
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;

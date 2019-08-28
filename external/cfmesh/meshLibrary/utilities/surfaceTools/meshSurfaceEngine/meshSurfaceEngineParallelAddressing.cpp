@@ -345,7 +345,7 @@ void meshSurfaceEngine::calcGlobalBoundaryEdgeLabels() const
         mesh_.procBoundaries();
 
     //- find which processors contain a given bnd edge
-    typedef std::set<std::pair<label, label> > procEdgeMap;
+    typedef std::set<std::pair<label, label>> procEdgeMap;
     List<procEdgeMap> facesWithProcBndEdges(procBoundaries.size());
 
     forAll(procBoundaries, patchI)

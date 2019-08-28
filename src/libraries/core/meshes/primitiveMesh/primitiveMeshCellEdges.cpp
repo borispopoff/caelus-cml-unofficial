@@ -56,7 +56,7 @@ void CML::primitiveMesh::calcCellEdges() const
     else
     {
         // Set up temporary storage
-        List<DynamicList<label, edgesPerCell_> > ce(nCells());
+        List<DynamicList<label, edgesPerCell_>> ce(nCells());
 
 
         // Get reference to faceCells and faceEdges

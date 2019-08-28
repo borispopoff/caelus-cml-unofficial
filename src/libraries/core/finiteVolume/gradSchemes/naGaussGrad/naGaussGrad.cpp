@@ -52,7 +52,7 @@ CML::fv::naGaussGrad<Type>::calcGrad
     const volPointInterpolation& pInterp = volPointInterpolation::New(mesh);
 
     // Do interpolation from volume to points
-    tmp<GeometricField<Type, pointPatchField, pointMesh> > tpf
+    tmp<GeometricField<Type, pointPatchField, pointMesh>> tpf
     (
       pInterp.interpolate(vsf)
     );
@@ -60,7 +60,7 @@ CML::fv::naGaussGrad<Type>::calcGrad
     GeometricField<Type, pointPatchField, pointMesh>& pf = tpf();
 
     // Construct tmp<surfaceField> to be used in Gauss grad
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tssf
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -126,7 +126,7 @@ CML::fv::naGaussGrad<Type>::calcGrad
     // Use Gauss gradient with nodal averaged surfaceScalarField
     typedef typename outerProduct<vector, Type>::type GradType;
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tnagGrad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tnagGrad
     (
         gaussGrad<Type>::gradf(ssf, name)
     );

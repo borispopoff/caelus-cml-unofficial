@@ -169,7 +169,7 @@ public:
             //  Note, optimized to avoid overwriting data (with Xfer::null)
             void reset
             (
-                const Xfer<List<point> >& points,
+                const Xfer<List<point>>& points,
                 const Xfer<faceList>& faces,
                 const Xfer<surfZoneList>& zones
             );

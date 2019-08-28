@@ -102,7 +102,7 @@ CML::primitiveEntry::primitiveEntry
 CML::primitiveEntry::primitiveEntry
 (
     const keyType& key,
-    const Xfer<List<token> >& tokens
+    const Xfer<List<token>>& tokens
 )
 :
     entry(key),

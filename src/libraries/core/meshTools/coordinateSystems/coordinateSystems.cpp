@@ -53,7 +53,7 @@ CML::coordinateSystems::coordinateSystems
 CML::coordinateSystems::coordinateSystems
 (
     const IOobject& io,
-    const Xfer<PtrList<coordinateSystem> >& lst
+    const Xfer<PtrList<coordinateSystem>>& lst
 )
 :
     IOPtrList<coordinateSystem>(io, lst)

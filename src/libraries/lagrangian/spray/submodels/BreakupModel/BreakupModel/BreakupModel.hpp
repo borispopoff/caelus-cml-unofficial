@@ -107,7 +107,7 @@ public:
 
 
     //- Selector
-    static autoPtr<BreakupModel<CloudType> > New
+    static autoPtr<BreakupModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -206,7 +206,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<sprayCloudType>, 0);                \
                                                                                \
     BreakupModel<sprayCloudType>::                                             \
-        adddictionaryConstructorToTable<SS<sprayCloudType> >                   \
+        adddictionaryConstructorToTable<SS<sprayCloudType>>                    \
             add##SS##CloudType##sprayCloudType##ConstructorToTable_;
 
 
@@ -282,7 +282,7 @@ CML::BreakupModel<CloudType>::~BreakupModel()
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::BreakupModel<CloudType> >
+CML::autoPtr<CML::BreakupModel<CloudType>>
 CML::BreakupModel<CloudType>::New
 (
     const dictionary& dict,
@@ -306,7 +306,7 @@ CML::BreakupModel<CloudType>::New
             << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);
     }
 
-    return autoPtr<BreakupModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<BreakupModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

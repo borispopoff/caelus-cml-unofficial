@@ -98,10 +98,10 @@ public:
         static inline const SubField<Type>& null();
 
         //- Return a component field of the field
-        inline tmp<Field<cmptType> > component(const direction) const;
+        inline tmp<Field<cmptType>> component(const direction) const;
 
         //- Return the field transpose (only defined for second rank tensors)
-        tmp<Field<Type> > T() const;
+        tmp<Field<Type>> T() const;
 
 
     // Member operators

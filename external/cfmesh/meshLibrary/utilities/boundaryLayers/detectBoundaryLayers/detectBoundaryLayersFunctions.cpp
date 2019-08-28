@@ -121,7 +121,7 @@ public:
     template<class labelListType>
     void collectGroups
     (
-        std::map<label, DynList<label> >& neiGroups,
+        std::map<label, DynList<label>>& neiGroups,
         const labelListType& elementInGroup,
         const DynList<label>& localGroupLabel
     ) const
@@ -137,7 +137,7 @@ public:
         const Map<label>& globalToLocal =
             mse_.globalToLocalBndEdgeAddressing();
 
-        std::map<label, LongList<labelPair> > exchangeData;
+        std::map<label, LongList<labelPair>> exchangeData;
         forAll(mse_.beNeiProcs(), procI)
             exchangeData[mse_.beNeiProcs()[procI]].clear();
 
@@ -400,7 +400,7 @@ void detectBoundaryLayers::analyseLayers()
     }
 
     //- check the number of layer found at a patch
-    typedef std::map<label, DynList<label> > patchToLayerType;
+    typedef std::map<label, DynList<label>> patchToLayerType;
     patchToLayerType patchToLayer;
 
     const labelList& facePatch = meshSurface_.boundaryFacePatches();

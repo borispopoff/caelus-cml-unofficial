@@ -63,7 +63,7 @@ class triSurfaceSearch
         label maxTreeDepth_;
 
         //- Octree for searches
-        mutable autoPtr<indexedOctree<treeDataTriSurface> > treePtr_;
+        mutable autoPtr<indexedOctree<treeDataTriSurface>> treePtr_;
 
 
     // Private Member Functions
@@ -172,7 +172,7 @@ public:
         (
             const pointField& start,
             const pointField& end,
-            List<List<pointIndexHit> >& info
+            List<List<pointIndexHit>>& info
         ) const;
 };
 

@@ -154,7 +154,7 @@ public:
 
         //- Interpolate
         template<class Type>
-        tmp<Field<Type> > interpolate(const Field<Type>& ctrlField) const;
+        tmp<Field<Type>> interpolate(const Field<Type>& ctrlField) const;
 
         //- Move points
         void movePoints();
@@ -169,7 +169,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::RBFInterpolation::interpolate
+CML::tmp<CML::Field<Type>> CML::RBFInterpolation::interpolate
 (
     const Field<Type>& ctrlField
 ) const
@@ -183,7 +183,7 @@ CML::tmp<CML::Field<Type> > CML::RBFInterpolation::interpolate
             << abort(FatalError);
     }
 
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>(allPoints_.size(), pTraits<Type>::zero)
     );

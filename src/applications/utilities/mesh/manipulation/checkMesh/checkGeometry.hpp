@@ -28,6 +28,6 @@ namespace CML
         const polyMesh& mesh,
         const bool allGeometry,
         const autoPtr<surfaceWriter>&,
-        const autoPtr<writer<scalar> >&
+        const autoPtr<writer<scalar>>&
     );
 }

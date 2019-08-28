@@ -56,7 +56,7 @@ const NamedEnum<shellSurfaces::refineMode, 3> shellSurfaces::refineModeNames_;
 void CML::shellSurfaces::setAndCheckLevels
 (
     const label shellI,
-    const List<Tuple2<scalar, label> >& distLevels
+    const List<Tuple2<scalar, label>>& distLevels
 )
 {
     if (modes_[shellI] != DISTANCE && distLevels.size() != 1)

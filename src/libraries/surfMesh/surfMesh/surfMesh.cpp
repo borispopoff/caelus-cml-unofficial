@@ -155,7 +155,7 @@ CML::surfMesh::surfMesh
 CML::surfMesh::surfMesh
 (
     const IOobject& io,
-    const Xfer<MeshedSurface<face> >& surf,
+    const Xfer<MeshedSurface<face>>& surf,
     const word& surfName
 )
 :
@@ -286,9 +286,9 @@ void CML::surfMesh::transfer
 }
 
 
-CML::Xfer<CML::MeshedSurface<CML::face> > CML::surfMesh::xfer()
+CML::Xfer<CML::MeshedSurface<CML::face>> CML::surfMesh::xfer()
 {
-    Xfer<MeshedSurface<face> > xf;
+    Xfer<MeshedSurface<face>> xf;
 
     xf().storedPoints().transfer(this->storedPoints());
     xf().storedFaces().transfer(this->storedFaces());

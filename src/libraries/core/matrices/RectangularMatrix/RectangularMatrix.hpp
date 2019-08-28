@@ -85,7 +85,7 @@ public:
         inline RectangularMatrix(Istream&);
 
         //- Clone
-        inline autoPtr<RectangularMatrix<Type> > clone() const;
+        inline autoPtr<RectangularMatrix<Type>> clone() const;
 
 
     // Member operators

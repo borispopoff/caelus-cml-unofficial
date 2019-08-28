@@ -59,7 +59,7 @@ void CML::sampledSets::combineSampledSets
         const sampledSet& samplePts = sampledSets[setI];
 
         // Collect data from all processors
-        List<List<point> > gatheredPts(Pstream::nProcs());
+        List<List<point>> gatheredPts(Pstream::nProcs());
         gatheredPts[Pstream::myProcNo()] = samplePts;
         Pstream::gatherList(gatheredPts);
 
@@ -75,9 +75,9 @@ void CML::sampledSets::combineSampledSets
         // Combine processor lists into one big list.
         List<point> allPts
         (
-            ListListOps::combine<List<point> >
+            ListListOps::combine<List<point>>
             (
-                gatheredPts, accessOp<List<point> >()
+                gatheredPts, accessOp<List<point>>()
             )
         );
         labelList allSegments

@@ -98,9 +98,9 @@ public:
         ParticleForce(const ParticleForce& pf);
 
         //- Construct and return a clone
-        virtual autoPtr<ParticleForce<CloudType> > clone() const
+        virtual autoPtr<ParticleForce<CloudType>> clone() const
         {
-            return autoPtr<ParticleForce<CloudType> >
+            return autoPtr<ParticleForce<CloudType>>
             (
                 new ParticleForce<CloudType>(*this)
             );
@@ -112,7 +112,7 @@ public:
 
 
     //- Selector
-    static autoPtr<ParticleForce<CloudType> > New
+    static autoPtr<ParticleForce<CloudType>> New
     (
         CloudType& owner,
         const fvMesh& mesh,
@@ -318,7 +318,7 @@ CML::scalar CML::ParticleForce<CloudType>::massAdd
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::ParticleForce<CloudType> >
+CML::autoPtr<CML::ParticleForce<CloudType>>
 CML::ParticleForce<CloudType>::New
 (
     CloudType& owner,
@@ -350,7 +350,7 @@ CML::ParticleForce<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<ParticleForce<CloudType> >
+    return autoPtr<ParticleForce<CloudType>>
     (
         cstrIter()
         (
@@ -384,7 +384,7 @@ CML::ParticleForce<CloudType>::New
     defineNamedTemplateTypeNameAndDebug(SS<kinematicCloudType>, 0);            \
                                                                                \
     ParticleForce<kinematicCloudType>::                                        \
-        adddictionaryConstructorToTable<SS<kinematicCloudType> >               \
+        adddictionaryConstructorToTable<SS<kinematicCloudType>>                \
         add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 

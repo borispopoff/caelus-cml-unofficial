@@ -84,27 +84,27 @@ public:
     // Member Functions
 
         //- mirror fvm::ddt with porosity
-        virtual tmp<fvMatrix<vector> > ddt
+        virtual tmp<fvMatrix<vector>> ddt
         (
             GeometricField<vector, fvPatchField, volMesh>&
         );
 
         //- mirror fvm::ddt with porosity
-        virtual tmp<fvMatrix<vector> > ddt
+        virtual tmp<fvMatrix<vector>> ddt
         (
             const geometricOneField&,
             GeometricField<vector, fvPatchField, volMesh>&
         );
 
         //- mirror fvm::ddt with porosity
-        virtual tmp<fvMatrix<vector> > ddt
+        virtual tmp<fvMatrix<vector>> ddt
         (
             const dimensionedScalar&,
             GeometricField<vector, fvPatchField, volMesh>&
         );
 
         //- mirror fvm::ddt with porosity
-        virtual tmp<fvMatrix<vector> > ddt
+        virtual tmp<fvMatrix<vector>> ddt
         (
             const volScalarField&,
             GeometricField<vector, fvPatchField, volMesh>&

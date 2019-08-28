@@ -45,7 +45,7 @@ void symmetryPlaneOptimisation::detectSymmetryPlanes()
 
     symmetryPlanes_.clear();
 
-    typedef std::map<label, std::pair<vector, label> > mapType;
+    typedef std::map<label, std::pair<vector, label>> mapType;
     mapType centreSum, normalSum;
 
     forAll(boundaries, patchI)

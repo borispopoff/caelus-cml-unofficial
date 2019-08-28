@@ -124,10 +124,10 @@ public:
         typedef KinematicCloud<CloudType> kinematicCloudType;
 
         //- Force models type
-        typedef ParticleForceList<KinematicCloud<CloudType> > forceType;
+        typedef ParticleForceList<KinematicCloud<CloudType>> forceType;
 
         //- Function object type
-        typedef CloudFunctionObjectList<KinematicCloud<CloudType> >
+        typedef CloudFunctionObjectList<KinematicCloud<CloudType>>
             functionType;
 
 
@@ -136,7 +136,7 @@ private:
     // Private data
 
         //- Cloud copy pointer
-        autoPtr<KinematicCloud<CloudType> > cloudCopyPtr_;
+        autoPtr<KinematicCloud<CloudType>> cloudCopyPtr_;
 
 
     // Private Member Functions
@@ -174,7 +174,7 @@ protected:
         mutable Random rndGen_;
 
         //- Cell occupancy information for each parcel, (demand driven)
-        autoPtr<List<DynamicList<parcelType*> > > cellOccupancyPtr_;
+        autoPtr<List<DynamicList<parcelType*>>> cellOccupancyPtr_;
 
         //- Cell length scale
         scalarField cellLengthScale_;
@@ -211,22 +211,22 @@ protected:
         // References to the cloud sub-models
 
             //- Injector models
-            InjectionModelList<KinematicCloud<CloudType> > injectors_;
+            InjectionModelList<KinematicCloud<CloudType>> injectors_;
 
             //- Dispersion model
-            autoPtr<DispersionModel<KinematicCloud<CloudType> > >
+            autoPtr<DispersionModel<KinematicCloud<CloudType>>>
                 dispersionModel_;
 
             //- Patch interaction model
-            autoPtr<PatchInteractionModel<KinematicCloud<CloudType> > >
+            autoPtr<PatchInteractionModel<KinematicCloud<CloudType>>>
                 patchInteractionModel_;
 
             //- Stochastic collision model
-            autoPtr<StochasticCollisionModel<KinematicCloud<CloudType> > >
+            autoPtr<StochasticCollisionModel<KinematicCloud<CloudType>>>
                 stochasticCollisionModel_;
 
             //- Surface film model
-            autoPtr<SurfaceFilmModel<KinematicCloud<CloudType> > >
+            autoPtr<SurfaceFilmModel<KinematicCloud<CloudType>>>
                 surfaceFilmModel_;
 
 
@@ -239,10 +239,10 @@ protected:
         // Sources
 
             //- Momentum
-            autoPtr<DimensionedField<vector, volMesh> > UTrans_;
+            autoPtr<DimensionedField<vector, volMesh>> UTrans_;
 
             //- Coefficient for carrier phase U equation
-            autoPtr<DimensionedField<scalar, volMesh> > UCoeff_;
+            autoPtr<DimensionedField<scalar, volMesh>> UCoeff_;
 
 
         // Initialisation
@@ -314,18 +314,18 @@ public:
         );
 
         //- Construct and return clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > clone(const word& name)
+        virtual autoPtr<Cloud<parcelType>> clone(const word& name)
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new KinematicCloud(*this, name)
             );
         }
 
         //- Construct and return bare clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > cloneBare(const word& name) const
+        virtual autoPtr<Cloud<parcelType>> cloneBare(const word& name) const
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new KinematicCloud(this->mesh(), name, *this)
             );
@@ -384,7 +384,7 @@ public:
                 //  parcel, non-const access, the caller is
                 //  responsible for updating it for its own purposes
                 //  if particles are removed or created.
-                inline List<DynamicList<parcelType*> >& cellOccupancy();
+                inline List<DynamicList<parcelType*>>& cellOccupancy();
 
                 //- Return the cell length scale
                 inline const scalarField& cellLengthScale() const;
@@ -427,44 +427,44 @@ public:
             // Sub-models
 
                 //- Return const access to the injection model
-                inline const InjectionModelList<KinematicCloud<CloudType> >&
+                inline const InjectionModelList<KinematicCloud<CloudType>>&
                     injectors() const;
 
                 //- Return reference to the injection model
-                inline InjectionModelList<KinematicCloud<CloudType> >&
+                inline InjectionModelList<KinematicCloud<CloudType>>&
                     injectors();
 
                 //- Return const-access to the dispersion model
-                inline const DispersionModel<KinematicCloud<CloudType> >&
+                inline const DispersionModel<KinematicCloud<CloudType>>&
                     dispersion() const;
 
                 //- Return reference to the dispersion model
-                inline DispersionModel<KinematicCloud<CloudType> >&
+                inline DispersionModel<KinematicCloud<CloudType>>&
                     dispersion();
 
                 //- Return const-access to the patch interaction model
-                inline const PatchInteractionModel<KinematicCloud<CloudType> >&
+                inline const PatchInteractionModel<KinematicCloud<CloudType>>&
                     patchInteraction() const;
 
                 //- Return reference to the patch interaction model
-                inline PatchInteractionModel<KinematicCloud<CloudType> >&
+                inline PatchInteractionModel<KinematicCloud<CloudType>>&
                     patchInteraction();
 
                 //- Return const-access to the stochastic collision model
                 inline const
-                    StochasticCollisionModel<KinematicCloud<CloudType> >&
+                    StochasticCollisionModel<KinematicCloud<CloudType>>&
                     stochasticCollision() const;
 
                 //- Return reference to the stochastic collision model
-                inline StochasticCollisionModel<KinematicCloud<CloudType> >&
+                inline StochasticCollisionModel<KinematicCloud<CloudType>>&
                     stochasticCollision();
 
                 //- Return const-access to the surface film model
-                inline const SurfaceFilmModel<KinematicCloud<CloudType> >&
+                inline const SurfaceFilmModel<KinematicCloud<CloudType>>&
                     surfaceFilm() const;
 
                 //- Return reference to the surface film model
-                inline SurfaceFilmModel<KinematicCloud<CloudType> >&
+                inline SurfaceFilmModel<KinematicCloud<CloudType>>&
                     surfaceFilm();
 
 
@@ -781,7 +781,7 @@ CML::KinematicCloud<CloudType>::functions()
 
 
 template<class CloudType>
-inline const CML::InjectionModelList<CML::KinematicCloud<CloudType> >&
+inline const CML::InjectionModelList<CML::KinematicCloud<CloudType>>&
 CML::KinematicCloud<CloudType>::injectors() const
 {
     return injectors_;
@@ -789,7 +789,7 @@ CML::KinematicCloud<CloudType>::injectors() const
 
 
 template<class CloudType>
-inline CML::InjectionModelList<CML::KinematicCloud<CloudType> >&
+inline CML::InjectionModelList<CML::KinematicCloud<CloudType>>&
 CML::KinematicCloud<CloudType>::injectors()
 {
     return injectors_;
@@ -797,7 +797,7 @@ CML::KinematicCloud<CloudType>::injectors()
 
 
 template<class CloudType>
-inline const CML::DispersionModel<CML::KinematicCloud<CloudType> >&
+inline const CML::DispersionModel<CML::KinematicCloud<CloudType>>&
 CML::KinematicCloud<CloudType>::dispersion() const
 {
     return dispersionModel_;
@@ -805,7 +805,7 @@ CML::KinematicCloud<CloudType>::dispersion() const
 
 
 template<class CloudType>
-inline CML::DispersionModel<CML::KinematicCloud<CloudType> >&
+inline CML::DispersionModel<CML::KinematicCloud<CloudType>>&
 CML::KinematicCloud<CloudType>::dispersion()
 {
     return dispersionModel_();
@@ -813,7 +813,7 @@ CML::KinematicCloud<CloudType>::dispersion()
 
 
 template<class CloudType>
-inline const CML::PatchInteractionModel<CML::KinematicCloud<CloudType> >&
+inline const CML::PatchInteractionModel<CML::KinematicCloud<CloudType>>&
 CML::KinematicCloud<CloudType>::patchInteraction() const
 {
     return patchInteractionModel_;
@@ -821,7 +821,7 @@ CML::KinematicCloud<CloudType>::patchInteraction() const
 
 
 template<class CloudType>
-inline CML::PatchInteractionModel<CML::KinematicCloud<CloudType> >&
+inline CML::PatchInteractionModel<CML::KinematicCloud<CloudType>>&
 CML::KinematicCloud<CloudType>::patchInteraction()
 {
     return patchInteractionModel_();
@@ -829,7 +829,7 @@ CML::KinematicCloud<CloudType>::patchInteraction()
 
 
 template<class CloudType>
-inline const CML::StochasticCollisionModel<CML::KinematicCloud<CloudType> >&
+inline const CML::StochasticCollisionModel<CML::KinematicCloud<CloudType>>&
 CML::KinematicCloud<CloudType>::stochasticCollision() const
 {
     return stochasticCollisionModel_();
@@ -837,7 +837,7 @@ CML::KinematicCloud<CloudType>::stochasticCollision() const
 
 
 template<class CloudType>
-inline CML::StochasticCollisionModel<CML::KinematicCloud<CloudType> >&
+inline CML::StochasticCollisionModel<CML::KinematicCloud<CloudType>>&
 CML::KinematicCloud<CloudType>::stochasticCollision()
 {
     return stochasticCollisionModel_();
@@ -845,7 +845,7 @@ CML::KinematicCloud<CloudType>::stochasticCollision()
 
 
 template<class CloudType>
-inline const CML::SurfaceFilmModel<CML::KinematicCloud<CloudType> >&
+inline const CML::SurfaceFilmModel<CML::KinematicCloud<CloudType>>&
 CML::KinematicCloud<CloudType>::surfaceFilm() const
 {
     return surfaceFilmModel_();
@@ -853,7 +853,7 @@ CML::KinematicCloud<CloudType>::surfaceFilm() const
 
 
 template<class CloudType>
-inline CML::SurfaceFilmModel<CML::KinematicCloud<CloudType> >&
+inline CML::SurfaceFilmModel<CML::KinematicCloud<CloudType>>&
 CML::KinematicCloud<CloudType>::surfaceFilm()
 {
     return surfaceFilmModel_();
@@ -971,7 +971,7 @@ inline CML::Random& CML::KinematicCloud<CloudType>::rndGen() const
 
 
 template<class CloudType>
-inline CML::List<CML::DynamicList<typename CloudType::particleType*> >&
+inline CML::List<CML::DynamicList<typename CloudType::particleType*>>&
 CML::KinematicCloud<CloudType>::cellOccupancy()
 {
     if (cellOccupancyPtr_.empty())
@@ -1218,7 +1218,7 @@ void CML::KinematicCloud<CloudType>::setModels()
 {
     dispersionModel_.reset
     (
-        DispersionModel<KinematicCloud<CloudType> >::New
+        DispersionModel<KinematicCloud<CloudType>>::New
         (
             subModelProperties_,
             *this
@@ -1227,7 +1227,7 @@ void CML::KinematicCloud<CloudType>::setModels()
 
     patchInteractionModel_.reset
     (
-        PatchInteractionModel<KinematicCloud<CloudType> >::New
+        PatchInteractionModel<KinematicCloud<CloudType>>::New
         (
             subModelProperties_,
             *this
@@ -1236,7 +1236,7 @@ void CML::KinematicCloud<CloudType>::setModels()
 
     stochasticCollisionModel_.reset
     (
-        StochasticCollisionModel<KinematicCloud<CloudType> >::New
+        StochasticCollisionModel<KinematicCloud<CloudType>>::New
         (
             subModelProperties_,
             *this
@@ -1245,7 +1245,7 @@ void CML::KinematicCloud<CloudType>::setModels()
 
     surfaceFilmModel_.reset
     (
-        SurfaceFilmModel<KinematicCloud<CloudType> >::New
+        SurfaceFilmModel<KinematicCloud<CloudType>>::New
         (
             subModelProperties_,
             *this
@@ -1316,7 +1316,7 @@ void CML::KinematicCloud<CloudType>::buildCellOccupancy()
     {
         cellOccupancyPtr_.reset
         (
-            new List<DynamicList<parcelType*> >(mesh_.nCells())
+            new List<DynamicList<parcelType*>>(mesh_.nCells())
         );
     }
     else if (cellOccupancyPtr_().size() != mesh_.nCells())
@@ -1327,7 +1327,7 @@ void CML::KinematicCloud<CloudType>::buildCellOccupancy()
         cellOccupancyPtr_().setSize(mesh_.nCells());
     }
 
-    List<DynamicList<parcelType*> >& cellOccupancy = cellOccupancyPtr_();
+    List<DynamicList<parcelType*>>& cellOccupancy = cellOccupancyPtr_();
 
     forAll(cellOccupancy, cO)
     {

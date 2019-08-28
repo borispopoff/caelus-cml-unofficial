@@ -70,7 +70,7 @@ class blockDivScheme
 protected:
 
     const fvMesh& mesh_;
-    tmp<surfaceInterpolationScheme<Type> > tinterpScheme_;
+    tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
     //- Disallow copy construct
     blockDivScheme(const blockDivScheme&);
@@ -110,7 +110,7 @@ public:
 
     // Selectors
     //- Return a pointer to a new blockDivScheme created on freestore
-    static tmp<blockDivScheme<Type> > New
+    static tmp<blockDivScheme<Type>> New
     (
         const fvMesh& mesh,
         Istream& schemeData
@@ -128,14 +128,14 @@ public:
     //- Return the BlockLduSystem corresponding to the implicit div
     // discretization. For block coupled system.
     virtual
-    tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type> >
+    tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type>>
     fvmUDiv
     (
         const GeometricField<Type, fvPatchField, volMesh>&
     ) const;
 
     virtual
-    tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type> >
+    tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type>>
     fvmUDiv
     (
         const surfaceScalarField&,
@@ -158,7 +158,7 @@ defineNamedTemplateTypeNameAndDebug(CML::fv::SS<CML::Type>, 0);               \
     {                                                                         \
         namespace fv                                                          \
         {                                                                     \
-            blockDivScheme<Type>::addIstreamConstructorToTable<SS<Type> >     \
+            blockDivScheme<Type>::addIstreamConstructorToTable<SS<Type>>     \
                 add##SS##Type##IstreamConstructorToTable_;                    \
         }                                                                     \
     }                                                      
@@ -178,7 +178,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<blockDivScheme<Type> > blockDivScheme<Type>::New
+tmp<blockDivScheme<Type>> blockDivScheme<Type>::New
 (
     const fvMesh& mesh,
     Istream& schemeData
@@ -226,7 +226,7 @@ blockDivScheme<Type>::~blockDivScheme()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type> >
+tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type>>
 blockDivScheme<Type>::fvmUDiv
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -238,7 +238,7 @@ blockDivScheme<Type>::fvmUDiv
 
     typedef typename innerProduct<vector, Type>::type DivType;
 
-    tmp<BlockLduSystem<vector, DivType> > tbs
+    tmp<BlockLduSystem<vector, DivType>> tbs
     (
         new BlockLduSystem<vector, DivType>(vf.mesh())
     );
@@ -248,7 +248,7 @@ blockDivScheme<Type>::fvmUDiv
 
 
 template<class Type>
-tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type> >
+tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type>>
 blockDivScheme<Type>::fvmUDiv
 (
     const surfaceScalarField& flux,
@@ -261,7 +261,7 @@ blockDivScheme<Type>::fvmUDiv
 
     typedef typename innerProduct<vector, Type>::type DivType;
 
-    tmp<BlockLduSystem<vector, DivType> > tbs
+    tmp<BlockLduSystem<vector, DivType>> tbs
     (
         new BlockLduSystem<vector, DivType>(vf.mesh())
     );

@@ -1113,7 +1113,7 @@ void fvBlockMatrix<Type>::insertAdjointConvection
     const vectorField& UIn = U.internalField();
 
     // Get weights for UStar needed for implicit discretisation
-    tmp<surfaceInterpolationScheme<vector> > tinterpScheme =
+    tmp<surfaceInterpolationScheme<vector>> tinterpScheme =
         fvc::scheme<vector>(mesh, UStar.name());
     tmp<surfaceScalarField> tweights = tinterpScheme().weights(U);
     const scalarField& wIn = tweights().internalField();
@@ -1352,7 +1352,7 @@ void fvBlockMatrix<Type>::insertPicardTensor
     // Get weights for U which makes the implicit flux part
     const fvMesh& mesh = U.mesh();
 
-    tmp<surfaceInterpolationScheme<vector> > tinterpScheme =
+    tmp<surfaceInterpolationScheme<vector>> tinterpScheme =
         fvc::scheme<vector>(mesh, U.name());
 
     tmp<surfaceScalarField> tweights = tinterpScheme().weights(U);

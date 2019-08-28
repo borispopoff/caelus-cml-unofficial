@@ -78,7 +78,7 @@ void fvcInterpolationFunctionPlugin<T>::doEvaluation()
 {
     IStringStream spec(specString_);
 
-    tmp<surfaceInterpolationScheme<T> > scheme(
+    tmp<surfaceInterpolationScheme<T>> scheme(
         surfaceInterpolationScheme<T>::New(
             mesh(),
             spec

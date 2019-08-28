@@ -79,7 +79,7 @@ class cyclicAMIFvPatchField
 
         //- Return neighbour side field given internal fields
         template<class Type2>
-        tmp<Field<Type2> > neighbourSideField
+        tmp<Field<Type2>> neighbourSideField
         (
             const Field<Type2>&
         ) const;
@@ -121,9 +121,9 @@ public:
         cyclicAMIFvPatchField(const cyclicAMIFvPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicAMIFvPatchField<Type>(*this)
             );
@@ -137,12 +137,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicAMIFvPatchField<Type>(*this, iF)
             );
@@ -167,7 +167,7 @@ public:
             virtual bool coupled() const;
 
             //- Return neighbour coupled internal cell data
-            virtual tmp<Field<Type> > patchNeighbourField() const;
+            virtual tmp<Field<Type>> patchNeighbourField() const;
 
             //- Return reference to neighbour patchField
             const cyclicAMIFvPatchField<Type>& neighbourPatchField() const;
@@ -330,7 +330,7 @@ bool CML::cyclicAMIFvPatchField<Type>::coupled() const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::cyclicAMIFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
@@ -339,7 +339,7 @@ CML::cyclicAMIFvPatchField<Type>::patchNeighbourField() const
 
     Field<Type> pnf(iField, nbrFaceCells);
 
-    tmp<Field<Type> > tpnf;
+    tmp<Field<Type>> tpnf;
     if (cyclicAMIPatch_.applyLowWeightCorrection())
     {
         tpnf = cyclicAMIPatch_.interpolate(pnf, this->patchInternalField()());
@@ -368,7 +368,7 @@ CML::cyclicAMIFvPatchField<Type>::neighbourPatchField() const
             this->internalField()
         );
 
-    return refCast<const cyclicAMIFvPatchField<Type> >
+    return refCast<const cyclicAMIFvPatchField<Type>>
     (
         fld.boundaryField()[cyclicAMIPatch_.neighbPatchID()]
     );

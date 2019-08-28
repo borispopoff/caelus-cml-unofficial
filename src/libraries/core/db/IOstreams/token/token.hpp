@@ -436,7 +436,7 @@ Ostream& operator<<(Ostream&, const token::compound&);
     defineTemplateTypeNameAndDebugWithName(token::Compound<Type>, #Type, 0);
 
 #define addCompoundToRunTimeSelectionTable(Type, Name)                        \
-    token::compound::addIstreamConstructorToTable<token::Compound<Type> >     \
+    token::compound::addIstreamConstructorToTable<token::Compound<Type>>      \
         add##Name##IstreamConstructorToTable_;
 
 

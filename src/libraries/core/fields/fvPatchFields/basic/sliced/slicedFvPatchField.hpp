@@ -98,7 +98,7 @@ public:
         slicedFvPatchField(const slicedFvPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const;
+        virtual tmp<fvPatchField<Type>> clone() const;
 
         //- Construct as copy setting internal field reference
         slicedFvPatchField
@@ -108,7 +108,7 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const;
@@ -140,24 +140,24 @@ public:
         // Evaluation functions
 
             //- Return patch-normal gradient
-            virtual tmp<Field<Type> > snGrad() const;
+            virtual tmp<Field<Type>> snGrad() const;
 
             //- Update the coefficients associated with the patch field
             //  Sets Updated to true
             virtual void updateCoeffs();
 
             //- Return internal field next to patch as patch field
-            virtual tmp<Field<Type> > patchInternalField() const;
+            virtual tmp<Field<Type>> patchInternalField() const;
 
             //- Return neighbour coupled given internal cell data
-            virtual tmp<Field<Type> > patchNeighbourField
+            virtual tmp<Field<Type>> patchNeighbourField
             (
                 const Field<Type>& iField
             ) const;
 
             //- Return patchField of the values on the patch or on the
             //  opposite patch
-            virtual tmp<Field<Type> > patchNeighbourField() const;
+            virtual tmp<Field<Type>> patchNeighbourField() const;
 
             //- Initialise the evaluation of the patch field
             virtual void initEvaluate
@@ -175,25 +175,25 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const;
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
         //- Write
@@ -302,7 +302,7 @@ template<class Type>
 CML::tmp<CML::fvPatchField<Type>>
 CML::slicedFvPatchField<Type>::clone() const
 {
-    return tmp<fvPatchField<Type> >
+    return tmp<fvPatchField<Type>>
     (
         new slicedFvPatchField<Type>(*this)
     );
@@ -334,7 +334,7 @@ CML::slicedFvPatchField<Type>::clone
     const DimensionedField<Type, volMesh>& iF
 ) const
 {
-    return tmp<fvPatchField<Type> >
+    return tmp<fvPatchField<Type>>
     (
         new slicedFvPatchField<Type>(*this, iF)
     );

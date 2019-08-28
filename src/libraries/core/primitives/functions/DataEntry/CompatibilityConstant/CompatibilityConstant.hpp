@@ -90,9 +90,9 @@ public:
         CompatibilityConstant(const CompatibilityConstant<Type>& cnst);
 
         //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
+        virtual tmp<DataEntry<Type>> clone() const
         {
-            return tmp<DataEntry<Type> >
+            return tmp<DataEntry<Type>>
             (
                 new CompatibilityConstant<Type>(*this)
             );

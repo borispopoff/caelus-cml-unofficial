@@ -114,7 +114,7 @@ void CML::searchableSurfaceCollection::findNearest
 void CML::searchableSurfaceCollection::sortHits
 (
     const List<pointIndexHit>& info,
-    List<List<pointIndexHit> >& surfInfo,
+    List<List<pointIndexHit>>& surfInfo,
     labelListList& infoMap
 ) const
 {
@@ -556,7 +556,7 @@ void CML::searchableSurfaceCollection::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     // To be done. Assume for now only one intersection.
@@ -604,9 +604,9 @@ void CML::searchableSurfaceCollection::getRegion
         // Multiple surfaces. Sort by surface.
 
         // Per surface the hit
-        List<List<pointIndexHit> > surfInfo;
+        List<List<pointIndexHit>> surfInfo;
         // Per surface the original position
-        List<List<label> > infoMap;
+        List<List<label>> infoMap;
         sortHits(info, surfInfo, infoMap);
 
         region.setSize(info.size());
@@ -661,9 +661,9 @@ void CML::searchableSurfaceCollection::getNormal
         // Multiple surfaces. Sort by surface.
 
         // Per surface the hit
-        List<List<pointIndexHit> > surfInfo;
+        List<List<pointIndexHit>> surfInfo;
         // Per surface the original position
-        List<List<label> > infoMap;
+        List<List<label>> infoMap;
         sortHits(info, surfInfo, infoMap);
 
         normal.setSize(info.size());
@@ -770,9 +770,9 @@ void CML::searchableSurfaceCollection::getField
         // Multiple surfaces. Sort by surface.
 
         // Per surface the hit
-        List<List<pointIndexHit> > surfInfo;
+        List<List<pointIndexHit>> surfInfo;
         // Per surface the original position
-        List<List<label> > infoMap;
+        List<List<label>> infoMap;
         sortHits(info, surfInfo, infoMap);
 
         // Do surface tests

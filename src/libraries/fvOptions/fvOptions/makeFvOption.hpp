@@ -37,7 +37,7 @@ License
     );                                                                        \
                                                                               \
     CML::fv::option::adddictionaryConstructorToTable                          \
-        <CML::fv::Option<CML::Type> >                                         \
+        <CML::fv::Option<CML::Type>>                                          \
         add##Option##Type##dictionary##ConstructorTooptionTable_
 
 

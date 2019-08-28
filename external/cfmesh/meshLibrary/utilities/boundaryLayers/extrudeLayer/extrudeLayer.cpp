@@ -303,7 +303,7 @@ void extrudeLayer::createNewVertices()
         //- create the information which faces are attached to points
         //- at parallel boundaries in dual form where each edge represents
         //- global labels of cells sharing a face
-        typedef std::map<label, DynList<edge> > dualEdgesMap;
+        typedef std::map<label, DynList<edge>> dualEdgesMap;
         dualEdgesMap procPointsDual;
 
         //- fill in local data
@@ -745,7 +745,7 @@ void extrudeLayer::movePoints()
         std::map<label, scalar> distances;
 
         //- create a map for exchanging data
-        std::map<label, LongList<labelledPointScalar> > exchangeData;
+        std::map<label, LongList<labelledPointScalar>> exchangeData;
         forAll(pProcs, i)
             exchangeData.insert
             (
@@ -944,7 +944,7 @@ void extrudeLayer::createLayerCells()
         const face& of = faces[extrudedFaces_[extrudedI].second()];
 
         //- create new cell from the front pair
-        DynList<DynList<label, 4> > newCell;
+        DynList<DynList<label, 4>> newCell;
         newCell.setSize(f.size()+2);
 
         newCell[0] = f;

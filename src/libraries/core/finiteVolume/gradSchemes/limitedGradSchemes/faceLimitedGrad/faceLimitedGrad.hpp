@@ -59,7 +59,7 @@ class faceLimitedGrad
 {
     // Private Data
 
-        tmp<fv::gradScheme<Type> > basicGradScheme_;
+        tmp<fv::gradScheme<Type>> basicGradScheme_;
 
         //- Limiter coefficient
         const scalar k_;

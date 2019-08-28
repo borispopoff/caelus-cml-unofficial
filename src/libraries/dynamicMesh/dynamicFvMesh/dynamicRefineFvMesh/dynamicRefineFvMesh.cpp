@@ -204,7 +204,7 @@ void CML::dynamicRefineFvMesh::readDict()
         ).subDict(typeName + "Coeffs")
     );
 
-    List<Pair<word> > fluxVelocities = List<Pair<word> >
+    List<Pair<word>> fluxVelocities = List<Pair<word>>
     (
         refineDict.lookup("correctFluxes")
     );

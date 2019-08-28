@@ -47,7 +47,7 @@ void CML::enrichedPatch::calcMasterPointFaces() const
     // Master face points lists the points of the enriched master face plus
     // points projected into the master face
 
-    Map<DynamicList<label> > mpf(meshPoints().size());
+    Map<DynamicList<label>> mpf(meshPoints().size());
 
     const faceList& ef = enrichedFaces();
 
@@ -58,7 +58,7 @@ void CML::enrichedPatch::calcMasterPointFaces() const
 //         Pout<< "Cur face in pfAddr: " << curFace << endl;
         forAll(curFace, pointI)
         {
-            Map<DynamicList<label> >::iterator mpfIter =
+            Map<DynamicList<label>>::iterator mpfIter =
                 mpf.find(curFace[pointI]);
 
             if (mpfIter == mpf.end())
@@ -97,7 +97,7 @@ void CML::enrichedPatch::calcMasterPointFaces() const
             const label mergedSmp =
                 pointMergeMap().find(slaveMeshPoints[pointI])();
 
-            Map<DynamicList<label> >::iterator mpfIter =
+            Map<DynamicList<label>>::iterator mpfIter =
                 mpf.find(mergedSmp);
 
             if (mpfIter == mpf.end())

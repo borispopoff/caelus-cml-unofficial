@@ -112,7 +112,7 @@ public:
 
             //- Raw field receive function returning field
             template<class Type>
-            tmp<Field<Type> > receive
+            tmp<Field<Type>> receive
             (
                 const Pstream::commsTypes commsType,
                 const label size
@@ -137,7 +137,7 @@ public:
 
             //- Raw field receive function with data compression returning field
             template<class Type>
-            tmp<Field<Type> > compressedReceive
+            tmp<Field<Type>> compressedReceive
             (
                 const Pstream::commsTypes commsType,
                 const label size
@@ -242,13 +242,13 @@ void CML::processorLduInterface::receive
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::processorLduInterface::receive
+CML::tmp<CML::Field<Type>> CML::processorLduInterface::receive
 (
     const Pstream::commsTypes commsType,
     const label size
 ) const
 {
-    tmp<Field<Type> > tf(new Field<Type>(size));
+    tmp<Field<Type>> tf(new Field<Type>(size));
     receive(commsType, tf());
     return tf;
 }
@@ -380,13 +380,13 @@ void CML::processorLduInterface::compressedReceive
 }
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::processorLduInterface::compressedReceive
+CML::tmp<CML::Field<Type>> CML::processorLduInterface::compressedReceive
 (
     const Pstream::commsTypes commsType,
     const label size
 ) const
 {
-    tmp<Field<Type> > tf(new Field<Type>(size));
+    tmp<Field<Type>> tf(new Field<Type>(size));
     compressedReceive(commsType, tf());
     return tf;
 }

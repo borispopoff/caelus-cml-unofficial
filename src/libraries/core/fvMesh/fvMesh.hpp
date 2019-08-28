@@ -303,10 +303,10 @@ public:
             const DimensionedField<scalar, volMesh>& V00() const;
 
             //- Return sub-cycle cell volumes
-            tmp<DimensionedField<scalar, volMesh> > Vsc() const;
+            tmp<DimensionedField<scalar, volMesh>> Vsc() const;
 
             //- Return sub-cycl old-time cell volumes
-            tmp<DimensionedField<scalar, volMesh> > Vsc0() const;
+            tmp<DimensionedField<scalar, volMesh>> Vsc0() const;
 
             //- Return cell face area vectors
             const surfaceVectorField& Sf() const;

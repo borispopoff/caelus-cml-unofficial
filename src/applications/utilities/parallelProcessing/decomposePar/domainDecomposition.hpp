@@ -80,7 +80,7 @@ class domainDecomposition
         // indices will be incremented by 1 and the decremented as
         // necessary to avoid the problem of face number zero having no
         // sign.
-        List<DynamicList<label> > procFaceAddressing_;
+        List<DynamicList<label>> procFaceAddressing_;
 
         //- Labels of cells for each processor
         labelListList procCellAddressing_;
@@ -133,8 +133,8 @@ class domainDecomposition
             const label ownerProc,
             const label nbrProc,
 
-            List<Map<label> >&,
-            List<DynamicList<DynamicList<label> > >&
+            List<Map<label>>&,
+            List<DynamicList<DynamicList<label>>>&
         ) const;
 
         //- Generate sub patch info for processor cyclics
@@ -142,8 +142,8 @@ class domainDecomposition
         void processInterCyclics
         (
             const polyBoundaryMesh& patches,
-            List<DynamicList<DynamicList<label> > >& interPatchFaces,
-            List<Map<label> >& procNbrToInterPatch,
+            List<DynamicList<DynamicList<label>>>& interPatchFaces,
+            List<Map<label>>& procNbrToInterPatch,
             List<labelListList>& subPatchIDs,
             List<labelListList>& subPatchStarts,
             bool owner,
@@ -211,8 +211,8 @@ template <class BinaryOp>
 void CML::domainDecomposition::processInterCyclics
 (
     const polyBoundaryMesh& patches,
-    List<DynamicList<DynamicList<label> > >& interPatchFaces,
-    List<Map<label> >& procNbrToInterPatch,
+    List<DynamicList<DynamicList<label>>>& interPatchFaces,
+    List<Map<label>>& procNbrToInterPatch,
     List<labelListList>& subPatchIDs,
     List<labelListList>& subPatchStarts,
     bool owner,

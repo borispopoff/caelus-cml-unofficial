@@ -286,7 +286,7 @@ void meshSurfaceEngine::calculatePointFaces() const
     # endif
 
     label minRow(INT_MAX), maxRow(0);
-    List<List<LongList<labelPair> > > dataForOtherThreads(nThreads);
+    List<List<LongList<labelPair>>> dataForOtherThreads(nThreads);
 
     # ifdef USE_OMP
     # pragma omp parallel num_threads(nThreads)
@@ -298,7 +298,7 @@ void meshSurfaceEngine::calculatePointFaces() const
         const label threadI(0);
         # endif
 
-        List<LongList<labelPair> >& dot = dataForOtherThreads[threadI];
+        List<LongList<labelPair>>& dot = dataForOtherThreads[threadI];
         dot.setSize(nThreads);
 
         //- find min and max entry in the graph
@@ -807,7 +807,7 @@ void meshSurfaceEngine::updatePointNormalsAtProcBoundaries() const
     vectorField& pNormals = *pointNormalsPtr_;
 
     //- create data which will be sent to other processors
-    std::map<label, LongList<labelledPoint> > exchangeData;
+    std::map<label, LongList<labelledPoint>> exchangeData;
 
     forAllConstIter(Map<label>, globalToLocal, iter)
     {
@@ -910,7 +910,7 @@ void meshSurfaceEngine::calculateEdgesAndAddressing() const
         # endif
         forAll(pFaces, bpI)
         {
-            std::set<std::pair<label, label> > edgesAtPoint;
+            std::set<std::pair<label, label>> edgesAtPoint;
 
             forAllRow(pFaces, bpI, pfI)
             {
@@ -935,7 +935,7 @@ void meshSurfaceEngine::calculateEdgesAndAddressing() const
                 }
             }
 
-            std::set<std::pair<label, label> >::const_iterator it;
+            std::set<std::pair<label, label>>::const_iterator it;
             for(it=edgesAtPoint.begin();it!=edgesAtPoint.end();++it)
                 edgesHelper.append(edge(it->first, it->second));
         }

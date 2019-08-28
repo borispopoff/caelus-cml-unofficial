@@ -223,7 +223,7 @@ public:
         inline PackedList(const PackedList<nBits>&);
 
         //- Construct by transferring the parameter contents
-        inline PackedList(const Xfer<PackedList<nBits> >&);
+        inline PackedList(const Xfer<PackedList<nBits>>&);
 
         //- Construct from a list of labels
         explicit inline PackedList(const labelUList&);
@@ -232,7 +232,7 @@ public:
         explicit inline PackedList(const UIndirectList<label>&);
 
         //- Clone
-        inline autoPtr< PackedList<nBits> > clone() const;
+        inline autoPtr< PackedList<nBits>> clone() const;
 
 
     // Member Functions
@@ -341,7 +341,7 @@ public:
             inline void transfer(PackedList<nBits>&);
 
             //- Transfer contents to the Xfer container
-            inline Xfer<PackedList<nBits> > xfer();
+            inline Xfer<PackedList<nBits>> xfer();
 
 
         // IO
@@ -834,7 +834,7 @@ inline CML::PackedList<nBits>::PackedList(const PackedList<nBits>& lst)
 
 
 template<unsigned nBits>
-inline CML::PackedList<nBits>::PackedList(const Xfer<PackedList<nBits> >& lst)
+inline CML::PackedList<nBits>::PackedList(const Xfer<PackedList<nBits>>& lst)
 {
     transfer(lst());
 }
@@ -869,10 +869,10 @@ inline CML::PackedList<nBits>::PackedList(const UIndirectList<label>& lst)
 
 
 template<unsigned nBits>
-inline CML::autoPtr<CML::PackedList<nBits> >
+inline CML::autoPtr<CML::PackedList<nBits>>
 CML::PackedList<nBits>::clone() const
 {
-    return autoPtr<PackedList<nBits> >(new PackedList<nBits>(*this));
+    return autoPtr<PackedList<nBits>>(new PackedList<nBits>(*this));
 }
 
 
@@ -1566,7 +1566,7 @@ inline void CML::PackedList<nBits>::transfer(PackedList<nBits>& lst)
 
 
 template<unsigned nBits>
-inline CML::Xfer<CML::PackedList<nBits> > CML::PackedList<nBits>::xfer()
+inline CML::Xfer<CML::PackedList<nBits>> CML::PackedList<nBits>::xfer()
 {
     return xferMove(*this);
 }

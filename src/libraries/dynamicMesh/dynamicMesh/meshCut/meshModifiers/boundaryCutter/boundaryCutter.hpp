@@ -67,7 +67,7 @@ class boundaryCutter
         const polyMesh& mesh_;
 
         //- Per edge sorted (start to end) list of points added.
-        HashTable<labelList, edge, Hash<edge> > edgeAddedPoints_;
+        HashTable<labelList, edge, Hash<edge>> edgeAddedPoints_;
 
         //- Per face the mid point added.
         Map<label> faceAddedPoint_;
@@ -142,7 +142,7 @@ public:
             void setRefinement
             (
                 const Map<point>& pointToPos,
-                const Map<List<point> >& edgeToCuts,
+                const Map<List<point>>& edgeToCuts,
                 const Map<labelPair>& faceToSplit,
                 const Map<point>& faceToFeaturePoint,
                 polyTopoChange& meshMod
@@ -155,7 +155,7 @@ public:
         // Access
 
             //- Per edge a sorted list (start to end) of added points.
-            const HashTable<labelList, edge, Hash<edge> >& edgeAddedPoints()
+            const HashTable<labelList, edge, Hash<edge>>& edgeAddedPoints()
              const
             {
                 return edgeAddedPoints_;

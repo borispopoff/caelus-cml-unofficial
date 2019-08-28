@@ -67,7 +67,7 @@ public:
         explicit SortableList(const UList<T>&);
 
         //- Construct from transferred List, sorting immediately.
-        explicit SortableList(const Xfer<List<T> >&);
+        explicit SortableList(const Xfer<List<T>>&);
 
         //- Construct given size. Sort later on.
         //  The indices remain empty until the list is sorted
@@ -109,7 +109,7 @@ public:
         void reverseSort();
 
         //- Transfer contents to the Xfer container as a plain List
-        inline Xfer<List<T> > xfer();
+        inline Xfer<List<T>> xfer();
 
 
     // Member Operators
@@ -168,7 +168,7 @@ CML::SortableList<T>::SortableList(const UList<T>& values)
 
 
 template<class T>
-CML::SortableList<T>::SortableList(const Xfer<List<T> >& values)
+CML::SortableList<T>::SortableList(const Xfer<List<T>>& values)
 :
     List<T>(values)
 {
@@ -249,9 +249,9 @@ void CML::SortableList<T>::reverseSort()
 
 
 template<class T>
-CML::Xfer<CML::List<T> > CML::SortableList<T>::xfer()
+CML::Xfer<CML::List<T>> CML::SortableList<T>::xfer()
 {
-    return xferMoveTo<List<T> >(*this);
+    return xferMoveTo<List<T>>(*this);
 }
 
 

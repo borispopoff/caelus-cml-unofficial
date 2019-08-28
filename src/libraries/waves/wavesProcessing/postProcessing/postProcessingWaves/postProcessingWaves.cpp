@@ -75,7 +75,7 @@ void postProcessingWaves::getTimeDirs
     // Make a numerical sorting of the words
     // This sorting is needed to easily exclude duplicate time instances in
     // the outputted data, when read by raw-data methods
-    List<std::pair<scalar, word> > timeWord(timeDirs.size());
+    List<std::pair<scalar, word>> timeWord(timeDirs.size());
 
     forAll (timeWord, timei)
     {
@@ -390,7 +390,7 @@ List<vectorField> postProcessingWaves::readVectorFields
 
 scalarField postProcessingWaves::equidistantTime
 (
-    const List<std::pair<scalar, label > >& timeLabel,
+    const List<std::pair<scalar, label >>& timeLabel,
     const dictionary& dict
 )
 {
@@ -423,7 +423,7 @@ scalarField postProcessingWaves::equidistantTime
 
 void postProcessingWaves::interpolationWeights
 (
-    const List<std::pair<scalar, label> >& timeLabel,
+    const List<std::pair<scalar, label>>& timeLabel,
     const scalarField& t,
     scalarField& weights,
     labelList& first,

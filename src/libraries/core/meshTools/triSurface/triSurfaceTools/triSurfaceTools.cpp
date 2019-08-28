@@ -447,8 +447,8 @@ void CML::triSurfaceTools::getMergedEdges
     const triSurface& surf,
     const label edgeI,
     const labelHashSet& collapsedFaces,
-    HashTable<label, label, Hash<label> >& edgeToEdge,
-    HashTable<label, label, Hash<label> >& edgeToFace
+    HashTable<label, label, Hash<label>>& edgeToEdge,
+    HashTable<label, label, Hash<label>>& edgeToFace
 )
 {
     const edge& e = surf.edges()[edgeI];
@@ -530,8 +530,8 @@ CML::scalar CML::triSurfaceTools::edgeCosAngle
     const label v1,
     const point& pt,
     const labelHashSet& collapsedFaces,
-    const HashTable<label, label, Hash<label> >& edgeToEdge,
-    const HashTable<label, label, Hash<label> >& edgeToFace,
+    const HashTable<label, label, Hash<label>>& edgeToEdge,
+    const HashTable<label, label, Hash<label>>& edgeToFace,
     const label faceI,
     const label edgeI
 )
@@ -628,8 +628,8 @@ CML::scalar CML::triSurfaceTools::collapseMinCosAngle
     const label v1,
     const point& pt,
     const labelHashSet& collapsedFaces,
-    const HashTable<label, label, Hash<label> >& edgeToEdge,
-    const HashTable<label, label, Hash<label> >& edgeToFace
+    const HashTable<label, label, Hash<label>>& edgeToEdge,
+    const HashTable<label, label, Hash<label>>& edgeToFace
 )
 {
     const labelList& v1Faces = surf.pointFaces()[v1];
@@ -682,8 +682,8 @@ bool CML::triSurfaceTools::collapseCreatesFold
     const label v1,
     const point& pt,
     const labelHashSet& collapsedFaces,
-    const HashTable<label, label, Hash<label> >& edgeToEdge,
-    const HashTable<label, label, Hash<label> >& edgeToFace,
+    const HashTable<label, label, Hash<label>>& edgeToEdge,
+    const HashTable<label, label, Hash<label>>& edgeToFace,
     const scalar minCos
 )
 {
@@ -747,7 +747,7 @@ bool CML::triSurfaceTools::collapseCreatesFold
 //    // neighbours actually contains the
 //    // edge with which triangle connects to collapsedFaces.
 //
-//    HashTable<label, label, Hash<label> > neighbours;
+//    HashTable<label, label, Hash<label>> neighbours;
 //
 //    labelList collapsed = collapsedFaces.toc();
 //
@@ -2616,8 +2616,8 @@ void CML::triSurfaceTools::calcInterpolationWeights
 (
     const triSurface& s,
     const pointField& samplePts,
-    List<FixedList<label, 3> >& allVerts,
-    List<FixedList<scalar, 3> >& allWeights
+    List<FixedList<label, 3>>& allVerts,
+    List<FixedList<scalar, 3>>& allWeights
 )
 {
     allVerts.setSize(samplePts.size());

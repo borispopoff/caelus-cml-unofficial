@@ -160,16 +160,16 @@ public:
             // Interpolators for continuous phase fields
 
                 //- Temperature field interpolator
-                autoPtr<interpolation<scalar> > TInterp_;
+                autoPtr<interpolation<scalar>> TInterp_;
 
                 //- Specific heat capacity field interpolator
-                autoPtr<interpolation<scalar> > CpInterp_;
+                autoPtr<interpolation<scalar>> CpInterp_;
 
                 //- Thermal conductivity field interpolator
-                autoPtr<interpolation<scalar> > kappaInterp_;
+                autoPtr<interpolation<scalar>> kappaInterp_;
 
                 //- Radiation field interpolator
-                autoPtr<interpolation<scalar> > GInterp_;
+                autoPtr<interpolation<scalar>> GInterp_;
 
 
             // Cached continuous phase properties
@@ -362,9 +362,9 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<ThermoParcel<ParcelType> > operator()(Istream& is) const
+            autoPtr<ThermoParcel<ParcelType>> operator()(Istream& is) const
             {
-                return autoPtr<ThermoParcel<ParcelType> >
+                return autoPtr<ThermoParcel<ParcelType>>
                 (
                     new ThermoParcel<ParcelType>(mesh_, is, true)
                 );
@@ -1182,7 +1182,7 @@ void CML::ThermoParcel<ParcelType>::readFields(CloudType& c)
 
 
     label i = 0;
-    forAllIter(typename Cloud<ThermoParcel<ParcelType> >, c, iter)
+    forAllIter(typename Cloud<ThermoParcel<ParcelType>>, c, iter)
     {
         ThermoParcel<ParcelType>& p = iter();
 
@@ -1205,7 +1205,7 @@ void CML::ThermoParcel<ParcelType>::writeFields(const CloudType& c)
     IOField<scalar> Cp(c.fieldIOobject("Cp", IOobject::NO_READ), np);
 
     label i = 0;
-    forAllConstIter(typename Cloud<ThermoParcel<ParcelType> >, c, iter)
+    forAllConstIter(typename Cloud<ThermoParcel<ParcelType>>, c, iter)
     {
         const ThermoParcel<ParcelType>& p = iter();
 

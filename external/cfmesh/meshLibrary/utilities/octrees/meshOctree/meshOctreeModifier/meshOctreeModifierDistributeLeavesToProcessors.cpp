@@ -49,7 +49,7 @@ void meshOctreeModifier::distributeLeavesToProcessors()
     //- leaf boxes are sorted in Z-ordering
     //- initial distribution is performed by decomposing the list of leaves
     //- into the equal-size chunks and allocate them to processors
-    List<Pair<meshOctreeCubeCoordinates> > procRange(Pstream::nProcs());
+    List<Pair<meshOctreeCubeCoordinates>> procRange(Pstream::nProcs());
     label balance = leaves.size() % Pstream::nProcs();
     label start = leaves.size() - 1;
     for(short procI=Pstream::nProcs()-1;procI>=0;--procI)

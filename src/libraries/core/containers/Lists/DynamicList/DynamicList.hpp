@@ -111,7 +111,7 @@ public:
         explicit inline DynamicList(const UIndirectList<T>&);
 
         //- Construct by transferring the parameter contents
-        explicit inline DynamicList(const Xfer<List<T> >&);
+        explicit inline DynamicList(const Xfer<List<T>>&);
 
         //- Construct from Istream. Size set to size of list read.
         explicit DynamicList(Istream&);
@@ -174,7 +174,7 @@ public:
             inline void transfer(DynamicList<T, SizeInc, SizeMult, SizeDiv>&);
 
             //- Transfer contents to the Xfer container as a plain List
-            inline Xfer<List<T> > xfer();
+            inline Xfer<List<T>> xfer();
 
 
         // Member Operators
@@ -305,7 +305,7 @@ inline CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 (
-    const Xfer<List<T> >& lst
+    const Xfer<List<T>>& lst
 )
 :
     List<T>(lst),
@@ -517,10 +517,10 @@ CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::transfer
 
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-inline CML::Xfer<CML::List<T> >
+inline CML::Xfer<CML::List<T>>
 CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::xfer()
 {
-    return xferMoveTo< List<T> >(*this);
+    return xferMoveTo< List<T>>(*this);
 }
 
 

@@ -41,7 +41,7 @@ namespace CML
     );
 
     template<>
-    const word IOList<Tuple2<scalar, vector> >::typeName("scalarVectorTable");
+    const word IOList<Tuple2<scalar, vector>>::typeName("scalarVectorTable");
 }
 
 
@@ -61,7 +61,7 @@ displacementInterpolationMotionSolver
     // Get zones and their interpolation tables for displacement
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    List<Pair<word> > faceZoneToTable
+    List<Pair<word>> faceZoneToTable
     (
         coeffDict().lookup("interpolationTables")
     );
@@ -86,7 +86,7 @@ displacementInterpolationMotionSolver
 
         const word& tableName = faceZoneToTable[i][1];
 
-        IOList<Tuple2<scalar, vector> > table
+        IOList<Tuple2<scalar, vector>> table
         (
             IOobject
             (

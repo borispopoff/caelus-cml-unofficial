@@ -160,7 +160,7 @@ void CML::CentredFitData<Polynomial>::calcFit()
     // Get the cell/face centres in stencil order.
     // Centred face stencils no good for triangles or tets.
     // Need bigger stencils
-    List<List<point> > stencilPoints(mesh.nFaces());
+    List<List<point>> stencilPoints(mesh.nFaces());
     this->stencil().collectData(mesh.C(), stencilPoints);
 
     // find the fit coefficients for every face in the mesh

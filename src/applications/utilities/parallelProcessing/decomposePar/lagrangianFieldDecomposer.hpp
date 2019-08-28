@@ -96,7 +96,7 @@ public:
         (
             const label cloudI,
             const IOobjectList& lagrangianObjects,
-            PtrList<PtrList<IOField<Type> > >& lagrangianFields
+            PtrList<PtrList<IOField<Type>>>& lagrangianFields
         );
 
         template<class Type>
@@ -106,21 +106,21 @@ public:
             const IOobjectList& lagrangianObjects,
             PtrList
             <
-                PtrList<CompactIOField<Field<Type>, Type> >
+                PtrList<CompactIOField<Field<Type>, Type>>
             >& lagrangianFields
         );
 
 
         //- Decompose volume field
         template<class Type>
-        tmp<IOField<Type> > decomposeField
+        tmp<IOField<Type>> decomposeField
         (
             const word& cloudName,
             const IOField<Type>& field
         ) const;
 
         template<class Type>
-        tmp<CompactIOField<Field<Type>, Type> > decomposeFieldField
+        tmp<CompactIOField<Field<Type>, Type>> decomposeFieldField
         (
             const word& cloudName,
             const CompactIOField<Field<Type>, Type>& field
@@ -158,7 +158,7 @@ void CML::lagrangianFieldDecomposer::readFields
 (
     const label cloudI,
     const IOobjectList& lagrangianObjects,
-    PtrList<PtrList<IOField<Type> > >& lagrangianFields
+    PtrList<PtrList<IOField<Type>>>& lagrangianFields
 )
 {
     // Search list of objects for lagrangian fields
@@ -170,7 +170,7 @@ void CML::lagrangianFieldDecomposer::readFields
     lagrangianFields.set
     (
         cloudI,
-        new PtrList<IOField<Type> >
+        new PtrList<IOField<Type>>
         (
             lagrangianTypeObjects.size()
         )
@@ -193,13 +193,13 @@ void CML::lagrangianFieldDecomposer::readFieldFields
 (
     const label cloudI,
     const IOobjectList& lagrangianObjects,
-    PtrList<PtrList<CompactIOField<Field<Type>, Type> > >& lagrangianFields
+    PtrList<PtrList<CompactIOField<Field<Type>, Type>>>& lagrangianFields
 )
 {
     // Search list of objects for lagrangian fields
     IOobjectList lagrangianTypeObjectsA
     (
-        lagrangianObjects.lookupClass(IOField<Field<Type> >::typeName)
+        lagrangianObjects.lookupClass(IOField<Field<Type>>::typeName)
     );
 
     IOobjectList lagrangianTypeObjectsB
@@ -214,7 +214,7 @@ void CML::lagrangianFieldDecomposer::readFieldFields
     lagrangianFields.set
     (
         cloudI,
-        new PtrList<CompactIOField<Field<Type>, Type> >
+        new PtrList<CompactIOField<Field<Type>, Type>>
         (
             lagrangianTypeObjectsA.size() + lagrangianTypeObjectsB.size()
         )
@@ -243,7 +243,7 @@ void CML::lagrangianFieldDecomposer::readFieldFields
 
 
 template<class Type>
-CML::tmp<CML::IOField<Type> >
+CML::tmp<CML::IOField<Type>>
 CML::lagrangianFieldDecomposer::decomposeField
 (
     const word& cloudName,
@@ -254,7 +254,7 @@ CML::lagrangianFieldDecomposer::decomposeField
     Field<Type> procField(field, particleIndices_);
 
     // Create the field for the processor
-    return tmp<IOField<Type> >
+    return tmp<IOField<Type>>
     (
         new IOField<Type>
         (
@@ -275,7 +275,7 @@ CML::lagrangianFieldDecomposer::decomposeField
 
 
 template<class Type>
-CML::tmp<CML::CompactIOField<CML::Field<Type>, Type> >
+CML::tmp<CML::CompactIOField<CML::Field<Type>, Type>>
 CML::lagrangianFieldDecomposer::decomposeFieldField
 (
     const word& cloudName,
@@ -283,10 +283,10 @@ CML::lagrangianFieldDecomposer::decomposeFieldField
 ) const
 {
     // Create and map the internal field values
-    Field<Field<Type> > procField(field, particleIndices_);
+    Field<Field<Type>> procField(field, particleIndices_);
 
     // Create the field for the processor
-    return tmp<CompactIOField<Field<Type>, Type> >
+    return tmp<CompactIOField<Field<Type>, Type>>
     (
         new CompactIOField<Field<Type>, Type>
         (

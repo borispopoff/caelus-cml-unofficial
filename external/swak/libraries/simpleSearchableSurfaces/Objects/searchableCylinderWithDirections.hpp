@@ -141,7 +141,7 @@ public:
     (
         const pointField& start,
         const pointField& end,
-        List<List<pointIndexHit> >&
+        List<List<pointIndexHit>>&
     ) const;
 
      bool writeData(Ostream&) const

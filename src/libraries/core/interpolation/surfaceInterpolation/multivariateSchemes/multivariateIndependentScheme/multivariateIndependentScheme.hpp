@@ -88,7 +88,7 @@ public:
 
     // Member Operators
 
-        tmp<surfaceInterpolationScheme<Type> > operator()
+        tmp<surfaceInterpolationScheme<Type>> operator()
         (
             const GeometricField<Type, fvPatchField, volMesh>& field
         ) const

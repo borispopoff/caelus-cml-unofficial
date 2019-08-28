@@ -66,7 +66,7 @@ CML::basicSolidChemistryModel::RR(const label i)
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::basicSolidChemistryModel::calculateRR
 (
     const label reactionI,
@@ -75,7 +75,7 @@ CML::basicSolidChemistryModel::calculateRR
 {
     NotImplemented;
 
-    return dynamic_cast<tmp<DimensionedField<scalar, volMesh> >&>
+    return dynamic_cast<tmp<DimensionedField<scalar, volMesh>>&>
     (
         const_cast<DimensionedField<scalar, volMesh>& >
         (

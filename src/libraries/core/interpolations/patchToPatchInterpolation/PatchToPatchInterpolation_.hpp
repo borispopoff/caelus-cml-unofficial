@@ -205,17 +205,17 @@ public:
 
         //- Interpolate point field
         template<class Type>
-        tmp<Field<Type> > pointInterpolate(const Field<Type>& pf) const;
+        tmp<Field<Type>> pointInterpolate(const Field<Type>& pf) const;
 
         template<class Type>
-        tmp<Field<Type> > pointInterpolate(const tmp<Field<Type> >& tpf) const;
+        tmp<Field<Type>> pointInterpolate(const tmp<Field<Type>>& tpf) const;
 
         //- Interpolate face field
         template<class Type>
-        tmp<Field<Type> > faceInterpolate(const Field<Type>& pf) const;
+        tmp<Field<Type>> faceInterpolate(const Field<Type>& pf) const;
 
         template<class Type>
-        tmp<Field<Type> > faceInterpolate(const tmp<Field<Type> >& tpf) const;
+        tmp<Field<Type>> faceInterpolate(const tmp<Field<Type>>& tpf) const;
 
 };
 
@@ -722,7 +722,7 @@ namespace CML
 //- Interpolate point field
 template<class FromPatch, class ToPatch>
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 PatchToPatchInterpolation<FromPatch, ToPatch>::pointInterpolate
 (
     const Field<Type>& pf
@@ -736,7 +736,7 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::pointInterpolate
             << abort(FatalError);
     }
 
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>
         (
@@ -776,13 +776,13 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::pointInterpolate
 
 template<class FromPatch, class ToPatch>
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 PatchToPatchInterpolation<FromPatch, ToPatch>::pointInterpolate
 (
-    const tmp<Field<Type> >& tpf
+    const tmp<Field<Type>>& tpf
 ) const
 {
-    tmp<Field<Type> > tint = pointInterpolate<Type>(tpf());
+    tmp<Field<Type>> tint = pointInterpolate<Type>(tpf());
     tpf.clear();
     return tint;
 }
@@ -791,7 +791,7 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::pointInterpolate
 //- Interpolate face field
 template<class FromPatch, class ToPatch>
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 PatchToPatchInterpolation<FromPatch, ToPatch>::faceInterpolate
 (
     const Field<Type>& ff
@@ -805,7 +805,7 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::faceInterpolate
             << abort(FatalError);
     }
 
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>
         (
@@ -847,13 +847,13 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::faceInterpolate
 
 template<class FromPatch, class ToPatch>
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 PatchToPatchInterpolation<FromPatch, ToPatch>::faceInterpolate
 (
-    const tmp<Field<Type> >& tff
+    const tmp<Field<Type>>& tff
 ) const
 {
-    tmp<Field<Type> > tint = faceInterpolate(tff());
+    tmp<Field<Type>> tint = faceInterpolate(tff());
     tff.clear();
     return tint;
 }

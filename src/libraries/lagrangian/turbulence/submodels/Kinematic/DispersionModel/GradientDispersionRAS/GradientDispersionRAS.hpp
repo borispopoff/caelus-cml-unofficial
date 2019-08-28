@@ -76,9 +76,9 @@ public:
         GradientDispersionRAS(const GradientDispersionRAS<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<DispersionModel<CloudType> > clone() const
+        virtual autoPtr<DispersionModel<CloudType>> clone() const
         {
-            return autoPtr<DispersionModel<CloudType> >
+            return autoPtr<DispersionModel<CloudType>>
             (
                 new GradientDispersionRAS<CloudType>(*this)
             );

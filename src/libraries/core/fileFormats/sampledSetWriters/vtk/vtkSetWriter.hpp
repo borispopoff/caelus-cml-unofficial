@@ -82,7 +82,7 @@ public:
             const bool writeTracks,
             const PtrList<coordSet>&,
             const wordList& valueSetNames,
-            const List<List<Field<Type> > >&,
+            const List<List<Field<Type>>>&,
             Ostream&
         ) const;
 };
@@ -179,7 +179,7 @@ void CML::vtkSetWriter<Type>::write
     const bool writeTracks,
     const PtrList<coordSet>& tracks,
     const wordList& valueSetNames,
-    const List<List<Field<Type> > >& valueSets,
+    const List<List<Field<Type>>>& valueSets,
     Ostream& os
 ) const
 {
@@ -242,7 +242,7 @@ void CML::vtkSetWriter<Type>::write
         os  << valueSetNames[setI] << ' ' << pTraits<Type>::nComponents << ' '
             << nPoints << " float" << nl;
 
-        const List<Field<Type> >& fieldVals = valueSets[setI];
+        const List<Field<Type>>& fieldVals = valueSets[setI];
 
         forAll(fieldVals, i)
         {

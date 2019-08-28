@@ -86,10 +86,10 @@ public:
         virtual inline Type integrate(const scalar x1, const scalar x2) const;
 
         //- Return value as a function of (scalar) independent variable
-        virtual tmp<Field<Type> > value(const scalarField& x) const;
+        virtual tmp<Field<Type>> value(const scalarField& x) const;
 
         //- Integrate between two (scalar) values
-        virtual tmp<Field<Type> > integrate
+        virtual tmp<Field<Type>> integrate
         (
             const scalarField& x1,
             const scalarField& x2
@@ -154,17 +154,17 @@ inline Type CML::DataEntryTypes::OneConstant<Type>::integrate
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::DataEntryTypes::OneConstant<Type>::value
+CML::tmp<CML::Field<Type>> CML::DataEntryTypes::OneConstant<Type>::value
 (
     const scalarField& x
 ) const
 {
-    return tmp<Field<Type> >(new Field<Type>(x.size(), pTraits<Type>::one));
+    return tmp<Field<Type>>(new Field<Type>(x.size(), pTraits<Type>::one));
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::DataEntryTypes::OneConstant<Type>::integrate
+CML::tmp<CML::Field<Type>> CML::DataEntryTypes::OneConstant<Type>::integrate
 (
     const scalarField& x1,
     const scalarField& x2

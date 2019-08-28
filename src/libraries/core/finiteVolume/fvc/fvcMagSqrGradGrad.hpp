@@ -53,7 +53,7 @@ namespace fvc
     template<class Type>
     tmp<volScalarField> magSqrGradGrad
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
     );
 }
 
@@ -104,7 +104,7 @@ template<class Type>
 tmp<volScalarField>
 magSqrGradGrad
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvf
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 )
 {
     tmp<volScalarField> tMagSqrGradGrad(fvc::magSqrGradGrad(tvf()));

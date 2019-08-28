@@ -86,14 +86,14 @@ class sampledThresholdCellFaces
 
         //- sample field on faces
         template<class Type>
-        tmp<Field<Type> > sampleField
+        tmp<Field<Type>> sampleField
         (
             const GeometricField<Type, fvPatchField, volMesh>& vField
         ) const;
 
 
         template<class Type>
-        tmp<Field<Type> >
+        tmp<Field<Type>>
         interpolateField(const interpolation<Type>&) const;
 
 
@@ -214,7 +214,7 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledThresholdCellFaces::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
@@ -223,12 +223,12 @@ CML::sampledThresholdCellFaces::sampleField
     // Recreate geometry if time has changed
     updateGeometry();
 
-    return tmp<Field<Type> >(new Field<Type>(vField, meshCells_));
+    return tmp<Field<Type>>(new Field<Type>(vField, meshCells_));
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledThresholdCellFaces::interpolateField
 (
     const interpolation<Type>& interpolator
@@ -238,7 +238,7 @@ CML::sampledThresholdCellFaces::interpolateField
     updateGeometry();
 
     // One value per point
-    tmp<Field<Type> > tvalues(new Field<Type>(points().size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
     Field<Type>& values = tvalues();
 
     boolList pointDone(points().size(), false);

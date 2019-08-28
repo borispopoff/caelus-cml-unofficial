@@ -209,7 +209,7 @@ namespace CML {
     }
 
     template<class Type>
-    inline tmp<Field<Type> > ExpressionResult::getResult(bool keep)
+    inline tmp<Field<Type>> ExpressionResult::getResult(bool keep)
     {
         Pbug << "getResult(bool keep "
             << keep << ")" << endl;
@@ -222,7 +222,7 @@ namespace CML {
                 << exit(FatalError);
         }
 
-        tmp<Field<Type> > result;
+        tmp<Field<Type>> result;
 
         if(valPtr_==nullptr) {
             FatalErrorInFunction
@@ -234,7 +234,7 @@ namespace CML {
 
         }
 
-        result=tmp<Field<Type> > (
+        result=tmp<Field<Type>> (
             static_cast<Field<Type>*>(valPtr_)
         );
 

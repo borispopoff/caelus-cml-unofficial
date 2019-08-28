@@ -144,7 +144,7 @@ void reflectionAnalysis2DFFT::writeReflectionIncident
 void reflectionAnalysis2DFFT::decomposeAmplitudes
 (
     const scalarField& k,
-    const List<Field<complex> >& amps,
+    const List<Field<complex>>& amps,
     Field<complex>& ampRight,
     Field<complex>& ampLeft,
     scalarField& determinant
@@ -308,7 +308,7 @@ void reflectionAnalysis2DFFT::evaluate()
         while (true)
         {
             // Make the Fourier transform of the next bit of the data set
-            List<Field<complex> > transforms = smfft.fft(input);
+            List<Field<complex>> transforms = smfft.fft(input);
 
             // In case the Fourier transform sequence is done, a List of size
             // zero is returned.

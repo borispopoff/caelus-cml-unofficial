@@ -192,7 +192,7 @@ void CML::RBD::rigidBodyMotion::writeState(const label bodyID, autoPtr<OFstream>
         << endl;
 }
 
-void CML::RBD::rigidBodyMotion::writeRestState(List<autoPtr<OFstream> > &restraintStateFilePtrs)
+void CML::RBD::rigidBodyMotion::writeRestState(List<autoPtr<OFstream>> &restraintStateFilePtrs)
 {
     
     forAll(restraints_,ri)

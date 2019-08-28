@@ -225,12 +225,12 @@ void CML::LUscalarMatrix::solve
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::LUscalarMatrix::solve
+CML::tmp<CML::Field<Type>> CML::LUscalarMatrix::solve
 (
     const Field<Type>& source
 ) const
 {
-    tmp<Field<Type> > tx(new Field<Type>(m()));
+    tmp<Field<Type>> tx(new Field<Type>(m()));
     Field<Type>& x = tx();
 
     solve(x, source);

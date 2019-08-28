@@ -106,7 +106,7 @@ public:
         explicit UPtrList(const label);
 
         //- Construct by transferring the parameter contents
-        UPtrList(const Xfer<UPtrList<T> >&);
+        UPtrList(const Xfer<UPtrList<T>>&);
 
         //- Construct as copy or re-use as specified.
         UPtrList(UPtrList<T>&, bool reuse);
@@ -155,7 +155,7 @@ public:
             void transfer(UPtrList<T>&);
 
             //- Transfer contents to the Xfer container
-            inline Xfer<UPtrList<T> > xfer();
+            inline Xfer<UPtrList<T>> xfer();
 
             //- Is element set
             inline bool set(const label) const;
@@ -339,7 +339,7 @@ inline T* CML::UPtrList<T>::set(const label i, T* ptr)
 
 
 template<class T>
-inline CML::Xfer<CML::UPtrList<T> > CML::UPtrList<T>::xfer()
+inline CML::Xfer<CML::UPtrList<T>> CML::UPtrList<T>::xfer()
 {
     return xferMove(*this);
 }
@@ -565,7 +565,7 @@ CML::UPtrList<T>::UPtrList(const label s)
 
 
 template<class T>
-CML::UPtrList<T>::UPtrList(const Xfer<UPtrList<T> >& lst)
+CML::UPtrList<T>::UPtrList(const Xfer<UPtrList<T>>& lst)
 {
     transfer(lst());
 }

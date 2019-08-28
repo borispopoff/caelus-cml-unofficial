@@ -26,7 +26,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::pointLinear<Type>::
 correction
 (
@@ -40,7 +40,7 @@ correction
         volPointInterpolation::New(mesh).interpolate(vf)
     );
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsfCorr =
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr =
         linearInterpolate(vf);
 
     Field<Type>& sfCorr = tsfCorr().internalField();

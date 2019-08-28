@@ -31,7 +31,7 @@ CML::wallDistReflection::wallDistReflection
 )
 :
     reflectionVectors(mesh),
-    wallDistData<wallPointData<vector> >
+    wallDistData<wallPointData<vector>>
     (
         mesh,
         reflectionVectors::n_,
@@ -46,7 +46,7 @@ CML::wallDistReflection::wallDistReflection
 void CML::wallDistReflection::correct()
 {
     reflectionVectors::correct();
-    wallDistData<wallPointData<vector> >::correct();
+    wallDistData<wallPointData<vector>>::correct();
 }
 
 

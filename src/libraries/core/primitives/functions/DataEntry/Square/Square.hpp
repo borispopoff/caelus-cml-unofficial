@@ -100,16 +100,16 @@ class Square
         scalar markSpace_;
 
         //- Scalar amplitude of the square function
-        autoPtr<DataEntry<scalar> > amplitude_;
+        autoPtr<DataEntry<scalar>> amplitude_;
 
         //- Frequency of the square function
-        autoPtr<DataEntry<scalar> > frequency_;
+        autoPtr<DataEntry<scalar>> frequency_;
 
         //- Scaling factor of the square function
-        autoPtr<DataEntry<Type> > scale_;
+        autoPtr<DataEntry<Type>> scale_;
 
         //- Level to which the square function is added
-        autoPtr<DataEntry<Type> > level_;
+        autoPtr<DataEntry<Type>> level_;
 
 
     // Private Member Functions

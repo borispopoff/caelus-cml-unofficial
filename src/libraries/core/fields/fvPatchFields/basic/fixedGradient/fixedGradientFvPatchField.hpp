@@ -91,9 +91,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedGradientFvPatchField<Type>(*this)
             );
@@ -107,12 +107,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedGradientFvPatchField<Type>(*this, iF)
             );
@@ -159,7 +159,7 @@ public:
         // Evaluation functions
 
             //- Return gradient at boundary
-            virtual tmp<Field<Type> > snGrad() const
+            virtual tmp<Field<Type>> snGrad() const
             {
                 return gradient_;
             }
@@ -172,25 +172,25 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const;
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
         //- Write
@@ -293,7 +293,7 @@ void CML::fixedGradientFvPatchField<Type>::rmap
     fvPatchField<Type>::rmap(ptf, addr);
 
     const fixedGradientFvPatchField<Type>& fgptf =
-        refCast<const fixedGradientFvPatchField<Type> >(ptf);
+        refCast<const fixedGradientFvPatchField<Type>>(ptf);
 
     gradient_.rmap(fgptf.gradient_, addr);
 }
@@ -323,7 +323,7 @@ CML::fixedGradientFvPatchField<Type>::valueInternalCoeffs
     const tmp<scalarField>&
 ) const
 {
-    return tmp<Field<Type> >(new Field<Type>(this->size(), pTraits<Type>::one));
+    return tmp<Field<Type>>(new Field<Type>(this->size(), pTraits<Type>::one));
 }
 
 
@@ -343,7 +343,7 @@ CML::tmp<CML::Field<Type>>
 CML::fixedGradientFvPatchField<Type>::
 gradientInternalCoeffs() const
 {
-    return tmp<Field<Type> >
+    return tmp<Field<Type>>
     (
         new Field<Type>(this->size(), Zero)
     );

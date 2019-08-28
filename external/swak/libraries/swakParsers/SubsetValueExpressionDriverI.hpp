@@ -40,7 +40,7 @@ Contributors/Copyright:
 namespace CML {
 
     template<class FieldType,class Subset,class T>
-    tmp<Field<T> > SubsetValueExpressionDriver::getFieldInternal(
+    tmp<Field<T>> SubsetValueExpressionDriver::getFieldInternal(
         const word &inName,
         const Subset &sub,
         bool oldTime
@@ -72,7 +72,7 @@ namespace CML {
             return this->variable(name).getResult<T>(true);
         }
 
-        tmp<Field<T> > result(new Field<T>(this->size()));
+        tmp<Field<T>> result(new Field<T>(this->size()));
         label cnt=0;
 
         if(debug) {
@@ -130,7 +130,7 @@ namespace CML {
     }
 
     template<class FieldType,class IFieldType,class Subset,class T>
-    tmp<Field<T> > SubsetValueExpressionDriver::getFieldInternalAndInterpolate(
+    tmp<Field<T>> SubsetValueExpressionDriver::getFieldInternalAndInterpolate(
         const word &inName,
         const Subset &sub,
         bool oldTime
@@ -154,7 +154,7 @@ namespace CML {
             return this->variable(name).getResult<T>(true);
         }
 
-        tmp<Field<T> > result(new Field<T>(this->size()));
+        tmp<Field<T>> result(new Field<T>(this->size()));
 
         bool done=false;
 
@@ -351,12 +351,12 @@ namespace CML {
     }
 
     template<class Subset,class T>
-    tmp<Field<T> > SubsetValueExpressionDriver::getFromFieldInternal(
+    tmp<Field<T>> SubsetValueExpressionDriver::getFromFieldInternal(
         const Field<T> &original,
         const Subset &sub
     ) const
     {
-        tmp<Field<T> > result(new Field<T>(this->size()));
+        tmp<Field<T>> result(new Field<T>(this->size()));
         label cnt=0;
 
         forAllConstIter(typename Subset,sub,iter) {
@@ -370,12 +370,12 @@ namespace CML {
     }
 
     template<class Subset,class T>
-    tmp<Field<T> > SubsetValueExpressionDriver::getFromSurfaceFieldInternal(
+    tmp<Field<T>> SubsetValueExpressionDriver::getFromSurfaceFieldInternal(
         const GeometricField<T,fvsPatchField,surfaceMesh> &original,
         const Subset &sub
     ) const
     {
-        tmp<Field<T> > result(new Field<T>(this->size()));
+        tmp<Field<T>> result(new Field<T>(this->size()));
         label cnt=0;
 
         forAllConstIter(typename Subset,sub,iter) {

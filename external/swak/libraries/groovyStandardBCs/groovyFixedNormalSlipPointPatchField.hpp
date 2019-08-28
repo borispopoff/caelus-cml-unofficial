@@ -102,9 +102,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new groovyFixedNormalSlipPointPatchField<Type>(*this)
             );
@@ -118,12 +118,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new groovyFixedNormalSlipPointPatchField<Type>(*this, iF)
             );
@@ -253,7 +253,7 @@ void CML::groovyFixedNormalSlipPointPatchField<Type>::evaluate
     n/=mag(n); // normalize
     Field<Type> val(driver_.evaluate<Type>(this->fixedValueExpression_,true));
 
-    tmp<Field<Type> > tvalues=transform(I - n*n, this->patchInternalField())+transform(n*n,val);
+    tmp<Field<Type>> tvalues=transform(I - n*n, this->patchInternalField())+transform(n*n,val);
 
     // Get internal field to insert values into
     Field<Type>& iF = const_cast<Field<Type>&>(this->internalField());

@@ -101,7 +101,7 @@ public:
 
         //- Return the explicit correction to the uncorrectedSnGrad
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const;
 };
 
@@ -139,14 +139,14 @@ uncorrectedSnGrad<Type>::~uncorrectedSnGrad()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 uncorrectedSnGrad<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>&
 ) const
 {
     NotImplemented;
-    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >(nullptr);
+    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>(nullptr);
 }
 
 

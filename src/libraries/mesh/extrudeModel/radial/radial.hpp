@@ -47,7 +47,7 @@ class radial
 {
     // Private data
 
-        autoPtr<DataEntry<scalar> > R_;
+        autoPtr<DataEntry<scalar>> R_;
 
 
 public:

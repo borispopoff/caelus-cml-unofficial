@@ -36,7 +36,7 @@ namespace CML
 /* * * * * * * * * * * * * * * * Global functions  * * * * * * * * * * * * * */
 
 template<class Type>
-tmp<CoeffField<Type> > inv(const CoeffField<Type>& f)
+tmp<CoeffField<Type>> inv(const CoeffField<Type>& f)
 {
     // The inverse of a linear coefficient type is currently done "by
     // hand".  The need for this will disappear once the diagonal tensor
@@ -46,7 +46,7 @@ tmp<CoeffField<Type> > inv(const CoeffField<Type>& f)
     typedef typename CoeffField<Type>::linearType linearType;
 
     // Create result
-    tmp<CoeffField<Type> > tresult(new CoeffField<Type>(f.size()));
+    tmp<CoeffField<Type>> tresult(new CoeffField<Type>(f.size()));
     CoeffField<Type>& result = tresult();
 
     if (f.activeType() == blockCoeffBase::SCALAR)
@@ -181,24 +181,24 @@ void opFunc                                                                   \
                                                                               \
                                                                               \
 template<class Type>                                                          \
-tmp<CoeffField<Type> > operator op                                            \
+tmp<CoeffField<Type>> operator op                                            \
 (                                                                             \
     const CoeffField<Type>& f1                                                \
 )                                                                             \
 {                                                                             \
-    tmp<CoeffField<Type> > tf(new CoeffField<Type>(f1.size()));               \
+    tmp<CoeffField<Type>> tf(new CoeffField<Type>(f1.size()));               \
     opFunc(tf(), f1);                                                         \
     return tf;                                                                \
 }                                                                             \
                                                                               \
                                                                               \
 template<class Type>                                                          \
-tmp<CoeffField<Type> > operator op                                            \
+tmp<CoeffField<Type>> operator op                                            \
 (                                                                             \
-    const tmp<CoeffField<Type> >& tf1                                         \
+    const tmp<CoeffField<Type>>& tf1                                         \
 )                                                                             \
 {                                                                             \
-    tmp<CoeffField<Type> > tf(tf1.ptr());                                     \
+    tmp<CoeffField<Type>> tf(tf1.ptr());                                     \
     opFunc(tf(), tf());                                                       \
     return tf;                                                                \
 }
@@ -211,39 +211,39 @@ UNARY_OPERATOR(-, negate)
 #define BINARY_OPERATOR_FF(Type1, Type2, op, opFunc)                          \
                                                                               \
 template<class Type>                                                          \
-tmp<Field<Type> > operator op                                                 \
+tmp<Field<Type>> operator op                                                 \
 (                                                                             \
     const CoeffField<Type1>& f1,                                              \
     const Type2& f2                                                           \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(new Field<Type>(f1.size()));                         \
+    tmp<Field<Type>> tf(new Field<Type>(f1.size()));                         \
     opFunc(tf(), f1, f2);                                                     \
     return tf;                                                                \
 }                                                                             \
                                                                               \
                                                                               \
 template<class Type>                                                          \
-tmp<Field<Type> > operator op                                                 \
+tmp<Field<Type>> operator op                                                 \
 (                                                                             \
     const CoeffField<Type1>& f1,                                              \
     const Field<Type2>& f2                                                    \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(new Field<Type>(f1.size()));                         \
+    tmp<Field<Type>> tf(new Field<Type>(f1.size()));                         \
     opFunc(tf(), f1, f2);                                                     \
     return tf;                                                                \
 }                                                                             \
                                                                               \
                                                                               \
 template<class Type>                                                          \
-tmp<Field<Type> > operator op                                                 \
+tmp<Field<Type>> operator op                                                 \
 (                                                                             \
     const Field<Type2>& f1,                                                   \
     const CoeffField<Type1>& f2                                               \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(new Field<Type>(f1.size()));                         \
+    tmp<Field<Type>> tf(new Field<Type>(f1.size()));                         \
     opFunc(tf(), f1, f2);                                                     \
     return tf;                                                                \
 }
@@ -251,13 +251,13 @@ tmp<Field<Type> > operator op                                                 \
 
 #define BINARY_OPERATOR_FTR(Type1, Type2, op, opFunc)                         \
 template<class Type>                                                          \
-tmp<Field<Type> > operator op                                                 \
+tmp<Field<Type>> operator op                                                 \
 (                                                                             \
     const CoeffField<Type1>& f1,                                              \
-    const tmp<Field<Type2> >& tf2                                             \
+    const tmp<Field<Type2>>& tf2                                             \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(tf2.ptr());                                          \
+    tmp<Field<Type>> tf(tf2.ptr());                                          \
     opFunc(tf(), f1, tf());                                                   \
     return tf;                                                                \
 }
@@ -265,13 +265,13 @@ tmp<Field<Type> > operator op                                                 \
 
 #define BINARY_OPERATOR_FT(Type1, Type2, op, opFunc)                          \
 template<class Type>                                                          \
-tmp<Field<Type> > operator op                                                 \
+tmp<Field<Type>> operator op                                                 \
 (                                                                             \
     const Field<Type1>& f1,                                                   \
-    const tmp<CoeffField<Type2> >& tf2                                        \
+    const tmp<CoeffField<Type2>>& tf2                                        \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf = f1 op tf2();                                       \
+    tmp<Field<Type>> tf = f1 op tf2();                                       \
     tf2.clear();                                                              \
     return tf;                                                                \
 }
@@ -279,13 +279,13 @@ tmp<Field<Type> > operator op                                                 \
 
 #define BINARY_OPERATOR_TRF(Type1, Type2, op, opFunc)                         \
 template<class Type>                                                          \
-tmp<Field<Type> > operator op                                                 \
+tmp<Field<Type>> operator op                                                 \
 (                                                                             \
-    const tmp<CoeffField<Type1> >& tf1,                                       \
+    const tmp<CoeffField<Type1>>& tf1,                                       \
     const Field<Type2>& f2                                                    \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(tf1.ptr());                                          \
+    tmp<Field<Type>> tf(tf1.ptr());                                          \
     opFunc(tf(), tf(), f2);                                                   \
     return tf;                                                                \
 }
@@ -293,13 +293,13 @@ tmp<Field<Type> > operator op                                                 \
 
 #define BINARY_OPERATOR_TF(Type1, Type2, op, opFunc)                          \
 template<class Type>                                                          \
-tmp<Field<Type> > operator op                                                 \
+tmp<Field<Type>> operator op                                                 \
 (                                                                             \
-    const tmp<CoeffField<Type1> >& tf1,                                       \
+    const tmp<CoeffField<Type1>>& tf1,                                       \
     const Field<Type2>& f2                                                    \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf = tf1() op f2;                                       \
+    tmp<Field<Type>> tf = tf1() op f2;                                       \
     tf1.clear();                                                              \
     return tf;                                                                \
 }
@@ -307,13 +307,13 @@ tmp<Field<Type> > operator op                                                 \
 
 #define BINARY_OPERATOR_TRT(Type1, Type2, op, opFunc)                         \
 template<class Type>                                                          \
-tmp<Field<Type> > operator op                                                 \
+tmp<Field<Type>> operator op                                                 \
 (                                                                             \
-    const tmp<CoeffField<Type1> >& tf1,                                       \
-    const tmp<Field<Type2> >& tf2                                             \
+    const tmp<CoeffField<Type1>>& tf1,                                       \
+    const tmp<Field<Type2>>& tf2                                             \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(tf1.ptr());                                          \
+    tmp<Field<Type>> tf(tf1.ptr());                                          \
     opFunc(tf(), tf(), tf2());                                                \
     tf2.clear();                                                              \
     return tf;                                                                \
@@ -322,13 +322,13 @@ tmp<Field<Type> > operator op                                                 \
 
 #define BINARY_OPERATOR_TTR(Type1, Type2, op, opFunc)                         \
 template<class Type>                                                          \
-tmp<Field<Type> > operator op                                                 \
+tmp<Field<Type>> operator op                                                 \
 (                                                                             \
-    const tmp<Field<Type1> >& tf1,                                            \
-    const tmp<CoeffField<Type2> >& tf2                                        \
+    const tmp<Field<Type1>>& tf1,                                            \
+    const tmp<CoeffField<Type2>>& tf2                                        \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(tf2.ptr());                                          \
+    tmp<Field<Type>> tf(tf2.ptr());                                          \
     opFunc(tf(), tf1(), tf());                                                \
     tf1.clear();                                                              \
     return tf;                                                                \

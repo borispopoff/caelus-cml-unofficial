@@ -80,7 +80,7 @@ private:
             label findMappedSrcFace
             (
                 const label tgtFaceI,
-                const List<DynamicList<label> >& tgtToSrc
+                const List<DynamicList<label>>& tgtToSrc
             ) const;
 
 
@@ -241,7 +241,7 @@ template<class SourcePatch, class TargetPatch>
 CML::label CML::mapNearestAMI<SourcePatch, TargetPatch>::findMappedSrcFace
 (
     const label tgtFaceI,
-    const List<DynamicList<label> >& tgtToSrc
+    const List<DynamicList<label>>& tgtToSrc
 ) const
 {
     DynamicList<label> testFaces(10);
@@ -347,8 +347,8 @@ void CML::mapNearestAMI<SourcePatch, TargetPatch>::calculate
 
 
     // temporary storage for addressing and weights
-    List<DynamicList<label> > srcAddr(this->srcPatch_.size());
-    List<DynamicList<label> > tgtAddr(this->tgtPatch_.size());
+    List<DynamicList<label>> srcAddr(this->srcPatch_.size());
+    List<DynamicList<label>> tgtAddr(this->tgtPatch_.size());
 
 
     // construct weights and addressing

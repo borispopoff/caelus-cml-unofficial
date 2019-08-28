@@ -114,7 +114,7 @@ private:
         (
             const pointField& points,
             const faceList& faces,
-            List<DynamicList<face> >& decomposedFaces,
+            List<DynamicList<face>>& decomposedFaces,
             OFstream& os
         ) const;
 
@@ -399,7 +399,7 @@ void CML::nastranSurfaceWriter::writeTemplate
         << "$" << nl
         << "BEGIN BULK" << nl;
 
-    List<DynamicList<face> > decomposedFaces(faces.size());
+    List<DynamicList<face>> decomposedFaces(faces.size());
 
     writeGeometry(points, faces, decomposedFaces, os);
 

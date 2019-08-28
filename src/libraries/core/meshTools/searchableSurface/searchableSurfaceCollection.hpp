@@ -102,7 +102,7 @@ private:
         void sortHits
         (
             const List<pointIndexHit>& info,
-            List<List<pointIndexHit> >& surfInfo,
+            List<List<pointIndexHit>>& surfInfo,
             labelListList& infoMap
         ) const;
 
@@ -223,7 +223,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const;
 
             //- From a set of points and indices get the region

@@ -100,7 +100,7 @@ public:
 
         //- Reconstruct volume internal field
         template<class Type>
-        tmp<DimensionedField<Type, volMesh> >
+        tmp<DimensionedField<Type, volMesh>>
         reconstructFvVolumeInternalField
         (
             const DimensionedField<Type, volMesh>&
@@ -108,14 +108,14 @@ public:
 
         //- Read and reconstruct volume internal field
         template<class Type>
-        tmp<DimensionedField<Type, volMesh> >
+        tmp<DimensionedField<Type, volMesh>>
         reconstructFvVolumeInternalField(const IOobject& fieldIoObject) const;
 
 
 
         //- Reconstruct volume field
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> >
+        tmp<GeometricField<Type, fvPatchField, volMesh>>
         reconstructFvVolumeField
         (
             const GeometricField<Type, fvPatchField, volMesh>& fld
@@ -123,14 +123,14 @@ public:
 
         //- Read and reconstruct volume field
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> >
+        tmp<GeometricField<Type, fvPatchField, volMesh>>
         reconstructFvVolumeField(const IOobject& fieldIoObject) const;
 
 
 
         //- Reconstruct surface field
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         reconstructFvSurfaceField
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>&
@@ -138,7 +138,7 @@ public:
 
         //- Read and reconstruct surface field
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         reconstructFvSurfaceField(const IOobject& fieldIoObject) const;
 
 
@@ -194,7 +194,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::DimensionedField<Type, CML::volMesh> >
+CML::tmp<CML::DimensionedField<Type, CML::volMesh>>
 CML::parFvFieldReconstructor::reconstructFvVolumeInternalField
 (
     const DimensionedField<Type, volMesh>& fld
@@ -219,7 +219,7 @@ CML::parFvFieldReconstructor::reconstructFvVolumeInternalField
         IOobject::NO_WRITE
     );
 
-    return tmp<DimensionedField<Type, volMesh> >
+    return tmp<DimensionedField<Type, volMesh>>
     (
         new DimensionedField<Type, volMesh>
         (
@@ -233,7 +233,7 @@ CML::parFvFieldReconstructor::reconstructFvVolumeInternalField
 
 
 template<class Type>
-CML::tmp<CML::DimensionedField<Type, CML::volMesh> >
+CML::tmp<CML::DimensionedField<Type, CML::volMesh>>
 CML::parFvFieldReconstructor::reconstructFvVolumeInternalField
 (
     const IOobject& fieldIoObject
@@ -253,7 +253,7 @@ CML::parFvFieldReconstructor::reconstructFvVolumeInternalField
 
 // Reconstruct a field onto the baseMesh
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh>>
 CML::parFvFieldReconstructor::reconstructFvVolumeField
 (
     const GeometricField<Type, fvPatchField, volMesh>& fld
@@ -276,7 +276,7 @@ CML::parFvFieldReconstructor::reconstructFvVolumeField
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Note: patchFields still on mesh, not baseMesh
 
-    PtrList<fvPatchField<Type> > patchFields(fld.mesh().boundary().size());
+    PtrList<fvPatchField<Type>> patchFields(fld.mesh().boundary().size());
 
     const typename GeometricField
     <
@@ -304,7 +304,7 @@ CML::parFvFieldReconstructor::reconstructFvVolumeField
     }
 
 
-    PtrList<fvPatchField<Type> > basePatchFields
+    PtrList<fvPatchField<Type>> basePatchFields
     (
         baseMesh_.boundary().size()
     );
@@ -366,7 +366,7 @@ CML::parFvFieldReconstructor::reconstructFvVolumeField
         IOobject::NO_WRITE
     );
 
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -381,7 +381,7 @@ CML::parFvFieldReconstructor::reconstructFvVolumeField
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh>>
 CML::parFvFieldReconstructor::reconstructFvVolumeField
 (
     const IOobject& fieldIoObject
@@ -400,7 +400,7 @@ CML::parFvFieldReconstructor::reconstructFvVolumeField
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::parFvFieldReconstructor::reconstructFvSurfaceField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& fld
@@ -446,7 +446,7 @@ CML::parFvFieldReconstructor::reconstructFvSurfaceField
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Note: patchFields still on mesh, not baseMesh
 
-    PtrList<fvsPatchField<Type> > patchFields(fld.mesh().boundary().size());
+    PtrList<fvsPatchField<Type>> patchFields(fld.mesh().boundary().size());
 
     const typename GeometricField
     <
@@ -474,7 +474,7 @@ CML::parFvFieldReconstructor::reconstructFvSurfaceField
     }
 
 
-    PtrList<fvsPatchField<Type> > basePatchFields
+    PtrList<fvsPatchField<Type>> basePatchFields
     (
         baseMesh_.boundary().size()
     );
@@ -536,7 +536,7 @@ CML::parFvFieldReconstructor::reconstructFvSurfaceField
         IOobject::NO_WRITE
     );
 
-    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -551,7 +551,7 @@ CML::parFvFieldReconstructor::reconstructFvSurfaceField
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::parFvFieldReconstructor::reconstructFvSurfaceField
 (
     const IOobject& fieldIoObject
@@ -593,7 +593,7 @@ void CML::parFvFieldReconstructor::reconstructFvVolumeInternalFields
             {
                 Info<< "        " << fieldIter()->name() << endl;
 
-                tmp<DimensionedField<Type, volMesh> > tfld
+                tmp<DimensionedField<Type, volMesh>> tfld
                 (
                     reconstructFvVolumeInternalField<Type>(*fieldIter())
                 );
@@ -637,7 +637,7 @@ void CML::parFvFieldReconstructor::reconstructFvVolumeFields
             {
                 Info<< "        " << name << endl;
 
-                tmp<GeometricField<Type, fvPatchField, volMesh> > tfld
+                tmp<GeometricField<Type, fvPatchField, volMesh>> tfld
                 (
                     reconstructFvVolumeField<Type>(*fieldIter())
                 );
@@ -678,7 +678,7 @@ void CML::parFvFieldReconstructor::reconstructFvSurfaceFields
             {
                 Info<< "        " << fieldIter()->name() << endl;
 
-                tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tfld
+                tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tfld
                 (
                     reconstructFvSurfaceField<Type>(*fieldIter())
                 );

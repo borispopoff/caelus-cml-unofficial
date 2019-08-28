@@ -94,7 +94,7 @@ protected:
         labelList srcNonOverlap_;
 
         //- Octree used to find face seeds
-        autoPtr<indexedOctree<treeType> > treePtr_;
+        autoPtr<indexedOctree<treeType>> treePtr_;
 
         //- Face triangulation mode
         const faceAreaIntersect::triangulationMode triMode_;
@@ -605,7 +605,7 @@ bool CML::AMIMethod<SourcePatch, TargetPatch>::conformal() const
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class SourcePatch, class TargetPatch>
-CML::autoPtr<CML::AMIMethod<SourcePatch, TargetPatch> >
+CML::autoPtr<CML::AMIMethod<SourcePatch, TargetPatch>>
 CML::AMIMethod<SourcePatch, TargetPatch>::New
 (
     const word& methodName,
@@ -635,7 +635,7 @@ CML::AMIMethod<SourcePatch, TargetPatch>::New
             << componentsConstructorTablePtr_->sortedToc() << exit(FatalError);
     }
 
-    return autoPtr<AMIMethod<SourcePatch, TargetPatch> >
+    return autoPtr<AMIMethod<SourcePatch, TargetPatch>>
     (
         cstrIter()
         (

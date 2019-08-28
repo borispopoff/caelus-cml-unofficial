@@ -102,7 +102,7 @@ public:
         List(const List<T>&);
 
         //- Construct by transferring the parameter contents
-        List(const Xfer<List<T> >&);
+        List(const Xfer<List<T>>&);
 
         //- Construct as copy or re-use as specified.
         List(List<T>&, bool reuse);
@@ -134,7 +134,7 @@ public:
         List(Istream&);
 
         //- Clone
-        inline autoPtr<List<T> > clone() const;
+        inline autoPtr<List<T>> clone() const;
 
 
     //- Destructor
@@ -193,7 +193,7 @@ public:
             void transfer(SortableList<T>&);
 
             //- Transfer contents to the Xfer container
-            inline Xfer<List<T> > xfer();
+            inline Xfer<List<T>> xfer();
 
             //- Return subscript-checked element of UList.
             inline T& newElmt(const label);
@@ -253,9 +253,9 @@ inline CML::List<T>::List()
 
 
 template<class T>
-inline CML::autoPtr<CML::List<T> > CML::List<T>::clone() const
+inline CML::autoPtr<CML::List<T>> CML::List<T>::clone() const
 {
-    return autoPtr<List<T> >(new List<T>(*this));
+    return autoPtr<List<T>>(new List<T>(*this));
 }
 
 
@@ -264,7 +264,7 @@ inline CML::autoPtr<CML::List<T> > CML::List<T>::clone() const
 template<class T>
 inline const CML::List<T>& CML::List<T>::null()
 {
-    return NullSingletonRef< List<T> >();
+    return NullSingletonRef< List<T>>();
 }
 
 
@@ -309,7 +309,7 @@ inline CML::label CML::List<T>::size() const
 
 
 template<class T>
-inline CML::Xfer<CML::List<T> > CML::List<T>::xfer()
+inline CML::Xfer<CML::List<T>> CML::List<T>::xfer()
 {
     return xferMove(*this);
 }
@@ -459,7 +459,7 @@ CML::List<T>::List(const List<T>& a)
 
 // Construct by transferring the parameter contents
 template<class T>
-CML::List<T>::List(const Xfer<List<T> >& lst)
+CML::List<T>::List(const Xfer<List<T>>& lst)
 {
     transfer(lst());
 }
@@ -917,7 +917,7 @@ CML::Istream& CML::operator>>(Istream& is, List<T>& L)
     {
         L.transfer
         (
-            dynamicCast<token::Compound<List<T> > >
+            dynamicCast<token::Compound<List<T>>>
             (
                 firstToken.transferCompoundToken(is)
             )

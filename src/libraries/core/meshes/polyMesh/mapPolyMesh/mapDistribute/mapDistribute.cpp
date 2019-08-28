@@ -210,7 +210,7 @@ CML::mapDistribute::mapDistribute
 (
     const globalIndex& globalNumbering,
     labelList& elements,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -228,7 +228,7 @@ CML::mapDistribute::mapDistribute
 (
     const globalIndex& globalNumbering,
     labelListList& cellCells,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -250,7 +250,7 @@ CML::mapDistribute::mapDistribute
     const globalIndexAndTransform& globalTransforms,
     const labelPairList& transformedElements,
     labelList& transformedIndices,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -355,7 +355,7 @@ CML::mapDistribute::mapDistribute
     const globalIndexAndTransform& globalTransforms,
     const List<labelPairList>& transformedElements,
     labelListList& transformedIndices,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :

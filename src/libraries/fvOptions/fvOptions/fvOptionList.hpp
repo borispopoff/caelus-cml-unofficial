@@ -110,14 +110,14 @@ public:
 
             //- Return source for equation
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 GeometricField<Type, fvPatchField, volMesh>& fld
             );
 
             //- Return source for equation with specified name
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 GeometricField<Type, fvPatchField, volMesh>& fld,
                 const word& fieldName
@@ -125,7 +125,7 @@ public:
 
             //- Return source for equation
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 const volScalarField& rho,
                 GeometricField<Type, fvPatchField, volMesh>& fld
@@ -133,7 +133,7 @@ public:
 
             //- Return source for equation with specified name
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 const volScalarField& rho,
                 GeometricField<Type, fvPatchField, volMesh>& fld,
@@ -142,7 +142,7 @@ public:
 
             //- Return source for equation
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
@@ -151,7 +151,7 @@ public:
 
             //- Return source for equation with specified name
             template<class Type>
-            tmp<fvMatrix<Type> > operator()
+            tmp<fvMatrix<Type>> operator()
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
@@ -222,7 +222,7 @@ void CML::fv::optionList::correct
 
 
 template<class Type>
-CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
     GeometricField<Type, fvPatchField, volMesh>& fld
 )
@@ -232,7 +232,7 @@ CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
 
 
 template<class Type>
-CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
     GeometricField<Type, fvPatchField, volMesh>& fld,
     const word& fieldName
@@ -242,7 +242,7 @@ CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
 
     const dimensionSet ds = fld.dimensions()/dimTime*dimVolume;
 
-    tmp<fvMatrix<Type> > tmtx(new fvMatrix<Type>(fld, ds));
+    tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(fld, ds));
     fvMatrix<Type>& mtx = tmtx();
 
     forAll(*this, i)
@@ -275,7 +275,7 @@ CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
 
 
 template<class Type>
-CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
     const volScalarField& rho,
     GeometricField<Type, fvPatchField, volMesh>& fld
@@ -286,7 +286,7 @@ CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
 
 
 template<class Type>
-CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
     const volScalarField& rho,
     GeometricField<Type, fvPatchField, volMesh>& fld,
@@ -297,7 +297,7 @@ CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
 
     const dimensionSet ds = rho.dimensions()*fld.dimensions()/dimTime*dimVolume;
 
-    tmp<fvMatrix<Type> > tmtx(new fvMatrix<Type>(fld, ds));
+    tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(fld, ds));
     fvMatrix<Type>& mtx = tmtx();
 
     forAll(*this, i)
@@ -330,7 +330,7 @@ CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
 
 
 template<class Type>
-CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -342,7 +342,7 @@ CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
 
 
 template<class Type>
-CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -355,7 +355,7 @@ CML::tmp<CML::fvMatrix<Type> > CML::fv::optionList::operator()
     const dimensionSet ds =
         alpha.dimensions()*rho.dimensions()*fld.dimensions()/dimTime*dimVolume;
 
-    tmp<fvMatrix<Type> > tmtx(new fvMatrix<Type>(fld, ds));
+    tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(fld, ds));
     fvMatrix<Type>& mtx = tmtx();
 
     forAll(*this, i)

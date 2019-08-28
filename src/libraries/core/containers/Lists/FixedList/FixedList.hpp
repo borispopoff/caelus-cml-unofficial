@@ -79,7 +79,7 @@ public:
 
     //- Hashing function class.
     //  Use Hasher directly for contiguous data. Otherwise hash incrementally.
-    template< class HashT=Hash<T> >
+    template< class HashT=Hash<T>>
     class Hash
     {
     public:
@@ -131,7 +131,7 @@ public:
         FixedList(Istream&);
 
         //- Clone
-        inline autoPtr< FixedList<T, Size> > clone() const;
+        inline autoPtr< FixedList<T, Size>> clone() const;
 
 
     // Member Functions
@@ -463,10 +463,10 @@ inline CML::FixedList<T, Size>::FixedList(const FixedList<T, Size>& lst)
 
 
 template<class T, unsigned Size>
-inline CML::autoPtr< CML::FixedList<T, Size> >
+inline CML::autoPtr< CML::FixedList<T, Size>>
 CML::FixedList<T, Size>::clone() const
 {
-    return autoPtr< FixedList<T, Size> >(new FixedList<T, Size>(*this));
+    return autoPtr< FixedList<T, Size>>(new FixedList<T, Size>(*this));
 }
 
 
@@ -475,7 +475,7 @@ CML::FixedList<T, Size>::clone() const
 template<class T, unsigned Size>
 inline const CML::FixedList<T, Size>& CML::FixedList<T, Size>::null()
 {
-    return NullSingletonRef< FixedList<T, Size> >();
+    return NullSingletonRef< FixedList<T, Size>>();
 }
 
 
@@ -951,7 +951,7 @@ CML::Istream& CML::operator>>(CML::Istream& is, FixedList<T, Size>& L)
 
         if (firstToken.isCompound())
         {
-            L = dynamicCast<token::Compound<List<T> > >
+            L = dynamicCast<token::Compound<List<T>>>
             (
                 firstToken.transferCompoundToken(is)
             );

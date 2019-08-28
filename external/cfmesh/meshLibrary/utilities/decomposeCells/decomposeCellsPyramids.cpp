@@ -37,7 +37,7 @@ void decomposeCells::findAddressingForCell
     const label cellI,
     DynList<label, 32>& vrt,
     DynList<edge, 64>& edges,
-    DynList<DynList<label, 8> >& faceEdges,
+    DynList<DynList<label, 8>>& faceEdges,
     DynList<DynList<label, 2>, 64>& edgeFaces
 ) const
 {
@@ -166,7 +166,7 @@ void decomposeCells::decomposeCellIntoPyramids(const label cellI)
     //- calculate edges, faceEdges and edgeFaces addressing
     DynList<label, 32> vrt;
     DynList<edge, 64> edges;
-    DynList<DynList<label, 8> > faceEdges;
+    DynList<DynList<label, 8>> faceEdges;
     faceEdges.setSize(c.size());
     DynList<DynList<label, 2>, 64> edgeFaces;
     findAddressingForCell(cellI, vrt, edges, faceEdges, edgeFaces);
@@ -183,7 +183,7 @@ void decomposeCells::decomposeCellIntoPyramids(const label cellI)
         Info << "Face " << faces[c[fI]] << " is a base face" << endl;
         #endif
         const face& f = faces[c[fI]];
-        DynList<DynList<label, 8> > cellFaces;
+        DynList<DynList<label, 8>> cellFaces;
         cellFaces.setSize(f.size() + 1);
 
         DynList<triFace> triFaces;

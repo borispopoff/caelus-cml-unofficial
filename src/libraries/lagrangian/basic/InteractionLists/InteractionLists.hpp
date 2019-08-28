@@ -43,7 +43,7 @@ Description
     Requiring data:
 
     \verbatim
-    List<DynamicList<typename CloudType::parcelType*> > cellOccupancy_;
+    List<DynamicList<typename CloudType::parcelType*>> cellOccupancy_;
     \endverbatim
 
 
@@ -144,7 +144,7 @@ class InteractionLists
         List<vector> referredWallData_;
 
         //- Referred particle container
-        List<IDLList<ParticleType> > referredParticles_;
+        List<IDLList<ParticleType>> referredParticles_;
 
 
     // Private Member Functions
@@ -176,7 +176,7 @@ class InteractionLists
         //  will be referred
         void prepareParticlesToRefer
         (
-            const List<DynamicList<ParticleType*> >& cellOccupancy
+            const List<DynamicList<ParticleType*>>& cellOccupancy
         );
 
         //- Prepare particle to be referred
@@ -231,7 +231,7 @@ public:
         //  nonBlocking communication
         void sendReferredData
         (
-            const List<DynamicList<ParticleType*> >& cellOccupancy,
+            const List<DynamicList<ParticleType*>>& cellOccupancy,
             PstreamBuffers& pBufs
         );
 
@@ -291,11 +291,11 @@ public:
             inline const List<vector>& referredWallData() const;
 
             //- Return access to the referred particle container
-            inline const List<IDLList<ParticleType> >&
+            inline const List<IDLList<ParticleType>>&
             referredParticles() const;
 
             //- Return non-const access to the referred particle container
-            inline List<IDLList<ParticleType> >& referredParticles();
+            inline List<IDLList<ParticleType>>& referredParticles();
 };
 
 
@@ -414,7 +414,7 @@ CML::InteractionLists<ParticleType>::referredWallData() const
 
 
 template<class ParticleType>
-const CML::List<CML::IDLList<ParticleType> >&
+const CML::List<CML::IDLList<ParticleType>>&
 CML::InteractionLists<ParticleType>::referredParticles() const
 {
     return referredParticles_;
@@ -422,7 +422,7 @@ CML::InteractionLists<ParticleType>::referredParticles() const
 
 
 template<class ParticleType>
-CML::List<CML::IDLList<ParticleType> >&
+CML::List<CML::IDLList<ParticleType>>&
 CML::InteractionLists<ParticleType>::referredParticles()
 {
     return referredParticles_;
@@ -683,7 +683,7 @@ void CML::InteractionLists<ParticleType>::buildInteractionLists()
     rilInverse_.setSize(mesh_.nCells());
 
     // Temporary Dynamic lists for accumulation
-    List<DynamicList<label> > rilInverseTemp(rilInverse_.size());
+    List<DynamicList<label>> rilInverseTemp(rilInverse_.size());
 
     // Loop over all referred cells
     forAll(ril_, refCelli)
@@ -900,7 +900,7 @@ void CML::InteractionLists<ParticleType>::buildInteractionLists()
     rwfilInverse_.setSize(mesh_.nCells());
 
     // Temporary Dynamic lists for accumulation
-    List<DynamicList<label> > rwfilInverseTemp(rwfilInverse_.size());
+    List<DynamicList<label>> rwfilInverseTemp(rwfilInverse_.size());
 
     // Loop over all referred wall faces
     forAll(rwfil_, refWallFacei)
@@ -1306,7 +1306,7 @@ void CML::InteractionLists<ParticleType>::buildMap
 template<class ParticleType>
 void CML::InteractionLists<ParticleType>::prepareParticlesToRefer
 (
-    const List<DynamicList<ParticleType*> >& cellOccupancy
+    const List<DynamicList<ParticleType*>>& cellOccupancy
 )
 {
     const globalIndexAndTransform& globalTransforms =
@@ -1544,7 +1544,7 @@ CML::InteractionLists<ParticleType>::~InteractionLists()
 template<class ParticleType>
 void CML::InteractionLists<ParticleType>::sendReferredData
 (
-    const List<DynamicList<ParticleType*> >& cellOccupancy,
+    const List<DynamicList<ParticleType*>>& cellOccupancy,
     PstreamBuffers& pBufs
 )
 {
@@ -1569,7 +1569,7 @@ void CML::InteractionLists<ParticleType>::sendReferredData
         {
             UOPstream toDomain(domain, pBufs);
 
-            UIndirectList<IDLList<ParticleType> > subMappedParticles
+            UIndirectList<IDLList<ParticleType>> subMappedParticles
             (
                 referredParticles_,
                 subMap

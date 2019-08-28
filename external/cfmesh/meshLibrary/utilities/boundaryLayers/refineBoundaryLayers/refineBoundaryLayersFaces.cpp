@@ -53,7 +53,7 @@ void refineBoundaryLayers::refineFace
         WarningIn
         (
             "void refineBoundaryLayers::refineFace(const face&,"
-            " const FixedList<label, 2>&, DynList<DynList<label, 4> >&)"
+            " const FixedList<label, 2>&, DynList<DynList<label, 4>>&)"
         ) << "Face " << f << " is not a quad" << endl;
         return;
     }
@@ -235,7 +235,7 @@ void refineBoundaryLayers::refineFace
     # endif
 
     //- map the face onto a matrix for easier orientation
-    DynList<DynList<label> > facePoints;
+    DynList<DynList<label>> facePoints;
     facePoints.setSize(nLayersDir0+1);
     forAll(facePoints, i)
     {
@@ -434,7 +434,7 @@ void refineBoundaryLayers::refineFace
 void refineBoundaryLayers::sortFacePoints
 (
     const label faceI,
-    DynList<DynList<label> >& facePoints,
+    DynList<DynList<label>>& facePoints,
     const label transpose
 ) const
 {
@@ -637,7 +637,7 @@ void refineBoundaryLayers::sortFacePoints
 
     if( transpose )
     {
-        DynList<DynList<label> > transposedFacePoints;
+        DynList<DynList<label>> transposedFacePoints;
         transposedFacePoints.setSize(facePoints[0].size());
         forAll(transposedFacePoints, j)
             transposedFacePoints[j].setSize(facePoints.size());
@@ -657,7 +657,7 @@ void refineBoundaryLayers::sortFacePoints
 void refineBoundaryLayers::sortFaceFaces
 (
     const label faceI,
-    DynList<DynList<label> >& faceFaces,
+    DynList<DynList<label>>& faceFaces,
     const label transpose
 ) const
 {
@@ -785,7 +785,7 @@ void refineBoundaryLayers::sortFaceFaces
 
     if( transpose )
     {
-        DynList<DynList<label> > transposedFaceFaces;
+        DynList<DynList<label>> transposedFaceFaces;
         transposedFaceFaces.setSize(faceFaces[0].size());
         forAll(transposedFaceFaces, j)
             transposedFaceFaces[j].setSize(faceFaces.size());
@@ -887,7 +887,7 @@ void refineBoundaryLayers::generateNewFaces()
         forAllRow(facesFromFace_, faceI, i)
             Pout << "New face " << i << " is "
                  << newFaces_[facesFromFace_(faceI, i)] << endl;
-        DynList<DynList<label> > tralala;
+        DynList<DynList<label>> tralala;
         sortFacePoints(faceI, tralala);
         # endif
     }
@@ -979,7 +979,7 @@ void refineBoundaryLayers::generateNewFaces()
 
         //- exchange information about the number of splits
         //- to other processors
-        std::map<label, DynList<labelPair, 2> > localSplits;
+        std::map<label, DynList<labelPair, 2>> localSplits;
         forAll(procBoundaries, patchI)
         {
             labelLongList sendData;
@@ -1095,7 +1095,7 @@ void refineBoundaryLayers::generateNewFaces()
             {
                 const label faceI = start + fI;
 
-                std::map<label, DynList<labelPair, 2> >::const_iterator it =
+                std::map<label, DynList<labelPair, 2>>::const_iterator it =
                     localSplits.find(faceI);
 
                 if( it == localSplits.end() )

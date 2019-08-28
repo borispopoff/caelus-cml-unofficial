@@ -59,7 +59,7 @@ void meshSurfaceMapper::preMapVertices(const label nIterations)
     const triSurf& surf = meshOctree_.surface();
 
     List<labelledPointScalar> preMapPositions(boundaryPoints.size());
-    List<DynList<scalar, 6> > faceCentreDistances(bFaces.size());
+    List<DynList<scalar, 6>> faceCentreDistances(bFaces.size());
 
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 20)
@@ -80,7 +80,7 @@ void meshSurfaceMapper::preMapVertices(const label nIterations)
     for(label iterI=0;iterI<nIterations;++iterI)
     {
         //- find patches in the vicinity of a boundary face
-        List<DynList<label> > boundaryPointPatches(boundaryPoints.size());
+        List<DynList<label>> boundaryPointPatches(boundaryPoints.size());
         # ifdef USE_OMP
         # pragma omp parallel for schedule(dynamic, 50)
         # endif
@@ -173,7 +173,7 @@ void meshSurfaceMapper::preMapVertices(const label nIterations)
                 surfaceEngine_.globalToLocalBndPointAddressing();
 
             //- collect data to be sent to other processors
-            std::map<label, LongList<labelledPointScalar> > exchangeData;
+            std::map<label, LongList<labelledPointScalar>> exchangeData;
             forAll(surfaceEngine_.bpNeiProcs(), i)
                 exchangeData.insert
                 (

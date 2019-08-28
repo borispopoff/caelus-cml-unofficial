@@ -52,7 +52,7 @@ class stabilisedConvectionScheme
 :
     public fv::convectionScheme<Type>
 {
-    tmp<fv::convectionScheme<Type> > scheme_;
+    tmp<fv::convectionScheme<Type>> scheme_;
 
     //- Disallow default bitwise copy construct
     stabilisedConvectionScheme(const stabilisedConvectionScheme&);
@@ -81,25 +81,25 @@ public:
     )
     {}
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > interpolate
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     ) const;
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > flux
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     ) const;
 
-    tmp<fvMatrix<Type> > fvmDiv
+    tmp<fvMatrix<Type>> fvmDiv
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     ) const;
 
-    tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDiv
+    tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDiv
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
@@ -122,7 +122,7 @@ namespace fv
 {
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 stabilisedConvectionScheme<Type>::interpolate
 (
     const surfaceScalarField& phi,
@@ -134,7 +134,7 @@ stabilisedConvectionScheme<Type>::interpolate
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 stabilisedConvectionScheme<Type>::flux
 (
     const surfaceScalarField& faceFlux,
@@ -146,7 +146,7 @@ stabilisedConvectionScheme<Type>::flux
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 stabilisedConvectionScheme<Type>::fvmDiv
 (
     const surfaceScalarField& faceFlux,
@@ -160,7 +160,7 @@ stabilisedConvectionScheme<Type>::fvmDiv
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 stabilisedConvectionScheme<Type>::fvcDiv
 (
     const surfaceScalarField& faceFlux,

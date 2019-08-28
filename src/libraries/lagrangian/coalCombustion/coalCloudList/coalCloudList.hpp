@@ -114,7 +114,7 @@ public:
 #include "volFields.hpp"
 #include "DimensionedField.hpp"
 
-CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh>>
 CML::coalCloudList::UTrans() const
 {
     tmp<volVectorField::Internal> tfld
@@ -162,7 +162,7 @@ CML::tmp<CML::fvVectorMatrix> CML::coalCloudList::SU
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::coalCloudList::hsTrans() const
 {
     tmp<volScalarField::Internal> tfld
@@ -228,7 +228,7 @@ CML::tmp<CML::fvScalarMatrix> CML::coalCloudList::SYi
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::coalCloudList::rhoTrans() const
 {
     tmp<volScalarField::Internal> tfld
@@ -263,7 +263,7 @@ CML::coalCloudList::rhoTrans() const
 
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::coalCloudList::Srho() const
 {
     tmp<volScalarField::Internal> tfld
@@ -294,7 +294,7 @@ CML::coalCloudList::Srho() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::coalCloudList::Srho
 (
     const label i

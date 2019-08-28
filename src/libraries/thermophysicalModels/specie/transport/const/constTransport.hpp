@@ -112,7 +112,7 @@ public:
     //- Construct and return a clone
     inline autoPtr<constTransport> clone() const
     {
-        return autoPtr<constTransport<Thermo> >
+        return autoPtr<constTransport<Thermo>>
         (
             new constTransport<Thermo>(*this)
         );
@@ -122,7 +122,7 @@ public:
     // Selector from dictionary
     inline static autoPtr<constTransport> New(const dictionary& dict)
     {
-        return autoPtr<constTransport<Thermo> >
+        return autoPtr<constTransport<Thermo>>
         (
             new constTransport<Thermo>(dict)
         );

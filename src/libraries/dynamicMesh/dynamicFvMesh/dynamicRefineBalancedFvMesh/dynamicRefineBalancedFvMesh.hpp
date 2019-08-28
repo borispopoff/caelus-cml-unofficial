@@ -66,7 +66,7 @@ private:
     volScalarField* internalRefinementFieldPtr_;
 
     //- Hash table of gradieint fields
-    HashTable< Pair<scalar> > gradFields_;
+    HashTable<Pair<scalar>> gradFields_;
 
     //- Hash table of regions
     PtrList<entry> refinedRegions_;

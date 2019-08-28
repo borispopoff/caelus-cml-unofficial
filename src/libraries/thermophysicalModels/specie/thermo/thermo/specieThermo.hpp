@@ -83,7 +83,7 @@ template<class Thermo, template<class> class Type>
 class thermo
 :
     public Thermo,
-    public Type<thermo<Thermo, Type> >
+    public Type<thermo<Thermo, Type>>
 {
 
     //- Convergence tolerance of energy -> temperature inversion functions
@@ -199,13 +199,13 @@ public:
     {
         return
               Thermo::typeName() + ','
-            + Type<thermo<Thermo, Type> >::typeName();
+            + Type<thermo<Thermo, Type>>::typeName();
     }
 
     //- Name of Enthalpy/Internal energy
     static inline word heName()
     {
-        return Type<thermo<Thermo, Type> >::energyName();
+        return Type<thermo<Thermo, Type>>::energyName();
     }
 
 
@@ -242,7 +242,7 @@ public:
     //- Heat capacity at constant pressure/volume [J/(kg K)]
     inline scalar Cpv(const scalar p, const scalar T) const
     {
-        return Type<thermo<Thermo, Type> >::Cpv(*this, p, T);
+        return Type<thermo<Thermo, Type>>::Cpv(*this, p, T);
     }
 
     //- Gamma = Cp/Cv []
@@ -256,13 +256,13 @@ public:
     //  constant pressure/volume []
     inline scalar CpByCpv(const scalar p, const scalar T) const
     {
-        return Type<thermo<Thermo, Type> >::CpByCpv(*this, p, T);
+        return Type<thermo<Thermo, Type>>::CpByCpv(*this, p, T);
     }
 
     //- Enthalpy/Internal energy [J/kg]
     inline scalar HE(const scalar p, const scalar T) const
     {
-        return Type<thermo<Thermo, Type> >::HE(*this, p, T);
+        return Type<thermo<Thermo, Type>>::HE(*this, p, T);
     }
 
     //- Gibbs free energy [J/kg]
@@ -446,7 +446,7 @@ public:
         const scalar T0
     ) const
     {
-        return Type<thermo<Thermo, Type> >::THE(*this, he, p, T0);
+        return Type<thermo<Thermo, Type>>::THE(*this, he, p, T0);
     }
 
     //- Temperature from sensible enthalpy given an initial T0

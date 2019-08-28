@@ -66,12 +66,12 @@ void ReaderParticleCloud::clearData()
 }
 
 template <typename T>
-tmp<Field<T> > filterValues(
+tmp<Field<T>> filterValues(
     const Field<T> &orig,
     const boolList &mask,
     label size
 ) {
-    tmp<Field<T> > pResult(
+    tmp<Field<T>> pResult(
         new Field<T>(
             size,
             pTraits<T>::zero

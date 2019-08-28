@@ -4629,7 +4629,7 @@ void CML::hexRef8::checkMesh() const
             {
                 // Check how many faces between owner and neighbour. Should
                 // be only one.
-                HashTable<label, labelPair, labelPair::Hash<> >
+                HashTable<label, labelPair, labelPair::Hash<>>
                     cellToFace(2*pp.size());
 
                 label facei = pp.start();

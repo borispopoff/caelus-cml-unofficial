@@ -124,9 +124,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<vector> > clone() const
+        virtual tmp<fvPatchField<vector>> clone() const
         {
-            return tmp<fvPatchField<vector> >
+            return tmp<fvPatchField<vector>>
             (
                 new waveVelocityFvPatchVectorField(*this)
             );
@@ -140,13 +140,13 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<vector> > clone
+        virtual tmp<fvPatchField<vector>> clone
         (
             const DimensionedField<vector,
             volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<vector> >
+            return tmp<fvPatchField<vector>>
             (
                 new waveVelocityFvPatchVectorField(*this, iF)
             );

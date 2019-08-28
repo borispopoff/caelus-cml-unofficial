@@ -73,13 +73,13 @@ protected:
     label nSpecie_;
 
     //- List of reaction rate per gas [kg/m3/s]
-    PtrList<DimensionedField<scalar, volMesh> > RRg_;
+    PtrList<DimensionedField<scalar, volMesh>> RRg_;
 
 
     // Protected Member Functions
 
     //- Write access to source terms for gases
-    inline PtrList<DimensionedField<scalar, volMesh> >& RRg()
+    inline PtrList<DimensionedField<scalar, volMesh>>& RRg()
     {
         return RRg_;
     }
@@ -197,9 +197,9 @@ public:
     }
 
     //- Return total gas source term
-    inline tmp<DimensionedField<scalar, volMesh> > RRg() const
+    inline tmp<DimensionedField<scalar, volMesh>> RRg() const
     {
-        tmp<DimensionedField<scalar, volMesh> > tRRg
+        tmp<DimensionedField<scalar, volMesh>> tRRg
         (
             new DimensionedField<scalar, volMesh>
             (

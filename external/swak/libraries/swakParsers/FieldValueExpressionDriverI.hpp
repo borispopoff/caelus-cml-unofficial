@@ -715,7 +715,7 @@ template<class T> struct FieldValueExpressionDriver::correctBC {
         }
 };
 
-template<class T> struct FieldValueExpressionDriver::correctBC<GeometricField<T,fvPatchField,volMesh> > {
+template<class T> struct FieldValueExpressionDriver::correctBC<GeometricField<T,fvPatchField,volMesh>> {
     typedef GeometricField<T,fvPatchField,volMesh> theType;
 
     inline void operator()(const theType &val)
@@ -731,7 +731,7 @@ template<class T> struct FieldValueExpressionDriver::correctBC<GeometricField<T,
         }
 };
 
-template<class T> struct FieldValueExpressionDriver::correctBC<GeometricField<T,pointPatchField,pointMesh> > {
+template<class T> struct FieldValueExpressionDriver::correctBC<GeometricField<T,pointPatchField,pointMesh>> {
     typedef GeometricField<T,pointPatchField,pointMesh> theType;
 
     inline void operator()(const theType &val)
@@ -786,7 +786,7 @@ bool FieldValueExpressionDriver::resultIsTyp(bool isLogical)
 }
 
 template<class Type>
-inline autoPtr<GeometricField<Type,pointPatchField,pointMesh> >
+inline autoPtr<GeometricField<Type,pointPatchField,pointMesh>>
 FieldValueExpressionDriver::cellToPointInterpolate(
     const GeometricField<Type,fvPatchField,volMesh> &field
 ) {
@@ -797,7 +797,7 @@ FieldValueExpressionDriver::cellToPointInterpolate(
 }
 
 template<class Type>
-inline autoPtr<GeometricField<Type,fvPatchField,volMesh> >
+inline autoPtr<GeometricField<Type,fvPatchField,volMesh>>
 FieldValueExpressionDriver::pointToCellInterpolate(
     const GeometricField<Type,pointPatchField,pointMesh> &field
 ) {

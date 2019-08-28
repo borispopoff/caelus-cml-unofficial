@@ -42,7 +42,7 @@ namespace fv
 {
 
 template<>
-tmp<BlockLduSystem<vector, vector> > blockLeastSquaresGrad<scalar>::fvmGrad
+tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
 (
     const GeometricField<scalar, fvPatchField, volMesh>& vf
 ) const
@@ -72,7 +72,7 @@ tmp<BlockLduSystem<vector, vector> > blockLeastSquaresGrad<scalar>::fvmGrad
 
     const surfaceScalarField& w = mesh.weights();
 
-    tmp<BlockLduSystem<vector, vector> > tbs
+    tmp<BlockLduSystem<vector, vector>> tbs
     (
         new BlockLduSystem<vector, vector>(mesh)
     );

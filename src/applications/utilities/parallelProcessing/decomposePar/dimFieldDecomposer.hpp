@@ -96,7 +96,7 @@ public:
 
         //- Decompose field
         template<class Type>
-        tmp<DimensionedField<Type, volMesh> > decomposeField
+        tmp<DimensionedField<Type, volMesh>> decomposeField
         (
             const DimensionedField<Type, volMesh>& field
         ) const;
@@ -116,7 +116,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::DimensionedField<Type, CML::volMesh> >
+CML::tmp<CML::DimensionedField<Type, CML::volMesh>>
 CML::dimFieldDecomposer::decomposeField
 (
     const DimensionedField<Type, volMesh>& field
@@ -126,7 +126,7 @@ CML::dimFieldDecomposer::decomposeField
     Field<Type> mappedField(field, cellAddressing_);
 
     // Create the field for the processor
-    return tmp<DimensionedField<Type, volMesh> >
+    return tmp<DimensionedField<Type, volMesh>>
     (
         new DimensionedField<Type, volMesh>
         (

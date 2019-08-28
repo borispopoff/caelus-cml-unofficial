@@ -93,7 +93,7 @@ public:
 
 
     //- Selector
-    static autoPtr<DispersionModel<CloudType> > New
+    static autoPtr<DispersionModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -139,7 +139,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<kinematicCloudType>, 0);            \
                                                                                \
     DispersionModel<kinematicCloudType>::                                      \
-        adddictionaryConstructorToTable<SS<kinematicCloudType> >               \
+        adddictionaryConstructorToTable<SS<kinematicCloudType>>                \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 
@@ -203,7 +203,7 @@ CML::vector CML::DispersionModel<CloudType>::update
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::DispersionModel<CloudType> >
+CML::autoPtr<CML::DispersionModel<CloudType>>
 CML::DispersionModel<CloudType>::New
 (
     const dictionary& dict,
@@ -227,7 +227,7 @@ CML::DispersionModel<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<DispersionModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<DispersionModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

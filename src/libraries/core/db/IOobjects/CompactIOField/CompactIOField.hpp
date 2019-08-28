@@ -88,7 +88,7 @@ public:
         CompactIOField(const IOobject&, const Field<Type>&);
 
         //- Construct by transferring the Field contents
-        CompactIOField(const IOobject&, const Xfer<Field<Type> >&);
+        CompactIOField(const IOobject&, const Xfer<Field<Type>>&);
 
 
     // Destructor
@@ -223,7 +223,7 @@ template<class Type, class BaseType>
 CML::CompactIOField<Type, BaseType>::CompactIOField
 (
     const IOobject& io,
-    const Xfer<Field<Type> >& list
+    const Xfer<Field<Type>>& list
 )
 :
     regIOobject(io)

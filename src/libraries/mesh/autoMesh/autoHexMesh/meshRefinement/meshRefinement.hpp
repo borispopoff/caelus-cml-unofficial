@@ -523,12 +523,12 @@ public:
             //  topo changes. Every entry is a list over all faces.
             //  Bit of a hack. Additional flag to say whether to maintain master
             //  only (false) or increase set to account for face-from-face.
-            const List<Tuple2<mapType, labelList> >& userFaceData() const
+            const List<Tuple2<mapType, labelList>>& userFaceData() const
             {
                 return userFaceData_;
             }
 
-            List<Tuple2<mapType, labelList> >& userFaceData()
+            List<Tuple2<mapType, labelList>>& userFaceData()
             {
                 return userFaceData_;
             }

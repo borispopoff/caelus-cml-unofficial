@@ -579,7 +579,7 @@ void CML::PatchTools::gatherAndMerge
     // Collect points from all processors
     labelList pointSizes;
     {
-        List<Field<PointType> > gatheredPoints(Pstream::nProcs());
+        List<Field<PointType>> gatheredPoints(Pstream::nProcs());
         gatheredPoints[Pstream::myProcNo()] = p.points();
 
         Pstream::gatherList(gatheredPoints);
@@ -589,13 +589,13 @@ void CML::PatchTools::gatherAndMerge
             pointSizes = ListListOps::subSizes
             (
                 gatheredPoints,
-                accessOp<Field<PointType> >()
+                accessOp<Field<PointType>>()
             );
 
-            mergedPoints = ListListOps::combine<Field<PointType> >
+            mergedPoints = ListListOps::combine<Field<PointType>>
             (
                 gatheredPoints,
-                accessOp<Field<PointType> >()
+                accessOp<Field<PointType>>()
             );
         }
     }
@@ -603,7 +603,7 @@ void CML::PatchTools::gatherAndMerge
     // Collect faces from all processors and renumber using sizes of
     // gathered points
     {
-        List<List<Face> > gatheredFaces(Pstream::nProcs());
+        List<List<Face>> gatheredFaces(Pstream::nProcs());
         gatheredFaces[Pstream::myProcNo()] = p;
         Pstream::gatherList(gatheredFaces);
 
@@ -611,11 +611,11 @@ void CML::PatchTools::gatherAndMerge
         {
             mergedFaces = static_cast<const List<Face>&>
             (
-                ListListOps::combineOffset<List<Face> >
+                ListListOps::combineOffset<List<Face>>
                 (
                     gatheredFaces,
                     pointSizes,
-                    accessOp<List<Face> >(),
+                    accessOp<List<Face>>(),
                     offsetOp<Face>()
                 )
             );
@@ -1289,7 +1289,7 @@ CML::PatchTools::pointNormals
 
     {
         // Collect local pointFaces (sized on patch points only)
-        List<List<point> > pointFaceNormals(map.constructSize());
+        List<List<point>> pointFaceNormals(map.constructSize());
         forAll(p.meshPoints(), patchPointi)
         {
             label meshPointi = p.meshPoints()[patchPointi];

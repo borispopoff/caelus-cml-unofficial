@@ -442,31 +442,31 @@ bool PatchValueExpressionDriver::existsPluginFunction(
 }
 
 template<>
-HashPtrTable<interpolation<scalar> > &PatchValueExpressionDriver::interpolations<scalar>()
+HashPtrTable<interpolation<scalar>> &PatchValueExpressionDriver::interpolations<scalar>()
 {
     return interpolationScalar_;
 }
 
 template<>
-HashPtrTable<interpolation<vector> > &PatchValueExpressionDriver::interpolations<vector>()
+HashPtrTable<interpolation<vector>> &PatchValueExpressionDriver::interpolations<vector>()
 {
     return interpolationVector_;
 }
 
 template<>
-HashPtrTable<interpolation<tensor> > &PatchValueExpressionDriver::interpolations<tensor>()
+HashPtrTable<interpolation<tensor>> &PatchValueExpressionDriver::interpolations<tensor>()
 {
     return interpolationTensor_;
 }
 
 template<>
-HashPtrTable<interpolation<symmTensor> > &PatchValueExpressionDriver::interpolations<symmTensor>()
+HashPtrTable<interpolation<symmTensor>> &PatchValueExpressionDriver::interpolations<symmTensor>()
 {
     return interpolationSymmTensor_;
 }
 
 template<>
-HashPtrTable<interpolation<sphericalTensor> > &PatchValueExpressionDriver::interpolations<sphericalTensor>()
+HashPtrTable<interpolation<sphericalTensor>> &PatchValueExpressionDriver::interpolations<sphericalTensor>()
 {
     return interpolationSphericalTensor_;
 }

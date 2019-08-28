@@ -100,7 +100,7 @@ public:
         coordinateSystems
         (
             const IOobject&,
-            const Xfer<PtrList<coordinateSystem> >&
+            const Xfer<PtrList<coordinateSystem>>&
         );
 
 

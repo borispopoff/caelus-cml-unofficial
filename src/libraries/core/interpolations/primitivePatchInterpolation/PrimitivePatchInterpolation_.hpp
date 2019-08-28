@@ -103,41 +103,41 @@ public:
 
         //- Interpolate from faces to points
         template<class Type>
-        tmp<Field<Type> > faceToPointInterpolate
+        tmp<Field<Type>> faceToPointInterpolate
         (
             const Field<Type>& ff
         ) const;
 
         template<class Type>
-        tmp<Field<Type> > faceToPointInterpolate
+        tmp<Field<Type>> faceToPointInterpolate
         (
-            const tmp<Field<Type> >& tff
+            const tmp<Field<Type>>& tff
         ) const;
 
         //- Interpolate from points to faces
         template<class Type>
-        tmp<Field<Type> > pointToFaceInterpolate
+        tmp<Field<Type>> pointToFaceInterpolate
         (
             const Field<Type>& pf
         ) const;
 
         template<class Type>
-        tmp<Field<Type> > pointToFaceInterpolate
+        tmp<Field<Type>> pointToFaceInterpolate
         (
-            const tmp<Field<Type> >& tpf
+            const tmp<Field<Type>>& tpf
         ) const;
 
         //- Interpolate from faces to edges
         template<class Type>
-        tmp<Field<Type> > faceToEdgeInterpolate
+        tmp<Field<Type>> faceToEdgeInterpolate
         (
             const Field<Type>& ff
         ) const;
 
         template<class Type>
-        tmp<Field<Type> > faceToEdgeInterpolate
+        tmp<Field<Type>> faceToEdgeInterpolate
         (
-            const tmp<Field<Type> >& tff
+            const tmp<Field<Type>>& tff
         ) const;
 
         //- Do what is necessary if the mesh has moved
@@ -297,7 +297,7 @@ PrimitivePatchInterpolation<Patch>::~PrimitivePatchInterpolation()
 
 template<class Patch>
 template<class Type>
-tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::faceToPointInterpolate
+tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::faceToPointInterpolate
 (
     const Field<Type>& ff
 ) const
@@ -311,7 +311,7 @@ tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::faceToPointInterpolate
             << abort(FatalError);
     }
 
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>
         (
@@ -341,12 +341,12 @@ tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::faceToPointInterpolate
 
 template<class Patch>
 template<class Type>
-tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::faceToPointInterpolate
+tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::faceToPointInterpolate
 (
-    const tmp<Field<Type> >& tff
+    const tmp<Field<Type>>& tff
 ) const
 {
-    tmp<Field<Type> > tint = faceToPointInterpolate(tff());
+    tmp<Field<Type>> tint = faceToPointInterpolate(tff());
     tff.clear();
     return tint;
 }
@@ -354,7 +354,7 @@ tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::faceToPointInterpolate
 
 template<class Patch>
 template<class Type>
-tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::pointToFaceInterpolate
+tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::pointToFaceInterpolate
 (
     const Field<Type>& pf
 ) const
@@ -367,7 +367,7 @@ tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::pointToFaceInterpolate
             << abort(FatalError);
     }
 
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>
         (
@@ -398,12 +398,12 @@ tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::pointToFaceInterpolate
 
 template<class Patch>
 template<class Type>
-tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::pointToFaceInterpolate
+tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::pointToFaceInterpolate
 (
-    const tmp<Field<Type> >& tpf
+    const tmp<Field<Type>>& tpf
 ) const
 {
-    tmp<Field<Type> > tint = pointToFaceInterpolate(tpf());
+    tmp<Field<Type>> tint = pointToFaceInterpolate(tpf());
     tpf.clear();
     return tint;
 }
@@ -411,7 +411,7 @@ tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::pointToFaceInterpolate
 
 template<class Patch>
 template<class Type>
-tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::faceToEdgeInterpolate
+tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::faceToEdgeInterpolate
 (
     const Field<Type>& pf
 ) const
@@ -425,7 +425,7 @@ tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::faceToEdgeInterpolate
             << abort(FatalError);
     }
 
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>(patch_.nEdges(), pTraits<Type>::zero)
     );
@@ -455,12 +455,12 @@ tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::faceToEdgeInterpolate
 
 template<class Patch>
 template<class Type>
-tmp<Field<Type> > PrimitivePatchInterpolation<Patch>::faceToEdgeInterpolate
+tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::faceToEdgeInterpolate
 (
-    const tmp<Field<Type> >& tpf
+    const tmp<Field<Type>>& tpf
 ) const
 {
-    tmp<Field<Type> > tint = faceToEdgeInterpolate(tpf());
+    tmp<Field<Type>> tint = faceToEdgeInterpolate(tpf());
     tpf.clear();
     return tint;
 }

@@ -100,7 +100,7 @@ protected:
 
         //- Fields to process
         //wordList fieldSet_;
-        List<Tuple2<word, word> > fieldSet_;
+        List<Tuple2<word, word>> fieldSet_;
 
         //- Locally constructed fields
         PtrList<surfaceScalarField> ssf_;
@@ -115,7 +115,7 @@ protected:
         template<class Type>
         void interpolateFields
         (
-            PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+            PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
         ) const;
 
 private:
@@ -198,7 +198,7 @@ public:
 template<class Type>
 void CML::surfaceInterpolateFields::interpolateFields
 (
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& sflds
+    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;

@@ -24,24 +24,24 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::extendedUpwindCellToFaceStencil::weightedSum
 (
     const surfaceScalarField& phi,
     const GeometricField<Type, fvPatchField, volMesh>& fld,
-    const List<List<scalar> >& ownWeights,
-    const List<List<scalar> >& neiWeights
+    const List<List<scalar>>& ownWeights,
+    const List<List<scalar>>& neiWeights
 ) const
 {
     const fvMesh& mesh = fld.mesh();
 
     // Collect internal and boundary values
-    List<List<Type> > ownFld;
+    List<List<Type>> ownFld;
     collectData(ownMap(), ownStencil(), fld, ownFld);
-    List<List<Type> > neiFld;
+    List<List<Type>> neiFld;
     collectData(neiMap(), neiStencil(), fld, neiFld);
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsfCorr
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (

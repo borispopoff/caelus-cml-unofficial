@@ -256,7 +256,7 @@ void CML::orientedSurface::findZoneSide
     isOutside = false;
 
     pointField start(1, outsidePoint);
-    List<List<pointIndexHit> > hits(1, List<pointIndexHit>());
+    List<List<pointIndexHit>> hits(1, List<pointIndexHit>());
 
     forAll(faceZone, faceI)
     {

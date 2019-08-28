@@ -65,8 +65,8 @@ class meshSearch
         mutable autoPtr<treeBoundBox> overallBbPtr_;
 
         //- demand driven octrees
-        mutable autoPtr<indexedOctree<treeDataFace> > boundaryTreePtr_;
-        mutable autoPtr<indexedOctree<treeDataCell> > cellTreePtr_;
+        mutable autoPtr<indexedOctree<treeDataFace>> boundaryTreePtr_;
+        mutable autoPtr<indexedOctree<treeDataCell>> cellTreePtr_;
 
 
     // Private Member Functions

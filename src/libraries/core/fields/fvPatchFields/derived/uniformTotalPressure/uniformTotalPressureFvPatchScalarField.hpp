@@ -105,7 +105,7 @@ class uniformTotalPressureFvPatchScalarField
         scalar gamma_;
 
         //- Table of time vs total pressure, including the bounding treatment
-        autoPtr<DataEntry<scalar> > pressure_;
+        autoPtr<DataEntry<scalar>> pressure_;
 
 
 public:

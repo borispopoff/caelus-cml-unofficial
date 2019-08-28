@@ -65,7 +65,7 @@ public:
         IOField(const IOobject&, const Field<Type>&);
 
         //- Construct by transferring the Field contents
-        IOField(const IOobject&, const Xfer<Field<Type> >&);
+        IOField(const IOobject&, const Xfer<Field<Type>>&);
 
 
     //- Destructor
@@ -192,7 +192,7 @@ CML::IOField<Type>::IOField(const IOobject& io, const Field<Type>& f)
 
 
 template<class Type>
-CML::IOField<Type>::IOField(const IOobject& io, const Xfer<Field<Type> >& f)
+CML::IOField<Type>::IOField(const IOobject& io, const Xfer<Field<Type>>& f)
 :
     regIOobject(io)
 {

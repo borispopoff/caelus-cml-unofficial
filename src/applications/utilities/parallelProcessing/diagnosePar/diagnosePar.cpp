@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
         Random rndGen(43544*Pstream::myProcNo());
 
         // Generate random data.
-        List<Tuple2<label, List<scalar> > > complexData(100);
+        List<Tuple2<label, List<scalar>>> complexData(100);
         forAll(complexData, i)
         {
             complexData[i].first() =

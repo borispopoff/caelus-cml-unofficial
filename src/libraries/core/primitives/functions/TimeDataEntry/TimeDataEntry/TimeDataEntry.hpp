@@ -68,7 +68,7 @@ protected:
         const word name_;
 
         //- The underlying DataEntry
-        autoPtr<DataEntry<Type> > entry_;
+        autoPtr<DataEntry<Type>> entry_;
 
 
 public:

@@ -99,13 +99,13 @@ public:
         static inline const SubDimensionedField<Type, GeoMesh>& null();
 
         //- Return a component field of the field
-        inline tmp<DimensionedField<cmptType, GeoMesh> > component
+        inline tmp<DimensionedField<cmptType, GeoMesh>> component
         (
             const direction
         ) const;
 
         //- Return the field transpose (only defined for second rank tensors)
-        tmp<DimensionedField<Type, GeoMesh> > T() const;
+        tmp<DimensionedField<Type, GeoMesh>> T() const;
 
 
     // Member operators

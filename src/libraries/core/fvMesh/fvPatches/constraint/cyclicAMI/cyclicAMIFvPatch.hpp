@@ -161,7 +161,7 @@ public:
             virtual tmp<vectorField> deltaFull() const;
 
             template<class Type>
-            tmp<Field<Type> > interpolate
+            tmp<Field<Type>> interpolate
             (
                 const Field<Type>& fld,
                 const UList<Type>& defaultValues = UList<Type>()
@@ -171,9 +171,9 @@ public:
             }
 
             template<class Type>
-            tmp<Field<Type> > interpolate
+            tmp<Field<Type>> interpolate
             (
-                const tmp<Field<Type> >& tFld,
+                const tmp<Field<Type>>& tFld,
                 const UList<Type>& defaultValues = UList<Type>()
             ) const
             {

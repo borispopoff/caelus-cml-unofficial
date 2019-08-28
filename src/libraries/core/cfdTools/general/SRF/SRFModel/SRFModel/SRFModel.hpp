@@ -158,13 +158,13 @@ public:
             const dimensionedVector& omega() const;
 
             //- Return the coriolis force
-            tmp<DimensionedField<vector, volMesh> > Fcoriolis() const;
+            tmp<DimensionedField<vector, volMesh>> Fcoriolis() const;
 
             //- Return the centrifugal force
-            tmp<DimensionedField<vector, volMesh> > Fcentrifugal() const;
+            tmp<DimensionedField<vector, volMesh>> Fcentrifugal() const;
 
             //- Source term component for momentum equation
-            tmp<DimensionedField<vector, volMesh> > Su() const;
+            tmp<DimensionedField<vector, volMesh>> Su() const;
 
             //- Return velocity vector from positions
             vectorField velocity(const vectorField& positions) const;

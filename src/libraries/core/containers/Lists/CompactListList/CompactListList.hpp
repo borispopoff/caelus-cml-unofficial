@@ -69,7 +69,7 @@ template<class T, class Container> Ostream& operator<<
                        Class CompactListList Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class T, class Container = List<T> >
+template<class T, class Container = List<T>>
 class CompactListList
 {
     // Private data
@@ -95,7 +95,7 @@ public:
         //- Null constructor.
         inline CompactListList();
 
-        //- Construct by converting given List<List<T> >
+        //- Construct by converting given List<List<T>>
         explicit CompactListList(const List<Container>&);
 
         //- Construct given size of offset table (number of rows)
@@ -113,7 +113,7 @@ public:
         CompactListList(const labelUList& rowSizes, const T&);
 
         //- Construct by transferring the parameter contents
-        explicit CompactListList(const Xfer<CompactListList<T, Container> >&);
+        explicit CompactListList(const Xfer<CompactListList<T, Container>>&);
 
         //- Construct as copy or re-use as specified.
         CompactListList(CompactListList<T, Container>&, bool reuse);
@@ -122,7 +122,7 @@ public:
         CompactListList(Istream&);
 
         //- Clone
-        inline autoPtr<CompactListList<T, Container> > clone() const;
+        inline autoPtr<CompactListList<T, Container>> clone() const;
 
 
     // Member Functions
@@ -187,7 +187,7 @@ public:
             void transfer(CompactListList<T, Container>&);
 
             //- Transfer the contents to the Xfer container
-            inline Xfer<CompactListList<T, Container> > xfer();
+            inline Xfer<CompactListList<T, Container>> xfer();
 
         // Other
 
@@ -287,10 +287,10 @@ inline CML::CompactListList<T, Container>::CompactListList
 
 
 template<class T, class Container>
-inline CML::autoPtr<CML::CompactListList<T, Container> >
+inline CML::autoPtr<CML::CompactListList<T, Container>>
 CML::CompactListList<T, Container>::clone() const
 {
-    return autoPtr<CompactListList<T, Container> >
+    return autoPtr<CompactListList<T, Container>>
     (
         new CompactListList<T, Container>(*this)
     );
@@ -303,7 +303,7 @@ template<class T, class Container>
 inline const CML::CompactListList<T, Container>&
 CML::CompactListList<T, Container>::null()
 {
-    return NullSingletonRef< CompactListList<T, Container> >();
+    return NullSingletonRef< CompactListList<T, Container>>();
 }
 
 
@@ -389,7 +389,7 @@ inline CML::label CML::CompactListList<T, Container>::whichColumn
 
 
 template<class T, class Container>
-inline CML::Xfer<CML::CompactListList<T, Container> >
+inline CML::Xfer<CML::CompactListList<T, Container>>
 CML::CompactListList<T, Container>::xfer()
 {
     return xferMove(*this);
@@ -571,7 +571,7 @@ CML::CompactListList<T, Container>::CompactListList
 template<class T, class Container>
 CML::CompactListList<T, Container>::CompactListList
 (
-    const Xfer<CompactListList<T, Container> >& lst
+    const Xfer<CompactListList<T, Container>>& lst
 )
 {
     transfer(lst());

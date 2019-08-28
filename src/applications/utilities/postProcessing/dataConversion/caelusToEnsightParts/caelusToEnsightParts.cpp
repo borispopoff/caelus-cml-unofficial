@@ -217,10 +217,10 @@ int main(int argc, char *argv[])
     DynamicList<label> fieldTimesUsed;
 
     // Track the time indices used by each cloud
-    HashTable<DynamicList<label> > cloudTimesUsed;
+    HashTable<DynamicList<label>> cloudTimesUsed;
 
     // Create a new DynamicList for each cloud
-    forAllConstIter(HashTable<HashTable<word> >, cloudFields, cloudIter)
+    forAllConstIter(HashTable<HashTable<word>>, cloudFields, cloudIter)
     {
         cloudTimesUsed.insert(cloudIter.key(), DynamicList<label>());
     }
@@ -353,7 +353,7 @@ int main(int argc, char *argv[])
         Info<< " )" << endl;
 
         // check for clouds
-        forAllConstIter(HashTable<HashTable<word> >, cloudFields, cloudIter)
+        forAllConstIter(HashTable<HashTable<word>>, cloudFields, cloudIter)
         {
             const word& cloudName = cloudIter.key();
 

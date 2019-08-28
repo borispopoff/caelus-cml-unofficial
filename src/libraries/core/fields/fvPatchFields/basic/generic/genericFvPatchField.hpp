@@ -99,9 +99,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new genericFvPatchField<Type>(*this)
             );
@@ -115,12 +115,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new genericFvPatchField<Type>(*this, iF)
             );
@@ -149,25 +149,25 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            tmp<Field<Type> > gradientInternalCoeffs() const;
+            tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
         //- Write
@@ -279,13 +279,13 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<scalar> >::typeName
+                     == token::Compound<List<scalar>>::typeName
                     )
                     {
                         scalarField* fPtr = new scalarField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<scalar> > >
+                            dynamicCast<token::Compound<List<scalar>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -311,13 +311,13 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<vector> >::typeName
+                     == token::Compound<List<vector>>::typeName
                     )
                     {
                         vectorField* fPtr = new vectorField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<vector> > >
+                            dynamicCast<token::Compound<List<vector>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -343,7 +343,7 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<sphericalTensor> >::typeName
+                     == token::Compound<List<sphericalTensor>>::typeName
                     )
                     {
                         sphericalTensorField* fPtr = new sphericalTensorField;
@@ -351,7 +351,7 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                         (
                             dynamicCast
                             <
-                                token::Compound<List<sphericalTensor> >
+                                token::Compound<List<sphericalTensor>>
                             >
                             (
                                 fieldToken.transferCompoundToken(is)
@@ -378,7 +378,7 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<symmTensor> >::typeName
+                     == token::Compound<List<symmTensor>>::typeName
                     )
                     {
                         symmTensorField* fPtr = new symmTensorField;
@@ -386,7 +386,7 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                         (
                             dynamicCast
                             <
-                                token::Compound<List<symmTensor> >
+                                token::Compound<List<symmTensor>>
                             >
                             (
                                 fieldToken.transferCompoundToken(is)
@@ -413,13 +413,13 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<tensor> >::typeName
+                     == token::Compound<List<tensor>>::typeName
                     )
                     {
                         tensorField* fPtr = new tensorField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<tensor> > >
+                            dynamicCast<token::Compound<List<tensor>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -738,7 +738,7 @@ void CML::genericFvPatchField<Type>::rmap
     calculatedFvPatchField<Type>::rmap(ptf, addr);
 
     const genericFvPatchField<Type>& dptf =
-        refCast<const genericFvPatchField<Type> >(ptf);
+        refCast<const genericFvPatchField<Type>>(ptf);
 
     forAllIter
     (
@@ -823,7 +823,7 @@ void CML::genericFvPatchField<Type>::rmap
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::genericFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
@@ -845,7 +845,7 @@ CML::genericFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::genericFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
@@ -867,7 +867,7 @@ CML::genericFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::genericFvPatchField<Type>::gradientInternalCoeffs() const
 {
     FatalErrorInFunction
@@ -885,7 +885,7 @@ CML::genericFvPatchField<Type>::gradientInternalCoeffs() const
 }
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     FatalErrorInFunction

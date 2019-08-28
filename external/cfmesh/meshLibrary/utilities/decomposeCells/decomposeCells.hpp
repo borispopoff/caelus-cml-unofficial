@@ -71,7 +71,7 @@ class decomposeCells
             const label cellI,
             DynList<label, 32>& vrt,
             DynList<edge, 64>& edges,
-            DynList<DynList<label, 8> >& faceEdges,
+            DynList<DynList<label, 8>>& faceEdges,
             DynList<DynList<label, 2>, 64>& edgeFaces
         ) const;
 

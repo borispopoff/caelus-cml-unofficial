@@ -97,7 +97,7 @@ class volPointInterpolation
         //- Get boundary field in same order as boundary faces. Field is
         //  zero on all coupled and empty patches
         template<class Type>
-        tmp<Field<Type> > flatBoundaryField
+        tmp<Field<Type>> flatBoundaryField
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
         ) const;
@@ -148,7 +148,7 @@ public:
         //- Interpolate volField using inverse distance weighting
         //  returning pointField
         template<class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > interpolate
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
@@ -156,9 +156,9 @@ public:
         //- Interpolate tmp<volField> using inverse distance weighting
         //  returning pointField
         template<class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > interpolate
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> interpolate
         (
-            const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+            const tmp<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
 
         //- Interpolate volField using inverse distance weighting
@@ -166,7 +166,7 @@ public:
         //  to any fixedValue boundary conditions to make them consistent
         //  with internal field
         template<class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > interpolate
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>&,
             const wordList& patchFieldTypes
@@ -177,9 +177,9 @@ public:
         //  to any fixedValue boundary conditions to make them consistent
         //  with internal field
         template<class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > interpolate
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> interpolate
         (
-            const tmp<GeometricField<Type, fvPatchField, volMesh> >&,
+            const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
             const wordList& patchFieldTypes
         ) const;
 
@@ -225,7 +225,7 @@ public:
             //- Interpolate volField using inverse distance weighting
             //  returning pointField with name. Optionally caches
             template<class Type>
-            tmp<GeometricField<Type, pointPatchField, pointMesh> > interpolate
+            tmp<GeometricField<Type, pointPatchField, pointMesh>> interpolate
             (
                 const GeometricField<Type, fvPatchField, volMesh>&,
                 const word& name,
@@ -321,7 +321,7 @@ void CML::volPointInterpolation::addSeparated
     {
         if (pfbf[patchI].coupled())
         {
-            refCast<coupledPointPatchField<Type> >
+            refCast<coupledPointPatchField<Type>>
                 (pfbf[patchI]).initSwapAddSeparated
                 (
                     Pstream::nonBlocking,
@@ -337,7 +337,7 @@ void CML::volPointInterpolation::addSeparated
     {
         if (pfbf[patchI].coupled())
         {
-            refCast<coupledPointPatchField<Type> >
+            refCast<coupledPointPatchField<Type>>
                 (pfbf[patchI]).swapAddSeparated
                 (
                     Pstream::nonBlocking,
@@ -386,7 +386,7 @@ void CML::volPointInterpolation::interpolateInternalField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::volPointInterpolation::flatBoundaryField
+CML::tmp<CML::Field<Type>> CML::volPointInterpolation::flatBoundaryField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
@@ -394,7 +394,7 @@ CML::tmp<CML::Field<Type> > CML::volPointInterpolation::flatBoundaryField
     const fvMesh& mesh = vf.mesh();
     const fvBoundaryMesh& bm = mesh.boundary();
 
-    tmp<Field<Type> > tboundaryVals
+    tmp<Field<Type>> tboundaryVals
     (
         new Field<Type>(mesh.nFaces()-mesh.nInternalFaces())
     );
@@ -444,7 +444,7 @@ void CML::volPointInterpolation::interpolateBoundaryField
     Field<Type>& pfi = pf.internalField();
 
     // Get face data in flat list
-    tmp<Field<Type> > tboundaryVals(flatBoundaryField(vf));
+    tmp<Field<Type>> tboundaryVals(flatBoundaryField(vf));
     const Field<Type>& boundaryVals = tboundaryVals();
 
 
@@ -527,7 +527,7 @@ void CML::volPointInterpolation::interpolate
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh> >
+CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh>>
 CML::volPointInterpolation::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
@@ -537,7 +537,7 @@ CML::volPointInterpolation::interpolate
     const pointMesh& pm = pointMesh::New(vf.mesh());
 
     // Construct tmp<pointField>
-    tmp<GeometricField<Type, pointPatchField, pointMesh> > tpf
+    tmp<GeometricField<Type, pointPatchField, pointMesh>> tpf
     (
         new GeometricField<Type, pointPatchField, pointMesh>
         (
@@ -563,15 +563,15 @@ CML::volPointInterpolation::interpolate
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh> >
+CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh>>
 CML::volPointInterpolation::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvf,
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
     const wordList& patchFieldTypes
 ) const
 {
     // Construct tmp<pointField>
-    tmp<GeometricField<Type, pointPatchField, pointMesh> > tpf =
+    tmp<GeometricField<Type, pointPatchField, pointMesh>> tpf =
         interpolate(tvf(), patchFieldTypes);
     tvf.clear();
     return tpf;
@@ -579,7 +579,7 @@ CML::volPointInterpolation::interpolate
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh> >
+CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh>>
 CML::volPointInterpolation::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
@@ -611,7 +611,7 @@ CML::volPointInterpolation::interpolate
         }
 
 
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > tpf
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> tpf
         (
             new GeometricField<Type, pointPatchField, pointMesh>
             (
@@ -674,7 +674,7 @@ CML::volPointInterpolation::interpolate
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh> >
+CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh>>
 CML::volPointInterpolation::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -685,14 +685,14 @@ CML::volPointInterpolation::interpolate
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh> >
+CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh>>
 CML::volPointInterpolation::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvf
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 ) const
 {
     // Construct tmp<pointField>
-    tmp<GeometricField<Type, pointPatchField, pointMesh> > tpf =
+    tmp<GeometricField<Type, pointPatchField, pointMesh>> tpf =
         interpolate(tvf());
     tvf.clear();
     return tpf;

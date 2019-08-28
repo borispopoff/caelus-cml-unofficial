@@ -1050,7 +1050,7 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
     // Construct map
     globalEdgeTransformedSlavesPtr_.reset(new labelListList());
 
-    List<Map<label> > compactMap(Pstream::nProcs());
+    List<Map<label>> compactMap(Pstream::nProcs());
     globalEdgeSlavesMapPtr_.reset
     (
         new mapDistribute
@@ -1434,7 +1434,7 @@ void CML::globalMeshData::calcGlobalPointBoundaryFaces() const
     }
 
     // Construct a map to get the face data directly
-    List<Map<label> > compactMap(Pstream::nProcs());
+    List<Map<label>> compactMap(Pstream::nProcs());
 
     globalPointTransformedBoundaryFacesPtr_.reset
     (
@@ -1661,7 +1661,7 @@ void CML::globalMeshData::calcGlobalPointBoundaryCells() const
     }
 
     // Construct a map to get the cell data directly
-    List<Map<label> > compactMap(Pstream::nProcs());
+    List<Map<label>> compactMap(Pstream::nProcs());
 
     globalPointTransformedBoundaryCellsPtr_.reset
     (

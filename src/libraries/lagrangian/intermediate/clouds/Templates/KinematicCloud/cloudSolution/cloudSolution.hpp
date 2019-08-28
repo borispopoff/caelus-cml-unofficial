@@ -96,7 +96,7 @@ class cloudSolution
             Switch resetSourcesOnStartup_;
 
             //- List schemes, e.g. U semiImplicit 1
-            List<Tuple2<word, Tuple2<bool, scalar> > > schemes_;
+            List<Tuple2<word, Tuple2<bool, scalar>>> schemes_;
 
 
     // Private Member Functions

@@ -501,7 +501,7 @@ void meshOctreeModifier::refineSelectedBoxesAndAdditionalLayers
     const LongList<meshOctreeCube*>& leaves = octree_.leaves_;
 
     typedef std::pair<direction, label> mapKey;
-    typedef std::map<mapKey, LongList<meshOctreeCube*> > lMap;
+    typedef std::map<mapKey, LongList<meshOctreeCube*>> lMap;
     lMap leavesMap;
 
     # ifdef DEBUGSearch

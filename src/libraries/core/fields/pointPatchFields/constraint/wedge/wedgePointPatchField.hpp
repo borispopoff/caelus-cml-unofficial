@@ -82,9 +82,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new wedgePointPatchField<Type>
                 (
@@ -101,12 +101,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new wedgePointPatchField<Type>
                 (
@@ -218,7 +218,7 @@ void CML::wedgePointPatchField<Type>::evaluate(const Pstream::commsTypes)
     // normal vector from the first point
     const vector& nHat = this->patch().pointNormals()[0];
 
-    tmp<Field<Type> > tvalues =
+    tmp<Field<Type>> tvalues =
         transform(I - nHat*nHat, this->patchInternalField());
 
     // Get internal field to insert values into

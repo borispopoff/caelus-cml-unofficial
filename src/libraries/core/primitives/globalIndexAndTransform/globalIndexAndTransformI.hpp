@@ -400,7 +400,7 @@ CML::label CML::globalIndexAndTransform::nullTransformIndex() const
 }
 
 
-const CML::List<CML::Pair<CML::label> >&
+const CML::List<CML::Pair<CML::label>>&
 CML::globalIndexAndTransform::patchTransformSign() const
 {
     return patchTransformSign_;

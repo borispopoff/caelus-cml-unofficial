@@ -86,7 +86,7 @@ public:
 
         //- Extract face data
         template<class Type>
-        tmp<Field<Type> > getFaceField
+        tmp<Field<Type>> getFaceField
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>&
         ) const;
@@ -95,7 +95,7 @@ public:
         template<class Type>
         void write
         (
-            const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+            const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
         );
 };
 
@@ -111,14 +111,14 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<Field<Type> > CML::surfaceMeshWriter::getFaceField
+CML::tmp<Field<Type>> CML::surfaceMeshWriter::getFaceField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sfld
 ) const
 {
     const polyBoundaryMesh& patches = sfld.mesh().boundaryMesh();
 
-    tmp<Field<Type> > tfld(new Field<Type>(pp_.size()));
+    tmp<Field<Type>> tfld(new Field<Type>(pp_.size()));
     Field<Type>& fld = tfld();
 
     forAll(pp_.addressing(), i)
@@ -145,7 +145,7 @@ CML::tmp<Field<Type> > CML::surfaceMeshWriter::getFaceField
 template<class Type>
 void CML::surfaceMeshWriter::write
 (
-    const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& sflds
+    const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 )
 {
     forAll(sflds, fieldi)

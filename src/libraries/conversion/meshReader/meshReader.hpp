@@ -154,7 +154,7 @@ private:
         List<labelPair> interfaces_;
 
         //- list of cells/faces id pairs for each baffle
-        List<List<cellFaceIdentifier> > baffleIds_;
+        List<List<cellFaceIdentifier>> baffleIds_;
 
         //- Global face list for polyMesh
         faceList meshFaces_;
@@ -257,7 +257,7 @@ protected:
 
         //- Identify boundary faces by cells and their faces
         //  for each patch
-        List<List<cellFaceIdentifier> > boundaryIds_;
+        List<List<cellFaceIdentifier>> boundaryIds_;
 
         //- Boundary patch types
         wordList patchTypes_;

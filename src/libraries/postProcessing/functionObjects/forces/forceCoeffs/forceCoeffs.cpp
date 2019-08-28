@@ -202,7 +202,7 @@ void CML::forceCoeffs::write()
         Field<vector> totForce(force_[0] + force_[1] + force_[2]);
         Field<vector> totMoment(moment_[0] + moment_[1] + moment_[2]);
 
-        List<Field<scalar> > coeffs(3);
+        List<Field<scalar>> coeffs(3);
         coeffs[0].setSize(nBin_);
         coeffs[1].setSize(nBin_);
         coeffs[2].setSize(nBin_);

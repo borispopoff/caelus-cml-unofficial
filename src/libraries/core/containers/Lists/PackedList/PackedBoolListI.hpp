@@ -63,7 +63,7 @@ inline CML::PackedBoolList::PackedBoolList(const Xfer<PackedBoolList>& lst)
 }
 
 
-inline CML::PackedBoolList::PackedBoolList(const Xfer<PackedList<1> >& lst)
+inline CML::PackedBoolList::PackedBoolList(const Xfer<PackedList<1>>& lst)
 :
     PackedList<1>(lst)
 {}

@@ -33,7 +33,7 @@ inline CML::IndirectListAddressing::IndirectListAddressing
 
 inline CML::IndirectListAddressing::IndirectListAddressing
 (
-    const Xfer<List<label> >& addr
+    const Xfer<List<label>>& addr
 )
 :
     addressing_(addr)
@@ -60,7 +60,7 @@ template<class T>
 inline CML::IndirectList<T>::IndirectList
 (
     const UList<T>& completeList,
-    const Xfer<List<label> >& addr
+    const Xfer<List<label>>& addr
 )
 :
     IndirectListAddressing(addr),
@@ -122,7 +122,7 @@ inline void CML::IndirectListAddressing::resetAddressing
 
 inline void CML::IndirectListAddressing::resetAddressing
 (
-    const Xfer<List<label> >& addr
+    const Xfer<List<label>>& addr
 )
 {
     addressing_.transfer(addr());

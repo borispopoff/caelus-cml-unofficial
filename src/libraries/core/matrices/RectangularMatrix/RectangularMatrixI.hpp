@@ -103,10 +103,10 @@ inline CML::RectangularMatrix<Type>::RectangularMatrix(Istream& is)
 
 
 template<class Type>
-inline CML::autoPtr<CML::RectangularMatrix<Type> >
+inline CML::autoPtr<CML::RectangularMatrix<Type>>
 CML::RectangularMatrix<Type>::clone() const
 {
-    return autoPtr<RectangularMatrix<Type> >
+    return autoPtr<RectangularMatrix<Type>>
     (
         new RectangularMatrix<Type>(*this)
     );

@@ -1121,7 +1121,7 @@ bool CML::isoSurfaceCell::validTri(const triSurface& surf, const label facei)
 void CML::isoSurfaceCell::calcAddressing
 (
     const triSurface& surf,
-    List<FixedList<label, 3> >& faceEdges,
+    List<FixedList<label, 3>>& faceEdges,
     labelList& edgeFace0,
     labelList& edgeFace1,
     Map<labelList>& edgeFacesRest
@@ -1222,7 +1222,7 @@ void CML::isoSurfaceCell::calcAddressing
 //void CML::isoSurfaceCell::walkOrientation
 //(
 //    const triSurface& surf,
-//    const List<FixedList<label, 3> >& faceEdges,
+//    const List<FixedList<label, 3>>& faceEdges,
 //    const labelList& edgeFace0,
 //    const labelList& edgeFace1,
 //    const label seedTriI,
@@ -1290,7 +1290,7 @@ void CML::isoSurfaceCell::calcAddressing
 //void CML::isoSurfaceCell::orientSurface
 //(
 //    triSurface& surf,
-//    const List<FixedList<label, 3> >& faceEdges,
+//    const List<FixedList<label, 3>>& faceEdges,
 //    const labelList& edgeFace0,
 //    const labelList& edgeFace1,
 //    const Map<labelList>& edgeFacesRest
@@ -1385,7 +1385,7 @@ bool CML::isoSurfaceCell::danglingTriangle
 // Mark triangles to keep. Returns number of dangling triangles.
 CML::label CML::isoSurfaceCell::markDanglingTriangles
 (
-    const List<FixedList<label, 3> >& faceEdges,
+    const List<FixedList<label, 3>>& faceEdges,
     const labelList& edgeFace0,
     const labelList& edgeFace1,
     const Map<labelList>& edgeFacesRest,
@@ -1669,7 +1669,7 @@ CML::isoSurfaceCell::isoSurfaceCell
 
     if (regularise)
     {
-        List<FixedList<label, 3> > faceEdges;
+        List<FixedList<label, 3>> faceEdges;
         labelList edgeFace0, edgeFace1;
         Map<labelList> edgeFacesRest;
 

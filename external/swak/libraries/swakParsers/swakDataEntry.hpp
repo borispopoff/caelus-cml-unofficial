@@ -97,9 +97,9 @@ public:
         swakDataEntry(const swakDataEntry<Type>& cnst);
 
         //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
+        virtual tmp<DataEntry<Type>> clone() const
         {
-            return tmp<DataEntry<Type> >(new swakDataEntry<Type>(*this));
+            return tmp<DataEntry<Type>>(new swakDataEntry<Type>(*this));
         }
 
 
@@ -116,10 +116,10 @@ public:
         Type integrate(const scalar x1, const scalar x2) const;
 
         //- Return value as a function of (scalar) independent variable
-        tmp<Field<Type> > value(const scalarField& x) const;
+        tmp<Field<Type>> value(const scalarField& x) const;
 
         //- Integrate between two (scalar) values
-        tmp<Field<Type> > integrate
+        tmp<Field<Type>> integrate
         (
             const scalarField& x1,
             const scalarField& x2
@@ -244,12 +244,12 @@ Type swakDataEntry<Type>::integrate(const scalar x1,const scalar x2) const
 
 
 template<class Type>
-tmp<Field<Type> > swakDataEntry<Type>::value
+tmp<Field<Type>> swakDataEntry<Type>::value
 (
     const scalarField& x
 ) const
 {
-    tmp<Field<Type> > tfld(new Field<Type>(x.size()));
+    tmp<Field<Type>> tfld(new Field<Type>(x.size()));
     Field<Type>& fld = const_cast<Field<Type>&>(tfld());
 
     forAll(x, i)
@@ -261,13 +261,13 @@ tmp<Field<Type> > swakDataEntry<Type>::value
 
 
 template<class Type>
-tmp<Field<Type> > swakDataEntry<Type>::integrate
+tmp<Field<Type>> swakDataEntry<Type>::integrate
 (
     const scalarField& x1,
     const scalarField& x2
 ) const
 {
-    tmp<Field<Type> > tfld(new Field<Type>(x1.size()));
+    tmp<Field<Type>> tfld(new Field<Type>(x1.size()));
     Field<Type>& fld = const_cast<Field<Type>&>(tfld());
 
     forAll(x1, i)

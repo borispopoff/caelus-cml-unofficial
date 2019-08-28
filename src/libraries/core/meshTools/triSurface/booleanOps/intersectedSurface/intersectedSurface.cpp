@@ -278,7 +278,7 @@ void CML::intersectedSurface::incCount
 // Calculate point to edge addressing for the face given by the edge
 // subset faceEdges. Constructs facePointEdges which for every point
 // gives a list of edge labels connected to it.
-CML::Map<CML::DynamicList<CML::label> >
+CML::Map<CML::DynamicList<CML::label>>
 CML::intersectedSurface::calcPointEdgeAddressing
 (
     const edgeSurface& eSurf,
@@ -290,7 +290,7 @@ CML::intersectedSurface::calcPointEdgeAddressing
 
     const labelList& fEdges = eSurf.faceEdges()[facei];
 
-    Map<DynamicList<label> > facePointEdges(4*fEdges.size());
+    Map<DynamicList<label>> facePointEdges(4*fEdges.size());
 
     forAll(fEdges, i)
     {
@@ -299,7 +299,7 @@ CML::intersectedSurface::calcPointEdgeAddressing
         const edge& e = edges[edgeI];
 
         // Add e.start to point-edges
-        Map<DynamicList<label> >::iterator iter =
+        Map<DynamicList<label>>::iterator iter =
             facePointEdges.find(e.start());
 
         if (iter == facePointEdges.end())
@@ -314,7 +314,7 @@ CML::intersectedSurface::calcPointEdgeAddressing
         }
 
         // Add e.end to point-edges
-        Map<DynamicList<label> >::iterator iter2 =
+        Map<DynamicList<label>>::iterator iter2 =
             facePointEdges.find(e.end());
 
         if (iter2 == facePointEdges.end())
@@ -330,7 +330,7 @@ CML::intersectedSurface::calcPointEdgeAddressing
     }
 
     // Shrink it
-    forAllIter(Map< DynamicList<label> >, facePointEdges, iter)
+    forAllIter(Map< DynamicList<label>>, facePointEdges, iter)
     {
         iter().shrink();
 
@@ -357,7 +357,7 @@ CML::intersectedSurface::calcPointEdgeAddressing
         }
 
         Pout<< "    Constructed point-edge addressing:" << endl;
-        forAllConstIter(Map< DynamicList<label> >, facePointEdges, iter)
+        forAllConstIter(Map< DynamicList<label>>, facePointEdges, iter)
         {
             Pout<< "    vertex " << iter.key() << " is connected to edges "
                 << iter() << endl;
@@ -379,7 +379,7 @@ CML::label CML::intersectedSurface::nextEdge
     const Map<label>& visited,
     const label facei,
     const vector& n,
-    const Map<DynamicList<label> >& facePointEdges,
+    const Map<DynamicList<label>>& facePointEdges,
     const label prevEdgeI,
     const label prevVertI
 )
@@ -557,7 +557,7 @@ CML::face CML::intersectedSurface::walkFace
     const edgeSurface& eSurf,
     const label facei,
     const vector& n,
-    const Map<DynamicList<label> >& facePointEdges,
+    const Map<DynamicList<label>>& facePointEdges,
 
     const label startEdgeI,
     const label startVertI,
@@ -633,7 +633,7 @@ void CML::intersectedSurface::findNearestVisited
 (
     const edgeSurface& eSurf,
     const label facei,
-    const Map<DynamicList<label> >& facePointEdges,
+    const Map<DynamicList<label>>& facePointEdges,
     const Map<label>& pointVisited,
     const point& pt,
     const label excludePointi,
@@ -695,7 +695,7 @@ CML::faceList CML::intersectedSurface::resplitFace
 (
     const triSurface& surf,
     const label facei,
-    const Map<DynamicList<label> >& facePointEdges,
+    const Map<DynamicList<label>>& facePointEdges,
     const Map<label>& visited,
     edgeSurface& eSurf
 )
@@ -782,7 +782,7 @@ CML::faceList CML::intersectedSurface::resplitFace
     {
         scalar minDist = GREAT;
 
-        forAllConstIter(Map<DynamicList<label> >, facePointEdges, iter)
+        forAllConstIter(Map<DynamicList<label>>, facePointEdges, iter)
         {
             label pointi = iter.key();
 
@@ -827,7 +827,7 @@ CML::faceList CML::intersectedSurface::resplitFace
     {
         scalar minDist = GREAT;
 
-        forAllConstIter(Map<DynamicList<label> >, facePointEdges, iter)
+        forAllConstIter(Map<DynamicList<label>>, facePointEdges, iter)
         {
             label pointi = iter.key();
 
@@ -914,7 +914,7 @@ CML::faceList CML::intersectedSurface::splitFace
     const labelList& fEdges = eSurf.faceEdges()[facei];
 
     // Create local (for the face only) point-edge connectivity.
-    Map<DynamicList<label> > facePointEdges
+    Map<DynamicList<label>> facePointEdges
     (
         calcPointEdgeAddressing
         (

@@ -26,7 +26,7 @@ using namespace CML::constant;
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const CML::List<CML::Tuple2<CML::scalar, CML::scalar> >
+const CML::List<CML::Tuple2<CML::scalar, CML::scalar>>
 CML::radiation::blackBodyEmission::emissivePowerTable
 (
     IStringStream

@@ -118,10 +118,10 @@ class rigidBodyMeshMotion
         outputFilterOutputControl motionOutputControl_;
         
         //- List of stateFiles for bodies
-		List<autoPtr<OFstream> > bodyStateFilePtrs_; 
+		List<autoPtr<OFstream>> bodyStateFilePtrs_; 
 		
 		//- List of stateFiles for restraints
-		List<autoPtr<OFstream> > restraintStateFilePtrs_; 
+		List<autoPtr<OFstream>> restraintStateFilePtrs_; 
 
 
     // Private Member Functions

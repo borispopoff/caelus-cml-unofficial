@@ -100,7 +100,7 @@ public:
     // Selectors
 
         //- Return a pointer to a new gradScheme created on freestore
-        static tmp<gradScheme<Type> > New
+        static tmp<gradScheme<Type>> New
         (
             const fvMesh& mesh,
             Istream& schemeData
@@ -165,7 +165,7 @@ public:
             <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
         > grad
         (
-            const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+            const tmp<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
 };
 
@@ -189,7 +189,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            gradScheme<Type>::addIstreamConstructorToTable<SS<Type> >          \
+            gradScheme<Type>::addIstreamConstructorToTable<SS<Type>>          \
                 add##SS##Type##IstreamConstructorToTable_;                     \
         }                                                                      \
     }
@@ -210,7 +210,7 @@ makeFvGradTypeScheme(SS, vector)
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::fv::gradScheme<Type> > CML::fv::gradScheme<Type>::New
+CML::tmp<CML::fv::gradScheme<Type>> CML::fv::gradScheme<Type>::New
 (
     const fvMesh& mesh,
     Istream& schemeData
@@ -395,7 +395,7 @@ CML::tmp
 >
 CML::fv::gradScheme<Type>::grad
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvsf
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvsf
 ) const
 {
     typedef typename outerProduct<vector, Type>::type GradType;

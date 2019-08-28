@@ -38,7 +38,7 @@ namespace fv
 {
 
 template<>
-tmp<BlockLduSystem<vector, vector> > blockGaussGrad<scalar>::fvmGrad
+tmp<BlockLduSystem<vector, vector>> blockGaussGrad<scalar>::fvmGrad
 (
     const GeometricField<scalar, fvPatchField, volMesh>& vf
 ) const
@@ -48,7 +48,7 @@ tmp<BlockLduSystem<vector, vector> > blockGaussGrad<scalar>::fvmGrad
 
     const fvMesh& mesh = vf.mesh();
 
-    tmp<BlockLduSystem<vector, vector> > tbs
+    tmp<BlockLduSystem<vector, vector>> tbs
     (
         new BlockLduSystem<vector, vector>(mesh)
     );

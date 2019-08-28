@@ -100,9 +100,9 @@ public:
         ParticleTrap(const ParticleTrap<CloudType>& pe);
 
         //- Construct and return a clone
-        virtual autoPtr<CloudFunctionObject<CloudType> > clone() const
+        virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
-            return autoPtr<CloudFunctionObject<CloudType> >
+            return autoPtr<CloudFunctionObject<CloudType>>
             (
                 new ParticleTrap<CloudType>(*this)
             );

@@ -142,7 +142,7 @@ public:
 
         //- Reconstruct field
         template<class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh> >
+        tmp<GeometricField<Type, pointPatchField, pointMesh>>
         reconstructField(const IOobject& fieldIoObject);
 
         //- Reconstruct and write all fields
@@ -163,11 +163,11 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh> >
+CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh>>
 CML::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
 {
     // Read the field for all the processors
-    PtrList<GeometricField<Type, pointPatchField, pointMesh> > procFields
+    PtrList<GeometricField<Type, pointPatchField, pointMesh>> procFields
     (
         procMeshes_.size()
     );
@@ -197,7 +197,7 @@ CML::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
     Field<Type> internalField(mesh_.size());
 
     // Create the patch fields
-    PtrList<pointPatchField<Type> > patchFields(mesh_.boundary().size());
+    PtrList<pointPatchField<Type>> patchFields(mesh_.boundary().size());
 
 
     forAll(procMeshes_, proci)
@@ -252,7 +252,7 @@ CML::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
 
     // Construct and write the field
     // setting the internalField and patchFields
-    return tmp<GeometricField<Type, pointPatchField, pointMesh> >
+    return tmp<GeometricField<Type, pointPatchField, pointMesh>>
     (
         new GeometricField<Type, pointPatchField, pointMesh>
         (

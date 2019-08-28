@@ -81,7 +81,7 @@ public:
     // Member Functions
     //- Return the BlockLduSystem corresponding to the implicit least
     // quares grad discretization. For block coupled systems.
-    tmp<BlockLduSystem<vector, typename outerProduct<vector, Type>::type> >
+    tmp<BlockLduSystem<vector, typename outerProduct<vector, Type>::type>>
     fvmGrad
     (
         const GeometricField<Type, fvPatchField, volMesh>&
@@ -116,7 +116,7 @@ tmp
 
    typedef typename outerProduct<vector, Type>::type GradType;
 
-   tmp<BlockLduSystem<vector, GradType> > tbs
+   tmp<BlockLduSystem<vector, GradType>> tbs
    (
        new BlockLduSystem<vector, GradType>(vf.mesh())
    );

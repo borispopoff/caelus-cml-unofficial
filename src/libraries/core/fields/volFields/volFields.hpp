@@ -45,7 +45,7 @@ namespace CML
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<>
-tmp<GeometricField<scalar, fvPatchField, volMesh> >
+tmp<GeometricField<scalar, fvPatchField, volMesh>>
 GeometricField<scalar, fvPatchField, volMesh>::component
 (
     const direction

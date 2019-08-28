@@ -56,7 +56,7 @@ class multivariateGaussConvectionScheme
 {
     // Private data
 
-        tmp<multivariateSurfaceInterpolationScheme<Type> > tinterpScheme_;
+        tmp<multivariateSurfaceInterpolationScheme<Type>> tinterpScheme_;
 
 
 public:
@@ -90,31 +90,31 @@ public:
 
     // Member Functions
 
-        tmp<multivariateSurfaceInterpolationScheme<Type> >
+        tmp<multivariateSurfaceInterpolationScheme<Type>>
         interpolationScheme() const
         {
             return tinterpScheme_;
         }
 
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > interpolate
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > flux
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
-        tmp<fvMatrix<Type> > fvmDiv
+        tmp<fvMatrix<Type>> fvmDiv
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDiv
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDiv
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -124,7 +124,7 @@ public:
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 multivariateGaussConvectionScheme<Type>::interpolate
 (
     const surfaceScalarField& faceFlux,
@@ -141,7 +141,7 @@ multivariateGaussConvectionScheme<Type>::interpolate
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 multivariateGaussConvectionScheme<Type>::flux
 (
     const surfaceScalarField& faceFlux,
@@ -158,7 +158,7 @@ multivariateGaussConvectionScheme<Type>::flux
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 multivariateGaussConvectionScheme<Type>::fvmDiv
 (
     const surfaceScalarField& faceFlux,
@@ -175,7 +175,7 @@ multivariateGaussConvectionScheme<Type>::fvmDiv
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 multivariateGaussConvectionScheme<Type>::fvcDiv
 (
     const surfaceScalarField& faceFlux,

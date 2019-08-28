@@ -179,7 +179,7 @@ class motionSmoother
 
         //- Average of connected points.
         template <class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > avg
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> avg
         (
             const GeometricField<Type, pointPatchField, pointMesh>& fld,
             const scalarField& edgeWeight
@@ -187,7 +187,7 @@ class motionSmoother
 
         //- Average position of connected points.
         template <class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > avgPositions
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> avgPositions
         (
             const GeometricField<Type, pointPatchField, pointMesh>& fld,
             const scalarField& edgeWeight
@@ -630,14 +630,14 @@ void CML::motionSmoother::applyCornerConstraints
 
 // Average of connected points.
 template <class Type>
-CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh> >
+CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh>>
 CML::motionSmoother::avg
 (
     const GeometricField<Type, pointPatchField, pointMesh>& fld,
     const scalarField& edgeWeight
 ) const
 {
-    tmp<GeometricField<Type, pointPatchField, pointMesh> > tres
+    tmp<GeometricField<Type, pointPatchField, pointMesh>> tres
     (
         new GeometricField<Type, pointPatchField, pointMesh>
         (

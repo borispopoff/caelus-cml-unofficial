@@ -267,7 +267,7 @@ CML::tmp<CML::volScalarField> CML::radiation::P1::Rp() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::radiation::P1::Ru() const
 {
     const DimensionedField<scalar, volMesh>& G =

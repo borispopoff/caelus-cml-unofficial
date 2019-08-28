@@ -280,7 +280,7 @@ void CML::surfaceIntersection::classifyHit
 
     DynamicList<edge>& allCutEdges,
     DynamicList<point>& allCutPoints,
-    List<DynamicList<label> >& surfEdgeCuts
+    List<DynamicList<label>>& surfEdgeCuts
 )
 {
     const edge& e = surf1.edges()[edgeI];
@@ -561,7 +561,7 @@ void CML::surfaceIntersection::doCutEdges
 
     DynamicList<edge>& allCutEdges,
     DynamicList<point>& allCutPoints,
-    List<DynamicList<label> >& surfEdgeCuts
+    List<DynamicList<label>>& surfEdgeCuts
 )
 {
     scalar oldTol = intersection::setPlanarTol(1E-3);
@@ -735,7 +735,7 @@ CML::surfaceIntersection::surfaceIntersection
 
 
     // From edge to cut index on surface1
-    List<DynamicList<label> > edgeCuts1(query1.surface().nEdges());
+    List<DynamicList<label>> edgeCuts1(query1.surface().nEdges());
 
     doCutEdges
     (
@@ -762,7 +762,7 @@ CML::surfaceIntersection::surfaceIntersection
     }
 
     // From edge to cut index
-    List<DynamicList<label> > edgeCuts2(query2.surface().nEdges());
+    List<DynamicList<label>> edgeCuts2(query2.surface().nEdges());
 
     doCutEdges
     (
@@ -839,7 +839,7 @@ CML::surfaceIntersection::surfaceIntersection
 
     {
         // From edge to cut index on surface1
-        List<DynamicList<label> > edgeCuts1(surf1.nEdges());
+        List<DynamicList<label>> edgeCuts1(surf1.nEdges());
 
         forAll(intersections1, edgeI)
         {
@@ -880,7 +880,7 @@ CML::surfaceIntersection::surfaceIntersection
 
     {
         // From edge to cut index on surface2
-        List<DynamicList<label> > edgeCuts2(surf2.nEdges());
+        List<DynamicList<label>> edgeCuts2(surf2.nEdges());
 
         forAll(intersections2, edgeI)
         {
@@ -997,7 +997,7 @@ CML::surfaceIntersection::surfaceIntersection
     DynamicList<point> allCutPoints;
 
     // From edge to cut index on surface1
-    List<DynamicList<label> > edgeCuts1(query1.surface().nEdges());
+    List<DynamicList<label>> edgeCuts1(query1.surface().nEdges());
 
     doCutEdges
     (

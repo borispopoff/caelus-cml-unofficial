@@ -80,20 +80,20 @@ class sampledPatch
 
         //- Sample field on faces
         template<class Type>
-        tmp<Field<Type> > sampleField
+        tmp<Field<Type>> sampleField
         (
             const GeometricField<Type, fvPatchField, volMesh>& vField
         ) const;
 
         //- Sample surface field on faces
         template<class Type>
-        tmp<Field<Type> > sampleField
+        tmp<Field<Type>> sampleField
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
         ) const;
 
         template<class Type>
-        tmp<Field<Type> > interpolateField(const interpolation<Type>&) const;
+        tmp<Field<Type>> interpolateField(const interpolation<Type>&) const;
 
         //- Re-map action on triangulation or cleanup
         virtual void remapFaces(const labelUList& faceMap);
@@ -286,14 +286,14 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledPatch::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
 {
     // One value per face
-    tmp<Field<Type> > tvalues(new Field<Type>(patchFaceLabels_.size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels_.size()));
     Field<Type>& values = tvalues();
     forAll(patchFaceLabels_, i)
     {
@@ -307,14 +307,14 @@ CML::sampledPatch::sampleField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledPatch::sampleField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
 ) const
 {
     // One value per face
-    tmp<Field<Type> > tvalues(new Field<Type>(patchFaceLabels_.size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels_.size()));
     Field<Type>& values = tvalues();
 
     forAll(patchFaceLabels_, i)
@@ -328,14 +328,14 @@ CML::sampledPatch::sampleField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledPatch::interpolateField
 (
     const interpolation<Type>& interpolator
 ) const
 {
     // One value per vertex
-    tmp<Field<Type> > tvalues(new Field<Type>(points().size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
     Field<Type>& values = tvalues();
 
     const labelList& own = mesh().faceOwner();

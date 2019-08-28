@@ -102,10 +102,10 @@ class refineBoundaryLayers
 
         //- information about existing boundary layers at patches
         //- only available layers
-        List<DynList<label> > layerAtPatch_;
+        List<DynList<label>> layerAtPatch_;
 
         //- which patches are part of a single layer
-        List<DynList<word> > patchesInLayer_;
+        List<DynList<word>> patchesInLayer_;
 
         //- a containing the number of layers which shall be generated above
         //- a boundary face
@@ -151,7 +151,7 @@ class refineBoundaryLayers
         void sortFacePoints
         (
             const label faceI,
-            DynList<DynList<label> >& facePoints,
+            DynList<DynList<label>>& facePoints,
             const label transpose = false
         ) const;
 
@@ -160,7 +160,7 @@ class refineBoundaryLayers
         void sortFaceFaces
         (
             const label faceI,
-            DynList<DynList<label> >& faceFaces,
+            DynList<DynList<label>>& faceFaces,
             const label transpose = false
         ) const;
 
@@ -219,7 +219,7 @@ class refineBoundaryLayers
                 FixedList<bool, 6> faceOrientation_;
 
                 //- points on cross-split faces
-                FixedList<DynList<DynList<label> >, 2> cellPoints_;
+                FixedList<DynList<DynList<label>>, 2> cellPoints_;
 
             // Private member functions
                 //- populate faceInDirection_nad wrongFaceOrientation_
@@ -283,10 +283,10 @@ class refineBoundaryLayers
                 FixedList<bool, 6> faceOrientation_;
 
                 //- points on cross-split faces
-                FixedList<DynList<DynList<label> >, 6> facePoints_;
+                FixedList<DynList<DynList<label>>, 6> facePoints_;
 
                 //- points inside the cell
-                DynList<DynList<DynList<label> > > cellPoints_;
+                DynList<DynList<DynList<label>>> cellPoints_;
 
             // Private member functions
                 //- populate faceInDirection_nad wrongFaceOrientation_
