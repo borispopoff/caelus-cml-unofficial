@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -144,22 +144,22 @@ public:
             return Rtr_;
         };
 
-        //- Return local Cartesian x-axis
+        //- Return local Cartesian x-axis in global coordinates
         virtual const vector e1() const
         {
-            return R_.x();
+            return Rtr_.x();
         }
 
-        //- Return local Cartesian y-axis
+        //- Return local Cartesian y-axis in global coordinates
         virtual const vector e2() const
         {
-            return R_.y();
+            return Rtr_.y();
         }
 
-        //- Return local Cartesian z-axis
+        //- Return local Cartesian z-axis in global coordinates
         virtual const vector e3() const
         {
-            return R_.z();
+            return Rtr_.z();
         }
 
         //- Return transformation tensor field
