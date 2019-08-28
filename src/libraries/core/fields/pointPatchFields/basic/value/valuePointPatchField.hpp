@@ -269,12 +269,14 @@ CML::valuePointPatchField<Type>::valuePointPatchField
     }
     else if (!valueRequired)
     {
-        Field<Type>::operator=(pTraits<Type>::zero);
+        Field<Type>::operator=(Zero);
     }
     else
     {
-        FatalIOErrorInFunction(dict)
-            << "Essential entry 'value' missing"
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "Essential entry 'value' missing"
             << exit(FatalIOError);
     }
 }
@@ -391,7 +393,7 @@ void CML::valuePointPatchField<Type>::operator=
     const pointPatchField<Type>& ptf
 )
 {
-    Field<Type>::operator=(ptf.patchInternalField());
+    Field<Type>::operator=(this->patchInternalField());
 }
 
 
@@ -432,7 +434,7 @@ void CML::valuePointPatchField<Type>::operator==
     const pointPatchField<Type>& ptf
 )
 {
-    Field<Type>::operator=(ptf.patchInternalField());
+    Field<Type>::operator=(this->patchInternalField());
 }
 
 

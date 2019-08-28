@@ -78,7 +78,7 @@ Ostream& operator<<
 template<class Type>
 class pointPatchField
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch
         const pointPatch& patch_;
@@ -231,8 +231,7 @@ public:
             const dictionary&
         );
 
-
-        //- Return a pointer to a new CalculatedpointPatchField created on
+        //- Return a pointer to a new calculatedPointPatchField created on
         //  freestore without setting patchField values
         template<class Type2>
         static autoPtr<pointPatchField<Type>>
@@ -247,7 +246,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -368,18 +367,13 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const pointPatchFieldMapper&
-            )
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const pointPatchFieldMapper&)
             {}
 
             //- Reverse map the given pointPatchField onto this pointPatchField
-            virtual void rmap
-            (
-                const pointPatchField<Type>&,
-                const labelList&
-            )
+            //  Used to reconstruct fields
+            virtual void rmap(const pointPatchField<Type>&, const labelList&)
             {}
 
 
@@ -395,52 +389,33 @@ public:
             //- Initialise evaluation of the patch field (do nothing)
             virtual void initEvaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::blocking
             )
             {}
 
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::blocking
             );
 
 
-        //- Write
-        virtual void write(Ostream&) const;
+        // I-O
+
+            //- Write
+            virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
-        virtual void operator=
-        (
-            const pointPatchField<Type>&
-        )
-        {}
+        virtual void operator=(const pointPatchField<Type>&){}
 
-        virtual void operator+=
-        (
-            const pointPatchField<Type>&
-        )
-        {}
-
-        virtual void operator-=
-        (
-            const pointPatchField<Type>&
-        )
-        {}
-
-        virtual void operator*=
-        (
-            const pointPatchField<scalar>&
-        )
-        {}
-
-        virtual void operator/=
-        (
-            const pointPatchField<scalar>&
-        )
-        {}
+        virtual void operator+=(const pointPatchField<Type>&){}
+        virtual void operator-=(const pointPatchField<Type>&){}
+        virtual void operator*=(const pointPatchField<scalar>&){}
+        virtual void operator/=(const pointPatchField<scalar>&){}
 
         virtual void operator=(const Field<Type>&){}
         virtual void operator+=(const Field<Type>&){}
@@ -460,12 +435,7 @@ public:
         // By generic these do nothing unless the patch actually has boundary
         // values
 
-            virtual void operator==
-            (
-                const pointPatchField<Type>&
-            )
-            {}
-
+            virtual void operator==(const pointPatchField<Type>&){}
             virtual void operator==(const Field<Type>&){}
             virtual void operator==(const Type&){}
 
@@ -480,8 +450,8 @@ public:
 };
 
 
-// This function is added as a hack to enable simple backward compatability
-// with verions using referenceLevel in GeometicField
+// This function is added as a hack to enable simple backward compatibility
+// with versions using referenceLevel in GeometicField
 template<class Type>
 const pointPatchField<Type>& operator+
 (
