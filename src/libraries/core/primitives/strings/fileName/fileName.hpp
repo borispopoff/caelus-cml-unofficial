@@ -100,19 +100,19 @@ public:
         //- Construct null
         inline fileName();
 
-        //- Construct as copy
+        //- Copy constructor
         inline fileName(const fileName&);
 
         //- Construct as copy of word
         inline fileName(const word&);
 
-        //- Construct as copy of string
+        //- Copy constructor of string
         inline fileName(const string&);
 
-        //- Construct as copy of std::string
+        //- Copy constructor of std::string
         inline fileName(const std::string&);
 
-        //- Construct as copy of character array
+        //- Copy constructor of character array
         inline fileName(const char*);
 
         //- Construct by concatenating elements of wordList separated by '/'
@@ -122,13 +122,26 @@ public:
         fileName(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Is this character valid for a fileName?
         inline static bool valid(char);
 
         //- Cleanup file name
-        //  eg, remove repeated slashes, etc.
+        //
+        // * Removes repeated slashes
+        //       /abc////def        -->   /abc/def
+        //
+        // * Removes '/./'
+        //       /abc/def/./ghi/.   -->   /abc/def/./ghi
+        //       abc/def/./         -->   abc/def
+        //
+        // * Removes '/../'
+        //       /abc/def/../ghi/jkl/nmo/..   -->   /abc/ghi/jkl
+        //       abc/../def/ghi/../jkl        -->   abc/../def/jkl
+        //
+        // * Removes trailing '/'
+        //
         bool clean();
 
         //- Cleanup file name
@@ -204,7 +217,7 @@ public:
             word component(const size_type, const char delimiter='/') const;
 
 
-    // Member operators
+    // Member Operators
 
         // Assignment
 
@@ -215,7 +228,7 @@ public:
             void operator=(const char*);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, fileName&);
         friend Ostream& operator<<(Ostream&, const fileName&);

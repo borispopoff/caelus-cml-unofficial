@@ -121,7 +121,7 @@ bool CML::fileName::clean()
                 // Peek at the next character
                 char c1 = operator[](src);
 
-                // found '/./' - skip it
+                // Found '/./' - skip it
                 if (c1 == '/')
                 {
                     src++;

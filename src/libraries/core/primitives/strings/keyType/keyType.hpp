@@ -63,7 +63,7 @@ class keyType
 :
     public word
 {
-    // Private data
+    // Private Data
 
         //- Is the keyType a pattern (regular expression)
         bool isPattern_;
@@ -75,7 +75,7 @@ class keyType
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- An empty keyType
         static const keyType null;
@@ -86,20 +86,20 @@ public:
         //- Construct null
         inline keyType();
 
-        //- Construct as copy
+        //- Copy constructor
         inline keyType(const keyType&);
 
-        //- Construct as copy of word. Not treated as a regular expression
+        //- Copy constructor of word. Not treated as a regular expression
         inline keyType(const word&);
 
-        //- Construct as copy of string. Treat as regular expression.
+        //- Copy constructor of string. Treat as regular expression.
         inline keyType(const string&);
 
-        //- Construct as copy of character array.
+        //- Copy constructor of character array.
         //  Not treated as a regular expression
         inline keyType(const char*);
 
-        //- Construct as copy of std::string with specified treatment
+        //- Copy constructor of std::string with specified treatment
         inline keyType(const std::string&, const bool isPattern);
 
         //- Construct from Istream
@@ -107,7 +107,7 @@ public:
         keyType(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Should be treated as a match rather than a literal string
         inline bool isPattern() const;
@@ -116,7 +116,7 @@ public:
         //  Optionally force a literal match only
         bool match(const std::string&, bool literalMatch=false) const;
 
-    // Member operators
+    // Member Operators
 
         // Assignment
 
@@ -133,7 +133,7 @@ public:
             inline void operator=(const char*);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, keyType&);
         friend Ostream& operator<<(Ostream&, const keyType&);

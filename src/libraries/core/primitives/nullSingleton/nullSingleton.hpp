@@ -50,7 +50,7 @@ class NullSingleton
     NullSingleton(const NullSingleton&);
 
     //- Prevent assignment
-    NullSingleton& operator=(const NullSingleton&);
+    void operator=(const NullSingleton&);
 
 public:
 

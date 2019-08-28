@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -281,18 +281,15 @@ CML::Xfer<CML::labelList> CML::PackedBoolList::used() const
 
 
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
-CML::PackedBoolList&
-CML::PackedBoolList::operator=(const CML::UList<bool>& lst)
+void CML::PackedBoolList::operator=(const CML::UList<bool>& lst)
 {
-   this->setSize(lst.size());
+    this->setSize(lst.size());
 
-   // overwrite with new true/false values
-   forAll(*this, elemI)
-   {
-       set(elemI, lst[elemI]);
-   }
-
-   return *this;
+    // overwrite with new true/false values
+    forAll(*this, elemI)
+    {
+        set(elemI, lst[elemI]);
+    }
 }
 
 

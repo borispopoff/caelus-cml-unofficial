@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -213,7 +213,7 @@ public:
             inline void resize(const label);
 
             //- Clear the PtrList, i.e. set size to zero deleting all the
-            //  allocated entries.
+            //  allocated entries
             void clear();
 
             //- Append an element at the end of the list
@@ -222,7 +222,7 @@ public:
             inline void append(const tmp<T>&);
 
             //- Transfer the contents of the argument PtrList into this PtrList
-            //  and annul the argument list.
+            //  and annul the argument list
             void transfer(PtrList<T>&);
 
             //- Transfer contents to the Xfer container
@@ -259,8 +259,8 @@ public:
         inline const T* operator()(const label) const;
 
 
-        //- Assignment.
-        PtrList<T>& operator=(const PtrList<T>&);
+        //- Assignment operator
+        void operator=(const PtrList<T>&);
 
 
     // STL type definitions
@@ -1226,7 +1226,7 @@ void CML::PtrList<T>::reorder(const labelUList& oldToNew)
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class T>
-CML::PtrList<T>& CML::PtrList<T>::operator=(const PtrList<T>& a)
+void CML::PtrList<T>::operator=(const PtrList<T>& a)
 {
     if (this == &a)
     {
@@ -1235,16 +1235,16 @@ CML::PtrList<T>& CML::PtrList<T>::operator=(const PtrList<T>& a)
             << abort(FatalError);
     }
 
-    if (size() == 0)
+    if (this->size() == 0)
     {
         setSize(a.size());
 
         forAll(*this, i)
         {
-            ptrs_[i] = (a[i]).clone().ptr();
+            this->ptrs_[i] = (a[i]).clone().ptr();
         }
     }
-    else if (a.size() == size())
+    else if (a.size() == this->size())
     {
         forAll(*this, i)
         {
@@ -1257,9 +1257,6 @@ CML::PtrList<T>& CML::PtrList<T>::operator=(const PtrList<T>& a)
             << "bad size: " << a.size()
             << abort(FatalError);
     }
-
-
-    return *this;
 }
 
 

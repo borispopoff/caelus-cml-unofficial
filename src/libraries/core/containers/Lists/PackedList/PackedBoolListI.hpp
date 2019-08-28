@@ -122,47 +122,35 @@ inline CML::Xfer<CML::PackedBoolList> CML::PackedBoolList::xfer()
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline CML::PackedBoolList&
-CML::PackedBoolList::operator=(const bool val)
+inline void CML::PackedBoolList::operator=(const bool val)
 {
     PackedList<1>::operator=(val);
-    return *this;
 }
 
 
-inline CML::PackedBoolList&
-CML::PackedBoolList::operator=(const PackedBoolList& lst)
+inline void CML::PackedBoolList::operator=(const PackedBoolList& lst)
 {
     PackedList<1>::operator=(lst);
-    return *this;
 }
 
 
-inline CML::PackedBoolList&
-CML::PackedBoolList::operator=(const PackedList<1>& lst)
+inline void CML::PackedBoolList::operator=(const PackedList<1>& lst)
 {
     PackedList<1>::operator=(lst);
-    return *this;
 }
 
 
-inline CML::PackedBoolList&
-CML::PackedBoolList::operator=(const labelUList& indices)
+inline void CML::PackedBoolList::operator=(const labelUList& indices)
 {
     clear();
     set(indices);
-
-    return *this;
 }
 
 
-inline CML::PackedBoolList&
-CML::PackedBoolList::operator=(const UIndirectList<label>& indices)
+inline void CML::PackedBoolList::operator=(const UIndirectList<label>& indices)
 {
     clear();
     set(indices);
-
-    return *this;
 }
 
 
