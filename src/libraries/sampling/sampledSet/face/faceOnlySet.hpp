@@ -66,6 +66,7 @@ class faceOnlySet
         (
             passiveParticleCloud& particleCloud,
             passiveParticle& singleParticle,
+            const scalar smallDist,
             DynamicList<point>& samplingPts,
             DynamicList<label>& samplingCells,
             DynamicList<label>& samplingFaces,

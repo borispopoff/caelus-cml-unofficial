@@ -41,16 +41,13 @@ bool CML::faceOnlySet::trackToBoundary
 (
     passiveParticleCloud& particleCloud,
     passiveParticle& singleParticle,
+    const scalar smallDist,
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
     DynamicList<label>& samplingFaces,
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
-    // distance vector between sampling points
-    const vector offset = end_ - start_;
-    const vector smallVec = tol*offset;
-    const scalar smallDist = mag(smallVec);
 
     particle::trackingData td(particleCloud);
 
@@ -217,6 +214,7 @@ void CML::faceOnlySet::calcSamples
         (
             particleCloud,
             singleParticle,
+            smallDist,
             samplingPts,
             samplingCells,
             samplingFaces,
@@ -236,11 +234,6 @@ void CML::faceOnlySet::calcSamples
             //     << endl;
             break;
         }
-
-
-        // Go past boundary intersection where tracking stopped
-        // Use coordinate comparison instead of face comparison for
-        // accuracy reasons
 
         bool foundValidB = false;
 
@@ -268,7 +261,7 @@ void CML::faceOnlySet::calcSamples
             }
         }
 
-        if (!foundValidB)
+        if (!foundValidB || bHitI == bHits.size() - 1)
         {
             // No valid boundary intersection found beyond tracking position
             break;
