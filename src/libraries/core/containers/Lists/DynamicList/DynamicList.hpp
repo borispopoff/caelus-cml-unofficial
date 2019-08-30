@@ -100,7 +100,10 @@ public:
         //- Construct given size
         explicit inline DynamicList(const label);
 
-        //- Construct copy.
+        //- Construct with given size and value for all elements.
+        inline DynamicList(const label, const T&);
+
+        //- Copy constructor
         inline DynamicList(const DynamicList<T, SizeInc, SizeMult, SizeDiv>&);
 
         //- Construct from UList. Size set to UList size.
@@ -221,6 +224,12 @@ public:
             inline void operator=(const UIndirectList<T>&);
 
 
+        // STL member functions
+
+            //- Erase an element, move the remaining elements to fill the gap
+            //  and resize the List
+            typename UList<T>::iterator erase(typename UList<T>::iterator);
+
 
         // IOstream Operators
 
@@ -265,9 +274,21 @@ inline CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
     List<T>(nElem),
     capacity_(nElem)
 {
-    // we could also enforce SizeInc granularity when (!SizeMult || !SizeDiv)
+    // We could also enforce SizeInc granularity when (!SizeMult || !SizeDiv)
     List<T>::size(0);
 }
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
+(
+    const label nElem,
+    const T& a
+)
+:
+    List<T>(nElem, a),
+    capacity_(nElem)
+{}
 
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
@@ -314,7 +335,6 @@ inline CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 {}
 
 
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
@@ -336,10 +356,10 @@ inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::setCapacity
 
     if (nextFree > capacity_)
     {
-        // truncate addressed sizes too
+        // Truncate addressed sizes too
         nextFree = capacity_;
     }
-    // we could also enforce SizeInc granularity when (!SizeMult || !SizeDiv)
+    // We could also enforce SizeInc granularity when (!SizeMult || !SizeDiv)
 
     List<T>::setSize(capacity_);
     List<T>::size(nextFree);
@@ -352,30 +372,16 @@ inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::reserve
     const label nElem
 )
 {
-    // allocate more capacity?
+    // Allocate more capacity if necessary
     if (nElem > capacity_)
     {
-// TODO: convince the compiler that division by zero does not occur
-//        if (SizeInc && (!SizeMult || !SizeDiv))
-//        {
-//            // resize with SizeInc as the granularity
-//            capacity_ = nElem;
-//            unsigned pad = SizeInc - (capacity_ % SizeInc);
-//            if (pad != SizeInc)
-//            {
-//                capacity_ += pad;
-//            }
-//        }
-//        else
-        {
-            capacity_ = max
-            (
-                nElem,
-                label(SizeInc + capacity_ * SizeMult / SizeDiv)
-            );
-        }
+        capacity_ = max
+        (
+            nElem,
+            label(SizeInc + capacity_ * SizeMult / SizeDiv)
+        );
 
-        // adjust allocated size, leave addressed size untouched
+        // Adjust allocated size, leave addressed size untouched
         label nextFree = List<T>::size();
         List<T>::setSize(capacity_);
         List<T>::size(nextFree);
@@ -389,33 +395,19 @@ inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::setSize
     const label nElem
 )
 {
-    // allocate more capacity?
+    // Allocate more capacity if necessary
     if (nElem > capacity_)
     {
-// TODO: convince the compiler that division by zero does not occur
-//        if (SizeInc && (!SizeMult || !SizeDiv))
-//        {
-//            // resize with SizeInc as the granularity
-//            capacity_ = nElem;
-//            unsigned pad = SizeInc - (capacity_ % SizeInc);
-//            if (pad != SizeInc)
-//            {
-//                capacity_ += pad;
-//            }
-//        }
-//        else
-        {
-            capacity_ = max
-            (
-                nElem,
-                label(SizeInc + capacity_ * SizeMult / SizeDiv)
-            );
-        }
+        capacity_ = max
+        (
+            nElem,
+            label(SizeInc + capacity_ * SizeMult / SizeDiv)
+        );
 
         List<T>::setSize(capacity_);
     }
 
-    // adjust addressed size
+    // Adjust addressed size
     List<T>::size(nElem);
 }
 
@@ -430,7 +422,7 @@ inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::setSize
     label nextFree = List<T>::size();
     setSize(nElem);
 
-    // set new elements to constant value
+    // Set new elements to constant value
     while (nextFree < nElem)
     {
         this->operator[](nextFree++) = t;
@@ -481,10 +473,10 @@ CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::shrink()
     label nextFree = List<T>::size();
     if (capacity_ > nextFree)
     {
-        // use the full list when resizing
+        // Use the full list when resizing
         List<T>::size(capacity_);
 
-        // the new size
+        // The new size
         capacity_ = nextFree;
         List<T>::setSize(capacity_);
         List<T>::size(nextFree);
@@ -509,10 +501,9 @@ CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::transfer
     DynamicList<T, SizeInc, SizeMult, SizeDiv>& lst
 )
 {
-    // take over storage as-is (without shrink), clear addressing for lst.
+    // Take over storage as-is (without shrink), clear addressing for lst.
     capacity_ = lst.capacity_;
     lst.capacity_ = 0;
-
     List<T>::transfer(static_cast<List<T>&>(lst));
 }
 
@@ -550,7 +541,7 @@ CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::append
     if (this == &lst)
     {
         FatalErrorInFunction
-            << "attempted appending to self" << abort(FatalError);
+            << "Attempted appending to self" << abort(FatalError);
     }
 
     label nextFree = List<T>::size();
@@ -637,18 +628,18 @@ inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::operator=
     if (this == &lst)
     {
         FatalErrorInFunction
-            << "attempted assignment to self" << abort(FatalError);
+            << "Attempted assignment to self" << abort(FatalError);
     }
 
     if (capacity_ >= lst.size())
     {
-        // can copy w/o reallocating, match initial size to avoid reallocation
+        // Can copy w/o reallocating, match initial size to avoid reallocation
         List<T>::size(lst.size());
         List<T>::operator=(lst);
     }
     else
     {
-        // make everything available for the copy operation
+        // Make everything available for the copy operation
         List<T>::size(capacity_);
 
         List<T>::operator=(lst);
@@ -665,13 +656,13 @@ inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::operator=
 {
     if (capacity_ >= lst.size())
     {
-        // can copy w/o reallocating, match initial size to avoid reallocation
+        // Can copy w/o reallocating, match initial size to avoid reallocation
         List<T>::size(lst.size());
         List<T>::operator=(lst);
     }
     else
     {
-        // make everything available for the copy operation
+        // Make everything available for the copy operation
         List<T>::size(capacity_);
 
         List<T>::operator=(lst);
@@ -688,13 +679,13 @@ inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::operator=
 {
     if (capacity_ >= lst.size())
     {
-        // can copy w/o reallocating, match initial size to avoid reallocation
+        // Can copy w/o reallocating, match initial size to avoid reallocation
         List<T>::size(lst.size());
         List<T>::operator=(lst);
     }
     else
     {
-        // make everything available for the copy operation
+        // Make everything available for the copy operation
         List<T>::size(capacity_);
 
         List<T>::operator=(lst);
@@ -703,6 +694,32 @@ inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::operator=
 }
 
 
+// * * * * * * * * * * * * * * STL Member Functions  * * * * * * * * * * * * //
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+typename CML::UList<T>::iterator
+CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::erase
+(
+    typename UList<T>::iterator curIter
+)
+{
+    typename CML::UList<T>::iterator iter = curIter;
+    typename CML::UList<T>::iterator nextIter = curIter;
+
+    if (iter != this->end())
+    {
+        ++iter;
+
+        while (iter != this->end())
+        {
+            *nextIter++ = *iter++;
+        }
+
+        this->setSize(this->size() - 1);
+    }
+
+    return curIter;
+}
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 
