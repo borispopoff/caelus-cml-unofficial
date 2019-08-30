@@ -86,7 +86,7 @@ void CML::faceZoneToCell::combine(topoSet& set, const bool add) const
             forAll(cellLabels, i)
             {
                 // Only do active cells
-                if (cellLabels[i] < mesh_.nCells())
+                if (cellLabels[i] >= 0 && cellLabels[i] < mesh_.nCells())
                 {
                     addOrDelete(set, cellLabels[i], add);
                 }
