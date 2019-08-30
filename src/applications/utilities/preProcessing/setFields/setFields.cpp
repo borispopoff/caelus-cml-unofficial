@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -50,6 +50,7 @@ bool setCellFieldType
 
     word fieldName(fieldValueStream);
 
+    // Check the current time directory
     IOobject fieldHeader
     (
         fieldName,
@@ -174,6 +175,7 @@ bool setFaceFieldType
 
     word fieldName(fieldValueStream);
 
+    // Check the current time directory
     IOobject fieldHeader
     (
         fieldName,
@@ -203,7 +205,7 @@ bool setFaceFieldType
                 field.boundaryField()[patchi].size(),
                 field.boundaryField()[patchi].patch().start()
               - mesh.nInternalFaces()
-            ).assign(field.boundaryField()[patchi]);
+            ) = field.boundaryField()[patchi];
         }
 
         // Override

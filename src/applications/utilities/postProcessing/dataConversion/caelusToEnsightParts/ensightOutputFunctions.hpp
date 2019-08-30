@@ -269,7 +269,7 @@ void CML::ensightLagrangianField
 
 
 //- write generalized field components
-template <class Type>
+template<class Type>
 void CML::ensightVolField
 (
     const ensightParts& partsList,

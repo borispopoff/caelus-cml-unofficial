@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -317,12 +317,12 @@ void CML::volPointInterpolation::addSeparated
     typename GeometricField<Type, pointPatchField, pointMesh>::
         GeometricBoundaryField& pfbf = pf.boundaryField();
 
-    forAll(pfbf, patchI)
+    forAll(pfbf, patchi)
     {
-        if (pfbf[patchI].coupled())
+        if (pfbf[patchi].coupled())
         {
             refCast<coupledPointPatchField<Type>>
-                (pfbf[patchI]).initSwapAddSeparated
+                (pfbf[patchi]).initSwapAddSeparated
                 (
                     Pstream::nonBlocking,
                     pf.internalField()
@@ -333,12 +333,12 @@ void CML::volPointInterpolation::addSeparated
     // Block for any outstanding requests
     Pstream::waitRequests();
 
-    forAll(pfbf, patchI)
+    forAll(pfbf, patchi)
     {
-        if (pfbf[patchI].coupled())
+        if (pfbf[patchi].coupled())
         {
             refCast<coupledPointPatchField<Type>>
-                (pfbf[patchI]).swapAddSeparated
+                (pfbf[patchi]).swapAddSeparated
                 (
                     Pstream::nonBlocking,
                     pf.internalField()
@@ -374,7 +374,7 @@ void CML::volPointInterpolation::interpolateInternalField
             const scalarList& pw = pointWeights_[pointi];
             const labelList& ppc = pointCells[pointi];
 
-            pf[pointi] = pTraits<Type>::zero;
+            pf[pointi] = Zero;
 
             forAll(ppc, pointCelli)
             {
@@ -400,30 +400,30 @@ CML::tmp<CML::Field<Type>> CML::volPointInterpolation::flatBoundaryField
     );
     Field<Type>& boundaryVals = tboundaryVals();
 
-    forAll(vf.boundaryField(), patchI)
+    forAll(vf.boundaryField(), patchi)
     {
-        label bFaceI = bm[patchI].patch().start() - mesh.nInternalFaces();
+        label bFacei = bm[patchi].patch().start() - mesh.nInternalFaces();
 
         if
         (
-           !isA<emptyFvPatch>(bm[patchI])
-        && !vf.boundaryField()[patchI].coupled()
+           !isA<emptyFvPatch>(bm[patchi])
+        && !vf.boundaryField()[patchi].coupled()
         )
         {
             SubList<Type>
             (
                 boundaryVals,
-                vf.boundaryField()[patchI].size(),
-                bFaceI
-            ).assign(vf.boundaryField()[patchI]);
+                vf.boundaryField()[patchi].size(),
+                bFacei
+            ) = vf.boundaryField()[patchi];
         }
         else
         {
-            const polyPatch& pp = bm[patchI].patch();
+            const polyPatch& pp = bm[patchi].patch();
 
             forAll(pp, i)
             {
-                boundaryVals[bFaceI++] = pTraits<Type>::zero;
+                boundaryVals[bFacei++] = Zero;
             }
         }
     }
@@ -447,22 +447,19 @@ void CML::volPointInterpolation::interpolateBoundaryField
     tmp<Field<Type>> tboundaryVals(flatBoundaryField(vf));
     const Field<Type>& boundaryVals = tboundaryVals();
 
-
     // Do points on 'normal' patches from the surrounding patch faces
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     forAll(boundary.meshPoints(), i)
     {
-        label pointI = boundary.meshPoints()[i];
+        label pointi = boundary.meshPoints()[i];
 
-        if (isPatchPoint_[pointI])
+        if (isPatchPoint_[pointi])
         {
             const labelList& pFaces = boundary.pointFaces()[i];
             const scalarList& pWeights = boundaryPointWeights_[i];
 
-            Type& val = pfi[pointI];
+            Type& val = pfi[pointi];
 
-            val = pTraits<Type>::zero;
+            val = Zero;
             forAll(pFaces, j)
             {
                 if (boundaryIsPatchFace_[pFaces[j]])
@@ -697,9 +694,6 @@ CML::volPointInterpolation::interpolate
     tvf.clear();
     return tpf;
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

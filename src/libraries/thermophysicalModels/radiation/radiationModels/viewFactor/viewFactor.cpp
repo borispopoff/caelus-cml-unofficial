@@ -462,9 +462,9 @@ void CML::radiation::viewFactor::calculate()
     }
 
     // Fill the local values to distribute
-    SubList<scalar>(compactCoarseT4, nLocalCoarseFaces_).assign(localCoarseT4ave);
-    SubList<scalar>(compactCoarseE, nLocalCoarseFaces_).assign(localCoarseEave);
-    SubList<scalar>(compactCoarseHo, nLocalCoarseFaces_).assign(localCoarseHoave);
+    SubList<scalar>(compactCoarseT4, nLocalCoarseFaces_) = localCoarseT4ave;
+    SubList<scalar>(compactCoarseE, nLocalCoarseFaces_) = localCoarseEave;
+    SubList<scalar>(compactCoarseHo, nLocalCoarseFaces_) = localCoarseHoave;
 
     // Distribute data
     map_->distribute(compactCoarseT4);
@@ -485,7 +485,7 @@ void CML::radiation::viewFactor::calculate()
     (
         compactGlobalIds,
         nLocalCoarseFaces_
-    ).assign(localGlobalIds);
+    ) = localGlobalIds;
 
     map_->distribute(compactGlobalIds);
 

@@ -321,7 +321,7 @@ CML::labelList CML::simpleGeomDecomp::decompose
 
             label nTotalPoints = 0;
             // Master first
-            SubField<point>(allPoints, points.size()).assign(points);
+            SubField<point>(allPoints, points.size()) = points;
             nTotalPoints += points.size();
 
             // Add slaves
@@ -334,7 +334,7 @@ CML::labelList CML::simpleGeomDecomp::decompose
                     allPoints,
                     nbrPoints.size(),
                     nTotalPoints
-                ).assign(nbrPoints);
+                ) = nbrPoints;
                 nTotalPoints += nbrPoints.size();
             }
 
@@ -397,8 +397,8 @@ CML::labelList CML::simpleGeomDecomp::decompose
 
             label nTotalPoints = 0;
             // Master first
-            SubField<point>(allPoints, points.size()).assign(points);
-            SubField<scalar>(allWeights, points.size()).assign(weights);
+            SubField<point>(allPoints, points.size()) = points;
+            SubField<scalar>(allWeights, points.size()) = weights;
             nTotalPoints += points.size();
 
             // Add slaves
@@ -412,13 +412,13 @@ CML::labelList CML::simpleGeomDecomp::decompose
                     allPoints,
                     nbrPoints.size(),
                     nTotalPoints
-                ).assign(nbrPoints);
+                ) = nbrPoints;
                 SubField<scalar>
                 (
                     allWeights,
                     nbrWeights.size(),
                     nTotalPoints
-                ).assign(nbrWeights);
+                ) = nbrWeights;
                 nTotalPoints += nbrPoints.size();
             }
 
@@ -445,12 +445,20 @@ CML::labelList CML::simpleGeomDecomp::decompose
         {
             // Send my points
             {
-                OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::scheduled,
+                    Pstream::masterNo()
+                );
                 toMaster<< points << weights;
             }
 
             // Receive back decomposition
-            IPstream fromMaster(Pstream::scheduled, Pstream::masterNo());
+            IPstream fromMaster
+            (
+                Pstream::scheduled,
+                Pstream::masterNo()
+            );
             labelList finalDecomp(fromMaster);
 
             return finalDecomp;

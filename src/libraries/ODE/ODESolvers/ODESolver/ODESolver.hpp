@@ -234,7 +234,7 @@ public:
 template<class Type>
 inline void CML::ODESolver::resizeField(UList<Type>& f, const label n)
 {
-    f = UList<Type>(f.begin(), n);
+    f.shallowCopy(UList<Type>(f.begin(), n));
 }
 
 

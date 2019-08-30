@@ -2205,7 +2205,7 @@ CML::label CML::AMIInterpolation<SourcePatch, TargetPatch>::calcDistribution
             proci = -1;
             if (debug)
             {
-                Info<< "AMIInterpolation::calcDistribution: "
+                InfoInFunction
                     << "AMI split across multiple processors" << endl;
             }
         }
@@ -2214,7 +2214,7 @@ CML::label CML::AMIInterpolation<SourcePatch, TargetPatch>::calcDistribution
             proci = findIndex(facesPresentOnProc, 1);
             if (debug)
             {
-                Info<< "AMIInterpolation::calcDistribution: "
+                InfoInFunction
                     << "AMI local to processor" << proci << endl;
             }
         }
@@ -2391,7 +2391,7 @@ distributeAndMergePatches
     // My own data first
     {
         const labelList& faceIDs = allTgtFaceIDs[Pstream::myProcNo()];
-        SubList<label>(tgtFaceIDs, faceIDs.size()).assign(faceIDs);
+        SubList<label>(tgtFaceIDs, faceIDs.size()) = faceIDs;
 
         const faceList& fcs = allFaces[Pstream::myProcNo()];
         forAll(fcs, i)
@@ -2419,7 +2419,7 @@ distributeAndMergePatches
         if (proci != Pstream::myProcNo())
         {
             const labelList& faceIDs = allTgtFaceIDs[proci];
-            SubList<label>(tgtFaceIDs, faceIDs.size(), nFaces).assign(faceIDs);
+            SubList<label>(tgtFaceIDs, faceIDs.size(), nFaces) = faceIDs;
 
             const faceList& fcs = allFaces[proci];
             forAll(fcs, i)

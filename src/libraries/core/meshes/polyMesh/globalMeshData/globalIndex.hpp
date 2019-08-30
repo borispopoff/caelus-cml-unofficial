@@ -246,7 +246,11 @@ void CML::globalIndex::gather
         // Assign my local data
         SubList<Type>(allFld, fld.size(), 0) = fld;
 
-        if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
+        if
+        (
+            commsType == Pstream::scheduled
+         || commsType == Pstream::blocking
+        )
         {
             for (label i = 1; i < procIDs.size(); i++)
             {
@@ -310,7 +314,11 @@ void CML::globalIndex::gather
     }
     else
     {
-        if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
+        if
+        (
+            commsType == Pstream::scheduled
+         || commsType == Pstream::blocking
+        )
         {
             if (contiguous<Type>())
             {

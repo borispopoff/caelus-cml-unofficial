@@ -282,7 +282,7 @@ void CML::TranCellZoneInjection<CloudType>::setPositions
         allPositions,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(positions);
+    ) = positions;
 
     Pstream::listCombineGather(allPositions, minEqOp<point>());
     Pstream::listCombineScatter(allPositions);
@@ -293,19 +293,19 @@ void CML::TranCellZoneInjection<CloudType>::setPositions
         allInjectorCells,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(injectorCells);
+    ) = injectorCells;
     SubList<label>
     (
         allInjectorTetFaces,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(injectorTetFaces);
+    ) = injectorTetFaces;
     SubList<label>
     (
         allInjectorTetPts,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(injectorTetPts);
+    ) = injectorTetPts;
 
     // Transfer data
     positions_.transfer(allPositions);

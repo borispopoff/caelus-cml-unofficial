@@ -270,7 +270,7 @@ void CML::CellZoneInjection<CloudType>::setPositions
         allPositions,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(positions);
+    ) = positions;
 
     Pstream::listCombineGather(allPositions, minEqOp<point>());
     Pstream::listCombineScatter(allPositions);
@@ -281,19 +281,19 @@ void CML::CellZoneInjection<CloudType>::setPositions
         allInjectorCells,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(injectorCells);
+    ) = injectorCells;
     SubList<label>
     (
         allInjectorTetFaces,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(injectorTetFaces);
+    ) = injectorTetFaces;
     SubList<label>
     (
         allInjectorTetPts,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(injectorTetPts);
+    ) = injectorTetPts;
 
     // Transfer data
     positions_.transfer(allPositions);
@@ -514,9 +514,6 @@ bool CML::CellZoneInjection<CloudType>::validInjection(const label)
 {
     return true;
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

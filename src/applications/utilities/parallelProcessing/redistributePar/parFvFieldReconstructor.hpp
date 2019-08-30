@@ -416,16 +416,13 @@ CML::parFvFieldReconstructor::reconstructFvSurfaceField
     );
 
     // Create flat field of internalField + all patch fields
-    Field<Type> flatFld(fld.mesh().nFaces(), pTraits<Type>::zero);
-    SubList<Type>(flatFld, fld.internalField().size()).assign
-    (
-        fld.internalField()
-    );
+    Field<Type> flatFld(fld.mesh().nFaces(), Type(Zero));
+    SubList<Type>(flatFld, fld.internalField().size()) = fld.internalField();
     forAll(fld.boundaryField(), patchI)
     {
         const fvsPatchField<Type>& fvp = fld.boundaryField()[patchI];
 
-        SubList<Type>(flatFld, fvp.size(), fvp.patch().start()).assign(fvp);
+        SubList<Type>(flatFld, fvp.size(), fvp.patch().start()) = fvp;
     }
 
     // Map all faces

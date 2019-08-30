@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -240,14 +240,14 @@ CML::sampledPatchInternalField::interpolateField
 
         Field<Type> patchVals(mesh().nCells());
 
-        forAll(samples, cellI)
+        forAll(samples, celli)
         {
-            if (samples[cellI] != point::max)
+            if (samples[celli] != point::max)
             {
-                patchVals[cellI] = interpolator.interpolate
+                patchVals[celli] = interpolator.interpolate
                 (
-                    samples[cellI],
-                    cellI
+                    samples[celli],
+                    celli
                 );
             }
         }
@@ -256,7 +256,7 @@ CML::sampledPatchInternalField::interpolateField
 
         // Now patchVals holds the interpolated data in patch face order.
         // Collect.
-        SubList<Type>(allPatchVals, patchVals.size(), sz).assign(patchVals);
+        SubList<Type>(allPatchVals, patchVals.size(), sz) = patchVals;
         sz += patchVals.size();
     }
 
@@ -285,9 +285,6 @@ CML::sampledPatchInternalField::interpolateField
         allPatches
     ).faceToPointInterpolate(allPatchVals);
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

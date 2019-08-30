@@ -676,10 +676,8 @@ void CML::fvMeshDistribute::getNeighbourData
             }
 
             // Which processor they will end up on
-            SubList<label>(nbrNewNbrProc, pp.size(), offset).assign
-            (
-                UIndirectList<label>(distribution, pp.faceCells())()
-            );
+            SubList<label>(nbrNewNbrProc, pp.size(), offset) =
+                UIndirectList<label>(distribution, pp.faceCells())();
         }
     }
 
@@ -1245,7 +1243,7 @@ void CML::fvMeshDistribute::sendMesh
 
             if (myZoneID != -1)
             {
-                zonePoints[nameI].assign(pointZones[myZoneID]);
+                zonePoints[nameI].deepCopy(pointZones[myZoneID]);
             }
         }
     }
@@ -1277,8 +1275,8 @@ void CML::fvMeshDistribute::sendMesh
 
             if (myZoneID != -1)
             {
-                zoneFaces[nameI].assign(faceZones[myZoneID]);
-                zoneFaceFlip[nameI].assign(faceZones[myZoneID].flipMap());
+                zoneFaces[nameI].deepCopy(faceZones[myZoneID]);
+                zoneFaceFlip[nameI].deepCopy(faceZones[myZoneID].flipMap());
             }
         }
     }
@@ -1308,7 +1306,7 @@ void CML::fvMeshDistribute::sendMesh
 
             if (myZoneID != -1)
             {
-                zoneCells[nameI].assign(cellZones[myZoneID]);
+                zoneCells[nameI].deepCopy(cellZones[myZoneID]);
             }
         }
     }

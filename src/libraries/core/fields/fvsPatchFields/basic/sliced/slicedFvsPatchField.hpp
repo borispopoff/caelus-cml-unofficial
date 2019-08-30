@@ -171,7 +171,7 @@ CML::slicedFvsPatchField<Type>::slicedFvsPatchField
     fvsPatchField<Type>(p, iF, Field<Type>())
 {
     // Set the fvsPatchField to a slice of the given complete field
-    UList<Type>::operator=(p.patchSlice(completeField));
+    UList<Type>::shallowCopy(p.patchSlice(completeField));
 }
 
 
@@ -225,8 +225,9 @@ CML::slicedFvsPatchField<Type>::slicedFvsPatchField
     fvsPatchField<Type>(ptf.patch(), iF, Field<Type>())
 {
     // Transfer the slice from the argument
-    UList<Type>::operator=(ptf);
+    UList<Type>::shallowCopy(ptf);
 }
+
 
 template<class Type>
 CML::tmp<CML::fvsPatchField<Type>>
@@ -253,7 +254,7 @@ CML::slicedFvsPatchField<Type>::slicedFvsPatchField
     )
 {
     // Transfer the slice from the argument
-    UList<Type>::operator=(ptf);
+    UList<Type>::shallowCopy(ptf);
 }
 
 
@@ -276,7 +277,7 @@ CML::slicedFvsPatchField<Type>::~slicedFvsPatchField<Type>()
 {
     // Set the fvsPatchField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
-    UList<Type>::operator=(UList<Type>(nullptr, 0));
+    UList<Type>::shallowCopy(UList<Type>(nullptr, 0));
 }
 
 

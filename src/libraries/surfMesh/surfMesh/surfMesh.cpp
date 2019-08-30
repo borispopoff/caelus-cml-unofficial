@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -227,7 +227,7 @@ CML::surfMesh::~surfMesh()
 
 void CML::surfMesh::updatePointsRef()
 {
-    // assign the reference to the points (this is truly ugly)
+    // Assign the reference to the points (this is truly ugly)
     reinterpret_cast<SubField<point>&>
     (
         const_cast<Field<point>&>(MeshReference::points())
@@ -237,8 +237,8 @@ void CML::surfMesh::updatePointsRef()
 
 void CML::surfMesh::updateFacesRef()
 {
-    // assign the reference to the faces
-    static_cast<UList<face>&>(*this) = this->storedFaces();
+    // Assign the reference to the faces
+    shallowCopy(this->storedFaces());
 }
 
 

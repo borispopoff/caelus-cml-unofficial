@@ -138,7 +138,7 @@ class domainDecomposition
         ) const;
 
         //- Generate sub patch info for processor cyclics
-        template <class BinaryOp>
+        template<class BinaryOp>
         void processInterCyclics
         (
             const polyBoundaryMesh& patches,
@@ -207,7 +207,7 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template <class BinaryOp>
+template<class BinaryOp>
 void CML::domainDecomposition::processInterCyclics
 (
     const polyBoundaryMesh& patches,
