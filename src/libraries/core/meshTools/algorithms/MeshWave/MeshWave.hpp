@@ -49,7 +49,7 @@ TemplateName(MeshWave);
                            Class MeshWave Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Type, class TrackingData = int>
+template<class Type, class TrackingData = int>
 class MeshWave
 :
     public MeshWaveName
@@ -167,7 +167,7 @@ public:
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 int CML::MeshWave<Type, TrackingData>::dummyTrackData_ = 12345;
 
 
@@ -175,7 +175,7 @@ int CML::MeshWave<Type, TrackingData>::dummyTrackData_ = 12345;
 
 // Iterate, propagating changedFacesInfo across mesh, until no change (or
 // maxIter reached).
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::MeshWave<Type, TrackingData>::MeshWave
 (
     const polyMesh& mesh,
@@ -202,7 +202,7 @@ CML::MeshWave<Type, TrackingData>::MeshWave
 
 // Iterate, propagating changedFacesInfo across mesh, until no change (or
 // maxIter reached). Initial cell values specified.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::MeshWave<Type, TrackingData>::MeshWave
 (
     const polyMesh& mesh,

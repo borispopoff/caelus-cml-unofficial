@@ -254,7 +254,7 @@ class isoAdvection
         // can be either internal or boundary face
 
             //- Return face value for a given Geometric surface field
-            template<typename Type>
+            template<class Type>
             Type faceValue
             (
                 const GeometricField<Type, fvsPatchField, surfaceMesh>& f,
@@ -262,7 +262,7 @@ class isoAdvection
             ) const;
 
             //- Set face value for a given Geometric surface field
-            template<typename Type>
+            template<class Type>
             void setFaceValue
             (
                 GeometricField<Type, fvsPatchField, surfaceMesh>& f,
@@ -371,7 +371,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<typename Type>
+template<class Type>
 Type CML::isoAdvection::faceValue
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& f,
@@ -409,7 +409,7 @@ Type CML::isoAdvection::faceValue
 }
 
 
-template<typename Type>
+template<class Type>
 void CML::isoAdvection::setFaceValue
 (
     GeometricField<Type, fvsPatchField, surfaceMesh>& f,

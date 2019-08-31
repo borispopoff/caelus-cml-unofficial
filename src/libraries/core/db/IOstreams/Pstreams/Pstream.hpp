@@ -89,7 +89,7 @@ public:
 
             //- Gather data. Apply bop to combine Value
             //  from different processors
-            template <class T, class BinaryOp>
+            template<class T, class BinaryOp>
             static void gather
             (
                 const List<commsStruct>& comms,
@@ -335,7 +335,7 @@ namespace CML
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class T, class BinaryOp>
+template<class T, class BinaryOp>
 void Pstream::gather
 (
     const List<UPstream::commsStruct>& comms,
@@ -410,7 +410,7 @@ void Pstream::gather
 }
 
 
-template <class T, class BinaryOp>
+template<class T, class BinaryOp>
 void Pstream::gather
 (
     T& Value,
@@ -429,7 +429,7 @@ void Pstream::gather
 }
 
 
-template <class T>
+template<class T>
 void Pstream::scatter
 (
     const List<UPstream::commsStruct>& comms,
@@ -501,7 +501,7 @@ void Pstream::scatter
 }
 
 
-template <class T>
+template<class T>
 void Pstream::scatter(T& Value, const int tag)
 {
     if (UPstream::nProcs() < UPstream::nProcsSimpleSum)
@@ -530,7 +530,7 @@ namespace CML
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class T, class CombineOp>
+template<class T, class CombineOp>
 void Pstream::combineGather
 (
     const List<UPstream::commsStruct>& comms,
@@ -626,7 +626,7 @@ void Pstream::combineGather
 }
 
 
-template <class T, class CombineOp>
+template<class T, class CombineOp>
 void Pstream::combineGather
 (
     T& Value,
@@ -657,7 +657,7 @@ void Pstream::combineGather
 }
 
 
-template <class T>
+template<class T>
 void Pstream::combineScatter
 (
     const List<UPstream::commsStruct>& comms,
@@ -740,7 +740,7 @@ void Pstream::combineScatter
 }
 
 
-template <class T>
+template<class T>
 void Pstream::combineScatter
 (
     T& Value,
@@ -758,7 +758,7 @@ void Pstream::combineScatter
 }
 
 
-template <class T, class CombineOp>
+template<class T, class CombineOp>
 void Pstream::listCombineGather
 (
     const List<UPstream::commsStruct>& comms,
@@ -861,7 +861,7 @@ void Pstream::listCombineGather
 }
 
 
-template <class T, class CombineOp>
+template<class T, class CombineOp>
 void Pstream::listCombineGather
 (
     List<T>& Values,
@@ -892,7 +892,7 @@ void Pstream::listCombineGather
 }
 
 
-template <class T>
+template<class T>
 void Pstream::listCombineScatter
 (
     const List<UPstream::commsStruct>& comms,
@@ -975,7 +975,7 @@ void Pstream::listCombineScatter
 }
 
 
-template <class T>
+template<class T>
 void Pstream::listCombineScatter
 (
     List<T>& Values,
@@ -1003,7 +1003,7 @@ void Pstream::listCombineScatter
 }
 
 
-template <class Container, class CombineOp>
+template<class Container, class CombineOp>
 void Pstream::mapCombineGather
 (
     const List<UPstream::commsStruct>& comms,
@@ -1081,7 +1081,7 @@ void Pstream::mapCombineGather
 }
 
 
-template <class Container, class CombineOp>
+template<class Container, class CombineOp>
 void Pstream::mapCombineGather
 (
     Container& Values,
@@ -1112,7 +1112,7 @@ void Pstream::mapCombineGather
 }
 
 
-template <class Container>
+template<class Container>
 void Pstream::mapCombineScatter
 (
     const List<UPstream::commsStruct>& comms,
@@ -1167,7 +1167,7 @@ void Pstream::mapCombineScatter
 }
 
 
-template <class Container>
+template<class Container>
 void Pstream::mapCombineScatter
 (
     Container& Values,
@@ -1209,7 +1209,7 @@ namespace CML
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class T>
+template<class T>
 void Pstream::gatherList
 (
     const List<UPstream::commsStruct>& comms,
@@ -1353,7 +1353,7 @@ void Pstream::gatherList
 }
 
 
-template <class T>
+template<class T>
 void Pstream::gatherList(List<T>& Values, const int tag)
 {
     if (UPstream::nProcs() < UPstream::nProcsSimpleSum)
@@ -1367,7 +1367,7 @@ void Pstream::gatherList(List<T>& Values, const int tag)
 }
 
 
-template <class T>
+template<class T>
 void Pstream::scatterList
 (
     const List<UPstream::commsStruct>& comms,
@@ -1490,7 +1490,7 @@ void Pstream::scatterList
 }
 
 
-template <class T>
+template<class T>
 void Pstream::scatterList(List<T>& Values, const int tag)
 {
     if (UPstream::nProcs() < UPstream::nProcsSimpleSum)
@@ -1519,7 +1519,7 @@ namespace CML
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class Container, class T>
+template<class Container, class T>
 void Pstream::exchange
 (
     const UList<Container>& sendBufs,

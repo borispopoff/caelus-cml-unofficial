@@ -232,7 +232,7 @@ inline bool CML::refinementData::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::refinementData::equal
 (
     const refinementData& rhs,

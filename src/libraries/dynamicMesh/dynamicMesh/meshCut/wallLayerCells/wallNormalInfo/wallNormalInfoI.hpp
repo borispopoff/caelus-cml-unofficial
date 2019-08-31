@@ -188,7 +188,7 @@ inline bool CML::wallNormalInfo::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::wallNormalInfo::equal
 (
     const wallNormalInfo& rhs,

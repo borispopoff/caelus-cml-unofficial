@@ -380,7 +380,7 @@ public:
         // Other patch operations
 
             //- Project vertices of patch onto another patch
-            template <class ToPatch>
+            template<class ToPatch>
             List<objectHit> projectPoints
             (
                 const ToPatch& targetPatch,
@@ -390,7 +390,7 @@ public:
             ) const;
 
             //- Project vertices of patch onto another patch
-            template <class ToPatch>
+            template<class ToPatch>
             List<objectHit> projectFaceCentres
             (
                 const ToPatch& targetPatch,
@@ -2346,7 +2346,7 @@ template
     class PointField,
     class PointType
 >
-template <class ToPatch>
+template<class ToPatch>
 CML::List<CML::objectHit>
 CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
 projectPoints
@@ -2589,7 +2589,7 @@ template
     class PointField,
     class PointType
 >
-template <class ToPatch>
+template<class ToPatch>
 CML::List<CML::objectHit>
 CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
 projectFaceCentres

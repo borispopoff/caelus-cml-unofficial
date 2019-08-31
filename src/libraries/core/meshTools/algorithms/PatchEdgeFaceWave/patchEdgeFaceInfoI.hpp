@@ -230,7 +230,7 @@ inline bool CML::patchEdgeFaceInfo::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::patchEdgeFaceInfo::equal
 (
     const patchEdgeFaceInfo& rhs,

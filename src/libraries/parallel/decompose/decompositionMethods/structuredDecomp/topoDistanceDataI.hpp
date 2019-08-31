@@ -48,7 +48,7 @@ inline CML::topoDistanceData::topoDistanceData
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::topoDistanceData::valid(TrackingData& td) const
 {
     return distance_ != -1;
@@ -56,7 +56,7 @@ inline bool CML::topoDistanceData::valid(TrackingData& td) const
 
 
 // No geometric data so never any problem on cyclics
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::topoDistanceData::sameGeometry
 (
     const polyMesh&,
@@ -70,7 +70,7 @@ inline bool CML::topoDistanceData::sameGeometry
 
 
 // No geometric data.
-template <class TrackingData>
+template<class TrackingData>
 inline void CML::topoDistanceData::leaveDomain
 (
     const polyMesh&,
@@ -83,7 +83,7 @@ inline void CML::topoDistanceData::leaveDomain
 
 
 // No geometric data.
-template <class TrackingData>
+template<class TrackingData>
 inline void CML::topoDistanceData::transform
 (
     const polyMesh&,
@@ -94,7 +94,7 @@ inline void CML::topoDistanceData::transform
 
 
 // No geometric data.
-template <class TrackingData>
+template<class TrackingData>
 inline void CML::topoDistanceData::enterDomain
 (
     const polyMesh&,
@@ -107,7 +107,7 @@ inline void CML::topoDistanceData::enterDomain
 
 
 // Update cell with neighbouring face information
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::topoDistanceData::updateCell
 (
     const polyMesh&,
@@ -132,7 +132,7 @@ inline bool CML::topoDistanceData::updateCell
 
 
 // Update face with neighbouring cell information
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::topoDistanceData::updateFace
 (
     const polyMesh& mesh,
@@ -158,7 +158,7 @@ inline bool CML::topoDistanceData::updateFace
 
 
 // Update face with coupled face information
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::topoDistanceData::updateFace
 (
     const polyMesh&,
@@ -181,7 +181,7 @@ inline bool CML::topoDistanceData::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::topoDistanceData::equal
 (
     const topoDistanceData& rhs,

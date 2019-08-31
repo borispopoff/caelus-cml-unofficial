@@ -240,7 +240,7 @@ inline bool CML::cellInfo::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::cellInfo::equal
 (
     const cellInfo& rhs,

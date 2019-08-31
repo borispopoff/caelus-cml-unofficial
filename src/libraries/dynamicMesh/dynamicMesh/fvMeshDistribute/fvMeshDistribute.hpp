@@ -391,7 +391,7 @@ void CML::fvMeshDistribute::printFieldInfo(const fvMesh& mesh)
 }
 
 
-template <class T, class Mesh>
+template<class T, class Mesh>
 void CML::fvMeshDistribute::saveBoundaryFields
 (
     PtrList<FieldField<fvsPatchField, T>>& bflds
@@ -421,7 +421,7 @@ void CML::fvMeshDistribute::saveBoundaryFields
 }
 
 
-template <class T, class Mesh>
+template<class T, class Mesh>
 void CML::fvMeshDistribute::mapBoundaryFields
 (
     const mapPolyMesh& map,

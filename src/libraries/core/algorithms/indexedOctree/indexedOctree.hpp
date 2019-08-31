@@ -699,7 +699,7 @@ public:
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::scalar CML::indexedOctree<Type>::perturbTol_ = 10*SMALL;
 
 

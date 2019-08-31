@@ -281,7 +281,7 @@ inline bool CML::directionInfo::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::directionInfo::equal
 (
     const directionInfo& rhs,

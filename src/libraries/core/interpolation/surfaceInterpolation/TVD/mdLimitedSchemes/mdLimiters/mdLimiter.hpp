@@ -44,11 +44,11 @@ Author
 namespace CML
 {
 
-template <typename LimiterFunctionType, typename FieldType>
+template<class LimiterFunctionType, class FieldType>
 class MDLimiter
 {};
 
-template <typename LimiterFunctionType>
+template<class LimiterFunctionType>
 class MDLimiter<LimiterFunctionType,volScalarField>
 {
     fvMesh           const& mesh_;
@@ -227,7 +227,7 @@ public:
     }
 };
 
-template <typename LimiterFunctionType>
+template<class LimiterFunctionType>
 class MDLimiter<LimiterFunctionType,volVectorField>
 {
     fvMesh           const& mesh_;

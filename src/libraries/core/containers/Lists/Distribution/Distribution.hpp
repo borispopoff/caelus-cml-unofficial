@@ -761,7 +761,7 @@ void CML::Distribution<Type>::operator=
 
 // * * * * * * * * * * * * * * Friend Operators * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::Istream& CML::operator>>
 (
     Istream& is,
@@ -799,7 +799,7 @@ CML::Ostream& CML::operator<<
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::Distribution<Type> CML::operator+
 (
     const Distribution<Type>& d1,

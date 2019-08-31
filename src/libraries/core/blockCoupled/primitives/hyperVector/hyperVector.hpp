@@ -50,7 +50,7 @@ namespace CML
                            Class hyperVector Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 class hyperVector
 :
     public VectorSpace<hyperVector<Cmpt, length>, Cmpt, length>
@@ -106,36 +106,36 @@ class hyperTensor;
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 const char* const hyperVector<Cmpt, length>::typeName =
     ("vector" + name(length)).c_str();
 
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 const hyperVector<Cmpt, length> hyperVector<Cmpt, length>::zero(0);
 
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 const hyperVector<Cmpt, length> hyperVector<Cmpt, length>::one(1);
 
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 const hyperVector<Cmpt, length> hyperVector<Cmpt, length>::max(VGREAT);
 
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 const hyperVector<Cmpt, length> hyperVector<Cmpt, length>::min(-VGREAT);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct null
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperVector<Cmpt, length>::hyperVector()
 {}
 
 
 // Construct given VectorSpace
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperVector<Cmpt, length>::hyperVector
 (
     const VectorSpace<hyperVector<Cmpt, length>, Cmpt, length>& vs
@@ -146,7 +146,7 @@ inline hyperVector<Cmpt, length>::hyperVector
 
 
 // Construct given Cmpts
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperVector<Cmpt, length>::hyperVector(const Cmpt& vx)
 {
     VectorSpaceOps<hyperVector<Cmpt, length>::nComponents, 0>::eqOpS
@@ -155,7 +155,7 @@ inline hyperVector<Cmpt, length>::hyperVector(const Cmpt& vx)
 
 
 // Construct from Istream
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperVector<Cmpt, length>::hyperVector(Istream& is)
 :
     VectorSpace<hyperVector<Cmpt, length>, Cmpt, length>(is)
@@ -164,7 +164,7 @@ inline hyperVector<Cmpt, length>::hyperVector(Istream& is)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline const Cmpt& hyperVector<Cmpt, length>::operator()
 (
     const direction i
@@ -174,7 +174,7 @@ inline const Cmpt& hyperVector<Cmpt, length>::operator()
 }
 
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline Cmpt& hyperVector<Cmpt, length>::operator()(const direction i)
 {
     return this->operator[](i);
@@ -236,7 +236,7 @@ public:
 
 
 //- Inner-product between a vector and a vector
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline Cmpt operator&
 (
     const hyperVector<Cmpt, length>& v1,

@@ -82,7 +82,7 @@ UNARY_TEMPLATE_FUNCTION(hyperVector, hyperTensor, sumMagToDiag)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 //- Return the average of a vector as a scalar
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline void contractScalar(Cmpt& result, const hyperVector<Cmpt, length>& t)
 {
     result = pTraits<Cmpt>::zero;
@@ -98,7 +98,7 @@ inline void contractScalar(Cmpt& result, const hyperVector<Cmpt, length>& t)
 
 
 //- Return the Average of a vector as a scalar
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline Cmpt contractScalar(const hyperVector<Cmpt, length>& t)
 {
     Cmpt result;
@@ -108,7 +108,7 @@ inline Cmpt contractScalar(const hyperVector<Cmpt, length>& t)
 
 
 //- Return the diagonal of a hyperTensor as a scalar
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline void contractScalar(Cmpt& result, const hyperTensor<Cmpt, length>& t)
 {
     result = pTraits<Cmpt>::zero;
@@ -126,7 +126,7 @@ inline void contractScalar(Cmpt& result, const hyperTensor<Cmpt, length>& t)
 
 
 //- Return the diagonal of a hyperTensor as a scalar
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline Cmpt contractScalar(const hyperTensor<Cmpt, length>& t)
 {
     Cmpt result;
@@ -136,7 +136,7 @@ inline Cmpt contractScalar(const hyperTensor<Cmpt, length>& t)
 
 
 //- Return the diagonal of a hyperTensor as a hyperVector
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline void contractLinear
 (
     hyperVector<Cmpt, length>& result,
@@ -153,7 +153,7 @@ inline void contractLinear
 
 
 //- Return the diagonal of a hyperTensor as a hyperVector
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperVector<Cmpt, length> contractLinear
 (
     const hyperTensor<Cmpt, length>& t
@@ -166,7 +166,7 @@ inline hyperVector<Cmpt, length> contractLinear
 
 
 //- Return the hyperVector given a scalar
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline void expandScalar(hyperVector<Cmpt, length>& result, const Cmpt& v)
 {
     for (int i = 0; i < hyperVector<Cmpt, length>::nComponents; i++)
@@ -177,7 +177,7 @@ inline void expandScalar(hyperVector<Cmpt, length>& result, const Cmpt& v)
 
 
 //- Return the hyperTensor given a scalar
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline void expandScalar(hyperTensor<Cmpt, length>& result, const Cmpt& v)
 {
     result = hyperTensor<Cmpt, length>::zero;
@@ -192,7 +192,7 @@ inline void expandScalar(hyperTensor<Cmpt, length>& result, const Cmpt& v)
 
 
 //- Return the hyperTensor given a diagonal hyperVector
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline void expandLinear
 (
     hyperTensor<Cmpt, length>& result,
@@ -211,7 +211,7 @@ inline void expandLinear
 
 
 //- Sum row elements of a hyperTensor as a hyperVector
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline void sumToDiag
 (
     hyperVector<Cmpt, length>& result,
@@ -231,7 +231,7 @@ inline void sumToDiag
 
 
 //- Sum row elements of a hyperTensor as a hyperVector
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperVector<Cmpt, length> sumToDiag(const hyperTensor<Cmpt, length>& t)
 {
     hyperVector<Cmpt, length> result;
@@ -241,7 +241,7 @@ inline hyperVector<Cmpt, length> sumToDiag(const hyperTensor<Cmpt, length>& t)
 
 
 //- Sum magnitudes of row elements of a hyperTensor as a hyperVector
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline void sumMagToDiag
 (
     hyperVector<Cmpt, length>& result,
@@ -261,7 +261,7 @@ inline void sumMagToDiag
 
 
 //- Sum magnitudes of row elements of a hyperTensor as a hyperVector
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperVector<Cmpt, length> sumMagToDiag
 (
     const hyperTensor<Cmpt, length>& t

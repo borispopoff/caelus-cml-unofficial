@@ -78,7 +78,7 @@ TemplateName(PointEdgeWave);
                            Class PointEdgeWave Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Type, class TrackingData = int>
+template<class Type, class TrackingData = int>
 class PointEdgeWave
 :
     public PointEdgeWaveName
@@ -192,7 +192,7 @@ class PointEdgeWave
         // Parallel, cyclic
 
             //- Has patches of certain type?
-            template <class PatchType>
+            template<class PatchType>
             label countPatchType() const;
 
             //- Merge data from across processor boundaries
@@ -319,7 +319,7 @@ public:
 \*---------------------------------------------------------------------------*/
 
 //- List update operation
-template <class Type, class TrackingData = int>
+template<class Type, class TrackingData = int>
 class listUpdateOp
 {
     //- Additional data to be passed into container
@@ -365,10 +365,10 @@ public:
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::scalar CML::PointEdgeWave<Type, TrackingData>::propagationTol_ = 0.01;
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 int CML::PointEdgeWave<Type, TrackingData>::dummyTrackData_ = 12345;
 
 namespace CML
@@ -399,7 +399,7 @@ namespace CML
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 // Handle leaving domain. Implementation referred to Type
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::PointEdgeWave<Type, TrackingData>::leaveDomain
 (
     const polyPatch& patch,
@@ -421,7 +421,7 @@ void CML::PointEdgeWave<Type, TrackingData>::leaveDomain
 
 
 // Handle entering domain. Implementation referred to Type
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::PointEdgeWave<Type, TrackingData>::enterDomain
 (
     const polyPatch& patch,
@@ -443,7 +443,7 @@ void CML::PointEdgeWave<Type, TrackingData>::enterDomain
 
 
 // Transform. Implementation referred to Type
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::PointEdgeWave<Type, TrackingData>::transform
 (
     const polyPatch& patch,
@@ -481,7 +481,7 @@ void CML::PointEdgeWave<Type, TrackingData>::transform
 // Updates:
 //      - changedPoint_, changedPoints_, nChangedPoints_,
 //      - statistics: nEvals_, nUnvisitedPoints_
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
 (
     const label pointI,
@@ -528,7 +528,7 @@ bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
 // Updates:
 //      - changedPoint_, changedPoints_, nChangedPoints_,
 //      - statistics: nEvals_, nUnvisitedPoints_
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
 (
     const label pointI,
@@ -573,7 +573,7 @@ bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
 // Updates:
 //      - changedEdge_, changedEdges_, nChangedEdges_,
 //      - statistics: nEvals_, nUnvisitedEdge_
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 bool CML::PointEdgeWave<Type, TrackingData>::updateEdge
 (
     const label edgeI,
@@ -616,8 +616,8 @@ bool CML::PointEdgeWave<Type, TrackingData>::updateEdge
 
 
 // Check if patches of given type name are present
-template <class Type, class TrackingData>
-template <class PatchType>
+template<class Type, class TrackingData>
+template<class PatchType>
 CML::label CML::PointEdgeWave<Type, TrackingData>::countPatchType() const
 {
     label nPatches = 0;
@@ -634,7 +634,7 @@ CML::label CML::PointEdgeWave<Type, TrackingData>::countPatchType() const
 
 
 // Transfer all the information to/from neighbouring processors
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 {
     // 1. Send all point info on processor patches.
@@ -747,7 +747,7 @@ void CML::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 }
 
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
 {
     // 1. Send all point info on cyclic patches.
@@ -932,7 +932,7 @@ CML::label CML::PointEdgeWave<Type, TrackingData>::handleCollocatedPoints()
 
 // Iterate, propagating changedPointsInfo across mesh, until no change (or
 // maxIter reached). Initial point values specified.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::PointEdgeWave<Type, TrackingData>::PointEdgeWave
 (
     const polyMesh& mesh,
@@ -1005,7 +1005,7 @@ CML::PointEdgeWave<Type, TrackingData>::PointEdgeWave
 }
 
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::PointEdgeWave<Type, TrackingData>::PointEdgeWave
 (
     const polyMesh& mesh,
@@ -1033,7 +1033,7 @@ CML::PointEdgeWave<Type, TrackingData>::PointEdgeWave
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::PointEdgeWave<Type, TrackingData>::~PointEdgeWave()
 {}
 
@@ -1041,14 +1041,14 @@ CML::PointEdgeWave<Type, TrackingData>::~PointEdgeWave()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::PointEdgeWave<Type, TrackingData>::getUnsetPoints() const
 {
     return nUnvisitedPoints_;
 }
 
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::PointEdgeWave<Type, TrackingData>::getUnsetEdges() const
 {
     return nUnvisitedEdges_;
@@ -1056,7 +1056,7 @@ CML::label CML::PointEdgeWave<Type, TrackingData>::getUnsetEdges() const
 
 
 // Copy point information into member data
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::PointEdgeWave<Type, TrackingData>::setPointInfo
 (
     const labelList& changedPoints,
@@ -1093,7 +1093,7 @@ void CML::PointEdgeWave<Type, TrackingData>::setPointInfo
 
 
 // Propagate information from edge to point. Return number of points changed.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::PointEdgeWave<Type, TrackingData>::edgeToPoint()
 {
     for
@@ -1169,7 +1169,7 @@ CML::label CML::PointEdgeWave<Type, TrackingData>::edgeToPoint()
 
 
 // Propagate information from point to edge. Return number of edges changed.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::PointEdgeWave<Type, TrackingData>::pointToEdge()
 {
     const labelListList& pointEdges = mesh_.pointEdges();
@@ -1237,7 +1237,7 @@ CML::label CML::PointEdgeWave<Type, TrackingData>::pointToEdge()
 
 
 // Iterate
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::PointEdgeWave<Type, TrackingData>::iterate
 (
     const label maxIter

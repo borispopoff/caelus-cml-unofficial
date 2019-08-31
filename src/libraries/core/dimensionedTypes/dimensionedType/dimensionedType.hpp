@@ -58,7 +58,7 @@ class dictionary;
                            Class dimensioned Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Type>
+template<class Type>
 class dimensioned
 {
     // Private data
@@ -353,7 +353,7 @@ void dimensioned<Type>::initialize(Istream& is)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 dimensioned<Type>::dimensioned
 (
     const word& name,
@@ -367,7 +367,7 @@ dimensioned<Type>::dimensioned
 {}
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type>::dimensioned
 (
     const word& name,
@@ -380,7 +380,7 @@ dimensioned<Type>::dimensioned
 {}
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type>::dimensioned
 (
     Istream& is
@@ -392,7 +392,7 @@ dimensioned<Type>::dimensioned
 {}
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type>::dimensioned
 (
     const word& name,
@@ -405,7 +405,7 @@ dimensioned<Type>::dimensioned
 {}
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type>::dimensioned
 (
     const word& name,
@@ -437,7 +437,7 @@ dimensioned<Type>::dimensioned
 }
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type>::dimensioned
 ()
 :
@@ -449,7 +449,7 @@ dimensioned<Type>::dimensioned
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 dimensioned<Type> dimensioned<Type>::lookupOrDefault
 (
     const word& name,
@@ -469,7 +469,7 @@ dimensioned<Type> dimensioned<Type>::lookupOrDefault
 }
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type> dimensioned<Type>::lookupOrAddToDict
 (
     const word& name,
@@ -485,46 +485,46 @@ dimensioned<Type> dimensioned<Type>::lookupOrAddToDict
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 const word& dimensioned<Type>::name() const
 {
     return name_;
 }
 
-template <class Type>
+template<class Type>
 word& dimensioned<Type>::name()
 {
     return name_;
 }
 
 
-template <class Type>
+template<class Type>
 const dimensionSet& dimensioned<Type>::dimensions() const
 {
     return dimensions_;
 }
 
-template <class Type>
+template<class Type>
 dimensionSet& dimensioned<Type>::dimensions()
 {
     return dimensions_;
 }
 
 
-template <class Type>
+template<class Type>
 const Type& dimensioned<Type>::value() const
 {
     return value_;
 }
 
-template <class Type>
+template<class Type>
 Type& dimensioned<Type>::value()
 {
     return value_;
 }
 
 
-template <class Type>
+template<class Type>
 dimensioned<typename dimensioned<Type>::cmptType> dimensioned<Type>::component
 (
     const direction d
@@ -539,7 +539,7 @@ dimensioned<typename dimensioned<Type>::cmptType> dimensioned<Type>::component
 }
 
 
-template <class Type>
+template<class Type>
 void dimensioned<Type>::replace
 (
     const direction d,
@@ -551,14 +551,14 @@ void dimensioned<Type>::replace
 }
 
 
-template <class Type>
+template<class Type>
 void dimensioned<Type>::read(const dictionary& dict)
 {
     dict.lookup(name_) >> value_;
 }
 
 
-template <class Type>
+template<class Type>
 bool dimensioned<Type>::readIfPresent(const dictionary& dict)
 {
     return dict.readIfPresent(name_, value_);
@@ -567,7 +567,7 @@ bool dimensioned<Type>::readIfPresent(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 dimensioned<typename dimensioned<Type>::cmptType> dimensioned<Type>::operator[]
 (
     const direction d
@@ -577,7 +577,7 @@ dimensioned<typename dimensioned<Type>::cmptType> dimensioned<Type>::operator[]
 }
 
 
-template <class Type>
+template<class Type>
 void dimensioned<Type>::operator+=
 (
     const dimensioned<Type>& dt
@@ -588,7 +588,7 @@ void dimensioned<Type>::operator+=
 }
 
 
-template <class Type>
+template<class Type>
 void dimensioned<Type>::operator-=
 (
     const dimensioned<Type>& dt
@@ -599,7 +599,7 @@ void dimensioned<Type>::operator-=
 }
 
 
-template <class Type>
+template<class Type>
 void dimensioned<Type>::operator*=
 (
     const scalar s
@@ -609,7 +609,7 @@ void dimensioned<Type>::operator*=
 }
 
 
-template <class Type>
+template<class Type>
 void dimensioned<Type>::operator/=
 (
     const scalar s
@@ -723,7 +723,7 @@ dimensioned<Type> max
 }
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type> min
 (
     const dimensioned<Type>& dt1,
@@ -748,7 +748,7 @@ dimensioned<Type> min
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 Istream& operator>>(Istream& is, dimensioned<Type>& dt)
 {
     token nextToken(is);
@@ -779,7 +779,7 @@ Istream& operator>>(Istream& is, dimensioned<Type>& dt)
 }
 
 
-template <class Type>
+template<class Type>
 Ostream& operator<<(Ostream& os, const dimensioned<Type>& dt)
 {
     // Do a stream write op for a dimensionSet
@@ -796,7 +796,7 @@ Ostream& operator<<(Ostream& os, const dimensioned<Type>& dt)
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 bool operator>
 (
     const dimensioned<Type>& dt1,
@@ -807,7 +807,7 @@ bool operator>
 }
 
 
-template <class Type>
+template<class Type>
 bool operator<
 (
     const dimensioned<Type>& dt1,
@@ -818,7 +818,7 @@ bool operator<
 }
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type> operator+
 (
     const dimensioned<Type>& dt1,
@@ -834,7 +834,7 @@ dimensioned<Type> operator+
 }
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type> operator-(const dimensioned<Type>& dt)
 {
     return dimensioned<Type>
@@ -846,7 +846,7 @@ dimensioned<Type> operator-(const dimensioned<Type>& dt)
 }
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type> operator-
 (
     const dimensioned<Type>& dt1,
@@ -862,7 +862,7 @@ dimensioned<Type> operator-
 }
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type> operator*
 (
     const dimensioned<scalar>& ds,
@@ -878,7 +878,7 @@ dimensioned<Type> operator*
 }
 
 
-template <class Type>
+template<class Type>
 dimensioned<Type> operator/
 (
     const dimensioned<Type>& dt,

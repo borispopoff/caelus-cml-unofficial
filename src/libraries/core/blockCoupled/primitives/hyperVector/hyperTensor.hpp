@@ -53,7 +53,7 @@ namespace CML
                            Class hyperTensor Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 class hyperTensor
 :
     public VectorSpace<hyperTensor<Cmpt, length>, Cmpt, length*length>
@@ -120,28 +120,28 @@ public:
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 const char* const hyperTensor<Cmpt, length>::typeName =
     ("tensor" + name(length)).c_str();
 
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 const hyperTensor<Cmpt, length> hyperTensor<Cmpt, length>::zero(0);
 
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 const hyperTensor<Cmpt, length> hyperTensor<Cmpt, length>::one(1);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 //- Construct null
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length>::hyperTensor()
 {}
 
 
 //- Construct given VectorSpace
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length>::hyperTensor
 (
     const VectorSpace<hyperTensor<Cmpt, length>, Cmpt, length*length>& vs
@@ -152,7 +152,7 @@ inline hyperTensor<Cmpt, length>::hyperTensor
 
 
 //- Construct from component
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length>::hyperTensor(const Cmpt& tx)
 {
     VectorSpaceOps<hyperTensor<Cmpt, length>::nComponents, 0>::eqOpS
@@ -165,7 +165,7 @@ inline hyperTensor<Cmpt, length>::hyperTensor(const Cmpt& tx)
 
 
 //- Construct from Istream
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length>::hyperTensor(Istream& is)
 :
     VectorSpace<hyperTensor<Cmpt, length>, Cmpt, length*length>(is)
@@ -174,7 +174,7 @@ inline hyperTensor<Cmpt, length>::hyperTensor(Istream& is)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 //- Return tensor transpose
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length> hyperTensor<Cmpt, length>::T() const
 {
     hyperTensor<Cmpt, length> transpose;
@@ -196,7 +196,7 @@ inline hyperTensor<Cmpt, length> hyperTensor<Cmpt, length>::T() const
 
 
 //- Negative sum the vertical off-diagonal components
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length> hyperTensor<Cmpt, length>::negSumDiag() const
 {
     hyperTensor<Cmpt, length> negsumdiag;
@@ -244,7 +244,7 @@ inline hyperTensor<Cmpt, length> transform
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline direction hyperTensor<Cmpt, length>::cmpt
 (
     const direction i,
@@ -268,7 +268,7 @@ inline direction hyperTensor<Cmpt, length>::cmpt
 }
 
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline const Cmpt& hyperTensor<Cmpt, length>::operator()
 (
     const direction i,
@@ -279,7 +279,7 @@ inline const Cmpt& hyperTensor<Cmpt, length>::operator()
 }
 
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline Cmpt& hyperTensor<Cmpt, length>::operator()
 (
     const direction i,
@@ -292,7 +292,7 @@ inline Cmpt& hyperTensor<Cmpt, length>::operator()
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
 //- Inner-product between two tensors
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline typename
 innerProduct<hyperTensor<Cmpt, length>, hyperTensor<Cmpt, length>>::type
 operator&
@@ -337,7 +337,7 @@ operator&
 
 
 //- Inner-product between a tensor and a vector
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline typename
 innerProduct<hyperTensor<Cmpt, length>, hyperVector<Cmpt, length>>::type
 operator&
@@ -365,7 +365,7 @@ operator&
 
 
 //- Inner-product between a vector and a tensor
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline typename
 innerProduct<hyperVector<Cmpt, length>, hyperTensor<Cmpt, length>>::type
 operator&
@@ -393,7 +393,7 @@ operator&
 
 
 //- Outer-product between two vectors
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline typename
 outerProduct<hyperVector<Cmpt, length>, hyperVector<Cmpt, length>>::type
 operator*
@@ -419,7 +419,7 @@ operator*
 
 
 //- Addition of hyperTensor and hyperTensor
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length>
 operator+
 (
@@ -441,7 +441,7 @@ operator+
 
 
 //- Subtraction of hyperTensor and hyperTensor
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length>
 operator-
 (
@@ -463,7 +463,7 @@ operator-
 
 
 //- Division of a scalar by a hyperTensor
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length>
 operator/(const scalar s, const hyperTensor<Cmpt, length>& t)
 {
@@ -472,7 +472,7 @@ operator/(const scalar s, const hyperTensor<Cmpt, length>& t)
 
 
 //- Inner Product of a hyperVector by an inverse hyperTensor
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperVector<Cmpt, length>
 operator/
 (
@@ -485,7 +485,7 @@ operator/
 
 
 //- Inner Product of a hyperTensor by an inverse hyperTensor
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length>
 operator/
 (
@@ -497,7 +497,7 @@ operator/
 }
 
 
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline Cmpt det(const hyperTensor<Cmpt, length>& t)
 {
     // Calculate determinant via sub-determinants
@@ -560,7 +560,7 @@ inline Cmpt det(const hyperTensor<Cmpt, 2>& t)
 
 //- Return the inverse of a tensor give the determinant
 //  Uses Gauss-Jordan Elimination with full pivoting
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length> inv(const hyperTensor<Cmpt, length>& t)
 {
     hyperTensor<Cmpt, length> result(t);
@@ -688,7 +688,7 @@ inline hyperTensor<Cmpt, length> inv(const hyperTensor<Cmpt, length>& t)
 
 
 //- Inverse: partial template specialisation for rank 1
-template <class Cmpt>
+template<class Cmpt>
 inline hyperTensor<Cmpt, 1> inv(const hyperTensor<Cmpt, 1>& t)
 {
     return hyperTensor<Cmpt, 1>(1/t(0, 0));
@@ -696,7 +696,7 @@ inline hyperTensor<Cmpt, 1> inv(const hyperTensor<Cmpt, 1>& t)
 
 
 //- Inverse: partial template specialisation for rank 2
-template <class Cmpt>
+template<class Cmpt>
 inline hyperTensor<Cmpt, 2> inv(const hyperTensor<Cmpt, 2>& t)
 {
     hyperTensor<Cmpt, 2> result(t);
@@ -713,7 +713,7 @@ inline hyperTensor<Cmpt, 2> inv(const hyperTensor<Cmpt, 2>& t)
 
 
 //- Return tensor diagonal
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length> negSumDiag(const hyperTensor<Cmpt, length>& t)
 {
     return t.negSumDiag();
@@ -721,7 +721,7 @@ inline hyperTensor<Cmpt, length> negSumDiag(const hyperTensor<Cmpt, length>& t)
 
 
 //- Scale tensor row with a hyperVector
-template <class Cmpt, int length>
+template<class Cmpt, int length>
 inline hyperTensor<Cmpt, length> scaleRow
 (
     const hyperTensor<Cmpt, length>& t,

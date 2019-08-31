@@ -34,7 +34,7 @@ Author
 namespace CML
 {
 
-template <typename Flux, typename Limiter>
+template<class Flux, class Limiter>
 class numericFlux : public Flux
 {
 
@@ -128,7 +128,7 @@ public:
 
 }
 
-template <typename Flux, typename Limiter>
+template<class Flux, class Limiter>
 CML::numericFlux<Flux,Limiter>::numericFlux
 (
     volScalarField const& p,
@@ -196,7 +196,7 @@ CML::numericFlux<Flux,Limiter>::numericFlux
     gradT_(fvc::grad(this->T_))
 {}
 
-template <typename Flux, typename Limiter>
+template<class Flux, class Limiter>
 void CML::numericFlux<Flux,Limiter>::update()
 {
     unallocLabelList const& owner = this->mesh_.owner();

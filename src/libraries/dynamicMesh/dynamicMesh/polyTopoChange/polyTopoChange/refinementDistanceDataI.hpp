@@ -256,7 +256,7 @@ inline bool CML::refinementDistanceData::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::refinementDistanceData::equal
 (
     const refinementDistanceData& rhs,

@@ -76,7 +76,7 @@ Modifications
 namespace CML
 {
 
-template <typename Type>
+template<class Type>
 class dbRegistrator : public regIOobject
 {
     Type const* typePtr_;
@@ -103,7 +103,7 @@ public:
 };
 }
 
-template <typename Type>
+template<class Type>
 CML::dbRegistrator<Type>::dbRegistrator(IOobject const& io ) : regIOobject(io)
 {
     if
@@ -119,7 +119,7 @@ CML::dbRegistrator<Type>::dbRegistrator(IOobject const& io ) : regIOobject(io)
 }
 
 
-template <typename Type> CML::dbRegistrator<Type>::dbRegistrator
+template<class Type> CML::dbRegistrator<Type>::dbRegistrator
 (
     IOobject const& io,
     Type const& reference
@@ -139,11 +139,11 @@ template <typename Type> CML::dbRegistrator<Type>::dbRegistrator
     }
 }
 
-template <typename Type>
+template<class Type>
 CML::dbRegistrator<Type>::~dbRegistrator()
 {}
 
-template<typename Type>
+template<class Type>
 bool CML::dbRegistrator<Type>::writeData(Ostream& os) const
 {
     // do nothing
@@ -151,7 +151,7 @@ bool CML::dbRegistrator<Type>::writeData(Ostream& os) const
 }
 
 
-template <typename Type>
+template<class Type>
 Type const& CML::dbRegistrator<Type>::operator()() const
 {
     if (!typePtr_)
@@ -165,7 +165,7 @@ Type const& CML::dbRegistrator<Type>::operator()() const
 }
 
 
-template <typename Type>
+template<class Type>
 void CML::dbRegistrator<Type>::set
 (
     Type const& reference

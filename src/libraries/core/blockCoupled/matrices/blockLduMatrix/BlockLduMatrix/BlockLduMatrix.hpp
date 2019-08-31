@@ -2132,7 +2132,7 @@ void BlockLduMatrix<Type>::updateInterfaces
 }
 
 /*
-template <typename Type>
+template<class Type>
 void
 CML::BlockLduMatrix<Type>::updateMatrixInterfaces
 (
@@ -2300,7 +2300,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
 }
 */
 /*
-template <typename Type>
+template<class Type>
 void
 BlockLduMatrix<Type>::initMatrixInterfaces
 (

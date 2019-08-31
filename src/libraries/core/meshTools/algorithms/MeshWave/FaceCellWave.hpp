@@ -166,7 +166,7 @@ class FaceCellWave
             void checkCyclic(const polyPatch& pPatch) const;
 
             //- Has cyclic patch?
-            template <class PatchType>
+            template<class PatchType>
             bool hasPatch() const;
 
             //- Merge received patch data into global data
@@ -393,13 +393,13 @@ public:
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 const CML::scalar CML::FaceCellWave<Type, TrackingData>::geomTol_ = 1e-6;
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::scalar CML::FaceCellWave<Type, TrackingData>::propagationTol_ = 0.01;
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 int CML::FaceCellWave<Type, TrackingData>::dummyTrackData_ = 12345;
 
 namespace CML
@@ -466,7 +466,7 @@ namespace CML
 // Updates:
 //      - changedCell_, changedCells_, nChangedCells_,
 //      - statistics: nEvals_, nUnvisitedCells_
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 bool CML::FaceCellWave<Type, TrackingData>::updateCell
 (
     const label cellI,
@@ -514,7 +514,7 @@ bool CML::FaceCellWave<Type, TrackingData>::updateCell
 // Updates:
 //      - changedFace_, changedFaces_, nChangedFaces_,
 //      - statistics: nEvals_, nUnvisitedFaces_
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 bool CML::FaceCellWave<Type, TrackingData>::updateFace
 (
     const label faceI,
@@ -562,7 +562,7 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
 // Updates:
 //      - changedFace_, changedFaces_, nChangedFaces_,
 //      - statistics: nEvals_, nUnvisitedFaces_
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 bool CML::FaceCellWave<Type, TrackingData>::updateFace
 (
     const label faceI,
@@ -604,7 +604,7 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
 
 
 // For debugging: check status on both sides of cyclic
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::checkCyclic
 (
     const polyPatch& patch
@@ -651,8 +651,8 @@ void CML::FaceCellWave<Type, TrackingData>::checkCyclic
 
 
 // Check if has cyclic patches
-template <class Type, class TrackingData>
-template <class PatchType>
+template<class Type, class TrackingData>
+template<class PatchType>
 bool CML::FaceCellWave<Type, TrackingData>::hasPatch() const
 {
     forAll(mesh_.boundaryMesh(), patchI)
@@ -667,7 +667,7 @@ bool CML::FaceCellWave<Type, TrackingData>::hasPatch() const
 
 
 // Copy face information into member data
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::setFaceInfo
 (
     const labelList& changedFaces,
@@ -698,7 +698,7 @@ void CML::FaceCellWave<Type, TrackingData>::setFaceInfo
 
 
 // Merge face information into member data
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::mergeFaceInfo
 (
     const polyPatch& patch,
@@ -733,7 +733,7 @@ void CML::FaceCellWave<Type, TrackingData>::mergeFaceInfo
 // Construct compact patchFace change arrays for a (slice of a) single patch.
 // changedPatchFaces in local patch numbering.
 // Return length of arrays.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::getChangedPatchFaces
 (
     const polyPatch& patch,
@@ -763,7 +763,7 @@ CML::label CML::FaceCellWave<Type, TrackingData>::getChangedPatchFaces
 
 
 // Handle leaving domain. Implementation referred to Type
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::leaveDomain
 (
     const polyPatch& patch,
@@ -785,7 +785,7 @@ void CML::FaceCellWave<Type, TrackingData>::leaveDomain
 
 
 // Handle entering domain. Implementation referred to Type
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::enterDomain
 (
     const polyPatch& patch,
@@ -807,7 +807,7 @@ void CML::FaceCellWave<Type, TrackingData>::enterDomain
 
 
 // Transform. Implementation referred to Type
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::transform
 (
     const tensorField& rotTensor,
@@ -835,7 +835,7 @@ void CML::FaceCellWave<Type, TrackingData>::transform
 
 
 // Offset mesh face. Used for transferring from one cyclic half to the other.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::offset
 (
     const polyPatch&,
@@ -852,7 +852,7 @@ void CML::FaceCellWave<Type, TrackingData>::offset
 
 
 // Transfer all the information to/from neighbouring processors
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 {
     const globalMeshData& pData = mesh_.globalData();
@@ -971,7 +971,7 @@ void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 
 
 // Transfer information across cyclic halves.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
 {
     forAll(mesh_.boundaryMesh(), patchI)
@@ -1056,7 +1056,7 @@ void CML::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
 
 
 // Transfer information across cyclic halves.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
 {
     forAll(mesh_.boundaryMesh(), patchI)
@@ -1235,7 +1235,7 @@ void CML::FaceCellWave<Type, TrackingData>::handleExplicitConnections()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Set up only. Use setFaceInfo and iterate() to do actual calculation.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::FaceCellWave<Type, TrackingData>::FaceCellWave
 (
     const polyMesh& mesh,
@@ -1284,7 +1284,7 @@ CML::FaceCellWave<Type, TrackingData>::FaceCellWave
 
 // Iterate, propagating changedFacesInfo across mesh, until no change (or
 // maxIter reached). Initial cell values specified.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::FaceCellWave<Type, TrackingData>::FaceCellWave
 (
     const polyMesh& mesh,
@@ -1424,14 +1424,14 @@ CML::FaceCellWave<Type, TrackingData>::FaceCellWave
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::getUnsetCells() const
 {
     return nUnvisitedCells_;
 }
 
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::getUnsetFaces() const
 {
     return nUnvisitedFaces_;
@@ -1440,7 +1440,7 @@ CML::label CML::FaceCellWave<Type, TrackingData>::getUnsetFaces() const
 
 
 // Propagate cell to face
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::faceToCell()
 {
     const labelList& owner = mesh_.faceOwner();
@@ -1525,7 +1525,7 @@ CML::label CML::FaceCellWave<Type, TrackingData>::faceToCell()
 
 
 // Propagate cell to face
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::cellToFace()
 {
     const cellList& cells = mesh_.cells();
@@ -1611,7 +1611,7 @@ CML::label CML::FaceCellWave<Type, TrackingData>::cellToFace()
 
 
 // Iterate
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::iterate(const label maxIter)
 {
     if (hasCyclicPatches_)

@@ -60,7 +60,7 @@ TemplateName(ParSortableList);
                            Class ParSortableList Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Type>
+template<class Type>
 class ParSortableList
 :
     public ParSortableListName,
@@ -202,7 +202,7 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 void CML::ParSortableList<Type>::write
 (
     const List<Type>& elems,
@@ -220,7 +220,7 @@ void CML::ParSortableList<Type>::write
 
 
 // Copy src, starting at destI into dest.
-template <class Type>
+template<class Type>
 void CML::ParSortableList<Type>::copyInto
 (
     const List<Type>& values,
@@ -243,7 +243,7 @@ void CML::ParSortableList<Type>::copyInto
 }
 
 
-template <class Type>
+template<class Type>
 void CML::ParSortableList<Type>::getPivots
 (
     const List<Type>& elems,
@@ -263,7 +263,7 @@ void CML::ParSortableList<Type>::getPivots
 }
 
 
-template <class Type>
+template<class Type>
 void CML::ParSortableList<Type>::checkAndSend
 (
     List<Type>& values,
@@ -294,7 +294,7 @@ void CML::ParSortableList<Type>::checkAndSend
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from List, sorting the elements
-template <class Type>
+template<class Type>
 CML::ParSortableList<Type>::ParSortableList(const UList<Type>& values)
 :
     List<Type>(values),
@@ -306,7 +306,7 @@ CML::ParSortableList<Type>::ParSortableList(const UList<Type>& values)
 
 
 // Construct given size. Sort later on.
-template <class Type>
+template<class Type>
 CML::ParSortableList<Type>::ParSortableList(const label size)
 :
     List<Type>(size),
@@ -318,7 +318,7 @@ CML::ParSortableList<Type>::ParSortableList(const label size)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 // Sort
-template <class Type>
+template<class Type>
 void CML::ParSortableList<Type>::sort()
 {
     //

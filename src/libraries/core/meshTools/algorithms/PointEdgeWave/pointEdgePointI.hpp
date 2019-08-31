@@ -292,7 +292,7 @@ inline bool CML::pointEdgePoint::updateEdge
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::pointEdgePoint::equal
 (
     const pointEdgePoint& rhs,

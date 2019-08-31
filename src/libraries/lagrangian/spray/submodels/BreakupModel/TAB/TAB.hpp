@@ -147,7 +147,7 @@ public:
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template <class CloudType>
+template<class CloudType>
 CML::TAB<CloudType>::TAB
 (
     const dictionary& dict,

@@ -92,7 +92,7 @@ class sampledSurfaceElevation
 
 
         //- Class used for sampling volFields
-        template <class Type>
+        template<class Type>
         class volFieldSampler
         :
             public List<Field<Type>>
@@ -297,7 +297,7 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 
-template <class Type>
+template<class Type>
 CML::sampledSurfaceElevation::volFieldSampler<Type>::volFieldSampler
 (
     const word& interpolationScheme,
@@ -344,7 +344,7 @@ CML::sampledSurfaceElevation::volFieldSampler<Type>::volFieldSampler
 }
 
 
-template <class Type>
+template<class Type>
 CML::sampledSurfaceElevation::volFieldSampler<Type>::volFieldSampler
 (
     const GeometricField<Type, fvPatchField, volMesh>& field,
@@ -377,7 +377,7 @@ CML::sampledSurfaceElevation::volFieldSampler<Type>::volFieldSampler
 }
 
 
-template <class Type>
+template<class Type>
 CML::sampledSurfaceElevation::volFieldSampler<Type>::volFieldSampler
 (
     const List<Field<Type>>& values,

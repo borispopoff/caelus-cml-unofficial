@@ -281,7 +281,7 @@ inline CML::word CML::interpolationLookUpTable<Type>::tableName() const
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::label CML::interpolationLookUpTable<Type>::index
 (
     const List<scalar>& indices,
@@ -325,7 +325,7 @@ CML::label CML::interpolationLookUpTable<Type>::index
 }
 
 
-template <class Type>
+template<class Type>
 CML::label CML::interpolationLookUpTable<Type>::index
 (
     const scalar indice

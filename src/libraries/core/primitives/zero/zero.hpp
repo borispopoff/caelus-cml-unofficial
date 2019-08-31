@@ -93,13 +93,13 @@ inline zero operator+(const zero&, const zero&)
     return Zero;
 }
 
-template <typename Type>
+template<class Type>
 inline const Type& operator+(const Type& t, const zero&)
 {
     return t;
 }
 
-template <typename Type>
+template<class Type>
 inline const Type& operator+(const zero&, const Type& t)
 {
     return t;
@@ -110,13 +110,13 @@ inline zero operator-(const zero&, const zero&)
     return Zero;
 }
 
-template <typename Type>
+template<class Type>
 inline const Type& operator-(const Type& t, const zero&)
 {
     return t;
 }
 
-template <typename Type>
+template<class Type>
 inline Type operator-(const zero&, const Type& t)
 {
     return -t;
@@ -127,19 +127,19 @@ inline zero operator*(const zero&, const zero&)
     return Zero;
 }
 
-template <typename Type>
+template<class Type>
 inline zero operator*(const Type& t, const zero&)
 {
     return Zero;
 }
 
-template <typename Type>
+template<class Type>
 inline zero operator*(const zero&, const Type& t)
 {
     return Zero;
 }
 
-template <typename Type>
+template<class Type>
 inline zero operator/(const zero&, const Type& t)
 {
     return Zero;

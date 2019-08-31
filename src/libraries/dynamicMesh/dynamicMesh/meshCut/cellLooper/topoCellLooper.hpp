@@ -68,7 +68,7 @@ class topoCellLooper
     // Private Member Functions
 
         //- In-memory truncate a list
-        template <class T>
+        template<class T>
         static void subsetList
         (
             const label startI,

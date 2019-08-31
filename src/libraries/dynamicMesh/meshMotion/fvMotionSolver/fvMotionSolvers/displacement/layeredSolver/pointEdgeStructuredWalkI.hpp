@@ -260,7 +260,7 @@ inline bool CML::pointEdgeStructuredWalk::updateEdge
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::pointEdgeStructuredWalk::equal
 (
     const pointEdgeStructuredWalk& rhs,

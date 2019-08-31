@@ -121,7 +121,7 @@ public:
 
 
         // Constructor
-        template <class TrackCloudType>
+        template<class TrackCloudType>
         trackingData(const TrackCloudType& cloud)
         {}
     };

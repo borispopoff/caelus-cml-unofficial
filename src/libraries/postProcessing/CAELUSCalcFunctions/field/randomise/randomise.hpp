@@ -122,7 +122,7 @@ public:
 } // End namespace calcTypes
 } // End namespace CML
 
-template <class Type>
+template<class Type>
 void CML::calcTypes::randomise::writeRandomField
 (
     const IOobject& header,

@@ -45,7 +45,7 @@ const CML::scalar CML::topoCellLooper::featureCos = CML::cos(degToRad(10.0));
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 // In-memory truncate a list
-template <class T>
+template<class T>
 void CML::topoCellLooper::subsetList
 (
     const label startI,

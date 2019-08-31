@@ -64,29 +64,29 @@ extern const NullSingleton* nullSingletonPtr;
 
 
 //- Return reference to the nullSingleton of type T
-template <class T>
+template<class T>
 inline const T& NullSingletonRef();
 
 //- Return pointer to the nullSingleton of type T
-template <class T>
+template<class T>
 inline const T* NullSingletonPtr();
 
 
 //- Return true if t is a reference to the nullSingleton of type T
-template <class T>
+template<class T>
 inline bool isNull(const T& t);
 
 //- Return true if t is not a reference to the nullSingleton of type T
-template <class T>
+template<class T>
 inline bool notNull(const T& t);
 
 
 //- Return true if t is a pointer to the nullSingleton of type T
-template <class T>
+template<class T>
 inline bool isNull(const T* t);
 
 //- Return true if t is not a pointer to the nullSingleton of type T
-template <class T>
+template<class T>
 inline bool notNull(const T* t);
 
 
@@ -97,39 +97,39 @@ inline bool notNull(const T* t);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
-template <class T>
+template<class T>
 inline const T& CML::NullSingletonRef()
 {
     return *reinterpret_cast<const T*>(nullSingletonPtr);
 }
 
-template <class T>
+template<class T>
 inline const T* CML::NullSingletonPtr()
 {
     return reinterpret_cast<const T*>(nullSingletonPtr);
 }
 
 
-template <class T>
+template<class T>
 inline bool CML::isNull(const T& t)
 {
     return &t == NullSingletonPtr<T>();
 }
 
-template <class T>
+template<class T>
 inline bool CML::notNull(const T& t)
 {
     return &t != NullSingletonPtr<T>();
 }
 
 
-template <class T>
+template<class T>
 inline bool CML::isNull(const T* t)
 {
     return t == NullSingletonPtr<T>();
 }
 
-template <class T>
+template<class T>
 inline bool CML::notNull(const T* t)
 {
     return t != NullSingletonPtr<T>();

@@ -70,7 +70,7 @@ public:
         }
 };
 
-template<typename arg2>
+template<class arg2>
 class innerProduct<one, arg2>
 {
 public:
@@ -83,19 +83,19 @@ inline const one& operator*(const one& o, const one&)
     return o;
 }
 
-template <typename Type>
+template<class Type>
 inline const Type& operator*(const Type& t, const one&)
 {
     return t;
 }
 
-template <typename Type>
+template<class Type>
 inline const Type& operator*(const one&, const Type& t)
 {
     return t;
 }
 
-template<typename Type>
+template<class Type>
 inline const Type& operator&(const one&, const Type& t)
 {
     return t;
@@ -106,14 +106,14 @@ inline const one& operator/(const one& o, const one&)
     return o;
 }
 
-template <typename Type>
+template<class Type>
 inline Type operator/(const one&, const Type& t)
 {
     return scalar(1)/t;
 }
 
 
-template <typename Type>
+template<class Type>
 inline const Type& operator/(const Type& t, const one&)
 {
     return t;

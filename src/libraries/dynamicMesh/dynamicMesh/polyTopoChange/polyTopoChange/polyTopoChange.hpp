@@ -637,7 +637,7 @@ inline void CML::polyTopoChange::setNumPatches(const label nPatches)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class T>
+template<class T>
 void CML::polyTopoChange::reorder
 (
     const labelList& oldToNew,
@@ -659,7 +659,7 @@ void CML::polyTopoChange::reorder
 }
 
 
-template <class T>
+template<class T>
 void CML::polyTopoChange::reorder
 (
     const labelList& oldToNew,
@@ -681,7 +681,7 @@ void CML::polyTopoChange::reorder
 }
 
 
-template <class T>
+template<class T>
 void CML::polyTopoChange::renumberKey
 (
     const labelList& oldToNew,

@@ -34,7 +34,7 @@ SourceFiles
 
 #include <string>
 
-template <class T> class CRegexpT;
+template<class T> class CRegexpT;
 
 namespace CML
 {

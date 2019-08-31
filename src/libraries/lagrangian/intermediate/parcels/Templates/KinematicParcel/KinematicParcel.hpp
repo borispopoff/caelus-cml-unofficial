@@ -206,7 +206,7 @@ public:
         // Constructors
 
             //- Construct from components
-            template <class TrackCloudType>
+            template<class TrackCloudType>
             inline trackingData
             (
                 const TrackCloudType& cloud,

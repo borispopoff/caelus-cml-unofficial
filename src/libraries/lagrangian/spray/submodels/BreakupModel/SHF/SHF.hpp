@@ -164,7 +164,7 @@ public:
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template <class CloudType>
+template<class CloudType>
 CML::SHF<CloudType>::SHF
 (
     const dictionary& dict,
