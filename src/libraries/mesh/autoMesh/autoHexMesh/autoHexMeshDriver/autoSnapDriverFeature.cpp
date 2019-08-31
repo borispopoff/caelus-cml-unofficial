@@ -177,7 +177,7 @@ void CML::autoSnapDriver::smoothAndConstrain
         // - same for feature points. They are already attracted to the
         //   nearest feature point.
 
-        vectorField dispSum(pp.nPoints(), vector::zero);
+        vectorField dispSum(pp.nPoints(), Zero);
         labelList dispCount(pp.nPoints(), 0);
 
         const labelListList& pointEdges = pp.pointEdges();
@@ -249,7 +249,7 @@ void CML::autoSnapDriver::smoothAndConstrain2
 
     for (label avgIter = 0; avgIter < 20; avgIter++)
     {
-        vectorField dispSum(pp.nPoints(), vector::zero);
+        vectorField dispSum(pp.nPoints(), Zero);
         labelList dispCount(pp.nPoints(), 0);
 
         const labelListList& pointEdges = pp.pointEdges();
@@ -326,9 +326,9 @@ void CML::autoSnapDriver::calcNearestFace
 
     // Displacement and orientation per pp face.
     faceDisp.setSize(pp.size());
-    faceDisp = vector::zero;
+    faceDisp = Zero;
     faceSurfaceNormal.setSize(pp.size());
-    faceSurfaceNormal = vector::zero;
+    faceSurfaceNormal = Zero;
     faceSurfaceGlobalRegion.setSize(pp.size());
     faceSurfaceGlobalRegion = -1;
 
@@ -485,7 +485,7 @@ void CML::autoSnapDriver::calcNearestFace
 
     // Determine rotation axis
     faceRotation.setSize(pp.size());
-    faceRotation = vector::zero;
+    faceRotation = Zero;
 
     forAll(faceRotation, faceI)
     {
@@ -739,7 +739,7 @@ CML::pointIndexHit CML::autoSnapDriver::findMultiPatchPoint
             }
         }
     }
-    return pointIndexHit(false, vector::zero, labelMax);
+    return pointIndexHit(false, Zero, labelMax);
 }
 
 
@@ -902,7 +902,7 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
     pointConstraint& patchConstraint
 ) const
 {
-    patchAttraction = vector::zero;
+    patchAttraction = Zero;
     patchConstraint = pointConstraint();
 
     // Collect all different directions
@@ -1071,7 +1071,7 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
 
     forAll(pp.localPoints(), pointI)
     {
-        vector attraction = vector::zero;
+        vector attraction = Zero;
         pointConstraint constraint;
 
         featureAttractionUsingReconstruction
@@ -1425,7 +1425,7 @@ CML::labelPair CML::autoSnapDriver::findNearFeaturePoint
                 // Current pointI nearer.
                 pointAttractor[featI][featPointI] = pointI;
                 pointConstraints[featI][featPointI].first() = 3;
-                pointConstraints[featI][featPointI].second() = vector::zero;
+                pointConstraints[featI][featPointI].second() = Zero;
 
                 // Store for later use
                 patchAttraction[pointI] = featPt-pt;
@@ -1433,7 +1433,7 @@ CML::labelPair CML::autoSnapDriver::findNearFeaturePoint
                     pointConstraints[featI][featPointI];
 
                 // Reset oldPointI to nearest on feature edge
-                patchAttraction[oldPointI] = vector::zero;
+                patchAttraction[oldPointI] = Zero;
                 patchConstraints[oldPointI] = pointConstraint();
 
                 label edgeFeatI;
@@ -1457,7 +1457,7 @@ CML::labelPair CML::autoSnapDriver::findNearFeaturePoint
             // Current pointI nearer.
             pointAttractor[featI][featPointI] = pointI;
             pointConstraints[featI][featPointI].first() = 3;
-            pointConstraints[featI][featPointI].second() = vector::zero;
+            pointConstraints[featI][featPointI].second() = Zero;
 
             // Store for later use
             patchAttraction[pointI] = featPt-pt;
@@ -1545,7 +1545,7 @@ void CML::autoSnapDriver::determineFeatures
     {
         const point& pt = pp.localPoints()[pointI];
 
-        vector attraction = vector::zero;
+        vector attraction = Zero;
         pointConstraint constraint;
 
         featureAttractionUsingReconstruction
@@ -1809,7 +1809,7 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
     }
 
     // Reverse: from pp point to nearest feature
-    vectorField rawPatchAttraction(pp.nPoints(), vector::zero);
+    vectorField rawPatchAttraction(pp.nPoints(), Zero);
     List<pointConstraint> rawPatchConstraints(pp.nPoints());
 
     determineFeatures
@@ -2026,7 +2026,7 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
                         pointAttractor[featI][featPointI] = pointI;
                         pointConstraints[featI][featPointI].first() = 3;
                         pointConstraints[featI][featPointI].second() =
-                            vector::zero;
+                            Zero;
 
                         // Store for later use
                         rawPatchAttraction[pointI] = featPt-pt;
@@ -2116,7 +2116,7 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
 
     // Per mesh point the point on nearest feature edge.
     patchAttraction.setSize(pp.nPoints());
-    patchAttraction = vector::zero;
+    patchAttraction = Zero;
     patchConstraints.setSize(pp.nPoints());
     patchConstraints = pointConstraint();
 
@@ -2339,7 +2339,7 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
                         //Pout<< "Knocking out constraint"
                         //    << " on non-multiPatchPoint:"
                         //    << pp.localPoints()[pointI] << endl;
-                        patchAttraction[pointI] = vector::zero;
+                        patchAttraction[pointI] = Zero;
                         patchConstraints[pointI] = pointConstraint();
                         nChanged++;
 
@@ -2667,11 +2667,11 @@ CML::vectorField CML::autoSnapDriver::calcNearestSurfaceFeature
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // vector from point on surface back to face centre
-    vectorField faceDisp(pp.size(), vector::zero);
+    vectorField faceDisp(pp.size(), Zero);
     // normal of surface at point on surface
-    vectorField faceSurfaceNormal(pp.size(), vector::zero);
+    vectorField faceSurfaceNormal(pp.size(), Zero);
     labelList faceSurfaceGlobalRegion(pp.size(), -1);
-    vectorField faceRotation(pp.size(), vector::zero);
+    vectorField faceRotation(pp.size(), Zero);
 
     calcNearestFace
     (
@@ -2686,9 +2686,9 @@ CML::vectorField CML::autoSnapDriver::calcNearestSurfaceFeature
 
     //// Displacement and orientation per pp point
     //// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    //vectorField pointDisp(pp.nPoints(), vector::zero);
-    //vectorField pointSurfaceNormal(pp.nPoints(), vector::zero);
-    //vectorField pointRotation(pp.nPoints(), vector::zero);
+    //vectorField pointDisp(pp.nPoints(), Zero);
+    //vectorField pointSurfaceNormal(pp.nPoints(), Zero);
+    //vectorField pointRotation(pp.nPoints(), Zero);
     //calcNearest
     //(
     //    iter,
@@ -2736,7 +2736,7 @@ CML::vectorField CML::autoSnapDriver::calcNearestSurfaceFeature
     // here.
 
     // Nearest feature
-    vectorField patchAttraction(localPoints.size(), vector::zero);
+    vectorField patchAttraction(localPoints.size(), Zero);
     // Constraints at feature
     List<pointConstraint> patchConstraints(localPoints.size());
 

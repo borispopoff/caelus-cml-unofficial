@@ -380,7 +380,7 @@ bool CML::geomCellLooper::cut
 
     // Get points on loop and centre of loop
     pointField loopPoints(localLoop.size());
-    point ctr(vector::zero);
+    point ctr(Zero);
 
     forAll(localLoop, i)
     {

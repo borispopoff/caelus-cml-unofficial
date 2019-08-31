@@ -29,7 +29,7 @@ License
 inline CML::directionInfo::directionInfo()
 :
     index_(-3),
-    n_(vector::zero)
+    n_(Zero)
 {}
 
 

@@ -40,8 +40,8 @@ angularOscillatingDisplacementPointPatchVectorField
 )
 :
     fixedValuePointPatchField<vector>(p, iF),
-    axis_(vector::zero),
-    origin_(vector::zero),
+    axis_(Zero),
+    origin_(Zero),
     angle0_(0.0),
     amplitude_(0.0),
     omega_(0.0),

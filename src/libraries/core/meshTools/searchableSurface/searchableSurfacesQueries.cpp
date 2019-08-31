@@ -860,7 +860,7 @@ CML::pointIndexHit CML::searchableSurfacesQueries::facesIntersection
     // starting point onto the surfaces and the mid point
     List<point> nearest(surfacesToTest.size()+1);
 
-    point sumNearest = vector::zero;
+    point sumNearest = Zero;
 
     forAll(surfacesToTest, i)
     {

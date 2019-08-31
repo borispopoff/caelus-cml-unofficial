@@ -1199,7 +1199,7 @@ void CML::refinementSurfaces::findNearestRegion
     hitRegion.setSize(hitSurface.size());
     hitRegion = -1;
     hitNormal.setSize(hitSurface.size());
-    hitNormal = vector::zero;
+    hitNormal = Zero;
 
     forAll(surfacesToTest, i)
     {

@@ -130,7 +130,7 @@ CML::pointIndexHit CML::searchablePlate::findLine
     pointIndexHit info
     (
         true,
-        vector::zero,
+        Zero,
         0
     );
 
@@ -422,7 +422,7 @@ void CML::searchablePlate::getNormal
 ) const
 {
     normal.setSize(info.size());
-    normal = vector::zero;
+    normal = Zero;
     forAll(normal, i)
     {
         normal[i][normalDir_] = 1.0;

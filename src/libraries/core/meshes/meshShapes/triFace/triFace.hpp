@@ -143,7 +143,7 @@ public:
         inline tensor inertia
         (
             const pointField&,
-            const point& refPt = vector::zero,
+            const point& refPt = Zero,
             scalar density = 1.0
         ) const;
 

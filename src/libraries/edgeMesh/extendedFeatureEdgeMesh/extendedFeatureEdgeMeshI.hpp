@@ -117,7 +117,7 @@ inline CML::vector CML::extendedFeatureEdgeMesh::edgeDirection
             << e.start() << " " << e.end()
             << exit(FatalError);
 
-        return vector::zero;
+        return Zero;
     }
 }
 

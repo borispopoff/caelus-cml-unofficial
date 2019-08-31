@@ -66,7 +66,7 @@ void rawForcesAndMoments::writeRawData
 {
     // Write the time vector
     scalarField output0(timeLabel.size(), 0.0);
-    vectorField output1(timeLabel.size(), vector::zero);
+    vectorField output1(timeLabel.size(), Zero);
 
     {
         forAll (timeLabel, labeli)
@@ -210,7 +210,7 @@ void rawForcesAndMoments::readForceAndMomentData
             timeLabel[Nentries].first = val;
             timeLabel[Nentries].second = Nentries;
 
-            vector temp(vector::zero);
+            vector temp(Zero);
 
             // Reading the first vector component with starting parenteres
             iss >> dummy;

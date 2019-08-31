@@ -554,7 +554,7 @@ void CML::boundaryMesh::read(const polyMesh& mesh)
         {
             const face& f = msh[faceI];
 
-            point ctr(vector::zero);
+            point ctr(Zero);
 
             forAll(f, fp)
             {

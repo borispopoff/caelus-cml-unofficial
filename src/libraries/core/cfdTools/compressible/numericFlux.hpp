@@ -189,7 +189,7 @@ CML::numericFlux<Flux,Limiter>::numericFlux
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedVector("zero", dimVelocity, vector::zero)
+        dimensionedVector("zero", dimVelocity, Zero)
     ),
     gradp_(fvc::grad(this->p_)),
     gradU_(fvc::grad(this->U_)),

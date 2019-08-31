@@ -91,7 +91,7 @@ CML::pointIndexHit CML::searchableCylinder::findNearest
 
     if (magV < ROOTVSMALL)
     {
-        v = vector::zero;
+        v = Zero;
     }
     else
     {
@@ -649,7 +649,7 @@ void CML::searchableCylinder::getNormal
 ) const
 {
     normal.setSize(info.size());
-    normal = vector::zero;
+    normal = Zero;
 
     forAll(info, i)
     {

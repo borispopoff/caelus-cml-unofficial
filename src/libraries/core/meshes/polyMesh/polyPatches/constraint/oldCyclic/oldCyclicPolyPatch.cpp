@@ -569,9 +569,9 @@ CML::oldCyclicPolyPatch::oldCyclicPolyPatch
 :
     coupledPolyPatch(name, size, start, index, bm, patchType, transform),
     featureCos_(0.9),
-    rotationAxis_(vector::zero),
+    rotationAxis_(Zero),
     rotationCentre_(point::zero),
-    separationVector_(vector::zero)
+    separationVector_(Zero)
 {}
 
 
@@ -586,9 +586,9 @@ CML::oldCyclicPolyPatch::oldCyclicPolyPatch
 :
     coupledPolyPatch(name, dict, index, bm, patchType),
     featureCos_(0.9),
-    rotationAxis_(vector::zero),
+    rotationAxis_(Zero),
     rotationCentre_(point::zero),
-    separationVector_(vector::zero)
+    separationVector_(Zero)
 {
     if (dict.found("neighbourPatch"))
     {

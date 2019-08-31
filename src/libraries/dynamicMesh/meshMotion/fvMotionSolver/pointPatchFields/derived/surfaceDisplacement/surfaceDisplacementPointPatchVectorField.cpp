@@ -68,7 +68,7 @@ void surfaceDisplacementPointPatchVectorField::calcProjection
     const scalar projectLen = mag(mesh.bounds().max()-mesh.bounds().min());
 
     // For case of fixed projection vector:
-    vector projectVec(vector::zero);
+    vector projectVec(Zero);
     if (projectMode_ == FIXEDNORMAL)
     {
         vector n = projectDir_/mag(projectDir_);
@@ -304,9 +304,9 @@ surfaceDisplacementPointPatchVectorField
 )
 :
     fixedValuePointPatchVectorField(p, iF),
-    velocity_(vector::zero),
+    velocity_(Zero),
     projectMode_(NEAREST),
-    projectDir_(vector::zero),
+    projectDir_(Zero),
     wedgePlane_(-1)
 {}
 

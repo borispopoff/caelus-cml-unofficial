@@ -110,7 +110,7 @@ void CML::plane::calcPntAndVec
 CML::plane::plane(const vector& normalVector)
 :
     unitVector_(normalVector),
-    basePoint_(vector::zero)
+    basePoint_(Zero)
 {
     scalar magUnitVector(mag(unitVector_));
 
@@ -170,7 +170,7 @@ CML::plane::plane
 // Construct from dictionary
 CML::plane::plane(const dictionary& dict)
 :
-    unitVector_(vector::zero),
+    unitVector_(Zero),
     basePoint_(point::zero)
 {
     const word planeType(dict.lookup("planeType"));

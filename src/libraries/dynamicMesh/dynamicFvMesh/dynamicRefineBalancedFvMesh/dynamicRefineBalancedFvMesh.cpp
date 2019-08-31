@@ -379,7 +379,7 @@ bool CML::dynamicRefineBalancedFvMesh::update()
             // Convert to local sequential indexing and calculate coarse
             // points and weights
             labelList localIndex(nCells(), 0);
-            pointField coarsePoints(nCoarse, vector::zero);
+            pointField coarsePoints(nCoarse, Zero);
             scalarField coarseWeights(nCoarse, 0.0);
             
             forAll(uniqueIndex, cellI)

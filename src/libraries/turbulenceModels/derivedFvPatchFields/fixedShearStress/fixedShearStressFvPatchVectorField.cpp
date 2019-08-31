@@ -43,7 +43,7 @@ fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
     fixedValueFvPatchVectorField(p, iF),
     phiName_("phi"),
     rhoName_("rho"),
-    tau0_(vector::zero)
+    tau0_(Zero)
 {}
 
 
@@ -57,7 +57,7 @@ fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
     fixedValueFvPatchVectorField(p, iF),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    tau0_(dict.lookupOrDefault<vector>("tau", vector::zero))
+    tau0_(dict.lookupOrDefault<vector>("tau", Zero))
 {
     fvPatchField<vector>::operator=(patchInternalField());
 }

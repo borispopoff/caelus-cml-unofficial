@@ -320,7 +320,7 @@ void CML::edgeMesh::mergePoints(const scalar mergeDist)
         false,
         pointMap,
         newPoints,
-        vector::zero
+        Zero
     );
 
     if (hasMerged)

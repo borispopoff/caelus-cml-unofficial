@@ -136,7 +136,7 @@ CML::tmp<CML::vectorField> CML::cyclicACMIFvPatch::delta() const
         (
             interpolate
             (
-                vectorField(nbrPatchCoupled.size(), vector::zero),
+                vectorField(nbrPatchCoupled.size(), Zero),
                 nbrPatchNonOverlap.delta()()
             )
         );

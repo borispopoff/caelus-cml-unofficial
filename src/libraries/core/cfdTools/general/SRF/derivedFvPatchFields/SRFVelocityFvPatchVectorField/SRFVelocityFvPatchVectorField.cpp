@@ -35,7 +35,7 @@ CML::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
 :
     fixedValueFvPatchVectorField(p, iF),
     relative_(0),
-    inletValue_(p.size(), vector::zero)
+    inletValue_(p.size(), Zero)
 {}
 
 

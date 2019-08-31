@@ -875,7 +875,7 @@ void CML::autoLayerDriver::medialAxisSmoothingInfo
                                     medialAxisPt,   //points[pointI],
                                     magSqr(points[pointI]-medialAxisPt),//0.0,
                                     pointI,         // passive data
-                                    vector::zero    // passive data
+                                    Zero    // passive data
                                 )
                             );
                             pointMedialDist[pointI] = maxInfo.last();
@@ -931,7 +931,7 @@ void CML::autoLayerDriver::medialAxisSmoothingInfo
                                     points[pointI],
                                     0.0,
                                     pointI,         // passive data
-                                    vector::zero    // passive data
+                                    Zero    // passive data
                                 )
                             );
                             pointMedialDist[pointI] = maxInfo.last();
@@ -977,7 +977,7 @@ void CML::autoLayerDriver::medialAxisSmoothingInfo
                                         points[pointI],
                                         0.0,
                                         pointI,         // passive data
-                                        vector::zero    // passive data
+                                        Zero    // passive data
                                     )
                                 );
                                 pointMedialDist[pointI] = maxInfo.last();
@@ -1269,7 +1269,7 @@ void CML::autoLayerDriver::shrinkMeshMedialDistance
                 points[pointI],
                 0.0,
                 thickness[patchPointI],       // transport layer thickness
-                vector::zero                  // passive vector
+                Zero                  // passive vector
             );
         }
 

@@ -154,14 +154,14 @@ public:
         virtual const vector e1() const
         {
             NotImplemented;
-            return vector::zero;
+            return Zero;
         }
 
         //- Return local Cartesian y-axis in global coordinates
         virtual const vector e2() const
         {
             NotImplemented;
-            return vector::zero;
+            return Zero;
         }
 
         //- Return local Cartesian z-axis in global coordinates

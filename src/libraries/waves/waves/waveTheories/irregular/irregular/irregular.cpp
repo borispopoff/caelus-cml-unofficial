@@ -141,7 +141,7 @@ vector irregular::U
 {
     scalar Z(returnZ(x));
 
-    vector U(vector::zero);
+    vector U(Zero);
 
     forAll (amp_, index)
     {

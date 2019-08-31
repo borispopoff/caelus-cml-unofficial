@@ -76,7 +76,7 @@ void CML::leastSquaresVectors::makeLeastSquaresVectors() const
             false
         ),
         mesh_,
-        dimensionedVector("zero", dimless/dimLength, vector::zero)
+        dimensionedVector("zero", dimless/dimLength, Zero)
     );
     surfaceVectorField& lsP = *pVectorsPtr_;
 
@@ -92,7 +92,7 @@ void CML::leastSquaresVectors::makeLeastSquaresVectors() const
             false
         ),
         mesh_,
-        dimensionedVector("zero", dimless/dimLength, vector::zero)
+        dimensionedVector("zero", dimless/dimLength, Zero)
     );
     surfaceVectorField& lsN = *nVectorsPtr_;
 

@@ -40,7 +40,7 @@ pressureInletOutletParSlipVelocityFvPatchVectorField
     rhoName_("rho")
 {
     refValue() = *this;
-    refGrad() = vector::zero;
+    refGrad() = Zero;
     valueFraction() = 0.0;
 }
 
@@ -74,7 +74,7 @@ pressureInletOutletParSlipVelocityFvPatchVectorField
 {
     fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
     refValue() = *this;
-    refGrad() = vector::zero;
+    refGrad() = Zero;
     valueFraction() = 0.0;
 }
 

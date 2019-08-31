@@ -42,7 +42,7 @@ CML::pointIndexHit CML::searchablePlane::findLine
     const point& end
 ) const
 {
-    pointIndexHit info(true, vector::zero, 0);
+    pointIndexHit info(true, Zero, 0);
 
     linePointRef l(start, end);
 

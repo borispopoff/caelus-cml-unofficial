@@ -188,7 +188,7 @@ CML::point CML::cell::centre
 
     // first calculate the approximate cell centre as the average of all
     // face centres
-    vector cEst = vector::zero;
+    vector cEst = Zero;
     scalar sumArea = 0;
 
     const labelList& faces = *this;
@@ -204,7 +204,7 @@ CML::point CML::cell::centre
 
     // Calculate the centre by breaking the cell into pyramids and
     // volume-weighted averaging their centres
-    vector sumVc = vector::zero;
+    vector sumVc = Zero;
 
     scalar sumV = 0;
 
@@ -247,7 +247,7 @@ CML::scalar CML::cell::mag
 
     // first calculate the approximate cell centre as the average of all
     // face centres
-    vector cEst = vector::zero;
+    vector cEst = Zero;
     scalar nCellFaces = 0;
 
     const labelList& faces = *this;

@@ -309,7 +309,7 @@ CML::extendedFeatureEdgeMesh::extendedFeatureEdgeMesh
             edgeNormals[i][j] = faceMap[eFI];
         }
 
-        vector fC0tofC1(vector::zero);
+        vector fC0tofC1(Zero);
 
         if (eFaces.size() == 2)
         {

@@ -55,7 +55,7 @@ bool CML::primitiveMesh::checkClosedBoundary
     // Loop through all boundary faces and sum up the face area vectors.
     // For a closed boundary, this should be zero in all vector components
 
-    vector sumClosed(vector::zero);
+    vector sumClosed(Zero);
     scalar sumMagClosedBoundary = 0;
 
     for (label faceI = nInternalFaces(); faceI < areas.size(); faceI++)

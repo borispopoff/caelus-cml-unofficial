@@ -256,7 +256,7 @@ inline vectorTensorTransform operator&
 
 inline CML::vectorTensorTransform::vectorTensorTransform()
 :
-    t_(vector::zero),
+    t_(Zero),
     R_(sphericalTensor::I),
     hasR_(false)
 {}
@@ -285,7 +285,7 @@ inline CML::vectorTensorTransform::vectorTensorTransform(const vector& t)
 
 inline CML::vectorTensorTransform::vectorTensorTransform(const tensor& R)
 :
-    t_(vector::zero),
+    t_(Zero),
     R_(R),
     hasR_(true)
 {}

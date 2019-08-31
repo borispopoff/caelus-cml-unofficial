@@ -1020,7 +1020,7 @@ CML::label CML::meshRefinement::markSurfaceCurvatureRefinement
     // minLevel) and cache per cell the max surface level and the local normal
     // on that surface.
     labelList cellMaxLevel(mesh_.nCells(), -1);
-    vectorField cellMaxNormal(mesh_.nCells(), vector::zero);
+    vectorField cellMaxNormal(mesh_.nCells(), Zero);
 
     {
         // Per segment the normals of the surfaces

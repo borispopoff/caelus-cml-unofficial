@@ -111,7 +111,7 @@ void CML::hllcFlux::evaluateFlux
 
     scalar convectionSpeed = 0.0;
     scalar rhoState = 0.0;
-    vector rhoUState = vector::zero;
+    vector rhoUState = Zero;
     scalar rhoEState = 0.0;
     scalar pState = 0.0;
 

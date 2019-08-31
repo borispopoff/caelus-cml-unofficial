@@ -40,7 +40,7 @@ oscillatingVelocityPointPatchVectorField
 )
 :
     fixedValuePointPatchField<vector>(p, iF),
-    amplitude_(vector::zero),
+    amplitude_(Zero),
     omega_(0.0),
     p0_(p.localPoints())
 {}

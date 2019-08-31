@@ -40,7 +40,7 @@ pressureDirectedInletOutletVelocityFvPatchVectorField
     inletDir_(p.size())
 {
     refValue() = *this;
-    refGrad() = vector::zero;
+    refGrad() = Zero;
     valueFraction() = 0.0;
 }
 
@@ -76,7 +76,7 @@ pressureDirectedInletOutletVelocityFvPatchVectorField
 {
     fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
     refValue() = *this;
-    refGrad() = vector::zero;
+    refGrad() = Zero;
     valueFraction() = 0.0;
 }
 

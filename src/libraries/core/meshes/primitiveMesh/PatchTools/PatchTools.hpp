@@ -1285,7 +1285,7 @@ CML::PatchTools::pointNormals
     // patch points since the master point does not have to be on the
     // patch!
 
-    pointField coupledPointNormals(map.constructSize(), vector::zero);
+    pointField coupledPointNormals(map.constructSize(), Zero);
 
     {
         // Collect local pointFaces (sized on patch points only)
@@ -1384,7 +1384,7 @@ CML::PatchTools::pointNormals
     // 1. Start off with local normals (note:without calculating pointNormals
     //    to avoid them being stored)
 
-    tmp<pointField> textrudeN(new pointField(p.nPoints(), vector::zero));
+    tmp<pointField> textrudeN(new pointField(p.nPoints(), Zero));
     pointField& extrudeN = textrudeN();
     {
         const faceList& localFaces = p.localFaces();
@@ -1438,7 +1438,7 @@ CML::PatchTools::edgeNormals
 {
     // 1. Start off with local normals
 
-    tmp<pointField> tedgeNormals(new pointField(p.nEdges(), vector::zero));
+    tmp<pointField> tedgeNormals(new pointField(p.nEdges(), Zero));
     pointField& edgeNormals = tedgeNormals();
     {
         const labelListList& edgeFaces = p.edgeFaces();
@@ -1465,7 +1465,7 @@ CML::PatchTools::edgeNormals
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     //- Construct with all data in consistent orientation
-    pointField cppEdgeData(map.constructSize(), vector::zero);
+    pointField cppEdgeData(map.constructSize(), Zero);
 
     forAll(patchEdges, i)
     {

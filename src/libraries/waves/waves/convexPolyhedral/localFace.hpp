@@ -112,7 +112,7 @@ public:
 
         inline point negCentre() const
         {
-            return (isNegFace() ? negF_.centre(pp_) : vector::zero);
+            return (isNegFace() ? negF_.centre(pp_) : Zero);
         };
 
         inline scalar posMag()   const {return posF_.mag(pp_);};

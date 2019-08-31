@@ -205,7 +205,7 @@ List<vectorField> spectralMethodsFFTBased::powerSpectra
     forAll (spectra, speci)
     {
         vectorField& spectrum(spectra[speci]);
-        spectrum.setSize(bins_/2, vector::zero);
+        spectrum.setSize(bins_/2, Zero);
 
         const vectorField& input(inputData[ speci ]);
 

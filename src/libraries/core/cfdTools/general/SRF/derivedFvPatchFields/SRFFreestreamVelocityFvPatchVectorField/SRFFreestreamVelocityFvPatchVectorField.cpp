@@ -36,7 +36,7 @@ SRFFreestreamVelocityFvPatchVectorField
 )
 :
     inletOutletFvPatchVectorField(p, iF),
-    UInf_(vector::zero)
+    UInf_(Zero)
 {}
 
 

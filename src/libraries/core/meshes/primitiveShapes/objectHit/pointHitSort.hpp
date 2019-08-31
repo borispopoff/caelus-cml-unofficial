@@ -61,7 +61,7 @@ public:
         //- Construct null
         pointHitSort()
         :
-            inter_(false, vector::zero, GREAT, false),
+            inter_(false, Zero, GREAT, false),
             index_(-1)
         {}
 

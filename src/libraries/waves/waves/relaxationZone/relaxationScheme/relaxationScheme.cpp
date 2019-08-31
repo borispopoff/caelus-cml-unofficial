@@ -66,7 +66,7 @@ relaxationScheme::relaxationScheme
 
         // Update size of target fields and zero
         alphaTarget_.setSize(relaxShape_->cells().size(), 0.0);
-        UTarget_.setSize(relaxShape_->cells().size(), vector::zero);
+        UTarget_.setSize(relaxShape_->cells().size(), Zero);
     }
 }
 

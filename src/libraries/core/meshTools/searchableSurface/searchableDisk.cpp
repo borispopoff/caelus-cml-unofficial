@@ -54,7 +54,7 @@ CML::pointIndexHit CML::searchableDisk::findNearest
 
     if (magV < ROOTVSMALL)
     {
-        v = vector::zero;
+        v = Zero;
     }
     else
     {
@@ -81,7 +81,7 @@ void CML::searchableDisk::findLine
     pointIndexHit& info
 ) const
 {
-    info = pointIndexHit(false, vector::zero, -1);
+    info = pointIndexHit(false, Zero, -1);
 
     vector v(start - origin_);
 
@@ -99,7 +99,7 @@ void CML::searchableDisk::findLine
 
     if (magV < ROOTVSMALL)
     {
-        v = vector::zero;
+        v = Zero;
     }
     else
     {

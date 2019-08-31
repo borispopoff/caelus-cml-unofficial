@@ -53,7 +53,7 @@ CML::anisotropicFilter::anisotropicFilter
             mesh
         ),
         mesh,
-        dimensionedVector("zero", dimLength*dimLength, vector::zero),
+        dimensionedVector("zero", dimLength*dimLength, Zero),
         calculatedFvPatchVectorField::typeName
     )
 {
@@ -90,7 +90,7 @@ CML::anisotropicFilter::anisotropicFilter
             mesh
         ),
         mesh,
-        dimensionedVector("zero", dimLength*dimLength, vector::zero),
+        dimensionedVector("zero", dimLength*dimLength, Zero),
         calculatedFvPatchScalarField::typeName
     )
 {

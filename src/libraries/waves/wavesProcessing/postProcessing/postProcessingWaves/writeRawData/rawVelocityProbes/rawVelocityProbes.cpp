@@ -69,7 +69,7 @@ void rawVelocityProbes::writeRawData
 {
     // Write the time vector
     scalarField output0(timeLabel.size(), 0.0);
-    vectorField output1(timeLabel.size(), vector::zero);
+    vectorField output1(timeLabel.size(), Zero);
 
     {
         forAll (timeLabel, labeli)
@@ -280,7 +280,7 @@ void rawVelocityProbes::readVelocityProbeData
 
             forAll (Us, UI)
             {
-                vector temp(vector::zero);
+                vector temp(Zero);
 
                 // Reading the first vector component with starting parenteres
                 iss >> dummy;

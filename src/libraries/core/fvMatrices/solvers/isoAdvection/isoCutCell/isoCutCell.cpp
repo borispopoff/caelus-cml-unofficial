@@ -45,9 +45,9 @@ CML::isoCutCell::isoCutCell(const fvMesh& mesh, scalarField& f)
     isoCutFaceAreas_(10),
     isoFaceEdges_(10),
     isoFacePoints_(10),
-    isoFaceCentre_(vector::zero),
-    isoFaceArea_(vector::zero),
-    subCellCentre_(vector::zero),
+    isoFaceCentre_(Zero),
+    isoFaceArea_(Zero),
+    subCellCentre_(Zero),
     subCellVolume_(-10),
     VOF_(-10),
     fullySubFaces_(10),
@@ -65,7 +65,7 @@ void CML::isoCutCell::calcSubCellCentreAndVolume()
 {
     if (cellStatus_ == 0)
     {
-        subCellCentre_ = vector::zero;
+        subCellCentre_ = Zero;
         subCellVolume_ = 0.0;
 
         // Estimate the approximate cell centre as the average of face centres
@@ -167,7 +167,7 @@ void CML::isoCutCell::calcSubCellCentreAndVolume()
     else if (cellStatus_ == 1)
     {
         // Cell fully above isosurface
-        subCellCentre_ = vector::zero;
+        subCellCentre_ = Zero;
         subCellVolume_ = 0;
         VOF_ = 0;
     }
@@ -184,7 +184,7 @@ void CML::isoCutCell::calcSubCellCentreAndVolume()
 void CML::isoCutCell::calcIsoFaceCentreAndArea()
 {
     // Initial guess of face centre from edge points
-    point fCentre = vector::zero;
+    point fCentre = Zero;
     label nEdgePoints = 0;
     forAll(isoFaceEdges_, ei)
     {
@@ -205,9 +205,9 @@ void CML::isoCutCell::calcIsoFaceCentreAndArea()
         Pout << "Warning: nEdgePoints = 0 for cell " << cellI_ << endl;
     }
 
-    vector sumN = vector::zero;
+    vector sumN = Zero;
     scalar sumA = 0;
-    vector sumAc = vector::zero;
+    vector sumAc = Zero;
 
     forAll(isoFaceEdges_, ei)
     {
@@ -233,7 +233,7 @@ void CML::isoCutCell::calcIsoFaceCentreAndArea()
     if (sumA < ROOTVSMALL)
     {
         isoFaceCentre_ = fCentre;
-        isoFaceArea_ = vector::zero;
+        isoFaceArea_ = Zero;
     }
     else
     {
@@ -457,9 +457,9 @@ void CML::isoCutCell::clearStorage()
     isoCutFaceAreas_.clear();
     isoFaceEdges_.clear();
     isoFacePoints_.clear();
-    isoFaceCentre_ = vector::zero;
-    isoFaceArea_ = vector::zero;
-    subCellCentre_ = vector::zero;
+    isoFaceCentre_ = Zero;
+    isoFaceArea_ = Zero;
+    subCellCentre_ = Zero;
     subCellVolume_ = -10;
     VOF_ = -10;
     fullySubFaces_.clear();

@@ -23,7 +23,7 @@ License
 
 inline CML::pointConstraint::pointConstraint()
 :
-    Tuple2<label, vector>(0, vector::zero)
+    Tuple2<label, vector>(0, Zero)
 {}
 
 
@@ -64,7 +64,7 @@ void CML::pointConstraint::applyConstraint(const vector& cd)
         if (mag(cd & second()) > 1e-3)
         {
             first() = 3;
-            second() = vector::zero;
+            second() = Zero;
         }
     }
 }
@@ -99,13 +99,13 @@ void CML::pointConstraint::combine(const pointConstraint& pc)
             {
                 // Different directions
                 first() = 3;
-                second() = vector::zero;
+                second() = Zero;
             }
         }
         else
         {
             first() = 3;
-            second() = vector::zero;
+            second() = Zero;
         }
     }
 }
@@ -127,7 +127,7 @@ CML::tensor CML::pointConstraint::constraintTransformation() const
     }
     else
     {
-        return tensor::zero;
+        return Zero;
     }
 }
 
@@ -168,7 +168,7 @@ const
     // Knock out remaining vectors
     for (direction dir = n; dir < vecs.size(); dir++)
     {
-        vecs[dir] = vector::zero;
+        vecs[dir] = Zero;
     }
 
     tt = tensor(vecs[0], vecs[1], vecs[2]);

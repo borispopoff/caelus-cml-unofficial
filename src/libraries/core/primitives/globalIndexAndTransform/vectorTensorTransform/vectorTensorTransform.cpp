@@ -30,15 +30,15 @@ const char* const CML::vectorTensorTransform::typeName =
 
 const CML::vectorTensorTransform CML::vectorTensorTransform::zero
 (
-    vector::zero,
-    tensor::zero,
+    Zero,
+    Zero,
     false
 );
 
 
 const CML::vectorTensorTransform CML::vectorTensorTransform::I
 (
-    vector::zero,
+    Zero,
     sphericalTensor::I,
     false
 );

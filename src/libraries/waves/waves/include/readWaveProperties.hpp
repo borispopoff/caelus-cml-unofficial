@@ -12,7 +12,7 @@ IOdictionary waveProperties
 
 // Compute a reference point that is placed on the free surface
 // A zero offset between original and new reference level. Default offset
-dimensionedVector referencePoint("NULL", dimLength, vector::zero);
+dimensionedVector referencePoint("NULL", dimLength, Zero);
 
 bool waves = false;
 

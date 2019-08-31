@@ -1059,7 +1059,7 @@ CML::vector CML::particle::deviationFromMeshCentre() const
     }
     else
     {
-        return vector::zero;
+        return Zero;
     }
 }
 

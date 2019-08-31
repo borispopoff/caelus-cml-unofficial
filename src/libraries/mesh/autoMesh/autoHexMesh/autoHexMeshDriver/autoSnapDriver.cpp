@@ -183,7 +183,7 @@ CML::pointField CML::autoSnapDriver::smoothPatchDisplacement
     // Get average position of boundary face centres
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    vectorField avgBoundary(pointFaces.size(), vector::zero);
+    vectorField avgBoundary(pointFaces.size(), Zero);
     labelList nBoundary(pointFaces.size(), 0);
 
     forAll(pointFaces, patchPointi)
@@ -231,7 +231,7 @@ CML::pointField CML::autoSnapDriver::smoothPatchDisplacement
     vectorField avgInternal;
     labelList nInternal;
     {
-        vectorField globalSum(mesh.nPoints(), vector::zero);
+        vectorField globalSum(mesh.nPoints(), Zero);
         labelList globalNum(mesh.nPoints(), 0);
 
         // Note: no use of pointFaces
@@ -345,7 +345,7 @@ CML::pointField CML::autoSnapDriver::smoothPatchDisplacement
 
 
     // Displacement to calculate.
-    pointField patchDisp(meshPoints.size(), vector::zero);
+    pointField patchDisp(meshPoints.size(), Zero);
 
     forAll(pointFaces, i)
     {
@@ -797,7 +797,7 @@ CML::vectorField CML::autoSnapDriver::calcNearestSurface
     const fvMesh& mesh = meshRefiner_.mesh();
 
     // Displacement per patch point
-    vectorField patchDisp(localPoints.size(), vector::zero);
+    vectorField patchDisp(localPoints.size(), Zero);
 
     if (returnReduce(localPoints.size(), sumOp<label>()) > 0)
     {

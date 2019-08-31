@@ -110,7 +110,7 @@ void cumTrapz::evaluateVector()
     {
         const vectorField& field(input[I]);
         vectorField& out( ct[ I ] );
-        out.setSize(time.size(), vector::zero);
+        out.setSize(time.size(), Zero);
 
         for (int i=1; i < field.size(); i++)
         {

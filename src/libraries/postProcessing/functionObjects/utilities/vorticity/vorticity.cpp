@@ -76,7 +76,7 @@ CML::vorticity::vorticity
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedVector("0", dimless/dimTime, vector::zero)
+                dimensionedVector("0", dimless/dimTime, Zero)
             )
         );
 

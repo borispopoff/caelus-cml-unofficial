@@ -2115,7 +2115,7 @@ CML::vector CML::triSurfaceTools::surfaceNormal
         // Calculate edge normal by averaging face normals
         const labelList& eFaces = surf.edgeFaces()[edgeI];
 
-        vector edgeNormal(vector::zero);
+        vector edgeNormal(Zero);
 
         forAll(eFaces, i)
         {

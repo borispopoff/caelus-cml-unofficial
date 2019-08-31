@@ -236,7 +236,7 @@ void fvMesh::makeDefectCorrVecs() const
         fvPatchVectorField& patchDefectCorrVecs =
             DefectCorrVecs.boundaryField()[patchI];
 
-        patchDefectCorrVecs = vector::zero;
+        patchDefectCorrVecs = Zero;
     }
 }
 

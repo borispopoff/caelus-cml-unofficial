@@ -43,10 +43,10 @@ temperatureDirectedInletOutletVelocityFvPatchVectorField
     T0_(p.size(), 0.0),
     inletDir_(p.size()),
     cylindricalCCS_(0),
-    omega_(vector::zero)
+    omega_(Zero)
 {
     refValue() = *this;
-    refGrad() = vector::zero;
+    refGrad() = Zero;
     valueFraction() = 0.0;
 }
 
@@ -94,7 +94,7 @@ temperatureDirectedInletOutletVelocityFvPatchVectorField
     }
 
     refValue() = *this;
-    refGrad() = vector::zero;
+    refGrad() = Zero;
     valueFraction() = 0.0;
 }
 

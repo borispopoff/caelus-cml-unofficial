@@ -37,7 +37,7 @@ CML::reflectionVectors::reflectionVectors(const CML::fvMesh& mesh)
             mesh
         ),
         mesh,
-        dimensionedVector("n", dimless, vector::zero)
+        dimensionedVector("n", dimless, Zero)
     )
 {
     correct();

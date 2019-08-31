@@ -264,7 +264,7 @@ CML::volumeType CML::treeDataFace::getVolumeType
             // triangle normals)
             const labelList& pFaces = mesh_.pointFaces()[f[fp]];
 
-            vector pointNormal(vector::zero);
+            vector pointNormal(Zero);
 
             forAll(pFaces, i)
             {
@@ -333,7 +333,7 @@ CML::volumeType CML::treeDataFace::getVolumeType
             // triangle normals)
             const labelList& eFaces = mesh_.edgeFaces()[myEdges[myEdgeI]];
 
-            vector edgeNormal(vector::zero);
+            vector edgeNormal(Zero);
 
             forAll(eFaces, i)
             {

@@ -312,7 +312,7 @@ CML::displacementInterpolationMotionSolver::curPoints() const
     pointField& curPoints = tcurPoints();
 
     // Interpolate the displacement of the face zones.
-    vectorField zoneDisp(displacements_.size(), vector::zero);
+    vectorField zoneDisp(displacements_.size(), Zero);
     forAll(zoneDisp, zoneI)
     {
         if (times_[zoneI].size())
@@ -346,11 +346,11 @@ CML::displacementInterpolationMotionSolver::curPoints() const
             // Get the two zones bounding the range
             label minZoneI = rangeZone[rangeI];
             //vector minDisp =
-            //    (minZoneI == -1 ? vector::zero : zoneDisp[minZoneI]);
+            //    (minZoneI == -1 ? Zero : zoneDisp[minZoneI]);
             scalar minDisp = (minZoneI == -1 ? 0.0 : zoneDisp[minZoneI][dir]);
             label maxZoneI = rangeZone[rangeI+1];
             //vector maxDisp =
-            //    (maxZoneI == -1 ? vector::zero : zoneDisp[maxZoneI]);
+            //    (maxZoneI == -1 ? Zero : zoneDisp[maxZoneI]);
             scalar maxDisp = (maxZoneI == -1 ? 0.0 : zoneDisp[maxZoneI][dir]);
 
             forAll(rPoints, i)

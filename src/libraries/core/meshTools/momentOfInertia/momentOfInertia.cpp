@@ -194,8 +194,8 @@ void CML::momentOfInertia::massPropertiesShell
     // Reset properties for accumulation
 
     mass = 0.0;
-    cM = vector::zero;
-    J = tensor::zero;
+    cM = Zero;
+    J = Zero;
 
     // Find centre of mass
 
@@ -333,8 +333,8 @@ CML::tensor CML::momentOfInertia::meshInertia
     }
 
     scalar m = 0.0;
-    vector cM = vector::zero;
-    tensor J = tensor::zero;
+    vector cM = Zero;
+    tensor J = Zero;
 
     massPropertiesSolid(mesh.points(), faces, 1.0, m, cM, J);
 

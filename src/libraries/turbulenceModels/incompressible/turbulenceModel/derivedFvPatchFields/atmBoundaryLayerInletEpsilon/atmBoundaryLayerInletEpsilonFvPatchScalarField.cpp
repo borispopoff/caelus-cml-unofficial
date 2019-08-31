@@ -43,7 +43,7 @@ atmBoundaryLayerInletEpsilonFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
-    z_(vector::zero),
+    z_(Zero),
     kappa_(0.41),
     Uref_(0),
     Href_(0),

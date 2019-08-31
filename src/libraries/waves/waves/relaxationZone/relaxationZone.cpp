@@ -69,7 +69,7 @@ void relaxationZone::resetTargetFields()
 
     if (targetVelocity_ != nullptr)
     {
-        (*targetVelocity_).internalField() = vector::zero;
+        (*targetVelocity_).internalField() = Zero;
     }
 }
 
@@ -201,7 +201,7 @@ const volVectorField& relaxationZone::targetVelocityField()
                 IOobject::AUTO_WRITE
             ),
             mesh_,
-            dimensionedVector("null", dimVelocity, vector::zero),
+            dimensionedVector("null", dimVelocity, Zero),
             "zeroGradient"
         );
     }

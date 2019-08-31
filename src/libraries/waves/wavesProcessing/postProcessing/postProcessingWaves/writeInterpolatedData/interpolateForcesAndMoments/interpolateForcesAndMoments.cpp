@@ -76,7 +76,7 @@ void interpolateForcesAndMoments::evaluate()
 
     interpolationWeights(timeLabel, t, weights, leftData, rightData);
 
-    vectorField output(weights.size(), vector::zero);
+    vectorField output(weights.size(), Zero);
 
     // Outputs the forces as index 0
     {

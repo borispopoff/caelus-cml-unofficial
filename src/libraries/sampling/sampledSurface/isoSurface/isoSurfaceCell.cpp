@@ -248,7 +248,7 @@ CML::labelPair CML::isoSurfaceCell::findCommonPoints
 // Caculate centre of surface.
 CML::point CML::isoSurfaceCell::calcCentre(const triSurface& s)
 {
-    vector sum = vector::zero;
+    vector sum = Zero;
 
     forAll(s, i)
     {
@@ -267,7 +267,7 @@ CML::pointIndexHit CML::isoSurfaceCell::collapseSurface
     DynamicList<labelledTri, 64>& localTris
 ) const
 {
-    pointIndexHit info(false, vector::zero, localTris.size());
+    pointIndexHit info(false, Zero, localTris.size());
 
     if (localTris.size() == 1)
     {

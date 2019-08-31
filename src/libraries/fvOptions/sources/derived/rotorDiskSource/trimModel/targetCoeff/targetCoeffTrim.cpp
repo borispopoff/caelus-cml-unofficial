@@ -117,9 +117,9 @@ void CML::targetCoeffTrim::correctTrim
         // Iterate to find new pitch angles to achieve target force
         scalar err = GREAT;
         label iter = 0;
-        tensor J(tensor::zero);
+        tensor J(Zero);
 
-        vector old = vector::zero;
+        vector old = Zero;
         while ((err > tol_) && (iter < nIter_))
         {
             // Cache initial theta vector

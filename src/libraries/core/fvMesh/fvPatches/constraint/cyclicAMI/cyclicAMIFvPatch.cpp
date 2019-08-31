@@ -98,7 +98,7 @@ CML::tmp<CML::vectorField> CML::cyclicAMIFvPatch::delta() const
                 interpolate
                 (
                     nbrPatch.coupledFvPatch::delta(),
-                    vectorField(this->size(), vector::zero)
+                    vectorField(this->size(), Zero)
                 );
         }
         else

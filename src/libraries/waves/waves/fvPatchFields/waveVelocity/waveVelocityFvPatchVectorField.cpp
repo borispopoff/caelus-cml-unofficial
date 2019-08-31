@@ -170,7 +170,7 @@ void waveVelocityFvPatchVectorField::updateCoeffs()
                 = waveProps_->windVelocity(db().time().value());
         }
 
-        this->refGrad()[facei] = vector::zero;
+        this->refGrad()[facei] = Zero;
         this->valueFraction()[facei] = 1.0;
     }
 

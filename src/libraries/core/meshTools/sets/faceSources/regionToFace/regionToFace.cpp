@@ -120,7 +120,7 @@ void CML::regionToFace::combine(topoSet& set, const bool add) const
 
     mappedPatchBase::nearInfo ni
     (
-        pointIndexHit(false, vector::zero, -1),
+        pointIndexHit(false, Zero, -1),
         Tuple2<scalar, label>
         (
             sqr(GREAT),

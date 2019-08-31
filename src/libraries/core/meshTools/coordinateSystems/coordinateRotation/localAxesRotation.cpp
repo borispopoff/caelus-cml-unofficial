@@ -96,7 +96,7 @@ CML::localAxesRotation::localAxesRotation
 :
     Rptr_(),
     origin_(point::zero),
-    e3_(vector::zero)
+    e3_(Zero)
 {
     // If origin is specified in the coordinateSystem
     if (dict.parent().found("origin"))
@@ -161,8 +161,8 @@ CML::localAxesRotation::localAxesRotation(const dictionary& dict)
 CML::localAxesRotation::localAxesRotation(const tensorField& R)
 :
     Rptr_(),
-    origin_(vector::zero),
-    e3_(vector::zero)
+    origin_(Zero),
+    e3_(Zero)
 {
     Rptr_() = R;
 }
@@ -218,7 +218,7 @@ CML::tmp<CML::vectorField> CML::localAxesRotation::transform
 CML::vector CML::localAxesRotation::transform(const vector& v) const
 {
     NotImplemented;
-    return vector::zero;
+    return Zero;
 }
 
 
@@ -244,7 +244,7 @@ CML::tmp<CML::vectorField> CML::localAxesRotation::invTransform
 CML::vector CML::localAxesRotation::invTransform(const vector& v) const
 {
     NotImplemented;
-    return vector::zero;
+    return Zero;
 }
 
 
@@ -280,7 +280,7 @@ CML::tensor CML::localAxesRotation::transformTensor
 {
     NotImplemented;
 
-    return tensor::zero;
+    return Zero;
 }
 
 

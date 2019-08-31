@@ -136,13 +136,13 @@ void CML::porosityModels::fixedCoeff::calcTransformModelData()
             alpha_[zoneI].setSize(1);
             beta_[zoneI].setSize(1);
 
-            alpha_[zoneI][0] = tensor::zero;
+            alpha_[zoneI][0] = Zero;
             alpha_[zoneI][0].xx() = alphaXYZ_.value().x();
             alpha_[zoneI][0].yy() = alphaXYZ_.value().y();
             alpha_[zoneI][0].zz() = alphaXYZ_.value().z();
             alpha_[zoneI][0] = coordSys_.R().transformTensor(alpha_[zoneI][0]);
 
-            beta_[zoneI][0] = tensor::zero;
+            beta_[zoneI][0] = Zero;
             beta_[zoneI][0].xx() = betaXYZ_.value().x();
             beta_[zoneI][0].yy() = betaXYZ_.value().y();
             beta_[zoneI][0].zz() = betaXYZ_.value().z();
@@ -160,12 +160,12 @@ void CML::porosityModels::fixedCoeff::calcTransformModelData()
 
             forAll(cells, i)
             {
-                alpha_[zoneI][i] = tensor::zero;
+                alpha_[zoneI][i] = Zero;
                 alpha_[zoneI][i].xx() = alphaXYZ_.value().x();
                 alpha_[zoneI][i].yy() = alphaXYZ_.value().y();
                 alpha_[zoneI][i].zz() = alphaXYZ_.value().z();
 
-                beta_[zoneI][i] = tensor::zero;
+                beta_[zoneI][i] = Zero;
                 beta_[zoneI][i].xx() = betaXYZ_.value().x();
                 beta_[zoneI][i].yy() = betaXYZ_.value().y();
                 beta_[zoneI][i].zz() = betaXYZ_.value().z();
@@ -189,7 +189,7 @@ void CML::porosityModels::fixedCoeff::calcForce
 ) const
 {
     scalarField Udiag(U.size(), 0.0);
-    vectorField Usource(U.size(), vector::zero);
+    vectorField Usource(U.size(), Zero);
     const scalarField& V = mesh_.V();
     scalar rhoRef = readScalar(coeffs_.lookup("rhoRef"));
 

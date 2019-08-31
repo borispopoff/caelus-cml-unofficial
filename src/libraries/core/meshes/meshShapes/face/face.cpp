@@ -513,7 +513,7 @@ CML::point CML::face::centre(const pointField& points) const
     centrePoint /= nPoints;
 
     scalar sumA = 0;
-    vector sumAc = vector::zero;
+    vector sumAc = Zero;
 
     for (label pI=0; pI<nPoints; ++pI)
     {
@@ -572,14 +572,14 @@ CML::vector CML::face::area(const pointField& p) const
 
     label pI;
 
-    point centrePoint = vector::zero;
+    point centrePoint = Zero;
     for (pI = 0; pI < nPoints; ++pI)
     {
         centrePoint += p[operator[](pI)];
     }
     centrePoint /= nPoints;
 
-    vector a = vector::zero;
+    vector a = Zero;
 
     point nextPoint = centrePoint;
 
@@ -750,7 +750,7 @@ CML::tensor CML::face::inertia
 
     const point ctr = centre(p);
 
-    tensor J = tensor::zero;
+    tensor J = Zero;
 
     forAll(*this, i)
     {

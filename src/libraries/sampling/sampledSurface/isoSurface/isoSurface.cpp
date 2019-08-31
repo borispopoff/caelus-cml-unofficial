@@ -470,7 +470,7 @@ void CML::isoSurface::calcCutTypes
 // Caculate centre of surface.
 CML::point CML::isoSurface::calcCentre(const triSurface& s)
 {
-    vector sum = vector::zero;
+    vector sum = Zero;
 
     forAll(s, i)
     {

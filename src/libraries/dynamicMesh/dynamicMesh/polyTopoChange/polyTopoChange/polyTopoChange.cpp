@@ -3080,7 +3080,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::polyTopoChange::changeMesh
             }
             else
             {
-                renumberedMeshPoints[newPointI] = vector::zero;
+                renumberedMeshPoints[newPointI] = Zero;
             }
         }
 

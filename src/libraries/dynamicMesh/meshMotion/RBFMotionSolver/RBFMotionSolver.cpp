@@ -227,7 +227,7 @@ void CML::RBFMotionSolver::makeControlIDs()
     movingIDs_.setSize(nMovingPoints);
 
     // Actual location of moving points will be set later on request
-    movingPoints_.setSize(nMovingPoints, vector::zero);
+    movingPoints_.setSize(nMovingPoints, Zero);
 
     // Mark all points on static patches with -1
     label nStaticPoints = 0;
@@ -280,7 +280,7 @@ void CML::RBFMotionSolver::makeControlIDs()
 
     // Control IDs also potentially include points on static patches
     controlIDs_.setSize(movingIDs_.size() + staticIDs_.size());
-    motion_.setSize(controlIDs_.size(), vector::zero);
+    motion_.setSize(controlIDs_.size(), Zero);
 
     label nControlPoints = 0;
 
@@ -466,7 +466,7 @@ void CML::RBFMotionSolver::setMotion(const vectorField& m)
 
     // Motion of static points is zero and moving points are first
     // in the list.
-    motion_ = vector::zero;
+    motion_ = Zero;
 
     forAll (m, i)
     {
@@ -507,7 +507,7 @@ CML::tmp<CML::pointField> CML::RBFMotionSolver::curPoints() const
     // Prepare new points: same as old point
     tmp<pointField> tcurPoints
     (
-        new vectorField(mesh().nPoints(), vector::zero)
+        new vectorField(mesh().nPoints(), Zero)
     );
     pointField& curPoints = tcurPoints();
 
@@ -522,7 +522,7 @@ CML::tmp<CML::pointField> CML::RBFMotionSolver::curPoints() const
     // 2. Insert zero motion of static points
     forAll (staticIDs_, i)
     {
-        curPoints[staticIDs_[i]] = vector::zero;
+        curPoints[staticIDs_[i]] = Zero;
     }
 
     // Set motion of control points
@@ -643,7 +643,7 @@ CML::tmp<CML::pointField> CML::RBFMotionSolver::curPoints() const
 void CML::RBFMotionSolver::solve()
 {
     // Motion is a vectorField of all moving boundary points
-    vectorField motion(movingPoints().size(), vector::zero);
+    vectorField motion(movingPoints().size(), Zero);
 
     vectorField oldPoints = movingPoints();
     vectorField newPoints = oldPoints;

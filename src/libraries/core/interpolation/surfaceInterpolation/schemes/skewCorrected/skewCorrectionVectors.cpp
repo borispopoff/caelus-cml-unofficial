@@ -99,7 +99,7 @@ void CML::skewCorrectionVectors::makeSkewCorrectionVectors() const
 
         if (!patchSkewCorrVecs.coupled())
         {
-            patchSkewCorrVecs = vector::zero;
+            patchSkewCorrVecs = Zero;
         }
         else
         {

@@ -568,7 +568,7 @@ public:
             //  Clears all data. Returns map.
             //  inflate = true : keep old mesh points. Put new points into the
             //  returned map (preMotionPoints) so we can use inflation. Any
-            //  points out of nothing (appended points) are vector::zero.
+            //  points out of nothing (appended points) are Zero.
             //  inflate = false: set mesh points directly. Empty preMotionPoints
             //  in the map.
             //  orderCells :  whether to order the cells (see bandCompression.H)

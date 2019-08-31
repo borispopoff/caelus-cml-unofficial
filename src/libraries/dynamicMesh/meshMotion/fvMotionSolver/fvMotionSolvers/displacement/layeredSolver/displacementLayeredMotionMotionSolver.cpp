@@ -160,7 +160,7 @@ void CML::displacementLayeredMotionMotionSolver::walkStructured
                 points0()[pointI],  // location of data
                 vector::max,        // not valid
                 0.0,
-                vector::zero        // passive data
+                Zero        // passive data
             );
         }
     }
@@ -178,7 +178,7 @@ void CML::displacementLayeredMotionMotionSolver::walkStructured
                 mesh().edges()[edgeI].centre(points0()),    // location of data
                 vector::max,                                // not valid
                 0.0,
-                vector::zero
+                Zero
             );
         }
     }

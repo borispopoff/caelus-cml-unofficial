@@ -84,7 +84,7 @@ public:
             const label facei = -1
         ) const
         {
-            return interpolate(vector::zero, tetIs.cell(), facei);
+            return interpolate(Zero, tetIs.cell(), facei);
         }
 };
 

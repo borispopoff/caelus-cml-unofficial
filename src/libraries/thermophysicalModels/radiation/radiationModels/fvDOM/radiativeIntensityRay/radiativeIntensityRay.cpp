@@ -104,8 +104,8 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
         mesh_,
         dimensionedScalar("qem", dimMass/pow3(dimTime), 0.0)
     ),
-    d_(vector::zero),
-    dAve_(vector::zero),
+    d_(Zero),
+    dAve_(Zero),
     theta_(theta),
     phi_(phi),
     omega_(0.0),
@@ -137,7 +137,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
     // dimension cases
     if (mesh_.nSolutionD() == 2)
     {
-        vector meshDir(vector::zero);
+        vector meshDir(Zero);
         for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
         {
             if (mesh_.geometricD()[cmpt] == -1)
@@ -154,7 +154,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
     }
     else if (mesh_.nSolutionD() == 1)
     {
-        vector meshDir(vector::zero);
+        vector meshDir(Zero);
         for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
         {
             if (mesh_.geometricD()[cmpt] == 1)

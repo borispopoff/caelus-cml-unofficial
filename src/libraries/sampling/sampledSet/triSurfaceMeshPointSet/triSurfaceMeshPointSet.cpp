@@ -165,7 +165,7 @@ CML::point CML::triSurfaceMeshPointSet::getRefPoint(const List<point>& pts)
     }
     else
     {
-        return vector::zero;
+        return Zero;
     }
 }
 

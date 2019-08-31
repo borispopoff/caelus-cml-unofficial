@@ -132,7 +132,7 @@ CML::wallShearStress::wallShearStress
                 (
                     "0",
                     sqr(dimLength)/sqr(dimTime),
-                    vector::zero
+                    Zero
                 )
             )
         );

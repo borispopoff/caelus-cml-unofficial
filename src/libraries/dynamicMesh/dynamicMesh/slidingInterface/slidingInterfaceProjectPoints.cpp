@@ -246,7 +246,7 @@ bool CML::slidingInterface::projectPoints() const
     if (projectedSlavePointsPtr_) delete projectedSlavePointsPtr_;
 
     projectedSlavePointsPtr_ =
-        new pointField(slavePointFaceHits.size(), vector::zero);
+        new pointField(slavePointFaceHits.size(), Zero);
     pointField& projectedSlavePoints = *projectedSlavePointsPtr_;
 
     // Adjust projection to type of match

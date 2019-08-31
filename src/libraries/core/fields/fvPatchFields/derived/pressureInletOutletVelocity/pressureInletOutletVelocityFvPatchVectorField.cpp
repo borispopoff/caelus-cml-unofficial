@@ -37,8 +37,8 @@ pressureInletOutletVelocityFvPatchVectorField
     directionMixedFvPatchVectorField(p, iF),
     phiName_("phi")
 {
-    refValue() = vector::zero;
-    refGrad() = vector::zero;
+    refValue() = Zero;
+    refGrad() = Zero;
     valueFraction() = symmTensor::zero;
 }
 
@@ -84,10 +84,10 @@ pressureInletOutletVelocityFvPatchVectorField
     }
     else
     {
-        refValue() = vector::zero;
+        refValue() = Zero;
     }
 
-    refGrad() = vector::zero;
+    refGrad() = Zero;
     valueFraction() = symmTensor::zero;
 }
 

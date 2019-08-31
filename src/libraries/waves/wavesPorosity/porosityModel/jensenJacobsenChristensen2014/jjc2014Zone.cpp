@@ -56,8 +56,8 @@ CML::jjc2014Zone::jjc2014Zone
     coordSys_(mesh, dict),
     porosity_(readScalar(dict_.lookup("porosity"))),
     addedMassCoeff_(readScalar(dict_.lookup("gammaAddedMass"))),
-    D_("D", dimensionSet(0, -2, 0, 0, 0), tensor::zero),
-    F_("F", dimensionSet(0, -1, 0, 0, 0), tensor::zero)
+    D_("D", dimensionSet(0, -2, 0, 0, 0), Zero),
+    F_("F", dimensionSet(0, -1, 0, 0, 0), Zero)
 {
     Info<< "Creating porous zone: " << name_ << endl;
 

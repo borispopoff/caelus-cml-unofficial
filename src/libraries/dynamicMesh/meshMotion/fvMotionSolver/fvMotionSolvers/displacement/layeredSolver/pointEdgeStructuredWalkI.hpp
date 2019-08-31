@@ -57,7 +57,7 @@ inline CML::pointEdgeStructuredWalk::pointEdgeStructuredWalk()
     point0_(vector::max),
     previousPoint_(vector::max),
     dist_(0),
-    data_(vector::zero)
+    data_(Zero)
 {}
 
 

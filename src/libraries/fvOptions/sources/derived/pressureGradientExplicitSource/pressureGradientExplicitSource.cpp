@@ -179,7 +179,7 @@ void CML::fv::pressureGradientExplicitSource::addSup
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedVector("zero", eqn.dimensions()/dimVolume, vector::zero)
+        dimensionedVector("zero", eqn.dimensions()/dimVolume, Zero)
     );
 
     scalar gradP = gradP0_ + dGradP_;

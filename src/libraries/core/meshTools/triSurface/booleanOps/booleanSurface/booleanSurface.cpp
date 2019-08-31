@@ -940,7 +940,7 @@ CML::booleanSurface::booleanSurface
     const pointField& pts = combinedSurf.points();
 
     label minFaceI = -1;
-    pointHit minHit(false, vector::zero, GREAT, true);
+    pointHit minHit(false, Zero, GREAT, true);
 
     forAll(combinedSurf, faceI)
     {

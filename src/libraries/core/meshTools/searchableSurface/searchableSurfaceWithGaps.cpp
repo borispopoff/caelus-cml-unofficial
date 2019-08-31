@@ -43,7 +43,7 @@ CML::Pair<CML::vector> CML::searchableSurfaceWithGaps::offsetVecs
     const point& end
 ) const
 {
-    Pair<vector> offsets(vector::zero, vector::zero);
+    Pair<vector> offsets(Zero, Zero);
 
     vector n(end-start);
 

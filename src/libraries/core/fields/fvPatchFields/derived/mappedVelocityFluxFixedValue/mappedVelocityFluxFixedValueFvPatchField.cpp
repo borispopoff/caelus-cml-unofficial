@@ -164,7 +164,7 @@ void CML::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
     {
         case mappedPolyPatch::NEARESTFACE:
         {
-            vectorField allUValues(nbrMesh.nFaces(), vector::zero);
+            vectorField allUValues(nbrMesh.nFaces(), Zero);
             scalarField allPhiValues(nbrMesh.nFaces(), 0.0);
 
             forAll(UField.boundaryField(), patchI)

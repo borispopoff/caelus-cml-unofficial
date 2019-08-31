@@ -378,10 +378,10 @@ void CML::surfaceInterpolation::makeNonOrthCorrectionVectors() const
         if (!patchCorrVecs.coupled())
         {
 		    // Set the correction to zero. This is okay for fixedGradient conditions
-			patchCorrVecs = vector::zero;
+			patchCorrVecs = Zero;
 			
 			// Initialise correction to zero
-			fvCorrVecs[patchi] = vector::zero;
+			fvCorrVecs[patchi] = Zero;
 			
 		    const fvsPatchScalarField& patchNonOrthDeltaCoeffs
                 = NonOrthDeltaCoeffs.boundaryField()[patchi];

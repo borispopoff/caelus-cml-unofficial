@@ -179,7 +179,7 @@ void CML::isoAdvection::timeIntegratedFlux()
     // Interpolating alpha1 cell centre values to mesh points (vertices)
     ap_ = volPointInterpolation::New(mesh_).interpolate(alpha1_);
 
-    vectorField gradAlpha(mesh_.nPoints(), vector::zero);
+    vectorField gradAlpha(mesh_.nPoints(), Zero);
     if (gradAlphaBasedNormal_)
     {
         // Calculate gradient of alpha1 and interpolate to vertices
@@ -212,7 +212,7 @@ void CML::isoAdvection::timeIntegratedFlux()
             {
                 // Calculating smoothed alpha gradient in surface cell in order
                 // to use it as the isoface orientation.
-                vector smoothedGradA = vector::zero;
+                vector smoothedGradA = Zero;
                 const point& cellCentre = cellCentres[celli];
                 scalar wSum = 0;
                 forAll(cp, pointI)

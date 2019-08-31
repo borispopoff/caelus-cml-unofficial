@@ -200,14 +200,14 @@ bool CML::autoLayerDriver::unmarkExtrusion
     {
         extrudeStatus[patchPointI] = NOEXTRUDE;
         patchNLayers[patchPointI] = 0;
-        patchDisp[patchPointI] = vector::zero;
+        patchDisp[patchPointI] = Zero;
         return true;
     }
     else if (extrudeStatus[patchPointI] == EXTRUDEREMOVE)
     {
         extrudeStatus[patchPointI] = NOEXTRUDE;
         patchNLayers[patchPointI] = 0;
-        patchDisp[patchPointI] = vector::zero;
+        patchDisp[patchPointI] = Zero;
         return true;
     }
     else
@@ -841,7 +841,7 @@ CML::autoLayerDriver::makeLayerDisplacementField
                 IOobject::AUTO_WRITE
             ),
             pMesh,
-            dimensionedVector("displacement", dimLength, vector::zero),
+            dimensionedVector("displacement", dimLength, Zero),
             patchFieldTypes,
             actualPatchTypes
         )
@@ -928,7 +928,7 @@ void CML::autoLayerDriver::growNoExtrusion
     {
         if (extrudeStatus[patchPointI] == NOEXTRUDE)
         {
-            patchDisp[patchPointI] = vector::zero;
+            patchDisp[patchPointI] = Zero;
             patchNLayers[patchPointI] = 0;
         }
     }
@@ -1484,7 +1484,7 @@ void CML::autoLayerDriver::getPatchDisplacement
         {
             // Do not use unmarkExtrusion; forcibly set to zero extrusion.
             patchNLayers[patchPointI] = 0;
-            patchDisp[patchPointI] = vector::zero;
+            patchDisp[patchPointI] = Zero;
         }
         else
         {
@@ -1508,7 +1508,7 @@ void CML::autoLayerDriver::getPatchDisplacement
     {
         if (extrudeStatus[patchPointI] == EXTRUDEREMOVE)
         {
-            point avg(vector::zero);
+            point avg(Zero);
             label nPoints = 0;
 
             const labelList& pEdges = pp.pointEdges()[patchPointI];
@@ -1729,7 +1729,7 @@ CML::label CML::autoLayerDriver::truncateDisplacement
         else if (extrudeStatus[patchPointI] == NOEXTRUDE)
         {
             // Make sure displacement is 0. Should already be so but ...
-            patchDisp[patchPointI] = vector::zero;
+            patchDisp[patchPointI] = Zero;
             patchNLayers[patchPointI] = 0;
         }
     }
@@ -2719,7 +2719,7 @@ void CML::autoLayerDriver::addLayers
             false
         ),
         meshMover().pMesh(),
-        dimensionedVector("dispVec", dimLength, vector::zero)
+        dimensionedVector("dispVec", dimLength, Zero)
     );
 
     pointScalarField medialRatio
@@ -2749,7 +2749,7 @@ void CML::autoLayerDriver::addLayers
             false
         ),
         meshMover().pMesh(),
-        dimensionedVector("medialVec", dimLength, vector::zero)
+        dimensionedVector("medialVec", dimLength, Zero)
     );
 
     // Setup information for medial axis smoothing. Calculates medial axis
@@ -2937,7 +2937,7 @@ void CML::autoLayerDriver::addLayers
 
         // Calculate displacement for final layer for addPatchLayer.
         // (layer of cells next to the original mesh)
-        vectorField finalDisp(patchNLayers.size(), vector::zero);
+        vectorField finalDisp(patchNLayers.size(), Zero);
 
         forAll(nPatchPointLayers, i)
         {

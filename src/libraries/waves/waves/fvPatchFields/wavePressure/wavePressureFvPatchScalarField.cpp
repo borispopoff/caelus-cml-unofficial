@@ -155,8 +155,8 @@ void wavePressureFvPatchScalarField::updateCoeffs()
 
     const label start = patch().patch().start();
 
-    vector centre( vector::zero );
-    vector normal( vector::zero );
+    vector centre(Zero);
+    vector normal(Zero);
 
     forAll (magSf, facei)
     {

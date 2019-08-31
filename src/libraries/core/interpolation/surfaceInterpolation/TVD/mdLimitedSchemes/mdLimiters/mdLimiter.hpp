@@ -271,7 +271,7 @@ public:
                 IOobject::AUTO_WRITE
             ),
             this->mesh_,
-            dimensionedVector("phiMinValue", dimless, vector::zero),
+            dimensionedVector("phiMinValue", dimless, Zero),
             zeroGradientFvPatchScalarField::typeName
 	),
         phiMaxValue_
@@ -285,7 +285,7 @@ public:
                 IOobject::AUTO_WRITE
              ),
              this->mesh_,
-	    dimensionedVector("phiMaxValue", dimless, vector::zero),
+	    dimensionedVector("phiMaxValue", dimless, Zero),
              zeroGradientFvPatchScalarField::typeName
         )
     {

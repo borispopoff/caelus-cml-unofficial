@@ -132,7 +132,7 @@ void CML::cyclicAMIPolyPatch::calcTransforms
     {
         case ROTATIONAL:
         {
-            tensor revT = tensor::zero;
+            tensor revT = Zero;
 
             if (rotationAngleDefined_)
             {
@@ -217,8 +217,8 @@ void CML::cyclicAMIPolyPatch::calcTransforms
             }
             else
             {
-                point n0 = vector::zero;
-                point n1 = vector::zero;
+                point n0 = Zero;
+                point n1 = Zero;
                 if (half0Ctrs.size())
                 {
                     n0 = findFaceNormalMaxRadius(half0Ctrs);
@@ -485,11 +485,11 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     coupledPolyPatch(name, size, start, index, bm, patchType, transform),
     nbrPatchName_(word::null),
     nbrPatchID_(-1),
-    rotationAxis_(vector::zero),
+    rotationAxis_(Zero),
     rotationCentre_(point::zero),
     rotationAngleDefined_(false),
     rotationAngle_(0.0),
-    separationVector_(vector::zero),
+    separationVector_(Zero),
     AMIPtr_(nullptr),
     AMIReverse_(false),
     AMIRequireMatch_(true),
@@ -514,11 +514,11 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     coupledPolyPatch(name, dict, index, bm, patchType),
     nbrPatchName_(dict.lookupOrDefault<word>("neighbourPatch", "")),
     nbrPatchID_(-1),
-    rotationAxis_(vector::zero),
+    rotationAxis_(Zero),
     rotationCentre_(point::zero),
     rotationAngleDefined_(false),
     rotationAngle_(0.0),
-    separationVector_(vector::zero),
+    separationVector_(Zero),
     AMIPtr_(nullptr),
     AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
     AMIRequireMatch_(true),

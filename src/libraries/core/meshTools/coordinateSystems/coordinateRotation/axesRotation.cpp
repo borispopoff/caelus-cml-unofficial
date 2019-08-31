@@ -86,7 +86,7 @@ void CML::axesRotation::calcTransform
                 << "Unhandled axes specifictation" << endl
                 << abort(FatalError);
 
-            Rtr = tensor::zero;
+            Rtr = Zero;
             break;
         }
     }

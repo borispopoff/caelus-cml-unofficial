@@ -27,7 +27,7 @@ License
 CML::refineCell::refineCell()
 :
     cellNo_(-1),
-    direction_(vector::zero)
+    direction_(Zero)
 {}
 
 

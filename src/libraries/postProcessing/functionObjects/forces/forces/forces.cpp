@@ -538,7 +538,7 @@ CML::forces::forces
     localSystem_(false),
     porosity_(false),
     nBin_(1),
-    binDir_(vector::zero),
+    binDir_(Zero),
     binDx_(0.0),
     binMin_(GREAT),
     binPoints_(),
@@ -597,7 +597,7 @@ CML::forces::forces
     localSystem_(false),
     porosity_(false),
     nBin_(1),
-    binDir_(vector::zero),
+    binDir_(Zero),
     binDx_(0.0),
     binMin_(GREAT),
     binPoints_(),
@@ -802,13 +802,13 @@ void CML::forces::calcForcesMoment()
         return;
     }
 
-    force_[0] = vector::zero;
-    force_[1] = vector::zero;
-    force_[2] = vector::zero;
+    force_[0] = Zero;
+    force_[1] = Zero;
+    force_[2] = Zero;
 
-    moment_[0] = vector::zero;
-    moment_[1] = vector::zero;
-    moment_[2] = vector::zero;
+    moment_[0] = Zero;
+    moment_[1] = Zero;
+    moment_[2] = Zero;
 
     if (directForceDensity_)
     {
@@ -848,7 +848,7 @@ void CML::forces::calcForcesMoment()
             vectorField fT(sA*fD.boundaryField()[patchI] - fN);
 
             //- Porous force
-            vectorField fP(Md.size(), vector::zero);
+            vectorField fP(Md.size(), Zero);
 
             applyBins(Md, fN, fT, fP, mesh.C().boundaryField()[patchI]);
         }
@@ -894,7 +894,7 @@ void CML::forces::calcForcesMoment()
                 (Sfb[patchI]*patchWeights) & devRhoReffb[patchI]
             );
 
-            vectorField fP(Md.size(), vector::zero);
+            vectorField fP(Md.size(), Zero);
 
             applyBins(Md, fN, fT, fP, mesh.C().boundaryField()[patchI]);
         }
@@ -937,7 +937,7 @@ void CML::forces::calcForcesMoment()
                 const vectorField fP(fPTot, cZone);
                 const vectorField Md(d - coordSys_.origin());
 
-                const vectorField fDummy(Md.size(), vector::zero);
+                const vectorField fDummy(Md.size(), Zero);
 
                 applyBins(Md, fDummy, fDummy, fP, d);
             }
