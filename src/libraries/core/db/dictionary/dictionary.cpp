@@ -264,7 +264,7 @@ CML::SHA1Digest CML::dictionary::digest() const
 {
     OSHA1stream os;
 
-    // process entries
+    // Process entries
     forAllConstIter(IDLList<entry>, *this, iter)
     {
         os << *iter;
@@ -721,7 +721,7 @@ bool CML::dictionary::add(entry* entryPtr, bool mergeEntry)
 
     if (mergeEntry && iter != hashedEntries_.end())
     {
-        // merge dictionary with dictionary
+        // Merge dictionary with dictionary
         if (iter()->isDict() && entryPtr->isDict())
         {
             iter()->dict().merge(entryPtr->dict());
@@ -731,7 +731,7 @@ bool CML::dictionary::add(entry* entryPtr, bool mergeEntry)
         }
         else
         {
-            // replace existing dictionary with entry or vice versa
+            // Replace existing dictionary with entry or vice versa
             IDLList<entry>::replace(iter(), entryPtr);
             delete iter();
             hashedEntries_.erase(iter);
@@ -911,7 +911,7 @@ bool CML::dictionary::changeKeyword
 
     HashTable<entry*>::iterator iter = hashedEntries_.find(oldKeyword);
 
-    // oldKeyword not found - do nothing
+    // OldKeyword not found - do nothing
     if (iter == hashedEntries_.end())
     {
         return false;
@@ -929,7 +929,7 @@ bool CML::dictionary::changeKeyword
 
     HashTable<entry*>::iterator iter2 = hashedEntries_.find(newKeyword);
 
-    // newKeyword already exists
+    // NewKeyword already exists
     if (iter2 != hashedEntries_.end())
     {
         if (forceOverwrite)
