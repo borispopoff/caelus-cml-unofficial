@@ -178,7 +178,8 @@ template<class T>
 CML::Ostream& CML::operator<<(Ostream& os, const PtrList<T>& L)
 {
     // Write size and start delimiter
-    os << nl << L.size() << nl << token::BEGIN_LIST;
+    os  << nl << indent << L.size() << nl
+        << indent << token::BEGIN_LIST << incrIndent;
 
     // Write contents
     forAll(L, i)
@@ -187,7 +188,7 @@ CML::Ostream& CML::operator<<(Ostream& os, const PtrList<T>& L)
     }
 
     // Write end delimiter
-    os << nl << token::END_LIST << nl;
+    os << nl << decrIndent << indent << token::END_LIST << nl;
 
     // Check state of IOstream
     os.check("Ostream& operator<<(Ostream&, const PtrList&)");
