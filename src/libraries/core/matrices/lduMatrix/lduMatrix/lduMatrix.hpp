@@ -737,7 +737,7 @@ CML::tmp<CML::Field<Type>> CML::lduMatrix::H(const Field<Type>& psi) const
 {
     tmp<Field<Type>> tHpsi
     (
-        new Field<Type>(lduAddr().size(), pTraits<Type>::zero)
+        new Field<Type>(lduAddr().size(), Zero)
     );
 
     if (lowerPtr_ || upperPtr_)

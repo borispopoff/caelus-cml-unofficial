@@ -269,7 +269,7 @@ void CML::GAMGAgglomeration::restrictField
             << abort(FatalError);
     }
 
-    cf = pTraits<Type>::zero;
+    cf = Zero;
 
     forAll(ff, i)
     {
@@ -288,7 +288,7 @@ void CML::GAMGAgglomeration::restrictFaceField
 {
     const labelList& fineToCoarse = faceRestrictAddressing_[fineLevelIndex];
 
-    cf = pTraits<Type>::zero;
+    cf = Zero;
 
     forAll(fineToCoarse, ffacei)
     {

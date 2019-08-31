@@ -244,7 +244,7 @@ CML::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 :
     fixedValueFvPatchField<Type>(p, iF),
     ranGen_(label(0)),
-    fluctuationScale_(pTraits<Type>::zero),
+    fluctuationScale_(Zero),
     referenceField_(p.size()),
     alpha_(0.1),
     curTimeIndex_(-1)

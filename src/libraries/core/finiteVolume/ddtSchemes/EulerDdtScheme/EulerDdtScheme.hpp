@@ -269,7 +269,7 @@ EulerDdtScheme<Type>::fvcDdt
                 (
                     "0",
                     dt.dimensions()/dimTime,
-                    pTraits<Type>::zero
+                    Zero
                 )
             )
         );
@@ -291,7 +291,7 @@ EulerDdtScheme<Type>::fvcDdt
                 (
                     "0",
                     dt.dimensions()/dimTime,
-                    pTraits<Type>::zero
+                    Zero
                 ),
                 calculatedFvPatchField<Type>::typeName
             )

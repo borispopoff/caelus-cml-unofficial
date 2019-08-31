@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -36,7 +36,7 @@ Type CML::interpolatePointToCell
 
     labelHashSet pointHad(10*cFaces.size());
 
-    Type sum(pTraits<Type>::zero);
+    Type sum(Zero);
 
     forAll(cFaces, i)
     {

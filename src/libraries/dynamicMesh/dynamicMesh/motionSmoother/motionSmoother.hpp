@@ -651,7 +651,7 @@ CML::motionSmoother::avg
                 false
             ),
             fld.mesh(),
-            dimensioned<Type>("zero", fld.dimensions(), pTraits<Type>::zero)
+            dimensioned<Type>("zero", fld.dimensions(), Zero)
         )
     );
     GeometricField<Type, pointPatchField, pointMesh>& res = tres();
@@ -693,7 +693,7 @@ CML::motionSmoother::avg
         mesh,
         res,
         plusEqOp<Type>(),
-        pTraits<Type>::zero     // null value
+        Type(Zero)     // null value
     );
     syncTools::syncPointList
     (

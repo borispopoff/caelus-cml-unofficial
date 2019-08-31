@@ -70,7 +70,7 @@ Type CML::interpolatePointToCell
 
     labelHashSet pointHad(10*cFaces.size());
 
-    Type sum(pTraits<Type>::zero);
+    Type sum = Zero;
 
     forAll(cFaces, i)
     {

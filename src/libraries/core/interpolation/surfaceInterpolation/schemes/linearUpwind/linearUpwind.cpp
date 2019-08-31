@@ -47,7 +47,7 @@ CML::linearUpwind<Type>::correction
                 false
             ),
             mesh,
-            dimensioned<Type>(vf.name(), vf.dimensions(), pTraits<Type>::zero)
+            dimensioned<Type>(vf.name(), vf.dimensions(), Zero)
         )
     );
 

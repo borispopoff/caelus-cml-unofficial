@@ -272,8 +272,8 @@ void CML::fieldValues::fieldValueDelta::processFields(bool& found)
     const dictionary& results1 = source1Ptr_->resultDict();
     const dictionary& results2 = source2Ptr_->resultDict();
 
-    Type r1(pTraits<Type>::zero);
-    Type r2(pTraits<Type>::zero);
+    Type r1(Zero);
+    Type r2(Zero);
 
     forAll(fields1, i)
     {

@@ -254,7 +254,7 @@ steadyStateDdtScheme<Type>::fvcDdt
             (
                 "0",
                 dt.dimensions()/dimTime,
-                pTraits<Type>::zero
+                Zero
             )
         )
     );
@@ -283,7 +283,7 @@ steadyStateDdtScheme<Type>::fvcDdt
             (
                 "0",
                 vf.dimensions()/dimTime,
-                pTraits<Type>::zero
+                Zero
             )
         )
     );
@@ -313,7 +313,7 @@ steadyStateDdtScheme<Type>::fvcDdt
             (
                 "0",
                 rho.dimensions()*vf.dimensions()/dimTime,
-                pTraits<Type>::zero
+                Zero
             )
         )
     );
@@ -343,7 +343,7 @@ steadyStateDdtScheme<Type>::fvcDdt
             (
                 "0",
                 rho.dimensions()*vf.dimensions()/dimTime,
-                pTraits<Type>::zero
+                Zero
             )
         )
     );
@@ -374,7 +374,7 @@ steadyStateDdtScheme<Type>::fvcDdt
             (
                 "0",
                 rho.dimensions()*vf.dimensions()/dimTime,
-                pTraits<Type>::zero
+                Zero
             )
         )
     );

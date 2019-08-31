@@ -216,7 +216,7 @@ CML::mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
     fixedValueFvPatchField<Type>(p, iF),
     fieldName_(iF.name()),
     setAverage_(false),
-    average_(pTraits<Type>::zero),
+    average_(Zero),
     interpolationScheme_(interpolationCell<Type>::typeName)
 {}
 
@@ -453,7 +453,7 @@ void CML::mappedFixedValueFvPatchField<Type>::updateCoeffs()
         }
         case mappedPatchBase::NEARESTFACE:
         {
-            Field<Type> allValues(nbrMesh.nFaces(), pTraits<Type>::zero);
+            Field<Type> allValues(nbrMesh.nFaces(), Zero);
 
             const fieldType& nbrField = sampleField();
 

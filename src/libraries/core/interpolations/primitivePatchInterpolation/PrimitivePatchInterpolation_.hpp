@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -313,10 +313,7 @@ tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::faceToPointInterpolate
 
     tmp<Field<Type>> tresult
     (
-        new Field<Type>
-        (
-            patch_.nPoints(), pTraits<Type>::zero
-        )
+        new Field<Type>(patch_.nPoints(), Zero)
     );
 
     Field<Type>& result = tresult();
@@ -369,11 +366,7 @@ tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::pointToFaceInterpolate
 
     tmp<Field<Type>> tresult
     (
-        new Field<Type>
-        (
-            patch_.size(),
-            pTraits<Type>::zero
-        )
+        new Field<Type>(patch_.size(), Zero)
     );
 
     Field<Type>& result = tresult();
@@ -427,7 +420,7 @@ tmp<Field<Type>> PrimitivePatchInterpolation<Patch>::faceToEdgeInterpolate
 
     tmp<Field<Type>> tresult
     (
-        new Field<Type>(patch_.nEdges(), pTraits<Type>::zero)
+        new Field<Type>(patch_.nEdges(), Zero)
     );
 
     Field<Type>& result = tresult();

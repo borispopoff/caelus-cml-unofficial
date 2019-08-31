@@ -624,7 +624,7 @@ Type CML::face::average
     label nPoints = size();
 
     point centrePoint = point::zero;
-    Type cf = pTraits<Type>::zero;
+    Type cf = Zero;
 
     for (label pI=0; pI<nPoints; pI++)
     {
@@ -636,7 +636,7 @@ Type CML::face::average
     cf /= nPoints;
 
     scalar sumA = 0;
-    Type sumAf = pTraits<Type>::zero;
+    Type sumAf = Zero;
 
     for (label pI=0; pI<nPoints; pI++)
     {

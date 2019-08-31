@@ -592,7 +592,7 @@ CML::sampledSurface::pointAverage
                 false
             ),
             mesh,
-            dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
+            dimensioned<Type>("zero", dimless, Zero)
         )
     );
     GeometricField<Type, fvPatchField, volMesh>& cellAvg = tcellAvg();

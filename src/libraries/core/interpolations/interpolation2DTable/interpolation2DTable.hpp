@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -432,7 +432,7 @@ Type CML::interpolation2DTable<Type>::operator()
         WarningInFunction
             << "cannot interpolate a zero-sized table - returning zero" << endl;
 
-        return pTraits<Type>::zero;
+        return Zero;
     }
     else if (nX == 1)
     {

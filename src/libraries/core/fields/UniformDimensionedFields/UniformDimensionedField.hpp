@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -129,7 +129,7 @@ CML::UniformDimensionedField<Type>::UniformDimensionedField
 )
 :
     regIOobject(io),
-    dimensioned<Type>(regIOobject::name(), dimless, pTraits<Type>::zero)
+    dimensioned<Type>(regIOobject::name(), dimless, Zero)
 {
     dictionary dict(readStream(typeName));
     this->dimensions().reset(dict.lookup("dimensions"));

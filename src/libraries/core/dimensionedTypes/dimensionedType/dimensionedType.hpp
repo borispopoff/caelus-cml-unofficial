@@ -415,7 +415,7 @@ dimensioned<Type>::dimensioned
 :
     name_(name),
     dimensions_(dimSet),
-    value_(pTraits<Type>::zero)
+    value_(Zero)
 {
     initialize(is);
 }
@@ -431,7 +431,7 @@ dimensioned<Type>::dimensioned
 :
     name_(name),
     dimensions_(dimSet),
-    value_(pTraits<Type>::zero)
+    value_(Zero)
 {
     initialize(dict.lookup(name));
 }
@@ -443,7 +443,7 @@ dimensioned<Type>::dimensioned
 :
     name_("undefined"),
     dimensions_(dimless),
-    value_(pTraits<Type>::zero)
+    value_(Zero)
 {}
 
 

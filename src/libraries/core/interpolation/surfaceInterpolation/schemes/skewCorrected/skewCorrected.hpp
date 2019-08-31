@@ -148,7 +148,7 @@ public:
                     (
                         vf.name(),
                         vf.dimensions(),
-                        pTraits<Type>::zero
+                        Zero
                     )
                 )
             );

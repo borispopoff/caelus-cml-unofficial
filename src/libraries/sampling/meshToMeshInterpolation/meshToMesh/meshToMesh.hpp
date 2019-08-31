@@ -611,7 +611,6 @@ void CML::meshToMesh::mapSrcToTgt
 
             if (srcAddress.size())
             {
-//                result[cellI] = pTraits<Type>::zero;
                 result[cellI] *= (1.0 - sum(srcWeight));
                 forAll(srcAddress, i)
                 {
@@ -631,7 +630,6 @@ void CML::meshToMesh::mapSrcToTgt
 
             if (srcAddress.size())
             {
-//                result[cellI] = pTraits<Type>::zero;
                 result[cellI] *= (1.0 - sum(srcWeight));
                 forAll(srcAddress, i)
                 {
@@ -657,7 +655,7 @@ CML::tmp<CML::Field<Type>> CML::meshToMesh::mapSrcToTgt
         new Field<Type>
         (
             tgtToSrcCellAddr_.size(),
-            pTraits<Type>::zero
+            Zero
         )
     );
 
@@ -773,11 +771,7 @@ CML::tmp<CML::Field<Type>> CML::meshToMesh::mapTgtToSrc
 {
     tmp<Field<Type>> tresult
     (
-        new Field<Type>
-        (
-            srcToTgtCellAddr_.size(),
-            pTraits<Type>::zero
-        )
+        new Field<Type>(srcToTgtCellAddr_.size(), Zero)
     );
 
     mapTgtToSrc(tgtField, cop, tresult());
@@ -837,7 +831,7 @@ void CML::meshToMesh::mapSrcToTgt
         const Field<Type>& srcField = field.boundaryField()[srcPatchI];
         Field<Type>& tgtField = result.boundaryField()[tgtPatchI];
 
-        tgtField = pTraits<Type>::zero;
+        tgtField = Type(Zero);
 
         AMIList[i].interpolateToTarget
         (
@@ -936,7 +930,7 @@ CML::meshToMesh::mapSrcToTgt
             ),
             tgtMesh,
             field.dimensions(),
-            Field<Type>(tgtMesh.nCells(), pTraits<Type>::zero),
+            Field<Type>(tgtMesh.nCells(), Zero),
             tgtPatchFields
         )
     );
@@ -1001,7 +995,7 @@ void CML::meshToMesh::mapTgtToSrc
         Field<Type>& srcField = result.boundaryField()[srcPatchI];
         const Field<Type>& tgtField = field.boundaryField()[tgtPatchI];
 
-        srcField = pTraits<Type>::zero;
+        srcField = Type(Zero);
 
         AMIList[i].interpolateToSource
         (
@@ -1099,7 +1093,7 @@ CML::meshToMesh::mapTgtToSrc
             ),
             srcMesh,
             field.dimensions(),
-            Field<Type>(srcMesh.nCells(), pTraits<Type>::zero),
+            Field<Type>(srcMesh.nCells(), Zero),
             srcPatchFields
         )
     );

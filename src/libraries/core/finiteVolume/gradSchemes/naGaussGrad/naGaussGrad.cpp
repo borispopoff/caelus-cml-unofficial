@@ -89,7 +89,7 @@ CML::fv::naGaussGrad<Type>::calcGrad
         label nPoints = f.size();
 
         // Face centre value calculated as a simple nodal average
-        Type fCentre = pTraits<Type>::zero;
+        Type fCentre = Zero;
         for (label pi = 0; pi < nPoints; pi++)
         {
             fCentre += pf[f[pi]];
@@ -111,7 +111,7 @@ CML::fv::naGaussGrad<Type>::calcGrad
             label nPoints = f.size();
 
             // Face centre value calculated as a simple nodal average
-            Type fCentre = pTraits<Type>::zero;
+            Type fCentre = Zero;
             for (label pi = 0; pi < nPoints; pi++)
             {
                 fCentre += pf[f[pi]];

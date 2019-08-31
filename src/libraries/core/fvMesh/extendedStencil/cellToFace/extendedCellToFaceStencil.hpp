@@ -132,7 +132,7 @@ void CML::extendedCellToFaceStencil::collectData
 )
 {
     // 1. Construct cell data in compact addressing
-    List<Type> compactFld(map.constructSize(), pTraits<Type>::zero);
+    List<Type> compactFld(map.constructSize(), Zero);
 
     // Insert my internal values
     forAll(fld, cellI)
@@ -205,7 +205,7 @@ CML::extendedCellToFaceStencil::weightedSum
             (
                 fld.name(),
                 fld.dimensions(),
-                pTraits<Type>::zero
+                Zero
             )
         )
     );

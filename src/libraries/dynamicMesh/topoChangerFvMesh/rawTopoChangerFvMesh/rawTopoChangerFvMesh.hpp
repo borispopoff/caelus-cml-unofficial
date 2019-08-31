@@ -168,7 +168,7 @@ void CML::rawTopoChangerFvMesh::zeroUnmappedValues
                     false
                 ),
                 *this,
-                dimensioned<Type>("0", fld.dimensions(), pTraits<Type>::zero)
+                dimensioned<Type>("0", fld.dimensions(), Zero)
             )
         );
     }

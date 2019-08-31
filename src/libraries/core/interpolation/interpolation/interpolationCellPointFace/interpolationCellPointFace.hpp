@@ -148,7 +148,7 @@ Type interpolationCellPointFace<Type>::interpolate
     scalar phi[4], phiCandidate[4];
     label tetLabelCandidate[2], tetPointLabels[2];
 
-    Type t = pTraits<Type>::zero;
+    Type t = Zero;
 
     // only use face information when the position is on a face
     if (faceI < 0)

@@ -346,7 +346,7 @@ void CML::fv::SemiImplicitSource<Type>::addSup
         (
             "zero",
             eqn.dimensions()/dimVolume,
-            pTraits<Type>::zero
+            Zero
         ),
         false
     );
@@ -368,7 +368,7 @@ void CML::fv::SemiImplicitSource<Type>::addSup
         (
             "zero",
             Su.dimensions()/psi.dimensions(),
-            0.0
+            Zero
         ),
         false
     );

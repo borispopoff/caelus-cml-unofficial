@@ -959,7 +959,7 @@ void CML::isoSurface::generateTriPoints
 
     // Determine neighbouring snap status
     boolList neiSnapped(mesh_.nFaces()-mesh_.nInternalFaces(), false);
-    List<Type> neiSnappedPoint(neiSnapped.size(), pTraits<Type>::zero);
+    List<Type> neiSnappedPoint(neiSnapped.size(), Zero);
     forAll(patches, patchI)
     {
         const polyPatch& pp = patches[patchI];
@@ -1104,7 +1104,7 @@ CML::isoSurface::interpolate
 )
 {
     // One value per point
-    tmp<Field<Type> > tvalues(new Field<Type>(nPoints, pTraits<Type>::zero));
+    tmp<Field<Type> > tvalues(new Field<Type>(nPoints, Zero));
     Field<Type>& values = tvalues();
     labelList nValues(values.size(), 0);
 

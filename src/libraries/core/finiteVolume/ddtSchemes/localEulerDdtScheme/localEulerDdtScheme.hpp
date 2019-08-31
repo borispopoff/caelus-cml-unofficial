@@ -341,7 +341,7 @@ localEulerDdtScheme<Type>::fvcDdt
             (
                 "0",
                 dt.dimensions()/dimTime,
-                pTraits<Type>::zero
+                Zero
             ),
             calculatedFvPatchField<Type>::typeName
         )

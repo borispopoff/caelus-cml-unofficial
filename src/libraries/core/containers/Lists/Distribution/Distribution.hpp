@@ -377,7 +377,7 @@ CML::Pair<CML::label> CML::Distribution<Type>::validLimits
 template<class Type>
 Type CML::Distribution<Type>::mean() const
 {
-    Type meanValue(pTraits<Type>::zero);
+    Type meanValue(Zero);
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
@@ -406,7 +406,7 @@ Type CML::Distribution<Type>::mean() const
 template<class Type>
 Type CML::Distribution<Type>::median() const
 {
-    Type medianValue(pTraits<Type>::zero);
+    Type medianValue(Zero);
 
     List< List < Pair<scalar>>> normDistribution = normalised();
 

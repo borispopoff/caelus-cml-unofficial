@@ -77,7 +77,7 @@ CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::getFieldValues
                 const faceList& faces = surfacePtr_().faces();
                 tmp<Field<Type>> tavg
                 (
-                    new Field<Type>(faces.size(), pTraits<Type>::zero)
+                    new Field<Type>(faces.size(), Zero)
                 );
                 Field<Type>& avg = tavg();
 

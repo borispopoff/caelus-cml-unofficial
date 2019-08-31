@@ -225,7 +225,7 @@ void CML::pairPatchAgglomeration::restrictField
             << abort(FatalError);
     }
 
-    cf = pTraits<Type>::zero;
+    cf = Zero;
 
     forAll(ff, i)
     {

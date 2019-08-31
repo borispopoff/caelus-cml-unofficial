@@ -222,10 +222,10 @@ timeVaryingMappedFixedValuePointPatchField
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),
-    startAverage_(pTraits<Type>::zero),
+    startAverage_(Zero),
     endSampleTime_(-1),
     endSampledValues_(0),
-    endAverage_(pTraits<Type>::zero),
+    endAverage_(Zero),
     offset_()
 {}
 
@@ -250,10 +250,10 @@ timeVaryingMappedFixedValuePointPatchField
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),
-    startAverage_(pTraits<Type>::zero),
+    startAverage_(Zero),
     endSampleTime_(-1),
     endSampledValues_(0),
-    endAverage_(pTraits<Type>::zero),
+    endAverage_(Zero),
     offset_
     (
         ptf.offset_.valid()
@@ -289,10 +289,10 @@ timeVaryingMappedFixedValuePointPatchField
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),
-    startAverage_(pTraits<Type>::zero),
+    startAverage_(Zero),
     endSampleTime_(-1),
     endSampledValues_(0),
-    endAverage_(pTraits<Type>::zero),
+    endAverage_(Zero),
     offset_()
 {
     if (dict.found("offset"))
