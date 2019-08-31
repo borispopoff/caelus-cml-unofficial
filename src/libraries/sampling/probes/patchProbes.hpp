@@ -177,9 +177,9 @@ void CML::patchProbes::sampleAndWrite
             << setw(w)
             << vField.time().timeToUserTime(vField.time().value());
 
-        forAll(values, probeI)
+        forAll(values, probei)
         {
-            probeStream << ' ' << setw(w) << values[probeI];
+            probeStream << ' ' << setw(w) << values[probei];
         }
         probeStream << endl;
     }
@@ -203,9 +203,9 @@ void CML::patchProbes::sampleAndWrite
             << setw(w)
             << sField.time().timeToUserTime(sField.time().value());
 
-        forAll(values, probeI)
+        forAll(values, probei)
         {
-            probeStream << ' ' << setw(w) << values[probeI];
+            probeStream << ' ' << setw(w) << values[probei];
         }
         probeStream << endl;
     }
@@ -336,15 +336,15 @@ CML::patchProbes::sample
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(*this, probeI)
+    forAll(*this, probei)
     {
-        label facei = elementList_[probeI];
+        label facei = elementList_[probei];
 
         if (facei >= 0)
         {
             label patchI = patches.whichPatch(facei);
             label localFaceI = patches[patchI].whichFace(facei);
-            values[probeI] = vField.boundaryField()[patchI][localFaceI];
+            values[probei] = vField.boundaryField()[patchI][localFaceI];
         }
     }
 
@@ -387,15 +387,15 @@ CML::patchProbes::sample
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(*this, probeI)
+    forAll(*this, probei)
     {
-        label facei = elementList_[probeI];
+        label facei = elementList_[probei];
 
         if (facei >= 0)
         {
             label patchI = patches.whichPatch(facei);
             label localFaceI = patches[patchI].whichFace(facei);
-            values[probeI] = sField.boundaryField()[patchI][localFaceI];
+            values[probei] = sField.boundaryField()[patchI][localFaceI];
         }
     }
 
