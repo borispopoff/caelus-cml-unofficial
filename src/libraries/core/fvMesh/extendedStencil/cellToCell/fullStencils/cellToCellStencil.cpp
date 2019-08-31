@@ -210,11 +210,11 @@ CML::cellToCellStencil::allCoupledFacesPatch() const
 
         if (pp.coupled())
         {
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                coupledFaces[nCoupled++] = faceI++;
+                coupledFaces[nCoupled++] = facei++;
             }
         }
     }
@@ -273,17 +273,17 @@ void CML::cellToCellStencil::insertFaceCells
 
     forAll(faceLabels, i)
     {
-        label faceI = faceLabels[i];
+        label facei = faceLabels[i];
 
-        label globalOwn = globalNumbering().toGlobal(own[faceI]);
+        label globalOwn = globalNumbering().toGlobal(own[facei]);
         if (globalOwn != exclude0 && globalOwn != exclude1)
         {
             globals.insert(globalOwn);
         }
 
-        if (mesh().isInternalFace(faceI))
+        if (mesh().isInternalFace(facei))
         {
-            label globalNei = globalNumbering().toGlobal(nei[faceI]);
+            label globalNei = globalNumbering().toGlobal(nei[facei]);
             if (globalNei != exclude0 && globalNei != exclude1)
             {
                 globals.insert(globalNei);
@@ -291,7 +291,7 @@ void CML::cellToCellStencil::insertFaceCells
         }
         else
         {
-            label bFaceI = faceI-mesh().nInternalFaces();
+            label bFaceI = facei-mesh().nInternalFaces();
 
             if (isValidBFace[bFaceI])
             {

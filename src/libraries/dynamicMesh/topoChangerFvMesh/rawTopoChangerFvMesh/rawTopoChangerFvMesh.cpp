@@ -89,18 +89,18 @@ bool CML::rawTopoChangerFvMesh::update()
         const label nOldInternal = topoChangeMap().oldPatchStarts()[0];
 
         const labelList& faceMap = topoChangeMap().faceMap();
-        for (label faceI = 0; faceI < nInternalFaces(); faceI++)
+        for (label facei = 0; facei < nInternalFaces(); facei++)
         {
-            if (faceMap[faceI] >= 0)
+            if (faceMap[facei] >= 0)
             {
-                mappedFace[faceI] = 1;
+                mappedFace[facei] = 1;
             }
         }
-        for (label faceI = nInternalFaces(); faceI < nFaces(); faceI++)
+        for (label facei = nInternalFaces(); facei < nFaces(); facei++)
         {
-            if (faceMap[faceI] >= 0 && faceMap[faceI] >= nOldInternal)
+            if (faceMap[facei] >= 0 && faceMap[facei] >= nOldInternal)
             {
-                mappedFace[faceI] = 1;
+                mappedFace[facei] = 1;
             }
         }
 

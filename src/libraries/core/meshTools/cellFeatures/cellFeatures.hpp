@@ -94,7 +94,7 @@ class cellFeatures
 
         void walkSuperFace
         (
-            const label faceI,
+            const label facei,
             const label superFaceI,
             Map<label>& toSuperFace
         ) const;
@@ -117,7 +117,7 @@ public:
         (
             const primitiveMesh&,
             const scalar minCos,    // angle to use for feature recognition.
-            const label cellI
+            const label celli
         );
 
 
@@ -168,9 +168,9 @@ public:
             //  from one face but not from another.
             bool isFeaturePoint(const label edge0, const label edge1) const;
 
-            //- Is vertexI on faceI used by two edges that form feature
+            //- Is vertexI on facei used by two edges that form feature
             //  point
-            bool isFeatureVertex(const label faceI, const label vertI) const;
+            bool isFeatureVertex(const label facei, const label vertI) const;
 
 };
 

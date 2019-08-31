@@ -97,9 +97,9 @@ void CML::meshToMesh::normaliseWeights
 
     if (nCell > 0)
     {
-        forAll(wght, cellI)
+        forAll(wght, celli)
         {
-            scalarList& w = wght[cellI];
+            scalarList& w = wght[celli];
             scalar s = sum(w);
 
             forAll(w, i)

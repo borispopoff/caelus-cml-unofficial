@@ -84,13 +84,13 @@ void triSurface::writeOBJ(const bool writeSorted, Ostream& os) const
                 patchFaceI++
             )
             {
-                const label faceI = faceMap[faceIndex++];
+                const label facei = faceMap[faceIndex++];
 
                 os  << "f "
-                    << operator[](faceI)[0] + 1 << ' '
-                    << operator[](faceI)[1] + 1 << ' '
-                    << operator[](faceI)[2] + 1
-                    //<< "  # " << operator[](faceI).region()
+                    << operator[](facei)[0] + 1 << ' '
+                    << operator[](facei)[1] + 1 << ' '
+                    << operator[](facei)[2] + 1
+                    //<< "  # " << operator[](facei).region()
                     << nl;
             }
         }
@@ -101,28 +101,28 @@ void triSurface::writeOBJ(const bool writeSorted, Ostream& os) const
         labelList patchIDs(size());
         forAll(myPatches, patchI)
         {
-            label faceI = myPatches[patchI].start();
+            label facei = myPatches[patchI].start();
 
             forAll(myPatches[patchI], i)
             {
-                patchIDs[faceMap[faceI++]] = patchI;
+                patchIDs[faceMap[facei++]] = patchI;
             }
         }
 
 
         label prevPatchI = -1;
 
-        forAll(*this, faceI)
+        forAll(*this, facei)
         {
-            if (prevPatchI != patchIDs[faceI])
+            if (prevPatchI != patchIDs[facei])
             {
-                prevPatchI = patchIDs[faceI];
-                os  << "g " << myPatches[patchIDs[faceI]].name() << nl;
+                prevPatchI = patchIDs[facei];
+                os  << "g " << myPatches[patchIDs[facei]].name() << nl;
             }
             os  << "f "
-                << operator[](faceI)[0] + 1 << ' '
-                << operator[](faceI)[1] + 1 << ' '
-                << operator[](faceI)[2] + 1
+                << operator[](facei)[0] + 1 << ' '
+                << operator[](facei)[1] + 1 << ' '
+                << operator[](facei)[2] + 1
                 << nl;
         }
     }

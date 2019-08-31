@@ -191,7 +191,7 @@ public:
 
             //- Add intersection edges to a face. Used for connecting
             //  floating intersection on face to rest of face.
-            void addIntersectionEdges(const label faceI, const edgeList&);
+            void addIntersectionEdges(const label facei, const edgeList&);
 };
 
 

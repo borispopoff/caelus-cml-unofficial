@@ -355,14 +355,14 @@ CML::sampledPatch::interpolateField
 
             if (!pointDone[pointI])
             {
-                label faceI = patchFaceI + pp.start();
-                label cellI = own[faceI];
+                label facei = patchFaceI + pp.start();
+                label celli = own[facei];
 
                 values[pointI] = interpolator.interpolate
                 (
                     points()[pointI],
-                    cellI,
-                    faceI
+                    celli,
+                    facei
                 );
                 pointDone[pointI] = true;
             }

@@ -81,8 +81,8 @@ public:
         inline Type interpolate
         (
             const vector& position,
-            const label cellI,
-            const label faceI = -1
+            const label celli,
+            const label facei = -1
         ) const;
 };
 
@@ -107,13 +107,13 @@ template<class Type>
 inline Type CML::interpolationPointMVC<Type>::interpolate
 (
     const vector& position,
-    const label cellI,
-    const label faceI
+    const label celli,
+    const label facei
 ) const
 {
     return interpolate
     (
-        pointMVCWeight(this->pMesh_, position, cellI, faceI)
+        pointMVCWeight(this->pMesh_, position, celli, facei)
     );
 }
 

@@ -130,7 +130,7 @@ void CML::topoCellLooper::subsetList
 void CML::topoCellLooper::walkFace
 (
     const cellFeatures& features,
-    const label faceI,
+    const label facei,
     const label startEdgeI,
     const label startVertI,
     const label nFeaturePts,
@@ -139,7 +139,7 @@ void CML::topoCellLooper::walkFace
     label& vertI
 ) const
 {
-    const labelList& fEdges = mesh().faceEdges()[faceI];
+    const labelList& fEdges = mesh().faceEdges()[facei];
 
     edgeI = startEdgeI;
 
@@ -153,17 +153,17 @@ void CML::topoCellLooper::walkFace
         // Started on edge. Go to one of its endpoints.
         vertI = mesh().edges()[edgeI].start();
 
-        if (features.isFeatureVertex(faceI, vertI))
+        if (features.isFeatureVertex(facei, vertI))
         {
             nVisited++;
         }
     }
 
-    if ((edgeI == -1) || !meshTools::edgeOnFace(mesh(), faceI, edgeI))
+    if ((edgeI == -1) || !meshTools::edgeOnFace(mesh(), facei, edgeI))
     {
         // Either edge is not set or not on current face.  Just take one of
         // the edges on this face as starting edge.
-        edgeI = getFirstVertEdge(faceI, vertI);
+        edgeI = getFirstVertEdge(facei, vertI);
     }
 
     // Now we should have starting edge on face and a vertex on that edge.
@@ -180,7 +180,7 @@ void CML::topoCellLooper::walkFace
 
         vertI = mesh().edges()[edgeI].otherVertex(vertI);
 
-        if (features.isFeatureVertex(faceI, vertI))
+        if (features.isFeatureVertex(facei, vertI))
         {
             nVisited++;
         }
@@ -195,12 +195,12 @@ void CML::topoCellLooper::walkFace
 CML::labelList CML::topoCellLooper::getSuperEdge
 (
     const cellFeatures& features,
-    const label faceI,
+    const label facei,
     const label startEdgeI,
     const label startVertI
 ) const
 {
-    const labelList& fEdges = mesh().faceEdges()[faceI];
+    const labelList& fEdges = mesh().faceEdges()[facei];
 
     labelList superVerts(fEdges.size());
     label superVertI = 0;
@@ -237,13 +237,13 @@ CML::labelList CML::topoCellLooper::getSuperEdge
 CML::label CML::topoCellLooper::getAlignedNonFeatureEdge
 (
     const vector& refDir,
-    const label cellI,
+    const label celli,
     const cellFeatures& features
 ) const
 {
-    const labelList& cEdges = mesh().cellEdges()[cellI];
+    const labelList& cEdges = mesh().cellEdges()[celli];
 
-    const point& ctr = mesh().cellCentres()[cellI];
+    const point& ctr = mesh().cellCentres()[celli];
 
     label cutEdgeI = -1;
     scalar maxCos = -GREAT;
@@ -284,7 +284,7 @@ CML::label CML::topoCellLooper::getAlignedNonFeatureEdge
 void CML::topoCellLooper::walkAcrossFace
 (
     const cellFeatures& features,
-    const label faceI,
+    const label facei,
     const label startEdgeI,
     const label startVertI,
     const label nFeats,
@@ -300,7 +300,7 @@ void CML::topoCellLooper::walkAcrossFace
     walkFace
     (
         features,
-        faceI,
+        facei,
         startEdgeI,
         startVertI,
         nFeats,
@@ -315,7 +315,7 @@ void CML::topoCellLooper::walkAcrossFace
         getSuperEdge
         (
             features,
-            faceI,
+            facei,
             oppositeEdgeI,
             oppositeVertI
         );
@@ -357,19 +357,19 @@ void CML::topoCellLooper::walkAcrossFace
 //
 // Position on face is given by:
 //
-//  vertI == -1, faceI != -1, edgeI != -1
+//  vertI == -1, facei != -1, edgeI != -1
 //      on edge of face. Cross edge to neighbouring face.
 //
-//  vertI != -1, edgeI != -1, faceI == -1
+//  vertI != -1, edgeI != -1, facei == -1
 //      coming from edge onto vertex vertI. Need to step to one
 //      of the faces not using edgeI.
 //
-//  vertI != -1, edgeI == -1, faceI != -1
+//  vertI != -1, edgeI == -1, facei != -1
 //      coming from vertex on side of face. Step to one of the faces
-//      using vertI but not faceI
+//      using vertI but not facei
 void CML::topoCellLooper::walkSplitHex
 (
-    const label cellI,
+    const label celli,
     const cellFeatures& features,
     const label fromFaceI,
     const label fromEdgeI,
@@ -380,7 +380,7 @@ void CML::topoCellLooper::walkSplitHex
 ) const
 {
     // Work vars giving position on cell
-    label faceI = fromFaceI;
+    label facei = fromFaceI;
     label edgeI = fromEdgeI;
     label vertI = fromVertI;
 
@@ -388,10 +388,10 @@ void CML::topoCellLooper::walkSplitHex
     {
         if (debug)
         {
-            Pout<< "Entering walk with : cell:" << cellI << " face:" << faceI;
-            if (faceI != -1)
+            Pout<< "Entering walk with : cell:" << celli << " face:" << facei;
+            if (facei != -1)
             {
-                Pout<< " verts:" << mesh().faces()[faceI];
+                Pout<< " verts:" << mesh().faces()[facei];
             }
             Pout<< " edge:" << edgeI;
             if (edgeI != -1)
@@ -464,13 +464,13 @@ void CML::topoCellLooper::walkSplitHex
             loopWeights.append(0.5);
 
             // Cross edge to next face
-            faceI = meshTools::otherFace(mesh(), cellI, faceI, edgeI);
+            facei = meshTools::otherFace(mesh(), celli, facei, edgeI);
 
             if (debug)
             {
                 Pout<< "    stepped across edge " << mesh().edges()[edgeI]
-                    << " to face " << faceI << " verts:"
-                    << mesh().faces()[faceI] << endl;
+                    << " to face " << facei << " verts:"
+                    << mesh().faces()[facei] << endl;
             }
 
             label nextEdgeI = -1;
@@ -480,7 +480,7 @@ void CML::topoCellLooper::walkSplitHex
             walkAcrossFace
             (
                 features,
-                faceI,
+                facei,
                 edgeI,
                 vertI,
                 2,
@@ -502,11 +502,11 @@ void CML::topoCellLooper::walkSplitHex
             if (edgeI == -1)
             {
                 // Normal vertex on edge of face. Get edges connected to it
-                // which are not on faceI.
+                // which are not on facei.
                 labelList nextEdges = getVertEdgesNonFace
                 (
-                    cellI,
-                    faceI,
+                    celli,
+                    facei,
                     vertI
                 );
 
@@ -521,11 +521,11 @@ void CML::topoCellLooper::walkSplitHex
 
                         if
                         (
-                            (thisFaceI != faceI)
-                         && meshTools::faceOnCell(mesh(), cellI, thisFaceI)
+                            (thisFaceI != facei)
+                         && meshTools::faceOnCell(mesh(), celli, thisFaceI)
                         )
                         {
-                            faceI = thisFaceI;
+                            facei = thisFaceI;
                             break;
                         }
                     }
@@ -533,8 +533,8 @@ void CML::topoCellLooper::walkSplitHex
                     if (debug)
                     {
                         Pout<< "    stepped from non-edge vertex " << vertI
-                            << " to face " << faceI << " verts:"
-                            << mesh().faces()[faceI]
+                            << " to face " << facei << " verts:"
+                            << mesh().faces()[facei]
                             << " since candidate edges:" << nextEdges << endl;
                     }
 
@@ -544,7 +544,7 @@ void CML::topoCellLooper::walkSplitHex
                     walkAcrossFace
                     (
                         features,
-                        faceI,
+                        facei,
                         edgeI,
                         vertI,
                         2,          // 2 vertices to cross
@@ -572,7 +572,7 @@ void CML::topoCellLooper::walkSplitHex
 
                     vertI = mesh().edges()[edgeI].otherVertex(vertI);
 
-                    faceI = -1;
+                    facei = -1;
                 }
                 else
                 {
@@ -593,7 +593,7 @@ void CML::topoCellLooper::walkSplitHex
 
                     vertI = mesh().edges()[edgeI].otherVertex(vertI);
 
-                    faceI = -1;
+                    facei = -1;
                 }
             }
             else
@@ -602,7 +602,7 @@ void CML::topoCellLooper::walkSplitHex
                 labelList nextFaces =
                     getVertFacesNonEdge
                     (
-                        cellI,
+                        celli,
                         edgeI,
                         vertI
                     );
@@ -610,7 +610,7 @@ void CML::topoCellLooper::walkSplitHex
                 if (nextFaces.size() == 1)
                 {
                     // Only one face to cross.
-                    faceI = nextFaces[0];
+                    facei = nextFaces[0];
 
                     label nextEdgeI = -1;
                     label nextVertI = -1;
@@ -618,7 +618,7 @@ void CML::topoCellLooper::walkSplitHex
                     walkAcrossFace
                     (
                         features,
-                        faceI,
+                        facei,
                         edgeI,
                         vertI,
                         2,          // 2 vertices to cross
@@ -633,7 +633,7 @@ void CML::topoCellLooper::walkSplitHex
                 else if (nextFaces.size() == 2)
                 {
                     // Split face. Get edge inbetween.
-                    faceI = -1;
+                    facei = -1;
 
                     edgeI =
                         meshTools::getSharedEdge
@@ -651,17 +651,17 @@ void CML::topoCellLooper::walkSplitHex
                         << "Choosing from more than "
                         << "two candidates:" << nextFaces
                         << " when coming from vertex " << vertI << " on cell "
-                        << cellI << abort(FatalError);
+                        << celli << abort(FatalError);
                 }
             }
         }
 
         if (debug)
         {
-            Pout<< "Walked to : face:" << faceI;
-            if (faceI != -1)
+            Pout<< "Walked to : face:" << facei;
+            if (facei != -1)
             {
-                Pout<< " verts:" << mesh().faces()[faceI];
+                Pout<< " verts:" << mesh().faces()[facei];
             }
             Pout<< " edge:" << edgeI;
             if (edgeI != -1)
@@ -695,7 +695,7 @@ CML::topoCellLooper::~topoCellLooper()
 bool CML::topoCellLooper::cut
 (
     const vector& refDir,
-    const label cellI,
+    const label celli,
     const boolList& vertIsCut,
     const boolList& edgeIsCut,
     const scalarField& edgeWeight,
@@ -704,14 +704,14 @@ bool CML::topoCellLooper::cut
     scalarField& loopWeights
 ) const
 {
-    if (mesh().cellShapes()[cellI].model() == hex_)
+    if (mesh().cellShapes()[celli].model() == hex_)
     {
         // Let parent handle hex case.
         return
             hexCellLooper::cut
             (
                 refDir,
-                cellI,
+                celli,
                 vertIsCut,
                 edgeIsCut,
                 edgeWeight,
@@ -721,7 +721,7 @@ bool CML::topoCellLooper::cut
     }
     else
     {
-        cellFeatures superCell(mesh(), featureCos, cellI);
+        cellFeatures superCell(mesh(), featureCos, celli);
 
         if (hexMatcher().isA(superCell.faces()))
         {
@@ -729,13 +729,13 @@ bool CML::topoCellLooper::cut
                 getAlignedNonFeatureEdge
                 (
                     refDir,
-                    cellI,
+                    celli,
                     superCell
                 );
 
             label vertI = -1;
 
-            label faceI = -1;
+            label facei = -1;
 
             if (edgeI != -1)
             {
@@ -746,26 +746,26 @@ bool CML::topoCellLooper::cut
             {
                 // No 'matching' non-feature edge found on cell. Get starting
                 // normal i.e. feature edge.
-                edgeI = getMisAlignedEdge(refDir, cellI);
+                edgeI = getMisAlignedEdge(refDir, celli);
 
                 // Get any face using edge
                 label face0;
                 label face1;
-                meshTools::getEdgeFaces(mesh(), cellI, edgeI, face0, face1);
+                meshTools::getEdgeFaces(mesh(), celli, edgeI, face0, face1);
 
-                faceI = face0;
+                facei = face0;
             }
 
-            label nEstCuts = 2*mesh().cells()[cellI].size();
+            label nEstCuts = 2*mesh().cells()[celli].size();
 
             DynamicList<label> localLoop(nEstCuts);
             DynamicList<scalar> localLoopWeights(nEstCuts);
 
             walkSplitHex
             (
-                cellI,
+                celli,
                 superCell,
-                faceI,
+                facei,
                 edgeI,
                 vertI,
 
@@ -791,7 +791,7 @@ bool CML::topoCellLooper::cut
             return hexCellLooper::cut
             (
                 refDir,
-                cellI,
+                celli,
                 vertIsCut,
                 edgeIsCut,
                 edgeWeight,
@@ -806,7 +806,7 @@ bool CML::topoCellLooper::cut
 bool CML::topoCellLooper::cut
 (
     const plane& cutPlane,
-    const label cellI,
+    const label celli,
     const boolList& vertIsCut,
     const boolList& edgeIsCut,
     const scalarField& edgeWeight,
@@ -820,7 +820,7 @@ bool CML::topoCellLooper::cut
         hexCellLooper::cut
         (
             cutPlane,
-            cellI,
+            celli,
             vertIsCut,
             edgeIsCut,
             edgeWeight,

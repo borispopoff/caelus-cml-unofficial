@@ -147,7 +147,7 @@ class boundaryLayerOptimisation
         //- calculate hair edges at a boundary faces
         void hairEdgesAtBndFace
         (
-            const label cellI,
+            const label celli,
             const label baseFaceI,
             DynList<edge>&
         ) const;
@@ -166,7 +166,7 @@ class boundaryLayerOptimisation
         scalar calculateThicknessOverCell
         (
             const label heI,
-            const label cellI,
+            const label celli,
             const label baseFaceI
         ) const;
 

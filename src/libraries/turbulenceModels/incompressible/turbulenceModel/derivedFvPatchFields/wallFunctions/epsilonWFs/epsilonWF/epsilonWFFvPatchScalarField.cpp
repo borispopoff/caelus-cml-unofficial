@@ -185,17 +185,17 @@ void epsilonWallFunctionFvPatchScalarField::updateCoeffs()
     const scalarField magGradUw(mag(Uw.snGrad()));
 
     // Set epsilon and G
-    forAll(nutw, faceI)
+    forAll(nutw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
-        epsilon[faceCellI] = Cmu75*pow(k[faceCellI], 1.5)/(kappa_*y[faceI]);
+        epsilon[faceCellI] = Cmu75*pow(k[faceCellI], 1.5)/(kappa_*y[facei]);
 
         G[faceCellI] =
-            (nutw[faceI] + nuw[faceI])
-           *magGradUw[faceI]
+            (nutw[facei] + nuw[facei])
+           *magGradUw[facei]
            *Cmu25*sqrt(k[faceCellI])
-           /(kappa_*y[faceI]);
+           /(kappa_*y[facei]);
     }
 
     fixedInternalValueFvPatchField<scalar>::updateCoeffs();

@@ -106,51 +106,51 @@ void polyMeshGenCells::calculateOwnersAndNeighbours() const
         List<LongList<labelPair>>& dot = dataForOtherThreads[threadI];
         dot.setSize(nThreads);
 
-        for(label faceI=startingFace;faceI<endFace;++faceI)
+        for(label facei=startingFace;facei<endFace;++facei)
         {
-            own[faceI] = -1;
-            nei[faceI] = -1;
+            own[facei] = -1;
+            nei[facei] = -1;
         }
 
         # ifdef USE_OMP
         # pragma omp for schedule(static)
         # endif
-        forAll(cells_, cellI)
+        forAll(cells_, celli)
         {
-            const cell& c = cells_[cellI];
+            const cell& c = cells_[celli];
 
             forAll(c, fI)
             {
-                const label faceI = c[fI];
+                const label facei = c[fI];
 
-                const label threadNo = faceI / chunkSize;
+                const label threadNo = facei / chunkSize;
 
                 if( threadNo == threadI )
                 {
-                    if( own[faceI] == -1 )
+                    if( own[facei] == -1 )
                     {
-                        own[faceI] = cellI;
+                        own[facei] = celli;
                     }
-                    else if( nei[faceI] == -1 )
+                    else if( nei[facei] == -1 )
                     {
-                        nei[faceI] = cellI;
+                        nei[facei] = celli;
                         ++nInternalFaces;
                     }
                     else
                     {
-                        Serr << "Face " << faces_[faceI] << endl;
-                        Serr << "Owner " << own[faceI] << endl;
-                        Serr << "Neighbour " << nei[faceI] << endl;
-                        Serr << "Current cell " << cellI << endl;
+                        Serr << "Face " << faces_[facei] << endl;
+                        Serr << "Owner " << own[facei] << endl;
+                        Serr << "Neighbour " << nei[facei] << endl;
+                        Serr << "Current cell " << celli << endl;
                         FatalErrorInFunction
-                            << Pstream::myProcNo() << "Face " << faceI
+                            << Pstream::myProcNo() << "Face " << facei
                             << " appears in more than 2 cells!!"
                             << abort(FatalError);
                     }
                 }
                 else
                 {
-                    dot[threadNo].append(labelPair(faceI, cellI));
+                    dot[threadNo].append(labelPair(facei, celli));
                 }
             }
         }
@@ -167,46 +167,46 @@ void polyMeshGenCells::calculateOwnersAndNeighbours() const
 
             forAll(data, j)
             {
-                const label faceI = data[j].first();
-                const label cellI = data[j].second();
+                const label facei = data[j].first();
+                const label celli = data[j].second();
 
-                if( own[faceI] == -1 )
+                if( own[facei] == -1 )
                 {
-                    own[faceI] = cellI;
+                    own[facei] = celli;
                 }
-                else if( own[faceI] > cellI )
+                else if( own[facei] > celli )
                 {
-                    if( nei[faceI] == -1 )
+                    if( nei[facei] == -1 )
                     {
-                        nei[faceI] = own[faceI];
-                        own[faceI] = cellI;
+                        nei[facei] = own[facei];
+                        own[facei] = celli;
                         ++nInternalFaces;
                     }
                     else
                     {
-                        Serr << "Face " << faces_[faceI] << endl;
-                        Serr << "Owner " << own[faceI] << endl;
-                        Serr << "Neighbour " << nei[faceI] << endl;
-                        Serr << "Current cell " << cellI << endl;
+                        Serr << "Face " << faces_[facei] << endl;
+                        Serr << "Owner " << own[facei] << endl;
+                        Serr << "Neighbour " << nei[facei] << endl;
+                        Serr << "Current cell " << celli << endl;
                         FatalErrorInFunction
-                            << Pstream::myProcNo() << "Face " << faceI
+                            << Pstream::myProcNo() << "Face " << facei
                             << " appears in more than 2 cells!!"
                             << abort(FatalError);
                     }
                 }
-                else if( nei[faceI] == -1 )
+                else if( nei[facei] == -1 )
                 {
-                    nei[faceI] = cellI;
+                    nei[facei] = celli;
                     ++nInternalFaces;
                 }
                 else
                 {
-                    Serr << "Face " << faces_[faceI] << endl;
-                    Serr << "Owner " << own[faceI] << endl;
-                    Serr << "Neighbour " << nei[faceI] << endl;
-                    Serr << "Current cell " << cellI << endl;
+                    Serr << "Face " << faces_[facei] << endl;
+                    Serr << "Owner " << own[facei] << endl;
+                    Serr << "Neighbour " << nei[facei] << endl;
+                    Serr << "Current cell " << celli << endl;
                     FatalErrorInFunction
-                        << Pstream::myProcNo() << "Face " << faceI
+                        << Pstream::myProcNo() << "Face " << facei
                         << " appears in more than 2 cells!!"
                         << abort(FatalError);
                 }
@@ -402,33 +402,33 @@ void polyMeshGenCells::read()
     const labelList& own = this->owner();
     const labelList& nei = this->neighbour();
 
-    forAll(own, faceI)
+    forAll(own, facei)
     {
-        if( own[faceI] >= nCells )
-            nCells = own[faceI] + 1;
+        if( own[facei] >= nCells )
+            nCells = own[facei] + 1;
 
-        if( nei[faceI] >= nCells )
-            nCells = nei[faceI] + 1;
+        if( nei[facei] >= nCells )
+            nCells = nei[facei] + 1;
     }
 
     List<label> nFacesInCell(nCells, label(0));
-    forAll(own, faceI)
-        ++nFacesInCell[own[faceI]];
+    forAll(own, facei)
+        ++nFacesInCell[own[facei]];
 
-    forAll(nei, faceI)
-        if( nei[faceI] != -1 )
-            ++nFacesInCell[nei[faceI]];
+    forAll(nei, facei)
+        if( nei[facei] != -1 )
+            ++nFacesInCell[nei[facei]];
 
     cells_.setSize(nCells);
-    forAll(cells_, cellI)
-        cells_[cellI].setSize(nFacesInCell[cellI]);
+    forAll(cells_, celli)
+        cells_[celli].setSize(nFacesInCell[celli]);
 
     nFacesInCell = 0;
-    forAll(own, faceI)
+    forAll(own, facei)
     {
-        cells_[own[faceI]][nFacesInCell[own[faceI]]++] = faceI;
-        if( nei[faceI] != -1 )
-            cells_[nei[faceI]][nFacesInCell[nei[faceI]]++] = faceI;
+        cells_[own[facei]][nFacesInCell[own[facei]]++] = facei;
+        if( nei[facei] != -1 )
+            cells_[nei[facei]][nFacesInCell[nei[facei]]++] = facei;
     }
 
     // read cell subsets

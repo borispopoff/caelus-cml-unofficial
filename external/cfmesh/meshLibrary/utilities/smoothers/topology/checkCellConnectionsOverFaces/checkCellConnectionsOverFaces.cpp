@@ -62,20 +62,20 @@ public:
         return mesh_.cells().size();
     }
 
-    void operator()(const label cellI, DynList<label>& neighbourCells) const
+    void operator()(const label celli, DynList<label>& neighbourCells) const
     {
         neighbourCells.clear();
 
         const labelList& owner = mesh_.owner();
         const labelList& neighbour = mesh_.neighbour();
 
-        const cell& c = mesh_.cells()[cellI];
+        const cell& c = mesh_.cells()[celli];
 
         forAll(c, fI)
         {
             label nei = owner[c[fI]];
 
-            if( nei == cellI )
+            if( nei == celli )
                 nei = neighbour[c[fI]];
 
             if( nei >= 0 )
@@ -102,17 +102,17 @@ public:
             const label size = procBoundaries[patchI].patchSize();
 
             labelList groupOwner(procBoundaries[patchI].patchSize());
-            for(label faceI=0;faceI<size;++faceI)
+            for(label facei=0;facei<size;++facei)
             {
-                const label groupI = elementInGroup[owner[start+faceI]];
+                const label groupI = elementInGroup[owner[start+facei]];
 
                 if( groupI < 0 )
                 {
-                    groupOwner[faceI] = -1;
+                    groupOwner[facei] = -1;
                     continue;
                 }
 
-                groupOwner[faceI] = localGroupLabel[groupI];
+                groupOwner[facei] = localGroupLabel[groupI];
             }
 
             OPstream toOtherProc
@@ -140,12 +140,12 @@ public:
 
             fromOtherProc >> receivedData;
 
-            forAll(receivedData, faceI)
+            forAll(receivedData, facei)
             {
-                if( receivedData[faceI] < 0 )
+                if( receivedData[facei] < 0 )
                     continue;
 
-                const label groupI = elementInGroup[owner[start+faceI]];
+                const label groupI = elementInGroup[owner[start+facei]];
 
                 if( groupI < 0 )
                     continue;
@@ -153,7 +153,7 @@ public:
                 DynList<label>& ng = neiGroups[localGroupLabel[groupI]];
 
                 //- store the connection over the inter-processor boundary
-                ng.appendIfNotIn(receivedData[faceI]);
+                ng.appendIfNotIn(receivedData[facei]);
             }
         }
     }
@@ -167,7 +167,7 @@ public:
     meshConnectionsSelectorOperator()
     {}
 
-    bool operator()(const label /*cellI*/) const
+    bool operator()(const label /*celli*/) const
     {
         return true;
     }
@@ -243,9 +243,9 @@ bool checkCellConnectionsOverFaces::checkCellGroups()
 
     //- remove cells which are not in the group which has max num of cells
     boolList removeCell(mesh_.cells().size(), false);
-    forAll(cellGroup_, cellI)
-        if( cellGroup_[cellI] != nGroups_ )
-            removeCell[cellI] = true;
+    forAll(cellGroup_, celli)
+        if( cellGroup_[celli] != nGroups_ )
+            removeCell[celli] = true;
 
     polyMeshGenModifier(mesh_).removeCells(removeCell);
 

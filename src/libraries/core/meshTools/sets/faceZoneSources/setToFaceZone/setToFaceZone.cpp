@@ -123,11 +123,11 @@ void CML::setToFaceZone::applyToSet
 
             forAllConstIter(faceSet, fSet, iter)
             {
-                label faceI = iter.key();
+                label facei = iter.key();
 
-                if (!fzSet.found(faceI))
+                if (!fzSet.found(facei))
                 {
-                    newAddressing.append(faceI);
+                    newAddressing.append(facei);
                     newFlipMap.append(false);
                 }
             }

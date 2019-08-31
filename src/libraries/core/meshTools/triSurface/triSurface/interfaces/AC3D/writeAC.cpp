@@ -91,9 +91,9 @@ void CML::triSurface::writeAC(Ostream& os) const
 
         forAll(sp, patchFaceI)
         {
-            const label faceI = faceMap[faceIndex++];
+            const label facei = faceMap[faceIndex++];
 
-            include[faceI] = true;
+            include[facei] = true;
         }
 
         labelList pointMap;
@@ -114,9 +114,9 @@ void CML::triSurface::writeAC(Ostream& os) const
 
         os << "numsurf " << patch.localFaces().size() << endl;
 
-        forAll(patch.localFaces(), faceI)
+        forAll(patch.localFaces(), facei)
         {
-            const labelledTri& f = patch.localFaces()[faceI];
+            const labelledTri& f = patch.localFaces()[facei];
 
             os  << "SURF 0x20" << endl          // polygon
                 << "mat " << patchI << endl

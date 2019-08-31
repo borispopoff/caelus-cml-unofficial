@@ -688,9 +688,9 @@ CML::MeshedSurface<Face>::MeshedSurface
     List<Face> newFaces(origFaces.size());
 
     // this is somewhat like ListOps reorder and/or IndirectList
-    forAll(newFaces, faceI)
+    forAll(newFaces, facei)
     {
-        newFaces[faceI] = origFaces[faceMap[faceI]];
+        newFaces[facei] = origFaces[faceMap[facei]];
     }
 
     this->storedFaces().transfer(newFaces);
@@ -908,9 +908,9 @@ void CML::MeshedSurface<Face>::remapFaces
                 zone.start() = newFaceI;
                 origEndI += zone.size();
 
-                for (label faceI = newFaceI; faceI < faceMap.size(); ++faceI)
+                for (label facei = newFaceI; facei < faceMap.size(); ++facei)
                 {
-                    if (faceMap[faceI] < origEndI)
+                    if (faceMap[facei] < origEndI)
                     {
                         ++newFaceI;
                     }
@@ -1073,9 +1073,9 @@ bool CML::MeshedSurface<Face>::stitchFaces
 
     // Reset the point labels to the unique points array
     label newFaceI = 0;
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
-        Face& f = faceLst[faceI];
+        Face& f = faceLst[facei];
         forAll(f, fp)
         {
             f[fp] = pointMap[f[fp]];
@@ -1084,17 +1084,17 @@ bool CML::MeshedSurface<Face>::stitchFaces
         // for extra safety: collapse face as well
         if (f.collapse() >= 3)
         {
-            if (newFaceI != faceI)
+            if (newFaceI != facei)
             {
                 faceLst[newFaceI] = f;
             }
-            faceMap[newFaceI] = faceI;
+            faceMap[newFaceI] = facei;
             newFaceI++;
         }
         else if (verbose)
         {
             Pout<< "MeshedSurface::stitchFaces : "
-                << "Removing collapsed face " << faceI << endl
+                << "Removing collapsed face " << facei << endl
                 << "    vertices   :" << f << endl;
         }
     }
@@ -1135,9 +1135,9 @@ bool CML::MeshedSurface<Face>::checkFaces
     label newFaceI = 0;
     // Detect badly labelled faces and mark degenerate faces
     const label maxPointI = this->points().size() - 1;
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
-        Face& f = faceLst[faceI];
+        Face& f = faceLst[facei];
 
         // avoid degenerate faces
         if (f.collapse() >= 3)
@@ -1154,19 +1154,19 @@ bool CML::MeshedSurface<Face>::checkFaces
                 }
             }
 
-            faceMap[faceI] = faceI;
+            faceMap[facei] = facei;
             newFaceI++;
         }
         else
         {
             // mark as bad face
-            faceMap[faceI] = -1;
+            faceMap[facei] = -1;
 
             changed = true;
             if (verbose)
             {
                 WarningInFunction
-                    << "face[" << faceI << "] = " << f
+                    << "face[" << facei << "] = " << f
                     << " does not have three unique vertices" << endl;
             }
         }
@@ -1176,19 +1176,19 @@ bool CML::MeshedSurface<Face>::checkFaces
     // do not touch the faces
     const labelListList& fFaces = this->faceFaces();
     newFaceI = 0;
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
         // skip already collapsed faces:
-        if (faceMap[faceI] < 0)
+        if (faceMap[facei] < 0)
         {
             continue;
         }
 
-        const Face& f = faceLst[faceI];
+        const Face& f = faceLst[facei];
 
         // duplicate face check
         bool okay = true;
-        const labelList& neighbours = fFaces[faceI];
+        const labelList& neighbours = fFaces[facei];
 
         // Check if faceNeighbours use same points as this face.
         // Note: discards normal information - sides of baffle are merged.
@@ -1196,7 +1196,7 @@ bool CML::MeshedSurface<Face>::checkFaces
         {
             const label neiFaceI = neighbours[neighI];
 
-            if (neiFaceI <= faceI || faceMap[neiFaceI] < 0)
+            if (neiFaceI <= facei || faceMap[neiFaceI] < 0)
             {
                 // lower numbered faces already checked
                 // skip neighbours that are themselves collapsed
@@ -1213,7 +1213,7 @@ bool CML::MeshedSurface<Face>::checkFaces
                 {
                     WarningInFunction
                         << "faces share the same vertices:" << nl
-                        << "    face[" << faceI << "] : " << f << nl
+                        << "    face[" << facei << "] : " << f << nl
                         << "    face[" << neiFaceI << "] : " << nei << endl;
                     // printFace(Warning, "    ", f, points());
                     // printFace(Warning, "    ", nei, points());
@@ -1225,12 +1225,12 @@ bool CML::MeshedSurface<Face>::checkFaces
 
         if (okay)
         {
-            faceMap[faceI] = faceI;
+            faceMap[facei] = facei;
             newFaceI++;
         }
         else
         {
-            faceMap[faceI] = -1;
+            faceMap[facei] = -1;
         }
     }
 
@@ -1250,15 +1250,15 @@ bool CML::MeshedSurface<Face>::checkFaces
 
         // compress the face list
         newFaceI = 0;
-        forAll(faceLst, faceI)
+        forAll(faceLst, facei)
         {
-            if (faceMap[faceI] >= 0)
+            if (faceMap[facei] >= 0)
             {
-                if (newFaceI != faceI)
+                if (newFaceI != facei)
                 {
-                    faceLst[newFaceI] = faceLst[faceI];
+                    faceLst[newFaceI] = faceLst[facei];
                 }
-                faceMap[newFaceI] = faceI;
+                faceMap[newFaceI] = facei;
                 newFaceI++;
             }
         }
@@ -1295,9 +1295,9 @@ CML::label CML::MeshedSurface<Face>::triangulate
     List<Face>& faceLst = this->storedFaces();
 
     // determine how many triangles will be needed
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
-        const label n = faceLst[faceI].nTriangles();
+        const label n = faceLst[facei].nTriangles();
         if (maxTri < n)
         {
             maxTri = n;
@@ -1333,16 +1333,16 @@ CML::label CML::MeshedSurface<Face>::triangulate
         // triangulate without points
         // simple face triangulation around f[0]
         label newFaceI = 0;
-        forAll(faceLst, faceI)
+        forAll(faceLst, facei)
         {
-            const Face& f = faceLst[faceI];
+            const Face& f = faceLst[facei];
 
             for (label fp = 1; fp < f.size() - 1; ++fp)
             {
                 label fp1 = f.fcIndex(fp);
 
                 newFaces[newFaceI] = triFace(f[0], f[fp], f[fp1]);
-                faceMap[newFaceI] = faceI;
+                faceMap[newFaceI] = facei;
                 newFaceI++;
             }
         }
@@ -1353,10 +1353,10 @@ CML::label CML::MeshedSurface<Face>::triangulate
         List<face> tmpTri(maxTri);
 
         label newFaceI = 0;
-        forAll(faceLst, faceI)
+        forAll(faceLst, facei)
         {
             // 'face' not '<Face>'
-            const face& f = faceLst[faceI];
+            const face& f = faceLst[facei];
 
             label nTmp = 0;
             f.triangles(this->points(), nTmp, tmpTri);
@@ -1366,7 +1366,7 @@ CML::label CML::MeshedSurface<Face>::triangulate
                 (
                     static_cast<labelUList&>(tmpTri[triI])
                 );
-                faceMap[newFaceI] = faceI;
+                faceMap[newFaceI] = facei;
                 newFaceI++;
             }
         }
@@ -1423,13 +1423,13 @@ CML::MeshedSurface<Face> CML::MeshedSurface<Face>::subsetMesh
 
     // Renumber face node labels
     List<Face> newFaces(faceMap.size());
-    forAll(faceMap, faceI)
+    forAll(faceMap, facei)
     {
-        const label origFaceI = faceMap[faceI];
-        newFaces[faceI] = Face(locFaces[origFaceI]);
+        const label origFaceI = faceMap[facei];
+        newFaces[facei] = Face(locFaces[origFaceI]);
 
         // Renumber labels for face
-        Face& f = newFaces[faceI];
+        Face& f = newFaces[facei];
         forAll(f, fp)
         {
             f[fp] = oldToNew[f[fp]];
@@ -1450,9 +1450,9 @@ CML::MeshedSurface<Face> CML::MeshedSurface<Face>::subsetMesh
         zone.start() = newFaceI;
         origEndI += zone.size();
 
-        for (label faceI = newFaceI; faceI < faceMap.size(); ++faceI)
+        for (label facei = newFaceI; facei < faceMap.size(); ++facei)
         {
-            if (faceMap[faceI] < origEndI)
+            if (faceMap[facei] < origEndI)
             {
                 ++newFaceI;
             }
@@ -1529,9 +1529,9 @@ void CML::MeshedSurface<Face>::transfer
         List<Face>& oldFaces = surf.storedFaces();
         List<Face> newFaces(faceMap.size());
 
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
-            newFaces[faceI].transfer(oldFaces[faceMap[faceI]]);
+            newFaces[facei].transfer(oldFaces[faceMap[facei]]);
         }
 
         reset
@@ -1685,10 +1685,10 @@ void CML::MeshedSurface<Face>::sortFacesAndStore
 
         // sorted faces
         List<Face> newFaces(faceMap.size());
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
             // use transfer to recover memory where possible
-            newFaces[faceI].transfer(oldFaces[faceMap[faceI]]);
+            newFaces[facei].transfer(oldFaces[faceMap[facei]]);
         }
         this->storedFaces().transfer(newFaces);
     }

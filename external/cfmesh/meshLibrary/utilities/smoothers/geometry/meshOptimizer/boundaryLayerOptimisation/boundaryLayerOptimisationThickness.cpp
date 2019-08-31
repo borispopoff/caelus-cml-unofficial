@@ -43,14 +43,14 @@ namespace CML
 
 void boundaryLayerOptimisation::hairEdgesAtBndFace
 (
-    const label cellI,
+    const label celli,
     const label baseFaceI,
     DynList<edge>& hairEdges
 ) const
 {
     const faceListPMG& faces = mesh_.faces();
 
-    const cell& c = mesh_.cells()[cellI];
+    const cell& c = mesh_.cells()[celli];
 
         //- check cell topology
     DynList<edge, 48> edges;
@@ -231,14 +231,14 @@ scalar boundaryLayerOptimisation::calculateThickness
 scalar boundaryLayerOptimisation::calculateThicknessOverCell
 (
     const label heI,
-    const label cellI,
+    const label celli,
     const label baseFaceI
 ) const
 {
     const pointFieldPMG& points = mesh_.points();
     const faceListPMG& faces = mesh_.faces();
 
-    const cell& c = mesh_.cells()[cellI];
+    const cell& c = mesh_.cells()[celli];
 
     const face& bf = faces[baseFaceI];
 

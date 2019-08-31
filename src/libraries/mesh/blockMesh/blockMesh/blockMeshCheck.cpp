@@ -187,9 +187,9 @@ bool CML::blockMesh::patchLabelsOK
 {
     bool ok = true;
 
-    forAll(patchFaces, faceI)
+    forAll(patchFaces, facei)
     {
-        const labelList& f = patchFaces[faceI];
+        const labelList& f = patchFaces[facei];
 
         forAll(f, fp)
         {
@@ -201,7 +201,7 @@ bool CML::blockMesh::patchLabelsOK
                     << "out-of-range point label " << f[fp]
                     << " (min = 0"
                     << ") on patch " << patchLabel
-                    << ", face " << faceI << endl;
+                    << ", face " << facei << endl;
             }
             else if (f[fp] >= points.size())
             {
@@ -211,7 +211,7 @@ bool CML::blockMesh::patchLabelsOK
                     << "out-of-range point label " << f[fp]
                     << " (max = " << points.size() - 1
                     << ") on patch " << patchLabel
-                    << ", face " << faceI << endl;
+                    << ", face " << facei << endl;
 
             }
         }

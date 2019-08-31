@@ -78,8 +78,8 @@ class extendedUpwindCellToFaceStencil
         (
             const boolList& nonEmptyFace,
             const scalar minOpposedness,
-            const label faceI,
-            const label cellI,
+            const label facei,
+            const label celli,
             DynamicList<label>& oppositeFaces
         ) const;
 
@@ -89,8 +89,8 @@ class extendedUpwindCellToFaceStencil
             const boolList& nonEmptyFace,
             const labelListList& faceStencil,
             const scalar minOpposedness,
-            const label faceI,
-            const label cellI,
+            const label facei,
+            const label celli,
             const bool stencilHasNeighbour,
 
             DynamicList<label>& oppositeFaces,
@@ -232,27 +232,27 @@ CML::extendedUpwindCellToFaceStencil::weightedSum
     GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsfCorr();
 
     // Internal faces
-    for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
     {
-        if (phi[faceI] > 0)
+        if (phi[facei] > 0)
         {
             // Flux out of owner. Use upwind (= owner side) stencil.
-            const List<Type>& stField = ownFld[faceI];
-            const List<scalar>& stWeight = ownWeights[faceI];
+            const List<Type>& stField = ownFld[facei];
+            const List<scalar>& stWeight = ownWeights[facei];
 
             forAll(stField, i)
             {
-                sf[faceI] += stField[i]*stWeight[i];
+                sf[facei] += stField[i]*stWeight[i];
             }
         }
         else
         {
-            const List<Type>& stField = neiFld[faceI];
-            const List<scalar>& stWeight = neiWeights[faceI];
+            const List<Type>& stField = neiFld[facei];
+            const List<scalar>& stWeight = neiWeights[facei];
 
             forAll(stField, i)
             {
-                sf[faceI] += stField[i]*stWeight[i];
+                sf[facei] += stField[i]*stWeight[i];
             }
         }
     }
@@ -268,15 +268,15 @@ CML::extendedUpwindCellToFaceStencil::weightedSum
 
         if (pSfCorr.coupled())
         {
-            label faceI = pSfCorr.patch().start();
+            label facei = pSfCorr.patch().start();
 
             forAll(pSfCorr, i)
             {
                 if (phi.boundaryField()[patchi][i] > 0)
                 {
                     // Flux out of owner. Use upwind (= owner side) stencil.
-                    const List<Type>& stField = ownFld[faceI];
-                    const List<scalar>& stWeight = ownWeights[faceI];
+                    const List<Type>& stField = ownFld[facei];
+                    const List<scalar>& stWeight = ownWeights[facei];
 
                     forAll(stField, j)
                     {
@@ -285,15 +285,15 @@ CML::extendedUpwindCellToFaceStencil::weightedSum
                 }
                 else
                 {
-                    const List<Type>& stField = neiFld[faceI];
-                    const List<scalar>& stWeight = neiWeights[faceI];
+                    const List<Type>& stField = neiFld[facei];
+                    const List<scalar>& stWeight = neiWeights[facei];
 
                     forAll(stField, j)
                     {
                         pSfCorr[i] += stField[j]*stWeight[j];
                     }
                 }
-                faceI++;
+                facei++;
             }
         }
     }

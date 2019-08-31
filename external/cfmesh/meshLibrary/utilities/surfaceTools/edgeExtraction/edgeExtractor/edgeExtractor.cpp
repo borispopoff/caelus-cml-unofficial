@@ -151,9 +151,9 @@ void edgeExtractor::calculateSingleCellEdge()
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 100)
     # endif
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const cell& c = cells[cellI];
+        const cell& c = cells[celli];
 
         DynList<edge> foundEdge;
 

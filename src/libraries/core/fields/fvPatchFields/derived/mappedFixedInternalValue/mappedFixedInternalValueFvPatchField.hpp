@@ -293,9 +293,9 @@ void CML::mappedFixedInternalValueFvPatchField<Type>::updateCoeffs()
 
                 label faceStart = pf.patch().start();
 
-                forAll(pf, faceI)
+                forAll(pf, facei)
                 {
-                    allValues[faceStart++] = pif[faceI];
+                    allValues[faceStart++] = pif[facei];
                 }
             }
 

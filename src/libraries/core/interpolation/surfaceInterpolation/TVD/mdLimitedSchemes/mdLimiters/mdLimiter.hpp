@@ -113,10 +113,10 @@ public:
         unallocLabelList const& owner = this->mesh_.owner();
         unallocLabelList const& neighbour = this->mesh_.neighbour();
 
-        forAll (owner, faceI)
+        forAll (owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
             // min values
             this->phiMinValue_[own] = min(phi_[own], phi_[nei]);
@@ -145,10 +145,10 @@ public:
         
         this->phiLimiter_ = 1.0;
 
-        forAll(owner, faceI)
+        forAll(owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
 	    // min values
             this->phiMinValue_[own] = min(this->phiMinValue_[own], phi_[nei]);
@@ -187,13 +187,13 @@ public:
         LimiterFunctionType limitFunction;
 
         // Compute limiter values
-        forAll(owner, faceI)
+        forAll(owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
-            vector const deltaRLeft  = faceCenter[faceI] - cellCenter[own];
-            vector const deltaRRight = faceCenter[faceI] - cellCenter[nei];
+            vector const deltaRLeft  = faceCenter[facei] - cellCenter[own];
+            vector const deltaRRight = faceCenter[facei] - cellCenter[nei];
 
 	    scalar phiOwnerLimiter = limitFunction.limiter
             (
@@ -292,10 +292,10 @@ public:
         unallocLabelList const& owner = this->mesh_.owner();
         unallocLabelList const& neighbour = this->mesh_.neighbour();
 
-        forAll (owner, faceI)
+        forAll (owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
             // min values
             this->phiMinValue_[own] = min(phi_[own], phi_[nei]);
@@ -324,10 +324,10 @@ public:
         
         this->phiLimiter_ = vector::one;
 
-        forAll(owner, faceI)
+        forAll(owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
 	    // min values
             this->phiMinValue_[own] = min(this->phiMinValue_[own], phi_[nei]);
@@ -366,13 +366,13 @@ public:
         LimiterFunctionType limitFunction;
 
         // Compute limiter values
-        forAll(owner, faceI)
+        forAll(owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
-            vector const deltaRLeft  = faceCenter[faceI] - cellCenter[own];
-            vector const deltaRRight = faceCenter[faceI] - cellCenter[nei];
+            vector const deltaRLeft  = faceCenter[facei] - cellCenter[own];
+            vector const deltaRRight = faceCenter[facei] - cellCenter[nei];
 
 	    vector phiOwnerLimiter = limitFunction.limiter
             (

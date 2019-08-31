@@ -54,9 +54,9 @@ void CML::extendedCentredFaceToCellStencil::compact()
 {
     boolList isInStencil(map().constructSize(), false);
 
-    forAll(stencil_, faceI)
+    forAll(stencil_, facei)
     {
-        const labelList& stencilCells = stencil_[faceI];
+        const labelList& stencilCells = stencil_[facei];
 
         forAll(stencilCells, i)
         {

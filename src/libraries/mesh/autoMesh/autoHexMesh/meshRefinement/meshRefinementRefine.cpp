@@ -82,10 +82,10 @@ CML::labelList CML::meshRefinement::getChangedFaces
 
         // 1. Internal faces
 
-        for (label faceI = 0; faceI < nInternalFaces; faceI++)
+        for (label facei = 0; facei < nInternalFaces; facei++)
         {
-            label oldOwn = map.cellMap()[faceOwner[faceI]];
-            label oldNei = map.cellMap()[faceNeighbour[faceI]];
+            label oldOwn = map.cellMap()[faceOwner[facei]];
+            label oldNei = map.cellMap()[faceNeighbour[facei]];
 
             if
             (
@@ -99,7 +99,7 @@ CML::labelList CML::meshRefinement::getChangedFaces
             }
             else
             {
-                refinedInternalFace.set(faceI, 1u);
+                refinedInternalFace.set(facei, 1u);
             }
         }
 
@@ -112,11 +112,11 @@ CML::labelList CML::meshRefinement::getChangedFaces
         {
             const polyPatch& pp = mesh.boundaryMesh()[patchI];
 
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                label oldOwn = map.cellMap()[faceOwner[faceI]];
+                label oldOwn = map.cellMap()[faceOwner[facei]];
 
                 if (oldOwn >= 0 && oldRefineCell.get(oldOwn) == 0u)
                 {
@@ -124,9 +124,9 @@ CML::labelList CML::meshRefinement::getChangedFaces
                 }
                 else
                 {
-                    refinedBoundaryFace[faceI-nInternalFaces] = true;
+                    refinedBoundaryFace[facei-nInternalFaces] = true;
                 }
-                faceI++;
+                facei++;
             }
         }
 
@@ -144,16 +144,16 @@ CML::labelList CML::meshRefinement::getChangedFaces
         //    - refinedBoundaryFace
         boolList changedFace(mesh.nFaces(), false);
 
-        forAll(refinedInternalFace, faceI)
+        forAll(refinedInternalFace, facei)
         {
-            if (refinedInternalFace.get(faceI) == 1u)
+            if (refinedInternalFace.get(facei) == 1u)
             {
-                const cell& ownFaces = cells[faceOwner[faceI]];
+                const cell& ownFaces = cells[faceOwner[facei]];
                 forAll(ownFaces, ownI)
                 {
                     changedFace[ownFaces[ownI]] = true;
                 }
-                const cell& neiFaces = cells[faceNeighbour[faceI]];
+                const cell& neiFaces = cells[faceNeighbour[facei]];
                 forAll(neiFaces, neiI)
                 {
                     changedFace[neiFaces[neiI]] = true;
@@ -189,9 +189,9 @@ CML::labelList CML::meshRefinement::getChangedFaces
         // Count changed master faces.
         nMasterChanged = 0;
 
-        forAll(changedFace, faceI)
+        forAll(changedFace, facei)
         {
-            if (changedFace[faceI] && isMasterFace[faceI])
+            if (changedFace[facei] && isMasterFace[facei])
             {
                 nMasterChanged++;
             }

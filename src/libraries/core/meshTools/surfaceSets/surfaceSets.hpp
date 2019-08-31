@@ -83,7 +83,7 @@ class surfaceSets
         //(
         //    const primitiveMesh& mesh,
         //    const boolList& selectedPoint,
-        //    const label cellI
+        //    const label celli
         //);
 
         ////- Find points used only by internalCells and remove from

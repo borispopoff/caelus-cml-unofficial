@@ -211,9 +211,9 @@ bool CML::layerAdditionRemoval::changeTopology() const
     if (thicknessFromVolume_)
     {
         // Thickness calculated from cell volume/face area
-        forAll(fz, faceI)
+        forAll(fz, facei)
         {
-            scalar curDelta = V[mc[faceI]]/mag(S[fz[faceI]]);
+            scalar curDelta = V[mc[facei]]/mag(S[fz[facei]]);
             avgDelta += curDelta;
             minDelta = min(minDelta, curDelta);
             maxDelta = max(maxDelta, curDelta);
@@ -227,9 +227,9 @@ bool CML::layerAdditionRemoval::changeTopology() const
         const Map<label>& zoneMeshPointMap = fz().meshPointMap();
 
         // Edges with only one point on zone
-        forAll(mc, faceI)
+        forAll(mc, facei)
         {
-            const cell& cFaces = mesh.cells()[mc[faceI]];
+            const cell& cFaces = mesh.cells()[mc[facei]];
             const edgeList cellEdges(cFaces.edges(mesh.faces()));
 
             forAll(cellEdges, i)

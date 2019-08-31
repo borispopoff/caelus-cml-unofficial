@@ -263,12 +263,12 @@ void CML::isoCutFace::surfacePoints
 
 CML::label CML::isoCutFace::calcSubFace
 (
-    const label faceI,
+    const label facei,
     const scalar isoValue
 )
 {
     clearStorage();
-    const labelList& pLabels = mesh_.faces()[faceI];
+    const labelList& pLabels = mesh_.faces()[facei];
     const pointField& points = mesh_.points();
     return calcSubFace(isoValue, points, f_, pLabels);
 }

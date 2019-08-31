@@ -174,17 +174,17 @@ void gammaReTheta::ReTheta(volScalarField& ReThetaField) const
     const scalar c9 = 100.0*pTraits<scalar>::one;
     const scalar c10 = 1.5*pTraits<scalar>::one;
 
-    forAll(ReThetaField, cellI)
+    forAll(ReThetaField, celli)
     {
         int iter = 0;
         const scalar c11 = 0.027*pTraits<scalar>::one;
         const scalar Tu = max
         (
-            c9*sqrt(k_[cellI]/c10)/max(mag(U_[cellI]),SMALL),
+            c9*sqrt(k_[celli]/c10)/max(mag(U_[celli]),SMALL),
             c11
         );
 
-        scalar dUds = U2gradU[cellI]/(sqr(max(mag(U_[cellI]),SMALL)));
+        scalar dUds = U2gradU[celli]/(sqr(max(mag(U_[celli]),SMALL)));
 
         // Declare ReThetaOld in this scope
         scalar ReThetaOld;
@@ -205,8 +205,8 @@ void gammaReTheta::ReTheta(volScalarField& ReThetaField) const
             (
                 min
                 (
-                    sqr(ReThetaOld)*nu()()[cellI]*dUds
-                   /(sqr(max(mag(U_[cellI]),SMALL))),
+                    sqr(ReThetaOld)*nu()()[celli]*dUds
+                   /(sqr(max(mag(U_[celli]),SMALL))),
                    c12
                 ),
                 -c12
@@ -215,7 +215,7 @@ void gammaReTheta::ReTheta(volScalarField& ReThetaField) const
             (
                 min
                 (
-                    nu()()[cellI]*dUds/(sqr(max(mag(this->U_[cellI]),SMALL))),
+                    nu()()[celli]*dUds/(sqr(max(mag(this->U_[celli]),SMALL))),
                     scalar(3e-6)
                 ),
                 scalar(-3e-6)
@@ -230,7 +230,7 @@ void gammaReTheta::ReTheta(volScalarField& ReThetaField) const
             }
         } while(mag(ReThetaNew-ReThetaOld) > ReThetaTol);
 
-        ReThetaField[cellI] = ReThetaNew;
+        ReThetaField[celli] = ReThetaNew;
     }
 
 }

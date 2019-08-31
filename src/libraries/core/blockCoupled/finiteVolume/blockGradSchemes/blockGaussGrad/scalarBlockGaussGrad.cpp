@@ -78,9 +78,9 @@ tmp<BlockLduSystem<vector, vector>> blockGaussGrad<scalar>::fvmGrad
         const scalarField internalCoeffs(pf.valueInternalCoeffs(pw));
 
         // Diag contribution
-        forAll (pf, faceI)
+        forAll (pf, facei)
         {
-            d[fc[faceI]] += internalCoeffs[faceI]*pSf[faceI];
+            d[fc[facei]] += internalCoeffs[facei]*pSf[facei];
         }
 
         if (patch.coupled())
@@ -102,9 +102,9 @@ tmp<BlockLduSystem<vector, vector>> blockGaussGrad<scalar>::fvmGrad
             const scalarField boundaryCoeffs(pf.valueBoundaryCoeffs(pw));
 
             // Boundary contribution
-            forAll (pf, faceI)
+            forAll (pf, facei)
             {
-                source[fc[faceI]] -= boundaryCoeffs[faceI]*pSf[faceI];
+                source[fc[facei]] -= boundaryCoeffs[facei]*pSf[facei];
             }
         }
     }

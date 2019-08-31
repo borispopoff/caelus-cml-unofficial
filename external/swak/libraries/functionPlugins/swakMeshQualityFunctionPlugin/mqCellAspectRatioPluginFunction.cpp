@@ -80,14 +80,14 @@ void mqCellAspectRatioPluginFunction::doEvaluation()
     const labelList& nei = mesh().faceNeighbour();
     const vectorField& areas = mesh().faceAreas();
 
-    forAll (own, faceI)
+    forAll (own, facei)
     {
-        sumMagClosed[own[faceI]] += cmptMag(areas[faceI]);
+        sumMagClosed[own[facei]] += cmptMag(areas[facei]);
     }
 
-    forAll (nei, faceI)
+    forAll (nei, facei)
     {
-        sumMagClosed[nei[faceI]] += cmptMag(areas[faceI]);
+        sumMagClosed[nei[facei]] += cmptMag(areas[facei]);
     }
 
     const scalarField& vols = mesh().cellVolumes();
@@ -102,7 +102,7 @@ void mqCellAspectRatioPluginFunction::doEvaluation()
     }
 
     // Check the sums
-    forAll(aspectRatio, cellI)
+    forAll(aspectRatio, celli)
     {
         // Calculate the aspect ration as the maximum of Cartesian component
         // aspect ratio to the total area hydraulic area aspect ratio
@@ -112,18 +112,18 @@ void mqCellAspectRatioPluginFunction::doEvaluation()
         {
             if (meshD[dir] == 1)
             {
-                minCmpt = min(minCmpt, sumMagClosed[cellI][dir]);
-                maxCmpt = max(maxCmpt, sumMagClosed[cellI][dir]);
+                minCmpt = min(minCmpt, sumMagClosed[celli][dir]);
+                maxCmpt = max(maxCmpt, sumMagClosed[celli][dir]);
             }
         }
 
-        aspectRatio[cellI] = maxCmpt/(minCmpt + VSMALL);
+        aspectRatio[celli] = maxCmpt/(minCmpt + VSMALL);
         if (nDims == 3)
         {
-            aspectRatio[cellI] = max
+            aspectRatio[celli] = max
             (
-                aspectRatio[cellI],
-                1.0/6.0*cmptSum(sumMagClosed[cellI])/pow(vols[cellI], 2.0/3.0)
+                aspectRatio[celli],
+                1.0/6.0*cmptSum(sumMagClosed[celli])/pow(vols[celli], 2.0/3.0)
             );
         }
     }

@@ -74,9 +74,9 @@ void meshSurfaceEngine::calcGlobalBoundaryPointLabels() const
     {
         const label start = procBoundaries[patchI].patchStart();
         const label end = start + procBoundaries[patchI].patchSize();
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
             forAll(f, pI)
                 if( bp[f[pI]] != -1 )
                 {
@@ -108,9 +108,9 @@ void meshSurfaceEngine::calcGlobalBoundaryPointLabels() const
 
             labelLongList dts;
             labelHashSet addedPoint;
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
                 forAll(f, pI)
                     if( (bp[f[pI]] != -1) && !addedPoint.found(f[pI]) )
                     {
@@ -121,7 +121,7 @@ void meshSurfaceEngine::calcGlobalBoundaryPointLabels() const
                         //- 2. local point position in face
                         //- 3. number of processors for point
                         //- 4. proc labels
-                        dts.append(faceI-start);
+                        dts.append(facei-start);
                         dts.append((f.size()-pI)%f.size());
                         dts.append(bpAtProcs.sizeOfRow(bpI));
                         forAllRow(bpAtProcs, bpI, i)
@@ -221,9 +221,9 @@ void meshSurfaceEngine::calcGlobalBoundaryPointLabels() const
 
             labelLongList dts;
             labelHashSet addedPoint;
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
                 forAll(f, pI)
                 {
                     const label bpI = bp[f[pI]];
@@ -237,7 +237,7 @@ void meshSurfaceEngine::calcGlobalBoundaryPointLabels() const
                         //- 1. face position in patch
                         //- 2. local point position in face
                         //- 3. global point label
-                        dts.append(faceI-start);
+                        dts.append(facei-start);
                         dts.append((f.size()-pI)%f.size());
                         dts.append(globalPointLabel[bpI]);
                     }
@@ -352,9 +352,9 @@ void meshSurfaceEngine::calcGlobalBoundaryEdgeLabels() const
     {
         const label start = procBoundaries[patchI].patchStart();
         const label end = start + procBoundaries[patchI].patchSize();
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             forAll(f, eI)
             {
@@ -375,7 +375,7 @@ void meshSurfaceEngine::calcGlobalBoundaryEdgeLabels() const
                     {
                         facesWithProcBndEdges[patchI].insert
                         (
-                            std::make_pair(faceI, eI)
+                            std::make_pair(facei, eI)
                         );
 
                         beAtProcs.appendIfNotIn
@@ -465,8 +465,8 @@ void meshSurfaceEngine::calcGlobalBoundaryEdgeLabels() const
             label counter(0);
             while( counter < receivedData.size() )
             {
-                const label faceI = start+receivedData[counter++];
-                const face& f = faces[faceI];
+                const label facei = start+receivedData[counter++];
+                const face& f = faces[facei];
                 const label eI = receivedData[counter++];
 
                 const edge e = f.faceEdge(eI);
@@ -483,7 +483,7 @@ void meshSurfaceEngine::calcGlobalBoundaryEdgeLabels() const
                     {
                         facesWithProcBndEdges[patchI].insert
                         (
-                            std::make_pair(faceI, eI)
+                            std::make_pair(facei, eI)
                         );
 
                         beAtProcs.append(edgeI, neiProc);
@@ -547,8 +547,8 @@ void meshSurfaceEngine::calcGlobalBoundaryEdgeLabels() const
             labelLongList dts;
             forAllConstIter(procEdgeMap, procBndEdges, it)
             {
-                const label faceI = it->first;
-                const face& f = faces[faceI];
+                const label facei = it->first;
+                const face& f = faces[facei];
 
                 const label eI = it->second;
                 const edge e = f.faceEdge(eI);
@@ -570,7 +570,7 @@ void meshSurfaceEngine::calcGlobalBoundaryEdgeLabels() const
                         //- 1. face position in patch
                         //- 2. local edge position in face
                         //- 3. global edge label
-                        dts.append(faceI-start);
+                        dts.append(facei-start);
                         dts.append((f.size()-eI-1)%f.size());
                         dts.append(globalEdgeLabel[edgeI]);
                     }

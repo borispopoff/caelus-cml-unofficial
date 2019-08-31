@@ -87,7 +87,7 @@ class polyMeshGeometry
             const polyMesh& mesh,
             const bool report,
             const scalar severeNonorthogonalityThreshold,
-            const label faceI,
+            const label facei,
             const vector& s,    // face area vector
             const vector& d,    // cc-cc vector
 
@@ -111,7 +111,7 @@ class polyMeshGeometry
             const bool report,
             const scalar minTetQuality,
             const pointField& p,
-            const label faceI,
+            const label facei,
             const point& fc,    // face centre
             const point& cc,    // cell centre
             labelHashSet* setPtr

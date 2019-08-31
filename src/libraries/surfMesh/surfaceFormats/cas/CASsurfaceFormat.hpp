@@ -327,7 +327,7 @@ void CML::fileFormats::CASsurfaceFormat<Face>::write
         os  << "\n// faces:"  << nl
             << faceLst.size() << token::BEGIN_LIST << nl;
 
-        label faceI = 0;
+        label facei = 0;
         forAll(zones, zoneI)
         {
             // Print all faces belonging to this zone
@@ -335,7 +335,7 @@ void CML::fileFormats::CASsurfaceFormat<Face>::write
 
             forAll(zone, localFaceI)
             {
-                os << faceLst[faceMap[faceI++]] << nl;
+                os << faceLst[faceMap[facei++]] << nl;
             }
         }
         os << token::END_LIST << nl;

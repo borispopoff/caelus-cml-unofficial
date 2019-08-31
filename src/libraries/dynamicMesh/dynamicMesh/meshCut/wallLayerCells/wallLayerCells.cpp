@@ -38,17 +38,17 @@ defineTypeNameAndDebug(wallLayerCells, 0);
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool CML::wallLayerCells::usesCoupledPatch(const label cellI) const
+bool CML::wallLayerCells::usesCoupledPatch(const label celli) const
 {
     const polyBoundaryMesh& patches = mesh().boundaryMesh();
 
-    const cell& cFaces = mesh().cells()[cellI];
+    const cell& cFaces = mesh().cells()[celli];
 
     forAll(cFaces, cFaceI)
     {
-        label faceI = cFaces[cFaceI];
+        label facei = cFaces[cFaceI];
 
-        label patchID = patches.whichPatch(faceI);
+        label patchID = patches.whichPatch(facei);
 
         if ((patchID >= 0) && (patches[patchID].coupled()))
         {
@@ -163,13 +163,13 @@ CML::wallLayerCells::wallLayerCells
 
         label vertI = 0;
 
-        forAll(faceInfo, faceI)
+        forAll(faceInfo, facei)
         {
-            const wallNormalInfo& info = faceInfo[faceI];
+            const wallNormalInfo& info = faceInfo[facei];
 
             if (info.valid(regionCalc.data()))
             {
-                const face& f = mesh.faces()[faceI];
+                const face& f = mesh.faces()[facei];
 
                 point mid(0.0, 0.0, 0.0);
 
@@ -207,13 +207,13 @@ CML::wallLayerCells::wallLayerCells
 
     const List<wallNormalInfo>& cellInfo = regionCalc.allCellInfo();
 
-    forAll(cellInfo, cellI)
+    forAll(cellInfo, celli)
     {
-        const wallNormalInfo& info = cellInfo[cellI];
+        const wallNormalInfo& info = cellInfo[celli];
 
-        if (info.valid(regionCalc.data()) && !usesCoupledPatch(cellI))
+        if (info.valid(regionCalc.data()) && !usesCoupledPatch(celli))
         {
-            refineCells.append(refineCell(cellI, info.normal()));
+            refineCells.append(refineCell(celli, info.normal()));
         }
     }
 

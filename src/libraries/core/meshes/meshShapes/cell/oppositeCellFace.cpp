@@ -50,15 +50,15 @@ CML::label CML::cell::opposingFaceLabel
 
     label oppositeFaceLabel = -1;
 
-    forAll(curFaceLabels, faceI)
+    forAll(curFaceLabels, facei)
     {
         // Compare the face with the master
-        const face& curFace = meshFaces[curFaceLabels[faceI]];
+        const face& curFace = meshFaces[curFaceLabels[facei]];
 
         // Skip the master face
         if
         (
-            curFaceLabels[faceI] != masterFaceLabel
+            curFaceLabels[facei] != masterFaceLabel
          && curFace.size() == masterFace.size()
         )
         {
@@ -88,7 +88,7 @@ CML::label CML::cell::opposingFaceLabel
                 if (oppositeFaceLabel == -1)
                 {
                     // Found opposite face
-                    oppositeFaceLabel = curFaceLabels[faceI];
+                    oppositeFaceLabel = curFaceLabels[facei];
                 }
                 else
                 {
@@ -96,7 +96,7 @@ CML::label CML::cell::opposingFaceLabel
                     // Non-prismatic cell
                     Info<< "Multiple faces not sharing vertex: "
                         << oppositeFaceLabel << " and "
-                        << curFaceLabels[faceI] << endl;
+                        << curFaceLabels[facei] << endl;
                     return -1;
                 }
             }

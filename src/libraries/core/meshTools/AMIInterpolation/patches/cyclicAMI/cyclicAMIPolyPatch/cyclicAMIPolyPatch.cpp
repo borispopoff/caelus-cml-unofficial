@@ -821,7 +821,7 @@ void CML::cyclicAMIPolyPatch::transformPosition(pointField& l) const
 void CML::cyclicAMIPolyPatch::transformPosition
 (
     point& l,
-    const label faceI
+    const label facei
 ) const
 {
     if (!parallel())
@@ -830,7 +830,7 @@ void CML::cyclicAMIPolyPatch::transformPosition
         (
             forwardT().size() == 1
           ? forwardT()[0]
-          : forwardT()[faceI]
+          : forwardT()[facei]
         );
 
         if (transform() == ROTATIONAL)
@@ -848,7 +848,7 @@ void CML::cyclicAMIPolyPatch::transformPosition
         (
             separation().size() == 1
           ? separation()[0]
-          : separation()[faceI]
+          : separation()[facei]
         );
 
         l -= s;
@@ -859,7 +859,7 @@ void CML::cyclicAMIPolyPatch::transformPosition
 void CML::cyclicAMIPolyPatch::reverseTransformPosition
 (
     point& l,
-    const label faceI
+    const label facei
 ) const
 {
     if (!parallel())
@@ -868,7 +868,7 @@ void CML::cyclicAMIPolyPatch::reverseTransformPosition
         (
             reverseT().size() == 1
           ? reverseT()[0]
-          : reverseT()[faceI]
+          : reverseT()[facei]
         );
 
         if (transform() == ROTATIONAL)
@@ -886,7 +886,7 @@ void CML::cyclicAMIPolyPatch::reverseTransformPosition
         (
             separation().size() == 1
           ? separation()[0]
-          : separation()[faceI]
+          : separation()[facei]
         );
 
         l += s;
@@ -897,7 +897,7 @@ void CML::cyclicAMIPolyPatch::reverseTransformPosition
 void CML::cyclicAMIPolyPatch::reverseTransformDirection
 (
     vector& d,
-    const label faceI
+    const label facei
 ) const
 {
     if (!parallel())
@@ -906,7 +906,7 @@ void CML::cyclicAMIPolyPatch::reverseTransformDirection
         (
             reverseT().size() == 1
           ? reverseT()[0]
-          : reverseT()[faceI]
+          : reverseT()[facei]
         );
 
         d = CML::transform(T, d);
@@ -965,16 +965,16 @@ bool CML::cyclicAMIPolyPatch::order
 
 CML::label CML::cyclicAMIPolyPatch::pointFace
 (
-    const label faceI,
+    const label facei,
     const vector& n,
     point& p
 ) const
 {
     point prt(p);
-    reverseTransformPosition(prt, faceI);
+    reverseTransformPosition(prt, facei);
 
     vector nrt(n);
-    reverseTransformDirection(nrt, faceI);
+    reverseTransformDirection(nrt, facei);
 
     label nbrFaceI = -1;
 
@@ -985,7 +985,7 @@ CML::label CML::cyclicAMIPolyPatch::pointFace
             *this,
             neighbPatch(),
             nrt,
-            faceI,
+            facei,
             prt
         );
     }
@@ -996,7 +996,7 @@ CML::label CML::cyclicAMIPolyPatch::pointFace
             neighbPatch(),
             *this,
             nrt,
-            faceI,
+            facei,
             prt
         );
     }

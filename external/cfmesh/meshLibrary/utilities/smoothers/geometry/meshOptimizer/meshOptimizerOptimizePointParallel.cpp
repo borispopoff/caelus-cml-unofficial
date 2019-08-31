@@ -222,10 +222,10 @@ void meshOptimizer::laplaceSmoother::laplacianPCParallel
 
         forAllRow(pCells, pointI, pcI)
         {
-            const label cellI = pCells(pointI, pcI);
+            const label celli = pCells(pointI, pcI);
 
             ++lpd.pointLabel();
-            lpd.coordinates() += centres[cellI];
+            lpd.coordinates() += centres[celli];
         }
 
         forAllRow(pointAtProcs, pointI, procI)
@@ -360,10 +360,10 @@ void meshOptimizer::laplaceSmoother::laplacianWPCParallel
 
         forAllRow(pCells, pointI, pcI)
         {
-            const label cellI = pCells(pointI, pcI);
+            const label celli = pCells(pointI, pcI);
 
-            const scalar w = CML::max(volumes[cellI], VSMALL);
-            lps.coordinates() += w * centres[cellI];
+            const scalar w = CML::max(volumes[celli], VSMALL);
+            lps.coordinates() += w * centres[celli];
             lps.scalarValue() += w;
         }
 

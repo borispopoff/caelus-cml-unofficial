@@ -181,7 +181,7 @@ private:
         bool usesMixedPointsOnly
         (
             const List<pointStatus>&,
-            const label cellI
+            const label celli
         ) const;
 
         //- Get faces (and its 'owner') inbetween cells of differing type

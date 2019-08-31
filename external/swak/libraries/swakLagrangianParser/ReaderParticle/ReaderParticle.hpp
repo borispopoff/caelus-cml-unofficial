@@ -82,11 +82,11 @@ public:
         (
             const polyMesh& mesh,
             const vector& position,
-            const label cellI,
+            const label celli,
             bool doCellFacePt = true
         )
         :
-            ReaderParticleBaseClass(mesh, position, cellI)
+            ReaderParticleBaseClass(mesh, position, celli)
         {}
 
         //- Construct from Istream

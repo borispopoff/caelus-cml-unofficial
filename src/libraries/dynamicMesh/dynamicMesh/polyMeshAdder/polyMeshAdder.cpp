@@ -359,35 +359,35 @@ CML::labelList CML::polyMeshAdder::getFaceOrder
     labelList oldToNew(owner.size(), -1);
 
     // Leave boundary faces in order
-    for (label faceI = nInternalFaces; faceI < owner.size(); ++faceI)
+    for (label facei = nInternalFaces; facei < owner.size(); ++facei)
     {
-        oldToNew[faceI] = faceI;
+        oldToNew[facei] = facei;
     }
 
     // First unassigned face
     label newFaceI = 0;
 
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const labelList& cFaces = cells[cellI];
+        const labelList& cFaces = cells[celli];
 
         SortableList<label> nbr(cFaces.size());
 
         forAll(cFaces, i)
         {
-            label faceI = cFaces[i];
+            label facei = cFaces[i];
 
-            label nbrCellI = neighbour[faceI];
+            label nbrCellI = neighbour[facei];
 
             if (nbrCellI != -1)
             {
                 // Internal face. Get cell on other side.
-                if (nbrCellI == cellI)
+                if (nbrCellI == celli)
                 {
-                    nbrCellI = owner[faceI];
+                    nbrCellI = owner[facei];
                 }
 
-                if (cellI < nbrCellI)
+                if (celli < nbrCellI)
                 {
                     // CellI is master
                     nbr[i] = nbrCellI;
@@ -418,13 +418,13 @@ CML::labelList CML::polyMeshAdder::getFaceOrder
 
 
     // Check done all faces.
-    forAll(oldToNew, faceI)
+    forAll(oldToNew, facei)
     {
-        if (oldToNew[faceI] == -1)
+        if (oldToNew[facei] == -1)
         {
             FatalErrorInFunction
                 << "Did not determine new position"
-                << " for face " << faceI
+                << " for face " << facei
                 << abort(FatalError);
         }
     }
@@ -663,12 +663,12 @@ void CML::polyMeshAdder::mergePrimitives
     from1ToAllFaces = -1;
 
     // Copy mesh0 internal faces (always uncoupled)
-    for (label faceI = 0; faceI < mesh0.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh0.nInternalFaces(); facei++)
     {
-        allFaces[allFaceI] = renumber(from0ToAllPoints, mesh0.faces()[faceI]);
-        allOwner[allFaceI] = mesh0.faceOwner()[faceI];
-        allNeighbour[allFaceI] = mesh0.faceNeighbour()[faceI];
-        from0ToAllFaces[faceI] = allFaceI++;
+        allFaces[allFaceI] = renumber(from0ToAllPoints, mesh0.faces()[facei]);
+        allOwner[allFaceI] = mesh0.faceOwner()[facei];
+        allNeighbour[allFaceI] = mesh0.faceNeighbour()[facei];
+        from0ToAllFaces[facei] = allFaceI++;
     }
 
     // Copy coupled faces. Every coupled face has an equivalent master and
@@ -714,12 +714,12 @@ void CML::polyMeshAdder::mergePrimitives
     }
 
     // Copy mesh1 internal faces (always uncoupled)
-    for (label faceI = 0; faceI < mesh1.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh1.nInternalFaces(); facei++)
     {
-        allFaces[allFaceI] = renumber(from1ToAllPoints, mesh1.faces()[faceI]);
-        allOwner[allFaceI] = mesh1.faceOwner()[faceI] + mesh0.nCells();
-        allNeighbour[allFaceI] = mesh1.faceNeighbour()[faceI] + mesh0.nCells();
-        from1ToAllFaces[faceI] = allFaceI++;
+        allFaces[allFaceI] = renumber(from1ToAllPoints, mesh1.faces()[facei]);
+        allOwner[allFaceI] = mesh1.faceOwner()[facei] + mesh0.nCells();
+        allNeighbour[allFaceI] = mesh1.faceNeighbour()[facei] + mesh0.nCells();
+        from1ToAllFaces[facei] = allFaceI++;
     }
 
     nInternalFaces = allFaceI;
@@ -734,24 +734,24 @@ void CML::polyMeshAdder::mergePrimitives
 
             nFacesPerPatch[allPatchI] += pp.size();
 
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                if (from0ToAllFaces[faceI] == -1)
+                if (from0ToAllFaces[facei] == -1)
                 {
                     // Is uncoupled face since has not yet been dealt with
                     allFaces[allFaceI] = renumber
                     (
                         from0ToAllPoints,
-                        mesh0.faces()[faceI]
+                        mesh0.faces()[facei]
                     );
-                    allOwner[allFaceI] = mesh0.faceOwner()[faceI];
+                    allOwner[allFaceI] = mesh0.faceOwner()[facei];
                     allNeighbour[allFaceI] = -1;
 
-                    from0ToAllFaces[faceI] = allFaceI++;
+                    from0ToAllFaces[facei] = allFaceI++;
                 }
-                faceI++;
+                facei++;
             }
         }
         if (fromAllTo1Patches[allPatchI] != -1)
@@ -761,26 +761,26 @@ void CML::polyMeshAdder::mergePrimitives
 
             nFacesPerPatch[allPatchI] += pp.size();
 
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                if (from1ToAllFaces[faceI] == -1)
+                if (from1ToAllFaces[facei] == -1)
                 {
                     // Is uncoupled face
                     allFaces[allFaceI] = renumber
                     (
                         from1ToAllPoints,
-                        mesh1.faces()[faceI]
+                        mesh1.faces()[facei]
                     );
                     allOwner[allFaceI] =
-                        mesh1.faceOwner()[faceI]
+                        mesh1.faceOwner()[facei]
                       + mesh0.nCells();
                     allNeighbour[allFaceI] = -1;
 
-                    from1ToAllFaces[faceI] = allFaceI++;
+                    from1ToAllFaces[facei] = allFaceI++;
                 }
-                faceI++;
+                facei++;
             }
         }
     }
@@ -1008,11 +1008,11 @@ void CML::polyMeshAdder::mergeFaceZones
 
         forAll(addressing, i)
         {
-            label faceI = addressing[i];
+            label facei = addressing[i];
 
-            if (from0ToAllFaces[faceI] != -1)
+            if (from0ToAllFaces[facei] != -1)
             {
-                newZone.append(from0ToAllFaces[faceI]);
+                newZone.append(from0ToAllFaces[facei]);
                 newFlip.append(flipMap[i]);
             }
         }
@@ -1046,8 +1046,8 @@ void CML::polyMeshAdder::mergeFaceZones
 
         forAll(addressing, i)
         {
-            label faceI = addressing[i];
-            label allFaceI = from1ToAllFaces[faceI];
+            label facei = addressing[i];
+            label allFaceI = from1ToAllFaces[facei];
 
             if
             (
@@ -2017,9 +2017,9 @@ void CML::polyMeshAdder::mergePoints
     // avoid addressing calculation.
     const faceList& faces = mesh.faces();
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         bool hasMerged = false;
 
@@ -2055,15 +2055,15 @@ void CML::polyMeshAdder::mergePoints
                 }
             }
 
-            label patchID = mesh.boundaryMesh().whichPatch(faceI);
-            label nei = (patchID == -1 ? mesh.faceNeighbour()[faceI] : -1);
-            label zoneID = mesh.faceZones().whichZone(faceI);
+            label patchID = mesh.boundaryMesh().whichPatch(facei);
+            label nei = (patchID == -1 ? mesh.faceNeighbour()[facei] : -1);
+            label zoneID = mesh.faceZones().whichZone(facei);
             bool zoneFlip = false;
 
             if (zoneID >= 0)
             {
                 const faceZone& fZone = mesh.faceZones()[zoneID];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+                zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
             }
 
             meshMod.setAction
@@ -2071,8 +2071,8 @@ void CML::polyMeshAdder::mergePoints
                 polyModifyFace
                 (
                     newF,                       // modified face
-                    faceI,                      // label of face
-                    mesh.faceOwner()[faceI],    // owner
+                    facei,                      // label of face
+                    mesh.faceOwner()[facei],    // owner
                     nei,                        // neighbour
                     false,                      // face flip
                     patchID,                    // patch for face

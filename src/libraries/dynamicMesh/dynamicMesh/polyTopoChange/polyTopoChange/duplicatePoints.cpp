@@ -107,12 +107,12 @@ void CML::duplicatePoints::setRefinement
 
     forAllConstIter(Map<label>, meshFaceMap, iter)
     {
-        label faceI = iter.key();
+        label facei = iter.key();
         label localI = iter();
 
         // Replace points with duplicated ones.
         const face& fRegion = faceRegions[localI];
-        const face& f = mesh_.faces()[faceI];
+        const face& f = mesh_.faces()[facei];
 
         newFace.setSize(f.size());
         forAll(f, fp)
@@ -142,23 +142,23 @@ void CML::duplicatePoints::setRefinement
         }
 
         // Get current zone info
-        label zoneID = mesh_.faceZones().whichZone(faceI);
+        label zoneID = mesh_.faceZones().whichZone(facei);
         bool zoneFlip = false;
         if (zoneID >= 0)
         {
             const faceZone& fZone = mesh_.faceZones()[zoneID];
-            zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+            zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
         }
 
 
-        if (mesh_.isInternalFace(faceI))
+        if (mesh_.isInternalFace(facei))
         {
             meshMod.modifyFace
             (
                 newFace,                    // modified face
-                faceI,                      // label of face being modified
-                mesh_.faceOwner()[faceI],   // owner
-                mesh_.faceNeighbour()[faceI],   // neighbour
+                facei,                      // label of face being modified
+                mesh_.faceOwner()[facei],   // owner
+                mesh_.faceNeighbour()[facei],   // neighbour
                 false,                      // face flip
                 -1,                         // patch for face
                 zoneID,                     // zone for face
@@ -170,11 +170,11 @@ void CML::duplicatePoints::setRefinement
             meshMod.modifyFace
             (
                 newFace,                    // modified face
-                faceI,                      // label of face being modified
-                mesh_.faceOwner()[faceI],   // owner
+                facei,                      // label of face being modified
+                mesh_.faceOwner()[facei],   // owner
                 -1,                         // neighbour
                 false,                      // face flip
-                patches.whichPatch(faceI),  // patch for face
+                patches.whichPatch(facei),  // patch for face
                 zoneID,                     // zone for face
                 zoneFlip                    // face flip in zone
             );

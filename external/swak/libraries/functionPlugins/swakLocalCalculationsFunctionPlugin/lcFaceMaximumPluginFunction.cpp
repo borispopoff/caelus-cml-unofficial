@@ -75,25 +75,25 @@ void lcFaceMaximumPluginFunction::doCellCalculation(volScalarField &field)
     const cellList &cl=field.mesh().cells();
     const surfaceScalarField &o=original_();
 
-    forAll(field,cellI) {
+    forAll(field,celli) {
         scalar maxVal=-1e30;
 
-        const cell &c=cl[cellI];
+        const cell &c=cl[celli];
         forAll(c,i) {
-            const label faceI=c[i];
-            if(faceI<field.mesh().nInternalFaces()) {
-                maxVal=max(maxVal,o[faceI]);
+            const label facei=c[i];
+            if(facei<field.mesh().nInternalFaces()) {
+                maxVal=max(maxVal,o[facei]);
             } else {
-                label patchID=field.mesh().boundaryMesh().whichPatch(faceI);
+                label patchID=field.mesh().boundaryMesh().whichPatch(facei);
                 label startI=field.mesh().boundaryMesh()[patchID].start();
                 maxVal=max(
                     maxVal,
-                    o.boundaryField()[patchID][faceI-startI]
+                    o.boundaryField()[patchID][facei-startI]
                 );
             }
         }
 
-        field[cellI]=maxVal;
+        field[celli]=maxVal;
     }
 }
 

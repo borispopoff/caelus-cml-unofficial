@@ -67,7 +67,7 @@ class regionToFace
         (
             const indirectPrimitivePatch& patch,
             const label procI,
-            const label faceI,
+            const label facei,
             const label zoneI,
             labelList& faceZone
         ) const;

@@ -137,21 +137,21 @@ bool checkUpperTriangular
 
     // Loop through faceCells once more and make sure that for internal cell
     // the first label is smaller
-    for(label faceI=0;faceI<internal;++faceI)
+    for(label facei=0;facei<internal;++facei)
     {
-        if( own[faceI] >= nei[faceI] )
+        if( own[facei] >= nei[facei] )
         {
             if( report )
             {
                 Pout<< "bool checkUpperTriangular(const polyMeshGen&, "
                     << "const bool, labelHashSet*) : " << endl
-                    << "face " << faceI
+                    << "face " << facei
                     << " has the owner label greater than neighbour:" << endl
-                    << own[faceI] << tab << nei[faceI] << endl;
+                    << own[facei] << tab << nei[facei] << endl;
             }
 
             if( setPtr )
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
 
             error  = true;
         }
@@ -160,13 +160,13 @@ bool checkUpperTriangular
     // Loop through all cells. For each cell, find the face that is internal and
     // add it to the check list (upper triangular order).
     // Once the list is completed, check it against the faceCell list
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const labelList& curFaces = cells[cellI];
+        const labelList& curFaces = cells[celli];
 
         // Using the fact that cell neighbour always appear
         // in the increasing order
-        boolList usedNbr(cc.sizeOfRow(cellI), false);
+        boolList usedNbr(cc.sizeOfRow(celli), false);
 
         for(label nSweeps=0;nSweeps<usedNbr.size();++nSweeps)
         {
@@ -174,10 +174,10 @@ bool checkUpperTriangular
             label nextNei = -1;
             label minNei = cells.size();
 
-            forAllRow(cc, cellI, nbrI)
+            forAllRow(cc, celli, nbrI)
             {
-                const label neiI = cc(cellI, nbrI);
-                if( (neiI > cellI) && !usedNbr[nbrI] && (neiI < minNei) )
+                const label neiI = cc(celli, nbrI);
+                if( (neiI > celli) && !usedNbr[nbrI] && (neiI < minNei) )
                 {
                     nextNei = nbrI;
                     minNei = neiI;
@@ -189,13 +189,13 @@ bool checkUpperTriangular
                 // Mark this neighbour as used
                 usedNbr[nextNei] = true;
 
-                forAll(curFaces, faceI)
+                forAll(curFaces, facei)
                 {
-                    if( curFaces[faceI] < internal )
+                    if( curFaces[facei] < internal )
                     {
-                        if( nei[curFaces[faceI]] == cc(cellI, nextNei) )
+                        if( nei[curFaces[facei]] == cc(celli, nextNei) )
                         {
-                            checkInternalFaces[nChecks] = curFaces[faceI];
+                            checkInternalFaces[nChecks] = curFaces[facei];
                             ++nChecks;
 
                             break;
@@ -207,21 +207,21 @@ bool checkUpperTriangular
     }
 
     // Check list created. If everything is OK, the face label is equal to index
-    forAll(checkInternalFaces, faceI)
+    forAll(checkInternalFaces, facei)
     {
-        if( checkInternalFaces[faceI] != faceI )
+        if( checkInternalFaces[facei] != facei )
         {
             error = true;
 
             Pout<< "bool checkUpperTriangular(const polyMeshGen&, const bool"
                 << ", labelHashSet*) : " << endl
-                << "face " << faceI << " out of position. Markup label: "
-                << checkInternalFaces[faceI] << ". All subsequent faces will "
+                << "face " << facei << " out of position. Markup label: "
+                << checkInternalFaces[facei] << ". All subsequent faces will "
                 << "also be out of position. Please check the mesh manually."
                 << endl;
 
             if( setPtr )
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
 
             break;
         }
@@ -264,16 +264,16 @@ bool checkCellsZipUp
     # ifdef USE_OMP
     # pragma omp parallel for schedule(guided) reduction(+ : nOpenCells)
     # endif
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const labelList& c = cells[cellI];
+        const labelList& c = cells[celli];
 
         DynList<edge> cellEdges;
         DynList<label> edgeUsage;
 
-        forAll(c, faceI)
+        forAll(c, facei)
         {
-            const face& f = faces[c[faceI]];
+            const face& f = faces[c[facei]];
 
             forAll(f, eI)
             {
@@ -307,7 +307,7 @@ bool checkCellsZipUp
                 (
                     "bool checkCellsZipUp(const polyMeshGen&,"
                     "const bool, labelHashSet*)"
-                )   << "edge " << cellEdges[edgeI] << " in cell " << cellI
+                )   << "edge " << cellEdges[edgeI] << " in cell " << celli
                     << " used " << edgeUsage[edgeI] << " times. " << endl
                     << "Should be 1 or 2 - serious error in mesh structure"
                     << endl;
@@ -317,7 +317,7 @@ bool checkCellsZipUp
                     # ifdef USE_OMP
                     # pragma omp critical
                     # endif
-                    setPtr->insert(cellI);
+                    setPtr->insert(celli);
                 }
             }
         }
@@ -328,7 +328,7 @@ bool checkCellsZipUp
             {
                 Pout<< "bool checkCellsZipUp(const polyMeshGen&, const bool"
                     << ", labelHashSet*) : " << endl
-                    << "Cell " << cellI << " has got " << singleEdges.size()
+                    << "Cell " << celli << " has got " << singleEdges.size()
                     << " unmatched edges: " << singleEdges << endl;
             }
 
@@ -337,7 +337,7 @@ bool checkCellsZipUp
                 # ifdef USE_OMP
                 # pragma omp critical
                 # endif
-                setPtr->insert(cellI);
+                setPtr->insert(celli);
             }
 
             ++nOpenCells;

@@ -99,9 +99,9 @@ void writePoints
 
     forAll(cellLabels, i)
     {
-        label cellI = cellLabels[i];
+        label celli = cellLabels[i];
 
-        const labelList& cEdges = mesh.cellEdges()[cellI];
+        const labelList& cEdges = mesh.cellEdges()[celli];
 
         forAll(cEdges, cEdgeI)
         {
@@ -148,21 +148,21 @@ void writePoints
 void writePoints
 (
     const polyMesh& mesh,
-    const label cellI,
+    const label celli,
     const fileName& timeName
 )
 {
     fileName fName
     (
         mesh.time().path()
-      / "meshPoints_" + timeName + '_' + name(cellI) + ".obj"
+      / "meshPoints_" + timeName + '_' + name(celli) + ".obj"
     );
 
     Info<< "Writing mesh points and edges to " << fName << endl;
 
     OFstream pointStream(fName);
 
-    const cell& cFaces = mesh.cells()[cellI];
+    const cell& cFaces = mesh.cells()[celli];
 
     meshTools::writeOBJ(pointStream, mesh.faces(), mesh.points(), cFaces);
 }
@@ -182,9 +182,9 @@ void writeFaceCentres(const polyMesh& mesh,const fileName& timeName)
 
     OFstream faceStream(faceFile);
 
-    forAll(mesh.faceCentres(), faceI)
+    forAll(mesh.faceCentres(), facei)
     {
-        writeOBJ(mesh.faceCentres()[faceI], faceStream);
+        writeOBJ(mesh.faceCentres()[facei], faceStream);
     }
 }
 
@@ -200,9 +200,9 @@ void writeCellCentres(const polyMesh& mesh, const fileName& timeName)
 
     OFstream cellStream(cellFile);
 
-    forAll(mesh.cellCentres(), cellI)
+    forAll(mesh.cellCentres(), celli)
     {
-        writeOBJ(mesh.cellCentres()[cellI], cellStream);
+        writeOBJ(mesh.cellCentres()[celli], cellStream);
     }
 }
 
@@ -228,9 +228,9 @@ void writePatchCentres
 
         OFstream patchFaceStream(faceFile);
 
-        forAll(pp.faceCentres(), faceI)
+        forAll(pp.faceCentres(), facei)
         {
-            writeOBJ(pp.faceCentres()[faceI], patchFaceStream);
+            writeOBJ(pp.faceCentres()[facei], patchFaceStream);
         }
     }
 }
@@ -263,9 +263,9 @@ void writePatchFaces
             writeOBJ(pp.localPoints()[pointI], patchFaceStream);
         }
 
-        forAll(pp.localFaces(), faceI)
+        forAll(pp.localFaces(), facei)
         {
-            const face& f = pp.localFaces()[faceI];
+            const face& f = pp.localFaces()[facei];
 
             patchFaceStream<< 'f';
 
@@ -458,9 +458,9 @@ int main(int argc, char *argv[])
             }
             if (doCell)
             {
-                label cellI = args.optionRead<label>("cell");
+                label celli = args.optionRead<label>("cell");
 
-                writePoints(mesh, cellI, runTime.timeName());
+                writePoints(mesh, celli, runTime.timeName());
             }
             if (doPoint)
             {
@@ -470,7 +470,7 @@ int main(int argc, char *argv[])
             }
             if (doFace)
             {
-                label faceI = args.optionRead<label>("face");
+                label facei = args.optionRead<label>("face");
 
                 fileName fName
                 (
@@ -478,7 +478,7 @@ int main(int argc, char *argv[])
                   / "meshPoints_"
                   + runTime.timeName()
                   + '_'
-                  + name(faceI)
+                  + name(facei)
                   + ".obj"
                 );
 
@@ -486,7 +486,7 @@ int main(int argc, char *argv[])
 
                 OFstream str(fName);
 
-                const face& f = mesh.faces()[faceI];
+                const face& f = mesh.faces()[facei];
 
                 meshTools::writeOBJ(str, faceList(1, f), mesh.points());
             }

@@ -253,7 +253,7 @@ private:
                 const label nAllowRefine,
                 const label surfaceLevel,
                 const vector& surfaceNormal,
-                const label cellI,
+                const label celli,
                 label& cellMaxLevel,
                 vector& cellMaxNormal,
                 labelList& refineCell,
@@ -298,7 +298,7 @@ private:
             label getBafflePatch
             (
                 const labelList& facePatch,
-                const label faceI
+                const label facei
             ) const;
 
             //- Repatches external face or creates baffle for internal face

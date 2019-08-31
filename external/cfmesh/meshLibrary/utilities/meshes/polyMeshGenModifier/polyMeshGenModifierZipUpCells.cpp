@@ -106,19 +106,19 @@ void polyMeshGenModifier::zipUpCells()
         Info << "Starting zipping cells " << endl;
         # endif
 
-        forAll (cells, cellI)
+        forAll (cells, celli)
         {
-            const labelList& curFaces = cells[cellI];
-            const edgeList cellEdges = cells[cellI].edges(faces);
-            const labelList cellPoints = cells[cellI].labels(faces);
+            const labelList& curFaces = cells[celli];
+            const edgeList cellEdges = cells[celli].edges(faces);
+            const labelList cellPoints = cells[celli].labels(faces);
 
             // Find the edges used only once in the cell
 
             labelList edgeUsage(cellEdges.size(), 0);
 
-            forAll (curFaces, faceI)
+            forAll (curFaces, facei)
             {
-                edgeList curFaceEdges = faces[curFaces[faceI]].edges();
+                edgeList curFaceEdges = faces[curFaces[facei]].edges();
 
                 forAll (curFaceEdges, faceEdgeI)
                 {
@@ -149,15 +149,15 @@ void polyMeshGenModifier::zipUpCells()
                 {
                     Warning
                         << "void polyMesh::zipUpCells() : "
-                        << "edge " << cellEdges[edgeI] << " in cell " << cellI
+                        << "edge " << cellEdges[edgeI] << " in cell " << celli
                         << " used " << edgeUsage[edgeI] << " times. " << nl
                         << "Should be 1 or 2 - serious error "
                         << "in mesh structure. " << endl;
 
 #           ifdef DEBUG_ZIPUP
-                    forAll (curFaces, faceI)
+                    forAll (curFaces, facei)
                     {
-                        Info<< "face: " << faces[curFaces[faceI]]
+                        Info<< "face: " << faces[curFaces[facei]]
                             << endl;
                     }
 
@@ -174,7 +174,7 @@ void polyMeshGenModifier::zipUpCells()
 #           endif
 
                     // Gather the problem cell
-                    problemCells.insert(cellI);
+                    problemCells.insert(celli);
                 }
             }
 
@@ -184,11 +184,11 @@ void polyMeshGenModifier::zipUpCells()
             singleEdges.setSize(nSingleEdges);
 
 #           ifdef DEBUG_ZIPUP
-            Info << "Cell " << cellI << endl;
+            Info << "Cell " << celli << endl;
 
-            forAll (curFaces, faceI)
+            forAll (curFaces, facei)
             {
-                Info<< "face: " << faces[curFaces[faceI]] << endl;
+                Info<< "face: " << faces[curFaces[facei]] << endl;
             }
 
             Info<< "Cell edges: " << cellEdges << nl
@@ -533,7 +533,7 @@ void polyMeshGenModifier::zipUpCells()
                                 << nl << "Point: " << orderedEdge[checkI]
                                 << " edge: " << orderedEdge << endl;
 
-                            problemCells.insert(cellI);
+                            problemCells.insert(celli);
                         }
                     }
                 }
@@ -562,12 +562,12 @@ void polyMeshGenModifier::zipUpCells()
                 forAllRow(pFaces, end, pfI)
                     facesSharingEdge[nfse++] = pFaces(end, pfI);
 
-                forAll(facesSharingEdge, faceI)
+                forAll(facesSharingEdge, facei)
                 {
                     bool faceChanges = false;
 
                     // Label of the face being analysed
-                    const label currentFaceIndex = facesSharingEdge[faceI];
+                    const label currentFaceIndex = facesSharingEdge[facei];
 
                     const edgeList curFaceEdges =
                         faces[currentFaceIndex].edges();
@@ -739,7 +739,7 @@ void polyMeshGenModifier::zipUpCells()
                                             << " face: "
                                             << newFace << endl;
 
-                                        problemCells.insert(cellI);
+                                        problemCells.insert(celli);
                                     }
                                 }
                             }

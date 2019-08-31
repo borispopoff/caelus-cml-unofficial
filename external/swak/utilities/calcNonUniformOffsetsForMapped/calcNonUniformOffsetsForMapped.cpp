@@ -387,9 +387,9 @@ int main(int argc, char *argv[])
             label pointsOutside=0;
 
             forAll(allMoved,i) {
-                label cellI=otherMesh.findCell(allMoved[i]);
-                reduce(cellI,maxOp<label>());
-                if(cellI<0) {
+                label celli=otherMesh.findCell(allMoved[i]);
+                reduce(celli,maxOp<label>());
+                if(celli<0) {
                     pointsOutside++;
                 }
             }

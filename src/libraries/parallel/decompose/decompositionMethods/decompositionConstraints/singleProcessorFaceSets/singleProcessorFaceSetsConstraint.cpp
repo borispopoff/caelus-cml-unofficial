@@ -280,17 +280,17 @@ void CML::decompositionConstraints::singleProcessorFaceSetsConstraint::apply
                 const labelList& pFaces = mesh.pointFaces()[pointI];
                 forAll(pFaces, i)
                 {
-                    label faceI = pFaces[i];
+                    label facei = pFaces[i];
 
-                    label own = mesh.faceOwner()[faceI];
+                    label own = mesh.faceOwner()[facei];
                     if (decomposition[own] != procI)
                     {
                         decomposition[own] = procI;
                         nChanged++;
                     }
-                    if (mesh.isInternalFace(faceI))
+                    if (mesh.isInternalFace(facei))
                     {
-                        label nei = mesh.faceNeighbour()[faceI];
+                        label nei = mesh.faceNeighbour()[facei];
                         if (decomposition[nei] != procI)
                         {
                             decomposition[nei] = procI;

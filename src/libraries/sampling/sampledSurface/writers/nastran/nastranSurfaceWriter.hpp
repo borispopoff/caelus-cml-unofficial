@@ -415,10 +415,10 @@ void CML::nastranSurfaceWriter::writeTemplate
         forAll(decomposedFaces, i)
         {
             const DynamicList<face>& dFaces = decomposedFaces[i];
-            forAll(dFaces, faceI)
+            forAll(dFaces, facei)
             {
                 Type v = pTraits<Type>::zero;
-                const face& f = dFaces[faceI];
+                const face& f = dFaces[facei];
 
                 forAll(f, fptI)
                 {
@@ -438,9 +438,9 @@ void CML::nastranSurfaceWriter::writeTemplate
         {
             const DynamicList<face>& dFaces = decomposedFaces[i];
 
-            forAll(dFaces, faceI)
+            forAll(dFaces, facei)
             {
-                writeFaceValue(nasFieldName, values[faceI], ++n, os);
+                writeFaceValue(nasFieldName, values[facei], ++n, os);
             }
         }
     }

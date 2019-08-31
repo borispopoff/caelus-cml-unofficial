@@ -403,7 +403,7 @@ public:
         //  following trajectory vector n
         label pointFace
         (
-            const label faceI,
+            const label facei,
             const vector& n,
             point& p
         ) const;

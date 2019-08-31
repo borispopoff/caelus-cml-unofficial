@@ -110,7 +110,7 @@ bool CML::fileFormats::GTSsurfaceFormat<Face>::read
 
     // Read triangles. Convert references to edges into pointlabels
     label maxZone = 0;
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
         label e0Label, e1Label, e2Label;
         label zoneI = 0;
@@ -149,7 +149,7 @@ bool CML::fileFormats::GTSsurfaceFormat<Face>::read
         if (common01 == -1)
         {
             FatalErrorInFunction
-                << "Edges 0 and 1 of triangle " << faceI
+                << "Edges 0 and 1 of triangle " << facei
                 << " do not share a point.\n"
                 << "    edge0:" << e0 << nl
                 << "    edge1:" << e1
@@ -163,7 +163,7 @@ bool CML::fileFormats::GTSsurfaceFormat<Face>::read
         if (common12 == -1)
         {
             FatalErrorInFunction
-                << "Edges 1 and 2 of triangle " << faceI
+                << "Edges 1 and 2 of triangle " << facei
                 << " do not share a point.\n"
                 << "    edge1:" << e1 << nl
                 << "    edge2:" << e2
@@ -175,7 +175,7 @@ bool CML::fileFormats::GTSsurfaceFormat<Face>::read
         if (common12 != e1Far || e2Far != e0Far)
         {
             FatalErrorInFunction
-                << "Edges of triangle " << faceI
+                << "Edges of triangle " << facei
                 << " reference more than three points.\n"
                 << "    edge0:" << e0 << nl
                 << "    edge1:" << e1 << nl
@@ -183,8 +183,8 @@ bool CML::fileFormats::GTSsurfaceFormat<Face>::read
                 << exit(FatalError);
         }
 
-        faceLst[faceI] = triFace(e0Far, common01, e1Far);
-        zoneIds[faceI] = zoneI;
+        faceLst[facei] = triFace(e0Far, common01, e1Far);
+        zoneIds[facei] = zoneI;
     }
 
 
@@ -227,9 +227,9 @@ void CML::fileFormats::GTSsurfaceFormat<Face>::write
     if (!MeshedSurface<Face>::isTri())
     {
         label nNonTris = 0;
-        forAll(faceLst, faceI)
+        forAll(faceLst, facei)
         {
-            if (faceLst[faceI].size() != 3)
+            if (faceLst[facei].size() != 3)
             {
                 ++nNonTris;
             }
@@ -329,9 +329,9 @@ void CML::fileFormats::GTSsurfaceFormat<Face>::write
     if (!MeshedSurface<Face>::isTri())
     {
         label nNonTris = 0;
-        forAll(faceLst, faceI)
+        forAll(faceLst, facei)
         {
-            if (faceLst[faceI].size() != 3)
+            if (faceLst[facei].size() != 3)
             {
                 ++nNonTris;
             }
@@ -397,14 +397,14 @@ void CML::fileFormats::GTSsurfaceFormat<Face>::write
     // Write faces in terms of edges.
     const labelListList& faceEs = surf.faceEdges();
 
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
-        const labelList& fEdges = faceEs[faceI];
+        const labelList& fEdges = faceEs[facei];
 
         os  << fEdges[0] + 1 << ' '
             << fEdges[1] + 1 << ' '
             << fEdges[2] + 1 << ' '
-            << zoneIds[faceI] << endl;
+            << zoneIds[facei] << endl;
     }
 }
 

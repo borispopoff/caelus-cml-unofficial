@@ -72,7 +72,7 @@ class walkPatch
         //- Get other face using v0, v1. Returns -1 if none.
         label getNeighbour
         (
-            const label faceI,
+            const label facei,
             const label fp,
             const label v0,
             const label v1
@@ -109,7 +109,7 @@ public:
             const primitivePatch& pp,
             const labelList& faceZone,  // Per face which zone it belongs to
             const bool reverse,         // Reverse walk
-            const label faceI,          // Current face
+            const label facei,          // Current face
             const label enterVertI,     // Vertex across which this face
                                         // is visited.
             boolList& visited

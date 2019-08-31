@@ -133,14 +133,14 @@ void CML::GaussSeidelSmoother::smooth
         label fStart;
         label fEnd = ownStartPtr[0];
 
-        for (label cellI=0; cellI<nCells; cellI++)
+        for (label celli=0; celli<nCells; celli++)
         {
             // Start and end of this row
             fStart = fEnd;
-            fEnd = ownStartPtr[cellI + 1];
+            fEnd = ownStartPtr[celli + 1];
 
             // Get the accumulated neighbour side
-            curX = bPrimePtr[cellI];
+            curX = bPrimePtr[celli];
 
             // Accumulate the owner product side
             for (label curFace=fStart; curFace<fEnd; curFace++)
@@ -149,7 +149,7 @@ void CML::GaussSeidelSmoother::smooth
             }
 
             // Finish current x
-            curX /= diagPtr[cellI];
+            curX /= diagPtr[celli];
 
             // Distribute the neighbour side using current x
             for (label curFace=fStart; curFace<fEnd; curFace++)
@@ -157,7 +157,7 @@ void CML::GaussSeidelSmoother::smooth
                 bPrimePtr[uPtr[curFace]] -= lowerPtr[curFace]*curX;
             }
 
-            xPtr[cellI] = curX;
+            xPtr[celli] = curX;
         }
     }
 }

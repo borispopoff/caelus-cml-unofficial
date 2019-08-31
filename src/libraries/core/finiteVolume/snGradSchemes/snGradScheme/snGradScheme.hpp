@@ -304,10 +304,10 @@ snGradScheme<Type>::snGrad
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
 
-    forAll(owner, faceI)
+    forAll(owner, facei)
     {
-        ssf[faceI] =
-            deltaCoeffs[faceI]*(vf[neighbour[faceI]] - vf[owner[faceI]]);
+        ssf[facei] =
+            deltaCoeffs[facei]*(vf[neighbour[facei]] - vf[owner[facei]]);
     }
 
     forAll(vf.boundaryField(), patchI)

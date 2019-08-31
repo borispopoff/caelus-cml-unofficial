@@ -322,9 +322,9 @@ inline void meshOptimizer::lockCells(const labelListType& l)
             const label start = procBoundaries[patchI].patchStart();
             const label end = start+procBoundaries[patchI].patchSize();
 
-            for(label faceI=start;faceI<end;++faceI)
-                if( lockedFace[faceI] )
-                    dataToSend.append(faceI-start);
+            for(label facei=start;facei<end;++facei)
+                if( lockedFace[facei] )
+                    dataToSend.append(facei-start);
 
             OPstream toOtherProc
             (
@@ -356,13 +356,13 @@ inline void meshOptimizer::lockCells(const labelListType& l)
 
     //- Finally, mark locked points and faces
     const faceListPMG& faces = mesh_.faces();
-    forAll(lockedFace, faceI)
+    forAll(lockedFace, facei)
     {
-        if( lockedFace[faceI] )
+        if( lockedFace[facei] )
         {
-            lockedFaces_.append(faceI);
+            lockedFaces_.append(facei);
 
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             forAll(f, pI)
                 vertexLocation_[f[pI]] |= LOCKED;
@@ -402,9 +402,9 @@ inline void meshOptimizer::lockFaces(const labelListType& lf)
             const label start = procBoundaries[patchI].patchStart();
             const label end = start+procBoundaries[patchI].patchSize();
 
-            for(label faceI=start;faceI<end;++faceI)
-                if( lockedFace[faceI] )
-                    dataToSend.append(faceI-start);
+            for(label facei=start;facei<end;++facei)
+                if( lockedFace[facei] )
+                    dataToSend.append(facei-start);
 
             OPstream toOtherProc
             (
@@ -436,13 +436,13 @@ inline void meshOptimizer::lockFaces(const labelListType& lf)
 
     //- Finally, mark locked points and faces
     const faceListPMG& faces = mesh_.faces();
-    forAll(lockedFace, faceI)
+    forAll(lockedFace, facei)
     {
-        if( lockedFace[faceI] )
+        if( lockedFace[facei] )
         {
-            lockedFaces_.append(faceI);
+            lockedFaces_.append(facei);
 
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             forAll(f, pI)
                 vertexLocation_[f[pI]] |= LOCKED;
@@ -480,16 +480,16 @@ inline void meshOptimizer::lockPoints(const labelListType& lp)
             const label start = procBoundaries[patchI].patchStart();
             const label end = start+procBoundaries[patchI].patchSize();
 
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
 
                 forAll(f, pI)
                 {
                     if( vertexLocation_[pI] & LOCKED )
                     {
                         // send the face lable and the location in the face
-                        dataToSend.append(faceI-start);
+                        dataToSend.append(facei-start);
                         dataToSend.append((f.size()-pI)%f.size());
                     }
                 }

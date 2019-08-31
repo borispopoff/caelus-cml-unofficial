@@ -76,7 +76,7 @@ public:
     // Constructors
 
         //- Construct from cell number and parent
-        splitCell(const label cellI, splitCell* parent);
+        splitCell(const label celli, splitCell* parent);
 
 
     //- Destructor

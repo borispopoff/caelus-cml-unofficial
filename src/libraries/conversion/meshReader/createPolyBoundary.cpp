@@ -101,9 +101,9 @@ void CML::meshReader::createPolyBoundary()
     const faceListList& cFaces = cellFaces();
 
     // determine number of non-patched faces:
-    forAll(cellPolys_, cellI)
+    forAll(cellPolys_, celli)
     {
-        cell& curCell = cellPolys_[cellI];
+        cell& curCell = cellPolys_[celli];
 
         forAll(curCell, fI)
         {
@@ -267,9 +267,9 @@ void CML::meshReader::createPolyBoundary()
     nInterfaces += (nMissingFaces - (nMissingFaces % 2)) / 2;
 
     // scan for any other missing faces
-    forAll(cellPolys_, cellI)
+    forAll(cellPolys_, celli)
     {
-        const labelList& curFaces = cellPolys_[cellI];
+        const labelList& curFaces = cellPolys_[celli];
 
         forAll(curFaces, cellFaceI)
         {
@@ -278,10 +278,10 @@ void CML::meshReader::createPolyBoundary()
                 // just report the first few
                 if (nMissingFaces < 4)
                 {
-                    const face& thisFace = cFaces[cellI][cellFaceI];
+                    const face& thisFace = cFaces[celli][cellFaceI];
 
-                    Info<< "  cell " << cellI << " face " << cellFaceI
-                        << " (original cell " << origCellId_[cellI] << ")"
+                    Info<< "  cell " << celli << " face " << cellFaceI
+                        << " (original cell " << origCellId_[celli] << ")"
                         << " face: " << thisFace
                         << endl;
                 }
@@ -290,7 +290,7 @@ void CML::meshReader::createPolyBoundary()
                     Info<< "  ..." << nl << endl;
                 }
 
-                addPolyBoundaryFace(cellI, cellFaceI, nCreatedFaces);
+                addPolyBoundaryFace(celli, cellFaceI, nCreatedFaces);
                 nMissingFaces++;
                 nCreatedFaces++;
             }
@@ -313,13 +313,13 @@ void CML::meshReader::createPolyBoundary()
     // (faces addressed once or more than twice)
     labelList markupFaces(meshFaces_.size(), 0);
 
-    forAll(cellPolys_, cellI)
+    forAll(cellPolys_, celli)
     {
-        const labelList& curFaces = cellPolys_[cellI];
+        const labelList& curFaces = cellPolys_[celli];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            markupFaces[curFaces[faceI]]++;
+            markupFaces[curFaces[facei]]++;
         }
     }
 
@@ -330,15 +330,15 @@ void CML::meshReader::createPolyBoundary()
 
     label nProblemFaces = 0;
 
-    forAll(markupFaces, faceI)
+    forAll(markupFaces, facei)
     {
-        if (markupFaces[faceI] != 2)
+        if (markupFaces[facei] != 2)
         {
-            const face& problemFace = meshFaces_[faceI];
+            const face& problemFace = meshFaces_[facei];
 
             Info<< "meshReader::createPolyBoundary() : "
-                << "problem with face " << faceI << ": addressed "
-                << markupFaces[faceI] << " times (should be 2!). Face: "
+                << "problem with face " << facei << ": addressed "
+                << markupFaces[facei] << " times (should be 2!). Face: "
                 << problemFace << endl;
 
             nProblemFaces++;

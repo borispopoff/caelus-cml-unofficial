@@ -244,11 +244,11 @@ void CML::polyTopoChange::getMergeSets
 
     label nSets = 0;
 
-    forAll(nMerged, cellI)
+    forAll(nMerged, celli)
     {
-        if (nMerged[cellI] > 1)
+        if (nMerged[celli] > 1)
         {
-            cellToMergeSet[cellI] = nSets++;
+            cellToMergeSet[celli] = nSets++;
         }
     }
 
@@ -330,7 +330,7 @@ CML::pointField CML::polyTopoChange::facePoints(const face& f) const
 void CML::polyTopoChange::checkFace
 (
     const face& f,
-    const label faceI,
+    const label facei,
     const label own,
     const label nei,
     const label patchI,
@@ -349,7 +349,7 @@ void CML::polyTopoChange::checkFace
                 << "Face has no neighbour (so external) but does not have"
                 << " a valid patch" << nl
                 << "f:" << f
-                << " faceI(-1 if added face):" << faceI
+                << " facei(-1 if added face):" << facei
                 << " own:" << own << " nei:" << nei
                 << " patchI:" << patchI << nl;
             if (hasValidPoints(f))
@@ -368,7 +368,7 @@ void CML::polyTopoChange::checkFace
             FatalErrorInFunction
                 << "Cannot both have valid patchI and neighbour" << nl
                 << "f:" << f
-                << " faceI(-1 if added face):" << faceI
+                << " facei(-1 if added face):" << facei
                 << " own:" << own << " nei:" << nei
                 << " patchI:" << patchI << nl;
             if (hasValidPoints(f))
@@ -386,7 +386,7 @@ void CML::polyTopoChange::checkFace
                 << "Owner cell label should be less than neighbour cell label"
                 << nl
                 << "f:" << f
-                << " faceI(-1 if added face):" << faceI
+                << " facei(-1 if added face):" << facei
                 << " own:" << own << " nei:" << nei
                 << " patchI:" << patchI << nl;
             if (hasValidPoints(f))
@@ -405,7 +405,7 @@ void CML::polyTopoChange::checkFace
             << "Illegal vertices in face"
             << nl
             << "f:" << f
-            << " faceI(-1 if added face):" << faceI
+            << " facei(-1 if added face):" << facei
             << " own:" << own << " nei:" << nei
             << " patchI:" << patchI << nl;
             if (hasValidPoints(f))
@@ -416,13 +416,13 @@ void CML::polyTopoChange::checkFace
             }
             FatalError << abort(FatalError);
     }
-    if (faceI >= 0 && faceI < faces_.size() && faceRemoved(faceI))
+    if (facei >= 0 && facei < faces_.size() && faceRemoved(facei))
     {
         FatalErrorInFunction
             << "Face already marked for removal"
             << nl
             << "f:" << f
-            << " faceI(-1 if added face):" << faceI
+            << " facei(-1 if added face):" << facei
             << " own:" << own << " nei:" << nei
             << " patchI:" << patchI << nl;
             if (hasValidPoints(f))
@@ -441,7 +441,7 @@ void CML::polyTopoChange::checkFace
                 << "Face uses removed vertices"
                 << nl
                 << "f:" << f
-                << " faceI(-1 if added face):" << faceI
+                << " facei(-1 if added face):" << facei
                 << " own:" << own << " nei:" << nei
                 << " patchI:" << patchI << nl;
             if (hasValidPoints(f))
@@ -471,24 +471,24 @@ void CML::polyTopoChange::makeCells
 
     // 1. Count faces per cell
 
-    for (label faceI = 0; faceI < nActiveFaces; faceI++)
+    for (label facei = 0; facei < nActiveFaces; facei++)
     {
-        nNbrs[faceOwner_[faceI]]++;
+        nNbrs[faceOwner_[facei]]++;
     }
-    for (label faceI = 0; faceI < nActiveFaces; faceI++)
+    for (label facei = 0; facei < nActiveFaces; facei++)
     {
-        if (faceNeighbour_[faceI] >= 0)
+        if (faceNeighbour_[facei] >= 0)
         {
-            nNbrs[faceNeighbour_[faceI]]++;
+            nNbrs[faceNeighbour_[facei]]++;
         }
     }
 
     // 2. Calculate offsets
 
     cellFaceOffsets[0] = 0;
-    forAll(nNbrs, cellI)
+    forAll(nNbrs, celli)
     {
-        cellFaceOffsets[cellI+1] = cellFaceOffsets[cellI] + nNbrs[cellI];
+        cellFaceOffsets[celli+1] = cellFaceOffsets[celli] + nNbrs[celli];
     }
 
     // 3. Fill faces per cell
@@ -496,20 +496,20 @@ void CML::polyTopoChange::makeCells
     // reset the whole list to use as counter
     nNbrs = 0;
 
-    for (label faceI = 0; faceI < nActiveFaces; faceI++)
+    for (label facei = 0; facei < nActiveFaces; facei++)
     {
-        label cellI = faceOwner_[faceI];
+        label celli = faceOwner_[facei];
 
-        cellFaces[cellFaceOffsets[cellI] + nNbrs[cellI]++] = faceI;
+        cellFaces[cellFaceOffsets[celli] + nNbrs[celli]++] = facei;
     }
 
-    for (label faceI = 0; faceI < nActiveFaces; faceI++)
+    for (label facei = 0; facei < nActiveFaces; facei++)
     {
-        label cellI = faceNeighbour_[faceI];
+        label celli = faceNeighbour_[facei];
 
-        if (cellI >= 0)
+        if (celli >= 0)
         {
-            cellFaces[cellFaceOffsets[cellI] + nNbrs[cellI]++] = faceI;
+            cellFaces[cellFaceOffsets[celli] + nNbrs[celli]++] = facei;
         }
     }
 
@@ -531,12 +531,12 @@ void CML::polyTopoChange::makeCellCells
 
     // 1. Count neighbours (through internal faces) per cell
 
-    for (label faceI = 0; faceI < nActiveFaces; faceI++)
+    for (label facei = 0; facei < nActiveFaces; facei++)
     {
-        if (faceNeighbour_[faceI] >= 0)
+        if (faceNeighbour_[facei] >= 0)
         {
-            nNbrs[faceOwner_[faceI]]++;
-            nNbrs[faceNeighbour_[faceI]]++;
+            nNbrs[faceOwner_[facei]]++;
+            nNbrs[faceNeighbour_[facei]]++;
         }
     }
 
@@ -549,13 +549,13 @@ void CML::polyTopoChange::makeCellCells
     // reset the whole list to use as counter
     nNbrs = 0;
 
-    for (label faceI = 0; faceI < nActiveFaces; faceI++)
+    for (label facei = 0; facei < nActiveFaces; facei++)
     {
-        label nei = faceNeighbour_[faceI];
+        label nei = faceNeighbour_[facei];
 
         if (nei >= 0)
         {
-            label own = faceOwner_[faceI];
+            label own = faceOwner_[facei];
             cellCells.m()[cellCells.index(own, nNbrs[own]++)] = nei;
             cellCells.m()[cellCells.index(nei, nNbrs[nei]++)] = own;
         }
@@ -583,13 +583,13 @@ CML::label CML::polyTopoChange::getCellOrder
 
 
     // loop over the cells
-    forAll(visited, cellI)
+    forAll(visited, celli)
     {
         // find the first non-removed cell that has not been visited yet
-        if (!cellRemoved(cellI) && visited[cellI] == 0)
+        if (!cellRemoved(celli) && visited[celli] == 0)
         {
             // use this cell as a start
-            nextCell.append(cellI);
+            nextCell.append(celli);
 
             // loop through the nextCell list. Add the first cell into the
             // cell order if it has not already been visited and ask for its
@@ -661,10 +661,10 @@ void CML::polyTopoChange::getFaceOrder
     labelList nbr;
     labelList order;
 
-    forAll(cellMap_, cellI)
+    forAll(cellMap_, celli)
     {
-        label startOfCell = cellFaceOffsets[cellI];
-        label nFaces = cellFaceOffsets[cellI+1] - startOfCell;
+        label startOfCell = cellFaceOffsets[celli];
+        label nFaces = cellFaceOffsets[celli+1] - startOfCell;
 
         // Neighbouring cells
         //SortableList<label> nbr(nFaces);
@@ -672,11 +672,11 @@ void CML::polyTopoChange::getFaceOrder
 
         for (label i = 0; i < nFaces; i++)
         {
-            label faceI = cellFaces[startOfCell + i];
+            label facei = cellFaces[startOfCell + i];
 
-            label nbrCellI = faceNeighbour_[faceI];
+            label nbrCellI = faceNeighbour_[facei];
 
-            if (faceI >= nActiveFaces)
+            if (facei >= nActiveFaces)
             {
                 // Retired face.
                 nbr[i] = -1;
@@ -684,12 +684,12 @@ void CML::polyTopoChange::getFaceOrder
             else if (nbrCellI != -1)
             {
                 // Internal face. Get cell on other side.
-                if (nbrCellI == cellI)
+                if (nbrCellI == celli)
                 {
-                    nbrCellI = faceOwner_[faceI];
+                    nbrCellI = faceOwner_[facei];
                 }
 
-                if (cellI < nbrCellI)
+                if (celli < nbrCellI)
                 {
                     // CellI is master
                     nbr[i] = nbrCellI;
@@ -738,20 +738,20 @@ void CML::polyTopoChange::getFaceOrder
 
     patchStarts[0] = newFaceI;
 
-    for (label faceI = 0; faceI < nActiveFaces; faceI++)
+    for (label facei = 0; facei < nActiveFaces; facei++)
     {
-        if (region_[faceI] >= 0)
+        if (region_[facei] >= 0)
         {
-            patchSizes[region_[faceI]]++;
+            patchSizes[region_[facei]]++;
         }
     }
 
-    label faceI = patchStarts[0];
+    label facei = patchStarts[0];
 
     forAll(patchStarts, patchI)
     {
-        patchStarts[patchI] = faceI;
-        faceI += patchSizes[patchI];
+        patchStarts[patchI] = facei;
+        facei += patchSizes[patchI];
     }
 
     //if (debug)
@@ -762,40 +762,40 @@ void CML::polyTopoChange::getFaceOrder
 
     labelList workPatchStarts(patchStarts);
 
-    for (label faceI = 0; faceI < nActiveFaces; faceI++)
+    for (label facei = 0; facei < nActiveFaces; facei++)
     {
-        if (region_[faceI] >= 0)
+        if (region_[facei] >= 0)
         {
-            oldToNew[faceI] = workPatchStarts[region_[faceI]]++;
+            oldToNew[facei] = workPatchStarts[region_[facei]]++;
         }
     }
 
     // Retired faces.
-    for (label faceI = nActiveFaces; faceI < oldToNew.size(); faceI++)
+    for (label facei = nActiveFaces; facei < oldToNew.size(); facei++)
     {
-        oldToNew[faceI] = faceI;
+        oldToNew[facei] = facei;
     }
 
     // Check done all faces.
-    forAll(oldToNew, faceI)
+    forAll(oldToNew, facei)
     {
-        if (oldToNew[faceI] == -1)
+        if (oldToNew[facei] == -1)
         {
             FatalErrorInFunction
                 << "Did not determine new position"
-                << " for face " << faceI
-                << " owner " << faceOwner_[faceI]
-                << " neighbour " << faceNeighbour_[faceI]
-                << " region " << region_[faceI] << endl
+                << " for face " << facei
+                << " owner " << faceOwner_[facei]
+                << " neighbour " << faceNeighbour_[facei]
+                << " region " << region_[facei] << endl
                 << "This is usually caused by not specifying a patch for"
                 << " a boundary face." << nl
                 << "Switch on the polyTopoChange::debug flag to catch"
                 << " this error earlier." << nl;
-            if (hasValidPoints(faces_[faceI]))
+            if (hasValidPoints(faces_[facei]))
             {
                 FatalError
                         << "points (removed points marked with "
-                        << vector::max << ") " << facePoints(faces_[faceI]);
+                        << vector::max << ") " << facePoints(faces_[facei]);
             }
             FatalError << abort(FatalError);
         }
@@ -897,17 +897,17 @@ void CML::polyTopoChange::compact
             }
 
             // Mark boundary points
-            forAll(faceOwner_, faceI)
+            forAll(faceOwner_, facei)
             {
                 if
                 (
-                   !faceRemoved(faceI)
-                 && faceOwner_[faceI] >= 0
-                 && faceNeighbour_[faceI] < 0
+                   !faceRemoved(facei)
+                 && faceOwner_[facei] >= 0
+                 && faceNeighbour_[facei] < 0
                 )
                 {
                     // Valid boundary face
-                    const face& f = faces_[faceI];
+                    const face& f = faces_[facei];
 
                     forAll(f, fp)
                     {
@@ -924,7 +924,7 @@ void CML::polyTopoChange::compact
                                 FatalErrorInFunction
                                     << "Removed or retired point " << pointI
                                     << " in face " << f
-                                    << " at position " << faceI << endl
+                                    << " at position " << facei << endl
                                     << "Probably face has not been adapted for"
                                     << " removed points." << abort(FatalError);
                             }
@@ -949,17 +949,17 @@ void CML::polyTopoChange::compact
             newPointI = 0;
 
             // Mark internal points
-            forAll(faceOwner_, faceI)
+            forAll(faceOwner_, facei)
             {
                 if
                 (
-                   !faceRemoved(faceI)
-                 && faceOwner_[faceI] >= 0
-                 && faceNeighbour_[faceI] >= 0
+                   !faceRemoved(facei)
+                 && faceOwner_[facei] >= 0
+                 && faceNeighbour_[facei] >= 0
                 )
                 {
                     // Valid internal face
-                    const face& f = faces_[faceI];
+                    const face& f = faces_[facei];
 
                     forAll(f, fp)
                     {
@@ -976,7 +976,7 @@ void CML::polyTopoChange::compact
                                 FatalErrorInFunction
                                     << "Removed or retired point " << pointI
                                     << " in face " << f
-                                    << " at position " << faceI << endl
+                                    << " at position " << facei << endl
                                     << "Probably face has not been adapted for"
                                     << " removed points." << abort(FatalError);
                             }
@@ -1018,19 +1018,19 @@ void CML::polyTopoChange::compact
         renumber(localPointMap, retiredPoints_);
 
         // Use map to relabel face vertices
-        forAll(faces_, faceI)
+        forAll(faces_, facei)
         {
-            face& f = faces_[faceI];
+            face& f = faces_[facei];
 
             //labelList oldF(f);
             renumberCompact(localPointMap, f);
 
-            if (!faceRemoved(faceI) && f.size() < 3)
+            if (!faceRemoved(facei) && f.size() < 3)
             {
                 FatalErrorInFunction
                     << "Created illegal face " << f
                     //<< " from face " << oldF
-                    << " at position:" << faceI
+                    << " at position:" << facei
                     << " when filtering removed points"
                     << abort(FatalError);
             }
@@ -1043,21 +1043,21 @@ void CML::polyTopoChange::compact
         labelList localFaceMap(faces_.size(), -1);
         label newFaceI = 0;
 
-        forAll(faces_, faceI)
+        forAll(faces_, facei)
         {
-            if (!faceRemoved(faceI) && faceOwner_[faceI] >= 0)
+            if (!faceRemoved(facei) && faceOwner_[facei] >= 0)
             {
-                localFaceMap[faceI] = newFaceI++;
+                localFaceMap[facei] = newFaceI++;
             }
         }
         nActiveFaces_ = newFaceI;
 
-        forAll(faces_, faceI)
+        forAll(faces_, facei)
         {
-            if (!faceRemoved(faceI) && faceOwner_[faceI] < 0)
+            if (!faceRemoved(facei) && faceOwner_[facei] < 0)
             {
                 // Retired face
-                localFaceMap[faceI] = newFaceI++;
+                localFaceMap[facei] = newFaceI++;
             }
         }
 
@@ -1092,11 +1092,11 @@ void CML::polyTopoChange::compact
             localCellMap = -1;
 
             newCellI = 0;
-            forAll(cellMap_, cellI)
+            forAll(cellMap_, celli)
             {
-                if (!cellRemoved(cellI))
+                if (!cellRemoved(celli))
                 {
-                    localCellMap[cellI] = newCellI++;
+                    localCellMap[celli] = newCellI++;
                 }
             }
         }
@@ -1123,39 +1123,39 @@ void CML::polyTopoChange::compact
 
             // Renumber owner/neighbour. Take into account if neighbour suddenly
             // gets lower cell than owner.
-            forAll(faceOwner_, faceI)
+            forAll(faceOwner_, facei)
             {
-                label own = faceOwner_[faceI];
-                label nei = faceNeighbour_[faceI];
+                label own = faceOwner_[facei];
+                label nei = faceNeighbour_[facei];
 
                 if (own >= 0)
                 {
                     // Update owner
-                    faceOwner_[faceI] = localCellMap[own];
+                    faceOwner_[facei] = localCellMap[own];
 
                     if (nei >= 0)
                     {
                         // Update neighbour.
-                        faceNeighbour_[faceI] = localCellMap[nei];
+                        faceNeighbour_[facei] = localCellMap[nei];
 
                         // Check if face needs reversing.
                         if
                         (
-                            faceNeighbour_[faceI] >= 0
-                         && faceNeighbour_[faceI] < faceOwner_[faceI]
+                            faceNeighbour_[facei] >= 0
+                         && faceNeighbour_[facei] < faceOwner_[facei]
                         )
                         {
-                            faces_[faceI].flip();
-                            Swap(faceOwner_[faceI], faceNeighbour_[faceI]);
-                            flipFaceFlux_[faceI] =
+                            faces_[facei].flip();
+                            Swap(faceOwner_[facei], faceNeighbour_[facei]);
+                            flipFaceFlux_[facei] =
                             (
-                                flipFaceFlux_[faceI]
+                                flipFaceFlux_[facei]
                               ? 0
                               : 1
                             );
-                            faceZoneFlip_[faceI] =
+                            faceZoneFlip_[facei] =
                             (
-                                faceZoneFlip_[faceI]
+                                faceZoneFlip_[facei]
                               ? 0
                               : 1
                             );
@@ -1165,7 +1165,7 @@ void CML::polyTopoChange::compact
                 else if (nei >= 0)
                 {
                     // Update neighbour.
-                    faceNeighbour_[faceI] = localCellMap[nei];
+                    faceNeighbour_[facei] = localCellMap[nei];
                 }
             }
         }
@@ -1215,9 +1215,9 @@ CML::labelList CML::polyTopoChange::selectFaces
 
     forAll(faceLabels, i)
     {
-        label faceI = faceLabels[i];
+        label facei = faceLabels[i];
 
-        if (internalFacesOnly == mesh.isInternalFace(faceI))
+        if (internalFacesOnly == mesh.isInternalFace(facei))
         {
             nFaces++;
         }
@@ -1239,11 +1239,11 @@ CML::labelList CML::polyTopoChange::selectFaces
 
         forAll(faceLabels, i)
         {
-            label faceI = faceLabels[i];
+            label facei = faceLabels[i];
 
-            if (internalFacesOnly == mesh.isInternalFace(faceI))
+            if (internalFacesOnly == mesh.isInternalFace(facei))
             {
-                collectedFaces[nFaces++] = faceI;
+                collectedFaces[nFaces++] = facei;
             }
         }
     }
@@ -1636,12 +1636,12 @@ void CML::polyTopoChange::resetZones
         forAllConstIter(Map<label>, faceZone_, iter)
         {
             label zoneI = iter();
-            label faceI = iter.key();
+            label facei = iter.key();
 
             label index = nFaces[zoneI]++;
 
-            addressing[zoneI][index] = faceI;
-            flipMode[zoneI][index] = faceZoneFlip_[faceI];
+            addressing[zoneI][index] = facei;
+            flipMode[zoneI][index] = faceZoneFlip_[facei];
         }
         // Sort the addressing
         forAll(addressing, zoneI)
@@ -1722,15 +1722,15 @@ void CML::polyTopoChange::resetZones
 
         labelList nCells(cellZones.size(), 0);
 
-        forAll(cellZone_, cellI)
+        forAll(cellZone_, celli)
         {
-            label zoneI = cellZone_[cellI];
+            label zoneI = cellZone_[celli];
 
             if (zoneI >= cellZones.size())
             {
                 FatalErrorInFunction
                     << "Illegal zoneID " << zoneI << " for cell "
-                    << cellI << abort(FatalError);
+                    << celli << abort(FatalError);
             }
 
             if (zoneI >= 0)
@@ -1746,13 +1746,13 @@ void CML::polyTopoChange::resetZones
         }
         nCells = 0;
 
-        forAll(cellZone_, cellI)
+        forAll(cellZone_, celli)
         {
-            label zoneI = cellZone_[cellI];
+            label zoneI = cellZone_[celli];
 
             if (zoneI >= 0)
             {
-                addressing[zoneI][nCells[zoneI]++] = cellI;
+                addressing[zoneI][nCells[zoneI]++] = celli;
             }
         }
         // Sort the addressing
@@ -1985,11 +1985,11 @@ void CML::polyTopoChange::reorderCoupledFaces
         reorderCompactFaces(oldToNew.size(), oldToNew);
 
         // Rotate faces (rotation is already in new face indices).
-        forAll(rotation, faceI)
+        forAll(rotation, facei)
         {
-            if (rotation[faceI] != 0)
+            if (rotation[facei] != 0)
             {
-                faces_[faceI] = rotateFace(faces_[faceI], rotation[faceI]);
+                faces_[facei] = rotateFace(faces_[facei], rotation[facei]);
             }
         }
     }
@@ -2317,31 +2317,31 @@ void CML::polyTopoChange::addMesh
 
             forAll(cellLabels, j)
             {
-                label cellI = cellLabels[j];
+                label celli = cellLabels[j];
 
-                if (newZoneID[cellI] != -1)
+                if (newZoneID[celli] != -1)
                 {
                     WarningInFunction
-                        << "Cell:" << cellI
-                        << " centre:" << mesh.cellCentres()[cellI]
+                        << "Cell:" << celli
+                        << " centre:" << mesh.cellCentres()[celli]
                         << " is in two zones:"
-                        << cellZones[newZoneID[cellI]].name()
+                        << cellZones[newZoneID[celli]].name()
                         << " and " << cellZones[zoneI].name() << endl
                         << "    This is not supported."
                         << " Continuing with first zone only." << endl;
                 }
                 else
                 {
-                    newZoneID[cellI] = cellZoneMap[zoneI];
+                    newZoneID[celli] = cellZoneMap[zoneI];
                 }
             }
         }
 
         // Add cells in mesh order
-        for (label cellI = 0; cellI < nAllCells; cellI++)
+        for (label celli = 0; celli < nAllCells; celli++)
         {
             // Add cell from cell
-            addCell(-1, -1, -1, cellI, newZoneID[cellI]);
+            addCell(-1, -1, -1, celli, newZoneID[celli]);
         }
     }
 
@@ -2388,20 +2388,20 @@ void CML::polyTopoChange::addMesh
         // Add faces in mesh order
 
         // 1. Internal faces
-        for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+        for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
         {
             addFace
             (
-                faces[faceI],
-                faceOwner[faceI],
-                faceNeighbour[faceI],
+                faces[facei],
+                faceOwner[facei],
+                faceNeighbour[facei],
                 -1,                         // masterPointID
                 -1,                         // masterEdgeID
-                faceI,                      // masterFaceID
+                facei,                      // masterFaceID
                 false,                      // flipFaceFlux
                 -1,                         // patchID
-                newZoneID[faceI],           // zoneID
-                zoneFlip[faceI]             // zoneFlip
+                newZoneID[facei],           // zoneID
+                zoneFlip[facei]             // zoneFlip
             );
         }
 
@@ -2422,20 +2422,20 @@ void CML::polyTopoChange::addMesh
             }
             forAll(pp, patchFaceI)
             {
-                label faceI = pp.start() + patchFaceI;
+                label facei = pp.start() + patchFaceI;
 
                 addFace
                 (
-                    faces[faceI],
-                    faceOwner[faceI],
+                    faces[facei],
+                    faceOwner[facei],
                     -1,                         // neighbour
                     -1,                         // masterPointID
                     -1,                         // masterEdgeID
-                    faceI,                      // masterFaceID
+                    facei,                      // masterFaceID
                     false,                      // flipFaceFlux
                     patchMap[patchI],           // patchID
-                    newZoneID[faceI],           // zoneID
-                    zoneFlip[faceI]             // zoneFlip
+                    newZoneID[facei],           // zoneID
+                    zoneFlip[facei]             // zoneFlip
                 );
             }
         }
@@ -2770,7 +2770,7 @@ CML::label CML::polyTopoChange::addFace
         checkFace(f, -1, own, nei, patchID, zoneID);
     }
 
-    label faceI = faces_.size();
+    label facei = faces_.size();
 
     faces_.append(f);
     region_.append(patchID);
@@ -2780,12 +2780,12 @@ CML::label CML::polyTopoChange::addFace
     if (masterPointID >= 0)
     {
         faceMap_.append(-1);
-        faceFromPoint_.insert(faceI, masterPointID);
+        faceFromPoint_.insert(facei, masterPointID);
     }
     else if (masterEdgeID >= 0)
     {
         faceMap_.append(-1);
-        faceFromEdge_.insert(faceI, masterEdgeID);
+        faceFromEdge_.insert(facei, masterEdgeID);
     }
     else if (masterFaceID >= 0)
     {
@@ -2800,24 +2800,24 @@ CML::label CML::polyTopoChange::addFace
         //    << abort(FatalError);
         faceMap_.append(-1);
     }
-    reverseFaceMap_.append(faceI);
+    reverseFaceMap_.append(facei);
 
-    flipFaceFlux_[faceI] = (flipFaceFlux ? 1 : 0);
+    flipFaceFlux_[facei] = (flipFaceFlux ? 1 : 0);
 
     if (zoneID >= 0)
     {
-        faceZone_.insert(faceI, zoneID);
+        faceZone_.insert(facei, zoneID);
     }
-    faceZoneFlip_[faceI] = (zoneFlip ? 1 : 0);
+    faceZoneFlip_[facei] = (zoneFlip ? 1 : 0);
 
-    return faceI;
+    return facei;
 }
 
 
 void CML::polyTopoChange::modifyFace
 (
     const face& f,
-    const label faceI,
+    const label facei,
     const label own,
     const label nei,
     const bool flipFaceFlux,
@@ -2829,17 +2829,17 @@ void CML::polyTopoChange::modifyFace
     // Check validity
     if (debug)
     {
-        checkFace(f, faceI, own, nei, patchID, zoneID);
+        checkFace(f, facei, own, nei, patchID, zoneID);
     }
 
-    faces_[faceI] = f;
-    faceOwner_[faceI] = own;
-    faceNeighbour_[faceI] = nei;
-    region_[faceI] = patchID;
+    faces_[facei] = f;
+    faceOwner_[facei] = own;
+    faceNeighbour_[facei] = nei;
+    region_[facei] = patchID;
 
-    flipFaceFlux_[faceI] = (flipFaceFlux ? 1 : 0);
+    flipFaceFlux_[facei] = (flipFaceFlux ? 1 : 0);
 
-    Map<label>::iterator faceFnd = faceZone_.find(faceI);
+    Map<label>::iterator faceFnd = faceZone_.find(facei);
 
     if (faceFnd != faceZone_.end())
     {
@@ -2854,18 +2854,18 @@ void CML::polyTopoChange::modifyFace
     }
     else if (zoneID >= 0)
     {
-        faceZone_.insert(faceI, zoneID);
+        faceZone_.insert(facei, zoneID);
     }
-    faceZoneFlip_[faceI] = (zoneFlip ? 1 : 0);
+    faceZoneFlip_[facei] = (zoneFlip ? 1 : 0);
 }
 
 
-void CML::polyTopoChange::removeFace(const label faceI, const label mergeFaceI)
+void CML::polyTopoChange::removeFace(const label facei, const label mergeFaceI)
 {
-    if (faceI < 0 || faceI >= faces_.size())
+    if (facei < 0 || facei >= faces_.size())
     {
         FatalErrorInFunction
-            << "illegal face label " << faceI << endl
+            << "illegal face label " << facei << endl
             << "Valid face labels are 0 .. " << faces_.size()-1
             << abort(FatalError);
     }
@@ -2873,33 +2873,33 @@ void CML::polyTopoChange::removeFace(const label faceI, const label mergeFaceI)
     if
     (
         strict_
-     && (faceRemoved(faceI) || faceMap_[faceI] == -1)
+     && (faceRemoved(facei) || faceMap_[facei] == -1)
     )
     {
         FatalErrorInFunction
-            << "face " << faceI
+            << "face " << facei
             << " already marked for removal"
             << abort(FatalError);
     }
 
-    faces_[faceI].setSize(0);
-    region_[faceI] = -1;
-    faceOwner_[faceI] = -1;
-    faceNeighbour_[faceI] = -1;
-    faceMap_[faceI] = -1;
+    faces_[facei].setSize(0);
+    region_[facei] = -1;
+    faceOwner_[facei] = -1;
+    faceNeighbour_[facei] = -1;
+    faceMap_[facei] = -1;
     if (mergeFaceI >= 0)
     {
-        reverseFaceMap_[faceI] = -mergeFaceI-2;
+        reverseFaceMap_[facei] = -mergeFaceI-2;
     }
     else
     {
-        reverseFaceMap_[faceI] = -1;
+        reverseFaceMap_[facei] = -1;
     }
-    faceFromEdge_.erase(faceI);
-    faceFromPoint_.erase(faceI);
-    flipFaceFlux_[faceI] = 0;
-    faceZone_.erase(faceI);
-    faceZoneFlip_[faceI] = 0;
+    faceFromEdge_.erase(facei);
+    faceFromPoint_.erase(facei);
+    flipFaceFlux_[facei] = 0;
+    faceZone_.erase(facei);
+    faceZoneFlip_[facei] = 0;
 }
 
 
@@ -2912,75 +2912,75 @@ CML::label CML::polyTopoChange::addCell
     const label zoneID
 )
 {
-    label cellI = cellMap_.size();
+    label celli = cellMap_.size();
 
     if (masterPointID >= 0)
     {
         cellMap_.append(-1);
-        cellFromPoint_.insert(cellI, masterPointID);
+        cellFromPoint_.insert(celli, masterPointID);
     }
     else if (masterEdgeID >= 0)
     {
         cellMap_.append(-1);
-        cellFromEdge_.insert(cellI, masterEdgeID);
+        cellFromEdge_.insert(celli, masterEdgeID);
     }
     else if (masterFaceID >= 0)
     {
         cellMap_.append(-1);
-        cellFromFace_.insert(cellI, masterFaceID);
+        cellFromFace_.insert(celli, masterFaceID);
     }
     else
     {
         cellMap_.append(masterCellID);
     }
-    reverseCellMap_.append(cellI);
+    reverseCellMap_.append(celli);
     cellZone_.append(zoneID);
 
-    return cellI;
+    return celli;
 }
 
 
 void CML::polyTopoChange::modifyCell
 (
-    const label cellI,
+    const label celli,
     const label zoneID
 )
 {
-    cellZone_[cellI] = zoneID;
+    cellZone_[celli] = zoneID;
 }
 
 
-void CML::polyTopoChange::removeCell(const label cellI, const label mergeCellI)
+void CML::polyTopoChange::removeCell(const label celli, const label mergeCellI)
 {
-    if (cellI < 0 || cellI >= cellMap_.size())
+    if (celli < 0 || celli >= cellMap_.size())
     {
         FatalErrorInFunction
-            << "illegal cell label " << cellI << endl
+            << "illegal cell label " << celli << endl
             << "Valid cell labels are 0 .. " << cellMap_.size()-1
             << abort(FatalError);
     }
 
-    if (strict_ && cellMap_[cellI] == -2)
+    if (strict_ && cellMap_[celli] == -2)
     {
         FatalErrorInFunction
-            << "cell " << cellI
+            << "cell " << celli
             << " already marked for removal"
             << abort(FatalError);
     }
 
-    cellMap_[cellI] = -2;
+    cellMap_[celli] = -2;
     if (mergeCellI >= 0)
     {
-        reverseCellMap_[cellI] = -mergeCellI-2;
+        reverseCellMap_[celli] = -mergeCellI-2;
     }
     else
     {
-        reverseCellMap_[cellI] = -1;
+        reverseCellMap_[celli] = -1;
     }
-    cellFromPoint_.erase(cellI);
-    cellFromEdge_.erase(cellI);
-    cellFromFace_.erase(cellI);
-    cellZone_[cellI] = -1;
+    cellFromPoint_.erase(celli);
+    cellFromEdge_.erase(celli);
+    cellFromFace_.erase(celli);
+    cellZone_[celli] = -1;
 }
 
 

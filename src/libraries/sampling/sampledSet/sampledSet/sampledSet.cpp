@@ -45,15 +45,15 @@ CML::label CML::sampledSet::getBoundaryCell(const label facei) const
 }
 
 
-CML::label CML::sampledSet::getNeighbourCell(const label faceI) const
+CML::label CML::sampledSet::getNeighbourCell(const label facei) const
 {
-    if (faceI >= mesh().nInternalFaces())
+    if (facei >= mesh().nInternalFaces())
     {
-        return mesh().faceOwner()[faceI];
+        return mesh().faceOwner()[facei];
     }
     else
     {
-        return mesh().faceNeighbour()[faceI];
+        return mesh().faceNeighbour()[facei];
     }
 }
 

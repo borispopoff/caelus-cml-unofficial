@@ -1019,9 +1019,9 @@ calcAddressing() const
 
     // Guess the max number of edges and neighbours for a face
     label maxEdges = 0;
-    forAll(locFcs, faceI)
+    forAll(locFcs, facei)
     {
-        maxEdges += locFcs[faceI].size();
+        maxEdges += locFcs[facei].size();
     }
 
     // create the lists for the various results. (resized on completion)
@@ -1044,12 +1044,12 @@ calcAddressing() const
     // initialise the lists of subshapes for each face to avoid duplication
     edgeListList faceIntoEdges(locFcs.size());
 
-    forAll(locFcs, faceI)
+    forAll(locFcs, facei)
     {
-        faceIntoEdges[faceI] = locFcs[faceI].edges();
+        faceIntoEdges[facei] = locFcs[facei].edges();
 
-        labelList& curFaceEdges = faceEdges[faceI];
-        curFaceEdges.setSize(faceIntoEdges[faceI].size());
+        labelList& curFaceEdges = faceEdges[facei];
+        curFaceEdges.setSize(faceIntoEdges[facei].size());
 
         forAll(curFaceEdges, faceEdgeI)
         {
@@ -1069,11 +1069,11 @@ calcAddressing() const
     // in face (i.e. curEdges[0] is edge between f[0] and f[1])
 
     // For all local faces ...
-    forAll(locFcs, faceI)
+    forAll(locFcs, facei)
     {
         // Get reference to vertices of current face and corresponding edges.
-        const Face& curF = locFcs[faceI];
-        const edgeList& curEdges = faceIntoEdges[faceI];
+        const Face& curF = locFcs[facei];
+        const edgeList& curEdges = faceIntoEdges[facei];
 
         // Record the neighbour face.  Multiple connectivity allowed
         List<DynamicList<label>> neiFaces(curF.size());
@@ -1085,7 +1085,7 @@ calcAddressing() const
         forAll(curEdges, edgeI)
         {
             // If the edge is already detected, skip
-            if (faceEdges[faceI][edgeI] >= 0) continue;
+            if (faceEdges[facei][edgeI] >= 0) continue;
 
             found = false;
 
@@ -1102,7 +1102,7 @@ calcAddressing() const
                 label curNei = nbrFaces[nbrFaceI];
 
                 // Reject neighbours with the lower label
-                if (curNei > faceI)
+                if (curNei > facei)
                 {
                     // get the reference to subshapes of the neighbour
                     const edgeList& searchEdges = faceIntoEdges[curNei];
@@ -1118,8 +1118,8 @@ calcAddressing() const
                             edgeOfNeiFace[edgeI].append(neiEdgeI);
 
                             // Record faceFaces both ways
-                            ff[faceI].append(curNei);
-                            ff[curNei].append(faceI);
+                            ff[facei].append(curNei);
+                            ff[curNei].append(facei);
 
                             // Keep searching due to multiple connectivity
                         }
@@ -1160,7 +1160,7 @@ calcAddressing() const
                 edges[nEdges] = curEdges[nextNei];
 
                 // Set face-edge and face-neighbour-edge to current face label
-                faceEdges[faceI][nextNei] = nEdges;
+                faceEdges[facei][nextNei] = nEdges;
 
                 DynamicList<label>& cnf = neiFaces[nextNei];
                 DynamicList<label>& eonf = edgeOfNeiFace[nextNei];
@@ -1168,7 +1168,7 @@ calcAddressing() const
                 // Set edge-face addressing
                 labelList& curEf = edgeFaces[nEdges];
                 curEf.setSize(cnf.size() + 1);
-                curEf[0] = faceI;
+                curEf[0] = facei;
 
                 forAll(cnf, cnfI)
                 {
@@ -1197,22 +1197,22 @@ calcAddressing() const
 
     // Do boundary faces
 
-    forAll(faceEdges, faceI)
+    forAll(faceEdges, facei)
     {
-        labelList& curEdges = faceEdges[faceI];
+        labelList& curEdges = faceEdges[facei];
 
         forAll(curEdges, edgeI)
         {
             if (curEdges[edgeI] < 0)
             {
                 // Grab edge and faceEdge
-                edges[nEdges] = faceIntoEdges[faceI][edgeI];
+                edges[nEdges] = faceIntoEdges[facei][edgeI];
                 curEdges[edgeI] = nEdges;
 
                 // Add edgeFace
                 labelList& curEf = edgeFaces[nEdges];
                 curEf.setSize(1);
-                curEf[0] = faceI;
+                curEf[0] = facei;
 
                 nEdges++;
             }
@@ -1229,9 +1229,9 @@ calcAddressing() const
     faceFacesPtr_ = new labelListList(locFcs.size());
     labelListList& faceFaces = *faceFacesPtr_;
 
-    forAll(faceFaces, faceI)
+    forAll(faceFaces, facei)
     {
-        faceFaces[faceI].transfer(ff[faceI]);
+        faceFaces[facei].transfer(ff[facei]);
     }
 
 
@@ -1609,11 +1609,11 @@ calcLocalPointOrder() const
 
     label nPoints = 0;
 
-    forAll(lf, faceI)
+    forAll(lf, facei)
     {
-        if (!visitedFace[faceI])
+        if (!visitedFace[facei])
         {
-            SLList<label> faceOrder(faceI);
+            SLList<label> faceOrder(facei);
 
             do
             {
@@ -2083,10 +2083,10 @@ meshEdges
         // get the patch faces sharing the edge
         const labelList& curFaces = EdgeFaces[edgeI];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
             // get the cell next to the face
-            label curCell = faceCells[curFaces[faceI]];
+            label curCell = faceCells[curFaces[facei]];
 
             // get reference to edges on the cell
             const labelList& ce = cellEdges[curCell];
@@ -2302,13 +2302,13 @@ calcPointFaces() const
     // set up storage for pointFaces
     List<SLList<label>> pointFcs(meshPoints().size());
 
-    forAll(f, faceI)
+    forAll(f, facei)
     {
-        const Face& curPoints = f[faceI];
+        const Face& curPoints = f[facei];
 
         forAll(curPoints, pointI)
         {
-            pointFcs[curPoints[pointI]].append(faceI);
+            pointFcs[curPoints[pointI]].append(facei);
         }
     }
 
@@ -2385,10 +2385,10 @@ projectPoints
     // Estimate face centre of target side
     Field<PointType> masterFaceCentres(targetPatch.size());
 
-    forAll(masterFaceCentres, faceI)
+    forAll(masterFaceCentres, facei)
     {
-        masterFaceCentres[faceI] =
-            average(masterFaces[faceI].points(masterPoints));
+        masterFaceCentres[facei] =
+            average(masterFaces[facei].points(masterPoints));
     }
 
     // Algorithm:
@@ -2525,10 +2525,10 @@ projectPoints
             result[curLocalPointLabel] = objectHit(false, -1);
             scalar minDistance = GREAT;
 
-            forAll(masterFaces, faceI)
+            forAll(masterFaces, facei)
             {
                 PointHit<PointType> curHit =
-                    masterFaces[faceI].ray
+                    masterFaces[facei].ray
                     (
                         curPoint,
                         curProjectionDir,
@@ -2539,8 +2539,8 @@ projectPoints
 
                 if (curHit.hit())
                 {
-                    result[curLocalPointLabel] = objectHit(true, faceI);
-                    curFace = faceI;
+                    result[curLocalPointLabel] = objectHit(true, facei);
+                    curFace = facei;
 
                     break;
                 }
@@ -2554,8 +2554,8 @@ projectPoints
                     {
                         minDistance = missDist;
 
-                        result[curLocalPointLabel] = objectHit(false, faceI);
-                        curFace = faceI;
+                        result[curLocalPointLabel] = objectHit(false, facei);
+                        curFace = facei;
                     }
                 }
             }
@@ -2622,10 +2622,10 @@ projectFaceCentres
 
     const typename ToPatch::PointFieldType& masterPoints = targetPatch.points();
 
-    forAll(masterFaceCentres, faceI)
+    forAll(masterFaceCentres, facei)
     {
-        masterFaceCentres[faceI] =
-            masterFaces[faceI].centre(masterPoints);
+        masterFaceCentres[facei] =
+            masterFaces[facei].centre(masterPoints);
     }
 
     // Result
@@ -2647,10 +2647,10 @@ projectFaceCentres
     label curFace = 0;
     label nNSquaredSearches = 0;
 
-    forAll(slaveFaceOrder, faceI)
+    forAll(slaveFaceOrder, facei)
     {
         // pick up slave point and direction
-        const label curLocalFaceLabel = slaveFaceOrder[faceI];
+        const label curLocalFaceLabel = slaveFaceOrder[facei];
 
         const point& curFaceCentre =
             slaveFaces[curLocalFaceLabel].centre(slaveGlobalPoints);
@@ -2669,7 +2669,7 @@ projectFaceCentres
 
         // Force the full search for the first point to ensure good
         // starting face
-        if (faceI == 0)
+        if (facei == 0)
         {
             doNSquaredSearch = true;
         }
@@ -2766,10 +2766,10 @@ projectFaceCentres
             result[curLocalFaceLabel] = objectHit(false, -1);
             scalar minDistance = GREAT;
 
-            forAll(masterFaces, faceI)
+            forAll(masterFaces, facei)
             {
                 PointHit<PointType> curHit =
-                    masterFaces[faceI].ray
+                    masterFaces[facei].ray
                     (
                         curFaceCentre,
                         curProjectionDir,
@@ -2780,8 +2780,8 @@ projectFaceCentres
 
                 if (curHit.hit())
                 {
-                    result[curLocalFaceLabel] = objectHit(true, faceI);
-                    curFace = faceI;
+                    result[curLocalFaceLabel] = objectHit(true, facei);
+                    curFace = facei;
 
                     break;
                 }
@@ -2795,8 +2795,8 @@ projectFaceCentres
                     {
                         minDistance = missDist;
 
-                        result[curLocalFaceLabel] = objectHit(false, faceI);
-                        curFace = faceI;
+                        result[curLocalFaceLabel] = objectHit(false, facei);
+                        curFace = facei;
                     }
                 }
             }

@@ -182,7 +182,7 @@ class addPatchCellLayer
         (
             const labelListList& edgeFaces,
             const label edgeI,
-            const label faceI
+            const label facei
         );
 
         //- Add vertex to face if unique.

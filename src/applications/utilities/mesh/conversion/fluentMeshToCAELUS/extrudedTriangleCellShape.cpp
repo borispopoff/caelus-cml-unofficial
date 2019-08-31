@@ -65,9 +65,9 @@ cellShape extrudedTriangleCellShape
     // make a list of outward-pointing faces
     labelListList localFaces(3);
 
-    forAll(faceLabels, faceI)
+    forAll(faceLabels, facei)
     {
-        const label curFaceLabel = faceLabels[faceI];
+        const label curFaceLabel = faceLabels[facei];
 
         const face& curFace = faces[curFaceLabel];
 
@@ -81,18 +81,18 @@ cellShape extrudedTriangleCellShape
 
         if (owner[curFaceLabel] == cellIndex)
         {
-            localFaces[faceI] = curFace;
+            localFaces[facei] = curFace;
         }
         else if (neighbour[curFaceLabel] == cellIndex)
         {
             // Reverse the face.  Note: it is necessary to reverse by
             // hand to preserve connectivity of a 2-D mesh.
             //
-            localFaces[faceI].setSize(curFace.size());
+            localFaces[facei].setSize(curFace.size());
 
             forAllReverse(curFace, i)
             {
-                localFaces[faceI][curFace.size() - i - 1] =
+                localFaces[facei][curFace.size() - i - 1] =
                     curFace[i];
             }
         }

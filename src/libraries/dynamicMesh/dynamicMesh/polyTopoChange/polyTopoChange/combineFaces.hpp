@@ -97,7 +97,7 @@ class combineFaces
         void regioniseFaces
         (
             const scalar minCos,
-            const label cellI,
+            const label celli,
             const labelList& cEdges,
             Map<label>& faceRegion
         ) const;
@@ -105,7 +105,7 @@ class combineFaces
         //- Does merging faces invalidate (unmerged) neighbouring faces?
         bool faceNeighboursValid
         (
-            const label cellI,
+            const label celli,
             const Map<label>& faceRegion
         ) const;
 

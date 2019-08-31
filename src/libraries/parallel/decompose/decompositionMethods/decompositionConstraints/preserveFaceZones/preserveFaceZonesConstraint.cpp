@@ -174,13 +174,13 @@ void CML::decompositionConstraints::preserveFaceZonesConstraint::apply
 
         forAll(fz, i)
         {
-            label faceI = fz[i];
+            label facei = fz[i];
 
-            label own = mesh.faceOwner()[faceI];
+            label own = mesh.faceOwner()[facei];
 
-            if (mesh.isInternalFace(faceI))
+            if (mesh.isInternalFace(facei))
             {
-                label nei = mesh.faceNeighbour()[faceI];
+                label nei = mesh.faceNeighbour()[facei];
                 if (decomposition[own] != decomposition[nei])
                 {
                     decomposition[nei] = decomposition[own];
@@ -189,7 +189,7 @@ void CML::decompositionConstraints::preserveFaceZonesConstraint::apply
             }
             else
             {
-                label bFaceI = faceI-mesh.nInternalFaces();
+                label bFaceI = facei-mesh.nInternalFaces();
                 if (decomposition[own] != destProc[bFaceI])
                 {
                     decomposition[own] = destProc[bFaceI];

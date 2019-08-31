@@ -144,10 +144,10 @@ void CML::decompositionConstraints::preserveBafflesConstraint::add
 
         // Convert back into labelPairList
         label n = 0;
-        forAll(faceToFace, faceI)
+        forAll(faceToFace, facei)
         {
-            label otherFaceI = faceToFace[faceI];
-            if (otherFaceI != -1 && faceI < otherFaceI)
+            label otherFaceI = faceToFace[facei];
+            if (otherFaceI != -1 && facei < otherFaceI)
             {
                 // I am master of slave
                 n++;
@@ -155,12 +155,12 @@ void CML::decompositionConstraints::preserveBafflesConstraint::add
         }
         explicitConnections.setSize(n);
         n = 0;
-        forAll(faceToFace, faceI)
+        forAll(faceToFace, facei)
         {
-            label otherFaceI = faceToFace[faceI];
-            if (otherFaceI != -1 && faceI < otherFaceI)
+            label otherFaceI = faceToFace[facei];
+            if (otherFaceI != -1 && facei < otherFaceI)
             {
-                explicitConnections[n++] = labelPair(faceI, otherFaceI);
+                explicitConnections[n++] = labelPair(facei, otherFaceI);
             }
         }
     }

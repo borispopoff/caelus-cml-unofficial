@@ -75,30 +75,30 @@ tmp<scalarField> mutkRoughWallFunctionFvPatchScalarField::calcMut() const
     tmp<scalarField> tmutw(new scalarField(*this));
     scalarField& mutw = tmutw();
 
-    forAll(mutw, faceI)
+    forAll(mutw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
         scalar uStar = Cmu25*sqrt(k[faceCellI]);
-        scalar yPlus = uStar*y[faceI]/(muw[faceI]/rhow[faceI]);
-        scalar KsPlus = uStar*Ks_[faceI]/(muw[faceI]/rhow[faceI]);
+        scalar yPlus = uStar*y[facei]/(muw[facei]/rhow[facei]);
+        scalar KsPlus = uStar*Ks_[facei]/(muw[facei]/rhow[facei]);
 
         scalar Edash = E_;
         if (KsPlus > 2.25)
         {
-            Edash /= fnRough(KsPlus, Cs_[faceI]);
+            Edash /= fnRough(KsPlus, Cs_[facei]);
         }
 
-        scalar limitingMutw = max(mutw[faceI], muw[faceI]);
+        scalar limitingMutw = max(mutw[facei], muw[facei]);
 
         // To avoid oscillations limit the change in the wall viscosity
         // which is particularly important if it temporarily becomes zero
-        mutw[faceI] =
+        mutw[facei] =
             max
             (
                 min
                 (
-                    muw[faceI]
+                    muw[facei]
                    *(yPlus*kappa_/log(max(Edash*yPlus, 1+1e-4)) - 1),
                     2*limitingMutw
                 ), 0.5*limitingMutw
@@ -109,7 +109,7 @@ tmp<scalarField> mutkRoughWallFunctionFvPatchScalarField::calcMut() const
             Info<< "yPlus = " << yPlus
                 << ", KsPlus = " << KsPlus
                 << ", Edash = " << Edash
-                << ", mutw = " << mutw[faceI]
+                << ", mutw = " << mutw[facei]
                 << endl;
         }
     }

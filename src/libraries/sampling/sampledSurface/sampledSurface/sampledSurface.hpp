@@ -532,9 +532,9 @@ void CML::sampledSurface::project
     {
         const vectorField& norm = Sf();
 
-        forAll(norm, faceI)
+        forAll(norm, facei)
         {
-            res[faceI] = field[faceI] & (norm[faceI]/mag(norm[faceI]));
+            res[facei] = field[facei] & (norm[facei]/mag(norm[facei]));
         }
     }
     else
@@ -605,16 +605,16 @@ CML::sampledSurface::pointAverage
 
             forAll(pCells, i)
             {
-                label cellI = pCells[i];
+                label celli = pCells[i];
 
-                cellAvg[cellI] += pfld[pointI];
-                nPointCells[cellI]++;
+                cellAvg[celli] += pfld[pointI];
+                nPointCells[celli]++;
             }
         }
     }
-    forAll(cellAvg, cellI)
+    forAll(cellAvg, celli)
     {
-        cellAvg[cellI] /= nPointCells[cellI];
+        cellAvg[celli] /= nPointCells[celli];
     }
     // Give value to calculatedFvPatchFields
     cellAvg.correctBoundaryConditions();

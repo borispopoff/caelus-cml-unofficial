@@ -256,27 +256,27 @@ namespace CML {
                 label cnt=0;
 
                 forAllConstIter(typename Subset,sub,iter) {
-                    label faceI=getIndexFromIterator(iter);
-                    if(faceI<this->mesh().nInternalFaces()) {
+                    label facei=getIndexFromIterator(iter);
+                    if(facei<this->mesh().nInternalFaces()) {
                         if(!oldTime) {
                             result()[cnt]=
-                                weights[faceI]*f[own[faceI]]
+                                weights[facei]*f[own[facei]]
                                 +
-                                (1-weights[faceI])*f[nei[faceI]];
+                                (1-weights[facei])*f[nei[facei]];
                         } else {
                             result()[cnt]=
-                                weights[faceI]*f.oldTime()[own[faceI]]
+                                weights[facei]*f.oldTime()[own[facei]]
                                 +
-                                (1-weights[faceI])*f.oldTime()[nei[faceI]];
+                                (1-weights[facei])*f.oldTime()[nei[facei]];
                         }
                         cnt++;
                     } else {
                         T value;
                         bool use;
                         if(!oldTime) {
-                            use=getBoundaryFaceValue(f,faceI,value);
+                            use=getBoundaryFaceValue(f,facei,value);
                         } else {
-                            use=getBoundaryFaceValue(f.oldTime(),faceI,value);
+                            use=getBoundaryFaceValue(f.oldTime(),facei,value);
                         }
                         if(use) {
                             result()[cnt]=value;
@@ -299,27 +299,27 @@ namespace CML {
                     label cnt=0;
 
                     forAllConstIter(typename Subset,sub,iter) {
-                        label faceI=getIndexFromIterator(iter);
-                        if(faceI<this->mesh().nInternalFaces()) {
+                        label facei=getIndexFromIterator(iter);
+                        if(facei<this->mesh().nInternalFaces()) {
                             if(!oldTime) {
                                 result()[cnt]=
-                                    weights[faceI]*f()[own[faceI]]
+                                    weights[facei]*f()[own[facei]]
                                     +
-                                    (1-weights[faceI])*f()[nei[faceI]];
+                                    (1-weights[facei])*f()[nei[facei]];
                             } else {
                                 result()[cnt]=
-                                    weights[faceI]*f->oldTime()[own[faceI]]
+                                    weights[facei]*f->oldTime()[own[facei]]
                                     +
-                                    (1-weights[faceI])*f->oldTime()[nei[faceI]];
+                                    (1-weights[facei])*f->oldTime()[nei[facei]];
                             }
                             cnt++;
                         } else {
                             T value;
                             bool use;
                             if(!oldTime) {
-                                use=getBoundaryFaceValue(f(),faceI,value);
+                                use=getBoundaryFaceValue(f(),facei,value);
                             } else {
-                                use=getBoundaryFaceValue(f->oldTime(),faceI,value);
+                                use=getBoundaryFaceValue(f->oldTime(),facei,value);
                             }
                             if(use) {
                                 result()[cnt]=value;
@@ -379,14 +379,14 @@ namespace CML {
         label cnt=0;
 
         forAllConstIter(typename Subset,sub,iter) {
-            label faceI=getIndexFromIterator(iter);
-            if(faceI<this->mesh().nInternalFaces()) {
-                result()[cnt]=original[faceI];
+            label facei=getIndexFromIterator(iter);
+            if(facei<this->mesh().nInternalFaces()) {
+                result()[cnt]=original[facei];
                 cnt++;
             } else {
                 T value;
                 bool use;
-                use=getBoundaryFaceValue(original,faceI,value);
+                use=getBoundaryFaceValue(original,facei,value);
                 if(use) {
                     result()[cnt]=value;
                     cnt++;
@@ -400,16 +400,16 @@ namespace CML {
     }
 
     bool SubsetValueExpressionDriver::useFaceValue(
-        const label faceI
+        const label facei
     ) const
     {
-        if(faceI<this->mesh().nInternalFaces()) {
+        if(facei<this->mesh().nInternalFaces()) {
             return true;
         } else {
-            label patchI=this->mesh().boundaryMesh().whichPatch(faceI);
+            label patchI=this->mesh().boundaryMesh().whichPatch(facei);
             if(patchI<0) {
                 FatalErrorInFunction
-                    << "Can't find the correct patch for face " << faceI
+                    << "Can't find the correct patch for face " << facei
                     << endl
                     << exit(FatalError);
             }
@@ -464,8 +464,8 @@ namespace CML {
         label cnt=0;
 
         forAllConstIter(typename Subset,sub,iter) {
-            const label faceI=getIndexFromIterator(iter);
-            if(useFaceValue(faceI)) {
+            const label facei=getIndexFromIterator(iter);
+            if(useFaceValue(facei)) {
                 cnt++;
             }
         }

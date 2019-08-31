@@ -242,19 +242,19 @@ void CML::numericFlux<Flux,Limiter>::update()
     volVectorField const& ULimiter = vectorULimiter.getPhiLimiter();
     volScalarField const& TLimiter = scalarTLimiter.getPhiLimiter();
 
-    forAll(owner, faceI)
+    forAll(owner, facei)
     {
-        label own = owner[faceI];
-        label nei = neighbour[faceI];
+        label own = owner[facei];
+        label nei = neighbour[facei];
 
-        vector deltaRLeft  = faceCenter[faceI] - cellCenter[own];
-        vector deltaRRight = faceCenter[faceI] - cellCenter[nei];
+        vector deltaRLeft  = faceCenter[facei] - cellCenter[own];
+        vector deltaRRight = faceCenter[facei] - cellCenter[nei];
 
         Flux::evaluateFlux
         (
-            this->rhoFlux_[faceI],
-            this->rhoUFlux_[faceI],
-            this->rhoEFlux_[faceI],
+            this->rhoFlux_[facei],
+            this->rhoUFlux_[facei],
+            this->rhoEFlux_[facei],
             this->p_[own] + pLimiter[own] * (deltaRLeft  & this->gradp_[own]),
             this->p_[nei] + pLimiter[nei] * (deltaRRight & this->gradp_[nei]),
             this->U_[own] + cmptMultiply(ULimiter[own], (deltaRLeft  & this->gradU_[own])),
@@ -265,9 +265,9 @@ void CML::numericFlux<Flux,Limiter>::update()
             R[nei],        
             Cv[own],       
             Cv[nei],       
-            Sf[faceI],      
-            magSf[faceI],   
-            this->dotX_[faceI]    
+            Sf[facei],      
+            magSf[facei],   
+            this->dotX_[facei]    
         );
     }
 

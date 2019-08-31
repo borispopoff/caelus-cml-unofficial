@@ -891,8 +891,8 @@ tmp<vectorField> CommonValueExpressionDriver::composeVectorField(
         new vectorField(x.size())
     );
 
-    forAll(result(),faceI) {
-        result()[faceI]=CML::vector(x[faceI],y[faceI],z[faceI]);
+    forAll(result(),facei) {
+        result()[facei]=CML::vector(x[facei],y[facei],z[facei]);
     }
 
     return result;
@@ -932,11 +932,11 @@ tmp<tensorField> CommonValueExpressionDriver::composeTensorField(
         new tensorField(xx.size())
     );
 
-    forAll(result(),faceI) {
-        result()[faceI]=CML::tensor(
-            xx[faceI],xy[faceI],xz[faceI],
-            yx[faceI],yy[faceI],yz[faceI],
-            zx[faceI],zy[faceI],zz[faceI]
+    forAll(result(),facei) {
+        result()[facei]=CML::tensor(
+            xx[facei],xy[facei],xz[facei],
+            yx[facei],yy[facei],yz[facei],
+            zx[facei],zy[facei],zz[facei]
         );
 
     }
@@ -972,11 +972,11 @@ tmp<symmTensorField> CommonValueExpressionDriver::composeSymmTensorField(
         new symmTensorField(xx.size())
     );
 
-    forAll(result(),faceI) {
-        result()[faceI]=CML::symmTensor(
-            xx[faceI],xy[faceI],xz[faceI],
-            yy[faceI],yz[faceI],
-            zz[faceI]
+    forAll(result(),facei) {
+        result()[facei]=CML::symmTensor(
+            xx[facei],xy[facei],xz[facei],
+            yy[facei],yz[facei],
+            zz[facei]
         );
 
     }
@@ -992,9 +992,9 @@ tmp<sphericalTensorField> CommonValueExpressionDriver::composeSphericalTensorFie
         new sphericalTensorField(ii.size())
     );
 
-    forAll(result(),faceI) {
-        result()[faceI]=CML::sphericalTensor(
-            ii[faceI]
+    forAll(result(),facei) {
+        result()[facei]=CML::sphericalTensor(
+            ii[facei]
         );
 
     }

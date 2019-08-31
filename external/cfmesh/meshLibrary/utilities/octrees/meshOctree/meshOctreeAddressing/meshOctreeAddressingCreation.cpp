@@ -976,7 +976,7 @@ void meshOctreeAddressing::createOctreeFaces() const
             for(label i=threadI;i<chunkI;i+=nThreads)
                 localStart += chunkSizes[i];
 
-            for(label faceI=0;faceI<chunkSizes[chunkI];++faceI)
+            for(label facei=0;facei<chunkSizes[chunkI];++facei)
             {
                 octreeFacesOwnersPtr_->operator[](start) =
                     helperOwner[localStart];
@@ -1013,7 +1013,7 @@ void meshOctreeAddressing::createOctreeFaces() const
             for(label i=threadI;i<chunkI;i+=nThreads)
                 localStart += chunkSizes[i];
 
-            for(label faceI=0;faceI<chunkSizes[chunkI];++faceI)
+            for(label facei=0;facei<chunkSizes[chunkI];++facei)
             {
                 for(label i=0;i<helperFaces.sizeOfRow(localStart);++i)
                     octreeFacesPtr_->operator()(start, i) =
@@ -1027,15 +1027,15 @@ void meshOctreeAddressing::createOctreeFaces() const
 
     # ifdef DEBUGVrt
     List<vector> sum(octree_.numberOfLeaves(), vector::zero);
-    for(label faceI=0;faceI<octreeFacesPtr_->size();++faceI)
+    for(label facei=0;facei<octreeFacesPtr_->size();++facei)
     {
-        face f(octreeFacesPtr_->sizeOfRow(faceI));
+        face f(octreeFacesPtr_->sizeOfRow(facei));
         forAll(f, pI)
-            f[pI] = octreeFacesPtr_->operator()(faceI, pI);
+            f[pI] = octreeFacesPtr_->operator()(facei, pI);
         const vector n = f.normal(this->octreePoints());
 
-        sum[(*octreeFacesOwnersPtr_)[faceI]] += n;
-        const label nei = (*octreeFacesNeighboursPtr_)[faceI];
+        sum[(*octreeFacesOwnersPtr_)[facei]] += n;
+        const label nei = (*octreeFacesNeighboursPtr_)[facei];
 
         if( nei < 0 )
             continue;
@@ -1105,15 +1105,15 @@ void meshOctreeAddressing::calculateLeafLeaves() const
     VRWGraph& leafLeaves = *leafLeavesPtr_;
 
     labelList nNei(leafLeaves.size(), 0);
-    forAll(owner, faceI)
+    forAll(owner, facei)
     {
-        if( owner[faceI] < 0 )
+        if( owner[facei] < 0 )
             continue;
-        if( neighbour[faceI] < 0 )
+        if( neighbour[facei] < 0 )
             continue;
 
-        ++nNei[owner[faceI]];
-        ++nNei[neighbour[faceI]];
+        ++nNei[owner[facei]];
+        ++nNei[neighbour[facei]];
     }
 
     forAll(nNei, leafI)
@@ -1121,15 +1121,15 @@ void meshOctreeAddressing::calculateLeafLeaves() const
 
     nNei = 0;
 
-    forAll(owner, faceI)
+    forAll(owner, facei)
     {
-        if( owner[faceI] < 0 )
+        if( owner[facei] < 0 )
             continue;
-        if( neighbour[faceI] < 0 )
+        if( neighbour[facei] < 0 )
             continue;
 
-        leafLeaves(owner[faceI], nNei[owner[faceI]]++) = neighbour[faceI];
-        leafLeaves(neighbour[faceI], nNei[neighbour[faceI]]++) = owner[faceI];
+        leafLeaves(owner[facei], nNei[owner[facei]]++) = neighbour[facei];
+        leafLeaves(neighbour[facei], nNei[neighbour[facei]]++) = owner[facei];
     }
 }
 
@@ -1147,23 +1147,23 @@ void meshOctreeAddressing::createOctreeEdges() const
     VRWGraph& nodeEdges = *nodeEdgesPtr_;
     nodeEdges.setSizeAndColumnWidth(nNodes_, 6);
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        faceEdges.setRowSize(faceI, faces[faceI].size());
-        forAllRow(faceEdges, faceI, feI)
-            faceEdges(faceI, feI) = -1;
+        faceEdges.setRowSize(facei, faces[facei].size());
+        forAllRow(faceEdges, facei, feI)
+            faceEdges(facei, feI) = -1;
     }
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const label nEdges = faces.sizeOfRow(faceI);
+        const label nEdges = faces.sizeOfRow(facei);
 
         for(label eI=0;eI<nEdges;++eI)
         {
             const edge e
             (
-                faces(faceI, eI),
-                faces(faceI, (eI+1)%nEdges)
+                faces(facei, eI),
+                faces(facei, (eI+1)%nEdges)
             );
 
             label eLabel(-1);
@@ -1179,7 +1179,7 @@ void meshOctreeAddressing::createOctreeEdges() const
             if( eLabel < 0 )
             {
                 //- append new edge
-                faceEdges(faceI, eI) = edges.size();
+                faceEdges(facei, eI) = edges.size();
                 nodeEdges.append(e.start(), edges.size());
                 nodeEdges.append(e.end(), edges.size());
 
@@ -1187,7 +1187,7 @@ void meshOctreeAddressing::createOctreeEdges() const
             }
             else
             {
-                faceEdges(faceI, eI) = eLabel;
+                faceEdges(facei, eI) = eLabel;
             }
         }
     }

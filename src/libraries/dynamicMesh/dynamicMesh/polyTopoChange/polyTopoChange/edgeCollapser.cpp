@@ -92,7 +92,7 @@ bool CML::edgeCollapser::pointRemoved(const label pointI) const
 }
 
 
-void CML::edgeCollapser::filterFace(const label faceI, face& f) const
+void CML::edgeCollapser::filterFace(const label facei, face& f) const
 {
     label newFp = 0;
 
@@ -383,33 +383,33 @@ bool CML::edgeCollapser::setRefinement(polyTopoChange& meshMod)
     do
     {
         // Update face collapse from edge collapses
-        forAll(newFaces, faceI)
+        forAll(newFaces, facei)
         {
-            filterFace(faceI, newFaces[faceI]);
+            filterFace(facei, newFaces[facei]);
         }
 
         // Check if faces to be collapsed cause cells to become collapsed.
         label nCellCollapsed = 0;
 
-        forAll(cells, cellI)
+        forAll(cells, celli)
         {
-            if (!cellRemoved[cellI])
+            if (!cellRemoved[celli])
             {
-                const cell& cFaces = cells[cellI];
+                const cell& cFaces = cells[celli];
 
                 label nFaces = cFaces.size();
 
                 forAll(cFaces, i)
                 {
-                    label faceI = cFaces[i];
+                    label facei = cFaces[i];
 
-                    if (newFaces[faceI].size() < 3)
+                    if (newFaces[facei].size() < 3)
                     {
                         --nFaces;
 
                         if (nFaces < 4)
                         {
-                            Info<< "Cell:" << cellI
+                            Info<< "Cell:" << celli
                                 << " uses faces:" << cFaces
                                 << " of which too many are marked for removal:"
                                 << endl
@@ -423,10 +423,10 @@ bool CML::edgeCollapser::setRefinement(polyTopoChange& meshMod)
                             }
                             Info<< endl;
 
-                            cellRemoved[cellI] = true;
+                            cellRemoved[celli] = true;
 
                             // Collapse all edges of cell to nothing
-                            collapseEdges(cellEdges[cellI]);
+                            collapseEdges(cellEdges[celli]);
 
                             nCellCollapsed++;
 
@@ -452,27 +452,27 @@ bool CML::edgeCollapser::setRefinement(polyTopoChange& meshMod)
         boolList usedPoint(mesh_.nPoints(), false);
 
 
-        forAll(cellRemoved, cellI)
+        forAll(cellRemoved, celli)
         {
-            if (cellRemoved[cellI])
+            if (cellRemoved[celli])
             {
-                meshMod.removeCell(cellI, -1);
+                meshMod.removeCell(celli, -1);
             }
         }
 
 
         // Remove faces
-        forAll(newFaces, faceI)
+        forAll(newFaces, facei)
         {
-            const face& f = newFaces[faceI];
+            const face& f = newFaces[facei];
 
             if (f.size() < 3)
             {
-                meshMod.removeFace(faceI, -1);
+                meshMod.removeFace(facei, -1);
                 meshChanged = true;
 
                 // Mark face as been done.
-                doneFace[faceI] = true;
+                doneFace[facei] = true;
             }
             else
             {
@@ -522,14 +522,14 @@ bool CML::edgeCollapser::setRefinement(polyTopoChange& meshMod)
 
             forAll(changedFaces, changedFaceI)
             {
-                label faceI = changedFaces[changedFaceI];
+                label facei = changedFaces[changedFaceI];
 
-                if (!doneFace[faceI])
+                if (!doneFace[facei])
                 {
-                    doneFace[faceI] = true;
+                    doneFace[facei] = true;
 
                     // Get current zone info
-                    label zoneID = faceZones.whichZone(faceI);
+                    label zoneID = faceZones.whichZone(facei);
 
                     bool zoneFlip = false;
 
@@ -537,27 +537,27 @@ bool CML::edgeCollapser::setRefinement(polyTopoChange& meshMod)
                     {
                         const faceZone& fZone = faceZones[zoneID];
 
-                        zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+                        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
                     }
 
                     // Get current connectivity
-                    label own = faceOwner[faceI];
+                    label own = faceOwner[facei];
                     label nei = -1;
                     label patchID = -1;
 
-                    if (mesh_.isInternalFace(faceI))
+                    if (mesh_.isInternalFace(facei))
                     {
-                        nei = faceNeighbour[faceI];
+                        nei = faceNeighbour[facei];
                     }
                     else
                     {
-                        patchID = boundaryMesh.whichPatch(faceI);
+                        patchID = boundaryMesh.whichPatch(facei);
                     }
 
                     meshMod.modifyFace
                     (
-                        newFaces[faceI],            // face
-                        faceI,                      // faceI to change
+                        newFaces[facei],            // face
+                        facei,                      // facei to change
                         own,                        // owner
                         nei,                        // neighbour
                         false,                      // flipFaceFlux

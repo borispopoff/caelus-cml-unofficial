@@ -138,7 +138,7 @@ bool CML::fileFormats::STLsurfaceFormatCore::readBINARY
 
     label ptI = 0;
     label zoneI = -1;
-    forAll(zoneIds_, faceI)
+    forAll(zoneIds_, facei)
     {
         // Read an STL triangle
         STLtriangle stlTri(is);
@@ -168,7 +168,7 @@ bool CML::fileFormats::STLsurfaceFormatCore::readBINARY
             dynSizes.append(0);
         }
 
-        zoneIds_[faceI] = zoneI;
+        zoneIds_[facei] = zoneI;
         dynSizes[zoneI]++;
 
 #ifdef DEBUG_STLBINARY

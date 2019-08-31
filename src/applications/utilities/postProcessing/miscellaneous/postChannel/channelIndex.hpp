@@ -149,9 +149,9 @@ CML::Field<T> CML::channelIndex::regionSum(const Field<T>& cellField) const
 {
     Field<T> regionField(cellRegion_().nRegions(), pTraits<T>::zero);
 
-    forAll(cellRegion_(), cellI)
+    forAll(cellRegion_(), celli)
     {
-        regionField[cellRegion_()[cellI]] += cellField[cellI];
+        regionField[cellRegion_()[celli]] += cellField[celli];
     }
 
     // Global sum

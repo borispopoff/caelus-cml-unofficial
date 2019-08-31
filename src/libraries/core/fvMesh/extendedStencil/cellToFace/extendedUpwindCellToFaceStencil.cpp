@@ -31,14 +31,14 @@ void CML::extendedUpwindCellToFaceStencil::selectOppositeFaces
 (
     const boolList& nonEmptyFace,
     const scalar minOpposedness,
-    const label faceI,
-    const label cellI,
+    const label facei,
+    const label celli,
     DynamicList<label>& oppositeFaces
 ) const
 {
     const vectorField& areas = mesh_.faceAreas();
     const labelList& own = mesh_.faceOwner();
-    const cell& cFaces = mesh_.cells()[cellI];
+    const cell& cFaces = mesh_.cells()[celli];
 
     SortableList<scalar> opposedness(cFaces.size(), -GREAT);
 
@@ -47,15 +47,15 @@ void CML::extendedUpwindCellToFaceStencil::selectOppositeFaces
     {
         label otherFaceI = cFaces[i];
 
-        if (otherFaceI != faceI && nonEmptyFace[otherFaceI])
+        if (otherFaceI != facei && nonEmptyFace[otherFaceI])
         {
-            if ((own[otherFaceI] == cellI) == (own[faceI] == cellI))
+            if ((own[otherFaceI] == celli) == (own[facei] == celli))
             {
-                opposedness[i] = -(areas[otherFaceI] & areas[faceI]);
+                opposedness[i] = -(areas[otherFaceI] & areas[facei]);
             }
             else
             {
-                opposedness[i] = (areas[otherFaceI] & areas[faceI]);
+                opposedness[i] = (areas[otherFaceI] & areas[facei]);
             }
         }
     }
@@ -64,7 +64,7 @@ void CML::extendedUpwindCellToFaceStencil::selectOppositeFaces
 
     oppositeFaces.clear();
 
-    scalar myAreaSqr = magSqr(areas[faceI]);
+    scalar myAreaSqr = magSqr(areas[facei]);
 
     if (myAreaSqr > VSMALL)
     {
@@ -104,8 +104,8 @@ void CML::extendedUpwindCellToFaceStencil::transportStencil
     const boolList& nonEmptyFace,
     const labelListList& faceStencil,
     const scalar minOpposedness,
-    const label faceI,
-    const label cellI,
+    const label facei,
+    const label celli,
     const bool stencilHasNeighbour,
 
     DynamicList<label>& oppositeFaces,
@@ -113,11 +113,11 @@ void CML::extendedUpwindCellToFaceStencil::transportStencil
     labelList& transportedStencil
 ) const
 {
-    label globalOwn = faceStencil[faceI][0];
+    label globalOwn = faceStencil[facei][0];
     label globalNei = -1;
-    if (stencilHasNeighbour && faceStencil[faceI].size() >= 2)
+    if (stencilHasNeighbour && faceStencil[facei].size() >= 2)
     {
-        globalNei = faceStencil[faceI][1];
+        globalNei = faceStencil[facei][1];
     }
 
 
@@ -125,8 +125,8 @@ void CML::extendedUpwindCellToFaceStencil::transportStencil
     (
         nonEmptyFace,
         minOpposedness,
-        faceI,
-        cellI,
+        facei,
+        celli,
         oppositeFaces
     );
 
@@ -218,10 +218,10 @@ void CML::extendedUpwindCellToFaceStencil::transportStencils
 
         if (isA<emptyPolyPatch>(pp))
         {
-            label faceI = pp.start();
+            label facei = pp.start();
             forAll(pp, i)
             {
-                nonEmptyFace[faceI++] = false;
+                nonEmptyFace[facei++] = false;
             }
         }
     }
@@ -234,7 +234,7 @@ void CML::extendedUpwindCellToFaceStencil::transportStencils
     ownStencil.setSize(mesh_.nFaces());
 
     // Internal faces
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
         // Get stencil as owner + neighbour + stencil from 'opposite' faces
         transportStencil
@@ -242,19 +242,19 @@ void CML::extendedUpwindCellToFaceStencil::transportStencils
             nonEmptyFace,
             faceStencil,
             minOpposedness,
-            faceI,
-            own[faceI],
+            facei,
+            own[facei],
             true,                   //stencilHasNeighbour
             oppositeFaces,
             faceStencilSet,
-            ownStencil[faceI]
+            ownStencil[facei]
         );
     }
     // Boundary faces
     forAll(patches, patchI)
     {
         const polyPatch& pp = patches[patchI];
-        label faceI = pp.start();
+        label facei = pp.start();
 
         if (pp.coupled())
         {
@@ -265,15 +265,15 @@ void CML::extendedUpwindCellToFaceStencil::transportStencils
                     nonEmptyFace,
                     faceStencil,
                     minOpposedness,
-                    faceI,
-                    own[faceI],
+                    facei,
+                    own[facei],
                     true,                   //stencilHasNeighbour
 
                     oppositeFaces,
                     faceStencilSet,
-                    ownStencil[faceI]
+                    ownStencil[facei]
                 );
-                faceI++;
+                facei++;
             }
         }
         else if (!isA<emptyPolyPatch>(pp))
@@ -286,15 +286,15 @@ void CML::extendedUpwindCellToFaceStencil::transportStencils
                     nonEmptyFace,
                     faceStencil,
                     minOpposedness,
-                    faceI,
-                    own[faceI],
+                    facei,
+                    own[facei],
                     false,                  //stencilHasNeighbour
 
                     oppositeFaces,
                     faceStencilSet,
-                    ownStencil[faceI]
+                    ownStencil[facei]
                 );
-                faceI++;
+                facei++;
             }
         }
     }
@@ -304,9 +304,9 @@ void CML::extendedUpwindCellToFaceStencil::transportStencils
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     labelListList neiBndStencil(nBnd);
-    for (label faceI = mesh_.nInternalFaces(); faceI < mesh_.nFaces(); faceI++)
+    for (label facei = mesh_.nInternalFaces(); facei < mesh_.nFaces(); facei++)
     {
-        neiBndStencil[faceI-mesh_.nInternalFaces()] = ownStencil[faceI];
+        neiBndStencil[facei-mesh_.nInternalFaces()] = ownStencil[facei];
     }
     //syncTools::swapBoundaryFaceList(mesh_, neiBndStencil);
     syncTools::syncBoundaryFaceList
@@ -328,20 +328,20 @@ void CML::extendedUpwindCellToFaceStencil::transportStencils
     neiStencil.setSize(mesh_.nFaces());
 
     // Internal faces
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
         transportStencil
         (
             nonEmptyFace,
             faceStencil,
             minOpposedness,
-            faceI,
-            nei[faceI],
+            facei,
+            nei[facei],
             true,                   //stencilHasNeighbour
 
             oppositeFaces,
             faceStencilSet,
-            neiStencil[faceI]
+            neiStencil[facei]
         );
     }
 
@@ -349,17 +349,17 @@ void CML::extendedUpwindCellToFaceStencil::transportStencils
     forAll(patches, patchI)
     {
         const polyPatch& pp = patches[patchI];
-        label faceI = pp.start();
+        label facei = pp.start();
 
         if (pp.coupled())
         {
             forAll(pp, i)
             {
-                neiStencil[faceI].transfer
+                neiStencil[facei].transfer
                 (
-                    neiBndStencil[faceI-mesh_.nInternalFaces()]
+                    neiBndStencil[facei-mesh_.nInternalFaces()]
                 );
-                faceI++;
+                facei++;
             }
         }
         else
@@ -382,11 +382,11 @@ CML::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
     extendedCellToFaceStencil(stencil.mesh()),
     pureUpwind_(pureUpwind)
 {
-    //forAll(stencil, faceI)
+    //forAll(stencil, facei)
     //{
-    //    const labelList& fCells = stencil[faceI];
+    //    const labelList& fCells = stencil[facei];
     //
-    //    Pout<< "Face:" << faceI << " at:" << mesh_.faceCentres()[faceI]
+    //    Pout<< "Face:" << facei << " at:" << mesh_.faceCentres()[facei]
     //        << endl;
     //
     //    forAll(fCells, i)
@@ -400,10 +400,10 @@ CML::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
     //        }
     //        else
     //        {
-    //            label faceI = globalI-mesh_.nCells() + mesh_.nInternalFaces();
+    //            label facei = globalI-mesh_.nCells() + mesh_.nInternalFaces();
     //
-    //            Pout<< "    boundary:" << faceI
-    //                << " at:" << mesh_.faceCentres()[faceI] << endl;
+    //            Pout<< "    boundary:" << facei
+    //                << " at:" << mesh_.faceCentres()[facei] << endl;
     //        }
     //    }
     //}
@@ -459,13 +459,13 @@ CML::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
         collectData(ownMapPtr_(), ownStencil_, mesh.C(), stencilPoints);
 
         // Mask off all stencil points on wrong side of face
-        forAll(stencilPoints, faceI)
+        forAll(stencilPoints, facei)
         {
-            const point& fc = mesh.faceCentres()[faceI];
-            const vector& fArea = mesh.faceAreas()[faceI];
+            const point& fc = mesh.faceCentres()[facei];
+            const vector& fArea = mesh.faceAreas()[facei];
 
-            const List<point>& points = stencilPoints[faceI];
-            const labelList& stencil = ownStencil_[faceI];
+            const List<point>& points = stencilPoints[facei];
+            const labelList& stencil = ownStencil_[facei];
 
             DynamicList<label> newStencil(stencil.size());
             forAll(points, i)
@@ -477,7 +477,7 @@ CML::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
             }
             if (newStencil.size() != stencil.size())
             {
-                ownStencil_[faceI].transfer(newStencil);
+                ownStencil_[facei].transfer(newStencil);
             }
         }
 
@@ -488,13 +488,13 @@ CML::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
         collectData(neiMapPtr_(), neiStencil_, mesh.C(), stencilPoints);
 
         // Mask off all stencil points on wrong side of face
-        forAll(stencilPoints, faceI)
+        forAll(stencilPoints, facei)
         {
-            const point& fc = mesh.faceCentres()[faceI];
-            const vector& fArea = mesh.faceAreas()[faceI];
+            const point& fc = mesh.faceCentres()[facei];
+            const vector& fArea = mesh.faceAreas()[facei];
 
-            const List<point>& points = stencilPoints[faceI];
-            const labelList& stencil = neiStencil_[faceI];
+            const List<point>& points = stencilPoints[facei];
+            const labelList& stencil = neiStencil_[facei];
 
             DynamicList<label> newStencil(stencil.size());
             forAll(points, i)
@@ -506,7 +506,7 @@ CML::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
             }
             if (newStencil.size() != stencil.size())
             {
-                neiStencil_[faceI].transfer(newStencil);
+                neiStencil_[facei].transfer(newStencil);
             }
         }
 
@@ -549,13 +549,13 @@ CML::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
     // Split stencil into owner and neighbour
     neiStencil_.setSize(ownStencil_.size());
 
-    forAll(stencilPoints, faceI)
+    forAll(stencilPoints, facei)
     {
-        const point& fc = mesh.faceCentres()[faceI];
-        const vector& fArea = mesh.faceAreas()[faceI];
+        const point& fc = mesh.faceCentres()[facei];
+        const vector& fArea = mesh.faceAreas()[facei];
 
-        const List<point>& points = stencilPoints[faceI];
-        const labelList& stencil = ownStencil_[faceI];
+        const List<point>& points = stencilPoints[facei];
+        const labelList& stencil = ownStencil_[facei];
 
         DynamicList<label> newOwnStencil(stencil.size());
         DynamicList<label> newNeiStencil(stencil.size());
@@ -572,8 +572,8 @@ CML::extendedUpwindCellToFaceStencil::extendedUpwindCellToFaceStencil
         }
         if (newNeiStencil.size() > 0)
         {
-            ownStencil_[faceI].transfer(newOwnStencil);
-            neiStencil_[faceI].transfer(newNeiStencil);
+            ownStencil_[facei].transfer(newOwnStencil);
+            neiStencil_[facei].transfer(newNeiStencil);
         }
     }
 

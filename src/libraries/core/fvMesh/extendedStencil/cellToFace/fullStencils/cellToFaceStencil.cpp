@@ -211,11 +211,11 @@ CML::cellToFaceStencil::allCoupledFacesPatch() const
 
         if (pp.coupled())
         {
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                coupledFaces[nCoupled++] = faceI++;
+                coupledFaces[nCoupled++] = facei++;
             }
         }
     }
@@ -274,17 +274,17 @@ void CML::cellToFaceStencil::insertFaceCells
 
     forAll(faceLabels, i)
     {
-        label faceI = faceLabels[i];
+        label facei = faceLabels[i];
 
-        label globalOwn = globalNumbering().toGlobal(own[faceI]);
+        label globalOwn = globalNumbering().toGlobal(own[facei]);
         if (globalOwn != exclude0 && globalOwn != exclude1)
         {
             globals.insert(globalOwn);
         }
 
-        if (mesh().isInternalFace(faceI))
+        if (mesh().isInternalFace(facei))
         {
-            label globalNei = globalNumbering().toGlobal(nei[faceI]);
+            label globalNei = globalNumbering().toGlobal(nei[facei]);
             if (globalNei != exclude0 && globalNei != exclude1)
             {
                 globals.insert(globalNei);
@@ -292,7 +292,7 @@ void CML::cellToFaceStencil::insertFaceCells
         }
         else
         {
-            label bFaceI = faceI-mesh().nInternalFaces();
+            label bFaceI = facei-mesh().nInternalFaces();
 
             if (isValidBFace[bFaceI])
             {
@@ -357,13 +357,13 @@ void CML::cellToFaceStencil::calcFaceStencil
 
         if (pp.coupled())
         {
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                neiGlobalCellCells[faceI-mesh_.nInternalFaces()] =
-                    globalCellCells[own[faceI]];
-                faceI++;
+                neiGlobalCellCells[facei-mesh_.nInternalFaces()] =
+                    globalCellCells[own[facei]];
+                facei++;
             }
         }
     }
@@ -385,11 +385,11 @@ void CML::cellToFaceStencil::calcFaceStencil
 
     labelHashSet faceStencilSet;
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
         faceStencilSet.clear();
 
-        const labelList& ownCCells = globalCellCells[own[faceI]];
+        const labelList& ownCCells = globalCellCells[own[facei]];
         label globalOwn = ownCCells[0];
         // Insert cellCells
         forAll(ownCCells, i)
@@ -397,7 +397,7 @@ void CML::cellToFaceStencil::calcFaceStencil
             faceStencilSet.insert(ownCCells[i]);
         }
 
-        const labelList& neiCCells = globalCellCells[nei[faceI]];
+        const labelList& neiCCells = globalCellCells[nei[facei]];
         label globalNei = neiCCells[0];
         // Insert cellCells
         forAll(neiCCells, i)
@@ -406,24 +406,24 @@ void CML::cellToFaceStencil::calcFaceStencil
         }
 
         // Guarantee owner first, neighbour second.
-        faceStencil[faceI].setSize(faceStencilSet.size());
+        faceStencil[facei].setSize(faceStencilSet.size());
         label n = 0;
-        faceStencil[faceI][n++] = globalOwn;
-        faceStencil[faceI][n++] = globalNei;
+        faceStencil[facei][n++] = globalOwn;
+        faceStencil[facei][n++] = globalNei;
         forAllConstIter(labelHashSet, faceStencilSet, iter)
         {
             if (iter.key() != globalOwn && iter.key() != globalNei)
             {
-                faceStencil[faceI][n++] = iter.key();
+                faceStencil[facei][n++] = iter.key();
             }
         }
-        //Pout<< "internalface:" << faceI << " toc:" << faceStencilSet.toc()
-        //    << " faceStencil:" << faceStencil[faceI] << endl;
+        //Pout<< "internalface:" << facei << " toc:" << faceStencilSet.toc()
+        //    << " faceStencil:" << faceStencil[facei] << endl;
     }
     forAll(patches, patchI)
     {
         const polyPatch& pp = patches[patchI];
-        label faceI = pp.start();
+        label facei = pp.start();
 
         if (pp.coupled())
         {
@@ -431,7 +431,7 @@ void CML::cellToFaceStencil::calcFaceStencil
             {
                 faceStencilSet.clear();
 
-                const labelList& ownCCells = globalCellCells[own[faceI]];
+                const labelList& ownCCells = globalCellCells[own[facei]];
                 label globalOwn = ownCCells[0];
                 forAll(ownCCells, i)
                 {
@@ -440,7 +440,7 @@ void CML::cellToFaceStencil::calcFaceStencil
 
                 // And the neighbours of the coupled cell
                 const labelList& neiCCells =
-                    neiGlobalCellCells[faceI-mesh_.nInternalFaces()];
+                    neiGlobalCellCells[facei-mesh_.nInternalFaces()];
                 label globalNei = neiCCells[0];
                 forAll(neiCCells, i)
                 {
@@ -448,23 +448,23 @@ void CML::cellToFaceStencil::calcFaceStencil
                 }
 
                 // Guarantee owner first, neighbour second.
-                faceStencil[faceI].setSize(faceStencilSet.size());
+                faceStencil[facei].setSize(faceStencilSet.size());
                 label n = 0;
-                faceStencil[faceI][n++] = globalOwn;
-                faceStencil[faceI][n++] = globalNei;
+                faceStencil[facei][n++] = globalOwn;
+                faceStencil[facei][n++] = globalNei;
                 forAllConstIter(labelHashSet, faceStencilSet, iter)
                 {
                     if (iter.key() != globalOwn && iter.key() != globalNei)
                     {
-                        faceStencil[faceI][n++] = iter.key();
+                        faceStencil[facei][n++] = iter.key();
                     }
                 }
 
-                //Pout<< "coupledface:" << faceI
+                //Pout<< "coupledface:" << facei
                 //    << " toc:" << faceStencilSet.toc()
-                //    << " faceStencil:" << faceStencil[faceI] << endl;
+                //    << " faceStencil:" << faceStencil[facei] << endl;
 
-                faceI++;
+                facei++;
             }
         }
         else if (!isA<emptyPolyPatch>(pp))
@@ -473,7 +473,7 @@ void CML::cellToFaceStencil::calcFaceStencil
             {
                 faceStencilSet.clear();
 
-                const labelList& ownCCells = globalCellCells[own[faceI]];
+                const labelList& ownCCells = globalCellCells[own[facei]];
                 label globalOwn = ownCCells[0];
                 forAll(ownCCells, i)
                 {
@@ -481,22 +481,22 @@ void CML::cellToFaceStencil::calcFaceStencil
                 }
 
                 // Guarantee owner first
-                faceStencil[faceI].setSize(faceStencilSet.size());
+                faceStencil[facei].setSize(faceStencilSet.size());
                 label n = 0;
-                faceStencil[faceI][n++] = globalOwn;
+                faceStencil[facei][n++] = globalOwn;
                 forAllConstIter(labelHashSet, faceStencilSet, iter)
                 {
                     if (iter.key() != globalOwn)
                     {
-                        faceStencil[faceI][n++] = iter.key();
+                        faceStencil[facei][n++] = iter.key();
                     }
                 }
 
-                //Pout<< "boundaryface:" << faceI
+                //Pout<< "boundaryface:" << facei
                 //    << " toc:" << faceStencilSet.toc()
-                //    << " faceStencil:" << faceStencil[faceI] << endl;
+                //    << " faceStencil:" << faceStencil[facei] << endl;
 
-                faceI++;
+                facei++;
             }
         }
     }

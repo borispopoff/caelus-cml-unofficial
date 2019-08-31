@@ -234,9 +234,9 @@ void meshOptimizer::laplaceSmoother::laplacianWPC
             scalar sumWeights(0.0);
             forAllRow(pointCells, pointI, pcI)
             {
-                const label cellI = pointCells(pointI, pcI);
-                const scalar w = CML::max(volumes[cellI], VSMALL);
-                newP += w * centres[cellI];
+                const label celli = pointCells(pointI, pcI);
+                const scalar w = CML::max(volumes[celli], VSMALL);
+                newP += w * centres[celli];
                 sumWeights += w;
             }
 
@@ -288,10 +288,10 @@ void meshOptimizer::laplaceSmoother::updateMeshGeometry
         const label size = pBnd[patchI].patchSize();
 
         labelLongList sendData;
-        for(label faceI=0;faceI<size;++faceI)
+        for(label facei=0;facei<size;++facei)
         {
-            if( chF[start+faceI] )
-                sendData.append(faceI);
+            if( chF[start+facei] )
+                sendData.append(facei);
         }
 
         OPstream toOtherProc

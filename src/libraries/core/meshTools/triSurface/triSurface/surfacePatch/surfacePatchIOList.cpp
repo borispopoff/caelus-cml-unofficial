@@ -69,7 +69,7 @@ CML::surfacePatchIOList::surfacePatchIOList
         PtrList<entry> patchEntries(is);
         patches.setSize(patchEntries.size());
 
-        label faceI = 0;
+        label facei = 0;
 
         forAll(patches, patchI)
         {
@@ -89,7 +89,7 @@ CML::surfacePatchIOList::surfacePatchIOList
                 );
 
 
-            if (startFaceI != faceI)
+            if (startFaceI != facei)
             {
                 FatalErrorInFunction
                     << "Patches are not ordered. Start of patch " << patchI
@@ -99,7 +99,7 @@ CML::surfacePatchIOList::surfacePatchIOList
                     << exit(FatalError);
             }
 
-            faceI += patchSize;
+            facei += patchSize;
         }
 
         // Check state of IOstream

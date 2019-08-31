@@ -89,12 +89,12 @@ void copyFaceSubsets
         labelList origFaces;        
         origSurf.facetsInSubset(subsetI, origFaces);
         
-        forAll(origFaces, faceI)
+        forAll(origFaces, facei)
         {
             newSurf.addFacetToSubset
             (
                 newSubsetId,
-                origFaces[faceI]
+                origFaces[facei]
             );
         }
     }
@@ -121,12 +121,12 @@ void copyEdgeSubsets
         labelList origEdges;        
         origSurf.edgesInSubset(subsetI, origEdges);
         
-        forAll(origEdges, faceI)
+        forAll(origEdges, facei)
         {
             newSurf.addEdgeToSubset
             (
                 newSubsetId,
-                origEdges[faceI]
+                origEdges[facei]
             );
         }
     }
@@ -153,12 +153,12 @@ void copyPointSubsets
         labelList origPoints;        
         origSurf.pointsInSubset(subsetI, origPoints);
         
-        forAll(origPoints, faceI)
+        forAll(origPoints, facei)
         {
             newSurf.addPointToSubset
             (
                 newSubsetId,
-                origPoints[faceI]
+                origPoints[facei]
             );
         }
     }
@@ -185,9 +185,9 @@ autoPtr<triSurf> mergeSurfacePatches
     // Create patch addressing
     List<DynamicList<label>> patchAddr(origPatches.size()+1);
     
-    forAll(origFacets, faceI)
+    forAll(origFacets, facei)
     {
-        patchAddr[origFacets[faceI].region()].append(faceI);
+        patchAddr[origFacets[facei].region()].append(facei);
     }
     
     // Move selected patches to new patch
@@ -202,7 +202,7 @@ autoPtr<triSurf> mergeSurfacePatches
     labelList newFaceAddr(origFacets.size(), -1);
     
     label patchCount = 0;
-    label faceI = 0;
+    label facei = 0;
     forAll(patchAddr, patchI)
     {
         const unallocLabelList& addr = patchAddr[patchI];
@@ -211,12 +211,12 @@ autoPtr<triSurf> mergeSurfacePatches
         {
             forAll(addr, i)
             {
-                newFacets[faceI] = origFacets[addr[i]];
-                newFacets[faceI].region() = patchCount;
+                newFacets[facei] = origFacets[addr[i]];
+                newFacets[facei].region() = patchCount;
                 
-                newFaceAddr[addr[i]] = faceI;
+                newFaceAddr[addr[i]] = facei;
                 
-                faceI++;
+                facei++;
             }
         }
         

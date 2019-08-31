@@ -2044,11 +2044,11 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMeshRegions
 
     label regionI = -1;
 
-    label cellI = mesh_.findCell(keepPoint);
+    label celli = mesh_.findCell(keepPoint);
 
-    if (cellI != -1)
+    if (celli != -1)
     {
-        regionI = cellRegion[cellI];
+        regionI = cellRegion[celli];
     }
 
     reduce(regionI, maxOp<label>());

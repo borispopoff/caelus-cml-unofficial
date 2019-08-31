@@ -86,9 +86,9 @@ tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
         const vectorField internalCoeffs(pf.valueInternalCoeffs(pw));
 
         // Diag contribution
-        forAll(pf, faceI)
+        forAll(pf, facei)
         {
-            d[fc[faceI]] += cmptMultiply(internalCoeffs[faceI], Sf[faceI]);
+            d[fc[facei]] += cmptMultiply(internalCoeffs[facei], Sf[facei]);
         }
 
         if (patch.coupled())
@@ -110,9 +110,9 @@ tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
             const vectorField boundaryCoeffs(pf.valueBoundaryCoeffs(pw));
 
             // Boundary contribution
-            forAll(pf, faceI)
+            forAll(pf, facei)
             {
-                source[fc[faceI]] -= boundaryCoeffs[faceI] & Sf[faceI];
+                source[fc[facei]] -= boundaryCoeffs[facei] & Sf[facei];
             }
         }
     }
@@ -178,12 +178,12 @@ tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
         const vectorField internalCoeffs(pf.valueInternalCoeffs(pw));
 
         // Diag contribution
-        forAll(pf, faceI)
+        forAll(pf, facei)
         {
-            d[fc[faceI]] += cmptMultiply
+            d[fc[facei]] += cmptMultiply
             (
-                internalCoeffs[faceI],
-                pFlux[faceI]*Sf[faceI]
+                internalCoeffs[facei],
+                pFlux[facei]*Sf[facei]
             );
         }
 
@@ -206,11 +206,11 @@ tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
             const vectorField boundaryCoeffs(pf.valueBoundaryCoeffs(pw));
 
             // Boundary contribution
-            forAll(pf, faceI)
+            forAll(pf, facei)
             {
-                source[fc[faceI]] -=
+                source[fc[facei]] -=
                 (
-                    boundaryCoeffs[faceI] & (pFlux[faceI]*Sf[faceI])
+                    boundaryCoeffs[facei] & (pFlux[facei]*Sf[facei])
                 );
             }
         }

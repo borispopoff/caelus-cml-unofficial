@@ -103,7 +103,7 @@ class faceCollapser
         void filterFace
         (
             const Map<labelList>& splitEdges,
-            const label faceI,
+            const label facei,
             polyTopoChange& meshMod
         ) const;
 

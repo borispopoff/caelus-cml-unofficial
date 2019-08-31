@@ -55,8 +55,8 @@ void checkNonMappableCellConnections::findCellTypes()
         const label start = boundaries[patchI].patchStart();
         const label end = start + boundaries[patchI].patchSize();
 
-        for(label faceI=start;faceI<end;++faceI)
-            cellType_[owner[faceI]] = BNDCELL;
+        for(label facei=start;facei<end;++facei)
+            cellType_[owner[facei]] = BNDCELL;
     }
 
     //- find boundary cells with all vertices at the boundary
@@ -66,12 +66,12 @@ void checkNonMappableCellConnections::findCellTypes()
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 1000)
     # endif
-    for(label cellI=cells.size()-1;cellI>=0;--cellI)
+    for(label celli=cells.size()-1;celli>=0;--celli)
     {
-        if( cellType_[cellI] & INTERNALCELL )
+        if( cellType_[celli] & INTERNALCELL )
             continue;
 
-        const cell& c = cells[cellI];
+        const cell& c = cells[celli];
 
         //- mark boundary cells with all vertices at the boundary
         const labelList cellPoints = c.labels(faces);
@@ -87,7 +87,7 @@ void checkNonMappableCellConnections::findCellTypes()
 
         if( allBoundary )
         {
-            cellType_[cellI] |= ALLBNDVERTEXCELL;
+            cellType_[celli] |= ALLBNDVERTEXCELL;
         }
         else
         {
@@ -142,7 +142,7 @@ void checkNonMappableCellConnections::findCellTypes()
         }
 
         if( nGroup > 1 )
-            cellType_[cellI] |= INTERNALFACEGROUP;
+            cellType_[celli] |= INTERNALFACEGROUP;
     }
 }
 
@@ -195,8 +195,8 @@ void checkNonMappableCellConnections::findCells(labelHashSet& badCells)
             label start = procBoundaries[patchI].patchStart();
             labelList patchCellType(procBoundaries[patchI].patchSize());
 
-            forAll(patchCellType, faceI)
-                patchCellType[faceI] = cellType_[owner[start++]];
+            forAll(patchCellType, facei)
+                patchCellType[facei] = cellType_[owner[start++]];
 
             OPstream toOtherProc
             (
@@ -225,33 +225,33 @@ void checkNonMappableCellConnections::findCells(labelHashSet& badCells)
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 40)
     # endif
-    for(label cellI=cellType_.size()-1;cellI>=0;--cellI)
+    for(label celli=cellType_.size()-1;celli>=0;--celli)
     {
-        if( cellType_[cellI] & INTERNALFACEGROUP )
+        if( cellType_[celli] & INTERNALFACEGROUP )
         {
             # ifdef USE_OMP
             # pragma omp critical
             # endif
-            badCells.insert(cellI);
+            badCells.insert(celli);
         }
-        else if( cellType_[cellI] & (ALLBNDVERTEXCELL+INTERNALFACEGROUP) )
+        else if( cellType_[celli] & (ALLBNDVERTEXCELL+INTERNALFACEGROUP) )
         {
             //- mark cells which have only one internal neighbour
-            const cell& c = cells[cellI];
+            const cell& c = cells[celli];
 
             bool hasInternalNeighbour(false);
             label nNeiCells(0);
 
             forAll(c, fI)
             {
-                const label faceI = c[fI];
+                const label facei = c[fI];
 
-                if( faceI < nInternalFaces )
+                if( facei < nInternalFaces )
                 {
                     ++nNeiCells;
 
                     label nei = neighbour[c[fI]];
-                    if( nei == cellI )
+                    if( nei == celli )
                         nei = owner[c[fI]];
 
                     if( cellType_[nei] & INTERNALCELL )
@@ -260,12 +260,12 @@ void checkNonMappableCellConnections::findCells(labelHashSet& badCells)
                         break;
                     }
                 }
-                else if( mesh_.faceIsInProcPatch(faceI) != -1 )
+                else if( mesh_.faceIsInProcPatch(facei) != -1 )
                 {
                     ++nNeiCells;
 
-                    const label patchI = mesh_.faceIsInProcPatch(faceI);
-                    const label j = faceI - procBoundaries[patchI].patchStart();
+                    const label patchI = mesh_.faceIsInProcPatch(facei);
+                    const label j = facei - procBoundaries[patchI].patchStart();
 
                     if( otherProcType[patchI][j] & INTERNALCELL )
                     {
@@ -280,7 +280,7 @@ void checkNonMappableCellConnections::findCells(labelHashSet& badCells)
                 # ifdef USE_OMP
                 # pragma omp critical
                 # endif
-                badCells.insert(cellI);
+                badCells.insert(celli);
             }
         }
     }

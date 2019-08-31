@@ -805,8 +805,8 @@ FieldValueExpressionDriver::pointToCellInterpolate(
     autoPtr<rType> result(
         this->makeConstantField<rType>(pTraits<Type>::zero).ptr()
     );
-    forAll(result(),cellI) {
-        result()[cellI]=interpolatePointToCell(field,cellI);
+    forAll(result(),celli) {
+        result()[celli]=interpolatePointToCell(field,celli);
     }
     result->correctBoundaryConditions();
 

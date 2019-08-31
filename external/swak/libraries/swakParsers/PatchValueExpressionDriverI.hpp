@@ -640,14 +640,14 @@ namespace CML {
                         );
 
                     newValues.setSize(samples.size(), pTraits<T>::max);
-                    forAll(samples, cellI)
+                    forAll(samples, celli)
                     {
-                        if (samples[cellI] != point::max)
+                        if (samples[celli] != point::max)
                         {
-                            newValues[cellI] = interp.interpolate
+                            newValues[celli] = interp.interpolate
                                 (
-                                    samples[cellI],
-                                    cellI
+                                    samples[celli],
+                                    celli
                                 );
                         }
                     }
@@ -725,18 +725,18 @@ namespace CML {
                         const Field<T> pif(pf.patchInternalField());
                         label faceStart = pf.patch().patch().start();
 
-                        forAll(pf, faceI)
+                        forAll(pf, facei)
                         {
-                            allValues[faceStart++] = pif[faceI];
+                            allValues[faceStart++] = pif[facei];
                         }
                     } else {
                         const fvPatchField<T>& pf =
                             nbrField.boundaryField()[patchI];
                         label faceStart = pf.patch().patch().start();
 
-                        forAll(pf, faceI)
+                        forAll(pf, facei)
                         {
-                            allValues[faceStart++] = pf[faceI];
+                            allValues[faceStart++] = pf[facei];
                         }
                     }
                 }

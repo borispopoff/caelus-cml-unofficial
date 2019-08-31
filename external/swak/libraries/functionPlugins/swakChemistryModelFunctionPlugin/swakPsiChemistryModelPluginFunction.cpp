@@ -296,9 +296,9 @@ public:
             specI++
         ) {
             const volScalarField &RR=wrapDimField(chemistry().RR(specI));
-            forAll(summe,cellI) {
-                if(RR[cellI]>0) {
-                    summe[cellI]+=RR[cellI];
+            forAll(summe,celli) {
+                if(RR[celli]>0) {
+                    summe[celli]+=RR[celli];
                 }
             }
         }

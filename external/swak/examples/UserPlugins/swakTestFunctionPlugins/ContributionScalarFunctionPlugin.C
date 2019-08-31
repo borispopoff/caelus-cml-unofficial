@@ -326,12 +326,12 @@ void ContributionScalarPluginFunction<Driver,PluginType>::doEvaluation()
         ).ptr()
     );
 
-    forAll(result,cellI)
+    forAll(result,celli)
     {
         scalar sum=0;
         scalar distSum=0;
         bool found=false;
-        const vector &here=myPositions()[cellI];
+        const vector &here=myPositions()[celli];
 
         forAll(values,valI)
         {
@@ -343,7 +343,7 @@ void ContributionScalarPluginFunction<Driver,PluginType>::doEvaluation()
                 const scalar dist=mag(localPos[i]-here);
                 if(dist<SMALL) {
                     // Avoid divison by zero
-                    result[cellI]=localValues[i];
+                    result[celli]=localValues[i];
                     found=true;
                     break;
                 }
@@ -359,7 +359,7 @@ void ContributionScalarPluginFunction<Driver,PluginType>::doEvaluation()
         }
 
         if(!found) {
-            result[cellI]=sum/distSum;
+            result[celli]=sum/distSum;
         }
     }
 

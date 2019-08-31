@@ -54,22 +54,22 @@ void smoothDelta::setChangedFaces
     DynamicList<deltaData>& changedFacesInfo
 )
 {
-    for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
     {
-        scalar ownDelta = delta[mesh.faceOwner()[faceI]];
+        scalar ownDelta = delta[mesh.faceOwner()[facei]];
 
-        scalar neiDelta = delta[mesh.faceNeighbour()[faceI]];
+        scalar neiDelta = delta[mesh.faceNeighbour()[facei]];
 
         // Check if owner delta much larger than neighbour delta or vice versa
 
         if (ownDelta > maxDeltaRatio_ * neiDelta)
         {
-            changedFaces.append(faceI);
+            changedFaces.append(facei);
             changedFacesInfo.append(deltaData(ownDelta));
         }
         else if (neiDelta > maxDeltaRatio_ * ownDelta)
         {
-            changedFaces.append(faceI);
+            changedFaces.append(facei);
             changedFacesInfo.append(deltaData(neiDelta));
         }
     }
@@ -112,9 +112,9 @@ void smoothDelta::calcDelta()
     // Set initial field on cells.
     List<deltaData> cellDeltaData(mesh_.nCells());
 
-    forAll(geometricDelta, cellI)
+    forAll(geometricDelta, celli)
     {
-        cellDeltaData[cellI] = geometricDelta[cellI];
+        cellDeltaData[celli] = geometricDelta[celli];
     }
 
     // Set initial field on faces.
@@ -133,9 +133,9 @@ void smoothDelta::calcDelta()
         maxDeltaRatio_
     );
 
-    forAll(delta_, cellI)
+    forAll(delta_, celli)
     {
-        delta_[cellI] = cellDeltaData[cellI].delta();
+        delta_[celli] = cellDeltaData[celli].delta();
     }
 }
 

@@ -48,9 +48,9 @@ label getBand(const labelList& owner, const labelList& neighbour)
 {
     label band = 0;
 
-    forAll(neighbour, faceI)
+    forAll(neighbour, facei)
     {
-        label diff = neighbour[faceI] - owner[faceI];
+        label diff = neighbour[facei] - owner[facei];
 
         if (diff > band)
         {
@@ -76,11 +76,11 @@ labelList regionBandCompression
 
     labelListList regionToCells(invertOneToMany(nRegions, cellToRegion));
 
-    label cellI = 0;
+    label celli = 0;
 
     forAll(regionToCells, regionI)
     {
-        Pout<< "    region " << regionI << " starts at " << cellI << endl;
+        Pout<< "    region " << regionI << " starts at " << celli << endl;
 
         // Per region do a reordering.
         fvMeshSubset subsetter(mesh);
@@ -92,7 +92,7 @@ labelList regionBandCompression
 
         forAll(subCellOrder, i)
         {
-            cellOrder[cellI++] = cellMap[subCellOrder[i]];
+            cellOrder[celli++] = cellMap[subCellOrder[i]];
         }
     }
     Pout<< endl;
@@ -137,15 +137,15 @@ labelList regionFaceOrder
 
         forAll(cFaces, i)
         {
-            label faceI = cFaces[i];
+            label facei = cFaces[i];
 
-            if (mesh.isInternalFace(faceI))
+            if (mesh.isInternalFace(facei))
             {
                 // Internal face. Get cell on other side.
-                label nbrCellI = reverseCellOrder[mesh.faceNeighbour()[faceI]];
+                label nbrCellI = reverseCellOrder[mesh.faceNeighbour()[facei]];
                 if (nbrCellI == newCellI)
                 {
-                    nbrCellI = reverseCellOrder[mesh.faceOwner()[faceI]];
+                    nbrCellI = reverseCellOrder[mesh.faceOwner()[facei]];
                 }
 
                 if (cellToRegion[oldCellI] != cellToRegion[cellOrder[nbrCellI]])
@@ -188,14 +188,14 @@ labelList regionFaceOrder
         // Sort in increasing region
         SortableList<label> sortKey(mesh.nFaces(), labelMax);
 
-        for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+        for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
         {
-            label ownRegion = cellToRegion[mesh.faceOwner()[faceI]];
-            label neiRegion = cellToRegion[mesh.faceNeighbour()[faceI]];
+            label ownRegion = cellToRegion[mesh.faceOwner()[facei]];
+            label neiRegion = cellToRegion[mesh.faceNeighbour()[facei]];
 
             if (ownRegion != neiRegion)
             {
-                sortKey[faceI] =
+                sortKey[facei] =
                     min(ownRegion, neiRegion)*nRegions
                    +max(ownRegion, neiRegion);
             }
@@ -226,20 +226,20 @@ labelList regionFaceOrder
     }
 
     // Leave patch faces intact.
-    for (label faceI = newFaceI; faceI < mesh.nFaces(); faceI++)
+    for (label facei = newFaceI; facei < mesh.nFaces(); facei++)
     {
-        oldToNewFace[faceI] = faceI;
+        oldToNewFace[facei] = facei;
     }
 
 
     // Check done all faces.
-    forAll(oldToNewFace, faceI)
+    forAll(oldToNewFace, facei)
     {
-        if (oldToNewFace[faceI] == -1)
+        if (oldToNewFace[facei] == -1)
         {
             FatalErrorInFunction
                 << "Did not determine new position"
-                << " for face " << faceI
+                << " for face " << facei
                 << abort(FatalError);
         }
     }
@@ -281,15 +281,15 @@ autoPtr<mapPolyMesh> reorderMesh
     );
 
     // Check if any faces need swapping.
-    forAll(newNeighbour, faceI)
+    forAll(newNeighbour, facei)
     {
-        label own = newOwner[faceI];
-        label nei = newNeighbour[faceI];
+        label own = newOwner[facei];
+        label nei = newNeighbour[facei];
 
         if (nei < own)
         {
-            newFaces[faceI].flip();
-            Swap(newOwner[faceI], newNeighbour[faceI]);
+            newFaces[facei].flip();
+            Swap(newOwner[facei], newNeighbour[facei]);
         }
     }
 
@@ -592,9 +592,9 @@ int main(int argc, char *argv[])
                 zeroGradientFvPatchScalarField::typeName
             );
 
-            forAll(cellToRegion, cellI)
+            forAll(cellToRegion, celli)
             {
-               cellDist[cellI] = cellToRegion[cellI];
+               cellDist[celli] = cellToRegion[celli];
             }
 
             cellDist.write();
@@ -685,14 +685,14 @@ int main(int argc, char *argv[])
         const labelHashSet& fff = map().flipFaceFlux();
         forAllConstIter(labelHashSet, fff, iter)
         {
-            label faceI = iter.key();
-            label masterFaceI = faceProcAddressing[faceI];
+            label facei = iter.key();
+            label masterFaceI = faceProcAddressing[facei];
 
-            faceProcAddressing[faceI] = -masterFaceI;
+            faceProcAddressing[facei] = -masterFaceI;
 
             if (masterFaceI == 0)
             {
-                FatalErrorInFunction << "problem faceI:" << faceI
+                FatalErrorInFunction << "problem facei:" << facei
                     << " masterFaceI:" << masterFaceI << exit(FatalError);
             }
         }

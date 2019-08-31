@@ -259,26 +259,26 @@ tmp<scalarField> FaceSetValueExpressionDriver::makeFaceFlipField() const
 
     forAll(faceLabels, i)
     {
-        label faceI = faceLabels[i];
+        label facei = faceLabels[i];
         bool use=false;
 
         bool flip = false;
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
             use=true;
             if
                 (
-                    cells.found(mesh.faceOwner()[faceI])
-                    && !cells.found(mesh.faceNeighbour()[faceI])
+                    cells.found(mesh.faceOwner()[facei])
+                    && !cells.found(mesh.faceNeighbour()[facei])
                 )
             {
                 flip = false;
             }
             else if
                 (
-                    !cells.found(mesh.faceOwner()[faceI])
-                    && cells.found(mesh.faceNeighbour()[faceI])
+                    !cells.found(mesh.faceOwner()[facei])
+                    && cells.found(mesh.faceNeighbour()[facei])
                 )
             {
                 flip = true;
@@ -287,23 +287,23 @@ tmp<scalarField> FaceSetValueExpressionDriver::makeFaceFlipField() const
             {
                 FatalErrorInFunction
                     << "One of owner or neighbour of internal face "
-                    << faceI << " should be in cellSet " << cells.name()
+                    << facei << " should be in cellSet " << cells.name()
                     << " to be able to determine orientation." << endl
-                    << "Face:" << faceI
-                    << " own:" << mesh.faceOwner()[faceI]
+                    << "Face:" << facei
+                    << " own:" << mesh.faceOwner()[facei]
                     << " OwnInCellSet:"
-                    << cells.found(mesh.faceOwner()[faceI])
-                    << " nei:" << mesh.faceNeighbour()[faceI]
+                    << cells.found(mesh.faceOwner()[facei])
+                    << " nei:" << mesh.faceNeighbour()[facei]
                     << " NeiInCellSet:"
-                    << cells.found(mesh.faceNeighbour()[faceI])
+                    << cells.found(mesh.faceNeighbour()[facei])
                     << exit(FatalError);
             }
         }
         else
         {
-            use=useFaceValue(faceI);
+            use=useFaceValue(facei);
             if(use) {
-                if (cells.found(mesh.faceOwner()[faceI]))
+                if (cells.found(mesh.faceOwner()[facei]))
                 {
                     flip = false;
                 }

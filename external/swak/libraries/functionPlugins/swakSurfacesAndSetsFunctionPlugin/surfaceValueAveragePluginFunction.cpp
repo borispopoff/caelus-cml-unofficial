@@ -94,17 +94,17 @@ void surfaceValueAveragePluginFunction<Type>::doEvaluation()
     const Field<Type> vals=this->values();
 
     forAll(cells,i) {
-        const label cellI=cells[i];
+        const label celli=cells[i];
 
-        if(cellI>=0) {
-            pValueAverage()[cellI]+=area[i]*vals[i];
-            areaSum[cellI]+=area[i];
+        if(celli>=0) {
+            pValueAverage()[celli]+=area[i]*vals[i];
+            areaSum[celli]+=area[i];
         }
     }
 
-    forAll(areaSum,cellI) {
-        if(areaSum[cellI]>SMALL) {
-            pValueAverage->internalField()[cellI]/=areaSum[cellI];
+    forAll(areaSum,celli) {
+        if(areaSum[celli]>SMALL) {
+            pValueAverage->internalField()[celli]/=areaSum[celli];
         }
     }
 

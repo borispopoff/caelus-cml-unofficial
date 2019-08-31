@@ -87,27 +87,27 @@ void triSurface::writeGTS(const bool writeSorted, Ostream& os) const
                 patchFaceI++
             )
             {
-                const label faceI = faceMap[faceIndex++];
+                const label facei = faceMap[faceIndex++];
 
-                const labelList& fEdges = faceEdges()[faceI];
+                const labelList& fEdges = faceEdges()[facei];
 
                 os  << fEdges[0] + 1 << ' '
                     << fEdges[1] + 1 << ' '
                     << fEdges[2] + 1 << ' '
-                    << (*this)[faceI].region() << endl;
+                    << (*this)[facei].region() << endl;
             }
         }
     }
     else
     {
-        forAll(faceEs, faceI)
+        forAll(faceEs, facei)
         {
-            const labelList& fEdges = faceEdges()[faceI];
+            const labelList& fEdges = faceEdges()[facei];
 
             os  << fEdges[0] + 1 << ' '
                 << fEdges[1] + 1 << ' '
                 << fEdges[2] + 1 << ' '
-                << (*this)[faceI].region() << endl;
+                << (*this)[facei].region() << endl;
         }
     }
 }

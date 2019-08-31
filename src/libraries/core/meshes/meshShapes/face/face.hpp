@@ -28,7 +28,7 @@ SeeAlso
     CML::triFace
 
 SourceFiles
-    faceI.hpp
+    facei.hpp
     face.cpp
     faceIntersection.cpp
     faceContactSphere.cpp

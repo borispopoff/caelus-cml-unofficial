@@ -118,13 +118,13 @@ void CML::dynamicRefineBalancedFvMesh::updateRefinementField()
         refFld = wgt * mag(fvc::grad(fld)) * cubeRtV;
         
         // Limit the value of refFld based on its max level
-        forAll(refFld, cellI)
+        forAll(refFld, celli)
         {
-            if (cellLevel[cellI] >= maxLevel)
+            if (cellLevel[celli] >= maxLevel)
             {
-                refFld[cellI] = min
+                refFld[celli] = min
                 (
-                    refFld[cellI],
+                    refFld[celli],
                     0.5*(refinePoints.first() + refinePoints.second())
                 );
             }
@@ -167,15 +167,15 @@ void CML::dynamicRefineBalancedFvMesh::updateRefinementField()
         
         forAll(cells, i)
         {
-            const label& cellI = cells[i];
+            const label& celli = cells[i];
             
-            if (cellLevel[cellI] < minLevel) // Force refinement
+            if (cellLevel[celli] < minLevel) // Force refinement
             {
-                refFld[cellI] = refinePoints.second() + 1.0;
+                refFld[celli] = refinePoints.second() + 1.0;
             }
-            else if (cellLevel[cellI] == minLevel) // Keep from coarsening
+            else if (cellLevel[celli] == minLevel) // Keep from coarsening
             {
-                refFld[cellI] = 0.5*(refinePoints.first()
+                refFld[celli] = 0.5*(refinePoints.first()
                               + refinePoints.second());
             }
             // else do nothing
@@ -356,21 +356,21 @@ bool CML::dynamicRefineBalancedFvMesh::update()
             
             label nCoarse = 0;
 
-            forAll(cells(), cellI)
+            forAll(cells(), celli)
             {
-                if (cellLevel[cellI] > 0)
+                if (cellLevel[celli] > 0)
                 {
-                    uniqueIndex[cellI] = nCells() + topParentID
+                    uniqueIndex[celli] = nCells() + topParentID
                     (
-                        meshCutter().history().parentIndex(cellI)
+                        meshCutter().history().parentIndex(celli)
                     );
                 }
                 else
                 {
-                    uniqueIndex[cellI] = cellI;
+                    uniqueIndex[celli] = celli;
                 }
                 
-                if (coarseIDmap.insert(uniqueIndex[cellI], nCoarse))
+                if (coarseIDmap.insert(uniqueIndex[celli], nCoarse))
                 {
                     ++nCoarse;
                 }
@@ -382,17 +382,17 @@ bool CML::dynamicRefineBalancedFvMesh::update()
             pointField coarsePoints(nCoarse, Zero);
             scalarField coarseWeights(nCoarse, 0.0);
             
-            forAll(uniqueIndex, cellI)
+            forAll(uniqueIndex, celli)
             {
-                localIndex[cellI] = coarseIDmap[uniqueIndex[cellI]];
+                localIndex[celli] = coarseIDmap[uniqueIndex[celli]];
                 
                 // If 2D refinement (quadtree) is ever implemented, this '3'
                 // should be set in general as the number of refinement
                 // dimensions.
-                label w = (1 << (3*cellLevel[cellI]));
+                label w = (1 << (3*cellLevel[celli]));
                 
-                coarseWeights[localIndex[cellI]] += 1.0;
-                coarsePoints[localIndex[cellI]] += C()[cellI]/w;
+                coarseWeights[localIndex[celli]] += 1.0;
+                coarsePoints[localIndex[celli]] += C()[celli]/w;
             }
             
             // Set up decomposer - a separate dictionary is used here so

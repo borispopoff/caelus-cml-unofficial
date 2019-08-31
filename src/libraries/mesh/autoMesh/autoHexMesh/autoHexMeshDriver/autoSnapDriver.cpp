@@ -1119,11 +1119,11 @@ CML::autoPtr<CML::mapPolyMesh> CML::autoSnapDriver::repatchToSurface
     PackedBoolList isZonedFace(mesh.nFaces());
     {
         // 1. Preserve faces in preserveFaces list
-        forAll(preserveFaces, faceI)
+        forAll(preserveFaces, facei)
         {
-            if (preserveFaces[faceI] != -1)
+            if (preserveFaces[facei] != -1)
             {
-                isZonedFace.set(faceI, 1);
+                isZonedFace.set(facei, 1);
             }
         }
 
@@ -1315,8 +1315,8 @@ void CML::autoSnapDriver::doSnap
                     const faceZone& fZone = fZones[zoneI];
                     forAll(fZone, i)
                     {
-                        label faceI = fZone[i];
-                        filterFace[faceI] = zoneI;
+                        label facei = fZone[i];
+                        filterFace[facei] = zoneI;
                         nFilterFaces++;
                     }
 
@@ -1324,8 +1324,8 @@ void CML::autoSnapDriver::doSnap
                     {
                         forAll(fZone, i)
                         {
-                            label faceI = fZone[i];
-                            const face& f = mesh.faces()[faceI];
+                            label facei = fZone[i];
+                            const face& f = mesh.faces()[facei];
                             forAll(f, fp)
                             {
                                 if (!duplicatePoint[f[fp]])
@@ -1591,11 +1591,11 @@ void CML::autoSnapDriver::doSnap
 
         if (mapPtr.valid())
         {
-            forAll(origBaffles, faceI)
+            forAll(origBaffles, facei)
             {
-                if (origBaffles[faceI] != -1)
+                if (origBaffles[facei] != -1)
                 {
-                    origBaffles[faceI] = mapPtr->reverseFaceMap()[faceI];
+                    origBaffles[facei] = mapPtr->reverseFaceMap()[facei];
                 }
             }
         }

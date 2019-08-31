@@ -41,7 +41,7 @@ namespace CML
 
 void CML::cellSplitter::getFaceInfo
 (
-    const label faceI,
+    const label facei,
     label& patchID,
     label& zoneID,
     label& zoneFlip
@@ -49,12 +49,12 @@ void CML::cellSplitter::getFaceInfo
 {
     patchID = -1;
 
-    if (!mesh_.isInternalFace(faceI))
+    if (!mesh_.isInternalFace(facei))
     {
-        patchID = mesh_.boundaryMesh().whichPatch(faceI);
+        patchID = mesh_.boundaryMesh().whichPatch(facei);
     }
 
-    zoneID = mesh_.faceZones().whichZone(faceI);
+    zoneID = mesh_.faceZones().whichZone(facei);
 
     zoneFlip = false;
 
@@ -62,20 +62,20 @@ void CML::cellSplitter::getFaceInfo
     {
         const faceZone& fZone = mesh_.faceZones()[zoneID];
 
-        zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
     }
 }
 
 
-// Find the new owner of faceI (since the original cell has been split into
+// Find the new owner of facei (since the original cell has been split into
 // newCells
 CML::label CML::cellSplitter::newOwner
 (
-    const label faceI,
+    const label facei,
     const Map<labelList>& cellToCells
 ) const
 {
-    label oldOwn = mesh_.faceOwner()[faceI];
+    label oldOwn = mesh_.faceOwner()[facei];
 
     Map<labelList>::const_iterator fnd = cellToCells.find(oldOwn);
 
@@ -92,18 +92,18 @@ CML::label CML::cellSplitter::newOwner
 
         const cell& cFaces = mesh_.cells()[oldOwn];
 
-        return newCells[findIndex(cFaces, faceI)];
+        return newCells[findIndex(cFaces, facei)];
     }
 }
 
 
 CML::label CML::cellSplitter::newNeighbour
 (
-    const label faceI,
+    const label facei,
     const Map<labelList>& cellToCells
 ) const
 {
-    label oldNbr = mesh_.faceNeighbour()[faceI];
+    label oldNbr = mesh_.faceNeighbour()[facei];
 
     Map<labelList>::const_iterator fnd = cellToCells.find(oldNbr);
 
@@ -120,7 +120,7 @@ CML::label CML::cellSplitter::newNeighbour
 
         const cell& cFaces = mesh_.cells()[oldNbr];
 
-        return newCells[findIndex(cFaces, faceI)];
+        return newCells[findIndex(cFaces, facei)];
     }
 }
 
@@ -159,9 +159,9 @@ void CML::cellSplitter::setRefinement
 
     forAllConstIter(Map<point>, cellToMidPoint, iter)
     {
-        label cellI = iter.key();
+        label celli = iter.key();
 
-        label anchorPoint = mesh_.cellPoints()[cellI][0];
+        label anchorPoint = mesh_.cellPoints()[celli][0];
 
         label addedPointI =
             meshMod.setAction
@@ -174,11 +174,11 @@ void CML::cellSplitter::setRefinement
                     true            // supports a cell
                 )
             );
-        addedPoints_.insert(cellI, addedPointI);
+        addedPoints_.insert(celli, addedPointI);
 
         //Pout<< "Added point " << addedPointI
-        //    << iter() << " in cell " << cellI << " with centre "
-        //    << mesh_.cellCentres()[cellI] << endl;
+        //    << iter() << " in cell " << celli << " with centre "
+        //    << mesh_.cellCentres()[celli] << endl;
     }
 
 
@@ -190,15 +190,15 @@ void CML::cellSplitter::setRefinement
 
     forAllConstIter(Map<point>, cellToMidPoint, iter)
     {
-        label cellI = iter.key();
+        label celli = iter.key();
 
-        const cell& cFaces = mesh_.cells()[cellI];
+        const cell& cFaces = mesh_.cells()[celli];
 
         // Cells created for this cell.
         labelList newCells(cFaces.size());
 
         // First pyramid is the original cell
-        newCells[0] = cellI;
+        newCells[0] = celli;
 
         // Add other pyramids
         for (label i = 1; i < cFaces.size(); i++)
@@ -211,7 +211,7 @@ void CML::cellSplitter::setRefinement
                         -1,     // master point
                         -1,     // master edge
                         -1,     // master face
-                        cellI,  // master cell
+                        celli,  // master cell
                         -1      // zone
                     )
                 );
@@ -219,10 +219,10 @@ void CML::cellSplitter::setRefinement
             newCells[i] = addedCellI;
         }
 
-        cellToCells.insert(cellI, newCells);
+        cellToCells.insert(celli, newCells);
 
-        //Pout<< "Split cell " << cellI
-        //    << " with centre " << mesh_.cellCentres()[cellI] << nl
+        //Pout<< "Split cell " << celli
+        //    << " with centre " << mesh_.cellCentres()[celli] << nl
         //    << " faces:" << cFaces << nl
         //    << " into :" << newCells << endl;
     }
@@ -235,13 +235,13 @@ void CML::cellSplitter::setRefinement
 
     forAllConstIter(Map<point>, cellToMidPoint, iter)
     {
-        label cellI = iter.key();
+        label celli = iter.key();
 
-        label midPointI = addedPoints_[cellI];
+        label midPointI = addedPoints_[celli];
 
-        const cell& cFaces = mesh_.cells()[cellI];
+        const cell& cFaces = mesh_.cells()[celli];
 
-        const labelList& cEdges = mesh_.cellEdges()[cellI];
+        const labelList& cEdges = mesh_.cellEdges()[celli];
 
         forAll(cEdges, i)
         {
@@ -250,11 +250,11 @@ void CML::cellSplitter::setRefinement
 
             // Get the faces on the cell using the edge
             label face0, face1;
-            meshTools::getEdgeFaces(mesh_, cellI, edgeI, face0, face1);
+            meshTools::getEdgeFaces(mesh_, celli, edgeI, face0, face1);
 
             // Get the cells on both sides of the face by indexing into cFaces.
             // (since newly created cells are stored in cFaces order)
-            const labelList& newCells = cellToCells[cellI];
+            const labelList& newCells = cellToCells[celli];
 
             label cell0 = newCells[findIndex(cFaces, face0)];
             label cell1 = newCells[findIndex(cFaces, face1)];
@@ -262,7 +262,7 @@ void CML::cellSplitter::setRefinement
             if (cell0 < cell1)
             {
                 // Construct face to midpoint that is pointing away from
-                // (pyramid split off from) cellI
+                // (pyramid split off from) celli
 
                 const face& f0 = mesh_.faces()[face0];
 
@@ -270,10 +270,10 @@ void CML::cellSplitter::setRefinement
 
                 bool edgeInFaceOrder = (f0[f0.fcIndex(index)] == e[1]);
 
-                // Check if cellI is the face owner
+                // Check if celli is the face owner
 
                 face newF(3);
-                if (edgeInFaceOrder == (mesh_.faceOwner()[face0] == cellI))
+                if (edgeInFaceOrder == (mesh_.faceOwner()[face0] == celli))
                 {
                     // edge used in face order.
                     newF[0] = e[1];
@@ -308,7 +308,7 @@ void CML::cellSplitter::setRefinement
             else
             {
                 // Construct face to midpoint that is pointing away from
-                // (pyramid split off from) cellI
+                // (pyramid split off from) celli
 
                 const face& f1 = mesh_.faces()[face1];
 
@@ -316,10 +316,10 @@ void CML::cellSplitter::setRefinement
 
                 bool edgeInFaceOrder = (f1[f1.fcIndex(index)] == e[1]);
 
-                // Check if cellI is the face owner
+                // Check if celli is the face owner
 
                 face newF(3);
-                if (edgeInFaceOrder == (mesh_.faceOwner()[face1] == cellI))
+                if (edgeInFaceOrder == (mesh_.faceOwner()[face1] == celli))
                 {
                     // edge used in face order.
                     newF[0] = e[1];
@@ -365,28 +365,28 @@ void CML::cellSplitter::setRefinement
 
     forAllConstIter(Map<point>, cellToMidPoint, iter)
     {
-        label cellI = iter.key();
+        label celli = iter.key();
 
-        const cell& cFaces = mesh_.cells()[cellI];
+        const cell& cFaces = mesh_.cells()[celli];
 
         forAll(cFaces, i)
         {
-            label faceI = cFaces[i];
+            label facei = cFaces[i];
 
-            faceUpToDate[faceI] = false;
+            faceUpToDate[facei] = false;
         }
     }
 
-    forAll(faceUpToDate, faceI)
+    forAll(faceUpToDate, facei)
     {
-        if (!faceUpToDate[faceI])
+        if (!faceUpToDate[facei])
         {
-            const face& f = mesh_.faces()[faceI];
+            const face& f = mesh_.faces()[facei];
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
-                label newOwn = newOwner(faceI, cellToCells);
-                label newNbr = newNeighbour(faceI, cellToCells);
+                label newOwn = newOwner(facei, cellToCells);
+                label newNbr = newNeighbour(facei, cellToCells);
 
                 if (newOwn < newNbr)
                 {
@@ -395,7 +395,7 @@ void CML::cellSplitter::setRefinement
                         polyModifyFace
                         (
                             f,
-                            faceI,
+                            facei,
                             newOwn,         // owner
                             newNbr,         // neighbour
                             false,          // flux flip
@@ -413,7 +413,7 @@ void CML::cellSplitter::setRefinement
                         polyModifyFace
                         (
                             f.reverseFace(),
-                            faceI,
+                            facei,
                             newNbr,         // owner
                             newOwn,         // neighbour
                             false,          // flux flip
@@ -428,17 +428,17 @@ void CML::cellSplitter::setRefinement
             }
             else
             {
-                label newOwn = newOwner(faceI, cellToCells);
+                label newOwn = newOwner(facei, cellToCells);
 
                 label patchID, zoneID, zoneFlip;
-                getFaceInfo(faceI, patchID, zoneID, zoneFlip);
+                getFaceInfo(facei, patchID, zoneID, zoneFlip);
 
                 meshMod.setAction
                 (
                     polyModifyFace
                     (
-                        mesh_.faces()[faceI],
-                        faceI,
+                        mesh_.faces()[facei],
+                        facei,
                         newOwn,         // owner
                         -1,             // neighbour
                         false,          // flux flip
@@ -450,7 +450,7 @@ void CML::cellSplitter::setRefinement
                 );
             }
 
-            faceUpToDate[faceI] = true;
+            faceUpToDate[facei] = true;
         }
     }
 }

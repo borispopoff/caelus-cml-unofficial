@@ -379,24 +379,24 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
 
                 labelList reverseAddressing(cp.size());
 
-                forAll(cp, faceI)
+                forAll(cp, facei)
                 {
                     // Check
-                    if (cp[faceI] <= 0)
+                    if (cp[facei] <= 0)
                     {
                         FatalErrorInFunction
                             << "Processor " << procI
                             << " patch "
                             << procField.mesh().boundary()[patchI].name()
-                            << " face " << faceI
+                            << " face " << facei
                             << " originates from reversed face since "
-                            << cp[faceI]
+                            << cp[facei]
                             << exit(FatalError);
                     }
 
                     // Subtract one to take into account offsets for
                     // face direction.
-                    reverseAddressing[faceI] = cp[faceI] - 1 - curPatchStart;
+                    reverseAddressing[facei] = cp[facei] - 1 - curPatchStart;
                 }
 
 
@@ -413,11 +413,11 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
 
                 // In processor patches, there's a mix of internal faces (some
                 // of them turned) and possible cyclics. Slow loop
-                forAll(cp, faceI)
+                forAll(cp, facei)
                 {
                     // Subtract one to take into account offsets for
                     // face direction.
-                    label curF = cp[faceI] - 1;
+                    label curF = cp[facei] - 1;
 
                     // Is the face on the boundary?
                     if (curF >= mesh_.nInternalFaces())
@@ -444,7 +444,7 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
                                 [curBPatch].whichFace(curF);
 
                         patchFields[curBPatch][curPatchFace] =
-                            curProcPatch[faceI];
+                            curProcPatch[facei];
                     }
                 }
             }
@@ -625,11 +625,11 @@ CML::fvFieldReconstructor::reconstructFvSurfaceField
 
                 labelList reverseAddressing(cp.size());
 
-                forAll(cp, faceI)
+                forAll(cp, facei)
                 {
                     // Subtract one to take into account offsets for
                     // face direction.
-                    reverseAddressing[faceI] = cp[faceI] - 1 - curPatchStart;
+                    reverseAddressing[facei] = cp[facei] - 1 - curPatchStart;
                 }
 
                 patchFields[curBPatch].rmap
@@ -645,9 +645,9 @@ CML::fvFieldReconstructor::reconstructFvSurfaceField
 
                 // In processor patches, there's a mix of internal faces (some
                 // of them turned) and possible cyclics. Slow loop
-                forAll(cp, faceI)
+                forAll(cp, facei)
                 {
-                    label curF = cp[faceI] - 1;
+                    label curF = cp[facei] - 1;
 
                     // Is the face turned the right side round
                     if (curF >= 0)
@@ -679,12 +679,12 @@ CML::fvFieldReconstructor::reconstructFvSurfaceField
                                 [curBPatch].whichFace(curF);
 
                             patchFields[curBPatch][curPatchFace] =
-                                curProcPatch[faceI];
+                                curProcPatch[facei];
                         }
                         else
                         {
                             // Internal face
-                            internalField[curF] = curProcPatch[faceI];
+                            internalField[curF] = curProcPatch[facei];
                         }
                     }
                 }

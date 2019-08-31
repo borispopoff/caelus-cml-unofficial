@@ -76,14 +76,14 @@ void surfaceDistancePluginFunction::doEvaluation()
     faceCenters[Pstream::myProcNo()]=theSurface().Cf();
     Pstream::scatterList(faceCenters);
 
-    forAll(cc,cellI) {
-        const vector &here=cc[cellI];
-        scalar &minDist=(pDistance)()[cellI];
+    forAll(cc,celli) {
+        const vector &here=cc[celli];
+        scalar &minDist=(pDistance)()[celli];
 
         forAll(faceCenters,i){
             const vectorField &fc=faceCenters[i];
-            forAll(fc,faceI){
-                const scalar dist=mag(here-fc[faceI]);
+            forAll(fc,facei){
+                const scalar dist=mag(here-fc[facei]);
                 if(dist<minDist) {
                     minDist=dist;
                 }

@@ -410,10 +410,10 @@ void CML::autoSnapDriver::calcNearestFace
         {
             if (hitInfo[hitI].hit())
             {
-                label faceI = ppFaces[hitI];
-                faceDisp[faceI] = hitInfo[hitI].hitPoint() - fc[hitI];
-                faceSurfaceNormal[faceI] = hitNormal[hitI];
-                faceSurfaceGlobalRegion[faceI] = surfaces.globalRegion
+                label facei = ppFaces[hitI];
+                faceDisp[facei] = hitInfo[hitI].hitPoint() - fc[hitI];
+                faceSurfaceNormal[facei] = hitNormal[hitI];
+                faceSurfaceGlobalRegion[facei] = surfaces.globalRegion
                 (
                     hitSurface[hitI],
                     hitRegion[hitI]
@@ -468,10 +468,10 @@ void CML::autoSnapDriver::calcNearestFace
     {
         if (hitInfo[hitI].hit())
         {
-            label faceI = ppFaces[hitI];
-            faceDisp[faceI] = hitInfo[hitI].hitPoint() - fc[hitI];
-            faceSurfaceNormal[faceI] = hitNormal[hitI];
-            faceSurfaceGlobalRegion[faceI] = surfaces.globalRegion
+            label facei = ppFaces[hitI];
+            faceDisp[facei] = hitInfo[hitI].hitPoint() - fc[hitI];
+            faceSurfaceNormal[facei] = hitNormal[hitI];
+            faceSurfaceGlobalRegion[facei] = surfaces.globalRegion
             (
                 hitSurface[hitI],
                 hitRegion[hitI]
@@ -487,12 +487,12 @@ void CML::autoSnapDriver::calcNearestFace
     faceRotation.setSize(pp.size());
     faceRotation = Zero;
 
-    forAll(faceRotation, faceI)
+    forAll(faceRotation, facei)
     {
         // Note: extend to >180 degrees checking
-        faceRotation[faceI] =
-            pp.faceNormals()[faceI]
-          ^ faceSurfaceNormal[faceI];
+        faceRotation[facei] =
+            pp.faceNormals()[facei]
+          ^ faceSurfaceNormal[facei];
     }
 
     if (debug&meshRefinement::OBJINTERSECTIONS)
@@ -561,13 +561,13 @@ void CML::autoSnapDriver::calcNearestFacePointProperties
 
         forAll(pFaces, i)
         {
-            label faceI = pFaces[i];
-            pNormals[i] = faceSurfaceNormal[faceI];
-            pDisp[i] = faceDisp[faceI];
-            pFc[i] = pp.faceCentres()[faceI];
-            //label meshFaceI = pp.addressing()[faceI];
+            label facei = pFaces[i];
+            pNormals[i] = faceSurfaceNormal[facei];
+            pDisp[i] = faceDisp[facei];
+            pFc[i] = pp.faceCentres()[facei];
+            //label meshFaceI = pp.addressing()[facei];
             //pFid[i] = mesh.boundaryMesh().whichPatch(meshFaceI);
-            pFid[i] = globalToPatch_[faceSurfaceGlobalRegion[faceI]];
+            pFid[i] = globalToPatch_[faceSurfaceGlobalRegion[facei]];
         }
     }
 
@@ -1864,8 +1864,8 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
             eFc.setSize(eFaces.size());
             forAll(eFaces, i)
             {
-                label faceI = eFaces[i];
-                eFc[i] = pp.faceNormals()[faceI];
+                label facei = eFaces[i];
+                eFc[i] = pp.faceNormals()[facei];
             }
         }
 
@@ -2307,9 +2307,9 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
 
         // 3. Knock out any attraction on faces with multi-patch points
         label nChanged = 0;
-        forAll(pp.localFaces(), faceI)
+        forAll(pp.localFaces(), facei)
         {
-            const face& f = pp.localFaces()[faceI];
+            const face& f = pp.localFaces()[facei];
 
             label nMultiPatchPoints = 0;
             forAll(f, fp)
@@ -2444,9 +2444,9 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
     // Attract one of the non-diagonal points.
 
-    forAll(pp.localFaces(), faceI)
+    forAll(pp.localFaces(), facei)
     {
-        const face& f = pp.localFaces()[faceI];
+        const face& f = pp.localFaces()[facei];
         // For now just detect any attraction. Improve this to look at
         // actual attraction position and only if would form a problem add
         // the non-diagonal point
@@ -2576,9 +2576,9 @@ void CML::autoSnapDriver::preventFaceSqueeze
 {
     pointField points;
     face singleF;
-    forAll(pp.localFaces(), faceI)
+    forAll(pp.localFaces(), facei)
     {
-        const face& f = pp.localFaces()[faceI];
+        const face& f = pp.localFaces()[facei];
 
         if (f.size() != points.size())
         {

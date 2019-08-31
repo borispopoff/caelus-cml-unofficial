@@ -74,10 +74,10 @@ const CML::labelList& CML::primitiveMesh::edgeCells
         // Do quadratic insertion.
         forAll(eFaces, i)
         {
-            label faceI = eFaces[i];
+            label facei = eFaces[i];
 
             {
-                label ownCellI = own[faceI];
+                label ownCellI = own[facei];
 
                 // Check if not already in storage
                 forAll(storage, j)
@@ -95,9 +95,9 @@ const CML::labelList& CML::primitiveMesh::edgeCells
                 }
             }
 
-            if (isInternalFace(faceI))
+            if (isInternalFace(facei))
             {
-                label neiCellI = nei[faceI];
+                label neiCellI = nei[facei];
 
                 forAll(storage, j)
                 {

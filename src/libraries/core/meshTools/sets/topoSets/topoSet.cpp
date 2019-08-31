@@ -448,11 +448,11 @@ void CML::topoSet::invert(const label maxLen)
     clear();
     resize(2*(maxLen - currentSet.size()));
 
-    for (label cellI = 0; cellI < maxLen; cellI++)
+    for (label celli = 0; celli < maxLen; celli++)
     {
-        if (!currentSet.found(cellI))
+        if (!currentSet.found(celli))
         {
-            insert(cellI);
+            insert(celli);
         }
     }
 

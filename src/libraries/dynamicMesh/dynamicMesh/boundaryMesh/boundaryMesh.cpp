@@ -280,14 +280,14 @@ CML::wordList CML::boundaryMesh::patchNames() const
 CML::label CML::boundaryMesh::whichPatch
 (
     const polyPatchList& patches,
-    const label faceI
+    const label facei
 ) const
 {
     forAll(patches, patchI)
     {
         const polyPatch& pp = patches[patchI];
 
-        if ((faceI >= pp.start()) && (faceI < (pp.start() + pp.size())))
+        if ((facei >= pp.start()) && (facei < (pp.start() + pp.size())))
         {
             return patchI;
         }
@@ -311,9 +311,9 @@ CML::labelList CML::boundaryMesh::faceToEdge
 
     forAll(changedFaces, i)
     {
-        label faceI = changedFaces[i];
+        label facei = changedFaces[i];
 
-        const labelList& fEdges = mesh().faceEdges()[faceI];
+        const labelList& fEdges = mesh().faceEdges()[facei];
 
         forAll(fEdges, fEdgeI)
         {
@@ -353,13 +353,13 @@ CML::labelList CML::boundaryMesh::edgeToFace
 
         forAll(eFaces, eFaceI)
         {
-            label faceI = eFaces[eFaceI];
+            label facei = eFaces[eFaceI];
 
-            if (faceRegion[faceI] == -1)
+            if (faceRegion[facei] == -1)
             {
-                faceRegion[faceI] = region;
+                faceRegion[facei] = region;
 
-                changedFaces[changedI++] = faceI;
+                changedFaces[changedI++] = facei;
             }
         }
     }
@@ -370,19 +370,19 @@ CML::labelList CML::boundaryMesh::edgeToFace
 }
 
 
-// Finds area, starting at faceI, delimited by borderEdge
+// Finds area, starting at facei, delimited by borderEdge
 void CML::boundaryMesh::markZone
 (
     const boolList& borderEdge,
-    label faceI,
+    label facei,
     label currentZone,
     labelList& faceZone
 ) const
 {
-    faceZone[faceI] = currentZone;
+    faceZone[facei] = currentZone;
 
     // List of faces whose faceZone has been set.
-    labelList changedFaces(1, faceI);
+    labelList changedFaces(1, facei);
     // List of edges whose faceZone has been set.
     labelList changedEdges;
 
@@ -550,9 +550,9 @@ void CML::boundaryMesh::read(const polyMesh& mesh)
 
         Pout<< "** Start of Faces **" << endl;
 
-        forAll(msh, faceI)
+        forAll(msh, facei)
         {
-            const face& f = msh[faceI];
+            const face& f = msh[facei];
 
             point ctr(Zero);
 
@@ -562,7 +562,7 @@ void CML::boundaryMesh::read(const polyMesh& mesh)
             }
             ctr /= f.size();
 
-            Pout<< "    " << faceI
+            Pout<< "    " << facei
                 << " ctr:" << ctr
                 << " verts:" << f
                 << endl;
@@ -796,11 +796,11 @@ void CML::boundaryMesh::writeTriSurface(const fileName& fName) const
 
     label triI = 0;
 
-    forAll(mesh(), faceI)
+    forAll(mesh(), facei)
     {
-        startTri[faceI] = triI;
+        startTri[facei] = triI;
 
-        triI += nTris[faceI];
+        triI += nTris[facei];
     }
 
     // Triangulate
@@ -820,11 +820,11 @@ void CML::boundaryMesh::writeTriSurface(const fileName& fName) const
 
         forAll(bp, patchFaceI)
         {
-            label faceI = bp.start() + patchFaceI;
+            label facei = bp.start() + patchFaceI;
 
-            label triVertI = 3*startTri[faceI];
+            label triVertI = 3*startTri[facei];
 
-            for (label faceTriI = 0; faceTriI < nTris[faceI]; faceTriI++)
+            for (label faceTriI = 0; faceTriI < nTris[facei]; faceTriI++)
             {
                 label v0 = triVerts[triVertI++];
                 label v1 = triVerts[triVertI++];
@@ -1529,20 +1529,20 @@ void CML::boundaryMesh::setExtraEdges(const label edgeI)
 }
 
 
-CML::label CML::boundaryMesh::whichPatch(const label faceI) const
+CML::label CML::boundaryMesh::whichPatch(const label facei) const
 {
     forAll(patches_, patchI)
     {
         const boundaryPatch& bp = patches_[patchI];
 
-        if ((faceI >= bp.start()) && (faceI < (bp.start() + bp.size())))
+        if ((facei >= bp.start()) && (facei < (bp.start() + bp.size())))
         {
             return patchI;
         }
     }
 
     FatalErrorInFunction
-        << "Cannot find face " << faceI << " in list of boundaryPatches "
+        << "Cannot find face " << facei << " in list of boundaryPatches "
         << patches_
         << abort(FatalError);
 
@@ -1726,9 +1726,9 @@ void CML::boundaryMesh::changeFaces
 
     labelList nFaces(patches_.size(), 0);
 
-    forAll(patchIDs, faceI)
+    forAll(patchIDs, facei)
     {
-        label patchID = patchIDs[faceI];
+        label patchID = patchIDs[facei];
 
         if (patchID < 0 || patchID >= patches_.size())
         {
@@ -1793,11 +1793,11 @@ void CML::boundaryMesh::changeFaces
     // Construct face mapping array
     oldToNew.setSize(patchIDs.size());
 
-    forAll(patchIDs, faceI)
+    forAll(patchIDs, facei)
     {
-        int patchID = patchIDs[faceI];
+        int patchID = patchIDs[facei];
 
-        oldToNew[faceI] = startFace[patchID]++;
+        oldToNew[facei] = startFace[patchID]++;
     }
 
     // Copy faces into correct position and maintain label of original face
@@ -1805,10 +1805,10 @@ void CML::boundaryMesh::changeFaces
 
     labelList newMeshFace(mesh().size());
 
-    forAll(oldToNew, faceI)
+    forAll(oldToNew, facei)
     {
-        newFaces[oldToNew[faceI]] = mesh()[faceI];
-        newMeshFace[oldToNew[faceI]] = meshFace_[faceI];
+        newFaces[oldToNew[facei]] = mesh()[facei];
+        newMeshFace[oldToNew[facei]] = meshFace_[facei];
     }
 
     // Reconstruct 'mesh' from new faces and (copy of) existing points.
@@ -1826,9 +1826,9 @@ void CML::boundaryMesh::changeFaces
 }
 
 
-CML::label CML::boundaryMesh::getNTris(const label faceI) const
+CML::label CML::boundaryMesh::getNTris(const label facei) const
 {
-    const face& f = mesh()[faceI];
+    const face& f = mesh()[facei];
 
     return f.nTriangles(mesh().points());
 }
@@ -1874,9 +1874,9 @@ void CML::boundaryMesh::triangulate
 
     for (label i = 0; i < nFaces; i++)
     {
-        label faceI = startFaceI + i;
+        label facei = startFaceI + i;
 
-        const face& f = mesh()[faceI];
+        const face& f = mesh()[facei];
 
         // Have face triangulate itself (results in faceList)
         faceList triFaces(f.nTriangles(mesh().points()));
@@ -1986,15 +1986,15 @@ void CML::boundaryMesh::markFaces
     // Set in visited all reached ones.
     visited.setSize(mesh().size());
 
-    forAll(currentZone, faceI)
+    forAll(currentZone, facei)
     {
-        if (currentZone[faceI] == 0)
+        if (currentZone[facei] == 0)
         {
-            visited[faceI] = true;
+            visited[facei] = true;
         }
         else
         {
-            visited[faceI] = false;
+            visited[facei] = false;
         }
     }
 }

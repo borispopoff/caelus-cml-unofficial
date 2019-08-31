@@ -119,13 +119,13 @@ CML::scalar CML::meshToMeshMethod::interVol
 
 void CML::meshToMeshMethod::appendNbrCells
 (
-    const label cellI,
+    const label celli,
     const polyMesh& mesh,
     const DynamicList<label>& visitedCells,
     DynamicList<label>& nbrCellIDs
 ) const
 {
-    const labelList& nbrCells = mesh.cellCells()[cellI];
+    const labelList& nbrCells = mesh.cellCells()[celli];
 
     // filter out cells already visited from cell neighbours
     forAll(nbrCells, i)
@@ -233,10 +233,10 @@ void CML::meshToMeshMethod::writeConnectivity
         const labelList& addr = mesh1ToMesh2Addr[i];
         forAll(addr, j)
         {
-            label cellI = addr[j];
+            label celli = addr[j];
             const vector& c0 = mesh1.cellCentres()[i];
 
-            const cell& c = mesh2.cells()[cellI];
+            const cell& c = mesh2.cells()[celli];
             const pointField pts(c.points(mesh2.faces(), mesh2.points()));
             forAll(pts, j)
             {

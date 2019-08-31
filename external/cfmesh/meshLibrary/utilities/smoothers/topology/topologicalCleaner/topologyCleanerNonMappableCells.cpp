@@ -48,9 +48,9 @@ void topologicalCleaner::checkNonMappableCells()
         const label start = boundaries[patchI].patchStart();
         const label end = start + boundaries[patchI].patchSize();
 
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            ++nBoundaryFaces[owner[faceI]];
+            ++nBoundaryFaces[owner[facei]];
         }
     }
 
@@ -88,9 +88,9 @@ void topologicalCleaner::checkNonMappableFaces()
         const label start = boundaries[patchI].patchStart();
         const label end = start + boundaries[patchI].patchSize();
 
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
             forAll(f, pI)
                 boundaryVertex[f[pI]] = true;
         }
@@ -107,9 +107,9 @@ void topologicalCleaner::checkNonMappableFaces()
     //bool changed(false);
 
     label nBadFaces(0);
-    for(label faceI=0;faceI<nIntFaces;++faceI)
+    for(label facei=0;facei<nIntFaces;++facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         DynList<label> bPos;
         forAll(f, pI)
@@ -128,9 +128,9 @@ void topologicalCleaner::checkNonMappableFaces()
         )
         {
             ++nBadFaces;
-            decomposeFace[faceI] = true;
-            decomposeCell_[owner[faceI]] = true;
-            decomposeCell_[neighbour[faceI]] = true;
+            decomposeFace[facei] = true;
+            decomposeCell_[owner[facei]] = true;
+            decomposeCell_[neighbour[facei]] = true;
         }
     }
 
@@ -147,9 +147,9 @@ void topologicalCleaner::checkNonMappableFaces()
 
             boolList decProcFace(procBoundaries[patchI].patchSize(), false);
 
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
 
                 DynList<label> bPos;
                 forAll(f, pI)
@@ -168,9 +168,9 @@ void topologicalCleaner::checkNonMappableFaces()
                 )
                 {
                     ++nBadFaces;
-                    decProcFace[faceI-start] = true;
-                    decomposeFace[faceI] = true;
-                    decomposeCell_[owner[faceI]] = true;
+                    decProcFace[facei-start] = true;
+                    decomposeFace[facei] = true;
+                    decomposeCell_[owner[facei]] = true;
                 }
             }
 
@@ -195,11 +195,11 @@ void topologicalCleaner::checkNonMappableFaces()
             fromOtherProc >> decOtherProc;
 
             const label start = procBoundaries[patchI].patchStart();
-            forAll(decOtherProc, faceI)
-                if( decOtherProc[faceI] )
+            forAll(decOtherProc, facei)
+                if( decOtherProc[facei] )
                 {
-                    decomposeFace[start+faceI] = true;
-                    decomposeCell_[owner[start+faceI]] = true;
+                    decomposeFace[start+facei] = true;
+                    decomposeCell_[owner[start+facei]] = true;
                 }
         }
 

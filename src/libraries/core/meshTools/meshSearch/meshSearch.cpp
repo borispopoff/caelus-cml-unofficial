@@ -638,18 +638,18 @@ const
 //// Works by checking if there is a face inbetween the point and the cell
 //// centre.
 //// Check for internal uses proper face decomposition or just average normal.
-//bool CML::meshSearch::pointInCell(const point& p, label cellI) const
+//bool CML::meshSearch::pointInCell(const point& p, label celli) const
 //{
 //    if (faceDecomp_)
 //    {
-//        const point& ctr = mesh_.cellCentres()[cellI];
+//        const point& ctr = mesh_.cellCentres()[celli];
 //
 //        vector dir(p - ctr);
 //        scalar magDir = mag(dir);
 //
 //        // Check if any faces are hit by ray from cell centre to p.
 //        // If none -> p is in cell.
-//        const labelList& cFaces = mesh_.cells()[cellI];
+//        const labelList& cFaces = mesh_.cells()[celli];
 //
 //        // Make sure half_ray does not pick up any faces on the wrong
 //        // side of the ray.
@@ -657,9 +657,9 @@ const
 //
 //        forAll(cFaces, i)
 //        {
-//            label faceI = cFaces[i];
+//            label facei = cFaces[i];
 //
-//            pointHit inter = mesh_.faces()[faceI].ray
+//            pointHit inter = mesh_.faces()[facei].ray
 //            (
 //                ctr,
 //                dir,
@@ -689,7 +689,7 @@ const
 //    }
 //    else
 //    {
-//        const labelList& f = mesh_.cells()[cellI];
+//        const labelList& f = mesh_.cells()[celli];
 //        const labelList& owner = mesh_.faceOwner();
 //        const vectorField& cf = mesh_.faceCentres();
 //        const vectorField& Sf = mesh_.faceAreas();
@@ -699,7 +699,7 @@ const
 //            label nFace = f[facei];
 //            vector proj = p - cf[nFace];
 //            vector normal = Sf[nFace];
-//            if (owner[nFace] == cellI)
+//            if (owner[nFace] == celli)
 //            {
 //                if ((normal & proj) > 0)
 //                {

@@ -68,7 +68,7 @@ class decomposeCells
         //- create addressing needed to decompose the cell
         void findAddressingForCell
         (
-            const label cellI,
+            const label celli,
             DynList<label, 32>& vrt,
             DynList<edge, 64>& edges,
             DynList<DynList<label, 8>>& faceEdges,
@@ -78,13 +78,13 @@ class decomposeCells
         //- find the apex of the pyramids
         label findTopVertex
         (
-            const label cellI,
+            const label celli,
             const DynList<label, 32>& vrt,
             const DynList<edge, 64>& edges,
             const DynList<DynList<label, 2>, 64>& edgeFaces
         );
 
-        void decomposeCellIntoPyramids(const label cellI);
+        void decomposeCellIntoPyramids(const label celli);
 
         void createPointsAndCellFaces(const boolList& decomposeCell);
 

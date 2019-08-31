@@ -82,16 +82,16 @@ tmp<scalarField> mutkWallFunctionFvPatchScalarField::calcMut() const
     tmp<scalarField> tmutw(new scalarField(patch().size(), 0.0));
     scalarField& mutw = tmutw();
 
-    forAll(mutw, faceI)
+    forAll(mutw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
         scalar yPlus =
-            Cmu25*y[faceI]*sqrt(k[faceCellI])/(muw[faceI]/rhow[faceI]);
+            Cmu25*y[facei]*sqrt(k[faceCellI])/(muw[facei]/rhow[facei]);
 
         if (yPlus > yPlusLam_)
         {
-            mutw[faceI] = muw[faceI]*(yPlus*kappa_/log(E_*yPlus) - 1);
+            mutw[facei] = muw[facei]*(yPlus*kappa_/log(E_*yPlus) - 1);
         }
     }
 

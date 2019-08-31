@@ -177,14 +177,14 @@ autoPtr<ReaderParticleCloud> ReaderParticleCloud::makeCloudFromVariables(
     forAll(positions,i)
     {
 	const vector &pos=positions[i];
-        const label cellI=mesh.findCell(pos);
-        usePos[i]=(cellI>=0);
+        const label celli=mesh.findCell(pos);
+        usePos[i]=(celli>=0);
         if(usePos[i]) {
             cloud.append(
                 new ReaderParticle(
                     mesh,
                     pos,
-                    cellI
+                    celli
                 )
             );
             swakIDs.append(i);

@@ -89,12 +89,12 @@ CML::label CML::faceCollapser::findEdge
 void CML::faceCollapser::filterFace
 (
     const Map<labelList>& splitEdges,
-    const label faceI,
+    const label facei,
     polyTopoChange& meshMod
 ) const
 {
-    const face& f = mesh_.faces()[faceI];
-    const labelList& fEdges = mesh_.faceEdges()[faceI];
+    const face& f = mesh_.faces()[facei];
+    const labelList& fEdges = mesh_.faceEdges()[facei];
 
     // Space for replaced vertices and split edges.
     DynamicList<label> newFace(10 * f.size());
@@ -142,7 +142,7 @@ void CML::faceCollapser::filterFace
     }
     face newF(newFace.shrink());
 
-    //Pout<< "Modifying face:" << faceI << " from " << f << " to " << newFace
+    //Pout<< "Modifying face:" << facei << " from " << f << " to " << newFace
     //    << endl;
 
     if (newF != f)
@@ -151,17 +151,17 @@ void CML::faceCollapser::filterFace
 
         label patchI = -1;
 
-        if (mesh_.isInternalFace(faceI))
+        if (mesh_.isInternalFace(facei))
         {
-            nei = mesh_.faceNeighbour()[faceI];
+            nei = mesh_.faceNeighbour()[facei];
         }
         else
         {
-            patchI = mesh_.boundaryMesh().whichPatch(faceI);
+            patchI = mesh_.boundaryMesh().whichPatch(facei);
         }
 
         // Get current zone info
-        label zoneID = mesh_.faceZones().whichZone(faceI);
+        label zoneID = mesh_.faceZones().whichZone(facei);
 
         bool zoneFlip = false;
 
@@ -169,7 +169,7 @@ void CML::faceCollapser::filterFace
         {
             const faceZone& fZone = mesh_.faceZones()[zoneID];
 
-            zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+            zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
         }
 
         meshMod.setAction
@@ -177,8 +177,8 @@ void CML::faceCollapser::filterFace
             polyModifyFace
             (
                 newF,                       // modified face
-                faceI,                      // label of face being modified
-                mesh_.faceOwner()[faceI],   // owner
+                facei,                      // label of face being modified
+                mesh_.faceOwner()[facei],   // owner
                 nei,                        // neighbour
                 false,                      // face flip
                 patchI,                     // patch for face
@@ -231,9 +231,9 @@ void CML::faceCollapser::setRefinement
 
     forAll(faceLabels, i)
     {
-        const label faceI = faceLabels[i];
+        const label facei = faceLabels[i];
 
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         const label fpA = fpStart[i];
         const label fpB = fpEnd[i];
@@ -371,7 +371,7 @@ void CML::faceCollapser::setRefinement
             meshTools::writeOBJ(str, faceList(1, f), points);
 
             FatalErrorInFunction
-                << "Trying to collapse face:" << faceI << " vertices:" << f
+                << "Trying to collapse face:" << facei << " vertices:" << f
                 << " to edges between vertices " << f[fpA] << " and "
                 << f[fpB] << " but " << f[fpB] << " does not seem to be the"
                 << " vertex furthest away from " << f[fpA] << endl
@@ -393,7 +393,7 @@ void CML::faceCollapser::setRefinement
             sortedFp[fp] = i;
         }
 
-        const labelList& fEdges = mesh_.faceEdges()[faceI];
+        const labelList& fEdges = mesh_.faceEdges()[facei];
 
         // Now look up all edges in the face and see if they get extra
         // vertices inserted and build an edge-to-intersected-points table.
@@ -453,7 +453,7 @@ void CML::faceCollapser::setRefinement
                 }
 
                 // Mark all faces affected
-                insert(edgeFaces[edgeI], faceI, affectedFaces);
+                insert(edgeFaces[edgeI], facei, affectedFaces);
             }
         }
     }
@@ -478,12 +478,12 @@ void CML::faceCollapser::setRefinement
 
     forAll(faceLabels, i)
     {
-        const label faceI = faceLabels[i];
+        const label facei = faceLabels[i];
 
-        meshMod.setAction(polyRemoveFace(faceI));
+        meshMod.setAction(polyRemoveFace(facei));
 
         // Update list of faces we still have to modify
-        affectedFaces.erase(faceI);
+        affectedFaces.erase(facei);
     }
 
 

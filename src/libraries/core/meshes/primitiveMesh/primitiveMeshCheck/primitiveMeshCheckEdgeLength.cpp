@@ -38,9 +38,9 @@ bool CML::primitiveMesh::checkEdgeLength
 
     labelHashSet smallEdgeSet(nPoints()/100);
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         forAll(f, fp)
         {

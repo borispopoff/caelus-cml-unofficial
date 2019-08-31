@@ -66,20 +66,20 @@ bool CML::primitiveMesh::checkMeshMotion
     scalar minVolume = GREAT;
     label nNegVols = 0;
 
-    forAll(cellVols, cellI)
+    forAll(cellVols, celli)
     {
-        if (cellVols[cellI] < VSMALL)
+        if (cellVols[celli] < VSMALL)
         {
             if (debug || report)
             {
                 Pout<< "Zero or negative cell volume detected for cell "
-                    << cellI << ".  Volume = " << cellVols[cellI] << endl;
+                    << celli << ".  Volume = " << cellVols[celli] << endl;
             }
 
             nNegVols++;
         }
 
-        minVolume = min(minVolume, cellVols[cellI]);
+        minVolume = min(minVolume, cellVols[celli]);
     }
 
     if (nNegVols > 0)
@@ -106,26 +106,26 @@ bool CML::primitiveMesh::checkMeshMotion
     label nPyrErrors = 0;
     label nDotProductErrors = 0;
 
-    forAll(f, faceI)
+    forAll(f, facei)
     {
-        const scalar a = CML::mag(fAreas[faceI]);
+        const scalar a = CML::mag(fAreas[facei]);
 
         if (a < VSMALL)
         {
             if (debug || report)
             {
-                if (isInternalFace(faceI))
+                if (isInternalFace(facei))
                 {
                     Pout<< "Zero or negative face area detected for "
-                        << "internal face "<< faceI << " between cells "
-                        << own[faceI] << " and " << nei[faceI]
+                        << "internal face "<< facei << " between cells "
+                        << own[facei] << " and " << nei[facei]
                         << ".  Face area magnitude = " << a << endl;
                 }
                 else
                 {
                     Pout<< "Zero or negative face area detected for "
-                        << "boundary face " << faceI << " next to cell "
-                        << own[faceI] << ".  Face area magnitude = "
+                        << "boundary face " << facei << " next to cell "
+                        << own[facei] << ".  Face area magnitude = "
                         << a << endl;
                 }
             }
@@ -137,31 +137,31 @@ bool CML::primitiveMesh::checkMeshMotion
 
         // Create the owner pyramid - it will have negative volume
         scalar pyrVol =
-            pyramidPointFaceRef(f[faceI], cellCtrsGeometric[own[faceI]]).mag(newPoints);
+            pyramidPointFaceRef(f[facei], cellCtrsGeometric[own[facei]]).mag(newPoints);
 
         if (pyrVol > SMALL)
         {
             if (debug || report)
             {
                 Pout<< "Negative pyramid volume: " << -pyrVol
-                    << " for face " << faceI << " " << f[faceI]
-                    << "  and owner cell: " << own[faceI] << endl
+                    << " for face " << facei << " " << f[facei]
+                    << "  and owner cell: " << own[facei] << endl
                     << "Owner cell vertex labels: "
-                    << cells()[own[faceI]].labels(f)
+                    << cells()[own[facei]].labels(f)
                     << endl;
             }
 
             nPyrErrors++;
         }
 
-        if (isInternalFace(faceI))
+        if (isInternalFace(facei))
         {
             // Create the neighbour pyramid - it will have positive volume
             scalar pyrVol =
                 pyramidPointFaceRef
                 (
-                    f[faceI],
-                    cellCtrsGeometric[nei[faceI]]
+                    f[facei],
+                    cellCtrsGeometric[nei[facei]]
                 ).mag(newPoints);
 
             if (pyrVol < -SMALL)
@@ -169,18 +169,18 @@ bool CML::primitiveMesh::checkMeshMotion
                 if (debug || report)
                 {
                     Pout<< "Negative pyramid volume: " << pyrVol
-                        << " for face " << faceI << " " << f[faceI]
-                        << "  and neighbour cell: " << nei[faceI] << nl
+                        << " for face " << facei << " " << f[facei]
+                        << "  and neighbour cell: " << nei[facei] << nl
                         << "Neighbour cell vertex labels: "
-                        << cells()[nei[faceI]].labels(f)
+                        << cells()[nei[facei]].labels(f)
                         << endl;
                 }
 
                 nPyrErrors++;
             }
 
-            const vector d = cellCtrs[nei[faceI]] - cellCtrs[own[faceI]];
-            const vector& s = fAreas[faceI];
+            const vector d = cellCtrs[nei[facei]] - cellCtrs[own[facei]];
+            const vector& s = fAreas[facei];
             scalar dDotS = (d & s)/(mag(d)*mag(s) + VSMALL);
 
             // Only write full message the first time
@@ -189,8 +189,8 @@ bool CML::primitiveMesh::checkMeshMotion
                 // Non-orthogonality greater than 90 deg
                 WarningInFunction
                     << "Severe non-orthogonality in mesh motion for face "
-                    << faceI
-                    << " between cells " << own[faceI] << " and " << nei[faceI]
+                    << facei
+                    << " between cells " << own[facei] << " and " << nei[facei]
                     << ": Angle = " << radToDeg(::acos(dDotS))
                     << " deg." << endl;
 

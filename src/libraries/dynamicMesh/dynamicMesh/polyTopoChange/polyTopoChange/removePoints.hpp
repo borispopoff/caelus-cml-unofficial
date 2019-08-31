@@ -80,7 +80,7 @@ class removePoints
         //  (patch, zone) the same.
         void modifyFace
         (
-            const label faceI,
+            const label facei,
             const face&,
             polyTopoChange&
         ) const;

@@ -32,9 +32,9 @@ void CML::fileFormats::VTKsurfaceFormat<Face>::writeHeaderPolygons
 {
     label nNodes = 0;
 
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
-        nNodes += faceLst[faceI].size();
+        nNodes += faceLst[facei].size();
     }
 
     os  << nl
@@ -144,9 +144,9 @@ void CML::fileFormats::VTKsurfaceFormat<Face>::write
     writeHeader(os, surf.points());
     writeHeaderPolygons(os, faceLst);
 
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
-        const Face& f = faceLst[faceI];
+        const Face& f = faceLst[facei];
 
         os << f.size();
         forAll(f, fp)

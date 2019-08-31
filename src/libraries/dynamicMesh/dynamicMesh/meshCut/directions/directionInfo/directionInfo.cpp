@@ -89,8 +89,8 @@ CML::label CML::directionInfo::lowest
 CML::label CML::directionInfo::edgeToFaceIndex
 (
     const primitiveMesh& mesh,
-    const label cellI,
-    const label faceI,
+    const label celli,
+    const label facei,
     const label edgeI
 )
 {
@@ -98,19 +98,19 @@ CML::label CML::directionInfo::edgeToFaceIndex
     {
         FatalErrorInFunction
             << "Illegal edge label:" << edgeI
-            << " when projecting cut edge from cell " << cellI
-            << " to face " << faceI
+            << " when projecting cut edge from cell " << celli
+            << " to face " << facei
             << abort(FatalError);
     }
 
     const edge& e = mesh.edges()[edgeI];
 
-    const face& f = mesh.faces()[faceI];
+    const face& f = mesh.faces()[facei];
 
     // edgeI is either
-    // - in faceI. Convert into index in face.
+    // - in facei. Convert into index in face.
     // - connected (but not in) to face. Return -1.
-    // - in face opposite faceI. Convert into index in face.
+    // - in face opposite facei. Convert into index in face.
 
     label fpA = findIndex(f, e.start());
     label fpB = findIndex(f, e.end());
@@ -141,17 +141,17 @@ CML::label CML::directionInfo::edgeToFaceIndex
             // - determine two faces using edge (one is the opposite face,
             //   one is 'side' face
             // - walk on both these faces to opposite edge
-            // - check if this opposite edge is on faceI
+            // - check if this opposite edge is on facei
 
             label f0I, f1I;
 
-            meshTools::getEdgeFaces(mesh, cellI, edgeI, f0I, f1I);
+            meshTools::getEdgeFaces(mesh, celli, edgeI, f0I, f1I);
 
             // Walk to opposite edge on face f0
             label edge0I =
                 meshTools::walkFace(mesh, f0I, edgeI, e.start(), 2);
 
-            // Check if edge on faceI.
+            // Check if edge on facei.
 
             const edge& e0 = mesh.edges()[edge0I];
 
@@ -163,14 +163,14 @@ CML::label CML::directionInfo::edgeToFaceIndex
                 return lowest(f.size(), fpA, fpB);
             }
 
-            // Face0 is doesn't have an edge on faceI (so must be the opposite
+            // Face0 is doesn't have an edge on facei (so must be the opposite
             // face) so try face1.
 
             // Walk to opposite edge on face f1
             label edge1I =
                 meshTools::walkFace(mesh, f1I, edgeI, e.start(), 2);
 
-            // Check if edge on faceI.
+            // Check if edge on facei.
             const edge& e1 = mesh.edges()[edge1I];
 
             fpA = findIndex(f, e1.start());
@@ -184,7 +184,7 @@ CML::label CML::directionInfo::edgeToFaceIndex
             FatalErrorInFunction
                 << "Found connected faces " << mesh.faces()[f0I] << " and "
                 << mesh.faces()[f1I] << " sharing edge " << edgeI << endl
-                << "But none seems to be connected to face " << faceI
+                << "But none seems to be connected to face " << facei
                 << " vertices:" << f
                 << abort(FatalError);
 

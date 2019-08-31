@@ -60,15 +60,15 @@ void CML::IDDESDelta::calcDelta()
 
     const cellList& cells = mesh().cells();
 
-    forAll(cells,cellI)
+    forAll(cells,celli)
     {
         scalar deltaMaxTmp = 0.0;
-        const labelList& cFaces = mesh().cells()[cellI];
-        const vector nCell = n[cellI];
+        const labelList& cFaces = mesh().cells()[celli];
+        const vector nCell = n[celli];
         forAll(cFaces, cFaceI)
         {
-            label faceI = cFaces[cFaceI];
-            const point& faceCentreI = mesh().faceCentres()[faceI];
+            label facei = cFaces[cFaceI];
+            const point& faceCentreI = mesh().faceCentres()[facei];
             forAll(cFaces, cFaceJ)
             {
                 label faceJ = cFaces[cFaceJ];
@@ -80,7 +80,7 @@ void CML::IDDESDelta::calcDelta()
                 }
             }
         }
-        faceToFacenMax()[cellI] = deltaMaxTmp;
+        faceToFacenMax()[celli] = deltaMaxTmp;
     }
 
     if (nD == 3)

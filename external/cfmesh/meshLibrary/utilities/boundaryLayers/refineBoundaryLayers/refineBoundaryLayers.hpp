@@ -150,7 +150,7 @@ class refineBoundaryLayers
         //- and return them in the local i, j system of the face
         void sortFacePoints
         (
-            const label faceI,
+            const label facei,
             DynList<DynList<label>>& facePoints,
             const label transpose = false
         ) const;
@@ -159,7 +159,7 @@ class refineBoundaryLayers
         //- and return them in the local i, j, system of the face
         void sortFaceFaces
         (
-            const label faceI,
+            const label facei,
             DynList<DynList<label>>& faceFaces,
             const label transpose = false
         ) const;
@@ -170,7 +170,7 @@ class refineBoundaryLayers
         //- generate new cells for a prism with one boundary face
         void generateNewCellsPrism
         (
-            const label cellI,
+            const label celli,
             DynList<DynList<DynList<label, 8>, 10>, 64>& cellsFromCell
         ) const;
 
@@ -178,7 +178,7 @@ class refineBoundaryLayers
         //- an existing face into new cells
         void storeFacesIntoCells
         (
-            const label faceI,
+            const label facei,
             const bool reverseOrientation,
             const label normalDirection,
             const bool maxCoordinate,
@@ -238,7 +238,7 @@ class refineBoundaryLayers
                 //- construct from cell label and the refineBoundaryLayers
                 refineEdgeHexCell
                 (
-                    const label cellI,
+                    const label celli,
                     const refineBoundaryLayers& ref
                 );
 
@@ -308,7 +308,7 @@ class refineBoundaryLayers
                 //- construct from cell label and the refineBoundaryLayers
                 refineCornerHexCell
                 (
-                    const label cellI,
+                    const label celli,
                     const refineBoundaryLayers& ref
                 );
 

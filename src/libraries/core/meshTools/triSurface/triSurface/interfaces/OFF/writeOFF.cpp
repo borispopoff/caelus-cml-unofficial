@@ -79,26 +79,26 @@ void triSurface::writeOFF(const bool writeSorted, Ostream& os) const
                 patchFaceI++
             )
             {
-                const label faceI = faceMap[faceIndex++];
+                const label facei = faceMap[faceIndex++];
 
                 os  << "3 "
-                    << operator[](faceI)[0] << ' '
-                    << operator[](faceI)[1] << ' '
-                    << operator[](faceI)[2] << ' '
-                    << operator[](faceI).region()
+                    << operator[](facei)[0] << ' '
+                    << operator[](facei)[1] << ' '
+                    << operator[](facei)[2] << ' '
+                    << operator[](facei).region()
                     << endl;
             }
         }
     }
     else
     {
-        forAll(*this, faceI)
+        forAll(*this, facei)
         {
             os  << "3 "
-                << operator[](faceI)[0] << ' '
-                << operator[](faceI)[1] << ' '
-                << operator[](faceI)[2] << ' '
-                << operator[](faceI).region()
+                << operator[](facei)[0] << ' '
+                << operator[](facei)[1] << ' '
+                << operator[](facei)[2] << ' '
+                << operator[](facei).region()
                 << endl;
         }
     }

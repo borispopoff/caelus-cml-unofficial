@@ -103,10 +103,10 @@ void CML::manipulatePatchField::manipulate(
 
     }
     label cnt=0;
-    forAll(value,cellI) {
-        if(mask[cellI]) {
+    forAll(value,celli) {
+        if(mask[celli]) {
             cnt++;
-            value[cellI]=newValue[cellI];
+            value[celli]=newValue[celli];
         }
     }
 
@@ -180,10 +180,10 @@ void CML::manipulatePatchField::manipulatePoint(
 
     }
     label cnt=0;
-    forAll(value,cellI) {
-        if(mask[cellI]) {
+    forAll(value,celli) {
+        if(mask[celli]) {
             cnt++;
-            value[cellI]=newValue[cellI];
+            value[celli]=newValue[celli];
         }
     }
 

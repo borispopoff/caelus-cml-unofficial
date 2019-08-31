@@ -75,10 +75,10 @@ void surfaceRelativeSurfacePluginFunction::doEvaluation()
     const scalarField &vol=mesh().V();
 
     forAll(cells,i) {
-        const label cellI=cells[i];
+        const label celli=cells[i];
 
-        if(cellI>=0) {
-            pRelativeSurface()[cellI]+=area[i]/vol[cellI];
+        if(celli>=0) {
+            pRelativeSurface()[celli]+=area[i]/vol[celli];
         }
     }
 

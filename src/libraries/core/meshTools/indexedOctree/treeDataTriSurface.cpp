@@ -42,13 +42,13 @@ CML::volumeType CML::treeDataPrimitivePatch<CML::triSurface>::getVolumeType
     }
 
     // Get actual intersection point on face
-    label faceI = info.index();
+    label facei = info.index();
 
     triSurfaceTools::sideType t = triSurfaceTools::surfaceSide
     (
         patch_,
         sample,
-        faceI
+        facei
     );
 
     if (t == triSurfaceTools::UNKNOWN)

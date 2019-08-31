@@ -371,7 +371,7 @@ class cellCuts
                 const labelList& loop
             ) const;
 
-            //- Determines if loop through cellI consistent with existing
+            //- Determines if loop through celli consistent with existing
             //  pattern.
             bool conservativeValidLoop
             (

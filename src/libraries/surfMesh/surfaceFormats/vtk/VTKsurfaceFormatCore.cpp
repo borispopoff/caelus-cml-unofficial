@@ -101,11 +101,11 @@ void CML::fileFormats::VTKsurfaceFormatCore::writeTail
         << "FIELD attributes 1" << nl
         << "zone 1 " << zoneIds.size() << " float" << nl;
 
-    forAll(zoneIds, faceI)
+    forAll(zoneIds, facei)
     {
-        if (faceI)
+        if (facei)
         {
-            if (faceI % 20)
+            if (facei % 20)
             {
                 os << ' ';
             }
@@ -114,7 +114,7 @@ void CML::fileFormats::VTKsurfaceFormatCore::writeTail
                 os << nl;
             }
         }
-        os  << zoneIds[faceI] + 1;
+        os  << zoneIds[facei] + 1;
     }
     os  << nl;
 }

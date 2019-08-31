@@ -82,7 +82,7 @@ class treeDataFace
     // Private Member Functions
 
         //- Calculate face bounding box
-        treeBoundBox calcBb(const label cellI) const;
+        treeBoundBox calcBb(const label celli) const;
 
         //- Initialise all member data
         void update();

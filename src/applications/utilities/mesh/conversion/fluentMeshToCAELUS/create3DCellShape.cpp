@@ -81,24 +81,24 @@ cellShape create3DCellShape
     // make a list of outward-pointing faces
     labelListList localFaces(faceLabels.size());
 
-    forAll(faceLabels, faceI)
+    forAll(faceLabels, facei)
     {
-        const label curFaceLabel = faceLabels[faceI];
+        const label curFaceLabel = faceLabels[facei];
 
         const labelList& curFace = faces[curFaceLabel];
 
         if (owner[curFaceLabel] == cellIndex)
         {
-            localFaces[faceI] = curFace;
+            localFaces[facei] = curFace;
         }
         else if (neighbour[curFaceLabel] == cellIndex)
         {
             // Reverse the face
-            localFaces[faceI].setSize(curFace.size());
+            localFaces[facei].setSize(curFace.size());
 
             forAllReverse(curFace, i)
             {
-                localFaces[faceI][curFace.size() - i - 1] =
+                localFaces[facei][curFace.size() - i - 1] =
                     curFace[i];
             }
         }

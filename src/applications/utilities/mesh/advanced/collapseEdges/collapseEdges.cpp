@@ -270,14 +270,14 @@ label collapseHighAspectFaces
 
     label nCollapsed = 0;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        if (magArea[faceI] < minArea)
+        if (magArea[facei] < minArea)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             // Get the edges in face point order
-            labelList fEdges(getSortedEdges(edges, f, faceEdges[faceI]));
+            labelList fEdges(getSortedEdges(edges, f, faceEdges[facei]));
 
             SortableList<scalar> lengths(fEdges.size());
             forAll(fEdges, i)
@@ -359,22 +359,22 @@ label simplifyFaces
 
     boolList protectedEdge(mesh.nEdges(), false);
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         if
         (
             f.size() > minSize
-         && cells[faceOwner[faceI]].size() >= 6
+         && cells[faceOwner[facei]].size() >= 6
          && (
-                mesh.isInternalFace(faceI)
-             && cells[faceNeighbour[faceI]].size() >= 6
+                mesh.isInternalFace(facei)
+             && cells[faceNeighbour[facei]].size() >= 6
             )
         )
         {
             // Get the edges in face point order
-            labelList fEdges(getSortedEdges(edges, f, faceEdges[faceI]));
+            labelList fEdges(getSortedEdges(edges, f, faceEdges[facei]));
 
             SortableList<scalar> lengths(fEdges.size());
             forAll(fEdges, i)
@@ -482,9 +482,9 @@ int main(int argc, char *argv[])
         PackedBoolList boundaryPoint(mesh.nPoints());
 
         label nIntFaces = mesh.nInternalFaces();
-        for (label faceI = nIntFaces; faceI < mesh.nFaces(); faceI++)
+        for (label facei = nIntFaces; facei < mesh.nFaces(); facei++)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             forAll(f, fp)
             {

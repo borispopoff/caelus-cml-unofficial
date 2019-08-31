@@ -57,11 +57,11 @@ CML::scalar CML::targetVolumeToCell::volumeOfSet
 ) const
 {
     scalar sumVol = 0.0;
-    forAll(selected, cellI)
+    forAll(selected, celli)
     {
-        if (selected[cellI])
+        if (selected[celli])
         {
-            sumVol += mesh_.cellVolumes()[cellI];
+            sumVol += mesh_.cellVolumes()[celli];
         }
     }
     return returnReduce(sumVol, sumOp<scalar>());
@@ -80,13 +80,13 @@ CML::label CML::targetVolumeToCell::selectCells
 
     label nSelected = 0;
 
-    forAll(mesh_.cellCentres(), cellI)
+    forAll(mesh_.cellCentres(), celli)
     {
-        const point& cc = mesh_.cellCentres()[cellI];
+        const point& cc = mesh_.cellCentres()[celli];
 
-        if (maskSet[cellI] && ((cc&n_) < normalComp))
+        if (maskSet[celli] && ((cc&n_) < normalComp))
         {
-            selected[cellI] = true;
+            selected[celli] = true;
             nSelected++;
         }
     }
@@ -252,11 +252,11 @@ void CML::targetVolumeToCell::combine(topoSet& set, const bool add) const
     Info<< "    Selected " << nSelected << " with actual volume " << selectedVol
         << endl;
 
-    forAll(selected, cellI)
+    forAll(selected, celli)
     {
-        if (selected[cellI])
+        if (selected[celli])
         {
-            addOrDelete(set, cellI, add);
+            addOrDelete(set, celli, add);
         }
     }
 }

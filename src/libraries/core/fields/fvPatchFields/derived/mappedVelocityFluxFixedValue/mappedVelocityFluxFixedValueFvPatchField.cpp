@@ -174,10 +174,10 @@ void CML::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
 
                 label faceStart = Upf.patch().start();
 
-                forAll(Upf, faceI)
+                forAll(Upf, facei)
                 {
-                    allUValues[faceStart + faceI] = Upf[faceI];
-                    allPhiValues[faceStart + faceI] = phipf[faceI];
+                    allUValues[faceStart + facei] = Upf[facei];
+                    allPhiValues[faceStart + facei] = phipf[facei];
                 }
             }
 

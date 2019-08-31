@@ -339,9 +339,9 @@ void CML::mapDistributeBase::calcCompactAddressing
     // Count all (non-local) elements needed. Just for presizing map.
     labelList nNonLocal(Pstream::nProcs(), 0);
 
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        const labelList& cCells = cellCells[cellI];
+        const labelList& cCells = cellCells[celli];
 
         forAll(cCells, i)
         {
@@ -366,9 +366,9 @@ void CML::mapDistributeBase::calcCompactAddressing
 
 
     // Collect all (non-local) elements needed.
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        const labelList& cCells = cellCells[cellI];
+        const labelList& cCells = cellCells[celli];
 
         forAll(cCells, i)
         {
@@ -533,9 +533,9 @@ void CML::mapDistributeBase::exchangeAddressing
     );
 
     // Renumber elements
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        labelList& cCells = cellCells[cellI];
+        labelList& cCells = cellCells[celli];
 
         forAll(cCells, i)
         {

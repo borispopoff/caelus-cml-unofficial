@@ -764,7 +764,7 @@ bool CML::cellCuts::walkPoint
 }
 
 
-// Cross cut (which is edge on faceI) onto next face
+// Cross cut (which is edge on facei) onto next face
 bool CML::cellCuts::crossEdge
 (
     const label celli,
@@ -844,7 +844,7 @@ bool CML::cellCuts::addCut
 }
 
 
-// Walk across faceI, storing cuts as you go. Returns last two cuts visisted.
+// Walk across facei, storing cuts as you go. Returns last two cuts visisted.
 // Returns true if valid walk.
 bool CML::cellCuts::walkFace
 (

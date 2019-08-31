@@ -18,12 +18,12 @@ void maxFaceToCell
     scalarField& cellFld = cellData.internalField();
 
     cellFld = -GREAT;
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const cell& cFaces = cells[cellI];
+        const cell& cFaces = cells[celli];
         forAll(cFaces, i)
         {
-            cellFld[cellI] = max(cellFld[cellI], faceData[cFaces[i]]);
+            cellFld[celli] = max(cellFld[celli], faceData[cFaces[i]]);
         }
     }
 
@@ -48,12 +48,12 @@ void minFaceToCell
     scalarField& cellFld = cellData.internalField();
 
     cellFld = GREAT;
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const cell& cFaces = cells[cellI];
+        const cell& cFaces = cells[celli];
         forAll(cFaces, i)
         {
-            cellFld[cellI] = min(cellFld[cellI], faceData[cFaces[i]]);
+            cellFld[celli] = min(cellFld[celli], faceData[cFaces[i]]);
         }
     }
 
@@ -292,10 +292,10 @@ void CML::writeFields
             zeroGradientFvPatchScalarField::typeName
         );
         const cellShapeList& cellShapes = mesh.cellShapes();
-        forAll(cellShapes, cellI)
+        forAll(cellShapes, celli)
         {
-            const cellModel& model = cellShapes[cellI].model();
-            shape[cellI] = model.index();
+            const cellModel& model = cellShapes[celli].model();
+            shape[celli] = model.index();
         }
         shape.correctBoundaryConditions();
         Info<< "    Writing cell shape (hex, tet etc.) to " << shape.name()

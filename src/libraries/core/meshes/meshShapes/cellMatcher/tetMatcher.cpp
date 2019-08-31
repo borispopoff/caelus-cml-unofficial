@@ -61,7 +61,7 @@ bool CML::tetMatcher::matchShape
     const bool checkOnly,
     const faceList& faces,
     const labelList& owner,
-    const label cellI,
+    const label celli,
     const labelList& myFaces
 )
 {
@@ -116,7 +116,7 @@ bool CML::tetMatcher::matchShape
         (
             face3vert0,
             faceSize_[face3I],
-            !(owner[faceMap_[face3I]] == cellI)
+            !(owner[faceMap_[face3I]] == celli)
         );
     vertLabels_[1] = pointMap_[face3[face3vert1]];
 
@@ -126,7 +126,7 @@ bool CML::tetMatcher::matchShape
         (
             face3vert1,
             faceSize_[face3I],
-            !(owner[faceMap_[face3I]] == cellI)
+            !(owner[faceMap_[face3I]] == celli)
         );
     vertLabels_[2] = pointMap_[face3[face3vert2]];
 
@@ -173,7 +173,7 @@ bool CML::tetMatcher::matchShape
         (
             face1vert0,
             faceSize_[face1I],
-            (owner[faceMap_[face1I]] == cellI)
+            (owner[faceMap_[face1I]] == celli)
         );
     vertLabels_[3] = pointMap_[face1[face1vert3]];
 
@@ -211,15 +211,15 @@ bool CML::tetMatcher::faceSizeMatch
 }
 
 
-bool CML::tetMatcher::isA(const primitiveMesh& mesh, const label cellI)
+bool CML::tetMatcher::isA(const primitiveMesh& mesh, const label celli)
 {
     return matchShape
     (
         true,
         mesh.faces(),
         mesh.faceOwner(),
-        cellI,
-        mesh.cells()[cellI]
+        celli,
+        mesh.cells()[celli]
     );
 }
 
@@ -241,7 +241,7 @@ bool CML::tetMatcher::isA(const faceList& faces)
 bool CML::tetMatcher::matches
 (
     const primitiveMesh& mesh,
-    const label cellI,
+    const label celli,
     cellShape& shape
 )
 {
@@ -252,8 +252,8 @@ bool CML::tetMatcher::matches
             false,
             mesh.faces(),
             mesh.faceOwner(),
-            cellI,
-            mesh.cells()[cellI]
+            celli,
+            mesh.cells()[celli]
         )
     )
     {

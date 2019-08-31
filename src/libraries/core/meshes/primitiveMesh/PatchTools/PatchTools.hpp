@@ -766,7 +766,7 @@ void CML::PatchTools::gatherAndMerge
 #include "boundBox.hpp"
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Finds area, starting at faceI, delimited by borderEdge.
+// Finds area, starting at facei, delimited by borderEdge.
 // Marks all visited faces (from face-edge-face walk) with currentZone.
 template
 <

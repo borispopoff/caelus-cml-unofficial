@@ -187,7 +187,7 @@ bool CML::fileFormats::OFFsurfaceFormat<Face>::read
     // use a DynamicList for possible on-the-fly triangulation
     DynamicList<Face>  dynFaces(nElems);
 
-    for (label faceI = 0; faceI < nElems; ++faceI)
+    for (label facei = 0; facei < nElems; ++facei)
     {
         line = this->getLineNoComment(is);
 

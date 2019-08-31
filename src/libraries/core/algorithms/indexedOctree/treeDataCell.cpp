@@ -34,7 +34,7 @@ namespace CML
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-CML::treeBoundBox CML::treeDataCell::calcCellBb(const label cellI) const
+CML::treeBoundBox CML::treeDataCell::calcCellBb(const label celli) const
 {
     const cellList& cells = mesh_.cells();
     const faceList& faces = mesh_.faces();
@@ -46,7 +46,7 @@ CML::treeBoundBox CML::treeDataCell::calcCellBb(const label cellI) const
         vector(-GREAT, -GREAT, -GREAT)
     );
 
-    const cell& cFaces = cells[cellI];
+    const cell& cFaces = cells[celli];
 
     forAll(cFaces, cFaceI)
     {
@@ -205,14 +205,14 @@ void CML::treeDataCell::findNearestOp::operator()
     forAll(indices, i)
     {
         label index = indices[i];
-        label cellI = shape.cellLabels()[index];
-        scalar distSqr = magSqr(sample - shape.mesh().cellCentres()[cellI]);
+        label celli = shape.cellLabels()[index];
+        scalar distSqr = magSqr(sample - shape.mesh().cellCentres()[celli]);
 
         if (distSqr < nearestDistSqr)
         {
             nearestDistSqr = distSqr;
             minIndex = index;
-            nearestPoint = shape.mesh().cellCentres()[cellI];
+            nearestPoint = shape.mesh().cellCentres()[celli];
         }
     }
 }

@@ -42,12 +42,12 @@ polyMeshGenModifierAddCellByCell::polyMeshGenModifierAddCellByCell
 {
     this->pointFaces();
     faceListPMG& faces = this->facesAccess();
-    forAll(faces, faceI)
-        newFaces_[faceI].transfer(faces[faceI]);
+    forAll(faces, facei)
+        newFaces_[facei].transfer(faces[facei]);
     
     cellListPMG& cells = this->cellsAccess();
-    forAll(cells, cellI)
-        newCells_[cellI].transfer(cells[cellI]);
+    forAll(cells, celli)
+        newCells_[celli].transfer(cells[celli]);
 };
             
 // Destructor
@@ -55,13 +55,13 @@ polyMeshGenModifierAddCellByCell::~polyMeshGenModifierAddCellByCell()
 {
     faceListPMG& faces = this->facesAccess();
     faces.setSize(nFaces_);
-    forAll(faces, faceI)
-        faces[faceI].transfer(newFaces_[faceI]);
+    forAll(faces, facei)
+        faces[facei].transfer(newFaces_[facei]);
     
     cellListPMG& cells = this->cellsAccess();
     cells.setSize(newCells_.size());
-    forAll(cells, cellI)
-        cells[cellI].transfer(newCells_[cellI]);
+    forAll(cells, celli)
+        cells[celli].transfer(newCells_[celli]);
 }
     
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -72,20 +72,20 @@ void polyMeshGenModifierAddCellByCell::addCell(const faceList& cellFaces)
     
     VRWGraph& pointFaces = this->pointFaces();
     
-    forAll(cellFaces, faceI)
+    forAll(cellFaces, facei)
     {
-        const face& f = cellFaces[faceI];
+        const face& f = cellFaces[facei];
         
         const label pointI = f[0];
         
         label fLabel(-1);
         forAllRow(pointFaces, pointI, pfI)
         {
-            const label faceI = pointFaces(pointI, pfI);
+            const label facei = pointFaces(pointI, pfI);
             
-            if( newFaces_[faceI] == f )
+            if( newFaces_[facei] == f )
             {
-                fLabel = faceI;
+                fLabel = facei;
                 break;
             }
         }
@@ -93,7 +93,7 @@ void polyMeshGenModifierAddCellByCell::addCell(const faceList& cellFaces)
         if( fLabel == -1 )
         {
             newFaces_.append(f);
-            c[faceI] = nFaces_;
+            c[facei] = nFaces_;
             forAll(f, pI)
                 pointFaces.append(f[pI], nFaces_);
             
@@ -101,7 +101,7 @@ void polyMeshGenModifierAddCellByCell::addCell(const faceList& cellFaces)
         }
         else
         {
-            c[faceI] = fLabel;
+            c[facei] = fLabel;
         }
     }
     

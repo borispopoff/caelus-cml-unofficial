@@ -131,12 +131,12 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
 
     const labelUList& oldOwnerStart = lduAddr().ownerStartAddr();
 
-    forAll(newCellFaces, cellI)
+    forAll(newCellFaces, celli)
     {
-        labelList& curFaces = newCellFaces[cellI];
+        labelList& curFaces = newCellFaces[celli];
 
-        const label s = oldOwnerStart[cellI];
-        const label e = oldOwnerStart[cellI + 1];
+        const label s = oldOwnerStart[celli];
+        const label e = oldOwnerStart[celli + 1];
 
         curFaces.setSize(e - s);
 
@@ -172,12 +172,12 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
         const labelUList& curFaceCells = curPatch.faceCells();
         const label curStart = curPatch.start();
 
-        forAll(curPatch, faceI)
+        forAll(curPatch, facei)
         {
             // Find out if the mirrored face is identical to the
             // original.  If so, the face needs to become internal and
             // added to its owner cell
-            const face& origFace = curPatch[faceI];
+            const face& origFace = curPatch[facei];
 
             face mirrorFace(origFace.size());
             forAll(mirrorFace, pointI)
@@ -189,12 +189,12 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
             {
                 // The mirror is identical to current face.  This will
                 // become an internal face
-                const label oldSize = newCellFaces[curFaceCells[faceI]].size();
+                const label oldSize = newCellFaces[curFaceCells[facei]].size();
 
-                newCellFaces[curFaceCells[faceI]].setSize(oldSize + 1);
-                newCellFaces[curFaceCells[faceI]][oldSize] = curStart + faceI;
+                newCellFaces[curFaceCells[facei]].setSize(oldSize + 1);
+                newCellFaces[curFaceCells[facei]][oldSize] = curStart + facei;
 
-                curInsBouFace[faceI] = true;
+                curInsBouFace[facei] = true;
             }
         }
     }
@@ -211,9 +211,9 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     label nNewFaces = 0;
 
     // Insert original (internal) faces
-    forAll(newCellFaces, cellI)
+    forAll(newCellFaces, celli)
     {
-        const labelList& curCellFaces = newCellFaces[cellI];
+        const labelList& curCellFaces = newCellFaces[celli];
 
         forAll(curCellFaces, cfI)
         {
@@ -225,9 +225,9 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     }
 
     // Mirror internal faces
-    for (label faceI = 0; faceI < nOldInternalFaces; faceI++)
+    for (label facei = 0; facei < nOldInternalFaces; facei++)
     {
-        const face& oldFace = oldFaces[faceI];
+        const face& oldFace = oldFaces[facei];
         face& nf = newFaces[nNewFaces];
         nf.setSize(oldFace.size());
 
@@ -238,7 +238,7 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
             nf[i] = mirrorPointLookup[oldFace[oldFace.size() - i]];
         }
 
-        mirrorFaceLookup[faceI] = nNewFaces;
+        mirrorFaceLookup[facei] = nNewFaces;
         nNewFaces++;
     }
 
@@ -259,27 +259,27 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
         newPatchStarts[nNewPatches] = nNewFaces;
 
         // Master side
-        for (label faceI = 0; faceI < curPatchSize; faceI++)
+        for (label facei = 0; facei < curPatchSize; facei++)
         {
             // Check if the face has already been added.  If not, add it and
             // insert the numbering details.
-            if (!curInserted[faceI])
+            if (!curInserted[facei])
             {
-                newFaces[nNewFaces] = oldFaces[curPatchStart + faceI];
+                newFaces[nNewFaces] = oldFaces[curPatchStart + facei];
 
-                masterFaceLookup[curPatchStart + faceI] = nNewFaces;
+                masterFaceLookup[curPatchStart + facei] = nNewFaces;
                 nNewFaces++;
             }
         }
 
         // Mirror side
-        for (label faceI = 0; faceI < curPatchSize; faceI++)
+        for (label facei = 0; facei < curPatchSize; facei++)
         {
             // Check if the face has already been added.  If not, add it and
             // insert the numbering details.
-            if (!curInserted[faceI])
+            if (!curInserted[facei])
             {
-                const face& oldFace = oldFaces[curPatchStart + faceI];
+                const face& oldFace = oldFaces[curPatchStart + facei];
                 face& nf = newFaces[nNewFaces];
                 nf.setSize(oldFace.size());
 
@@ -290,14 +290,14 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
                     nf[i] = mirrorPointLookup[oldFace[oldFace.size() - i]];
                 }
 
-                mirrorFaceLookup[curPatchStart + faceI] = nNewFaces;
+                mirrorFaceLookup[curPatchStart + facei] = nNewFaces;
                 nNewFaces++;
             }
             else
             {
                 // Grab the index of the master face for the mirror side
-                mirrorFaceLookup[curPatchStart + faceI] =
-                    masterFaceLookup[curPatchStart + faceI];
+                mirrorFaceLookup[curPatchStart + facei] =
+                    masterFaceLookup[curPatchStart + facei];
             }
         }
 
@@ -332,9 +332,9 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     label nNewCells = 0;
 
     // Grab the original cells.  Take care of face renumbering.
-    forAll(oldCells, cellI)
+    forAll(oldCells, celli)
     {
-        const cell& oc = oldCells[cellI];
+        const cell& oc = oldCells[celli];
 
         cell& nc = newCells[nNewCells];
         nc.setSize(oc.size());
@@ -348,9 +348,9 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     }
 
     // Mirror the cells
-    forAll(oldCells, cellI)
+    forAll(oldCells, celli)
     {
-        const cell& oc = oldCells[cellI];
+        const cell& oc = oldCells[celli];
 
         cell& nc = newCells[nNewCells];
         nc.setSize(oc.size());

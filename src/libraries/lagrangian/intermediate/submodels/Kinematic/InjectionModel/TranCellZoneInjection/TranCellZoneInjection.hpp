@@ -219,10 +219,10 @@ void CML::TranCellZoneInjection<CloudType>::setPositions
 
     forAll(cellZoneCells, i)
     {
-        const label cellI = cellZoneCells[i];
+        const label celli = cellZoneCells[i];
 
         // Calc number of particles to add
-        const scalar newParticles = V[cellI]*numberDensity_;
+        const scalar newParticles = V[celli]*numberDensity_;
         newParticlesTotal += newParticles;
         label addParticles = floor(newParticles);
         addParticlesTotal += addParticles;
@@ -237,14 +237,14 @@ void CML::TranCellZoneInjection<CloudType>::setPositions
 
         // Construct cell tet indices
         const List<tetIndices> cellTetIs =
-            polyMeshTetDecomposition::cellTetIndices(mesh, cellI);
+            polyMeshTetDecomposition::cellTetIndices(mesh, celli);
 
         // Construct cell tet volume fractions
         scalarList cTetVFrac(cellTetIs.size(), 0.0);
         for (label tetI = 1; tetI < cellTetIs.size() - 1; tetI++)
         {
             cTetVFrac[tetI] =
-                cTetVFrac[tetI-1] + cellTetIs[tetI].tet(mesh).mag()/V[cellI];
+                cTetVFrac[tetI-1] + cellTetIs[tetI].tet(mesh).mag()/V[celli];
         }
         cTetVFrac.last() = 1.0;
 
@@ -263,7 +263,7 @@ void CML::TranCellZoneInjection<CloudType>::setPositions
             }
             positions.append(cellTetIs[tetI].tet(mesh).randomPoint(rnd));
 
-            injectorCells.append(cellI);
+            injectorCells.append(celli);
             injectorTetFaces.append(cellTetIs[tetI].face());
             injectorTetPts.append(cellTetIs[tetI].tetPt());
         }

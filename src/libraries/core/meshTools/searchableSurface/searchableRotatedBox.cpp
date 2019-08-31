@@ -117,7 +117,7 @@ bool CML::searchableRotatedBox::overlaps(const boundBox& bb) const
 
     // 2. Check if one or more face points inside
     const faceList& fcs = treeBoundBox::faces;
-    forAll(fcs, faceI)
+    forAll(fcs, facei)
     {
         if (bb.containsAny(points_))
         {
@@ -147,9 +147,9 @@ bool CML::searchableRotatedBox::overlaps(const boundBox& bb) const
 
     const pointField bbPoints(bb.points());
 
-    forAll(fcs, faceI)
+    forAll(fcs, facei)
     {
-        const face& f = fcs[faceI];
+        const face& f = fcs[facei];
         point fc = f.centre(points_);
 
         forAll(edges, edgeI)

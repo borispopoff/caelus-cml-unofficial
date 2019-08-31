@@ -116,11 +116,11 @@ void CML::inverseFaceDistanceDiffusivity::correct()
     const List<wallPoint>& faceInfo = waveInfo.allFaceInfo();
     const List<wallPoint>& cellInfo = waveInfo.allCellInfo();
 
-    for (label faceI=0; faceI<mesh().nInternalFaces(); faceI++)
+    for (label facei=0; facei<mesh().nInternalFaces(); facei++)
     {
-        scalar dist = faceInfo[faceI].distSqr();
+        scalar dist = faceInfo[facei].distSqr();
 
-        faceDiffusivity_[faceI] = 1.0/sqrt(dist);
+        faceDiffusivity_[facei] = 1.0/sqrt(dist);
     }
 
     forAll(faceDiffusivity_.boundaryField(), patchI)

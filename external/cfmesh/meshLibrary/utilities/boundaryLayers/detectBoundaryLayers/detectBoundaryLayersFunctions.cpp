@@ -72,8 +72,8 @@ public:
         const cellListPMG& cells = mse_.cells();
 
         const labelList& faceOwner = mse_.faceOwners();
-        const label cellI = faceOwner[bfI];
-        const cell& c = cells[cellI];
+        const label celli = faceOwner[bfI];
+        const cell& c = cells[celli];
 
         const VRWGraph& faceEdges = mse_.faceEdges();
         const VRWGraph& edgeFaces = mse_.edgeFaces();
@@ -90,11 +90,11 @@ public:
                     nei = edgeFaces(edgeI, 1);
 
                 //- faces must not be part of the same cell
-                if( faceOwner[nei] == cellI )
+                if( faceOwner[nei] == celli )
                     continue;
 
                 //- owner cell of the other face must
-                //- have cellI as its neighbour
+                //- have celli as its neighbour
                 const cell& neiC = cells[faceOwner[nei]];
                 bool sharedFace(false);
                 forAll(c, fI)

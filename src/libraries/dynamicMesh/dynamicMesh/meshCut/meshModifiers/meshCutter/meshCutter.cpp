@@ -199,7 +199,7 @@ void CML::meshCutter::getFaceInfo
 }
 
 
-// Adds a face on top of existing faceI.
+// Adds a face on top of existing facei.
 void CML::meshCutter::addFace
 (
     polyTopoChange& meshMod,
@@ -278,7 +278,7 @@ void CML::meshCutter::addFace
 }
 
 
-// Modifies existing faceI for either new owner/neighbour or new face points.
+// Modifies existing facei for either new owner/neighbour or new face points.
 void CML::meshCutter::modFace
 (
     polyTopoChange& meshMod,
@@ -455,7 +455,7 @@ CML::face CML::meshCutter::addEdgeCutsToFace(const label facei) const
 }
 
 
-// Walk loop (loop of cuts) across circumference of cellI. Returns face in
+// Walk loop (loop of cuts) across circumference of celli. Returns face in
 // new vertices.
 // Note: tricky bit is that it can use existing edges which have been split.
 CML::face CML::meshCutter::loopToFace

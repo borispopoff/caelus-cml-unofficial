@@ -32,29 +32,29 @@ void CML::edgeFaceCirculator::setEnd()
 
 void CML::edgeFaceCirculator::setFace
 (
-    const label faceI,
-    const label cellI
+    const label facei,
+    const label celli
 )
 {
-    faceLabel_ = faceI;
+    faceLabel_ = facei;
 
-    if (!isBoundaryEdge_ && !mesh_.isInternalFace(faceI))
+    if (!isBoundaryEdge_ && !mesh_.isInternalFace(facei))
     {
         FatalErrorInFunction
             << "Edge is not defined as boundary edge but still walked to"
-            << " boundary face:" << faceI << " on cell:" << cellI
+            << " boundary face:" << facei << " on cell:" << celli
             << abort(FatalError);
     }
 }
 
 
-void CML::edgeFaceCirculator::otherFace(const label cellI)
+void CML::edgeFaceCirculator::otherFace(const label celli)
 {
     const face& f = mesh_.faces()[faceLabel_];
     label v0 = f[index_];
     label v1 = f.nextLabel(index_);
 
-    const cell& cFaces = mesh_.cells()[cellI];
+    const cell& cFaces = mesh_.cells()[celli];
 
     forAll(cFaces, i)
     {
@@ -67,7 +67,7 @@ void CML::edgeFaceCirculator::otherFace(const label cellI)
             if (fp >= 0)
             {
                 index_ = fp;
-                setFace(faceB, cellI);
+                setFace(faceB, celli);
                 return;
             }
         }
@@ -216,17 +216,17 @@ void CML::edgeFaceCirculator::setCanonical()
             {
                 if (ownerSide_)
                 {
-                    label cellI = mesh_.faceNeighbour()[faceLabel_];
-                    otherFace(cellI);
+                    label celli = mesh_.faceNeighbour()[faceLabel_];
+                    otherFace(celli);
                     // Maintain reverse direction of walking
-                    ownerSide_ = (mesh_.faceOwner()[faceLabel_] == cellI);
+                    ownerSide_ = (mesh_.faceOwner()[faceLabel_] == celli);
                 }
                 else
                 {
-                    label cellI = mesh_.faceOwner()[faceLabel_];
-                    otherFace(cellI);
+                    label celli = mesh_.faceOwner()[faceLabel_];
+                    otherFace(celli);
                     // Maintain reverse direction of walking
-                    ownerSide_ = (mesh_.faceOwner()[faceLabel_] == cellI);
+                    ownerSide_ = (mesh_.faceOwner()[faceLabel_] == celli);
                 }
             }
             else if (ownerSide_)
@@ -235,10 +235,10 @@ void CML::edgeFaceCirculator::setCanonical()
             }
             else
             {
-                label cellI = mesh_.faceOwner()[faceLabel_];
-                otherFace(cellI);
+                label celli = mesh_.faceOwner()[faceLabel_];
+                otherFace(celli);
                 // Maintain reverse direction of walking
-                ownerSide_ = (mesh_.faceOwner()[faceLabel_] == cellI);
+                ownerSide_ = (mesh_.faceOwner()[faceLabel_] == celli);
             }
 
             i++;
@@ -356,10 +356,10 @@ CML::edgeFaceCirculator::operator++()
     else if (ownerSide_)
     {
         // Step to owner
-        label cellI = mesh_.faceOwner()[faceLabel_];
-        otherFace(cellI);
+        label celli = mesh_.faceOwner()[faceLabel_];
+        otherFace(celli);
         // Maintain direction of walking
-        ownerSide_ = (mesh_.faceOwner()[faceLabel_] != cellI);
+        ownerSide_ = (mesh_.faceOwner()[faceLabel_] != celli);
 
         // Check for internal edge : ends on starting face.
         if (!isBoundaryEdge_ && faceLabel_ == startFaceLabel_)
@@ -370,10 +370,10 @@ CML::edgeFaceCirculator::operator++()
     else if (mesh_.isInternalFace(faceLabel_))
     {
         // Step to neighbour
-        label cellI = mesh_.faceNeighbour()[faceLabel_];
-        otherFace(cellI);
+        label celli = mesh_.faceNeighbour()[faceLabel_];
+        otherFace(celli);
         // Maintain direction of walking
-        ownerSide_ = (mesh_.faceOwner()[faceLabel_] != cellI);
+        ownerSide_ = (mesh_.faceOwner()[faceLabel_] != celli);
 
         // Check for internal edge : ends on starting face.
         if (!isBoundaryEdge_ && faceLabel_ == startFaceLabel_)

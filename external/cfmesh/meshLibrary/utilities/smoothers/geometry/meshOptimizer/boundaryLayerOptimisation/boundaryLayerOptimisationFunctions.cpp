@@ -349,9 +349,9 @@ void boundaryLayerOptimisation::calculateHairEdges()
     VRWGraph bpFacesHelper(bpEdges.size());
     forAll(faceOwner, bfI)
     {
-        const label cellI = faceOwner[bfI];
+        const label celli = faceOwner[bfI];
 
-        const cell& c = cells[cellI];
+        const cell& c = cells[celli];
 
         forAll(c, fI)
         {

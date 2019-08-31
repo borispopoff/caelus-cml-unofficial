@@ -226,10 +226,10 @@ partTetMesh::partTetMesh
     List<direction> useCell(cells.size(), direction(0));
 
     //- select cells containing at least one vertex of the bad faces
-    forAll(faces, faceI)
-        if( badFaces.found(faceI) )
+    forAll(faces, facei)
+        if( badFaces.found(facei) )
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             forAll(f, pI)
             {
@@ -575,10 +575,10 @@ void partTetMesh::updateOrigMesh(boolList* changedFacePtr)
             const label size = pBnd[patchI].patchSize();
 
             labelLongList sendData;
-            for(label faceI=0;faceI<size;++faceI)
+            for(label facei=0;facei<size;++facei)
             {
-                if( chF[start+faceI] )
-                    sendData.append(faceI);
+                if( chF[start+facei] )
+                    sendData.append(facei);
             }
 
             OPstream toOtherProc

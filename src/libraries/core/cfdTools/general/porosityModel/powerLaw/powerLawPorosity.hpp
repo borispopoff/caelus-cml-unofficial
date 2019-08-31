@@ -186,10 +186,10 @@ void CML::porosityModels::powerLaw::apply
 
         forAll(cells, i)
         {
-            const label cellI = cells[i];
+            const label celli = cells[i];
 
-            Udiag[cellI] +=
-                V[cellI]*rho[cellI]*C0*pow(magSqr(U[cellI]), C1m1b2);
+            Udiag[celli] +=
+                V[celli]*rho[celli]*C0*pow(magSqr(U[celli]), C1m1b2);
         }
     }
 }
@@ -212,10 +212,10 @@ void CML::porosityModels::powerLaw::apply
 
         forAll(cells, i)
         {
-            const label cellI = cells[i];
+            const label celli = cells[i];
 
-            AU[cellI] =
-                AU[cellI] + I*(rho[cellI]*C0*pow(magSqr(U[cellI]), C1m1b2));
+            AU[celli] =
+                AU[celli] + I*(rho[celli]*C0*pow(magSqr(U[celli]), C1m1b2));
         }
     }
 }

@@ -67,9 +67,9 @@ tmp<scalarField> nutUTabulatedWallFunctionFvPatchScalarField::calcUPlus
     tmp<scalarField> tuPlus(new scalarField(patch().size(), 0.0));
     scalarField& uPlus = tuPlus();
 
-    forAll(uPlus, faceI)
+    forAll(uPlus, facei)
     {
-        uPlus[faceI] = uPlusTable_.interpolateLog10(Rey[faceI]);
+        uPlus[facei] = uPlusTable_.interpolateLog10(Rey[facei]);
     }
 
     return tuPlus;

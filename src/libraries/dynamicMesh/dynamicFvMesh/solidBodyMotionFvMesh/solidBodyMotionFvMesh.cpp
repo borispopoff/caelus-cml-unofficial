@@ -144,8 +144,8 @@ CML::solidBodyMotionFvMesh::solidBodyMotionFvMesh(const IOobject& io)
 
         forAll(cellIDs, i)
         {
-            label cellI = cellIDs[i];
-            const cell& c = cells()[cellI];
+            label celli = cellIDs[i];
+            const cell& c = cells()[celli];
             forAll(c, j)
             {
                 const face& f = faces()[c[j]];

@@ -67,11 +67,11 @@ void CML::fieldToCell::applyToSet
         Info<< "    Adding all cells with value of field " << fieldName_
             << " within range " << min_ << ".." << max_ << endl;
 
-        forAll(field, cellI)
+        forAll(field, celli)
         {
-            if (field[cellI] >= min_ && field[cellI] <= max_)
+            if (field[celli] >= min_ && field[celli] <= max_)
             {
-                set.insert(cellI);
+                set.insert(celli);
             }
         }
     }
@@ -80,11 +80,11 @@ void CML::fieldToCell::applyToSet
         Info<< "    Removing all cells with value of field " << fieldName_
             << " within range " << min_ << ".." << max_ << endl;
 
-        forAll(field, cellI)
+        forAll(field, celli)
         {
-            if (field[cellI] >= min_ && field[cellI] <= max_)
+            if (field[celli] >= min_ && field[celli] <= max_)
             {
-                set.erase(cellI);
+                set.erase(celli);
             }
         }
     }

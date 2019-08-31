@@ -97,18 +97,18 @@ void CML::expressionToFace::combine(topoSet& set, const bool add) const
         Info << "    Expression " << expression_
             << " evaluates to cellValue: using boundary" << endl;
 
-        for(label faceI=0;faceI<condition.mesh().nInternalFaces();faceI++)
+        for(label facei=0;facei<condition.mesh().nInternalFaces();facei++)
         {
-            if (condition[own[faceI]] != condition[nei[faceI]])
+            if (condition[own[facei]] != condition[nei[facei]])
             {
-                addOrDelete(set, faceI, add);
+                addOrDelete(set, facei, add);
             }
         }
     } else if(driver.resultIsTyp<surfaceScalarField>(true)) {
         const surfaceScalarField &condition=driver.getResult<surfaceScalarField>();
-        forAll(condition,faceI) {
-            if(condition[faceI]>0) {
-                addOrDelete(set, faceI, add);
+        forAll(condition,facei) {
+            if(condition[facei]>0) {
+                addOrDelete(set, facei, add);
             }
         }
         forAll(condition.boundaryField(),patchI) {

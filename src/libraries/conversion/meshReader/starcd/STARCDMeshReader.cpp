@@ -374,7 +374,7 @@ void CML::meshReaders::STARCD::readCells(const fileName& inputName)
         labelList starLabels(64);
         label lineLabel, shapeId, nLabels, cellTableId, typeId;
 
-        label cellI = 0;
+        label celli = 0;
         label baffleI = 0;
 
         while ((is >> lineLabel).good())
@@ -453,18 +453,18 @@ void CML::meshReaders::STARCD::readCells(const fileName& inputName)
                 }
 
                 // record original cell number and lookup
-                origCellId_[cellI] = starCellId;
-                mapToCaelusCellId_[starCellId] = cellI;
+                origCellId_[celli] = starCellId;
+                mapToCaelusCellId_[starCellId] = celli;
 
-                cellTableId_[cellI] = cellTableId;
-                cellShapes_[cellI] = cellShape
+                cellTableId_[celli] = cellTableId;
+                cellShapes_[celli] = cellShape
                 (
                     *curModelPtr,
                     SubList<label>(starLabels, nLabels)
                 );
 
-                cellFaces_[cellI] = cellShapes_[cellI].faces();
-                cellI++;
+                cellFaces_[celli] = cellShapes_[celli].faces();
+                celli++;
             }
             else if (shapeId == starcdPoly)
             {
@@ -495,7 +495,7 @@ void CML::meshReaders::STARCD::readCells(const fileName& inputName)
 
                 // traverse beg/end indices
                 faceList faces(nFaces);
-                label faceI = 0;
+                label facei = 0;
                 for (label i=0; i < nFaces; ++i)
                 {
                     label beg = starLabels[i];
@@ -511,19 +511,19 @@ void CML::meshReaders::STARCD::readCells(const fileName& inputName)
                     // valid faces only
                     if (f.size() >= 3)
                     {
-                        faces[faceI++] = f;
+                        faces[facei++] = f;
                     }
                 }
 
-                if (nFaces > faceI)
+                if (nFaces > facei)
                 {
                     Info<< "star cell " << starCellId << " has "
-                        << (nFaces - faceI)
+                        << (nFaces - facei)
                         << " empty faces - could cause boundary "
                         << "addressing problems"
                         << endl;
 
-                    nFaces = faceI;
+                    nFaces = facei;
                     faces.setSize(nFaces);
                 }
 
@@ -535,13 +535,13 @@ void CML::meshReaders::STARCD::readCells(const fileName& inputName)
                 }
 
                 // record original cell number and lookup
-                origCellId_[cellI] = starCellId;
-                mapToCaelusCellId_[starCellId] = cellI;
+                origCellId_[celli] = starCellId;
+                mapToCaelusCellId_[starCellId] = celli;
 
-                cellTableId_[cellI] = cellTableId;
-                cellShapes_[cellI]  = genericShape;
-                cellFaces_[cellI]   = faces;
-                cellI++;
+                cellTableId_[celli] = cellTableId;
+                cellShapes_[celli]  = genericShape;
+                cellFaces_[celli]   = faces;
+                celli++;
             }
             else if (typeId == starcdBaffleType)
             {
@@ -982,9 +982,9 @@ void CML::meshReaders::STARCD::cullPoints()
     labelList oldToNew(nPoints, -1);
 
     // loop through cell faces and note which points are being used
-    forAll(cellFaces_, cellI)
+    forAll(cellFaces_, celli)
     {
-        const faceList& faces = cellFaces_[cellI];
+        const faceList& faces = cellFaces_[celli];
         forAll(faces, i)
         {
             const labelList& labels = faces[i];
@@ -1016,9 +1016,9 @@ void CML::meshReaders::STARCD::cullPoints()
         points_.setSize(nPoints);
 
         // adjust cellFaces - with mesh shapes this might be faster
-        forAll(cellFaces_, cellI)
+        forAll(cellFaces_, celli)
         {
-            faceList& faces = cellFaces_[cellI];
+            faceList& faces = cellFaces_[celli];
             forAll(faces, i)
             {
                 inplaceRenumber(oldToNew, faces[i]);
@@ -1026,9 +1026,9 @@ void CML::meshReaders::STARCD::cullPoints()
         }
 
         // adjust baffles
-        forAll(baffleFaces_, faceI)
+        forAll(baffleFaces_, facei)
         {
-            inplaceRenumber(oldToNew, baffleFaces_[faceI]);
+            inplaceRenumber(oldToNew, baffleFaces_[facei]);
         }
     }
 }

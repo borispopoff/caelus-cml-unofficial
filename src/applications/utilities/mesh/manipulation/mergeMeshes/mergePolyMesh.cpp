@@ -233,10 +233,10 @@ void CML::mergePolyMesh::addMesh(const polyMesh& m)
         cellZoneIndices[zoneI] = zoneIndex(cellZoneNames_, cz[zoneI].name());
     }
 
-    forAll(c, cellI)
+    forAll(c, celli)
     {
         // Grab zone ID.  If a cell is not in a zone, it will return -1
-        zoneID = cz.whichZone(cellI);
+        zoneID = cz.whichZone(celli);
 
         if (zoneID >= 0)
         {
@@ -244,7 +244,7 @@ void CML::mergePolyMesh::addMesh(const polyMesh& m)
             zoneID = cellZoneIndices[zoneID];
         }
 
-        renumberCells[cellI] =
+        renumberCells[celli] =
             meshMod_.setAction
             (
                 polyAddCell
@@ -292,9 +292,9 @@ void CML::mergePolyMesh::addMesh(const polyMesh& m)
     label newOwn, newNei, newPatch, newZone;
     bool newZoneFlip;
 
-    forAll(f, faceI)
+    forAll(f, facei)
     {
-        const face& curFace = f[faceI];
+        const face& curFace = f[facei];
 
         face newFace(curFace.size());
 
@@ -309,22 +309,22 @@ void CML::mergePolyMesh::addMesh(const polyMesh& m)
             if (min(newFace) < 0)
             {
                 FatalErrorInFunction
-                    << "Error in point mapping for face " << faceI
+                    << "Error in point mapping for face " << facei
                     << ".  Old face: " << curFace << " New face: " << newFace
                     << abort(FatalError);
             }
         }
 
-        if (faceI < m.nInternalFaces() || faceI >= m.nFaces())
+        if (facei < m.nInternalFaces() || facei >= m.nFaces())
         {
             newPatch = -1;
         }
         else
         {
-            newPatch = patchIndices[bm.whichPatch(faceI)];
+            newPatch = patchIndices[bm.whichPatch(facei)];
         }
 
-        newOwn = own[faceI];
+        newOwn = own[facei];
         if (newOwn > -1) newOwn = renumberCells[newOwn];
 
         if (newPatch > -1)
@@ -333,23 +333,23 @@ void CML::mergePolyMesh::addMesh(const polyMesh& m)
         }
         else
         {
-            newNei = nei[faceI];
+            newNei = nei[facei];
             newNei = renumberCells[newNei];
         }
 
 
-        newZone = fz.whichZone(faceI);
+        newZone = fz.whichZone(facei);
         newZoneFlip = false;
 
         if (newZone >= 0)
         {
-            newZoneFlip = fz[newZone].flipMap()[fz[newZone].whichFace(faceI)];
+            newZoneFlip = fz[newZone].flipMap()[fz[newZone].whichFace(facei)];
 
             // Grab the new zone
             newZone = faceZoneIndices[newZone];
         }
 
-        renumberFaces[faceI] =
+        renumberFaces[facei] =
             meshMod_.setAction
             (
                 polyAddFace

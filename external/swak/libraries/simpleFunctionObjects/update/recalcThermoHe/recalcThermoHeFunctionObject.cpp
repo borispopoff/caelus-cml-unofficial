@@ -76,8 +76,8 @@ void recalcThermoHeFunctionObject::recalc()
     volScalarField &h=thermo.he();
 
     labelList allCells(T.size());
-    forAll(allCells,cellI) {
-        allCells[cellI]=cellI;
+    forAll(allCells,celli) {
+        allCells[celli]=celli;
     }
     h.internalField()=thermo.he(
         p.internalField(),

@@ -435,9 +435,9 @@ CML::labelList CML::fvMeshSubset::getCellsToRemove
 {
     // Count
     label nKeep = 0;
-    forAll(region, cellI)
+    forAll(region, celli)
     {
-        if (region[cellI] == currentRegion)
+        if (region[celli] == currentRegion)
         {
             nKeep++;
         }
@@ -448,11 +448,11 @@ CML::labelList CML::fvMeshSubset::getCellsToRemove
     labelList cellsToRemove(nRemove);
 
     nRemove = 0;
-    forAll(region, cellI)
+    forAll(region, celli)
     {
-        if (region[cellI] != currentRegion)
+        if (region[celli] != currentRegion)
         {
-            cellsToRemove[nRemove++] = cellI;
+            cellsToRemove[nRemove++] = celli;
         }
     }
 
@@ -1611,14 +1611,14 @@ const labelList& CML::fvMeshSubset::faceFlipMap() const
         }
         for (label subFaceI = subInt; subFaceI < subOwn.size(); subFaceI++)
         {
-            label faceI = subToBaseFace[subFaceI];
-            if (subToBaseCell[subOwn[subFaceI]] == own[faceI])
+            label facei = subToBaseFace[subFaceI];
+            if (subToBaseCell[subOwn[subFaceI]] == own[facei])
             {
-                faceFlipMap[subFaceI] = faceI+1;
+                faceFlipMap[subFaceI] = facei+1;
             }
             else
             {
-                faceFlipMap[subFaceI] = -faceI-1;
+                faceFlipMap[subFaceI] = -facei-1;
             }
         }
     }

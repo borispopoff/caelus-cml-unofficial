@@ -219,20 +219,20 @@ cellLimitedBlockGrad<scalar>::fvmGrad
     CoeffField<vector>::linearTypeField& l = bs.lower().asLinear();
 
     // Limit upper and lower coeffs
-    forAll(u, faceI)
+    forAll(u, facei)
     {
-        label own = owner[faceI];
-        label nei = neighbour[faceI];
+        label own = owner[facei];
+        label nei = neighbour[facei];
 
-        u[faceI] *= lfIn[own];
-        l[faceI] *= lfIn[nei];
+        u[facei] *= lfIn[own];
+        l[facei] *= lfIn[nei];
     }
 
     // Limit diag and source coeffs
-    forAll(d, cellI)
+    forAll(d, celli)
     {
-        d[cellI] *= lfIn[cellI];
-        source[cellI] *= lfIn[cellI];
+        d[celli] *= lfIn[celli];
+        source[celli] *= lfIn[celli];
     }
 
     // Limit coupling coeffs
@@ -253,10 +253,10 @@ cellLimitedBlockGrad<scalar>::fvmGrad
             const scalarField lfNei(
                 limitField.boundaryField()[patchI].patchNeighbourField());
 
-            forAll(pf, faceI)
+            forAll(pf, facei)
             {
-                pcoupleUpper[faceI] *= lfIn[fc[faceI]];
-                pcoupleLower[faceI] *= lfNei[faceI];
+                pcoupleUpper[facei] *= lfIn[fc[facei]];
+                pcoupleLower[facei] *= lfNei[facei];
             }
         }
     }

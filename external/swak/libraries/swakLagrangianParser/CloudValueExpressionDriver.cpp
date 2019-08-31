@@ -316,8 +316,8 @@ tmp<Field<bool>> CloudValueExpressionDriver::makeCellSetField(const word &name)
 
     forAll(theCells,i)
     {
-        label cellI=theCells[i];
-        if(cs.found(cellI)) {
+        label celli=theCells[i];
+        if(cs.found(celli)) {
             result()[i]=true;
         }
     }
@@ -346,8 +346,8 @@ tmp<Field<bool>> CloudValueExpressionDriver::makeCellZoneField(const word &name)
 
     forAll(theCells,i)
     {
-        label cellI=theCells[i];
-        if(zone.found(cellI)) {
+        label celli=theCells[i];
+        if(zone.found(celli)) {
             result()[i]=true;
         }
     }

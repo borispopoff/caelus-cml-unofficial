@@ -117,8 +117,8 @@ public:
         static label edgeToFaceIndex
         (
             const primitiveMesh& mesh,
-            const label cellI,
-            const label faceI,
+            const label celli,
+            const label facei,
             const label edgeI
         );
 

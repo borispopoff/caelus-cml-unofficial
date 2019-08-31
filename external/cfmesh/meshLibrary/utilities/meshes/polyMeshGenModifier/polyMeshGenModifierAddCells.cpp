@@ -50,20 +50,20 @@ void polyMeshGenModifier::addCells(const LongList<faceList>& cellFaces)
         label fI(0);
         cell c(cellFaces[cI].size());
 
-        forAll(facesInCell, faceI)
+        forAll(facesInCell, facei)
         {
-            const face& f = facesInCell[faceI];
+            const face& f = facesInCell[facei];
 
             const label pointI = f[0];
 
             label fLabel(-1);
             forAllRow(pointFaces, pointI, pfI)
             {
-                const label faceI = pointFaces(pointI, pfI);
+                const label facei = pointFaces(pointI, pfI);
 
-                if( faces[faceI] == f )
+                if( faces[facei] == f )
                 {
-                    fLabel = faceI;
+                    fLabel = facei;
                     break;
                 }
             }
@@ -121,20 +121,20 @@ void polyMeshGenModifier::addCells(const VRWGraphList& cellFaces)
         label fI(0);
         cell c(facesInCell.size());
 
-        forAll(facesInCell, faceI)
+        forAll(facesInCell, facei)
         {
-            const face& f = facesInCell[faceI];
+            const face& f = facesInCell[facei];
 
             const label pointI = f[0];
 
             label fLabel(-1);
             forAllRow(pointFaces, pointI, pfI)
             {
-                const label faceI = pointFaces(pointI, pfI);
+                const label facei = pointFaces(pointI, pfI);
 
-                if( faces[faceI] == f )
+                if( faces[facei] == f )
                 {
-                    fLabel = faceI;
+                    fLabel = facei;
                     break;
                 }
             }
@@ -177,20 +177,20 @@ void polyMeshGenModifier::addCell(const faceList& cellFaces)
     cell c(cellFaces.size());
     label fI(0);
 
-    forAll(cellFaces, faceI)
+    forAll(cellFaces, facei)
     {
-        const face& f = cellFaces[faceI];
+        const face& f = cellFaces[facei];
 
         const label pointI = f[0];
 
         label fLabel(-1);
         forAllRow(pointFaces, pointI, pfI)
         {
-            const label faceI = pointFaces(pointI, pfI);
+            const label facei = pointFaces(pointI, pfI);
 
-            if( faces[faceI] == f )
+            if( faces[facei] == f )
             {
-                fLabel = faceI;
+                fLabel = facei;
                 break;
             }
         }

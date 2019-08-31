@@ -51,9 +51,9 @@ tmp<scalarField> mutUWallFunctionFvPatchScalarField::calcYPlus
     tmp<scalarField> tyPlus(new scalarField(patch().size(), 0.0));
     scalarField& yPlus = tyPlus();
 
-    forAll(yPlus, faceI)
+    forAll(yPlus, facei)
     {
-        scalar kappaRe = kappa_*magUp[faceI]*y[faceI]/(muw[faceI]/rhow[faceI]);
+        scalar kappaRe = kappa_*magUp[facei]*y[facei]/(muw[facei]/rhow[facei]);
 
         scalar yp = yPlusLam_;
         scalar ryPlusLam = 1.0/yp;
@@ -68,7 +68,7 @@ tmp<scalarField> mutUWallFunctionFvPatchScalarField::calcYPlus
 
         } while (mag(ryPlusLam*(yp - yPlusLast)) > 0.01 && ++iter < 10);
 
-        yPlus[faceI] = max(0.0, yp);
+        yPlus[facei] = max(0.0, yp);
     }
 
     return tyPlus;
@@ -92,12 +92,12 @@ tmp<scalarField> mutUWallFunctionFvPatchScalarField::calcMut() const
     tmp<scalarField> tmutw(new scalarField(patch().size(), 0.0));
     scalarField& mutw = tmutw();
 
-    forAll(yPlus, faceI)
+    forAll(yPlus, facei)
     {
-        if (yPlus[faceI] > yPlusLam_)
+        if (yPlus[facei] > yPlusLam_)
         {
-            mutw[faceI] =
-                muw[faceI]*(yPlus[faceI]*kappa_/log(E_*yPlus[faceI]) - 1.0);
+            mutw[facei] =
+                muw[facei]*(yPlus[facei]*kappa_/log(E_*yPlus[facei]) - 1.0);
         }
     }
 

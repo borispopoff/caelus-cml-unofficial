@@ -120,22 +120,22 @@ template<class Type>
 Type interpolationCellPatchConstrained<Type>::interpolate
 (
     const vector& pt,
-    const label cellI,
-    const label faceI
+    const label celli,
+    const label facei
 ) const
 {
-    if (faceI >= 0 && faceI >= this->psi_.mesh().nInternalFaces())
+    if (facei >= 0 && facei >= this->psi_.mesh().nInternalFaces())
     {
         // Use boundary value
         const polyBoundaryMesh& pbm = this->psi_.mesh().boundaryMesh();
-        label patchI = pbm.patchID()[faceI-this->psi_.mesh().nInternalFaces()];
-        label patchFaceI = pbm[patchI].whichFace(faceI);
+        label patchI = pbm.patchID()[facei-this->psi_.mesh().nInternalFaces()];
+        label patchFaceI = pbm[patchI].whichFace(facei);
 
         return this->psi_.boundaryField()[patchI][patchFaceI];
     }
     else
     {
-        return this->psi_[cellI];
+        return this->psi_[celli];
     }
 }
 

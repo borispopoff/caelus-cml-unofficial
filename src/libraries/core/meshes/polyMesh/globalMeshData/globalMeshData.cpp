@@ -1412,12 +1412,12 @@ void CML::globalMeshData::calcGlobalPointBoundaryFaces() const
                     if (findIndex(untrafoFaces, slave)== -1)
                     {
                         label procI = globalIndices.whichProcID(slave);
-                        label faceI = globalIndices.toLocal(procI, slave);
+                        label facei = globalIndices.toLocal(procI, slave);
 
                         myBFaces[n++] = globalIndexAndTransform::encode
                         (
                             procI,
-                            faceI,
+                            facei,
                             transformI
                         );
                     }
@@ -1500,8 +1500,8 @@ void CML::globalMeshData::calcGlobalPointBoundaryCells() const
 
         forAll(pCells, i)
         {
-            label cellI = pCells[i];
-            Map<label>::iterator fnd = meshCellMap.find(cellI);
+            label celli = pCells[i];
+            Map<label>::iterator fnd = meshCellMap.find(celli);
 
             if (fnd != meshCellMap.end())
             {
@@ -1509,8 +1509,8 @@ void CML::globalMeshData::calcGlobalPointBoundaryCells() const
             }
             else
             {
-                meshCellMap.insert(cellI, bCellI);
-                cellMap.append(cellI);
+                meshCellMap.insert(celli, bCellI);
+                cellMap.append(celli);
                 bCells[i] = bCellI;
                 bCellI++;
             }
@@ -1641,11 +1641,11 @@ void CML::globalMeshData::calcGlobalPointBoundaryCells() const
                     if (findIndex(untrafoCells, slave)== -1)
                     {
                         label procI = globalIndices.whichProcID(slave);
-                        label cellI = globalIndices.toLocal(procI, slave);
+                        label celli = globalIndices.toLocal(procI, slave);
                         myBCells[n++] = globalIndexAndTransform::encode
                         (
                             procI,
-                            cellI,
+                            celli,
                             transformI
                         );
                     }
@@ -2068,11 +2068,11 @@ const CML::indirectPrimitivePatch& CML::globalMeshData::coupledPatch() const
 
             if (pp.coupled())
             {
-                label faceI = pp.start();
+                label facei = pp.start();
 
                 forAll(pp, i)
                 {
-                    coupledFaces[nCoupled++] = faceI++;
+                    coupledFaces[nCoupled++] = facei++;
                 }
             }
         }

@@ -1023,11 +1023,11 @@ CML::triSurface CML::isoSurface::stitchTriPoints
 
 
 // Does face use valid vertices?
-bool CML::isoSurface::validTri(const triSurface& surf, const label faceI)
+bool CML::isoSurface::validTri(const triSurface& surf, const label facei)
 {
     // Simple check on indices ok.
 
-    const labelledTri& f = surf[faceI];
+    const labelledTri& f = surf[facei];
 
     if
     (
@@ -1037,7 +1037,7 @@ bool CML::isoSurface::validTri(const triSurface& surf, const label faceI)
     )
     {
         WarningInFunction
-            << "triangle " << faceI << " vertices " << f
+            << "triangle " << facei << " vertices " << f
             << " uses point indices outside point range 0.."
             << surf.points().size()-1 << endl;
 
@@ -1047,7 +1047,7 @@ bool CML::isoSurface::validTri(const triSurface& surf, const label faceI)
     if ((f[0] == f[1]) || (f[0] == f[2]) || (f[1] == f[2]))
     {
         WarningInFunction
-            << "triangle " << faceI
+            << "triangle " << facei
             << " uses non-unique vertices " << f
             << endl;
         return false;
@@ -1055,7 +1055,7 @@ bool CML::isoSurface::validTri(const triSurface& surf, const label faceI)
 
     // duplicate triangle check
 
-    const labelList& fFaces = surf.faceFaces()[faceI];
+    const labelList& fFaces = surf.faceFaces()[facei];
 
     // Check if faceNeighbours use same points as this face.
     // Note: discards normal information - sides of baffle are merged.
@@ -1063,7 +1063,7 @@ bool CML::isoSurface::validTri(const triSurface& surf, const label faceI)
     {
         label nbrFaceI = fFaces[i];
 
-        if (nbrFaceI <= faceI)
+        if (nbrFaceI <= facei)
         {
             // lower numbered faces already checked
             continue;
@@ -1079,7 +1079,7 @@ bool CML::isoSurface::validTri(const triSurface& surf, const label faceI)
         )
         {
             WarningInFunction
-                << "triangle " << faceI << " vertices " << f
+                << "triangle " << facei << " vertices " << f
                 << " fc:" << f.centre(surf.points())
                 << " has the same vertices as triangle " << nbrFaceI
                 << " vertices " << nbrF

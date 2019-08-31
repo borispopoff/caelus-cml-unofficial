@@ -156,12 +156,12 @@ class boundaryMesh
             labelList& faceRegion
         ) const;
 
-        //- Finds area, starting at faceI, delimited by borderEdge. Marks all
+        //- Finds area, starting at facei, delimited by borderEdge. Marks all
         //  faces thus visited with currentZone.
         void markZone
         (
             const boolList& borderEdge,
-            label faceI,
+            label facei,
             label currentZone,
             labelList& faceZone
         ) const;
@@ -294,7 +294,7 @@ public:
         // Patches
 
             //- Get index of patch face is in
-            label whichPatch(const label faceI) const;
+            label whichPatch(const label facei) const;
 
             //- Get index of patch by name
             label findPatchID(const word& patchName) const;
@@ -331,7 +331,7 @@ public:
 
             //- Simple triangulation of face subset. Returns number of triangles
             //  needed.
-            label getNTris(const label faceI) const;
+            label getNTris(const label facei) const;
 
             //- Simple triangulation of face subset. TotalNTris is total number
             //  of triangles, nTris is per face number of triangles.
@@ -373,7 +373,7 @@ public:
             void markFaces
             (
                 const labelList& protectedEdges,
-                const label faceI,
+                const label facei,
                 boolList& visited
             ) const;
 };

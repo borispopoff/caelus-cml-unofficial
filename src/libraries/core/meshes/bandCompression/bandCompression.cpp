@@ -44,18 +44,18 @@ CML::labelList CML::bandCompression(const labelListList& cellCellAddressing)
     label cellInOrder = 0;
 
     // reset the visited cells list
-    forAll(visited, cellI)
+    forAll(visited, celli)
     {
-        visited[cellI] = 0;
+        visited[celli] = 0;
     }
 
     // loop over the cells
-    forAll(visited, cellI)
+    forAll(visited, celli)
     {
         // find the first cell that has not been visited yet
-        if (visited[cellI] == 0)
+        if (visited[celli] == 0)
         {
-            currentCell = cellI;
+            currentCell = celli;
 
             // use this cell as a start
             nextCell.append(currentCell);

@@ -58,16 +58,16 @@ void decomposeCells::checkFaceConnections(const boolList& decomposeCell)
     const cellListPMG& cells = mesh_.cells();
 
     boolList decomposeFace(faces.size(), false);
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        if( decomposeCell[cellI] )
+        if( decomposeCell[celli] )
         {
             DynList<label, 32> vrt;
             DynList<edge, 64> edges;
             DynList<DynList<label, 8>> faceEdges;
             DynList<DynList<label, 2>, 64> edgeFaces;
 
-            findAddressingForCell(cellI, vrt, edges, faceEdges, edgeFaces);
+            findAddressingForCell(celli, vrt, edges, faceEdges, edgeFaces);
 
             forAll(faceEdges, fI)
             {
@@ -82,7 +82,7 @@ void decomposeCells::checkFaceConnections(const boolList& decomposeCell)
 
                     if( neiFaces.found(neiFace) )
                     {
-                        decomposeFace[cells[cellI][fI]] = true;
+                        decomposeFace[cells[celli][fI]] = true;
                     }
                     else
                     {
@@ -200,11 +200,11 @@ void decomposeCells::addNewCells()
 
     labelLongList newBoundaryOwners;
 
-    forAll(newBoundaryFaces_, faceI)
+    forAll(newBoundaryFaces_, facei)
     {
-        face bf(newBoundaryFaces_.sizeOfRow(faceI));
-        forAllRow(newBoundaryFaces_, faceI, pI)
-            bf[pI] = newBoundaryFaces_(faceI, pI);
+        face bf(newBoundaryFaces_.sizeOfRow(facei));
+        forAllRow(newBoundaryFaces_, facei, pI)
+            bf[pI] = newBoundaryFaces_(facei, pI);
 
         # ifdef DEBUGDecompose
         Info << "Finding cell for boundary face " << bf << endl;

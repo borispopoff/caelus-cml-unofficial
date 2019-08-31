@@ -81,14 +81,14 @@ CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::getFieldValues
                 );
                 Field<Type>& avg = tavg();
 
-                forAll(faces, faceI)
+                forAll(faces, facei)
                 {
-                    const face& f = faces[faceI];
+                    const face& f = faces[facei];
                     forAll(f, fp)
                     {
-                        avg[faceI] += intFld[f[fp]];
+                        avg[facei] += intFld[f[fp]];
                     }
-                    avg[faceI] /= f.size();
+                    avg[facei] /= f.size();
                 }
 
                 return tavg;
@@ -345,11 +345,11 @@ CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
 
     forAll(values, i)
     {
-        label faceI = faceId_[i];
+        label facei = faceId_[i];
         label patchI = facePatchId_[i];
         if (patchI >= 0)
         {
-            values[i] = field.boundaryField()[patchI][faceI];
+            values[i] = field.boundaryField()[patchI][facei];
         }
         else
         {
@@ -386,15 +386,15 @@ CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
 
     forAll(values, i)
     {
-        label faceI = faceId_[i];
+        label facei = faceId_[i];
         label patchI = facePatchId_[i];
         if (patchI >= 0)
         {
-            values[i] = field.boundaryField()[patchI][faceI];
+            values[i] = field.boundaryField()[patchI][facei];
         }
         else
         {
-            values[i] = field[faceI];
+            values[i] = field[facei];
         }
     }
 

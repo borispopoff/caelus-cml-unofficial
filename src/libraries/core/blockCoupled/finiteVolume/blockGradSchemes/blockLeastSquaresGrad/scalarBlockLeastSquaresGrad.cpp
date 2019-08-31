@@ -96,17 +96,17 @@ tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
 
     label owner, neighbour;
 
-    forAll (nei, faceI)
+    forAll (nei, facei)
     {
-        owner = own[faceI];
-        neighbour = nei[faceI];
+        owner = own[facei];
+        neighbour = nei[facei];
 
-        u[faceI] = cellVIn[owner]*ownLsIn[faceI];
-        l[faceI] = cellVIn[neighbour]*neiLsIn[faceI];
+        u[facei] = cellVIn[owner]*ownLsIn[facei];
+        l[facei] = cellVIn[neighbour]*neiLsIn[facei];
 
         // Caution - this is NOT negSumDiag(). VV, 17/July/2014.
-        d[owner] -= u[faceI];
-        d[neighbour] -= l[faceI];
+        d[owner] -= u[facei];
+        d[neighbour] -= l[facei];
     }
 
     // Boundary contributions
@@ -119,10 +119,10 @@ tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
         const labelList& fc = patch.faceCells();
 
         // Part of diagonal contribution irrespective of the patch type
-        forAll (pf, faceI)
+        forAll (pf, facei)
         {
-            const label cellI = fc[faceI];
-            d[cellI] -= cellVIn[cellI]*pownLs[faceI];
+            const label celli = fc[facei];
+            d[celli] -= cellVIn[celli]*pownLs[facei];
         }
 
         if (patch.coupled())
@@ -137,10 +137,10 @@ tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
                 bs.coupleLower()[patchI].asLinear();
 
             // Coupling  and diagonal contributions
-            forAll (pf, faceI)
+            forAll (pf, facei)
             {
-                pcoupleUpper[faceI] -= cellVIn[fc[faceI]]*pownLs[faceI];
-                pcoupleLower[faceI] -= cellVInNei[faceI]*pneiLs[faceI];
+                pcoupleUpper[facei] -= cellVIn[fc[facei]]*pownLs[facei];
+                pcoupleLower[facei] -= cellVInNei[facei]*pneiLs[facei];
             }
         }
         else
@@ -149,14 +149,14 @@ tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
             const scalarField boundaryCoeffs(pf.valueBoundaryCoeffs(pw));
 
             // Diagonal and source contributions depending on the patch type
-            forAll (pf, faceI)
+            forAll (pf, facei)
             {
-                const label cellI = fc[faceI];
+                const label celli = fc[facei];
 
-                d[cellI] += cellVIn[cellI]*pownLs[faceI]*internalCoeffs[faceI];
+                d[celli] += cellVIn[celli]*pownLs[facei]*internalCoeffs[facei];
 
-                source[cellI] -= cellVIn[cellI]*pownLs[faceI]*
-                    boundaryCoeffs[faceI];
+                source[celli] -= cellVIn[celli]*pownLs[facei]*
+                    boundaryCoeffs[facei];
             }
         }
     }

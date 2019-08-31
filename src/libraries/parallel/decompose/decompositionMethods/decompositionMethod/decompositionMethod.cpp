@@ -304,18 +304,18 @@ void CML::decompositionMethod::calcCellCells
 
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
-            label faceI = pp.start();
+            label facei = pp.start();
             label bFaceI = pp.start() - mesh.nInternalFaces();
 
             forAll(pp, i)
             {
                 globalNeighbour[bFaceI] = globalAgglom.toGlobal
                 (
-                    agglom[faceOwner[faceI]]
+                    agglom[faceOwner[facei]]
                 );
 
                 bFaceI++;
-                faceI++;
+                facei++;
             }
         }
     }
@@ -330,10 +330,10 @@ void CML::decompositionMethod::calcCellCells
     // Number of faces per coarse cell
     labelList nFacesPerCell(nLocalCoarse, 0);
 
-    for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
     {
-        label own = agglom[faceOwner[faceI]];
-        label nei = agglom[faceNeighbour[faceI]];
+        label own = agglom[faceOwner[facei]];
+        label nei = agglom[faceNeighbour[facei]];
 
         nFacesPerCell[own]++;
         nFacesPerCell[nei]++;
@@ -345,12 +345,12 @@ void CML::decompositionMethod::calcCellCells
 
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
-            label faceI = pp.start();
+            label facei = pp.start();
             label bFaceI = pp.start()-mesh.nInternalFaces();
 
             forAll(pp, i)
             {
-                label own = agglom[faceOwner[faceI]];
+                label own = agglom[faceOwner[facei]];
 
                 label globalNei = globalNeighbour[bFaceI];
                 if
@@ -362,7 +362,7 @@ void CML::decompositionMethod::calcCellCells
                     nFacesPerCell[own]++;
                 }
 
-                faceI++;
+                facei++;
                 bFaceI++;
             }
         }
@@ -380,10 +380,10 @@ void CML::decompositionMethod::calcCellCells
     const labelList& offsets = cellCells.offsets();
 
     // For internal faces is just offsetted owner and neighbour
-    for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
     {
-        label own = agglom[faceOwner[faceI]];
-        label nei = agglom[faceNeighbour[faceI]];
+        label own = agglom[faceOwner[facei]];
+        label nei = agglom[faceNeighbour[facei]];
 
         m[offsets[own] + nFacesPerCell[own]++] = globalAgglom.toGlobal(nei);
         m[offsets[nei] + nFacesPerCell[nei]++] = globalAgglom.toGlobal(own);
@@ -396,12 +396,12 @@ void CML::decompositionMethod::calcCellCells
 
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
-            label faceI = pp.start();
+            label facei = pp.start();
             label bFaceI = pp.start()-mesh.nInternalFaces();
 
             forAll(pp, i)
             {
-                label own = agglom[faceOwner[faceI]];
+                label own = agglom[faceOwner[facei]];
 
                 label globalNei = globalNeighbour[bFaceI];
 
@@ -414,7 +414,7 @@ void CML::decompositionMethod::calcCellCells
                     m[offsets[own] + nFacesPerCell[own]++] = globalNei;
                 }
 
-                faceI++;
+                facei++;
                 bFaceI++;
             }
         }
@@ -504,18 +504,18 @@ void CML::decompositionMethod::calcCellCells
 
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
-            label faceI = pp.start();
+            label facei = pp.start();
             label bFaceI = pp.start() - mesh.nInternalFaces();
 
             forAll(pp, i)
             {
                 globalNeighbour[bFaceI] = globalAgglom.toGlobal
                 (
-                    agglom[faceOwner[faceI]]
+                    agglom[faceOwner[facei]]
                 );
 
                 bFaceI++;
-                faceI++;
+                facei++;
             }
         }
     }
@@ -530,10 +530,10 @@ void CML::decompositionMethod::calcCellCells
     // Number of faces per coarse cell
     labelList nFacesPerCell(nLocalCoarse, 0);
 
-    for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
     {
-        label own = agglom[faceOwner[faceI]];
-        label nei = agglom[faceNeighbour[faceI]];
+        label own = agglom[faceOwner[facei]];
+        label nei = agglom[faceNeighbour[facei]];
 
         nFacesPerCell[own]++;
         nFacesPerCell[nei]++;
@@ -545,12 +545,12 @@ void CML::decompositionMethod::calcCellCells
 
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
-            label faceI = pp.start();
+            label facei = pp.start();
             label bFaceI = pp.start()-mesh.nInternalFaces();
 
             forAll(pp, i)
             {
-                label own = agglom[faceOwner[faceI]];
+                label own = agglom[faceOwner[facei]];
 
                 label globalNei = globalNeighbour[bFaceI];
                 if
@@ -562,7 +562,7 @@ void CML::decompositionMethod::calcCellCells
                     nFacesPerCell[own]++;
                 }
 
-                faceI++;
+                facei++;
                 bFaceI++;
             }
         }
@@ -582,18 +582,18 @@ void CML::decompositionMethod::calcCellCells
     const labelList& offsets = cellCells.offsets();
 
     // For internal faces is just offsetted owner and neighbour
-    for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
     {
-        label own = agglom[faceOwner[faceI]];
-        label nei = agglom[faceNeighbour[faceI]];
+        label own = agglom[faceOwner[facei]];
+        label nei = agglom[faceNeighbour[facei]];
 
         label ownIndex = offsets[own] + nFacesPerCell[own]++;
         label neiIndex = offsets[nei] + nFacesPerCell[nei]++;
 
         m[ownIndex] = globalAgglom.toGlobal(nei);
-        w[ownIndex] = mag(mesh.faceAreas()[faceI]);
+        w[ownIndex] = mag(mesh.faceAreas()[facei]);
         m[neiIndex] = globalAgglom.toGlobal(own);
-        w[ownIndex] = mag(mesh.faceAreas()[faceI]);
+        w[ownIndex] = mag(mesh.faceAreas()[facei]);
     }
 
     // For boundary faces is offsetted coupled neighbour
@@ -603,12 +603,12 @@ void CML::decompositionMethod::calcCellCells
 
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
-            label faceI = pp.start();
+            label facei = pp.start();
             label bFaceI = pp.start()-mesh.nInternalFaces();
 
             forAll(pp, i)
             {
-                label own = agglom[faceOwner[faceI]];
+                label own = agglom[faceOwner[facei]];
 
                 label globalNei = globalNeighbour[bFaceI];
 
@@ -620,10 +620,10 @@ void CML::decompositionMethod::calcCellCells
                 {
                     label ownIndex = offsets[own] + nFacesPerCell[own]++;
                     m[ownIndex] = globalNei;
-                    w[ownIndex] = mag(mesh.faceAreas()[faceI]);
+                    w[ownIndex] = mag(mesh.faceAreas()[facei]);
                 }
 
-                faceI++;
+                facei++;
                 bFaceI++;
             }
         }
@@ -644,12 +644,12 @@ void CML::decompositionMethod::calcCellCells
 
     label startIndex = cellCells.offsets()[0];
 
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
         nbrCells.clear();
-        nbrCells.insert(globalAgglom.toGlobal(cellI));
+        nbrCells.insert(globalAgglom.toGlobal(celli));
 
-        label endIndex = cellCells.offsets()[cellI+1];
+        label endIndex = cellCells.offsets()[celli+1];
 
         for (label i = startIndex; i < endIndex; i++)
         {
@@ -661,8 +661,8 @@ void CML::decompositionMethod::calcCellCells
             }
         }
         startIndex = endIndex;
-        cellCells.offsets()[cellI+1] = newIndex;
-        cellCellWeights.offsets()[cellI+1] = newIndex;
+        cellCells.offsets()[celli+1] = newIndex;
+        cellCellWeights.offsets()[celli+1] = newIndex;
     }
 
     cellCells.m().setSize(newIndex);
@@ -709,18 +709,18 @@ void CML::decompositionMethod::calcCellCells
 //
 //        if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
 //        {
-//            label faceI = pp.start();
+//            label facei = pp.start();
 //            label bFaceI = pp.start() - mesh.nInternalFaces();
 //
 //            forAll(pp, i)
 //            {
 //                globalNeighbour[bFaceI] = globalAgglom.toGlobal
 //                (
-//                    agglom[faceOwner[faceI]]
+//                    agglom[faceOwner[facei]]
 //                );
 //
 //                bFaceI++;
-//                faceI++;
+//                facei++;
 //            }
 //        }
 //    }
@@ -736,12 +736,12 @@ void CML::decompositionMethod::calcCellCells
 //    labelList nFacesPerCell(nLocalCoarse, 0);
 //
 //    // 1. Internal faces
-//    for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+//    for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
 //    {
-//        if (!blockedFace[faceI])
+//        if (!blockedFace[facei])
 //        {
-//            label own = agglom[faceOwner[faceI]];
-//            label nei = agglom[faceNeighbour[faceI]];
+//            label own = agglom[faceOwner[facei]];
+//            label nei = agglom[faceNeighbour[facei]];
 //
 //            nFacesPerCell[own]++;
 //            nFacesPerCell[nei]++;
@@ -755,14 +755,14 @@ void CML::decompositionMethod::calcCellCells
 //
 //        if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
 //        {
-//            label faceI = pp.start();
+//            label facei = pp.start();
 //            label bFaceI = pp.start()-mesh.nInternalFaces();
 //
 //            forAll(pp, i)
 //            {
-//                if (!blockedFace[faceI])
+//                if (!blockedFace[facei])
 //                {
-//                    label own = agglom[faceOwner[faceI]];
+//                    label own = agglom[faceOwner[facei]];
 //
 //                    label globalNei = globalNeighbour[bFaceI];
 //                    if
@@ -774,7 +774,7 @@ void CML::decompositionMethod::calcCellCells
 //                        nFacesPerCell[own]++;
 //                    }
 //
-//                    faceI++;
+//                    facei++;
 //                    bFaceI++;
 //                }
 //            }
@@ -863,12 +863,12 @@ void CML::decompositionMethod::calcCellCells
 //    const labelList& offsets = cellCells.offsets();
 //
 //    // 1. For internal faces is just offsetted owner and neighbour
-//    for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+//    for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
 //    {
-//        if (!blockedFace[faceI])
+//        if (!blockedFace[facei])
 //        {
-//            label own = agglom[faceOwner[faceI]];
-//            label nei = agglom[faceNeighbour[faceI]];
+//            label own = agglom[faceOwner[facei]];
+//            label nei = agglom[faceNeighbour[facei]];
 //
 //            m[offsets[own] + nFacesPerCell[own]++] =
 //              globalAgglom.toGlobal(nei);
@@ -884,14 +884,14 @@ void CML::decompositionMethod::calcCellCells
 //
 //        if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
 //        {
-//            label faceI = pp.start();
+//            label facei = pp.start();
 //            label bFaceI = pp.start()-mesh.nInternalFaces();
 //
 //            forAll(pp, i)
 //            {
-//                if (!blockedFace[faceI])
+//                if (!blockedFace[facei])
 //                {
-//                    label own = agglom[faceOwner[faceI]];
+//                    label own = agglom[faceOwner[facei]];
 //
 //                    label globalNei = globalNeighbour[bFaceI];
 //
@@ -904,7 +904,7 @@ void CML::decompositionMethod::calcCellCells
 //                        m[offsets[own] + nFacesPerCell[own]++] = globalNei;
 //                    }
 //
-//                    faceI++;
+//                    facei++;
 //                    bFaceI++;
 //                }
 //            }
@@ -1008,12 +1008,12 @@ void CML::decompositionMethod::calcCellCells
 //
 //    label startIndex = cellCells.offsets()[0];
 //
-//    forAll(cellCells, cellI)
+//    forAll(cellCells, celli)
 //    {
 //        nbrCells.clear();
-//        nbrCells.insert(globalAgglom.toGlobal(cellI));
+//        nbrCells.insert(globalAgglom.toGlobal(celli));
 //
-//        label endIndex = cellCells.offsets()[cellI+1];
+//        label endIndex = cellCells.offsets()[celli+1];
 //
 //        for (label i = startIndex; i < endIndex; i++)
 //        {
@@ -1023,20 +1023,20 @@ void CML::decompositionMethod::calcCellCells
 //            }
 //        }
 //        startIndex = endIndex;
-//        cellCells.offsets()[cellI+1] = newIndex;
+//        cellCells.offsets()[celli+1] = newIndex;
 //    }
 //
 //    cellCells.m().setSize(newIndex);
 //
-//    //forAll(cellCells, cellI)
+//    //forAll(cellCells, celli)
 //    //{
-//    //    Pout<< "Original: Coarse cell " << cellI << endl;
-//    //    forAll(mesh.cellCells()[cellI], i)
+//    //    Pout<< "Original: Coarse cell " << celli << endl;
+//    //    forAll(mesh.cellCells()[celli], i)
 //    //    {
-//    //        Pout<< "    nbr:" << mesh.cellCells()[cellI][i] << endl;
+//    //        Pout<< "    nbr:" << mesh.cellCells()[celli][i] << endl;
 //    //    }
-//    //    Pout<< "Compacted: Coarse cell " << cellI << endl;
-//    //    const labelUList cCells = cellCells[cellI];
+//    //    Pout<< "Compacted: Coarse cell " << celli << endl;
+//    //    const labelUList cCells = cellCells[celli];
 //    //    forAll(cCells, i)
 //    //    {
 //    //        Pout<< "    nbr:" << cCells[i] << endl;
@@ -1092,9 +1092,9 @@ CML::labelList CML::decompositionMethod::decompose
 
     // Any faces not blocked?
     label nUnblocked = 0;
-    forAll(blockedFace, faceI)
+    forAll(blockedFace, facei)
     {
-        if (!blockedFace[faceI])
+        if (!blockedFace[facei])
         {
             nUnblocked++;
         }
@@ -1161,13 +1161,13 @@ CML::labelList CML::decompositionMethod::decompose
 
         pointField regionCentres(localRegion.nLocalRegions(), point::max);
 
-        forAll(localRegion, cellI)
+        forAll(localRegion, celli)
         {
-            label regionI = localRegion[cellI];
+            label regionI = localRegion[celli];
 
             if (regionCentres[regionI] == point::max)
             {
-                regionCentres[regionI] = mesh.cellCentres()[cellI];
+                regionCentres[regionI] = mesh.cellCentres()[celli];
             }
         }
 
@@ -1178,18 +1178,18 @@ CML::labelList CML::decompositionMethod::decompose
 
         if (nWeights > 0)
         {
-            forAll(localRegion, cellI)
+            forAll(localRegion, celli)
             {
-                label regionI = localRegion[cellI];
+                label regionI = localRegion[celli];
 
-                regionWeights[regionI] += cellWeights[cellI];
+                regionWeights[regionI] += cellWeights[celli];
             }
         }
         else
         {
-            forAll(localRegion, cellI)
+            forAll(localRegion, celli)
             {
-                label regionI = localRegion[cellI];
+                label regionI = localRegion[celli];
 
                 regionWeights[regionI] += 1.0;
             }
@@ -1338,12 +1338,12 @@ CML::labelList CML::decompositionMethod::decompose
                     const labelList& pFaces = mesh.pointFaces()[f[fp]];
                     forAll(pFaces, i)
                     {
-                        label faceI = pFaces[i];
+                        label facei = pFaces[i];
 
-                        finalDecomp[mesh.faceOwner()[faceI]] = procI;
-                        if (mesh.isInternalFace(faceI))
+                        finalDecomp[mesh.faceOwner()[facei]] = procI;
+                        if (mesh.isInternalFace(facei))
                         {
-                            finalDecomp[mesh.faceNeighbour()[faceI]] = procI;
+                            finalDecomp[mesh.faceNeighbour()[facei]] = procI;
                         }
                     }
                 }

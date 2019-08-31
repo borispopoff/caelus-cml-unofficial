@@ -82,8 +82,8 @@ void triSurface::writeDXGeometry
                 patchFaceI++
             )
             {
-                const label faceI = faceMap[faceIndex++];
-                const labelledTri& f = localFaces()[faceI];
+                const label facei = faceMap[faceIndex++];
+                const labelledTri& f = localFaces()[facei];
 
                 os  << f[0] << ' ' << f[1] << ' ' << f[2] << endl;
             }
@@ -91,9 +91,9 @@ void triSurface::writeDXGeometry
     }
     else
     {
-        forAll(*this, faceI)
+        forAll(*this, facei)
         {
-            const labelledTri& f = localFaces()[faceI];
+            const labelledTri& f = localFaces()[facei];
 
             os  << f[0] << ' ' << f[1] << ' ' << f[2] << endl;
         }
@@ -142,9 +142,9 @@ void triSurface::writeDX(const bool writeSorted, Ostream& os) const
     {
         // Write face number as data
 
-        forAll(*this, faceI)
+        forAll(*this, facei)
         {
-            os  << faceI << endl;
+            os  << facei << endl;
         }
     }
 
@@ -166,9 +166,9 @@ void triSurface::writeDX(const scalarField& field, Ostream& os) const
         // Connections dependent data
         os  << "object 3 class array type float rank 0 items " << field.size()
             << " data follows" << endl;
-        forAll(field, faceI)
+        forAll(field, facei)
         {
-            os  << field[faceI] << endl;
+            os  << field[facei] << endl;
         }
         os  << endl
             << "attribute \"dep\" string \"connections\"" << endl << endl;
@@ -209,11 +209,11 @@ void triSurface::writeDX(const vectorField& field, Ostream& os) const
         // Connections dependent data
         os  << "object 3 class array type float rank 1 shape 3 items "
             << field.size() << " data follows" << endl;
-        forAll(field, faceI)
+        forAll(field, facei)
         {
-            os  << field[faceI].x() << ' '
-                << field[faceI].y() << ' '
-                << field[faceI].z() << endl;
+            os  << field[facei].x() << ' '
+                << field[facei].y() << ' '
+                << field[facei].z() << endl;
         }
         os  << endl
             << "attribute \"dep\" string \"connections\"" << endl << endl;

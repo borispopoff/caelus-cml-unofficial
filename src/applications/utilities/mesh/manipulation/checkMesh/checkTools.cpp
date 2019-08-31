@@ -212,9 +212,9 @@ void CML::printMeshBandwidth(const polyMesh& mesh)
 
     label band = 0;
 
-    forAll(neighbour, faceI)
+    forAll(neighbour, facei)
     {
-        label diff = neighbour[faceI] - owner[faceI];
+        label diff = neighbour[facei] - owner[facei];
 
         if (diff > band)
         {

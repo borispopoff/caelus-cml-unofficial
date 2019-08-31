@@ -1098,9 +1098,9 @@ void CML::fvMatrix<Type>::addToInternalField
             << abort(FatalError);
     }
 
-    forAll(addr, faceI)
+    forAll(addr, facei)
     {
-        intf[addr[faceI]] += pf[faceI];
+        intf[addr[facei]] += pf[facei];
     }
 }
 
@@ -1135,9 +1135,9 @@ void CML::fvMatrix<Type>::subtractFromInternalField
             << abort(FatalError);
     }
 
-    forAll(addr, faceI)
+    forAll(addr, facei)
     {
-        intf[addr[faceI]] -= pf[faceI];
+        intf[addr[facei]] -= pf[facei];
     }
 }
 

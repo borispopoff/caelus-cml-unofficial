@@ -124,9 +124,9 @@ void surfaceMorpherCells::morphMesh()
 
         const cellListPMG& cells = mesh_.cells();
         const faceListPMG& faces = mesh_.faces();
-        forAll(cells, cellI)
+        forAll(cells, celli)
         {
-            const cell& c = cells[cellI];
+            const cell& c = cells[celli];
 
             const edgeList edges = c.edges(faces);
             List<direction> nAppearances(edges.size(), direction(0));
@@ -151,16 +151,16 @@ void surfaceMorpherCells::morphMesh()
                     closed = false;
                     Info << "Edge " << edges[eI] << " appears "
                         << label(nAppearances[eI]) << " times in cell "
-                        << cellI << endl;
+                        << celli << endl;
                 }
 
             if( !closed )
             {
-                Info << "Cell " << cellI << " consists of faces " << c << endl;
+                Info << "Cell " << celli << " consists of faces " << c << endl;
                 forAll(c, fI)
                     Info << "Face " << c[fI] << " is " << faces[c[fI]] << endl;
                 FatalErrorInFunction
-                    << "Cell " << cellI << " is not topologically closed"
+                    << "Cell " << celli << " is not topologically closed"
                     << abort(FatalError);
             }
         }

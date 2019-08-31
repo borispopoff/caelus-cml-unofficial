@@ -131,7 +131,7 @@ class FaceCellWave
         //  statistics.
         bool updateCell
         (
-            const label cellI,
+            const label celli,
             const label neighbourFaceI,
             const Type& neighbourInfo,
             const scalar tol,
@@ -142,7 +142,7 @@ class FaceCellWave
         //  statistics.
         bool updateFace
         (
-            const label faceI,
+            const label facei,
             const label neighbourCellI,
             const Type& neighbourInfo,
             const scalar tol,
@@ -153,7 +153,7 @@ class FaceCellWave
         //  statistics.
         bool updateFace
         (
-            const label faceI,
+            const label facei,
             const Type& neighbourInfo,
             const scalar tol,
             Type& faceInfo
@@ -428,7 +428,7 @@ namespace CML
             void operator()
             (
                 Type& x,
-                const label faceI,
+                const label facei,
                 const Type& y,
                 const scalar weight
             ) const
@@ -438,11 +438,11 @@ namespace CML
                     label meshFaceI = -1;
                     if (patch_.owner())
                     {
-                        meshFaceI = patch_.start() + faceI;
+                        meshFaceI = patch_.start() + facei;
                     }
                     else
                     {
-                        meshFaceI = patch_.neighbPatch().start() + faceI;
+                        meshFaceI = patch_.neighbPatch().start() + facei;
                     }
                     x.updateFace
                     (
@@ -461,7 +461,7 @@ namespace CML
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Update info for cellI, at position pt, with information from
+// Update info for celli, at position pt, with information from
 // neighbouring face/cell.
 // Updates:
 //      - changedCell_, changedCells_, nChangedCells_,
@@ -469,7 +469,7 @@ namespace CML
 template<class Type, class TrackingData>
 bool CML::FaceCellWave<Type, TrackingData>::updateCell
 (
-    const label cellI,
+    const label celli,
     const label neighbourFaceI,
     const Type& neighbourInfo,
     const scalar tol,
@@ -484,7 +484,7 @@ bool CML::FaceCellWave<Type, TrackingData>::updateCell
         cellInfo.updateCell
         (
             mesh_,
-            cellI,
+            celli,
             neighbourFaceI,
             neighbourInfo,
             tol,
@@ -493,10 +493,10 @@ bool CML::FaceCellWave<Type, TrackingData>::updateCell
 
     if (propagate)
     {
-        if (!changedCell_[cellI])
+        if (!changedCell_[celli])
         {
-            changedCell_[cellI] = true;
-            changedCells_[nChangedCells_++] = cellI;
+            changedCell_[celli] = true;
+            changedCells_[nChangedCells_++] = celli;
         }
     }
 
@@ -509,7 +509,7 @@ bool CML::FaceCellWave<Type, TrackingData>::updateCell
 }
 
 
-// Update info for faceI, at position pt, with information from
+// Update info for facei, at position pt, with information from
 // neighbouring face/cell.
 // Updates:
 //      - changedFace_, changedFaces_, nChangedFaces_,
@@ -517,7 +517,7 @@ bool CML::FaceCellWave<Type, TrackingData>::updateCell
 template<class Type, class TrackingData>
 bool CML::FaceCellWave<Type, TrackingData>::updateFace
 (
-    const label faceI,
+    const label facei,
     const label neighbourCellI,
     const Type& neighbourInfo,
     const scalar tol,
@@ -532,7 +532,7 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
         faceInfo.updateFace
         (
             mesh_,
-            faceI,
+            facei,
             neighbourCellI,
             neighbourInfo,
             tol,
@@ -541,10 +541,10 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
 
     if (propagate)
     {
-        if (!changedFace_[faceI])
+        if (!changedFace_[facei])
         {
-            changedFace_[faceI] = true;
-            changedFaces_[nChangedFaces_++] = faceI;
+            changedFace_[facei] = true;
+            changedFaces_[nChangedFaces_++] = facei;
         }
     }
 
@@ -557,7 +557,7 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
 }
 
 
-// Update info for faceI, at position pt, with information from
+// Update info for facei, at position pt, with information from
 // same face.
 // Updates:
 //      - changedFace_, changedFaces_, nChangedFaces_,
@@ -565,7 +565,7 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
 template<class Type, class TrackingData>
 bool CML::FaceCellWave<Type, TrackingData>::updateFace
 (
-    const label faceI,
+    const label facei,
     const Type& neighbourInfo,
     const scalar tol,
     Type& faceInfo
@@ -579,7 +579,7 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
         faceInfo.updateFace
         (
             mesh_,
-            faceI,
+            facei,
             neighbourInfo,
             tol,
             td_
@@ -587,10 +587,10 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
 
     if (propagate)
     {
-        if (!changedFace_[faceI])
+        if (!changedFace_[facei])
         {
-            changedFace_[faceI] = true;
-            changedFaces_[nChangedFaces_++] = faceI;
+            changedFace_[facei] = true;
+            changedFaces_[nChangedFaces_++] = facei;
         }
     }
 
@@ -676,23 +676,23 @@ void CML::FaceCellWave<Type, TrackingData>::setFaceInfo
 {
     forAll(changedFaces, changedFaceI)
     {
-        label faceI = changedFaces[changedFaceI];
+        label facei = changedFaces[changedFaceI];
 
-        bool wasValid = allFaceInfo_[faceI].valid(td_);
+        bool wasValid = allFaceInfo_[facei].valid(td_);
 
-        // Copy info for faceI
-        allFaceInfo_[faceI] = changedFacesInfo[changedFaceI];
+        // Copy info for facei
+        allFaceInfo_[facei] = changedFacesInfo[changedFaceI];
 
         // Maintain count of unset faces
-        if (!wasValid && allFaceInfo_[faceI].valid(td_))
+        if (!wasValid && allFaceInfo_[facei].valid(td_))
         {
             --nUnvisitedFaces_;
         }
 
-        // Mark faceI as changed, both on list and on face itself.
+        // Mark facei as changed, both on list and on face itself.
 
-        changedFace_[faceI] = true;
-        changedFaces_[nChangedFaces_++] = faceI;
+        changedFace_[facei] = true;
+        changedFaces_[nChangedFaces_++] = facei;
     }
 }
 
@@ -819,16 +819,16 @@ void CML::FaceCellWave<Type, TrackingData>::transform
     {
         const tensor& T = rotTensor[0];
 
-        for (label faceI = 0; faceI < nFaces; faceI++)
+        for (label facei = 0; facei < nFaces; facei++)
         {
-            faceInfo[faceI].transform(mesh_, T, td_);
+            faceInfo[facei].transform(mesh_, T, td_);
         }
     }
     else
     {
-        for (label faceI = 0; faceI < nFaces; faceI++)
+        for (label facei = 0; facei < nFaces; facei++)
         {
-            faceInfo[faceI].transform(mesh_, rotTensor[faceI], td_);
+            faceInfo[facei].transform(mesh_, rotTensor[facei], td_);
         }
     }
 }
@@ -844,9 +844,9 @@ void CML::FaceCellWave<Type, TrackingData>::offset
     labelList& faces
 )
 {
-    for (label faceI = 0; faceI < nFaces; faceI++)
+    for (label facei = 0; facei < nFaces; facei++)
     {
-        faces[faceI] += cycOffset;
+        faces[facei] += cycOffset;
     }
 }
 
@@ -1454,30 +1454,30 @@ CML::label CML::FaceCellWave<Type, TrackingData>::faceToCell()
         changedFaceI++
     )
     {
-        label faceI = changedFaces_[changedFaceI];
-        if (!changedFace_[faceI])
+        label facei = changedFaces_[changedFaceI];
+        if (!changedFace_[facei])
         {
             FatalErrorInFunction
-                << "Face " << faceI
+                << "Face " << facei
                 << " not marked as having been changed"
                 << abort(FatalError);
         }
 
 
-        const Type& neighbourWallInfo = allFaceInfo_[faceI];
+        const Type& neighbourWallInfo = allFaceInfo_[facei];
 
         // Evaluate all connected cells
 
         // Owner
-        label cellI = owner[faceI];
-        Type& currentWallInfo = allCellInfo_[cellI];
+        label celli = owner[facei];
+        Type& currentWallInfo = allCellInfo_[celli];
 
         if (!currentWallInfo.equal(neighbourWallInfo, td_))
         {
             updateCell
             (
-                cellI,
-                faceI,
+                celli,
+                facei,
                 neighbourWallInfo,
                 propagationTol_,
                 currentWallInfo
@@ -1485,17 +1485,17 @@ CML::label CML::FaceCellWave<Type, TrackingData>::faceToCell()
         }
 
         // Neighbour.
-        if (faceI < nInternalFaces)
+        if (facei < nInternalFaces)
         {
-            cellI = neighbour[faceI];
-            Type& currentWallInfo2 = allCellInfo_[cellI];
+            celli = neighbour[facei];
+            Type& currentWallInfo2 = allCellInfo_[celli];
 
             if (!currentWallInfo2.equal(neighbourWallInfo, td_))
             {
                 updateCell
                 (
-                    cellI,
-                    faceI,
+                    celli,
+                    facei,
                     neighbourWallInfo,
                     propagationTol_,
                     currentWallInfo2
@@ -1504,7 +1504,7 @@ CML::label CML::FaceCellWave<Type, TrackingData>::faceToCell()
         }
 
         // Reset status of face
-        changedFace_[faceI] = false;
+        changedFace_[facei] = false;
     }
 
     // Handled all changed faces by now
@@ -1537,30 +1537,30 @@ CML::label CML::FaceCellWave<Type, TrackingData>::cellToFace()
         changedCellI++
     )
     {
-        label cellI = changedCells_[changedCellI];
-        if (!changedCell_[cellI])
+        label celli = changedCells_[changedCellI];
+        if (!changedCell_[celli])
         {
             FatalErrorInFunction
-                << "Cell " << cellI << " not marked as having been changed"
+                << "Cell " << celli << " not marked as having been changed"
                 << abort(FatalError);
         }
 
-        const Type& neighbourWallInfo = allCellInfo_[cellI];
+        const Type& neighbourWallInfo = allCellInfo_[celli];
 
         // Evaluate all connected faces
 
-        const labelList& faceLabels = cells[cellI];
+        const labelList& faceLabels = cells[celli];
         forAll(faceLabels, faceLabelI)
         {
-            label faceI = faceLabels[faceLabelI];
-            Type& currentWallInfo = allFaceInfo_[faceI];
+            label facei = faceLabels[faceLabelI];
+            Type& currentWallInfo = allFaceInfo_[facei];
 
             if (!currentWallInfo.equal(neighbourWallInfo, td_))
             {
                 updateFace
                 (
-                    faceI,
-                    cellI,
+                    facei,
+                    celli,
                     neighbourWallInfo,
                     propagationTol_,
                     currentWallInfo
@@ -1569,7 +1569,7 @@ CML::label CML::FaceCellWave<Type, TrackingData>::cellToFace()
         }
 
         // Reset status of cell
-        changedCell_[cellI] = false;
+        changedCell_[celli] = false;
     }
 
     // Handled all changed cells by now

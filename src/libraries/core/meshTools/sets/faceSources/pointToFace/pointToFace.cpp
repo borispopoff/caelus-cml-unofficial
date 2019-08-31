@@ -94,13 +94,13 @@ void CML::pointToFace::combine(topoSet& set, const bool add) const
 
             forAll(pFaces, pFaceI)
             {
-                const label faceI = pFaces[pFaceI];
+                const label facei = pFaces[pFaceI];
 
-                Map<label>::iterator fndFace = numPoints.find(faceI);
+                Map<label>::iterator fndFace = numPoints.find(facei);
 
                 if (fndFace == numPoints.end())
                 {
-                    numPoints.insert(faceI, 1);
+                    numPoints.insert(facei, 1);
                 }
                 else
                 {
@@ -114,11 +114,11 @@ void CML::pointToFace::combine(topoSet& set, const bool add) const
         // in face -> all points of face
         forAllConstIter(Map<label>, numPoints, iter)
         {
-            const label faceI = iter.key();
+            const label facei = iter.key();
 
-            if (iter() == mesh_.faces()[faceI].size())
+            if (iter() == mesh_.faces()[facei].size())
             {
-                addOrDelete(set, faceI, add);
+                addOrDelete(set, facei, add);
             }
         }
     }

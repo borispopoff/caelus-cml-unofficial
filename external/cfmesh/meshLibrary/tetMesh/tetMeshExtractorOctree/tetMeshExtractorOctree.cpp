@@ -85,8 +85,8 @@ void tetMeshExtractorOctree::createPolyMesh()
         # ifdef USE_OMP
         # pragma omp for
         # endif
-        forAll(removeFace, faceI)
-            removeFace[faceI] = false;
+        forAll(removeFace, facei)
+            removeFace[facei] = false;
 
         //- set sizes of cells and create all faces
         # ifdef USE_OMP
@@ -98,48 +98,48 @@ void tetMeshExtractorOctree::createPolyMesh()
 
             const partTet& elmt = tets[elmtI];
 
-            label faceI = 4 * elmtI;
+            label facei = 4 * elmtI;
 
             //- first face
-            cells[elmtI][0] = faceI;
+            cells[elmtI][0] = facei;
 
-            face& f0 = faces[faceI];
+            face& f0 = faces[facei];
             f0.setSize(3);
 
             f0[0] = elmt.a();
             f0[1] = elmt.c();
             f0[2] = elmt.b();
 
-            ++faceI;
+            ++facei;
 
             //- second face
-            cells[elmtI][1] = faceI;
+            cells[elmtI][1] = facei;
 
-            face& f1 = faces[faceI];
+            face& f1 = faces[facei];
             f1.setSize(3);
 
             f1[0] = elmt.a();
             f1[1] = elmt.b();
             f1[2] = elmt.d();
 
-            ++faceI;
+            ++facei;
 
             //- third face
-            cells[elmtI][2] = faceI;
+            cells[elmtI][2] = facei;
 
-            face& f2 = faces[faceI];
+            face& f2 = faces[facei];
             f2.setSize ( 3 );
 
             f2[0] = elmt.b();
             f2[1] = elmt.c();
             f2[2] = elmt.d();
 
-            ++faceI;
+            ++facei;
 
             //- fourth face
-            cells[elmtI][3] = faceI;
+            cells[elmtI][3] = facei;
 
-            face& f3 = faces[faceI];
+            face& f3 = faces[facei];
             f3.setSize ( 3 );
 
             f3[0] = elmt.c();
@@ -155,9 +155,9 @@ void tetMeshExtractorOctree::createPolyMesh()
         # ifdef USE_OMP
         # pragma omp for schedule(dynamic, 20)
         # endif
-        forAll(cells, cellI)
+        forAll(cells, celli)
         {
-            cell& c = cells[cellI];
+            cell& c = cells[celli];
 
             forAll(c, fI)
             {
@@ -168,7 +168,7 @@ void tetMeshExtractorOctree::createPolyMesh()
                 {
                     //- do not check cells with greater labels
                     //- they cannot be face owners
-                    if( pTets(pointI, ptI) >= cellI )
+                    if( pTets(pointI, ptI) >= celli )
                         continue;
 
                     const cell& otherTet = cells[pTets(pointI, ptI)];
@@ -197,14 +197,14 @@ void tetMeshExtractorOctree::createPolyMesh()
     label nFaces(0);
     labelLongList newFaceLabel(faces.size(), -1);
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        if( !removeFace[faceI] )
+        if( !removeFace[facei] )
         {
-            if( nFaces < faceI )
-                faces[nFaces].transfer(faces[faceI]);
+            if( nFaces < facei )
+                faces[nFaces].transfer(faces[facei]);
 
-            newFaceLabel[faceI] = nFaces;
+            newFaceLabel[facei] = nFaces;
             ++nFaces;
         }
     }
@@ -216,9 +216,9 @@ void tetMeshExtractorOctree::createPolyMesh()
     # ifdef USE_OMP
     # pragma omp for schedule(dynamic, 40)
     # endif
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        cell& c = cells[cellI];
+        cell& c = cells[celli];
 
         DynList<label> newC;
 

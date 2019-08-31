@@ -190,21 +190,21 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
     const scalarField magGradUw(mag(Uw.snGrad()));
 
     // Set omega and G
-    forAll(nutw, faceI)
+    forAll(nutw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
-        scalar omegaVis = 6.0*nuw[faceI]/(beta1_*sqr(y[faceI]));
+        scalar omegaVis = 6.0*nuw[facei]/(beta1_*sqr(y[facei]));
 
-        scalar omegaLog = sqrt(k[faceCellI])/(Cmu25*kappa_*y[faceI]);
+        scalar omegaLog = sqrt(k[faceCellI])/(Cmu25*kappa_*y[facei]);
 
         omega[faceCellI] = sqrt(sqr(omegaVis) + sqr(omegaLog));
 
         G[faceCellI] =
-            (nutw[faceI] + nuw[faceI])
-           *magGradUw[faceI]
+            (nutw[facei] + nuw[facei])
+           *magGradUw[facei]
            *Cmu25*sqrt(k[faceCellI])
-           /(kappa_*y[faceI]);
+           /(kappa_*y[facei]);
     }
 
     fixedInternalValueFvPatchField<scalar>::updateCoeffs();

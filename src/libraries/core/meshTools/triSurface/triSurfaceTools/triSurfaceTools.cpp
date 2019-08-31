@@ -49,20 +49,20 @@ const CML::label CML::triSurfaceTools::COLLAPSED = -3;
 void CML::triSurfaceTools::calcRefineStatus
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     List<refineType>& refine
 )
 {
-    if (refine[faceI] == RED)
+    if (refine[facei] == RED)
     {
         // Already marked for refinement. Do nothing.
     }
     else
     {
         // Not marked or marked for 'green' refinement. Refine.
-        refine[faceI] = RED;
+        refine[facei] = RED;
 
-        const labelList& myNeighbours = surf.faceFaces()[faceI];
+        const labelList& myNeighbours = surf.faceFaces()[facei];
 
         forAll(myNeighbours, myNeighbourI)
         {
@@ -82,17 +82,17 @@ void CML::triSurfaceTools::calcRefineStatus
 }
 
 
-// Split faceI along edgeI at position newPointI
+// Split facei along edgeI at position newPointI
 void CML::triSurfaceTools::greenRefine
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     const label edgeI,
     const label newPointI,
     DynamicList<labelledTri>& newFaces
 )
 {
-    const labelledTri& f = surf.localFaces()[faceI];
+    const labelledTri& f = surf.localFaces()[facei];
     const edge& e = surf.edges()[edgeI];
 
     // Find index of edge in face.
@@ -173,12 +173,12 @@ CML::triSurface CML::triSurfaceTools::doRefine
     // Point index for midpoint on edge
     labelList edgeMid(surf.nEdges(), -1);
 
-    forAll(refineStatus, faceI)
+    forAll(refineStatus, facei)
     {
-        if (refineStatus[faceI] == RED)
+        if (refineStatus[facei] == RED)
         {
             // Create new vertices on all edges to be refined.
-            const labelList& fEdges = surf.faceEdges()[faceI];
+            const labelList& fEdges = surf.faceEdges()[facei];
 
             forAll(fEdges, i)
             {
@@ -214,7 +214,7 @@ CML::triSurface CML::triSurfaceTools::doRefine
                     edgeMid[fEdges[0]],
                     edges[fEdges[0]].commonVertex(edges[fEdges[1]]),
                     edgeMid[fEdges[1]],
-                    surf[faceI].region()
+                    surf[facei].region()
                 )
             );
 
@@ -225,7 +225,7 @@ CML::triSurface CML::triSurfaceTools::doRefine
                     edgeMid[fEdges[1]],
                     edges[fEdges[1]].commonVertex(edges[fEdges[2]]),
                     edgeMid[fEdges[2]],
-                    surf[faceI].region()
+                    surf[facei].region()
                 )
             );
 
@@ -236,7 +236,7 @@ CML::triSurface CML::triSurfaceTools::doRefine
                     edgeMid[fEdges[2]],
                     edges[fEdges[2]].commonVertex(edges[fEdges[0]]),
                     edgeMid[fEdges[0]],
-                    surf[faceI].region()
+                    surf[facei].region()
                 )
             );
 
@@ -248,7 +248,7 @@ CML::triSurface CML::triSurfaceTools::doRefine
                     edgeMid[fEdges[0]],
                     edgeMid[fEdges[1]],
                     edgeMid[fEdges[2]],
-                    surf[faceI].region()
+                    surf[facei].region()
                 )
             );
 
@@ -258,7 +258,7 @@ CML::triSurface CML::triSurfaceTools::doRefine
             {
                 const label edgeI = fEdges[i];
 
-                label otherFaceI = otherFace(surf, faceI, edgeI);
+                label otherFaceI = otherFace(surf, facei, edgeI);
 
                 if ((otherFaceI != -1) && (refineStatus[otherFaceI] == GREEN))
                 {
@@ -276,11 +276,11 @@ CML::triSurface CML::triSurfaceTools::doRefine
     }
 
     // Copy unmarked triangles since keep original vertex numbering.
-    forAll(refineStatus, faceI)
+    forAll(refineStatus, facei)
     {
-        if (refineStatus[faceI] == NONE)
+        if (refineStatus[facei] == NONE)
         {
-            newFaces.append(surf.localFaces()[faceI]);
+            newFaces.append(surf.localFaces()[facei]);
         }
     }
 
@@ -335,11 +335,11 @@ void CML::triSurfaceTools::protectNeighbours
 //    const labelList& myFaces = surf.pointFaces()[vertI];
 //    forAll(myFaces, i)
 //    {
-//        label faceI = myFaces[i];
+//        label facei = myFaces[i];
 //
-//        if ((faceStatus[faceI] == ANYEDGE) || (faceStatus[faceI] >= 0))
+//        if ((faceStatus[facei] == ANYEDGE) || (faceStatus[facei] >= 0))
 //        {
-//            faceStatus[faceI] = NOEDGE;
+//            faceStatus[facei] = NOEDGE;
 //        }
 //    }
 
@@ -350,11 +350,11 @@ void CML::triSurfaceTools::protectNeighbours
 
         forAll(myFaces, myFaceI)
         {
-            label faceI = myFaces[myFaceI];
+            label facei = myFaces[myFaceI];
 
-            if ((faceStatus[faceI] == ANYEDGE) || (faceStatus[faceI] >= 0))
+            if ((faceStatus[facei] == ANYEDGE) || (faceStatus[facei] >= 0))
             {
-                faceStatus[faceI] = NOEDGE;
+                faceStatus[facei] = NOEDGE;
             }
        }
     }
@@ -522,7 +522,7 @@ void CML::triSurfaceTools::getMergedEdges
 }
 
 
-// Calculates (cos of) angle across edgeI of faceI,
+// Calculates (cos of) angle across edgeI of facei,
 // taking into account updated addressing (resulting from edge collapse)
 CML::scalar CML::triSurfaceTools::edgeCosAngle
 (
@@ -532,7 +532,7 @@ CML::scalar CML::triSurfaceTools::edgeCosAngle
     const labelHashSet& collapsedFaces,
     const HashTable<label, label, Hash<label>>& edgeToEdge,
     const HashTable<label, label, Hash<label>>& edgeToFace,
-    const label faceI,
+    const label facei,
     const label edgeI
 )
 {
@@ -540,7 +540,7 @@ CML::scalar CML::triSurfaceTools::edgeCosAngle
 
     label A = surf.edges()[edgeI].start();
     label B = surf.edges()[edgeI].end();
-    label C = oppositeVertex(surf, faceI, edgeI);
+    label C = oppositeVertex(surf, facei, edgeI);
 
     label D = -1;
 
@@ -557,7 +557,7 @@ CML::scalar CML::triSurfaceTools::edgeCosAngle
     else
     {
         // Use normal edge-face addressing
-        face2I = otherFace(surf, faceI, edgeI);
+        face2I = otherFace(surf, facei, edgeI);
 
         if ((face2I != -1) && !collapsedFaces.found(face2I))
         {
@@ -612,7 +612,7 @@ CML::scalar CML::triSurfaceTools::edgeCosAngle
         else
         {
             FatalErrorInFunction
-                << "face " << faceI << " does not use vertex "
+                << "face " << facei << " does not use vertex "
                 << v1 << " of collapsed edge" << abort(FatalError);
         }
     }
@@ -638,14 +638,14 @@ CML::scalar CML::triSurfaceTools::collapseMinCosAngle
 
     forAll(v1Faces, v1FaceI)
     {
-        label faceI = v1Faces[v1FaceI];
+        label facei = v1Faces[v1FaceI];
 
-        if (collapsedFaces.found(faceI))
+        if (collapsedFaces.found(facei))
         {
             continue;
         }
 
-        const labelList& myEdges = surf.faceEdges()[faceI];
+        const labelList& myEdges = surf.faceEdges()[facei];
 
         forAll(myEdges, myEdgeI)
         {
@@ -663,7 +663,7 @@ CML::scalar CML::triSurfaceTools::collapseMinCosAngle
                         collapsedFaces,
                         edgeToEdge,
                         edgeToFace,
-                        faceI,
+                        facei,
                         edgeI
                     )
                 );
@@ -691,14 +691,14 @@ bool CML::triSurfaceTools::collapseCreatesFold
 
     forAll(v1Faces, v1FaceI)
     {
-        label faceI = v1Faces[v1FaceI];
+        label facei = v1Faces[v1FaceI];
 
-        if (collapsedFaces.found(faceI))
+        if (collapsedFaces.found(facei))
         {
             continue;
         }
 
-        const labelList& myEdges = surf.faceEdges()[faceI];
+        const labelList& myEdges = surf.faceEdges()[facei];
 
         forAll(myEdges, myEdgeI)
         {
@@ -714,7 +714,7 @@ bool CML::triSurfaceTools::collapseCreatesFold
                     collapsedFaces,
                     edgeToEdge,
                     edgeToFace,
-                    faceI,
+                    facei,
                     edgeI
                 )
               < minCos
@@ -753,11 +753,11 @@ bool CML::triSurfaceTools::collapseCreatesFold
 //
 //    forAll(collapsed, collapseI)
 //    {
-//        const label faceI = collapsed[collapseI];
+//        const label facei = collapsed[collapseI];
 //
-//        const labelList& myEdges = surf.faceEdges()[faceI];
+//        const labelList& myEdges = surf.faceEdges()[facei];
 //
-//        Pout<< "collapsing faceI:" << faceI << " uses edges:" << myEdges
+//        Pout<< "collapsing facei:" << facei << " uses edges:" << myEdges
 //            << endl;
 //
 //        forAll(myEdges, myEdgeI)
@@ -772,7 +772,7 @@ bool CML::triSurfaceTools::collapseCreatesFold
 //                // Get the other face
 //                label neighbourFaceI = myFaces[0];
 //
-//                if (neighbourFaceI == faceI)
+//                if (neighbourFaceI == facei)
 //                {
 //                    neighbourFaceI = myFaces[1];
 //                }
@@ -810,7 +810,7 @@ bool CML::triSurfaceTools::collapseCreatesFold
 //        {
 //            const labelList& faceJEdges = surf.faceEdges()[neighbourList[j]];
 //
-//            // Check if faceI and faceJ share an edge
+//            // Check if facei and faceJ share an edge
 //            forAll(faceIEdges, fI)
 //            {
 //                forAll(faceJEdges, fJ)
@@ -1326,11 +1326,11 @@ void CML::triSurfaceTools::getVertexTriangles
 
     forAll(endFaces, endFaceI)
     {
-        label faceI = endFaces[endFaceI];
+        label facei = endFaces[endFaceI];
 
-        if ((faceI != face1I) && (faceI != face2I))
+        if ((facei != face1I) && (facei != face2I))
         {
-            edgeTris[nTris++] = faceI;
+            edgeTris[nTris++] = facei;
         }
     }
 }
@@ -1425,7 +1425,7 @@ CML::labelList CML::triSurfaceTools::getVertexVertices
 CML::label CML::triSurfaceTools::otherFace
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     const label edgeI
 )
 {
@@ -1437,7 +1437,7 @@ CML::label CML::triSurfaceTools::otherFace
     }
     else
     {
-        if (faceI == myFaces[0])
+        if (facei == myFaces[0])
         {
             return myFaces[1];
         }
@@ -1449,17 +1449,17 @@ CML::label CML::triSurfaceTools::otherFace
 }
 
 
-// Get the two edges on faceI counterclockwise after edgeI
+// Get the two edges on facei counterclockwise after edgeI
 void CML::triSurfaceTools::otherEdges
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     const label edgeI,
     label& e1,
     label& e2
 )
 {
-    const labelList& eFaces = surf.faceEdges()[faceI];
+    const labelList& eFaces = surf.faceEdges()[facei];
 
     label i0 = findIndex(eFaces, edgeI);
 
@@ -1467,7 +1467,7 @@ void CML::triSurfaceTools::otherEdges
     {
         FatalErrorInFunction
             << "Edge " << surf.edges()[edgeI] << " not in face "
-            << surf.localFaces()[faceI] << abort(FatalError);
+            << surf.localFaces()[facei] << abort(FatalError);
     }
 
     label i1 = eFaces.fcIndex(i0);
@@ -1478,17 +1478,17 @@ void CML::triSurfaceTools::otherEdges
 }
 
 
-// Get the two vertices on faceI counterclockwise vertI
+// Get the two vertices on facei counterclockwise vertI
 void CML::triSurfaceTools::otherVertices
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     const label vertI,
     label& vert1I,
     label& vert2I
 )
 {
-    const labelledTri& f = surf.localFaces()[faceI];
+    const labelledTri& f = surf.localFaces()[facei];
 
     if (vertI == f[0])
     {
@@ -1517,11 +1517,11 @@ void CML::triSurfaceTools::otherVertices
 CML::label CML::triSurfaceTools::oppositeEdge
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     const label vertI
 )
 {
-    const labelList& myEdges = surf.faceEdges()[faceI];
+    const labelList& myEdges = surf.faceEdges()[facei];
 
     forAll(myEdges, myEdgeI)
     {
@@ -1536,7 +1536,7 @@ CML::label CML::triSurfaceTools::oppositeEdge
     }
 
     FatalErrorInFunction
-        << "Cannot find vertex " << vertI << " in edges of face " << faceI
+        << "Cannot find vertex " << vertI << " in edges of face " << facei
         << abort(FatalError);
 
     return -1;
@@ -1547,11 +1547,11 @@ CML::label CML::triSurfaceTools::oppositeEdge
 CML::label CML::triSurfaceTools::oppositeVertex
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     const label edgeI
 )
 {
-    const triSurface::FaceType& f = surf.localFaces()[faceI];
+    const triSurface::FaceType& f = surf.localFaces()[facei];
     const edge& e = surf.edges()[edgeI];
 
     forAll(f, fp)
@@ -1566,7 +1566,7 @@ CML::label CML::triSurfaceTools::oppositeVertex
 
     FatalErrorInFunction
         << "Cannot find vertex opposite edge " << edgeI << " vertices " << e
-        << " in face " << faceI << " vertices " << f << abort(FatalError);
+        << " in face " << facei << " vertices " << f << abort(FatalError);
 
     return -1;
 }
@@ -1617,9 +1617,9 @@ CML::label CML::triSurfaceTools::getTriangle
 
     forAll(eFaces, eFaceI)
     {
-        label faceI = eFaces[eFaceI];
+        label facei = eFaces[eFaceI];
 
-        const labelList& myEdges = surf.faceEdges()[faceI];
+        const labelList& myEdges = surf.faceEdges()[facei];
 
         if
         (
@@ -1635,7 +1635,7 @@ CML::label CML::triSurfaceTools::getTriangle
              || (myEdges[2] == e2I)
             )
             {
-                return faceI;
+                return facei;
             }
         }
     }
@@ -1816,9 +1816,9 @@ CML::triSurface CML::triSurfaceTools::collapseEdges
 
 
     // Get only non-collapsed triangles and renumber vertex labels.
-    forAll(localFaces, faceI)
+    forAll(localFaces, facei)
     {
-        const labelledTri& f = localFaces[faceI];
+        const labelledTri& f = localFaces[facei];
 
         const label a = pointMap[f[0]];
         const label b = pointMap[f[1]];
@@ -1827,7 +1827,7 @@ CML::triSurface CML::triSurfaceTools::collapseEdges
         if
         (
             (a != b) && (a != c) && (b != c)
-         && (faceStatus[faceI] != COLLAPSED)
+         && (faceStatus[facei] != COLLAPSED)
         )
         {
             // uncollapsed triangle
@@ -1835,7 +1835,7 @@ CML::triSurface CML::triSurfaceTools::collapseEdges
         }
         else
         {
-            //Pout<< "Collapsed triangle " << faceI
+            //Pout<< "Collapsed triangle " << facei
             //    << " vertices:" << f << endl;
         }
     }
@@ -1949,11 +1949,11 @@ CML::triSurface CML::triSurfaceTools::greenRefine
     }
 
     // Add unrefined faces
-    forAll(surf.localFaces(), faceI)
+    forAll(surf.localFaces(), facei)
     {
-        if (refineStatus[faceI] == NONE)
+        if (refineStatus[facei] == NONE)
         {
-            newFaces.append(surf.localFaces()[faceI]);
+            newFaces.append(surf.localFaces()[facei]);
         }
     }
 
@@ -2057,9 +2057,9 @@ CML::triSurface CML::triSurfaceTools::mergePoints
         List<labelledTri> newTriangles(surf.size());
         label newTriangleI = 0;
 
-        forAll(surf, faceI)
+        forAll(surf, facei)
         {
-            const labelledTri& f = surf.localFaces()[faceI];
+            const labelledTri& f = surf.localFaces()[facei];
 
             label newA = pointMap[f[0]];
             label newB = pointMap[f[1]];
@@ -2434,9 +2434,9 @@ CML::triSurface CML::triSurfaceTools::triangulateFaceCentre
     {
         newPoints[newPointI++] = points[pointI];
     }
-    forAll(faceCentres, faceI)
+    forAll(faceCentres, facei)
     {
-        newPoints[newPointI++] = faceCentres[faceI];
+        newPoints[newPointI++] = faceCentres[facei];
     }
 
 
@@ -2635,9 +2635,9 @@ void CML::triSurfaceTools::calcInterpolationWeights
 
         scalar minDistance = GREAT;
 
-        forAll(s, faceI)
+        forAll(s, facei)
         {
-            const labelledTri& f = s[faceI];
+            const labelledTri& f = s[facei];
 
             triPointRef tri(f.tri(points));
 
@@ -2660,7 +2660,7 @@ void CML::triSurfaceTools::calcInterpolationWeights
                 calcInterpolationWeights(tri, nearest.rawPoint(), weights);
 
                 //Pout<< "calcScalingFactors : samplePt:" << samplePt
-                //    << " inside triangle:" << faceI
+                //    << " inside triangle:" << facei
                 //    << " verts:" << verts
                 //    << " weights:" << weights
                 //    << endl;

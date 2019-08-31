@@ -89,9 +89,9 @@ void setField
 
     label setCells=0;
 
-    forAll(*pTemp,cellI) {
-        if(cond[cellI]!=0) {
-            (*pTemp)[cellI]=result[cellI];
+    forAll(*pTemp,celli) {
+        if(cond[celli]!=0) {
+            (*pTemp)[celli]=result[celli];
             setCells++;
         }
     }

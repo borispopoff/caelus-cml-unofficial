@@ -75,7 +75,7 @@ class polyDualMesh
         static void getPointEdges
         (
             const primitivePatch& patch,
-            const label faceI,
+            const label facei,
             const label pointI,
             label& e0,
             label& e1

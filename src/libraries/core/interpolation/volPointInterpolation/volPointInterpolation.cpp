@@ -221,9 +221,9 @@ void CML::volPointInterpolation::makeBoundaryWeights(scalarField& sumWeights)
             {
                 if (boundaryIsPatchFace_[pFaces[i]])
                 {
-                    label faceI = mesh().nInternalFaces() + pFaces[i];
+                    label facei = mesh().nInternalFaces() + pFaces[i];
 
-                    pw[i] = 1.0/mag(points[pointI] - faceCentres[faceI]);
+                    pw[i] = 1.0/mag(points[pointI] - faceCentres[facei]);
                     sumWeights[pointI] += pw[i];
                 }
                 else

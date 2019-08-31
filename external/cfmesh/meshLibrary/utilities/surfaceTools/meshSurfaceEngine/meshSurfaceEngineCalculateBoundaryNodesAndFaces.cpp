@@ -166,9 +166,9 @@ void meshSurfaceEngine::calculateBoundaryNodes() const
 
                 labelLongList dts;
                 labelHashSet addedPoint;
-                for(label faceI=start;faceI<end;++faceI)
+                for(label facei=start;facei<end;++facei)
                 {
-                    const face& f = faces[faceI];
+                    const face& f = faces[facei];
                     forAll(f, pI)
                         if( (bp[f[pI]] != -1) && !addedPoint.found(f[pI]) )
                         {
@@ -177,7 +177,7 @@ void meshSurfaceEngine::calculateBoundaryNodes() const
                             //- data is sent as follows
                             //- 1. local face label in patch
                             //- 2. local node in face
-                            dts.append(faceI-start);
+                            dts.append(facei-start);
                             dts.append((f.size() - pI) % f.size());
                         }
                 }
@@ -245,15 +245,15 @@ void meshSurfaceEngine::calculateBoundaryFacePatches() const
     boundaryFacePatchPtr_ = new labelList(bFaces.size());
     labelList& facePatch = *boundaryFacePatchPtr_;
 
-    label faceI(0);
+    label facei(0);
     const PtrList<boundaryPatch>& boundaries = mesh_.boundaries();
     forAll(boundaries, patchI)
     {
         const label nFaces = boundaries[patchI].patchSize();
         for(label patchFaceI=0;patchFaceI<nFaces;++patchFaceI)
         {
-            facePatch[faceI] = patchI;
-            ++faceI;
+            facePatch[facei] = patchI;
+            ++facei;
         }
     }
 }
@@ -1002,9 +1002,9 @@ void meshSurfaceEngine::calculateEdgesAndAddressing() const
             const label end = start + procBoundaries[patchI].patchSize();
 
             labelLongList dts;
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
                 forAll(f, eI)
                 {
                     const edge e = f.faceEdge(eI);
@@ -1015,7 +1015,7 @@ void meshSurfaceEngine::calculateEdgesAndAddressing() const
                     forAllRow(bpEdges, s, peI)
                         if( edges[bpEdges(s, peI)] == e )
                         {
-                            dts.append(faceI-start);
+                            dts.append(facei-start);
                             dts.append((f.size()-1-eI)%f.size());
                             break;
                         }

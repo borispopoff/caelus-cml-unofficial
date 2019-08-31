@@ -834,9 +834,9 @@ CML::labelList CML::globalPoints::reverseMeshPoints
 
     faceList masterFaces(nbrPatch.size());
 
-    forAll(nbrPatch, faceI)
+    forAll(nbrPatch, facei)
     {
-        masterFaces[faceI] = nbrPatch[faceI].reverseFace();
+        masterFaces[facei] = nbrPatch[facei].reverseFace();
     }
 
     return primitiveFacePatch

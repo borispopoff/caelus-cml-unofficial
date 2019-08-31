@@ -2013,15 +2013,15 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
         );
         // Insert the sign bit from face flipping
         labelList& faceMap = subFaceMap[Pstream::myProcNo()];
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
-            faceMap[faceI] += 1;
+            faceMap[facei] += 1;
         }
         const labelHashSet& flip = subMap().flipFaceFlux();
         forAllConstIter(labelHashSet, flip, iter)
         {
-            label faceI = iter.key();
-            faceMap[faceI] = -faceMap[faceI];
+            label facei = iter.key();
+            faceMap[facei] = -faceMap[facei];
         }
         subPointMap[Pstream::myProcNo()] = subMap().pointMap();
         subPatchMap[Pstream::myProcNo()] = identity(patches.size());

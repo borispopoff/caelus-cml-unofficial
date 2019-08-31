@@ -357,7 +357,7 @@ public:
 
         //- When exporting faceZones, check if a given face has to be included
         //  or not (i.e. faces on processor boundaries)
-        bool faceToBeIncluded(const label faceI) const;
+        bool faceToBeIncluded(const label facei) const;
 
         //- Helper to cause barrier. Necessary on Quadrics.
         static void barrier();

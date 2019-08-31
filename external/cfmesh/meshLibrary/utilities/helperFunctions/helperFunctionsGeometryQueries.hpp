@@ -505,10 +505,10 @@ inline faceList mergePatchFaces
     //- merge faces which share a common edge
     faceList patchFaces(pfcs.size());
     label counter(0);
-    forAll(pfcs, faceI)
-        if( pfcs[faceI].size() > 2 )
+    forAll(pfcs, facei)
+        if( pfcs[facei].size() > 2 )
         {
-            const DynList<label>& f = pfcs[faceI];
+            const DynList<label>& f = pfcs[facei];
             face f_(f.size());
             forAll(f_, fJ)
                 f_[fJ] = f[fJ];

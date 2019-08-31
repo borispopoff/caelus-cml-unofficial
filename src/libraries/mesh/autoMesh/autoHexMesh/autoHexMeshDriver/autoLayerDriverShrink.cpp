@@ -398,15 +398,15 @@ void CML::autoLayerDriver::handleFeatureAngleLayerTerminations
 
     boolList extrudedFaces(pp.size(), true);
 
-    forAll(pp.localFaces(), faceI)
+    forAll(pp.localFaces(), facei)
     {
-        const face& f = pp.localFaces()[faceI];
+        const face& f = pp.localFaces()[facei];
 
         forAll(f, fp)
         {
             if (extrudeStatus[f[fp]] == NOEXTRUDE)
             {
-                extrudedFaces[faceI] = false;
+                extrudedFaces[facei] = false;
                 break;
             }
         }
@@ -514,14 +514,14 @@ void CML::autoLayerDriver::findIsolatedRegions
         // faces are not grown
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         boolList extrudedFaces(pp.size(), true);
-        forAll(pp.localFaces(), faceI)
+        forAll(pp.localFaces(), facei)
         {
-            const face& f = pp.localFaces()[faceI];
+            const face& f = pp.localFaces()[facei];
             forAll(f, fp)
             {
                 if (extrudeStatus[f[fp]] == NOEXTRUDE)
                 {
-                    extrudedFaces[faceI] = false;
+                    extrudedFaces[facei] = false;
                     break;
                 }
             }
@@ -536,8 +536,8 @@ void CML::autoLayerDriver::findIsolatedRegions
 
             forAll(pFaces, i)
             {
-                label faceI = pFaces[i];
-                if (extrudedFaces[faceI])
+                label facei = pFaces[i];
+                if (extrudedFaces[facei])
                 {
                     keptPoints[patchPointI] = true;
                     break;
@@ -623,9 +623,9 @@ void CML::autoLayerDriver::findIsolatedRegions
 
     // stop layer growth on isolated faces
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    forAll(pp, faceI)
+    forAll(pp, facei)
     {
-        const face& f = pp.localFaces()[faceI];
+        const face& f = pp.localFaces()[facei];
         bool failed = false;
         forAll(f, fp)
         {

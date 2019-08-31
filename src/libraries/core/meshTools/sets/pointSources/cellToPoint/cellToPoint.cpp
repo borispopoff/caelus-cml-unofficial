@@ -66,8 +66,8 @@ void CML::cellToPoint::combine(topoSet& set, const bool add) const
     // Add all point from cells in loadedSet
     forAllConstIter(cellSet, loadedSet, iter)
     {
-        const label cellI = iter.key();
-        const labelList& cFaces = mesh_.cells()[cellI];
+        const label celli = iter.key();
+        const labelList& cFaces = mesh_.cells()[celli];
 
         forAll(cFaces, cFaceI)
         {

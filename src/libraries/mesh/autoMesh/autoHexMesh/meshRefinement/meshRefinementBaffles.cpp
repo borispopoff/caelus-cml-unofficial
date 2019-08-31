@@ -120,7 +120,7 @@ CML::label CML::meshRefinement::createBaffle
 CML::label CML::meshRefinement::getBafflePatch
 (
     const labelList& facePatch,
-    const label faceI
+    const label facei
 ) const
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
@@ -132,9 +132,9 @@ CML::label CML::meshRefinement::getBafflePatch
     // Check first for real patch (so proper surface intersection and then
     // in facePatch array for patches to block off faces
 
-    forAll(mesh_.faces()[faceI], fp)
+    forAll(mesh_.faces()[facei], fp)
     {
-        label pointI = mesh_.faces()[faceI][fp];
+        label pointI = mesh_.faces()[facei][fp];
 
         forAll(mesh_.pointFaces()[pointI], pf)
         {
@@ -155,7 +155,7 @@ CML::label CML::meshRefinement::getBafflePatch
 
     // Loop over owner and neighbour cells, looking for the first face with a
     // valid patch number
-    const cell& ownFaces = mesh_.cells()[mesh_.faceOwner()[faceI]];
+    const cell& ownFaces = mesh_.cells()[mesh_.faceOwner()[facei]];
 
     forAll(ownFaces, i)
     {
@@ -173,9 +173,9 @@ CML::label CML::meshRefinement::getBafflePatch
         }
     }
 
-    if (mesh_.isInternalFace(faceI))
+    if (mesh_.isInternalFace(facei))
     {
-        const cell& neiFaces = mesh_.cells()[mesh_.faceNeighbour()[faceI]];
+        const cell& neiFaces = mesh_.cells()[mesh_.faceNeighbour()[facei]];
 
         forAll(neiFaces, i)
         {
@@ -196,7 +196,7 @@ CML::label CML::meshRefinement::getBafflePatch
 
     WarningInFunction
         << "Could not find boundary face neighbouring internal face "
-        << faceI << " with face centre " << mesh_.faceCentres()[faceI]
+        << facei << " with face centre " << mesh_.faceCentres()[facei]
         << nl
         << "Using arbitrary patch " << 0 << " instead." << endl;
 
@@ -387,19 +387,19 @@ CML::Map<CML::label> CML::meshRefinement::getZoneBafflePatches
 
             forAll(fZone, i)
             {
-                label faceI = fZone[i];
+                label facei = fZone[i];
 
-                if (allowBoundary || mesh_.isInternalFace(faceI))
+                if (allowBoundary || mesh_.isInternalFace(facei))
                 {
-                    if (!bafflePatch.insert(faceI, patchI))
+                    if (!bafflePatch.insert(facei, patchI))
                     {
-                        label oldPatchI = bafflePatch[faceI];
+                        label oldPatchI = bafflePatch[facei];
 
                         if (oldPatchI != patchI)
                         {
                             FatalErrorInFunction
-                                << "Face " << faceI
-                                << " fc:" << mesh_.faceCentres()[faceI]
+                                << "Face " << facei
+                                << " fc:" << mesh_.faceCentres()[facei]
                                 << " in zone " << fZone.name()
                                 << " is in patch "
                                 << mesh_.boundaryMesh()[oldPatchI].name()
@@ -1749,11 +1749,11 @@ void CML::meshRefinement::baffleAndSplitMesh
                     globalToPatch
                 )
             );
-            forAll(facePatchTopo, faceI)
+            forAll(facePatchTopo, facei)
             {
-                if (facePatchTopo[faceI] != -1)
+                if (facePatchTopo[facei] != -1)
                 {
-                    problemTopo.insert(faceI);
+                    problemTopo.insert(facei);
                 }
             }
             problemTopo.instance() = timeName();
@@ -2644,9 +2644,9 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
         {
             forAll(pp, i)
             {
-                label faceI = pp.start()+i;
-                neiCellZone[faceI-mesh_.nInternalFaces()] =
-                    cellToZone[mesh_.faceOwner()[faceI]];
+                label facei = pp.start()+i;
+                neiCellZone[facei-mesh_.nInternalFaces()] =
+                    cellToZone[mesh_.faceOwner()[facei]];
             }
         }
     }

@@ -144,9 +144,9 @@ void CML::autoLayerDriver::checkMeshManifold() const
     // Get all outside faces
     labelList outsideFaces(mesh.nFaces() - mesh.nInternalFaces());
 
-    for (label faceI = mesh.nInternalFaces(); faceI < mesh.nFaces(); faceI++)
+    for (label facei = mesh.nInternalFaces(); facei < mesh.nFaces(); facei++)
     {
-         outsideFaces[faceI - mesh.nInternalFaces()] = faceI;
+         outsideFaces[facei - mesh.nInternalFaces()] = facei;
     }
 
     pointSet nonManifoldPoints
@@ -507,13 +507,13 @@ void CML::autoLayerDriver::handleWarpedFaces
 
         if (f.size() > 3)
         {
-            label faceI = pp.addressing()[i];
+            label facei = pp.addressing()[i];
 
-            label ownLevel = cellLevel[mesh.faceOwner()[faceI]];
+            label ownLevel = cellLevel[mesh.faceOwner()[facei]];
             scalar edgeLen = edge0Len/(1<<ownLevel);
 
             // Normal distance to face centre plane
-            const point& fc = mesh.faceCentres()[faceI];
+            const point& fc = mesh.faceCentres()[facei];
             const vector& fn = pp.faceNormals()[i];
 
             scalarField vProj(f.size());
@@ -582,13 +582,13 @@ void CML::autoLayerDriver::handleWarpedFaces
 //
 //        forAll(pFaces, i)
 //        {
-//            label cellI = mesh.faceOwner()[pp.addressing()[pFaces[i]]];
+//            label celli = mesh.faceOwner()[pp.addressing()[pFaces[i]]];
 //
-//            if (!pointCells.insert(cellI))
+//            if (!pointCells.insert(celli))
 //            {
 //                // Second or more occurrence of cell so cell has two or more
 //                // pp faces connected to this point.
-//                multiPatchCells.insert(cellI);
+//                multiPatchCells.insert(celli);
 //            }
 //        }
 //    }
@@ -626,10 +626,10 @@ void CML::autoLayerDriver::handleWarpedFaces
 //
 //                forAll(pFaces, i)
 //                {
-//                    label cellI =
+//                    label celli =
 //                        mesh.faceOwner()[pp.addressing()[pFaces[i]]];
 //
-//                    if (multiPatchCells.found(cellI))
+//                    if (multiPatchCells.found(celli))
 //                    {
 //                        if
 //                        (
@@ -755,9 +755,9 @@ void CML::autoLayerDriver::setNumLayers
 
     // Calculate number of cells to create
     nAddedCells = 0;
-    forAll(pp.localFaces(), faceI)
+    forAll(pp.localFaces(), facei)
     {
-        const face& f = pp.localFaces()[faceI];
+        const face& f = pp.localFaces()[facei];
 
         // Get max of extrusion per point
         label nCells = 0;
@@ -866,9 +866,9 @@ void CML::autoLayerDriver::growNoExtrusion
 
     label nGrown = 0;
 
-    forAll(localFaces, faceI)
+    forAll(localFaces, facei)
     {
-        const face& f = localFaces[faceI];
+        const face& f = localFaces[facei];
 
         bool hasSqueeze = false;
         forAll(f, fp)
@@ -1578,14 +1578,14 @@ void CML::autoLayerDriver::getVertexString
 (
     const indirectPrimitivePatch& pp,
     const labelListList& globalEdgeFaces,
-    const label faceI,
+    const label facei,
     const label edgeI,
     const label myGlobFaceI,
     const label nbrGlobFaceI,
     DynamicList<label>& vertices
 ) const
 {
-    const labelList& fEdges = pp.faceEdges()[faceI];
+    const labelList& fEdges = pp.faceEdges()[facei];
     label fp = findIndex(fEdges, edgeI);
 
     if (fp == -1)
@@ -1636,7 +1636,7 @@ void CML::autoLayerDriver::getVertexString
         endFp = nextFp;
     }
 
-    const face& f = pp.localFaces()[faceI];
+    const face& f = pp.localFaces()[facei];
     vertices.clear();
     fp = startFp;
     while (fp != endFp)
@@ -1674,17 +1674,17 @@ CML::label CML::autoLayerDriver::truncateDisplacement
 
     forAllConstIter(faceSet, illegalPatchFaces, iter)
     {
-        label faceI = iter.key();
+        label facei = iter.key();
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
             FatalErrorInFunction
                 << "Faceset " << illegalPatchFaces.name()
-                << " contains internal face " << faceI << nl
+                << " contains internal face " << facei << nl
                 << "It should only contain patch faces" << abort(FatalError);
         }
 
-        const face& f = mesh.faces()[faceI];
+        const face& f = mesh.faces()[facei];
 
 
         forAll(f, fp)
@@ -2079,12 +2079,12 @@ void CML::autoLayerDriver::setupLayerInfoTruncation
                 {
                     forAll(pointFaces[patchPointI], pointFaceI)
                     {
-                        label faceI = pointFaces[patchPointI][pointFaceI];
+                        label facei = pointFaces[patchPointI][pointFaceI];
 
                         if
                         (
-                            nPatchFaceLayers[faceI] != -1
-                         && maxLevel[faceI] > 0
+                            nPatchFaceLayers[facei] != -1
+                         && maxLevel[facei] > 0
                         )
                         {
                             foundNeighbour[patchPointI] = true;
@@ -2108,15 +2108,15 @@ void CML::autoLayerDriver::setupLayerInfoTruncation
                     {
                         forAll(pointFaces[patchPointI], pointFaceI)
                         {
-                            label faceI = pointFaces[patchPointI][pointFaceI];
+                            label facei = pointFaces[patchPointI][pointFaceI];
                             if
                             (
-                                nPatchFaceLayers[faceI] == -1
-                             && maxLevel[faceI] > 0
-                             && ilevel < maxLevel[faceI]
+                                nPatchFaceLayers[facei] == -1
+                             && maxLevel[facei] > 0
+                             && ilevel < maxLevel[facei]
                             )
                             {
-                                tempCounter[faceI] = ilevel;
+                                tempCounter[facei] = ilevel;
                             }
                         }
                     }
@@ -3083,9 +3083,9 @@ void CML::autoLayerDriver::addLayers
         label nTotFaces = returnReduce(pp().size(), sumOp<label>());
         label nAddedCells = 0;
         {
-            forAll(flaggedCells, cellI)
+            forAll(flaggedCells, celli)
             {
-                if (flaggedCells[cellI])
+                if (flaggedCells[celli])
                 {
                     nAddedCells++;
                 }

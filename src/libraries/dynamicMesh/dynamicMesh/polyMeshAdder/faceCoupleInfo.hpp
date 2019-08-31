@@ -511,11 +511,11 @@ CML::pointField CML::faceCoupleInfo::calcFaceCentres
 {
     pointField fc(size);
 
-    label faceI = start;
+    label facei = start;
 
     forAll(fc, i)
     {
-        fc[i] = faces[faceI++].centre(points);
+        fc[i] = faces[facei++].centre(points);
     }
     return fc;
 }

@@ -102,24 +102,24 @@ void CML::fieldValues::faceSource::setFaceZoneFaces()
 
     forAll(fZone, i)
     {
-        label faceI = fZone[i];
+        label facei = fZone[i];
 
         label faceId = -1;
         label facePatchId = -1;
-        if (mesh().isInternalFace(faceI))
+        if (mesh().isInternalFace(facei))
         {
-            faceId = faceI;
+            faceId = facei;
             facePatchId = -1;
         }
         else
         {
-            facePatchId = mesh().boundaryMesh().whichPatch(faceI);
+            facePatchId = mesh().boundaryMesh().whichPatch(facei);
             const polyPatch& pp = mesh().boundaryMesh()[facePatchId];
             if (isA<coupledPolyPatch>(pp))
             {
                 if (refCast<const coupledPolyPatch>(pp).owner())
                 {
-                    faceId = pp.whichFace(faceI);
+                    faceId = pp.whichFace(facei);
                 }
                 else
                 {
@@ -128,7 +128,7 @@ void CML::fieldValues::faceSource::setFaceZoneFaces()
             }
             else if (!isA<emptyPolyPatch>(pp))
             {
-                faceId = faceI - pp.start();
+                faceId = facei - pp.start();
             }
             else
             {
@@ -193,11 +193,11 @@ void CML::fieldValues::faceSource::setPatchFaces()
     faceSign_.setSize(nFaces);
     nFaces_ = returnReduce(faceId_.size(), sumOp<label>());
 
-    forAll(faceId_, faceI)
+    forAll(faceId_, facei)
     {
-        faceId_[faceI] = faceI;
-        facePatchId_[faceI] = patchId;
-        faceSign_[faceI] = 1;
+        faceId_[facei] = facei;
+        facePatchId_[facei] = patchId;
+        faceSign_[facei] = 1;
     }
 }
 

@@ -117,7 +117,7 @@ class surfaceToCell
         (
             const triSurfaceSearch& querySurf,
             const vector& span,
-            const label cellI,
+            const label celli,
             const label cellTriI,
             Map<label>& pointToNearest
         ) const;

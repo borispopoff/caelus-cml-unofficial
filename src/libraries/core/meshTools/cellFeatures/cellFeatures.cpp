@@ -32,12 +32,12 @@ License
 
 // Return true if edge start and end are on increasing face vertices. (edge is
 // guaranteed to be on face)
-bool CML::cellFeatures::faceAlignedEdge(const label faceI, const label edgeI)
+bool CML::cellFeatures::faceAlignedEdge(const label facei, const label edgeI)
  const
 {
     const edge& e = mesh_.edges()[edgeI];
 
-    const face& f = mesh_.faces()[faceI];
+    const face& f = mesh_.faces()[facei];
 
     forAll(f, fp)
     {
@@ -51,7 +51,7 @@ bool CML::cellFeatures::faceAlignedEdge(const label faceI, const label edgeI)
 
     FatalErrorInFunction
         << "Can not find edge " << mesh_.edges()[edgeI]
-        << " on face " << faceI << abort(FatalError);
+        << " on face " << facei << abort(FatalError);
 
     return false;
 }
@@ -81,12 +81,12 @@ CML::label CML::cellFeatures::nextEdge
 
             forAll(eFaces, eFaceI)
             {
-                label faceI = eFaces[eFaceI];
+                label facei = eFaces[eFaceI];
 
                 if
                 (
-                    meshTools::faceOnCell(mesh_, cellI_, faceI)
-                 && (toSuperFace[faceI] == superFaceI)
+                    meshTools::faceOnCell(mesh_, cellI_, facei)
+                 && (toSuperFace[facei] == superFaceI)
                 )
                 {
                     return edgeI;
@@ -174,16 +174,16 @@ bool CML::cellFeatures::isCellFeatureEdge
 // edges.
 void CML::cellFeatures::walkSuperFace
 (
-    const label faceI,
+    const label facei,
     const label superFaceI,
     Map<label>& toSuperFace
 ) const
 {
-    if (!toSuperFace.found(faceI))
+    if (!toSuperFace.found(facei))
     {
-        toSuperFace.insert(faceI, superFaceI);
+        toSuperFace.insert(facei, superFaceI);
 
-        const labelList& fEdges = mesh_.faceEdges()[faceI];
+        const labelList& fEdges = mesh_.faceEdges()[facei];
 
         forAll(fEdges, fEdgeI)
         {
@@ -195,7 +195,7 @@ void CML::cellFeatures::walkSuperFace
                 label face1;
                 meshTools::getEdgeFaces(mesh_, cellI_, edgeI, face0, face1);
 
-                if (face0 == faceI)
+                if (face0 == facei)
                 {
                     face0 = face1;
                 }
@@ -227,13 +227,13 @@ void CML::cellFeatures::calcSuperFaces() const
 
     forAll(cFaces, cFaceI)
     {
-        label faceI = cFaces[cFaceI];
+        label facei = cFaces[cFaceI];
 
-        if (!toSuperFace.found(faceI))
+        if (!toSuperFace.found(facei))
         {
             walkSuperFace
             (
-                faceI,
+                facei,
                 superFaceI,
                 toSuperFace
             );
@@ -247,9 +247,9 @@ void CML::cellFeatures::calcSuperFaces() const
 
     forAll(cFaces, cFaceI)
     {
-        label faceI = cFaces[cFaceI];
+        label facei = cFaces[cFaceI];
 
-        faceMap_[toSuperFace[faceI]].append(faceI);
+        faceMap_[toSuperFace[facei]].append(facei);
     }
 
     forAll(faceMap_, superI)
@@ -266,9 +266,9 @@ void CML::cellFeatures::calcSuperFaces() const
 
     forAll(cFaces, cFaceI)
     {
-        label faceI = cFaces[cFaceI];
+        label facei = cFaces[cFaceI];
 
-        label superFaceI = toSuperFace[faceI];
+        label superFaceI = toSuperFace[facei];
 
         if (faces[superFaceI].empty())
         {
@@ -277,7 +277,7 @@ void CML::cellFeatures::calcSuperFaces() const
             // Find starting feature edge on face.
             label startEdgeI = -1;
 
-            const labelList& fEdges = mesh_.faceEdges()[faceI];
+            const labelList& fEdges = mesh_.faceEdges()[facei];
 
             forAll(fEdges, fEdgeI)
             {
@@ -296,15 +296,15 @@ void CML::cellFeatures::calcSuperFaces() const
             {
                 // Walk point-edge-point along feature edges
 
-                DynamicList<label> superFace(10*mesh_.faces()[faceI].size());
+                DynamicList<label> superFace(10*mesh_.faces()[facei].size());
 
                 const edge& e = mesh_.edges()[startEdgeI];
 
                 // Walk either start-end or end-start depending on orientation
-                // of face. SuperFace will have cellI as owner.
+                // of face. SuperFace will have celli as owner.
                 bool flipOrientation =
-                    (mesh_.faceOwner()[faceI] == cellI_)
-                  ^ (faceAlignedEdge(faceI, startEdgeI));
+                    (mesh_.faceOwner()[facei] == cellI_)
+                  ^ (faceAlignedEdge(facei, startEdgeI));
 
                 label startVertI = -1;
 
@@ -372,13 +372,13 @@ CML::cellFeatures::cellFeatures
 (
     const primitiveMesh& mesh,
     const scalar minCos,
-    const label cellI
+    const label celli
 )
 :
     mesh_(mesh),
     minCos_(minCos),
-    cellI_(cellI),
-    featureEdge_(10*mesh.cellEdges()[cellI].size()),
+    cellI_(celli),
+    featureEdge_(10*mesh.cellEdges()[celli].size()),
     facesPtr_(nullptr),
     faceMap_(0)
 {
@@ -474,19 +474,19 @@ bool CML::cellFeatures::isFeaturePoint(const label edge0, const label edge1)
 }
 
 
-bool CML::cellFeatures::isFeatureVertex(const label faceI, const label vertI)
+bool CML::cellFeatures::isFeatureVertex(const label facei, const label vertI)
  const
 {
     if
     (
-        (faceI < 0)
-     || (faceI >= mesh_.nFaces())
+        (facei < 0)
+     || (facei >= mesh_.nFaces())
      || (vertI < 0)
      || (vertI >= mesh_.nPoints())
     )
     {
         FatalErrorInFunction
-            << "Illegal face " << faceI << " or vertex " << vertI
+            << "Illegal face " << facei << " or vertex " << vertI
             << abort(FatalError);
     }
 
@@ -499,7 +499,7 @@ bool CML::cellFeatures::isFeatureVertex(const label faceI, const label vertI)
     {
         label edgeI = pEdges[pEdgeI];
 
-        if (meshTools::edgeOnFace(mesh_, faceI, edgeI))
+        if (meshTools::edgeOnFace(mesh_, facei, edgeI))
         {
             if (edge0 == -1)
             {
@@ -519,7 +519,7 @@ bool CML::cellFeatures::isFeatureVertex(const label faceI, const label vertI)
     {
         FatalErrorInFunction
             << "Did not find two edges sharing vertex " << vertI
-            << " on face " << faceI << " vertices:" << mesh_.faces()[faceI]
+            << " on face " << facei << " vertices:" << mesh_.faces()[facei]
             << abort(FatalError);
     }
 

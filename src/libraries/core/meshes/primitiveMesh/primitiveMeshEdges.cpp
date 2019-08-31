@@ -114,9 +114,9 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
         {
             fePtr_ = new labelListList(fcs.size());
             labelListList& faceEdges = *fePtr_;
-            forAll(fcs, faceI)
+            forAll(fcs, facei)
             {
-                faceEdges[faceI].setSize(fcs[faceI].size());
+                faceEdges[facei].setSize(fcs[facei].size());
             }
         }
 
@@ -137,9 +137,9 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
         if (nInternalPoints_ == -1)
         {
             // No ordering. No distinction between types.
-            forAll(fcs, faceI)
+            forAll(fcs, facei)
             {
-                const face& f = fcs[faceI];
+                const face& f = fcs[facei];
 
                 forAll(f, fp)
                 {
@@ -150,7 +150,7 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
 
                     if (doFaceEdges)
                     {
-                        (*fePtr_)[faceI][fp] = edgeI;
+                        (*fePtr_)[facei][fp] = edgeI;
                     }
                 }
             }
@@ -162,9 +162,9 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
         else
         {
             // 1. Do external faces first. This creates external edges.
-            for (label faceI = nInternalFaces_; faceI < fcs.size(); faceI++)
+            for (label facei = nInternalFaces_; facei < fcs.size(); facei++)
             {
-                const face& f = fcs[faceI];
+                const face& f = fcs[facei];
 
                 forAll(f, fp)
                 {
@@ -180,15 +180,15 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
                     }
                     if (doFaceEdges)
                     {
-                        (*fePtr_)[faceI][fp] = edgeI;
+                        (*fePtr_)[facei][fp] = edgeI;
                     }
                 }
             }
 
             // 2. Do internal faces. This creates internal edges.
-            for (label faceI = 0; faceI < nInternalFaces_; faceI++)
+            for (label facei = 0; facei < nInternalFaces_; facei++)
             {
-                const face& f = fcs[faceI];
+                const face& f = fcs[facei];
 
                 forAll(f, fp)
                 {
@@ -225,7 +225,7 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
                     }
                     if (doFaceEdges)
                     {
-                        (*fePtr_)[faceI][fp] = edgeI;
+                        (*fePtr_)[facei][fp] = edgeI;
                     }
                 }
             }
@@ -441,9 +441,9 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
         if (doFaceEdges)
         {
             labelListList& faceEdges = *fePtr_;
-            forAll(faceEdges, faceI)
+            forAll(faceEdges, facei)
             {
-                inplaceRenumber(oldToNew, faceEdges[faceI]);
+                inplaceRenumber(oldToNew, faceEdges[facei]);
             }
         }
     }
@@ -530,11 +530,11 @@ const CML::labelListList& CML::primitiveMesh::faceEdges() const
         fePtr_ = new labelListList(fcs.size());
         labelListList& faceEdges = *fePtr_;
 
-        forAll(fcs, faceI)
+        forAll(fcs, facei)
         {
-            const face& f = fcs[faceI];
+            const face& f = fcs[facei];
 
-            labelList& fEdges = faceEdges[faceI];
+            labelList& fEdges = faceEdges[facei];
             fEdges.setSize(f.size());
 
             forAll(f, fp)
@@ -575,18 +575,18 @@ void CML::primitiveMesh::clearOutEdges()
 
 const CML::labelList& CML::primitiveMesh::faceEdges
 (
-    const label faceI,
+    const label facei,
     DynamicList<label>& storage
 ) const
 {
     if (hasFaceEdges())
     {
-        return faceEdges()[faceI];
+        return faceEdges()[facei];
     }
     else
     {
         const labelListList& pointEs = pointEdges();
-        const face& f = faces()[faceI];
+        const face& f = faces()[facei];
 
         storage.clear();
         if (f.size() > storage.capacity())
@@ -611,25 +611,25 @@ const CML::labelList& CML::primitiveMesh::faceEdges
 }
 
 
-const CML::labelList& CML::primitiveMesh::faceEdges(const label faceI) const
+const CML::labelList& CML::primitiveMesh::faceEdges(const label facei) const
 {
-    return faceEdges(faceI, labels_);
+    return faceEdges(facei, labels_);
 }
 
 
 const CML::labelList& CML::primitiveMesh::cellEdges
 (
-    const label cellI,
+    const label celli,
     DynamicList<label>& storage
 ) const
 {
     if (hasCellEdges())
     {
-        return cellEdges()[cellI];
+        return cellEdges()[celli];
     }
     else
     {
-        const labelList& cFaces = cells()[cellI];
+        const labelList& cFaces = cells()[celli];
 
         labelSet_.clear();
 
@@ -660,9 +660,9 @@ const CML::labelList& CML::primitiveMesh::cellEdges
 }
 
 
-const CML::labelList& CML::primitiveMesh::cellEdges(const label cellI) const
+const CML::labelList& CML::primitiveMesh::cellEdges(const label celli) const
 {
-    return cellEdges(cellI, labels_);
+    return cellEdges(celli, labels_);
 }
 
 

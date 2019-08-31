@@ -329,9 +329,9 @@ void CML::ensightPartCells::writeConnectivity
             const label id = idList[i] + offset_;
             const labelUList& cFace = mesh_.cells()[id];
 
-            forAll(cFace, faceI)
+            forAll(cFace, facei)
             {
-                const face& cf = meshFaces[cFace[faceI]];
+                const face& cf = meshFaces[cFace[facei]];
 
                 os.write(cf.size());
                 os.newline();

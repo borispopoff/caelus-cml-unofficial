@@ -61,7 +61,7 @@ class rawSurfaceWriter
             Ostream&,
             const pointField&,
             const faceList&,
-            const label faceI
+            const label facei
         );
 
         template<class Type>

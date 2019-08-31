@@ -104,18 +104,18 @@ public:
             const bool checkOnly,
             const faceList& faces,
             const labelList& faceOwner,
-            const label cellI,
+            const label celli,
             const labelList& myFaces
         );
 
-        virtual bool isA(const primitiveMesh& mesh, const label cellI);
+        virtual bool isA(const primitiveMesh& mesh, const label celli);
 
         virtual bool isA(const faceList&);
 
         virtual bool matches
         (
             const primitiveMesh& mesh,
-            const label cellI,
+            const label celli,
             cellShape& shape
         );
 };

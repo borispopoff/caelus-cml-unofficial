@@ -402,9 +402,9 @@ void CML::cuttingPlane::remapFaces
         MeshStorage::remapFaces(faceMap);
 
         List<label> newCutCells(faceMap.size());
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
-            newCutCells[faceI] = cutCells_[faceMap[faceI]];
+            newCutCells[facei] = cutCells_[faceMap[facei]];
         }
         cutCells_.transfer(newCutCells);
     }

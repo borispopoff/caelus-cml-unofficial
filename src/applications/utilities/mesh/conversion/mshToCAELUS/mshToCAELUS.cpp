@@ -86,24 +86,24 @@ int main(int argc, char *argv[])
 
     if (readHex)
     {
-        for (label cellI = 0; cellI < nCells; cellI++)
+        for (label celli = 0; celli < nCells; celli++)
         {
             for (label cp = 0; cp < 8; cp++)
             {
                 mshStream >> hexPoints[cp];
             }
-            cells[cellI] = cellShape(hex, hexPoints);
+            cells[celli] = cellShape(hex, hexPoints);
         }
     }
     else
     {
-        for (label cellI = 0; cellI < nCells; cellI++)
+        for (label celli = 0; celli < nCells; celli++)
         {
             for (label cp = 0; cp < 4; cp++)
             {
                 mshStream >> tetPoints[cp];
             }
-            cells[cellI] = cellShape(tet, tetPoints);
+            cells[celli] = cellShape(tet, tetPoints);
         }
     }
 

@@ -137,10 +137,10 @@ protected:
             //- Find face on target patch that overlaps source face
             label findTargetFace(const label srcFaceI) const;
 
-            //- Add faces neighbouring faceI to the ID list
+            //- Add faces neighbouring facei to the ID list
             void appendNbrFaces
             (
-                const label faceI,
+                const label facei,
                 const TargetPatch& patch,
                 const DynamicList<label>& visitedFaces,
                 DynamicList<label>& faceIDs
@@ -360,12 +360,12 @@ bool CML::AMIMethod<SourcePatch, TargetPatch>::initialise
         srcFaceI = 0;
         tgtFaceI = 0;
         bool foundFace = false;
-        forAll(srcPatch_, faceI)
+        forAll(srcPatch_, facei)
         {
-            tgtFaceI = findTargetFace(faceI);
+            tgtFaceI = findTargetFace(facei);
             if (tgtFaceI >= 0)
             {
-                srcFaceI = faceI;
+                srcFaceI = facei;
                 foundFace = true;
                 break;
             }
@@ -510,13 +510,13 @@ CML::label CML::AMIMethod<SourcePatch, TargetPatch>::findTargetFace
 template<class SourcePatch, class TargetPatch>
 void CML::AMIMethod<SourcePatch, TargetPatch>::appendNbrFaces
 (
-    const label faceI,
+    const label facei,
     const TargetPatch& patch,
     const DynamicList<label>& visitedFaces,
     DynamicList<label>& faceIDs
 ) const
 {
-    const labelList& nbrFaces = patch.faceFaces()[faceI];
+    const labelList& nbrFaces = patch.faceFaces()[facei];
 
     // filter out faces already visited from face neighbours
     forAll(nbrFaces, i)
@@ -547,7 +547,7 @@ void CML::AMIMethod<SourcePatch, TargetPatch>::appendNbrFaces
         // prevent addition of face if it is not on the same plane-ish
         if (valid)
         {
-            const vector& n1 = patch.faceNormals()[faceI];
+            const vector& n1 = patch.faceNormals()[facei];
             const vector& n2 = patch.faceNormals()[nbrFaceI];
 
             scalar cosI = n1 & n2;

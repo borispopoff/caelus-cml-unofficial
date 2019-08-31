@@ -183,19 +183,19 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
     // affect the determinant)
     if (nDims == 2)
     {
-        forAll(dd, cellI)
+        forAll(dd, celli)
         {
             if (twoD == 0)
             {
-                dd[cellI].xx() = 1;
+                dd[celli].xx() = 1;
             }
             else if (twoD == 1)
             {
-                dd[cellI].yy() = 1;
+                dd[celli].yy() = 1;
             }
             else
             {
-                dd[cellI].zz() = 1;
+                dd[celli].zz() = 1;
             }
         }
     }

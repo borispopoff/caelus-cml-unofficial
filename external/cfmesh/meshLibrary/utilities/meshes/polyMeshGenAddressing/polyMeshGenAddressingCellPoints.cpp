@@ -66,9 +66,9 @@ void polyMeshGenAddressing::calcCellPoints() const
             # ifdef USE_OMP
             # pragma omp for schedule(static)
             # endif
-            forAll(cells, cellI)
+            forAll(cells, celli)
             {
-                const cell& c = cells[cellI];
+                const cell& c = cells[celli];
 
                 DynList<label, 32> cPoints;
                 forAll(c, fI)
@@ -79,7 +79,7 @@ void polyMeshGenAddressing::calcCellPoints() const
                         cPoints.appendIfNotIn(f[pI]);
                 }
 
-                nPoints[cellI] = cPoints.size();
+                nPoints[celli] = cPoints.size();
             }
 
             # ifdef USE_OMP
@@ -94,9 +94,9 @@ void polyMeshGenAddressing::calcCellPoints() const
 
             # pragma omp for schedule(static)
             # endif
-            forAll(cells, cellI)
+            forAll(cells, celli)
             {
-                const cell& c = cells[cellI];
+                const cell& c = cells[celli];
 
                 DynList<label, 32> cPoints;
                 forAll(c, fI)
@@ -107,7 +107,7 @@ void polyMeshGenAddressing::calcCellPoints() const
                         cPoints.appendIfNotIn(f[pI]);
                 }
 
-                cellPointsAddr.setRow(cellI, cPoints);
+                cellPointsAddr.setRow(celli, cPoints);
             }
         }
     }

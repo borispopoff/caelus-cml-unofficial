@@ -63,8 +63,8 @@ void CML::localAxesRotation::init
         tensorField& R = Rptr_();
         forAll(cells, i)
         {
-            label cellI = cells[i];
-            vector dir = cc[cellI] - origin_;
+            label celli = cells[i];
+            vector dir = cc[celli] - origin_;
             dir /= mag(dir) + VSMALL;
 
             R[i] = axesRotation(e3_, dir).R();
@@ -75,12 +75,12 @@ void CML::localAxesRotation::init
         Rptr_.reset(new tensorField(mesh.nCells()));
 
         tensorField& R = Rptr_();
-        forAll(cc, cellI)
+        forAll(cc, celli)
         {
-            vector dir = cc[cellI] - origin_;
+            vector dir = cc[celli] - origin_;
             dir /= mag(dir) + VSMALL;
 
-            R[cellI] = axesRotation(e3_, dir).R();
+            R[celli] = axesRotation(e3_, dir).R();
         }
     }
 }
@@ -190,11 +190,11 @@ void CML::localAxesRotation::updateCells
 
     forAll(cells, i)
     {
-        label cellI = cells[i];
-        vector dir = cc[cellI] - origin_;
+        label celli = cells[i];
+        vector dir = cc[celli] - origin_;
         dir /= mag(dir) + VSMALL;
 
-        R[cellI] = axesRotation(e3_, dir).R();
+        R[celli] = axesRotation(e3_, dir).R();
     }
 }
 
@@ -303,8 +303,8 @@ CML::tmp<CML::tensorField> CML::localAxesRotation::transformTensor
     tensorField& t = tt();
     forAll(cellMap, i)
     {
-        const label cellI = cellMap[i];
-        t[i] = R[cellI] & tf[i] & Rtr[cellI];
+        const label celli = cellMap[i];
+        t[i] = R[celli] & tf[i] & Rtr[celli];
     }
 
     return tt;

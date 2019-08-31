@@ -135,9 +135,9 @@ void cellZoneSet::invert(const label maxLen)
     // Count
     label n = 0;
 
-    for (label cellI = 0; cellI < maxLen; cellI++)
+    for (label celli = 0; celli < maxLen; celli++)
     {
-        if (!found(cellI))
+        if (!found(celli))
         {
             n++;
         }
@@ -147,11 +147,11 @@ void cellZoneSet::invert(const label maxLen)
     addressing_.setSize(n);
     n = 0;
 
-    for (label cellI = 0; cellI < maxLen; cellI++)
+    for (label celli = 0; celli < maxLen; celli++)
     {
-        if (!found(cellI))
+        if (!found(celli))
         {
-            addressing_[n] = cellI;
+            addressing_[n] = celli;
             n++;
         }
     }
@@ -168,11 +168,11 @@ void cellZoneSet::subset(const topoSet& set)
 
     forAll(fSet.addressing(), i)
     {
-        label cellI = fSet.addressing()[i];
+        label celli = fSet.addressing()[i];
 
-        if (found(cellI))
+        if (found(celli))
         {
-            newAddressing.append(cellI);
+            newAddressing.append(celli);
         }
     }
 
@@ -189,11 +189,11 @@ void cellZoneSet::addSet(const topoSet& set)
 
     forAll(fSet.addressing(), i)
     {
-        label cellI = fSet.addressing()[i];
+        label celli = fSet.addressing()[i];
 
-        if (!found(cellI))
+        if (!found(celli))
         {
-            newAddressing.append(cellI);
+            newAddressing.append(celli);
         }
     }
 
@@ -210,12 +210,12 @@ void cellZoneSet::deleteSet(const topoSet& set)
 
     forAll(addressing_, i)
     {
-        label cellI = addressing_[i];
+        label celli = addressing_[i];
 
-        if (!fSet.found(cellI))
+        if (!fSet.found(celli))
         {
             // Not found in fSet so add
-            newAddressing.append(cellI);
+            newAddressing.append(celli);
         }
     }
 
@@ -287,8 +287,8 @@ void cellZoneSet::updateMesh(const mapPolyMesh& morphMap)
     label n = 0;
     forAll(addressing_, i)
     {
-        label cellI = addressing_[i];
-        label newCellI = morphMap.reverseCellMap()[cellI];
+        label celli = addressing_[i];
+        label newCellI = morphMap.reverseCellMap()[celli];
         if (newCellI >= 0)
         {
             newAddressing[n] = newCellI;

@@ -166,16 +166,16 @@ labelList findBaffles(const polyMesh& mesh, const labelList& boundaryFaces)
     {
         if (duplicates[bFaceI] != -1)
         {
-            label faceI = mesh.nInternalFaces() + bFaceI;
-            label patchI = patches.whichPatch(faceI);
+            label facei = mesh.nInternalFaces() + bFaceI;
+            label patchI = patches.whichPatch(facei);
 
             if (isA<processorPolyPatch>(patches[patchI]))
             {
                 FatalErrorInFunction
-                    << "Duplicate face " << faceI
+                    << "Duplicate face " << facei
                     << " is on a processorPolyPatch."
                     << "This is not allowed." << nl
-                    << "Face:" << faceI
+                    << "Face:" << facei
                     << " is on patch:" << patches[patchI].name()
                     << abort(FatalError);
             }

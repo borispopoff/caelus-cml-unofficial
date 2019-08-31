@@ -162,7 +162,7 @@ inline bool CML::directionInfo::updateCell
             const edge& e = mesh.edges()[edgeI];
 
             // Find face connected to face through edgeI and on same cell.
-            label faceI =
+            label facei =
                 meshTools::otherFace
                 (
                     mesh,
@@ -171,12 +171,12 @@ inline bool CML::directionInfo::updateCell
                     edgeI
                 );
 
-            // Find edge on faceI which is connected to e.start() but not edgeI.
+            // Find edge on facei which is connected to e.start() but not edgeI.
             index_ =
                 meshTools::otherEdge
                 (
                     mesh,
-                    mesh.faceEdges()[faceI],
+                    mesh.faceEdges()[facei],
                     edgeI,
                     e.start()
                 );

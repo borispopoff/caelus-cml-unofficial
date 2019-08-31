@@ -27,19 +27,19 @@ CML::cellPointWeightWallModified::cellPointWeightWallModified
 (
     const polyMesh& mesh,
     const vector& position,
-    const label cellI,
-    const label faceI
+    const label celli,
+    const label facei
 )
 :
-    cellPointWeight(mesh, position, cellI, faceI)
+    cellPointWeight(mesh, position, celli, facei)
 {
     // findTetrahedron or findTriangle will already have been called
     // by the cellPointWeight constructor
 
-    if (faceI >= 0)
+    if (facei >= 0)
     {
         const polyBoundaryMesh& bm = mesh.boundaryMesh();
-        label patchI = bm.whichPatch(faceI);
+        label patchI = bm.whichPatch(facei);
         if (patchI != -1)
         {
             if (isA<wallPolyPatch>(bm[patchI]))

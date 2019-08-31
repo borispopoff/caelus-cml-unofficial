@@ -133,9 +133,9 @@ void CML::inversePointDistanceDiffusivity::correct()
     }
 
 
-    for (label faceI=0; faceI<mesh().nInternalFaces(); faceI++)
+    for (label facei=0; facei<mesh().nInternalFaces(); facei++)
     {
-        const face& f = mesh().faces()[faceI];
+        const face& f = mesh().faces()[facei];
 
         scalar dist = 0;
 
@@ -145,7 +145,7 @@ void CML::inversePointDistanceDiffusivity::correct()
         }
         dist /= f.size();
 
-        faceDiffusivity_[faceI] = 1.0/dist;
+        faceDiffusivity_[facei] = 1.0/dist;
     }
 
     forAll(faceDiffusivity_.boundaryField(), patchI)

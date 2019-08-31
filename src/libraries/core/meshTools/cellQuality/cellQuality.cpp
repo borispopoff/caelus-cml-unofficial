@@ -54,18 +54,18 @@ CML::tmp<CML::scalarField> CML::cellQuality::nonOrthogonality() const
     const labelList& own = mesh_.faceOwner();
     const labelList& nei = mesh_.faceNeighbour();
 
-    forAll(nei, faceI)
+    forAll(nei, facei)
     {
-        vector d = centres[nei[faceI]] - centres[own[faceI]];
-        vector s = areas[faceI];
+        vector d = centres[nei[facei]] - centres[own[facei]];
+        vector s = areas[facei];
         scalar magS = mag(s);
 
         scalar cosDDotS =
             radToDeg(CML::acos(min(1.0, (d & s)/(mag(d)*magS + VSMALL))));
 
-        result[own[faceI]] = max(cosDDotS, result[own[faceI]]);
+        result[own[facei]] = max(cosDDotS, result[own[facei]]);
 
-        result[nei[faceI]] = max(cosDDotS, result[nei[faceI]]);
+        result[nei[facei]] = max(cosDDotS, result[nei[facei]]);
     }
 
     forAll(mesh_.boundaryMesh(), patchI)
@@ -79,16 +79,16 @@ CML::tmp<CML::scalarField> CML::cellQuality::nonOrthogonality() const
         const vectorField::subField faceAreas =
             mesh_.boundaryMesh()[patchI].faceAreas();
 
-        forAll(faceCentres, faceI)
+        forAll(faceCentres, facei)
         {
-            vector d = faceCentres[faceI] - centres[faceCells[faceI]];
-            vector s = faceAreas[faceI];
+            vector d = faceCentres[facei] - centres[faceCells[facei]];
+            vector s = faceAreas[facei];
             scalar magS = mag(s);
 
             scalar cosDDotS =
                 radToDeg(CML::acos(min(1.0, (d & s)/(mag(d)*magS + VSMALL))));
 
-            result[faceCells[faceI]] = max(cosDDotS, result[faceCells[faceI]]);
+            result[faceCells[facei]] = max(cosDDotS, result[faceCells[facei]]);
         }
     }
 
@@ -116,29 +116,29 @@ CML::tmp<CML::scalarField> CML::cellQuality::skewness() const
     const labelList& own = mesh_.faceOwner();
     const labelList& nei = mesh_.faceNeighbour();
 
-    forAll(nei, faceI)
+    forAll(nei, facei)
     {
         scalar dOwn = mag
         (
-            (faceCtrs[faceI] - cellCtrs[own[faceI]]) & areas[faceI]
-        )/mag(areas[faceI]);
+            (faceCtrs[facei] - cellCtrs[own[facei]]) & areas[facei]
+        )/mag(areas[facei]);
 
         scalar dNei = mag
         (
-            (cellCtrs[nei[faceI]] - faceCtrs[faceI]) & areas[faceI]
-        )/mag(areas[faceI]);
+            (cellCtrs[nei[facei]] - faceCtrs[facei]) & areas[facei]
+        )/mag(areas[facei]);
 
         point faceIntersection =
-            cellCtrs[own[faceI]]
-          + (dOwn/(dOwn+dNei))*(cellCtrs[nei[faceI]] - cellCtrs[own[faceI]]);
+            cellCtrs[own[facei]]
+          + (dOwn/(dOwn+dNei))*(cellCtrs[nei[facei]] - cellCtrs[own[facei]]);
 
         scalar skewness =
-            mag(faceCtrs[faceI] - faceIntersection)
-           /(mag(cellCtrs[nei[faceI]] - cellCtrs[own[faceI]]) + VSMALL);
+            mag(faceCtrs[facei] - faceIntersection)
+           /(mag(cellCtrs[nei[facei]] - cellCtrs[own[facei]]) + VSMALL);
 
-        result[own[faceI]] = max(skewness, result[own[faceI]]);
+        result[own[facei]] = max(skewness, result[own[facei]]);
 
-        result[nei[faceI]] = max(skewness, result[nei[faceI]]);
+        result[nei[facei]] = max(skewness, result[nei[facei]]);
     }
 
     forAll(mesh_.boundaryMesh(), patchI)
@@ -152,22 +152,22 @@ CML::tmp<CML::scalarField> CML::cellQuality::skewness() const
         const vectorField::subField faceAreas =
             mesh_.boundaryMesh()[patchI].faceAreas();
 
-        forAll(faceCentres, faceI)
+        forAll(faceCentres, facei)
         {
-            vector n = faceAreas[faceI]/mag(faceAreas[faceI]);
+            vector n = faceAreas[facei]/mag(faceAreas[facei]);
 
             point faceIntersection =
-                cellCtrs[faceCells[faceI]]
-              + ((faceCentres[faceI] - cellCtrs[faceCells[faceI]])&n)*n;
+                cellCtrs[faceCells[facei]]
+              + ((faceCentres[facei] - cellCtrs[faceCells[facei]])&n)*n;
 
             scalar skewness =
-                mag(faceCentres[faceI] - faceIntersection)
+                mag(faceCentres[facei] - faceIntersection)
                /(
-                    mag(faceCentres[faceI] - cellCtrs[faceCells[faceI]])
+                    mag(faceCentres[facei] - cellCtrs[faceCells[facei]])
                   + VSMALL
                 );
 
-            result[faceCells[faceI]] = max(skewness, result[faceCells[faceI]]);
+            result[faceCells[facei]] = max(skewness, result[faceCells[facei]]);
         }
     }
 
@@ -193,16 +193,16 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceNonOrthogonality() const
     const labelList& own = mesh_.faceOwner();
     const labelList& nei = mesh_.faceNeighbour();
 
-    forAll(nei, faceI)
+    forAll(nei, facei)
     {
-        vector d = centres[nei[faceI]] - centres[own[faceI]];
-        vector s = areas[faceI];
+        vector d = centres[nei[facei]] - centres[own[facei]];
+        vector s = areas[facei];
         scalar magS = mag(s);
 
         scalar cosDDotS =
             radToDeg(CML::acos(min(1.0, (d & s)/(mag(d)*magS + VSMALL))));
 
-        result[faceI] = cosDDotS;
+        result[facei] = cosDDotS;
     }
 
     label globalFaceI = mesh_.nInternalFaces();
@@ -218,10 +218,10 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceNonOrthogonality() const
         const vectorField::subField faceAreas =
             mesh_.boundaryMesh()[patchI].faceAreas();
 
-        forAll(faceCentres, faceI)
+        forAll(faceCentres, facei)
         {
-            vector d = faceCentres[faceI] - centres[faceCells[faceI]];
-            vector s = faceAreas[faceI];
+            vector d = faceCentres[facei] - centres[faceCells[facei]];
+            vector s = faceAreas[facei];
             scalar magS = mag(s);
 
             scalar cosDDotS =
@@ -254,25 +254,25 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceSkewness() const
     const labelList& own = mesh_.faceOwner();
     const labelList& nei = mesh_.faceNeighbour();
 
-    forAll(nei, faceI)
+    forAll(nei, facei)
     {
         scalar dOwn = mag
         (
-            (faceCtrs[faceI] - cellCtrs[own[faceI]]) & areas[faceI]
-        )/mag(areas[faceI]);
+            (faceCtrs[facei] - cellCtrs[own[facei]]) & areas[facei]
+        )/mag(areas[facei]);
 
         scalar dNei = mag
         (
-            (cellCtrs[nei[faceI]] - faceCtrs[faceI]) & areas[faceI]
-        )/mag(areas[faceI]);
+            (cellCtrs[nei[facei]] - faceCtrs[facei]) & areas[facei]
+        )/mag(areas[facei]);
 
         point faceIntersection =
-            cellCtrs[own[faceI]]
-          + (dOwn/(dOwn+dNei))*(cellCtrs[nei[faceI]] - cellCtrs[own[faceI]]);
+            cellCtrs[own[facei]]
+          + (dOwn/(dOwn+dNei))*(cellCtrs[nei[facei]] - cellCtrs[own[facei]]);
 
-        result[faceI] =
-            mag(faceCtrs[faceI] - faceIntersection)
-           /(mag(cellCtrs[nei[faceI]] - cellCtrs[own[faceI]]) + VSMALL);
+        result[facei] =
+            mag(faceCtrs[facei] - faceIntersection)
+           /(mag(cellCtrs[nei[facei]] - cellCtrs[own[facei]]) + VSMALL);
     }
 
 
@@ -289,18 +289,18 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceSkewness() const
         const vectorField::subField faceAreas =
             mesh_.boundaryMesh()[patchI].faceAreas();
 
-        forAll(faceCentres, faceI)
+        forAll(faceCentres, facei)
         {
-            vector n = faceAreas[faceI]/mag(faceAreas[faceI]);
+            vector n = faceAreas[facei]/mag(faceAreas[facei]);
 
             point faceIntersection =
-                cellCtrs[faceCells[faceI]]
-              + ((faceCentres[faceI] - cellCtrs[faceCells[faceI]])&n)*n;
+                cellCtrs[faceCells[facei]]
+              + ((faceCentres[facei] - cellCtrs[faceCells[facei]])&n)*n;
 
             result[globalFaceI++] =
-                mag(faceCentres[faceI] - faceIntersection)
+                mag(faceCentres[facei] - faceIntersection)
                /(
-                    mag(faceCentres[faceI] - cellCtrs[faceCells[faceI]])
+                    mag(faceCentres[facei] - cellCtrs[faceCells[facei]])
                   + VSMALL
                 );
         }

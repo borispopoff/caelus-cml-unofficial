@@ -135,17 +135,17 @@ CML::pointField CML::coupledPolyPatch::getAnchorPoints
     if (transform != COINCIDENTFULLMATCH)
     {
         // Return the first point
-        forAll(faces, faceI)
+        forAll(faces, facei)
         {
-            anchors[faceI] = points[faces[faceI][0]];
+            anchors[facei] = points[faces[facei][0]];
         }
     }
     else
     {
         // Make anchor point unique
-        forAll(faces, faceI)
+        forAll(faces, facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             bool unique = true;
 
@@ -175,14 +175,14 @@ CML::pointField CML::coupledPolyPatch::getAnchorPoints
 
                 if (unique)
                 {
-                    anchors[faceI] = p1;
+                    anchors[facei] = p1;
                     break;
                 }
             }
 
             if (!unique)
             {
-                anchors[faceI] = points[faces[faceI][0]];
+                anchors[facei] = points[faces[facei][0]];
             }
         }
     }
@@ -201,11 +201,11 @@ CML::scalarField CML::coupledPolyPatch::calcFaceTol
     // Calculate typical distance per face
     scalarField tols(faces.size());
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const point& cc = faceCentres[faceI];
+        const point& cc = faceCentres[facei];
 
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         // 1. calculate a typical size of the face. Use maximum distance
         //    to face centre
@@ -221,7 +221,7 @@ CML::scalarField CML::coupledPolyPatch::calcFaceTol
             maxCmpt = max(maxCmpt, cmptMax(cmptMag(pt)));
         }
 
-        tols[faceI] = max
+        tols[facei] = max
         (
             SMALL,
             max(SMALL*maxCmpt, CML::sqrt(maxLenSqr))

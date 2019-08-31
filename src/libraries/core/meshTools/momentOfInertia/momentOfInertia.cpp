@@ -316,13 +316,13 @@ CML::tmp<CML::tensorField> CML::momentOfInertia::meshInertia
 CML::tensor CML::momentOfInertia::meshInertia
 (
     const polyMesh& mesh,
-    label cellI
+    label celli
 )
 {
     List<tetIndices> cellTets = polyMeshTetDecomposition::cellTetIndices
     (
         mesh,
-        cellI
+        celli
     );
 
     triFaceList faces(cellTets.size());

@@ -96,7 +96,7 @@ class edgeCollapser
         bool pointRemoved(const label) const;
 
         //- Renumber f with new vertices. Removes duplicates.
-        void filterFace(const label faceI, face&) const;
+        void filterFace(const label facei, face&) const;
 
         //- Some debugging printing
         void printRegions() const;

@@ -108,9 +108,9 @@ void CML::extendedFaceToCellStencil::collectData
     List<Type> compactFld(map.constructSize(), Zero);
 
     // Insert my internal values
-    forAll(fld, cellI)
+    forAll(fld, celli)
     {
-        compactFld[cellI] = fld[cellI];
+        compactFld[celli] = fld[celli];
     }
     // Insert my boundary values
     label nCompact = fld.size();
@@ -130,15 +130,15 @@ void CML::extendedFaceToCellStencil::collectData
     // 2. Pull to stencil
     stencilFld.setSize(stencil.size());
 
-    forAll(stencil, faceI)
+    forAll(stencil, facei)
     {
-        const labelList& compactCells = stencil[faceI];
+        const labelList& compactCells = stencil[facei];
 
-        stencilFld[faceI].setSize(compactCells.size());
+        stencilFld[facei].setSize(compactCells.size());
 
         forAll(compactCells, i)
         {
-            stencilFld[faceI][i] = compactFld[compactCells[i]];
+            stencilFld[facei][i] = compactFld[compactCells[i]];
         }
     }
 }
@@ -182,14 +182,14 @@ CML::extendedFaceToCellStencil::weightedSum
     GeometricField<Type, fvPatchField, volMesh>& sf = tsfCorr();
 
     // cells
-    forAll(sf, cellI)
+    forAll(sf, celli)
     {
-        const List<Type>& stField = stencilFld[cellI];
-        const List<scalar>& stWeight = stencilWeights[cellI];
+        const List<Type>& stField = stencilFld[celli];
+        const List<scalar>& stWeight = stencilWeights[celli];
 
         forAll(stField, i)
         {
-            sf[cellI] += stField[i]*stWeight[i];
+            sf[celli] += stField[i]*stWeight[i];
         }
     }
 
