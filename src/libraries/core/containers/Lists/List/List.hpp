@@ -54,8 +54,10 @@ template<class T> Istream& operator>>(Istream&, List<T>&);
 template<class T, unsigned Size> class FixedList;
 template<class T> class PtrList;
 template<class T> class SLList;
+
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-    class DynamicList;
+class DynamicList;
+
 template<class T> class SortableList;
 template<class T> class IndirectList;
 template<class T> class UIndirectList;
@@ -109,10 +111,6 @@ public:
 
         //- Construct as subset.
         List(const UList<T>&, const labelUList& mapAddressing);
-
-        //- Construct given start and end iterators.
-        template<class InputIterator>
-        List(InputIterator first, InputIterator last);
 
         //- Construct as copy of FixedList<T, Size>
         template<unsigned Size>
@@ -376,7 +374,6 @@ inline void CML::List<T>::operator=(const zero)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "ListLoopM.hpp"
-
 #include "FixedList.hpp"
 #include "PtrList.hpp"
 #include "SLList.hpp"
@@ -520,38 +517,6 @@ CML::List<T>::List(const UList<T>& a, const labelUList& map)
         {
             this->v_[i] = a[map[i]];
         }
-    }
-}
-
-
-// Construct given start and end iterators.
-template<class T>
-template<class InputIterator>
-CML::List<T>::List(InputIterator first, InputIterator last)
-{
-    label s = 0;
-    for
-    (
-        InputIterator iter = first;
-        iter != last;
-        ++iter
-    )
-    {
-        s++;
-    }
-
-    setSize(s);
-
-    s = 0;
-
-    for
-    (
-        InputIterator iter = first;
-        iter != last;
-        ++iter
-    )
-    {
-        this->operator[](s++) = *iter;
     }
 }
 
