@@ -97,24 +97,24 @@ void CML::forces::writeFileHeader(const label i)
 
         vectorField binPoints(nBin_);
         writeCommented(file(i), "x co-ords  :");
-        forAll(binPoints, pointI)
+        forAll(binPoints, pointi)
         {
-            binPoints[pointI] = (binMin_ + (pointI + 1)*binDx_)*binDir_;
-            file(i) << tab << binPoints[pointI].x();
+            binPoints[pointi] = (binMin_ + (pointi + 1)*binDx_)*binDir_;
+            file(i) << tab << binPoints[pointi].x();
         }
         file(i) << nl;
 
         writeCommented(file(i), "y co-ords  :");
-        forAll(binPoints, pointI)
+        forAll(binPoints, pointi)
         {
-            file(i) << tab << binPoints[pointI].y();
+            file(i) << tab << binPoints[pointi].y();
         }
         file(i) << nl;
 
         writeCommented(file(i), "z co-ords  :");
-        forAll(binPoints, pointI)
+        forAll(binPoints, pointi)
         {
-            file(i) << tab << binPoints[pointI].z();
+            file(i) << tab << binPoints[pointi].z();
         }
         file(i) << nl;
 
@@ -706,8 +706,8 @@ void CML::forces::read(const dictionary& dict)
                 scalar binMax = -GREAT;
                 forAllConstIter(labelHashSet, patchSet_, iter)
                 {
-                    label patchI = iter.key();
-                    const polyPatch& pp = pbm[patchI];
+                    label patchi = iter.key();
+                    const polyPatch& pp = pbm[patchi];
                     scalarField d(pp.faceCentres() & binDir_);
                     binMin_ = min(min(d), binMin_);
                     binMax = max(max(d), binMax);
@@ -821,36 +821,36 @@ void CML::forces::calcForcesMoment()
 
         forAllConstIter(labelHashSet, patchSet_, iter)
         {
-            label patchI = iter.key();
+            label patchi = iter.key();
 
             const scalarField patchWeights
             (
-                mesh.patchWeights(mesh.boundary()[patchI])
+                mesh.patchWeights(mesh.boundary()[patchi])
             );
 
             vectorField Md
             (
-                mesh.C().boundaryField()[patchI] - coordSys_.origin()
+                mesh.C().boundaryField()[patchi] - coordSys_.origin()
             );
 
-            scalarField sA(mag(Sfb[patchI]));
+            scalarField sA(mag(Sfb[patchi]));
 
             // Normal force = surfaceUnitNormal*(surfaceNormal & forceDensity)
             vectorField fN
             (
-                Sfb[patchI]/sA
+                Sfb[patchi]/sA
                *(
-                    (Sfb[patchI]*patchWeights) & fD.boundaryField()[patchI]
+                    (Sfb[patchi]*patchWeights) & fD.boundaryField()[patchi]
                 )
             );
 
             // Tangential force (total force minus normal fN)
-            vectorField fT(sA*fD.boundaryField()[patchI] - fN);
+            vectorField fT(sA*fD.boundaryField()[patchi] - fN);
 
             //- Porous force
             vectorField fP(Md.size(), Zero);
 
-            applyBins(Md, fN, fT, fP, mesh.C().boundaryField()[patchI]);
+            applyBins(Md, fN, fT, fP, mesh.C().boundaryField()[patchi]);
         }
     }
     else
@@ -872,31 +872,31 @@ void CML::forces::calcForcesMoment()
 
         forAllConstIter(labelHashSet, patchSet_, iter)
         {
-            label patchI = iter.key();
+            label patchi = iter.key();
 
             const scalarField patchWeights
             (
-                mesh.patchWeights(mesh.boundary()[patchI])
+                mesh.patchWeights(mesh.boundary()[patchi])
             );
 
             vectorField Md
             (
-                mesh.C().boundaryField()[patchI] - coordSys_.origin()
+                mesh.C().boundaryField()[patchi] - coordSys_.origin()
             );
 
             vectorField fN
             (
-                rho(p)*Sfb[patchI]*patchWeights*(p.boundaryField()[patchI] - pRef)
+                rho(p)*Sfb[patchi]*patchWeights*(p.boundaryField()[patchi] - pRef)
             );
 
             vectorField fT
             (
-                (Sfb[patchI]*patchWeights) & devRhoReffb[patchI]
+                (Sfb[patchi]*patchWeights) & devRhoReffb[patchi]
             );
 
             vectorField fP(Md.size(), Zero);
 
-            applyBins(Md, fN, fT, fP, mesh.C().boundaryField()[patchI]);
+            applyBins(Md, fN, fT, fP, mesh.C().boundaryField()[patchi]);
         }
     }
 

@@ -99,7 +99,7 @@ CML::label CML::meshCutter::findCutCell
 }
 
 
-//- Returns first pointI in pointLabels that uses an internal
+//- Returns first pointi in pointLabels that uses an internal
 //  face. Used to find point to inflate cell/face from (has to be
 //  connected to internal face). Returns -1 (so inflate from nothing) if
 //  none found.

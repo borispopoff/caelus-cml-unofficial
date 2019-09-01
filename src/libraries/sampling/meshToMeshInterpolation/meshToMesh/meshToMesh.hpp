@@ -844,8 +844,8 @@ void CML::meshToMesh::mapSrcToTgt
 
     forAll(cuttingPatches_, i)
     {
-        label patchI = cuttingPatches_[i];
-        fvPatchField<Type>& pf = result.boundaryField()[patchI];
+        label patchi = cuttingPatches_[i];
+        fvPatchField<Type>& pf = result.boundaryField()[patchi];
         pf == pf.patchInternalField();
     }
 }
@@ -1007,8 +1007,8 @@ void CML::meshToMesh::mapTgtToSrc
 
     forAll(cuttingPatches_, i)
     {
-        label patchI = cuttingPatches_[i];
-        fvPatchField<Type>& pf = result.boundaryField()[patchI];
+        label patchi = cuttingPatches_[i];
+        fvPatchField<Type>& pf = result.boundaryField()[patchi];
         pf == pf.patchInternalField();
     }
 }

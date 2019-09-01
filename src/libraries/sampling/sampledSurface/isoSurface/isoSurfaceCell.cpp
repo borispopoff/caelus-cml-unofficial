@@ -529,7 +529,7 @@ void CML::isoSurfaceCell::calcSnappedCc
 }
 
 
-// Generate triangles for face connected to pointI
+// Generate triangles for face connected to pointi
 void CML::isoSurfaceCell::genPointTris
 (
     const scalarField& cellValues,
@@ -602,7 +602,7 @@ void CML::isoSurfaceCell::genPointTris
 }
 
 
-// Generate triangle for tet connected to pointI
+// Generate triangle for tet connected to pointi
 void CML::isoSurfaceCell::genPointTris
 (
     const scalarField& pointValues,

@@ -530,27 +530,27 @@ void fvBlockMatrix<Type>::updateCouplingCoeffs
     const GeometricField<matrixType, fvPatchField, volMesh>& psi =
         matrix.psi();
 
-    forAll (psi.boundaryField(), patchI)
+    forAll (psi.boundaryField(), patchi)
     {
-        const fvPatchField<matrixType>& pf = psi.boundaryField()[patchI];
+        const fvPatchField<matrixType>& pf = psi.boundaryField()[patchi];
         const fvPatch& patch = pf.patch();
 
         if (patch.coupled())
         {
-            const Field<matrixType>& icp = matrix.internalCoeffs()[patchI];
-            const Field<matrixType>& bcp = matrix.boundaryCoeffs()[patchI];
+            const Field<matrixType>& icp = matrix.internalCoeffs()[patchi];
+            const Field<matrixType>& bcp = matrix.boundaryCoeffs()[patchi];
 
             if
             (
-                this->coupleUpper()[patchI].activeType()
+                this->coupleUpper()[patchi].activeType()
              != blockCoeffBase::SQUARE
             )
             {
                 typename CoeffField<Type>::linearTypeField& pcoupleUpper =
-                    this->coupleUpper()[patchI].asLinear();
+                    this->coupleUpper()[patchi].asLinear();
 
                 typename CoeffField<Type>::linearTypeField& pcoupleLower =
-                    this->coupleLower()[patchI].asLinear();
+                    this->coupleLower()[patchi].asLinear();
 
                 for (direction cmptI = 0; cmptI < nCmpts; cmptI++)
                 {
@@ -570,15 +570,15 @@ void fvBlockMatrix<Type>::updateCouplingCoeffs
             }
             else if
             (
-                this->coupleUpper()[patchI].activeType()
+                this->coupleUpper()[patchi].activeType()
              == blockCoeffBase::SQUARE
             )
             {
                 typename CoeffField<Type>::squareTypeField& pcoupleUpper =
-                    this->coupleUpper()[patchI].asSquare();
+                    this->coupleUpper()[patchi].asSquare();
 
                 typename CoeffField<Type>::squareTypeField& pcoupleLower =
-                    this->coupleLower()[patchI].asSquare();
+                    this->coupleLower()[patchi].asSquare();
 
                 for (direction cmptI = 0; cmptI < nCmpts; cmptI++)
                 {
@@ -735,21 +735,21 @@ void fvBlockMatrix<Type>::insertBoundaryContributions
     localDirJ = dirJ;
 
     // Insert coupling contributions into block matrix
-    forAll (bmesh, patchI)
+    forAll (bmesh, patchi)
     {
-        if (bmesh[patchI].coupled())
+        if (bmesh[patchi].coupled())
         {
             typename CoeffField<Type>::squareTypeField& pcoupleUpper =
-                this->coupleUpper()[patchI].asSquare();
+                this->coupleUpper()[patchi].asSquare();
 
             typename CoeffField<Type>::squareTypeField& pcoupleLower =
-                this->coupleLower()[patchI].asSquare();
+                this->coupleLower()[patchi].asSquare();
 
             const typename CoeffField<blockType>::linearTypeField& bmcu =
-                blockSystem.coupleUpper()[patchI].asLinear();
+                blockSystem.coupleUpper()[patchi].asLinear();
 
             const typename CoeffField<blockType>::linearTypeField& bmcl =
-                blockSystem.coupleLower()[patchI].asLinear();
+                blockSystem.coupleLower()[patchi].asLinear();
 
             for (direction cmptI = 0; cmptI < nCmpts; cmptI++)
             {
@@ -889,19 +889,19 @@ void fvBlockMatrix<Type>::insertCouplingUpperLower
     }
 
     // Insert block interface fields
-    forAll (this->interfaces(), patchI)
+    forAll (this->interfaces(), patchi)
     {
-        if (this->interfaces().set(patchI))
+        if (this->interfaces().set(patchi))
         {
             // Couple upper and lower
-            const scalarField& cUpper = matrix.boundaryCoeffs()[patchI];
-            const scalarField& cLower = matrix.internalCoeffs()[patchI];
+            const scalarField& cUpper = matrix.boundaryCoeffs()[patchi];
+            const scalarField& cLower = matrix.internalCoeffs()[patchi];
 
             typename CoeffField<Type>::squareTypeField& blockUpper =
-                this->coupleUpper()[patchI].asSquare();
+                this->coupleUpper()[patchi].asSquare();
 
             typename CoeffField<Type>::squareTypeField& blockLower =
-                this->coupleLower()[patchI].asSquare();
+                this->coupleLower()[patchi].asSquare();
 
             forAll (cUpper, facei)
             {
@@ -1161,10 +1161,10 @@ void fvBlockMatrix<Type>::insertAdjointConvection
 
     // Boundary contributions - hard coded or explicit because of the problem
     // with inconsistent return type of internalCoeffs. VV, 7/Apr/2016.
-    forAll(UStar.boundaryField(), patchI)
+    forAll(UStar.boundaryField(), patchi)
     {
         // Get references to velocity field and the patch
-        const fvPatchVectorField& UStarp = UStar.boundaryField()[patchI];
+        const fvPatchVectorField& UStarp = UStar.boundaryField()[patchi];
         const fvPatch& patch = UStarp.patch();
 
         // Check for empty patches. Needed since the boundary conditions are
@@ -1175,10 +1175,10 @@ void fvBlockMatrix<Type>::insertAdjointConvection
         }
 
         // Get additional references
-        const fvsPatchScalarField& wp = tweights().boundaryField()[patchI];
+        const fvsPatchScalarField& wp = tweights().boundaryField()[patchi];
         const unallocLabelList& fc = patch.faceCells();
-        const fvsPatchVectorField Sfp = Sf.boundaryField()[patchI];
-        const fvPatchVectorField& Up = U.boundaryField()[patchI];
+        const fvsPatchVectorField Sfp = Sf.boundaryField()[patchi];
+        const fvPatchVectorField& Up = U.boundaryField()[patchi];
 
         // Hard coded implicit zeroGradient if patch does not fix value
         if (not UStarp.fixesValue())
@@ -1195,9 +1195,9 @@ void fvBlockMatrix<Type>::insertAdjointConvection
         else if (patch.coupled())
         {
             typename CoeffField<vector>::squareTypeField& acpCoupleUpper =
-                acSystem.coupleUpper()[patchI].asSquare();
+                acSystem.coupleUpper()[patchi].asSquare();
             typename CoeffField<vector>::squareTypeField& acpCoupleLower =
-                acSystem.coupleLower()[patchI].asSquare();
+                acSystem.coupleLower()[patchi].asSquare();
 
             // Get velocity patch internal field (primal, not adjoint)
             const vectorField UpIn(Up.patchInternalField());
@@ -1288,19 +1288,19 @@ void fvBlockMatrix<Type>::insertAdjointConvection
     localDirJ = UEqnDir;
 
     // Add coupling contributions
-    forAll(UStar.boundaryField(), patchI)
+    forAll(UStar.boundaryField(), patchi)
     {
-        if (UStar.boundaryField()[patchI].patch().coupled())
+        if (UStar.boundaryField()[patchi].patch().coupled())
         {
             typename CoeffField<Type>::squareTypeField& pcoupleUpper =
-                this->coupleUpper()[patchI].asSquare();
+                this->coupleUpper()[patchi].asSquare();
             typename CoeffField<Type>::squareTypeField& pcoupleLower =
-                this->coupleLower()[patchI].asSquare();
+                this->coupleLower()[patchi].asSquare();
 
             const typename CoeffField<vector>::squareTypeField& acpcu =
-                acSystem.coupleUpper()[patchI].asSquare();
+                acSystem.coupleUpper()[patchi].asSquare();
             const typename CoeffField<vector>::squareTypeField& acpcl =
-                acSystem.coupleLower()[patchI].asSquare();
+                acSystem.coupleLower()[patchi].asSquare();
 
             for (direction cmptI = 0; cmptI < nCmpts; cmptI++)
             {
@@ -1385,12 +1385,12 @@ void fvBlockMatrix<Type>::insertPicardTensor
 
     // Boundary contributions - hard coded or explicit because of the problem
     // with inconsistent return type of internalCoeffs. VV, 21/July/2014.
-    forAll(U.boundaryField(), patchI)
+    forAll(U.boundaryField(), patchi)
     {
-        const fvPatchVectorField& Ub = U.boundaryField()[patchI];
+        const fvPatchVectorField& Ub = U.boundaryField()[patchi];
         const fvPatch& patch = Ub.patch();
-        const fvsPatchTensorField& pib = pi.boundaryField()[patchI];
-        const fvsPatchScalarField& wb = tweights().boundaryField()[patchI];
+        const fvsPatchTensorField& pib = pi.boundaryField()[patchi];
+        const fvsPatchScalarField& wb = tweights().boundaryField()[patchi];
         const unallocLabelList& fc = patch.faceCells();
 
         // Check for empty patches. Needed since the boundary conditions are
@@ -1412,9 +1412,9 @@ void fvBlockMatrix<Type>::insertPicardTensor
         else if (patch.coupled())
         {
             typename CoeffField<vector>::squareTypeField& pipCoupleUpper =
-                piSystem.coupleUpper()[patchI].asSquare();
+                piSystem.coupleUpper()[patchi].asSquare();
             typename CoeffField<vector>::squareTypeField& pipCoupleLower =
-                piSystem.coupleLower()[patchI].asSquare();
+                piSystem.coupleLower()[patchi].asSquare();
 
             const tensorField pcl(-wb*pib);
             const tensorField pcu(pcl + pib);
@@ -1493,19 +1493,19 @@ void fvBlockMatrix<Type>::insertPicardTensor
     localDirJ = UEqnDir;
 
     // Add coupling contributions
-    forAll(U.boundaryField(), patchI)
+    forAll(U.boundaryField(), patchi)
     {
-        if (U.boundaryField()[patchI].patch().coupled())
+        if (U.boundaryField()[patchi].patch().coupled())
         {
             typename CoeffField<Type>::squareTypeField& pcoupleUpper =
-                this->coupleUpper()[patchI].asSquare();
+                this->coupleUpper()[patchi].asSquare();
             typename CoeffField<Type>::squareTypeField& pcoupleLower =
-                this->coupleLower()[patchI].asSquare();
+                this->coupleLower()[patchi].asSquare();
 
             const typename CoeffField<vector>::squareTypeField& pipcu =
-                piSystem.coupleUpper()[patchI].asSquare();
+                piSystem.coupleUpper()[patchi].asSquare();
             const typename CoeffField<vector>::squareTypeField& pipcl =
-                piSystem.coupleLower()[patchI].asSquare();
+                piSystem.coupleLower()[patchi].asSquare();
 
             for (direction cmptI = 0; cmptI < nCmpts; cmptI++)
             {

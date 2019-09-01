@@ -300,16 +300,16 @@ Type interpolationCellPointFace<Type>::interpolate
             }
             else
             {
-                label patchI =
+                label patchi =
                     this->pMesh_.boundaryMesh().whichPatch(closestFace);
 
                 // If the boundary patch is not empty use the face value
                 // else use the cell value
-                if (this->psi_.boundaryField()[patchI].size())
+                if (this->psi_.boundaryField()[patchi].size())
                 {
-                    ts[2] = this->psi_.boundaryField()[patchI]
+                    ts[2] = this->psi_.boundaryField()[patchi]
                     [
-                        this->pMesh_.boundaryMesh()[patchI].whichFace
+                        this->pMesh_.boundaryMesh()[patchi].whichFace
                         (
                             closestFace
                         )
@@ -345,16 +345,16 @@ Type interpolationCellPointFace<Type>::interpolate
             }
             else
             {
-                label patchI =
+                label patchi =
                     this->pMesh_.boundaryMesh().whichPatch(closestFace);
 
                 // If the boundary patch is not empty use the face value
                 // else use the cell value
-                if (this->psi_.boundaryField()[patchI].size())
+                if (this->psi_.boundaryField()[patchi].size())
                 {
-                    t = this->psi_.boundaryField()[patchI]
+                    t = this->psi_.boundaryField()[patchi]
                     [
-                        this->pMesh_.boundaryMesh()[patchI].whichFace
+                        this->pMesh_.boundaryMesh()[patchi].whichFace
                         (
                             closestFace
                         )
@@ -393,14 +393,14 @@ Type interpolationCellPointFace<Type>::interpolate
             }
             else
             {
-                label patchI = this->pMesh_.boundaryMesh().whichPatch(facei);
+                label patchi = this->pMesh_.boundaryMesh().whichPatch(facei);
 
                 // If the boundary patch is not empty use the face value
                 // else use the cell value
-                if (this->psi_.boundaryField()[patchI].size())
+                if (this->psi_.boundaryField()[patchi].size())
                 {
-                    t += phi[2]*this->psi_.boundaryField()[patchI]
-                        [this->pMesh_.boundaryMesh()[patchI].whichFace(facei)];
+                    t += phi[2]*this->psi_.boundaryField()[patchi]
+                        [this->pMesh_.boundaryMesh()[patchi].whichFace(facei)];
                 }
                 else
                 {
@@ -417,14 +417,14 @@ Type interpolationCellPointFace<Type>::interpolate
             }
             else
             {
-                label patchI = this->pMesh_.boundaryMesh().whichPatch(facei);
+                label patchi = this->pMesh_.boundaryMesh().whichPatch(facei);
 
                 // If the boundary patch is not empty use the face value
                 // else use the cell value
-                if (this->psi_.boundaryField()[patchI].size())
+                if (this->psi_.boundaryField()[patchi].size())
                 {
-                    t = this->psi_.boundaryField()[patchI]
-                        [this->pMesh_.boundaryMesh()[patchI].whichFace(facei)];
+                    t = this->psi_.boundaryField()[patchi]
+                        [this->pMesh_.boundaryMesh()[patchi].whichFace(facei)];
                 }
                 else
                 {

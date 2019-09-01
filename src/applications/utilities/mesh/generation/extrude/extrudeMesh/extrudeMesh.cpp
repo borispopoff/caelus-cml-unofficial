@@ -342,10 +342,10 @@ int main(int argc, char *argv[])
             {
                 label meshFaceI = meshFaces[i];
 
-                label patchI = patches.whichPatch(meshFaceI);
+                label patchi = patches.whichPatch(meshFaceI);
                 label own = mesh.faceOwner()[meshFaceI];
                 label nei = -1;
-                if (patchI == -1)
+                if (patchi == -1)
                 {
                     nei = mesh.faceNeighbour()[meshFaceI];
                 }
@@ -365,7 +365,7 @@ int main(int argc, char *argv[])
                     own,                            // owner
                     nei,                            // neighbour
                     true,                           // face flip
-                    patchI,                         // patch for face
+                    patchi,                         // patch for face
                     zoneI,                          // zone for face
                     zoneFlip                        // face flip in zone
                 );
@@ -466,11 +466,11 @@ int main(int argc, char *argv[])
         if (nAdded > 0)
         {
             DynamicList<polyPatch*> newPatches(nPatches);
-            forAll(mesh.boundaryMesh(), patchI)
+            forAll(mesh.boundaryMesh(), patchi)
             {
                 newPatches.append
                 (
-                    mesh.boundaryMesh()[patchI].clone
+                    mesh.boundaryMesh()[patchi].clone
                     (
                         mesh.boundaryMesh()
                     ).ptr()
@@ -478,12 +478,12 @@ int main(int argc, char *argv[])
             }
             for
             (
-                label patchI = mesh.boundaryMesh().size();
-                patchI < nPatches;
-                patchI++
+                label patchi = mesh.boundaryMesh().size();
+                patchi < nPatches;
+                patchi++
             )
             {
-                label nbrProcI = patchToNbrProc[patchI];
+                label nbrProcI = patchToNbrProc[patchi];
 
                 word name =
                         "procBoundary"
@@ -491,7 +491,7 @@ int main(int argc, char *argv[])
                       + "to"
                       + CML::name(nbrProcI);
 
-                Pout<< "Adding patch " << patchI
+                Pout<< "Adding patch " << patchi
                     << " name:" << name
                     << " between " << Pstream::myProcNo()
                     << " and " << nbrProcI
@@ -505,7 +505,7 @@ int main(int argc, char *argv[])
                         name,
                         0,                  // size
                         mesh.nFaces(),      // start
-                        patchI,             // index
+                        patchi,             // index
                         mesh.boundaryMesh(),// polyBoundaryMesh
                         Pstream::myProcNo(),// myProcNo
                         nbrProcI            // neighbProcNo
@@ -535,25 +535,25 @@ int main(int argc, char *argv[])
         // Determine points and extrusion
         pointField layer0Points(extrudePatch.nPoints());
         pointField displacement(extrudePatch.nPoints());
-        forAll(displacement, pointI)
+        forAll(displacement, pointi)
         {
-            const vector& patchNormal = extrudePatchPointNormals[pointI];
+            const vector& patchNormal = extrudePatchPointNormals[pointi];
 
             // layer0 point
-            layer0Points[pointI] = model()
+            layer0Points[pointi] = model()
             (
-                extrudePatch.localPoints()[pointI],
+                extrudePatch.localPoints()[pointi],
                 patchNormal,
                 0
             );
             // layerN point
             point extrudePt = model()
             (
-                extrudePatch.localPoints()[pointI],
+                extrudePatch.localPoints()[pointi],
                 patchNormal,
                 model().nLayers()
             );
-            displacement[pointI] = extrudePt - layer0Points[pointI];
+            displacement[pointi] = extrudePt - layer0Points[pointi];
         }
 
 
@@ -611,19 +611,19 @@ int main(int argc, char *argv[])
         );
 
         // Reset points according to extrusion model
-        forAll(layerExtrude.addedPoints(), pointI)
+        forAll(layerExtrude.addedPoints(), pointi)
         {
-            const labelList& pPoints = layerExtrude.addedPoints()[pointI];
+            const labelList& pPoints = layerExtrude.addedPoints()[pointi];
             forAll(pPoints, pPointI)
             {
-                label meshPointI = pPoints[pPointI];
+                label meshPointi = pPoints[pPointI];
 
                 point modelPt
                 (
                     model()
                     (
-                        extrudePatch.localPoints()[pointI],
-                        extrudePatchPointNormals[pointI],
+                        extrudePatch.localPoints()[pointi],
+                        extrudePatchPointNormals[pointi],
                         pPointI+1       // layer
                     )
                 );
@@ -631,7 +631,7 @@ int main(int argc, char *argv[])
                 const_cast<DynamicList<point>&>
                 (
                     meshMod().points()
-                )[meshPointI] = modelPt;
+                )[meshPointi] = modelPt;
             }
         }
 

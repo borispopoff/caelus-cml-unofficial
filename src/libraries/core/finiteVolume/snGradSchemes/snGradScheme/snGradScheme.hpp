@@ -310,18 +310,18 @@ snGradScheme<Type>::snGrad
             deltaCoeffs[facei]*(vf[neighbour[facei]] - vf[owner[facei]]);
     }
 
-    forAll(vf.boundaryField(), patchI)
+    forAll(vf.boundaryField(), patchi)
     {
-        const fvPatchField<Type>& pvf = vf.boundaryField()[patchI];
+        const fvPatchField<Type>& pvf = vf.boundaryField()[patchi];
 
         if (pvf.coupled())
         {
-            ssf.boundaryField()[patchI] =
-                pvf.snGrad(tdeltaCoeffs().boundaryField()[patchI]);
+            ssf.boundaryField()[patchi] =
+                pvf.snGrad(tdeltaCoeffs().boundaryField()[patchi]);
         }
         else
         {
-            ssf.boundaryField()[patchI] = pvf.snGrad();
+            ssf.boundaryField()[patchi] = pvf.snGrad();
         }
     }
 

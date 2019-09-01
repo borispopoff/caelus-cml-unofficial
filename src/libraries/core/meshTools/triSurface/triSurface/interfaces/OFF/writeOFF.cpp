@@ -39,10 +39,10 @@ void triSurface::writeOFF(const bool writeSorted, Ostream& os) const
     surfacePatchList myPatches(calcPatches(faceMap));
 
     // Print patch names as comment
-    forAll(myPatches, patchI)
+    forAll(myPatches, patchi)
     {
-        os  << "#     " << patchI << "    "
-            << myPatches[patchI].name() << endl;
+        os  << "#     " << patchi << "    "
+            << myPatches[patchi].name() << endl;
     }
     os  << nl << endl;
 
@@ -68,14 +68,14 @@ void triSurface::writeOFF(const bool writeSorted, Ostream& os) const
     {
         label faceIndex = 0;
 
-        forAll(myPatches, patchI)
+        forAll(myPatches, patchi)
         {
             // Print all faces belonging to this patch
 
             for
             (
                 label patchFaceI = 0;
-                patchFaceI < myPatches[patchI].size();
+                patchFaceI < myPatches[patchi].size();
                 patchFaceI++
             )
             {

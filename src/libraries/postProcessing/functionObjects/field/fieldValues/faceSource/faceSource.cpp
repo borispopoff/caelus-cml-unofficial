@@ -229,8 +229,8 @@ void CML::fieldValues::faceSource::combineMeshGeometry
     {
         if (facePatchId_[i] != -1)
         {
-            label patchI = facePatchId_[i];
-            globalFacesIs[i] += mesh().boundaryMesh()[patchI].start();
+            label patchi = facePatchId_[i];
+            globalFacesIs[i] += mesh().boundaryMesh()[patchi].start();
         }
     }
 

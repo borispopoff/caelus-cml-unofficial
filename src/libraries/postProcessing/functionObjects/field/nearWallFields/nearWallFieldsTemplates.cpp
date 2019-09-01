@@ -99,9 +99,9 @@ void CML::nearWallFields::sampleBoundaryField
     label nPatchFaces = 0;
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
-        label patchI = iter.key();
+        label patchi = iter.key();
 
-        fvPatchField<Type>& pfld = fld.boundaryField()[patchI];
+        fvPatchField<Type>& pfld = fld.boundaryField()[patchi];
 
         Field<Type> newFld(pfld.size());
         forAll(pfld, i)

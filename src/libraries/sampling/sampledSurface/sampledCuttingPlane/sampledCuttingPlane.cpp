@@ -132,30 +132,30 @@ void CML::sampledCuttingPlane::createGeometry()
 
     // Patch fields
     {
-        forAll(cellDistance.boundaryField(), patchI)
+        forAll(cellDistance.boundaryField(), patchi)
         {
             if
             (
                 isA<emptyFvPatchScalarField>
                 (
-                    cellDistance.boundaryField()[patchI]
+                    cellDistance.boundaryField()[patchi]
                 )
             )
             {
                 cellDistance.boundaryField().set
                 (
-                    patchI,
+                    patchi,
                     new calculatedFvPatchScalarField
                     (
-                        fvm.boundary()[patchI],
+                        fvm.boundary()[patchi],
                         cellDistance
                     )
                 );
 
-                const polyPatch& pp = fvm.boundary()[patchI].patch();
+                const polyPatch& pp = fvm.boundary()[patchi].patch();
                 pointField::subField cc = pp.patchSlice(fvm.faceCentres());
 
-                fvPatchScalarField& fld = cellDistance.boundaryField()[patchI];
+                fvPatchScalarField& fld = cellDistance.boundaryField()[patchi];
                 fld.setSize(pp.size());
                 forAll(fld, i)
                 {
@@ -164,8 +164,8 @@ void CML::sampledCuttingPlane::createGeometry()
             }
             else
             {
-                const pointField& cc = fvm.C().boundaryField()[patchI];
-                fvPatchScalarField& fld = cellDistance.boundaryField()[patchI];
+                const pointField& cc = fvm.C().boundaryField()[patchi];
+                fvPatchScalarField& fld = cellDistance.boundaryField()[patchi];
 
                 forAll(fld, i)
                 {

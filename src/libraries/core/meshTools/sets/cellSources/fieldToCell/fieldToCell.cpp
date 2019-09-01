@@ -164,15 +164,15 @@ void CML::fieldToCell::applyToSet
 //    const polyBoundaryMesh& patches = mesh().boundaryMesh();
 //
 //    List<polyPatch*> newPatches(patches.size());
-//    forAll(patches, patchI)
+//    forAll(patches, patchi)
 //    {
-//        const polyPatch& pp = patches[patchI];
+//        const polyPatch& pp = patches[patchi];
 //
-//        newPatches[patchI] =
-//            patches[patchI].clone
+//        newPatches[patchi] =
+//            patches[patchi].clone
 //            (
 //                fMesh.boundaryMesh(),
-//                patchI,
+//                patchi,
 //                pp.size(),
 //                pp.start()
 //            ).ptr();

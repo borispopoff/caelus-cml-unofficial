@@ -143,9 +143,9 @@ CML::labelList CML::removeCells::getExposedFaces
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -195,28 +195,28 @@ void CML::removeCells::setRefinement
 
     forAll(exposedFaceLabels, i)
     {
-        label patchI = exposedPatchIDs[i];
+        label patchi = exposedPatchIDs[i];
 
-        if (patchI < 0 || patchI >= patches.size())
+        if (patchi < 0 || patchi >= patches.size())
         {
             FatalErrorInFunction
-                << "Invalid patch " << patchI
+                << "Invalid patch " << patchi
                 << " for exposed face " << exposedFaceLabels[i] << endl
                 << "Valid patches 0.." << patches.size()-1
                 << abort(FatalError);
         }
 
-        if (patches[patchI].coupled())
+        if (patches[patchi].coupled())
         {
             FatalErrorInFunction
                 << "Trying to put exposed face " << exposedFaceLabels[i]
-                << " into a coupled patch : " << patches[patchI].name()
+                << " into a coupled patch : " << patches[patchi].name()
                 << endl
                 << "This is illegal."
                 << abort(FatalError);
         }
 
-        newPatchID[exposedFaceLabels[i]] = patchI;
+        newPatchID[exposedFaceLabels[i]] = patchi;
     }
 
 
@@ -366,9 +366,9 @@ void CML::removeCells::setRefinement
         }
     }
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -455,20 +455,20 @@ void CML::removeCells::setRefinement
     // Remove points that are no longer used.
     // Loop rewritten to not use pointFaces.
 
-    forAll(nFacesUsingPoint, pointI)
+    forAll(nFacesUsingPoint, pointi)
     {
-        if (nFacesUsingPoint[pointI] == 0)
+        if (nFacesUsingPoint[pointi] == 0)
         {
-            //Pout<< "Removing unused point " << pointI
-            //    << " at:" << mesh_.points()[pointI] << endl;
+            //Pout<< "Removing unused point " << pointi
+            //    << " at:" << mesh_.points()[pointi] << endl;
 
-            meshMod.setAction(polyRemovePoint(pointI));
+            meshMod.setAction(polyRemovePoint(pointi));
         }
-        else if (nFacesUsingPoint[pointI] == 1)
+        else if (nFacesUsingPoint[pointi] == 1)
         {
             WarningInFunction
-                << "point " << pointI << " at coordinate "
-                << mesh_.points()[pointI]
+                << "point " << pointi << " at coordinate "
+                << mesh_.points()[pointi]
                 << " is only used by 1 face after removing cells."
                 << " This probably results in an illegal mesh."
                 << endl;

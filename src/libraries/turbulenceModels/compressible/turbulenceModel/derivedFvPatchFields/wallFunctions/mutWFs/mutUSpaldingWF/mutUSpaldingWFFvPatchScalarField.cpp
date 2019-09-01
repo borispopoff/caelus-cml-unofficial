@@ -100,15 +100,15 @@ tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::calcUTau
 
 tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::calcMut() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
 
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchI];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magGradU(mag(Uw.snGrad()));
-    const scalarField& rhow = turbModel.rho().boundaryField()[patchI];
-    const scalarField& muw = turbModel.mu().boundaryField()[patchI];
+    const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
+    const scalarField& muw = turbModel.mu().boundaryField()[patchi];
 
     return max
     (
@@ -181,15 +181,15 @@ mutUSpaldingWallFunctionFvPatchScalarField
 
 tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::yPlus() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
 
-    const scalarField& y = turbModel.y()[patchI];
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchI];
-    const scalarField& rhow = turbModel.rho().boundaryField()[patchI];
-    const scalarField& muw = turbModel.mu().boundaryField()[patchI];
+    const scalarField& y = turbModel.y()[patchi];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
+    const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
+    const scalarField& muw = turbModel.mu().boundaryField()[patchi];
 
     return y*calcUTau(mag(Uw.snGrad()))/(muw/rhow);
 }

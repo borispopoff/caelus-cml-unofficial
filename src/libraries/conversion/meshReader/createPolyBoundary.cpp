@@ -114,9 +114,9 @@ void CML::meshReader::createPolyBoundary()
         }
     }
 
-    forAll(boundaryIds_, patchI)
+    forAll(boundaryIds_, patchi)
     {
-        nBoundaryFaces += boundaryIds_[patchI].size();
+        nBoundaryFaces += boundaryIds_[patchi].size();
     }
 
     Info<< nl
@@ -132,14 +132,14 @@ void CML::meshReader::createPolyBoundary()
     interfaces_.setSize(baffleIds_.size());
     nBoundaryFaces = 0;
 
-    forAll(boundaryIds_, patchI)
+    forAll(boundaryIds_, patchi)
     {
-        const List<cellFaceIdentifier>& idList = boundaryIds_[patchI];
+        const List<cellFaceIdentifier>& idList = boundaryIds_[patchi];
 
-        patchStarts_[patchI] = nCreatedFaces;
+        patchStarts_[patchi] = nCreatedFaces;
 
         // write each baffle side separately
-        if (patchPhysicalTypes_[patchI] == "baffle")
+        if (patchPhysicalTypes_[patchi] == "baffle")
         {
             label count = 0;
 
@@ -182,7 +182,7 @@ void CML::meshReader::createPolyBoundary()
 
             nInterfaces += (count - (count % 2)) / 2;
         }
-        else if (patchPhysicalTypes_[patchI] == "monitoring")
+        else if (patchPhysicalTypes_[patchi] == "monitoring")
         {
             // translate the "monitoring" pseudo-boundaries to face sets
             List<label> monitoring(idList.size());
@@ -204,7 +204,7 @@ void CML::meshReader::createPolyBoundary()
                 }
             }
 
-            monitoringSets_.insert(patchNames_[patchI], monitoring);
+            monitoringSets_.insert(patchNames_[patchi], monitoring);
         }
         else
         {
@@ -225,7 +225,7 @@ void CML::meshReader::createPolyBoundary()
             }
         }
 
-        patchSizes_[patchI] = nCreatedFaces - patchStarts_[patchI];
+        patchSizes_[patchi] = nCreatedFaces - patchStarts_[patchi];
     }
 
     // add in missing faces
@@ -373,16 +373,16 @@ CML::meshReader::polyBoundaryPatches(const polyMesh& mesh)
 
     // avoid empty patches - move to the end of the lists and truncate
     labelList oldToNew = identity(nPatches);
-    forAll(patchSizes_, patchI)
+    forAll(patchSizes_, patchi)
     {
-        if (patchSizes_[patchI] > 0)
+        if (patchSizes_[patchi] > 0)
         {
-            oldToNew[patchI] = nUsed++;
+            oldToNew[patchi] = nUsed++;
         }
         else
         {
             nEmpty++;
-            oldToNew[patchI] = nPatches - nEmpty;
+            oldToNew[patchi] = nPatches - nEmpty;
         }
     }
 
@@ -422,34 +422,34 @@ CML::meshReader::polyBoundaryPatches(const polyMesh& mesh)
         "defaultFaces",
         defaultFacesType
     );
-    forAll(patchDicts, patchI)
+    forAll(patchDicts, patchi)
     {
-        if (!patchDicts.set(patchI))
+        if (!patchDicts.set(patchi))
         {
-            patchDicts.set(patchI, new dictionary());
+            patchDicts.set(patchi, new dictionary());
         }
-        dictionary& patchDict = patchDicts[patchI];
+        dictionary& patchDict = patchDicts[patchi];
 
         // add but not overwrite type
-        patchDict.add("type", patchTypes_[patchI], false);
-        if (patchPhysicalTypes_.size() && patchPhysicalTypes_[patchI].size())
+        patchDict.add("type", patchTypes_[patchi], false);
+        if (patchPhysicalTypes_.size() && patchPhysicalTypes_[patchi].size())
         {
-            patchDict.add("startFace", patchPhysicalTypes_[patchI], false);
+            patchDict.add("startFace", patchPhysicalTypes_[patchi], false);
         }
 
         // overwrite sizes and start
-        patchDict.add("nFaces", patchSizes_[patchI], true);
-        patchDict.add("startFace", patchStarts_[patchI], true);
+        patchDict.add("nFaces", patchSizes_[patchi], true);
+        patchDict.add("startFace", patchStarts_[patchi], true);
     }
 
 
-    forAll(patchStarts_, patchI)
+    forAll(patchStarts_, patchi)
     {
-        p[patchI] = polyPatch::New
+        p[patchi] = polyPatch::New
         (
-            patchNames_[patchI],
-            patchDicts[patchI],
-            patchI,
+            patchNames_[patchi],
+            patchDicts[patchi],
+            patchi,
             mesh.boundaryMesh()
         ).ptr();
     }

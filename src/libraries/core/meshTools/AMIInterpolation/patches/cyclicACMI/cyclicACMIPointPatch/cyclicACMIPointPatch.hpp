@@ -130,8 +130,8 @@ public:
         //- Return neighbour point patch
         const cyclicACMIPointPatch& neighbPatch() const
         {
-            label patchI = cyclicACMIPolyPatch_.neighbPatchID();
-            const pointPatch& pp = this->boundaryMesh()[patchI];
+            label patchi = cyclicACMIPolyPatch_.neighbPatchID();
+            const pointPatch& pp = this->boundaryMesh()[patchi];
             return refCast<const cyclicACMIPointPatch>(pp);
         }
 

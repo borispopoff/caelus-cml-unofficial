@@ -126,10 +126,10 @@ void CML::distanceSurface::createGeometry()
 
     // Patch fields
     {
-        forAll(fvm.C().boundaryField(), patchI)
+        forAll(fvm.C().boundaryField(), patchi)
         {
-            const pointField& cc = fvm.C().boundaryField()[patchI];
-            fvPatchScalarField& fld = cellDistance.boundaryField()[patchI];
+            const pointField& cc = fvm.C().boundaryField()[patchi];
+            fvPatchScalarField& fld = cellDistance.boundaryField()[patchi];
 
             List<pointIndexHit> nearest;
             surfPtr_().findNearest

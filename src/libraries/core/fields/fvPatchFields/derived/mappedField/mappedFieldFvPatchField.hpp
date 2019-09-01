@@ -484,10 +484,10 @@ void mappedFieldFvPatchField<Type>::updateCoeffs()
 
             const fieldType& nbrField = sampleField();
 
-            forAll(nbrField.boundaryField(), patchI)
+            forAll(nbrField.boundaryField(), patchi)
             {
                 const fvPatchField<Type>& pf =
-                    nbrField.boundaryField()[patchI];
+                    nbrField.boundaryField()[patchi];
                 label faceStart = pf.patch().patch().start();
 
                 forAll(pf, facei)

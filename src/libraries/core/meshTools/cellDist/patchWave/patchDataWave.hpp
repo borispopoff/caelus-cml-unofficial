@@ -209,13 +209,13 @@ void CML::patchDataWave<TransferType>::setChangedFaces
 
     label nChangedFaces = 0;
 
-    forAll(mesh.boundaryMesh(), patchI)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh.boundaryMesh()[patchI];
+            const polyPatch& patch = mesh.boundaryMesh()[patchi];
 
-            const Field<Type>& patchField = initialPatchValuePtrs_[patchI];
+            const Field<Type>& patchField = initialPatchValuePtrs_[patchi];
 
             forAll(patch.faceCentres(), patchFaceI)
             {
@@ -282,21 +282,21 @@ CML::label CML::patchDataWave<TransferType>::getValues
     }
 
     // Copy boundary values
-    forAll(patchDistance_, patchI)
+    forAll(patchDistance_, patchi)
     {
-        const polyPatch& patch = mesh.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh.boundaryMesh()[patchi];
 
         // Allocate storage for patchDistance
         scalarField* patchFieldPtr = new scalarField(patch.size());
 
-        patchDistance_.set(patchI, patchFieldPtr);
+        patchDistance_.set(patchi, patchFieldPtr);
 
         scalarField& patchField = *patchFieldPtr;
 
         // Allocate storage for patchData
         Field<Type>* patchDataFieldPtr = new Field<Type>(patch.size());
 
-        patchData_.set(patchI, patchDataFieldPtr);
+        patchData_.set(patchi, patchDataFieldPtr);
 
         Field<Type>& patchDataField = *patchDataFieldPtr;
 

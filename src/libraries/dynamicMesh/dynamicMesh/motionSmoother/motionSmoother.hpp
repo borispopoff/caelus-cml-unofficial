@@ -31,7 +31,7 @@ Description
     E.g.
     \verbatim
         // Construct iterative mesh mover.
-        motionSmoother meshMover(mesh, labelList(1, patchI));
+        motionSmoother meshMover(mesh, labelList(1, patchi));
 
         // Set desired displacement:
         meshMover.displacement() = ..
@@ -264,7 +264,7 @@ class motionSmoother
         ) const;
 
         //- Helper function. Is point internal?
-        bool isInternalPoint(const label pointI) const;
+        bool isInternalPoint(const label pointi) const;
 
         //- Given a set of faces that cause smoothing and a number of
         //  iterations determine the maximum set of points who are affected
@@ -707,16 +707,16 @@ CML::motionSmoother::avg
     // Average
     // ~~~~~~~
 
-    forAll(res, pointI)
+    forAll(res, pointi)
     {
-        if (mag(sumWeight[pointI]) < VSMALL)
+        if (mag(sumWeight[pointi]) < VSMALL)
         {
             // Unconnected point. Take over original value
-            res[pointI] = fld[pointI];
+            res[pointi] = fld[pointi];
         }
         else
         {
-            res[pointI] /= sumWeight[pointI];
+            res[pointi] /= sumWeight[pointi];
         }
     }
 
@@ -739,11 +739,11 @@ void CML::motionSmoother::smooth
     tmp<pointVectorField> tavgFld = avg(fld, edgeWeight);
     const pointVectorField& avgFld = tavgFld();
 
-    forAll(fld, pointI)
+    forAll(fld, pointi)
     {
-        if (isInternalPoint(pointI))
+        if (isInternalPoint(pointi))
         {
-            newFld[pointI] = 0.5*fld[pointI] + 0.5*avgFld[pointI];
+            newFld[pointi] = 0.5*fld[pointi] + 0.5*avgFld[pointi];
         }
     }
 

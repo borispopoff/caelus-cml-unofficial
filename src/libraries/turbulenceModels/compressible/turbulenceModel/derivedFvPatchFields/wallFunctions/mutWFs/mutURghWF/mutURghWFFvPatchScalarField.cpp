@@ -39,14 +39,14 @@ tmp<scalarField> mutURoughWallFunctionFvPatchScalarField::calcYPlus
     const scalarField& magUp
 ) const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
 
-    const scalarField& y = turbModel.y()[patchI];
-    const scalarField& muw = turbModel.mu().boundaryField()[patchI];
-    const fvPatchScalarField& rho = turbModel.rho().boundaryField()[patchI];
+    const scalarField& y = turbModel.y()[patchi];
+    const scalarField& muw = turbModel.mu().boundaryField()[patchi];
+    const fvPatchScalarField& rho = turbModel.rho().boundaryField()[patchi];
 
     tmp<scalarField> tyPlus(new scalarField(patch().size(), 0.0));
     scalarField& yPlus = tyPlus();
@@ -166,15 +166,15 @@ tmp<scalarField> mutURoughWallFunctionFvPatchScalarField::calcYPlus
 
 tmp<scalarField> mutURoughWallFunctionFvPatchScalarField::calcMut() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
 
-    const scalarField& y = turbModel.y()[patchI];
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchI];
-    const scalarField& muw = turbModel.mu().boundaryField()[patchI];
-    const fvPatchScalarField& rho = turbModel.rho().boundaryField()[patchI];
+    const scalarField& y = turbModel.y()[patchi];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
+    const scalarField& muw = turbModel.mu().boundaryField()[patchi];
+    const fvPatchScalarField& rho = turbModel.rho().boundaryField()[patchi];
 
     scalarField magUp(mag(Uw.patchInternalField() - Uw));
 
@@ -271,11 +271,11 @@ mutURoughWallFunctionFvPatchScalarField::mutURoughWallFunctionFvPatchScalarField
 
 tmp<scalarField> mutURoughWallFunctionFvPatchScalarField::yPlus() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchI];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magUp(mag(Uw.patchInternalField() - Uw));
 
     return calcYPlus(magUp);

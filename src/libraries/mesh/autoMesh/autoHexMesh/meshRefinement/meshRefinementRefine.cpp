@@ -108,9 +108,9 @@ CML::labelList CML::meshRefinement::getChangedFaces
 
         boolList refinedBoundaryFace(mesh.nFaces()-nInternalFaces, false);
 
-        forAll(mesh.boundaryMesh(), patchI)
+        forAll(mesh.boundaryMesh(), patchi)
         {
-            const polyPatch& pp = mesh.boundaryMesh()[patchI];
+            const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
             label facei = pp.start();
 
@@ -435,10 +435,10 @@ void CML::meshRefinement::markFeatureCellLevel
         const trackedParticle& startTp = iter();
 
         label featI = startTp.i();
-        label pointI = startTp.j();
+        label pointi = startTp.j();
 
         const featureEdgeMesh& featureMesh = features_[featI];
-        const labelList& pEdges = featureMesh.pointEdges()[pointI];
+        const labelList& pEdges = featureMesh.pointEdges()[pointi];
 
         // Now shoot particles down all pEdges.
         forAll(pEdges, pEdgeI)
@@ -451,7 +451,7 @@ void CML::meshRefinement::markFeatureCellLevel
                 // on the edge.
 
                 const edge& e = featureMesh.edges()[edgeI];
-                label otherPointi = e.otherVertex(pointI);
+                label otherPointi = e.otherVertex(pointi);
 
                 trackedParticle* tp(new trackedParticle(startTp));
                 tp->start() = tp->position();
@@ -461,7 +461,7 @@ void CML::meshRefinement::markFeatureCellLevel
 
                 if (debug)
                 {
-                    Pout<< "Adding particle for point:" << pointI
+                    Pout<< "Adding particle for point:" << pointi
                         << " coord:" << tp->position()
                         << " feature:" << featI
                         << " to track to:" << tp->end()
@@ -493,12 +493,12 @@ void CML::meshRefinement::markFeatureCellLevel
             trackedParticle& tp = iter();
 
             label featI = tp.i();
-            label pointI = tp.j();
+            label pointi = tp.j();
 
             const featureEdgeMesh& featureMesh = features_[featI];
-            const labelList& pEdges = featureMesh.pointEdges()[pointI];
+            const labelList& pEdges = featureMesh.pointEdges()[pointi];
 
-            // Particle now at pointI. Check connected edges to see which one
+            // Particle now at pointi. Check connected edges to see which one
             // we have to visit now.
 
             bool keepParticle = false;
@@ -513,7 +513,7 @@ void CML::meshRefinement::markFeatureCellLevel
                     // on the edge.
 
                     const edge& e = featureMesh.edges()[edgeI];
-                    label otherPointi = e.otherVertex(pointI);
+                    label otherPointi = e.otherVertex(pointi);
 
                     tp.start() = tp.position();
                     tp.end() = featureMesh.points()[otherPointi];

@@ -192,9 +192,9 @@ void CML::wallDistData<TransferType>::correct()
     // Collect pointers to data on patches
     UPtrList<Field<Type>> patchData(mesh.boundaryMesh().size());
 
-    forAll(field_.boundaryField(), patchI)
+    forAll(field_.boundaryField(), patchi)
     {
-        patchData.set(patchI, &field_.boundaryField()[patchI]);
+        patchData.set(patchi, &field_.boundaryField()[patchi]);
     }
 
     // Do mesh wave
@@ -212,17 +212,17 @@ void CML::wallDistData<TransferType>::correct()
     field_.transfer(wave.cellData());
 
     // Transfer values on patches into boundaryField of *this and field_
-    forAll(boundaryField(), patchI)
+    forAll(boundaryField(), patchi)
     {
-        scalarField& waveFld = wave.patchDistance()[patchI];
+        scalarField& waveFld = wave.patchDistance()[patchi];
 
-        if (!isA<emptyFvPatchScalarField>(boundaryField()[patchI]))
+        if (!isA<emptyFvPatchScalarField>(boundaryField()[patchi]))
         {
-            boundaryField()[patchI].transfer(waveFld);
+            boundaryField()[patchi].transfer(waveFld);
 
-            Field<Type>& wavePatchData = wave.patchData()[patchI];
+            Field<Type>& wavePatchData = wave.patchData()[patchi];
 
-            field_.boundaryField()[patchI].transfer(wavePatchData);
+            field_.boundaryField()[patchi].transfer(wavePatchData);
         }
     }
 

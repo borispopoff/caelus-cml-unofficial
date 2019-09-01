@@ -62,9 +62,9 @@ void writePoints(const polyMesh& mesh, const fileName& timeName)
 
     OFstream pointStream(pointFile);
 
-    forAll(mesh.points(), pointI)
+    forAll(mesh.points(), pointi)
     {
-        writeOBJ(mesh.points()[pointI], pointStream);
+        writeOBJ(mesh.points()[pointi], pointStream);
         vertI++;
     }
 
@@ -215,9 +215,9 @@ void writePatchCentres
 {
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         fileName faceFile
         (
@@ -244,9 +244,9 @@ void writePatchFaces
 {
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         fileName faceFile
         (
@@ -258,9 +258,9 @@ void writePatchFaces
 
         OFstream patchFaceStream(faceFile);
 
-        forAll(pp.localPoints(), pointI)
+        forAll(pp.localPoints(), pointi)
         {
-            writeOBJ(pp.localPoints()[pointI], patchFaceStream);
+            writeOBJ(pp.localPoints()[pointi], patchFaceStream);
         }
 
         forAll(pp.localFaces(), facei)
@@ -287,9 +287,9 @@ void writePatchBoundaryEdges
 {
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         fileName edgeFile
         (
@@ -301,9 +301,9 @@ void writePatchBoundaryEdges
 
         OFstream patchEdgeStream(edgeFile);
 
-        forAll(pp.localPoints(), pointI)
+        forAll(pp.localPoints(), pointi)
         {
-            writeOBJ(pp.localPoints()[pointI], patchEdgeStream);
+            writeOBJ(pp.localPoints()[pointi], patchEdgeStream);
         }
 
         for (label edgeI = pp.nInternalEdges(); edgeI < pp.nEdges(); edgeI++)
@@ -322,11 +322,11 @@ void writePatchBoundaryEdges
 void writePointCells
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const fileName& timeName
 )
 {
-    const labelList& pCells = mesh.pointCells()[pointI];
+    const labelList& pCells = mesh.pointCells()[pointi];
 
     labelHashSet allEdges(6*pCells.size());
 
@@ -344,7 +344,7 @@ void writePointCells
     fileName pFile
     (
         mesh.time().path()
-      / "pointEdges_" + timeName + '_' + name(pointI) + ".obj"
+      / "pointEdges_" + timeName + '_' + name(pointi) + ".obj"
     );
 
     Info<< "Writing pointEdges to " << pFile << endl;
@@ -464,9 +464,9 @@ int main(int argc, char *argv[])
             }
             if (doPoint)
             {
-                label pointI = args.optionRead<label>("point");
+                label pointi = args.optionRead<label>("point");
 
-                writePointCells(mesh, pointI, runTime.timeName());
+                writePointCells(mesh, pointi, runTime.timeName());
             }
             if (doFace)
             {

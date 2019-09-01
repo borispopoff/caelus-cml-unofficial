@@ -68,14 +68,14 @@ public:
         {
             const fvBoundaryMesh& patches = mesh.boundary();
 
-            forAll(patches, patchI)
+            forAll(patches, patchi)
             {
                 set
                 (
-                    patchI,
+                    patchi,
                     new fvPatchMapper
                     (
-                        patches[patchI],
+                        patches[patchi],
                         faceMap
                     )
                 );

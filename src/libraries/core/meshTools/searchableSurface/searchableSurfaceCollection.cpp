@@ -74,9 +74,9 @@ void CML::searchableSurfaceCollection::findNearest
             hitInfo
         );
 
-        forAll(hitInfo, pointI)
+        forAll(hitInfo, pointi)
         {
-            if (hitInfo[pointI].hit())
+            if (hitInfo[pointi].hit())
             {
                 // Rework back into global coordinate sys. Multiply then
                 // transform
@@ -84,24 +84,24 @@ void CML::searchableSurfaceCollection::findNearest
                 (
                     cmptMultiply
                     (
-                        hitInfo[pointI].rawPoint(),
+                        hitInfo[pointi].rawPoint(),
                         scale_[surfI]
                     )
                 );
 
-                scalar distSqr = magSqr(globalPt - samples[pointI]);
+                scalar distSqr = magSqr(globalPt - samples[pointi]);
 
-                if (distSqr < minDistSqr[pointI])
+                if (distSqr < minDistSqr[pointi])
                 {
-                    minDistSqr[pointI] = distSqr;
-                    nearestInfo[pointI].setPoint(globalPt);
-                    nearestInfo[pointI].setHit();
-                    nearestInfo[pointI].setIndex
+                    minDistSqr[pointi] = distSqr;
+                    nearestInfo[pointi].setPoint(globalPt);
+                    nearestInfo[pointi].setHit();
+                    nearestInfo[pointi].setIndex
                     (
-                        hitInfo[pointI].index()
+                        hitInfo[pointi].index()
                       + indexOffset_[surfI]
                     );
-                    nearestSurf[pointI] = surfI;
+                    nearestSurf[pointi] = surfI;
                 }
             }
         }
@@ -121,11 +121,11 @@ void CML::searchableSurfaceCollection::sortHits
     // Count hits per surface.
     labelList nHits(subGeom_.size(), 0);
 
-    forAll(info, pointI)
+    forAll(info, pointi)
     {
-        if (info[pointI].hit())
+        if (info[pointi].hit())
         {
-            label index = info[pointI].index();
+            label index = info[pointi].index();
             label surfI = findLower(indexOffset_, index+1);
             nHits[surfI]++;
         }
@@ -143,11 +143,11 @@ void CML::searchableSurfaceCollection::sortHits
     }
     nHits = 0;
 
-    forAll(info, pointI)
+    forAll(info, pointi)
     {
-        if (info[pointI].hit())
+        if (info[pointi].hit())
         {
-            label index = info[pointI].index();
+            label index = info[pointi].index();
             label surfI = findLower(indexOffset_, index+1);
 
             // Store for correct surface and adapt indices back to local
@@ -155,11 +155,11 @@ void CML::searchableSurfaceCollection::sortHits
             label localI = nHits[surfI]++;
             surfInfo[surfI][localI] = pointIndexHit
             (
-                info[pointI].hit(),
-                info[pointI].rawPoint(),
+                info[pointi].hit(),
+                info[pointi].rawPoint(),
                 index-indexOffset_[surfI]
             );
-            infoMap[surfI][localI] = pointI;
+            infoMap[surfI][localI] = pointi;
         }
     }
 }
@@ -482,24 +482,24 @@ void CML::searchableSurfaceCollection::findLine
 
         subGeom_[surfI].findLine(e0, e1, hitInfo);
 
-        forAll(hitInfo, pointI)
+        forAll(hitInfo, pointi)
         {
-            if (hitInfo[pointI].hit())
+            if (hitInfo[pointi].hit())
             {
                 // Transform back to global coordinate sys.
-                nearest[pointI] = transform_[surfI].globalPosition
+                nearest[pointi] = transform_[surfI].globalPosition
                 (
                     cmptMultiply
                     (
-                        hitInfo[pointI].rawPoint(),
+                        hitInfo[pointi].rawPoint(),
                         scale_[surfI]
                     )
                 );
-                info[pointI] = hitInfo[pointI];
-                info[pointI].rawPoint() = nearest[pointI];
-                info[pointI].setIndex
+                info[pointi] = hitInfo[pointi];
+                info[pointi].rawPoint() = nearest[pointi];
+                info[pointi].setIndex
                 (
-                    hitInfo[pointI].index()
+                    hitInfo[pointi].index()
                   + indexOffset_[surfI]
                 );
             }
@@ -510,27 +510,27 @@ void CML::searchableSurfaceCollection::findLine
     // Debug check
     if (false)
     {
-        forAll(info, pointI)
+        forAll(info, pointi)
         {
-            if (info[pointI].hit())
+            if (info[pointi].hit())
             {
-                vector n(end[pointI] - start[pointI]);
+                vector n(end[pointi] - start[pointi]);
                 scalar magN = mag(n);
 
                 if (magN > SMALL)
                 {
                     n /= mag(n);
 
-                    scalar s = ((info[pointI].rawPoint()-start[pointI])&n);
+                    scalar s = ((info[pointi].rawPoint()-start[pointi])&n);
 
                     if (s < 0 || s > 1)
                     {
                         FatalErrorInFunction
-                            << "point:" << info[pointI]
+                            << "point:" << info[pointi]
                             << " s:" << s
                             << " outside vector "
-                            << " start:" << start[pointI]
-                            << " end:" << end[pointI]
+                            << " start:" << start[pointi]
+                            << " end:" << end[pointi]
                             << abort(FatalError);
                     }
                 }
@@ -564,16 +564,16 @@ void CML::searchableSurfaceCollection::findLineAll
     findLine(start, end, nearestInfo);
 
     info.setSize(start.size());
-    forAll(info, pointI)
+    forAll(info, pointi)
     {
-        if (nearestInfo[pointI].hit())
+        if (nearestInfo[pointi].hit())
         {
-            info[pointI].setSize(1);
-            info[pointI][0] = nearestInfo[pointI];
+            info[pointi].setSize(1);
+            info[pointi][0] = nearestInfo[pointi];
         }
         else
         {
-            info[pointI].clear();
+            info[pointi].clear();
         }
     }
 }

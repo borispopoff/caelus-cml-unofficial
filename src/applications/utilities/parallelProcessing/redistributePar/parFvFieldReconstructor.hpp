@@ -285,21 +285,21 @@ CML::parFvFieldReconstructor::reconstructFvVolumeField
         volMesh
     >::GeometricBoundaryField& bfld = fld.boundaryField();
 
-    forAll(bfld, patchI)
+    forAll(bfld, patchi)
     {
-        if (patchFaceMaps_.set(patchI))
+        if (patchFaceMaps_.set(patchi))
         {
             // Clone local patch field
-            patchFields.set(patchI, bfld[patchI].clone());
+            patchFields.set(patchi, bfld[patchi].clone());
 
             distributedUnallocatedDirectFvPatchFieldMapper mapper
             (
                 labelUList::null(),
-                patchFaceMaps_[patchI]
+                patchFaceMaps_[patchi]
             );
 
             // Map into local copy
-            patchFields[patchI].autoMap(mapper);
+            patchFields[patchi].autoMap(mapper);
         }
     }
 
@@ -311,20 +311,20 @@ CML::parFvFieldReconstructor::reconstructFvVolumeField
 
     // Clone the patchFields onto the base patches. This is just to reset
     // the reference to the patch, size and content stay the same.
-    forAll(patchFields, patchI)
+    forAll(patchFields, patchi)
     {
-        if (patchFields.set(patchI))
+        if (patchFields.set(patchi))
         {
-            const fvPatch& basePatch = baseMesh_.boundary()[patchI];
+            const fvPatch& basePatch = baseMesh_.boundary()[patchi];
 
-            const fvPatchField<Type>& pfld = patchFields[patchI];
+            const fvPatchField<Type>& pfld = patchFields[patchi];
 
             labelList dummyMap(identity(pfld.size()));
             directFvPatchFieldMapper dummyMapper(dummyMap);
 
             basePatchFields.set
             (
-                patchI,
+                patchi,
                 fvPatchField<Type>::New
                 (
                     pfld,
@@ -338,17 +338,17 @@ CML::parFvFieldReconstructor::reconstructFvVolumeField
 
     // Add some empty patches on remaining patches (tbd.probably processor
     // patches)
-    forAll(basePatchFields, patchI)
+    forAll(basePatchFields, patchi)
     {
-        if (patchI >= patchFields.size() || !patchFields.set(patchI))
+        if (patchi >= patchFields.size() || !patchFields.set(patchi))
         {
             basePatchFields.set
             (
-                patchI,
+                patchi,
                 fvPatchField<Type>::New
                 (
                     emptyFvPatchField<Type>::typeName,
-                    baseMesh_.boundary()[patchI],
+                    baseMesh_.boundary()[patchi],
                     DimensionedField<Type, volMesh>::null()
                 )
             );
@@ -418,9 +418,9 @@ CML::parFvFieldReconstructor::reconstructFvSurfaceField
     // Create flat field of internalField + all patch fields
     Field<Type> flatFld(fld.mesh().nFaces(), Type(Zero));
     SubList<Type>(flatFld, fld.internalField().size()) = fld.internalField();
-    forAll(fld.boundaryField(), patchI)
+    forAll(fld.boundaryField(), patchi)
     {
-        const fvsPatchField<Type>& fvp = fld.boundaryField()[patchI];
+        const fvsPatchField<Type>& fvp = fld.boundaryField()[patchi];
 
         SubList<Type>(flatFld, fvp.size(), fvp.patch().start()) = fvp;
     }
@@ -452,21 +452,21 @@ CML::parFvFieldReconstructor::reconstructFvSurfaceField
         surfaceMesh
     >::GeometricBoundaryField& bfld = fld.boundaryField();
 
-    forAll(bfld, patchI)
+    forAll(bfld, patchi)
     {
-        if (patchFaceMaps_.set(patchI))
+        if (patchFaceMaps_.set(patchi))
         {
             // Clone local patch field
-            patchFields.set(patchI, bfld[patchI].clone());
+            patchFields.set(patchi, bfld[patchi].clone());
 
             distributedUnallocatedDirectFvPatchFieldMapper mapper
             (
                 labelUList::null(),
-                patchFaceMaps_[patchI]
+                patchFaceMaps_[patchi]
             );
 
             // Map into local copy
-            patchFields[patchI].autoMap(mapper);
+            patchFields[patchi].autoMap(mapper);
         }
     }
 
@@ -478,20 +478,20 @@ CML::parFvFieldReconstructor::reconstructFvSurfaceField
 
     // Clone the patchFields onto the base patches. This is just to reset
     // the reference to the patch, size and content stay the same.
-    forAll(patchFields, patchI)
+    forAll(patchFields, patchi)
     {
-        if (patchFields.set(patchI))
+        if (patchFields.set(patchi))
         {
-            const fvPatch& basePatch = baseMesh_.boundary()[patchI];
+            const fvPatch& basePatch = baseMesh_.boundary()[patchi];
 
-            const fvsPatchField<Type>& pfld = patchFields[patchI];
+            const fvsPatchField<Type>& pfld = patchFields[patchi];
 
             labelList dummyMap(identity(pfld.size()));
             directFvPatchFieldMapper dummyMapper(dummyMap);
 
             basePatchFields.set
             (
-                patchI,
+                patchi,
                 fvsPatchField<Type>::New
                 (
                     pfld,
@@ -505,17 +505,17 @@ CML::parFvFieldReconstructor::reconstructFvSurfaceField
 
     // Add some empty patches on remaining patches (tbd.probably processor
     // patches)
-    forAll(basePatchFields, patchI)
+    forAll(basePatchFields, patchi)
     {
-        if (patchI >= patchFields.size() || !patchFields.set(patchI))
+        if (patchi >= patchFields.size() || !patchFields.set(patchi))
         {
             basePatchFields.set
             (
-                patchI,
+                patchi,
                 fvsPatchField<Type>::New
                 (
                     emptyFvsPatchField<Type>::typeName,
-                    baseMesh_.boundary()[patchI],
+                    baseMesh_.boundary()[patchi],
                     DimensionedField<Type, surfaceMesh>::null()
                 )
             );

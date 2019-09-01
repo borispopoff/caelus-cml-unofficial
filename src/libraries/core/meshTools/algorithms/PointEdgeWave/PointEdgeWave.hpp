@@ -164,7 +164,7 @@ class PointEdgeWave
         //  statistics.
         bool updatePoint
         (
-            const label pointI,
+            const label pointi,
             const label neighbourEdgeI,
             const Type& neighbourInfo,
             Type& pointInfo
@@ -174,7 +174,7 @@ class PointEdgeWave
         //  statistics.
         bool updatePoint
         (
-            const label pointI,
+            const label pointi,
             const Type& neighbourInfo,
             Type& pointInfo
         );
@@ -411,11 +411,11 @@ void CML::PointEdgeWave<Type, TrackingData>::leaveDomain
 
     forAll(patchPointLabels, i)
     {
-        label patchPointI = patchPointLabels[i];
+        label patchPointi = patchPointLabels[i];
 
-        const point& pt = patch.points()[meshPoints[patchPointI]];
+        const point& pt = patch.points()[meshPoints[patchPointi]];
 
-        pointInfo[i].leaveDomain(patch, patchPointI, pt, td_);
+        pointInfo[i].leaveDomain(patch, patchPointi, pt, td_);
     }
 }
 
@@ -433,11 +433,11 @@ void CML::PointEdgeWave<Type, TrackingData>::enterDomain
 
     forAll(patchPointLabels, i)
     {
-        label patchPointI = patchPointLabels[i];
+        label patchPointi = patchPointLabels[i];
 
-        const point& pt = patch.points()[meshPoints[patchPointI]];
+        const point& pt = patch.points()[meshPoints[patchPointi]];
 
-        pointInfo[i].enterDomain(patch, patchPointI, pt, td_);
+        pointInfo[i].enterDomain(patch, patchPointi, pt, td_);
     }
 }
 
@@ -476,7 +476,7 @@ void CML::PointEdgeWave<Type, TrackingData>::transform
 }
 
 
-// Update info for pointI, at position pt, with information from
+// Update info for pointi, at position pt, with information from
 // neighbouring edge.
 // Updates:
 //      - changedPoint_, changedPoints_, nChangedPoints_,
@@ -484,7 +484,7 @@ void CML::PointEdgeWave<Type, TrackingData>::transform
 template<class Type, class TrackingData>
 bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
 (
-    const label pointI,
+    const label pointi,
     const label neighbourEdgeI,
     const Type& neighbourInfo,
     Type& pointInfo
@@ -498,7 +498,7 @@ bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
         pointInfo.updatePoint
         (
             mesh_,
-            pointI,
+            pointi,
             neighbourEdgeI,
             neighbourInfo,
             propagationTol_,
@@ -507,10 +507,10 @@ bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
 
     if (propagate)
     {
-        if (!changedPoint_[pointI])
+        if (!changedPoint_[pointi])
         {
-            changedPoint_[pointI] = true;
-            changedPoints_[nChangedPoints_++] = pointI;
+            changedPoint_[pointi] = true;
+            changedPoints_[nChangedPoints_++] = pointi;
         }
     }
 
@@ -523,7 +523,7 @@ bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
 }
 
 
-// Update info for pointI, at position pt, with information from
+// Update info for pointi, at position pt, with information from
 // same point.
 // Updates:
 //      - changedPoint_, changedPoints_, nChangedPoints_,
@@ -531,7 +531,7 @@ bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
 template<class Type, class TrackingData>
 bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
 (
-    const label pointI,
+    const label pointi,
     const Type& neighbourInfo,
     Type& pointInfo
 )
@@ -544,7 +544,7 @@ bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
         pointInfo.updatePoint
         (
             mesh_,
-            pointI,
+            pointi,
             neighbourInfo,
             propagationTol_,
             td_
@@ -552,10 +552,10 @@ bool CML::PointEdgeWave<Type, TrackingData>::updatePoint
 
     if (propagate)
     {
-        if (!changedPoint_[pointI])
+        if (!changedPoint_[pointi])
         {
-            changedPoint_[pointI] = true;
-            changedPoints_[nChangedPoints_++] = pointI;
+            changedPoint_[pointi] = true;
+            changedPoints_[nChangedPoints_++] = pointi;
         }
     }
 
@@ -622,9 +622,9 @@ CML::label CML::PointEdgeWave<Type, TrackingData>::countPatchType() const
 {
     label nPatches = 0;
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        if (isA<PatchType>(mesh_.boundaryMesh()[patchI]))
+        if (isA<PatchType>(mesh_.boundaryMesh()[patchi]))
         {
             nPatches++;
         }
@@ -647,9 +647,9 @@ void CML::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 
     forAll(mesh_.globalData().processorPatches(), i)
     {
-        label patchI = mesh_.globalData().processorPatches()[i];
+        label patchi = mesh_.globalData().processorPatches()[i];
         const processorPolyPatch& procPatch =
-            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchI]);
+            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchi]);
 
         patchInfo.clear();
         patchInfo.reserve(procPatch.nPoints());
@@ -662,10 +662,10 @@ void CML::PointEdgeWave<Type, TrackingData>::handleProcPatches()
         const labelList& neighbPoints = procPatch.neighbPoints();
         forAll(neighbPoints, thisPointI)
         {
-            label meshPointI = procPatch.meshPoints()[thisPointI];
-            if (changedPoint_[meshPointI])
+            label meshPointi = procPatch.meshPoints()[thisPointI];
+            if (changedPoint_[meshPointi])
             {
-                patchInfo.append(allPointInfo_[meshPointI]);
+                patchInfo.append(allPointInfo_[meshPointi]);
                 thisPoints.append(thisPointI);
                 nbrPoints.append(neighbPoints[thisPointI]);
             }
@@ -676,7 +676,7 @@ void CML::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 
         if (debug)
         {
-            Pout<< "Processor patch " << patchI << ' ' << procPatch.name()
+            Pout<< "Processor patch " << patchi << ' ' << procPatch.name()
                 << " communicating with " << procPatch.neighbProcNo()
                 << "  Sending:" << patchInfo.size() << endl;
         }
@@ -694,9 +694,9 @@ void CML::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 
     forAll(mesh_.globalData().processorPatches(), i)
     {
-        label patchI = mesh_.globalData().processorPatches()[i];
+        label patchi = mesh_.globalData().processorPatches()[i];
         const processorPolyPatch& procPatch =
-            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchI]);
+            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchi]);
 
         List<Type> patchInfo;
         labelList patchPoints;
@@ -708,7 +708,7 @@ void CML::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 
         if (debug)
         {
-            Pout<< "Processor patch " << patchI << ' ' << procPatch.name()
+            Pout<< "Processor patch " << patchi << ' ' << procPatch.name()
                 << " communicating with " << procPatch.neighbProcNo()
                 << "  Received:" << patchInfo.size() << endl;
         }
@@ -726,15 +726,15 @@ void CML::PointEdgeWave<Type, TrackingData>::handleProcPatches()
         const labelList& meshPoints = procPatch.meshPoints();
         forAll(patchInfo, i)
         {
-            label meshPointI = meshPoints[patchPoints[i]];
+            label meshPointi = meshPoints[patchPoints[i]];
 
-            if (!allPointInfo_[meshPointI].equal(patchInfo[i], td_))
+            if (!allPointInfo_[meshPointi].equal(patchInfo[i], td_))
             {
                 updatePoint
                 (
-                    meshPointI,
+                    meshPointi,
                     patchInfo[i],
-                    allPointInfo_[meshPointI]
+                    allPointInfo_[meshPointi]
                 );
             }
         }
@@ -756,9 +756,9 @@ void CML::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
     DynamicList<label> nbrPoints;
     DynamicList<label> thisPoints;
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        const polyPatch& patch = mesh_.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh_.boundaryMesh()[patchi];
 
         if (isA<cyclicPolyPatch>(patch))
         {
@@ -781,13 +781,13 @@ void CML::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
                 forAll(pairs, pairI)
                 {
                     label thisPointI = pairs[pairI][0];
-                    label nbrPointI = pairs[pairI][1];
-                    label meshPointI = meshPoints[nbrPointI];
+                    label nbrPointi = pairs[pairI][1];
+                    label meshPointi = meshPoints[nbrPointi];
 
-                    if (changedPoint_[meshPointI])
+                    if (changedPoint_[meshPointi])
                     {
-                        nbrInfo.append(allPointInfo_[meshPointI]);
-                        nbrPoints.append(nbrPointI);
+                        nbrInfo.append(allPointInfo_[meshPointi]);
+                        nbrPoints.append(nbrPointi);
                         thisPoints.append(thisPointI);
                     }
                 }
@@ -807,7 +807,7 @@ void CML::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
 
             if (debug)
             {
-                Pout<< "Cyclic patch " << patchI << ' ' << patch.name()
+                Pout<< "Cyclic patch " << patchi << ' ' << patch.name()
                     << "  Changed : " << nbrInfo.size()
                     << endl;
             }
@@ -819,15 +819,15 @@ void CML::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
             const labelList& meshPoints = cycPatch.meshPoints();
             forAll(nbrInfo, i)
             {
-                label meshPointI = meshPoints[thisPoints[i]];
+                label meshPointi = meshPoints[thisPoints[i]];
 
-                if (!allPointInfo_[meshPointI].equal(nbrInfo[i], td_))
+                if (!allPointInfo_[meshPointi].equal(nbrInfo[i], td_))
                 {
                     updatePoint
                     (
-                        meshPointI,
+                        meshPointi,
                         nbrInfo[i],
-                        allPointInfo_[meshPointI]
+                        allPointInfo_[meshPointi]
                     );
                 }
             }
@@ -1065,25 +1065,25 @@ void CML::PointEdgeWave<Type, TrackingData>::setPointInfo
 {
     forAll(changedPoints, changedPointI)
     {
-        label pointI = changedPoints[changedPointI];
+        label pointi = changedPoints[changedPointI];
 
-        bool wasValid = allPointInfo_[pointI].valid(td_);
+        bool wasValid = allPointInfo_[pointi].valid(td_);
 
-        // Copy info for pointI
-        allPointInfo_[pointI] = changedPointsInfo[changedPointI];
+        // Copy info for pointi
+        allPointInfo_[pointi] = changedPointsInfo[changedPointI];
 
         // Maintain count of unset points
-        if (!wasValid && allPointInfo_[pointI].valid(td_))
+        if (!wasValid && allPointInfo_[pointi].valid(td_))
         {
             --nUnvisitedPoints_;
         }
 
-        // Mark pointI as changed, both on list and on point itself.
+        // Mark pointi as changed, both on list and on point itself.
 
-        if (!changedPoint_[pointI])
+        if (!changedPoint_[pointi])
         {
-            changedPoint_[pointI] = true;
-            changedPoints_[nChangedPoints_++] = pointI;
+            changedPoint_[pointi] = true;
+            changedPoints_[nChangedPoints_++] = pointi;
         }
     }
 
@@ -1181,22 +1181,22 @@ CML::label CML::PointEdgeWave<Type, TrackingData>::pointToEdge()
         changedPointI++
     )
     {
-        label pointI = changedPoints_[changedPointI];
+        label pointi = changedPoints_[changedPointI];
 
-        if (!changedPoint_[pointI])
+        if (!changedPoint_[pointi])
         {
             FatalErrorInFunction
-                << "Point " << pointI
+                << "Point " << pointi
                 << " not marked as having been changed" << nl
                 << "This might be caused by multiple occurrences of the same"
                 << " seed point." << abort(FatalError);
         }
 
-        const Type& neighbourWallInfo = allPointInfo_[pointI];
+        const Type& neighbourWallInfo = allPointInfo_[pointi];
 
         // Evaluate all connected edges
 
-        const labelList& edgeLabels = pointEdges[pointI];
+        const labelList& edgeLabels = pointEdges[pointi];
         forAll(edgeLabels, edgeLabelI)
         {
             label edgeI = edgeLabels[edgeLabelI];
@@ -1208,7 +1208,7 @@ CML::label CML::PointEdgeWave<Type, TrackingData>::pointToEdge()
                 updateEdge
                 (
                     edgeI,
-                    pointI,
+                    pointi,
                     neighbourWallInfo,
                     currentWallInfo
                 );
@@ -1216,7 +1216,7 @@ CML::label CML::PointEdgeWave<Type, TrackingData>::pointToEdge()
         }
 
         // Reset status of point
-        changedPoint_[pointI] = false;
+        changedPoint_[pointi] = false;
     }
 
     // Handled all changed points by now

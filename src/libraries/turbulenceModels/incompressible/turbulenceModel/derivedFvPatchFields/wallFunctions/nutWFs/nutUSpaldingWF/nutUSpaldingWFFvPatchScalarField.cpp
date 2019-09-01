@@ -36,15 +36,15 @@ namespace incompressible
 
 tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::calcNut() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchI];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magGradU(mag(Uw.snGrad()));
     const tmp<volScalarField> tnu = turbModel.nu();
     const volScalarField& nu = tnu();
-    const scalarField& nuw = nu.boundaryField()[patchI];
+    const scalarField& nuw = nu.boundaryField()[patchi];
 
     return max
     (
@@ -59,18 +59,18 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::calcUTau
     const scalarField& magGradU
 ) const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
-    const scalarField& y = turbModel.y()[patchI];
+    const scalarField& y = turbModel.y()[patchi];
 
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchI];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magUp(mag(Uw.patchInternalField() - Uw));
 
     const tmp<volScalarField> tnu = turbModel.nu();
     const volScalarField& nu = tnu();
-    const scalarField& nuw = nu.boundaryField()[patchI];
+    const scalarField& nuw = nu.boundaryField()[patchi];
 
     const scalarField& nutw = *this;
 

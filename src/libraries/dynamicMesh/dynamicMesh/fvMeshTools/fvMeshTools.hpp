@@ -58,7 +58,7 @@ class fvMeshTools
     static void setPatchFields
     (
         fvMesh& mesh,
-        const label patchI,
+        const label patchi,
         const dictionary& patchFieldDict
     );
 
@@ -67,7 +67,7 @@ class fvMeshTools
     static void setPatchFields
     (
         fvMesh& mesh,
-        const label patchI,
+        const label patchi,
         const typename GeoField::value_type& value
     );
 
@@ -101,12 +101,12 @@ public:
     static void setPatchFields
     (
         fvMesh& mesh,
-        const label patchI,
+        const label patchi,
         const dictionary& patchFieldDict
     );
 
     //- Change patchField to zero on registered fields
-    static void zeroPatchFields(fvMesh& mesh, const label patchI);
+    static void zeroPatchFields(fvMesh& mesh, const label patchi);
 
     //- Reorder and remove trailing patches. If validBoundary call is parallel
     //  synced
@@ -207,7 +207,7 @@ template<class GeoField>
 void CML::fvMeshTools::setPatchFields
 (
     fvMesh& mesh,
-    const label patchI,
+    const label patchi,
     const dictionary& patchFieldDict
 )
 {
@@ -227,10 +227,10 @@ void CML::fvMeshTools::setPatchFields
         {
             bfld.set
             (
-                patchI,
+                patchi,
                 GeoField::PatchFieldType::New
                 (
-                    mesh.boundary()[patchI],
+                    mesh.boundary()[patchi],
                     fld.dimensionedInternalField(),
                     patchFieldDict.subDict(fld.name())
                 )
@@ -246,7 +246,7 @@ template<class GeoField>
 void CML::fvMeshTools::setPatchFields
 (
     fvMesh& mesh,
-    const label patchI,
+    const label patchi,
     const typename GeoField::value_type& value
 )
 {
@@ -262,7 +262,7 @@ void CML::fvMeshTools::setPatchFields
         typename GeoField::GeometricBoundaryField& bfld =
             fld.boundaryField();
 
-        bfld[patchI] == value;
+        bfld[patchi] == value;
     }
 }
 

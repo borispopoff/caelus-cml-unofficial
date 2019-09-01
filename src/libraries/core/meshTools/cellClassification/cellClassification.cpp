@@ -350,11 +350,11 @@ void CML::cellClassification::classifyPoints
 {
     pointSide.setSize(mesh_.nPoints());
 
-    forAll(mesh_.pointCells(), pointI)
+    forAll(mesh_.pointCells(), pointi)
     {
-        const labelList& pCells = mesh_.pointCells()[pointI];
+        const labelList& pCells = mesh_.pointCells()[pointi];
 
-        pointSide[pointI] = UNSET;
+        pointSide[pointi] = UNSET;
 
         forAll(pCells, i)
         {
@@ -362,26 +362,26 @@ void CML::cellClassification::classifyPoints
 
             if (type == meshType)
             {
-                if (pointSide[pointI] == UNSET)
+                if (pointSide[pointi] == UNSET)
                 {
-                    pointSide[pointI] = MESH;
+                    pointSide[pointi] = MESH;
                 }
-                else if (pointSide[pointI] == NONMESH)
+                else if (pointSide[pointi] == NONMESH)
                 {
-                    pointSide[pointI] = MIXED;
+                    pointSide[pointi] = MIXED;
 
                     break;
                 }
             }
             else
             {
-                if (pointSide[pointI] == UNSET)
+                if (pointSide[pointi] == UNSET)
                 {
-                    pointSide[pointI] = NONMESH;
+                    pointSide[pointi] = NONMESH;
                 }
-                else if (pointSide[pointI] == MESH)
+                else if (pointSide[pointi] == MESH)
                 {
-                    pointSide[pointI] = MIXED;
+                    pointSide[pointi] = MIXED;
 
                     break;
                 }
@@ -564,12 +564,12 @@ CML::label CML::cellClassification::trimCutCells
         classifyPoints(meshType, newCellType, pointSide);
 
         // Grow layer of outside cells
-        forAll(pointSide, pointI)
+        forAll(pointSide, pointi)
         {
-            if (pointSide[pointI] == MIXED)
+            if (pointSide[pointi] == MIXED)
             {
                 // Make cut
-                const labelList& pCells = mesh_.pointCells()[pointI];
+                const labelList& pCells = mesh_.pointCells()[pointi];
 
                 forAll(pCells, i)
                 {
@@ -622,9 +622,9 @@ CML::label CML::cellClassification::growSurface
 
     // Mark points used by meshType cells
 
-    forAll(mesh_.pointCells(), pointI)
+    forAll(mesh_.pointCells(), pointi)
     {
-        const labelList& myCells = mesh_.pointCells()[pointI];
+        const labelList& myCells = mesh_.pointCells()[pointi];
 
         // Check if one of cells has meshType
         forAll(myCells, myCellI)
@@ -633,7 +633,7 @@ CML::label CML::cellClassification::growSurface
 
             if (type == meshType)
             {
-                hasMeshType[pointI] = true;
+                hasMeshType[pointi] = true;
 
                 break;
             }
@@ -644,11 +644,11 @@ CML::label CML::cellClassification::growSurface
 
     label nChanged = 0;
 
-    forAll(hasMeshType, pointI)
+    forAll(hasMeshType, pointi)
     {
-        if (hasMeshType[pointI])
+        if (hasMeshType[pointi])
         {
-            const labelList& myCells = mesh_.pointCells()[pointI];
+            const labelList& myCells = mesh_.pointCells()[pointi];
 
             forAll(myCells, myCellI)
             {
@@ -689,11 +689,11 @@ CML::label CML::cellClassification::fillHangingCells
         // Check all cells using mixed point type for whether they use mixed
         // points only. Note: could probably speed this up by counting number
         // of mixed verts per face and mixed faces per cell or something?
-        forAll(pointSide, pointI)
+        forAll(pointSide, pointi)
         {
-            if (pointSide[pointI] == MIXED)
+            if (pointSide[pointi] == MIXED)
             {
-                const labelList& pCells = mesh_.pointCells()[pointI];
+                const labelList& pCells = mesh_.pointCells()[pointi];
 
                 forAll(pCells, i)
                 {
@@ -828,9 +828,9 @@ CML::label CML::cellClassification::fillRegionPoints
         forAllConstIter(labelHashSet, nonManifoldPoints, iter)
         {
             // Find a face on fp using point and remove it.
-            const label patchPointI = meshPointMap[iter.key()];
+            const label patchPointi = meshPointMap[iter.key()];
 
-            const labelList& pFaces = fp.pointFaces()[patchPointI];
+            const labelList& pFaces = fp.pointFaces()[patchPointi];
 
             // Remove any face using conflicting point. Does first face which
             // has not yet been done. Could be more intelligent and decide which

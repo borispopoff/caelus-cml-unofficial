@@ -109,9 +109,9 @@ void CML::cellToFace::combine(topoSet& set, const bool add) const
         // Get coupled cell status
         boolList neiInSet(mesh_.nFaces()-nInt, false);
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if (pp.coupled())
             {
@@ -127,9 +127,9 @@ void CML::cellToFace::combine(topoSet& set, const bool add) const
 
 
         // Check all boundary faces
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if (pp.coupled())
             {

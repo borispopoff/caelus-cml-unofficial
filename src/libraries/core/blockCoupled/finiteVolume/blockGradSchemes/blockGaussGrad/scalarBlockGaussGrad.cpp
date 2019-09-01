@@ -67,12 +67,12 @@ tmp<BlockLduSystem<vector, vector>> blockGaussGrad<scalar>::fvmGrad
     bs.negSumDiag();
 
     // Boundary contributions
-    forAll (vf.boundaryField(), patchI)
+    forAll (vf.boundaryField(), patchi)
     {
-        const fvPatchScalarField& pf = vf.boundaryField()[patchI];
+        const fvPatchScalarField& pf = vf.boundaryField()[patchi];
         const fvPatch& patch = pf.patch();
         const vectorField& pSf = patch.Sf();
-        const fvsPatchScalarField& pw = tweights().boundaryField()[patchI];
+        const fvsPatchScalarField& pw = tweights().boundaryField()[patchi];
         const labelList& fc = patch.faceCells();
 
         const scalarField internalCoeffs(pf.valueInternalCoeffs(pw));
@@ -86,9 +86,9 @@ tmp<BlockLduSystem<vector, vector>> blockGaussGrad<scalar>::fvmGrad
         if (patch.coupled())
         {
             CoeffField<vector>::linearTypeField& pcoupleUpper =
-                bs.coupleUpper()[patchI].asLinear();
+                bs.coupleUpper()[patchi].asLinear();
             CoeffField<vector>::linearTypeField& pcoupleLower =
-                bs.coupleLower()[patchI].asLinear();
+                bs.coupleLower()[patchi].asLinear();
 
             const vectorField pcl(-pw*pSf);
             const vectorField pcu(pcl + pSf);

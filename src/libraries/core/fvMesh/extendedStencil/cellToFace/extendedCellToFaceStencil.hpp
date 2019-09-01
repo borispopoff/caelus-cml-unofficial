@@ -141,9 +141,9 @@ void CML::extendedCellToFaceStencil::collectData
     }
     // Insert my boundary values
     label nCompact = fld.size();
-    forAll(fld.boundaryField(), patchI)
+    forAll(fld.boundaryField(), patchi)
     {
-        const fvPatchField<Type>& pfld = fld.boundaryField()[patchI];
+        const fvPatchField<Type>& pfld = fld.boundaryField()[patchi];
 
         forAll(pfld, i)
         {

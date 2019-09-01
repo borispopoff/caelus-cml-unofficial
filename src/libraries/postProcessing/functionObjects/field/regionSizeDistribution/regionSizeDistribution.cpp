@@ -469,9 +469,9 @@ void CML::regionSizeDistribution::write()
             }
 
             // Block coupled faces
-            forAll(alpha.boundaryField(), patchI)
+            forAll(alpha.boundaryField(), patchi)
             {
-                const fvPatchScalarField& fvp = alpha.boundaryField()[patchI];
+                const fvPatchScalarField& fvp = alpha.boundaryField()[patchi];
                 if (fvp.coupled())
                 {
                     tmp<scalarField> townFld(fvp.patchInternalField());

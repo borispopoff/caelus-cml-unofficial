@@ -123,17 +123,17 @@ public:
             reverseLinearWeights.internalField() =
                 1.0 - cdWeights.internalField();
 
-            forAll(mesh.boundary(), patchI)
+            forAll(mesh.boundary(), patchi)
             {
-                if (reverseLinearWeights.boundaryField()[patchI].coupled())
+                if (reverseLinearWeights.boundaryField()[patchi].coupled())
                 {
-                    reverseLinearWeights.boundaryField()[patchI] =
-                        1.0 - cdWeights.boundaryField()[patchI];
+                    reverseLinearWeights.boundaryField()[patchi] =
+                        1.0 - cdWeights.boundaryField()[patchi];
                 }
                 else
                 {
-                    reverseLinearWeights.boundaryField()[patchI] =
-                        cdWeights.boundaryField()[patchI];
+                    reverseLinearWeights.boundaryField()[patchi] =
+                        cdWeights.boundaryField()[patchi];
                 }
             }
 

@@ -55,9 +55,9 @@ void CML::nbrToCell::combine(topoSet& set, const bool add) const
 
     boolList isCoupled(mesh_.nFaces()-mesh_.nInternalFaces(), false);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {

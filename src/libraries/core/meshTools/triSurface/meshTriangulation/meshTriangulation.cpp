@@ -219,9 +219,9 @@ CML::meshTriangulation::meshTriangulation
     if (faceCentreDecomposition)
     {
         newPoints.setSize(mesh.nPoints() + faces.size());
-        forAll(mesh.points(), pointI)
+        forAll(mesh.points(), pointi)
         {
-            newPoints[pointI] = mesh.points()[pointI];
+            newPoints[pointi] = mesh.points()[pointi];
         }
         // Face centres
         forAll(faces, facei)
@@ -277,12 +277,12 @@ CML::meshTriangulation::meshTriangulation
             {
                 // Face will become outside of the surface.
 
-                label patchI = -1;
+                label patchi = -1;
                 bool reverse = false;
 
                 if (mesh.isInternalFace(facei))
                 {
-                    patchI = internalFacesPatch;
+                    patchi = internalFacesPatch;
 
                     // Check orientation. Check which side of the face gets
                     // included (note: only one side is).
@@ -299,7 +299,7 @@ CML::meshTriangulation::meshTriangulation
                 {
                     // Face was already outside so orientation ok.
 
-                    patchI = patches.whichPatch(facei);
+                    patchi = patches.whichPatch(facei);
 
                     reverse = false;
                 }
@@ -320,7 +320,7 @@ CML::meshTriangulation::meshTriangulation
                                 f.nextLabel(fp),
                                 f[fp],
                                 mesh.nPoints() + facei,     // face centre
-                                patchI
+                                patchi
                             );
                     }
                 }
@@ -336,7 +336,7 @@ CML::meshTriangulation::meshTriangulation
                                 f[fp],
                                 f.nextLabel(fp),
                                 mesh.nPoints() + facei,     // face centre
-                                patchI
+                                patchi
                             );
                     }
                 }
@@ -392,12 +392,12 @@ CML::meshTriangulation::meshTriangulation
             {
                 // Face will become outside of the surface.
 
-                label patchI = -1;
+                label patchi = -1;
                 bool reverse = false;
 
                 if (mesh.isInternalFace(facei))
                 {
-                    patchI = internalFacesPatch;
+                    patchi = internalFacesPatch;
 
                     // Check orientation. Check which side of the face gets
                     // included (note: only one side is).
@@ -414,7 +414,7 @@ CML::meshTriangulation::meshTriangulation
                 {
                     // Face was already outside so orientation ok.
 
-                    patchI = patches.whichPatch(facei);
+                    patchi = patches.whichPatch(facei);
 
                     reverse = false;
                 }
@@ -436,7 +436,7 @@ CML::meshTriangulation::meshTriangulation
                     (
                         faceTris,
                         facei,
-                        patchI,
+                        patchi,
                         reverse,    // whether to reverse
 
                         triangles,
@@ -457,14 +457,14 @@ CML::meshTriangulation::meshTriangulation
 
     geometricSurfacePatchList surfPatches(patches.size());
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        surfPatches[patchI] =
+        surfPatches[patchi] =
             geometricSurfacePatch
             (
-                patches[patchI].physicalType(),
-                patches[patchI].name(),
-                patchI
+                patches[patchi].physicalType(),
+                patches[patchi].name(),
+                patchi
             );
     }
 

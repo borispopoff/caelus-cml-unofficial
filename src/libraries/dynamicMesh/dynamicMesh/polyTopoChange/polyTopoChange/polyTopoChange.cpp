@@ -202,10 +202,10 @@ void CML::polyTopoChange::writeMeshStats(const polyMesh& mesh, Ostream& os)
 
     labelList patchSizes(patches.size());
     labelList patchStarts(patches.size());
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        patchSizes[patchI] = patches[patchI].size();
-        patchStarts[patchI] = patches[patchI].start();
+        patchSizes[patchi] = patches[patchi].size();
+        patchStarts[patchi] = patches[patchi].start();
     }
 
     os  << "    Points      : " << mesh.nPoints() << nl
@@ -333,7 +333,7 @@ void CML::polyTopoChange::checkFace
     const label facei,
     const label own,
     const label nei,
-    const label patchI,
+    const label patchi,
     const label zoneI
 ) const
 {
@@ -343,7 +343,7 @@ void CML::polyTopoChange::checkFace
         {
             // retired face
         }
-        else if (patchI == -1 || patchI >= nPatches_)
+        else if (patchi == -1 || patchi >= nPatches_)
         {
             FatalErrorInFunction
                 << "Face has no neighbour (so external) but does not have"
@@ -351,7 +351,7 @@ void CML::polyTopoChange::checkFace
                 << "f:" << f
                 << " facei(-1 if added face):" << facei
                 << " own:" << own << " nei:" << nei
-                << " patchI:" << patchI << nl;
+                << " patchi:" << patchi << nl;
             if (hasValidPoints(f))
             {
                 FatalError
@@ -363,14 +363,14 @@ void CML::polyTopoChange::checkFace
     }
     else
     {
-        if (patchI != -1)
+        if (patchi != -1)
         {
             FatalErrorInFunction
-                << "Cannot both have valid patchI and neighbour" << nl
+                << "Cannot both have valid patchi and neighbour" << nl
                 << "f:" << f
                 << " facei(-1 if added face):" << facei
                 << " own:" << own << " nei:" << nei
-                << " patchI:" << patchI << nl;
+                << " patchi:" << patchi << nl;
             if (hasValidPoints(f))
             {
                 FatalError
@@ -388,7 +388,7 @@ void CML::polyTopoChange::checkFace
                 << "f:" << f
                 << " facei(-1 if added face):" << facei
                 << " own:" << own << " nei:" << nei
-                << " patchI:" << patchI << nl;
+                << " patchi:" << patchi << nl;
             if (hasValidPoints(f))
             {
                 FatalError
@@ -407,7 +407,7 @@ void CML::polyTopoChange::checkFace
             << "f:" << f
             << " facei(-1 if added face):" << facei
             << " own:" << own << " nei:" << nei
-            << " patchI:" << patchI << nl;
+            << " patchi:" << patchi << nl;
             if (hasValidPoints(f))
             {
                 FatalError
@@ -424,7 +424,7 @@ void CML::polyTopoChange::checkFace
             << "f:" << f
             << " facei(-1 if added face):" << facei
             << " own:" << own << " nei:" << nei
-            << " patchI:" << patchI << nl;
+            << " patchi:" << patchi << nl;
             if (hasValidPoints(f))
             {
                 FatalError
@@ -443,7 +443,7 @@ void CML::polyTopoChange::checkFace
                 << "f:" << f
                 << " facei(-1 if added face):" << facei
                 << " own:" << own << " nei:" << nei
-                << " patchI:" << patchI << nl;
+                << " patchi:" << patchi << nl;
             if (hasValidPoints(f))
             {
                 FatalError
@@ -748,10 +748,10 @@ void CML::polyTopoChange::getFaceOrder
 
     label facei = patchStarts[0];
 
-    forAll(patchStarts, patchI)
+    forAll(patchStarts, patchi)
     {
-        patchStarts[patchI] = facei;
-        facei += patchSizes[patchI];
+        patchStarts[patchi] = facei;
+        facei += patchSizes[patchi];
     }
 
     //if (debug)
@@ -871,26 +871,26 @@ void CML::polyTopoChange::compact
     label nActivePoints = 0;
     {
         labelList localPointMap(points_.size(), -1);
-        label newPointI = 0;
+        label newPointi = 0;
 
         if (!orderPoints)
         {
             nInternalPoints = -1;
 
-            forAll(points_, pointI)
+            forAll(points_, pointi)
             {
-                if (!pointRemoved(pointI) && !retiredPoints_.found(pointI))
+                if (!pointRemoved(pointi) && !retiredPoints_.found(pointi))
                 {
-                    localPointMap[pointI] = newPointI++;
+                    localPointMap[pointi] = newPointi++;
                 }
             }
-            nActivePoints = newPointI;
+            nActivePoints = newPointi;
         }
         else
         {
-            forAll(points_, pointI)
+            forAll(points_, pointi)
             {
-                if (!pointRemoved(pointI) && !retiredPoints_.found(pointI))
+                if (!pointRemoved(pointi) && !retiredPoints_.found(pointi))
                 {
                     nActivePoints++;
                 }
@@ -911,42 +911,42 @@ void CML::polyTopoChange::compact
 
                     forAll(f, fp)
                     {
-                        label pointI = f[fp];
+                        label pointi = f[fp];
 
-                        if (localPointMap[pointI] == -1)
+                        if (localPointMap[pointi] == -1)
                         {
                             if
                             (
-                                pointRemoved(pointI)
-                             || retiredPoints_.found(pointI)
+                                pointRemoved(pointi)
+                             || retiredPoints_.found(pointi)
                             )
                             {
                                 FatalErrorInFunction
-                                    << "Removed or retired point " << pointI
+                                    << "Removed or retired point " << pointi
                                     << " in face " << f
                                     << " at position " << facei << endl
                                     << "Probably face has not been adapted for"
                                     << " removed points." << abort(FatalError);
                             }
-                            localPointMap[pointI] = newPointI++;
+                            localPointMap[pointi] = newPointi++;
                         }
                     }
                 }
             }
 
-            label nBoundaryPoints = newPointI;
+            label nBoundaryPoints = newPointi;
             nInternalPoints = nActivePoints - nBoundaryPoints;
 
             // Move the boundary addressing up
-            forAll(localPointMap, pointI)
+            forAll(localPointMap, pointi)
             {
-                if (localPointMap[pointI] != -1)
+                if (localPointMap[pointi] != -1)
                 {
-                    localPointMap[pointI] += nInternalPoints;
+                    localPointMap[pointi] += nInternalPoints;
                 }
             }
 
-            newPointI = 0;
+            newPointi = 0;
 
             // Mark internal points
             forAll(faceOwner_, facei)
@@ -963,55 +963,55 @@ void CML::polyTopoChange::compact
 
                     forAll(f, fp)
                     {
-                        label pointI = f[fp];
+                        label pointi = f[fp];
 
-                        if (localPointMap[pointI] == -1)
+                        if (localPointMap[pointi] == -1)
                         {
                             if
                             (
-                                pointRemoved(pointI)
-                             || retiredPoints_.found(pointI)
+                                pointRemoved(pointi)
+                             || retiredPoints_.found(pointi)
                             )
                             {
                                 FatalErrorInFunction
-                                    << "Removed or retired point " << pointI
+                                    << "Removed or retired point " << pointi
                                     << " in face " << f
                                     << " at position " << facei << endl
                                     << "Probably face has not been adapted for"
                                     << " removed points." << abort(FatalError);
                             }
-                            localPointMap[pointI] = newPointI++;
+                            localPointMap[pointi] = newPointi++;
                         }
                     }
                 }
             }
 
-            if (newPointI != nInternalPoints)
+            if (newPointi != nInternalPoints)
             {
                 FatalErrorInFunction
                     << "Problem." << abort(FatalError);
             }
-            newPointI = nActivePoints;
+            newPointi = nActivePoints;
         }
 
         forAllConstIter(labelHashSet, retiredPoints_, iter)
         {
-            localPointMap[iter.key()] = newPointI++;
+            localPointMap[iter.key()] = newPointi++;
         }
 
 
         if (debug)
         {
             Pout<< "Points : active:" << nActivePoints
-                << "  removed:" << points_.size()-newPointI << endl;
+                << "  removed:" << points_.size()-newPointi << endl;
         }
 
         reorder(localPointMap, points_);
-        points_.setCapacity(newPointI);
+        points_.setCapacity(newPointi);
 
         // Update pointMaps
         reorder(localPointMap, pointMap_);
-        pointMap_.setCapacity(newPointI);
+        pointMap_.setCapacity(newPointi);
         renumberReverseMap(localPointMap, reversePointMap_);
 
         renumberKey(localPointMap, pointZone_);
@@ -1263,13 +1263,13 @@ void CML::polyTopoChange::calcPatchPointMap
 {
     patchPointMap.setSize(boundary.size());
 
-    forAll(boundary, patchI)
+    forAll(boundary, patchi)
     {
-        const labelList& meshPoints = boundary[patchI].meshPoints();
+        const labelList& meshPoints = boundary[patchi].meshPoints();
 
-        const Map<label>& oldMeshPointMap = oldPatchMeshPointMaps[patchI];
+        const Map<label>& oldMeshPointMap = oldPatchMeshPointMaps[patchi];
 
-        labelList& curPatchPointRnb = patchPointMap[patchI];
+        labelList& curPatchPointRnb = patchPointMap[patchi];
 
         curPatchPointRnb.setSize(meshPoints.size());
 
@@ -1827,28 +1827,28 @@ void CML::polyTopoChange::calcFaceZonePointMap
 
         curFzPointRnb.setSize(newZoneMeshPoints.size());
 
-        forAll(newZoneMeshPoints, pointI)
+        forAll(newZoneMeshPoints, pointi)
         {
-            if (newZoneMeshPoints[pointI] < pointMap_.size())
+            if (newZoneMeshPoints[pointi] < pointMap_.size())
             {
                 Map<label>::const_iterator ozmpmIter =
                     oldZoneMeshPointMap.find
                     (
-                        pointMap_[newZoneMeshPoints[pointI]]
+                        pointMap_[newZoneMeshPoints[pointi]]
                     );
 
                 if (ozmpmIter != oldZoneMeshPointMap.end())
                 {
-                    curFzPointRnb[pointI] = ozmpmIter();
+                    curFzPointRnb[pointi] = ozmpmIter();
                 }
                 else
                 {
-                    curFzPointRnb[pointI] = -1;
+                    curFzPointRnb[pointi] = -1;
                 }
             }
             else
             {
-                curFzPointRnb[pointI] = -1;
+                curFzPointRnb[pointi] = -1;
             }
         }
     }
@@ -1898,11 +1898,11 @@ void CML::polyTopoChange::reorderCoupledFaces
     PstreamBuffers pBufs(Pstream::nonBlocking);
 
     // Send ordering
-    forAll(boundary, patchI)
+    forAll(boundary, patchi)
     {
-        if (syncParallel || !isA<processorPolyPatch>(boundary[patchI]))
+        if (syncParallel || !isA<processorPolyPatch>(boundary[patchi]))
         {
-            boundary[patchI].initOrder
+            boundary[patchi].initOrder
             (
                 pBufs,
                 primitivePatch
@@ -1910,8 +1910,8 @@ void CML::polyTopoChange::reorderCoupledFaces
                     SubList<face>
                     (
                         faces_,
-                        patchSizes[patchI],
-                        patchStarts[patchI]
+                        patchSizes[patchi],
+                        patchStarts[patchi]
                     ),
                     points
                 )
@@ -1928,14 +1928,14 @@ void CML::polyTopoChange::reorderCoupledFaces
 
     bool anyChanged = false;
 
-    forAll(boundary, patchI)
+    forAll(boundary, patchi)
     {
-        if (syncParallel || !isA<processorPolyPatch>(boundary[patchI]))
+        if (syncParallel || !isA<processorPolyPatch>(boundary[patchi]))
         {
-            labelList patchFaceMap(patchSizes[patchI], -1);
-            labelList patchFaceRotation(patchSizes[patchI], 0);
+            labelList patchFaceMap(patchSizes[patchi], -1);
+            labelList patchFaceRotation(patchSizes[patchi], 0);
 
-            bool changed = boundary[patchI].order
+            bool changed = boundary[patchi].order
             (
                 pBufs,
                 primitivePatch
@@ -1943,8 +1943,8 @@ void CML::polyTopoChange::reorderCoupledFaces
                     SubList<face>
                     (
                         faces_,
-                        patchSizes[patchI],
-                        patchStarts[patchI]
+                        patchSizes[patchi],
+                        patchStarts[patchi]
                     ),
                     points
                 ),
@@ -1955,7 +1955,7 @@ void CML::polyTopoChange::reorderCoupledFaces
             if (changed)
             {
                 // Merge patch face reordering into mesh face reordering table
-                label start = patchStarts[patchI];
+                label start = patchStarts[patchi];
 
                 forAll(patchFaceMap, patchFaceI)
                 {
@@ -2105,12 +2105,12 @@ void CML::polyTopoChange::compactAndReorder
     oldPatchNMeshPoints.setSize(boundary.size());
     oldPatchStarts.setSize(boundary.size());
 
-    forAll(boundary, patchI)
+    forAll(boundary, patchi)
     {
         // Copy old face zone mesh point maps
-        oldPatchMeshPointMaps[patchI] = boundary[patchI].meshPointMap();
-        oldPatchNMeshPoints[patchI] = boundary[patchI].meshPoints().size();
-        oldPatchStarts[patchI] = boundary[patchI].start();
+        oldPatchMeshPointMaps[patchi] = boundary[patchi].meshPointMap();
+        oldPatchNMeshPoints[patchi] = boundary[patchi].meshPoints().size();
+        oldPatchStarts[patchi] = boundary[patchi].start();
     }
 
     // Grab old face zone mesh point maps.
@@ -2278,13 +2278,13 @@ void CML::polyTopoChange::addMesh
         }
 
         // Add points in mesh order
-        for (label pointI = 0; pointI < mesh.nPoints(); pointI++)
+        for (label pointi = 0; pointi < mesh.nPoints(); pointi++)
         {
             addPoint
             (
-                points[pointI],
-                pointI,
-                newZoneID[pointI],
+                points[pointi],
+                pointi,
+                newZoneID[pointi],
                 true
             );
         }
@@ -2406,9 +2406,9 @@ void CML::polyTopoChange::addMesh
         }
 
         // 2. Patch faces
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if (pp.start() != faces_.size())
             {
@@ -2433,7 +2433,7 @@ void CML::polyTopoChange::addMesh
                     -1,                         // masterEdgeID
                     facei,                      // masterFaceID
                     false,                      // flipFaceFlux
-                    patchMap[patchI],           // patchID
+                    patchMap[patchi],           // patchID
                     newZoneID[facei],           // zoneID
                     zoneFlip[facei]             // zoneFlip
                 );
@@ -2612,50 +2612,50 @@ CML::label CML::polyTopoChange::addPoint
     const bool inCell
 )
 {
-    label pointI = points_.size();
+    label pointi = points_.size();
 
     points_.append(pt);
     pointMap_.append(masterPointID);
-    reversePointMap_.append(pointI);
+    reversePointMap_.append(pointi);
 
     if (zoneID >= 0)
     {
-        pointZone_.insert(pointI, zoneID);
+        pointZone_.insert(pointi, zoneID);
     }
 
     if (!inCell)
     {
-        retiredPoints_.insert(pointI);
+        retiredPoints_.insert(pointi);
     }
 
-    return pointI;
+    return pointi;
 }
 
 
 void CML::polyTopoChange::modifyPoint
 (
-    const label pointI,
+    const label pointi,
     const point& pt,
     const label newZoneID,
     const bool inCell
 )
 {
-    if (pointI < 0 || pointI >= points_.size())
+    if (pointi < 0 || pointi >= points_.size())
     {
         FatalErrorInFunction
-            << "illegal point label " << pointI << endl
+            << "illegal point label " << pointi << endl
             << "Valid point labels are 0 .. " << points_.size()-1
             << abort(FatalError);
     }
-    if (pointRemoved(pointI) || pointMap_[pointI] == -1)
+    if (pointRemoved(pointi) || pointMap_[pointi] == -1)
     {
         FatalErrorInFunction
-            << "point " << pointI << " already marked for removal"
+            << "point " << pointi << " already marked for removal"
             << abort(FatalError);
     }
-    points_[pointI] = pt;
+    points_[pointi] = pt;
 
-    Map<label>::iterator pointFnd = pointZone_.find(pointI);
+    Map<label>::iterator pointFnd = pointZone_.find(pointi);
 
     if (pointFnd != pointZone_.end())
     {
@@ -2670,16 +2670,16 @@ void CML::polyTopoChange::modifyPoint
     }
     else if (newZoneID >= 0)
     {
-        pointZone_.insert(pointI, newZoneID);
+        pointZone_.insert(pointi, newZoneID);
     }
 
     if (inCell)
     {
-        retiredPoints_.erase(pointI);
+        retiredPoints_.erase(pointi);
     }
     else
     {
-        retiredPoints_.insert(pointI);
+        retiredPoints_.insert(pointi);
     }
 }
 
@@ -2695,23 +2695,23 @@ void CML::polyTopoChange::movePoints(const pointField& newPoints)
             << abort(FatalError);
     }
 
-    forAll(points_, pointI)
+    forAll(points_, pointi)
     {
-        points_[pointI] = newPoints[pointI];
+        points_[pointi] = newPoints[pointi];
     }
 }
 
 
 void CML::polyTopoChange::removePoint
 (
-    const label pointI,
+    const label pointi,
     const label mergePointI
 )
 {
-    if (pointI < 0 || pointI >= points_.size())
+    if (pointi < 0 || pointi >= points_.size())
     {
         FatalErrorInFunction
-            << "illegal point label " << pointI << endl
+            << "illegal point label " << pointi << endl
             << "Valid point labels are 0 .. " << points_.size()-1
             << abort(FatalError);
     }
@@ -2719,34 +2719,34 @@ void CML::polyTopoChange::removePoint
     if
     (
         strict_
-     && (pointRemoved(pointI) || pointMap_[pointI] == -1)
+     && (pointRemoved(pointi) || pointMap_[pointi] == -1)
     )
     {
         FatalErrorInFunction
-            << "point " << pointI << " already marked for removal" << nl
-            << "Point:" << points_[pointI] << " pointMap:" << pointMap_[pointI]
+            << "point " << pointi << " already marked for removal" << nl
+            << "Point:" << points_[pointi] << " pointMap:" << pointMap_[pointi]
             << abort(FatalError);
     }
 
-    if (pointI == mergePointI)
+    if (pointi == mergePointI)
     {
         FatalErrorInFunction
-            << "Cannot remove/merge point " << pointI << " onto itself."
+            << "Cannot remove/merge point " << pointi << " onto itself."
             << abort(FatalError);
     }
 
-    points_[pointI] = point::max;
-    pointMap_[pointI] = -1;
+    points_[pointi] = point::max;
+    pointMap_[pointi] = -1;
     if (mergePointI >= 0)
     {
-        reversePointMap_[pointI] = -mergePointI-2;
+        reversePointMap_[pointi] = -mergePointI-2;
     }
     else
     {
-        reversePointMap_[pointI] = -1;
+        reversePointMap_[pointi] = -1;
     }
-    pointZone_.erase(pointI);
-    retiredPoints_.erase(pointI);
+    pointZone_.erase(pointi);
+    retiredPoints_.erase(pointi);
 }
 
 
@@ -3070,17 +3070,17 @@ CML::autoPtr<CML::mapPolyMesh> CML::polyTopoChange::changeMesh
         // (appended points (i.e. from nowhere) get value zero)
         pointField renumberedMeshPoints(newPoints.size());
 
-        forAll(pointMap_, newPointI)
+        forAll(pointMap_, newPointi)
         {
-            label oldPointI = pointMap_[newPointI];
+            label oldPointi = pointMap_[newPointi];
 
-            if (oldPointI >= 0)
+            if (oldPointi >= 0)
             {
-                renumberedMeshPoints[newPointI] = mesh.points()[oldPointI];
+                renumberedMeshPoints[newPointi] = mesh.points()[oldPointi];
             }
             else
             {
-                renumberedMeshPoints[newPointI] = Zero;
+                renumberedMeshPoints[newPointi] = Zero;
             }
         }
 
@@ -3383,14 +3383,14 @@ CML::autoPtr<CML::mapPolyMesh> CML::polyTopoChange::makeMesh
 
         List<polyPatch*> newBoundary(oldPatches.size());
 
-        forAll(oldPatches, patchI)
+        forAll(oldPatches, patchi)
         {
-            newBoundary[patchI] = oldPatches[patchI].clone
+            newBoundary[patchi] = oldPatches[patchi].clone
             (
                 newMesh.boundaryMesh(),
-                patchI,
-                patchSizes[patchI],
-                patchStarts[patchI]
+                patchi,
+                patchSizes[patchi],
+                patchStarts[patchi]
             ).ptr();
         }
         newMesh.addFvPatches(newBoundary);

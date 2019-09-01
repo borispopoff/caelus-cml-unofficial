@@ -53,13 +53,13 @@ void CML::enrichedPatch::calcPointPoints() const
     {
         const face& curFace = lf[facei];
 
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
             DynamicList<label, primitiveMesh::edgesPerPoint_>&
-                curPp = pp[curFace[pointI]];
+                curPp = pp[curFace[pointi]];
 
             // Do next label
-            label next = curFace.nextLabel(pointI);
+            label next = curFace.nextLabel(pointi);
 
             found = false;
 
@@ -78,7 +78,7 @@ void CML::enrichedPatch::calcPointPoints() const
             }
 
             // Do previous label
-            label prev = curFace.prevLabel(pointI);
+            label prev = curFace.prevLabel(pointi);
             found = false;
 
             forAll(curPp, i)
@@ -101,9 +101,9 @@ void CML::enrichedPatch::calcPointPoints() const
     pointPointsPtr_ = new labelListList(pp.size());
     labelListList& ppAddr = *pointPointsPtr_;
 
-    forAll(pp, pointI)
+    forAll(pp, pointi)
     {
-        ppAddr[pointI].transfer(pp[pointI]);
+        ppAddr[pointi].transfer(pp[pointi]);
     }
 }
 

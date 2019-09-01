@@ -137,18 +137,18 @@ void CML::targetVolumeToCell::combine(topoSet& set, const bool add) const
 
 //        label minPointI = -1;
         label maxPointI = -1;
-        forAll(points, pointI)
+        forAll(points, pointi)
         {
-            scalar c = (points[pointI]&n_);
+            scalar c = (points[pointi]&n_);
             if (c > maxComp)
             {
                 maxComp = c;
-                maxPointI = pointI;
+                maxPointI = pointi;
             }
             else if (c < minComp)
             {
                 minComp = c;
-//                minPointI = pointI;
+//                minPointI = pointi;
             }
         }
 

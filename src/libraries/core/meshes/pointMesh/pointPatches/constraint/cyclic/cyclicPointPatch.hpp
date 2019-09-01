@@ -123,8 +123,8 @@ public:
             //- Return neighbour point patch
             const cyclicPointPatch& neighbPatch() const
             {
-                label patchI = cyclicPolyPatch_.neighbPatchID();
-                const pointPatch& pp = this->boundaryMesh()[patchI];
+                label patchi = cyclicPolyPatch_.neighbPatchID();
+                const pointPatch& pp = this->boundaryMesh()[patchi];
                 return refCast<const cyclicPointPatch>(pp);
             }
 

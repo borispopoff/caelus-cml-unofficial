@@ -152,11 +152,11 @@ void epsilonWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbulence =
         db().lookupObject<turbulenceModel>(turbulenceModel::typeName);
-    const scalarField& y = turbulence.y()[patchI];
+    const scalarField& y = turbulence.y()[patchi];
 
     const scalar Cmu25 = pow025(Cmu_);
     const scalar Cmu75 = pow(Cmu_, 0.75);
@@ -174,13 +174,13 @@ void epsilonWallFunctionFvPatchScalarField::updateCoeffs()
     const volScalarField& k = tk();
 
     const tmp<volScalarField> tnu = turbulence.nu();
-    const scalarField& nuw = tnu().boundaryField()[patchI];
+    const scalarField& nuw = tnu().boundaryField()[patchi];
 
     const tmp<volScalarField> tnut = turbulence.nut();
     const volScalarField& nut = tnut();
-    const scalarField& nutw = nut.boundaryField()[patchI];
+    const scalarField& nutw = nut.boundaryField()[patchi];
 
-    const fvPatchVectorField& Uw = turbulence.U().boundaryField()[patchI];
+    const fvPatchVectorField& Uw = turbulence.U().boundaryField()[patchi];
 
     const scalarField magGradUw(mag(Uw.snGrad()));
 

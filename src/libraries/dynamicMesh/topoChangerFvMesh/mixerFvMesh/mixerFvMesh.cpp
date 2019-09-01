@@ -222,9 +222,9 @@ void CML::mixerFvMesh::calcMovingMasks() const
             // Mark all the points as moving
             const face& curFace = f[curCell[facei]];
 
-            forAll(curFace, pointI)
+            forAll(curFace, pointi)
             {
-                movingPointsMask[curFace[pointI]] = 1;
+                movingPointsMask[curFace[pointi]] = 1;
             }
         }
     }
@@ -241,9 +241,9 @@ void CML::mixerFvMesh::calcMovingMasks() const
     {
         const face& curFace = f[innerSliderAddr[facei]];
 
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
-            movingPointsMask[curFace[pointI]] = 1;
+            movingPointsMask[curFace[pointi]] = 1;
         }
     }
 
@@ -259,9 +259,9 @@ void CML::mixerFvMesh::calcMovingMasks() const
     {
         const face& curFace = f[outerSliderAddr[facei]];
 
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
-            movingPointsMask[curFace[pointI]] = 0;
+            movingPointsMask[curFace[pointi]] = 0;
         }
     }
 }

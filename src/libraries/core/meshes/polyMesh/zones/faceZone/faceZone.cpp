@@ -464,9 +464,9 @@ bool CML::faceZone::checkParallelSync(const bool report) const
         forAll(*this, i)
         {
             const label facei = operator[](i);
-            const label patchI = bm.whichPatch(facei);
+            const label patchi = bm.whichPatch(facei);
 
-            if (patchI != -1 && bm[patchI].coupled())
+            if (patchi != -1 && bm[patchi].coupled())
             {
                 const label bFaceI = facei-mesh.nInternalFaces();
 
@@ -481,7 +481,7 @@ bool CML::faceZone::checkParallelSync(const bool report) const
                             << " named " << name()
                             << ". Face " << facei
                             << " on coupled patch "
-                            << bm[patchI].name()
+                            << bm[patchi].name()
                             << " is not consistent with its coupled neighbour."
                             << endl;
                     }
@@ -502,7 +502,7 @@ bool CML::faceZone::checkParallelSync(const bool report) const
                             << " named " << name()
                             << ". Face " << facei
                             << " on coupled patch "
-                            << bm[patchI].name()
+                            << bm[patchi].name()
                             << " does not have consistent flipMap"
                             << " across coupled faces."
                             << endl;

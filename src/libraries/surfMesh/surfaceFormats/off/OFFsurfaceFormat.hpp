@@ -172,7 +172,7 @@ bool CML::fileFormats::OFFsurfaceFormat<Face>::read
 
     // Read points
     pointField pointLst(nPoints);
-    forAll(pointLst, pointI)
+    forAll(pointLst, pointi)
     {
         scalar x, y, z;
         line = this->getLineNoComment(is);
@@ -180,7 +180,7 @@ bool CML::fileFormats::OFFsurfaceFormat<Face>::read
             IStringStream lineStream(line);
             lineStream >> x >> y >> z;
         }
-        pointLst[pointI] = point(x, y, z);
+        pointLst[pointi] = point(x, y, z);
     }
 
     // Read faces - ignore optional zone information

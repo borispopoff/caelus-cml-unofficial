@@ -48,12 +48,12 @@ namespace CML
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Returns number of feature edges connected to pointI
-CML::label CML::boundaryMesh::nFeatureEdges(label pointI) const
+// Returns number of feature edges connected to pointi
+CML::label CML::boundaryMesh::nFeatureEdges(label pointi) const
 {
     label nFeats = 0;
 
-    const labelList& pEdges = mesh().pointEdges()[pointI];
+    const labelList& pEdges = mesh().pointEdges()[pointi];
 
     forAll(pEdges, pEdgeI)
     {
@@ -68,7 +68,7 @@ CML::label CML::boundaryMesh::nFeatureEdges(label pointI) const
 }
 
 
-// Returns next feature edge connected to pointI
+// Returns next feature edge connected to pointi
 CML::label CML::boundaryMesh::nextFeatureEdge
 (
     const label edgeI,
@@ -96,7 +96,7 @@ CML::label CML::boundaryMesh::nextFeatureEdge
 }
 
 
-// Finds connected feature edges, starting from startPointI and returns
+// Finds connected feature edges, starting from startPointi and returns
 // feature labels (not edge labels). Marks feature edges handled in
 // featVisited.
 CML::labelList CML::boundaryMesh::collectSegment
@@ -253,11 +253,11 @@ CML::label CML::boundaryMesh::findPatchID
     const word& patchName
 ) const
 {
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (patches[patchI].name() == patchName)
+        if (patches[patchi].name() == patchName)
         {
-            return patchI;
+            return patchi;
         }
     }
 
@@ -269,9 +269,9 @@ CML::wordList CML::boundaryMesh::patchNames() const
 {
     wordList names(patches_.size());
 
-    forAll(patches_, patchI)
+    forAll(patches_, patchi)
     {
-        names[patchI] = patches_[patchI].name();
+        names[patchi] = patches_[patchi].name();
     }
     return names;
 }
@@ -283,13 +283,13 @@ CML::label CML::boundaryMesh::whichPatch
     const label facei
 ) const
 {
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if ((facei >= pp.start()) && (facei < (pp.start() + pp.size())))
         {
-            return patchI;
+            return patchi;
         }
     }
     return -1;
@@ -482,17 +482,17 @@ void CML::boundaryMesh::read(const polyMesh& mesh)
     label bFaceI = 0;
 
     // Collect all boundary faces.
-    forAll(mesh.boundaryMesh(), patchI)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        const polyPatch& pp = mesh.boundaryMesh()[patchI];
+        const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
         patches_.set
         (
-            patchI,
+            patchi,
             new boundaryPatch
             (
                 pp.name(),
-                patchI,
+                patchi,
                 pp.size(),
                 bFaceI,
                 pp.type()
@@ -515,9 +515,9 @@ void CML::boundaryMesh::read(const polyMesh& mesh)
     {
         Pout<< "read : patches now:" << endl;
 
-        forAll(patches_, patchI)
+        forAll(patches_, patchi)
         {
-            const boundaryPatch& bp = patches_[patchI];
+            const boundaryPatch& bp = patches_[patchi];
 
             Pout<< "    name  : " << bp.name() << endl
                 << "    size  : " << bp.size() << endl
@@ -572,10 +572,10 @@ void CML::boundaryMesh::read(const polyMesh& mesh)
 
         Pout<< "** Start of Points **" << endl;
 
-        forAll(msh.points(), pointI)
+        forAll(msh.points(), pointi)
         {
-            Pout<< "    " << pointI
-                << " coord:" << msh.points()[pointI]
+            Pout<< "    " << pointi
+                << " coord:" << msh.points()[pointi]
                 << endl;
         }
 
@@ -643,17 +643,17 @@ void CML::boundaryMesh::readTriSurface(const fileName& fName)
         patches_.setSize(surfPatches.size());
 
         // Take over patches, setting size to 0 for now.
-        forAll(surfPatches, patchI)
+        forAll(surfPatches, patchi)
         {
-            const geometricSurfacePatch& surfPatch = surfPatches[patchI];
+            const geometricSurfacePatch& surfPatch = surfPatches[patchi];
 
             patches_.set
             (
-                patchI,
+                patchi,
                 new boundaryPatch
                 (
                     surfPatch.name(),
-                    patchI,
+                    patchi,
                     0,
                     0,
                     surfPatch.geometricType()
@@ -667,15 +667,15 @@ void CML::boundaryMesh::readTriSurface(const fileName& fName)
 
         patches_.setSize(regionToBoundaryPatch.size());
 
-        forAll(patches_, patchI)
+        forAll(patches_, patchi)
         {
             patches_.set
             (
-                patchI,
+                patchi,
                 new boundaryPatch
                 (
-                    "patch" + name(patchI),
-                    patchI,
+                    "patch" + name(patchi),
+                    patchi,
                     0,
                     0,
                     "empty"
@@ -769,16 +769,16 @@ void CML::boundaryMesh::writeTriSurface(const fileName& fName) const
 {
     geometricSurfacePatchList surfPatches(patches_.size());
 
-    forAll(patches_, patchI)
+    forAll(patches_, patchi)
     {
-        const boundaryPatch& bp = patches_[patchI];
+        const boundaryPatch& bp = patches_[patchi];
 
-        surfPatches[patchI] =
+        surfPatches[patchi] =
             geometricSurfacePatch
             (
                 bp.physicalType(),
                 bp.name(),
-                patchI
+                patchi
             );
     }
 
@@ -814,9 +814,9 @@ void CML::boundaryMesh::writeTriSurface(const fileName& fName) const
 
     triI = 0;
 
-    forAll(patches_, patchI)
+    forAll(patches_, patchi)
     {
-        const boundaryPatch& bp = patches_[patchI];
+        const boundaryPatch& bp = patches_[patchi];
 
         forAll(bp, patchFaceI)
         {
@@ -830,7 +830,7 @@ void CML::boundaryMesh::writeTriSurface(const fileName& fName) const
                 label v1 = triVerts[triVertI++];
                 label v2 = triVerts[triVertI++];
 
-                tris[triI++] = labelledTri(v0, v1, v2, patchI);
+                tris[triI++] = labelledTri(v0, v1, v2, patchi);
             }
         }
     }
@@ -1231,9 +1231,9 @@ void CML::boundaryMesh::patchify
     {
         Pout<< "Patchify : new polyPatch list:" << endl;
 
-        forAll(newPatchPtrList, patchI)
+        forAll(newPatchPtrList, patchi)
         {
-            const polyPatch& newPatch = *newPatchPtrList[patchI];
+            const polyPatch& newPatch = *newPatchPtrList[patchi];
 
             if (debug)
             {
@@ -1241,7 +1241,7 @@ void CML::boundaryMesh::patchify
                     << "    type :" << newPatch.typeName << endl
                     << "    size :" << newPatch.size() << endl
                     << "    start:" << newPatch.start() << endl
-                    << "    index:" << patchI << endl;
+                    << "    index:" << patchi << endl;
             }
         }
     }
@@ -1531,13 +1531,13 @@ void CML::boundaryMesh::setExtraEdges(const label edgeI)
 
 CML::label CML::boundaryMesh::whichPatch(const label facei) const
 {
-    forAll(patches_, patchI)
+    forAll(patches_, patchi)
     {
-        const boundaryPatch& bp = patches_[patchI];
+        const boundaryPatch& bp = patches_[patchi];
 
         if ((facei >= bp.start()) && (facei < (bp.start() + bp.size())))
         {
-            return patchI;
+            return patchi;
         }
     }
 
@@ -1552,11 +1552,11 @@ CML::label CML::boundaryMesh::whichPatch(const label facei) const
 
 CML::label CML::boundaryMesh::findPatchID(const word& patchName) const
 {
-    forAll(patches_, patchI)
+    forAll(patches_, patchi)
     {
-        if (patches_[patchI].name() == patchName)
+        if (patches_[patchi].name() == patchName)
         {
-            return patchI;
+            return patchi;
         }
     }
 
@@ -1570,26 +1570,26 @@ void CML::boundaryMesh::addPatch(const word& patchName)
 
     // Add empty patch at end of patch list.
 
-    label patchI = patches_.size()-1;
+    label patchi = patches_.size()-1;
 
     boundaryPatch* bpPtr = new boundaryPatch
     (
         patchName,
-        patchI,
+        patchi,
         0,
         mesh().size(),
         "empty"
     );
 
-    patches_.set(patchI, bpPtr);
+    patches_.set(patchi, bpPtr);
 
     if (debug)
     {
         Pout<< "addPatch : patches now:" << endl;
 
-        forAll(patches_, patchI)
+        forAll(patches_, patchi)
         {
-            const boundaryPatch& bp = patches_[patchI];
+            const boundaryPatch& bp = patches_[patchi];
 
             Pout<< "    name  : " << bp.name() << endl
                 << "    size  : " << bp.size() << endl
@@ -1622,16 +1622,16 @@ void CML::boundaryMesh::deletePatch(const word& patchName)
 
     PtrList<boundaryPatch> newPatches(patches_.size() - 1);
 
-    for (label patchI = 0; patchI < delPatchI; patchI++)
+    for (label patchi = 0; patchi < delPatchI; patchi++)
     {
-        newPatches.set(patchI, patches_[patchI].clone());
+        newPatches.set(patchi, patches_[patchi].clone());
     }
 
     // Move patches down, starting from delPatchI.
 
-    for (label patchI = delPatchI + 1; patchI < patches_.size(); patchI++)
+    for (label patchi = delPatchI + 1; patchi < patches_.size(); patchi++)
     {
-        newPatches.set(patchI - 1, patches_[patchI].clone());
+        newPatches.set(patchi - 1, patches_[patchi].clone());
     }
 
     patches_.clear();
@@ -1642,9 +1642,9 @@ void CML::boundaryMesh::deletePatch(const word& patchName)
     {
         Pout<< "deletePatch : patches now:" << endl;
 
-        forAll(patches_, patchI)
+        forAll(patches_, patchi)
         {
-            const boundaryPatch& bp = patches_[patchI];
+            const boundaryPatch& bp = patches_[patchi];
 
             Pout<< "    name  : " << bp.name() << endl
                 << "    size  : " << bp.size() << endl
@@ -1678,12 +1678,12 @@ void CML::boundaryMesh::changePatchType
 
     PtrList<boundaryPatch> newPatches(patches_.size());
 
-    forAll(patches_, patchI)
+    forAll(patches_, patchi)
     {
-        if (patchI == changeI)
+        if (patchi == changeI)
         {
             // Create copy but for type
-            const boundaryPatch& oldBp = patches_[patchI];
+            const boundaryPatch& oldBp = patches_[patchi];
 
             boundaryPatch* bpPtr = new boundaryPatch
             (
@@ -1694,12 +1694,12 @@ void CML::boundaryMesh::changePatchType
                 patchType
             );
 
-            newPatches.set(patchI, bpPtr);
+            newPatches.set(patchi, bpPtr);
         }
         else
         {
             // Create copy
-            newPatches.set(patchI, patches_[patchI].clone());
+            newPatches.set(patchi, patches_[patchi].clone());
         }
     }
 
@@ -1746,27 +1746,27 @@ void CML::boundaryMesh::changeFaces
 
     startFace[0] = 0;
 
-    for (label patchI = 1; patchI < patches_.size(); patchI++)
+    for (label patchi = 1; patchi < patches_.size(); patchi++)
     {
-        startFace[patchI] = startFace[patchI-1] + nFaces[patchI-1];
+        startFace[patchi] = startFace[patchi-1] + nFaces[patchi-1];
     }
 
     // Update patch info
     PtrList<boundaryPatch> newPatches(patches_.size());
 
-    forAll(patches_, patchI)
+    forAll(patches_, patchi)
     {
-        const boundaryPatch& bp = patches_[patchI];
+        const boundaryPatch& bp = patches_[patchi];
 
         newPatches.set
         (
-            patchI,
+            patchi,
             new boundaryPatch
             (
                 bp.name(),
-                patchI,
-                nFaces[patchI],
-                startFace[patchI],
+                patchi,
+                nFaces[patchi],
+                startFace[patchi],
                 bp.physicalType()
             )
         );
@@ -1777,9 +1777,9 @@ void CML::boundaryMesh::changeFaces
     {
         Pout<< "changeFaces : patches now:" << endl;
 
-        forAll(patches_, patchI)
+        forAll(patches_, patchi)
         {
-            const boundaryPatch& bp = patches_[patchI];
+            const boundaryPatch& bp = patches_[patchi];
 
             Pout<< "    name  : " << bp.name() << endl
                 << "    size  : " << bp.size() << endl

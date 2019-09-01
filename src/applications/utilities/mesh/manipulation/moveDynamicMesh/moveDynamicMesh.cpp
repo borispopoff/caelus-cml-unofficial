@@ -66,12 +66,12 @@ void writeWeights(const polyMesh& mesh)
 
     const word tmName(mesh.time().timeName());
 
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        if (isA<cyclicAMIPolyPatch>(pbm[patchI]))
+        if (isA<cyclicAMIPolyPatch>(pbm[patchi]))
         {
             const cyclicAMIPolyPatch& cpp =
-                refCast<const cyclicAMIPolyPatch>(pbm[patchI]);
+                refCast<const cyclicAMIPolyPatch>(pbm[patchi]);
 
             if (cpp.owner())
             {

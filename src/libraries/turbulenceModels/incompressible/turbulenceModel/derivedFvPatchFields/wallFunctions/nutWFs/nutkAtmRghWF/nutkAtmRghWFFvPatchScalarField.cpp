@@ -36,16 +36,16 @@ namespace incompressible
 
 tmp<scalarField> nutkAtmRoughWallFunctionFvPatchScalarField::calcNut() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbulence =
         db().lookupObject<turbulenceModel>("turbulenceModel");
-    const scalarField& y = turbulence.y()[patchI];
+    const scalarField& y = turbulence.y()[patchi];
     const tmp<volScalarField> tk = turbulence.k();
     const volScalarField& k = tk();
     const tmp<volScalarField> tnu = turbulence.nu();
     const volScalarField& nu = tnu();
-    const scalarField& nuw = nu.boundaryField()[patchI];
+    const scalarField& nuw = nu.boundaryField()[patchi];
 
     const scalar Cmu25 = pow025(Cmu_);
 

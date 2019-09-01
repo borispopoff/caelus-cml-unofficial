@@ -92,10 +92,10 @@ void CML::skewCorrectionVectors::makeSkewCorrectionVectors() const
     }
 
 
-    forAll(SkewCorrVecs.boundaryField(), patchI)
+    forAll(SkewCorrVecs.boundaryField(), patchi)
     {
         fvsPatchVectorField& patchSkewCorrVecs =
-            SkewCorrVecs.boundaryField()[patchI];
+            SkewCorrVecs.boundaryField()[patchi];
 
         if (!patchSkewCorrVecs.coupled())
         {
@@ -105,8 +105,8 @@ void CML::skewCorrectionVectors::makeSkewCorrectionVectors() const
         {
             const fvPatch& p = patchSkewCorrVecs.patch();
             const labelUList& faceCells = p.faceCells();
-            const vectorField& patchFaceCentres = Cf.boundaryField()[patchI];
-            const vectorField& patchSf = Sf.boundaryField()[patchI];
+            const vectorField& patchFaceCentres = Cf.boundaryField()[patchi];
+            const vectorField& patchSf = Sf.boundaryField()[patchi];
             const vectorField patchD(p.delta());
 
             forAll(p, patchFaceI)

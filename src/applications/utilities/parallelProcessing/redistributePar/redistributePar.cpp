@@ -869,9 +869,9 @@ autoPtr<mapDistributePolyMesh> redistributeAndWrite
 
             label nonProcI = -1;
 
-            forAll(patches, patchI)
+            forAll(patches, patchi)
             {
-                if (isA<processorPolyPatch>(patches[patchI]))
+                if (isA<processorPolyPatch>(patches[patchi]))
                 {
                     break;
                 }
@@ -1333,10 +1333,10 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
         const polyBoundaryMesh& pbm = mesh.boundaryMesh();
         labelList oldPatchStarts(pbm.size());
         labelList oldPatchNMeshPoints(pbm.size());
-        forAll(pbm, patchI)
+        forAll(pbm, patchi)
         {
-            oldPatchStarts[patchI] = pbm[patchI].start();
-            oldPatchNMeshPoints[patchI] = pbm[patchI].nPoints();
+            oldPatchStarts[patchi] = pbm[patchi].start();
+            oldPatchNMeshPoints[patchi] = pbm[patchi].nPoints();
         }
 
         mapPtr.reset
@@ -1412,10 +1412,10 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
         const polyBoundaryMesh& pbm = mesh.boundaryMesh();
         labelList oldPatchStarts(pbm.size());
         labelList oldPatchNMeshPoints(pbm.size());
-        forAll(pbm, patchI)
+        forAll(pbm, patchi)
         {
-            oldPatchStarts[patchI] = pbm[patchI].start();
-            oldPatchNMeshPoints[patchI] = pbm[patchI].nPoints();
+            oldPatchStarts[patchi] = pbm[patchi].start();
+            oldPatchNMeshPoints[patchi] = pbm[patchi].nPoints();
         }
 
         mapPtr.reset

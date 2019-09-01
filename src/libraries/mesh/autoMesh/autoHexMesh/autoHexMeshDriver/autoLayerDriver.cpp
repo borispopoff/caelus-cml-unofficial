@@ -75,12 +75,12 @@ void CML::autoLayerDriver::dumpDisplacement
 
     label vertI = 0;
 
-    forAll(patchDisp, patchPointI)
+    forAll(patchDisp, patchPointi)
     {
-        const point& pt = pp.localPoints()[patchPointI];
+        const point& pt = pp.localPoints()[patchPointi];
 
         meshTools::writeOBJ(dispStr, pt); vertI++;
-        meshTools::writeOBJ(dispStr, pt + patchDisp[patchPointI]); vertI++;
+        meshTools::writeOBJ(dispStr, pt + patchDisp[patchPointi]); vertI++;
 
         dispStr << "l " << vertI-1 << ' ' << vertI << nl;
     }
@@ -91,14 +91,14 @@ void CML::autoLayerDriver::dumpDisplacement
 
     vertI = 0;
 
-    forAll(patchDisp, patchPointI)
+    forAll(patchDisp, patchPointi)
     {
-        if (extrudeStatus[patchPointI] != EXTRUDE)
+        if (extrudeStatus[patchPointi] != EXTRUDE)
         {
-            const point& pt = pp.localPoints()[patchPointI];
+            const point& pt = pp.localPoints()[patchPointi];
 
             meshTools::writeOBJ(illStr, pt); vertI++;
-            meshTools::writeOBJ(illStr, pt + patchDisp[patchPointI]); vertI++;
+            meshTools::writeOBJ(illStr, pt + patchDisp[patchPointi]); vertI++;
 
             illStr << "l " << vertI-1 << ' ' << vertI << nl;
         }
@@ -190,24 +190,24 @@ void CML::autoLayerDriver::checkMeshManifold() const
 // Unset extrusion on point. Returns true if anything unset.
 bool CML::autoLayerDriver::unmarkExtrusion
 (
-    const label patchPointI,
+    const label patchPointi,
     pointField& patchDisp,
     labelList& patchNLayers,
     List<extrudeMode>& extrudeStatus
 )
 {
-    if (extrudeStatus[patchPointI] == EXTRUDE)
+    if (extrudeStatus[patchPointi] == EXTRUDE)
     {
-        extrudeStatus[patchPointI] = NOEXTRUDE;
-        patchNLayers[patchPointI] = 0;
-        patchDisp[patchPointI] = Zero;
+        extrudeStatus[patchPointi] = NOEXTRUDE;
+        patchNLayers[patchPointi] = 0;
+        patchDisp[patchPointi] = Zero;
         return true;
     }
-    else if (extrudeStatus[patchPointI] == EXTRUDEREMOVE)
+    else if (extrudeStatus[patchPointi] == EXTRUDEREMOVE)
     {
-        extrudeStatus[patchPointI] = NOEXTRUDE;
-        patchNLayers[patchPointI] = 0;
-        patchDisp[patchPointI] = Zero;
+        extrudeStatus[patchPointi] = NOEXTRUDE;
+        patchNLayers[patchPointi] = 0;
+        patchDisp[patchPointi] = Zero;
         return true;
     }
     else
@@ -339,13 +339,13 @@ void CML::autoLayerDriver::handleNonManifolds
     {
         const labelList& meshPoints = pp.meshPoints();
 
-        forAll(meshPoints, patchPointI)
+        forAll(meshPoints, patchPointi)
         {
-            if (nonManifoldPoints.found(meshPoints[patchPointI]))
+            if (nonManifoldPoints.found(meshPoints[patchPointi]))
             {
                 unmarkExtrusion
                 (
-                    patchPointI,
+                    patchPointi,
                     patchDisp,
                     patchNLayers,
                     extrudeStatus
@@ -574,9 +574,9 @@ void CML::autoLayerDriver::handleWarpedFaces
 //    cellSet multiPatchCells(mesh, "multiPatchCells", pp.size());
 //
 //    // Detect points that use multiple faces on same cell.
-//    forAll(pointFaces, patchPointI)
+//    forAll(pointFaces, patchPointi)
 //    {
-//        const labelList& pFaces = pointFaces[patchPointI];
+//        const labelList& pFaces = pointFaces[patchPointi];
 //
 //        labelHashSet pointCells(pFaces.size());
 //
@@ -618,11 +618,11 @@ void CML::autoLayerDriver::handleWarpedFaces
 //        // (has to be done in separate loop since having one point on
 //        // multipatches has to reset extrusion on all points of cell)
 //
-//        forAll(pointFaces, patchPointI)
+//        forAll(pointFaces, patchPointi)
 //        {
-//            if (extrudeStatus[patchPointI] != NOEXTRUDE)
+//            if (extrudeStatus[patchPointi] != NOEXTRUDE)
 //            {
-//                const labelList& pFaces = pointFaces[patchPointI];
+//                const labelList& pFaces = pointFaces[patchPointi];
 //
 //                forAll(pFaces, i)
 //                {
@@ -635,7 +635,7 @@ void CML::autoLayerDriver::handleWarpedFaces
 //                        (
 //                            unmarkExtrusion
 //                            (
-//                                patchPointI,
+//                                patchPointi,
 //                                patchDisp,
 //                                patchNLayers,
 //                                extrudeStatus
@@ -680,15 +680,15 @@ void CML::autoLayerDriver::setNumLayers
 
     forAll(patchIDs, i)
     {
-        label patchI = patchIDs[i];
+        label patchi = patchIDs[i];
 
-        const labelList& meshPoints = mesh.boundaryMesh()[patchI].meshPoints();
+        const labelList& meshPoints = mesh.boundaryMesh()[patchi].meshPoints();
 
-        label wantedLayers = patchToNLayers[patchI];
+        label wantedLayers = patchToNLayers[patchi];
 
-        forAll(meshPoints, patchPointI)
+        forAll(meshPoints, patchPointi)
         {
-            label ppPointI = pp.meshPointMap()[meshPoints[patchPointI]];
+            label ppPointI = pp.meshPointMap()[meshPoints[patchPointi]];
 
             maxLayers[ppPointI] = max(wantedLayers, maxLayers[ppPointI]);
             minLayers[ppPointI] = min(wantedLayers, minLayers[ppPointI]);
@@ -796,30 +796,30 @@ CML::autoLayerDriver::makeLayerDisplacementField
         slipPointPatchVectorField::typeName
     );
     wordList actualPatchTypes(patchFieldTypes.size());
-    forAll(pointPatches, patchI)
+    forAll(pointPatches, patchi)
     {
-        actualPatchTypes[patchI] = pointPatches[patchI].type();
+        actualPatchTypes[patchi] = pointPatches[patchi].type();
     }
 
-    forAll(numLayers, patchI)
+    forAll(numLayers, patchi)
     {
         //  0 layers: do not allow lslip so fixedValue 0
         // >0 layers: fixedValue which gets adapted
-        if (numLayers[patchI] >= 0)
+        if (numLayers[patchi] >= 0)
         {
-            patchFieldTypes[patchI] = fixedValuePointPatchVectorField::typeName;
+            patchFieldTypes[patchi] = fixedValuePointPatchVectorField::typeName;
         }
     }
 
-    forAll(pointPatches, patchI)
+    forAll(pointPatches, patchi)
     {
-        if (isA<processorPointPatch>(pointPatches[patchI]))
+        if (isA<processorPointPatch>(pointPatches[patchi]))
         {
-            patchFieldTypes[patchI] = calculatedPointPatchVectorField::typeName;
+            patchFieldTypes[patchi] = calculatedPointPatchVectorField::typeName;
         }
-        else if (isA<cyclicPointPatch>(pointPatches[patchI]))
+        else if (isA<cyclicPointPatch>(pointPatches[patchi]))
         {
-            patchFieldTypes[patchI] = cyclicSlipPointPatchVectorField::typeName;
+            patchFieldTypes[patchi] = cyclicSlipPointPatchVectorField::typeName;
         }
     }
 
@@ -924,12 +924,12 @@ void CML::autoLayerDriver::growNoExtrusion
     }
 
 
-    forAll(extrudeStatus, patchPointI)
+    forAll(extrudeStatus, patchPointi)
     {
-        if (extrudeStatus[patchPointI] == NOEXTRUDE)
+        if (extrudeStatus[patchPointi] == NOEXTRUDE)
         {
-            patchDisp[patchPointI] = Zero;
-            patchNLayers[patchPointI] = 0;
+            patchDisp[patchPointi] = Zero;
+            patchNLayers[patchPointi] = 0;
         }
     }
 
@@ -988,9 +988,9 @@ void CML::autoLayerDriver::determineSidePatches
         // so prepare to renumber sidePatchID
         Map<label> wantedToAddedPatch;
 
-        for (label patchI = nOldPatches; patchI < nPatches; patchI++)
+        for (label patchi = nOldPatches; patchi < nPatches; patchi++)
         {
-            label nbrProcI = patchToNbrProc[patchI];
+            label nbrProcI = patchToNbrProc[patchi];
             word name =
                     "procBoundary"
                   + CML::name(Pstream::myProcNo())
@@ -1004,7 +1004,7 @@ void CML::autoLayerDriver::determineSidePatches
             patchDict.add("nFaces", 0);
             patchDict.add("startFace", mesh.nFaces());
 
-            //Pout<< "Adding patch " << patchI
+            //Pout<< "Adding patch " << patchi
             //    << " name:" << name
             //    << " between " << Pstream::myProcNo()
             //    << " and " << nbrProcI << endl;
@@ -1016,14 +1016,14 @@ void CML::autoLayerDriver::determineSidePatches
                 name,
                 patchDict
             );
-            wantedToAddedPatch.insert(patchI, procPatchI);
+            wantedToAddedPatch.insert(patchi, procPatchI);
         }
 
         // Renumber sidePatchID
         forAll(sidePatchID, i)
         {
-            label patchI = sidePatchID[i];
-            Map<label>::const_iterator fnd = wantedToAddedPatch.find(patchI);
+            label patchi = sidePatchID[i];
+            Map<label>::const_iterator fnd = wantedToAddedPatch.find(patchi);
             if (fnd != wantedToAddedPatch.end())
             {
                 sidePatchID[i] = fnd();
@@ -1068,38 +1068,38 @@ void CML::autoLayerDriver::calculateLayerThickness
 
     forAll(patchIDs, i)
     {
-        label patchI = patchIDs[i];
+        label patchi = patchIDs[i];
 
-        const labelList& meshPoints = patches[patchI].meshPoints();
+        const labelList& meshPoints = patches[patchi].meshPoints();
 
-        forAll(meshPoints, patchPointI)
+        forAll(meshPoints, patchPointi)
         {
-            label ppPointI = pp.meshPointMap()[meshPoints[patchPointI]];
+            label ppPointI = pp.meshPointMap()[meshPoints[patchPointi]];
 
             firstLayerThickness[ppPointI] = min
             (
                 firstLayerThickness[ppPointI],
-                layerParams.firstLayerThickness()[patchI]
+                layerParams.firstLayerThickness()[patchi]
             );
             finalLayerThickness[ppPointI] = min
             (
                 finalLayerThickness[ppPointI],
-                layerParams.finalLayerThickness()[patchI]
+                layerParams.finalLayerThickness()[patchi]
             );
             totalThickness[ppPointI] = min
             (
                 totalThickness[ppPointI],
-                layerParams.thickness()[patchI]
+                layerParams.thickness()[patchi]
             );
             expRatio[ppPointI] = min
             (
                 expRatio[ppPointI],
-                layerParams.expansionRatio()[patchI]
+                layerParams.expansionRatio()[patchi]
             );
             minThickness[ppPointI] = min
             (
                 minThickness[ppPointI],
-                layerParams.minThickness()[patchI]
+                layerParams.minThickness()[patchi]
             );
         }
     }
@@ -1197,14 +1197,14 @@ void CML::autoLayerDriver::calculateLayerThickness
         );
 
 
-        forAll(maxPointLevel, pointI)
+        forAll(maxPointLevel, pointi)
         {
             // Find undistorted edge size for this level.
-            scalar edgeLen = edge0Len/(1<<maxPointLevel[pointI]);
-            firstLayerThickness[pointI] *= edgeLen;
-            finalLayerThickness[pointI] *= edgeLen;
-            totalThickness[pointI] *= edgeLen;
-            minThickness[pointI] *= edgeLen;
+            scalar edgeLen = edge0Len/(1<<maxPointLevel[pointi]);
+            firstLayerThickness[pointi] *= edgeLen;
+            finalLayerThickness[pointi] *= edgeLen;
+            totalThickness[pointi] *= edgeLen;
+            minThickness[pointi] *= edgeLen;
         }
     }
 
@@ -1213,24 +1213,24 @@ void CML::autoLayerDriver::calculateLayerThickness
     // Rework thickness parameters into overall thickness
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    forAll(firstLayerThickness, pointI)
+    forAll(firstLayerThickness, pointi)
     {
-        thickness[pointI] = layerParams.layerThickness
+        thickness[pointi] = layerParams.layerThickness
         (
-            patchNLayers[pointI],
-            firstLayerThickness[pointI],
-            finalLayerThickness[pointI],
-            totalThickness[pointI],
-            expRatio[pointI]
+            patchNLayers[pointi],
+            firstLayerThickness[pointi],
+            finalLayerThickness[pointi],
+            totalThickness[pointi],
+            expRatio[pointi]
         );
 
-        expansionRatio[pointI] = layerParams.layerExpansionRatio
+        expansionRatio[pointi] = layerParams.layerExpansionRatio
         (
-            patchNLayers[pointI],
-            firstLayerThickness[pointI],
-            finalLayerThickness[pointI],
-            totalThickness[pointI],
-            expRatio[pointI]
+            patchNLayers[pointi],
+            firstLayerThickness[pointi],
+            finalLayerThickness[pointi],
+            totalThickness[pointi],
+            expRatio[pointi]
         );
     }
 
@@ -1245,8 +1245,8 @@ void CML::autoLayerDriver::calculateLayerThickness
         label maxPatchNameLen = 0;
         forAll(patchIDs, i)
         {
-            label patchI = patchIDs[i];
-            word patchName = patches[patchI].name();
+            label patchi = patchIDs[i];
+            word patchName = patches[patchi].name();
             maxPatchNameLen = max(maxPatchNameLen, label(patchName.size()));
         }
 
@@ -1260,16 +1260,16 @@ void CML::autoLayerDriver::calculateLayerThickness
 
         forAll(patchIDs, i)
         {
-            label patchI = patchIDs[i];
+            label patchi = patchIDs[i];
 
-            const labelList& meshPoints = patches[patchI].meshPoints();
+            const labelList& meshPoints = patches[patchi].meshPoints();
 
             scalar sumThickness = 0;
             scalar sumNearWallThickness = 0;
 
-            forAll(meshPoints, patchPointI)
+            forAll(meshPoints, patchPointi)
             {
-                label ppPointI = pp.meshPointMap()[meshPoints[patchPointI]];
+                label ppPointI = pp.meshPointMap()[meshPoints[patchPointi]];
 
                 sumThickness += thickness[ppPointI];
                 sumNearWallThickness += layerParams.firstLayerThickness
@@ -1299,10 +1299,10 @@ void CML::autoLayerDriver::calculateLayerThickness
             }
 
             Info<< setf(ios_base::left) << setw(maxPatchNameLen)
-                << patches[patchI].name() << setprecision(3)
+                << patches[patchi].name() << setprecision(3)
                 << " " << setw(8)
-                << returnReduce(patches[patchI].size(), sumOp<scalar>())
-                << " " << setw(6) << layerParams.numLayers()[patchI]
+                << returnReduce(patches[patchi].size(), sumOp<scalar>())
+                << " " << setw(6) << layerParams.numLayers()[patchi]
                 << " " << setw(8) << avgNearWallThickness
                 << "  " << setw(8) << avgThickness
                 << endl;
@@ -1476,52 +1476,52 @@ void CML::autoLayerDriver::getPatchDisplacement
     patchDisp = thickness*pointNormals;
 
     // Check if no extrude possible.
-    forAll(pointNormals, patchPointI)
+    forAll(pointNormals, patchPointi)
     {
-        label meshPointI = pp.meshPoints()[patchPointI];
+        label meshPointi = pp.meshPoints()[patchPointi];
 
-        if (extrudeStatus[patchPointI] == NOEXTRUDE)
+        if (extrudeStatus[patchPointi] == NOEXTRUDE)
         {
             // Do not use unmarkExtrusion; forcibly set to zero extrusion.
-            patchNLayers[patchPointI] = 0;
-            patchDisp[patchPointI] = Zero;
+            patchNLayers[patchPointi] = 0;
+            patchDisp[patchPointi] = Zero;
         }
         else
         {
             // Get normal
-            const vector& n = pointNormals[patchPointI];
+            const vector& n = pointNormals[patchPointi];
 
-            if (!meshTools::visNormal(n, faceNormals, pointFaces[patchPointI]))
+            if (!meshTools::visNormal(n, faceNormals, pointFaces[patchPointi]))
             {
-                Pout<< "No valid normal for point " << meshPointI
-                    << ' ' << pp.points()[meshPointI]
-                    << "; setting displacement to " << patchDisp[patchPointI]
+                Pout<< "No valid normal for point " << meshPointi
+                    << ' ' << pp.points()[meshPointi]
+                    << "; setting displacement to " << patchDisp[patchPointi]
                     << endl;
 
-                extrudeStatus[patchPointI] = EXTRUDEREMOVE;
+                extrudeStatus[patchPointi] = EXTRUDEREMOVE;
             }
         }
     }
 
     // At illegal points make displacement average of new neighbour positions
-    forAll(extrudeStatus, patchPointI)
+    forAll(extrudeStatus, patchPointi)
     {
-        if (extrudeStatus[patchPointI] == EXTRUDEREMOVE)
+        if (extrudeStatus[patchPointi] == EXTRUDEREMOVE)
         {
             point avg(Zero);
             label nPoints = 0;
 
-            const labelList& pEdges = pp.pointEdges()[patchPointI];
+            const labelList& pEdges = pp.pointEdges()[patchPointi];
 
             forAll(pEdges, i)
             {
                 label edgeI = pEdges[i];
 
-                label otherPointI = pp.edges()[edgeI].otherVertex(patchPointI);
+                label otherPointi = pp.edges()[edgeI].otherVertex(patchPointi);
 
-                if (extrudeStatus[otherPointI] != NOEXTRUDE)
+                if (extrudeStatus[otherPointi] != NOEXTRUDE)
                 {
-                    avg += localPoints[otherPointI] + patchDisp[otherPointI];
+                    avg += localPoints[otherPointi] + patchDisp[otherPointi];
                     nPoints++;
                 }
             }
@@ -1529,13 +1529,13 @@ void CML::autoLayerDriver::getPatchDisplacement
             if (nPoints > 0)
             {
                 Pout<< "Displacement at illegal point "
-                    << localPoints[patchPointI]
-                    << " set to " << (avg / nPoints - localPoints[patchPointI])
+                    << localPoints[patchPointi]
+                    << " set to " << (avg / nPoints - localPoints[patchPointi])
                     << endl;
 
-                patchDisp[patchPointI] =
+                patchDisp[patchPointi] =
                     avg / nPoints
-                  - localPoints[patchPointI];
+                  - localPoints[patchPointi];
             }
         }
     }
@@ -1691,13 +1691,13 @@ CML::label CML::autoLayerDriver::truncateDisplacement
         {
             if (meshPointMap.found(f[fp]))
             {
-                label patchPointI = meshPointMap[f[fp]];
+                label patchPointi = meshPointMap[f[fp]];
 
-                if (extrudeStatus[patchPointI] != NOEXTRUDE)
+                if (extrudeStatus[patchPointi] != NOEXTRUDE)
                 {
                     unmarkExtrusion
                     (
-                        patchPointI,
+                        patchPointi,
                         patchDisp,
                         patchNLayers,
                         extrudeStatus
@@ -1708,15 +1708,15 @@ CML::label CML::autoLayerDriver::truncateDisplacement
         }
     }
 
-    forAll(patchDisp, patchPointI)
+    forAll(patchDisp, patchPointi)
     {
-        if (mag(patchDisp[patchPointI]) < minThickness[patchPointI])
+        if (mag(patchDisp[patchPointi]) < minThickness[patchPointi])
         {
             if
             (
                 unmarkExtrusion
                 (
-                    patchPointI,
+                    patchPointi,
                     patchDisp,
                     patchNLayers,
                     extrudeStatus
@@ -1726,11 +1726,11 @@ CML::label CML::autoLayerDriver::truncateDisplacement
                 nChanged++;
             }
         }
-        else if (extrudeStatus[patchPointI] == NOEXTRUDE)
+        else if (extrudeStatus[patchPointi] == NOEXTRUDE)
         {
             // Make sure displacement is 0. Should already be so but ...
-            patchDisp[patchPointI] = Zero;
-            patchNLayers[patchPointI] = 0;
+            patchDisp[patchPointi] = Zero;
+            patchNLayers[patchPointi] = 0;
         }
     }
 
@@ -2075,11 +2075,11 @@ void CML::autoLayerDriver::setupLayerInfoTruncation
 
                 boolList foundNeighbour(pp.nPoints(), false);
 
-                forAll(pp.meshPoints(), patchPointI)
+                forAll(pp.meshPoints(), patchPointi)
                 {
-                    forAll(pointFaces[patchPointI], pointFaceI)
+                    forAll(pointFaces[patchPointi], pointFaceI)
                     {
-                        label facei = pointFaces[patchPointI][pointFaceI];
+                        label facei = pointFaces[patchPointi][pointFaceI];
 
                         if
                         (
@@ -2087,7 +2087,7 @@ void CML::autoLayerDriver::setupLayerInfoTruncation
                          && maxLevel[facei] > 0
                         )
                         {
-                            foundNeighbour[patchPointI] = true;
+                            foundNeighbour[patchPointi] = true;
                             break;
                         }
                     }
@@ -2102,13 +2102,13 @@ void CML::autoLayerDriver::setupLayerInfoTruncation
                     false               // null value
                 );
 
-                forAll(pp.meshPoints(), patchPointI)
+                forAll(pp.meshPoints(), patchPointi)
                 {
-                    if (foundNeighbour[patchPointI])
+                    if (foundNeighbour[patchPointi])
                     {
-                        forAll(pointFaces[patchPointI], pointFaceI)
+                        forAll(pointFaces[patchPointi], pointFaceI)
                         {
-                            label facei = pointFaces[patchPointI][pointFaceI];
+                            label facei = pointFaces[patchPointi][pointFaceI];
                             if
                             (
                                 nPatchFaceLayers[facei] == -1
@@ -2133,23 +2133,23 @@ void CML::autoLayerDriver::setupLayerInfoTruncation
             }
         }
 
-        forAll(pp.meshPoints(), patchPointI)
+        forAll(pp.meshPoints(), patchPointi)
         {
-            if (extrudeStatus[patchPointI] != NOEXTRUDE)
+            if (extrudeStatus[patchPointi] != NOEXTRUDE)
             {
-                forAll(pointFaces[patchPointI], pointFaceI)
+                forAll(pointFaces[patchPointi], pointFaceI)
                 {
-                    label face = pointFaces[patchPointI][pointFaceI];
-                    nPatchPointLayers[patchPointI] = max
+                    label face = pointFaces[patchPointi][pointFaceI];
+                    nPatchPointLayers[patchPointi] = max
                     (
-                        nPatchPointLayers[patchPointI],
+                        nPatchPointLayers[patchPointi],
                         nPatchFaceLayers[face]
                     );
                 }
             }
             else
             {
-                nPatchPointLayers[patchPointI] = 0;
+                nPatchPointLayers[patchPointi] = 0;
             }
         }
         syncTools::syncPointList
@@ -3265,16 +3265,16 @@ void CML::autoLayerDriver::doLayers
     // Patches that need to get a layer
     DynamicList<label> patchIDs(numLayers.size());
     label nFacesWithLayers = 0;
-    forAll(numLayers, patchI)
+    forAll(numLayers, patchi)
     {
-        if (numLayers[patchI] > 0)
+        if (numLayers[patchi] > 0)
         {
-            const polyPatch& pp = mesh.boundaryMesh()[patchI];
+            const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
             if (!pp.coupled())
             {
-                patchIDs.append(patchI);
-                nFacesWithLayers += mesh.boundaryMesh()[patchI].size();
+                patchIDs.append(patchi);
+                nFacesWithLayers += mesh.boundaryMesh()[patchi].size();
             }
             else
             {
@@ -3319,14 +3319,14 @@ void CML::autoLayerDriver::doLayers
                 << endl;
 
             scalarField cellWeights(mesh.nCells(), 1);
-            forAll(numLayers, patchI)
+            forAll(numLayers, patchi)
             {
-                if (numLayers[patchI] > 0)
+                if (numLayers[patchi] > 0)
                 {
-                    const polyPatch& pp = mesh.boundaryMesh()[patchI];
+                    const polyPatch& pp = mesh.boundaryMesh()[patchi];
                     forAll(pp.faceCells(), i)
                     {
-                        cellWeights[pp.faceCells()[i]] += numLayers[patchI];
+                        cellWeights[pp.faceCells()[i]] += numLayers[patchi];
                     }
                 }
             }

@@ -175,16 +175,16 @@ void CML::RBFMotionSolver::makeControlIDs()
     // Mark all points on moving patches with 1
     label nMovingPoints = 0;
 
-    forAll (movingPatches_, patchI)
+    forAll (movingPatches_, patchi)
     {
         // Find the patch in boundary
         label patchIndex =
-            mesh().boundaryMesh().findPatchID(movingPatches_[patchI]);
+            mesh().boundaryMesh().findPatchID(movingPatches_[patchi]);
 
         if (patchIndex < 0)
         {
             FatalErrorInFunction
-                << "Patch " << movingPatches_[patchI] << " not found.  "
+                << "Patch " << movingPatches_[patchi] << " not found.  "
                 << "valid patch names: " << mesh().boundaryMesh().names()
                 << abort(FatalError);
         }
@@ -232,16 +232,16 @@ void CML::RBFMotionSolver::makeControlIDs()
     // Mark all points on static patches with -1
     label nStaticPoints = 0;
 
-    forAll (staticPatches_, patchI)
+    forAll (staticPatches_, patchi)
     {
         // Find the patch in boundary
         label patchIndex =
-            mesh().boundaryMesh().findPatchID(staticPatches_[patchI]);
+            mesh().boundaryMesh().findPatchID(staticPatches_[patchi]);
 
         if (patchIndex < 0)
         {
             FatalErrorInFunction
-                << "Patch " << staticPatches_[patchI] << " not found.  "
+                << "Patch " << staticPatches_[patchi] << " not found.  "
                 << "valid patch names: " << mesh().boundaryMesh().names()
                 << abort(FatalError);
         }
@@ -284,11 +284,11 @@ void CML::RBFMotionSolver::makeControlIDs()
 
     label nControlPoints = 0;
 
-    forAll (movingPatches_, patchI)
+    forAll (movingPatches_, patchi)
     {
         // Find the patch in boundary
         label patchIndex =
-            mesh().boundaryMesh().findPatchID(movingPatches_[patchI]);
+            mesh().boundaryMesh().findPatchID(movingPatches_[patchi]);
 
         const labelList& mp = mesh().boundaryMesh()[patchIndex].meshPoints();
 
@@ -318,11 +318,11 @@ void CML::RBFMotionSolver::makeControlIDs()
 
     if (includeStaticPatches_)
     {
-        forAll (staticPatches_, patchI)
+        forAll (staticPatches_, patchi)
         {
             // Find the patch in boundary
             label patchIndex =
-                mesh().boundaryMesh().findPatchID(staticPatches_[patchI]);
+                mesh().boundaryMesh().findPatchID(staticPatches_[patchi]);
 
             const labelList& mp =
                 mesh().boundaryMesh()[patchIndex].meshPoints();

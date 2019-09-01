@@ -82,13 +82,13 @@ void CML::triSurfaceTools::calcRefineStatus
 }
 
 
-// Split facei along edgeI at position newPointI
+// Split facei along edgeI at position newPointi
 void CML::triSurfaceTools::greenRefine
 (
     const triSurface& surf,
     const label facei,
     const label edgeI,
-    const label newPointI,
+    const label newPointi,
     DynamicList<labelledTri>& newFaces
 )
 {
@@ -109,7 +109,7 @@ void CML::triSurfaceTools::greenRefine
             labelledTri
             (
                 f[fp0],
-                newPointI,
+                newPointi,
                 f[fp2],
                 f.region()
             )
@@ -118,7 +118,7 @@ void CML::triSurfaceTools::greenRefine
         (
             labelledTri
             (
-                newPointI,
+                newPointi,
                 f[fp1],
                 f[fp2],
                 f.region()
@@ -132,7 +132,7 @@ void CML::triSurfaceTools::greenRefine
             labelledTri
             (
                 f[fp2],
-                newPointI,
+                newPointi,
                 f[fp1],
                 f.region()
             )
@@ -141,7 +141,7 @@ void CML::triSurfaceTools::greenRefine
         (
             labelledTri
             (
-                newPointI,
+                newPointi,
                 f[fp0],
                 f[fp1],
                 f.region()
@@ -160,9 +160,9 @@ CML::triSurface CML::triSurfaceTools::doRefine
 {
     // Storage for new points. (start after old points)
     DynamicList<point> newPoints(surf.nPoints());
-    forAll(surf.localPoints(), pointI)
+    forAll(surf.localPoints(), pointi)
     {
-        newPoints.append(surf.localPoints()[pointI]);
+        newPoints.append(surf.localPoints()[pointi]);
     }
     label newVertI = surf.nPoints();
 
@@ -1253,9 +1253,9 @@ void CML::triSurfaceTools::writeOBJ
 {
     OFstream outFile(fName);
 
-    forAll(pts, pointI)
+    forAll(pts, pointi)
     {
-        const point& pt = pts[pointI];
+        const point& pt = pts[pointi];
 
         outFile<< "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << endl;
     }
@@ -1714,9 +1714,9 @@ CML::triSurface CML::triSurfaceTools::collapseEdges
 
     // Map for old to new points
     labelList pointMap(localPoints.size());
-    forAll(localPoints, pointI)
+    forAll(localPoints, pointi)
     {
-        pointMap[pointI] = pointI;
+        pointMap[pointi] = pointi;
     }
 
 
@@ -1892,7 +1892,7 @@ CML::triSurface CML::triSurfaceTools::greenRefine
 
     pointField newPoints(surf.localPoints());
     newPoints.setSize(surf.nPoints() + surf.nEdges());
-    label newPointI = surf.nPoints();
+    label newPointi = surf.nPoints();
 
 
     // Refine edges
@@ -1925,7 +1925,7 @@ CML::triSurface CML::triSurfaceTools::greenRefine
                   + surf.localPoints()[e.end()]
                 );
 
-            newPoints[newPointI] = mid;
+            newPoints[newPointi] = mid;
 
             // Refine faces using edge
             forAll(myFaces, myFaceI)
@@ -1936,7 +1936,7 @@ CML::triSurface CML::triSurfaceTools::greenRefine
                     surf,
                     myFaces[myFaceI],
                     edgeI,
-                    newPointI,
+                    newPointi,
                     newFaces
                 );
 
@@ -1944,7 +1944,7 @@ CML::triSurface CML::triSurfaceTools::greenRefine
                 refineStatus[myFaces[myFaceI]] = GREEN;
             }
 
-            newPointI++;
+            newPointi++;
         }
     }
 
@@ -1958,7 +1958,7 @@ CML::triSurface CML::triSurfaceTools::greenRefine
     }
 
     newFaces.shrink();
-    newPoints.setSize(newPointI);
+    newPoints.setSize(newPointi);
 
     return triSurface(newFaces, surf.patches(), newPoints, true);
 }
@@ -2290,10 +2290,10 @@ CML::triSurfaceTools::sideType CML::triSurfaceTools::surfaceSide
 
             const edge& e = edges[edgeI];
 
-            label otherPointI = e.otherVertex(nearPointI);
+            label otherPointi = e.otherVertex(nearPointI);
 
             // Get edge normal.
-            vector eVec(localPoints[otherPointI] - base);
+            vector eVec(localPoints[otherPointi] - base);
             scalar magEVec = mag(eVec);
 
             if (magEVec > VSMALL)
@@ -2345,8 +2345,8 @@ CML::triSurface CML::triSurfaceTools::triangulate
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
-        const label patchI = iter.key();
-        const polyPatch& patch = bMesh[patchI];
+        const label patchi = iter.key();
+        const polyPatch& patch = bMesh[patchi];
         const pointField& points = patch.points();
 
         label nTriTotal = 0;
@@ -2399,8 +2399,8 @@ CML::triSurface CML::triSurfaceTools::triangulate
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
-        const label patchI = iter.key();
-        const polyPatch& patch = bMesh[patchI];
+        const label patchi = iter.key();
+        const polyPatch& patch = bMesh[patchi];
 
         surface.patches()[newPatchI].name() = patch.name();
         surface.patches()[newPatchI].geometricType() = patch.type();
@@ -2428,15 +2428,15 @@ CML::triSurface CML::triSurfaceTools::triangulateFaceCentre
 
     pointField newPoints(points.size() + faceCentres.size());
 
-    label newPointI = 0;
+    label newPointi = 0;
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        newPoints[newPointI++] = points[pointI];
+        newPoints[newPointi++] = points[pointi];
     }
     forAll(faceCentres, facei)
     {
-        newPoints[newPointI++] = faceCentres[facei];
+        newPoints[newPointi++] = faceCentres[facei];
     }
 
 
@@ -2450,8 +2450,8 @@ CML::triSurface CML::triSurfaceTools::triangulateFaceCentre
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
-        const label patchI = iter.key();
-        const polyPatch& patch = bMesh[patchI];
+        const label patchi = iter.key();
+        const polyPatch& patch = bMesh[patchi];
 
         label nTriTotal = 0;
 
@@ -2460,7 +2460,7 @@ CML::triSurface CML::triSurfaceTools::triangulateFaceCentre
             // Face in global coords.
             const face& f = patch[patchFaceI];
 
-            // Index in newPointI of face centre.
+            // Index in newPointi of face centre.
             label fc = points.size() + patchFaceI + patch.start();
 
             forAll(f, fp)
@@ -2502,8 +2502,8 @@ CML::triSurface CML::triSurfaceTools::triangulateFaceCentre
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
-        const label patchI = iter.key();
-        const polyPatch& patch = bMesh[patchI];
+        const label patchi = iter.key();
+        const polyPatch& patch = bMesh[patchi];
 
         surface.patches()[newPatchI].name() = patch.name();
         surface.patches()[newPatchI].geometricType() = patch.type();

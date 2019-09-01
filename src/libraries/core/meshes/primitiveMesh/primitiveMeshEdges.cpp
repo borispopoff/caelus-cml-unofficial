@@ -33,18 +33,18 @@ CML::label CML::primitiveMesh::getEdge
     List<DynamicList<label>>& pe,
     DynamicList<edge>& es,
 
-    const label pointI,
-    const label nextPointI
+    const label pointi,
+    const label nextPointi
 )
 {
-    // Find connection between pointI and nextPointI
-    forAll(pe[pointI], ppI)
+    // Find connection between pointi and nextPointi
+    forAll(pe[pointi], ppI)
     {
-        label eI = pe[pointI][ppI];
+        label eI = pe[pointi][ppI];
 
         const edge& e = es[eI];
 
-        if (e.start() == nextPointI || e.end() == nextPointI)
+        if (e.start() == nextPointi || e.end() == nextPointi)
         {
             return eI;
         }
@@ -52,15 +52,15 @@ CML::label CML::primitiveMesh::getEdge
 
     // Make new edge.
     label edgeI = es.size();
-    pe[pointI].append(edgeI);
-    pe[nextPointI].append(edgeI);
-    if (pointI < nextPointI)
+    pe[pointi].append(edgeI);
+    pe[nextPointi].append(edgeI);
+    if (pointi < nextPointi)
     {
-        es.append(edge(pointI, nextPointI));
+        es.append(edge(pointi, nextPointi));
     }
     else
     {
-        es.append(edge(nextPointI, pointI));
+        es.append(edge(nextPointi, pointi));
     }
     return edgeI;
 }
@@ -101,9 +101,9 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
 
         // Estimate pointEdges storage
         List<DynamicList<label>> pe(nPoints());
-        forAll(pe, pointI)
+        forAll(pe, pointi)
         {
-            pe[pointI].setCapacity(primitiveMesh::edgesPerPoint_);
+            pe[pointi].setCapacity(primitiveMesh::edgesPerPoint_);
         }
 
         // Estimate edges storage
@@ -143,10 +143,10 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
 
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
-                    label nextPointI = f[f.fcIndex(fp)];
+                    label pointi = f[fp];
+                    label nextPointi = f[f.fcIndex(fp)];
 
-                    label edgeI = getEdge(pe, es, pointI, nextPointI);
+                    label edgeI = getEdge(pe, es, pointi, nextPointi);
 
                     if (doFaceEdges)
                     {
@@ -168,11 +168,11 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
 
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
-                    label nextPointI = f[f.fcIndex(fp)];
+                    label pointi = f[fp];
+                    label nextPointi = f[f.fcIndex(fp)];
 
                     label oldNEdges = es.size();
-                    label edgeI = getEdge(pe, es, pointI, nextPointI);
+                    label edgeI = getEdge(pe, es, pointi, nextPointi);
 
                     if (es.size() > oldNEdges)
                     {
@@ -192,17 +192,17 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
 
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
-                    label nextPointI = f[f.fcIndex(fp)];
+                    label pointi = f[fp];
+                    label nextPointi = f[f.fcIndex(fp)];
 
                     label oldNEdges = es.size();
-                    label edgeI = getEdge(pe, es, pointI, nextPointI);
+                    label edgeI = getEdge(pe, es, pointi, nextPointi);
 
                     if (es.size() > oldNEdges)
                     {
-                        if (pointI < nInternalPoints_)
+                        if (pointi < nInternalPoints_)
                         {
-                            if (nextPointI < nInternalPoints_)
+                            if (nextPointi < nInternalPoints_)
                             {
                                 nInternal0Edges_++;
                             }
@@ -213,7 +213,7 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
                         }
                         else
                         {
-                            if (nextPointI < nInternalPoints_)
+                            if (nextPointi < nInternalPoints_)
                             {
                                 nInt1Edges++;
                             }
@@ -292,9 +292,9 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
         // no reallocations
         SortableList<label> nbrPoints(primitiveMesh::edgesPerPoint_);
 
-        forAll(pe, pointI)
+        forAll(pe, pointi)
         {
-            const DynamicList<label>& pEdges = pe[pointI];
+            const DynamicList<label>& pEdges = pe[pointi];
 
             nbrPoints.setSize(pEdges.size());
 
@@ -302,15 +302,15 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
             {
                 const edge& e = es[pEdges[i]];
 
-                label nbrPointI = e.otherVertex(pointI);
+                label nbrPointi = e.otherVertex(pointi);
 
-                if (nbrPointI < pointI)
+                if (nbrPointi < pointi)
                 {
                     nbrPoints[i] = -1;
                 }
                 else
                 {
-                    nbrPoints[i] = nbrPointI;
+                    nbrPoints[i] = nbrPointi;
                 }
             }
             nbrPoints.sort();
@@ -331,22 +331,22 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
             }
             else
             {
-                if (pointI < nInternalPoints_)
+                if (pointi < nInternalPoints_)
                 {
                     forAll(nbrPoints, i)
                     {
-                        label nbrPointI = nbrPoints[i];
+                        label nbrPointi = nbrPoints[i];
 
                         label edgeI = pEdges[nbrPoints.indices()[i]];
 
-                        if (nbrPointI != -1)
+                        if (nbrPointi != -1)
                         {
                             if (edgeI < nExtEdges)
                             {
                                 // External edge
                                 oldToNew[edgeI] = externalEdgeI++;
                             }
-                            else if (nbrPointI < nInternalPoints_)
+                            else if (nbrPointi < nInternalPoints_)
                             {
                                 // Both points inside
                                 oldToNew[edgeI] = internal0EdgeI++;
@@ -363,18 +363,18 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
                 {
                     forAll(nbrPoints, i)
                     {
-                        label nbrPointI = nbrPoints[i];
+                        label nbrPointi = nbrPoints[i];
 
                         label edgeI = pEdges[nbrPoints.indices()[i]];
 
-                        if (nbrPointI != -1)
+                        if (nbrPointi != -1)
                         {
                             if (edgeI < nExtEdges)
                             {
                                 // External edge
                                 oldToNew[edgeI] = externalEdgeI++;
                             }
-                            else if (nbrPointI < nInternalPoints_)
+                            else if (nbrPointi < nInternalPoints_)
                             {
                                 // Not possible!
                                 FatalErrorInFunction
@@ -428,13 +428,13 @@ void CML::primitiveMesh::calcEdges(const bool doFaceEdges) const
         // pointEdges
         pePtr_ = new labelListList(nPoints());
         labelListList& pointEdges = *pePtr_;
-        forAll(pe, pointI)
+        forAll(pe, pointi)
         {
-            DynamicList<label>& pEdges = pe[pointI];
+            DynamicList<label>& pEdges = pe[pointi];
             pEdges.shrink();
             inplaceRenumber(oldToNew, pEdges);
-            pointEdges[pointI].transfer(pEdges);
-            CML::sort(pointEdges[pointI]);
+            pointEdges[pointi].transfer(pEdges);
+            CML::sort(pointEdges[pointi]);
         }
 
         // faceEdges
@@ -539,17 +539,17 @@ const CML::labelListList& CML::primitiveMesh::faceEdges() const
 
             forAll(f, fp)
             {
-                label pointI = f[fp];
-                label nextPointI = f[f.fcIndex(fp)];
+                label pointi = f[fp];
+                label nextPointi = f[f.fcIndex(fp)];
 
-                // Find edge between pointI, nextPontI
-                const labelList& pEdges = pe[pointI];
+                // Find edge between pointi, nextPontI
+                const labelList& pEdges = pe[pointi];
 
                 forAll(pEdges, i)
                 {
                     label edgeI = pEdges[i];
 
-                    if (es[edgeI].otherVertex(pointI) == nextPointI)
+                    if (es[edgeI].otherVertex(pointi) == nextPointi)
                     {
                         fEdges[fp] = edgeI;
                         break;

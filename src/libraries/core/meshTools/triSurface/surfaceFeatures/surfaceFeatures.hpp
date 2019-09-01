@@ -142,7 +142,7 @@ private:
             const bool mark,
             const List<edgeStatus>& edgeStat,
             const label startEdgeI,
-            const label startPointI,
+            const label startPointi,
             const label currentFeatI,
             labelList& featVisited
         );

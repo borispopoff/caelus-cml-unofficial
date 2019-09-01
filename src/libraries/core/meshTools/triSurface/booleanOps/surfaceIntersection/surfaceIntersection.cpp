@@ -571,11 +571,11 @@ void CML::surfaceIntersection::doCutEdges
     // Calculate local (to point) tolerance based on min edge length.
     scalarField surf1PointTol(surf1Pts.size());
 
-    forAll(surf1PointTol, pointI)
+    forAll(surf1PointTol, pointi)
     {
-        surf1PointTol[pointI] =
+        surf1PointTol[pointi] =
             intersection::planarTol()
-          * minEdgeLen(surf1, pointI);
+          * minEdgeLen(surf1, pointi);
     }
 
     const triSurface& surf2 = querySurf2.surface();
@@ -956,13 +956,13 @@ CML::surfaceIntersection::surfaceIntersection
 
         forAllConstIter(labelPairLookup, facePairToVertex_, iter)
         {
-            label pointI = iter();
+            label pointi = iter();
 
-            if (!usedPoints.found(pointI))
+            if (!usedPoints.found(pointi))
             {
                 FatalErrorInFunction
-                    << "Problem: cut point:" << pointI
-                    << " coord:" << cutPoints_[pointI]
+                    << "Problem: cut point:" << pointi
+                    << " coord:" << cutPoints_[pointi]
                     << " not used by any edge" << abort(FatalError);
             }
         }

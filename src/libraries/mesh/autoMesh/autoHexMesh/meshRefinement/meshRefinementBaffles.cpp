@@ -134,17 +134,17 @@ CML::label CML::meshRefinement::getBafflePatch
 
     forAll(mesh_.faces()[facei], fp)
     {
-        label pointI = mesh_.faces()[facei][fp];
+        label pointi = mesh_.faces()[facei][fp];
 
-        forAll(mesh_.pointFaces()[pointI], pf)
+        forAll(mesh_.pointFaces()[pointi], pf)
         {
-            label pFaceI = mesh_.pointFaces()[pointI][pf];
+            label pFaceI = mesh_.pointFaces()[pointi][pf];
 
-            label patchI = patches.whichPatch(pFaceI);
+            label patchi = patches.whichPatch(pFaceI);
 
-            if (patchI != -1 && !patches[patchI].coupled())
+            if (patchi != -1 && !patches[patchi].coupled())
             {
-                return patchI;
+                return patchi;
             }
             else if (facePatch[pFaceI] != -1)
             {
@@ -161,11 +161,11 @@ CML::label CML::meshRefinement::getBafflePatch
     {
         label cFaceI = ownFaces[i];
 
-        label patchI = patches.whichPatch(cFaceI);
+        label patchi = patches.whichPatch(cFaceI);
 
-        if (patchI != -1 && !patches[patchI].coupled())
+        if (patchi != -1 && !patches[patchi].coupled())
         {
-            return patchI;
+            return patchi;
         }
         else if (facePatch[cFaceI] != -1)
         {
@@ -181,11 +181,11 @@ CML::label CML::meshRefinement::getBafflePatch
         {
             label cFaceI = neiFaces[i];
 
-            label patchI = patches.whichPatch(cFaceI);
+            label patchi = patches.whichPatch(cFaceI);
 
-            if (patchI != -1 && !patches[patchI].coupled())
+            if (patchi != -1 && !patches[patchi].coupled())
             {
-                return patchI;
+                return patchi;
             }
             else if (facePatch[cFaceI] != -1)
             {
@@ -375,14 +375,14 @@ CML::Map<CML::label> CML::meshRefinement::getZoneBafflePatches
             const faceZone& fZone = fZones[zoneI];
 
             //// Get patch allocated for zone
-            //label patchI = surfaceToCyclicPatch_[surfI];
+            //label patchi = surfaceToCyclicPatch_[surfI];
             // Get patch of (first region) of surface
-            label patchI = globalToPatch[surfaces_.globalRegion(surfI, 0)];
+            label patchi = globalToPatch[surfaces_.globalRegion(surfI, 0)];
 
             Info<< "For surface "
                 << surfaces_.names()[surfI]
                 << " found faceZone " << fZone.name()
-                << " and patch " << mesh_.boundaryMesh()[patchI].name()
+                << " and patch " << mesh_.boundaryMesh()[patchi].name()
                 << endl;
 
             forAll(fZone, i)
@@ -391,11 +391,11 @@ CML::Map<CML::label> CML::meshRefinement::getZoneBafflePatches
 
                 if (allowBoundary || mesh_.isInternalFace(facei))
                 {
-                    if (!bafflePatch.insert(facei, patchI))
+                    if (!bafflePatch.insert(facei, patchi))
                     {
                         label oldPatchI = bafflePatch[facei];
 
-                        if (oldPatchI != patchI)
+                        if (oldPatchI != patchi)
                         {
                             FatalErrorInFunction
                                 << "Face " << facei
@@ -404,7 +404,7 @@ CML::Map<CML::label> CML::meshRefinement::getZoneBafflePatches
                                 << " is in patch "
                                 << mesh_.boundaryMesh()[oldPatchI].name()
                                 << " and in patch "
-                                << mesh_.boundaryMesh()[patchI].name()
+                                << mesh_.boundaryMesh()[patchi].name()
                                 << abort(FatalError);
                         }
                     }
@@ -2636,9 +2636,9 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
 
     // Get coupled neighbour cellZone. Set to -1 on non-coupled patches.
     labelList neiCellZone(mesh_.nFaces()-mesh_.nInternalFaces(), -1);
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {

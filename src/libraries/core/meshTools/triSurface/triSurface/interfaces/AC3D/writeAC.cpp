@@ -55,11 +55,11 @@ void CML::triSurface::writeAC(Ostream& os) const
 
     os  << "AC3Db" << endl;
 
-    forAll(myPatches, patchI)
+    forAll(myPatches, patchi)
     {
-        const word& pName = myPatches[patchI].name();
+        const word& pName = myPatches[patchi].name();
 
-        label colourI = patchI % 8;
+        label colourI = patchi % 8;
         label colourCompI = 3 * colourI;
 
         os  << "MATERIAL \"" << pName << "Mat\" rgb "
@@ -78,9 +78,9 @@ void CML::triSurface::writeAC(Ostream& os) const
 
     label faceIndex = 0;
 
-    forAll(myPatches, patchI)
+    forAll(myPatches, patchi)
     {
-        const surfacePatch& sp = myPatches[patchI];
+        const surfacePatch& sp = myPatches[patchi];
 
         os  << "OBJECT poly" << endl
             << "name \"" << sp.name() << '"' << endl;
@@ -119,7 +119,7 @@ void CML::triSurface::writeAC(Ostream& os) const
             const labelledTri& f = patch.localFaces()[facei];
 
             os  << "SURF 0x20" << endl          // polygon
-                << "mat " << patchI << endl
+                << "mat " << patchi << endl
                 << "refs " << f.size() << endl;
 
             os << f[0] << " 0 0" << endl;

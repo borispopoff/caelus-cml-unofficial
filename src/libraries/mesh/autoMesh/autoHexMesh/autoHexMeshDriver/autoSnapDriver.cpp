@@ -826,15 +826,15 @@ CML::vectorField CML::autoSnapDriver::calcNearestSurface
                 hitInfo
             );
 
-            forAll(hitInfo, pointI)
+            forAll(hitInfo, pointi)
             {
-                if (hitInfo[pointI].hit())
+                if (hitInfo[pointi].hit())
                 {
-                    patchDisp[pointI] =
-                        hitInfo[pointI].hitPoint()
-                      - localPoints[pointI];
+                    patchDisp[pointi] =
+                        hitInfo[pointi].hitPoint()
+                      - localPoints[pointi];
 
-                    snapSurf[pointI] = hitSurface[pointI];
+                    snapSurf[pointi] = hitSurface[pointi];
                 }
             }
         }
@@ -1354,11 +1354,11 @@ void CML::autoSnapDriver::doSnap
             // Collect all points
             labelList candidatePoints(nDuplicatePoints);
             nDuplicatePoints = 0;
-            forAll(duplicatePoint, pointI)
+            forAll(duplicatePoint, pointi)
             {
-                if (duplicatePoint[pointI])
+                if (duplicatePoint[pointi])
                 {
-                    candidatePoints[nDuplicatePoints++] = pointI;
+                    candidatePoints[nDuplicatePoints++] = pointi;
                 }
             }
 

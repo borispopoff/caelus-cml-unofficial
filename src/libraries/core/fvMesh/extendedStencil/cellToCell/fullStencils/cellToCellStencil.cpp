@@ -169,9 +169,9 @@ void CML::cellToCellStencil::validBoundaryFaces(boolList& isValidBFace) const
 
     isValidBFace.setSize(mesh().nFaces()-mesh().nInternalFaces(), true);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled() || isA<emptyPolyPatch>(pp))
         {
@@ -192,9 +192,9 @@ CML::cellToCellStencil::allCoupledFacesPatch() const
 
     label nCoupled = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -204,9 +204,9 @@ CML::cellToCellStencil::allCoupledFacesPatch() const
     labelList coupledFaces(nCoupled);
     nCoupled = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {

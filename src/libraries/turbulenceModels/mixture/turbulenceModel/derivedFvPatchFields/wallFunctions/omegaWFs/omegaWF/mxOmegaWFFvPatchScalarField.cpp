@@ -175,11 +175,11 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbulence =
         db().lookupObject<turbulenceModel>(turbulenceModel::typeName);
-    const scalarField& y = turbulence.y()[patchI];
+    const scalarField& y = turbulence.y()[patchi];
 
     const scalar Cmu25 = pow025(Cmu_);
 
@@ -196,15 +196,15 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
     const volScalarField& k = tk();
 
     const tmp<volScalarField> tmu = turbulence.mu();
-    const scalarField& muw = tmu().boundaryField()[patchI];
+    const scalarField& muw = tmu().boundaryField()[patchi];
 
-    const scalarField& rhow = turbulence.rho().boundaryField()[patchI];
+    const scalarField& rhow = turbulence.rho().boundaryField()[patchi];
 
     const tmp<volScalarField> tmut = turbulence.mut();
     const volScalarField& mut = tmut();
-    const scalarField& mutw = mut.boundaryField()[patchI];
+    const scalarField& mutw = mut.boundaryField()[patchi];
 
-    const fvPatchVectorField& Uw = turbulence.U().boundaryField()[patchI];
+    const fvPatchVectorField& Uw = turbulence.U().boundaryField()[patchi];
 
     const scalarField magGradUw(mag(Uw.snGrad()));
 

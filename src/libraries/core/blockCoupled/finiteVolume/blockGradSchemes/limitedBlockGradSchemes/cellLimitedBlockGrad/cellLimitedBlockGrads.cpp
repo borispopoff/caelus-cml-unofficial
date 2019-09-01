@@ -236,9 +236,9 @@ cellLimitedBlockGrad<scalar>::fvmGrad
     }
 
     // Limit coupling coeffs
-    forAll(vsf.boundaryField(), patchI)
+    forAll(vsf.boundaryField(), patchi)
     {
-        const fvPatchScalarField& pf = vsf.boundaryField()[patchI];
+        const fvPatchScalarField& pf = vsf.boundaryField()[patchi];
         const fvPatch& patch = pf.patch();
 
         const labelList& fc = patch.faceCells();
@@ -246,12 +246,12 @@ cellLimitedBlockGrad<scalar>::fvmGrad
         if (patch.coupled())
         {
             CoeffField<vector>::linearTypeField& pcoupleUpper =
-                bs.coupleUpper()[patchI].asLinear();
+                bs.coupleUpper()[patchi].asLinear();
             CoeffField<vector>::linearTypeField& pcoupleLower =
-                bs.coupleLower()[patchI].asLinear();
+                bs.coupleLower()[patchi].asLinear();
 
             const scalarField lfNei(
-                limitField.boundaryField()[patchI].patchNeighbourField());
+                limitField.boundaryField()[patchi].patchNeighbourField());
 
             forAll(pf, facei)
             {

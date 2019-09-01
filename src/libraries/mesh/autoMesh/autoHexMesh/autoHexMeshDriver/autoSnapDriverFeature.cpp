@@ -97,12 +97,12 @@ bool CML::autoSnapDriver::isFeaturePoint
     const scalar featureCos,
     const indirectPrimitivePatch& pp,
     const PackedBoolList& isFeatureEdge,
-    const label pointI
+    const label pointi
 ) const
 {
     const pointField& points = pp.localPoints();
     const edgeList& edges = pp.edges();
-    const labelList& pEdges = pp.pointEdges()[pointI];
+    const labelList& pEdges = pp.pointEdges()[pointi];
 
     label nFeatEdges = 0;
 
@@ -119,9 +119,9 @@ bool CML::autoSnapDriver::isFeaturePoint
                     const edge& eI = edges[pEdges[i]];
                     const edge& eJ = edges[pEdges[j]];
 
-                    const point& p = points[pointI];
-                    const point& pI = points[eI.otherVertex(pointI)];
-                    const point& pJ = points[eJ.otherVertex(pointI)];
+                    const point& p = points[pointi];
+                    const point& pI = points[eI.otherVertex(pointi)];
+                    const point& pJ = points[eJ.otherVertex(pointi)];
 
                     vector vI = p-pI;
                     scalar vIMag = mag(vI);
@@ -183,21 +183,21 @@ void CML::autoSnapDriver::smoothAndConstrain
         const labelListList& pointEdges = pp.pointEdges();
         const edgeList& edges = pp.edges();
 
-        forAll(pointEdges, pointI)
+        forAll(pointEdges, pointi)
         {
-            const labelList& pEdges = pointEdges[pointI];
+            const labelList& pEdges = pointEdges[pointi];
 
-            label nConstraints = constraints[pointI].first();
+            label nConstraints = constraints[pointi].first();
 
             if (nConstraints <= 1)
             {
                 forAll(pEdges, i)
                 {
-                    label nbrPointI = edges[pEdges[i]].otherVertex(pointI);
-                    if (constraints[nbrPointI].first() >= nConstraints)
+                    label nbrPointi = edges[pEdges[i]].otherVertex(pointi);
+                    if (constraints[nbrPointi].first() >= nConstraints)
                     {
-                        dispSum[pointI] += disp[nbrPointI];
-                        dispCount[pointI]++;
+                        dispSum[pointi] += disp[nbrPointi];
+                        dispCount[pointi]++;
                     }
                 }
             }
@@ -223,14 +223,14 @@ void CML::autoSnapDriver::smoothAndConstrain
         );
 
         // Constraints
-        forAll(constraints, pointI)
+        forAll(constraints, pointi)
         {
-            if (dispCount[pointI] > 0)
+            if (dispCount[pointi] > 0)
             {
                 // Mix my displacement with neighbours' displacement
-                disp[pointI] =
+                disp[pointi] =
                     0.5
-                   *(disp[pointI] + dispSum[pointI]/dispCount[pointI]);
+                   *(disp[pointi] + dispSum[pointi]/dispCount[pointi]);
             }
         }
     }
@@ -255,15 +255,15 @@ void CML::autoSnapDriver::smoothAndConstrain2
         const labelListList& pointEdges = pp.pointEdges();
         const edgeList& edges = pp.edges();
 
-        forAll(pointEdges, pointI)
+        forAll(pointEdges, pointi)
         {
-            const labelList& pEdges = pointEdges[pointI];
+            const labelList& pEdges = pointEdges[pointi];
 
             forAll(pEdges, i)
             {
-                label nbrPointI = edges[pEdges[i]].otherVertex(pointI);
-                dispSum[pointI] += disp[nbrPointI];
-                dispCount[pointI]++;
+                label nbrPointi = edges[pEdges[i]].otherVertex(pointi);
+                dispSum[pointi] += disp[nbrPointi];
+                dispCount[pointi]++;
             }
         }
 
@@ -287,21 +287,21 @@ void CML::autoSnapDriver::smoothAndConstrain2
         );
 
         // Constraints
-        forAll(constraints, pointI)
+        forAll(constraints, pointi)
         {
-            if (dispCount[pointI] > 0)// && constraints[pointI].first() <= 1)
+            if (dispCount[pointi] > 0)// && constraints[pointi].first() <= 1)
             {
                 // Mix my displacement with neighbours' displacement
-                disp[pointI] =
+                disp[pointi] =
                     0.5
-                   *(disp[pointI] + dispSum[pointI]/dispCount[pointI]);
+                   *(disp[pointi] + dispSum[pointi]/dispCount[pointi]);
 
                 if (applyConstraints)
                 {
-                    disp[pointI] = transform
+                    disp[pointi] = transform
                     (
-                        constraints[pointI].constraintTransformation(),
-                        disp[pointI]
+                        constraints[pointi].constraintTransformation(),
+                        disp[pointi]
                     );
                 }
             }
@@ -547,16 +547,16 @@ void CML::autoSnapDriver::calcNearestFacePointProperties
     pointFacePatchID.setSize(pp.nPoints());
 
     // Fill local data
-    forAll(pp.pointFaces(), pointI)
+    forAll(pp.pointFaces(), pointi)
     {
-        const labelList& pFaces = pp.pointFaces()[pointI];
-        List<point>& pNormals = pointFaceSurfNormals[pointI];
+        const labelList& pFaces = pp.pointFaces()[pointi];
+        List<point>& pNormals = pointFaceSurfNormals[pointi];
         pNormals.setSize(pFaces.size());
-        List<point>& pDisp = pointFaceDisp[pointI];
+        List<point>& pDisp = pointFaceDisp[pointi];
         pDisp.setSize(pFaces.size());
-        List<point>& pFc = pointFaceCentres[pointI];
+        List<point>& pFc = pointFaceCentres[pointi];
         pFc.setSize(pFaces.size());
-        labelList& pFid = pointFacePatchID[pointI];
+        labelList& pFid = pointFacePatchID[pointi];
         pFid.setSize(pFaces.size());
 
         forAll(pFaces, i)
@@ -584,9 +584,9 @@ void CML::autoSnapDriver::calcNearestFacePointProperties
         labelList patchID(pbm.patchID());
 
         // Unmark all non-coupled boundary faces
-        forAll(pbm, patchI)
+        forAll(pbm, patchi)
         {
-            const polyPatch& pp = pbm[patchI];
+            const polyPatch& pp = pbm[patchi];
 
             if (pp.coupled() || isA<emptyPolyPatch>(pp))
             {
@@ -610,30 +610,30 @@ void CML::autoSnapDriver::calcNearestFacePointProperties
         const labelList& boundaryPoints = pp.boundaryPoints();
         forAll(boundaryPoints, i)
         {
-            label pointI = boundaryPoints[i];
-            label meshPointI = pp.meshPoints()[pointI];
-            const point& pt = mesh.points()[meshPointI];
-            const labelList& pFaces = mesh.pointFaces()[meshPointI];
+            label pointi = boundaryPoints[i];
+            label meshPointi = pp.meshPoints()[pointi];
+            const point& pt = mesh.points()[meshPointi];
+            const labelList& pFaces = mesh.pointFaces()[meshPointi];
 
-            List<point>& pNormals = pointFaceSurfNormals[pointI];
-            List<point>& pDisp = pointFaceDisp[pointI];
-            List<point>& pFc = pointFaceCentres[pointI];
-            labelList& pFid = pointFacePatchID[pointI];
+            List<point>& pNormals = pointFaceSurfNormals[pointi];
+            List<point>& pDisp = pointFaceDisp[pointi];
+            List<point>& pFc = pointFaceCentres[pointi];
+            labelList& pFid = pointFacePatchID[pointi];
 
             forAll(pFaces, i)
             {
                 label meshFaceI = pFaces[i];
                 if (!mesh.isInternalFace(meshFaceI))
                 {
-                    label patchI = patchID[meshFaceI-mesh.nInternalFaces()];
+                    label patchi = patchID[meshFaceI-mesh.nInternalFaces()];
 
-                    if (patchI != -1)
+                    if (patchi != -1)
                     {
                         vector fn = mesh.faceAreas()[meshFaceI];
                         pNormals.append(fn/mag(fn));
                         pDisp.append(mesh.faceCentres()[meshFaceI]-pt);
                         pFc.append(mesh.faceCentres()[meshFaceI]);
-                        pFid.append(patchI);
+                        pFid.append(patchi);
                     }
                 }
             }
@@ -846,7 +846,7 @@ void CML::autoSnapDriver::binFeatureFaces
     const indirectPrimitivePatch& pp,
     const scalarField& snapDist,
 
-    const label pointI,
+    const label pointi,
 
     const List<List<point>>& pointFaceSurfNormals,
     const List<List<point>>& pointFaceDisp,
@@ -857,9 +857,9 @@ void CML::autoSnapDriver::binFeatureFaces
     DynamicList<label>& surfaceCounts
 ) const
 {
-    const List<point>& pfSurfNormals = pointFaceSurfNormals[pointI];
-    const List<point>& pfDisp = pointFaceDisp[pointI];
-    const List<point>& pfCentres = pointFaceCentres[pointI];
+    const List<point>& pfSurfNormals = pointFaceSurfNormals[pointi];
+    const List<point>& pfDisp = pointFaceDisp[pointi];
+    const List<point>& pfCentres = pointFaceCentres[pointi];
 
     // Collect all different directions
     forAll(pfSurfNormals, i)
@@ -870,7 +870,7 @@ void CML::autoSnapDriver::binFeatureFaces
             featureCos,
 
             pp,
-            snapDist[pointI],
+            snapDist[pointi],
 
             pfCentres[i],
             pfSurfNormals[i],
@@ -891,7 +891,7 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
 
     const indirectPrimitivePatch& pp,
     const scalarField& snapDist,
-    const label pointI,
+    const label pointi,
 
     const List<List<point>>& pointFaceSurfNormals,
     const List<List<point>>& pointFaceDisp,
@@ -917,7 +917,7 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
 
         pp,
         snapDist,
-        pointI,
+        pointi,
 
         pointFaceSurfNormals,
         pointFaceDisp,
@@ -928,7 +928,7 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
         surfaceCounts
     );
 
-    const point& pt = pp.localPoints()[pointI];
+    const point& pt = pp.localPoints()[pointi];
 
     // Check the number of directions
     if (surfaceNormals.size() == 1)
@@ -939,9 +939,9 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
            *surfaceNormals[0];
 
         // Trim to snap distance
-        if (magSqr(d) > sqr(snapDist[pointI]))
+        if (magSqr(d) > sqr(snapDist[pointi]))
         {
-            d *= CML::sqrt(sqr(snapDist[pointI])/magSqr(d));
+            d *= CML::sqrt(sqr(snapDist[pointi])/magSqr(d));
         }
 
         patchAttraction = d;
@@ -975,9 +975,9 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
         //);
 
         // Trim to snap distance
-        if (magSqr(d) > sqr(snapDist[pointI]))
+        if (magSqr(d) > sqr(snapDist[pointi]))
         {
-            d *= CML::sqrt(sqr(snapDist[pointI])/magSqr(d));
+            d *= CML::sqrt(sqr(snapDist[pointi])/magSqr(d));
         }
 
         patchAttraction = d;
@@ -996,9 +996,9 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
         vector d = cornerPt - pt;
 
         // Trim to snap distance
-        if (magSqr(d) > sqr(snapDist[pointI]))
+        if (magSqr(d) > sqr(snapDist[pointi]))
         {
-            d *= CML::sqrt(sqr(snapDist[pointI])/magSqr(d));
+            d *= CML::sqrt(sqr(snapDist[pointi])/magSqr(d));
         }
 
         patchAttraction = d;
@@ -1069,7 +1069,7 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
     }
 
 
-    forAll(pp.localPoints(), pointI)
+    forAll(pp.localPoints(), pointi)
     {
         vector attraction = Zero;
         pointConstraint constraint;
@@ -1081,7 +1081,7 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
 
             pp,
             snapDist,
-            pointI,
+            pointi,
 
             pointFaceSurfNormals,
             pointFaceDisp,
@@ -1094,28 +1094,28 @@ void CML::autoSnapDriver::featureAttractionUsingReconstruction
 
         if
         (
-            (constraint.first() > patchConstraints[pointI].first())
-         || (magSqr(attraction) < magSqr(patchAttraction[pointI]))
+            (constraint.first() > patchConstraints[pointi].first())
+         || (magSqr(attraction) < magSqr(patchAttraction[pointi]))
         )
         {
-            patchAttraction[pointI] = attraction;
-            patchConstraints[pointI] = constraint;
+            patchAttraction[pointi] = attraction;
+            patchConstraints[pointi] = constraint;
 
-            const point& pt = pp.localPoints()[pointI];
+            const point& pt = pp.localPoints()[pointi];
 
-            if (patchConstraints[pointI].first() == 2 && feStr.valid())
+            if (patchConstraints[pointi].first() == 2 && feStr.valid())
             {
                 meshTools::writeOBJ(feStr(), pt);
                 feVertI++;
-                meshTools::writeOBJ(feStr(), pt+patchAttraction[pointI]);
+                meshTools::writeOBJ(feStr(), pt+patchAttraction[pointi]);
                 feVertI++;
                 feStr() << "l " << feVertI-1 << ' ' << feVertI << nl;
             }
-            else if (patchConstraints[pointI].first() == 3 && fpStr.valid())
+            else if (patchConstraints[pointi].first() == 3 && fpStr.valid())
             {
                 meshTools::writeOBJ(fpStr(), pt);
                 fpVertI++;
-                meshTools::writeOBJ(fpStr(), pt+patchAttraction[pointI]);
+                meshTools::writeOBJ(fpStr(), pt+patchAttraction[pointi]);
                 fpVertI++;
                 fpStr() << "l " << fpVertI-1 << ' ' << fpVertI << nl;
             }
@@ -1166,13 +1166,13 @@ void CML::autoSnapDriver::stringFeatureEdges
         label nChanged = 0;
 
         const labelListList& pointEdges = pp.pointEdges();
-        forAll(pointEdges, pointI)
+        forAll(pointEdges, pointi)
         {
-            if (patchConstraints[pointI].first() == 2)
+            if (patchConstraints[pointi].first() == 2)
             {
-                const point& pt = pp.localPoints()[pointI];
-                const labelList& pEdges = pointEdges[pointI];
-                const vector& featVec = patchConstraints[pointI].second();
+                const point& pt = pp.localPoints()[pointi];
+                const labelList& pEdges = pointEdges[pointi];
+                const vector& featVec = patchConstraints[pointi].second();
 
                 // Detect whether there are edges in both directions.
                 // (direction along the feature edge that is)
@@ -1182,13 +1182,13 @@ void CML::autoSnapDriver::stringFeatureEdges
                 forAll(pEdges, pEdgeI)
                 {
                     const edge& e = pp.edges()[pEdges[pEdgeI]];
-                    label nbrPointI = e.otherVertex(pointI);
+                    label nbrPointi = e.otherVertex(pointi);
 
-                    if (patchConstraints[nbrPointI].first() > 1)
+                    if (patchConstraints[nbrPointi].first() > 1)
                     {
-                        const point& nbrPt = pp.localPoints()[nbrPointI];
+                        const point& nbrPt = pp.localPoints()[nbrPointi];
                         const point featPt =
-                            nbrPt + patchAttraction[nbrPointI];
+                            nbrPt + patchAttraction[nbrPointi];
                         const scalar cosAngle = (featVec & (featPt-pt));
 
                         if (cosAngle > 0)
@@ -1205,7 +1205,7 @@ void CML::autoSnapDriver::stringFeatureEdges
                 if (!hasPos || !hasNeg)
                 {
                     //Pout<< "**Detected feature string end at  "
-                    //    << pp.localPoints()[pointI] << endl;
+                    //    << pp.localPoints()[pointi] << endl;
 
                     // No string. Assign best choice on either side
                     label bestPosPointI = -1;
@@ -1216,30 +1216,30 @@ void CML::autoSnapDriver::stringFeatureEdges
                     forAll(pEdges, pEdgeI)
                     {
                         const edge& e = pp.edges()[pEdges[pEdgeI]];
-                        label nbrPointI = e.otherVertex(pointI);
+                        label nbrPointi = e.otherVertex(pointi);
 
                         if
                         (
-                            patchConstraints[nbrPointI].first() <= 1
-                         && rawPatchConstraints[nbrPointI].first() > 1
+                            patchConstraints[nbrPointi].first() <= 1
+                         && rawPatchConstraints[nbrPointi].first() > 1
                         )
                         {
                             const vector& nbrFeatVec =
-                                rawPatchConstraints[pointI].second();
+                                rawPatchConstraints[pointi].second();
 
                             if (mag(featVec&nbrFeatVec) > featureCos)
                             {
-                                // nbrPointI attracted to sameish feature
+                                // nbrPointi attracted to sameish feature
                                 // Note: also check on position.
 
                                 scalar d2 = magSqr
                                 (
-                                    rawPatchAttraction[nbrPointI]
+                                    rawPatchAttraction[nbrPointi]
                                 );
 
                                 const point featPt =
-                                    pp.localPoints()[nbrPointI]
-                                  + rawPatchAttraction[nbrPointI];
+                                    pp.localPoints()[nbrPointi]
+                                  + rawPatchAttraction[nbrPointi];
                                 const scalar cosAngle =
                                     (featVec & (featPt-pt));
 
@@ -1248,7 +1248,7 @@ void CML::autoSnapDriver::stringFeatureEdges
                                     if (!hasPos && d2 < minPosDistSqr)
                                     {
                                         minPosDistSqr = d2;
-                                        bestPosPointI = nbrPointI;
+                                        bestPosPointI = nbrPointi;
                                     }
                                 }
                                 else
@@ -1256,7 +1256,7 @@ void CML::autoSnapDriver::stringFeatureEdges
                                     if (!hasNeg && d2 < minNegDistSqr)
                                     {
                                         minNegDistSqr = d2;
-                                        bestNegPointI = nbrPointI;
+                                        bestNegPointI = nbrPointi;
                                     }
                                 }
                             }
@@ -1317,7 +1317,7 @@ CML::pointIndexHit CML::autoSnapDriver::findNearFeatureEdge
 (
     const indirectPrimitivePatch& pp,
     const scalarField& snapDist,
-    const label pointI,
+    const label pointi,
     const point& estimatedPt,
 
     label& featI,
@@ -1334,7 +1334,7 @@ CML::pointIndexHit CML::autoSnapDriver::findNearFeatureEdge
     features.findNearestEdge
     (
         pointField(1, estimatedPt),
-        scalarField(1, sqr(snapDist[pointI])),
+        scalarField(1, sqr(snapDist[pointi])),
         nearEdgeFeat,
         nearEdgeInfo
     );
@@ -1359,9 +1359,9 @@ CML::pointIndexHit CML::autoSnapDriver::findNearFeatureEdge
         edgeConstraints[featI][nearInfo.index()].append(c);
 
         // Store for later use
-        patchAttraction[pointI] =
-            nearInfo.hitPoint()-pp.localPoints()[pointI];
-        patchConstraints[pointI] = c;
+        patchAttraction[pointi] =
+            nearInfo.hitPoint()-pp.localPoints()[pointi];
+        patchConstraints[pointi] = c;
     }
     return nearInfo;
 }
@@ -1369,7 +1369,7 @@ CML::labelPair CML::autoSnapDriver::findNearFeaturePoint
 (
     const indirectPrimitivePatch& pp,
     const scalarField& snapDist,
-    const label pointI,
+    const label pointi,
     const point& estimatedPt,
 
     // Feature-point to pp point
@@ -1390,7 +1390,7 @@ CML::labelPair CML::autoSnapDriver::findNearFeaturePoint
     features.findNearestPoint
     (
         pointField(1, estimatedPt),
-        scalarField(1, sqr(snapDist[pointI])),
+        scalarField(1, sqr(snapDist[pointi])),
         nearFeat,
         nearIndex
     );
@@ -1400,7 +1400,7 @@ CML::labelPair CML::autoSnapDriver::findNearFeaturePoint
 
     if (featI != -1)
     {
-        const point& pt = pp.localPoints()[pointI];
+        const point& pt = pp.localPoints()[pointi];
 
         const treeDataPoint& shapes =
             features.pointTrees()[featI].shapes();
@@ -1409,40 +1409,40 @@ CML::labelPair CML::autoSnapDriver::findNearFeaturePoint
         scalar distSqr = magSqr(featPt-pt);
 
         // Check if already attracted
-        label oldPointI = pointAttractor[featI][featPointI];
+        label oldPointi = pointAttractor[featI][featPointI];
 
-        if (oldPointI != -1)
+        if (oldPointi != -1)
         {
             // Check distance
-            if (distSqr >= magSqr(featPt-pp.localPoints()[oldPointI]))
+            if (distSqr >= magSqr(featPt-pp.localPoints()[oldPointi]))
             {
-                // oldPointI nearest. Keep.
+                // oldPointi nearest. Keep.
                 featI = -1;
                 featPointI = -1;
             }
             else
             {
-                // Current pointI nearer.
-                pointAttractor[featI][featPointI] = pointI;
+                // Current pointi nearer.
+                pointAttractor[featI][featPointI] = pointi;
                 pointConstraints[featI][featPointI].first() = 3;
                 pointConstraints[featI][featPointI].second() = Zero;
 
                 // Store for later use
-                patchAttraction[pointI] = featPt-pt;
-                patchConstraints[pointI] =
+                patchAttraction[pointi] = featPt-pt;
+                patchConstraints[pointi] =
                     pointConstraints[featI][featPointI];
 
-                // Reset oldPointI to nearest on feature edge
-                patchAttraction[oldPointI] = Zero;
-                patchConstraints[oldPointI] = pointConstraint();
+                // Reset oldPointi to nearest on feature edge
+                patchAttraction[oldPointi] = Zero;
+                patchConstraints[oldPointi] = pointConstraint();
 
                 label edgeFeatI;
                 findNearFeatureEdge
                 (
                     pp,
                     snapDist,
-                    oldPointI,
-                    pp.localPoints()[oldPointI],
+                    oldPointi,
+                    pp.localPoints()[oldPointi],
 
                     edgeFeatI,
                     edgeAttractors,
@@ -1454,14 +1454,14 @@ CML::labelPair CML::autoSnapDriver::findNearFeaturePoint
         }
         else
         {
-            // Current pointI nearer.
-            pointAttractor[featI][featPointI] = pointI;
+            // Current pointi nearer.
+            pointAttractor[featI][featPointI] = pointi;
             pointConstraints[featI][featPointI].first() = 3;
             pointConstraints[featI][featPointI].second() = Zero;
 
             // Store for later use
-            patchAttraction[pointI] = featPt-pt;
-            patchConstraints[pointI] = pointConstraints[featI][featPointI];
+            patchAttraction[pointi] = featPt-pt;
+            patchConstraints[pointi] = pointConstraints[featI][featPointI];
         }
     }
 
@@ -1541,9 +1541,9 @@ void CML::autoSnapDriver::determineFeatures
 
     const refinementFeatures& features = meshRefiner_.features();
 
-    forAll(pp.localPoints(), pointI)
+    forAll(pp.localPoints(), pointi)
     {
-        const point& pt = pp.localPoints()[pointI];
+        const point& pt = pp.localPoints()[pointi];
 
         vector attraction = Zero;
         pointConstraint constraint;
@@ -1555,7 +1555,7 @@ void CML::autoSnapDriver::determineFeatures
 
             pp,
             snapDist,
-            pointI,
+            pointi,
 
             pointFaceSurfNormals,
             pointFaceDisp,
@@ -1568,15 +1568,15 @@ void CML::autoSnapDriver::determineFeatures
 
         if
         (
-            (constraint.first() > patchConstraints[pointI].first())
-         || (magSqr(attraction) < magSqr(patchAttraction[pointI]))
+            (constraint.first() > patchConstraints[pointi].first())
+         || (magSqr(attraction) < magSqr(patchAttraction[pointi]))
         )
         {
-            patchAttraction[pointI] = attraction;
-            patchConstraints[pointI] = constraint;
+            patchAttraction[pointi] = attraction;
+            patchConstraints[pointi] = constraint;
 
             // Check the number of directions
-            if (patchConstraints[pointI].first() == 1)
+            if (patchConstraints[pointi].first() == 1)
             {
                 // Flat surface. Check for different patchIDs
                 if (multiRegionFeatureSnap)
@@ -1586,8 +1586,8 @@ void CML::autoSnapDriver::determineFeatures
                         findMultiPatchPoint
                         (
                             pt,
-                            pointFacePatchID[pointI],
-                            pointFaceCentres[pointI]
+                            pointFacePatchID[pointi],
+                            pointFaceCentres[pointi]
                         )
                     );
                     if (multiPatchPt.hit())
@@ -1600,7 +1600,7 @@ void CML::autoSnapDriver::determineFeatures
                         (
                             pp,
                             snapDist,
-                            pointI,
+                            pointi,
                             multiPatchPt.hitPoint(),        //estimatedPt
 
                             featI,
@@ -1649,12 +1649,12 @@ void CML::autoSnapDriver::determineFeatures
                     }
                 }
             }
-            else if (patchConstraints[pointI].first() == 2)
+            else if (patchConstraints[pointi].first() == 2)
             {
                 // Mark point on the nearest feature edge. Note that we
                 // only search within the surrounding since the plane
                 // reconstruction might find a feature where there isn't one.
-                const point estimatedPt(pt + patchAttraction[pointI]);
+                const point estimatedPt(pt + patchAttraction[pointi]);
 
                 // Determine nearest point on feature edge. Store constraint
                 // (calculated from feature edge, alternative would be to
@@ -1664,7 +1664,7 @@ void CML::autoSnapDriver::determineFeatures
                 (
                     pp,
                     snapDist,
-                    pointI,
+                    pointi,
                     estimatedPt,
 
                     featI,
@@ -1711,16 +1711,16 @@ void CML::autoSnapDriver::determineFeatures
                     }
                 }
             }
-            else if (patchConstraints[pointI].first() == 3)
+            else if (patchConstraints[pointi].first() == 3)
             {
                 // Mark point on the nearest feature point.
-                const point estimatedPt(pt + patchAttraction[pointI]);
+                const point estimatedPt(pt + patchAttraction[pointi]);
 
                 labelPair nearInfo = findNearFeaturePoint
                 (
                     pp,
                     snapDist,
-                    pointI,
+                    pointi,
                     estimatedPt,
 
                     // Feature-point to pp point
@@ -1942,7 +1942,7 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
             }
         }
 
-        forAll(pp.pointEdges(), pointI)
+        forAll(pp.pointEdges(), pointi)
         {
             if
             (
@@ -1951,29 +1951,29 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
                     featureCos,
                     pp,
                     isBaffleEdge,
-                    pointI
+                    pointi
                 )
             )
             {
-                //Pout<< "Detected feature point:" << pp.localPoints()[pointI]
+                //Pout<< "Detected feature point:" << pp.localPoints()[pointi]
                 //    << endl;
                 //-TEMPORARILY DISABLED:
-                //pointStatus[pointI] = 1;
+                //pointStatus[pointi] = 1;
             }
         }
 
-        forAll(pointStatus, pointI)
+        forAll(pointStatus, pointi)
         {
-            const point& pt = pp.localPoints()[pointI];
+            const point& pt = pp.localPoints()[pointi];
 
-            if (pointStatus[pointI] == 0)   // baffle edge
+            if (pointStatus[pointi] == 0)   // baffle edge
             {
                 label featI;
                 const pointIndexHit nearInfo = findNearFeatureEdge
                 (
                     pp,
                     snapDist,
-                    pointI,
+                    pointi,
                     pt,
 
                     featI,
@@ -1989,14 +1989,14 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
                     //    << endl;
                 }
             }
-            else if (pointStatus[pointI] == 1)   // baffle point
+            else if (pointStatus[pointi] == 1)   // baffle point
             {
                 labelList nearFeat;
                 labelList nearIndex;
                 features.findNearestPoint
                 (
                     pointField(1, pt),
-                    scalarField(1, sqr(snapDist[pointI])),
+                    scalarField(1, sqr(snapDist[pointi])),
                     nearFeat,
                     nearIndex
                 );
@@ -2012,28 +2012,28 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
                     scalar distSqr = magSqr(featPt-pt);
 
                     // Check if already attracted
-                    label oldPointI = pointAttractor[featI][featPointI];
+                    label oldPointi = pointAttractor[featI][featPointI];
 
                     if
                     (
-                        oldPointI == -1
+                        oldPointi == -1
                      || (
                             distSqr
-                          < magSqr(featPt-pp.localPoints()[oldPointI])
+                          < magSqr(featPt-pp.localPoints()[oldPointi])
                         )
                     )
                     {
-                        pointAttractor[featI][featPointI] = pointI;
+                        pointAttractor[featI][featPointI] = pointi;
                         pointConstraints[featI][featPointI].first() = 3;
                         pointConstraints[featI][featPointI].second() =
                             Zero;
 
                         // Store for later use
-                        rawPatchAttraction[pointI] = featPt-pt;
-                        rawPatchConstraints[pointI] =
+                        rawPatchAttraction[pointi] = featPt-pt;
+                        rawPatchConstraints[pointi] =
                             pointConstraints[featI][featPointI];
 
-                        if (oldPointI != -1)
+                        if (oldPointi != -1)
                         {
                             // The current point is closer so wins. Reset
                             // the old point to attract to nearest edge
@@ -2043,8 +2043,8 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
                             (
                                 pp,
                                 snapDist,
-                                oldPointI,
-                                pp.localPoints()[oldPointI],
+                                oldPointi,
+                                pp.localPoints()[oldPointi],
 
                                 edgeFeatI,
                                 edgeAttractors,
@@ -2074,7 +2074,7 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
                     (
                         pp,
                         snapDist,
-                        pointI,
+                        pointi,
                         pt,                     // starting point
 
                         featI,
@@ -2141,19 +2141,19 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
 
                 if (nearInfo.hit())
                 {
-                    label pointI = nearInfo.index();
-                    const point attraction = featPt-pp.localPoints()[pointI];
+                    label pointi = nearInfo.index();
+                    const point attraction = featPt-pp.localPoints()[pointi];
 
                     // Check if this point is already being attracted. If so
                     // override it only if nearer.
                     if
                     (
-                        patchConstraints[pointI].first() <= 1
-                     || magSqr(attraction) < magSqr(patchAttraction[pointI])
+                        patchConstraints[pointi].first() <= 1
+                     || magSqr(attraction) < magSqr(patchAttraction[pointi])
                     )
                     {
-                        patchAttraction[pointI] = attraction;
-                        patchConstraints[pointI] = edgeConstr[featEdgeI][i];
+                        patchAttraction[pointi] = attraction;
+                        patchConstraints[pointi] = edgeConstr[featEdgeI][i];
                     }
                 }
                 else
@@ -2202,34 +2202,34 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
 
                 if (nearInfo.hit())
                 {
-                    label pointI = nearInfo.index();
-                    const point& pt = pp.localPoints()[pointI];
+                    label pointi = nearInfo.index();
+                    const point& pt = pp.localPoints()[pointi];
                     const point attraction = featPt-pt;
 
                     // - already attracted to feature edge : point always wins
                     // - already attracted to feature point: nearest wins
 
-                    if (patchConstraints[pointI].first() <= 1)
+                    if (patchConstraints[pointi].first() <= 1)
                     {
-                        patchAttraction[pointI] = attraction;
-                        patchConstraints[pointI] = pointConstr[featPointI];
+                        patchAttraction[pointi] = attraction;
+                        patchConstraints[pointi] = pointConstr[featPointI];
                     }
-                    else if (patchConstraints[pointI].first() == 2)
+                    else if (patchConstraints[pointi].first() == 2)
                     {
-                        patchAttraction[pointI] = attraction;
-                        patchConstraints[pointI] = pointConstr[featPointI];
+                        patchAttraction[pointi] = attraction;
+                        patchConstraints[pointi] = pointConstr[featPointI];
                     }
-                    else if (patchConstraints[pointI].first() == 3)
+                    else if (patchConstraints[pointi].first() == 3)
                     {
                         // Only if nearer
                         if
                         (
                             magSqr(attraction)
-                          < magSqr(patchAttraction[pointI])
+                          < magSqr(patchAttraction[pointi])
                         )
                         {
-                            patchAttraction[pointI] = attraction;
-                            patchConstraints[pointI] =
+                            patchAttraction[pointi] = attraction;
+                            patchConstraints[pointi] =
                                 pointConstr[featPointI];
                         }
                     }
@@ -2265,37 +2265,37 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
         // 1. Mark points on multiple patches
         PackedBoolList isMultiPatchPoint(pp.size());
 
-        forAll(pointFacePatchID, pointI)
+        forAll(pointFacePatchID, pointi)
         {
             pointIndexHit multiPatchPt = findMultiPatchPoint
             (
-                pp.localPoints()[pointI],
-                pointFacePatchID[pointI],
-                pointFaceCentres[pointI]
+                pp.localPoints()[pointi],
+                pointFacePatchID[pointi],
+                pointFaceCentres[pointi]
             );
-            isMultiPatchPoint[pointI] = multiPatchPt.hit();
+            isMultiPatchPoint[pointi] = multiPatchPt.hit();
         }
 
         // 2. Make sure multi-patch points are also attracted
-        forAll(isMultiPatchPoint, pointI)
+        forAll(isMultiPatchPoint, pointi)
         {
-            if (isMultiPatchPoint[pointI])
+            if (isMultiPatchPoint[pointi])
             {
                 if
                 (
-                    patchConstraints[pointI].first() <= 1
-                 && rawPatchConstraints[pointI].first() > 1
+                    patchConstraints[pointi].first() <= 1
+                 && rawPatchConstraints[pointi].first() > 1
                 )
                 {
-                    patchAttraction[pointI] = rawPatchAttraction[pointI];
-                    patchConstraints[pointI] = rawPatchConstraints[pointI];
+                    patchAttraction[pointi] = rawPatchAttraction[pointi];
+                    patchConstraints[pointi] = rawPatchConstraints[pointi];
 
                     if (multiPatchStr.valid())
                     {
                         Pout<< "Adding constraint on multiPatchPoint:"
-                            << pp.localPoints()[pointI]
-                            << " constraint:" << patchConstraints[pointI]
-                            << " attraction:" << patchAttraction[pointI]
+                            << pp.localPoints()[pointi]
+                            << " constraint:" << patchConstraints[pointi]
+                            << " attraction:" << patchAttraction[pointi]
                             << endl;
                     }
                 }
@@ -2314,11 +2314,11 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
             label nMultiPatchPoints = 0;
             forAll(f, fp)
             {
-                label pointI = f[fp];
+                label pointi = f[fp];
                 if
                 (
-                    isMultiPatchPoint[pointI]
-                 && patchConstraints[pointI].first() > 1
+                    isMultiPatchPoint[pointi]
+                 && patchConstraints[pointi].first() > 1
                 )
                 {
                     nMultiPatchPoints++;
@@ -2329,18 +2329,18 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
             {
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
+                    label pointi = f[fp];
                     if
                     (
-                       !isMultiPatchPoint[pointI]
-                     && patchConstraints[pointI].first() > 1
+                       !isMultiPatchPoint[pointi]
+                     && patchConstraints[pointi].first() > 1
                     )
                     {
                         //Pout<< "Knocking out constraint"
                         //    << " on non-multiPatchPoint:"
-                        //    << pp.localPoints()[pointI] << endl;
-                        patchAttraction[pointI] = Zero;
-                        patchConstraints[pointI] = pointConstraint();
+                        //    << pp.localPoints()[pointi] << endl;
+                        patchAttraction[pointi] = Zero;
+                        patchConstraints[pointi] = pointConstraint();
                         nChanged++;
 
                         if (multiPatchStr.valid())
@@ -2348,7 +2348,7 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
                             meshTools::writeOBJ
                             (
                                 multiPatchStr(),
-                                pp.localPoints()[pointI]
+                                pp.localPoints()[pointi]
                             );
                         }
                     }
@@ -2384,31 +2384,31 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
         Pout<< "Dumping feature-point attraction to "
             << featurePointStr.name() << endl;
 
-        forAll(patchConstraints, pointI)
+        forAll(patchConstraints, pointi)
         {
-            const point& pt = pp.localPoints()[pointI];
+            const point& pt = pp.localPoints()[pointi];
 
-            if (patchConstraints[pointI].first() == 2)
+            if (patchConstraints[pointi].first() == 2)
             {
                 meshTools::writeOBJ(featureEdgeStr, pt);
                 featureEdgeVertI++;
                 meshTools::writeOBJ
                 (
                     featureEdgeStr,
-                    pt+patchAttraction[pointI]
+                    pt+patchAttraction[pointi]
                 );
                 featureEdgeVertI++;
                 featureEdgeStr << "l " << featureEdgeVertI-1
                     << ' ' << featureEdgeVertI << nl;
             }
-            else if (patchConstraints[pointI].first() == 3)
+            else if (patchConstraints[pointi].first() == 3)
             {
                 meshTools::writeOBJ(featurePointStr, pt);
                 featurePointVertI++;
                 meshTools::writeOBJ
                 (
                     featurePointStr,
-                    pt+patchAttraction[pointI]
+                    pt+patchAttraction[pointi]
                 );
                 featurePointVertI++;
                 featurePointStr << "l " << featurePointVertI-1
@@ -2456,8 +2456,8 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
             label firstAttract = -1;
             forAll(f, fp)
             {
-                label pointI = f[fp];
-                if (patchConstraints[pointI].first() == 2)
+                label pointi = f[fp];
+                if (patchConstraints[pointi].first() == 2)
                 {
                     nAttract++;
                     if (firstAttract == -1)
@@ -2469,9 +2469,9 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
             if (nAttract == 2)
             {
                 label nextAttract = f.fcIndex(f.fcIndex(firstAttract));
-                label pointI = f[nextAttract];
+                label pointi = f[nextAttract];
 
-                if (patchConstraints[pointI].first() == 2)
+                if (patchConstraints[pointi].first() == 2)
                 {
                     // Found two diagonal points that being attracted.
                     // For now just attract my one to the average of those.
@@ -2504,10 +2504,10 @@ void CML::autoSnapDriver::featureAttractionUsingFeatureEdges
                         scalar minDistSqr = GREAT;
                         forAll(f, fp)
                         {
-                            label pointI = f[fp];
-                            if (patchConstraints[pointI].first() <= 1)
+                            label pointi = f[fp];
+                            if (patchConstraints[pointi].first() <= 1)
                             {
-                                const point& pt = pp.localPoints()[pointI];
+                                const point& pt = pp.localPoints()[pointi];
                                 scalar distSqr = magSqr(mid-pt);
                                 if (distSqr < minDistSqr)
                                 {
@@ -2592,12 +2592,12 @@ void CML::autoSnapDriver::preventFaceSqueeze
         label nConstraints = 0;
         forAll(f, fp)
         {
-            label pointI = f[fp];
-            const point& pt = pp.localPoints()[pointI];
+            label pointi = f[fp];
+            const point& pt = pp.localPoints()[pointi];
 
-            if (patchConstraints[pointI].first() > 1)
+            if (patchConstraints[pointi].first() > 1)
             {
-                points[fp] = pt + patchAttraction[pointI];
+                points[fp] = pt + patchAttraction[pointi];
                 nConstraints++;
             }
             else
@@ -2626,9 +2626,9 @@ void CML::autoSnapDriver::preventFaceSqueeze
                 }
                 if (maxFp != -1)
                 {
-                    label pointI = f[maxFp];
-                    // Lower attraction on pointI
-                    patchAttraction[pointI] *= 0.5;
+                    label pointi = f[maxFp];
+                    // Lower attraction on pointi
+                    patchAttraction[pointi] *= 0.5;
                 }
             }
         }
@@ -2824,13 +2824,13 @@ CML::vectorField CML::autoSnapDriver::calcNearestSurfaceFeature
 
 
     // Mix with direct feature attraction
-    forAll(patchConstraints, pointI)
+    forAll(patchConstraints, pointi)
     {
-        if (patchConstraints[pointI].first() > 1)
+        if (patchConstraints[pointi].first() > 1)
         {
-            patchDisp[pointI] =
-                (1.0-featureAttract)*patchDisp[pointI]
-              + featureAttract*patchAttraction[pointI];
+            patchDisp[pointi] =
+                (1.0-featureAttract)*patchDisp[pointi]
+              + featureAttract*patchAttraction[pointi];
         }
     }
 
@@ -2842,17 +2842,17 @@ CML::vectorField CML::autoSnapDriver::calcNearestSurfaceFeature
         label nEdge = 0;
         label nPoint = 0;
 
-        forAll(patchConstraints, pointI)
+        forAll(patchConstraints, pointi)
         {
-            if (patchConstraints[pointI].first() == 1)
+            if (patchConstraints[pointi].first() == 1)
             {
                 nPlanar++;
             }
-            else if (patchConstraints[pointI].first() == 2)
+            else if (patchConstraints[pointi].first() == 2)
             {
                 nEdge++;
             }
-            else if (patchConstraints[pointI].first() == 3)
+            else if (patchConstraints[pointi].first() == 3)
             {
                 nPoint++;
             }

@@ -90,14 +90,14 @@ class meshDualiser
         static void dumpPolyTopoChange(const polyTopoChange&, const fileName&);
 
         //- Find dual cell given point and cell
-        label findDualCell(const label celli, const label pointI) const;
+        label findDualCell(const label celli, const label pointi) const;
 
         //- Helper function to generate dualpoints on all boundary edges
         //  emanating from (boundary & feature) point
         void generateDualBoundaryEdges
         (
             const PackedBoolList&,
-            const label pointI,
+            const label pointi,
             polyTopoChange&
         );
 
@@ -105,13 +105,13 @@ class meshDualiser
         bool sameDualCell
         (
             const label facei,
-            const label pointI
+            const label pointi
         ) const;
 
         //- Add internal face
         label addInternalFace
         (
-            const label masterPointI,
+            const label masterPointi,
             const label masterEdgeI,
             const label masterFaceI,
 
@@ -125,12 +125,12 @@ class meshDualiser
         //- Add boundary face
         label addBoundaryFace
         (
-            const label masterPointI,
+            const label masterPointi,
             const label masterEdgeI,
             const label masterFaceI,
 
             const label dualCellI,
-            const label patchI,
+            const label patchi,
             const DynamicList<label>& verts,
             polyTopoChange& meshMod
         ) const;
@@ -154,11 +154,11 @@ class meshDualiser
             polyTopoChange&
         ) const;
 
-        //- Creates boundary faces walking around point on patchI.
+        //- Creates boundary faces walking around point on patchi.
         void createFacesAroundBoundaryPoint
         (
-            const label patchI,
-            const label patchPointI,
+            const label patchi,
+            const label patchPointi,
             const label startFaceI,
             polyTopoChange&,
             boolList& donePFaces            // pFaces visited

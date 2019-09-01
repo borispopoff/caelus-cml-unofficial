@@ -110,12 +110,12 @@ tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
     }
 
     // Boundary contributions
-    forAll (vf.boundaryField(), patchI)
+    forAll (vf.boundaryField(), patchi)
     {
-        const fvPatchScalarField& pf = vf.boundaryField()[patchI];
+        const fvPatchScalarField& pf = vf.boundaryField()[patchi];
         const fvPatch& patch = pf.patch();
-        const vectorField& pownLs = ownLs.boundaryField()[patchI];
-        const fvsPatchScalarField& pw = w.boundaryField()[patchI];
+        const vectorField& pownLs = ownLs.boundaryField()[patchi];
+        const fvsPatchScalarField& pw = w.boundaryField()[patchi];
         const labelList& fc = patch.faceCells();
 
         // Part of diagonal contribution irrespective of the patch type
@@ -127,14 +127,14 @@ tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
 
         if (patch.coupled())
         {
-            const vectorField& pneiLs = neiLs.boundaryField()[patchI];
+            const vectorField& pneiLs = neiLs.boundaryField()[patchi];
             const scalarField cellVInNei(
-                cellV.boundaryField()[patchI].patchNeighbourField());
+                cellV.boundaryField()[patchi].patchNeighbourField());
 
             CoeffField<vector>::linearTypeField& pcoupleUpper =
-                bs.coupleUpper()[patchI].asLinear();
+                bs.coupleUpper()[patchi].asLinear();
             CoeffField<vector>::linearTypeField& pcoupleLower =
-                bs.coupleLower()[patchI].asLinear();
+                bs.coupleLower()[patchi].asLinear();
 
             // Coupling  and diagonal contributions
             forAll (pf, facei)

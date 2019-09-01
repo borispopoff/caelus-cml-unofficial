@@ -157,11 +157,11 @@ bool CML::primitiveMesh::calcPointOrder
 
         forAll(f, fp)
         {
-            label pointI = f[fp];
+            label pointi = f[fp];
 
-            if (oldToNew[pointI] == -1)
+            if (oldToNew[pointi] == -1)
             {
-                oldToNew[pointI] = nBoundaryPoints++;
+                oldToNew[pointi] = nBoundaryPoints++;
             }
         }
     }
@@ -171,11 +171,11 @@ bool CML::primitiveMesh::calcPointOrder
     nInternalPoints = nPoints - nBoundaryPoints;
 
     // Move the boundary addressing up
-    forAll(oldToNew, pointI)
+    forAll(oldToNew, pointi)
     {
-        if (oldToNew[pointI] != -1)
+        if (oldToNew[pointi] != -1)
         {
-            oldToNew[pointI] += nInternalPoints;
+            oldToNew[pointi] += nInternalPoints;
         }
     }
 
@@ -183,7 +183,7 @@ bool CML::primitiveMesh::calcPointOrder
     // 2. Compact the internal points. Detect whether internal and boundary
     // points are mixed.
 
-    label internalPointI = 0;
+    label internalPointi = 0;
 
     bool ordered = true;
 
@@ -193,15 +193,15 @@ bool CML::primitiveMesh::calcPointOrder
 
         forAll(f, fp)
         {
-            label pointI = f[fp];
+            label pointi = f[fp];
 
-            if (oldToNew[pointI] == -1)
+            if (oldToNew[pointi] == -1)
             {
-                if (pointI >= nInternalPoints)
+                if (pointi >= nInternalPoints)
                 {
                     ordered = false;
                 }
-                oldToNew[pointI] = internalPointI++;
+                oldToNew[pointi] = internalPointi++;
             }
         }
     }

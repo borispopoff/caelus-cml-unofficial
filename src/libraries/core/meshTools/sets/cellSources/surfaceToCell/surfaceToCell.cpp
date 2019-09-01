@@ -62,13 +62,13 @@ CML::topoSetSource::addToUsageTable CML::surfaceToCell::usage_
 CML::label CML::surfaceToCell::getNearest
 (
     const triSurfaceSearch& querySurf,
-    const label pointI,
+    const label pointi,
     const point& pt,
     const vector& span,
     Map<label>& cache
 )
 {
-    Map<label>::const_iterator iter = cache.find(pointI);
+    Map<label>::const_iterator iter = cache.find(pointi);
 
     if (iter != cache.end())
     {
@@ -83,7 +83,7 @@ CML::label CML::surfaceToCell::getNearest
         label triI = inter.index();
 
         // Store triangle on point
-        cache.insert(pointI, triI);
+        cache.insert(pointi, triI);
 
         return triI;
     }
@@ -118,14 +118,14 @@ bool CML::surfaceToCell::differingPointNormals
 
         forAll(f, fp)
         {
-            label pointI = f[fp];
+            label pointi = f[fp];
 
             label pointTriI =
                 getNearest
                 (
                     querySurf,
-                    pointI,
-                    points[pointI],
+                    pointi,
+                    points[pointi],
                     span,
                     pointToNearest
                 );

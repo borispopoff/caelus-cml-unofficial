@@ -104,9 +104,9 @@ label mergeEdges
 
     label nCollapsed = 0;
 
-    forAll(pointEdges, pointI)
+    forAll(pointEdges, pointi)
     {
-        const labelList& pEdges = pointEdges[pointI];
+        const labelList& pEdges = pointEdges[pointi];
 
         if (pEdges.size() == 2)
         {
@@ -114,15 +114,15 @@ label mergeEdges
             const edge& rightE = edges[pEdges[1]];
 
             // Get the two vertices on both sides of the point
-            label leftV = leftE.otherVertex(pointI);
-            label rightV = rightE.otherVertex(pointI);
+            label leftV = leftE.otherVertex(pointi);
+            label rightV = rightE.otherVertex(pointi);
 
             // Collapse only if none of the points part of merge network
             // or all of networks with different masters.
             label midMaster = -1;
-            if (region[pointI] != -1)
+            if (region[pointi] != -1)
             {
-                midMaster = master[region[pointI]];
+                midMaster = master[region[pointi]];
             }
 
             label leftMaster = -2;
@@ -145,10 +145,10 @@ label mergeEdges
             )
             {
                 // Check if the two edge are in line
-                vector leftVec = points[pointI] - points[leftV];
+                vector leftVec = points[pointi] - points[leftV];
                 leftVec /= mag(leftVec) + VSMALL;
 
-                vector rightVec = points[rightV] - points[pointI];
+                vector rightVec = points[rightV] - points[pointi];
                 rightVec /= mag(rightVec) + VSMALL;
 
                 if ((leftVec & rightVec) > maxCos)

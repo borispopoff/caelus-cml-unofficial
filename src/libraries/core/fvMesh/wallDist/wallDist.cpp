@@ -72,13 +72,13 @@ void CML::wallDist::correct()
     transfer(wave.distance());
 
     // Transfer values on patches into boundaryField of *this
-    forAll(boundaryField(), patchI)
+    forAll(boundaryField(), patchi)
     {
-        if (!isA<emptyFvPatchScalarField>(boundaryField()[patchI]))
+        if (!isA<emptyFvPatchScalarField>(boundaryField()[patchi]))
         {
-            scalarField& waveFld = wave.patchDistance()[patchI];
+            scalarField& waveFld = wave.patchDistance()[patchi];
 
-            boundaryField()[patchI].transfer(waveFld);
+            boundaryField()[patchi].transfer(waveFld);
         }
     }
 

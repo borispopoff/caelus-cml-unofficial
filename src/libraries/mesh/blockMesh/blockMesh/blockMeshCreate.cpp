@@ -268,9 +268,9 @@ void CML::blockMesh::createPatches() const
     patches_.clear();
     patches_.setSize(topoPatches.size());
 
-    forAll(topoPatches, patchI)
+    forAll(topoPatches, patchi)
     {
-        patches_[patchI] = createPatchFaces(topoPatches[patchI]);
+        patches_[patchi] = createPatchFaces(topoPatches[patchi]);
     }
 
 }

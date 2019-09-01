@@ -145,9 +145,9 @@ void CML::slidingInterface::calcAttachedAddressing() const
 
         const labelList& masterMeshPoints = masterPatch.meshPoints();
 
-        forAll(masterMeshPoints, pointI)
+        forAll(masterMeshPoints, pointi)
         {
-            const labelList& curFaces = pointFaces[masterMeshPoints[pointI]];
+            const labelList& curFaces = pointFaces[masterMeshPoints[pointi]];
 
             forAll(curFaces, facei)
             {
@@ -174,9 +174,9 @@ void CML::slidingInterface::calcAttachedAddressing() const
 
         const labelList& slaveMeshPoints = slavePatch.meshPoints();
 
-        forAll(slaveMeshPoints, pointI)
+        forAll(slaveMeshPoints, pointi)
         {
-            const labelList& curFaces = pointFaces[slaveMeshPoints[pointI]];
+            const labelList& curFaces = pointFaces[slaveMeshPoints[pointi]];
 
             forAll(curFaces, facei)
             {
@@ -442,12 +442,12 @@ void CML::slidingInterface::renumberAttachedAddressing
     const labelList& sfzPointRenumber =
         m.faceZonePointMap()[slaveFaceZoneID_.index()];
 
-    forAll(newProjectedSlavePoints, pointI)
+    forAll(newProjectedSlavePoints, pointi)
     {
-        if (sfzPointRenumber[pointI] > -1)
+        if (sfzPointRenumber[pointi] > -1)
         {
-            newProjectedSlavePoints[pointI] =
-                projectedSlavePoints[sfzPointRenumber[pointI]];
+            newProjectedSlavePoints[pointi] =
+                projectedSlavePoints[sfzPointRenumber[pointi]];
         }
     }
 

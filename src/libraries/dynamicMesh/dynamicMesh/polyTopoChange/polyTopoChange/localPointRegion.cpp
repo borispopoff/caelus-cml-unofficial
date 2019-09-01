@@ -136,23 +136,23 @@ void CML::localPointRegion::countPointRegions
 
             forAll(f, fp)
             {
-                label pointI = f[fp];
+                label pointi = f[fp];
 
                 // Even points which were not candidates for splitting might
                 // be on multiple baffles that are being split so check.
 
-                if (candidatePoint[pointI])
+                if (candidatePoint[pointi])
                 {
                     label region = minRegion[facei][fp];
 
-                    if (minPointRegion[pointI] == -1)
+                    if (minPointRegion[pointi] == -1)
                     {
-                        minPointRegion[pointI] = region;
+                        minPointRegion[pointi] = region;
                     }
-                    else if (minPointRegion[pointI] != region)
+                    else if (minPointRegion[pointi] != region)
                     {
                         // Multiple regions for this point. Add.
-                        Map<label>::iterator iter = meshPointMap_.find(pointI);
+                        Map<label>::iterator iter = meshPointMap_.find(pointi);
                         if (iter != meshPointMap_.end())
                         {
                             labelList& regions = pointRegions[iter()];
@@ -165,10 +165,10 @@ void CML::localPointRegion::countPointRegions
                         }
                         else
                         {
-                            label localPointI = meshPointMap_.size();
-                            meshPointMap_.insert(pointI, localPointI);
+                            label localPointi = meshPointMap_.size();
+                            meshPointMap_.insert(pointi, localPointi);
                             labelList regions(2);
-                            regions[0] = minPointRegion[pointI];
+                            regions[0] = minPointRegion[pointi];
                             regions[1] = region;
                             pointRegions.append(regions);
                         }
@@ -362,12 +362,12 @@ void CML::localPointRegion::calcPointRegions
 
                     forAll(f, fp)
                     {
-                        label pointI = f[fp];
-                        Map<label>::iterator iter = minPointValue.find(pointI);
+                        label pointi = f[fp];
+                        Map<label>::iterator iter = minPointValue.find(pointi);
 
                         if (iter == minPointValue.end())
                         {
-                            minPointValue.insert(pointI, minRegion[facei][fp]);
+                            minPointValue.insert(pointi, minRegion[facei][fp]);
                         }
                         else
                         {
@@ -465,11 +465,11 @@ CML::localPointRegion::localPointRegion(const polyMesh& mesh)
     // Get any point on the outside which is on a non-coupled boundary
     boolList candidatePoint(mesh.nPoints(), false);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (!patches[patchI].coupled())
+        if (!patches[patchi].coupled())
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             forAll(pp.meshPoints(), i)
             {
@@ -694,11 +694,11 @@ void CML::localPointRegion::updateMesh(const mapPolyMesh& map)
 
         forAllConstIter(Map<label>, meshPointMap_, iter)
         {
-            label newPointI = map.reversePointMap()[iter.key()];
+            label newPointi = map.reversePointMap()[iter.key()];
 
-            if (newPointI >= 0)
+            if (newPointi >= 0)
             {
-                newMap.insert(newPointI, iter());
+                newMap.insert(newPointi, iter());
             }
         }
 

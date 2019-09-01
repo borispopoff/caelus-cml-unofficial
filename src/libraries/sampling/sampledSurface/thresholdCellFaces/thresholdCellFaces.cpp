@@ -65,14 +65,14 @@ void CML::thresholdCellFaces::calculate
         0   // index
     );
 
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        surfZones[patchI+1] = surfZone
+        surfZones[patchi+1] = surfZone
         (
-            bMesh[patchI].name(),
+            bMesh[patchi].name(),
             0,        // size
             0,        // start
-            patchI+1  // index
+            patchi+1  // index
         );
     }
 
@@ -169,10 +169,10 @@ void CML::thresholdCellFaces::calculate
 
 
     // nothing special for processor patches?
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        const polyPatch& p = bMesh[patchI];
-        surfZone& zone = surfZones[patchI+1];
+        const polyPatch& p = bMesh[patchi];
+        surfZone& zone = surfZones[patchi+1];
 
         zone.start() = nFaces;
 
@@ -241,11 +241,11 @@ void CML::thresholdCellFaces::calculate
 
     pointField surfPoints(nPoints);
     nPoints = 0;
-    forAll(oldToNewPoints, pointI)
+    forAll(oldToNewPoints, pointi)
     {
-        if (oldToNewPoints[pointI] >= 0)
+        if (oldToNewPoints[pointi] >= 0)
         {
-            surfPoints[oldToNewPoints[pointI]] = origPoints[pointI];
+            surfPoints[oldToNewPoints[pointi]] = origPoints[pointi];
             nPoints++;
         }
     }

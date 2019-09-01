@@ -190,7 +190,7 @@ public:
         inline label addToTransformIndex
         (
             const label transformIndex,
-            const label patchI,
+            const label patchi,
             const bool isSendingSide = true,
             const scalar tol = SMALL
         ) const;

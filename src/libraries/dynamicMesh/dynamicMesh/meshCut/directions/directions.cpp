@@ -349,9 +349,9 @@ CML::directions::directions
 
         const word patchName(patchDict.lookup("patch"));
 
-        const label patchI = mesh.boundaryMesh().findPatchID(patchName);
+        const label patchi = mesh.boundaryMesh().findPatchID(patchName);
 
-        if (patchI == -1)
+        if (patchi == -1)
         {
             FatalErrorInFunction
                 << "Cannot find patch "
@@ -360,7 +360,7 @@ CML::directions::directions
         }
 
         // Take zeroth face on patch
-        const polyPatch& pp = mesh.boundaryMesh()[patchI];
+        const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
         vector tan1(patchDict.lookup("tan1"));
 

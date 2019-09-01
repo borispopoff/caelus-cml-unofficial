@@ -41,12 +41,12 @@ CML::pointBoundaryMesh::pointBoundaryMesh
     // Set boundary patches
     pointPatchList& Patches = *this;
 
-    forAll(Patches, patchI)
+    forAll(Patches, patchi)
     {
         Patches.set
         (
-            patchI,
-            facePointPatch::New(basicBdry[patchI], *this).ptr()
+            patchi,
+            facePointPatch::New(basicBdry[patchi], *this).ptr()
         );
     }
 }

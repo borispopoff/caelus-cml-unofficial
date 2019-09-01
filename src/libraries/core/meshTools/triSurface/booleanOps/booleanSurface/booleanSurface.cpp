@@ -134,9 +134,9 @@ CML::geometricSurfacePatchList CML::booleanSurface::mergePatches
 
     // Copy all patches of surf1
     label combinedPatchI = 0;
-    forAll(surf1.patches(), patchI)
+    forAll(surf1.patches(), patchi)
     {
-        combinedPatches[combinedPatchI++] = surf1.patches()[patchI];
+        combinedPatches[combinedPatchI++] = surf1.patches()[patchi];
     }
 
     // (inefficiently) add unique patches from surf2
@@ -581,10 +581,10 @@ CML::booleanSurface::booleanSurface
 
     label combinedPointI = 0;
 
-    forAll(subSurf1.points(), pointI)
+    forAll(subSurf1.points(), pointi)
     {
         // Label in cutSurf
-        label cutSurfPointI = pointMap1[pointI];
+        label cutSurfPointI = pointMap1[pointi];
 
         if (!cutSurf1.isSurfacePoint(cutSurfPointI))
         {
@@ -595,28 +595,28 @@ CML::booleanSurface::booleanSurface
         }
 
         // Copy point
-        combinedPoints[combinedPointI++] = subSurf1.points()[pointI];
+        combinedPoints[combinedPointI++] = subSurf1.points()[pointi];
     }
 
     // Append points from subSurf2 (if they are not intersection points)
     // and construct mapping
     labelList pointMap(subSurf2.nPoints());
 
-    forAll(subSurf2.points(), pointI)
+    forAll(subSurf2.points(), pointi)
     {
         // Label in cutSurf
-        label cutSurfPointI = pointMap2[pointI];
+        label cutSurfPointI = pointMap2[pointi];
 
         if (!cutSurf2.isSurfacePoint(cutSurfPointI))
         {
             // Lookup its label in combined point list.
-            pointMap[pointI] = intersectionLabels[cutSurfPointI];
+            pointMap[pointi] = intersectionLabels[cutSurfPointI];
         }
         else
         {
-            pointMap[pointI] = combinedPointI;
+            pointMap[pointi] = combinedPointI;
 
-            combinedPoints[combinedPointI++] = subSurf2.points()[pointI];
+            combinedPoints[combinedPointI++] = subSurf2.points()[pointi];
         }
     }
 
@@ -812,19 +812,19 @@ CML::booleanSurface::booleanSurface
 
     label combinedPointI = 0;
 
-    forAll(cutSurf1.points(), pointI)
+    forAll(cutSurf1.points(), pointi)
     {
-        combinedPoints[combinedPointI++] = cutSurf1.points()[pointI];
+        combinedPoints[combinedPointI++] = cutSurf1.points()[pointi];
     }
 
     for
     (
-        label pointI = 0;
-        pointI < cutSurf2.nSurfacePoints();
-        pointI++
+        label pointi = 0;
+        pointi < cutSurf2.nSurfacePoints();
+        pointi++
     )
     {
-        combinedPoints[combinedPointI++] = cutSurf2.points()[pointI];
+        combinedPoints[combinedPointI++] = cutSurf2.points()[pointi];
     }
 
     // Point order is now

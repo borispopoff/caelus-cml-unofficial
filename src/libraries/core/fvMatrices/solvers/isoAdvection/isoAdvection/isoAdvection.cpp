@@ -215,12 +215,12 @@ void CML::isoAdvection::timeIntegratedFlux()
                 vector smoothedGradA = Zero;
                 const point& cellCentre = cellCentres[celli];
                 scalar wSum = 0;
-                forAll(cp, pointI)
+                forAll(cp, pointi)
                 {
-                    point vertex = points[cp[pointI]];
+                    point vertex = points[cp[pointi]];
                     scalar w = 1.0/mag(vertex - cellCentre);
                     wSum += w;
-                    smoothedGradA += w*gradAlpha[cp[pointI]];
+                    smoothedGradA += w*gradAlpha[cp[pointi]];
                 }
                 smoothedGradA /= wSum;
 

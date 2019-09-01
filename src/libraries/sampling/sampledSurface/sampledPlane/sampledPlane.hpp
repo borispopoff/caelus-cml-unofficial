@@ -248,16 +248,16 @@ CML::sampledPlane::interpolateField
 
         forAll(f, faceVertI)
         {
-            label pointI = f[faceVertI];
+            label pointi = f[faceVertI];
 
-            if (!pointDone[pointI])
+            if (!pointDone[pointi])
             {
-                values[pointI] = interpolator.interpolate
+                values[pointi] = interpolator.interpolate
                 (
-                    points()[pointI],
+                    points()[pointi],
                     meshCells()[cutFaceI]
                 );
-                pointDone[pointI] = true;
+                pointDone[pointi] = true;
             }
         }
     }

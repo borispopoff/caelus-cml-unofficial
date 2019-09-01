@@ -756,9 +756,9 @@ CML::MeshedSurface<Face>::MeshedSurface
 
     label startFaceI = 0;
     label nZone = 0;
-    forAll(bPatches, patchI)
+    forAll(bPatches, patchi)
     {
-        const polyPatch& p = bPatches[patchI];
+        const polyPatch& p = bPatches[patchi];
 
         if (p.size())
         {
@@ -1408,10 +1408,10 @@ CML::MeshedSurface<Face> CML::MeshedSurface<Face>::subsetMesh
     // Create compact coordinate list and forward mapping array
     pointField newPoints(pointMap.size());
     labelList oldToNew(locPoints.size());
-    forAll(pointMap, pointI)
+    forAll(pointMap, pointi)
     {
-        newPoints[pointI] = locPoints[pointMap[pointI]];
-        oldToNew[pointMap[pointI]] = pointI;
+        newPoints[pointi] = locPoints[pointMap[pointi]];
+        oldToNew[pointMap[pointi]] = pointi;
     }
 
     // create/copy a new zones list, each zone with zero size

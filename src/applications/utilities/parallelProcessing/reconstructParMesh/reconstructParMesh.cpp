@@ -113,9 +113,9 @@ autoPtr<faceCoupleInfo> determineCoupledFaces
           - masterMesh.nInternalFaces()
         );
 
-        forAll(masterPatches, patchI)
+        forAll(masterPatches, patchi)
         {
-            const polyPatch& pp = masterPatches[patchI];
+            const polyPatch& pp = masterPatches[patchi];
 
             if
             (
@@ -147,9 +147,9 @@ autoPtr<faceCoupleInfo> determineCoupledFaces
           - meshToAdd.nInternalFaces()
         );
 
-        forAll(addPatches, patchI)
+        forAll(addPatches, patchi)
         {
-            const polyPatch& pp = addPatches[patchI];
+            const polyPatch& pp = addPatches[patchi];
 
             if (isA<processorPolyPatch>(pp))
             {
@@ -249,24 +249,24 @@ autoPtr<mapPolyMesh> mergeSharedPoints
 
         forAll(constructMap, i)
         {
-            label oldPointI = constructMap[i];
+            label oldPointi = constructMap[i];
 
             // New label of point after changeMesh.
-            label newPointI = map().reversePointMap()[oldPointI];
+            label newPointi = map().reversePointMap()[oldPointi];
 
-            if (newPointI < -1)
+            if (newPointi < -1)
             {
-                constructMap[i] = -newPointI-2;
+                constructMap[i] = -newPointi-2;
             }
-            else if (newPointI >= 0)
+            else if (newPointi >= 0)
             {
-                constructMap[i] = newPointI;
+                constructMap[i] = newPointi;
             }
             else
             {
                 FatalErrorInFunction
-                    << "Problem. oldPointI:" << oldPointI
-                    << " newPointI:" << newPointI << abort(FatalError);
+                    << "Problem. oldPointi:" << oldPointi
+                    << " newPointi:" << newPointi << abort(FatalError);
             }
         }
     }

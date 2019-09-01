@@ -130,7 +130,7 @@ class autoLayerDriver
                 //- Unset extrusion on point. Returns true if anything unset.
                 static bool unmarkExtrusion
                 (
-                    const label patchPointI,
+                    const label patchPointi,
                     pointField& patchDisp,
                     labelList& patchNLayers,
                     List<extrudeMode>& extrudeStatus

@@ -120,15 +120,15 @@ bool CML::sampledIsoSurfaceCell::updateGeometry() const
         scalarField cellAvg(fvm.nCells(), scalar(0.0));
         labelField nPointCells(fvm.nCells(), 0);
         {
-            for (label pointI = 0; pointI < fvm.nPoints(); pointI++)
+            for (label pointi = 0; pointi < fvm.nPoints(); pointi++)
             {
-                const labelList& pCells = fvm.pointCells(pointI);
+                const labelList& pCells = fvm.pointCells(pointi);
 
                 forAll(pCells, i)
                 {
                     label celli = pCells[i];
 
-                    cellAvg[celli] += pointFld().internalField()[pointI];
+                    cellAvg[celli] += pointFld().internalField()[pointi];
                     nPointCells[celli]++;
                 }
             }

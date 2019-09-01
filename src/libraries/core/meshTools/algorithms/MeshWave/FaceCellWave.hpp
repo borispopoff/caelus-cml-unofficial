@@ -655,9 +655,9 @@ template<class Type, class TrackingData>
 template<class PatchType>
 bool CML::FaceCellWave<Type, TrackingData>::hasPatch() const
 {
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        if (isA<PatchType>(mesh_.boundaryMesh()[patchI]))
+        if (isA<PatchType>(mesh_.boundaryMesh()[patchi]))
         {
             return true;
         }
@@ -866,10 +866,10 @@ void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 
     forAll(procPatches, i)
     {
-        label patchI = procPatches[i];
+        label patchi = procPatches[i];
 
         const processorPolyPatch& procPatch =
-            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchI]);
+            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchi]);
 
         // Allocate buffers
         label nSendFaces;
@@ -897,7 +897,7 @@ void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 
         if (debug)
         {
-            Pout<< " Processor patch " << patchI << ' ' << procPatch.name()
+            Pout<< " Processor patch " << patchi << ' ' << procPatch.name()
                 << " communicating with " << procPatch.neighbProcNo()
                 << "  Sending:" << nSendFaces
                 << endl;
@@ -916,10 +916,10 @@ void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 
     forAll(procPatches, i)
     {
-        label patchI = procPatches[i];
+        label patchi = procPatches[i];
 
         const processorPolyPatch& procPatch =
-            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchI]);
+            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchi]);
 
         // Allocate buffers
         labelList receiveFaces;
@@ -932,7 +932,7 @@ void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 
         if (debug)
         {
-            Pout<< " Processor patch " << patchI << ' ' << procPatch.name()
+            Pout<< " Processor patch " << patchi << ' ' << procPatch.name()
                 << " communicating with " << procPatch.neighbProcNo()
                 << "  Receiving:" << receiveFaces.size()
                 << endl;
@@ -974,9 +974,9 @@ void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
 {
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        const polyPatch& patch = mesh_.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh_.boundaryMesh()[patchi];
 
         if (isA<cyclicPolyPatch>(patch))
         {
@@ -1023,7 +1023,7 @@ void CML::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
 
             if (debug)
             {
-                Pout<< " Cyclic patch " << patchI << ' ' << cycPatch.name()
+                Pout<< " Cyclic patch " << patchi << ' ' << cycPatch.name()
                     << "  Changed : " << nReceiveFaces
                     << endl;
             }
@@ -1059,9 +1059,9 @@ void CML::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
 template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
 {
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        const polyPatch& patch = mesh_.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh_.boundaryMesh()[patchi];
 
         if (isA<cyclicAMIPolyPatch>(patch))
         {

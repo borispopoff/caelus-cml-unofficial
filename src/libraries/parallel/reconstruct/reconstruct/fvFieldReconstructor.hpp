@@ -339,14 +339,14 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
         );
 
         // Set the boundary patch values in the reconstructed field
-        forAll(boundaryProcAddressing_[procI], patchI)
+        forAll(boundaryProcAddressing_[procI], patchi)
         {
             // Get patch index of the original patch
-            const label curBPatch = boundaryProcAddressing_[procI][patchI];
+            const label curBPatch = boundaryProcAddressing_[procI][patchi];
 
             // Get addressing slice for this patch
             const labelList::subList cp =
-                procField.mesh().boundary()[patchI].patchSlice
+                procField.mesh().boundary()[patchi].patchSlice
                 (
                     faceProcAddressing_[procI]
                 );
@@ -363,7 +363,7 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
                         curBPatch,
                         fvPatchField<Type>::New
                         (
-                            procField.boundaryField()[patchI],
+                            procField.boundaryField()[patchi],
                             mesh_.boundary()[curBPatch],
                             DimensionedField<Type, volMesh>::null(),
                             fvPatchFieldReconstructor
@@ -387,7 +387,7 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
                         FatalErrorInFunction
                             << "Processor " << procI
                             << " patch "
-                            << procField.mesh().boundary()[patchI].name()
+                            << procField.mesh().boundary()[patchi].name()
                             << " face " << facei
                             << " originates from reversed face since "
                             << cp[facei]
@@ -402,14 +402,14 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
 
                 patchFields[curBPatch].rmap
                 (
-                    procField.boundaryField()[patchI],
+                    procField.boundaryField()[patchi],
                     reverseAddressing
                 );
             }
             else
             {
                 const Field<Type>& curProcPatch =
-                    procField.boundaryField()[patchI];
+                    procField.boundaryField()[patchi];
 
                 // In processor patches, there's a mix of internal faces (some
                 // of them turned) and possible cyclics. Slow loop
@@ -451,22 +451,22 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
         }
     }
 
-    forAll(mesh_.boundary(), patchI)
+    forAll(mesh_.boundary(), patchi)
     {
         // add empty patches
         if
         (
-            isType<emptyFvPatch>(mesh_.boundary()[patchI])
-         && !patchFields(patchI)
+            isType<emptyFvPatch>(mesh_.boundary()[patchi])
+         && !patchFields(patchi)
         )
         {
             patchFields.set
             (
-                patchI,
+                patchi,
                 fvPatchField<Type>::New
                 (
                     emptyFvPatchField<Type>::typeName,
-                    mesh_.boundary()[patchI],
+                    mesh_.boundary()[patchi],
                     DimensionedField<Type, volMesh>::null()
                 )
             );
@@ -585,14 +585,14 @@ CML::fvFieldReconstructor::reconstructFvSurfaceField
         }
 
         // Set the boundary patch values in the reconstructed field
-        forAll(boundaryProcAddressing_[procI], patchI)
+        forAll(boundaryProcAddressing_[procI], patchi)
         {
             // Get patch index of the original patch
-            const label curBPatch = boundaryProcAddressing_[procI][patchI];
+            const label curBPatch = boundaryProcAddressing_[procI][patchi];
 
             // Get addressing slice for this patch
             const labelList::subList cp =
-                procMeshes_[procI].boundary()[patchI].patchSlice
+                procMeshes_[procI].boundary()[patchi].patchSlice
                 (
                     faceProcAddressing_[procI]
                 );
@@ -609,7 +609,7 @@ CML::fvFieldReconstructor::reconstructFvSurfaceField
                         curBPatch,
                         fvsPatchField<Type>::New
                         (
-                            procField.boundaryField()[patchI],
+                            procField.boundaryField()[patchi],
                             mesh_.boundary()[curBPatch],
                             DimensionedField<Type, surfaceMesh>::null(),
                             fvPatchFieldReconstructor
@@ -634,14 +634,14 @@ CML::fvFieldReconstructor::reconstructFvSurfaceField
 
                 patchFields[curBPatch].rmap
                 (
-                    procField.boundaryField()[patchI],
+                    procField.boundaryField()[patchi],
                     reverseAddressing
                 );
             }
             else
             {
                 const Field<Type>& curProcPatch =
-                    procField.boundaryField()[patchI];
+                    procField.boundaryField()[patchi];
 
                 // In processor patches, there's a mix of internal faces (some
                 // of them turned) and possible cyclics. Slow loop
@@ -692,22 +692,22 @@ CML::fvFieldReconstructor::reconstructFvSurfaceField
         }
     }
 
-    forAll(mesh_.boundary(), patchI)
+    forAll(mesh_.boundary(), patchi)
     {
         // add empty patches
         if
         (
-            isType<emptyFvPatch>(mesh_.boundary()[patchI])
-         && !patchFields(patchI)
+            isType<emptyFvPatch>(mesh_.boundary()[patchi])
+         && !patchFields(patchi)
         )
         {
             patchFields.set
             (
-                patchI,
+                patchi,
                 fvsPatchField<Type>::New
                 (
                     emptyFvsPatchField<Type>::typeName,
-                    mesh_.boundary()[patchI],
+                    mesh_.boundary()[patchi],
                     DimensionedField<Type, surfaceMesh>::null()
                 )
             );

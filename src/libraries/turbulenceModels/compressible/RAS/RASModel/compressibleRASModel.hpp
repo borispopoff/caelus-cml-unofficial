@@ -241,9 +241,9 @@ public:
         }
 
         //- Return the effective turbulent thermal diffusivity for a patch
-        virtual tmp<scalarField> alphaEff(const label patchI) const
+        virtual tmp<scalarField> alphaEff(const label patchi) const
         {
-            return thermo().alphaEff(alphat()().boundaryField()[patchI], patchI);
+            return thermo().alphaEff(alphat()().boundaryField()[patchi], patchi);
         }
 
         //- Return the effective turbulent temperature diffusivity
@@ -253,16 +253,16 @@ public:
         }
 
         //- Return the effective turbulent temperature diffusivity for a patch
-        virtual tmp<scalarField> kappaEff(const label patchI) const
+        virtual tmp<scalarField> kappaEff(const label patchi) const
         {
             return
-                thermo().kappaEff(alphat()().boundaryField()[patchI], patchI);
+                thermo().kappaEff(alphat()().boundaryField()[patchi], patchi);
         }
 
         //- Return yPlus for the given patch
         virtual tmp<scalarField> yPlus
         (
-            const label patchI,
+            const label patchi,
             const scalar Cmu
         ) const;
 

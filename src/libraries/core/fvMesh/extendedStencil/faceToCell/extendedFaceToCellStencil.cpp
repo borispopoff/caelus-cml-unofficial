@@ -32,12 +32,12 @@ CML::extendedFaceToCellStencil::extendedFaceToCellStencil(const polyMesh& mesh)
     // Check for transformation - not supported.
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (patches[patchI].coupled())
+        if (patches[patchi].coupled())
         {
             const coupledPolyPatch& cpp =
-                refCast<const coupledPolyPatch>(patches[patchI]);
+                refCast<const coupledPolyPatch>(patches[patchi]);
 
             if (!cpp.parallel() || cpp.separated())
             {

@@ -189,17 +189,17 @@ bool CML::fileFormats::STARCDedgeFormat::read
         label nUsed = 0;
 
         pointField& pts = storedPoints();
-        forAll(pts, pointI)
+        forAll(pts, pointi)
         {
-            if (usedPoints.get(pointI))
+            if (usedPoints.get(pointi))
             {
-                if (nUsed != pointI)
+                if (nUsed != pointi)
                 {
-                    pts[nUsed] = pts[pointI];
+                    pts[nUsed] = pts[pointi];
                 }
 
                 // map prev -> new id
-                mapPointId.set(pointI, nUsed);
+                mapPointId.set(pointi, nUsed);
 
                 ++nUsed;
             }

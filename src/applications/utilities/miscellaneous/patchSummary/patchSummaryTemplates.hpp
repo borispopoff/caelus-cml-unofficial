@@ -42,14 +42,14 @@ namespace CML
     void outputFieldList
     (
         const PtrList<GeoField>& fieldList,
-        const label patchI
+        const label patchi
     );
 
     template<class GeoField>
     void collectFieldList
     (
         const PtrList<GeoField>& fieldList,
-        const label patchI,
+        const label patchi,
         HashTable<word>& fieldToType
     );
 } // End namespace CML
@@ -87,7 +87,7 @@ template<class GeoField>
 void CML::outputFieldList
 (
     const PtrList<GeoField>& fieldList,
-    const label patchI
+    const label patchi
 )
 {
     forAll(fieldList, fieldI)
@@ -97,7 +97,7 @@ void CML::outputFieldList
             Info<< "    " << pTraits<typename GeoField::value_type>::typeName
                 << tab << tab
                 << fieldList[fieldI].name() << tab << tab
-                << fieldList[fieldI].boundaryField()[patchI].type() << nl;
+                << fieldList[fieldI].boundaryField()[patchi].type() << nl;
         }
     }
 }
@@ -107,7 +107,7 @@ template<class GeoField>
 void CML::collectFieldList
 (
     const PtrList<GeoField>& fieldList,
-    const label patchI,
+    const label patchi,
     HashTable<word>& fieldToType
 )
 {
@@ -118,7 +118,7 @@ void CML::collectFieldList
             fieldToType.insert
             (
                 fieldList[fieldI].name(),
-                fieldList[fieldI].boundaryField()[patchI].type()
+                fieldList[fieldI].boundaryField()[patchi].type()
             );
         }
     }

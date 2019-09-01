@@ -98,18 +98,18 @@ void CML::inversePointDistanceDiffusivity::correct()
 
             forAll(meshPoints, i)
             {
-                label pointI = meshPoints[i];
+                label pointi = meshPoints[i];
 
-                if (!pointWallDist[pointI].valid(dummyTrackData))
+                if (!pointWallDist[pointi].valid(dummyTrackData))
                 {
                     // Not yet seeded
                     seedInfo[nPatchEdges] = pointEdgePoint
                     (
-                        mesh().points()[pointI],
+                        mesh().points()[pointi],
                         0.0
                     );
-                    seedPoints[nPatchEdges] = pointI;
-                    pointWallDist[pointI] = seedInfo[nPatchEdges];
+                    seedPoints[nPatchEdges] = pointi;
+                    pointWallDist[pointi] = seedInfo[nPatchEdges];
 
                     nPatchEdges++;
                 }
@@ -148,11 +148,11 @@ void CML::inversePointDistanceDiffusivity::correct()
         faceDiffusivity_[facei] = 1.0/dist;
     }
 
-    forAll(faceDiffusivity_.boundaryField(), patchI)
+    forAll(faceDiffusivity_.boundaryField(), patchi)
     {
-        fvsPatchScalarField& bfld = faceDiffusivity_.boundaryField()[patchI];
+        fvsPatchScalarField& bfld = faceDiffusivity_.boundaryField()[patchi];
 
-        if (patchSet.found(patchI))
+        if (patchSet.found(patchi))
         {
             const labelUList& faceCells = bfld.patch().faceCells();
 

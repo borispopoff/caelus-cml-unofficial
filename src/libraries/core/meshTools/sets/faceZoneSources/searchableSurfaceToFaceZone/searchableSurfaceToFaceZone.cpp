@@ -125,9 +125,9 @@ void CML::searchableSurfaceToFaceZone::applyToSet
 
         const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
-        forAll(pbm, patchI)
+        forAll(pbm, patchi)
         {
-            const polyPatch& pp = pbm[patchI];
+            const polyPatch& pp = pbm[patchi];
 
             if (pp.coupled())
             {

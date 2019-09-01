@@ -98,9 +98,9 @@ void simpleMarkFeatures
     // 1. Mark all edges between patches
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
         const labelList& meshEdges = pp.meshEdges();
 
         // All patch corner edges. These need to be feature points & edges!

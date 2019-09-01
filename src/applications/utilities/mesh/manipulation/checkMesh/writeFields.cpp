@@ -27,9 +27,9 @@ void maxFaceToCell
         }
     }
 
-    forAll(cellData.boundaryField(), patchI)
+    forAll(cellData.boundaryField(), patchi)
     {
-        fvPatchScalarField& fvp = cellData.boundaryField()[patchI];
+        fvPatchScalarField& fvp = cellData.boundaryField()[patchi];
 
         fvp = fvp.patch().patchSlice(faceData);
     }
@@ -57,9 +57,9 @@ void minFaceToCell
         }
     }
 
-    forAll(cellData.boundaryField(), patchI)
+    forAll(cellData.boundaryField(), patchi)
     {
-        fvPatchScalarField& fvp = cellData.boundaryField()[patchI];
+        fvPatchScalarField& fvp = cellData.boundaryField()[patchi];
 
         fvp = fvp.patch().patchSlice(faceData);
     }

@@ -1652,9 +1652,9 @@ bool CML::primitiveMesh::checkFaceFaces
 
         forAll(curFace, fp)
         {
-            label pointI = curFace[fp];
+            label pointi = curFace[fp];
 
-            const labelList& nbs = pf[pointI];
+            const labelList& nbs = pf[pointi];
 
             forAll(nbs, nbI)
             {

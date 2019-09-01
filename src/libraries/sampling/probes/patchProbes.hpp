@@ -342,9 +342,9 @@ CML::patchProbes::sample
 
         if (facei >= 0)
         {
-            label patchI = patches.whichPatch(facei);
-            label localFaceI = patches[patchI].whichFace(facei);
-            values[probei] = vField.boundaryField()[patchI][localFaceI];
+            label patchi = patches.whichPatch(facei);
+            label localFaceI = patches[patchi].whichFace(facei);
+            values[probei] = vField.boundaryField()[patchi][localFaceI];
         }
     }
 
@@ -393,9 +393,9 @@ CML::patchProbes::sample
 
         if (facei >= 0)
         {
-            label patchI = patches.whichPatch(facei);
-            label localFaceI = patches[patchI].whichFace(facei);
-            values[probei] = sField.boundaryField()[patchI][localFaceI];
+            label patchi = patches.whichPatch(facei);
+            label localFaceI = patches[patchi].whichFace(facei);
+            values[probei] = sField.boundaryField()[patchi][localFaceI];
         }
     }
 

@@ -112,7 +112,7 @@ void fixedShearStressFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const surfaceScalarField& phi =
         db().lookupObject<surfaceScalarField>(phiName_);
@@ -126,7 +126,7 @@ void fixedShearStressFvPatchVectorField::updateCoeffs()
                 "turbulenceModel"
             );
 
-        nuEff = turbModel.nuEff()()[patchI];
+        nuEff = turbModel.nuEff()()[patchi];
     }
     else if (phi.dimensions() == dimDensity*dimVelocity*dimArea)
     {
@@ -139,7 +139,7 @@ void fixedShearStressFvPatchVectorField::updateCoeffs()
         const fvPatchField<scalar>& rhop =
             patch().lookupPatchField<volScalarField, scalar>(rhoName_);
 
-        nuEff = turbModel.muEff()()[patchI]/rhop;
+        nuEff = turbModel.muEff()()[patchi]/rhop;
     }
     else
     {

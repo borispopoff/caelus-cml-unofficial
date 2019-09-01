@@ -299,12 +299,12 @@ autoPtr<mapPolyMesh> reorderMesh
     labelList oldPatchNMeshPoints(patches.size());
     labelListList patchPointMap(patches.size());
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        patchSizes[patchI] = patches[patchI].size();
-        patchStarts[patchI] = patches[patchI].start();
-        oldPatchNMeshPoints[patchI] = patches[patchI].nPoints();
-        patchPointMap[patchI] = identity(patches[patchI].nPoints());
+        patchSizes[patchi] = patches[patchi].size();
+        patchStarts[patchi] = patches[patchi].start();
+        oldPatchNMeshPoints[patchi] = patches[patchi].nPoints();
+        patchPointMap[patchi] = identity(patches[patchi].nPoints());
     }
 
     mesh.resetPrimitives

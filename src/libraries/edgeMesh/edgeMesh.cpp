@@ -120,9 +120,9 @@ void CML::edgeMesh::calcPointEdges() const
     }
 
     // Size
-    forAll(pointEdges, pointI)
+    forAll(pointEdges, pointi)
     {
-        pointEdges[pointI].setSize(nEdgesPerPoint[pointI]);
+        pointEdges[pointi].setSize(nEdgesPerPoint[pointi]);
     }
 
     // Fill

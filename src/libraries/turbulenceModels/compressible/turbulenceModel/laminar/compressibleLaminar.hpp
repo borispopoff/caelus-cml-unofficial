@@ -111,9 +111,9 @@ public:
 
         //- Return the effective turbulent thermal diffusivity for a patch,
         //  i.e. the laminar thermal diffusivity
-        virtual tmp<scalarField> alphaEff(const label patchI) const
+        virtual tmp<scalarField> alphaEff(const label patchi) const
         {
-            return alpha().boundaryField()[patchI];
+            return alpha().boundaryField()[patchi];
         }
 
         //- Return the effective turbulent temperature diffusivity,
@@ -132,9 +132,9 @@ public:
 
         //- Return the effective turbulent temperature diffusivity for a patch,
         //  i.e. the laminar thermal diffusivity
-        virtual tmp<scalarField> kappaEff(const label patchI) const
+        virtual tmp<scalarField> kappaEff(const label patchi) const
         {
-            return thermo().kappa(patchI);
+            return thermo().kappa(patchi);
         }
 
         //- Return the turbulence kinetic energy, i.e. 0 for laminar flow

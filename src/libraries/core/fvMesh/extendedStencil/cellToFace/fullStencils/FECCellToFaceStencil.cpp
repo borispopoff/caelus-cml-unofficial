@@ -76,9 +76,9 @@ void CML::FECCellToFaceStencil::calcFaceStencil
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     labelList neiGlobalCell(nBnd);
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -214,9 +214,9 @@ void CML::FECCellToFaceStencil::calcFaceStencil
             faceStencil[facei][n++] = iter.key();
         }
     }
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
         label facei = pp.start();
 
         if (pp.coupled())
@@ -366,9 +366,9 @@ void CML::FECCellToFaceStencil::calcFaceStencil
     }
 
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {

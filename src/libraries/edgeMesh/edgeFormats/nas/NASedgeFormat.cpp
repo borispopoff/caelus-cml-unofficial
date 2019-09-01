@@ -182,17 +182,17 @@ bool CML::fileFormats::NASedgeFormat::read
         label nUsed = 0;
 
         pointField& pts = storedPoints();
-        forAll(pts, pointI)
+        forAll(pts, pointi)
         {
-            if (usedPoints.get(pointI))
+            if (usedPoints.get(pointi))
             {
-                if (nUsed != pointI)
+                if (nUsed != pointi)
                 {
-                    pts[nUsed] = pts[pointI];
+                    pts[nUsed] = pts[pointi];
                 }
 
                 // map prev -> new id
-                mapPointId[pointI] = nUsed;
+                mapPointId[pointi] = nUsed;
 
                 ++nUsed;
             }

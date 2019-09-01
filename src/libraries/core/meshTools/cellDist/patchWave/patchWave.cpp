@@ -38,11 +38,11 @@ void CML::patchWave::setChangedFaces
 
     label nChangedFaces = 0;
 
-    forAll(mesh.boundaryMesh(), patchI)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh.boundaryMesh()[patchI];
+            const polyPatch& patch = mesh.boundaryMesh()[patchi];
 
             forAll(patch.faceCentres(), patchFaceI)
             {
@@ -91,14 +91,14 @@ CML::label CML::patchWave::getValues(const MeshWave<wallPoint>& waveInfo)
     }
 
     // Copy boundary values
-    forAll(patchDistance_, patchI)
+    forAll(patchDistance_, patchi)
     {
-        const polyPatch& patch = mesh().boundaryMesh()[patchI];
+        const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
         // Allocate storage for patchDistance
         scalarField* patchDistPtr = new scalarField(patch.size());
 
-        patchDistance_.set(patchI, patchDistPtr);
+        patchDistance_.set(patchi, patchDistPtr);
 
         scalarField& patchField = *patchDistPtr;
 

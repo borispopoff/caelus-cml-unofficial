@@ -682,19 +682,19 @@ void CML::refinementSurfaces::findHigherIntersection
             }
 
 
-            label pointI = intersectionToPoint[i];
+            label pointi = intersectionToPoint[i];
 
-            if (minLocalLevel > currentLevel[pointI])
+            if (minLocalLevel > currentLevel[pointi])
             {
                 // Mark point for refinement
-                surfaces[pointI] = surfI;
-                surfaceLevel[pointI] = minLocalLevel;
+                surfaces[pointi] = surfI;
+                surfaceLevel[pointi] = minLocalLevel;
             }
             else
             {
-                p0[missI] = start[pointI];
-                p1[missI] = end[pointI];
-                intersectionToPoint[missI] = pointI;
+                p0[missI] = start[pointi];
+                p1[missI] = end[pointi];
+                intersectionToPoint[missI] = pointi;
                 missI++;
             }
         }
@@ -746,23 +746,23 @@ void CML::refinementSurfaces::findAllHigherIntersections
         // To avoid overhead of calling getRegion for every point
 
         label n = 0;
-        forAll(hitInfo, pointI)
+        forAll(hitInfo, pointi)
         {
-            n += hitInfo[pointI].size();
+            n += hitInfo[pointi].size();
         }
 
         List<pointIndexHit> surfInfo(n);
         labelList pointMap(n);
         n = 0;
 
-        forAll(hitInfo, pointI)
+        forAll(hitInfo, pointi)
         {
-            const List<pointIndexHit>& pHits = hitInfo[pointI];
+            const List<pointIndexHit>& pHits = hitInfo[pointi];
 
             forAll(pHits, i)
             {
                 surfInfo[n] = pHits[i];
-                pointMap[n] = pointI;
+                pointMap[n] = pointi;
                 n++;
             }
         }
@@ -781,17 +781,17 @@ void CML::refinementSurfaces::findAllHigherIntersections
         forAll(surfRegion, i)
         {
             label region = globalRegion(surfI, surfRegion[i]);
-            label pointI = pointMap[i];
+            label pointi = pointMap[i];
 
-            if (maxLevel_[region] > currentLevel[pointI])
+            if (maxLevel_[region] > currentLevel[pointi])
             {
-                // Append to pointI info
-                label sz = surfaceNormal[pointI].size();
-                surfaceNormal[pointI].setSize(sz+1);
-                surfaceNormal[pointI][sz] = surfNormal[i];
+                // Append to pointi info
+                label sz = surfaceNormal[pointi].size();
+                surfaceNormal[pointi].setSize(sz+1);
+                surfaceNormal[pointi][sz] = surfNormal[i];
 
-                surfaceLevel[pointI].setSize(sz+1);
-                surfaceLevel[pointI][sz] = maxLevel_[region];
+                surfaceLevel[pointi].setSize(sz+1);
+                surfaceLevel[pointi][sz] = maxLevel_[region];
             }
         }
     }
@@ -844,14 +844,14 @@ void CML::refinementSurfaces::findNearestIntersection
             region
         );
 
-        forAll(nearestInfo, pointI)
+        forAll(nearestInfo, pointi)
         {
-            if (nearestInfo[pointI].hit())
+            if (nearestInfo[pointi].hit())
             {
-                hit1[pointI] = nearestInfo[pointI];
-                surface1[pointI] = surfI;
-                region1[pointI] = region[pointI];
-                nearest[pointI] = hit1[pointI].hitPoint();
+                hit1[pointi] = nearestInfo[pointi];
+                surface1[pointi] = surfI;
+                region1[pointi] = region[pointi];
+                nearest[pointi] = hit1[pointi].hitPoint();
             }
         }
     }
@@ -867,16 +867,16 @@ void CML::refinementSurfaces::findNearestIntersection
     region2 = region1;
 
     // Set current end of segment to test.
-    forAll(nearest, pointI)
+    forAll(nearest, pointi)
     {
-        if (hit1[pointI].hit())
+        if (hit1[pointi].hit())
         {
-            nearest[pointI] = hit1[pointI].hitPoint();
+            nearest[pointi] = hit1[pointi].hitPoint();
         }
         else
         {
             // Disable testing by setting to end.
-            nearest[pointI] = end[pointI];
+            nearest[pointi] = end[pointi];
         }
     }
 
@@ -897,14 +897,14 @@ void CML::refinementSurfaces::findNearestIntersection
             region
         );
 
-        forAll(nearestInfo, pointI)
+        forAll(nearestInfo, pointi)
         {
-            if (nearestInfo[pointI].hit())
+            if (nearestInfo[pointi].hit())
             {
-                hit2[pointI] = nearestInfo[pointI];
-                surface2[pointI] = surfI;
-                region2[pointI] = region[pointI];
-                nearest[pointI] = hit2[pointI].hitPoint();
+                hit2[pointi] = nearestInfo[pointi];
+                surface2[pointi] = surfI;
+                region2[pointi] = region[pointi];
+                nearest[pointi] = hit2[pointi].hitPoint();
             }
         }
     }
@@ -912,13 +912,13 @@ void CML::refinementSurfaces::findNearestIntersection
 
     // Make sure that if hit1 has hit something, hit2 will have at least the
     // same point (due to tolerances it might miss its end point)
-    forAll(hit1, pointI)
+    forAll(hit1, pointi)
     {
-        if (hit1[pointI].hit() && !hit2[pointI].hit())
+        if (hit1[pointi].hit() && !hit2[pointi].hit())
         {
-            hit2[pointI] = hit1[pointI];
-            surface2[pointI] = surface1[pointI];
-            region2[pointI] = region1[pointI];
+            hit2[pointi] = hit1[pointi];
+            surface2[pointi] = surface1[pointi];
+            region2[pointi] = region1[pointi];
         }
     }
 }
@@ -968,15 +968,15 @@ void CML::refinementSurfaces::findNearestIntersection
         geom.getRegion(nearestInfo, region);
         geom.getNormal(nearestInfo, normal);
 
-        forAll(nearestInfo, pointI)
+        forAll(nearestInfo, pointi)
         {
-            if (nearestInfo[pointI].hit())
+            if (nearestInfo[pointi].hit())
             {
-                hit1[pointI] = nearestInfo[pointI];
-                surface1[pointI] = surfI;
-                region1[pointI] = region[pointI];
-                normal1[pointI] = normal[pointI];
-                nearest[pointI] = hit1[pointI].hitPoint();
+                hit1[pointi] = nearestInfo[pointi];
+                surface1[pointi] = surfI;
+                region1[pointi] = region[pointi];
+                normal1[pointi] = normal[pointi];
+                nearest[pointi] = hit1[pointi].hitPoint();
             }
         }
     }
@@ -993,16 +993,16 @@ void CML::refinementSurfaces::findNearestIntersection
     normal2 = normal1;
 
     // Set current end of segment to test.
-    forAll(nearest, pointI)
+    forAll(nearest, pointi)
     {
-        if (hit1[pointI].hit())
+        if (hit1[pointi].hit())
         {
-            nearest[pointI] = hit1[pointI].hitPoint();
+            nearest[pointi] = hit1[pointi].hitPoint();
         }
         else
         {
             // Disable testing by setting to end.
-            nearest[pointI] = end[pointI];
+            nearest[pointi] = end[pointi];
         }
     }
 
@@ -1016,15 +1016,15 @@ void CML::refinementSurfaces::findNearestIntersection
         geom.getRegion(nearestInfo, region);
         geom.getNormal(nearestInfo, normal);
 
-        forAll(nearestInfo, pointI)
+        forAll(nearestInfo, pointi)
         {
-            if (nearestInfo[pointI].hit())
+            if (nearestInfo[pointi].hit())
             {
-                hit2[pointI] = nearestInfo[pointI];
-                surface2[pointI] = surfI;
-                region2[pointI] = region[pointI];
-                normal2[pointI] = normal[pointI];
-                nearest[pointI] = hit2[pointI].hitPoint();
+                hit2[pointi] = nearestInfo[pointi];
+                surface2[pointi] = surfI;
+                region2[pointi] = region[pointi];
+                normal2[pointi] = normal[pointi];
+                nearest[pointi] = hit2[pointi].hitPoint();
             }
         }
     }
@@ -1032,14 +1032,14 @@ void CML::refinementSurfaces::findNearestIntersection
 
     // Make sure that if hit1 has hit something, hit2 will have at least the
     // same point (due to tolerances it might miss its end point)
-    forAll(hit1, pointI)
+    forAll(hit1, pointi)
     {
-        if (hit1[pointI].hit() && !hit2[pointI].hit())
+        if (hit1[pointi].hit() && !hit2[pointi].hit())
         {
-            hit2[pointI] = hit1[pointI];
-            surface2[pointI] = surface1[pointI];
-            region2[pointI] = region1[pointI];
-            normal2[pointI] = normal1[pointI];
+            hit2[pointi] = hit1[pointi];
+            surface2[pointi] = surface1[pointi];
+            region2[pointi] = region1[pointi];
+            normal2[pointi] = normal1[pointi];
         }
     }
 }
@@ -1089,11 +1089,11 @@ void CML::refinementSurfaces::findNearest
     );
 
     // Rework the hitSurface to be surface (i.e. index into surfaces_)
-    forAll(hitSurface, pointI)
+    forAll(hitSurface, pointi)
     {
-        if (hitSurface[pointI] != -1)
+        if (hitSurface[pointi] != -1)
         {
-            hitSurface[pointI] = surfacesToTest[hitSurface[pointI]];
+            hitSurface[pointi] = surfacesToTest[hitSurface[pointi]];
         }
     }
 }
@@ -1123,11 +1123,11 @@ void CML::refinementSurfaces::findNearestRegion
     );
 
     // Rework the hitSurface to be surface (i.e. index into surfaces_)
-    forAll(hitSurface, pointI)
+    forAll(hitSurface, pointi)
     {
-        if (hitSurface[pointI] != -1)
+        if (hitSurface[pointi] != -1)
         {
-            hitSurface[pointI] = surfacesToTest[hitSurface[pointI]];
+            hitSurface[pointi] = surfacesToTest[hitSurface[pointi]];
         }
     }
 
@@ -1187,11 +1187,11 @@ void CML::refinementSurfaces::findNearestRegion
     );
 
     // Rework the hitSurface to be surface (i.e. index into surfaces_)
-    forAll(hitSurface, pointI)
+    forAll(hitSurface, pointi)
     {
-        if (hitSurface[pointI] != -1)
+        if (hitSurface[pointi] != -1)
         {
-            hitSurface[pointI] = surfacesToTest[hitSurface[pointI]];
+            hitSurface[pointi] = surfacesToTest[hitSurface[pointi]];
         }
     }
 
@@ -1312,23 +1312,23 @@ void CML::refinementSurfaces::findInside
             List<volumeType> volType;
             allGeometry_[surfaces_[surfI]].getVolumeType(pt, volType);
 
-            forAll(volType, pointI)
+            forAll(volType, pointi)
             {
-                if (insideSurfaces[pointI] == -1)
+                if (insideSurfaces[pointi] == -1)
                 {
                     if
                     (
                         (
-                            volType[pointI] == volumeType::INSIDE
+                            volType[pointi] == volumeType::INSIDE
                          && zoneInside_[surfI] == INSIDE
                         )
                      || (
-                            volType[pointI] == volumeType::OUTSIDE
+                            volType[pointi] == volumeType::OUTSIDE
                          && zoneInside_[surfI] == OUTSIDE
                         )
                     )
                     {
-                        insideSurfaces[pointI] = surfI;
+                        insideSurfaces[pointi] = surfI;
                     }
                 }
             }

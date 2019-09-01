@@ -87,7 +87,7 @@ class edgeCollapser
         //  Note: Only routine that uses edgesToRemove!
         label changePointRegion
         (
-            const label pointI,
+            const label pointi,
             const label oldRegion,
             const label newRegion
         );

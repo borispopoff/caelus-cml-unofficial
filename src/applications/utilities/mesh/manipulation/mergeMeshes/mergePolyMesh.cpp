@@ -45,14 +45,14 @@ CML::label CML::mergePolyMesh::patchIndex(const polyPatch& p)
 
     bool nameFound = false;
 
-    forAll(patchNames_, patchI)
+    forAll(patchNames_, patchi)
     {
-        if (patchNames_[patchI] == pName)
+        if (patchNames_[patchi] == pName)
         {
-            if (patchTypes_[patchI] == pType)
+            if (patchTypes_[patchi] == pType)
             {
                 // Found name and types match
-                return patchI;
+                return patchi;
             }
             else
             {
@@ -126,10 +126,10 @@ CML::mergePolyMesh::mergePolyMesh(const IOobject& io)
     wordList curPatchTypes = boundaryMesh().types();
     wordList curPatchNames = boundaryMesh().names();
 
-    forAll(curPatchTypes, patchI)
+    forAll(curPatchTypes, patchi)
     {
-        patchTypes_.append(curPatchTypes[patchI]);
-        patchNames_.append(curPatchNames[patchI]);
+        patchTypes_.append(curPatchTypes[patchi]);
+        patchNames_.append(curPatchNames[patchi]);
     }
 
     // Insert point, face and cell zones into the list
@@ -196,10 +196,10 @@ void CML::mergePolyMesh::addMesh(const polyMesh& m)
         pointZoneIndices[zoneI] = zoneIndex(pointZoneNames_, pz[zoneI].name());
     }
 
-    forAll(p, pointI)
+    forAll(p, pointi)
     {
         // Grab zone ID.  If a point is not in a zone, it will return -1
-        zoneID = pz.whichZone(pointI);
+        zoneID = pz.whichZone(pointi);
 
         if (zoneID >= 0)
         {
@@ -207,15 +207,15 @@ void CML::mergePolyMesh::addMesh(const polyMesh& m)
             zoneID = pointZoneIndices[zoneID];
         }
 
-        renumberPoints[pointI] =
+        renumberPoints[pointi] =
             meshMod_.setAction
             (
                 polyAddPoint
                 (
-                    p[pointI],            // Point to add
+                    p[pointi],            // Point to add
                     -1,                   // Master point (straight addition)
                     zoneID,               // Zone for point
-                    pointI < m.nPoints()  // Is in cell?
+                    pointi < m.nPoints()  // Is in cell?
                 )
             );
     }
@@ -264,9 +264,9 @@ void CML::mergePolyMesh::addMesh(const polyMesh& m)
     // Gather the patch indices
     labelList patchIndices(bm.size());
 
-    forAll(patchIndices, patchI)
+    forAll(patchIndices, patchi)
     {
-        patchIndices[patchI] = patchIndex(bm[patchI]);
+        patchIndices[patchi] = patchIndex(bm[patchi]);
     }
 
     // Temporary: update number of allowable patches. This should be
@@ -298,9 +298,9 @@ void CML::mergePolyMesh::addMesh(const polyMesh& m)
 
         face newFace(curFace.size());
 
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
-            newFace[pointI] = renumberPoints[curFace[pointI]];
+            newFace[pointi] = renumberPoints[curFace[pointi]];
         }
 
         if (debug)
@@ -389,30 +389,30 @@ void CML::mergePolyMesh::merge()
         const polyBoundaryMesh& oldPatches = boundaryMesh();
 
         // Note.  Re-using counter in two for loops
-        label patchI = 0;
+        label patchi = 0;
 
-        for (patchI = 0; patchI < oldPatches.size(); patchI++)
+        for (patchi = 0; patchi < oldPatches.size(); patchi++)
         {
-            newPatches[patchI] = oldPatches[patchI].clone(oldPatches).ptr();
+            newPatches[patchi] = oldPatches[patchi].clone(oldPatches).ptr();
         }
 
         Info<< "Adding new patches. " << endl;
 
         label endOfLastPatch =
-            oldPatches[patchI - 1].start() + oldPatches[patchI - 1].size();
+            oldPatches[patchi - 1].start() + oldPatches[patchi - 1].size();
 
-        for (; patchI < patchNames_.size(); patchI++)
+        for (; patchi < patchNames_.size(); patchi++)
         {
             // Add a patch
-            newPatches[patchI] =
+            newPatches[patchi] =
             (
                 polyPatch::New
                 (
-                    patchTypes_[patchI],
-                    patchNames_[patchI],
+                    patchTypes_[patchi],
+                    patchNames_[patchi],
                     0,
                     endOfLastPatch,
-                    patchI,
+                    patchi,
                     oldPatches
                 ).ptr()
             );

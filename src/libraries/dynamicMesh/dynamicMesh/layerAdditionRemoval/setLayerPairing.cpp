@@ -124,19 +124,19 @@ bool CML::layerAdditionRemoval::setLayerPairing() const
         ftc[facei] = lidFace.oppositeIndex();
 
         // Using the local face insert the points into the lid list
-        forAll(curLocalFace, pointI)
+        forAll(curLocalFace, pointi)
         {
-            const label clp = curLocalFace[pointI];
+            const label clp = curLocalFace[pointi];
 
             if (ptc[clp] == -1)
             {
                 // Point not mapped yet.  Insert the label
-                ptc[clp] = lidFace[pointI];
+                ptc[clp] = lidFace[pointi];
             }
             else
             {
                 // Point mapped from some other face.  Check the label
-                if (ptc[clp] != lidFace[pointI])
+                if (ptc[clp] != lidFace[pointi])
                 {
                     nPointErrors++;
 //                     Pout<< "Topological error in cell layer pairing.  "
@@ -145,7 +145,7 @@ bool CML::layerAdditionRemoval::setLayerPairing() const
 //                         << "consistently.  Please check the "
 //                         << "face zone flip map." << nl
 //                         << "First index: " << ptc[clp]
-//                         << " new index: " << lidFace[pointI] << endl;
+//                         << " new index: " << lidFace[pointi] << endl;
                 }
             }
         }

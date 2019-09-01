@@ -728,9 +728,9 @@ void CML::searchableCylinder::getVolumeType
     volType.setSize(points.size());
     volType = volumeType::INSIDE;
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         vector v(pt - point1_);
 
@@ -740,12 +740,12 @@ void CML::searchableCylinder::getVolumeType
         if (parallel < 0)
         {
             // left of point1 endcap
-            volType[pointI] = volumeType::OUTSIDE;
+            volType[pointi] = volumeType::OUTSIDE;
         }
         else if (parallel > magDir_)
         {
             // right of point2 endcap
-            volType[pointI] = volumeType::OUTSIDE;
+            volType[pointi] = volumeType::OUTSIDE;
         }
         else
         {
@@ -754,11 +754,11 @@ void CML::searchableCylinder::getVolumeType
 
             if (mag(v) > radius_)
             {
-                volType[pointI] = volumeType::OUTSIDE;
+                volType[pointi] = volumeType::OUTSIDE;
             }
             else
             {
-                volType[pointI] = volumeType::INSIDE;
+                volType[pointi] = volumeType::INSIDE;
             }
         }
     }

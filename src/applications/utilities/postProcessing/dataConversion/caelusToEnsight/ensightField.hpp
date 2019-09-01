@@ -543,10 +543,10 @@ void ensightField
                 {
                     if (eMesh.faceToBeIncluded(facei))
                     {
-                        label patchI = mesh.boundaryMesh().whichPatch(facei);
-                        const polyPatch& pp = mesh.boundaryMesh()[patchI];
+                        label patchi = mesh.boundaryMesh().whichPatch(facei);
+                        const polyPatch& pp = mesh.boundaryMesh()[patchi];
                         label patchFaceI = pp.whichFace(facei);
-                        Type value = sf.boundaryField()[patchI][patchFaceI];
+                        Type value = sf.boundaryField()[patchi][patchFaceI];
                         values[j] = value;
                         ++j;
                     }

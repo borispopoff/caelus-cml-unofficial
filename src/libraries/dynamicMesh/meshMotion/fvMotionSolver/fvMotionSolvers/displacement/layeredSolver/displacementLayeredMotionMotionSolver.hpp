@@ -97,7 +97,7 @@ class displacementLayeredMotionMotionSolver
             const labelList& meshPoints,
             const dictionary& dict,
             const PtrList<pointVectorField>& patchDisp,
-            const label patchI
+            const label patchi
         ) const;
 
         void cellZoneSolve

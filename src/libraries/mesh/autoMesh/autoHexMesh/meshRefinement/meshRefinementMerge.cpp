@@ -48,9 +48,9 @@ License
 //
 //    forAll(patchIDs, i)
 //    {
-//        label patchI = patchIDs[i];
+//        label patchi = patchIDs[i];
 //
-//        const polyPatch& patch = patches[patchI];
+//        const polyPatch& patch = patches[patchi];
 //
 //        if (!patch.coupled())
 //        {
@@ -259,9 +259,9 @@ CML::label CML::meshRefinement::mergePatchFacesUndo
 
         forAll(patchIDs, i)
         {
-            label patchI = patchIDs[i];
+            label patchi = patchIDs[i];
 
-            const polyPatch& patch = patches[patchI];
+            const polyPatch& patch = patches[patchi];
 
             if (!patch.coupled())
             {

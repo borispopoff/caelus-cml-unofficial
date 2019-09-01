@@ -142,7 +142,7 @@ void CML::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const compressible::turbulenceModel& turbulence =
         db().lookupObject<compressible::turbulenceModel>
@@ -153,7 +153,7 @@ void CML::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    const scalarField alphap(turbulence.alphaEff(patchI));
+    const scalarField alphap(turbulence.alphaEff(patchi));
 
     refValue() = 1.0;
     refGrad() = 0.0;

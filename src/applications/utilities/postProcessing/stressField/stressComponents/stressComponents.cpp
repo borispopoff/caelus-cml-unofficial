@@ -188,12 +188,12 @@ int main(int argc, char *argv[])
                 0.0*sigma.component(symmTensor::YZ)
             );
 
-            forAll(sigmaUn.boundaryField(), patchI)
+            forAll(sigmaUn.boundaryField(), patchi)
             {
-                sigmaUn.boundaryField()[patchI] =
+                sigmaUn.boundaryField()[patchi] =
                 (
-                    mesh.boundary()[patchI].nf()
-                  & sigma.boundaryField()[patchI]
+                    mesh.boundary()[patchi].nf()
+                  & sigma.boundaryField()[patchi]
                 )().component(vector::X);
             }
 

@@ -46,10 +46,10 @@ void triSurface::writeOBJ(const bool writeSorted, Ostream& os) const
     const pointField& ps = points();
 
     // Print patch names as comment
-    forAll(myPatches, patchI)
+    forAll(myPatches, patchi)
     {
-        os  << "#     " << patchI << "    "
-            << myPatches[patchI].name() << nl;
+        os  << "#     " << patchi << "    "
+            << myPatches[patchi].name() << nl;
     }
     os  << "#" << nl;
 
@@ -71,16 +71,16 @@ void triSurface::writeOBJ(const bool writeSorted, Ostream& os) const
     {
         label faceIndex = 0;
 
-        forAll(myPatches, patchI)
+        forAll(myPatches, patchi)
         {
             // Print all faces belonging to this patch
 
-            os  << "g " << myPatches[patchI].name() << nl;
+            os  << "g " << myPatches[patchi].name() << nl;
 
             for
             (
                 label patchFaceI = 0;
-                patchFaceI < myPatches[patchI].size();
+                patchFaceI < myPatches[patchi].size();
                 patchFaceI++
             )
             {
@@ -99,13 +99,13 @@ void triSurface::writeOBJ(const bool writeSorted, Ostream& os) const
     {
         // Get patch (=compact region) per face
         labelList patchIDs(size());
-        forAll(myPatches, patchI)
+        forAll(myPatches, patchi)
         {
-            label facei = myPatches[patchI].start();
+            label facei = myPatches[patchi].start();
 
-            forAll(myPatches[patchI], i)
+            forAll(myPatches[patchi], i)
             {
-                patchIDs[faceMap[facei++]] = patchI;
+                patchIDs[faceMap[facei++]] = patchi;
             }
         }
 

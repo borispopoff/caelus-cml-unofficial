@@ -297,8 +297,8 @@ CML::sampledPatch::sampleField
     Field<Type>& values = tvalues();
     forAll(patchFaceLabels_, i)
     {
-        label patchI = patchIDs_[patchIndex_[i]];
-        const Field<Type>& bField = vField.boundaryField()[patchI];
+        label patchi = patchIDs_[patchIndex_[i]];
+        const Field<Type>& bField = vField.boundaryField()[patchi];
         values[i] = bField[patchFaceLabels_[i]];
     }
 
@@ -319,8 +319,8 @@ CML::sampledPatch::sampleField
 
     forAll(patchFaceLabels_, i)
     {
-        label patchI = patchIDs_[patchIndex_[i]];
-        values[i] = sField.boundaryField()[patchI][patchFaceLabels_[i]];
+        label patchi = patchIDs_[patchIndex_[i]];
+        values[i] = sField.boundaryField()[patchi][patchFaceLabels_[i]];
     }
 
     return tvalues;
@@ -344,27 +344,27 @@ CML::sampledPatch::interpolateField
 
     forAll(faces(), cutFaceI)
     {
-        label patchI = patchIDs_[patchIndex_[cutFaceI]];
-        const polyPatch& pp = mesh().boundaryMesh()[patchI];
+        label patchi = patchIDs_[patchIndex_[cutFaceI]];
+        const polyPatch& pp = mesh().boundaryMesh()[patchi];
         label patchFaceI = patchFaceLabels()[cutFaceI];
         const face& f = faces()[cutFaceI];
 
         forAll(f, faceVertI)
         {
-            label pointI = f[faceVertI];
+            label pointi = f[faceVertI];
 
-            if (!pointDone[pointI])
+            if (!pointDone[pointi])
             {
                 label facei = patchFaceI + pp.start();
                 label celli = own[facei];
 
-                values[pointI] = interpolator.interpolate
+                values[pointi] = interpolator.interpolate
                 (
-                    points()[pointI],
+                    points()[pointi],
                     celli,
                     facei
                 );
-                pointDone[pointI] = true;
+                pointDone[pointi] = true;
             }
         }
     }

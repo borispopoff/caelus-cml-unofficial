@@ -766,10 +766,10 @@ CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
     forAll(values, i)
     {
         label facei = faceId_[i];
-        label patchI = facePatchId_[i];
-        if (patchI >= 0)
+        label patchi = facePatchId_[i];
+        if (patchi >= 0)
         {
-            values[i] = field.boundaryField()[patchI][facei];
+            values[i] = field.boundaryField()[patchi][facei];
         }
         else
         {
@@ -807,10 +807,10 @@ CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
     forAll(values, i)
     {
         label facei = faceId_[i];
-        label patchI = facePatchId_[i];
-        if (patchI >= 0)
+        label patchi = facePatchId_[i];
+        if (patchi >= 0)
         {
-            values[i] = field.boundaryField()[patchI][facei];
+            values[i] = field.boundaryField()[patchi][facei];
         }
         else
         {

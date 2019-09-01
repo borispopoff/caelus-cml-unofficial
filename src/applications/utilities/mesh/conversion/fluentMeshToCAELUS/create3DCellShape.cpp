@@ -151,9 +151,9 @@ cellShape create3DCellShape
 
             meshFaceUsed[meshFaceI] = true;
 
-            forAll(curMeshFace, pointI)
+            forAll(curMeshFace, pointi)
             {
-                pointLabels[firstModelFace[pointI]] = curMeshFace[pointI];
+                pointLabels[firstModelFace[pointi]] = curMeshFace[pointi];
             }
 
             break;
@@ -200,12 +200,12 @@ cellShape create3DCellShape
                     // try matching the face
                     label nMatchedLabels = 0;
 
-                    forAll(meshFaceLabels, pointI)
+                    forAll(meshFaceLabels, pointi)
                     {
                         if
                         (
-                            pointLabels[curModelFace[pointI]]
-                         == meshFaceLabels[pointI]
+                            pointLabels[curModelFace[pointi]]
+                         == meshFaceLabels[pointi]
                         )
                         {
                             nMatchedLabels++;
@@ -221,10 +221,10 @@ cellShape create3DCellShape
                     if (found)
                     {
                         // match found. Insert mesh face
-                        forAll(meshFaceLabels, pointI)
+                        forAll(meshFaceLabels, pointi)
                         {
-                            pointLabels[curModelFace[pointI]] =
-                                meshFaceLabels[pointI];
+                            pointLabels[curModelFace[pointi]] =
+                                meshFaceLabels[pointi];
                         }
 
                         meshFaceUsed[meshFaceI] = true;

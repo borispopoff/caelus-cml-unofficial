@@ -239,9 +239,9 @@ CML::channelIndex::channelIndex
 
     forAll(patchNames, i)
     {
-        const label patchI = patches.findPatchID(patchNames[i]);
+        const label patchi = patches.findPatchID(patchNames[i]);
 
-        if (patchI == -1)
+        if (patchi == -1)
         {
             FatalErrorInFunction
                 << "Illegal patch " << patchNames[i]
@@ -249,7 +249,7 @@ CML::channelIndex::channelIndex
                 << exit(FatalError);
         }
 
-        nFaces += patches[patchI].size();
+        nFaces += patches[patchi].size();
     }
 
     labelList startFaces(nFaces);

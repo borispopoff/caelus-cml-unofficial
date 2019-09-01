@@ -441,26 +441,26 @@ CML::isoSurface::adaptPatchFields
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if
         (
             isA<emptyPolyPatch>(pp)
-         && pp.size() != sliceFld.boundaryField()[patchI].size()
+         && pp.size() != sliceFld.boundaryField()[patchi].size()
         )
         {
             // Clear old value. Cannot resize it since is a slice.
-            sliceFld.boundaryField().set(patchI, nullptr);
+            sliceFld.boundaryField().set(patchi, nullptr);
 
             // Set new value we can change
             sliceFld.boundaryField().set
             (
-                patchI,
+                patchi,
                 new calculatedFvPatchField<Type>
                 (
-                    mesh.boundary()[patchI],
+                    mesh.boundary()[patchi],
                     sliceFld
                 )
             );
@@ -468,9 +468,9 @@ CML::isoSurface::adaptPatchFields
             // Note: cannot use patchInternalField since uses emptyFvPatch::size
             // Do our own internalField instead.
             const labelUList& faceCells =
-                mesh.boundary()[patchI].patch().faceCells();
+                mesh.boundary()[patchi].patch().faceCells();
 
-            Field<Type>& pfld = sliceFld.boundaryField()[patchI];
+            Field<Type>& pfld = sliceFld.boundaryField()[patchi];
             pfld.setSize(faceCells.size());
             forAll(faceCells, i)
             {
@@ -485,10 +485,10 @@ CML::isoSurface::adaptPatchFields
         {
             fvPatchField<Type>& pfld = const_cast<fvPatchField<Type>&>
             (
-                sliceFld.boundaryField()[patchI]
+                sliceFld.boundaryField()[patchi]
             );
 
-            const scalarField& w = mesh.weights().boundaryField()[patchI];
+            const scalarField& w = mesh.weights().boundaryField()[patchi];
 
             tmp<Field<Type>> f =
                 w*pfld.patchInternalField()
@@ -822,26 +822,26 @@ CML::label CML::isoSurface::generateFaceTriPoints
 
     forAll(f, fp)
     {
-        label pointI = f[fp];
-        label nextPointI = f[f.fcIndex(fp)];
+        label pointi = f[fp];
+        label nextPointi = f[f.fcIndex(fp)];
 
         generateTriPoints
         (
-            pVals[pointI],
-            pCoords[pointI],
-            snappedPoint[pointI] != -1,
+            pVals[pointi],
+            pCoords[pointi],
+            snappedPoint[pointi] != -1,
             (
-                snappedPoint[pointI] != -1
-              ? snappedPoints[snappedPoint[pointI]]
+                snappedPoint[pointi] != -1
+              ? snappedPoints[snappedPoint[pointi]]
               : pTraits<Type>::zero
             ),
 
-            pVals[nextPointI],
-            pCoords[nextPointI],
-            snappedPoint[nextPointI] != -1,
+            pVals[nextPointi],
+            pCoords[nextPointi],
+            snappedPoint[nextPointi] != -1,
             (
-                snappedPoint[nextPointI] != -1
-              ? snappedPoints[snappedPoint[nextPointI]]
+                snappedPoint[nextPointi] != -1
+              ? snappedPoints[snappedPoint[nextPointi]]
               : pTraits<Type>::zero
             ),
 
@@ -960,9 +960,9 @@ void CML::isoSurface::generateTriPoints
     // Determine neighbouring snap status
     boolList neiSnapped(mesh_.nFaces()-mesh_.nInternalFaces(), false);
     List<Type> neiSnappedPoint(neiSnapped.size(), Zero);
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -986,9 +986,9 @@ void CML::isoSurface::generateTriPoints
 
 
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (isA<processorPolyPatch>(pp))
         {
@@ -1018,8 +1018,8 @@ void CML::isoSurface::generateTriPoints
                             snappedPoint,
                             facei,
 
-                            cVals.boundaryField()[patchI][i],
-                            cCoords.boundaryField()[patchI][i],
+                            cVals.boundaryField()[patchi][i],
+                            cCoords.boundaryField()[patchi][i],
                             neiSnapped[facei-mesh_.nInternalFaces()],
                             neiSnappedPoint[facei-mesh_.nInternalFaces()],
 
@@ -1042,8 +1042,8 @@ void CML::isoSurface::generateTriPoints
                             snappedPoint,
                             facei,
 
-                            cVals.boundaryField()[patchI][i],
-                            cCoords.boundaryField()[patchI][i],
+                            cVals.boundaryField()[patchi][i],
+                            cCoords.boundaryField()[patchi][i],
                             false,
                             pTraits<Type>::zero,
 
@@ -1075,8 +1075,8 @@ void CML::isoSurface::generateTriPoints
                         snappedPoint,
                         facei,
 
-                        cVals.boundaryField()[patchI][i],
-                        cCoords.boundaryField()[patchI][i],
+                        cVals.boundaryField()[patchi][i],
+                        cCoords.boundaryField()[patchi][i],
                         false,  // fc not snapped
                         pTraits<Type>::zero,
 

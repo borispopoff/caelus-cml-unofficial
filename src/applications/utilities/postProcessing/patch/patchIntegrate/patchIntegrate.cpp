@@ -34,7 +34,7 @@ void printIntegrate
 (
     const fvMesh& mesh,
     const IOobject& fieldHeader,
-    const label patchI,
+    const label patchi,
     bool& done
 )
 {
@@ -47,21 +47,21 @@ void printIntegrate
 
         Info<< "    Integral of " << fieldHeader.name()
             << " over vector area of patch "
-            << mesh.boundary()[patchI].name() << '[' << patchI << ']' << " = "
+            << mesh.boundary()[patchi].name() << '[' << patchi << ']' << " = "
             << gSum
                (
-                   mesh.Sf().boundaryField()[patchI]
-                  *field.boundaryField()[patchI]
+                   mesh.Sf().boundaryField()[patchi]
+                  *field.boundaryField()[patchi]
                )
             << nl;
 
         Info<< "    Integral of " << fieldHeader.name()
             << " over area magnitude of patch "
-            << mesh.boundary()[patchI].name() << '[' << patchI << ']' << " = "
+            << mesh.boundary()[patchi].name() << '[' << patchi << ']' << " = "
             << gSum
                (
-                   mesh.magSf().boundaryField()[patchI]
-                  *field.boundaryField()[patchI]
+                   mesh.magSf().boundaryField()[patchi]
+                  *field.boundaryField()[patchi]
                )
             << nl;
 
@@ -75,7 +75,7 @@ void printSum
 (
     const fvMesh& mesh,
     const IOobject& fieldHeader,
-    const label patchI,
+    const label patchi,
     bool& done
 )
 {
@@ -87,11 +87,11 @@ void printSum
         FieldType field(fieldHeader, mesh);
         typename FieldType::value_type sumField = gSum
         (
-            field.boundaryField()[patchI]
+            field.boundaryField()[patchi]
         );
 
         Info<< "    Integral of " << fieldHeader.name() << " over patch "
-            << mesh.boundary()[patchI].name() << '[' << patchI << ']' << " = "
+            << mesh.boundary()[patchi].name() << '[' << patchi << ']' << " = "
             << sumField << nl;
 
         done = true;
@@ -133,8 +133,8 @@ int main(int argc, char *argv[])
         {
             mesh.readUpdate();
 
-            const label patchI = mesh.boundaryMesh().findPatchID(patchName);
-            if (patchI < 0)
+            const label patchi = mesh.boundaryMesh().findPatchID(patchName);
+            if (patchi < 0)
             {
                 FatalError
                     << "Unable to find patch " << patchName << nl
@@ -143,11 +143,11 @@ int main(int argc, char *argv[])
 
             // Give patch area
             Info<< "    Area vector of patch "
-                << patchName << '[' << patchI << ']' << " = "
-                << gSum(mesh.Sf().boundaryField()[patchI]) << endl;
+                << patchName << '[' << patchi << ']' << " = "
+                << gSum(mesh.Sf().boundaryField()[patchi]) << endl;
             Info<< "    Area magnitude of patch "
-                << patchName << '[' << patchI << ']' << " = "
-                << gSum(mesh.magSf().boundaryField()[patchI]) << endl;
+                << patchName << '[' << patchi << ']' << " = "
+                << gSum(mesh.magSf().boundaryField()[patchi]) << endl;
 
             // Read field and calc integral
             bool done = false;
@@ -155,14 +155,14 @@ int main(int argc, char *argv[])
             (
                 mesh,
                 fieldHeader,
-                patchI,
+                patchi,
                 done
             );
             printIntegrate<volVectorField>
             (
                 mesh,
                 fieldHeader,
-                patchI,
+                patchi,
                 done
             );
 
@@ -171,21 +171,21 @@ int main(int argc, char *argv[])
             //(
             //    mesh,
             //    fieldHeader,
-            //    patchI,
+            //    patchi,
             //    done
             //);
             //printIntegrate<volSymmTensorField>
             //(
             //    mesh,
             //    fieldHeader,
-            //    patchI,
+            //    patchi,
             //    done
             //);
             //printIntegrate<volTensorField>
             //(
             //    mesh,
             //    fieldHeader,
-            //    patchI,
+            //    patchi,
             //    done
             //);
 
@@ -193,35 +193,35 @@ int main(int argc, char *argv[])
             (
                 mesh,
                 fieldHeader,
-                patchI,
+                patchi,
                 done
             );
             printSum<surfaceVectorField>
             (
                 mesh,
                 fieldHeader,
-                patchI,
+                patchi,
                 done
             );
             printSum<volSphericalTensorField>
             (
                 mesh,
                 fieldHeader,
-                patchI,
+                patchi,
                 done
             );
             printSum<volSymmTensorField>
             (
                 mesh,
                 fieldHeader,
-                patchI,
+                patchi,
                 done
             );
             printSum<volTensorField>
             (
                 mesh,
                 fieldHeader,
-                patchI,
+                patchi,
                 done
             );
 

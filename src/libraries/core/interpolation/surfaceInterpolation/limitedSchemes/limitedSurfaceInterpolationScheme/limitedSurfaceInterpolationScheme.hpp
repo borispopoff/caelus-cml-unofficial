@@ -358,12 +358,12 @@ tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
     surfaceScalarField::GeometricBoundaryField& bWeights =
         Weights.boundaryField();
 
-    forAll(bWeights, patchI)
+    forAll(bWeights, patchi)
     {
-        scalarField& pWeights = bWeights[patchI];
+        scalarField& pWeights = bWeights[patchi];
 
-        const scalarField& pCDweights = CDweights.boundaryField()[patchI];
-        const scalarField& pFaceFlux = faceFlux_.boundaryField()[patchI];
+        const scalarField& pCDweights = CDweights.boundaryField()[patchi];
+        const scalarField& pFaceFlux = faceFlux_.boundaryField()[patchi];
 
         forAll(pWeights, face)
         {

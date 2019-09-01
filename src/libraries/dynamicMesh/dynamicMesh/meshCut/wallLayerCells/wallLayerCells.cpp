@@ -78,9 +78,9 @@ CML::wallLayerCells::wallLayerCells
     // Make map from name to local patch ID
     HashTable<label> patchNameToIndex(patches.size());
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        patchNameToIndex.insert(patches[patchI].name(), patchI);
+        patchNameToIndex.insert(patches[patchi].name(), patchi);
     }
 
 
@@ -93,9 +93,9 @@ CML::wallLayerCells::wallLayerCells
 
         if (patchNameToIndex.found(name))
         {
-            label patchI = patchNameToIndex[name];
+            label patchi = patchNameToIndex[name];
 
-            nWalls += patches[patchI].size();
+            nWalls += patches[patchi].size();
         }
     }
 
@@ -112,9 +112,9 @@ CML::wallLayerCells::wallLayerCells
 
         if (patchNameToIndex.found(name))
         {
-            label patchI = patchNameToIndex[name];
+            label patchi = patchNameToIndex[name];
 
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             forAll(pp, patchFaceI)
             {

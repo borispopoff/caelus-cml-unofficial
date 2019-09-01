@@ -91,10 +91,10 @@ void CML::meshDualiser::dumpPolyTopoChange
 
     const DynamicList<point>& points = meshMod.points();
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        meshTools::writeOBJ(str1, points[pointI]);
-        meshTools::writeOBJ(str2, points[pointI]);
+        meshTools::writeOBJ(str1, points[pointi]);
+        meshTools::writeOBJ(str2, points[pointi]);
     }
 
     const DynamicList<face>& faces = meshMod.faces();
@@ -125,10 +125,10 @@ void CML::meshDualiser::dumpPolyTopoChange
 CML::label CML::meshDualiser::findDualCell
 (
     const label celli,
-    const label pointI
+    const label pointi
 ) const
 {
-    const labelList& dualCells = pointToDualCells_[pointI];
+    const labelList& dualCells = pointToDualCells_[pointi];
 
     if (dualCells.size() == 1)
     {
@@ -136,7 +136,7 @@ CML::label CML::meshDualiser::findDualCell
     }
     else
     {
-        label index = findIndex(mesh_.pointCells()[pointI], celli);
+        label index = findIndex(mesh_.pointCells()[pointi], celli);
 
         return dualCells[index];
     }
@@ -148,11 +148,11 @@ CML::label CML::meshDualiser::findDualCell
 void CML::meshDualiser::generateDualBoundaryEdges
 (
     const PackedBoolList& isBoundaryEdge,
-    const label pointI,
+    const label pointi,
     polyTopoChange& meshMod
 )
 {
-    const labelList& pEdges = mesh_.pointEdges()[pointI];
+    const labelList& pEdges = mesh_.pointEdges()[pointi];
 
     forAll(pEdges, pEdgeI)
     {
@@ -165,7 +165,7 @@ void CML::meshDualiser::generateDualBoundaryEdges
             edgeToDualPoint_[edgeI] = meshMod.addPoint
             (
                 e.centre(mesh_.points()),
-                pointI, // masterPoint
+                pointi, // masterPoint
                 -1,     // zoneID
                 true    // inCell
             );
@@ -179,7 +179,7 @@ void CML::meshDualiser::generateDualBoundaryEdges
 bool CML::meshDualiser::sameDualCell
 (
     const label facei,
-    const label pointI
+    const label pointi
 ) const
 {
     if (!mesh_.isInternalFace(facei))
@@ -192,13 +192,13 @@ bool CML::meshDualiser::sameDualCell
     label own = mesh_.faceOwner()[facei];
     label nei = mesh_.faceNeighbour()[facei];
 
-    return findDualCell(own, pointI) == findDualCell(nei, pointI);
+    return findDualCell(own, pointi) == findDualCell(nei, pointi);
 }
 
 
 CML::label CML::meshDualiser::addInternalFace
 (
-    const label masterPointI,
+    const label masterPointi,
     const label masterEdgeI,
     const label masterFaceI,
 
@@ -264,7 +264,7 @@ CML::label CML::meshDualiser::addInternalFace
             newFace,
             dualCell0,      // own
             dualCell1,      // nei
-            masterPointI,   // masterPointID
+            masterPointi,   // masterPointID
             masterEdgeI,    // masterEdgeID
             masterFaceI,    // masterFaceID
             false,          // flipFaceFlux
@@ -291,7 +291,7 @@ CML::label CML::meshDualiser::addInternalFace
             newFace,
             dualCell1,      // own
             dualCell0,      // nei
-            masterPointI,   // masterPointID
+            masterPointi,   // masterPointID
             masterEdgeI,    // masterEdgeID
             masterFaceI,    // masterFaceID
             false,          // flipFaceFlux
@@ -317,12 +317,12 @@ CML::label CML::meshDualiser::addInternalFace
 
 CML::label CML::meshDualiser::addBoundaryFace
 (
-    const label masterPointI,
+    const label masterPointi,
     const label masterEdgeI,
     const label masterFaceI,
 
     const label dualCellI,
-    const label patchI,
+    const label patchi,
     const DynamicList<label>& verts,
     polyTopoChange& meshMod
 ) const
@@ -348,11 +348,11 @@ CML::label CML::meshDualiser::addBoundaryFace
         newFace,
         dualCellI,      // own
         -1,             // nei
-        masterPointI,   // masterPointID
+        masterPointi,   // masterPointID
         masterEdgeI,    // masterEdgeID
         masterFaceI,    // masterFaceID
         false,          // flipFaceFlux
-        patchI,         // patchID
+        patchi,         // patchID
         zoneID,         // zoneID
         zoneFlip        // zoneFlip
     );
@@ -476,7 +476,7 @@ void CML::meshDualiser::createFacesAroundEdge
             // Close current face.
             addInternalFace
             (
-                -1,         // masterPointI
+                -1,         // masterPointi
                 edgeI,      // masterEdgeI
                 -1,         // masterFaceI
                 edgeOrder,
@@ -528,7 +528,7 @@ void CML::meshDualiser::createFacesAroundEdge
     verts.shrink();
     addInternalFace
     (
-        -1,         // masterPointI
+        -1,         // masterPointi
         edgeI,      // masterEdgeI
         -1,         // masterFaceI
         edgeOrder,
@@ -622,7 +622,7 @@ void CML::meshDualiser::createFaceFromInternalFace
             verts.shrink();
             addInternalFace
             (
-                -1,         // masterPointI
+                -1,         // masterPointi
                 -1,         // masterEdgeI
                 facei,      // masterFaceI
                 true,       // edgeOrder,
@@ -643,21 +643,21 @@ void CML::meshDualiser::createFaceFromInternalFace
 // (pointFaces()). Gets starting face and marks off visited faces in donePFaces.
 void CML::meshDualiser::createFacesAroundBoundaryPoint
 (
-    const label patchI,
-    const label patchPointI,
+    const label patchi,
+    const label patchPointi,
     const label startFaceI,
     polyTopoChange& meshMod,
     boolList& donePFaces            // pFaces visited
 ) const
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
-    const polyPatch& pp = patches[patchI];
-    const labelList& pFaces = pp.pointFaces()[patchPointI];
+    const polyPatch& pp = patches[patchi];
+    const labelList& pFaces = pp.pointFaces()[patchPointi];
     const labelList& own = mesh_.faceOwner();
 
-    label pointI = pp.meshPoints()[patchPointI];
+    label pointi = pp.meshPoints()[patchPointi];
 
-    if (pointToDualPoint_[pointI] == -1)
+    if (pointToDualPoint_[pointi] == -1)
     {
         // Not a feature point. Loop over all connected
         // pointFaces.
@@ -681,11 +681,11 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
             // Insert face centre
             verts.append(faceToDualPoint_[facei]);
 
-            label dualCellI = findDualCell(own[facei], pointI);
+            label dualCellI = findDualCell(own[facei], pointi);
 
-            // Get the edge before the patchPointI
+            // Get the edge before the patchPointi
             const face& f = mesh_.faces()[facei];
-            label fp = findIndex(f, pointI);
+            label fp = findIndex(f, pointi);
             label prevFp = f.rcIndex(fp);
             label edgeI = mesh_.faceEdges()[facei][prevFp];
 
@@ -716,7 +716,7 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
             if (facei < pp.start() || facei >= pp.start()+pp.size())
             {
                 FatalErrorInFunction
-                    << "Walked from face on patch:" << patchI
+                    << "Walked from face on patch:" << patchi
                     << " to face:" << facei
                     << " fc:" << mesh_.faceCentres()[facei]
                     << " on patch:" << patches.whichPatch(facei)
@@ -724,19 +724,19 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
             }
 
             // Check if different cell.
-            if (dualCellI != findDualCell(own[facei], pointI))
+            if (dualCellI != findDualCell(own[facei], pointi))
             {
                 FatalErrorInFunction
                     << "Different dual cells but no feature edge"
-                    << " inbetween point:" << pointI
-                    << " coord:" << mesh_.points()[pointI]
+                    << " inbetween point:" << pointi
+                    << " coord:" << mesh_.points()[pointi]
                     << abort(FatalError);
             }
         }
 
         verts.shrink();
 
-        label dualCellI = findDualCell(own[facei], pointI);
+        label dualCellI = findDualCell(own[facei], pointi);
 
         //Bit dodgy: create dualface from the last face (instead of from
         // the central point). This will also use the original faceZone to
@@ -744,12 +744,12 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
 
         addBoundaryFace
         (
-            //pointI,     // masterPointI
-            -1,         // masterPointI
+            //pointi,     // masterPointi
+            -1,         // masterPointi
             -1,         // masterEdgeI
             facei,      // masterFaceI
             dualCellI,
-            patchI,
+            patchi,
             verts,
             meshMod
         );
@@ -762,11 +762,11 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
         DynamicList<label> verts(mesh_.faces()[facei].size());
 
         // Starting point.
-        verts.append(pointToDualPoint_[pointI]);
+        verts.append(pointToDualPoint_[pointi]);
 
-        // Find edge between pointI and next point on face.
+        // Find edge between pointi and next point on face.
         const labelList& fEdges = mesh_.faceEdges()[facei];
-        label nextEdgeI = fEdges[findIndex(mesh_.faces()[facei], pointI)];
+        label nextEdgeI = fEdges[findIndex(mesh_.faces()[facei], pointi)];
         if (edgeToDualPoint_[nextEdgeI] != -1)
         {
             verts.append(edgeToDualPoint_[nextEdgeI]);
@@ -786,30 +786,30 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
             // Face centre
             verts.append(faceToDualPoint_[facei]);
 
-            // Find edge before pointI on facei
+            // Find edge before pointi on facei
             const labelList& fEdges = mesh_.faceEdges()[facei];
             const face& f = mesh_.faces()[facei];
-            label prevFp = f.rcIndex(findIndex(f, pointI));
+            label prevFp = f.rcIndex(findIndex(f, pointi));
             label edgeI = fEdges[prevFp];
 
             if (edgeToDualPoint_[edgeI] != -1)
             {
                 // Feature edge. Close any face so far. Note: uses face to
-                // create dualFace from. Could use pointI instead.
+                // create dualFace from. Could use pointi instead.
                 verts.append(edgeToDualPoint_[edgeI]);
                 addBoundaryFace
                 (
-                    -1,     // masterPointI
+                    -1,     // masterPointi
                     -1,     // masterEdgeI
                     facei,  // masterFaceI
-                    findDualCell(own[facei], pointI),
-                    patchI,
+                    findDualCell(own[facei], pointi),
+                    patchi,
                     verts.shrink(),
                     meshMod
                 );
                 verts.clear();
 
-                verts.append(pointToDualPoint_[pointI]);
+                verts.append(pointToDualPoint_[pointi]);
                 verts.append(edgeToDualPoint_[edgeI]);
             }
 
@@ -841,14 +841,14 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
 
         if (verts.size() > 2)
         {
-            // Note: face created from face, not from pointI
+            // Note: face created from face, not from pointi
             addBoundaryFace
             (
-                -1,             // masterPointI
+                -1,             // masterPointi
                 -1,             // masterEdgeI
                 startFaceI,     // masterFaceI
-                findDualCell(own[facei], pointI),
-                patchI,
+                findDualCell(own[facei], pointi),
+                patchi,
                 verts.shrink(),
                 meshMod
             );
@@ -1010,7 +1010,7 @@ void CML::meshDualiser::setRefinement
     // Dual cells (from points)
     // ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    // pointToDualCells_[pointI]
+    // pointToDualCells_[pointi]
     // - single entry : all cells surrounding point all become the same
     //                  cell.
     // - multiple entries: in order of pointCells.
@@ -1019,21 +1019,21 @@ void CML::meshDualiser::setRefinement
     // feature points that become single cell
     forAll(singleCellFeaturePoints, i)
     {
-        label pointI = singleCellFeaturePoints[i];
+        label pointi = singleCellFeaturePoints[i];
 
-        pointToDualPoint_[pointI] = meshMod.addPoint
+        pointToDualPoint_[pointi] = meshMod.addPoint
         (
-            mesh_.points()[pointI],
-            pointI,                                 // masterPoint
-            mesh_.pointZones().whichZone(pointI),   // zoneID
+            mesh_.points()[pointi],
+            pointi,                                 // masterPoint
+            mesh_.pointZones().whichZone(pointi),   // zoneID
             true                                    // inCell
         );
 
         // Generate single cell
-        pointToDualCells_[pointI].setSize(1);
-        pointToDualCells_[pointI][0] = meshMod.addCell
+        pointToDualCells_[pointi].setSize(1);
+        pointToDualCells_[pointi][0] = meshMod.addCell
         (
-            pointI, //masterPointID,
+            pointi, //masterPointID,
             -1,     //masterEdgeID,
             -1,     //masterFaceID,
             -1,     //masterCellID,
@@ -1041,43 +1041,43 @@ void CML::meshDualiser::setRefinement
         );
         if (dualCcStr.valid())
         {
-            meshTools::writeOBJ(dualCcStr(), mesh_.points()[pointI]);
+            meshTools::writeOBJ(dualCcStr(), mesh_.points()[pointi]);
         }
     }
 
     // feature points that become multiple cells
     forAll(multiCellFeaturePoints, i)
     {
-        label pointI = multiCellFeaturePoints[i];
+        label pointi = multiCellFeaturePoints[i];
 
-        if (pointToDualCells_[pointI].size() > 0)
+        if (pointToDualCells_[pointi].size() > 0)
         {
             FatalErrorInFunction
-                << "Point " << pointI << " at:" << mesh_.points()[pointI]
+                << "Point " << pointi << " at:" << mesh_.points()[pointi]
                 << " is both in singleCellFeaturePoints"
                 << " and multiCellFeaturePoints."
                 << abort(FatalError);
         }
 
-        pointToDualPoint_[pointI] = meshMod.addPoint
+        pointToDualPoint_[pointi] = meshMod.addPoint
         (
-            mesh_.points()[pointI],
-            pointI,                                 // masterPoint
-            mesh_.pointZones().whichZone(pointI),   // zoneID
+            mesh_.points()[pointi],
+            pointi,                                 // masterPoint
+            mesh_.pointZones().whichZone(pointi),   // zoneID
             true                                    // inCell
         );
 
         // Create dualcell for every cell connected to dual point
 
-        const labelList& pCells = mesh_.pointCells()[pointI];
+        const labelList& pCells = mesh_.pointCells()[pointi];
 
-        pointToDualCells_[pointI].setSize(pCells.size());
+        pointToDualCells_[pointi].setSize(pCells.size());
 
         forAll(pCells, pCellI)
         {
-            pointToDualCells_[pointI][pCellI] = meshMod.addCell
+            pointToDualCells_[pointi][pCellI] = meshMod.addCell
             (
-                pointI,                                     //masterPointID
+                pointi,                                     //masterPointID
                 -1,                                         //masterEdgeID
                 -1,                                         //masterFaceID
                 -1,                                         //masterCellID
@@ -1088,20 +1088,20 @@ void CML::meshDualiser::setRefinement
                 meshTools::writeOBJ
                 (
                     dualCcStr(),
-                    0.5*(mesh_.points()[pointI]+cellCentres[pCells[pCellI]])
+                    0.5*(mesh_.points()[pointi]+cellCentres[pCells[pCellI]])
                 );
             }
         }
     }
     // Normal points
-    forAll(mesh_.points(), pointI)
+    forAll(mesh_.points(), pointi)
     {
-        if (pointToDualCells_[pointI].empty())
+        if (pointToDualCells_[pointi].empty())
         {
-            pointToDualCells_[pointI].setSize(1);
-            pointToDualCells_[pointI][0] = meshMod.addCell
+            pointToDualCells_[pointi].setSize(1);
+            pointToDualCells_[pointi][0] = meshMod.addCell
             (
-                pointI, //masterPointID,
+                pointi, //masterPointID,
                 -1,     //masterEdgeID,
                 -1,     //masterFaceID,
                 -1,     //masterCellID,
@@ -1110,7 +1110,7 @@ void CML::meshDualiser::setRefinement
 
             if (dualCcStr.valid())
             {
-                meshTools::writeOBJ(dualCcStr(), mesh_.points()[pointI]);
+                meshTools::writeOBJ(dualCcStr(), mesh_.points()[pointi]);
             }
         }
     }
@@ -1393,15 +1393,15 @@ void CML::meshDualiser::setRefinement
     // These need to be closed.
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         const labelListList& pointFaces = pp.pointFaces();
 
-        forAll(pointFaces, patchPointI)
+        forAll(pointFaces, patchPointi)
         {
-            const labelList& pFaces = pointFaces[patchPointI];
+            const labelList& pFaces = pointFaces[patchPointi];
 
             boolList donePFaces(pFaces.size(), false);
 
@@ -1412,17 +1412,17 @@ void CML::meshDualiser::setRefinement
                     // Starting face
                     label startFaceI = pp.start()+pFaces[i];
 
-                    //Pout<< "Walking around point:" << pointI
-                    //    << " coord:" << mesh_.points()[pointI]
-                    //    << " on patch:" << patchI
+                    //Pout<< "Walking around point:" << pointi
+                    //    << " coord:" << mesh_.points()[pointi]
+                    //    << " on patch:" << patchi
                     //    << " startFace:" << startFaceI
                     //    << " at:" << mesh_.faceCentres()[startFaceI]
                     //    << endl;
 
                     createFacesAroundBoundaryPoint
                     (
-                        patchI,
-                        patchPointI,
+                        patchi,
+                        patchPointi,
                         startFaceI,
                         meshMod,
                         donePFaces            // pFaces visited

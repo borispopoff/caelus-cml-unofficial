@@ -48,9 +48,9 @@ CML::labelList CML::cell::labels(const faceUList& f) const
     // in the first face there is no duplicates
     const labelList& first = f[faces[0]];
 
-    forAll(first, pointI)
+    forAll(first, pointi)
     {
-        p[pointI] = first[pointI];
+        p[pointi] = first[pointi];
     }
 
     // re-use maxVert to count the real vertices
@@ -63,9 +63,9 @@ CML::labelList CML::cell::labels(const faceUList& f) const
     {
         const labelList& curFace = f[faces[facei]];
 
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
-            const label curPoint = curFace[pointI];
+            const label curPoint = curFace[pointi];
 
             bool found = false;
 

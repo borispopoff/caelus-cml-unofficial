@@ -41,10 +41,10 @@ inline void CML::rawSurfaceWriter::writeLocation
 (
     Ostream& os,
     const pointField& points,
-    const label pointI
+    const label pointi
 )
 {
-    const point& pt = points[pointI];
+    const point& pt = points[pointi];
     os  << pt.x() << ' ' << pt.y() << ' ' << pt.z() << ' ';
 }
 

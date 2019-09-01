@@ -34,10 +34,10 @@ void CML::triSurface::writeSTLASCII(Ostream& os) const
     surfacePatchList myPatches(calcPatches(faceMap));
 
     label faceIndex = 0;
-    forAll(myPatches, patchI)
+    forAll(myPatches, patchi)
     {
         // Print all faces belonging to this region
-        const surfacePatch& patch = myPatches[patchI];
+        const surfacePatch& patch = myPatches[patchi];
 
         os  << "solid " << patch.name() << endl;
 

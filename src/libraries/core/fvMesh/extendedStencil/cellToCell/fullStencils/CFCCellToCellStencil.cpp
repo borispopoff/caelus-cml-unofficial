@@ -38,9 +38,9 @@ void CML::CFCCellToCellStencil::calcFaceBoundaryData
 
     neiGlobal.setSize(nBnd);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
         label facei = pp.start();
 
         if (pp.coupled())

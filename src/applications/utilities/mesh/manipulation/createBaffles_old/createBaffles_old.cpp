@@ -105,16 +105,16 @@ void modifyOrAddFace
 
 label findPatchID(const polyMesh& mesh, const word& name)
 {
-    const label patchI = mesh.boundaryMesh().findPatchID(name);
+    const label patchi = mesh.boundaryMesh().findPatchID(name);
 
-    if (patchI == -1)
+    if (patchi == -1)
     {
         FatalErrorInFunction
             << "Cannot find patch " << name << endl
             << "Valid patches are " << mesh.boundaryMesh().names()
             << exit(FatalError);
     }
-    return patchI;
+    return patchi;
 }
 
 
@@ -388,9 +388,9 @@ int main(int argc, char *argv[])
         // For warning once per patch.
         labelHashSet patchWarned;
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             label newPatchI = newMasterPatches[i];
 
@@ -409,7 +409,7 @@ int main(int argc, char *argv[])
 
                     if (zoneFaceI != -1)
                     {
-                        if (patchWarned.insert(patchI))
+                        if (patchWarned.insert(patchi))
                         {
                             WarningInFunction
                                 << "Found boundary face (in patch " << pp.name()
@@ -462,8 +462,8 @@ int main(int argc, char *argv[])
         bool hasWarned = false;
         forAll(newMasterPatches, i)
         {
-            label patchI = newMasterPatches[i];
-            const fvPatchMapper& pm = mapper.boundaryMap()[patchI];
+            label patchi = newMasterPatches[i];
+            const fvPatchMapper& pm = mapper.boundaryMap()[patchi];
             if (pm.sizeBeforeMapping() == 0)
             {
                 if (!hasWarned)
@@ -474,36 +474,36 @@ int main(int argc, char *argv[])
                         << "You might have to edit these fields." << endl;
                 }
 
-                SetPatchFields(vsFlds, patchI, pTraits<scalar>::zero);
-                SetPatchFields(vvFlds, patchI, pTraits<vector>::zero);
-                SetPatchFields(vstFlds, patchI, pTraits<sphericalTensor>::zero);
-                SetPatchFields(vsymtFlds, patchI, pTraits<symmTensor>::zero);
-                SetPatchFields(vtFlds, patchI, pTraits<tensor>::zero);
+                SetPatchFields(vsFlds, patchi, pTraits<scalar>::zero);
+                SetPatchFields(vvFlds, patchi, pTraits<vector>::zero);
+                SetPatchFields(vstFlds, patchi, pTraits<sphericalTensor>::zero);
+                SetPatchFields(vsymtFlds, patchi, pTraits<symmTensor>::zero);
+                SetPatchFields(vtFlds, patchi, pTraits<tensor>::zero);
 
-                SetPatchFields(ssFlds, patchI, pTraits<scalar>::zero);
-                SetPatchFields(svFlds, patchI, pTraits<vector>::zero);
-                SetPatchFields(sstFlds, patchI, pTraits<sphericalTensor>::zero);
-                SetPatchFields(ssymtFlds, patchI, pTraits<symmTensor>::zero);
-                SetPatchFields(stFlds, patchI, pTraits<tensor>::zero);
+                SetPatchFields(ssFlds, patchi, pTraits<scalar>::zero);
+                SetPatchFields(svFlds, patchi, pTraits<vector>::zero);
+                SetPatchFields(sstFlds, patchi, pTraits<sphericalTensor>::zero);
+                SetPatchFields(ssymtFlds, patchi, pTraits<symmTensor>::zero);
+                SetPatchFields(stFlds, patchi, pTraits<tensor>::zero);
             }
         }
         forAll(newSlavePatches, i)
         {
-            label patchI = newSlavePatches[i];
-            const fvPatchMapper& pm = mapper.boundaryMap()[patchI];
+            label patchi = newSlavePatches[i];
+            const fvPatchMapper& pm = mapper.boundaryMap()[patchi];
             if (pm.sizeBeforeMapping() == 0)
             {
-                SetPatchFields(vsFlds, patchI, pTraits<scalar>::zero);
-                SetPatchFields(vvFlds, patchI, pTraits<vector>::zero);
-                SetPatchFields(vstFlds, patchI, pTraits<sphericalTensor>::zero);
-                SetPatchFields(vsymtFlds, patchI, pTraits<symmTensor>::zero);
-                SetPatchFields(vtFlds, patchI, pTraits<tensor>::zero);
+                SetPatchFields(vsFlds, patchi, pTraits<scalar>::zero);
+                SetPatchFields(vvFlds, patchi, pTraits<vector>::zero);
+                SetPatchFields(vstFlds, patchi, pTraits<sphericalTensor>::zero);
+                SetPatchFields(vsymtFlds, patchi, pTraits<symmTensor>::zero);
+                SetPatchFields(vtFlds, patchi, pTraits<tensor>::zero);
 
-                SetPatchFields(ssFlds, patchI, pTraits<scalar>::zero);
-                SetPatchFields(svFlds, patchI, pTraits<vector>::zero);
-                SetPatchFields(sstFlds, patchI, pTraits<sphericalTensor>::zero);
-                SetPatchFields(ssymtFlds, patchI, pTraits<symmTensor>::zero);
-                SetPatchFields(stFlds, patchI, pTraits<tensor>::zero);
+                SetPatchFields(ssFlds, patchi, pTraits<scalar>::zero);
+                SetPatchFields(svFlds, patchi, pTraits<vector>::zero);
+                SetPatchFields(sstFlds, patchi, pTraits<sphericalTensor>::zero);
+                SetPatchFields(ssymtFlds, patchi, pTraits<symmTensor>::zero);
+                SetPatchFields(stFlds, patchi, pTraits<tensor>::zero);
             }
         }
     }

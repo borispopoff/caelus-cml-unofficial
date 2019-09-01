@@ -298,9 +298,9 @@ void CML::decompositionMethod::calcCellCells
 
     labelList globalNeighbour(mesh.nFaces()-mesh.nInternalFaces());
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
@@ -498,9 +498,9 @@ void CML::decompositionMethod::calcCellCells
 
     labelList globalNeighbour(mesh.nFaces()-mesh.nInternalFaces());
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
@@ -539,9 +539,9 @@ void CML::decompositionMethod::calcCellCells
         nFacesPerCell[nei]++;
     }
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
@@ -597,9 +597,9 @@ void CML::decompositionMethod::calcCellCells
     }
 
     // For boundary faces is offsetted coupled neighbour
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
@@ -703,9 +703,9 @@ void CML::decompositionMethod::calcCellCells
 //
 //    labelList globalNeighbour(mesh.nFaces()-mesh.nInternalFaces());
 //
-//    forAll(patches, patchI)
+//    forAll(patches, patchi)
 //    {
-//        const polyPatch& pp = patches[patchI];
+//        const polyPatch& pp = patches[patchi];
 //
 //        if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
 //        {
@@ -749,9 +749,9 @@ void CML::decompositionMethod::calcCellCells
 //    }
 //
 //    // 2. Coupled faces
-//    forAll(patches, patchI)
+//    forAll(patches, patchi)
 //    {
-//        const polyPatch& pp = patches[patchI];
+//        const polyPatch& pp = patches[patchi];
 //
 //        if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
 //        {
@@ -878,9 +878,9 @@ void CML::decompositionMethod::calcCellCells
 //    }
 //
 //    // 2. For boundary faces is offsetted coupled neighbour
-//    forAll(patches, patchI)
+//    forAll(patches, patchi)
 //    {
-//        const polyPatch& pp = patches[patchI];
+//        const polyPatch& pp = patches[patchi];
 //
 //        if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
 //        {

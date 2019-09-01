@@ -212,9 +212,9 @@ void CML::extendedUpwindCellToFaceStencil::transportStencils
 
     // For quick detection of empty faces
     boolList nonEmptyFace(mesh_.nFaces(), true);
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (isA<emptyPolyPatch>(pp))
         {
@@ -251,9 +251,9 @@ void CML::extendedUpwindCellToFaceStencil::transportStencils
         );
     }
     // Boundary faces
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
         label facei = pp.start();
 
         if (pp.coupled())
@@ -346,9 +346,9 @@ void CML::extendedUpwindCellToFaceStencil::transportStencils
     }
 
     // Boundary faces
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
         label facei = pp.start();
 
         if (pp.coupled())

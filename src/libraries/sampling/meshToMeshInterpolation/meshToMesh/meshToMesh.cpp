@@ -436,9 +436,9 @@ void CML::meshToMesh::constructNoCuttingPatches
 
         DynamicList<label> srcPatchID(srcBM.size());
         DynamicList<label> tgtPatchID(tgtBM.size());
-        forAll(srcBM, patchI)
+        forAll(srcBM, patchi)
         {
-            const polyPatch& pp = srcBM[patchI];
+            const polyPatch& pp = srcBM[patchi];
             if (!polyPatch::constraintType(pp.type()))
             {
                 srcPatchID.append(pp.index());

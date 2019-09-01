@@ -69,14 +69,14 @@ public:
         {
             const pointBoundaryMesh& patches = mesh.boundary();
 
-            forAll(patches, patchI)
+            forAll(patches, patchi)
             {
                 set
                 (
-                    patchI,
+                    patchi,
                     new pointPatchMapper
                     (
-                        patches[patchI],
+                        patches[patchi],
                         pointMap,
                         mpm
                     )

@@ -167,16 +167,16 @@ labelList findBaffles(const polyMesh& mesh, const labelList& boundaryFaces)
         if (duplicates[bFaceI] != -1)
         {
             label facei = mesh.nInternalFaces() + bFaceI;
-            label patchI = patches.whichPatch(facei);
+            label patchi = patches.whichPatch(facei);
 
-            if (isA<processorPolyPatch>(patches[patchI]))
+            if (isA<processorPolyPatch>(patches[patchi]))
             {
                 FatalErrorInFunction
                     << "Duplicate face " << facei
                     << " is on a processorPolyPatch."
                     << "This is not allowed." << nl
                     << "Face:" << facei
-                    << " is on patch:" << patches[patchI].name()
+                    << " is on patch:" << patches[patchi].name()
                     << abort(FatalError);
             }
         }
@@ -365,16 +365,16 @@ int main(int argc, char *argv[])
 
         pointSet dupPoints(mesh, "duplicatedPoints", 100);
 
-        forAll(pointMap, pointI)
+        forAll(pointMap, pointi)
         {
-            label oldPointI = pointMap[pointI];
+            label oldPointi = pointMap[pointi];
 
-            nDupPerPoint[oldPointI]++;
+            nDupPerPoint[oldPointi]++;
 
-            if (nDupPerPoint[oldPointI] > 1)
+            if (nDupPerPoint[oldPointi] > 1)
             {
-                dupPoints.insert(map().reversePointMap()[oldPointI]);
-                dupPoints.insert(pointI);
+                dupPoints.insert(map().reversePointMap()[oldPointi]);
+                dupPoints.insert(pointi);
             }
         }
 

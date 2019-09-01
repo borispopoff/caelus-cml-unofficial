@@ -233,7 +233,7 @@ endOfSection               {space}")"{space}
 %{
     // Point data
     label pointGroupNumberOfComponents = 3;
-    label pointI = 0; // index used for reading points
+    label pointi = 0; // index used for reading points
 
     // Face data
     label faceGroupElementType = -1;
@@ -339,7 +339,7 @@ endOfSection               {space}")"{space}
         readHexLabel(pointGroupDataStream);
 
         // In FOAM, indices start from zero - adjust
-        pointI = pointGroupStartIndex.last() - 1;
+        pointi = pointGroupStartIndex.last() - 1;
 
         // reset number of components to default
         pointGroupNumberOfComponents = 3;
@@ -377,8 +377,8 @@ endOfSection               {space}")"{space}
         scalar x = readScalar(vertexXyzStream);
         scalar y = readScalar(vertexXyzStream);
 
-        points[pointI] = point(x, y, 0);
-        pointI++;
+        points[pointi] = point(x, y, 0);
+        pointi++;
     }
 
 <readPoints3D>{spaceNl}{scalarList} {
@@ -390,19 +390,19 @@ endOfSection               {space}")"{space}
         scalar y = readScalar(vertexXyzStream);
         scalar z = readScalar(vertexXyzStream);
 
-        points[pointI] = convertToMeters*point(x, y, z);
-        pointI++;
+        points[pointi] = convertToMeters*point(x, y, z);
+        pointi++;
     }
 
 <readPoints2D,readPoints3D>{spaceNl}{endOfSection} {
 
         // check read of points
-        if (pointI != pointGroupEndIndex.last())
+        if (pointi != pointGroupEndIndex.last())
         {
             Info<< "problem with reading points: "
                 << "start index: " << pointGroupStartIndex.last()
                 << " end index: " << pointGroupEndIndex.last()
-                << " last points read: " << pointI << endl;
+                << " last points read: " << pointi << endl;
         }
 
         yy_pop_state();
@@ -982,18 +982,18 @@ int main(int argc, char *argv[])
         // points given by Fluent need to represent the FRONT plane of the
         // geometry. Therefore, the extrusion will be in -z direction
         //
-        forAll(oldPoints, pointI)
+        forAll(oldPoints, pointi)
         {
-            points[nNewPoints] = oldPoints[pointI];
+            points[nNewPoints] = oldPoints[pointi];
 
             points[nNewPoints].z() = zOffset;
 
             nNewPoints++;
         }
 
-        forAll(oldPoints, pointI)
+        forAll(oldPoints, pointi)
         {
-            points[nNewPoints] = oldPoints[pointI];
+            points[nNewPoints] = oldPoints[pointi];
 
             points[nNewPoints].z() = -zOffset;
 
@@ -1374,9 +1374,9 @@ int main(int argc, char *argv[])
     label nBoundaries = 0;
 
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const faceList& bFaces = patches[patchI];
+        const faceList& bFaces = patches[patchi];
 
         label sz = bFaces.size();
         labelList meshFaces(sz,-1);
@@ -1399,7 +1399,7 @@ int main(int argc, char *argv[])
 
         if
         (
-            patchTypes[patchI] != "internal"
+            patchTypes[patchi] != "internal"
          && !pShapeMesh.isInternalFace(meshFaces[0])
         )
         {
@@ -1415,7 +1415,7 @@ int main(int argc, char *argv[])
                 {
                     FatalErrorInFunction
                         << "Face " << facei << " on new patch "
-                        << patchNames[patchI]
+                        << patchNames[patchi]
                         << " is not an external face of the mesh." << endl
                         << exit(FatalError);
                 }
@@ -1424,7 +1424,7 @@ int main(int argc, char *argv[])
                 {
                     FatalErrorInFunction
                         << "Face " << facei << " on new patch "
-                        << patchNames[patchI]
+                        << patchNames[patchi]
                         << " has already been marked for repatching to"
                         << " patch "
                         << facePatchID[facei - pShapeMesh.nInternalFaces()]
@@ -1435,8 +1435,8 @@ int main(int argc, char *argv[])
 
             //add to boundary patch
 
-            Info<< "Adding new patch " << patchNames[patchI]
-                << " of type " << patchTypes[patchI]
+            Info<< "Adding new patch " << patchNames[patchi]
+                << " of type " << patchTypes[patchi]
                 << " as patch " << nBoundaries << endl;
 
             // Add patch to new patch list
@@ -1444,8 +1444,8 @@ int main(int argc, char *argv[])
             (
                 polyPatch::New
                 (
-                    patchTypes[patchI],
-                    patchNames[patchI],
+                    patchTypes[patchi],
+                    patchNames[patchi],
                     sz,
                     cMeshFace,
                     nBoundaries,
@@ -1457,7 +1457,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            Info<< "Patch " << patchNames[patchI]
+            Info<< "Patch " << patchNames[patchi]
                  << " is internal to the mesh "
                  << " and is not being added to the boundary."
                  << endl;
@@ -1532,12 +1532,12 @@ int main(int argc, char *argv[])
     // Re-do face matching to write sets
     if (writeSets)
     {
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const faceList& bFaces = patches[patchI];
+            const faceList& bFaces = patches[patchi];
             label sz = bFaces.size();
 
-            faceSet pFaceSet(pShapeMesh, patchNames[patchI], sz);
+            faceSet pFaceSet(pShapeMesh, patchNames[patchi], sz);
 
             forAll(bFaces, j)
             {
@@ -1545,7 +1545,7 @@ int main(int argc, char *argv[])
                 label cMeshFace = findFace(pShapeMesh, f);
                 pFaceSet.insert(cMeshFace);
             }
-            Info<< "Writing patch " << patchNames[patchI]
+            Info<< "Writing patch " << patchNames[patchi]
                 << " of size " << sz << " to faceSet" << endl;
 
             pFaceSet.instance() = pShapeMesh.instance();

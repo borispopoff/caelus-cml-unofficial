@@ -179,15 +179,15 @@ bool CML::polyMeshZipUpCells(polyMesh& mesh)
             {
                 const edge& curEdge = singleEdges[edgeI];
 
-                forAll(cellPoints, pointI)
+                forAll(cellPoints, pointi)
                 {
                     if
                     (
-                        cellPoints[pointI] == curEdge.start()
-                     || cellPoints[pointI] == curEdge.end()
+                        cellPoints[pointi] == curEdge.start()
+                     || cellPoints[pointi] == curEdge.end()
                     )
                     {
-                        pointUsage[pointI]++;
+                        pointUsage[pointi]++;
                     }
                 }
             }
@@ -205,18 +205,18 @@ bool CML::polyMeshZipUpCells(polyMesh& mesh)
                 label newEdgeEnd = singleEdges[edgeI].end();
 
                 // check that the edge has not got all ends blocked
-                forAll(cellPoints, pointI)
+                forAll(cellPoints, pointi)
                 {
-                    if (cellPoints[pointI] == newEdgeStart)
+                    if (cellPoints[pointi] == newEdgeStart)
                     {
-                        if (pointUsage[pointI] > 2)
+                        if (pointUsage[pointi] > 2)
                         {
                             blockedHead = true;
                         }
                     }
-                    else if (cellPoints[pointI] == newEdgeEnd)
+                    else if (cellPoints[pointi] == newEdgeEnd)
                     {
-                        if (pointUsage[pointI] > 2)
+                        if (pointUsage[pointi] > 2)
                         {
                             blockedTail = true;
                         }
@@ -262,11 +262,11 @@ bool CML::polyMeshZipUpCells(polyMesh& mesh)
 #                   endif
 
                     // Check if head or tail are blocked
-                    forAll(cellPoints, pointI)
+                    forAll(cellPoints, pointi)
                     {
-                        if (cellPoints[pointI] == newEdgeStart)
+                        if (cellPoints[pointi] == newEdgeStart)
                         {
-                            if (pointUsage[pointI] > 2)
+                            if (pointUsage[pointi] > 2)
                             {
 #                               ifdef DEBUG_CHAIN
                                 Info<< "start head blocked" << endl;
@@ -275,9 +275,9 @@ bool CML::polyMeshZipUpCells(polyMesh& mesh)
                                 blockHead = true;
                             }
                         }
-                        else if (cellPoints[pointI] == newEdgeEnd)
+                        else if (cellPoints[pointi] == newEdgeEnd)
                         {
-                            if (pointUsage[pointI] > 2)
+                            if (pointUsage[pointi] > 2)
                             {
 #                               ifdef DEBUG_CHAIN
                                 Info<< "start tail blocked" << endl;
@@ -357,11 +357,11 @@ bool CML::polyMeshZipUpCells(polyMesh& mesh)
                                     << " curEdgeEnd: " << curEdgeEnd << endl;
 #                               endif
 
-                                forAll(cellPoints, pointI)
+                                forAll(cellPoints, pointi)
                                 {
-                                    if (cellPoints[pointI] == curEdgeStart)
+                                    if (cellPoints[pointi] == curEdgeStart)
                                     {
-                                        if (pointUsage[pointI] > 2)
+                                        if (pointUsage[pointi] > 2)
                                         {
 #                                           ifdef DEBUG_CHAIN
                                             Info<< "head blocked" << endl;
@@ -370,9 +370,9 @@ bool CML::polyMeshZipUpCells(polyMesh& mesh)
                                             blockHead = true;
                                         }
                                     }
-                                    else if (cellPoints[pointI] == curEdgeEnd)
+                                    else if (cellPoints[pointi] == curEdgeEnd)
                                     {
-                                        if (pointUsage[pointI] > 2)
+                                        if (pointUsage[pointi] > 2)
                                         {
 #                                           ifdef DEBUG_CHAIN
                                             Info<< "tail blocked" << endl;
@@ -739,10 +739,10 @@ bool CML::polyMeshZipUpCells(polyMesh& mesh)
         labelList patchSizes(bMesh.size(), 0);
         labelList patchStarts(bMesh.size(), 0);
 
-        forAll(bMesh, patchI)
+        forAll(bMesh, patchi)
         {
-            patchSizes[patchI] = bMesh[patchI].size();
-            patchStarts[patchI] = bMesh[patchI].start();
+            patchSizes[patchi] = bMesh[patchi].size();
+            patchStarts[patchi] = bMesh[patchi].start();
         }
 
         // Reset the mesh. Number of active faces is one beyond the last patch

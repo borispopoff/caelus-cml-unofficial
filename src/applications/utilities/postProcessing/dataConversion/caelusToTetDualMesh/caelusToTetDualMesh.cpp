@@ -92,14 +92,14 @@ void ReadAndMapFields
 
         // Map from read field. Set unmapped entries to nullValue.
         fld.setSize(map.size(), nullValue);
-        forAll(map, pointI)
+        forAll(map, pointi)
         {
-            label index = map[pointI];
+            label index = map[pointi];
 
             if (index > 0)
             {
                 label celli = index-1;
-                fld[pointI] = readField[celli];
+                fld[pointi] = readField[celli];
             }
             else if (index < 0)
             {
@@ -107,12 +107,12 @@ void ReadAndMapFields
                 label bFaceI = facei - mesh.nInternalFaces();
                 if (bFaceI >= 0)
                 {
-                    label patchI = mesh.boundaryMesh().patchID()[bFaceI];
-                    label localFaceI = mesh.boundaryMesh()[patchI].whichFace
+                    label patchi = mesh.boundaryMesh().patchID()[bFaceI];
+                    label localFaceI = mesh.boundaryMesh()[patchi].whichFace
                     (
                         facei
                     );
-                    fld[pointI] = readField.boundaryField()[patchI][localFaceI];
+                    fld[pointi] = readField.boundaryField()[patchi][localFaceI];
                 }
                 //else
                 //{
@@ -125,8 +125,8 @@ void ReadAndMapFields
             //else
             //{
             //    WarningInFunction
-            //        << "Point " << pointI << " at "
-            //        << tetDualMesh.points()[pointI]
+            //        << "Point " << pointi << " at "
+            //        << tetDualMesh.points()[pointi]
             //        << " has no dual correspondence." << endl;
             //}
         }
@@ -198,9 +198,9 @@ int main(int argc, char *argv[])
     label nCells = 0;
     label nPatchFaces = 0;
     label nUnmapped = 0;
-    forAll(pointDualAddressing, pointI)
+    forAll(pointDualAddressing, pointi)
     {
-        label index = pointDualAddressing[pointI];
+        label index = pointDualAddressing[pointi];
 
         if (index > 0)
         {

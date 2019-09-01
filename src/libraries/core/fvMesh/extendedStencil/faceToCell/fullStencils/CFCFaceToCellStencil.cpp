@@ -39,9 +39,9 @@ void CML::CFCFaceToCellStencil::calcFaceBoundaryData
 
     neiGlobal.setSize(nBnd);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
         label facei = pp.start();
 
         if (pp.coupled())
@@ -110,9 +110,9 @@ void CML::CFCFaceToCellStencil::calcCellStencil(labelListList& globalCellFaces)
     boolList validBFace(mesh().nFaces()-mesh().nInternalFaces(), true);
 
     const polyBoundaryMesh& patches = mesh().boundaryMesh();
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (isA<emptyPolyPatch>(pp))
         {

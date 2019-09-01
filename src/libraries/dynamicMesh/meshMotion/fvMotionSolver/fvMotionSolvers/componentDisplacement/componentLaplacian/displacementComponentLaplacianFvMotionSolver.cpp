@@ -171,9 +171,9 @@ CML::displacementComponentLaplacianFvMotionSolver::curPoints() const
 
             forAll(pz, i)
             {
-                label pointI = pz[i];
+                label pointi = pz[i];
 
-                pointLocation_()[pointI][cmpt_] = points0_[pointI];
+                pointLocation_()[pointi][cmpt_] = points0_[pointi];
             }
         }
 
@@ -199,9 +199,9 @@ CML::displacementComponentLaplacianFvMotionSolver::curPoints() const
 
             forAll(pz, i)
             {
-                label pointI = pz[i];
+                label pointi = pz[i];
 
-                curPoints[pointI][cmpt_] = points0_[pointI];
+                curPoints[pointi][cmpt_] = points0_[pointi];
             }
         }
 

@@ -217,7 +217,7 @@ private:
         //  Used to determine if surface multiply connected through point.
         void visitPointRegion
         (
-            const label pointI,
+            const label pointi,
             const labelList& pFaces,
             const label startFaceI,
             const label startEdgeI,
@@ -1628,13 +1628,13 @@ calcLocalPointOrder() const
                     const labelList& curPoints = lf[curFace];
 
                     // mark points
-                    forAll(curPoints, pointI)
+                    forAll(curPoints, pointi)
                     {
-                        if (!visitedPoint[curPoints[pointI]])
+                        if (!visitedPoint[curPoints[pointi]])
                         {
-                            visitedPoint[curPoints[pointI]] = true;
+                            visitedPoint[curPoints[pointi]] = true;
 
-                            pointOrder[nPoints] = curPoints[pointI];
+                            pointOrder[nPoints] = curPoints[pointi];
 
                             nPoints++;
                         }
@@ -2147,10 +2147,10 @@ meshEdges
     // local-to-global point label translation is necessary
     forAll(PatchEdges, edgeI)
     {
-        const label globalPointI = pp[PatchEdges[edgeI].start()];
-        const edge curEdge(globalPointI, pp[PatchEdges[edgeI].end()]);
+        const label globalPointi = pp[PatchEdges[edgeI].start()];
+        const edge curEdge(globalPointi, pp[PatchEdges[edgeI].end()]);
 
-        const labelList& pe = pointEdges[globalPointI];
+        const labelList& pe = pointEdges[globalPointi];
 
         forAll(pe, i)
         {
@@ -2248,16 +2248,16 @@ calcPointEdges() const
 
     labelListList& pe = *pointEdgesPtr_;
 
-    forAll(pointEdges, pointI)
+    forAll(pointEdges, pointi)
     {
-        const SLList<label>& pEdge = pointEdges[pointI];
+        const SLList<label>& pEdge = pointEdges[pointi];
 
-        pe[pointI].setSize(pEdge.size());
+        pe[pointi].setSize(pEdge.size());
 
         label i = 0;
         forAllConstIter(SLList<label>, pEdge, iter)
         {
-            pe[pointI][i++] = iter();
+            pe[pointi][i++] = iter();
         }
     }
 
@@ -2306,9 +2306,9 @@ calcPointFaces() const
     {
         const Face& curPoints = f[facei];
 
-        forAll(curPoints, pointI)
+        forAll(curPoints, pointi)
         {
-            pointFcs[curPoints[pointI]].append(facei);
+            pointFcs[curPoints[pointi]].append(facei);
         }
     }
 
@@ -2317,14 +2317,14 @@ calcPointFaces() const
 
     labelListList& pf = *pointFacesPtr_;
 
-    forAll(pointFcs, pointI)
+    forAll(pointFcs, pointi)
     {
-        pf[pointI].setSize(pointFcs[pointI].size());
+        pf[pointi].setSize(pointFcs[pointi].size());
 
         label i = 0;
-        forAllIter(SLList<label>, pointFcs[pointI], curFacesIter)
+        forAllIter(SLList<label>, pointFcs[pointi], curFacesIter)
         {
-            pf[pointI][i++] = curFacesIter();
+            pf[pointi][i++] = curFacesIter();
         }
     }
 
@@ -2402,10 +2402,10 @@ projectPoints
     label curFace = 0;
     label nNSquaredSearches = 0;
 
-    forAll(slavePointOrder, pointI)
+    forAll(slavePointOrder, pointi)
     {
         // Pick up slave point and direction
-        const label curLocalPointLabel = slavePointOrder[pointI];
+        const label curLocalPointLabel = slavePointOrder[pointi];
 
         const PointType& curPoint =
             points_[slaveMeshPoints[curLocalPointLabel]];
@@ -2424,7 +2424,7 @@ projectPoints
 
         // Force the full search for the first point to ensure good
         // starting face
-        if (pointI == 0)
+        if (pointi == 0)
         {
             doNSquaredSearch = true;
         }

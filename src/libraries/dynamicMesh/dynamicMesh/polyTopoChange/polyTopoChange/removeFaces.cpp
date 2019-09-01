@@ -179,9 +179,9 @@ CML::boolList CML::removeFaces::getFacesAffected
     // Mark faces affected by removal of points
     forAllConstIter(labelHashSet, pointsToRemove, iter)
     {
-        label pointI = iter.key();
+        label pointi = iter.key();
 
-        const labelList& pFaces = mesh_.pointFaces()[pointI];
+        const labelList& pFaces = mesh_.pointFaces()[pointi];
 
         forAll(pFaces, pFaceI)
         {
@@ -346,16 +346,16 @@ void CML::removeFaces::mergeFaces
 
     forAll(edgeLoop, i)
     {
-        label pointI = fp.meshPoints()[edgeLoop[i]];
+        label pointi = fp.meshPoints()[edgeLoop[i]];
 
-        if (pointsToRemove.found(pointI))
+        if (pointsToRemove.found(pointi))
         {
-            //Pout<< "**Removing point " << pointI << " from "
+            //Pout<< "**Removing point " << pointi << " from "
             //    << edgeLoop << endl;
         }
         else
         {
-            faceVerts.append(pointI);
+            faceVerts.append(pointi);
         }
     }
 
@@ -1251,9 +1251,9 @@ void CML::removeFaces::setRefinement
 
         const labelListList& pointEdges = mesh_.pointEdges();
 
-        forAll(pointEdges, pointI)
+        forAll(pointEdges, pointi)
         {
-            nEdgesPerPoint[pointI] = pointEdges[pointI].size();
+            nEdgesPerPoint[pointi] = pointEdges[pointi].size();
         }
 
         forAllConstIter(labelHashSet, edgesToRemove, iter)
@@ -1268,14 +1268,14 @@ void CML::removeFaces::setRefinement
         }
 
         // Check locally (before synchronizing) for strangeness
-        forAll(nEdgesPerPoint, pointI)
+        forAll(nEdgesPerPoint, pointi)
         {
-            if (nEdgesPerPoint[pointI] == 1)
+            if (nEdgesPerPoint[pointi] == 1)
             {
                 FatalErrorInFunction
                     << "Problem : point would get 1 edge using it only."
-                    << " pointI:" << pointI
-                    << " coord:" << mesh_.points()[pointI]
+                    << " pointi:" << pointi
+                    << " coord:" << mesh_.points()[pointi]
                     << abort(FatalError);
             }
         }
@@ -1290,20 +1290,20 @@ void CML::removeFaces::setRefinement
             labelMin
         );
 
-        forAll(nEdgesPerPoint, pointI)
+        forAll(nEdgesPerPoint, pointi)
         {
-            if (nEdgesPerPoint[pointI] == 0)
+            if (nEdgesPerPoint[pointi] == 0)
             {
-                pointsToRemove.insert(pointI);
+                pointsToRemove.insert(pointi);
             }
-            else if (nEdgesPerPoint[pointI] == 1)
+            else if (nEdgesPerPoint[pointi] == 1)
             {
                 // Already checked before
             }
-            else if (nEdgesPerPoint[pointI] == 2)
+            else if (nEdgesPerPoint[pointi] == 2)
             {
                 // Remove point and merge edges.
-                pointsToRemove.insert(pointI);
+                pointsToRemove.insert(pointi);
             }
         }
     }
@@ -1372,9 +1372,9 @@ void CML::removeFaces::setRefinement
     // Remove points.
     forAllConstIter(labelHashSet, pointsToRemove, iter)
     {
-        label pointI = iter.key();
+        label pointi = iter.key();
 
-        meshMod.setAction(polyRemovePoint(pointI, -1));
+        meshMod.setAction(polyRemovePoint(pointi, -1));
     }
 
 

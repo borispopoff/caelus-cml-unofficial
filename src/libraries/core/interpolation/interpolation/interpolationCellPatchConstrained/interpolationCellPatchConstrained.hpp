@@ -128,10 +128,10 @@ Type interpolationCellPatchConstrained<Type>::interpolate
     {
         // Use boundary value
         const polyBoundaryMesh& pbm = this->psi_.mesh().boundaryMesh();
-        label patchI = pbm.patchID()[facei-this->psi_.mesh().nInternalFaces()];
-        label patchFaceI = pbm[patchI].whichFace(facei);
+        label patchi = pbm.patchID()[facei-this->psi_.mesh().nInternalFaces()];
+        label patchFaceI = pbm[patchi].whichFace(facei);
 
-        return this->psi_.boundaryField()[patchI][patchFaceI];
+        return this->psi_.boundaryField()[patchi][patchFaceI];
     }
     else
     {

@@ -255,17 +255,17 @@ template<class Type>
 void CML::writer<Type>::writeCoord
 (
     const coordSet& points,
-    const label pointI,
+    const label pointi,
     Ostream& os
 ) const
 {
     if (points.hasVectorAxis())
     {
-        write(points.vectorCoord(pointI), os);
+        write(points.vectorCoord(pointi), os);
     }
     else
     {
-        write(points.scalarCoord(pointI), os);
+        write(points.scalarCoord(pointi), os);
     }
 }
 
@@ -278,11 +278,11 @@ void CML::writer<Type>::writeTable
     Ostream& os
 ) const
 {
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        writeCoord(points, pointI, os);
+        writeCoord(points, pointi, os);
         writeSeparator(os);
-        write(values[pointI], os);
+        write(values[pointi], os);
         os << nl;
     }
 }
@@ -296,16 +296,16 @@ void CML::writer<Type>::writeTable
     Ostream& os
 ) const
 {
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        writeCoord(points, pointI, os);
+        writeCoord(points, pointi, os);
 
         forAll(valuesPtrList, i)
         {
             writeSeparator(os);
 
             const List<Type>& values = *valuesPtrList[i];
-            write(values[pointI], os);
+            write(values[pointi], os);
         }
         os << nl;
     }

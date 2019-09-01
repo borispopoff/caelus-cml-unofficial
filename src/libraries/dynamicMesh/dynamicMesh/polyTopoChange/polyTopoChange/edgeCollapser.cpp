@@ -50,38 +50,38 @@ CML::label CML::edgeCollapser::findIndex
 // Changes region of connected set of points
 CML::label CML::edgeCollapser::changePointRegion
 (
-    const label pointI,
+    const label pointi,
     const label oldRegion,
     const label newRegion
 )
 {
     label nChanged = 0;
 
-    if (pointRegion_[pointI] == oldRegion)
+    if (pointRegion_[pointi] == oldRegion)
     {
-        pointRegion_[pointI] = newRegion;
+        pointRegion_[pointi] = newRegion;
         nChanged++;
 
         // Step to neighbouring point across edges with same region number
 
-        const labelList& pEdges = mesh_.pointEdges()[pointI];
+        const labelList& pEdges = mesh_.pointEdges()[pointi];
 
         forAll(pEdges, i)
         {
-            label otherPointI = mesh_.edges()[pEdges[i]].otherVertex(pointI);
+            label otherPointi = mesh_.edges()[pEdges[i]].otherVertex(pointi);
 
-            nChanged += changePointRegion(otherPointI, oldRegion, newRegion);
+            nChanged += changePointRegion(otherPointi, oldRegion, newRegion);
         }
     }
     return nChanged;
 }
 
 
-bool CML::edgeCollapser::pointRemoved(const label pointI) const
+bool CML::edgeCollapser::pointRemoved(const label pointi) const
 {
-    label region = pointRegion_[pointI];
+    label region = pointRegion_[pointi];
 
-    if (region == -1 || pointRegionMaster_[region] == pointI)
+    if (region == -1 || pointRegionMaster_[region] == pointi)
     {
         return false;
     }
@@ -98,13 +98,13 @@ void CML::edgeCollapser::filterFace(const label facei, face& f) const
 
     forAll(f, fp)
     {
-        label pointI = f[fp];
+        label pointi = f[fp];
 
-        label region = pointRegion_[pointI];
+        label region = pointRegion_[pointi];
 
         if (region == -1)
         {
-            f[newFp++] = pointI;
+            f[newFp++] = pointi;
         }
         else
         {
@@ -132,35 +132,35 @@ void CML::edgeCollapser::filterFace(const label facei, face& f) const
         label fp1 = fp-1;
         label fp2 = fp-2;
 
-        label pointI = f[fp];
+        label pointi = f[fp];
 
         // Search for previous occurrence.
-        label index = findIndex(f, 0, fp, pointI);
+        label index = findIndex(f, 0, fp, pointi);
 
         if (index == fp1)
         {
             WarningInFunction
                 << "Removing consecutive duplicate vertex in face "
                 << f << endl;
-            // Don't store current pointI
+            // Don't store current pointi
         }
         else if (index == fp2)
         {
             WarningInFunction
                 << "Removing non-consecutive duplicate vertex in face "
                 << f << endl;
-            // Don't store current pointI and remove previous
+            // Don't store current pointi and remove previous
             newFp--;
         }
         else if (index != -1)
         {
             WarningInFunction
                 << "Pinched face " << f << endl;
-            f[newFp++] = pointI;
+            f[newFp++] = pointi;
         }
         else
         {
-            f[newFp++] = pointI;
+            f[newFp++] = pointi;
         }
     }
 
@@ -181,12 +181,12 @@ void CML::edgeCollapser::printRegions() const
                 << "    master:" << master
                 << ' ' << mesh_.points()[master] << nl;
 
-            forAll(pointRegion_, pointI)
+            forAll(pointRegion_, pointi)
             {
-                if (pointRegion_[pointI] == regionI && pointI != master)
+                if (pointRegion_[pointi] == regionI && pointi != master)
                 {
-                    Info<< "    slave:" << pointI
-                        << ' ' <<  mesh_.points()[pointI] << nl;
+                    Info<< "    slave:" << pointi
+                        << ' ' <<  mesh_.points()[pointi] << nl;
                 }
             }
         }
@@ -485,11 +485,11 @@ bool CML::edgeCollapser::setRefinement(polyTopoChange& meshMod)
         }
 
         // Remove unused vertices that have not been marked for removal already
-        forAll(usedPoint, pointI)
+        forAll(usedPoint, pointi)
         {
-            if (!usedPoint[pointI] && !pointRemoved(pointI))
+            if (!usedPoint[pointi] && !pointRemoved(pointi))
             {
-                meshMod.removePoint(pointI, -1);
+                meshMod.removePoint(pointi, -1);
                 meshChanged = true;
             }
         }
@@ -498,11 +498,11 @@ bool CML::edgeCollapser::setRefinement(polyTopoChange& meshMod)
 
 
     // Remove points.
-    forAll(pointRegion_, pointI)
+    forAll(pointRegion_, pointi)
     {
-        if (pointRemoved(pointI))
+        if (pointRemoved(pointi))
         {
-            meshMod.removePoint(pointI, -1);
+            meshMod.removePoint(pointi, -1);
             meshChanged = true;
         }
     }
@@ -514,11 +514,11 @@ bool CML::edgeCollapser::setRefinement(polyTopoChange& meshMod)
 
 
     // Renumber faces that use points
-    forAll(pointRegion_, pointI)
+    forAll(pointRegion_, pointi)
     {
-        if (pointRemoved(pointI))
+        if (pointRemoved(pointi))
         {
-            const labelList& changedFaces = pointFaces[pointI];
+            const labelList& changedFaces = pointFaces[pointi];
 
             forAll(changedFaces, changedFaceI)
             {

@@ -170,9 +170,9 @@ void CML::cellToFaceStencil::validBoundaryFaces(boolList& isValidBFace) const
 
     isValidBFace.setSize(mesh().nFaces()-mesh().nInternalFaces(), true);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled() || isA<emptyPolyPatch>(pp))
         {
@@ -193,9 +193,9 @@ CML::cellToFaceStencil::allCoupledFacesPatch() const
 
     label nCoupled = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -205,9 +205,9 @@ CML::cellToFaceStencil::allCoupledFacesPatch() const
     labelList coupledFaces(nCoupled);
     nCoupled = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -351,9 +351,9 @@ void CML::cellToFaceStencil::calcFaceStencil
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     labelListList neiGlobalCellCells(nBnd);
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -420,9 +420,9 @@ void CML::cellToFaceStencil::calcFaceStencil
         //Pout<< "internalface:" << facei << " toc:" << faceStencilSet.toc()
         //    << " faceStencil:" << faceStencil[facei] << endl;
     }
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
         label facei = pp.start();
 
         if (pp.coupled())

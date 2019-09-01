@@ -192,11 +192,11 @@ void CML::decompositionConstraints::singleProcessorFaceSetsConstraint::add
 
     label nUnblocked = 0;
 
-    forAll(procFacePoint, pointI)
+    forAll(procFacePoint, pointi)
     {
-        if (procFacePoint[pointI])
+        if (procFacePoint[pointi])
         {
-            const labelList& pFaces = mesh.pointFaces()[pointI];
+            const labelList& pFaces = mesh.pointFaces()[pointi];
             forAll(pFaces, i)
             {
                 if (blockedFace[pFaces[i]])
@@ -273,11 +273,11 @@ void CML::decompositionConstraints::singleProcessorFaceSetsConstraint::apply
         syncTools::syncPointList(mesh, procFacePoint, orEqOp<bool>(), false);
 
         // 2. Unblock all faces on procFacePoint
-        forAll(procFacePoint, pointI)
+        forAll(procFacePoint, pointi)
         {
-            if (procFacePoint[pointI])
+            if (procFacePoint[pointi])
             {
-                const labelList& pFaces = mesh.pointFaces()[pointI];
+                const labelList& pFaces = mesh.pointFaces()[pointi];
                 forAll(pFaces, i)
                 {
                     label facei = pFaces[i];

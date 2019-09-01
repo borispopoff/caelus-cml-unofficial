@@ -98,20 +98,20 @@ int main(int argc, char *argv[])
         Info<< endl;
 
         const polyBoundaryMesh& bm = mesh.boundaryMesh();
-        forAll(bm, patchI)
+        forAll(bm, patchi)
         {
-            Info<< bm[patchI].type() << ": " << bm[patchI].name() << nl;
-                outputFieldList(vsf, patchI);
-                outputFieldList(vvf, patchI);
-                outputFieldList(vsptf, patchI);
-                outputFieldList(vsytf, patchI);
-                outputFieldList(vtf, patchI);
+            Info<< bm[patchi].type() << ": " << bm[patchi].name() << nl;
+                outputFieldList(vsf, patchi);
+                outputFieldList(vvf, patchi);
+                outputFieldList(vsptf, patchi);
+                outputFieldList(vsytf, patchi);
+                outputFieldList(vtf, patchi);
 
-                outputFieldList(psf, patchI);
-                outputFieldList(pvf, patchI);
-                outputFieldList(psptf, patchI);
-                outputFieldList(psytf, patchI);
-                outputFieldList(ptf, patchI);
+                outputFieldList(psf, patchi);
+                outputFieldList(pvf, patchi);
+                outputFieldList(psptf, patchi);
+                outputFieldList(psytf, patchi);
+                outputFieldList(ptf, patchi);
             Info<< endl;
         }
     }

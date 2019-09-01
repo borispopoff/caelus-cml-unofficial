@@ -145,9 +145,9 @@ void CML::layerAdditionRemoval::removeCellLayer
     }
 
     // Remove all points that will be collapsed
-    forAll(ptc, pointI)
+    forAll(ptc, pointi)
     {
-        ref.setAction(polyRemovePoint(ptc[pointI]));
+        ref.setAction(polyRemovePoint(ptc[pointi]));
     }
 
     // Grab all faces coming off points to be deleted.  If the face
@@ -162,9 +162,9 @@ void CML::layerAdditionRemoval::removeCellLayer
     const labelList& meshPoints =
         mesh.faceZones()[faceZoneID_.index()]().meshPoints();
 
-    forAll(ptc, pointI)
+    forAll(ptc, pointi)
     {
-        removedPointMap.insert(ptc[pointI], meshPoints[pointI]);
+        removedPointMap.insert(ptc[pointi], meshPoints[pointi]);
     }
 
     const labelListList& pf = mesh.pointFaces();
@@ -176,9 +176,9 @@ void CML::layerAdditionRemoval::removeCellLayer
     // Make a list of faces to be modified using the map to avoid duplicates
     labelHashSet facesToModify(ptc.size()*primitiveMesh::facesPerPoint_);
 
-    forAll(ptc, pointI)
+    forAll(ptc, pointi)
     {
-        const labelList& curFaces = pf[ptc[pointI]];
+        const labelList& curFaces = pf[ptc[pointi]];
 
         forAll(curFaces, facei)
         {
@@ -202,15 +202,15 @@ void CML::layerAdditionRemoval::removeCellLayer
 
         face newFace(faces[curFaceID]);
 
-        forAll(newFace, pointI)
+        forAll(newFace, pointi)
         {
             Map<label>::iterator rpmIter =
-                removedPointMap.find(newFace[pointI]);
+                removedPointMap.find(newFace[pointi]);
 
             if (rpmIter != removedPointMap.end())
             {
                 // Point mapped. Replace it
-                newFace[pointI] = rpmIter();
+                newFace[pointi] = rpmIter();
             }
         }
 

@@ -262,7 +262,7 @@ class faceCoupleInfo
                 const bool patchDivision,
                 const labelList& cutToMasterEdges,
                 const labelList& cutToSlaveEdges,
-                const label pointI,
+                const label pointi,
                 const label edgeStart,
                 const label edgeEnd
             ) const;

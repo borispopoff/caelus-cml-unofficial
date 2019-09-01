@@ -171,12 +171,12 @@ CML::globalIndexAndTransform::decodeTransformIndex
 CML::label CML::globalIndexAndTransform::addToTransformIndex
 (
     const label transformIndex,
-    const label patchI,
+    const label patchi,
     const bool isSendingSide,
     const scalar tol
 ) const
 {
-    const Pair<label>& transSign = patchTransformSign_[patchI];
+    const Pair<label>& transSign = patchTransformSign_[patchi];
 
     label matchTransI = transSign.first();
 
@@ -204,7 +204,7 @@ CML::label CML::globalIndexAndTransform::addToTransformIndex
             {
                 // sent from patch without a transformation. Do nothing.
                 FatalErrorInFunction
-                    << "patch:" << mesh_.boundaryMesh()[patchI].name()
+                    << "patch:" << mesh_.boundaryMesh()[patchi].name()
                     << " transform:" << matchTransI << " sign:" << sign
                     << "  current transforms:" << permutation
                     << exit(FatalError);
@@ -214,7 +214,7 @@ CML::label CML::globalIndexAndTransform::addToTransformIndex
                 FatalErrorInFunction
                     << "More than one patch accessing the same transform "
                     << "but not of the same sign." << endl
-                    << "patch:" << mesh_.boundaryMesh()[patchI].name()
+                    << "patch:" << mesh_.boundaryMesh()[patchi].name()
                     << " transform:" << matchTransI << " sign:" << sign
                     << "  current transforms:" << permutation
                     << exit(FatalError);
@@ -432,9 +432,9 @@ CML::labelList CML::globalIndexAndTransform::transformIndicesForPatches
 
     forAllConstIter(labelHashSet, patchIs, iter)
     {
-        label patchI = iter.key();
+        label patchi = iter.key();
 
-        const Pair<label>& transSign = patchTransformSign_[patchI];
+        const Pair<label>& transSign = patchTransformSign_[patchi];
 
         label matchTransI = transSign.first();
 

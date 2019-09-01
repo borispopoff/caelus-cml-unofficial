@@ -347,9 +347,9 @@ bool CML::movingConeTopoFvMesh::update()
             //
             //    const pointField& currentPoints = points();
             //    label vertI = 0;
-            //    forAll(currentPoints, pointI)
+            //    forAll(currentPoints, pointi)
             //    {
-            //        meshTools::writeOBJ(str, currentPoints[pointI]);
+            //        meshTools::writeOBJ(str, currentPoints[pointi]);
             //        vertI++;
             //    }
             //    forAll(edges(), edgeI)
@@ -366,9 +366,9 @@ bool CML::movingConeTopoFvMesh::update()
             //    const pointField& newPoints =
             //        topoChangeMap().preMotionPoints();
             //    label vertI = 0;
-            //    forAll(newPoints, pointI)
+            //    forAll(newPoints, pointi)
             //    {
-            //        meshTools::writeOBJ(str, newPoints[pointI]);
+            //        meshTools::writeOBJ(str, newPoints[pointi]);
             //        vertI++;
             //    }
             //    forAll(edges(), edgeI)

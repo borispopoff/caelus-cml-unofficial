@@ -151,7 +151,7 @@ public:
             return getVertex(mesh_, eVert);
         }
 
-        //- Convert pointI to eVert
+        //- Convert pointi to eVert
         static label vertToEVert(const primitiveMesh& mesh, const label vertI)
         {
             if ((vertI < 0) || (vertI >= mesh.nPoints()))

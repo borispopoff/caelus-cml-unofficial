@@ -123,13 +123,13 @@ void CML::inverseFaceDistanceDiffusivity::correct()
         faceDiffusivity_[facei] = 1.0/sqrt(dist);
     }
 
-    forAll(faceDiffusivity_.boundaryField(), patchI)
+    forAll(faceDiffusivity_.boundaryField(), patchi)
     {
-        fvsPatchScalarField& bfld = faceDiffusivity_.boundaryField()[patchI];
+        fvsPatchScalarField& bfld = faceDiffusivity_.boundaryField()[patchi];
 
         const labelUList& faceCells = bfld.patch().faceCells();
 
-        if (patchSet.found(patchI))
+        if (patchSet.found(patchi))
         {
             forAll(bfld, i)
             {

@@ -170,11 +170,11 @@ CML::labelHashSet CML::cellDistFuncs::getPatchIDs() const
 
     labelHashSet patchIDs(bMesh.size());
 
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        if (isA<Type>(bMesh[patchI]))
+        if (isA<Type>(bMesh[patchi]))
         {
-            patchIDs.insert(patchI);
+            patchIDs.insert(patchi);
         }
     }
     return patchIDs;

@@ -48,11 +48,11 @@ CML::label CML::meshWriters::STARCD::findDefaultBoundary() const
     label id = -1;
 
     // find Default_Boundary_Region if it exists
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (defaultBoundaryName == patches[patchI].name())
+        if (defaultBoundaryName == patches[patchi].name())
         {
-            id = patchI;
+            id = patchi;
             break;
         }
     }
@@ -384,9 +384,9 @@ void CML::meshWriters::STARCD::writeBoundary(const fileName& prefix) const
     // write boundary faces - skip Default_Boundary_Region entirely
     //
     label boundId = 0;
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        label regionId = patchI;
+        label regionId = patchi;
         if (regionId == defaultId)
         {
             continue;  // skip - already written
@@ -396,9 +396,9 @@ void CML::meshWriters::STARCD::writeBoundary(const fileName& prefix) const
             regionId++;
         }
 
-        label patchStart = patches[patchI].start();
-        label patchSize  = patches[patchI].size();
-        word  bndType = boundaryRegion_.boundaryType(patches[patchI].name());
+        label patchStart = patches[patchi].start();
+        label patchSize  = patches[patchi].size();
+        word  bndType = boundaryRegion_.boundaryType(patches[patchi].name());
 
         for
         (

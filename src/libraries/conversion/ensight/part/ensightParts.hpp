@@ -180,7 +180,7 @@ void CML::ensightParts::writeField
 
     forAll(partsList_, partI)
     {
-        label patchI = partI - patchOffset;
+        label patchi = partI - patchOffset;
 
         if (partsList_[partI].isCellData())
         {
@@ -190,12 +190,12 @@ void CML::ensightParts::writeField
                 field
             );
         }
-        else if (patchI < field.boundaryField().size())
+        else if (patchi < field.boundaryField().size())
         {
             partsList_[partI].writeField
             (
                 os,
-                field.boundaryField()[patchI]
+                field.boundaryField()[patchi]
             );
         }
     }

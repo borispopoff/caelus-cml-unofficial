@@ -209,9 +209,9 @@ public:
         }
 
         //- Return the effective turbulence thermal diffusivity for a patch
-        virtual tmp<scalarField> alphaEff(const label patchI) const
+        virtual tmp<scalarField> alphaEff(const label patchi) const
         {
-            return thermo().alphaEff(alphaSgs()().boundaryField()[patchI], patchI);
+            return thermo().alphaEff(alphaSgs()().boundaryField()[patchi], patchi);
         }
 
         //- Return the effective turbulent temperature diffusivity
@@ -221,10 +221,10 @@ public:
         }
 
          //- Return the effective turbulent temperature diffusivity for a patch
-        virtual tmp<scalarField> kappaEff(const label patchI) const
+        virtual tmp<scalarField> kappaEff(const label patchi) const
         {
             return
-                thermo().kappaEff(alphaSgs()().boundaryField()[patchI], patchI);
+                thermo().kappaEff(alphaSgs()().boundaryField()[patchi], patchi);
         }
 
         //- Return the sub-grid stress tensor.

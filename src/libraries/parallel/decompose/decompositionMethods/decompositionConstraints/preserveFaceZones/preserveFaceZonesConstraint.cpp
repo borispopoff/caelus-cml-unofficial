@@ -143,9 +143,9 @@ void CML::decompositionConstraints::preserveFaceZonesConstraint::apply
 
     labelList destProc(mesh.nFaces()-mesh.nInternalFaces(), labelMax);
 
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        const polyPatch& pp = pbm[patchI];
+        const polyPatch& pp = pbm[patchi];
 
         const labelUList& faceCells = pp.faceCells();
 

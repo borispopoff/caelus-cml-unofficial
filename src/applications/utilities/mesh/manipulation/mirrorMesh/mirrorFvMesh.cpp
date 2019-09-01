@@ -68,18 +68,18 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     labelList mirrorPointLookup(oldPoints.size(), -1);
 
     // Grab the old points
-    forAll(oldPoints, pointI)
+    forAll(oldPoints, pointi)
     {
-        newPoints[nNewPoints] = oldPoints[pointI];
+        newPoints[nNewPoints] = oldPoints[pointi];
         nNewPoints++;
     }
 
-    forAll(oldPoints, pointI)
+    forAll(oldPoints, pointi)
     {
         scalar alpha =
             mirrorPlane.normalIntersect
             (
-                oldPoints[pointI],
+                oldPoints[pointi],
                 mirrorPlane.normal()
             );
 
@@ -88,10 +88,10 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
         {
             // The point gets mirrored
             newPoints[nNewPoints] =
-                oldPoints[pointI] + 2.0*alpha*mirrorPlane.normal();
+                oldPoints[pointi] + 2.0*alpha*mirrorPlane.normal();
 
             // remember the point correspondence
-            mirrorPointLookup[pointI] = nNewPoints;
+            mirrorPointLookup[pointi] = nNewPoints;
             nNewPoints++;
         }
         else
@@ -99,9 +99,9 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
             // The point is on the plane and does not get mirrored
             // Adjust plane location
             newPoints[nNewPoints] =
-                oldPoints[pointI] + alpha*mirrorPlane.normal();
+                oldPoints[pointi] + alpha*mirrorPlane.normal();
 
-            mirrorPointLookup[pointI] = pointI;
+            mirrorPointLookup[pointi] = pointi;
         }
     }
 
@@ -150,9 +150,9 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     // as internal
     boolListList insertedBouFace(oldPatches.size());
 
-    forAll(oldPatches, patchI)
+    forAll(oldPatches, patchi)
     {
-        const polyPatch& curPatch = oldPatches[patchI];
+        const polyPatch& curPatch = oldPatches[patchi];
 
         if (curPatch.coupled())
         {
@@ -163,7 +163,7 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
                 << " createPatch afterwards." << endl;
         }
 
-        boolList& curInsBouFace = insertedBouFace[patchI];
+        boolList& curInsBouFace = insertedBouFace[patchi];
 
         curInsBouFace.setSize(curPatch.size());
         curInsBouFace = false;
@@ -180,9 +180,9 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
             const face& origFace = curPatch[facei];
 
             face mirrorFace(origFace.size());
-            forAll(mirrorFace, pointI)
+            forAll(mirrorFace, pointi)
             {
-                mirrorFace[pointI] = mirrorPointLookup[origFace[pointI]];
+                mirrorFace[pointi] = mirrorPointLookup[origFace[pointi]];
             }
 
             if (origFace == mirrorFace)
@@ -250,11 +250,11 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     labelList newPatchStarts(boundary().size(), -1);
     label nNewPatches = 0;
 
-    forAll(boundaryMesh(), patchI)
+    forAll(boundaryMesh(), patchi)
     {
-        const label curPatchSize = boundaryMesh()[patchI].size();
-        const label curPatchStart = boundaryMesh()[patchI].start();
-        const boolList& curInserted = insertedBouFace[patchI];
+        const label curPatchSize = boundaryMesh()[patchi].size();
+        const label curPatchStart = boundaryMesh()[patchi].start();
+        const boolList& curInserted = insertedBouFace[patchi];
 
         newPatchStarts[nNewPatches] = nNewFaces;
 
@@ -304,8 +304,8 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
         // If patch exists, grab the name and type of the original patch
         if (nNewFaces > newPatchStarts[nNewPatches])
         {
-            newPatchTypes[nNewPatches] = boundaryMesh()[patchI].type();
-            newPatchNames[nNewPatches] = boundaryMesh()[patchI].name();
+            newPatchTypes[nNewPatches] = boundaryMesh()[patchi].type();
+            newPatchNames[nNewPatches] = boundaryMesh()[patchi].name();
             newPatchSizes[nNewPatches] =
                 nNewFaces - newPatchStarts[nNewPatches];
 
@@ -380,15 +380,15 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     // Add the boundary patches
     List<polyPatch*> p(newPatchTypes.size());
 
-    forAll(p, patchI)
+    forAll(p, patchi)
     {
-        p[patchI] = polyPatch::New
+        p[patchi] = polyPatch::New
         (
-            newPatchTypes[patchI],
-            newPatchNames[patchI],
-            newPatchSizes[patchI],
-            newPatchStarts[patchI],
-            patchI,
+            newPatchTypes[patchi],
+            newPatchNames[patchi],
+            newPatchSizes[patchi],
+            newPatchStarts[patchi],
+            patchi,
             pMesh.boundaryMesh()
         ).ptr();
     }

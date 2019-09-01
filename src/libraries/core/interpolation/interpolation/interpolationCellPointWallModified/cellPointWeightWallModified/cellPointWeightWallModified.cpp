@@ -39,10 +39,10 @@ CML::cellPointWeightWallModified::cellPointWeightWallModified
     if (facei >= 0)
     {
         const polyBoundaryMesh& bm = mesh.boundaryMesh();
-        label patchI = bm.whichPatch(facei);
-        if (patchI != -1)
+        label patchi = bm.whichPatch(facei);
+        if (patchi != -1)
         {
-            if (isA<wallPolyPatch>(bm[patchI]))
+            if (isA<wallPolyPatch>(bm[patchi]))
             {
                 // Apply cell centre value wall faces
                 weights_[0] = 1.0;

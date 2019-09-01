@@ -80,7 +80,7 @@ bool CML::fileFormats::GTSsurfaceFormat<Face>::read
     zoneIds.setSize(nElems);
 
     // Read points
-    forAll(pointLst, pointI)
+    forAll(pointLst, pointi)
     {
         scalar x, y, z;
         line = this->getLineNoComment(is);
@@ -90,7 +90,7 @@ bool CML::fileFormats::GTSsurfaceFormat<Face>::read
                 >> x >> y >> z;
         }
 
-        pointLst[pointI] = point(x, y, z);
+        pointLst[pointi] = point(x, y, z);
     }
 
     // Read edges (Foam indexing)
@@ -271,9 +271,9 @@ void CML::fileFormats::GTSsurfaceFormat<Face>::write
 
 
     // Write vertex coords
-    forAll(pointLst, pointI)
+    forAll(pointLst, pointi)
     {
-        const point& pt = pointLst[pointI];
+        const point& pt = pointLst[pointi];
 
         os  << pt.x() << ' ' << pt.y() << ' ' << pt.z() << nl;
     }
@@ -374,11 +374,11 @@ void CML::fileFormats::GTSsurfaceFormat<Face>::write
 
 
     // Write vertex coords
-    forAll(pointLst, pointI)
+    forAll(pointLst, pointi)
     {
-        os  << pointLst[pointI].x() << ' '
-            << pointLst[pointI].y() << ' '
-            << pointLst[pointI].z() << endl;
+        os  << pointLst[pointi].x() << ' '
+            << pointLst[pointi].y() << ' '
+            << pointLst[pointi].z() << endl;
     }
 
 

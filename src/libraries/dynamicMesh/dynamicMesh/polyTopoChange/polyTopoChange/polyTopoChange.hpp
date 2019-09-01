@@ -249,7 +249,7 @@ class polyTopoChange
             const label facei,
             const label own,
             const label nei,
-            const label patchI,
+            const label patchi,
             const label zoneI
         ) const;
 
@@ -445,7 +445,7 @@ public:
             }
 
             //- Is point removed?
-            inline bool pointRemoved(const label pointI) const;
+            inline bool pointRemoved(const label pointi) const;
             //- Is face removed?
             inline bool faceRemoved(const label facei) const;
             //- Is cell removed?
@@ -606,9 +606,9 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-inline bool CML::polyTopoChange::pointRemoved(const label pointI) const
+inline bool CML::polyTopoChange::pointRemoved(const label pointi) const
 {
-    const point& pt = points_[pointI];
+    const point& pt = points_[pointi];
 
     return
         pt.x() > 0.5*vector::max.x()

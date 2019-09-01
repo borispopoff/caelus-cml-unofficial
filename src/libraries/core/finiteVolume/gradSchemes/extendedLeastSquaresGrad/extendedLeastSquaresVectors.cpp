@@ -342,9 +342,9 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
         lsN[facei] = ((-1.0)/magSqr(d))*(invDd[nei] & d);
     }
 
-    forAll(blsP, patchI)
+    forAll(blsP, patchi)
     {
-        fvsPatchVectorField& patchLsP = blsP[patchI];
+        fvsPatchVectorField& patchLsP = blsP[patchi];
 
         const fvPatch& p = patchLsP.patch();
         const labelUList& faceCells = p.faceCells();

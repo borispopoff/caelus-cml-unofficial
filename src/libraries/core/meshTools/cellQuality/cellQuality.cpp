@@ -68,16 +68,16 @@ CML::tmp<CML::scalarField> CML::cellQuality::nonOrthogonality() const
         result[nei[facei]] = max(cosDDotS, result[nei[facei]]);
     }
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
         const labelUList& faceCells =
-            mesh_.boundaryMesh()[patchI].faceCells();
+            mesh_.boundaryMesh()[patchi].faceCells();
 
         const vectorField::subField faceCentres =
-            mesh_.boundaryMesh()[patchI].faceCentres();
+            mesh_.boundaryMesh()[patchi].faceCentres();
 
         const vectorField::subField faceAreas =
-            mesh_.boundaryMesh()[patchI].faceAreas();
+            mesh_.boundaryMesh()[patchi].faceAreas();
 
         forAll(faceCentres, facei)
         {
@@ -141,16 +141,16 @@ CML::tmp<CML::scalarField> CML::cellQuality::skewness() const
         result[nei[facei]] = max(skewness, result[nei[facei]]);
     }
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
         const labelUList& faceCells =
-            mesh_.boundaryMesh()[patchI].faceCells();
+            mesh_.boundaryMesh()[patchi].faceCells();
 
         const vectorField::subField faceCentres =
-            mesh_.boundaryMesh()[patchI].faceCentres();
+            mesh_.boundaryMesh()[patchi].faceCentres();
 
         const vectorField::subField faceAreas =
-            mesh_.boundaryMesh()[patchI].faceAreas();
+            mesh_.boundaryMesh()[patchi].faceAreas();
 
         forAll(faceCentres, facei)
         {
@@ -207,16 +207,16 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceNonOrthogonality() const
 
     label globalFaceI = mesh_.nInternalFaces();
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
         const labelUList& faceCells =
-            mesh_.boundaryMesh()[patchI].faceCells();
+            mesh_.boundaryMesh()[patchi].faceCells();
 
         const vectorField::subField faceCentres =
-            mesh_.boundaryMesh()[patchI].faceCentres();
+            mesh_.boundaryMesh()[patchi].faceCentres();
 
         const vectorField::subField faceAreas =
-            mesh_.boundaryMesh()[patchI].faceAreas();
+            mesh_.boundaryMesh()[patchi].faceAreas();
 
         forAll(faceCentres, facei)
         {
@@ -278,16 +278,16 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceSkewness() const
 
     label globalFaceI = mesh_.nInternalFaces();
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
         const labelUList& faceCells =
-            mesh_.boundaryMesh()[patchI].faceCells();
+            mesh_.boundaryMesh()[patchi].faceCells();
 
         const vectorField::subField faceCentres =
-            mesh_.boundaryMesh()[patchI].faceCentres();
+            mesh_.boundaryMesh()[patchi].faceCentres();
 
         const vectorField::subField faceAreas =
-            mesh_.boundaryMesh()[patchI].faceAreas();
+            mesh_.boundaryMesh()[patchi].faceAreas();
 
         forAll(faceCentres, facei)
         {

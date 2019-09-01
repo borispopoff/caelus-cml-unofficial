@@ -209,24 +209,24 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacianUncorrected
     fvm.upper() = deltaCoeffs.internalField()*gammaMagSf.internalField();
     fvm.negSumDiag();
 
-    forAll(vf.boundaryField(), patchI)
+    forAll(vf.boundaryField(), patchi)
     {
-        const fvPatchField<Type>& pvf = vf.boundaryField()[patchI];
-        const fvsPatchScalarField& pGamma = gammaMagSf.boundaryField()[patchI];
+        const fvPatchField<Type>& pvf = vf.boundaryField()[patchi];
+        const fvsPatchScalarField& pGamma = gammaMagSf.boundaryField()[patchi];
         const fvsPatchScalarField& pDeltaCoeffs =
-            deltaCoeffs.boundaryField()[patchI];
+            deltaCoeffs.boundaryField()[patchi];
 
         if (pvf.coupled())
         {
-            fvm.internalCoeffs()[patchI] =
+            fvm.internalCoeffs()[patchi] =
                 pGamma*pvf.gradientInternalCoeffs(pDeltaCoeffs);
-            fvm.boundaryCoeffs()[patchI] =
+            fvm.boundaryCoeffs()[patchi] =
                -pGamma*pvf.gradientBoundaryCoeffs(pDeltaCoeffs);
         }
         else
         {
-            fvm.internalCoeffs()[patchI] = pGamma*pvf.gradientInternalCoeffs();
-            fvm.boundaryCoeffs()[patchI] = -pGamma*pvf.gradientBoundaryCoeffs();
+            fvm.internalCoeffs()[patchi] = pGamma*pvf.gradientInternalCoeffs();
+            fvm.boundaryCoeffs()[patchi] = -pGamma*pvf.gradientBoundaryCoeffs();
         }
 
     }

@@ -373,7 +373,7 @@ bool CML::faceCoupleInfo::regionEdge
 }
 
 
-// Find edge using pointI that is most aligned with vector between
+// Find edge using pointi that is most aligned with vector between
 // master points. Patchdivision tells us whether or not to use
 // patch information to match edges.
 CML::label CML::faceCoupleInfo::mostAlignedCutEdge

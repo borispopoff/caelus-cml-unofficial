@@ -231,10 +231,10 @@ void fvMesh::makeDefectCorrVecs() const
     }
 
 
-    forAll(DefectCorrVecs.boundaryField(), patchI)
+    forAll(DefectCorrVecs.boundaryField(), patchi)
     {
         fvPatchVectorField& patchDefectCorrVecs =
-            DefectCorrVecs.boundaryField()[patchI];
+            DefectCorrVecs.boundaryField()[patchi];
 
         patchDefectCorrVecs = Zero;
     }
