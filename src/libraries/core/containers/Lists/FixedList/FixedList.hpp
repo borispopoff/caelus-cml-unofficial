@@ -36,7 +36,6 @@ Description
 #include "uLabel.hpp"
 #include "Hash.hpp"
 #include "autoPtr.hpp"
-#include "StaticAssert.hpp"
 #include <type_traits>
 #include <initializer_list>
 
@@ -66,8 +65,11 @@ template<class T> class SLList;
 template<class T, unsigned Size>
 class FixedList
 {
-    //- Size must be positive (non-zero) and also fit as a signed value
-    StaticAssert(Size && Size <= INT_MAX);
+    static_assert
+    (
+        Size && Size <= INT_MAX,
+        "Size must be positive (non-zero) and also fit as a signed value"
+    );
 
     // Private data
 

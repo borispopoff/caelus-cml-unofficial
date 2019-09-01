@@ -19,7 +19,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "StaticAssert.hpp"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -86,8 +86,16 @@ ConstBlock(const msType& matrix)
 :
     matrix_(matrix)
 {
-    StaticAssert(msType::mRows >= BRowStart + mRows);
-    StaticAssert(msType::nCols >= BColStart + nCols);
+    static_assert
+    (
+        msType::mRows >= BRowStart + mRows,
+        "Rows in block > rows in matrix"
+    );
+    static_assert
+    (
+        msType::nCols >= BColStart + nCols,
+        "Columns in block > columns in matrix"
+    );
 }
 
 
@@ -99,8 +107,16 @@ Block(msType& matrix)
 :
     matrix_(matrix)
 {
-    StaticAssert(msType::mRows >= BRowStart + mRows);
-    StaticAssert(msType::nCols >= BColStart + nCols);
+    static_assert
+    (
+        msType::mRows >= BRowStart + mRows,
+        "Rows in block > rows in matrix"
+    );
+    static_assert
+    (
+        msType::nCols >= BColStart + nCols,
+        "Columns in block > columns in matrix"
+    );
 }
 
 
@@ -110,7 +126,7 @@ template<class Form, class Cmpt, CML::direction Mrows, CML::direction Ncols>
 template<CML::direction Row, CML::direction Col>
 inline const Cmpt& CML::MatrixSpace<Form, Cmpt, Mrows, Ncols>::elmt() const
 {
-    StaticAssert(Row < Mrows && Col < Ncols);
+    static_assert(Row < Mrows && Col < Ncols, "Address outside matrix");
     return this->v_[Row*Ncols + Col];
 }
 
@@ -119,7 +135,7 @@ template<class Form, class Cmpt, CML::direction Mrows, CML::direction Ncols>
 template<CML::direction Row, CML::direction Col>
 inline Cmpt& CML::MatrixSpace<Form, Cmpt, Mrows, Ncols>::elmt()
 {
-    StaticAssert(Row < Mrows && Col < Ncols);
+    static_assert(Row < Mrows && Col < Ncols, "Address outside matrix");
     return this->v_[Row*Ncols + Col];
 }
 
@@ -252,7 +268,7 @@ template<class Form, class Cmpt, CML::direction Mrows, CML::direction Ncols>
 inline CML::MatrixSpace<Form, Cmpt, Mrows, Ncols>
 CML::MatrixSpace<Form, Cmpt, Mrows, Ncols>::identity()
 {
-    StaticAssert(Mrows == Ncols);
+    static_assert(Mrows == Ncols, "Matrix is not square");
     msType result(Zero);
 
     for (direction i=0; i<Ncols; ++i)
@@ -495,7 +511,7 @@ operator=
     const VectorSpace<VSForm, Cmpt, SubTensor::mRows>& v
 )
 {
-    StaticAssert(nCols == 1);
+    static_assert(nCols == 1, "Matrix must have a single column");
 
     for (direction i=0; i<SubTensor::mRows; ++i)
     {
@@ -556,7 +572,11 @@ inline typename typeOfInnerProduct<Cmpt, Form1, Form2>::type operator&
     const MatrixSpace<Form2, Cmpt, Mrows2, Ncols2>& matrix2
 )
 {
-    StaticAssert(Ncols1 == Mrows2);
+    static_assert
+    (
+        Ncols1 == Mrows2,
+        "Number of columns in matrix 1 != number of rows in matrix 2"
+    );
 
     typename typeOfInnerProduct<Cmpt, Form1, Form2>::type result(Zero);
 

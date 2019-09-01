@@ -33,7 +33,7 @@ SourceFiles
 #define DynamicField_H
 
 #include "Field.hpp"
-#include "StaticAssert.hpp"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,7 +70,11 @@ class DynamicField
     public Field<Type>
 {
     //- Avoid invalid sizing parameters
-    StaticAssert((SizeInc || SizeMult) && SizeDiv);
+    static_assert
+    (
+        (SizeInc || SizeMult) && SizeDiv,
+        "Avoid invalid sizing parameters"
+    );
 
     // Private data
 

@@ -223,7 +223,7 @@ word name(const VectorSpace<Form, Cmpt, Ncmpts>&);
 #include "products.hpp"
 #include "VectorSpaceM.hpp"
 #include "ops.hpp"
-#include "StaticAssert.hpp"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -265,7 +265,11 @@ VectorSpace<Form, Cmpt, Ncmpts>::ConstBlock<SubVector, BStart>::ConstBlock
 :
     vs_(vs)
 {
-    StaticAssert(vsType::nComponents >= BStart + nComponents);
+    static_assert
+    (
+        vsType::nComponents >= BStart + nComponents,
+        "Requested block size > VectorSpace size"
+    );
 }
 
 
