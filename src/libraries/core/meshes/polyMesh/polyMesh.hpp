@@ -695,7 +695,7 @@ public:
             ) const;
 
             //- Find the tetFacei and tetPti for point p in celli.
-            //  tetFacei and tetPtI are set to -1 if not found
+            //  tetFacei and tetPti are set to -1 if not found
             void findTetFacePt
             (
                 const label celli,

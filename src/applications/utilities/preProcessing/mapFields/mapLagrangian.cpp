@@ -37,11 +37,11 @@ static label findCell(const Cloud<passiveParticle>& cloud, const point& pt)
 {
     label celli = -1;
     label tetFacei = -1;
-    label tetPtI = -1;
+    label tetPti = -1;
 
     const polyMesh& mesh = cloud.pMesh();
 
-    mesh.findCellFacePt(pt, celli, tetFacei, tetPtI);
+    mesh.findCellFacePt(pt, celli, tetFacei, tetPti);
 
     if (celli >= 0)
     {
@@ -66,7 +66,7 @@ static label findCell(const Cloud<passiveParticle>& cloud, const point& pt)
 
             const point perturbPt = (1-perturbFactor)*pt+perturbFactor*cc;
 
-            mesh.findCellFacePt(perturbPt, celli, tetFacei, tetPtI);
+            mesh.findCellFacePt(perturbPt, celli, tetFacei, tetPti);
 
             return celli;
         }

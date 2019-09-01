@@ -29,7 +29,7 @@ CML::trackedParticle::trackedParticle
     const barycentric& coordinates,
     const label celli,
     const label tetFacei,
-    const label tetPtI,
+    const label tetPti,
     const point& end,
     const label level,
     const label i,
@@ -37,7 +37,7 @@ CML::trackedParticle::trackedParticle
     const label k
 )
 :
-    particle(mesh, coordinates, celli, tetFacei, tetPtI),
+    particle(mesh, coordinates, celli, tetFacei, tetPti),
     start_(position()),
     end_(end),
     level_(level),

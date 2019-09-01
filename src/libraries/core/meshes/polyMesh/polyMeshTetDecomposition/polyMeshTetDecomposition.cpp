@@ -59,9 +59,9 @@ CML::label CML::polyMeshTetDecomposition::findSharedBasePoint
 
         const point& tetBasePt = pPts[f[faceBasePtI]];
 
-        for (label tetPtI = 1; tetPtI < f.size() - 1; ++tetPtI)
+        for (label tetPti = 1; tetPti < f.size() - 1; ++tetPti)
         {
-            label facePtI = (tetPtI + faceBasePtI) % f.size();
+            label facePtI = (tetPti + faceBasePtI) % f.size();
             label otherFacePtI = f.fcIndex(facePtI);
 
             {
@@ -154,9 +154,9 @@ CML::label CML::polyMeshTetDecomposition::findBasePoint
 
         const point& tetBasePt = pPts[f[faceBasePtI]];
 
-        for (label tetPtI = 1; tetPtI < f.size() - 1; ++tetPtI)
+        for (label tetPti = 1; tetPti < f.size() - 1; ++tetPti)
         {
-            label facePtI = (tetPtI + faceBasePtI) % f.size();
+            label facePtI = (tetPti + faceBasePtI) % f.size();
             label otherFacePtI = f.fcIndex(facePtI);
 
             label ptAI = -1;

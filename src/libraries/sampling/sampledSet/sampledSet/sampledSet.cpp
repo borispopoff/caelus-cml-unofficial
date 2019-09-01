@@ -208,8 +208,8 @@ CML::point CML::sampledSet::pushIn
 
     // Taken from particle::initCellFacePt()
     label tetFacei;
-    label tetPtI;
-    mesh().findTetFacePt(celli, facePt, tetFacei, tetPtI);
+    label tetPti;
+    mesh().findTetFacePt(celli, facePt, tetFacei, tetPti);
 
     // This is the tolerance that was defined as a static constant of the
     // particle class. It is no longer used by particle, following the switch to
@@ -219,7 +219,7 @@ CML::point CML::sampledSet::pushIn
     // should almost certainly be left to the particle class.
     const scalar trackingCorrectionTol = 1e-5;
 
-    if (tetFacei == -1 || tetPtI == -1)
+    if (tetFacei == -1 || tetPti == -1)
     {
         newPosition = facePt;
 
@@ -236,7 +236,7 @@ CML::point CML::sampledSet::pushIn
                 celli,
                 newPosition,
                 tetFacei,
-                tetPtI
+                tetPti
             );
 
             iterNo++;
