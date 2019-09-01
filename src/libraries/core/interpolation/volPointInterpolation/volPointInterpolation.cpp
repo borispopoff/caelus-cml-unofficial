@@ -83,13 +83,13 @@ void CML::volPointInterpolation::calcBoundaryAddressing()
          && !magSf.boundaryField()[patchi].coupled()
         )
         {
-            label bFaceI = pp.start()-mesh().nInternalFaces();
+            label bFacei = pp.start()-mesh().nInternalFaces();
 
             forAll(pp, i)
             {
-                boundaryIsPatchFace_[bFaceI] = true;
+                boundaryIsPatchFace_[bFacei] = true;
 
-                const face& f = boundary[bFaceI++];
+                const face& f = boundary[bFacei++];
 
                 forAll(f, fp)
                 {

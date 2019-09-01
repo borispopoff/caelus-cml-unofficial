@@ -116,10 +116,10 @@ void CML::CFCFaceToCellStencil::calcCellStencil(labelListList& globalCellFaces)
 
         if (isA<emptyPolyPatch>(pp))
         {
-            label bFaceI = pp.start()-mesh().nInternalFaces();
+            label bFacei = pp.start()-mesh().nInternalFaces();
             forAll(pp, i)
             {
-                validBFace[bFaceI++] = false;
+                validBFace[bFacei++] = false;
             }
         }
     }
@@ -159,12 +159,12 @@ void CML::CFCFaceToCellStencil::calcCellStencil(labelListList& globalCellFaces)
 
             if (mesh().isInternalFace(facei))
             {
-                label nbrCellI = own[facei];
-                if (nbrCellI == celli)
+                label nbrCelli = own[facei];
+                if (nbrCelli == celli)
                 {
-                    nbrCellI = nei[facei];
+                    nbrCelli = nei[facei];
                 }
-                const cell& nbrFaces = mesh().cells()[nbrCellI];
+                const cell& nbrFaces = mesh().cells()[nbrCelli];
 
                 forAll(nbrFaces, j)
                 {

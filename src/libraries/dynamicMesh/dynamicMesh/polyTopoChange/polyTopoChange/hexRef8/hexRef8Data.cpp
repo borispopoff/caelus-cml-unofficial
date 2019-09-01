@@ -169,10 +169,10 @@ CML::hexRef8Data::hexRef8Data
         cellLevelPtr_.reset(new labelIOList(rio, mesh.nCells()));
         labelList& cellLevel = cellLevelPtr_();
 
-        forAll(procDatas, procI)
+        forAll(procDatas, proci)
         {
-            const labelList& procCellLevel = procDatas[procI].cellLevelPtr_();
-            UIndirectList<label>(cellLevel, cellMaps[procI]) = procCellLevel;
+            const labelList& procCellLevel = procDatas[proci].cellLevelPtr_();
+            UIndirectList<label>(cellLevel, cellMaps[proci]) = procCellLevel;
         }
     }
 
@@ -187,10 +187,10 @@ CML::hexRef8Data::hexRef8Data
         pointLevelPtr_.reset(new labelIOList(rio, mesh.nPoints()));
         labelList& pointLevel = pointLevelPtr_();
 
-        forAll(procDatas, procI)
+        forAll(procDatas, proci)
         {
-            const labelList& procPointLevel = procDatas[procI].pointLevelPtr_();
-            UIndirectList<label>(pointLevel, pointMaps[procI]) = procPointLevel;
+            const labelList& procPointLevel = procDatas[proci].pointLevelPtr_();
+            UIndirectList<label>(pointLevel, pointMaps[proci]) = procPointLevel;
         }
     }
 

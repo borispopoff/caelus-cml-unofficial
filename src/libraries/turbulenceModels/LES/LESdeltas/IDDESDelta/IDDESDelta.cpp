@@ -65,9 +65,9 @@ void CML::IDDESDelta::calcDelta()
         scalar deltaMaxTmp = 0.0;
         const labelList& cFaces = mesh().cells()[celli];
         const vector nCell = n[celli];
-        forAll(cFaces, cFaceI)
+        forAll(cFaces, cFacei)
         {
-            label facei = cFaces[cFaceI];
+            label facei = cFaces[cFacei];
             const point& faceCentreI = mesh().faceCentres()[facei];
             forAll(cFaces, cFaceJ)
             {

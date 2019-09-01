@@ -554,11 +554,11 @@ void CML::fvMeshDistribute::mapExposedFaces
             {
                 const label facei = patchFld.patch().start()+i;
 
-                label oldFaceI = faceMap[facei];
+                label oldFacei = faceMap[facei];
 
-                if (oldFaceI < oldInternal.size())
+                if (oldFacei < oldInternal.size())
                 {
-                    patchFld[i] = oldInternal[oldFaceI];
+                    patchFld[i] = oldInternal[oldFacei];
 
                     if (map.flipFaceFlux().found(facei))
                     {

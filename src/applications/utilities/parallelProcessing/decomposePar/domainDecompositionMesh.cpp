@@ -135,20 +135,20 @@ void CML::domainDecomposition::decomposeMesh()
 
     // For all processors, set the size of start index and patch size
     // lists to the number of patches in the mesh
-    forAll(procPatchSize_, procI)
+    forAll(procPatchSize_, proci)
     {
-        procPatchSize_[procI].setSize(patches.size());
-        procPatchStartIndex_[procI].setSize(patches.size());
+        procPatchSize_[proci].setSize(patches.size());
+        procPatchStartIndex_[proci].setSize(patches.size());
     }
 
     forAll(patches, patchi)
     {
         // Reset size and start index for all processors
-        forAll(procPatchSize_, procI)
+        forAll(procPatchSize_, proci)
         {
-            procPatchSize_[procI][patchi] = 0;
-            procPatchStartIndex_[procI][patchi] =
-                procFaceAddressing_[procI].size();
+            procPatchSize_[proci][patchi] = 0;
+            procPatchStartIndex_[proci][patchi] =
+                procFaceAddressing_[proci].size();
         }
 
         const label patchStart = patches[patchi].start();
@@ -233,12 +233,12 @@ void CML::domainDecomposition::decomposeMesh()
     // originating from internal faces this is always -1.
     List<labelListList> subPatchIDs(nProcs_);
     List<labelListList> subPatchStarts(nProcs_);
-    forAll(interPatchFaces, procI)
+    forAll(interPatchFaces, proci)
     {
-        label nInterfaces = interPatchFaces[procI].size();
+        label nInterfaces = interPatchFaces[proci].size();
 
-        subPatchIDs[procI].setSize(nInterfaces, labelList(1, label(-1)));
-        subPatchStarts[procI].setSize(nInterfaces, labelList(1, label(0)));
+        subPatchIDs[proci].setSize(nInterfaces, labelList(1, label(-1)));
+        subPatchStarts[proci].setSize(nInterfaces, labelList(1, label(0)));
     }
 
     // Special handling needed for the case that multiple processor cyclic
@@ -310,49 +310,49 @@ void CML::domainDecomposition::decomposeMesh()
 
     // Sort inter-proc patch by neighbour
     labelList order;
-    forAll(procNbrToInterPatch, procI)
+    forAll(procNbrToInterPatch, proci)
     {
-        label nInterfaces = procNbrToInterPatch[procI].size();
+        label nInterfaces = procNbrToInterPatch[proci].size();
 
-        procNeighbourProcessors_[procI].setSize(nInterfaces);
-        procProcessorPatchSize_[procI].setSize(nInterfaces);
-        procProcessorPatchStartIndex_[procI].setSize(nInterfaces);
-        procProcessorPatchSubPatchIDs_[procI].setSize(nInterfaces);
-        procProcessorPatchSubPatchStarts_[procI].setSize(nInterfaces);
+        procNeighbourProcessors_[proci].setSize(nInterfaces);
+        procProcessorPatchSize_[proci].setSize(nInterfaces);
+        procProcessorPatchStartIndex_[proci].setSize(nInterfaces);
+        procProcessorPatchSubPatchIDs_[proci].setSize(nInterfaces);
+        procProcessorPatchSubPatchStarts_[proci].setSize(nInterfaces);
 
         // Get sorted neighbour processors
-        const Map<label>& curNbrToInterPatch = procNbrToInterPatch[procI];
+        const Map<label>& curNbrToInterPatch = procNbrToInterPatch[proci];
         labelList nbrs = curNbrToInterPatch.toc();
 
         sortedOrder(nbrs, order);
 
         DynamicList<DynamicList<label>>& curInterPatchFaces =
-            interPatchFaces[procI];
+            interPatchFaces[proci];
 
         forAll(nbrs, i)
         {
             const label nbrProc = nbrs[i];
             const label interPatch = curNbrToInterPatch[nbrProc];
 
-            procNeighbourProcessors_[procI][i] = nbrProc;
-            procProcessorPatchSize_[procI][i] =
+            procNeighbourProcessors_[proci][i] = nbrProc;
+            procProcessorPatchSize_[proci][i] =
                 curInterPatchFaces[interPatch].size();
-            procProcessorPatchStartIndex_[procI][i] =
-                procFaceAddressing_[procI].size();
+            procProcessorPatchStartIndex_[proci][i] =
+                procFaceAddressing_[proci].size();
 
             // Add size as last element to substarts and transfer
             append
             (
-                subPatchStarts[procI][interPatch],
+                subPatchStarts[proci][interPatch],
                 curInterPatchFaces[interPatch].size()
             );
-            procProcessorPatchSubPatchIDs_[procI][i].transfer
+            procProcessorPatchSubPatchIDs_[proci][i].transfer
             (
-                subPatchIDs[procI][interPatch]
+                subPatchIDs[proci][interPatch]
             );
-            procProcessorPatchSubPatchStarts_[procI][i].transfer
+            procProcessorPatchSubPatchStarts_[proci][i].transfer
             (
-                subPatchStarts[procI][interPatch]
+                subPatchStarts[proci][interPatch]
             );
 
             // And add all the face labels for interPatch
@@ -361,12 +361,12 @@ void CML::domainDecomposition::decomposeMesh()
 
             forAll(interPatchFaces, j)
             {
-                procFaceAddressing_[procI].append(interPatchFaces[j]);
+                procFaceAddressing_[proci].append(interPatchFaces[j]);
             }
             interPatchFaces.clearStorage();
         }
         curInterPatchFaces.clearStorage();
-        procFaceAddressing_[procI].shrink();
+        procFaceAddressing_[proci].shrink();
     }
 
     Info<< "\nDistributing points to processors" << endl;
@@ -375,12 +375,12 @@ void CML::domainDecomposition::decomposeMesh()
     // used for the processor. Collect the list of used points for the
     // processor.
 
-    forAll(procPointAddressing_, procI)
+    forAll(procPointAddressing_, proci)
     {
         boolList pointLabels(nPoints(), false);
 
         // Get reference to list of used faces
-        const labelList& procFaceLabels = procFaceAddressing_[procI];
+        const labelList& procFaceLabels = procFaceAddressing_[proci];
 
         forAll(procFaceLabels, facei)
         {
@@ -395,7 +395,7 @@ void CML::domainDecomposition::decomposeMesh()
         }
 
         // Collect the used points
-        labelList& procPointLabels = procPointAddressing_[procI];
+        labelList& procPointLabels = procPointAddressing_[proci];
 
         procPointLabels.setSize(pointLabels.size());
 

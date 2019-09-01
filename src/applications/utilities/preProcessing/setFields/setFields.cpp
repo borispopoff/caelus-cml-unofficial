@@ -220,9 +220,9 @@ bool setFaceFieldType
             }
             else
             {
-                label bFaceI = facei-mesh.nInternalFaces();
-                allBoundaryValues[bFaceI] = value;
-                nChanged[mesh.boundaryMesh().patchID()[bFaceI]]++;
+                label bFacei = facei-mesh.nInternalFaces();
+                allBoundaryValues[bFacei] = value;
+                nChanged[mesh.boundaryMesh().patchID()[bFacei]]++;
             }
         }
 

@@ -75,7 +75,7 @@ inline void CML::topoDistanceData::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData&
 )
@@ -99,7 +99,7 @@ inline void CML::topoDistanceData::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData&
 )

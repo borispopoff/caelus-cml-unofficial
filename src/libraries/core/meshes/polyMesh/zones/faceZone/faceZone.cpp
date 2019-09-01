@@ -468,10 +468,10 @@ bool CML::faceZone::checkParallelSync(const bool report) const
 
             if (patchi != -1 && bm[patchi].coupled())
             {
-                const label bFaceI = facei-mesh.nInternalFaces();
+                const label bFacei = facei-mesh.nInternalFaces();
 
                 // Check face in zone on both sides
-                if (myZoneFace[bFaceI] != neiZoneFace[bFaceI])
+                if (myZoneFace[bFacei] != neiZoneFace[bFacei])
                 {
                     hasError = true;
 
@@ -491,7 +491,7 @@ bool CML::faceZone::checkParallelSync(const bool report) const
                         break;
                     }
                 }
-                else if (myZoneFlip[bFaceI] == neiZoneFlip[bFaceI])
+                else if (myZoneFlip[bFacei] == neiZoneFlip[bFacei])
                 {
                     // Flip state should be opposite.
                     hasError = true;

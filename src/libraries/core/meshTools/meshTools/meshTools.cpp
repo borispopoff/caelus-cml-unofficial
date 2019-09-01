@@ -425,9 +425,9 @@ CML::label CML::meshTools::getSharedFace
 {
     const cell& cFaces = mesh.cells()[cell0I];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         if
         (
@@ -572,13 +572,13 @@ CML::label CML::meshTools::otherCell
             << abort(FatalError);
     }
 
-    label newCellI = mesh.faceOwner()[facei];
+    label newCelli = mesh.faceOwner()[facei];
 
-    if (newCellI == otherCellI)
+    if (newCelli == otherCellI)
     {
-        newCellI = mesh.faceNeighbour()[facei];
+        newCelli = mesh.faceNeighbour()[facei];
     }
-    return newCellI;
+    return newCelli;
 }
 
 

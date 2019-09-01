@@ -401,9 +401,9 @@ bool CML::cellClassification::usesMixedPointsOnly
 
     const cell& cFaces = mesh_.cells()[celli];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        const face& f = faces[cFaces[cFaceI]];
+        const face& f = faces[cFaces[cFacei]];
 
         forAll(f, fp)
         {
@@ -764,9 +764,9 @@ CML::label CML::cellClassification::fillRegionEdges
 
                 forAll(eFaces, i)
                 {
-                    label patchFaceI = eFaces[i];
+                    label patchFacei = eFaces[i];
 
-                    label ownerCell = outsideOwner[patchFaceI];
+                    label ownerCell = outsideOwner[patchFacei];
 
                     if (operator[](ownerCell) == meshType)
                     {
@@ -837,8 +837,8 @@ CML::label CML::cellClassification::fillRegionPoints
             // one would be best to remove.
             forAll(pFaces, i)
             {
-                const label patchFaceI = pFaces[i];
-                const label ownerCell  = outsideOwner[patchFaceI];
+                const label patchFacei = pFaces[i];
+                const label ownerCell  = outsideOwner[patchFacei];
 
                 if (operator[](ownerCell) == meshType)
                 {

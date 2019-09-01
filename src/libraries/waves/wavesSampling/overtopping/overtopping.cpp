@@ -249,10 +249,10 @@ void CML::overtopping::computeAndWriteBoundary
     // so redundant
 //    else if (isA<cyclicPolyPatch>(pp))
 //    {
-//        label patchFaceI = faceI - pp.start();
-//        if (patchFaceI < pp.size()/2)
+//        label patchFacei = faceI - pp.start();
+//        if (patchFacei < pp.size()/2)
 //        {
-//            faceId = patchFaceI;
+//            faceId = patchFacei;
 //        }
 //        else
 //        {

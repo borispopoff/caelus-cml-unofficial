@@ -106,8 +106,8 @@ CML::fv::naGaussGrad<Type>::calcGrad
 
         forAll(mesh.boundary()[patchi], facei)
         {
-            label bFaceI = mesh.boundary()[patchi].patch().start() + facei;
-            const labelList& f = fcs[bFaceI];
+            label bFacei = mesh.boundary()[patchi].patch().start() + facei;
+            const labelList& f = fcs[bFacei];
             label nPoints = f.size();
 
             // Face centre value calculated as a simple nodal average

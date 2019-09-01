@@ -261,7 +261,7 @@ CML::point CML::sampledSet::pushIn
 
 
 // Calculates start of tracking given samplePt and first boundary intersection
-// (bPoint, bFaceI). bFaceI == -1 if no boundary intersection.
+// (bPoint, bFacei). bFacei == -1 if no boundary intersection.
 // Returns true if trackPt is sampling point
 bool CML::sampledSet::getTrackingPoint
 (

@@ -257,7 +257,7 @@ CML::List<CML::polyPatch*> CML::polyMeshAdder::combinePatches
     from0ToAllPatches.setSize(patches0.size());
     from0ToAllPatches = -1;
 
-    label startFaceI = nInternalFaces;
+    label startFacei = nInternalFaces;
 
     // Copy patches0 with new sizes. First patches always come from
     // mesh0 and will always be present.
@@ -284,10 +284,10 @@ CML::List<CML::polyPatch*> CML::polyMeshAdder::combinePatches
                     allBoundaryMesh,
                     filteredPatchI,
                     nFaces[patchi],
-                    startFaceI
+                    startFacei
                 ).ptr()
             );
-            startFaceI += nFaces[patchi];
+            startFacei += nFaces[patchi];
         }
 
         // Record new index in allPatches
@@ -332,10 +332,10 @@ CML::List<CML::polyPatch*> CML::polyMeshAdder::combinePatches
                         allBoundaryMesh,
                         filteredPatchI,
                         nFaces[allPatchI],
-                        startFaceI
+                        startFacei
                     ).ptr()
                 );
-                startFaceI += nFaces[allPatchI];
+                startFacei += nFaces[allPatchI];
             }
 
             from1ToAllPatches[patchi] = filteredPatchI;
@@ -365,7 +365,7 @@ CML::labelList CML::polyMeshAdder::getFaceOrder
     }
 
     // First unassigned face
-    label newFaceI = 0;
+    label newFacei = 0;
 
     forAll(cells, celli)
     {
@@ -377,20 +377,20 @@ CML::labelList CML::polyMeshAdder::getFaceOrder
         {
             label facei = cFaces[i];
 
-            label nbrCellI = neighbour[facei];
+            label nbrCelli = neighbour[facei];
 
-            if (nbrCellI != -1)
+            if (nbrCelli != -1)
             {
                 // Internal face. Get cell on other side.
-                if (nbrCellI == celli)
+                if (nbrCelli == celli)
                 {
-                    nbrCellI = owner[facei];
+                    nbrCelli = owner[facei];
                 }
 
-                if (celli < nbrCellI)
+                if (celli < nbrCelli)
                 {
                     // CellI is master
-                    nbr[i] = nbrCellI;
+                    nbr[i] = nbrCelli;
                 }
                 else
                 {
@@ -411,7 +411,7 @@ CML::labelList CML::polyMeshAdder::getFaceOrder
         {
             if (nbr[i] != -1)
             {
-                oldToNew[cFaces[nbr.indices()[i]]] = newFaceI++;
+                oldToNew[cFaces[nbr.indices()[i]]] = newFacei++;
             }
         }
     }
@@ -808,9 +808,9 @@ void CML::polyMeshAdder::mergePrimitives
         labelHashSet masterCutFaces(cutToMasterFaces.size());
         forAll(cutToMasterFaces, i)
         {
-            label meshFaceI = masterPatch.addressing()[cutToMasterFaces[i]];
+            label meshFacei = masterPatch.addressing()[cutToMasterFaces[i]];
 
-            masterCutFaces.insert(meshFaceI);
+            masterCutFaces.insert(meshFacei);
         }
 
         DynamicList<label> workFace(100);
@@ -839,9 +839,9 @@ void CML::polyMeshAdder::mergePrimitives
         labelHashSet slaveCutFaces(cutToSlaveFaces.size());
         forAll(cutToSlaveFaces, i)
         {
-            label meshFaceI = slavePatch.addressing()[cutToSlaveFaces[i]];
+            label meshFacei = slavePatch.addressing()[cutToSlaveFaces[i]];
 
-            slaveCutFaces.insert(meshFaceI);
+            slaveCutFaces.insert(meshFacei);
         }
 
         forAll(from1ToAllFaces, face1)
@@ -1599,7 +1599,7 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
     labelList patchSizes(allPatches.size());
     labelList patchStarts(allPatches.size());
 
-    label startFaceI = nInternalFaces;
+    label startFacei = nInternalFaces;
 
     // Copy patches0 with new sizes. First patches always come from
     // mesh0 and will always be present.
@@ -1638,7 +1638,7 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
                 )
             );
             patchSizes[allPatchI] = nFaces[patch0];
-            patchStarts[allPatchI] = startFaceI;
+            patchStarts[allPatchI] = startFacei;
 
             // Record new index in allPatches
             from0ToAllPatches[patch0] = allPatchI;
@@ -1649,7 +1649,7 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
                 from1ToAllPatches[fromAllTo1Patches[patch0]] = allPatchI;
             }
 
-            startFaceI += nFaces[patch0];
+            startFacei += nFaces[patch0];
 
             allPatchI++;
         }
@@ -1689,12 +1689,12 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
                     )
                 );
                 patchSizes[allPatchI] = nFaces[uncompactAllPatchI];
-                patchStarts[allPatchI] = startFaceI;
+                patchStarts[allPatchI] = startFacei;
 
                 // Record new index in allPatches
                 from1ToAllPatches[patch1] = allPatchI;
 
-                startFaceI += nFaces[uncompactAllPatchI];
+                startFacei += nFaces[uncompactAllPatchI];
 
                 allPatchI++;
             }

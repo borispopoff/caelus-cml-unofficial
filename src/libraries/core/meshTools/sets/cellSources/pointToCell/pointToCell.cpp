@@ -72,9 +72,9 @@ void CML::pointToCell::combine(topoSet& set, const bool add) const
             const label pointi = iter.key();
             const labelList& pCells = mesh_.pointCells()[pointi];
 
-            forAll(pCells, pCellI)
+            forAll(pCells, pCelli)
             {
-                addOrDelete(set, pCells[pCellI], add);
+                addOrDelete(set, pCells[pCelli], add);
             }
         }
     }

@@ -969,13 +969,13 @@ void CML::isoSurface::generateTriPoints
             label facei = pp.start();
             forAll(pp, i)
             {
-                label bFaceI = facei-mesh_.nInternalFaces();
+                label bFacei = facei-mesh_.nInternalFaces();
                 label snappedIndex = snappedCc[own[facei]];
 
                 if (snappedIndex != -1)
                 {
-                    neiSnapped[bFaceI] = true;
-                    neiSnappedPoint[bFaceI] = snappedPoints[snappedIndex];
+                    neiSnapped[bFacei] = true;
+                    neiSnappedPoint[bFacei] = snappedPoints[snappedIndex];
                 }
                 facei++;
             }

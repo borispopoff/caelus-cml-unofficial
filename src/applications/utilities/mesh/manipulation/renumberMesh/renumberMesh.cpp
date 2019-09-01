@@ -116,22 +116,22 @@ labelList regionFaceOrder
 
     labelList oldToNewFace(mesh.nFaces(), -1);
 
-    label newFaceI = 0;
+    label newFacei = 0;
 
     label prevRegion = -1;
 
-    forAll(cellOrder, newCellI)
+    forAll(cellOrder, newCelli)
     {
-        label oldCellI = cellOrder[newCellI];
+        label oldCelli = cellOrder[newCelli];
 
-        if (cellToRegion[oldCellI] != prevRegion)
+        if (cellToRegion[oldCelli] != prevRegion)
         {
-            prevRegion = cellToRegion[oldCellI];
+            prevRegion = cellToRegion[oldCelli];
             Pout<< "    region " << prevRegion << " internal faces start at "
-                << newFaceI << endl;
+                << newFacei << endl;
         }
 
-        const cell& cFaces = mesh.cells()[oldCellI];
+        const cell& cFaces = mesh.cells()[oldCelli];
 
         SortableList<label> nbr(cFaces.size());
 
@@ -142,21 +142,21 @@ labelList regionFaceOrder
             if (mesh.isInternalFace(facei))
             {
                 // Internal face. Get cell on other side.
-                label nbrCellI = reverseCellOrder[mesh.faceNeighbour()[facei]];
-                if (nbrCellI == newCellI)
+                label nbrCelli = reverseCellOrder[mesh.faceNeighbour()[facei]];
+                if (nbrCelli == newCelli)
                 {
-                    nbrCellI = reverseCellOrder[mesh.faceOwner()[facei]];
+                    nbrCelli = reverseCellOrder[mesh.faceOwner()[facei]];
                 }
 
-                if (cellToRegion[oldCellI] != cellToRegion[cellOrder[nbrCellI]])
+                if (cellToRegion[oldCelli] != cellToRegion[cellOrder[nbrCelli]])
                 {
                     // Treat like external face. Do later.
                     nbr[i] = -1;
                 }
-                else if (newCellI < nbrCellI)
+                else if (newCelli < nbrCelli)
                 {
                     // CellI is master
-                    nbr[i] = nbrCellI;
+                    nbr[i] = nbrCelli;
                 }
                 else
                 {
@@ -177,7 +177,7 @@ labelList regionFaceOrder
         {
             if (nbr[i] != -1)
             {
-                oldToNewFace[cFaces[nbr.indices()[i]]] = newFaceI++;
+                oldToNewFace[cFaces[nbr.indices()[i]]] = newFacei++;
             }
         }
     }
@@ -217,16 +217,16 @@ labelList regionFaceOrder
             {
                 Pout<< "    faces inbetween region " << key/nRegions
                     << " and " << key%nRegions
-                    << " start at " << newFaceI << endl;
+                    << " start at " << newFacei << endl;
                 prevKey = key;
             }
 
-            oldToNewFace[sortKey.indices()[i]] = newFaceI++;
+            oldToNewFace[sortKey.indices()[i]] = newFacei++;
         }
     }
 
     // Leave patch faces intact.
-    for (label facei = newFaceI; facei < mesh.nFaces(); facei++)
+    for (label facei = newFacei; facei < mesh.nFaces(); facei++)
     {
         oldToNewFace[facei] = facei;
     }

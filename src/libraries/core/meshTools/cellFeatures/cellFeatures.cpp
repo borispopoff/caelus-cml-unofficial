@@ -225,9 +225,9 @@ void CML::cellFeatures::calcSuperFaces() const
 
     label superFaceI = 0;
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         if (!toSuperFace.found(facei))
         {
@@ -245,9 +245,9 @@ void CML::cellFeatures::calcSuperFaces() const
 
     faceMap_.setSize(superFaceI);
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         faceMap_[toSuperFace[facei]].append(facei);
     }
@@ -264,9 +264,9 @@ void CML::cellFeatures::calcSuperFaces() const
 
     faceList& faces = *facesPtr_;
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         label superFaceI = toSuperFace[facei];
 

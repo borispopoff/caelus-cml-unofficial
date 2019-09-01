@@ -93,9 +93,9 @@ void CML::singleCellFvMesh::agglomerateMesh
 
                 forAll(pp, i)
                 {
-                    label bFaceI = offset+i;
+                    label bFacei = offset+i;
                     label myZone = agglom[patchi][i];
-                    label nbrZone = nbrAgglom[bFaceI];
+                    label nbrZone = nbrAgglom[bFacei];
 
                     Map<label>::const_iterator iter = localToNbr.find(myZone);
 
@@ -324,11 +324,11 @@ void CML::singleCellFvMesh::agglomerateMesh
 
             forAll(oldFz, i)
             {
-                label newFaceI = reverseFaceMap_[oldFz[i]];
+                label newFacei = reverseFaceMap_[oldFz[i]];
 
-                if (newFaceI != -1)
+                if (newFacei != -1)
                 {
-                    newAddressing.append(newFaceI);
+                    newAddressing.append(newFacei);
                     newFlipMap.append(oldFz.flipMap()[i]);
                 }
             }

@@ -182,7 +182,7 @@ class FaceCellWave
             label getChangedPatchFaces
             (
                 const polyPatch& patch,
-                const label startFaceI,
+                const label startFacei,
                 const label nFaces,
                 labelList& changedPatchFaces,
                 List<Type>& changedPatchFacesInfo
@@ -435,19 +435,19 @@ namespace CML
             {
                 if (y.valid(solver_.data()))
                 {
-                    label meshFaceI = -1;
+                    label meshFacei = -1;
                     if (patch_.owner())
                     {
-                        meshFaceI = patch_.start() + facei;
+                        meshFacei = patch_.start() + facei;
                     }
                     else
                     {
-                        meshFaceI = patch_.neighbPatch().start() + facei;
+                        meshFacei = patch_.neighbPatch().start() + facei;
                     }
                     x.updateFace
                     (
                         solver_.mesh(),
-                        meshFaceI,
+                        meshFacei,
                         y,
                         solver_.propagationTol(),
                         solver_.data()
@@ -613,10 +613,10 @@ void CML::FaceCellWave<Type, TrackingData>::checkCyclic
     const cyclicPolyPatch& nbrPatch =
         refCast<const cyclicPolyPatch>(patch).neighbPatch();
 
-    forAll(patch, patchFaceI)
+    forAll(patch, patchFacei)
     {
-        label i1 = patch.start() + patchFaceI;
-        label i2 = nbrPatch.start() + patchFaceI;
+        label i1 = patch.start() + patchFacei;
+        label i2 = nbrPatch.start() + patchFacei;
 
         if
         (
@@ -710,17 +710,17 @@ void CML::FaceCellWave<Type, TrackingData>::mergeFaceInfo
     for (label changedFaceI = 0; changedFaceI < nFaces; changedFaceI++)
     {
         const Type& neighbourWallInfo = changedFacesInfo[changedFaceI];
-        label patchFaceI = changedFaces[changedFaceI];
+        label patchFacei = changedFaces[changedFaceI];
 
-        label meshFaceI = patch.start() + patchFaceI;
+        label meshFacei = patch.start() + patchFacei;
 
-        Type& currentWallInfo = allFaceInfo_[meshFaceI];
+        Type& currentWallInfo = allFaceInfo_[meshFacei];
 
         if (!currentWallInfo.equal(neighbourWallInfo, td_))
         {
             updateFace
             (
-                meshFaceI,
+                meshFacei,
                 neighbourWallInfo,
                 propagationTol_,
                 currentWallInfo
@@ -737,7 +737,7 @@ template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::getChangedPatchFaces
 (
     const polyPatch& patch,
-    const label startFaceI,
+    const label startFacei,
     const label nFaces,
     labelList& changedPatchFaces,
     List<Type>& changedPatchFacesInfo
@@ -747,14 +747,14 @@ CML::label CML::FaceCellWave<Type, TrackingData>::getChangedPatchFaces
 
     for (label i = 0; i < nFaces; i++)
     {
-        label patchFaceI = i + startFaceI;
+        label patchFacei = i + startFacei;
 
-        label meshFaceI = patch.start() + patchFaceI;
+        label meshFacei = patch.start() + patchFacei;
 
-        if (changedFace_[meshFaceI])
+        if (changedFace_[meshFacei])
         {
-            changedPatchFaces[nChangedPatchFaces] = patchFaceI;
-            changedPatchFacesInfo[nChangedPatchFaces] = allFaceInfo_[meshFaceI];
+            changedPatchFaces[nChangedPatchFaces] = patchFacei;
+            changedPatchFacesInfo[nChangedPatchFaces] = allFaceInfo_[meshFacei];
             nChangedPatchFaces++;
         }
     }
@@ -776,10 +776,10 @@ void CML::FaceCellWave<Type, TrackingData>::leaveDomain
 
     for (label i = 0; i < nFaces; i++)
     {
-        label patchFaceI = faceLabels[i];
+        label patchFacei = faceLabels[i];
 
-        label meshFaceI = patch.start() + patchFaceI;
-        faceInfo[i].leaveDomain(mesh_, patch, patchFaceI, fc[meshFaceI], td_);
+        label meshFacei = patch.start() + patchFacei;
+        faceInfo[i].leaveDomain(mesh_, patch, patchFacei, fc[meshFacei], td_);
     }
 }
 
@@ -798,10 +798,10 @@ void CML::FaceCellWave<Type, TrackingData>::enterDomain
 
     for (label i = 0; i < nFaces; i++)
     {
-        label patchFaceI = faceLabels[i];
+        label patchFacei = faceLabels[i];
 
-        label meshFaceI = patch.start() + patchFaceI;
-        faceInfo[i].enterDomain(mesh_, patch, patchFaceI, fc[meshFaceI], td_);
+        label meshFacei = patch.start() + patchFacei;
+        faceInfo[i].enterDomain(mesh_, patch, patchFacei, fc[meshFacei], td_);
     }
 }
 
@@ -1135,9 +1135,9 @@ void CML::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
             // Merge into global storage
             forAll(receiveInfo, i)
             {
-                label meshFaceI = cycPatch.start()+i;
+                label meshFacei = cycPatch.start()+i;
 
-                Type& currentWallInfo = allFaceInfo_[meshFaceI];
+                Type& currentWallInfo = allFaceInfo_[meshFacei];
 
                 if
                 (
@@ -1147,7 +1147,7 @@ void CML::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
                 {
                     updateFace
                     (
-                        meshFaceI,
+                        meshFacei,
                         receiveInfo[i],
                         propagationTol_,
                         currentWallInfo

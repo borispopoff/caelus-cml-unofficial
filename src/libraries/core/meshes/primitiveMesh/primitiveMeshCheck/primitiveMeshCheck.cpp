@@ -1066,17 +1066,17 @@ bool CML::primitiveMesh::checkUpperTriangular
             }
             else
             {
-                label nbrCellI = nei[facei];
+                label nbrCelli = nei[facei];
 
-                if (nbrCellI == celli)
+                if (nbrCelli == celli)
                 {
-                    nbrCellI = own[facei];
+                    nbrCelli = own[facei];
                 }
 
-                if (celli < nbrCellI)
+                if (celli < nbrCelli)
                 {
                     // celli is master
-                    nbr[i] = nbrCellI;
+                    nbr[i] = nbrCelli;
                 }
                 else
                 {

@@ -85,20 +85,20 @@ CML::labelList CML::refinementParameters::findCells(const polyMesh& mesh)
     {
         const point& keepPoint = keepPoints_[i];
 
-        label localCellI = mesh.findCell(keepPoint);
+        label localCelli = mesh.findCell(keepPoint);
 
-        label globalCellI = -1;
+        label globalCelli = -1;
 
-        if (localCellI != -1)
+        if (localCelli != -1)
         {
-            Pout<< "Found point " << keepPoint << " in cell " << localCellI
+            Pout<< "Found point " << keepPoint << " in cell " << localCelli
                 << " on processor " << Pstream::myProcNo() << endl;
-            globalCellI = globalCells.toGlobal(localCellI);
+            globalCelli = globalCells.toGlobal(localCelli);
         }
 
-        reduce(globalCellI, maxOp<label>());
+        reduce(globalCelli, maxOp<label>());
 
-        if (globalCellI == -1)
+        if (globalCelli == -1)
         {
             FatalErrorInFunction
                 << "Point " << keepPoint
@@ -107,9 +107,9 @@ CML::labelList CML::refinementParameters::findCells(const polyMesh& mesh)
                 << exit(FatalError);
         }
 
-        if (globalCells.isLocal(globalCellI))
+        if (globalCells.isLocal(globalCelli))
         {
-            cellLabels[i] = localCellI;
+            cellLabels[i] = localCelli;
         }
         else
         {

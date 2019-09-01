@@ -122,11 +122,11 @@ public:
                 // patches.
                 label deletedI = 0;
 
-                forAll(oldToNew, oldPatchI)
+                forAll(oldToNew, oldPatchi)
                 {
-                    if (oldToNew[oldPatchI] == -1)
+                    if (oldToNew[oldPatchi] == -1)
                     {
-                        oldToNew[deletedI++] = oldPatchI;
+                        oldToNew[deletedI++] = oldPatchi;
                     }
                 }
 

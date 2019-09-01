@@ -155,41 +155,41 @@ void CML::regionSide::visitConnectedFaces
                 // we hit face on faceSet.
 
                 // Find face reachable from edge
-                label otherFaceI = otherFace(mesh, celli, facei, edgeI);
+                label otherFacei = otherFace(mesh, celli, facei, edgeI);
 
-                if (mesh.isInternalFace(otherFaceI))
+                if (mesh.isInternalFace(otherFacei))
                 {
                     label otherCellI = celli;
 
                     // Keep on crossing faces/cells until back on face on
                     // surface
-                    while (!region.found(otherFaceI))
+                    while (!region.found(otherFacei))
                     {
-                        visitedFace.insert(otherFaceI);
+                        visitedFace.insert(otherFacei);
 
                         if (debug)
                         {
                             Info<< "visitConnectedFaces : celli:" << celli
-                                << " found insideEdgeFace:" << otherFaceI
+                                << " found insideEdgeFace:" << otherFacei
                                 << endl;
                         }
 
 
-                        // Cross otherFaceI into neighbouring cell
+                        // Cross otherFacei into neighbouring cell
                         otherCellI =
                             meshTools::otherCell
                             (
                                 mesh,
                                 otherCellI,
-                                otherFaceI
+                                otherFacei
                             );
 
-                        otherFaceI =
+                        otherFacei =
                                 otherFace
                                 (
                                     mesh,
                                     otherCellI,
-                                    otherFaceI,
+                                    otherFacei,
                                     edgeI
                                 );
                     }
@@ -200,7 +200,7 @@ void CML::regionSide::visitConnectedFaces
                         region,
                         fenceEdges,
                         otherCellI,
-                        otherFaceI,
+                        otherFacei,
                         visitedFace
                     );
                 }
@@ -219,25 +219,25 @@ void CML::regionSide::walkPointConnectedFaces
     const primitiveMesh& mesh,
     const labelHashSet& regionEdges,
     const label regionPointi,
-    const label startFaceI,
+    const label startFacei,
     const label startEdgeI,
     labelHashSet& visitedEdges
 )
 {
     // Mark as visited
-    insidePointFaces_.insert(startFaceI);
+    insidePointFaces_.insert(startFacei);
 
     if (debug)
     {
         Info<< "walkPointConnectedFaces : regionPointi:" << regionPointi
-            << " facei:" << startFaceI
+            << " facei:" << startFacei
             << " edgeI:" << startEdgeI << " verts:"
             << mesh.edges()[startEdgeI]
             << endl;
     }
 
     // Cross facei i.e. get edge not startEdgeI which uses regionPointi
-    label edgeI = otherEdge(mesh, startFaceI, startEdgeI, regionPointi);
+    label edgeI = otherEdge(mesh, startFacei, startEdgeI, regionPointi);
 
     if (!regionEdges.found(edgeI))
     {
@@ -349,7 +349,7 @@ void CML::regionSide::walkAllPointConnectedFaces
             label edgeI = fEdges[fEdgeI];
 
             // Get the face 'perpendicular' to facei on region.
-            label otherFaceI = otherFace(mesh, celli, facei, edgeI);
+            label otherFacei = otherFace(mesh, celli, facei, edgeI);
 
             // Edge
             const edge& e = mesh.edges()[edgeI];
@@ -361,14 +361,14 @@ void CML::regionSide::walkAllPointConnectedFaces
 
                 visitedPoint.insert(e.start());
 
-                //edgeI = otherEdge(mesh, otherFaceI, edgeI, e.start());
+                //edgeI = otherEdge(mesh, otherFacei, edgeI, e.start());
 
                 walkPointConnectedFaces
                 (
                     mesh,
                     regionEdges,
                     e.start(),
-                    otherFaceI,
+                    otherFacei,
                     edgeI,
                     visitedEdges
                 );
@@ -380,14 +380,14 @@ void CML::regionSide::walkAllPointConnectedFaces
 
                 visitedPoint.insert(e.end());
 
-                //edgeI = otherEdge(mesh, otherFaceI, edgeI, e.end());
+                //edgeI = otherEdge(mesh, otherFacei, edgeI, e.end());
 
                 walkPointConnectedFaces
                 (
                     mesh,
                     regionEdges,
                     e.end(),
-                    otherFaceI,
+                    otherFacei,
                     edgeI,
                     visitedEdges
                 );
@@ -406,7 +406,7 @@ CML::regionSide::regionSide
     const labelHashSet& region,         // faces of region
     const labelHashSet& fenceEdges,     // outside edges
     const label startCellI,
-    const label startFaceI
+    const label startFacei
 )
 :
     sideOwner_(region.size()),
@@ -424,7 +424,7 @@ CML::regionSide::regionSide
         region,
         fenceEdges,
         startCellI,
-        startFaceI,
+        startFacei,
         visitedFace
     );
 

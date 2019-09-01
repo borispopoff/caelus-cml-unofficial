@@ -159,17 +159,17 @@ CML::label CML::meshRefinement::getBafflePatch
 
     forAll(ownFaces, i)
     {
-        label cFaceI = ownFaces[i];
+        label cFacei = ownFaces[i];
 
-        label patchi = patches.whichPatch(cFaceI);
+        label patchi = patches.whichPatch(cFacei);
 
         if (patchi != -1 && !patches[patchi].coupled())
         {
             return patchi;
         }
-        else if (facePatch[cFaceI] != -1)
+        else if (facePatch[cFacei] != -1)
         {
-            return facePatch[cFaceI];
+            return facePatch[cFacei];
         }
     }
 
@@ -179,17 +179,17 @@ CML::label CML::meshRefinement::getBafflePatch
 
         forAll(neiFaces, i)
         {
-            label cFaceI = neiFaces[i];
+            label cFacei = neiFaces[i];
 
-            label patchi = patches.whichPatch(cFaceI);
+            label patchi = patches.whichPatch(cFacei);
 
             if (patchi != -1 && !patches[patchi].coupled())
             {
                 return patchi;
             }
-            else if (facePatch[cFaceI] != -1)
+            else if (facePatch[cFacei] != -1)
             {
-                return facePatch[cFaceI];
+                return facePatch[cFacei];
             }
         }
     }
@@ -393,16 +393,16 @@ CML::Map<CML::label> CML::meshRefinement::getZoneBafflePatches
                 {
                     if (!bafflePatch.insert(facei, patchi))
                     {
-                        label oldPatchI = bafflePatch[facei];
+                        label oldPatchi = bafflePatch[facei];
 
-                        if (oldPatchI != patchi)
+                        if (oldPatchi != patchi)
                         {
                             FatalErrorInFunction
                                 << "Face " << facei
                                 << " fc:" << mesh_.faceCentres()[facei]
                                 << " in zone " << fZone.name()
                                 << " is in patch "
-                                << mesh_.boundaryMesh()[oldPatchI].name()
+                                << mesh_.boundaryMesh()[oldPatchi].name()
                                 << " and in patch "
                                 << mesh_.boundaryMesh()[patchi].name()
                                 << abort(FatalError);
@@ -578,13 +578,13 @@ CML::List<CML::labelPair> CML::meshRefinement::getDuplicateFaces
 
     forAll(duplicateFace, i)
     {
-        label otherFaceI = duplicateFace[i];
+        label otherFacei = duplicateFace[i];
 
-        if (otherFaceI != -1 && i < otherFaceI)
+        if (otherFacei != -1 && i < otherFacei)
         {
             label meshFace0 = testFaces[i];
             label patch0 = patches.whichPatch(meshFace0);
-            label meshFace1 = testFaces[otherFaceI];
+            label meshFace1 = testFaces[otherFacei];
             label patch1 = patches.whichPatch(meshFace1);
 
             if
@@ -2297,15 +2297,15 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
         Pstream::gatherList(allFaceZones);
         Pstream::scatterList(allFaceZones);
 
-        for (label procI = 1; procI < allFaceZones.size(); procI++)
+        for (label proci = 1; proci < allFaceZones.size(); proci++)
         {
-            if (allFaceZones[procI] != allFaceZones[0])
+            if (allFaceZones[proci] != allFaceZones[0])
             {
                 FatalErrorInFunction
                     << "Zones not synchronised among processors." << nl
                     << " Processor0 has faceZones:" << allFaceZones[0]
-                    << " , processor" << procI
-                    << " has faceZones:" << allFaceZones[procI]
+                    << " , processor" << proci
+                    << " has faceZones:" << allFaceZones[proci]
                     << exit(FatalError);
             }
         }
@@ -2355,15 +2355,15 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::zonify
         Pstream::gatherList(allCellZones);
         Pstream::scatterList(allCellZones);
 
-        for (label procI = 1; procI < allCellZones.size(); procI++)
+        for (label proci = 1; proci < allCellZones.size(); proci++)
         {
-            if (allCellZones[procI] != allCellZones[0])
+            if (allCellZones[proci] != allCellZones[0])
             {
                 FatalErrorInFunction
                     << "Zones not synchronised among processors." << nl
                     << " Processor0 has cellZones:" << allCellZones[0]
-                    << " , processor" << procI
-                    << " has cellZones:" << allCellZones[procI]
+                    << " , processor" << proci
+                    << " has cellZones:" << allCellZones[proci]
                     << exit(FatalError);
             }
         }

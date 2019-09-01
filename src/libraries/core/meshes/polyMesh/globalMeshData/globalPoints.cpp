@@ -63,14 +63,14 @@ CML::label CML::globalPoints::findSamePoint
     const labelPair& info
 ) const
 {
-    const label procI = globalIndexAndTransform::processor(info);
+    const label proci = globalIndexAndTransform::processor(info);
     const label index = globalIndexAndTransform::index(info);
 
     forAll(allInfo, i)
     {
         if
         (
-            globalIndexAndTransform::processor(allInfo[i]) == procI
+            globalIndexAndTransform::processor(allInfo[i]) == proci
          && globalIndexAndTransform::index(allInfo[i]) == index
         )
         {
@@ -138,11 +138,11 @@ void CML::globalPoints::addToSend
 
     forAll(pFaces, i)
     {
-        label patchFaceI = pFaces[i];
+        label patchFacei = pFaces[i];
 
-        const face& f = pp[patchFaceI];
+        const face& f = pp[patchFacei];
 
-        patchFaces.append(patchFaceI);
+        patchFaces.append(patchFacei);
         indexInFace.append(findIndex(f, meshPointi));
 
         // Add patch transformation
@@ -345,18 +345,18 @@ void CML::globalPoints::printProcPoint
     const labelPair& pointInfo
 ) const
 {
-    label procI = globalIndexAndTransform::processor(pointInfo);
+    label proci = globalIndexAndTransform::processor(pointInfo);
     label index = globalIndexAndTransform::index(pointInfo);
     label trafoI = globalIndexAndTransform::transformIndex(pointInfo);
 
-    Pout<< "    proc:" << procI;
+    Pout<< "    proc:" << proci;
     Pout<< " localpoint:";
     Pout<< index;
     Pout<< " through transform:"
         << trafoI << " bits:"
         << globalTransforms_.decodeTransformIndex(trafoI);
 
-    if (procI == Pstream::myProcNo())
+    if (proci == Pstream::myProcNo())
     {
         label meshPointi = localToMeshPoint(patchToMeshPoint, index);
         Pout<< " at:" <<  mesh_.points()[meshPointi];
@@ -1024,7 +1024,7 @@ void CML::globalPoints::calculateSharedPoints
                 for (label i = 1; i < pointInfo.size(); i++)
                 {
                     const labelPair& info = pointInfo[i];
-                    label procI = globalIndexAndTransform::processor(info);
+                    label proci = globalIndexAndTransform::processor(info);
                     label index = globalIndexAndTransform::index(info);
                     label transform = globalIndexAndTransform::transformIndex
                     (
@@ -1035,7 +1035,7 @@ void CML::globalPoints::calculateSharedPoints
                     {
                         pPoints[nonTransformI++] = globalIndices_.toGlobal
                         (
-                            procI,
+                            proci,
                             index
                         );
                     }

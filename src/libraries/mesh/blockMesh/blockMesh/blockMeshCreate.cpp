@@ -114,16 +114,16 @@ void CML::blockMesh::createCells() const
     {
         const labelListList& blockCells = blocks[blockI].cells();
 
-        forAll(blockCells, blockCellI)
+        forAll(blockCells, blockCelli)
         {
-            labelList cellPoints(blockCells[blockCellI].size());
+            labelList cellPoints(blockCells[blockCelli].size());
 
             forAll(cellPoints, cellPointI)
             {
                 cellPoints[cellPointI] =
                     mergeList_
                     [
-                        blockCells[blockCellI][cellPointI]
+                        blockCells[blockCelli][cellPointI]
                       + blockOffsets_[blockI]
                     ];
             }

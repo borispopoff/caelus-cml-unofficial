@@ -271,16 +271,16 @@ void CML::meshReader::createPolyBoundary()
     {
         const labelList& curFaces = cellPolys_[celli];
 
-        forAll(curFaces, cellFaceI)
+        forAll(curFaces, cellFacei)
         {
-            if (curFaces[cellFaceI] < 0)
+            if (curFaces[cellFacei] < 0)
             {
                 // just report the first few
                 if (nMissingFaces < 4)
                 {
-                    const face& thisFace = cFaces[celli][cellFaceI];
+                    const face& thisFace = cFaces[celli][cellFacei];
 
-                    Info<< "  cell " << celli << " face " << cellFaceI
+                    Info<< "  cell " << celli << " face " << cellFacei
                         << " (original cell " << origCellId_[celli] << ")"
                         << " face: " << thisFace
                         << endl;
@@ -290,7 +290,7 @@ void CML::meshReader::createPolyBoundary()
                     Info<< "  ..." << nl << endl;
                 }
 
-                addPolyBoundaryFace(celli, cellFaceI, nCreatedFaces);
+                addPolyBoundaryFace(celli, cellFacei, nCreatedFaces);
                 nMissingFaces++;
                 nCreatedFaces++;
             }

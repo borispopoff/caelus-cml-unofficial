@@ -799,7 +799,7 @@ void CML::argList::parse
             string  slaveMachine;
             label slavePid;
 
-            label procI = 0;
+            label proci = 0;
             for
             (
                 int slave = Pstream::firstSlave();
@@ -810,7 +810,7 @@ void CML::argList::parse
                 IPstream fromSlave(Pstream::scheduled, slave);
                 fromSlave >> slaveMachine >> slavePid;
 
-                slaveProcs[procI++] = slaveMachine + "." + name(slavePid);
+                slaveProcs[proci++] = slaveMachine + "." + name(slavePid);
             }
         }
         else

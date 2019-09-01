@@ -82,13 +82,13 @@ void smoothDelta::setChangedFaces
 
         if (patch.coupled())
         {
-            forAll(patch, patchFaceI)
+            forAll(patch, patchFacei)
             {
-                label meshFaceI = patch.start() + patchFaceI;
+                label meshFacei = patch.start() + patchFacei;
 
-                scalar ownDelta = delta[mesh.faceOwner()[meshFaceI]];
+                scalar ownDelta = delta[mesh.faceOwner()[meshFacei]];
 
-                changedFaces.append(meshFaceI);
+                changedFaces.append(meshFacei);
                 changedFacesInfo.append(deltaData(ownDelta));
             }
         }

@@ -112,9 +112,9 @@ bool CML::surfaceToCell::differingPointNormals
 
     const labelList& cFaces = mesh().cells()[celli];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        const face& f = faces[cFaces[cFaceI]];
+        const face& f = faces[cFaces[cFacei]];
 
         forAll(f, fp)
         {

@@ -150,8 +150,8 @@ void CML::decompositionConstraints::preservePatchesConstraint::apply
 
         forAll(faceCells, i)
         {
-            label bFaceI = pp.start()+i-mesh.nInternalFaces();
-            destProc[bFaceI] = decomposition[faceCells[i]];
+            label bFacei = pp.start()+i-mesh.nInternalFaces();
+            destProc[bFacei] = decomposition[faceCells[i]];
         }
     }
 
@@ -173,11 +173,11 @@ void CML::decompositionConstraints::preservePatchesConstraint::apply
 
         forAll(faceCells, i)
         {
-            label bFaceI = pp.start()+i-mesh.nInternalFaces();
+            label bFacei = pp.start()+i-mesh.nInternalFaces();
 
-            if (decomposition[faceCells[i]] != destProc[bFaceI])
+            if (decomposition[faceCells[i]] != destProc[bFacei])
             {
-                decomposition[faceCells[i]] = destProc[bFaceI];
+                decomposition[faceCells[i]] = destProc[bFacei];
                 nChanged++;
             }
         }

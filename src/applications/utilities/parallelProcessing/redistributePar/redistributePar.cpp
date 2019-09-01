@@ -157,16 +157,16 @@ void printMeshData(const polyMesh& mesh)
     label totProcPatches = 0;
     label maxProcFaces = 0;
 
-    for (label procI = 0; procI < Pstream::nProcs(); ++procI)
+    for (label proci = 0; proci < Pstream::nProcs(); ++proci)
     {
         Info<< nl
-            << "Processor " << procI << nl
-            << "    Number of cells = " << globalCells.localSize(procI)
+            << "Processor " << proci << nl
+            << "    Number of cells = " << globalCells.localSize(proci)
             << endl;
 
         label nProcFaces = 0;
 
-        const labelList& nei = patchNeiProcNo[procI];
+        const labelList& nei = patchNeiProcNo[proci];
         labelList neiSort(nei);
         labelList order;
         sortedOrder(neiSort, order);
@@ -175,18 +175,18 @@ void printMeshData(const polyMesh& mesh)
         forAll(neiSort, i)
         {
             Info<< "    Number of faces shared with processor "
-                << neiSort[i] << " = " << patchSize[procI][order[i]]
+                << neiSort[i] << " = " << patchSize[proci][order[i]]
                 << endl;
 
-            nProcFaces += patchSize[procI][i];
+            nProcFaces += patchSize[proci][i];
         }
 
         Info<< "    Number of processor patches = " << nei.size() << nl
             << "    Number of processor faces = " << nProcFaces << nl
             << "    Number of boundary faces = "
-            << globalBoundaryFaces.localSize(procI)-nProcFaces << endl;
+            << globalBoundaryFaces.localSize(proci)-nProcFaces << endl;
 
-        maxProcCells = max(maxProcCells, globalCells.localSize(procI));
+        maxProcCells = max(maxProcCells, globalCells.localSize(proci));
         totProcFaces += nProcFaces;
         totProcPatches += nei.size();
         maxProcPatches = max(maxProcPatches, nei.size());
@@ -661,11 +661,11 @@ void readFields
                 tmp<GeoField> tsubfld = subsetterPtr().interpolate(fields[i]);
 
                 // Send to all processors that don't have a mesh
-                for (label procI = 1; procI < Pstream::nProcs(); ++procI)
+                for (label proci = 1; proci < Pstream::nProcs(); ++proci)
                 {
-                    if (!haveMesh[procI])
+                    if (!haveMesh[proci])
                     {
-                        OPstream toProc(Pstream::blocking, procI);
+                        OPstream toProc(Pstream::blocking, proci);
                         toProc<< tsubfld();
                     }
                 }

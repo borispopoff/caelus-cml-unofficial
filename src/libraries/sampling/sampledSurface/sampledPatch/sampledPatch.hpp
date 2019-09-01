@@ -346,7 +346,7 @@ CML::sampledPatch::interpolateField
     {
         label patchi = patchIDs_[patchIndex_[cutFaceI]];
         const polyPatch& pp = mesh().boundaryMesh()[patchi];
-        label patchFaceI = patchFaceLabels()[cutFaceI];
+        label patchFacei = patchFaceLabels()[cutFaceI];
         const face& f = faces()[cutFaceI];
 
         forAll(f, faceVertI)
@@ -355,7 +355,7 @@ CML::sampledPatch::interpolateField
 
             if (!pointDone[pointi])
             {
-                label facei = patchFaceI + pp.start();
+                label facei = patchFacei + pp.start();
                 label celli = own[facei];
 
                 values[pointi] = interpolator.interpolate

@@ -327,7 +327,7 @@ public:
             const labelList& decomposition,
             const labelList& splitCellProc,
             const labelList& splitCellNum,
-            const label procI,
+            const label proci,
             labelList& oldToNewSplit
         ) const;
 

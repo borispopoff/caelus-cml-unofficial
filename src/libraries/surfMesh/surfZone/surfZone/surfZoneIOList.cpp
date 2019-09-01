@@ -64,13 +64,13 @@ CML::surfZoneIOList::surfZoneIOList
             const dictionary& dict = dictEntries[zoneI].dict();
 
             label zoneSize = readLabel(dict.lookup("nFaces"));
-            label startFaceI = readLabel(dict.lookup("startFace"));
+            label startFacei = readLabel(dict.lookup("startFace"));
 
             zones[zoneI] = surfZone
             (
                 dictEntries[zoneI].keyword(),
                 zoneSize,
-                startFaceI,
+                startFacei,
                 zoneI
             );
 
@@ -80,7 +80,7 @@ CML::surfZoneIOList::surfZoneIOList
                 zones[zoneI].geometricType() = geoType;
             }
 
-            if (startFaceI != facei)
+            if (startFacei != facei)
             {
                 FatalErrorInFunction
                     << "surfZones are not ordered. Start of zone " << zoneI

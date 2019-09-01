@@ -458,9 +458,9 @@ void CML::ParSortableList<Type>::sort()
 
     label combinedI = 0;
 
-    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
-        if (procI == Pstream::myProcNo())
+        if (proci == Pstream::myProcNo())
         {
             if (debug & 2)
             {
@@ -468,7 +468,7 @@ void CML::ParSortableList<Type>::sort()
             }
 
             // Copy ownValues,ownIndices into combined buffer
-            copyInto(ownValues, ownIndices, procI, combinedI, combinedValues);
+            copyInto(ownValues, ownIndices, proci, combinedI, combinedValues);
         }
         else
         {
@@ -478,16 +478,16 @@ void CML::ParSortableList<Type>::sort()
             {
                 if (debug)
                 {
-                    Pout<< "Receiving from " << procI << endl;
+                    Pout<< "Receiving from " << proci << endl;
                 }
 
-                IPstream fromSlave(Pstream::blocking, procI);
+                IPstream fromSlave(Pstream::blocking, proci);
 
                 fromSlave >> recValues >> recIndices;
 
                 if (debug & 2)
                 {
-                    Pout<< "Received from " << procI
+                    Pout<< "Received from " << proci
                         << " elements:" << recValues << endl;
                 }
             }
@@ -496,7 +496,7 @@ void CML::ParSortableList<Type>::sort()
             {
                 Pout<< "Copying starting at:" << combinedI << endl;
             }
-            copyInto(recValues, recIndices, procI, combinedI, combinedValues);
+            copyInto(recValues, recIndices, proci, combinedI, combinedValues);
         }
     }
     combinedValues.setSize(combinedI);

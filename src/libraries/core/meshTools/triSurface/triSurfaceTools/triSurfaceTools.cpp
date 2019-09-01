@@ -258,14 +258,14 @@ CML::triSurface CML::triSurfaceTools::doRefine
             {
                 const label edgeI = fEdges[i];
 
-                label otherFaceI = otherFace(surf, facei, edgeI);
+                label otherFacei = otherFace(surf, facei, edgeI);
 
-                if ((otherFaceI != -1) && (refineStatus[otherFaceI] == GREEN))
+                if ((otherFacei != -1) && (refineStatus[otherFacei] == GREEN))
                 {
                     greenRefine
                     (
                         surf,
-                        otherFaceI,
+                        otherFacei,
                         edgeI,
                         edgeMid[edgeI],
                         newFaces
@@ -1319,14 +1319,14 @@ void CML::triSurfaceTools::getVertexTriangles
     edgeTris.setSize(startFaces.size() + endFaces.size() - myFaces.size());
 
     label nTris = 0;
-    forAll(startFaces, startFaceI)
+    forAll(startFaces, startFacei)
     {
-        edgeTris[nTris++] = startFaces[startFaceI];
+        edgeTris[nTris++] = startFaces[startFacei];
     }
 
-    forAll(endFaces, endFaceI)
+    forAll(endFaces, endFacei)
     {
-        label facei = endFaces[endFaceI];
+        label facei = endFaces[endFacei];
 
         if ((facei != face1I) && (facei != face2I))
         {
@@ -2341,7 +2341,7 @@ CML::triSurface CML::triSurfaceTools::triangulate
         mesh.nFaces() - mesh.nInternalFaces()
     );
 
-    label newPatchI = 0;
+    label newPatchi = 0;
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
@@ -2351,9 +2351,9 @@ CML::triSurface CML::triSurfaceTools::triangulate
 
         label nTriTotal = 0;
 
-        forAll(patch, patchFaceI)
+        forAll(patch, patchFacei)
         {
-            const face& f = patch[patchFaceI];
+            const face& f = patch[patchFacei];
 
             faceList triFaces(f.nTriangles(points));
 
@@ -2365,7 +2365,7 @@ CML::triSurface CML::triSurfaceTools::triangulate
             {
                 const face& f = triFaces[triFaceI];
 
-                triangles.append(labelledTri(f[0], f[1], f[2], newPatchI));
+                triangles.append(labelledTri(f[0], f[1], f[2], newPatchi));
 
                 nTriTotal++;
             }
@@ -2375,10 +2375,10 @@ CML::triSurface CML::triSurfaceTools::triangulate
         {
             Pout<< patch.name() << " : generated " << nTriTotal
                 << " triangles from " << patch.size() << " faces with"
-                << " new patchid " << newPatchI << endl;
+                << " new patchid " << newPatchi << endl;
         }
 
-        newPatchI++;
+        newPatchi++;
     }
     triangles.shrink();
 
@@ -2393,19 +2393,19 @@ CML::triSurface CML::triSurfaceTools::triangulate
     );
 
     // Add patch names to surface
-    surface.patches().setSize(newPatchI);
+    surface.patches().setSize(newPatchi);
 
-    newPatchI = 0;
+    newPatchi = 0;
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
         const label patchi = iter.key();
         const polyPatch& patch = bMesh[patchi];
 
-        surface.patches()[newPatchI].name() = patch.name();
-        surface.patches()[newPatchI].geometricType() = patch.type();
+        surface.patches()[newPatchi].name() = patch.name();
+        surface.patches()[newPatchi].geometricType() = patch.type();
 
-        newPatchI++;
+        newPatchi++;
     }
 
     return surface;
@@ -2446,7 +2446,7 @@ CML::triSurface CML::triSurfaceTools::triangulateFaceCentre
         mesh.nFaces() - mesh.nInternalFaces()
     );
 
-    label newPatchI = 0;
+    label newPatchi = 0;
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
@@ -2455,19 +2455,19 @@ CML::triSurface CML::triSurfaceTools::triangulateFaceCentre
 
         label nTriTotal = 0;
 
-        forAll(patch, patchFaceI)
+        forAll(patch, patchFacei)
         {
             // Face in global coords.
-            const face& f = patch[patchFaceI];
+            const face& f = patch[patchFacei];
 
             // Index in newPointi of face centre.
-            label fc = points.size() + patchFaceI + patch.start();
+            label fc = points.size() + patchFacei + patch.start();
 
             forAll(f, fp)
             {
                 label fp1 = f.fcIndex(fp);
 
-                triangles.append(labelledTri(f[fp], f[fp1], fc, newPatchI));
+                triangles.append(labelledTri(f[fp], f[fp1], fc, newPatchi));
 
                 nTriTotal++;
             }
@@ -2477,10 +2477,10 @@ CML::triSurface CML::triSurfaceTools::triangulateFaceCentre
         {
             Pout<< patch.name() << " : generated " << nTriTotal
                 << " triangles from " << patch.size() << " faces with"
-                << " new patchid " << newPatchI << endl;
+                << " new patchid " << newPatchi << endl;
         }
 
-        newPatchI++;
+        newPatchi++;
     }
     triangles.shrink();
 
@@ -2496,19 +2496,19 @@ CML::triSurface CML::triSurfaceTools::triangulateFaceCentre
     );
 
     // Add patch names to surface
-    surface.patches().setSize(newPatchI);
+    surface.patches().setSize(newPatchi);
 
-    newPatchI = 0;
+    newPatchi = 0;
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
         const label patchi = iter.key();
         const polyPatch& patch = bMesh[patchi];
 
-        surface.patches()[newPatchI].name() = patch.name();
-        surface.patches()[newPatchI].geometricType() = patch.type();
+        surface.patches()[newPatchi].name() = patch.name();
+        surface.patches()[newPatchi].geometricType() = patch.type();
 
-        newPatchI++;
+        newPatchi++;
     }
 
     return surface;

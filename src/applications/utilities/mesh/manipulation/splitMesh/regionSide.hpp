@@ -98,7 +98,7 @@ class regionSide
             const primitiveMesh& mesh,
             const labelHashSet& regionEdges,
             const label regionPointi,
-            const label startFaceI,
+            const label startFacei,
             const label startEdgeI,
             labelHashSet& visitedEdges
         );

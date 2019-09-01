@@ -151,8 +151,8 @@ void CML::decompositionConstraints::preserveFaceZonesConstraint::apply
 
         forAll(faceCells, i)
         {
-            label bFaceI = pp.start()+i-mesh.nInternalFaces();
-            destProc[bFaceI] = decomposition[faceCells[i]];
+            label bFacei = pp.start()+i-mesh.nInternalFaces();
+            destProc[bFacei] = decomposition[faceCells[i]];
         }
     }
 
@@ -189,10 +189,10 @@ void CML::decompositionConstraints::preserveFaceZonesConstraint::apply
             }
             else
             {
-                label bFaceI = facei-mesh.nInternalFaces();
-                if (decomposition[own] != destProc[bFaceI])
+                label bFacei = facei-mesh.nInternalFaces();
+                if (decomposition[own] != destProc[bFacei])
                 {
-                    decomposition[own] = destProc[bFaceI];
+                    decomposition[own] = destProc[bFacei];
                     nChanged++;
                 }
             }

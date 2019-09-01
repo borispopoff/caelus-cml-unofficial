@@ -248,16 +248,16 @@ void CML::decompositionConstraints::singleProcessorFaceSetsConstraint::apply
         const labelList& set = specifiedProcessorFaces[setI];
 
         // Get the processor to use for the set
-        label procI = specifiedProcessor[setI];
-        if (procI == -1)
+        label proci = specifiedProcessor[setI];
+        if (proci == -1)
         {
             // If no processor specified use the one from the
             // 0th element
             if (set.size())
             {
-                procI = decomposition[mesh.faceOwner()[set[0]]];
+                proci = decomposition[mesh.faceOwner()[set[0]]];
             }
-            reduce(procI, maxOp<label>());
+            reduce(proci, maxOp<label>());
         }
 
         // Get all points on the sets
@@ -283,17 +283,17 @@ void CML::decompositionConstraints::singleProcessorFaceSetsConstraint::apply
                     label facei = pFaces[i];
 
                     label own = mesh.faceOwner()[facei];
-                    if (decomposition[own] != procI)
+                    if (decomposition[own] != proci)
                     {
-                        decomposition[own] = procI;
+                        decomposition[own] = proci;
                         nChanged++;
                     }
                     if (mesh.isInternalFace(facei))
                     {
                         label nei = mesh.faceNeighbour()[facei];
-                        if (decomposition[nei] != procI)
+                        if (decomposition[nei] != proci)
                         {
-                            decomposition[nei] = procI;
+                            decomposition[nei] = proci;
                             nChanged++;
                         }
                     }

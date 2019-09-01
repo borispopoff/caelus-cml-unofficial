@@ -990,24 +990,24 @@ void CML::autoLayerDriver::determineSidePatches
 
         for (label patchi = nOldPatches; patchi < nPatches; patchi++)
         {
-            label nbrProcI = patchToNbrProc[patchi];
+            label nbrProci = patchToNbrProc[patchi];
             word name =
                     "procBoundary"
                   + CML::name(Pstream::myProcNo())
                   + "to"
-                  + CML::name(nbrProcI);
+                  + CML::name(nbrProci);
 
             dictionary patchDict;
             patchDict.add("type", processorPolyPatch::typeName);
             patchDict.add("myProcNo", Pstream::myProcNo());
-            patchDict.add("neighbProcNo", nbrProcI);
+            patchDict.add("neighbProcNo", nbrProci);
             patchDict.add("nFaces", 0);
             patchDict.add("startFace", mesh.nFaces());
 
             //Pout<< "Adding patch " << patchi
             //    << " name:" << name
             //    << " between " << Pstream::myProcNo()
-            //    << " and " << nbrProcI << endl;
+            //    << " and " << nbrProci << endl;
 
             label procPatchI = meshRefiner_.appendPatch
             (
@@ -1990,15 +1990,15 @@ void CML::autoLayerDriver::setupLayerInfoTruncation
             << " nBufferCellsNoExtrude set to less than 0  ..." << endl;
 
         // Face layers if any point gets extruded
-        forAll(pp.localFaces(), patchFaceI)
+        forAll(pp.localFaces(), patchFacei)
         {
-            const face& f = pp.localFaces()[patchFaceI];
+            const face& f = pp.localFaces()[patchFacei];
 
             forAll(f, fp)
             {
                 if (patchNLayers[f[fp]] > 0)
                 {
-                    nPatchFaceLayers[patchFaceI] = patchNLayers[f[fp]];
+                    nPatchFaceLayers[patchFacei] = patchNLayers[f[fp]];
                     break;
                 }
             }
@@ -2010,9 +2010,9 @@ void CML::autoLayerDriver::setupLayerInfoTruncation
         // Determine max point layers per face.
         labelList maxLevel(pp.size(), 0);
 
-        forAll(pp.localFaces(), patchFaceI)
+        forAll(pp.localFaces(), patchFacei)
         {
-            const face& f = pp.localFaces()[patchFaceI];
+            const face& f = pp.localFaces()[patchFacei];
 
             // find patch faces where layer terminates (i.e contains extrude
             // and noextrude points).
@@ -2036,12 +2036,12 @@ void CML::autoLayerDriver::setupLayerInfoTruncation
 
                 if (noExtrude)
                 {
-                    nPatchFaceLayers[patchFaceI] = 1;
-                    maxLevel[patchFaceI] = mLevel;
+                    nPatchFaceLayers[patchFacei] = 1;
+                    maxLevel[patchFacei] = mLevel;
                 }
                 else
                 {
-                    maxLevel[patchFaceI] = mLevel;
+                    maxLevel[patchFacei] = mLevel;
                 }
             }
         }
@@ -2125,11 +2125,11 @@ void CML::autoLayerDriver::setupLayerInfoTruncation
             }
         }
 
-        forAll(pp.localFaces(), patchFaceI)
+        forAll(pp.localFaces(), patchFacei)
         {
-            if (nPatchFaceLayers[patchFaceI] == -1)
+            if (nPatchFaceLayers[patchFacei] == -1)
             {
-                nPatchFaceLayers[patchFaceI] = maxLevel[patchFaceI];
+                nPatchFaceLayers[patchFacei] = maxLevel[patchFacei];
             }
         }
 
@@ -2176,9 +2176,9 @@ bool CML::autoLayerDriver::cellsUseFace
     {
         const cell& cFaces = mesh.cells()[cellLabels[i]];
 
-        forAll(cFaces, cFaceI)
+        forAll(cFaces, cFacei)
         {
-            if (faces.found(cFaces[cFaceI]))
+            if (faces.found(cFaces[cFacei]))
             {
                 return true;
             }

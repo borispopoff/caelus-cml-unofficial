@@ -48,7 +48,7 @@ CML::label CML::fvMeshTools::addPatch
 
     // Append at end unless there are processor patches
     label insertPatchI = polyPatches.size();
-    label startFaceI = mesh.nFaces();
+    label startFacei = mesh.nFaces();
 
     if (!isA<processorPolyPatch>(patch))
     {
@@ -59,7 +59,7 @@ CML::label CML::fvMeshTools::addPatch
             if (isA<processorPolyPatch>(pp))
             {
                 insertPatchI = patchi;
-                startFaceI = pp.start();
+                startFacei = pp.start();
                 break;
             }
         }
@@ -86,7 +86,7 @@ CML::label CML::fvMeshTools::addPatch
             polyPatches,
             insertPatchI,   //index
             0,              //size
-            startFaceI      //start
+            startFacei      //start
         )
     );
     fvPatches.setSize(sz+1);

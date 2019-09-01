@@ -103,7 +103,7 @@ void CML::processorField::execute()
             obr_.lookupObject<volScalarField>("processorID");
 
         const_cast<volScalarField&>(procField) ==
-            dimensionedScalar("procI", dimless, Pstream::myProcNo());
+            dimensionedScalar("proci", dimless, Pstream::myProcNo());
     }
 }
 

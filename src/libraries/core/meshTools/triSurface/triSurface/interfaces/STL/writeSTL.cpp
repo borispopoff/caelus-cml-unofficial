@@ -43,9 +43,9 @@ void CML::triSurface::writeSTLASCII(Ostream& os) const
 
         for
         (
-            label patchFaceI = 0;
-            patchFaceI < patch.size();
-            patchFaceI++
+            label patchFacei = 0;
+            patchFacei < patch.size();
+            patchFacei++
         )
         {
             const label facei = faceMap[faceIndex++];

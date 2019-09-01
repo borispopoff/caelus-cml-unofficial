@@ -142,23 +142,23 @@ void CML::undoableMeshCutter::updateLabels
 
             label celli = splitPtr->cellLabel();
 
-            label newCellI = map[celli];
+            label newCelli = map[celli];
 
-            if (debug && (celli != newCellI))
+            if (debug && (celli != newCelli))
             {
                 Pout<< "undoableMeshCutter::updateLabels :"
                     << " Updating live (split)cell from " << celli
-                    << " to " << newCellI << endl;
+                    << " to " << newCelli << endl;
             }
 
-            if (newCellI >= 0)
+            if (newCelli >= 0)
             {
                 // Update splitCell. Can do inplace since only one celli will
                 // refer to this structure.
-                splitPtr->cellLabel() = newCellI;
+                splitPtr->cellLabel() = newCelli;
 
                 // Update liveSplitCells
-                newLiveSplitCells.insert(newCellI, splitPtr);
+                newLiveSplitCells.insert(newCelli, splitPtr);
             }
         }
         liveSplitCells = newLiveSplitCells;
@@ -238,10 +238,10 @@ void CML::undoableMeshCutter::setRefinement
         {
             label celli = iter.key();
 
-            label addedCellI = iter();
+            label addedCelli = iter();
 
 
-            // Newly created split cell. (celli ->  celli + addedCellI)
+            // Newly created split cell. (celli ->  celli + addedCelli)
 
             // Check if celli already part of split.
             Map<splitCell*>::iterator findCell =
@@ -258,7 +258,7 @@ void CML::undoableMeshCutter::setRefinement
 
                 splitCell* masterPtr = new splitCell(celli, parentPtr);
 
-                splitCell* slavePtr = new splitCell(addedCellI, parentPtr);
+                splitCell* slavePtr = new splitCell(addedCelli, parentPtr);
 
                 // Store newly created cells on parent together with face
                 // that splits them
@@ -267,15 +267,15 @@ void CML::undoableMeshCutter::setRefinement
 
                 // Insert master and slave into live splitcell list
 
-                if (liveSplitCells_.found(addedCellI))
+                if (liveSplitCells_.found(addedCelli))
                 {
                     FatalErrorInFunction
-                        << "problem addedCell:" << addedCellI
+                        << "problem addedCell:" << addedCelli
                         << abort(FatalError);
                 }
 
                 liveSplitCells_.insert(celli, masterPtr);
-                liveSplitCells_.insert(addedCellI, slavePtr);
+                liveSplitCells_.insert(addedCelli, slavePtr);
             }
             else
             {
@@ -287,7 +287,7 @@ void CML::undoableMeshCutter::setRefinement
 
                 splitCell* masterPtr = new splitCell(celli, parentPtr);
 
-                splitCell* slavePtr = new splitCell(addedCellI, parentPtr);
+                splitCell* slavePtr = new splitCell(addedCelli, parentPtr);
 
                 // Store newly created cells on parent together with face
                 // that splits them
@@ -296,15 +296,15 @@ void CML::undoableMeshCutter::setRefinement
 
                 // Insert master and slave into live splitcell list
 
-                if (liveSplitCells_.found(addedCellI))
+                if (liveSplitCells_.found(addedCelli))
                 {
                     FatalErrorInFunction
-                        << "problem addedCell:" << addedCellI
+                        << "problem addedCell:" << addedCelli
                         << abort(FatalError);
                 }
 
                 liveSplitCells_.insert(celli, masterPtr);
-                liveSplitCells_.insert(addedCellI, slavePtr);
+                liveSplitCells_.insert(addedCelli, slavePtr);
             }
         }
 

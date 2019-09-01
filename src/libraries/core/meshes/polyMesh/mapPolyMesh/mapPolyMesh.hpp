@@ -67,11 +67,11 @@ Description
 
     - unchanged:
         - faceMap[facei] contains old face label
-        - reverseFaceMap[oldFaceI] contains new face label
+        - reverseFaceMap[oldFacei] contains new face label
     - removed:
-        - reverseFaceMap[oldFaceI] contains -1
+        - reverseFaceMap[oldFacei] contains -1
     - merged into face:
-        - reverseFaceMap[oldFaceI] contains <-1 : -newFaceI-2
+        - reverseFaceMap[oldFacei] contains <-1 : -newFacei-2
         - faceMap[facei] contains the old master face label
         - facesFromFaces gives for facei all the old face labels
           (including the old master face!)
@@ -99,11 +99,11 @@ Description
 
     - unchanged:
         - cellMap[celli] contains old cell label
-        - reverseCellMap[oldCellI] contains new cell label
+        - reverseCellMap[oldCelli] contains new cell label
     - removed:
-        - reverseCellMap[oldCellI] contains -1
+        - reverseCellMap[oldCelli] contains -1
     - merged into cell:
-        - reverseCellMap[oldCellI] contains <-1 : -newCellI-2
+        - reverseCellMap[oldCelli] contains <-1 : -newCelli-2
         - cellMap[celli] contains the old master cell label
         - cellsFromCells gives for celli all the old cell labels
           (including the old master cell!)
@@ -493,9 +493,9 @@ public:
                 }
 
                 //- If face is removed return face (on new mesh) it merged into
-                label mergedFace(const label oldFaceI) const
+                label mergedFace(const label oldFacei) const
                 {
-                    label i = reverseFaceMap_[oldFaceI];
+                    label i = reverseFaceMap_[oldFacei];
 
                     if (i == -1)
                     {
@@ -508,7 +508,7 @@ public:
                     else
                     {
                         FatalErrorInFunction
-                            << "old face label " << oldFaceI
+                            << "old face label " << oldFacei
                             << " has reverseMap " << i << endl
                             << "Only call mergedFace for removed faces."
                             << abort(FatalError);
@@ -524,9 +524,9 @@ public:
                 }
 
                 //- If cell is removed return cell (on new mesh) it merged into
-                label mergedCell(const label oldCellI) const
+                label mergedCell(const label oldCelli) const
                 {
-                    label i = reverseCellMap_[oldCellI];
+                    label i = reverseCellMap_[oldCelli];
 
                     if (i == -1)
                     {
@@ -539,7 +539,7 @@ public:
                     else
                     {
                         FatalErrorInFunction
-                            << "old cell label " << oldCellI
+                            << "old cell label " << oldCelli
                             << " has reverseMap " << i << endl
                             << "Only call mergedCell for removed cells."
                             << abort(FatalError);

@@ -141,7 +141,7 @@ class meshDualiser
             const bool splitFace,
             const PackedBoolList&,
             const label edgeI,
-            const label startFaceI,
+            const label startFacei,
             polyTopoChange&,
             boolList& doneEFaces
         ) const;
@@ -159,7 +159,7 @@ class meshDualiser
         (
             const label patchi,
             const label patchPointi,
-            const label startFaceI,
+            const label startFacei,
             polyTopoChange&,
             boolList& donePFaces            // pFaces visited
         ) const;

@@ -516,7 +516,7 @@ CML::face CML::meshCutAndRemove::loopToFace
 {
     face newFace(2*loop.size());
 
-    label newFaceI = 0;
+    label newFacei = 0;
 
     forAll(loop, fp)
     {
@@ -530,14 +530,14 @@ CML::face CML::meshCutAndRemove::loopToFace
 
             label vertI = addedPoints_[e];
 
-            newFace[newFaceI++] = vertI;
+            newFace[newFacei++] = vertI;
         }
         else
         {
             // cut is vertex.
             label vertI = getVertex(cut);
 
-            newFace[newFaceI++] = vertI;
+            newFace[newFacei++] = vertI;
 
             label nextCut = loop[loop.fcIndex(fp)];
 
@@ -556,13 +556,13 @@ CML::face CML::meshCutAndRemove::loopToFace
 
                     if (fnd != addedPoints_.end())
                     {
-                        newFace[newFaceI++] = fnd();
+                        newFace[newFacei++] = fnd();
                     }
                 }
             }
         }
     }
-    newFace.setSize(newFaceI);
+    newFace.setSize(newFacei);
 
     return newFace;
 }
@@ -1283,18 +1283,18 @@ void CML::meshCutAndRemove::updateMesh(const mapPolyMesh& map)
         forAllConstIter(Map<label>, addedFaces_, iter)
         {
             label celli = iter.key();
-            label newCellI = map.reverseCellMap()[celli];
+            label newCelli = map.reverseCellMap()[celli];
 
             label addedFaceI = iter();
 
             label newAddedFaceI = map.reverseFaceMap()[addedFaceI];
 
-            if ((newCellI >= 0) && (newAddedFaceI >= 0))
+            if ((newCelli >= 0) && (newAddedFaceI >= 0))
             {
                 if
                 (
                     (debug & 2)
-                 && (newCellI != celli || newAddedFaceI != addedFaceI)
+                 && (newCelli != celli || newAddedFaceI != addedFaceI)
                 )
                 {
                     Pout<< "meshCutAndRemove::updateMesh :"
@@ -1303,7 +1303,7 @@ void CML::meshCutAndRemove::updateMesh(const mapPolyMesh& map)
                         << " to " << newAddedFaceI
                         << endl;
                 }
-                newAddedFaces.insert(newCellI, newAddedFaceI);
+                newAddedFaces.insert(newCelli, newAddedFaceI);
             }
         }
 

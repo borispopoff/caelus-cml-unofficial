@@ -840,17 +840,17 @@ void CML::boundaryCutter::updateMesh(const mapPolyMesh& morphMap)
 
         forAllConstIter(Map<label>, faceAddedPoint_, iter)
         {
-            label oldFaceI = iter.key();
+            label oldFacei = iter.key();
 
-            label newFaceI = morphMap.reverseFaceMap()[oldFaceI];
+            label newFacei = morphMap.reverseFaceMap()[oldFacei];
 
             label oldPointi = iter();
 
             label newPointi = morphMap.reversePointMap()[oldPointi];
 
-            if (newFaceI >= 0 && newPointi >= 0)
+            if (newFacei >= 0 && newPointi >= 0)
             {
-                newAddedPoints.insert(newFaceI, newPointi);
+                newAddedPoints.insert(newFacei, newPointi);
             }
         }
 

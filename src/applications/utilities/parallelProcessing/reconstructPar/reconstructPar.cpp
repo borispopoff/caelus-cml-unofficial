@@ -922,13 +922,13 @@ int main(int argc, char *argv[])
             {
                 PtrList<hexRef8Data> procData(procMeshes.meshes().size());
 
-                forAll(procMeshes.meshes(), procI)
+                forAll(procMeshes.meshes(), proci)
                 {
-                    const fvMesh& procMesh = procMeshes.meshes()[procI];
+                    const fvMesh& procMesh = procMeshes.meshes()[proci];
 
                     procData.set
                     (
-                        procI,
+                        proci,
                         new hexRef8Data
                         (
                             IOobject

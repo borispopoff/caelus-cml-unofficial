@@ -203,8 +203,8 @@ class addPatchCellLayer
             const indirectPrimitivePatch& pp,
             const labelListList& globalEdgeFaces,
             const boolList& doneEdge,
-            const label patchFaceI,
-            const label globalFaceI
+            const label patchFacei,
+            const label globalFacei
         ) const;
 
 

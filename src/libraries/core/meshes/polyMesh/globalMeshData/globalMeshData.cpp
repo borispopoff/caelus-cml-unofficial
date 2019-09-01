@@ -619,11 +619,11 @@ void CML::globalMeshData::calcPointConnectivity
             );
             // Add transform to connectivity
             const labelPair& n = myData[pTransformSlaves[i]];
-            label procI = globalIndexAndTransform::processor(n);
+            label proci = globalIndexAndTransform::processor(n);
             label index = globalIndexAndTransform::index(n);
             pConnectivity[connI++] = globalIndexAndTransform::encode
             (
-                procI,
+                proci,
                 index,
                 transformI
             );
@@ -770,11 +770,11 @@ void CML::globalMeshData::calcGlobalPointEdges
                 {
                     // Add transform to connectivity
                     const labelPair& n = otherData[j];
-                    label procI = globalIndexAndTransform::processor(n);
+                    label proci = globalIndexAndTransform::processor(n);
                     label index = globalIndexAndTransform::index(n);
                     globalPPoints[sz++] = globalIndexAndTransform::encode
                     (
-                        procI,
+                        proci,
                         index,
                         transformI
                     );
@@ -823,18 +823,18 @@ CML::label CML::globalMeshData::findTransform
     label localTransformI = -1;
     forAll(info, i)
     {
-        label procI = globalIndexAndTransform::processor(info[i]);
+        label proci = globalIndexAndTransform::processor(info[i]);
         label pointi = globalIndexAndTransform::index(info[i]);
         label transformI = globalIndexAndTransform::transformIndex(info[i]);
 
-        if (procI == Pstream::myProcNo() && pointi == localPoint)
+        if (proci == Pstream::myProcNo() && pointi == localPoint)
         {
             localTransformI = transformI;
             //Pout<< "For local :" << localPoint
             //    << " found transform:" << localTransformI
             //    << endl;
         }
-        if (procI == remoteProcI && pointi == remoteIndex)
+        if (proci == remoteProcI && pointi == remoteIndex)
         {
             remoteTransformI = transformI;
             //Pout<< "For remote:" << remotePoint
@@ -963,13 +963,13 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
 
                     if (transform0 == transform1)
                     {
-                        label procI = globalEdgeNumbers.whichProcID(pEdges0[i]);
+                        label proci = globalEdgeNumbers.whichProcID(pEdges0[i]);
                         eEdges.append
                         (
                             globalIndexAndTransform::encode
                             (
-                                procI,
-                                globalEdgeNumbers.toLocal(procI, pEdges0[i]),
+                                proci,
+                                globalEdgeNumbers.toLocal(proci, pEdges0[i]),
                                 transform0
                             )
                         );
@@ -1019,7 +1019,7 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
                 for (label i = 1; i < edgeInfo.size(); i++)
                 {
                     const labelPair& info = edgeInfo[i];
-                    label procI = globalIndexAndTransform::processor(info);
+                    label proci = globalIndexAndTransform::processor(info);
                     label index = globalIndexAndTransform::index(info);
                     label transform = globalIndexAndTransform::transformIndex
                     (
@@ -1030,7 +1030,7 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
                     {
                         eEdges[nonTransformI++] = globalEdgeNumbers.toGlobal
                         (
-                            procI,
+                            proci,
                             index
                         );
                     }
@@ -1267,10 +1267,10 @@ void CML::globalMeshData::calcPointBoundaryFaces
                     );
                     if (iter != meshPointMap.end())
                     {
-                        label bFaceI =
+                        label bFacei =
                              pp.start() + i - mesh_.nInternalFaces();
                         pointBoundaryFaces[iter()][nPointFaces[iter()]++] =
-                            bFaceI;
+                            bFacei;
                     }
                 }
             }
@@ -1411,12 +1411,12 @@ void CML::globalMeshData::calcGlobalPointBoundaryFaces() const
                     // Check that same face not already present untransformed
                     if (findIndex(untrafoFaces, slave)== -1)
                     {
-                        label procI = globalIndices.whichProcID(slave);
-                        label facei = globalIndices.toLocal(procI, slave);
+                        label proci = globalIndices.whichProcID(slave);
+                        label facei = globalIndices.toLocal(proci, slave);
 
                         myBFaces[n++] = globalIndexAndTransform::encode
                         (
-                            procI,
+                            proci,
                             facei,
                             transformI
                         );
@@ -1640,11 +1640,11 @@ void CML::globalMeshData::calcGlobalPointBoundaryCells() const
                     // Check that same cell not already present untransformed
                     if (findIndex(untrafoCells, slave)== -1)
                     {
-                        label procI = globalIndices.whichProcID(slave);
-                        label celli = globalIndices.toLocal(procI, slave);
+                        label proci = globalIndices.whichProcID(slave);
+                        label celli = globalIndices.toLocal(proci, slave);
                         myBCells[n++] = globalIndexAndTransform::encode
                         (
-                            procI,
+                            proci,
                             celli,
                             transformI
                         );

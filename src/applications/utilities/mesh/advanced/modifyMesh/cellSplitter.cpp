@@ -203,7 +203,7 @@ void CML::cellSplitter::setRefinement
         // Add other pyramids
         for (label i = 1; i < cFaces.size(); i++)
         {
-            label addedCellI =
+            label addedCelli =
                 meshMod.setAction
                 (
                     polyAddCell
@@ -216,7 +216,7 @@ void CML::cellSplitter::setRefinement
                     )
                 );
 
-            newCells[i] = addedCellI;
+            newCells[i] = addedCelli;
         }
 
         cellToCells.insert(celli, newCells);
@@ -464,17 +464,17 @@ void CML::cellSplitter::updateMesh(const mapPolyMesh& morphMap)
 
     forAllConstIter(Map<label>, addedPoints_, iter)
     {
-        label oldCellI = iter.key();
+        label oldCelli = iter.key();
 
-        label newCellI = morphMap.reverseCellMap()[oldCellI];
+        label newCelli = morphMap.reverseCellMap()[oldCelli];
 
         label oldPointi = iter();
 
         label newPointi = morphMap.reversePointMap()[oldPointi];
 
-        if (newCellI >= 0 && newPointi >= 0)
+        if (newCelli >= 0 && newPointi >= 0)
         {
-            newAddedPoints.insert(newCellI, newPointi);
+            newAddedPoints.insert(newCelli, newPointi);
         }
     }
 

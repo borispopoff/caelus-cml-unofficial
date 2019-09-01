@@ -26,7 +26,7 @@ Description
     for processor + local index. E.g.
 
     globalIndex globalFaces(mesh.nFaces());
-    label globalFaceI = globalFaces.toGlobal(facei);
+    label globalFacei = globalFaces.toGlobal(facei);
 
 
 SourceFiles

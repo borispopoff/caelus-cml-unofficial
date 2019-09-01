@@ -80,9 +80,9 @@ void CML::cellToFace::combine(topoSet& set, const bool add) const
             const label celli = iter.key();
             const labelList& cFaces = mesh_.cells()[celli];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                addOrDelete(set, cFaces[cFaceI], add);
+                addOrDelete(set, cFaces[cFacei], add);
             }
         }
     }

@@ -170,10 +170,10 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
         // Build the d-vectors
         vectorField pd(p.delta());
 
-        forAll(pd, patchFaceI)
+        forAll(pd, patchFacei)
         {
-            dd[faceCells[patchFaceI]] +=
-                (1.0/magSqr(pd[patchFaceI]))*sqr(pd[patchFaceI]);
+            dd[faceCells[patchFacei]] +=
+                (1.0/magSqr(pd[patchFacei]))*sqr(pd[patchFacei]);
         }
     }
 
@@ -352,11 +352,11 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
         // Build the d-vectors
         vectorField pd(p.delta());
 
-        forAll(p, patchFaceI)
+        forAll(p, patchFacei)
         {
-            patchLsP[patchFaceI] =
-                (1.0/magSqr(pd[patchFaceI]))
-               *(invDd[faceCells[patchFaceI]] & pd[patchFaceI]);
+            patchLsP[patchFacei] =
+                (1.0/magSqr(pd[patchFacei]))
+               *(invDd[faceCells[patchFacei]] & pd[patchFacei]);
         }
     }
 

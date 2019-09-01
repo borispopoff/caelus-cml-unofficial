@@ -24,7 +24,7 @@ Description
     Determines processor-processor connection. After instantiation contains
     on all processors the processor-processor connection table.
 
-    *this[procI] gives the list of neighbouring processors.
+    *this[proci] gives the list of neighbouring processors.
 
     TODO: This does not currently correctly support multiple processor
     patches connecting two processors.
@@ -149,11 +149,11 @@ CML::labelList CML::ProcessorTopology<Patch, ProcPatch>::procNeighbours
 
     nNeighbours = 0;
 
-    forAll(isNeighbourProc, procI)
+    forAll(isNeighbourProc, proci)
     {
-        if (isNeighbourProc[procI])
+        if (isNeighbourProc[proci])
         {
-            neighbours[nNeighbours++] = procI;
+            neighbours[nNeighbours++] = proci;
         }
     }
 
@@ -225,21 +225,21 @@ CML::ProcessorTopology<Patch, ProcPatch>::ProcessorTopology
         // to determine the schedule. Each processor pair stands for both
         // send and receive.
         label nComms = 0;
-        forAll(*this, procI)
+        forAll(*this, proci)
         {
-            nComms += operator[](procI).size();
+            nComms += operator[](proci).size();
         }
         DynamicList<labelPair> comms(nComms);
 
-        forAll(*this, procI)
+        forAll(*this, proci)
         {
-            const labelList& nbrs = operator[](procI);
+            const labelList& nbrs = operator[](proci);
 
             forAll(nbrs, i)
             {
-                if (procI < nbrs[i])
+                if (proci < nbrs[i])
                 {
-                    comms.append(labelPair(procI, nbrs[i]));
+                    comms.append(labelPair(proci, nbrs[i]));
                 }
             }
         }

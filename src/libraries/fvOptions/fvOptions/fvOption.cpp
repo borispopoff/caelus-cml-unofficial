@@ -117,8 +117,8 @@ void CML::fv::option::setCellSet()
                     selectedCells.insert(celli);
                 }
 
-                label globalCellI = returnReduce(celli, maxOp<label>());
-                if (globalCellI < 0)
+                label globalCelli = returnReduce(celli, maxOp<label>());
+                if (globalCelli < 0)
                 {
                     WarningInFunction
                         << "Unable to find owner cell for point " << points_[i]

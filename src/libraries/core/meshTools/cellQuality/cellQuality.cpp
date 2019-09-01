@@ -205,7 +205,7 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceNonOrthogonality() const
         result[facei] = cosDDotS;
     }
 
-    label globalFaceI = mesh_.nInternalFaces();
+    label globalFacei = mesh_.nInternalFaces();
 
     forAll(mesh_.boundaryMesh(), patchi)
     {
@@ -227,7 +227,7 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceNonOrthogonality() const
             scalar cosDDotS =
                 radToDeg(CML::acos(min(1.0, (d & s)/(mag(d)*magS + VSMALL))));
 
-            result[globalFaceI++] = cosDDotS;
+            result[globalFacei++] = cosDDotS;
         }
     }
 
@@ -276,7 +276,7 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceSkewness() const
     }
 
 
-    label globalFaceI = mesh_.nInternalFaces();
+    label globalFacei = mesh_.nInternalFaces();
 
     forAll(mesh_.boundaryMesh(), patchi)
     {
@@ -297,7 +297,7 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceSkewness() const
                 cellCtrs[faceCells[facei]]
               + ((faceCentres[facei] - cellCtrs[faceCells[facei]])&n)*n;
 
-            result[globalFaceI++] =
+            result[globalFacei++] =
                 mag(faceCentres[facei] - faceIntersection)
                /(
                     mag(faceCentres[facei] - cellCtrs[faceCells[facei]])

@@ -227,7 +227,7 @@ public:
 
         //- Special variant that works with the info sorted into bins
         //  according to local indices. E.g. think cellCells where
-        //  cellCells[localCellI] is a list of global cells
+        //  cellCells[localCelli] is a list of global cells
         mapDistributeBase
         (
             const globalIndex&,

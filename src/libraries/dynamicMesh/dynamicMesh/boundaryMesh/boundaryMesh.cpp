@@ -479,7 +479,7 @@ void CML::boundaryMesh::read(const polyMesh& mesh)
 
     meshFace_.setSize(nBFaces);
 
-    label bFaceI = 0;
+    label bFacei = 0;
 
     // Collect all boundary faces.
     forAll(mesh.boundaryMesh(), patchi)
@@ -494,19 +494,19 @@ void CML::boundaryMesh::read(const polyMesh& mesh)
                 pp.name(),
                 patchi,
                 pp.size(),
-                bFaceI,
+                bFacei,
                 pp.type()
             )
         );
 
         // Collect all faces in global numbering.
-        forAll(pp, patchFaceI)
+        forAll(pp, patchFacei)
         {
-            meshFace_[bFaceI] = pp.start() + patchFaceI;
+            meshFace_[bFacei] = pp.start() + patchFacei;
 
-            bFaces[bFaceI] = pp[patchFaceI];
+            bFaces[bFacei] = pp[patchFacei];
 
-            bFaceI++;
+            bFacei++;
         }
     }
 
@@ -694,7 +694,7 @@ void CML::boundaryMesh::readTriSurface(const fileName& fName)
 
     meshFace_.setSize(surf.size());
 
-    label bFaceI = 0;
+    label bFacei = 0;
 
     // Current region number
     label surfRegion = regions[0];
@@ -705,7 +705,7 @@ void CML::boundaryMesh::readTriSurface(const fileName& fName)
 
 
     // Index in bFaces of start of current patch
-    label startFaceI = 0;
+    label startFacei = 0;
 
     forAll(indices, indexI)
     {
@@ -718,8 +718,8 @@ void CML::boundaryMesh::readTriSurface(const fileName& fName)
             // Change of region. We now know the size of the previous one.
             boundaryPatch& bp = patches_[caelusRegion];
 
-            bp.size() = bFaceI - startFaceI;
-            bp.start() = startFaceI;
+            bp.size() = bFacei - startFacei;
+            bp.start() = startFacei;
 
             surfRegion = tri.region();
             caelusRegion = regionToBoundaryPatch[surfRegion];
@@ -728,19 +728,19 @@ void CML::boundaryMesh::readTriSurface(const fileName& fName)
                 << caelusRegion << " with name " << patches_[caelusRegion].name()
                 << endl;
 
-            startFaceI = bFaceI;
+            startFacei = bFacei;
         }
 
-        meshFace_[bFaceI] = triI;
+        meshFace_[bFacei] = triI;
 
-        bFaces[bFaceI++] = face(tri);
+        bFaces[bFacei++] = face(tri);
     }
 
     // Final region
     boundaryPatch& bp = patches_[caelusRegion];
 
-    bp.size() = bFaceI - startFaceI;
-    bp.start() = startFaceI;
+    bp.size() = bFacei - startFacei;
+    bp.start() = startFacei;
 
     //
     // Construct single primitivePatch for all of boundary
@@ -818,9 +818,9 @@ void CML::boundaryMesh::writeTriSurface(const fileName& fName) const
     {
         const boundaryPatch& bp = patches_[patchi];
 
-        forAll(bp, patchFaceI)
+        forAll(bp, patchFacei)
         {
-            label facei = bp.start() + patchFaceI;
+            label facei = bp.start() + patchFacei;
 
             label triVertI = 3*startTri[facei];
 
@@ -867,17 +867,17 @@ CML::labelList CML::boundaryMesh::getNearest
     DynamicList<label> leftFaces(mesh().size()/2);
     DynamicList<label> rightFaces(mesh().size()/2);
 
-    forAll(mesh(), bFaceI)
+    forAll(mesh(), bFacei)
     {
-        scalar sign = mesh().faceNormals()[bFaceI] & splitNormal_;
+        scalar sign = mesh().faceNormals()[bFacei] & splitNormal_;
 
         if (sign > -1e-5)
         {
-            rightFaces.append(bFaceI);
+            rightFaces.append(bFacei);
         }
         if (sign < 1e-5)
         {
-            leftFaces.append(bFaceI);
+            leftFaces.append(bFacei);
         }
     }
 
@@ -979,26 +979,26 @@ CML::labelList CML::boundaryMesh::getNearest
 
     const scalar searchDimSqr = magSqr(searchSpan);
 
-    forAll(nearestBFaceI, patchFaceI)
+    forAll(nearestBFaceI, patchFacei)
     {
-        label meshFaceI = pMesh.nInternalFaces() + patchFaceI;
+        label meshFacei = pMesh.nInternalFaces() + patchFacei;
 
-        const point& ctr = pMesh.faceCentres()[meshFaceI];
+        const point& ctr = pMesh.faceCentres()[meshFacei];
 
-        if (debug && (patchFaceI % 1000) == 0)
+        if (debug && (patchFacei % 1000) == 0)
         {
-            Pout<< "getNearest : patchFace:" << patchFaceI
-                << " meshFaceI:" << meshFaceI << " ctr:" << ctr << endl;
+            Pout<< "getNearest : patchFace:" << patchFacei
+                << " meshFacei:" << meshFacei << " ctr:" << ctr << endl;
         }
 
 
         // Get normal from area vector
-        vector n = pMesh.faceAreas()[meshFaceI];
+        vector n = pMesh.faceAreas()[meshFacei];
         scalar area = mag(n);
         n /= area;
 
         scalar typDim = -GREAT;
-        const face& f = pMesh.faces()[meshFaceI];
+        const face& f = pMesh.faces()[meshFacei];
 
         forAll(f, fp)
         {
@@ -1035,11 +1035,11 @@ CML::labelList CML::boundaryMesh::getNearest
                     // Both same sign. Choose nearest.
                     if (rightDist < leftDist)
                     {
-                        nearestBFaceI[patchFaceI] = rightFaceI;
+                        nearestBFaceI[patchFacei] = rightFaceI;
                     }
                     else
                     {
-                        nearestBFaceI[patchFaceI] = leftFaceI;
+                        nearestBFaceI[patchFacei] = leftFaceI;
                     }
                 }
                 else
@@ -1058,11 +1058,11 @@ CML::labelList CML::boundaryMesh::getNearest
                         // Different sign and nearby. Choosing matching normal
                         if (rightSign > 0)
                         {
-                            nearestBFaceI[patchFaceI] = rightFaceI;
+                            nearestBFaceI[patchFacei] = rightFaceI;
                         }
                         else
                         {
-                            nearestBFaceI[patchFaceI] = leftFaceI;
+                            nearestBFaceI[patchFacei] = leftFaceI;
                         }
                     }
                     else
@@ -1070,11 +1070,11 @@ CML::labelList CML::boundaryMesh::getNearest
                         // Different sign but faraway. Choosing nearest.
                         if (rightDist < leftDist)
                         {
-                            nearestBFaceI[patchFaceI] = rightFaceI;
+                            nearestBFaceI[patchFacei] = rightFaceI;
                         }
                         else
                         {
-                            nearestBFaceI[patchFaceI] = leftFaceI;
+                            nearestBFaceI[patchFacei] = leftFaceI;
                         }
                     }
                 }
@@ -1084,7 +1084,7 @@ CML::labelList CML::boundaryMesh::getNearest
                 // Found in right but not in left. Choose right regardless if
                 // correct sign. Note: do we want this?
                 label rightFaceI = rightFaces[rightInfo.index()];
-                nearestBFaceI[patchFaceI] = rightFaceI;
+                nearestBFaceI[patchFacei] = rightFaceI;
             }
         }
         else
@@ -1095,12 +1095,12 @@ CML::labelList CML::boundaryMesh::getNearest
             {
                 // Found in left but not in right. Choose left regardless if
                 // correct sign. Note: do we want this?
-                nearestBFaceI[patchFaceI] = leftFaces[leftInfo.index()];
+                nearestBFaceI[patchFacei] = leftFaces[leftInfo.index()];
             }
             else
             {
                 // No face found in left tree.
-                nearestBFaceI[patchFaceI] = -1;
+                nearestBFaceI[patchFacei] = -1;
             }
         }
     }
@@ -1129,15 +1129,15 @@ void CML::boundaryMesh::patchify
 
     label nNewPatches = patches_.size();
 
-    forAll(oldPatches, oldPatchI)
+    forAll(oldPatches, oldPatchi)
     {
-        const polyPatch& patch = oldPatches[oldPatchI];
-        const label newPatchI = findPatchID(patch.name());
+        const polyPatch& patch = oldPatches[oldPatchi];
+        const label newPatchi = findPatchID(patch.name());
 
-        if (newPatchI != -1)
+        if (newPatchi != -1)
         {
-            nameToIndex.insert(patch.name(), newPatchI);
-            indexToName.insert(newPatchI, patch.name());
+            nameToIndex.insert(patch.name(), newPatchi);
+            indexToName.insert(newPatchi, patch.name());
         }
     }
 
@@ -1162,7 +1162,7 @@ void CML::boundaryMesh::patchify
 
     List<polyPatch*> newPatchPtrList(nNewPatches);
 
-    label meshFaceI = newMesh.nInternalFaces();
+    label meshFacei = newMesh.nInternalFaces();
 
     // First patch gets all non-coupled faces
     label facesToBeDone = newMesh.nFaces() - newMesh.nInternalFaces();
@@ -1171,12 +1171,12 @@ void CML::boundaryMesh::patchify
     {
         const boundaryPatch& bp = patches_[bPatchI];
 
-        const label newPatchI = nameToIndex[bp.name()];
+        const label newPatchi = nameToIndex[bp.name()];
 
         // Find corresponding patch in polyMesh
-        const label oldPatchI = findPatchID(oldPatches, bp.name());
+        const label oldPatchi = findPatchID(oldPatches, bp.name());
 
-        if (oldPatchI == -1)
+        if (oldPatchi == -1)
         {
             // Newly created patch. Gets all or zero faces.
             if (debug)
@@ -1185,17 +1185,17 @@ void CML::boundaryMesh::patchify
                     << " type:" << bp.physicalType() << endl;
             }
 
-            newPatchPtrList[newPatchI] = polyPatch::New
+            newPatchPtrList[newPatchi] = polyPatch::New
             (
                 bp.physicalType(),
                 bp.name(),
                 facesToBeDone,
-                meshFaceI,
-                newPatchI,
+                meshFacei,
+                newPatchi,
                 newMesh.boundaryMesh()
             ).ptr();
 
-            meshFaceI += facesToBeDone;
+            meshFacei += facesToBeDone;
 
             // first patch gets all boundary faces; all others get 0.
             facesToBeDone = 0;
@@ -1203,7 +1203,7 @@ void CML::boundaryMesh::patchify
         else
         {
             // Existing patch. Gets all or zero faces.
-            const polyPatch& oldPatch = oldPatches[oldPatchI];
+            const polyPatch& oldPatch = oldPatches[oldPatchi];
 
             if (debug)
             {
@@ -1211,15 +1211,15 @@ void CML::boundaryMesh::patchify
                     << oldPatch.name() << endl;
             }
 
-            newPatchPtrList[newPatchI] = oldPatch.clone
+            newPatchPtrList[newPatchi] = oldPatch.clone
             (
                 newMesh.boundaryMesh(),
-                newPatchI,
+                newPatchi,
                 facesToBeDone,
-                meshFaceI
+                meshFacei
             ).ptr();
 
-            meshFaceI += facesToBeDone;
+            meshFacei += facesToBeDone;
 
             // first patch gets all boundary faces; all others get 0.
             facesToBeDone = 0;
@@ -1263,9 +1263,9 @@ void CML::boundaryMesh::patchify
             (newMesh.nFaces() - newMesh.nInternalFaces())
           / nNewPatches;
 
-        forAll(patchFaces, newPatchI)
+        forAll(patchFaces, newPatchi)
         {
-            patchFaces[newPatchI].setCapacity(nAvgFaces);
+            patchFaces[newPatchi].setCapacity(nAvgFaces);
         }
 
         //
@@ -1273,38 +1273,38 @@ void CML::boundaryMesh::patchify
         // since will contain all faces.
         //
 
-        forAll(oldPatches, oldPatchI)
+        forAll(oldPatches, oldPatchi)
         {
-            const polyPatch& patch = oldPatches[oldPatchI];
+            const polyPatch& patch = oldPatches[oldPatchi];
 
-            forAll(patch, patchFaceI)
+            forAll(patch, patchFacei)
             {
                 // Put face into region given by nearest boundary face
 
-                label meshFaceI = patch.start() + patchFaceI;
+                label meshFacei = patch.start() + patchFacei;
 
-                label bFaceI = meshFaceI - newMesh.nInternalFaces();
+                label bFacei = meshFacei - newMesh.nInternalFaces();
 
-                patchFaces[whichPatch(nearest[bFaceI])].append(meshFaceI);
+                patchFaces[whichPatch(nearest[bFacei])].append(meshFacei);
             }
         }
 
-        forAll(patchFaces, newPatchI)
+        forAll(patchFaces, newPatchi)
         {
-            patchFaces[newPatchI].shrink();
+            patchFaces[newPatchi].shrink();
         }
 
 
         // Change patch > 0. (since above we put all faces into the zeroth
         // patch)
 
-        for (label newPatchI = 1; newPatchI < patchFaces.size(); newPatchI++)
+        for (label newPatchi = 1; newPatchi < patchFaces.size(); newPatchi++)
         {
-            const labelList& pFaces = patchFaces[newPatchI];
+            const labelList& pFaces = patchFaces[newPatchi];
 
             forAll(pFaces, pFaceI)
             {
-                polyMeshRepatcher.changePatchID(pFaces[pFaceI], newPatchI);
+                polyMeshRepatcher.changePatchID(pFaces[pFaceI], newPatchi);
             }
         }
 
@@ -1836,7 +1836,7 @@ CML::label CML::boundaryMesh::getNTris(const label facei) const
 
 CML::label CML::boundaryMesh::getNTris
 (
-    const label startFaceI,
+    const label startFacei,
     const label nFaces,
     labelList& nTris
 ) const
@@ -1847,7 +1847,7 @@ CML::label CML::boundaryMesh::getNTris
 
     for (label i = 0; i < nFaces; i++)
     {
-        label faceNTris = getNTris(startFaceI + i);
+        label faceNTris = getNTris(startFacei + i);
 
         nTris[i] = faceNTris;
 
@@ -1861,7 +1861,7 @@ CML::label CML::boundaryMesh::getNTris
 // consecutive vertices per triangle.
 void CML::boundaryMesh::triangulate
 (
-    const label startFaceI,
+    const label startFacei,
     const label nFaces,
     const label totalNTris,
     labelList& triVerts
@@ -1874,7 +1874,7 @@ void CML::boundaryMesh::triangulate
 
     for (label i = 0; i < nFaces; i++)
     {
-        label facei = startFaceI + i;
+        label facei = startFacei + i;
 
         const face& f = mesh()[facei];
 
@@ -1902,11 +1902,11 @@ void CML::boundaryMesh::triangulate
 // Number of local points in subset.
 CML::label CML::boundaryMesh::getNPoints
 (
-    const label startFaceI,
+    const label startFacei,
     const label nFaces
 ) const
 {
-    SubList<face> patchFaces(mesh(), nFaces, startFaceI);
+    SubList<face> patchFaces(mesh(), nFaces, startFacei);
 
     primitivePatch patch(patchFaces, mesh().points());
 
@@ -1917,14 +1917,14 @@ CML::label CML::boundaryMesh::getNPoints
 // Triangulation of face subset in local coords.
 void CML::boundaryMesh::triangulateLocal
 (
-    const label startFaceI,
+    const label startFacei,
     const label nFaces,
     const label totalNTris,
     labelList& triVerts,
     labelList& localToGlobal
 ) const
 {
-    SubList<face> patchFaces(mesh(), nFaces, startFaceI);
+    SubList<face> patchFaces(mesh(), nFaces, startFacei);
 
     primitivePatch patch(patchFaces, mesh().points());
 
@@ -1965,7 +1965,7 @@ void CML::boundaryMesh::triangulateLocal
 void CML::boundaryMesh::markFaces
 (
     const labelList& protectedEdges,
-    const label seedFaceI,
+    const label seedFacei,
     boolList& visited
 ) const
 {
@@ -1980,8 +1980,8 @@ void CML::boundaryMesh::markFaces
     // Initialize zone for all faces to -1
     labelList currentZone(mesh().size(), -1);
 
-    // Mark with 0 all faces reachable from seedFaceI
-    markZone(protectedEdge, seedFaceI, 0, currentZone);
+    // Mark with 0 all faces reachable from seedFacei
+    markZone(protectedEdge, seedFacei, 0, currentZone);
 
     // Set in visited all reached ones.
     visited.setSize(mesh().size());

@@ -152,9 +152,9 @@ CML::boolList CML::removeFaces::getFacesAffected
         {
             const labelList& cFaces = mesh_.cells()[celli];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                affectedFace[cFaces[cFaceI]] = true;
+                affectedFace[cFaces[cFacei]] = true;
             }
         }
     }
@@ -395,13 +395,13 @@ void CML::removeFaces::mergeFaces
 
 
     // Remove all but master face.
-    forAll(faceLabels, patchFaceI)
+    forAll(faceLabels, patchFacei)
     {
-        if (patchFaceI != masterIndex)
+        if (patchFacei != masterIndex)
         {
-            //Pout<< "Removing face " << faceLabels[patchFaceI] << endl;
+            //Pout<< "Removing face " << faceLabels[patchFacei] << endl;
 
-            meshMod.setAction(polyRemoveFace(faceLabels[patchFaceI], facei));
+            meshMod.setAction(polyRemoveFace(faceLabels[patchFacei], facei));
         }
     }
 }
@@ -1113,20 +1113,20 @@ void CML::removeFaces::setRefinement
         // Walk to fill faceRegion with faces that will be connected across
         // edges that will be removed.
 
-        label startFaceI = 0;
+        label startFacei = 0;
 
         while (true)
         {
             // Find unset region.
-            for (; startFaceI < mesh_.nFaces(); startFaceI++)
+            for (; startFacei < mesh_.nFaces(); startFacei++)
             {
-                if (faceRegion[startFaceI] == -1 && !removedFace[startFaceI])
+                if (faceRegion[startFacei] == -1 && !removedFace[startFacei])
                 {
                     break;
                 }
             }
 
-            if (startFaceI == mesh_.nFaces())
+            if (startFacei == mesh_.nFaces())
             {
                 break;
             }
@@ -1139,9 +1139,9 @@ void CML::removeFaces::setRefinement
                 cellRegion,
                 removedFace,
                 nFacesPerEdge,
-                startFaceI,
+                startFacei,
                 nRegions,
-                mesh_.faceEdges(startFaceI, fe),
+                mesh_.faceEdges(startFacei, fe),
                 faceRegion
             );
 
@@ -1152,7 +1152,7 @@ void CML::removeFaces::setRefinement
             else if (nRegion == 1)
             {
                 // Reset face to be single region.
-                faceRegion[startFaceI] = -2;
+                faceRegion[startFacei] = -2;
             }
             else
             {

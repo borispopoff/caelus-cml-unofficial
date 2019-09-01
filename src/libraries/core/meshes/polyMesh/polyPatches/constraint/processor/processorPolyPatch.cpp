@@ -708,9 +708,9 @@ bool CML::processorPolyPatch::order
     {
         // Do nothing (i.e. identical mapping, zero rotation).
         // See comment at top.
-        forAll(faceMap, patchFaceI)
+        forAll(faceMap, patchFacei)
         {
-            faceMap[patchFaceI] = patchFaceI;
+            faceMap[patchFacei] = patchFacei;
         }
 
         if (transform() != COINCIDENTFULLMATCH)
@@ -725,19 +725,19 @@ bool CML::processorPolyPatch::order
                 matchTolerance()*calcFaceTol(pp, pp.points(), pp.faceCentres())
             );
 
-            forAll(faceMap, patchFaceI)
+            forAll(faceMap, patchFacei)
             {
-                const point& wantedAnchor = anchors[patchFaceI];
+                const point& wantedAnchor = anchors[patchFacei];
 
-                rotation[patchFaceI] = getRotation
+                rotation[patchFacei] = getRotation
                 (
                     ppPoints,
-                    pp[patchFaceI],
+                    pp[patchFacei],
                     wantedAnchor,
-                    tols[patchFaceI]
+                    tols[patchFacei]
                 );
 
-                if (rotation[patchFaceI] > 0)
+                if (rotation[patchFacei] > 0)
                 {
                     change = true;
                 }
@@ -939,19 +939,19 @@ bool CML::processorPolyPatch::order
                     faceMap2
                 );
 
-                forAll(faceMap, oldFaceI)
+                forAll(faceMap, oldFacei)
                 {
-                    if (faceMap[oldFaceI] == -1)
+                    if (faceMap[oldFacei] == -1)
                     {
-                        faceMap[oldFaceI] = faceMap2[oldFaceI];
+                        faceMap[oldFacei] = faceMap2[oldFacei];
                     }
                 }
 
                 matchedAll = true;
 
-                forAll(faceMap, oldFaceI)
+                forAll(faceMap, oldFacei)
                 {
-                    if (faceMap[oldFaceI] == -1)
+                    if (faceMap[oldFacei] == -1)
                     {
                         matchedAll = false;
                     }
@@ -1015,32 +1015,32 @@ bool CML::processorPolyPatch::order
             }
 
             // Set rotation.
-            forAll(faceMap, oldFaceI)
+            forAll(faceMap, oldFacei)
             {
-                // The face f will be at newFaceI (after morphing) and we want
+                // The face f will be at newFacei (after morphing) and we want
                 // its anchorPoint (= f[0]) to align with the anchorpoint for
                 // the corresponding face on the other side.
 
-                label newFaceI = faceMap[oldFaceI];
+                label newFacei = faceMap[oldFacei];
 
-                const point& wantedAnchor = masterAnchors[newFaceI];
+                const point& wantedAnchor = masterAnchors[newFacei];
 
-                rotation[newFaceI] = getRotation
+                rotation[newFacei] = getRotation
                 (
                     pp.points(),
-                    pp[oldFaceI],
+                    pp[oldFacei],
                     wantedAnchor,
-                    tols[oldFaceI]
+                    tols[oldFacei]
                 );
 
-                if (rotation[newFaceI] == -1)
+                if (rotation[newFacei] == -1)
                 {
                     SeriousErrorInFunction
                         << "in patch " << name()
                         << " : "
-                        << "Cannot find point on face " << pp[oldFaceI]
+                        << "Cannot find point on face " << pp[oldFacei]
                         << " with vertices "
-                        << UIndirectList<point>(pp.points(), pp[oldFaceI])()
+                        << UIndirectList<point>(pp.points(), pp[oldFacei])()
                         << " that matches point " << wantedAnchor
                         << " when matching the halves of processor patch "
                         << name()

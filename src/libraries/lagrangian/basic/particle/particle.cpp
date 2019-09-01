@@ -263,14 +263,14 @@ void CML::particle::changeFace(const label tetTriI)
     // Find the face in the same cell that shares the edge, and the
     // corresponding tetrahedra point
     tetPti_ = -1;
-    forAll(mesh_.cells()[celli_], cellFaceI)
+    forAll(mesh_.cells()[celli_], cellFacei)
     {
-        const label newFaceI = mesh_.cells()[celli_][cellFaceI];
-        const class face& newFace = mesh_.faces()[newFaceI];
-        const label newOwner = mesh_.faceOwner()[newFaceI];
+        const label newFacei = mesh_.cells()[celli_][cellFacei];
+        const class face& newFace = mesh_.faces()[newFacei];
+        const label newOwner = mesh_.faceOwner()[newFacei];
 
         // Exclude the current face
-        if (tetFacei_ == newFaceI)
+        if (tetFacei_ == newFacei)
         {
             continue;
         }
@@ -295,7 +295,7 @@ void CML::particle::changeFace(const label tetTriI)
         }
 
         // Make the edge index relative to the base point
-        const label newBaseI = max(0, mesh_.tetBasePtIs()[newFaceI]);
+        const label newBaseI = max(0, mesh_.tetBasePtIs()[newFacei]);
         edgeI = (edgeI - newBaseI + newFace.size()) % newFace.size();
 
         // If the edge is next the base point (i.e., the index is 0 or n - 1),
@@ -304,7 +304,7 @@ void CML::particle::changeFace(const label tetTriI)
         edgeI = min(max(1, edgeI), newFace.size() - 2);
 
         // Set the new face and tet point
-        tetFacei_ = newFaceI;
+        tetFacei_ = newFacei;
         tetPti_ = edgeI;
 
         // Exit the loop now that the tet point has been found
@@ -372,11 +372,11 @@ void CML::particle::changeToMasterPatch()
 
     label thisPatch = patch();
 
-    forAll(mesh_.cells()[celli_], cellFaceI)
+    forAll(mesh_.cells()[celli_], cellFacei)
     {
         // Skip the current face and any internal faces
-        const label otherFaceI = mesh_.cells()[celli_][cellFaceI];
-        if (facei_ == otherFaceI || mesh_.isInternalFace(otherFaceI))
+        const label otherFacei = mesh_.cells()[celli_][cellFacei];
+        if (facei_ == otherFacei || mesh_.isInternalFace(otherFacei))
         {
             continue;
         }
@@ -385,14 +385,14 @@ void CML::particle::changeToMasterPatch()
         // lower patch index. In the case of an ACMI-wall pair, this will be
         // the ACMI, which is what we want.
         const class face& thisFace = mesh_.faces()[facei_];
-        const class face& otherFace = mesh_.faces()[otherFaceI];
+        const class face& otherFace = mesh_.faces()[otherFacei];
         if (face::compare(thisFace, otherFace) != 0)
         {
             const label otherPatch =
-                mesh_.boundaryMesh().whichPatch(otherFaceI);
+                mesh_.boundaryMesh().whichPatch(otherFacei);
             if (thisPatch > otherPatch)
             {
-                facei_ = otherFaceI;
+                facei_ = otherFacei;
                 thisPatch = otherPatch;
             }
         }

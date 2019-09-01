@@ -45,14 +45,14 @@ addToRunTimeSelectionTable(cellLooper, hexCellLooper, word);
 bool CML::hexCellLooper::walkHex
 (
     const label celli,
-    const label startFaceI,
+    const label startFacei,
     const label startEdgeI,
 
     labelList& loop,
     scalarField& loopWeights
 ) const
 {
-    label facei = startFaceI;
+    label facei = startFacei;
 
     label edgeI = startEdgeI;
 

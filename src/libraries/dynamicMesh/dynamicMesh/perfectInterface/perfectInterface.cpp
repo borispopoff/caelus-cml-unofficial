@@ -64,9 +64,9 @@ CML::pointField CML::perfectInterface::calcFaceCentres
 
     pointField ctrs(pp.size());
 
-    forAll(ctrs, patchFaceI)
+    forAll(ctrs, patchFacei)
     {
-        ctrs[patchFaceI] = pp[patchFaceI].centre(points);
+        ctrs[patchFacei] = pp[patchFacei].centre(points);
     }
 
     return ctrs;

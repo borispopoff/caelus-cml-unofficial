@@ -83,7 +83,7 @@ inline void CML::directionInfo::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -99,14 +99,14 @@ inline void CML::directionInfo::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
 {
     if (index_ >= 0)
     {
-        const face& f = patch[patchFaceI];
+        const face& f = patch[patchFacei];
 
         index_ = (f.size() - index_) % f.size();
     }

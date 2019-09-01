@@ -2467,12 +2467,12 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     domainFaceI++
                 )
                 {
-                    label newFaceI = map().addedFaceMap()[domainFaceI];
-                    label newCellI = mesh_.faceOwner()[newFaceI];
+                    label newFacei = map().addedFaceMap()[domainFaceI];
+                    label newCelli = mesh_.faceOwner()[newFacei];
 
                     label domainCellI = domainMesh.faceOwner()[domainFaceI];
 
-                    if (newCellI != map().addedCellMap()[domainCellI])
+                    if (newCelli != map().addedCellMap()[domainCellI])
                     {
                         flippedAddedFaces.insert(domainFaceI);
                     }

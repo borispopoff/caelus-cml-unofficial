@@ -305,16 +305,16 @@ void CML::decompositionMethod::calcCellCells
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
             label facei = pp.start();
-            label bFaceI = pp.start() - mesh.nInternalFaces();
+            label bFacei = pp.start() - mesh.nInternalFaces();
 
             forAll(pp, i)
             {
-                globalNeighbour[bFaceI] = globalAgglom.toGlobal
+                globalNeighbour[bFacei] = globalAgglom.toGlobal
                 (
                     agglom[faceOwner[facei]]
                 );
 
-                bFaceI++;
+                bFacei++;
                 facei++;
             }
         }
@@ -346,13 +346,13 @@ void CML::decompositionMethod::calcCellCells
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
             label facei = pp.start();
-            label bFaceI = pp.start()-mesh.nInternalFaces();
+            label bFacei = pp.start()-mesh.nInternalFaces();
 
             forAll(pp, i)
             {
                 label own = agglom[faceOwner[facei]];
 
-                label globalNei = globalNeighbour[bFaceI];
+                label globalNei = globalNeighbour[bFacei];
                 if
                 (
                    !globalAgglom.isLocal(globalNei)
@@ -363,7 +363,7 @@ void CML::decompositionMethod::calcCellCells
                 }
 
                 facei++;
-                bFaceI++;
+                bFacei++;
             }
         }
     }
@@ -397,13 +397,13 @@ void CML::decompositionMethod::calcCellCells
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
             label facei = pp.start();
-            label bFaceI = pp.start()-mesh.nInternalFaces();
+            label bFacei = pp.start()-mesh.nInternalFaces();
 
             forAll(pp, i)
             {
                 label own = agglom[faceOwner[facei]];
 
-                label globalNei = globalNeighbour[bFaceI];
+                label globalNei = globalNeighbour[bFacei];
 
                 if
                 (
@@ -415,7 +415,7 @@ void CML::decompositionMethod::calcCellCells
                 }
 
                 facei++;
-                bFaceI++;
+                bFacei++;
             }
         }
     }
@@ -505,16 +505,16 @@ void CML::decompositionMethod::calcCellCells
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
             label facei = pp.start();
-            label bFaceI = pp.start() - mesh.nInternalFaces();
+            label bFacei = pp.start() - mesh.nInternalFaces();
 
             forAll(pp, i)
             {
-                globalNeighbour[bFaceI] = globalAgglom.toGlobal
+                globalNeighbour[bFacei] = globalAgglom.toGlobal
                 (
                     agglom[faceOwner[facei]]
                 );
 
-                bFaceI++;
+                bFacei++;
                 facei++;
             }
         }
@@ -546,13 +546,13 @@ void CML::decompositionMethod::calcCellCells
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
             label facei = pp.start();
-            label bFaceI = pp.start()-mesh.nInternalFaces();
+            label bFacei = pp.start()-mesh.nInternalFaces();
 
             forAll(pp, i)
             {
                 label own = agglom[faceOwner[facei]];
 
-                label globalNei = globalNeighbour[bFaceI];
+                label globalNei = globalNeighbour[bFacei];
                 if
                 (
                    !globalAgglom.isLocal(globalNei)
@@ -563,7 +563,7 @@ void CML::decompositionMethod::calcCellCells
                 }
 
                 facei++;
-                bFaceI++;
+                bFacei++;
             }
         }
     }
@@ -604,13 +604,13 @@ void CML::decompositionMethod::calcCellCells
         if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
         {
             label facei = pp.start();
-            label bFaceI = pp.start()-mesh.nInternalFaces();
+            label bFacei = pp.start()-mesh.nInternalFaces();
 
             forAll(pp, i)
             {
                 label own = agglom[faceOwner[facei]];
 
-                label globalNei = globalNeighbour[bFaceI];
+                label globalNei = globalNeighbour[bFacei];
 
                 if
                 (
@@ -624,7 +624,7 @@ void CML::decompositionMethod::calcCellCells
                 }
 
                 facei++;
-                bFaceI++;
+                bFacei++;
             }
         }
     }
@@ -710,16 +710,16 @@ void CML::decompositionMethod::calcCellCells
 //        if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
 //        {
 //            label facei = pp.start();
-//            label bFaceI = pp.start() - mesh.nInternalFaces();
+//            label bFacei = pp.start() - mesh.nInternalFaces();
 //
 //            forAll(pp, i)
 //            {
-//                globalNeighbour[bFaceI] = globalAgglom.toGlobal
+//                globalNeighbour[bFacei] = globalAgglom.toGlobal
 //                (
 //                    agglom[faceOwner[facei]]
 //                );
 //
-//                bFaceI++;
+//                bFacei++;
 //                facei++;
 //            }
 //        }
@@ -756,7 +756,7 @@ void CML::decompositionMethod::calcCellCells
 //        if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
 //        {
 //            label facei = pp.start();
-//            label bFaceI = pp.start()-mesh.nInternalFaces();
+//            label bFacei = pp.start()-mesh.nInternalFaces();
 //
 //            forAll(pp, i)
 //            {
@@ -764,7 +764,7 @@ void CML::decompositionMethod::calcCellCells
 //                {
 //                    label own = agglom[faceOwner[facei]];
 //
-//                    label globalNei = globalNeighbour[bFaceI];
+//                    label globalNei = globalNeighbour[bFacei];
 //                    if
 //                    (
 //                       !globalAgglom.isLocal(globalNei)
@@ -775,7 +775,7 @@ void CML::decompositionMethod::calcCellCells
 //                    }
 //
 //                    facei++;
-//                    bFaceI++;
+//                    bFacei++;
 //                }
 //            }
 //        }
@@ -885,7 +885,7 @@ void CML::decompositionMethod::calcCellCells
 //        if (pp.coupled() && (parallel || !isA<processorPolyPatch>(pp)))
 //        {
 //            label facei = pp.start();
-//            label bFaceI = pp.start()-mesh.nInternalFaces();
+//            label bFacei = pp.start()-mesh.nInternalFaces();
 //
 //            forAll(pp, i)
 //            {
@@ -893,7 +893,7 @@ void CML::decompositionMethod::calcCellCells
 //                {
 //                    label own = agglom[faceOwner[facei]];
 //
-//                    label globalNei = globalNeighbour[bFaceI];
+//                    label globalNei = globalNeighbour[bFacei];
 //
 //                    if
 //                    (
@@ -905,7 +905,7 @@ void CML::decompositionMethod::calcCellCells
 //                    }
 //
 //                    facei++;
-//                    bFaceI++;
+//                    bFacei++;
 //                }
 //            }
 //        }
@@ -1219,12 +1219,12 @@ CML::labelList CML::decompositionMethod::decompose
                 // different processor? So for now just push owner side
                 // proc
 
-                const label procI = finalDecomp[mesh.faceOwner()[f0]];
+                const label proci = finalDecomp[mesh.faceOwner()[f0]];
 
-                finalDecomp[mesh.faceOwner()[f1]] = procI;
+                finalDecomp[mesh.faceOwner()[f1]] = proci;
                 if (mesh.isInternalFace(f1))
                 {
-                    finalDecomp[mesh.faceNeighbour()[f1]] = procI;
+                    finalDecomp[mesh.faceNeighbour()[f1]] = proci;
                 }
             }
             else if (blockedFace[f0] != blockedFace[f1])
@@ -1322,12 +1322,12 @@ CML::labelList CML::decompositionMethod::decompose
         {
             const labelList& set = specifiedProcessorFaces[setI];
 
-            label procI = specifiedProcessor[setI];
-            if (procI == -1)
+            label proci = specifiedProcessor[setI];
+            if (proci == -1)
             {
                 // If no processor specified use the one from the
                 // 0th element
-                procI = finalDecomp[mesh.faceOwner()[set[0]]];
+                proci = finalDecomp[mesh.faceOwner()[set[0]]];
             }
 
             forAll(set, fI)
@@ -1340,10 +1340,10 @@ CML::labelList CML::decompositionMethod::decompose
                     {
                         label facei = pFaces[i];
 
-                        finalDecomp[mesh.faceOwner()[facei]] = procI;
+                        finalDecomp[mesh.faceOwner()[facei]] = proci;
                         if (mesh.isInternalFace(facei))
                         {
-                            finalDecomp[mesh.faceNeighbour()[facei]] = procI;
+                            finalDecomp[mesh.faceNeighbour()[facei]] = proci;
                         }
                     }
                 }

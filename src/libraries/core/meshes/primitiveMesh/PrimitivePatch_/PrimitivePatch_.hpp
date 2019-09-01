@@ -219,7 +219,7 @@ private:
         (
             const label pointi,
             const labelList& pFaces,
-            const label startFaceI,
+            const label startFacei,
             const label startEdgeI,
             boolList& pFacesHad
         ) const;

@@ -208,22 +208,22 @@ CML::fv::extendedLeastSquaresGrad<Type>::calcGrad
                 vsf.boundaryField()[patchi].patchNeighbourField()
             );
 
-            forAll(neiVsf, patchFaceI)
+            forAll(neiVsf, patchFacei)
             {
-                lsGrad[faceCells[patchFaceI]] +=
-                    patchOwnLs[patchFaceI]
-                   *(neiVsf[patchFaceI] - vsf[faceCells[patchFaceI]]);
+                lsGrad[faceCells[patchFacei]] +=
+                    patchOwnLs[patchFacei]
+                   *(neiVsf[patchFacei] - vsf[faceCells[patchFacei]]);
             }
         }
         else
         {
             const fvPatchField<Type>& patchVsf = vsf.boundaryField()[patchi];
 
-            forAll(patchVsf, patchFaceI)
+            forAll(patchVsf, patchFacei)
             {
-                lsGrad[faceCells[patchFaceI]] +=
-                     patchOwnLs[patchFaceI]
-                    *(patchVsf[patchFaceI] - vsf[faceCells[patchFaceI]]);
+                lsGrad[faceCells[patchFacei]] +=
+                     patchOwnLs[patchFacei]
+                    *(patchVsf[patchFacei] - vsf[faceCells[patchFacei]]);
             }
         }
     }

@@ -265,9 +265,9 @@ CML::ensightPart::localPoints CML::ensightPartCells::calcLocalPoints() const
             const label id = idList[i] + offset_;
             const labelUList& cFaces = mesh_.cells()[id];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = mesh_.faces()[cFaces[cFaceI]];
+                const face& f = mesh_.faces()[cFaces[cFacei]];
 
                 forAll(f, fp)
                 {
@@ -344,9 +344,9 @@ void CML::ensightPartCells::writeConnectivity
             const label id = idList[i] + offset_;
             const labelUList& cFace = mesh_.cells()[id];
 
-            forAll(cFace, cFaceI)
+            forAll(cFace, cFacei)
             {
-                const label faceId = cFace[cFaceI];
+                const label faceId = cFace[cFacei];
                 const face& cf = meshFaces[faceId];
 
                 // convert global -> local index

@@ -940,7 +940,7 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
     // Per splitCell entry the number of live cells that move to that processor
     const labelList& splitCellNum,
 
-    const label procI,
+    const label proci,
 
     // From old to new splitCells
     labelList& oldToNewSplit
@@ -957,9 +957,9 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
 
     forAll(splitCells_, index)
     {
-        if (splitCellProc[index] == procI && splitCellNum[index] == 8)
+        if (splitCellProc[index] == proci && splitCellNum[index] == 8)
         {
-            // Entry moves in its whole to procI
+            // Entry moves in its whole to proci
             oldToNewSplit[index] = newSplitCells.size();
             newSplitCells.append(splitCells_[index]);
         }
@@ -970,7 +970,7 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
     {
         label index = visibleCells_[celli];
 
-        if (index >= 0 && decomposition[celli] == procI)
+        if (index >= 0 && decomposition[celli] == proci)
         {
             label parent = splitCells_[index].parent_;
 
@@ -1010,7 +1010,7 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
     label nSub = 0;
     forAll(decomposition, celli)
     {
-        if (decomposition[celli] == procI)
+        if (decomposition[celli] == proci)
         {
             nSub++;
         }
@@ -1021,7 +1021,7 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
 
     forAll(visibleCells_, celli)
     {
-        if (decomposition[celli] == procI)
+        if (decomposition[celli] == proci)
         {
             label index = visibleCells_[celli];
             if (index >= 0)
@@ -1090,7 +1090,7 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
             decomposition,
             splitCellProc,
             splitCellNum,
-            1,      //procI,
+            1,      //proci,
             oldToNewSplit
         );
     }

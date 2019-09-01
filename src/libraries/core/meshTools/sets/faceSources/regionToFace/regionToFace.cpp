@@ -57,7 +57,7 @@ CML::topoSetSource::addToUsageTable CML::regionToFace::usage_
 void CML::regionToFace::markZone
 (
     const indirectPrimitivePatch& patch,
-    const label procI,
+    const label proci,
     const label facei,
     const label zoneI,
     labelList& faceZone
@@ -70,7 +70,7 @@ void CML::regionToFace::markZone
     DynamicList<label> changedEdges;
     DynamicList<patchEdgeFaceRegion> changedInfo;
 
-    if (Pstream::myProcNo() == procI)
+    if (Pstream::myProcNo() == proci)
     {
         const labelList& fEdges = patch.faceEdges()[facei];
         forAll(fEdges, i)
@@ -154,7 +154,7 @@ void CML::regionToFace::combine(topoSet& set, const bool add) const
     markZone
     (
         patch,
-        ni.second().second(),   // procI
+        ni.second().second(),   // proci
         ni.first().index(),     // start face
         0,                      // currentZone
         faceRegion

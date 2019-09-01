@@ -975,19 +975,19 @@ void createAndWriteRegion
     {
         // face + turning index. (see decomposePar)
         // Is the face pointing in the same direction?
-        label oldFaceI = map().faceMap()[facei];
+        label oldFacei = map().faceMap()[facei];
 
         if
         (
             map().cellMap()[newMesh().faceOwner()[facei]]
-         == mesh.faceOwner()[oldFaceI]
+         == mesh.faceOwner()[oldFacei]
         )
         {
-            faceProcAddressing[facei] = oldFaceI+1;
+            faceProcAddressing[facei] = oldFacei+1;
         }
         else
         {
-            faceProcAddressing[facei] = -(oldFaceI+1);
+            faceProcAddressing[facei] = -(oldFacei+1);
         }
     }
     Info<< "Writing map " << faceProcAddressing.name()
@@ -1264,15 +1264,15 @@ void matchRegions
         Pstream::gatherList(zoneNames);
         Pstream::scatterList(zoneNames);
 
-        forAll(zoneNames, procI)
+        forAll(zoneNames, proci)
         {
-            if (zoneNames[procI] != zoneNames[0])
+            if (zoneNames[proci] != zoneNames[0])
             {
                 FatalErrorInFunction
                     << "cellZones not synchronised across processors." << endl
                     << "Master has cellZones " << zoneNames[0] << endl
-                    << "Processor " << procI
-                    << " has cellZones " << zoneNames[procI]
+                    << "Processor " << proci
+                    << " has cellZones " << zoneNames[proci]
                     << exit(FatalError);
             }
         }

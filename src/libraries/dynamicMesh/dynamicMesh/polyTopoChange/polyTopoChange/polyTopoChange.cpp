@@ -129,13 +129,13 @@ void CML::polyTopoChange::countMap
     nMerge = 0;
     nRemove = 0;
 
-    forAll(map, newCellI)
+    forAll(map, newCelli)
     {
-        label oldCellI = map[newCellI];
+        label oldCelli = map[newCelli];
 
-        if (oldCellI >= 0)
+        if (oldCelli >= 0)
         {
-            if (reverseMap[oldCellI] == newCellI)
+            if (reverseMap[oldCelli] == newCelli)
             {
                 // unchanged
             }
@@ -145,34 +145,34 @@ void CML::polyTopoChange::countMap
                 nAdd++;
             }
         }
-        else if (oldCellI == -1)
+        else if (oldCelli == -1)
         {
             // Created from nothing
             nInflate++;
         }
         else
         {
-            FatalErrorInFunction << "old:" << oldCellI
-                << " new:" << newCellI << abort(FatalError);
+            FatalErrorInFunction << "old:" << oldCelli
+                << " new:" << newCelli << abort(FatalError);
         }
     }
 
-    forAll(reverseMap, oldCellI)
+    forAll(reverseMap, oldCelli)
     {
-        label newCellI = reverseMap[oldCellI];
+        label newCelli = reverseMap[oldCelli];
 
-        if (newCellI >= 0)
+        if (newCelli >= 0)
         {
             // unchanged
         }
-        else if (newCellI == -1)
+        else if (newCelli == -1)
         {
             // removed
             nRemove++;
         }
         else
         {
-            // merged into -newCellI-2
+            // merged into -newCelli-2
             nMerge++;
         }
     }
@@ -227,13 +227,13 @@ void CML::polyTopoChange::getMergeSets
     // Per new cell the number of old cells that have been merged into it
     labelList nMerged(cellMap.size(), 1);
 
-    forAll(reverseCellMap, oldCellI)
+    forAll(reverseCellMap, oldCelli)
     {
-        label newCellI = reverseCellMap[oldCellI];
+        label newCelli = reverseCellMap[oldCelli];
 
-        if (newCellI < -1)
+        if (newCelli < -1)
         {
-            label mergeCellI = -newCellI-2;
+            label mergeCellI = -newCelli-2;
 
             nMerged[mergeCellI]++;
         }
@@ -260,15 +260,15 @@ void CML::polyTopoChange::getMergeSets
 
     cellsFromCells.setSize(nSets);
 
-    forAll(reverseCellMap, oldCellI)
+    forAll(reverseCellMap, oldCelli)
     {
-        label newCellI = reverseCellMap[oldCellI];
+        label newCelli = reverseCellMap[oldCelli];
 
-        if (newCellI < -1)
+        if (newCelli < -1)
         {
-            label mergeCellI = -newCellI-2;
+            label mergeCellI = -newCelli-2;
 
-            // oldCellI was merged into mergeCellI
+            // oldCelli was merged into mergeCellI
 
             label setI = cellToMergeSet[mergeCellI];
 
@@ -285,13 +285,13 @@ void CML::polyTopoChange::getMergeSets
                 mergeSet.masterObjects()[0] = cellMap[mergeCellI];
 
                 // old slave label
-                mergeSet.masterObjects()[1] = oldCellI;
+                mergeSet.masterObjects()[1] = oldCelli;
 
                 nMerged[mergeCellI] = 2;
             }
             else
             {
-                mergeSet.masterObjects()[nMerged[mergeCellI]++] = oldCellI;
+                mergeSet.masterObjects()[nMerged[mergeCellI]++] = oldCelli;
             }
         }
     }
@@ -656,7 +656,7 @@ void CML::polyTopoChange::getFaceOrder
     oldToNew = -1;
 
     // First unassigned face
-    label newFaceI = 0;
+    label newFacei = 0;
 
     labelList nbr;
     labelList order;
@@ -674,25 +674,25 @@ void CML::polyTopoChange::getFaceOrder
         {
             label facei = cellFaces[startOfCell + i];
 
-            label nbrCellI = faceNeighbour_[facei];
+            label nbrCelli = faceNeighbour_[facei];
 
             if (facei >= nActiveFaces)
             {
                 // Retired face.
                 nbr[i] = -1;
             }
-            else if (nbrCellI != -1)
+            else if (nbrCelli != -1)
             {
                 // Internal face. Get cell on other side.
-                if (nbrCellI == celli)
+                if (nbrCelli == celli)
                 {
-                    nbrCellI = faceOwner_[facei];
+                    nbrCelli = faceOwner_[facei];
                 }
 
-                if (celli < nbrCellI)
+                if (celli < nbrCelli)
                 {
                     // CellI is master
-                    nbr[i] = nbrCellI;
+                    nbr[i] = nbrCelli;
                 }
                 else
                 {
@@ -716,7 +716,7 @@ void CML::polyTopoChange::getFaceOrder
         //    if (nbr[i] != -1)
         //    {
         //        oldToNew[cellFaces[startOfCell + nbr.indices()[i]]] =
-        //            newFaceI++;
+        //            newFacei++;
         //    }
         //}
         forAll(order, i)
@@ -724,7 +724,7 @@ void CML::polyTopoChange::getFaceOrder
             label index = order[i];
             if (nbr[index] != -1)
             {
-                oldToNew[cellFaces[startOfCell + index]] = newFaceI++;
+                oldToNew[cellFaces[startOfCell + index]] = newFacei++;
             }
         }
     }
@@ -736,7 +736,7 @@ void CML::polyTopoChange::getFaceOrder
     patchSizes.setSize(nPatches_);
     patchSizes = 0;
 
-    patchStarts[0] = newFaceI;
+    patchStarts[0] = newFacei;
 
     for (label facei = 0; facei < nActiveFaces; facei++)
     {
@@ -1041,40 +1041,40 @@ void CML::polyTopoChange::compact
     // Compact faces.
     {
         labelList localFaceMap(faces_.size(), -1);
-        label newFaceI = 0;
+        label newFacei = 0;
 
         forAll(faces_, facei)
         {
             if (!faceRemoved(facei) && faceOwner_[facei] >= 0)
             {
-                localFaceMap[facei] = newFaceI++;
+                localFaceMap[facei] = newFacei++;
             }
         }
-        nActiveFaces_ = newFaceI;
+        nActiveFaces_ = newFacei;
 
         forAll(faces_, facei)
         {
             if (!faceRemoved(facei) && faceOwner_[facei] < 0)
             {
                 // Retired face
-                localFaceMap[facei] = newFaceI++;
+                localFaceMap[facei] = newFacei++;
             }
         }
 
         if (debug)
         {
             Pout<< "Faces : active:" << nActiveFaces_
-                << "  removed:" << faces_.size()-newFaceI << endl;
+                << "  removed:" << faces_.size()-newFacei << endl;
         }
 
         // Reorder faces.
-        reorderCompactFaces(newFaceI, localFaceMap);
+        reorderCompactFaces(newFacei, localFaceMap);
     }
 
     // Compact cells.
     {
         labelList localCellMap;
-        label newCellI;
+        label newCelli;
 
         if (orderCells)
         {
@@ -1083,7 +1083,7 @@ void CML::polyTopoChange::compact
             makeCellCells(nActiveFaces_, cellCells);
 
             // Cell ordering (based on bandCompression). Handles removed cells.
-            newCellI = getCellOrder(cellCells, localCellMap);
+            newCelli = getCellOrder(cellCells, localCellMap);
         }
         else
         {
@@ -1091,31 +1091,31 @@ void CML::polyTopoChange::compact
             localCellMap.setSize(cellMap_.size());
             localCellMap = -1;
 
-            newCellI = 0;
+            newCelli = 0;
             forAll(cellMap_, celli)
             {
                 if (!cellRemoved(celli))
                 {
-                    localCellMap[celli] = newCellI++;
+                    localCellMap[celli] = newCelli++;
                 }
             }
         }
 
         if (debug)
         {
-            Pout<< "Cells : active:" << newCellI
-                << "  removed:" << cellMap_.size()-newCellI << endl;
+            Pout<< "Cells : active:" << newCelli
+                << "  removed:" << cellMap_.size()-newCelli << endl;
         }
 
         // Renumber -if cells reordered or -if cells removed
-        if (orderCells || (newCellI != cellMap_.size()))
+        if (orderCells || (newCelli != cellMap_.size()))
         {
             reorder(localCellMap, cellMap_);
-            cellMap_.setCapacity(newCellI);
+            cellMap_.setCapacity(newCelli);
             renumberReverseMap(localCellMap, reverseCellMap_);
 
             reorder(localCellMap, cellZone_);
-            cellZone_.setCapacity(newCellI);
+            cellZone_.setCapacity(newCelli);
 
             renumberKey(localCellMap, cellFromPoint_);
             renumberKey(localCellMap, cellFromEdge_);
@@ -1321,14 +1321,14 @@ void CML::polyTopoChange::calcFaceInflationMaps
         // Collect all still existing faces connected to this point.
         forAllConstIter(Map<label>, faceFromPoint_, iter)
         {
-            label newFaceI = iter.key();
+            label newFacei = iter.key();
 
-            if (region_[newFaceI] == -1)
+            if (region_[newFacei] == -1)
             {
                 // Get internal faces using point on old mesh
                 facesFromPoints[nFacesFromPoints++] = objectMap
                 (
-                    newFaceI,
+                    newFacei,
                     selectFaces
                     (
                         mesh,
@@ -1342,7 +1342,7 @@ void CML::polyTopoChange::calcFaceInflationMaps
                 // Get patch faces using point on old mesh
                 facesFromPoints[nFacesFromPoints++] = objectMap
                 (
-                    newFaceI,
+                    newFacei,
                     selectFaces
                     (
                         mesh,
@@ -1367,14 +1367,14 @@ void CML::polyTopoChange::calcFaceInflationMaps
         // Collect all still existing faces connected to this edge.
         forAllConstIter(Map<label>, faceFromEdge_, iter)
         {
-            label newFaceI = iter.key();
+            label newFacei = iter.key();
 
-            if (region_[newFaceI] == -1)
+            if (region_[newFacei] == -1)
             {
                 // Get internal faces using edge on old mesh
                 facesFromEdges[nFacesFromEdges++] = objectMap
                 (
-                    newFaceI,
+                    newFacei,
                     selectFaces
                     (
                         mesh,
@@ -1388,7 +1388,7 @@ void CML::polyTopoChange::calcFaceInflationMaps
                 // Get patch faces using edge on old mesh
                 facesFromEdges[nFacesFromEdges++] = objectMap
                 (
-                    newFaceI,
+                    newFacei,
                     selectFaces
                     (
                         mesh,
@@ -1469,12 +1469,12 @@ void CML::polyTopoChange::calcCellInflationMaps
         // Collect all still existing faces connected to this point.
         forAllConstIter(Map<label>, cellFromFace_, iter)
         {
-            label oldFaceI = iter();
+            label oldFacei = iter();
 
-            if (mesh.isInternalFace(oldFaceI))
+            if (mesh.isInternalFace(oldFacei))
             {
-                twoCells[0] = mesh.faceOwner()[oldFaceI];
-                twoCells[1] = mesh.faceNeighbour()[oldFaceI];
+                twoCells[0] = mesh.faceOwner()[oldFacei];
+                twoCells[1] = mesh.faceNeighbour()[oldFacei];
                 cellsFromFaces[nCellsFromFaces++] = objectMap
                 (
                     iter.key(),
@@ -1486,7 +1486,7 @@ void CML::polyTopoChange::calcCellInflationMaps
                 cellsFromFaces[nCellsFromFaces++] = objectMap
                 (
                     iter.key(),
-                    labelList(1, mesh.faceOwner()[oldFaceI])
+                    labelList(1, mesh.faceOwner()[oldFacei])
                 );
             }
         }
@@ -1957,16 +1957,16 @@ void CML::polyTopoChange::reorderCoupledFaces
                 // Merge patch face reordering into mesh face reordering table
                 label start = patchStarts[patchi];
 
-                forAll(patchFaceMap, patchFaceI)
+                forAll(patchFaceMap, patchFacei)
                 {
-                    oldToNew[patchFaceI + start] =
-                        start + patchFaceMap[patchFaceI];
+                    oldToNew[patchFacei + start] =
+                        start + patchFaceMap[patchFacei];
                 }
 
-                forAll(patchFaceRotation, patchFaceI)
+                forAll(patchFaceRotation, patchFacei)
                 {
-                    rotation[patchFaceI + start] =
-                        patchFaceRotation[patchFaceI];
+                    rotation[patchFacei + start] =
+                        patchFaceRotation[patchFacei];
                 }
 
                 anyChanged = true;
@@ -2420,9 +2420,9 @@ void CML::polyTopoChange::addMesh
                     << "Are patches in incremental order?"
                     << abort(FatalError);
             }
-            forAll(pp, patchFaceI)
+            forAll(pp, patchFacei)
             {
-                label facei = pp.start() + patchFaceI;
+                label facei = pp.start() + patchFacei;
 
                 addFace
                 (

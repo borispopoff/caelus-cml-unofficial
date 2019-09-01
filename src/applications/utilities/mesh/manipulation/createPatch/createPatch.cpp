@@ -573,7 +573,7 @@ int main(int argc, char *argv[])
         // Old and new patches.
         DynamicList<polyPatch*> allPatches(patches.size()+patchSources.size());
 
-        label startFaceI = mesh.nInternalFaces();
+        label startFacei = mesh.nInternalFaces();
 
         // Copy old patches.
         forAll(patches, patchi)
@@ -589,10 +589,10 @@ int main(int argc, char *argv[])
                         patches,
                         patchi,
                         pp.size(),
-                        startFaceI
+                        startFacei
                     ).ptr()
                 );
-                startFaceI += pp.size();
+                startFacei += pp.size();
             }
         }
 
@@ -602,20 +602,20 @@ int main(int argc, char *argv[])
 
             word patchName(dict.lookup("name"));
 
-            label destPatchI = patches.findPatchID(patchName);
+            label destPatchi = patches.findPatchID(patchName);
 
-            if (destPatchI == -1)
+            if (destPatchi == -1)
             {
                 dictionary patchDict(dict.subDict("patchInfo"));
 
-                destPatchI = allPatches.size();
+                destPatchi = allPatches.size();
 
                 Info<< "Adding new patch " << patchName
-                    << " as patch " << destPatchI
+                    << " as patch " << destPatchi
                     << " from " << patchDict << endl;
 
                 patchDict.set("nFaces", 0);
-                patchDict.set("startFace", startFaceI);
+                patchDict.set("startFace", startFacei);
 
                 // Add an empty patch.
                 allPatches.append
@@ -624,7 +624,7 @@ int main(int argc, char *argv[])
                     (
                         patchName,
                         patchDict,
-                        destPatchI,
+                        destPatchi,
                         patches
                     ).ptr()
                 );
@@ -650,10 +650,10 @@ int main(int argc, char *argv[])
                         patches,
                         patchi,
                         pp.size(),
-                        startFaceI
+                        startFacei
                     ).ptr()
                 );
-                startFaceI += pp.size();
+                startFacei += pp.size();
             }
         }
 
@@ -677,9 +677,9 @@ int main(int argc, char *argv[])
         const dictionary& dict = patchSources[addedI];
 
         const word patchName(dict.lookup("name"));
-        label destPatchI = patches.findPatchID(patchName);
+        label destPatchi = patches.findPatchID(patchName);
 
-        if (destPatchI == -1)
+        if (destPatchi == -1)
         {
             FatalErrorInFunction
                 << "patch " << patchName << " not added. Problem."
@@ -704,7 +704,7 @@ int main(int argc, char *argv[])
                 const polyPatch& pp = patches[iter.key()];
 
                 Info<< "Moving faces from patch " << pp.name()
-                    << " to patch " << destPatchI << endl;
+                    << " to patch " << destPatchi << endl;
 
                 forAll(pp, i)
                 {
@@ -712,7 +712,7 @@ int main(int argc, char *argv[])
                     (
                         mesh,
                         pp.start() + i,
-                        destPatchI,
+                        destPatchi,
                         meshMod
                     );
                 }
@@ -750,7 +750,7 @@ int main(int argc, char *argv[])
                 (
                     mesh,
                     facei,
-                    destPatchI,
+                    destPatchi,
                     meshMod
                 );
             }

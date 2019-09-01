@@ -153,12 +153,12 @@ CML::labelList CML::orientedSurface::edgeToFace
 void CML::orientedSurface::walkSurface
 (
     const triSurface& s,
-    const label startFaceI,
+    const label startFacei,
     labelList& flipState
 )
 {
     // List of faces that were changed in the last iteration.
-    labelList changedFaces(1, startFaceI);
+    labelList changedFaces(1, startFacei);
     // List of edges that were changed in the last iteration.
     labelList changedEdges;
 
@@ -246,13 +246,13 @@ void CML::orientedSurface::findZoneSide
     const labelList& faceZone,
     const label zoneI,
     const point& outsidePoint,
-    label& zoneFaceI,
+    label& zoneFacei,
     bool& isOutside
 )
 {
     const triSurface& s = surfSearches.surface();
 
-    zoneFaceI = -1;
+    zoneFacei = -1;
     isOutside = false;
 
     pointField start(1, outsidePoint);
@@ -294,7 +294,7 @@ void CML::orientedSurface::findZoneSide
 
                 if (zoneIndex != -1)
                 {
-                    zoneFaceI = facei;
+                    zoneFacei = facei;
 
                     if ((zoneIndex%2) == 0)
                     {
@@ -370,24 +370,24 @@ bool CML::orientedSurface::orientConsistent(triSurface& s)
         label facei = 0;
         while (true)
         {
-            label startFaceI = -1;
+            label startFacei = -1;
             while (facei < s.size())
             {
                 if (flipState[facei] == UNVISITED)
                 {
-                    startFaceI = facei;
+                    startFacei = facei;
                     break;
                 }
                 facei++;
             }
 
-            if (startFaceI == -1)
+            if (startFacei == -1)
             {
                 break;
             }
 
-            flipState[startFaceI] = NOFLIP;
-            walkSurface(s, startFaceI, flipState);
+            flipState[startFacei] = NOFLIP;
+            walkSurface(s, startFacei, flipState);
         }
 
         anyFlipped = flipSurface(s, flipState);
@@ -539,7 +539,7 @@ bool CML::orientedSurface::orient
     labelList flipState(s.size(), UNVISITED);
     for (label zoneI = 0; zoneI < nZones; zoneI++)
     {
-        label zoneFaceI = -1;
+        label zoneFacei = -1;
         bool isOutside;
         findZoneSide
         (
@@ -548,19 +548,19 @@ bool CML::orientedSurface::orient
             zoneI,
             samplePoint,
 
-            zoneFaceI,
+            zoneFacei,
             isOutside
         );
 
         if (isOutside == orientOutside)
         {
-            flipState[zoneFaceI] = NOFLIP;
+            flipState[zoneFacei] = NOFLIP;
         }
         else
         {
-            flipState[zoneFaceI] = FLIP;
+            flipState[zoneFacei] = FLIP;
         }
-        walkSurface(s, zoneFaceI, flipState);
+        walkSurface(s, zoneFacei, flipState);
     }
 
     // Now finally flip triangles according to flipState.

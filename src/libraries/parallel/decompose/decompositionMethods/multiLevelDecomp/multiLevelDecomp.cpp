@@ -95,8 +95,8 @@ void CML::multiLevelDecomp::subsetGlobalCellCells
         forAll(cCells, i)
         {
             // Get locally-compact cell index of neighbouring cell
-            label nbrCellI = oldToNew[cCells[i]];
-            if (nbrCellI == -1)
+            label nbrCelli = oldToNew[cCells[i]];
+            if (nbrCelli == -1)
             {
                 cutConnections[allDist[cCells[i]]]++;
             }
@@ -108,9 +108,9 @@ void CML::multiLevelDecomp::subsetGlobalCellCells
                 label celli = set[subCellI];
                 label oldNbrCellI = cellCells[celli][i];
                 // Get processor from original neighbour
-                label procI = globalCells.whichProcID(oldNbrCellI);
+                label proci = globalCells.whichProcID(oldNbrCellI);
                 // Convert into global compact numbering
-                cCells[newI++] = globalSubCells.toGlobal(procI, nbrCellI);
+                cCells[newI++] = globalSubCells.toGlobal(proci, nbrCelli);
             }
         }
         cCells.setSize(newI);

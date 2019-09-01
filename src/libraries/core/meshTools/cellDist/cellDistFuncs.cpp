@@ -91,14 +91,14 @@ CML::scalar CML::cellDistFuncs::smallestDist
 
     for (label wallFaceI = 0; wallFaceI < nWallFaces; wallFaceI++)
     {
-        label patchFaceI = wallFaces[wallFaceI];
+        label patchFacei = wallFaces[wallFaceI];
 
-        pointHit curHit = patch[patchFaceI].nearestPoint(p, points);
+        pointHit curHit = patch[patchFacei].nearestPoint(p, points);
 
         if (curHit.distance() < minDist)
         {
             minDist = curHit.distance();
-            minFaceI = patch.start() + patchFaceI;
+            minFaceI = patch.start() + patchFacei;
         }
     }
 
@@ -112,17 +112,17 @@ CML::scalar CML::cellDistFuncs::smallestDist
 CML::label CML::cellDistFuncs::getPointNeighbours
 (
     const primitivePatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     labelList& neighbours
 ) const
 {
     label nNeighbours = 0;
 
     // Add myself
-    neighbours[nNeighbours++] = patchFaceI;
+    neighbours[nNeighbours++] = patchFacei;
 
     // Add all face neighbours
-    const labelList& faceNeighbours = patch.faceFaces()[patchFaceI];
+    const labelList& faceNeighbours = patch.faceFaces()[patchFacei];
 
     forAll(faceNeighbours, faceNeighbourI)
     {
@@ -137,7 +137,7 @@ CML::label CML::cellDistFuncs::getPointNeighbours
     // Assumes that point-only neighbours are not using multiple points on
     // face.
 
-    const face& f = patch.localFaces()[patchFaceI];
+    const face& f = patch.localFaces()[patchFacei];
 
     forAll(f, fp)
     {
@@ -183,7 +183,7 @@ CML::label CML::cellDistFuncs::getPointNeighbours
             if (!nbs.found(nb))
             {
                 SeriousErrorInFunction
-                    << "getPointNeighbours : patchFaceI:" << patchFaceI
+                    << "getPointNeighbours : patchFacei:" << patchFacei
                     << " verts:" << f << endl;
 
                 forAll(f, fp)
@@ -288,16 +288,16 @@ void CML::cellDistFuncs::correctBoundaryFaceCells
             const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
             // Check cells with face on wall
-            forAll(patch, patchFaceI)
+            forAll(patch, patchFacei)
             {
                 label nNeighbours = getPointNeighbours
                 (
                     patch,
-                    patchFaceI,
+                    patchFacei,
                     neighbours
                 );
 
-                label celli = faceOwner[patch.start() + patchFaceI];
+                label celli = faceOwner[patch.start() + patchFacei];
 
                 label minFaceI = -1;
 

@@ -119,11 +119,11 @@ CML::labelPair CML::addPatchCellLayer::getEdgeString
     const indirectPrimitivePatch& pp,
     const labelListList& globalEdgeFaces,
     const boolList& doneEdge,
-    const label patchFaceI,
-    const label globalFaceI
+    const label patchFacei,
+    const label globalFacei
 ) const
 {
-    const labelList& fEdges = pp.faceEdges()[patchFaceI];
+    const labelList& fEdges = pp.faceEdges()[patchFacei];
 
     label startFp = -1;
     label endFp = -1;
@@ -153,7 +153,7 @@ CML::labelPair CML::addPatchCellLayer::getEdgeString
         (
             globalEdgeFaces,
             fEdges[startFp],
-            globalFaceI
+            globalFacei
         );
 
         if (nbrGlobalFaceI == -1)
@@ -178,7 +178,7 @@ CML::labelPair CML::addPatchCellLayer::getEdgeString
                         pp,
                         globalEdgeFaces,
                         doneEdge,
-                        globalFaceI,
+                        globalFacei,
                         nbrGlobalFaceI,
                         fEdges[prevFp]
                     )
@@ -202,7 +202,7 @@ CML::labelPair CML::addPatchCellLayer::getEdgeString
                         pp,
                         globalEdgeFaces,
                         doneEdge,
-                        globalFaceI,
+                        globalFacei,
                         nbrGlobalFaceI,
                         fEdges[nextFp]
                     )
@@ -256,7 +256,7 @@ CML::label CML::addPatchCellLayer::addSideFace
 
     // Zone info comes from any side patch face. Otherwise -1 since we
     // don't know what to put it in - inherit from the extruded faces?
-    label zoneI = -1;   //mesh_.faceZones().whichZone(meshFaceI);
+    label zoneI = -1;   //mesh_.faceZones().whichZone(meshFacei);
     bool flip = false;
 
     label addedFaceI = -1;
@@ -272,7 +272,7 @@ CML::label CML::addPatchCellLayer::addSideFace
         // see if we can find a face that is otherPatchID
 
         // Get my mesh face and its zone.
-        label meshFaceI = pp.addressing()[ownFaceI];
+        label meshFacei = pp.addressing()[ownFaceI];
 
         forAll(meshFaces, k)
         {
@@ -280,7 +280,7 @@ CML::label CML::addPatchCellLayer::addSideFace
 
             if
             (
-                (facei != meshFaceI)
+                (facei != meshFacei)
              && (patches.whichPatch(facei) == newPatchID)
             )
             {
@@ -491,13 +491,13 @@ CML::labelListList CML::addPatchCellLayer::addedCells
 {
     labelListList layerCells(layerFaces.size());
 
-    forAll(layerFaces, patchFaceI)
+    forAll(layerFaces, patchFacei)
     {
-        const labelList& faceLabels = layerFaces[patchFaceI];
+        const labelList& faceLabels = layerFaces[patchFacei];
 
         if (faceLabels.size())
         {
-            labelList& added = layerCells[patchFaceI];
+            labelList& added = layerCells[patchFacei];
             added.setSize(faceLabels.size()-1);
 
             for (label i = 0; i < faceLabels.size()-1; i++)
@@ -979,7 +979,7 @@ void CML::addPatchCellLayer::setRefinement
                 // Check that there is only one patchface using edge.
                 const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-                label bFaceI = -1;
+                label bFacei = -1;
 
                 forAll(meshFaces, i)
                 {
@@ -989,9 +989,9 @@ void CML::addPatchCellLayer::setRefinement
                     {
                         if (!mesh_.isInternalFace(facei))
                         {
-                            if (bFaceI == -1)
+                            if (bFacei == -1)
                             {
-                                bFaceI = facei;
+                                bFacei = facei;
                             }
                             else
                             {
@@ -1001,9 +1001,9 @@ void CML::addPatchCellLayer::setRefinement
                                     << pp.points()[meshPoints[e[1]]]
                                     << " has more than two boundary faces"
                                     << " using it:"
-                                    << bFaceI << " fc:"
-                                    << mesh_.faceCentres()[bFaceI]
-                                    << " patch:" << patches.whichPatch(bFaceI)
+                                    << bFacei << " fc:"
+                                    << mesh_.faceCentres()[bFacei]
+                                    << " patch:" << patches.whichPatch(bFacei)
                                     << " and " << facei << " fc:"
                                     << mesh_.faceCentres()[facei]
                                     << " patch:" << patches.whichPatch(facei)
@@ -1022,11 +1022,11 @@ void CML::addPatchCellLayer::setRefinement
     // Precalculated patchID for each patch face
     labelList patchID(pp.size());
 
-    forAll(pp, patchFaceI)
+    forAll(pp, patchFacei)
     {
-        label meshFaceI = pp.addressing()[patchFaceI];
+        label meshFacei = pp.addressing()[patchFacei];
 
-        patchID[patchFaceI] = patches.whichPatch(meshFaceI);
+        patchID[patchFacei] = patches.whichPatch(meshFacei);
     }
 
 
@@ -1128,31 +1128,31 @@ void CML::addPatchCellLayer::setRefinement
 
     labelListList addedCells(pp.size());
 
-    forAll(pp, patchFaceI)
+    forAll(pp, patchFacei)
     {
-        if (nFaceLayers[patchFaceI] > 0)
+        if (nFaceLayers[patchFacei] > 0)
         {
-            addedCells[patchFaceI].setSize(nFaceLayers[patchFaceI]);
+            addedCells[patchFacei].setSize(nFaceLayers[patchFacei]);
 
-            label meshFaceI = pp.addressing()[patchFaceI];
+            label meshFacei = pp.addressing()[patchFacei];
 
             label ownZoneI = mesh_.cellZones().whichZone
             (
-                mesh_.faceOwner()[meshFaceI]
+                mesh_.faceOwner()[meshFacei]
             );
 
-            for (label i = 0; i < nFaceLayers[patchFaceI]; i++)
+            for (label i = 0; i < nFaceLayers[patchFacei]; i++)
             {
                 // Note: add from cell (owner of patch face) or from face?
                 // for now add from cell so we can map easily.
-                addedCells[patchFaceI][i] = meshMod.setAction
+                addedCells[patchFacei][i] = meshMod.setAction
                 (
                     polyAddCell
                     (
                         -1,             // master point
                         -1,             // master edge
                         -1,             // master face
-                        (addToMesh_ ? mesh_.faceOwner()[meshFaceI] : -1),
+                        (addToMesh_ ? mesh_.faceOwner()[meshFacei] : -1),
                                         //master
                         ownZoneI        // zone for cell
                     )
@@ -1170,20 +1170,20 @@ void CML::addPatchCellLayer::setRefinement
 
     layerFaces_.setSize(pp.size());
 
-    forAll(pp.localFaces(), patchFaceI)
+    forAll(pp.localFaces(), patchFacei)
     {
-        label meshFaceI = pp.addressing()[patchFaceI];
+        label meshFacei = pp.addressing()[patchFacei];
 
-        if (addedCells[patchFaceI].size())
+        if (addedCells[patchFacei].size())
         {
-            layerFaces_[patchFaceI].setSize(addedCells[patchFaceI].size() + 1);
+            layerFaces_[patchFacei].setSize(addedCells[patchFacei].size() + 1);
 
             // Get duplicated vertices on the patch face.
-            const face& f = pp.localFaces()[patchFaceI];
+            const face& f = pp.localFaces()[patchFacei];
 
             face newFace(f.size());
 
-            forAll(addedCells[patchFaceI], i)
+            forAll(addedCells[patchFacei], i)
             {
                 forAll(f, fp)
                 {
@@ -1202,7 +1202,7 @@ void CML::addPatchCellLayer::setRefinement
                         // Get new outside point
                         label offset =
                             addedPoints_[f[fp]].size()
-                          - addedCells[patchFaceI].size();
+                          - addedCells[patchFacei].size();
                         newFace[fp] = addedPoints_[f[fp]][i+offset];
                     }
                 }
@@ -1215,36 +1215,36 @@ void CML::addPatchCellLayer::setRefinement
                 bool flip = false;
 
 
-                if (i == addedCells[patchFaceI].size()-1)
+                if (i == addedCells[patchFacei].size()-1)
                 {
                     // Top layer so is patch face.
                     nei = -1;
-                    patchi = patchID[patchFaceI];
-                    zoneI = mesh_.faceZones().whichZone(meshFaceI);
+                    patchi = patchID[patchFacei];
+                    zoneI = mesh_.faceZones().whichZone(meshFacei);
                     if (zoneI != -1)
                     {
                         const faceZone& fz = mesh_.faceZones()[zoneI];
-                        flip = fz.flipMap()[fz.whichFace(meshFaceI)];
+                        flip = fz.flipMap()[fz.whichFace(meshFacei)];
                     }
                 }
                 else
                 {
                     // Internal face between layer i and i+1
-                    nei = addedCells[patchFaceI][i+1];
+                    nei = addedCells[patchFacei][i+1];
                     patchi = -1;
                 }
 
 
-                layerFaces_[patchFaceI][i+1] = meshMod.setAction
+                layerFaces_[patchFacei][i+1] = meshMod.setAction
                 (
                     polyAddFace
                     (
                         newFace,                    // face
-                        addedCells[patchFaceI][i],  // owner
+                        addedCells[patchFacei][i],  // owner
                         nei,                        // neighbour
                         -1,                         // master point
                         -1,                         // master edge
-                        (addToMesh_ ? meshFaceI : -1), // master face
+                        (addToMesh_ ? meshFacei : -1), // master face
                         false,                      // flux flip
                         patchi,                     // patch for face
                         zoneI,                      // zone for face
@@ -1261,22 +1261,22 @@ void CML::addPatchCellLayer::setRefinement
 
     if (addToMesh_)
     {
-        forAll(pp, patchFaceI)
+        forAll(pp, patchFacei)
         {
-            if (addedCells[patchFaceI].size())
+            if (addedCells[patchFacei].size())
             {
-                label meshFaceI = pp.addressing()[patchFaceI];
+                label meshFacei = pp.addressing()[patchFacei];
 
-                layerFaces_[patchFaceI][0] = meshFaceI;
+                layerFaces_[patchFacei][0] = meshFacei;
 
                 meshMod.setAction
                 (
                     polyModifyFace
                     (
-                        pp[patchFaceI],                 // modified face
-                        meshFaceI,                      // label of face
-                        mesh_.faceOwner()[meshFaceI],   // owner
-                        addedCells[patchFaceI][0],      // neighbour
+                        pp[patchFacei],                 // modified face
+                        meshFacei,                      // label of face
+                        mesh_.faceOwner()[meshFacei],   // owner
+                        addedCells[patchFacei][0],      // neighbour
                         false,                          // face flip
                         -1,                             // patch for face
                         true, //false,                  // remove from zone
@@ -1291,38 +1291,38 @@ void CML::addPatchCellLayer::setRefinement
     {
         // If creating new mesh: reverse original faces and put them
         // in the exposed patch ID.
-        forAll(pp, patchFaceI)
+        forAll(pp, patchFacei)
         {
-            if (nFaceLayers[patchFaceI] > 0)
+            if (nFaceLayers[patchFacei] > 0)
             {
-                label meshFaceI = pp.addressing()[patchFaceI];
-                label zoneI = mesh_.faceZones().whichZone(meshFaceI);
+                label meshFacei = pp.addressing()[patchFacei];
+                label zoneI = mesh_.faceZones().whichZone(meshFacei);
                 bool zoneFlip = false;
                 if (zoneI != -1)
                 {
                     const faceZone& fz = mesh_.faceZones()[zoneI];
-                    zoneFlip = !fz.flipMap()[fz.whichFace(meshFaceI)];
+                    zoneFlip = !fz.flipMap()[fz.whichFace(meshFacei)];
                 }
 
                 // Reverse and renumber old patch face.
-                face f(pp.localFaces()[patchFaceI].reverseFace());
+                face f(pp.localFaces()[patchFacei].reverseFace());
                 forAll(f, fp)
                 {
                     f[fp] = copiedPatchPoints[f[fp]];
                 }
 
-                layerFaces_[patchFaceI][0] = meshMod.setAction
+                layerFaces_[patchFacei][0] = meshMod.setAction
                 (
                     polyAddFace
                     (
                         f,                          // modified face
-                        addedCells[patchFaceI][0],  // owner
+                        addedCells[patchFacei][0],  // owner
                         -1,                         // neighbour
                         -1,                         // masterPoint
                         -1,                         // masterEdge
                         -1,                         // masterFace
                         true,                       // face flip
-                        exposedPatchID[patchFaceI], // patch for face
+                        exposedPatchID[patchFacei], // patch for face
                         zoneI,                      // zone for face
                         zoneFlip                    // face flip in zone
                     )
@@ -1396,9 +1396,9 @@ void CML::addPatchCellLayer::setRefinement
 
     // Create faces. Per face walk connected edges and find string of edges
     // between the same two faces and extrude string into a single face.
-    forAll(pp, patchFaceI)
+    forAll(pp, patchFacei)
     {
-        const labelList& fEdges = faceEdges[patchFaceI];
+        const labelList& fEdges = faceEdges[patchFacei];
 
         forAll(fEdges, fp)
         {
@@ -1411,8 +1411,8 @@ void CML::addPatchCellLayer::setRefinement
                     pp,
                     globalEdgeFaces,
                     doneEdge,
-                    patchFaceI,
-                    globalFaces.toGlobal(pp.addressing()[patchFaceI])
+                    patchFacei,
+                    globalFaces.toGlobal(pp.addressing()[patchFacei])
                 )
             );
 
@@ -1429,7 +1429,7 @@ void CML::addPatchCellLayer::setRefinement
                 // Extrude edges from indexPair[0] up to indexPair[1]
                 // (note indexPair = indices of edges. There is one more vertex
                 //  than edges)
-                const face& f = localFaces[patchFaceI];
+                const face& f = localFaces[patchFacei];
 
                 labelList stringedVerts;
                 if (endFp >= startFp)
@@ -1457,7 +1457,7 @@ void CML::addPatchCellLayer::setRefinement
                 // and nbrFaceI the neighbour cell. Note that the cells get
                 // added in order of pp so we can just use face ordering and
                 // because we loop in incrementing order as well we will
-                // always have nbrFaceI > patchFaceI.
+                // always have nbrFaceI > patchFacei.
 
                 label startEdgeI = fEdges[startFp];
 
@@ -1614,7 +1614,7 @@ void CML::addPatchCellLayer::setRefinement
 
                     if (newFp >= 3)
                     {
-                        // Add face inbetween faces patchFaceI and nbrFaceI
+                        // Add face inbetween faces patchFacei and nbrFaceI
                         // (possibly -1 for external edges)
 
                         newFace.setSize(newFp);
@@ -1666,7 +1666,7 @@ void CML::addPatchCellLayer::setRefinement
                         (
                             pp.edgeFaces(),
                             startEdgeI,
-                            patchFaceI
+                            patchFacei
                         );
 
                         const labelList& meshFaces = mesh_.edgeFaces
@@ -1683,7 +1683,7 @@ void CML::addPatchCellLayer::setRefinement
                             newFace,                // vertices of new face
                             sidePatchID[startEdgeI],// -1 or patch for face
 
-                            patchFaceI,
+                            patchFacei,
                             nbrFaceI,
                             meshEdgeI,          // (mesh) edge to inflate
                             i,                  // layer
@@ -1736,23 +1736,23 @@ void CML::addPatchCellLayer::updateMesh
     {
         labelListList newLayerFaces(faceMap.size());
 
-        forAll(newLayerFaces, newFaceI)
+        forAll(newLayerFaces, newFacei)
         {
-            label oldFaceI = faceMap[newFaceI];
+            label oldFacei = faceMap[newFacei];
 
-            const labelList& added = layerFaces_[oldFaceI];
+            const labelList& added = layerFaces_[oldFacei];
 
-            labelList& newAdded = newLayerFaces[newFaceI];
+            labelList& newAdded = newLayerFaces[newFacei];
             newAdded.setSize(added.size());
             label newI = 0;
 
             forAll(added, i)
             {
-                label newFaceI = morphMap.reverseFaceMap()[added[i]];
+                label newFacei = morphMap.reverseFaceMap()[added[i]];
 
-                if (newFaceI >= 0)
+                if (newFacei >= 0)
                 {
-                    newAdded[newI++] = newFaceI;
+                    newAdded[newI++] = newFacei;
                 }
             }
             newAdded.setSize(newI);

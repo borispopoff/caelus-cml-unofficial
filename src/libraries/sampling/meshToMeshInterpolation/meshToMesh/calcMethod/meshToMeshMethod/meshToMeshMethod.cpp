@@ -130,15 +130,15 @@ void CML::meshToMeshMethod::appendNbrCells
     // filter out cells already visited from cell neighbours
     forAll(nbrCells, i)
     {
-        label nbrCellI = nbrCells[i];
+        label nbrCelli = nbrCells[i];
 
         if
         (
-            (findIndex(visitedCells, nbrCellI) == -1)
-         && (findIndex(nbrCellIDs, nbrCellI) == -1)
+            (findIndex(visitedCells, nbrCelli) == -1)
+         && (findIndex(nbrCellIDs, nbrCelli) == -1)
         )
         {
-            nbrCellIDs.append(nbrCellI);
+            nbrCellIDs.append(nbrCelli);
         }
     }
 }

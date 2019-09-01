@@ -113,9 +113,9 @@ int main(int argc, char *argv[])
 
             const labelList& pCells = mesh.pointCells()[meshPointi];
 
-            forAll(pCells, pCellI)
+            forAll(pCells, pCelli)
             {
-                cutCells.insert(pCells[pCellI]);
+                cutCells.insert(pCells[pCelli]);
             }
         }
     }

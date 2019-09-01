@@ -469,16 +469,16 @@ void CML::removePoints::updateMesh(const mapPolyMesh& map)
         {
             if (savedFaceLabels_[localI] >= 0)
             {
-                label newFaceI = map.reverseFaceMap()[savedFaceLabels_[localI]];
+                label newFacei = map.reverseFaceMap()[savedFaceLabels_[localI]];
 
-                if (newFaceI == -1)
+                if (newFacei == -1)
                 {
                     FatalErrorInFunction
                         << "Old face " << savedFaceLabels_[localI]
                         << " seems to have dissappeared."
                         << abort(FatalError);
                 }
-                savedFaceLabels_[localI] = newFaceI;
+                savedFaceLabels_[localI] = newFacei;
             }
         }
 
@@ -659,13 +659,13 @@ void CML::removePoints::getUnrefimentSet
         // Populate with my local points-to-restore.
         forAll(savedFaces_, saveI)
         {
-            label bFaceI = savedFaceLabels_[saveI] - mesh_.nInternalFaces();
+            label bFacei = savedFaceLabels_[saveI] - mesh_.nInternalFaces();
 
-            if (bFaceI >= 0)
+            if (bFacei >= 0)
             {
                 const face& savedFace = savedFaces_[saveI];
 
-                boolList& fRestore = faceVertexRestore[bFaceI];
+                boolList& fRestore = faceVertexRestore[bFacei];
 
                 fRestore.setSize(savedFace.size());
                 fRestore = false;
@@ -701,11 +701,11 @@ void CML::removePoints::getUnrefimentSet
 
         forAll(savedFaces_, saveI)
         {
-            label bFaceI = savedFaceLabels_[saveI] - mesh_.nInternalFaces();
+            label bFacei = savedFaceLabels_[saveI] - mesh_.nInternalFaces();
 
-            if (bFaceI >= 0)
+            if (bFacei >= 0)
             {
-                const boolList& fRestore = faceVertexRestore[bFaceI];
+                const boolList& fRestore = faceVertexRestore[bFacei];
 
                 const face& savedFace = savedFaces_[saveI];
 

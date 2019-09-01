@@ -105,7 +105,7 @@ void CML::fieldMinMax::calcMinMaxFields
 
     if (obr_.foundObject<fieldType>(fieldName))
     {
-        const label procI = Pstream::myProcNo();
+        const label proci = Pstream::myProcNo();
 
         const fieldType& field = obr_.lookupObject<fieldType>(fieldName);
         const fvMesh& mesh = field.mesh();
@@ -124,16 +124,16 @@ void CML::fieldMinMax::calcMinMaxFields
                 scalarList minVs(Pstream::nProcs());
                 List<vector> minCs(Pstream::nProcs());
                 label minProcI = findMin(magField);
-                minVs[procI] = magField[minProcI];
-                minCs[procI] = field.mesh().C()[minProcI];
+                minVs[proci] = magField[minProcI];
+                minCs[proci] = field.mesh().C()[minProcI];
 
 
                 labelList maxIs(Pstream::nProcs());
                 scalarList maxVs(Pstream::nProcs());
                 List<vector> maxCs(Pstream::nProcs());
                 label maxProcI = findMax(magField);
-                maxVs[procI] = magField[maxProcI];
-                maxCs[procI] = field.mesh().C()[maxProcI];
+                maxVs[proci] = magField[maxProcI];
+                maxCs[proci] = field.mesh().C()[maxProcI];
 
                 forAll(magFieldBoundary, patchi)
                 {
@@ -143,17 +143,17 @@ void CML::fieldMinMax::calcMinMaxFields
                         const vectorField& Cfp = CfBoundary[patchi];
 
                         label minPI = findMin(mfp);
-                        if (mfp[minPI] < minVs[procI])
+                        if (mfp[minPI] < minVs[proci])
                         {
-                            minVs[procI] = mfp[minPI];
-                            minCs[procI] = Cfp[minPI];
+                            minVs[proci] = mfp[minPI];
+                            minCs[proci] = Cfp[minPI];
                         }
 
                         label maxPI = findMax(mfp);
-                        if (mfp[maxPI] > maxVs[procI])
+                        if (mfp[maxPI] > maxVs[proci])
                         {
-                            maxVs[procI] = mfp[maxPI];
-                            maxCs[procI] = Cfp[maxPI];
+                            maxVs[proci] = mfp[maxPI];
+                            maxCs[proci] = Cfp[maxPI];
                         }
                     }
                 }
@@ -196,8 +196,8 @@ void CML::fieldMinMax::calcMinMaxFields
                 List<Type> minVs(Pstream::nProcs());
                 List<vector> minCs(Pstream::nProcs());
                 label minProcI = findMin(field);
-                minVs[procI] = field[minProcI];
-                minCs[procI] = field.mesh().C()[minProcI];
+                minVs[proci] = field[minProcI];
+                minCs[proci] = field.mesh().C()[minProcI];
 
                 Pstream::gatherList(minVs);
                 Pstream::gatherList(minCs);
@@ -205,8 +205,8 @@ void CML::fieldMinMax::calcMinMaxFields
                 List<Type> maxVs(Pstream::nProcs());
                 List<vector> maxCs(Pstream::nProcs());
                 label maxProcI = findMax(field);
-                maxVs[procI] = field[maxProcI];
-                maxCs[procI] = field.mesh().C()[maxProcI];
+                maxVs[proci] = field[maxProcI];
+                maxCs[proci] = field.mesh().C()[maxProcI];
 
                 forAll(fieldBoundary, patchi)
                 {
@@ -216,17 +216,17 @@ void CML::fieldMinMax::calcMinMaxFields
                         const vectorField& Cfp = CfBoundary[patchi];
 
                         label minPI = findMin(fp);
-                        if (fp[minPI] < minVs[procI])
+                        if (fp[minPI] < minVs[proci])
                         {
-                            minVs[procI] = fp[minPI];
-                            minCs[procI] = Cfp[minPI];
+                            minVs[proci] = fp[minPI];
+                            minCs[proci] = Cfp[minPI];
                         }
 
                         label maxPI = findMax(fp);
-                        if (fp[maxPI] > maxVs[procI])
+                        if (fp[maxPI] > maxVs[proci])
                         {
-                            maxVs[procI] = fp[maxPI];
-                            maxCs[procI] = Cfp[maxPI];
+                            maxVs[proci] = fp[maxPI];
+                            maxCs[proci] = Cfp[maxPI];
                         }
                     }
                 }
