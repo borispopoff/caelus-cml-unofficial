@@ -45,7 +45,7 @@ namespace CML
 
 
 // Geometric matching tolerance. Factor of mesh bounding box.
-const CML::scalar CML::globalMeshData::matchTol_ = 1E-8;
+const CML::scalar CML::globalMeshData::matchTol_ = 1e-8;
 
 namespace CML
 {
@@ -295,12 +295,13 @@ void CML::globalMeshData::countSharedEdges
 }
 
 
-// Shared edges are shared between multiple processors. By their nature both
-// of their endpoints are shared points. (but not all edges using two shared
-// points are shared edges! There might e.g. be an edge between two unrelated
-// clusters of shared points)
 void CML::globalMeshData::calcSharedEdges() const
 {
+    // Shared edges are shared between multiple processors. By their nature both
+    // of their endpoints are shared points. (but not all edges using two shared
+    // points are shared edges! There might e.g. be an edge between two
+    // unrelated clusters of shared points)
+
     if
     (
         nGlobalEdges_ != -1
@@ -467,14 +468,20 @@ void CML::globalMeshData::calcSharedEdges() const
     {
         // Send local edges to master
         {
-            OPstream toMaster(Pstream::blocking, Pstream::masterNo());
-
+            OPstream toMaster
+            (
+                Pstream::blocking,
+                Pstream::masterNo()
+            );
             toMaster << localShared;
         }
         // Receive merged edges from master.
         {
-            IPstream fromMaster(Pstream::blocking, Pstream::masterNo());
-
+            IPstream fromMaster
+            (
+                Pstream::blocking,
+                Pstream::masterNo()
+            );
             fromMaster >> globalShared;
         }
     }
@@ -587,61 +594,84 @@ void CML::globalMeshData::calcPointConnectivity
             transforms.nullTransformIndex()
         );
     }
-    // Send over.
+    // Send to master
     globalPointSlavesMap().distribute(myData);
 
 
     // String of connected points with their transform
     allPointConnectivity.setSize(globalPointSlavesMap().constructSize());
+    allPointConnectivity = labelPairList(0);
+
+    // Pass1: do the master points since these also update local slaves
+    //        (e.g. from local cyclics)
     forAll(slaves, pointi)
     {
         // Reconstruct string of connected points
         const labelList& pSlaves = slaves[pointi];
         const labelList& pTransformSlaves = transformedSlaves[pointi];
-        labelPairList& pConnectivity = allPointConnectivity[pointi];
-        pConnectivity.setSize(1+pSlaves.size()+pTransformSlaves.size());
-        label connI = 0;
 
-        // Add myself
-        pConnectivity[connI++] = myData[pointi];
-        // Add untransformed points
-        forAll(pSlaves, i)
+        if (pSlaves.size()+pTransformSlaves.size())
         {
-            pConnectivity[connI++] = myData[pSlaves[i]];
-        }
-        // Add transformed points.
-        forAll(pTransformSlaves, i)
-        {
-            // Get transform from index
-            label transformI = globalPointSlavesMap().whichTransform
-            (
-                pTransformSlaves[i]
-            );
-            // Add transform to connectivity
-            const labelPair& n = myData[pTransformSlaves[i]];
-            label proci = globalIndexAndTransform::processor(n);
-            label index = globalIndexAndTransform::index(n);
-            pConnectivity[connI++] = globalIndexAndTransform::encode
-            (
-                proci,
-                index,
-                transformI
-            );
-        }
+            labelPairList& pConnectivity = allPointConnectivity[pointi];
 
-        // Put back in slots
-        forAll(pSlaves, i)
-        {
-            allPointConnectivity[pSlaves[i]] = pConnectivity;
-        }
-        forAll(pTransformSlaves, i)
-        {
-            allPointConnectivity[pTransformSlaves[i]] = pConnectivity;
+            pConnectivity.setSize(1+pSlaves.size()+pTransformSlaves.size());
+            label connI = 0;
+
+            // Add myself
+            pConnectivity[connI++] = myData[pointi];
+            // Add untransformed points
+            forAll(pSlaves, i)
+            {
+                pConnectivity[connI++] = myData[pSlaves[i]];
+            }
+            // Add transformed points.
+            forAll(pTransformSlaves, i)
+            {
+                // Get transform from index
+                label transformI = globalPointSlavesMap().whichTransform
+                (
+                    pTransformSlaves[i]
+                );
+                // Add transform to connectivity
+                const labelPair& n = myData[pTransformSlaves[i]];
+                label proci = globalIndexAndTransform::processor(n);
+                label index = globalIndexAndTransform::index(n);
+                pConnectivity[connI++] = globalIndexAndTransform::encode
+                (
+                    proci,
+                    index,
+                    transformI
+                );
+            }
+
+            // Put back in slots
+            forAll(pSlaves, i)
+            {
+                allPointConnectivity[pSlaves[i]] = pConnectivity;
+            }
+            forAll(pTransformSlaves, i)
+            {
+                allPointConnectivity[pTransformSlaves[i]] = pConnectivity;
+            }
         }
     }
+
+
+    // Pass2: see if anything is still unset (should not be the case)
+    forAll(slaves, pointi)
+    {
+        labelPairList& pConnectivity = allPointConnectivity[pointi];
+
+        if (pConnectivity.size() == 0)
+        {
+            pConnectivity.setSize(1, myData[pointi]);
+        }
+    }
+
+
     globalPointSlavesMap().reverseDistribute
     (
-        allPointConnectivity.size(),
+        slaves.size(),
         allPointConnectivity
     );
 }
@@ -795,13 +825,13 @@ void CML::globalMeshData::calcGlobalPointEdges
     // Push back
     globalPointSlavesMap().reverseDistribute
     (
-        globalPointEdges.size(),
+        slaves.size(),
         globalPointEdges
     );
     // Push back
     globalPointSlavesMap().reverseDistribute
     (
-        globalPointPoints.size(),
+        slaves.size(),
         globalPointPoints
     );
 }
@@ -816,7 +846,7 @@ CML::label CML::globalMeshData::findTransform
     const label localPoint
 ) const
 {
-    const label remoteProcI = globalIndexAndTransform::processor(remotePoint);
+    const label remoteProci = globalIndexAndTransform::processor(remotePoint);
     const label remoteIndex = globalIndexAndTransform::index(remotePoint);
 
     label remoteTransformI = -1;
@@ -830,14 +860,14 @@ CML::label CML::globalMeshData::findTransform
         if (proci == Pstream::myProcNo() && pointi == localPoint)
         {
             localTransformI = transformI;
-            //Pout<< "For local :" << localPoint
+            // Pout<< "For local :" << localPoint
             //    << " found transform:" << localTransformI
             //    << endl;
         }
-        if (proci == remoteProcI && pointi == remoteIndex)
+        if (proci == remoteProci && pointi == remoteIndex)
         {
             remoteTransformI = transformI;
-            //Pout<< "For remote:" << remotePoint
+            // Pout<< "For remote:" << remotePoint
             //    << " found transform:" << remoteTransformI
             //    << " at index:" << i
             //    << endl;
@@ -876,14 +906,14 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
 
 
     // The whole problem with deducting edge-connectivity from
-    // point-connectivity is that one of the the endpoints might be
+    // point-connectivity is that one of the endpoints might be
     // a local master but the other endpoint might not. So we first
     // need to make sure that all points know about connectivity and
     // the transformations.
 
 
     // 1. collect point connectivity - basically recreating globalPoints output.
-    // All points will now have a string of points. The transforms are
+    // All points will now have a string of coupled points. The transforms are
     // in respect to the master.
     List<labelPairList> allPointConnectivity;
     calcPointConnectivity(allPointConnectivity);
@@ -979,7 +1009,11 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
         }
 
         allEdgeConnectivity[edgeI].transfer(eEdges);
-        sort(allEdgeConnectivity[edgeI], globalIndexAndTransform::less());
+        sort
+        (
+            allEdgeConnectivity[edgeI],
+            globalIndexAndTransform::less()
+        );
     }
 
     // We now have - in allEdgeConnectivity - a list of edges which are shared
@@ -1483,7 +1517,7 @@ void CML::globalMeshData::calcGlobalPointBoundaryCells() const
     // Create map of boundary cells and point-cell addressing
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    label bCellI = 0;
+    label bCelli = 0;
     Map<label> meshCellMap(4*coupledPatch().nPoints());
     DynamicList<label> cellMap(meshCellMap.size());
 
@@ -1509,10 +1543,10 @@ void CML::globalMeshData::calcGlobalPointBoundaryCells() const
             }
             else
             {
-                meshCellMap.insert(celli, bCellI);
+                meshCellMap.insert(celli, bCelli);
                 cellMap.append(celli);
-                bCells[i] = bCellI;
-                bCellI++;
+                bCells[i] = bCelli;
+                bCelli++;
             }
         }
     }
@@ -1886,9 +1920,9 @@ CML::pointField CML::globalMeshData::sharedPoints() const
         // insert my own data first
         forAll(pointLabels, i)
         {
-            label sharedPointI = pointAddr[i];
+            label sharedPointi = pointAddr[i];
 
-            sharedPoints[sharedPointI] = mesh_.points()[pointLabels[i]];
+            sharedPoints[sharedPointi] = mesh_.points()[pointLabels[i]];
         }
 
         // Receive data from slaves and insert
@@ -1907,9 +1941,9 @@ CML::pointField CML::globalMeshData::sharedPoints() const
 
             forAll(nbrSharedPointAddr, i)
             {
-                label sharedPointI = nbrSharedPointAddr[i];
+                label sharedPointi = nbrSharedPointAddr[i];
 
-                sharedPoints[sharedPointI] = nbrSharedPoints[i];
+                sharedPoints[sharedPointi] = nbrSharedPoints[i];
             }
         }
 
@@ -1935,8 +1969,11 @@ CML::pointField CML::globalMeshData::sharedPoints() const
         // Slave:
         // send points
         {
-            OPstream toMaster(Pstream::blocking, Pstream::masterNo());
-
+            OPstream toMaster
+            (
+                Pstream::blocking,
+                Pstream::masterNo()
+            );
             toMaster
                 << pointAddr
                 << UIndirectList<point>(mesh_.points(), pointLabels)();
@@ -1944,7 +1981,11 @@ CML::pointField CML::globalMeshData::sharedPoints() const
 
         // Receive sharedPoints
         {
-            IPstream fromMaster(Pstream::blocking, Pstream::masterNo());
+            IPstream fromMaster
+            (
+                Pstream::blocking,
+                Pstream::masterNo()
+            );
             fromMaster >> sharedPoints;
         }
     }
@@ -2436,7 +2477,7 @@ CML::autoPtr<CML::globalIndex> CML::globalMeshData::mergePoints
 
     label myUniquePoints = mesh_.nPoints() - cpp.nPoints() + nMaster;
 
-    //Pout<< "Points :" << nl
+    // Pout<< "Points :" << nl
     //    << "    mesh             : " << mesh_.nPoints() << nl
     //    << "    of which coupled : " << cpp.nPoints() << nl
     //    << "    of which master  : " << nMaster << nl
@@ -2552,7 +2593,7 @@ CML::autoPtr<CML::globalIndex> CML::globalMeshData::mergePoints
         }
     }
 
-    //Pout<< "Patch:" << nl
+    // Pout<< "Patch:" << nl
     //    << "    points:" << meshPoints.size() << nl
     //    << "    of which on coupled patch:" << nCoupled << endl;
 
@@ -2636,7 +2677,7 @@ CML::autoPtr<CML::globalIndex> CML::globalMeshData::mergePoints
 
     autoPtr<globalIndex> globalPointsPtr(new globalIndex(nMasters));
 
-    //Pout<< "Patch:" << nl
+    // Pout<< "Patch:" << nl
     //    << "    points:" << meshPoints.size() << nl
     //    << "    of which on coupled patch:" << nCoupled << nl
     //    << "    of which master:" << nMasters << endl;
@@ -2744,21 +2785,33 @@ void CML::globalMeshData::updateMesh()
     }
 
     // Total number of faces.
-    nTotalFaces_ = returnReduce(mesh_.nFaces(), sumOp<label>());
+    nTotalFaces_ = returnReduce
+    (
+        mesh_.nFaces(),
+        sumOp<label>()
+    );
 
     if (debug)
     {
         Pout<< "globalMeshData : nTotalFaces_:" << nTotalFaces_ << endl;
     }
 
-    nTotalCells_ = returnReduce(mesh_.nCells(), sumOp<label>());
+    nTotalCells_ = returnReduce
+    (
+        mesh_.nCells(),
+        sumOp<label>()
+    );
 
     if (debug)
     {
         Pout<< "globalMeshData : nTotalCells_:" << nTotalCells_ << endl;
     }
 
-    nTotalPoints_ = returnReduce(mesh_.nPoints(), sumOp<label>());
+    nTotalPoints_ = returnReduce
+    (
+        mesh_.nPoints(),
+        sumOp<label>()
+    );
 
     if (debug)
     {
