@@ -295,8 +295,8 @@ public:
             //- Return const access to the cell set
             inline const labelList& cells() const;
 
-            //- Set the applied flag to true for field index fieldI
-            inline void setApplied(const label fieldI);
+            //- Set the applied flag to true for field index fieldi
+            inline void setApplied(const label fieldi);
 
 
         // Edit
@@ -349,35 +349,35 @@ public:
                 virtual void addSup
                 (
                     fvMatrix<scalar>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Vector
                 virtual void addSup
                 (
                     fvMatrix<vector>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Spherical tensor
                 virtual void addSup
                 (
                     fvMatrix<symmTensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Symmetric tensor
                 virtual void addSup
                 (
                     fvMatrix<sphericalTensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Tensor
                 virtual void addSup
                 (
                     fvMatrix<tensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
 
@@ -388,7 +388,7 @@ public:
                 (
                     const volScalarField& rho,
                     fvMatrix<scalar>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Vector
@@ -396,7 +396,7 @@ public:
                 (
                     const volScalarField& rho,
                     fvMatrix<vector>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Spherical tensor
@@ -404,7 +404,7 @@ public:
                 (
                     const volScalarField& rho,
                     fvMatrix<symmTensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Symmetric tensor
@@ -412,7 +412,7 @@ public:
                 (
                     const volScalarField& rho,
                     fvMatrix<sphericalTensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Tensor
@@ -420,7 +420,7 @@ public:
                 (
                     const volScalarField& rho,
                     fvMatrix<tensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
 
@@ -432,7 +432,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<scalar>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Vector
@@ -441,7 +441,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<vector>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Spherical tensor
@@ -450,7 +450,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<symmTensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Symmetric tensor
@@ -459,7 +459,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<sphericalTensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Tensor
@@ -468,7 +468,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<tensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
 
@@ -478,35 +478,35 @@ public:
                 virtual void setValue
                 (
                     fvMatrix<scalar>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Vector
                 virtual void setValue
                 (
                     fvMatrix<vector>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Spherical tensor
                 virtual void setValue
                 (
                     fvMatrix<sphericalTensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Symmetric tensor
                 virtual void setValue
                 (
                     fvMatrix<symmTensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
                 //- Tensor
                 virtual void setValue
                 (
                     fvMatrix<tensor>& eqn,
-                    const label fieldI
+                    const label fieldi
                 );
 
 

@@ -184,7 +184,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<Type>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
             //- Add explicit contribution to compressible equation
@@ -192,7 +192,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<Type>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
 
@@ -320,7 +320,7 @@ template<class Type>
 void CML::fv::SemiImplicitSource<Type>::addSup
 (
     fvMatrix<Type>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (debug)
@@ -335,7 +335,7 @@ void CML::fv::SemiImplicitSource<Type>::addSup
     (
         IOobject
         (
-            name_ + fieldNames_[fieldI] + "Su",
+            name_ + fieldNames_[fieldi] + "Su",
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
@@ -351,13 +351,13 @@ void CML::fv::SemiImplicitSource<Type>::addSup
         false
     );
 
-    UIndirectList<Type>(Su, cells_) = injectionRate_[fieldI].first()/VDash_;
+    UIndirectList<Type>(Su, cells_) = injectionRate_[fieldi].first()/VDash_;
 
     DimensionedField<scalar, volMesh> Sp
     (
         IOobject
         (
-            name_ + fieldNames_[fieldI] + "Sp",
+            name_ + fieldNames_[fieldi] + "Sp",
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
@@ -373,7 +373,7 @@ void CML::fv::SemiImplicitSource<Type>::addSup
         false
     );
 
-    UIndirectList<scalar>(Sp, cells_) = injectionRate_[fieldI].second()/VDash_;
+    UIndirectList<scalar>(Sp, cells_) = injectionRate_[fieldi].second()/VDash_;
 
     eqn += Su + fvm::SuSp(Sp, psi);
 }
@@ -384,7 +384,7 @@ void CML::fv::SemiImplicitSource<Type>::addSup
 (
     const volScalarField& rho,
     fvMatrix<Type>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (debug)
@@ -393,7 +393,7 @@ void CML::fv::SemiImplicitSource<Type>::addSup
             << ">::addSup for source " << name_ << endl;
     }
 
-    return this->addSup(eqn, fieldI);
+    return this->addSup(eqn, fieldi);
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

@@ -127,10 +127,10 @@ void CML::fieldMinMax::writeFileHeader(const label i)
     }
     else
     {
-        forAll(fieldSet_, fieldI)
+        forAll(fieldSet_, fieldi)
         {
-            writeTabbed(file, "min(" + fieldSet_[fieldI] + ')');
-            writeTabbed(file, "max(" + fieldSet_[fieldI] + ')');
+            writeTabbed(file, "min(" + fieldSet_[fieldi] + ')');
+            writeTabbed(file, "max(" + fieldSet_[fieldi] + ')');
         }
     }
 
@@ -169,13 +169,13 @@ void CML::fieldMinMax::write()
 
        Info(log_)<< type() << " " << name_ <<  " output:" << nl;
 
-        forAll(fieldSet_, fieldI)
+        forAll(fieldSet_, fieldi)
         {
-            calcMinMaxFields<scalar>(fieldSet_[fieldI], mdCmpt);
-            calcMinMaxFields<vector>(fieldSet_[fieldI], mode_);
-            calcMinMaxFields<sphericalTensor>(fieldSet_[fieldI], mode_);
-            calcMinMaxFields<symmTensor>(fieldSet_[fieldI], mode_);
-            calcMinMaxFields<tensor>(fieldSet_[fieldI], mode_);
+            calcMinMaxFields<scalar>(fieldSet_[fieldi], mdCmpt);
+            calcMinMaxFields<vector>(fieldSet_[fieldi], mode_);
+            calcMinMaxFields<sphericalTensor>(fieldSet_[fieldi], mode_);
+            calcMinMaxFields<symmTensor>(fieldSet_[fieldi], mode_);
+            calcMinMaxFields<tensor>(fieldSet_[fieldi], mode_);
         }
 
         if (!location_)

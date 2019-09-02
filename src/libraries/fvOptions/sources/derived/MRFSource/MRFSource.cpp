@@ -88,7 +88,7 @@ CML::fv::MRFSource::MRFSource
 void CML::fv::MRFSource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // Update the velocity boundary conditions for changes in rotation speed
@@ -103,7 +103,7 @@ void CML::fv::MRFSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // Update the velocity boundary conditions for changes in rotation speed

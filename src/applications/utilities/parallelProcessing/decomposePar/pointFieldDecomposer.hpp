@@ -244,9 +244,9 @@ void CML::pointFieldDecomposer::decomposeFields
     const PtrList<GeoField>& fields
 ) const
 {
-    forAll(fields, fieldI)
+    forAll(fields, fieldi)
     {
-        decomposeField(fields[fieldI])().write();
+        decomposeField(fields[fieldi])().write();
     }
 }
 

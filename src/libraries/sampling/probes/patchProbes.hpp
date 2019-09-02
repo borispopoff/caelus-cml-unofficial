@@ -218,7 +218,7 @@ void CML::patchProbes::sampleAndWrite
     const fieldGroup<Type>& fields
 )
 {
-    forAll(fields, fieldI)
+    forAll(fields, fieldi)
     {
         if (loadFromFiles_)
         {
@@ -228,7 +228,7 @@ void CML::patchProbes::sampleAndWrite
                 (
                     IOobject
                     (
-                        fields[fieldI],
+                        fields[fieldi],
                         mesh_.time().timeName(),
                         mesh_,
                         IOobject::MUST_READ,
@@ -241,7 +241,7 @@ void CML::patchProbes::sampleAndWrite
         }
         else
         {
-            objectRegistry::const_iterator iter = mesh_.find(fields[fieldI]);
+            objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
 
             if
             (
@@ -255,7 +255,7 @@ void CML::patchProbes::sampleAndWrite
                     mesh_.lookupObject
                     <GeometricField<Type, fvPatchField, volMesh>>
                     (
-                        fields[fieldI]
+                        fields[fieldi]
                     )
                 );
             }
@@ -270,7 +270,7 @@ void CML::patchProbes::sampleAndWriteSurfaceFields
     const fieldGroup<Type>& fields
 )
 {
-    forAll(fields, fieldI)
+    forAll(fields, fieldi)
     {
         if (loadFromFiles_)
         {
@@ -280,7 +280,7 @@ void CML::patchProbes::sampleAndWriteSurfaceFields
                 (
                     IOobject
                     (
-                        fields[fieldI],
+                        fields[fieldi],
                         mesh_.time().timeName(),
                         mesh_,
                         IOobject::MUST_READ,
@@ -293,7 +293,7 @@ void CML::patchProbes::sampleAndWriteSurfaceFields
         }
         else
         {
-            objectRegistry::const_iterator iter = mesh_.find(fields[fieldI]);
+            objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
 
             if
             (
@@ -307,7 +307,7 @@ void CML::patchProbes::sampleAndWriteSurfaceFields
                     mesh_.lookupObject
                     <GeometricField<Type, fvsPatchField, surfaceMesh>>
                     (
-                        fields[fieldI]
+                        fields[fieldi]
                     )
                 );
             }

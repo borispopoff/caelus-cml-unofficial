@@ -104,7 +104,7 @@ public:
         // Evaluation
 
             //- Set value on field
-            virtual void setValue(fvMatrix<Type>& eqn, const label fieldI);
+            virtual void setValue(fvMatrix<Type>& eqn, const label fieldi);
 
 
         // I-O
@@ -172,7 +172,7 @@ template<class Type>
 void CML::fv::ExplicitSetValue<Type>::setValue
 (
     fvMatrix<Type>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (debug)
@@ -181,7 +181,7 @@ void CML::fv::ExplicitSetValue<Type>::setValue
             << ">::setValue for source " << name_ << endl;
     }
 
-    List<Type> values(cells_.size(), injectionRate_[fieldI]);
+    List<Type> values(cells_.size(), injectionRate_[fieldi]);
 
     eqn.setValues(cells_, values);
 }

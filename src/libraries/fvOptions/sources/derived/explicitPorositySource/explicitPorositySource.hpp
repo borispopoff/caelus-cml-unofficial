@@ -134,7 +134,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
             //- Add implicit contribution to compressible momentum equation
@@ -142,7 +142,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
             //- Add implicit contribution to phase momentum equation
@@ -151,7 +151,7 @@ public:
                 const volScalarField& alpha,
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
 

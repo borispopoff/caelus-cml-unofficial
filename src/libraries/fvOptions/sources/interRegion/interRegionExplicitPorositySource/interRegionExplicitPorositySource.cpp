@@ -130,7 +130,7 @@ CML::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
 void CML::fv::interRegionExplicitPorositySource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     initialise();
@@ -184,7 +184,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     initialise();

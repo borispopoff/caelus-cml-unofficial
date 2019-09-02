@@ -394,7 +394,7 @@ void CML::fv::option::correct(volTensorField& fld)
 void CML::fv::option::addSup
 (
     fvMatrix<scalar>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
@@ -404,7 +404,7 @@ void CML::fv::option::addSup
 void CML::fv::option::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
@@ -414,7 +414,7 @@ void CML::fv::option::addSup
 void CML::fv::option::addSup
 (
     fvMatrix<sphericalTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
@@ -424,7 +424,7 @@ void CML::fv::option::addSup
 void CML::fv::option::addSup
 (
     fvMatrix<symmTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
@@ -434,7 +434,7 @@ void CML::fv::option::addSup
 void CML::fv::option::addSup
 (
     fvMatrix<tensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
@@ -445,7 +445,7 @@ void CML::fv::option::addSup
 (
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
@@ -456,7 +456,7 @@ void CML::fv::option::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
@@ -467,7 +467,7 @@ void CML::fv::option::addSup
 (
     const volScalarField& rho,
     fvMatrix<sphericalTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
@@ -478,7 +478,7 @@ void CML::fv::option::addSup
 (
     const volScalarField& rho,
     fvMatrix<symmTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
@@ -489,7 +489,7 @@ void CML::fv::option::addSup
 (
     const volScalarField& rho,
     fvMatrix<tensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
@@ -501,10 +501,10 @@ void CML::fv::option::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    addSup(alpha*rho, eqn, fieldI);
+    addSup(alpha*rho, eqn, fieldi);
 }
 
 
@@ -513,10 +513,10 @@ void CML::fv::option::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    addSup(alpha*rho, eqn, fieldI);
+    addSup(alpha*rho, eqn, fieldi);
 }
 
 
@@ -525,10 +525,10 @@ void CML::fv::option::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<sphericalTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    addSup(alpha*rho, eqn, fieldI);
+    addSup(alpha*rho, eqn, fieldi);
 }
 
 
@@ -537,10 +537,10 @@ void CML::fv::option::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<symmTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    addSup(alpha*rho, eqn, fieldI);
+    addSup(alpha*rho, eqn, fieldi);
 }
 
 
@@ -549,20 +549,20 @@ void CML::fv::option::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<tensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    addSup(alpha*rho, eqn, fieldI);
+    addSup(alpha*rho, eqn, fieldi);
 }
 
 
-void CML::fv::option::setValue(fvMatrix<scalar>& eqn, const label fieldI)
+void CML::fv::option::setValue(fvMatrix<scalar>& eqn, const label fieldi)
 {
     // do nothing
 }
 
 
-void CML::fv::option::setValue(fvMatrix<vector>& eqn, const label fieldI)
+void CML::fv::option::setValue(fvMatrix<vector>& eqn, const label fieldi)
 {
     // do nothing
 }
@@ -571,7 +571,7 @@ void CML::fv::option::setValue(fvMatrix<vector>& eqn, const label fieldI)
 void CML::fv::option::setValue
 (
     fvMatrix<sphericalTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
@@ -581,14 +581,14 @@ void CML::fv::option::setValue
 void CML::fv::option::setValue
 (
     fvMatrix<symmTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // do nothing
 }
 
 
-void CML::fv::option::setValue(fvMatrix<tensor>& eqn, const label fieldI)
+void CML::fv::option::setValue(fvMatrix<tensor>& eqn, const label fieldi)
 {
     // do nothing
 }

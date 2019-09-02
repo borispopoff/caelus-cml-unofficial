@@ -535,14 +535,14 @@ void CML::fvMeshDistribute::mapExposedFaces
     }
 
 
-    label fieldI = 0;
+    label fieldi = 0;
 
     forAllIter(typename HashTable<fldType*>, flds, iter)
     {
         fldType& fld = *iter();
         typename fldType::GeometricBoundaryField& bfld = fld.boundaryField();
 
-        const Field<T>& oldInternal = oldFlds[fieldI++];
+        const Field<T>& oldInternal = oldFlds[fieldi++];
 
         // Pull from old internal field into bfld.
 

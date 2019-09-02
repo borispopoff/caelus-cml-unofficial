@@ -98,9 +98,9 @@ inline const CML::labelList& CML::fv::option::cells() const
 }
 
 
-inline void CML::fv::option::setApplied(const label fieldI)
+inline void CML::fv::option::setApplied(const label fieldi)
 {
-    applied_[fieldI] = true;
+    applied_[fieldi] = true;
 }
 
 

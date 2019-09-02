@@ -165,14 +165,14 @@ void CML::fv::pressureGradientExplicitSource::correct(volVectorField& U)
 void CML::fv::pressureGradientExplicitSource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     DimensionedField<vector, volMesh> Su
     (
         IOobject
         (
-            name_ + fieldNames_[fieldI] + "Sup",
+            name_ + fieldNames_[fieldi] + "Sup",
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
@@ -194,10 +194,10 @@ void CML::fv::pressureGradientExplicitSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    this->addSup(eqn, fieldI);
+    this->addSup(eqn, fieldi);
 }
 
 

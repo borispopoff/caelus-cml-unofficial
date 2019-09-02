@@ -61,7 +61,7 @@ CML::fv::radialActuationDiskSource::radialActuationDiskSource
 void CML::fv::radialActuationDiskSource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     const scalarField& cellsV = mesh_.V();
@@ -86,7 +86,7 @@ void CML::fv::radialActuationDiskSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     const scalarField& cellsV = mesh_.V();

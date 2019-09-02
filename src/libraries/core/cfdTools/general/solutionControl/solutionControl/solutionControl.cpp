@@ -51,8 +51,8 @@ void CML::solutionControl::read(const bool absTolOnly)
     forAllConstIter(dictionary, residualDict, iter)
     {
         const word& fName = iter().keyword();
-        const label fieldI = applyToField(fName, false);
-        if (fieldI == -1)
+        const label fieldi = applyToField(fName, false);
+        if (fieldi == -1)
         {
             fieldData fd;
             fd.name = fName.c_str();
@@ -85,7 +85,7 @@ void CML::solutionControl::read(const bool absTolOnly)
         }
         else
         {
-            fieldData& fd = data[fieldI];
+            fieldData& fd = data[fieldi];
             if (absTolOnly)
             {
                 fd.absTol = readScalar(residualDict.lookup(fName));

@@ -198,13 +198,13 @@ void CML::fv::optionList::correct
     {
         option& source = this->operator[](i);
 
-        label fieldI = source.applyToField(fieldName);
+        label fieldi = source.applyToField(fieldName);
 
-        if (fieldI != -1)
+        if (fieldi != -1)
         {
             addProfiling(fvopt, "fvOption::correct." + source.name());
 
-            source.setApplied(fieldI);
+            source.setApplied(fieldi);
 
             if (source.isActive())
             {
@@ -249,13 +249,13 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
     {
         option& source = this->operator[](i);
 
-        label fieldI = source.applyToField(fieldName);
+        label fieldi = source.applyToField(fieldName);
 
-        if (fieldI != -1)
+        if (fieldi != -1)
         {
             addProfiling(fvopt, "fvOption()." + source.name());
 
-            source.setApplied(fieldI);
+            source.setApplied(fieldi);
 
             if (source.isActive())
             {
@@ -265,7 +265,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
                         << fieldName << endl;
                 }
 
-                source.addSup(mtx, fieldI);
+                source.addSup(mtx, fieldi);
             }
         }
     }
@@ -304,13 +304,13 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
     {
         option& source = this->operator[](i);
 
-        label fieldI = source.applyToField(fieldName);
+        label fieldi = source.applyToField(fieldName);
 
-        if (fieldI != -1)
+        if (fieldi != -1)
         {
             addProfiling(fvopt, "fvOption()." + source.name());
 
-            source.setApplied(fieldI);
+            source.setApplied(fieldi);
 
             if (source.isActive())
             {
@@ -320,7 +320,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
                         << fieldName << endl;
                 }
 
-                source.addSup(rho, mtx, fieldI);
+                source.addSup(rho, mtx, fieldi);
             }
         }
     }
@@ -362,13 +362,13 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
     {
         option& source = this->operator[](i);
 
-        label fieldI = source.applyToField(fieldName);
+        label fieldi = source.applyToField(fieldName);
 
-        if (fieldI != -1)
+        if (fieldi != -1)
         {
             addProfiling(fvopt, "fvOption()." + source.name());
 
-            source.setApplied(fieldI);
+            source.setApplied(fieldi);
 
             if (source.isActive())
             {
@@ -378,7 +378,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
                         << fieldName << endl;
                 }
 
-                source.addSup(alpha, rho, mtx, fieldI);
+                source.addSup(alpha, rho, mtx, fieldi);
             }
         }
     }
@@ -396,13 +396,13 @@ void CML::fv::optionList::constrain(fvMatrix<Type>& eqn)
     {
         option& source = this->operator[](i);
 
-        label fieldI = source.applyToField(eqn.psi().name());
+        label fieldi = source.applyToField(eqn.psi().name());
 
-        if (fieldI != -1)
+        if (fieldi != -1)
         {
             addProfiling(fvopt, "fvOption::constrain." + eqn.psi().name());
 
-            source.setApplied(fieldI);
+            source.setApplied(fieldi);
 
             if (source.isActive())
             {
@@ -412,7 +412,7 @@ void CML::fv::optionList::constrain(fvMatrix<Type>& eqn)
                         << " to field " << eqn.psi().name() << endl;
                 }
 
-                source.setValue(eqn, fieldI);
+                source.setValue(eqn, fieldi);
             }
         }
     }

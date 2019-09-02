@@ -83,7 +83,7 @@ CML::fv::explicitPorositySource::explicitPorositySource
 void CML::fv::explicitPorositySource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -96,7 +96,7 @@ void CML::fv::explicitPorositySource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -110,7 +110,7 @@ void CML::fv::explicitPorositySource::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());

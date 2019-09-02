@@ -386,7 +386,7 @@ void CML::probes::sampleAndWrite
 template<class Type>
 void CML::probes::sampleAndWrite(const fieldGroup<Type>& fields)
 {
-    forAll(fields, fieldI)
+    forAll(fields, fieldi)
     {
         if (loadFromFiles_)
         {
@@ -396,7 +396,7 @@ void CML::probes::sampleAndWrite(const fieldGroup<Type>& fields)
                 (
                     IOobject
                     (
-                        fields[fieldI],
+                        fields[fieldi],
                         mesh_.time().timeName(),
                         mesh_,
                         IOobject::MUST_READ,
@@ -409,7 +409,7 @@ void CML::probes::sampleAndWrite(const fieldGroup<Type>& fields)
         }
         else
         {
-            objectRegistry::const_iterator iter = mesh_.find(fields[fieldI]);
+            objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
 
             if
             (
@@ -423,7 +423,7 @@ void CML::probes::sampleAndWrite(const fieldGroup<Type>& fields)
                     mesh_.lookupObject
                     <GeometricField<Type, fvPatchField, volMesh>>
                     (
-                        fields[fieldI]
+                        fields[fieldi]
                     )
                 );
             }
@@ -435,7 +435,7 @@ void CML::probes::sampleAndWrite(const fieldGroup<Type>& fields)
 template<class Type>
 void CML::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
 {
-    forAll(fields, fieldI)
+    forAll(fields, fieldi)
     {
         if (loadFromFiles_)
         {
@@ -445,7 +445,7 @@ void CML::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
                 (
                     IOobject
                     (
-                        fields[fieldI],
+                        fields[fieldi],
                         mesh_.time().timeName(),
                         mesh_,
                         IOobject::MUST_READ,
@@ -458,7 +458,7 @@ void CML::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
         }
         else
         {
-            objectRegistry::const_iterator iter = mesh_.find(fields[fieldI]);
+            objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
 
             if
             (
@@ -472,7 +472,7 @@ void CML::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
                     mesh_.lookupObject
                     <GeometricField<Type, fvsPatchField, surfaceMesh>>
                     (
-                        fields[fieldI]
+                        fields[fieldi]
                     )
                 );
             }
