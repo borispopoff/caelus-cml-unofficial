@@ -87,7 +87,7 @@ public:
         template<class Type, template<class> class PatchField, class GeoMesh>
         void write
         (
-            const PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+            const UPtrList<const GeometricField<Type, PatchField, GeoMesh>>&
         );
 
         //- Interpolate and write volFields
@@ -95,7 +95,7 @@ public:
         void write
         (
             const volPointInterpolation&,
-            const PtrList<GeometricField<Type, fvPatchField, volMesh>>&
+            const UPtrList<const GeometricField<Type, fvPatchField, volMesh>>&
         );
 };
 
@@ -113,7 +113,7 @@ public:
 template<class Type, template<class> class PatchField, class GeoMesh>
 void CML::internalWriter::write
 (
-    const PtrList<GeometricField<Type, PatchField, GeoMesh>>& flds
+    const UPtrList<const GeometricField<Type, PatchField, GeoMesh>>& flds
 )
 {
     forAll(flds, i)
@@ -127,7 +127,7 @@ template<class Type>
 void CML::internalWriter::write
 (
     const volPointInterpolation& pInterp,
-    const PtrList<GeometricField<Type, fvPatchField, volMesh>>& flds
+    const UPtrList<const GeometricField<Type, fvPatchField, volMesh>>& flds
 )
 {
     forAll(flds, i)

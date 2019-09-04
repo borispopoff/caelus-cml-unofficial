@@ -95,7 +95,10 @@ public:
         template<class Type>
         void write
         (
-            const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
+            const UPtrList
+            <
+                const GeometricField<Type, fvsPatchField, surfaceMesh>
+            >&
         );
 };
 
@@ -145,7 +148,10 @@ CML::tmp<Field<Type>> CML::surfaceMeshWriter::getFaceField
 template<class Type>
 void CML::surfaceMeshWriter::write
 (
-    const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
+    const UPtrList
+    <
+        const GeometricField<Type, fvsPatchField, surfaceMesh>
+    >& sflds
 )
 {
     forAll(sflds, fieldi)

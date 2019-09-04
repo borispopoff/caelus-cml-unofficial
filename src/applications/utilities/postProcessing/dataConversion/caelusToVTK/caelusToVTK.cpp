@@ -160,7 +160,7 @@ Note
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class GeoField>
-void print(const char* msg, Ostream& os, const PtrList<GeoField>& flds)
+void print(const char* msg, Ostream& os, const PtrList<const GeoField>& flds)
 {
     if (flds.size())
     {
@@ -553,11 +553,11 @@ int main(int argc, char *argv[])
 
         // Construct the vol fields (on the original mesh if subsetted)
 
-        PtrList<volScalarField> vsf;
-        PtrList<volVectorField> vvf;
-        PtrList<volSphericalTensorField> vSpheretf;
-        PtrList<volSymmTensorField> vSymmtf;
-        PtrList<volTensorField> vtf;
+        PtrList<const volScalarField> vsf;
+        PtrList<const volVectorField> vvf;
+        PtrList<const volSphericalTensorField> vSpheretf;
+        PtrList<const volSymmTensorField> vSymmtf;
+        PtrList<const volTensorField> vtf;
 
         if (!specifiedFields || selectedFields.size())
         {
@@ -609,11 +609,11 @@ int main(int argc, char *argv[])
                 << " (\"-noPointValues\" (at your option)\n";
         }
 
-        PtrList<pointScalarField> psf;
-        PtrList<pointVectorField> pvf;
-        PtrList<pointSphericalTensorField> pSpheretf;
-        PtrList<pointSymmTensorField> pSymmtf;
-        PtrList<pointTensorField> ptf;
+        PtrList<const pointScalarField> psf;
+        PtrList<const pointVectorField> pvf;
+        PtrList<const pointSphericalTensorField> pSpheretf;
+        PtrList<const pointSymmTensorField> pSymmtf;
+        PtrList<const pointTensorField> ptf;
 
         if (!noPointValues && !(specifiedFields && selectedFields.empty()))
         {
@@ -744,7 +744,7 @@ int main(int argc, char *argv[])
 
         if (args.optionFound("surfaceFields"))
         {
-            PtrList<surfaceScalarField> ssf;
+            PtrList<const surfaceScalarField> ssf;
             readFields
             (
                 vMesh,
@@ -755,7 +755,7 @@ int main(int argc, char *argv[])
             );
             print("    surfScalarFields  :", Info, ssf);
 
-            PtrList<surfaceVectorField> svf;
+            PtrList<const surfaceVectorField> svf;
             readFields
             (
                 vMesh,
@@ -777,8 +777,9 @@ int main(int argc, char *argv[])
 
                 forAll(ssf, i)
                 {
-                    svf.set(sz+i, ssf[i]*n);
-                    svf[sz+i].rename(ssf[i].name());
+                    surfaceVectorField* ssfiPtr = (ssf[i]*n).ptr();
+                    ssfiPtr->rename(ssf[i].name());
+                    svf.set(sz+i, ssfiPtr);
                 }
                 ssf.clear();
 
@@ -987,7 +988,7 @@ int main(int argc, char *argv[])
 
         if (doFaceZones)
         {
-            PtrList<surfaceScalarField> ssf;
+            PtrList<const surfaceScalarField> ssf;
             readFields
             (
                 vMesh,
@@ -998,7 +999,7 @@ int main(int argc, char *argv[])
             );
             print("    surfScalarFields  :", Info, ssf);
 
-            PtrList<surfaceVectorField> svf;
+            PtrList<const surfaceVectorField> svf;
             readFields
             (
                 vMesh,

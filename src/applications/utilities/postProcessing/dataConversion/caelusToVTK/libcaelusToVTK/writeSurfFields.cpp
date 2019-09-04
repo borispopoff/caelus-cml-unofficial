@@ -26,17 +26,15 @@ License
 #include "emptyFvsPatchFields.hpp"
 #include "fvsPatchFields.hpp"
 
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-void writeSurfFields
+void CML::writeSurfFields
 (
     const bool binary,
     const vtkMesh& vMesh,
     const fileName& fileName,
-    const PtrList<surfaceVectorField>& surfVectorFields
+    const UPtrList<const surfaceVectorField>& surfVectorFields
 )
 {
     const fvMesh& mesh = vMesh.mesh();
@@ -110,6 +108,5 @@ void writeSurfFields
     }
 }
 
-} // End namespace CML
 
 // ************************************************************************* //
