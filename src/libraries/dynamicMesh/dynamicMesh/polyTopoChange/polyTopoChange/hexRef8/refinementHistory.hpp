@@ -67,7 +67,6 @@ SourceFiles
 #ifndef refinementHistory_H
 #define refinementHistory_H
 
-#include "UPtrList.hpp"
 #include "DynamicList.hpp"
 #include "labelList.hpp"
 #include "FixedList.hpp"
@@ -165,6 +164,7 @@ private:
             const List<splitCell8>&,
             const splitCell8&
         );
+
         //- Debug write
         static void writeDebug
         (
@@ -353,7 +353,6 @@ public:
         //  Can only distribute clusters sent across in one go; cannot
         //  handle parts recombined in multiple passes.
         void distribute(const mapDistributePolyMesh&);
-
 
         //- Compact splitCells_. Removes all freeSplitCells_ elements.
         void compact();

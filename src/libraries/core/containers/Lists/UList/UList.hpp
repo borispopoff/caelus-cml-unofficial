@@ -73,7 +73,7 @@ class UList
         //- Number of elements in UList
         label size_;
 
-        //- Vector of values of type T.
+        //- Vector of values of type T
         T* RESTRICT v_;
 
 
@@ -464,7 +464,6 @@ inline CML::label CML::UList<T>::rcIndex(const label i) const
 }
 
 
-// Check start is within valid range (0 ... size-1).
 template<class T>
 inline void CML::UList<T>::checkStart(const label start) const
 {
@@ -477,7 +476,6 @@ inline void CML::UList<T>::checkStart(const label start) const
 }
 
 
-// Check size is within valid range (0 ... size).
 template<class T>
 inline void CML::UList<T>::checkSize(const label size) const
 {
@@ -490,7 +488,6 @@ inline void CML::UList<T>::checkSize(const label size) const
 }
 
 
-// Check index i is within valid range (0 ... size-1).
 template<class T>
 inline void CML::UList<T>::checkIndex(const label i) const
 {
@@ -562,7 +559,6 @@ inline void CML::UList<T>::shallowCopy(const UList<T>& a)
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 
-// element access
 template<class T>
 inline T& CML::UList<T>::operator[](const label i)
 {
@@ -592,7 +588,6 @@ namespace CML
 }
 
 
-// const element access
 template<class T>
 inline const T& CML::UList<T>::operator[](const label i) const
 {
@@ -603,7 +598,6 @@ inline const T& CML::UList<T>::operator[](const label i) const
 }
 
 
-// Allow cast to a const List<T>&
 template<class T>
 inline CML::UList<T>::operator const CML::List<T>&() const
 {
@@ -738,49 +732,40 @@ inline void CML::reverse(UList<T>& ul)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-/**
- * \def forAll(list, i)
- * Loop across all elements in \a list
- * \par Usage
- * \code
- * forAll(anyList, i)
- * {
- *      statements;
- * }
- * \endcode
- * \sa forAllReverse
-*/
-/**
- * \def forAllReverse(list, i)
- * Reverse loop across all elements in \a list
- * \par Usage
- * \code
- * forAllReverse(anyList, i)
- * {
- *      statements;
- * }
- * \endcode
- * \sa forAll
-*/
+//- Loop across all elements in \a list
+// \par Usage
+// \code
+// forAll(anyList, i)
+// {
+//      statements;
+// }
+// \endcode
+// \sa forAllReverse
 #define forAll(list, i) \
     for (CML::label i=0; i<(list).size(); i++)
 
+//- Reverse loop across all elements in \a list
+//  \par Usage
+//  \code
+//  forAllReverse(anyList, i)
+//  {
+//       statements;
+//  }
+//  \endcode
+//  \sa forAll
 #define forAllReverse(list, i) \
     for (CML::label i=(list).size()-1; i>=0; i--)
 
-/**
- * \def forAllIter(Container, container, iter)
- * Iterate across all elements in the \a container object of type
- * \a Container.
- * \par Usage
- * \code
- * forAll(ContainerType, container, iter)
- * {
- *     statements;
- * }
- * \endcode
- * \sa forAllConstIter
-*/
+//- Iterate across all elements in the \a container object of type
+//  \a Container.
+//  \par Usage
+//  \code
+//  forAll(ContainerType, container, iter)
+//  {
+//      statements;
+//  }
+//  \endcode
+//  \sa forAllConstIter
 #define forAllIter(Container,container,iter)                                   \
     for                                                                        \
     (                                                                          \
@@ -789,19 +774,16 @@ inline void CML::reverse(UList<T>& ul)
         ++iter                                                                 \
     )
 
-/**
- * \def forAllConstIter(Container, container, iter)
- * Iterate across all elements in the \a container object of type
- * \a Container with const access.
- * \par Usage
- * \code
- * forAllConstIter(ContainerType, container, iter)
- * {
- *     statements;
- * }
- * \endcode
- * \sa forAllIter
-*/
+//- Iterate across all elements in the \a container object of type
+//  \a Container with const access.
+//  \par Usage
+//  \code
+//  forAllConstIter(ContainerType, container, iter)
+//  {
+//      statements;
+//  }
+//  \endcode
+//  \sa forAllIter
 #define forAllConstIter(Container,container,iter)                              \
     for                                                                        \
     (                                                                          \
@@ -813,7 +795,6 @@ inline void CML::reverse(UList<T>& ul)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "error.hpp"
 
 #include "ListLoopM.hpp"
 #include "contiguous.hpp"
