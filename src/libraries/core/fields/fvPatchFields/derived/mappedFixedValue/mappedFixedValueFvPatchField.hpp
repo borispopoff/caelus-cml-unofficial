@@ -32,7 +32,7 @@ Description
 
     \table
         Property     | Description             | Required    | Default value
-        fieldName    | name of field to be mapped | no       | this field name
+        field        | name of field to be mapped | no       | this field name
         setAverage   | flag to activate setting of average value | yes |
         average      | average value to apply if \c setAverage = yes | yes |
         interpolationScheme | type of interpolation scheme | no |
@@ -43,7 +43,7 @@ Description
     myPatch
     {
         type            mapped;
-        fieldName       T;
+        field           T;
         setAverage      no;
         average         0;
         interpolationScheme cell;
@@ -258,7 +258,7 @@ CML::mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF, dict),
-    fieldName_(dict.lookupOrDefault<word>("fieldName", iF.name())),
+    fieldName_(dict.lookupOrDefault<word>("field", iF.name())),
     setAverage_(readBool(dict.lookup("setAverage"))),
     average_(pTraits<Type>(dict.lookup("average"))),
     interpolationScheme_(interpolationCell<Type>::typeName)
@@ -522,7 +522,7 @@ template<class Type>
 void CML::mappedFixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("fieldName") << fieldName_ << token::END_STATEMENT << nl;
+    os.writeKeyword("field") << fieldName_ << token::END_STATEMENT << nl;
     os.writeKeyword("setAverage") << setAverage_ << token::END_STATEMENT << nl;
     os.writeKeyword("average") << average_ << token::END_STATEMENT << nl;
     os.writeKeyword("interpolationScheme") << interpolationScheme_

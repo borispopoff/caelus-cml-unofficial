@@ -30,7 +30,7 @@ Description
 
     \table
         Property     | Description             | Required    | Default value
-        fieldName    | name of field to be mapped | no       | this field name
+        field        | name of field to be mapped | no       | this field name
         setAverage   | flag to activate setting of average value | yes |
         average      | average value to apply if \c setAverage = yes | yes |
     \endtable
@@ -40,7 +40,7 @@ Description
     myPatch
     {
         type            mappedField;
-        fieldName       T;              // optional field name
+        field           T;              // optional field name
         setAverage      no;             // apply an average value
         average         0;              // average to apply if setAverage
         value           uniform 0;      // place holder
@@ -273,7 +273,7 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 :
     mappedPatchBase(p.patch(), dict),
     fixedValueFvPatchField<Type>(p, iF, dict),
-    fieldName_(dict.template lookupOrDefault<word>("fieldName", iF.name())),
+    fieldName_(dict.template lookupOrDefault<word>("field", iF.name())),
     setAverage_(readBool(dict.lookup("setAverage"))),
     average_(pTraits<Type>(dict.lookup("average"))),
     interpolationScheme_(interpolationCell<Type>::typeName)
@@ -549,7 +549,7 @@ void mappedFieldFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     mappedPatchBase::write(os);
-    os.writeKeyword("fieldName") << fieldName_ << token::END_STATEMENT << nl;
+    os.writeKeyword("field") << fieldName_ << token::END_STATEMENT << nl;
     os.writeKeyword("setAverage") << setAverage_ << token::END_STATEMENT << nl;
     os.writeKeyword("average") << average_ << token::END_STATEMENT << nl;
     os.writeKeyword("interpolationScheme") << interpolationScheme_

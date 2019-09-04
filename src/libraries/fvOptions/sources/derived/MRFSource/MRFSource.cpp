@@ -79,7 +79,7 @@ CML::fv::MRFSource::MRFSource
 :
     option(name, modelType, dict, mesh),
     mrfPtr_(nullptr),
-    UName_(coeffs_.lookupOrDefault<word>("UName", "U"))
+    UName_(coeffs_.lookupOrDefault<word>("U", "U"))
 {
     initialise();
 }
@@ -166,7 +166,7 @@ bool CML::fv::MRFSource::read(const dictionary& dict)
 {
     if (option::read(dict))
     {
-        coeffs_.readIfPresent("UName", UName_);
+        coeffs_.readIfPresent("U", UName_);
 
         initialise();
 

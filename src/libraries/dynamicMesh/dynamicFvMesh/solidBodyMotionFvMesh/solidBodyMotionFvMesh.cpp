@@ -73,7 +73,7 @@ CML::solidBodyMotionFvMesh::solidBodyMotionFvMesh(const IOobject& io)
     ),
     pointIDs_(),
     moveAllCells_(false),
-    UName_(dynamicMeshCoeffs_.lookupOrDefault<word>("UName", "U"))
+    UName_(dynamicMeshCoeffs_.lookupOrDefault<word>("U", "U"))
 {
     if (undisplacedPoints_.size() != nPoints())
     {

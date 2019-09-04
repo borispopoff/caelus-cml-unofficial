@@ -134,9 +134,9 @@ bool CML::fv::explicitPorositySource::read(const dictionary& dict)
         {
             coeffs_.lookup("UNames") >> fieldNames_;
         }
-        else if (coeffs_.found("UName"))
+        else if (coeffs_.found("U"))
         {
-            word UName(coeffs_.lookup("UName"));
+            word UName(coeffs_.lookup("U"));
             fieldNames_ = wordList(1, UName);
         }
         else

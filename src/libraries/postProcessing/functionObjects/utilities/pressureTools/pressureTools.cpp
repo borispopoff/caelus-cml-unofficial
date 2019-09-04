@@ -252,9 +252,9 @@ void CML::pressureTools::read(const dictionary& dict)
 {
     if (active_)
     {
-        dict.readIfPresent("pName", pName_);
-        dict.readIfPresent("UName", UName_);
-        dict.readIfPresent("rhoName", rhoName_);
+        dict.readIfPresent("p", pName_);
+        dict.readIfPresent("U", UName_);
+        dict.readIfPresent("rho", rhoName_);
 
         if (rhoName_ == "rhoInf")
         {

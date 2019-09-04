@@ -114,8 +114,8 @@ CML::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
     option(name, modelType, dict, mesh, true),
     porosityPtr_(nullptr),
     firstIter_(-1),
-    UName_(coeffs_.lookupOrDefault<word>("UName", "U")),
-    muName_(coeffs_.lookupOrDefault<word>("muName", "thermo:mu"))
+    UName_(coeffs_.lookupOrDefault<word>("U", "U")),
+    muName_(coeffs_.lookupOrDefault<word>("mu", "thermo:mu"))
 {
     if (active_)
     {
@@ -292,8 +292,8 @@ bool CML::fv::interRegionExplicitPorositySource::read(const dictionary& dict)
 {
     if (option::read(dict))
     {
-        coeffs_.readIfPresent("UName", UName_);
-        coeffs_.readIfPresent("muName", muName_);
+        coeffs_.readIfPresent("U", UName_);
+        coeffs_.readIfPresent("mu", muName_);
 
         // reset the porosity model?
 

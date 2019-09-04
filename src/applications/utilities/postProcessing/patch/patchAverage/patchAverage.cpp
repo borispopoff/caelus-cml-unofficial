@@ -75,8 +75,8 @@ int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
     #include "addRegionOption.hpp"
-    argList::validArgs.append("fieldName");
-    argList::validArgs.append("patchName");
+    argList::validArgs.append("field");
+    argList::validArgs.append("patch");
 #   include "setRootCase.hpp"
 #   include "createTime.hpp"
     instantList timeDirs = timeSelector::select0(runTime, args);

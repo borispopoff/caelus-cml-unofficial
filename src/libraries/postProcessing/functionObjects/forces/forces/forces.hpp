@@ -56,12 +56,12 @@ Description
         type         | type name: forces       | yes         |
         log          | write force data to standard output | no | no
         patches      | patches included in the forces calculation | yes |
-        pName        | pressure field name     | no          | p
-        UName        | velocity field name     | no          | U
-        rhoName      | density field name (see below) | no   | rho
+        p            | pressure field name     | no          | p
+        U            | velocity field name     | no          | U
+        rho          | density field name (see below) | no   | rho
         CofR         | centre of rotation (see below) | no   |
         directForceDensity | force density supplied directly (see below)|no|no
-        fDName       | name of force density field (see below) | no | fD
+        fD           | name of force density field (see below) | no | fD
     \endtable
 
     Bin data is optional, but if the dictionary is present, the entries must
@@ -73,12 +73,12 @@ Description
     \endtable
 
 Note
-  - For incompressible cases, set \c rhoName to \c rhoInf.  You will then be
+  - For incompressible cases, set \c rho to \c rhoInf.  You will then be
     required to provide a \c rhoInf value corresponding to the free-stream
     constant density.
   - If the force density is supplied directly, set the \c directForceDensity
     flag to 'yes', and supply the force density field using the \c
-    fDName entry
+    fD entry
   - The centre of rotation (CofR) for moment calculations can either be
     specified by an \c CofR entry, or be taken from origin of the local
     coordinate system.  For example,

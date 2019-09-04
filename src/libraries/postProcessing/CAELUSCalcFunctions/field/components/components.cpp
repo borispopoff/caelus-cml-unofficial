@@ -53,7 +53,7 @@ CML::calcTypes::components::~components()
 void CML::calcTypes::components::init()
 {
     argList::validArgs.append("components");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 

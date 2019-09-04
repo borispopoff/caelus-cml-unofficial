@@ -245,7 +245,7 @@ void CML::yPlusLES::read(const dictionary& dict)
     if (active_)
     {
         log_ = dict.lookupOrDefault<Switch>("log", true);
-        phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
+        phiName_ = dict.lookupOrDefault<word>("phi", "phi");
     }
 }
 

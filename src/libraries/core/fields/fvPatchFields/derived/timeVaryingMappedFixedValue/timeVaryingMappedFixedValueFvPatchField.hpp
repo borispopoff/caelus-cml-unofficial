@@ -43,7 +43,7 @@ Description
         Property     | Description             | Required    | Default value
         setAverage   | flag to activate setting of average value | yes |
         perturb      | perturb points for regular geometries | no | 1e-5
-        fieldTableName | alternative field name to sample | no| this field name
+        fieldTable   | alternative field name to sample | no| this field name
         mapMethod    | type of mapping | no | planarInterpolation
         offset   | for applying offset to mapped values  | no | constant 0.0
     \endtable
@@ -54,7 +54,7 @@ Description
         type            timeVaryingMappedFixedValue;
         setAverage      false;
         //perturb       0.0;
-        //fieldTableName samples;
+        //fieldTable    samples;
         //offset    constant 0.2;
     }
     \endverbatim
@@ -353,7 +353,7 @@ timeVaryingMappedFixedValueFvPatchField
     }
 
 
-    dict.readIfPresent("fieldTableName", fieldTableName_);
+    dict.readIfPresent("fieldTable", fieldTableName_);
 
     if (dict.found("value"))
     {
@@ -800,7 +800,7 @@ void CML::timeVaryingMappedFixedValueFvPatchField<Type>::write(Ostream& os) cons
 
     if (fieldTableName_ != this->dimensionedInternalField().name())
     {
-        os.writeKeyword("fieldTableName") << fieldTableName_
+        os.writeKeyword("fieldTable") << fieldTableName_
             << token::END_STATEMENT << nl;
     }
 

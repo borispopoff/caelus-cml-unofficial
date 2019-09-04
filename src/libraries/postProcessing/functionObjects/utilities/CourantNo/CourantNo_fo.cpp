@@ -135,8 +135,8 @@ void CML::CourantNo::read(const dictionary& dict)
 {
     if (active_)
     {
-        phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
-        rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
+        phiName_ = dict.lookupOrDefault<word>("phi", "phi");
+        rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
     }
 }
 

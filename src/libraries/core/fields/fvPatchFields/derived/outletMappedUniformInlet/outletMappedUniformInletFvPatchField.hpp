@@ -26,7 +26,7 @@ Group
 
 Description
     This boundary conditon averages the field over the "outlet" patch specified
-    by name "outletPatchName" and applies this as the uniform value of the
+    by name "outletPatch" and applies this as the uniform value of the
     field over this patch. An optional fraction can be supplied to apply at
     fraction of the average outlet value to this patch
 
@@ -34,7 +34,7 @@ Description
 
     \table
         Property        | Description             | Required    | Default value
-        outletPatchName | name of outlet patch    | yes         |
+        outletPatch     | name of outlet patch    | yes         |
         phi             | flux field name         | no          | phi
         fraction        | fraction of outlet to   | no          | 1.0
                           apply
@@ -45,7 +45,7 @@ Description
     myPatch
     {
         type            outletMappedUniformInlet;
-        outletPatchName aPatch;
+        outletPatch     aPatch;
         phi             phi;
         fraction        0.5;
         value           uniform 0;
@@ -228,7 +228,7 @@ outletMappedUniformInletFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF, dict),
-    outletPatchName_(dict.lookup("outletPatchName")),
+    outletPatchName_(dict.lookup("outletPatch")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     fraction_(dict.lookupOrDefault<scalar>("fraction", 1.0))
 {}
@@ -332,7 +332,7 @@ template<class Type>
 void CML::outletMappedUniformInletFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("outletPatchName")
+    os.writeKeyword("outletPatch")
         << outletPatchName_ << token::END_STATEMENT << nl;
     if (phiName_ != "phi")
     {

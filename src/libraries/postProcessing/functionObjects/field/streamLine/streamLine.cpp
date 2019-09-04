@@ -383,9 +383,9 @@ void CML::streamLine::read(const dictionary& dict)
 
         //dict_ = dict;
         dict.lookup("fields") >> fields_;
-        if (dict.found("UName"))
+        if (dict.found("U"))
         {
-            dict.lookup("UName") >> UName_;
+            dict.lookup("U") >> UName_;
         }
         else
         {
@@ -394,7 +394,7 @@ void CML::streamLine::read(const dictionary& dict)
             {
                 IOWarningInFunction(dict)
                     << "Using deprecated entry \"U\"."
-                    << " Please use \"UName\" instead."
+                    << " Please use \"U\" instead."
                     << endl;
                 dict.lookup("U") >> UName_;
             }
@@ -479,7 +479,7 @@ void CML::streamLine::read(const dictionary& dict)
         //Info<< "    using interpolation " << interpolationScheme_
         //    << endl;
 
-        cloudName_ = dict.lookupOrDefault<word>("cloudName", "streamLine");
+        cloudName_ = dict.lookupOrDefault<word>("cloud", "streamLine");
         dict.lookup("seedSampleSet") >> seedSet_;
 
         const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);

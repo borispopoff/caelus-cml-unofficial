@@ -47,7 +47,7 @@ Description
         lifeTime        10000;
         trackLength     1e-3;
         nSubCycle       5;
-        cloudName       particleTracks;
+        cloud           particleTracks;
         seedSampleSet   uniform;
         uniformCoeffs
         {
@@ -70,7 +70,7 @@ Description
         lifetime     | Maximum number of particle tracking steps | yes |
         trackLength  | Tracking segment length | no          |
         nSubCycle    | Number of tracking steps per cell | no|
-        cloudName    | Cloud name to use       | yes         |
+        cloud        | Cloud name to use       | yes         |
         seedSampleSet| Seeding method (see below)| yes       |
     \endtable
 

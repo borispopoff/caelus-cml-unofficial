@@ -677,7 +677,7 @@ bool CML::fv::rotorDiskSource::read(const dictionary& dict)
 {
     if (option::read(dict))
     {
-        coeffs_.lookup("fieldNames") >> fieldNames_;
+        coeffs_.lookup("fields") >> fieldNames_;
         applied_.setSize(fieldNames_.size(), false);
 
         // Read if rotorDebug is active

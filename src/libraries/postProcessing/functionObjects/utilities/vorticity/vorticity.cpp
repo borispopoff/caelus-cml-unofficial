@@ -97,7 +97,7 @@ void CML::vorticity::read(const dictionary& dict)
 {
     if (active_)
     {
-        UName_ = dict.lookupOrDefault<word>("UName", "U");
+        UName_ = dict.lookupOrDefault<word>("U", "U");
         if (UName_ != "U")
         {
             outputName_ = typeName + "(" + UName_ + ")";

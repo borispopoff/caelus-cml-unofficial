@@ -53,7 +53,7 @@ CML::calcTypes::magSqr::~magSqr()
 void CML::calcTypes::magSqr::init()
 {
     argList::validArgs.append("magSqr");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 
