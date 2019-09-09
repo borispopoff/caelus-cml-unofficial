@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -77,6 +77,9 @@ BINARY_TYPE_OPERATOR_SF(scalar, scalar, scalar, /, '|', divide)
 
 BINARY_FUNCTION(scalar, scalar, scalar, pow)
 BINARY_TYPE_FUNCTION(scalar, scalar, scalar, pow)
+
+BINARY_FUNCTION(scalar, scalar, scalar, atan2)
+BINARY_TYPE_FUNCTION(scalar, scalar, scalar, atan2)
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -246,6 +249,7 @@ BINARY_OPERATOR(scalar, scalar, scalar, /, '|', divide)
 
 BINARY_TYPE_OPERATOR_SF(scalar, scalar, scalar, /, '|', divide)
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<template<class> class PatchField, class GeoMesh>
@@ -268,6 +272,20 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
     const GeometricField<scalar, PatchField, GeoMesh>& gsf2
 )
 {
+    if (!gsf1.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base field is not dimensionless: " << gsf1.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!gsf2.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << gsf2.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         new GeometricField<scalar, PatchField, GeoMesh>
@@ -281,11 +299,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
                 IOobject::NO_WRITE
             ),
             gsf1.mesh(),
-            pow
-            (
-                gsf1.dimensions(),
-                dimensionedScalar("1", gsf2.dimensions(), 1.0)
-            )
+            dimless
         )
     );
 
@@ -304,17 +318,27 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 {
     const GeometricField<scalar, PatchField, GeoMesh>& gsf1 = tgsf1();
 
+    if (!gsf1.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base field is not dimensionless: " << gsf1.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!gsf2.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << gsf2.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
         (
             tgsf1,
             "pow(" + gsf1.name() + ',' + gsf2.name() + ')',
-            pow
-            (
-                gsf1.dimensions(),
-                dimensionedScalar("1", gsf2.dimensions(), 1.0)
-            )
+            dimless
         )
     );
 
@@ -335,17 +359,27 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 {
     const GeometricField<scalar, PatchField, GeoMesh>& gsf2 = tgsf2();
 
+    if (!gsf1.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base field is not dimensionless: " << gsf1.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!gsf2.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << gsf2.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
         (
             tgsf2,
             "pow(" + gsf1.name() + ',' + gsf2.name() + ')',
-            pow
-            (
-                gsf1.dimensions(),
-                dimensionedScalar("1", gsf2.dimensions(), 1.0)
-            )
+            dimless
         )
     );
 
@@ -366,6 +400,20 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
     const GeometricField<scalar, PatchField, GeoMesh>& gsf1 = tgsf1();
     const GeometricField<scalar, PatchField, GeoMesh>& gsf2 = tgsf2();
 
+    if (!gsf1.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base field is not dimensionless: " << gsf1.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!gsf2.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << gsf2.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         reuseTmpTmpGeometricField
@@ -374,11 +422,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
             tgsf1,
             tgsf2,
             "pow(" + gsf1.name() + ',' + gsf2.name() + ')',
-            pow
-            (
-                gsf1.dimensions(),
-                dimensionedScalar("1", gsf2.dimensions(), 1.0)
-            )
+            dimless
         )
     );
 
@@ -412,6 +456,13 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
     const dimensionedScalar& ds
 )
 {
+    if (!ds.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent is not dimensionless: " << ds.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         new GeometricField<scalar, PatchField, GeoMesh>
@@ -441,6 +492,13 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
     const dimensionedScalar& ds
 )
 {
+    if (!ds.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent is not dimensionless: " << ds.dimensions()
+            << exit(FatalError);
+    }
+
     const GeometricField<scalar, PatchField, GeoMesh>& gsf = tgsf();
 
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
@@ -501,6 +559,20 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
     const GeometricField<scalar, PatchField, GeoMesh>& gsf
 )
 {
+    if (!ds.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base scalar is not dimensionless: " << ds.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!gsf.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << gsf.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         new GeometricField<scalar, PatchField, GeoMesh>
@@ -514,7 +586,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
                 IOobject::NO_WRITE
             ),
             gsf.mesh(),
-            pow(ds, gsf.dimensions())
+            dimless
         )
     );
 
@@ -533,13 +605,27 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 {
     const GeometricField<scalar, PatchField, GeoMesh>& gsf = tgsf();
 
+    if (!ds.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base scalar is not dimensionless: " << ds.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!gsf.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << gsf.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
         (
             tgsf,
             "pow(" + ds.name() + ',' + gsf.name() + ')',
-            pow(ds, gsf.dimensions())
+            dimless
         )
     );
 
@@ -568,6 +654,324 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 )
 {
     return pow(dimensionedScalar(s), tgsf);
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<template<class> class PatchField, class GeoMesh>
+void atan2
+(
+    GeometricField<scalar, PatchField, GeoMesh>& Atan2,
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf1,
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf2
+)
+{
+    atan2
+    (
+        Atan2.primitiveFieldRef(),
+        gsf1.primitiveField(),
+        gsf2.primitiveField()
+    );
+    atan2
+    (
+        Atan2.boundaryFieldRef(),
+        gsf1.boundaryField(),
+        gsf2.boundaryField()
+    );
+}
+
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf1,
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf2
+)
+{
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
+    (
+        new GeometricField<scalar, PatchField, GeoMesh>
+        (
+            IOobject
+            (
+                "atan2(" + gsf1.name() + ',' + gsf2.name() + ')',
+                gsf1.instance(),
+                gsf1.db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            gsf1.mesh(),
+            atan2(gsf1.dimensions(), gsf2.dimensions())
+        )
+    );
+
+    atan2(tAtan2.ref(), gsf1, gsf2);
+
+    return tAtan2;
+}
+
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf1,
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf2
+)
+{
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf1 = tgsf1();
+
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
+    (
+        New
+        (
+            tgsf1,
+            "atan2(" + gsf1.name() + ',' + gsf2.name() + ')',
+            atan2(gsf1.dimensions(), gsf2.dimensions())
+        )
+    );
+
+    atan2(tAtan2.ref(), gsf1, gsf2);
+
+    tgsf1.clear();
+
+    return tAtan2;
+}
+
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf1,
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf2
+)
+{
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf2 = tgsf2();
+
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
+    (
+        New
+        (
+            tgsf2,
+            "atan2(" + gsf1.name() + ',' + gsf2.name() + ')',
+            atan2( gsf1.dimensions(), gsf2.dimensions())
+        )
+    );
+
+    atan2(tAtan2.ref(), gsf1, gsf2);
+
+    tgsf2.clear();
+
+    return tAtan2;
+}
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf1,
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf2
+)
+{
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf1 = tgsf1();
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf2 = tgsf2();
+
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
+    (
+        reuseTmpTmpGeometricField
+            <scalar, scalar, scalar, scalar, PatchField, GeoMesh>::New
+        (
+            tgsf1,
+            tgsf2,
+            "atan2(" + gsf1.name() + ',' + gsf2.name() + ')',
+            atan2(gsf1.dimensions(), gsf2.dimensions())
+        )
+    );
+
+    atan2(tAtan2.ref(), gsf1, gsf2);
+
+    tgsf1.clear();
+    tgsf2.clear();
+
+    return tAtan2;
+}
+
+
+template<template<class> class PatchField, class GeoMesh>
+void atan2
+(
+    GeometricField<scalar, PatchField, GeoMesh>& tAtan2,
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf,
+    const dimensioned<scalar>& ds
+)
+{
+    atan2(tAtan2.primitiveFieldRef(), gsf.primitiveField(), ds.value());
+    atan2(tAtan2.boundaryFieldRef(), gsf.boundaryField(), ds.value());
+}
+
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf,
+    const dimensionedScalar& ds
+)
+{
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
+    (
+        new GeometricField<scalar, PatchField, GeoMesh>
+        (
+            IOobject
+            (
+                "atan2(" + gsf.name() + ',' + ds.name() + ')',
+                gsf.instance(),
+                gsf.db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            gsf.mesh(),
+            atan2(gsf.dimensions(), ds)
+        )
+    );
+
+    atan2(tAtan2.ref(), gsf, ds);
+
+    return tAtan2;
+}
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf,
+    const dimensionedScalar& ds
+)
+{
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf = tgsf();
+
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
+    (
+        New
+        (
+            tgsf,
+            "atan2(" + gsf.name() + ',' + ds.name() + ')',
+            atan2(gsf.dimensions(), ds)
+        )
+    );
+
+    atan2(tAtan2.ref(), gsf, ds);
+
+    tgsf.clear();
+
+    return tAtan2;
+}
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf,
+    const scalar& s
+)
+{
+    return atan2(gsf, dimensionedScalar(s));
+}
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf,
+    const scalar& s
+)
+{
+    return atan2(tgsf, dimensionedScalar(s));
+}
+
+
+template<template<class> class PatchField, class GeoMesh>
+void atan2
+(
+    GeometricField<scalar, PatchField, GeoMesh>& tAtan2,
+    const dimensioned<scalar>& ds,
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf
+)
+{
+    atan2(tAtan2.primitiveFieldRef(), ds.value(), gsf.primitiveField());
+    atan2(tAtan2.boundaryFieldRef(), ds.value(), gsf.boundaryField());
+}
+
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const dimensionedScalar& ds,
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf
+)
+{
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
+    (
+        new GeometricField<scalar, PatchField, GeoMesh>
+        (
+            IOobject
+            (
+                "atan2(" + ds.name() + ',' + gsf.name() + ')',
+                gsf.instance(),
+                gsf.db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            gsf.mesh(),
+            atan2(ds, gsf.dimensions())
+        )
+    );
+
+    atan2(tAtan2.ref(), ds, gsf);
+
+    return tAtan2;
+}
+
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const dimensionedScalar& ds,
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf
+)
+{
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf = tgsf();
+
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
+    (
+        New
+        (
+            tgsf,
+            "atan2(" + ds.name() + ',' + gsf.name() + ')',
+            atan2(ds, gsf.dimensions())
+        )
+    );
+
+    atan2(tAtan2.ref(), ds, gsf);
+
+    tgsf.clear();
+
+    return tAtan2;
+}
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const scalar& s,
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf
+)
+{
+    return atan2(dimensionedScalar(s), gsf);
+}
+
+template<template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
+(
+    const scalar& s,
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf
+)
+{
+    return atan2(dimensionedScalar(s), tgsf);
 }
 
 
@@ -691,7 +1095,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> func                      \
     reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>             \
     ::clear(tgsf);                                                          \
                                                                             \
-    return tFunc;                                                           \
+    return tFunc;                                                              \
 }
 
 BesselFunc(jn)

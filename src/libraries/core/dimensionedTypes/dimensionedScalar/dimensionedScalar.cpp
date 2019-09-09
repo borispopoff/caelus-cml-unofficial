@@ -264,7 +264,7 @@ dimensionedScalar func(const int n, const dimensionedScalar& ds)           \
                                                                            \
     return dimensionedScalar                                               \
     (                                                                      \
-        #func "(" + name(n) + ',' + ds.name() + ')',                      \
+        #func "(" + name(n) + ',' + ds.name() + ')',                       \
         dimless,                                                           \
         CML::func(n, ds.value())                                              \
     );                                                                     \
@@ -274,6 +274,21 @@ transFunc(jn)
 transFunc(yn)
 
 #undef transFunc
+
+
+dimensionedScalar atan2
+(
+    const dimensionedScalar& x,
+    const dimensionedScalar& y
+)
+{
+    return dimensionedScalar
+    (
+        "atan2(" + x.name() + ',' + y.name() + ')',
+        atan2(x.dimensions(), y.dimensions()),
+        ::atan2(x.value(), y.value())
+    );
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

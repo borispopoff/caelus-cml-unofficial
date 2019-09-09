@@ -82,6 +82,8 @@ dimensionSet inv(const dimensionSet&);
 //  for transcendental functions
 dimensionSet trans(const dimensionSet&);
 
+dimensionSet atan2(const dimensionSet&, const dimensionSet&);
+
 // Return the argument; transformations do not change the dimensions
 dimensionSet transform(const dimensionSet&);
 
@@ -243,6 +245,8 @@ public:
         //- Function to check the argument is dimensionless
         //  for transcendental functions
         friend dimensionSet trans(const dimensionSet&);
+
+        friend dimensionSet atan2(const dimensionSet&, const dimensionSet&);
 
         //- Return the argument; transformations do not change the dimensions
         friend dimensionSet transform(const dimensionSet&);

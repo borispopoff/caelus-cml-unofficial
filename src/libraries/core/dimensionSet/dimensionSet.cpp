@@ -492,6 +492,20 @@ CML::dimensionSet CML::trans(const dimensionSet& ds)
 }
 
 
+CML::dimensionSet CML::atan2(const dimensionSet& ds1, const dimensionSet& ds2)
+{
+    if (dimensionSet::debug && ds1 != ds2)
+    {
+        FatalErrorInFunction
+            << "Arguments of atan2 have different dimensions" << endl
+            << "     dimensions : " << ds1 << " and " << ds2 << endl
+            << abort(FatalError);
+    }
+
+    return dimless;
+}
+
+
 CML::dimensionSet CML::transform(const dimensionSet& ds)
 {
     return ds;
