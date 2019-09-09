@@ -62,6 +62,8 @@ CML::tmp<CML::volScalarField> CML::simpleFilter::operator()
     const tmp<volScalarField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volScalarField> filteredField = fvc::surfaceSum
     (
         mesh().magSf()*fvc::interpolate(unFilteredField)
@@ -78,6 +80,8 @@ CML::tmp<CML::volVectorField> CML::simpleFilter::operator()
     const tmp<volVectorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volVectorField> filteredField = fvc::surfaceSum
     (
         mesh().magSf()*fvc::interpolate(unFilteredField)
@@ -94,6 +98,8 @@ CML::tmp<CML::volSymmTensorField> CML::simpleFilter::operator()
     const tmp<volSymmTensorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volSymmTensorField> filteredField = fvc::surfaceSum
     (
         mesh().magSf()*fvc::interpolate(unFilteredField)
@@ -110,6 +116,8 @@ CML::tmp<CML::volTensorField> CML::simpleFilter::operator()
     const tmp<volTensorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volTensorField> filteredField = fvc::surfaceSum
     (
         mesh().magSf()*fvc::interpolate(unFilteredField)

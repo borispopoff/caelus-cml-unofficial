@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -125,6 +125,8 @@ CML::tmp<CML::volScalarField> CML::anisotropicFilter::operator()
     const tmp<volScalarField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volScalarField> tmpFilteredField =
         unFilteredField
       + (
@@ -147,6 +149,8 @@ CML::tmp<CML::volVectorField> CML::anisotropicFilter::operator()
     const tmp<volVectorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volVectorField> tmpFilteredField =
         unFilteredField
       + (
@@ -169,6 +173,8 @@ CML::tmp<CML::volSymmTensorField> CML::anisotropicFilter::operator()
     const tmp<volSymmTensorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volSymmTensorField> tmpFilteredField
     (
         new volSymmTensorField
@@ -203,6 +209,8 @@ CML::tmp<CML::volTensorField> CML::anisotropicFilter::operator()
     const tmp<volTensorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volTensorField> tmpFilteredField
     (
         new volTensorField

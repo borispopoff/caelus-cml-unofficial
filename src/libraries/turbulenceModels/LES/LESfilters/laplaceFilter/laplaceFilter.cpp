@@ -93,6 +93,8 @@ CML::tmp<CML::volScalarField> CML::laplaceFilter::operator()
     const tmp<volScalarField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volScalarField> filteredField =
         unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
 
@@ -107,6 +109,8 @@ CML::tmp<CML::volVectorField> CML::laplaceFilter::operator()
     const tmp<volVectorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volVectorField> filteredField =
         unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
 
@@ -121,6 +125,8 @@ CML::tmp<CML::volSymmTensorField> CML::laplaceFilter::operator()
     const tmp<volSymmTensorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volSymmTensorField> filteredField =
         unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
 
@@ -135,6 +141,8 @@ CML::tmp<CML::volTensorField> CML::laplaceFilter::operator()
     const tmp<volTensorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volTensorField> filteredField =
         unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
 
