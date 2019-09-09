@@ -22,12 +22,9 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.hpp"
-
 #include "UOPstream.hpp"
 #include "int.hpp"
 #include "token.hpp"
-
 #include <cctype>
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -172,7 +169,7 @@ CML::Ostream& CML::UOPstream::write(const char* str)
 
     if (nonWhiteChars.size() == 1)
     {
-        return write(nonWhiteChars.c_str()[1]);
+        return write(nonWhiteChars[0]);
     }
     else if (nonWhiteChars.size())
     {
