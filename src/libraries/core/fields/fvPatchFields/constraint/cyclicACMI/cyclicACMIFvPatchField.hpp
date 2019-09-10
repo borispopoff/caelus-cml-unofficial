@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -205,6 +205,8 @@ public:
             //- Manipulate matrix
             virtual void manipulateMatrix(fvMatrix<Type>& matrix);
 
+            //- Update the coefficients associated with the patch field
+            virtual void updateCoeffs();
 
         // Cyclic AMI coupled interface functions
 
@@ -456,6 +458,21 @@ void CML::cyclicACMIFvPatchField<Type>::manipulateMatrix
     const fvPatchField<Type>& npf = nonOverlapPatchField();
 
     const_cast<fvPatchField<Type>&>(npf).manipulateMatrix(matrix, 1.0 - mask);
+}
+
+
+template<class Type>
+void CML::cyclicACMIFvPatchField<Type>::updateCoeffs()
+{
+    // Update non-overlap patch - some will implement updateCoeffs, and
+    // others will implement evaluate
+
+    // Pass in (1 - mask) to give non-overlap patch the chance to do
+    // manipulation of non-face based data
+
+    const scalarField& mask = cyclicACMIPatch_.cyclicACMIPatch().mask();
+    const fvPatchField<Type>& npf = nonOverlapPatchField();
+    const_cast<fvPatchField<Type>&>(npf).updateWeightedCoeffs(1.0 - mask);
 }
 
 

@@ -414,9 +414,10 @@ public:
             virtual void updateCoeffs();
 
             //- Update the coefficients associated with the patch field
-            //  and apply weight field
-            //  Sets Updated to true
-            virtual void updateCoeffs(const scalarField& weights);
+            //  with a weight field (0..1). This weight field is usually
+            //  provided as the amount of geometric overlap for 'duplicate'
+            //  patches. Sets Updated to true
+            virtual void updateWeightedCoeffs(const scalarField& weights);
 
             //- Return internal field next to patch as patch field
             virtual tmp<Field<Type>> patchInternalField() const;
@@ -873,14 +874,12 @@ void CML::fvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void CML::fvPatchField<Type>::updateCoeffs(const scalarField& weights)
+void CML::fvPatchField<Type>::updateWeightedCoeffs(const scalarField& weights)
 {
+    // Default behaviour ignores the weights
     if (!updated_)
     {
         updateCoeffs();
-
-        Field<Type>& fld = *this;
-        fld *= weights;
 
         updated_ = true;
     }
