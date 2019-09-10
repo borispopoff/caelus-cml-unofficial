@@ -86,15 +86,6 @@ label pow(label a, label b)
         ans *= a;
     }
 
-#   ifdef FULLDEBUG
-    if (b < 0)
-    {
-        FatalErrorInFunction
-            << "negative value for b is not supported"
-            << abort(FatalError);
-    }
-#   endif
-
     return ans;
 }
 
@@ -109,10 +100,10 @@ label factorial(label n)
     };
 
 #   ifdef FULLDEBUG
-    if (n > 12 && n < 0)
+    if (n > 12)
     {
         FatalErrorInFunction
-            << "n value out of range"
+            << "n value out of range (> 12)"
             << abort(FatalError);
     }
 #   endif
