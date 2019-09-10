@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -108,15 +108,15 @@ private:
         const word methodName_;
 
         //- Flag to indicate that the two patches are co-directional and
-        //  that the orientation of the target patch should be reversed
+        //- that the orientation of the target patch should be reversed
         const bool reverseTarget_;
 
         //- Flag to indicate that the two patches must be matched/an overlap
-        //  exists between them
+        //- exists between them
         const bool requireMatch_;
 
         //- Index of processor that holds all of both sides. -1 in all other
-        //  cases
+        //- cases
         label singlePatchProc_;
 
         //- Threshold weight below which interpolation is deactivated
@@ -228,7 +228,7 @@ private:
         // Evaluation
 
             //- Normalise the (area) weights - suppresses numerical error in
-            //  weights calculation
+            //- weights calculation
             //  NOTE: if area weights are incorrect by 'a significant amount'
             //     normalisation may stabilise the solution, but will introduce
             //     numerical error!
@@ -352,7 +352,7 @@ public:
         // Access
 
             //- Set to -1, or the processor holding all faces (both sides) of
-            //  the AMI
+            //- the AMI
             inline label singlePatchProc() const;
 
             //- Threshold weight below which interpolation is deactivated
@@ -373,13 +373,20 @@ public:
                 //- Return const access to source patch weights
                 inline const scalarListList& srcWeights() const;
 
+                //- Return access to source patch weights
+                inline scalarListList& srcWeights();
+
                 //- Return const access to normalisation factor of source
-                //  patch weights (i.e. the sum before normalisation)
+                //- patch weights (i.e. the sum before normalisation)
                 inline const scalarField& srcWeightsSum() const;
 
+                //- Return access to normalisation factor of source
+                //- patch weights (i.e. the sum before normalisation)
+                inline scalarField& srcWeightsSum();
+
                 //- Source map pointer - valid only if singlePatchProc = -1
-                //  This gets source data into a form to be consumed by
-                //  tgtAddress, tgtWeights
+                //- This gets source data into a form to be consumed by
+                //- tgtAddress, tgtWeights
                 inline const mapDistribute& srcMap() const;
 
 
@@ -394,13 +401,20 @@ public:
                 //- Return const access to target patch weights
                 inline const scalarListList& tgtWeights() const;
 
+                //- Return access to target patch weights
+                inline scalarListList& tgtWeights();
+
                 //- Return const access to normalisation factor of target
-                //  patch weights (i.e. the sum before normalisation)
+                //- patch weights (i.e. the sum before normalisation)
                 inline const scalarField& tgtWeightsSum() const;
 
+                //- Return access to normalisation factor of target
+                //- patch weights (i.e. the sum before normalisation)
+                inline scalarField& tgtWeightsSum();
+
                 //- Target map pointer -  valid only if singlePatchProc=-1.
-                //  This gets target data into a form to be consumed by
-                //  srcAddress, srcWeights
+                //- This gets target data into a form to be consumed by
+                //- srcAddress, srcWeights
                 inline const mapDistribute& tgtMap() const;
 
 
@@ -419,7 +433,7 @@ public:
             // Low-level
 
                 //- Interpolate from target to source with supplied op
-                //  to combine existing value with remote value and weight
+                //- to combine existing value with remote value and weight
                 template<class Type, class CombineOp>
                 void interpolateToSource
                 (
@@ -430,7 +444,7 @@ public:
                 ) const;
 
                 //- Interpolate from source to target with supplied op
-                //  to combine existing value with remote value and weight
+                //- to combine existing value with remote value and weight
                 template<class Type, class CombineOp>
                 void interpolateToTarget
                 (
@@ -603,8 +617,24 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::srcWeights() const
 
 
 template<class SourcePatch, class TargetPatch>
+inline CML::scalarListList&
+CML::AMIInterpolation<SourcePatch, TargetPatch>::srcWeights()
+{
+    return srcWeights_;
+}
+
+
+template<class SourcePatch, class TargetPatch>
 inline const CML::scalarField&
 CML::AMIInterpolation<SourcePatch, TargetPatch>::srcWeightsSum() const
+{
+    return srcWeightsSum_;
+}
+
+
+template<class SourcePatch, class TargetPatch>
+inline CML::scalarField&
+CML::AMIInterpolation<SourcePatch, TargetPatch>::srcWeightsSum()
 {
     return srcWeightsSum_;
 }
@@ -643,8 +673,24 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeights() const
 
 
 template<class SourcePatch, class TargetPatch>
+inline CML::scalarListList&
+CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeights()
+{
+    return tgtWeights_;
+}
+
+
+template<class SourcePatch, class TargetPatch>
 inline const CML::scalarField&
 CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeightsSum() const
+{
+    return tgtWeightsSum_;
+}
+
+
+template<class SourcePatch, class TargetPatch>
+inline CML::scalarField&
+CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeightsSum()
 {
     return tgtWeightsSum_;
 }

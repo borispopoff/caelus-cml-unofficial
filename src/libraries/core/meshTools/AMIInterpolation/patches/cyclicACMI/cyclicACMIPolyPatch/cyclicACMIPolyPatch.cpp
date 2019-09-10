@@ -34,34 +34,9 @@ namespace CML
     addToRunTimeSelectionTable(polyPatch, cyclicACMIPolyPatch, dictionary);
 }
 
-const CML::scalar CML::cyclicACMIPolyPatch::tolerance_ = 1e-6;
+const CML::scalar CML::cyclicACMIPolyPatch::tolerance_ = 1e-10;
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void CML::cyclicACMIPolyPatch::initPatchFaceAreas() const
-{
-    if
-    (
-        !empty()
-     && (faceAreas0_.empty() || boundaryMesh().mesh().moving())
-    )
-    {
-        faceAreas0_ = faceAreas();
-    }
-
-    const cyclicACMIPolyPatch& nbrACMI =
-        refCast<const cyclicACMIPolyPatch>(this->neighbPatch());
-
-    if
-    (
-        !nbrACMI.empty()
-     && (nbrACMI.faceAreas0().empty() || boundaryMesh().mesh().moving())
-    )
-    {
-        nbrACMI.faceAreas0_ = nbrACMI.faceAreas();
-    }
-}
-
 
 void CML::cyclicACMIPolyPatch::resetAMI
 (
@@ -72,37 +47,126 @@ void CML::cyclicACMIPolyPatch::resetAMI
     {
         const polyPatch& nonOverlapPatch = this->nonOverlapPatch();
 
-        initPatchFaceAreas();
-
-        // Reset patch face areas based on original patch for AMI calculation
-        vectorField::subField Sf = faceAreas();
-        vectorField::subField noSf = nonOverlapPatch.faceAreas();
-
-        forAll(Sf, facei)
+        if (debug)
         {
-            Sf[facei] = faceAreas0_[facei];
-            noSf[facei] = faceAreas0_[facei];
+            Pout<< "cyclicACMIPolyPatch::resetAMI : recalculating weights"
+                << " for " << name() << " and " << nonOverlapPatch.name()
+                << endl;
         }
 
-        // Calculate the AMI using partial face-area-weighted
+        if (boundaryMesh().mesh().hasCellCentres())
+        {
+            if (debug)
+            {
+                Pout<< "cyclicACMIPolyPatch::resetAMI : clearing cellCentres"
+                    << " for " << name() << " and " << nonOverlapPatch.name()
+                    << endl;
+            }
+
+            //WarningInFunction
+            //    << "The mesh already has cellCentres calculated when"
+            //    << " resetting ACMI " << name() << "." << endl
+            //    << "This is a problem since ACMI adapts the face areas"
+            //    << " (to close cells) so this has" << endl
+            //    << "to be done before cell centre calculation." << endl
+            //    << "This can happen if e.g. the cyclicACMI is after"
+            //    << " any processor patches in the boundary." << endl;
+            const_cast<polyMesh&>
+            (
+                boundaryMesh().mesh()
+            ).primitiveMesh::clearGeom();
+        }
+
+
+        // Trigger re-building of faceAreas
+        (void)boundaryMesh().mesh().faceAreas();
+
+
+        // Calculate the AMI using partial face-area-weighted. This leaves
+        // the weights as fractions of local areas (sum(weights) = 1 means
+        // face is fully covered)
         cyclicAMIPolyPatch::resetAMI
         (
             AMIPatchToPatchInterpolation::imPartialFaceAreaWeight
         );
 
+        AMIPatchToPatchInterpolation& AMI =
+            const_cast<AMIPatchToPatchInterpolation&>(this->AMI());
+
         srcMask_ =
-            min(scalar(1) - tolerance_, max(tolerance_, AMI().srcWeightsSum()));
+            min(scalar(1) - tolerance_, max(tolerance_, AMI.srcWeightsSum()));
 
         tgtMask_ =
-            min(scalar(1) - tolerance_, max(tolerance_, AMI().tgtWeightsSum()));
+            min(scalar(1) - tolerance_, max(tolerance_, AMI.tgtWeightsSum()));
 
-        forAll(Sf, facei)
+
+        // Adapt owner side areas. Note that in uncoupled situations (e.g.
+        // decomposePar) srcMask, tgtMask can be zero size.
+        if (srcMask_.size())
         {
-            Sf[facei] *= srcMask_[facei];
-            noSf[facei] *= 1.0 - srcMask_[facei];
+            vectorField::subField Sf = faceAreas();
+            vectorField::subField noSf = nonOverlapPatch.faceAreas();
+
+            forAll(Sf, facei)
+            {
+                Sf[facei] *= srcMask_[facei];
+                noSf[facei] *= 1.0 - srcMask_[facei];
+            }
+        }
+        // Adapt slave side areas
+        if (tgtMask_.size())
+        {
+            const cyclicACMIPolyPatch& cp =
+                refCast<const cyclicACMIPolyPatch>(this->neighbPatch());
+            const polyPatch& pp = cp.nonOverlapPatch();
+
+            vectorField::subField Sf = cp.faceAreas();
+            vectorField::subField noSf = pp.faceAreas();
+
+            forAll(Sf, facei)
+            {
+                Sf[facei] *= tgtMask_[facei];
+                noSf[facei] *= 1.0 - tgtMask_[facei];
+            }
         }
 
-        setNeighbourFaceAreas();
+        // Re-normalise the weights since the effect of overlap is already
+        // accounted for in the area.
+        {
+            scalarListList& srcWeights = AMI.srcWeights();
+            scalarField& srcWeightsSum = AMI.srcWeightsSum();
+            forAll(srcWeights, i)
+            {
+                scalarList& wghts = srcWeights[i];
+                if (wghts.size())
+                {
+                    scalar& sum = srcWeightsSum[i];
+
+                    forAll(wghts, j)
+                    {
+                        wghts[j] /= sum;
+                    }
+                    sum = 1.0;
+                }
+            }
+        }
+        {
+            scalarListList& tgtWeights = AMI.tgtWeights();
+            scalarField& tgtWeightsSum = AMI.tgtWeightsSum();
+            forAll(tgtWeights, i)
+            {
+                scalarList& wghts = tgtWeights[i];
+                if (wghts.size())
+                {
+                    scalar& sum = tgtWeightsSum[i];
+                    forAll(wghts, j)
+                    {
+                        wghts[j] /= sum;
+                    }
+                    sum = 1.0;
+                }
+            }
+        }
 
         // Set the updated flag
         updated_ = true;
@@ -110,45 +174,28 @@ void CML::cyclicACMIPolyPatch::resetAMI
 }
 
 
-void CML::cyclicACMIPolyPatch::setNeighbourFaceAreas() const
-{
-    const cyclicACMIPolyPatch& cp =
-        refCast<const cyclicACMIPolyPatch>(this->neighbPatch());
-    const polyPatch& pp = cp.nonOverlapPatch();
-
-    const vectorField& faceAreas0 = cp.faceAreas0();
-
-    if (tgtMask_.size() == cp.size())
-    {
-        vectorField::subField Sf = cp.faceAreas();
-        vectorField::subField noSf = pp.faceAreas();
-
-        forAll(Sf, facei)
-        {
-            Sf[facei] = tgtMask_[facei]*faceAreas0[facei];
-            noSf[facei] = (1.0 - tgtMask_[facei])*faceAreas0[facei];
-        }
-    }
-    else
-    {
-        WarningInFunction
-            << "Target mask size differs to that of the neighbour patch\n"
-            << "    May occur when decomposing." << endl;
-    }
-}
-
-
 void CML::cyclicACMIPolyPatch::initGeometry(PstreamBuffers& pBufs)
 {
+    if (debug)
+    {
+        Pout<< "cyclicACMIPolyPatch::initGeometry : " << name() << endl;
+    }
+
+    // Note: calculates transformation and triggers face centre calculation
     cyclicAMIPolyPatch::initGeometry(pBufs);
 
-    // Initialise the AMI
+    // Initialise the AMI early to make sure we adapt the face areas before the
+    // cell centre calculation gets triggered.
     resetAMI();
 }
 
 
 void CML::cyclicACMIPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 {
+    if (debug)
+    {
+        Pout<< "cyclicACMIPolyPatch::calcGeometry : " << name() << endl;
+    }
     cyclicAMIPolyPatch::calcGeometry(pBufs);
 }
 
@@ -159,9 +206,15 @@ void CML::cyclicACMIPolyPatch::initMovePoints
     const pointField& p
 )
 {
+    if (debug)
+    {
+        Pout<< "cyclicACMIPolyPatch::initMovePoints : " << name() << endl;
+    }
+
+    // Note: calculates transformation and triggers face centre calculation
     cyclicAMIPolyPatch::initMovePoints(pBufs, p);
 
-    // Initialise the AMI
+    // Initialise the AMI early. See initGeometry.
     resetAMI();
 }
 
@@ -172,24 +225,40 @@ void CML::cyclicACMIPolyPatch::movePoints
     const pointField& p
 )
 {
+    if (debug)
+    {
+        Pout<< "cyclicACMIPolyPatch::movePoints : " << name() << endl;
+    }
     cyclicAMIPolyPatch::movePoints(pBufs, p);
 }
 
 
 void CML::cyclicACMIPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
 {
+    if (debug)
+    {
+        Pout<< "cyclicACMIPolyPatch::initUpdateMesh : " << name() << endl;
+    }
     cyclicAMIPolyPatch::initUpdateMesh(pBufs);
 }
 
 
 void CML::cyclicACMIPolyPatch::updateMesh(PstreamBuffers& pBufs)
 {
+    if (debug)
+    {
+        Pout<< "cyclicACMIPolyPatch::updateMesh : " << name() << endl;
+    }
     cyclicAMIPolyPatch::updateMesh(pBufs);
 }
 
 
 void CML::cyclicACMIPolyPatch::clearGeom()
 {
+    if (debug)
+    {
+        Pout<< "cyclicACMIPolyPatch::clearGeom : " << name() << endl;
+    }
     cyclicAMIPolyPatch::clearGeom();
 }
 
@@ -220,7 +289,6 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
 )
 :
     cyclicAMIPolyPatch(name, size, start, index, bm, patchType, transform),
-    faceAreas0_(),
     nonOverlapPatchName_(word::null),
     nonOverlapPatchID_(-1),
     srcMask_(),
@@ -244,7 +312,6 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
 )
 :
     cyclicAMIPolyPatch(name, dict, index, bm, patchType),
-    faceAreas0_(),
     nonOverlapPatchName_(dict.lookup("nonOverlapPatch")),
     nonOverlapPatchID_(-1),
     srcMask_(),
@@ -273,7 +340,6 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
 )
 :
     cyclicAMIPolyPatch(pp, bm),
-    faceAreas0_(),
     nonOverlapPatchName_(pp.nonOverlapPatchName_),
     nonOverlapPatchID_(-1),
     srcMask_(),
@@ -299,7 +365,6 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
 )
 :
     cyclicAMIPolyPatch(pp, bm, index, newSize, newStart, nbrPatchName),
-    faceAreas0_(),
     nonOverlapPatchName_(nonOverlapPatchName),
     nonOverlapPatchID_(-1),
     srcMask_(),
@@ -331,7 +396,6 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
 )
 :
     cyclicAMIPolyPatch(pp, bm, index, mapAddressing, newStart),
-    faceAreas0_(),
     nonOverlapPatchName_(pp.nonOverlapPatchName_),
     nonOverlapPatchID_(-1),
     srcMask_(),

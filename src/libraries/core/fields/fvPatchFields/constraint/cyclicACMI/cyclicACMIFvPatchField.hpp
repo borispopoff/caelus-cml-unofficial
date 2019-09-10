@@ -201,62 +201,6 @@ public:
                 const Pstream::commsTypes commsType
             ) const;
 
-            //- Return patch-normal gradient
-            virtual tmp<Field<Type>> snGrad
-            (
-                const scalarField& deltaCoeffs
-            ) const;
-
-            //- Update the coefficients associated with the patch field
-            void updateCoeffs();
-
-            //- Initialise the evaluation of the patch field
-            virtual void initEvaluate
-            (
-                const Pstream::commsTypes commsType
-            );
-
-            //- Evaluate the patch field
-            virtual void evaluate
-            (
-                const Pstream::commsTypes commsType
-            );
-
-            //- Return the matrix diagonal coefficients corresponding to the
-            //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type>> valueInternalCoeffs
-            (
-                const tmp<scalarField>&
-            ) const;
-
-            //- Return the matrix source coefficients corresponding to the
-            //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type>> valueBoundaryCoeffs
-            (
-                const tmp<scalarField>&
-            ) const;
-
-            //- Return the matrix diagonal coefficients corresponding to the
-            //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type>> gradientInternalCoeffs
-            (
-                const scalarField& deltaCoeffs
-            ) const;
-
-            //- Return the matrix diagonal coefficients corresponding to the
-            //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type>> gradientInternalCoeffs() const;
-
-            //- Return the matrix source coefficients corresponding to the
-            //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type>> gradientBoundaryCoeffs
-            (
-                const scalarField& deltaCoeffs
-            ) const;
-
-            //- Return the matrix source coefficients corresponding to the
-            //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
             //- Manipulate matrix
             virtual void manipulateMatrix(fvMatrix<Type>& matrix);
@@ -412,22 +356,15 @@ CML::tmp<CML::Field<Type>>
 CML::cyclicACMIFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
-    const labelUList& nbrFaceCellsCoupled =
-        cyclicACMIPatch_.cyclicACMIPatch().neighbPatch().faceCells();
-    const labelUList& faceCellsNonOverlap =
-        cyclicACMIPatch_.cyclicACMIPatch().nonOverlapPatch().faceCells();
-
-    Field<Type> pnfCoupled(iField, nbrFaceCellsCoupled);
-    Field<Type> pfNonOverlap(iField, faceCellsNonOverlap);
-
+    const cyclicACMIPolyPatch& cpp = cyclicACMIPatch_.cyclicACMIPatch();
     tmp<Field<Type>> tpnf
     (
-        new Field<Type>
+        cyclicACMIPatch_.interpolate
         (
-            cyclicACMIPatch_.interpolate
+            Field<Type>
             (
-                pnfCoupled,
-                pfNonOverlap
+                iField,
+                cpp.neighbPatch().faceCells()
             )
         )
     );
@@ -483,10 +420,12 @@ void CML::cyclicACMIFvPatchField<Type>::updateInterfaceMatrix
     const Pstream::commsTypes
 ) const
 {
+    const cyclicACMIPolyPatch& cpp = cyclicACMIPatch_.cyclicACMIPatch();
+
     // note: only applying coupled contribution
 
     const labelUList& nbrFaceCellsCoupled =
-        cyclicACMIPatch_.cyclicACMIPatch().neighbPatch().faceCells();
+        cpp.neighbPatch().faceCells();
 
     scalarField pnf(psiInternal, nbrFaceCellsCoupled);
 
@@ -501,149 +440,6 @@ void CML::cyclicACMIFvPatchField<Type>::updateInterfaceMatrix
     {
         result[faceCells[elemI]] -= coeffs[elemI]*pnf[elemI];
     }
-}
-
-
-template<class Type>
-CML::tmp<CML::Field<Type>> CML::cyclicACMIFvPatchField<Type>::snGrad
-(
-    const scalarField& deltaCoeffs
-) const
-{
-    // note: only applying coupled contribution
-    return coupledFvPatchField<Type>::snGrad(deltaCoeffs);
-}
-
-
-template<class Type>
-void CML::cyclicACMIFvPatchField<Type>::updateCoeffs()
-{
-    // update non-overlap patch - some will implement updateCoeffs, and
-    // others will implement evaluate
-
-    // scale neighbour field by (1 - mask)
-
-    const scalarField& mask = cyclicACMIPatch_.cyclicACMIPatch().mask();
-    const fvPatchField<Type>& npf = nonOverlapPatchField();
-    const_cast<fvPatchField<Type>&>(npf).updateCoeffs(1.0 - mask);
-}
-
-
-template<class Type>
-void CML::cyclicACMIFvPatchField<Type>::initEvaluate
-(
-    const Pstream::commsTypes comms
-)
-{
-    // update non-overlap patch (if not already updated by updateCoeffs)
-
-    // scale neighbour field by (1 - mask)
-
-    fvPatchField<Type>& npf =
-        const_cast<fvPatchField<Type>&>(nonOverlapPatchField());
-
-    if (!npf.updated())
-    {
-        const scalarField& mask = cyclicACMIPatch_.cyclicACMIPatch().mask();
-
-        npf.evaluate(comms);
-
-        npf *= 1.0 - mask;
-    }
-}
-
-
-template<class Type>
-void CML::cyclicACMIFvPatchField<Type>::evaluate
-(
-    const Pstream::commsTypes comms
-)
-{
-    // blend contributions from the coupled and non-overlap patches
-
-    // neighbour patch field is updated via updateCoeffs or initEvaluate
-    // and is already scaled by (1 - mask)
-    const fvPatchField<Type>& npf = nonOverlapPatchField();
-
-    coupledFvPatchField<Type>::evaluate(comms);
-    const Field<Type>& cpf = *this;
-
-    const scalarField& mask = cyclicACMIPatch_.cyclicACMIPatch().mask();
-    Field<Type>::operator=(mask*cpf + npf);
-
-    fvPatchField<Type>::evaluate();
-}
-
-
-template<class Type>
-CML::tmp<CML::Field<Type>>
-CML::cyclicACMIFvPatchField<Type>::valueInternalCoeffs
-(
-    const tmp<scalarField>& w
-) const
-{
-    // note: do not blend based on mask field
-    // - when applied this is scaled by the areas which are already scaled
-    return coupledFvPatchField<Type>::valueInternalCoeffs(w);
-}
-
-
-template<class Type>
-CML::tmp<CML::Field<Type>>
-CML::cyclicACMIFvPatchField<Type>::valueBoundaryCoeffs
-(
-    const tmp<scalarField>& w
-) const
-{
-    // note: do not blend based on mask field
-    // - when applied this is scaled by the areas which are already scaled
-    return coupledFvPatchField<Type>::valueBoundaryCoeffs(w);
-}
-
-
-template<class Type>
-CML::tmp<CML::Field<Type>>
-CML::cyclicACMIFvPatchField<Type>::gradientInternalCoeffs
-(
-    const scalarField& deltaCoeffs
-) const
-{
-    // note: do not blend based on mask field
-    // - when applied this is scaled by the areas which are already scaled
-    return coupledFvPatchField<Type>::gradientInternalCoeffs(deltaCoeffs);
-}
-
-
-template<class Type>
-CML::tmp<CML::Field<Type>>
-CML::cyclicACMIFvPatchField<Type>::gradientInternalCoeffs() const
-{
-    // note: do not blend based on mask field
-    // - when applied this is scaled by the areas which are already scaled
-    return coupledFvPatchField<Type>::gradientInternalCoeffs();
-}
-
-
-template<class Type>
-CML::tmp<CML::Field<Type>>
-CML::cyclicACMIFvPatchField<Type>::gradientBoundaryCoeffs
-(
-    const scalarField& deltaCoeffs
-) const
-{
-    // note: do not blend based on mask field
-    // - when applied this is scaled by the areas which are already scaled
-    return coupledFvPatchField<Type>::gradientBoundaryCoeffs(deltaCoeffs);
-}
-
-
-template<class Type>
-CML::tmp<CML::Field<Type>>
-CML::cyclicACMIFvPatchField<Type>::gradientBoundaryCoeffs() const
-{
-    // note: do not blend based on mask field
-    // - when applied this is scaled by the areas which are already scaled
-    return coupledFvPatchField<Type>::gradientBoundaryCoeffs();
 }
 
 

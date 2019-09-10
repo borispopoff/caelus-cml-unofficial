@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,9 +51,6 @@ private:
 
     // Private data
 
-        //- Copy of the original patch face areas
-        mutable vectorField faceAreas0_;
-
         //- Fraction of face area below which face is considered disconnected
         static const scalar tolerance_;
 
@@ -77,18 +74,12 @@ protected:
 
     // Protected Member Functions
 
-        //- Initialise patch face areas
-        virtual void initPatchFaceAreas() const;
-
         //- Reset the AMI interpolator
         virtual void resetAMI
         (
             const AMIPatchToPatchInterpolation::interpolationMethod& AMIMethod =
                 AMIPatchToPatchInterpolation::imFaceAreaWeight
         ) const;
-
-        //- Set neighbour ACMI patch areas
-        virtual void setNeighbourFaceAreas() const;
 
         //- Initialise the calculation of the patch geometry
         virtual void initGeometry(PstreamBuffers&);
@@ -126,7 +117,7 @@ public:
 
     // Constructors
 
-        //- Construct from (base couped patch) components
+        //- Construct from (base coupled patch) components
         cyclicACMIPolyPatch
         (
             const word& name,
@@ -248,9 +239,6 @@ public:
             //- Return access to the updated flag
             inline bool updated() const;
 
-            //- Return access to the original patch face areas
-            inline const vectorField& faceAreas0() const;
-
             //- Return a reference to the neighbour patch
             virtual const cyclicACMIPolyPatch& neighbPatch() const;
 
@@ -271,34 +259,6 @@ public:
 
             //- Overlap tolerance
             inline static scalar tolerance();
-
-            // Interpolations
-
-                //- Interpolate field
-                template<class Type>
-                tmp<Field<Type>> interpolate
-                (
-                    const Field<Type>& fldCouple,
-                    const Field<Type>& fldNonOverlap
-                ) const;
-
-                //- Interpolate tmp field
-                template<class Type>
-                tmp<Field<Type>> interpolate
-                (
-                    const tmp<Field<Type>>& tFldCouple,
-                    const tmp<Field<Type>>& tFldNonOverlap
-                ) const;
-
-                //- Low-level interpolate List
-                template<class Type, class CombineOp>
-                void interpolate
-                (
-                    const UList<Type>& fldCouple,
-                    const UList<Type>& fldNonOverlap,
-                    const CombineOp& cop,
-                    List<Type>& result
-                ) const;
 
 
         //- Calculate the patch geometry
@@ -358,12 +318,6 @@ inline bool CML::cyclicACMIPolyPatch::updated() const
 }
 
 
-inline const CML::vectorField& CML::cyclicACMIPolyPatch::faceAreas0() const
-{
-    return faceAreas0_;
-}
-
-
 inline const CML::word& CML::cyclicACMIPolyPatch::nonOverlapPatchName() const
 {
     return nonOverlapPatchName_;
@@ -372,7 +326,7 @@ inline const CML::word& CML::cyclicACMIPolyPatch::nonOverlapPatchName() const
 
 inline const CML::polyPatch& CML::cyclicACMIPolyPatch::nonOverlapPatch() const
 {
-    // Note: use nonOverlapPatchID() as opposed to patch name to initialise
+    // note: use nonOverlapPatchID() as opposed to patch name to initialise
     // demand-driven data
 
     return this->boundaryMesh()[nonOverlapPatchID()];
@@ -381,7 +335,7 @@ inline const CML::polyPatch& CML::cyclicACMIPolyPatch::nonOverlapPatch() const
 
 inline CML::polyPatch& CML::cyclicACMIPolyPatch::nonOverlapPatch()
 {
-    // Note: use nonOverlapPatchID() as opposed to patch name to initialise
+    // note: use nonOverlapPatchID() as opposed to patch name to initialise
     // demand-driven data
 
     return const_cast<polyPatch&>(this->boundaryMesh()[nonOverlapPatchID()]);
@@ -406,72 +360,6 @@ inline CML::scalar CML::cyclicACMIPolyPatch::tolerance()
     return tolerance_;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-
-template<class Type>
-CML::tmp<CML::Field<Type>> CML::cyclicACMIPolyPatch::interpolate
-(
-    const Field<Type>& fldCouple,
-    const Field<Type>& fldNonOverlap
-) const
-{
-    // Note: do not scale AMI field as face areas have already been taken into
-    // account
-
-    if (owner())
-    {
-        return
-            AMI().interpolateToSource(fldCouple)
-          + (1.0 - AMI().srcWeightsSum())*fldNonOverlap;
-    }
-    else
-    {
-        return
-            neighbPatch().AMI().interpolateToTarget(fldCouple)
-          + (1.0 - neighbPatch().AMI().tgtWeightsSum())*fldNonOverlap;
-    }
-}
-
-
-template<class Type>
-CML::tmp<CML::Field<Type>> CML::cyclicACMIPolyPatch::interpolate
-(
-    const tmp<Field<Type>>& tFldCouple,
-    const tmp<Field<Type>>& tFldNonOverlap
-) const
-{
-    return interpolate(tFldCouple(), tFldNonOverlap());
-}
-
-
-template<class Type, class CombineOp>
-void CML::cyclicACMIPolyPatch::interpolate
-(
-    const UList<Type>& fldCouple,
-    const UList<Type>& fldNonOverlap,
-    const CombineOp& cop,
-    List<Type>& result
-) const
-{
-    // Note: do not scale AMI field as face areas have already been taken into
-    // account
-
-    if (owner())
-    {
-        AMI().interpolateToSource(fldCouple, cop, result);
-        result += (1.0 - AMI().srcWeightsSum())*fldNonOverlap;
-    }
-    else
-    {
-        neighbPatch().AMI().interpolateToTarget(fldCouple, cop, result);
-        result += (1.0 - neighbPatch().AMI().tgtWeightsSum())*fldNonOverlap;
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 
