@@ -8,8 +8,6 @@
 #include "wedgePolyPatch.hpp"
 #include "unitConversion.hpp"
 #include "polyMeshTetDecomposition.hpp"
-#include "surfaceWriter.hpp"
-#include "checkTools.hpp"
 
 #include "vtkSurfaceWriter.hpp"
 #include "writer.hpp"

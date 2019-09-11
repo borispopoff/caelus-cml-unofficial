@@ -105,6 +105,10 @@ public:
         //- Copy constructor
         List(const List<T>&);
 
+        //- Copy constructor from list of another type
+        template<class T2>
+        explicit List(const List<T2>&);
+
         //- Construct by transferring the parameter contents
         List(const Xfer<List<T>>&);
 
@@ -457,6 +461,25 @@ CML::List<T>::List(const List<T>& a)
                 List_ELEM((*this), vp, i) = List_ELEM(a, ap, i);
             List_END_FOR_ALL
         }
+    }
+}
+
+
+template<class T>
+template<class T2>
+CML::List<T>::List(const List<T2>& a)
+:
+    UList<T>(NULL, a.size())
+{
+    if (this->size_)
+    {
+        this->v_ = new T[this->size_];
+
+        List_ACCESS(T, (*this), vp);
+        List_CONST_ACCESS(T2, a, ap);
+        List_FOR_ALL((*this), i)
+            List_ELEM((*this), vp, i) = T(List_ELEM(a, ap, i));
+        List_END_FOR_ALL
     }
 }
 

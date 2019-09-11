@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -30,6 +30,7 @@ Description
 #include "dynamicFvMesh.hpp"
 #include "vtkSurfaceWriter.hpp"
 #include "cyclicAMIPolyPatch.hpp"
+#include "PatchTools.hpp"
 
 using namespace CML;
 
@@ -38,6 +39,7 @@ using namespace CML;
 // Dump patch + weights to vtk file
 void writeWeights
 (
+    const polyMesh& mesh,
     const scalarField& wghtSum,
     const primitivePatch& patch,
     const fileName& folder,
@@ -47,16 +49,50 @@ void writeWeights
 {
     vtkSurfaceWriter writer;
 
-    writer.write
+    // Collect geometry
+    labelList pointToGlobal;
+    labelList uniqueMeshPointLabels;
+    autoPtr<globalIndex> globalPoints;
+    autoPtr<globalIndex> globalFaces;
+    faceList mergedFaces;
+    pointField mergedPoints;
+    CML::PatchTools::gatherAndMerge
     (
-        folder,
-        prefix + "_proc" + CML::name(Pstream::myProcNo()) + "_" + timeName,
-        patch.localPoints(),
+        mesh,
         patch.localFaces(),
-        "weightsSum",
-        wghtSum,
-        false
+        patch.meshPoints(),
+        patch.meshPointMap(),
+
+        pointToGlobal,
+        uniqueMeshPointLabels,
+        globalPoints,
+        globalFaces,
+
+        mergedFaces,
+        mergedPoints
     );
+    // Collect field
+    scalarField mergedWeights;
+    globalFaces().gather
+    (
+        labelList(UPstream::procIDs()),
+        wghtSum,
+        mergedWeights
+    );
+
+    if (Pstream::master())
+    {
+        writer.write
+        (
+            folder,
+            prefix + "_" + timeName,
+            mergedPoints,
+            mergedFaces,
+            "weightsSum",
+            mergedWeights,
+            false
+        );
+    }
 }
 
 
@@ -83,6 +119,7 @@ void writeWeights(const polyMesh& mesh)
                     cpp.AMI();
                 writeWeights
                 (
+                    mesh,
                     ami.tgtWeightsSum(),
                     cpp.neighbPatch(),
                     "output",
@@ -91,6 +128,7 @@ void writeWeights(const polyMesh& mesh)
                 );
                 writeWeights
                 (
+                    mesh,
                     ami.srcWeightsSum(),
                     cpp,
                     "output",
