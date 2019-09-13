@@ -81,7 +81,7 @@ public:
 
     //- Hashing function class.
     //  Use Hasher directly for contiguous data. Otherwise hash incrementally.
-    template< class HashT=Hash<T>>
+    template<class HashT=Hash<T>>
     class Hash
     {
     public:
@@ -468,7 +468,7 @@ template<class T, unsigned Size>
 inline CML::autoPtr< CML::FixedList<T, Size>>
 CML::FixedList<T, Size>::clone() const
 {
-    return autoPtr< FixedList<T, Size>>(new FixedList<T, Size>(*this));
+    return autoPtr<FixedList<T, Size>>(new FixedList<T, Size>(*this));
 }
 
 
@@ -477,7 +477,7 @@ CML::FixedList<T, Size>::clone() const
 template<class T, unsigned Size>
 inline const CML::FixedList<T, Size>& CML::FixedList<T, Size>::null()
 {
-    return NullSingletonRef< FixedList<T, Size>>();
+    return NullSingletonRef<FixedList<T, Size>>();
 }
 
 
@@ -495,7 +495,6 @@ inline CML::label CML::FixedList<T, Size>::rcIndex(const label i) const
 }
 
 
-// Check start is within valid range (0 ... size-1).
 template<class T, unsigned Size>
 inline void CML::FixedList<T, Size>::checkStart(const label start) const
 {
@@ -508,21 +507,18 @@ inline void CML::FixedList<T, Size>::checkStart(const label start) const
 }
 
 
-// Check size is within valid range (0 ... size).
 template<class T, unsigned Size>
 inline void CML::FixedList<T, Size>::checkSize(const label size) const
 {
-    if (size < 0 || unsigned(size) > Size)
+    if (unsigned(size) != Size)
     {
         FatalErrorInFunction
-            << "size " << size << " out of range 0 ... " << (Size)
+            << "size " << size << " != " << Size
             << abort(FatalError);
     }
 }
 
 
-// Check index i is within valid range (0 ... size-1)
-// The check for zero-sized list is already done in static assert
 template<class T, unsigned Size>
 inline void CML::FixedList<T, Size>::checkIndex(const label i) const
 {
@@ -607,7 +603,6 @@ inline const T& CML::FixedList<T, Size>::last() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-// element access
 template<class T, unsigned Size>
 inline T& CML::FixedList<T, Size>::operator[](const label i)
 {
@@ -618,7 +613,6 @@ inline T& CML::FixedList<T, Size>::operator[](const label i)
 }
 
 
-// const element access
 template<class T, unsigned Size>
 inline const T& CML::FixedList<T, Size>::operator[](const label i) const
 {
@@ -822,8 +816,6 @@ inline unsigned CML::FixedList<T, Size>::Hash<HashT>::operator()
     }
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "ListLoopM.hpp"
 
@@ -1199,9 +1191,6 @@ CML::Ostream& CML::operator<<(Ostream& os, const FixedList<T, Size>& L)
     return os;
 }
 
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 
