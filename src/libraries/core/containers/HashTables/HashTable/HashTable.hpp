@@ -206,7 +206,7 @@ public:
         HashTable(const Xfer<HashTable<T, Key, Hash>>&);
 
         //- Construct from an initializer list
-        HashTable(std::initializer_list<Tuple2<Key, T>> lst);
+        HashTable(std::initializer_list<Tuple2<Key, T>>);
 
 
     //- Destructor
@@ -307,6 +307,9 @@ public:
 
         //- Assignment
         void operator=(const HashTable<T, Key, Hash>&);
+
+        //- Assignment to an initializer list
+        void operator=(std::initializer_list<Tuple2<Key, T>>);
 
         //- Equality. Hash tables are equal if the keys and values are equal.
         //  Independent of table storage size and table order.
@@ -1367,7 +1370,7 @@ bool CML::HashTable<T, Key, Hash>::iteratorBase::erase()
             hashTable_->table_[hashIndex_] = entryPtr_->next_;
             delete entryPtr_;
 
-            // Assign any non-nullptr pointer value so it doesn't look
+            // Assign any non-nullptr value so it doesn't look
             // like end()/cend()
             entryPtr_ = reinterpret_cast<hashedEntry*>(this);
 
@@ -1585,6 +1588,29 @@ void CML::HashTable<T, Key, Hash>::operator=
     for (const_iterator iter = rhs.cbegin(); iter != rhs.cend(); ++iter)
     {
         insert(iter.key(), *iter);
+    }
+}
+
+
+template<class T, class Key, class Hash>
+void CML::HashTable<T, Key, Hash>::operator=
+(
+    std::initializer_list<Tuple2<Key, T>> lst
+)
+{
+    // Could be zero-sized from a previous transfer()
+    if (!tableSize_)
+    {
+        resize(lst.size());
+    }
+    else
+    {
+        clear();
+    }
+
+    for (const Tuple2<Key, T>& pair : lst)
+    {
+        insert(pair.first(), pair.second());
     }
 }
 

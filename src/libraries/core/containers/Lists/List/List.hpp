@@ -78,13 +78,23 @@ class List
 {
     // Private member functions
 
+        //- Allocate list storage
+        inline void alloc();
+
+        //- Reallocate list storage to the given size
+        inline void reAlloc(const label s);
+
         //- Copy list of given type
         template<class List2>
-        void CopyList(const List2&);
+        inline void copyList(const List2&);
+
+        //- Allocate storage and copy list of given type
+        template<class List2>
+        inline void allocCopyList(const List2&);
 
         //- Construct given start and end iterators and number of elements
         template<class InputIterator>
-        List(InputIterator first, InputIterator last, const label s);
+        inline List(InputIterator first, InputIterator last, const label s);
 
 
 protected:
@@ -153,7 +163,7 @@ public:
         explicit List(const BiIndirectList<T>&);
 
         //- Construct from an initializer list
-        List(std::initializer_list<T> lst);
+        List(std::initializer_list<T>);
 
         //- Construct from Istream
         List(Istream&);
@@ -193,7 +203,7 @@ public:
             void setSize(const label, const T&);
 
             //- Clear the list, i.e. set size to zero
-            void clear();
+            inline void clear();
 
             //- Append an element at the end of the list
             inline void append(const T&);
@@ -245,6 +255,9 @@ public:
         //- Assignment to BiIndirectList operator. Takes linear time
         void operator=(const BiIndirectList<T>&);
 
+        //- Construct from an initializer list
+        void operator=(std::initializer_list<T>);
+
         //- Assignment of all entries to the given value
         inline void operator=(const T&);
 
@@ -271,9 +284,81 @@ template<class T>
 List<T> readList(Istream&);
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class T>
+inline void CML::List<T>::alloc()
+{
+    if (this->size_)
+    {
+        this->v_ = new T[this->size_];
+    }
+}
+
+
+template<class T>
+inline void CML::List<T>::reAlloc(const label s)
+{
+    if (this->size_ != s)
+    {
+        clear();
+        this->size_ = s;
+        alloc();
+    }
+}
+
+
+template<class T>
+template<class List2>
+inline void CML::List<T>::copyList(const List2& lst)
+{
+    if (this->size_)
+    {
+        forAll(*this, i)
+        {
+            this->operator[](i) = lst[i];
+        }
+    }
+}
+
+
+template<class T>
+template<class List2>
+inline void CML::List<T>::allocCopyList(const List2& lst)
+{
+    if (this->size_)
+    {
+        alloc();
+        copyList(lst);
+    }
+}
+
+
+template<class T>
+template<class InputIterator>
+inline CML::List<T>::List
+(
+    InputIterator first,
+    InputIterator last,
+    const label s
+)
+:
+    UList<T>(nullptr, s)
+{
+    if (this->size_)
+    {
+        alloc();
+
+        InputIterator iter = first;
+        forAll(*this, i)
+        {
+            this->operator[](i) = *iter++;
+        }
+    }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -295,6 +380,19 @@ template<class T>
 inline const CML::List<T>& CML::List<T>::null()
 {
     return NullSingletonRef<List<T>>();
+}
+
+
+template<class T>
+inline void CML::List<T>::clear()
+{
+    if (this->v_)
+    {
+        delete[] this->v_;
+        this->v_ = 0;
+    }
+
+    this->size_ = 0;
 }
 
 
@@ -412,43 +510,6 @@ inline void CML::List<T>::operator=(const zero)
 #include "contiguous.hpp"
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class T>
-template<class List2>
-void CML::List<T>::CopyList(const List2& lst)
-{
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        forAll(*this, i)
-        {
-            this->operator[](i) = lst[i];
-        }
-    }
-}
-
-
-template<class T>
-template<class InputIterator>
-CML::List<T>::List(InputIterator first, InputIterator last, const label s)
-:
-    UList<T>(NULL, s)
-{
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        InputIterator iter = first;
-        forAll(*this, i)
-        {
-            this->operator[](i) = *iter++;
-        }
-    }
-}
-
-
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
 template<class T>
@@ -463,10 +524,7 @@ CML::List<T>::List(const label s)
             << abort(FatalError);
     }
 
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-    }
+    alloc();
 }
 
 
@@ -482,10 +540,10 @@ CML::List<T>::List(const label s, const T& a)
             << abort(FatalError);
     }
 
+    alloc();
+
     if (this->size_)
     {
-        this->v_ = new T[this->size_];
-
         List_ACCESS(T, (*this), vp);
         List_FOR_ALL((*this), i)
             List_ELEM((*this), vp, i) = a;
@@ -497,7 +555,7 @@ CML::List<T>::List(const label s, const T& a)
 template<class T>
 CML::List<T>::List(const label s, const zero)
 :
-    UList<T>(NULL, s)
+    UList<T>(nullptr, s)
 {
     if (this->size_ < 0)
     {
@@ -506,10 +564,10 @@ CML::List<T>::List(const label s, const zero)
             << abort(FatalError);
     }
 
+    alloc();
+
     if (this->size_)
     {
-        this->v_ = new T[this->size_];
-
         List_ACCESS(T, (*this), vp);
         List_FOR_ALL((*this), i)
             List_ELEM((*this), vp, i) = Zero;
@@ -525,7 +583,7 @@ CML::List<T>::List(const List<T>& a)
 {
     if (this->size_)
     {
-        this->v_ = new T[this->size_];
+        alloc();
 
         #ifdef USEMEMCPY
         if (contiguous<T>())
@@ -549,11 +607,11 @@ template<class T>
 template<class T2>
 CML::List<T>::List(const List<T2>& a)
 :
-    UList<T>(NULL, a.size())
+    UList<T>(nullptr, a.size())
 {
     if (this->size_)
     {
-        this->v_ = new T[this->size_];
+        alloc();
 
         List_ACCESS(T, (*this), vp);
         List_CONST_ACCESS(T2, a, ap);
@@ -584,7 +642,7 @@ CML::List<T>::List(List<T>& a, bool reuse)
     }
     else if (this->size_)
     {
-        this->v_ = new T[this->size_];
+        alloc();
 
         #ifdef USEMEMCPY
         if (contiguous<T>())
@@ -613,7 +671,7 @@ CML::List<T>::List(const UList<T>& a, const labelUList& map)
     {
         // Note:cannot use List_ELEM since third argument has to be index.
 
-        this->v_ = new T[this->size_];
+        alloc();
 
         forAll(*this, i)
         {
@@ -637,7 +695,7 @@ CML::List<T>::List(const FixedList<T, Size>& lst)
 :
     UList<T>(nullptr, Size)
 {
-    CopyList(lst);
+    allocCopyList(lst);
 }
 
 
@@ -646,7 +704,7 @@ CML::List<T>::List(const PtrList<T>& lst)
 :
     UList<T>(nullptr, lst.size())
 {
-    CopyList(lst);
+    allocCopyList(lst);
 }
 
 
@@ -660,9 +718,9 @@ CML::List<T>::List(const SLList<T>& lst)
 template<class T>
 CML::List<T>::List(const UIndirectList<T>& lst)
 :
-    UList<T>(NULL, lst.size())
+    UList<T>(nullptr, lst.size())
 {
-    CopyList(lst);
+    allocCopyList(lst);
 }
 
 
@@ -671,7 +729,7 @@ CML::List<T>::List(const BiIndirectList<T>& lst)
 :
     UList<T>(nullptr, lst.size())
 {
-    CopyList(lst);
+    allocCopyList(lst);
 }
 
 
@@ -687,7 +745,10 @@ CML::List<T>::List(std::initializer_list<T> lst)
 template<class T>
 CML::List<T>::~List()
 {
-    if (this->v_) delete[] this->v_;
+    if (this->v_)
+    {
+        delete[] this->v_;
+    }
 }
 
 
@@ -699,7 +760,7 @@ void CML::List<T>::setSize(const label newSize)
     if (newSize < 0)
     {
         FatalErrorInFunction
-            << "bad set size " << newSize
+            << "bad size " << newSize
             << abort(FatalError);
     }
 
@@ -726,8 +787,8 @@ void CML::List<T>::setSize(const label newSize)
                     while (i--) *--av = *--vv;
                 }
             }
-            if (this->v_) delete[] this->v_;
 
+            clear();
             this->size_ = newSize;
             this->v_ = nv;
         }
@@ -755,18 +816,9 @@ void CML::List<T>::setSize(const label newSize, const T& a)
 
 
 template<class T>
-void CML::List<T>::clear()
-{
-    if (this->v_) delete[] this->v_;
-    this->size_ = 0;
-    this->v_ = 0;
-}
-
-
-template<class T>
 void CML::List<T>::transfer(List<T>& a)
 {
-    if (this->v_) delete[] this->v_;
+    clear();
     this->size_ = a.size_;
     this->v_ = a.v_;
 
@@ -800,13 +852,7 @@ void CML::List<T>::transfer(SortableList<T>& a)
 template<class T>
 void CML::List<T>::operator=(const UList<T>& a)
 {
-    if (a.size_ != this->size_)
-    {
-        if (this->v_) delete[] this->v_;
-        this->v_ = 0;
-        this->size_ = a.size_;
-        if (this->size_) this->v_ = new T[this->size_];
-    }
+    reAlloc(a.size_);
 
     if (this->size_)
     {
@@ -845,13 +891,7 @@ void CML::List<T>::operator=(const List<T>& a)
 template<class T>
 void CML::List<T>::operator=(const SLList<T>& lst)
 {
-    if (lst.size() != this->size_)
-    {
-        if (this->v_) delete[] this->v_;
-        this->v_ = 0;
-        this->size_ = lst.size();
-        if (this->size_) this->v_ = new T[this->size_];
-    }
+    reAlloc(lst.size());
 
     if (this->size_)
     {
@@ -872,35 +912,28 @@ void CML::List<T>::operator=(const SLList<T>& lst)
 template<class T>
 void CML::List<T>::operator=(const UIndirectList<T>& lst)
 {
-    if (lst.size() != this->size_)
-    {
-        if (this->v_) delete[] this->v_;
-        this->v_ = 0;
-        this->size_ = lst.size();
-        if (this->size_) this->v_ = new T[this->size_];
-    }
-
-    forAll(*this, i)
-    {
-        this->operator[](i) = lst[i];
-    }
+    reAlloc(lst.size());
+    copyList(lst);
 }
 
 
 template<class T>
 void CML::List<T>::operator=(const BiIndirectList<T>& lst)
 {
-    if (lst.size() != this->size_)
-    {
-        if (this->v_) delete[] this->v_;
-        this->v_ = 0;
-        this->size_ = lst.size();
-        if (this->size_) this->v_ = new T[this->size_];
-    }
+    reAlloc(lst.size());
+    copyList(lst);
+}
 
+
+template<class T>
+void CML::List<T>::operator=(std::initializer_list<T> lst)
+{
+    reAlloc(lst.size());
+
+    typename std::initializer_list<T>::iterator iter = lst.begin();
     forAll(*this, i)
     {
-        this->operator[](i) = lst[i];
+        this->operator[](i) = *iter++;
     }
 }
 

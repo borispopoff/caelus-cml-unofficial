@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 Copyright (C) 2017-2018 OpenCFD Ltd.
 -------------------------------------------------------------------------------
@@ -108,7 +108,7 @@ public:
         inline FixedList();
 
         //- Construct from value
-        explicit FixedList(const T&);
+        explicit inline FixedList(const T&);
 
         //- Construct from C-array
         explicit inline FixedList(const T v[Size]);
@@ -117,7 +117,7 @@ public:
         template<class InputIterator>
         inline FixedList(InputIterator first, InputIterator last);
 
-        //- Construct from brace-enclosed values
+        //- Construct from an initializer list
         inline FixedList(std::initializer_list<T>);
 
         //- Construct from UList
@@ -133,7 +133,7 @@ public:
         FixedList(Istream&);
 
         //- Clone
-        inline autoPtr< FixedList<T, Size>> clone() const;
+        inline autoPtr<FixedList<T, Size>> clone() const;
 
 
     // Member Functions
@@ -215,6 +215,9 @@ public:
 
         //- Assignment to SLList operator. Takes linear time
         inline void operator=(const SLList<T>&);
+
+        //- Assignment from an initializer list. Takes linear time
+        inline void operator=(std::initializer_list<T>);
 
         //- Assignment of all entries to the given value
         inline void operator=(const T&);
@@ -648,15 +651,22 @@ inline void CML::FixedList<T, Size>::operator=(const SLList<T>& lst)
 {
     checkSize(lst.size());
 
-    label i = 0;
-    for
-    (
-        typename SLList<T>::const_iterator iter = lst.begin();
-        iter != lst.end();
-        ++iter
-    )
+    typename SLList<T>::const_iterator iter = lst.begin();
+    for (unsigned i=0; i<Size; i++)
     {
-        operator[](i++) = iter();
+        v_[i] = *iter++;
+    }
+}
+
+template<class T, unsigned Size>
+inline void CML::FixedList<T, Size>::operator=(std::initializer_list<T> lst)
+{
+    checkSize(lst.size());
+
+    typename std::initializer_list<T>::iterator iter = lst.begin();
+    for (unsigned i=0; i<Size; i++)
+    {
+        v_[i] = *iter++;
     }
 }
 
