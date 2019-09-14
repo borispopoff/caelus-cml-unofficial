@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,7 +24,6 @@ License
 #include "transformField.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
 
 namespace CML
 {
@@ -125,6 +124,7 @@ void CML::mapDistribute::transform::operator()
 ) const
 {}
 
+
 void CML::mapDistribute::printLayout(Ostream& os) const
 {
     mapDistributeBase::printLayout(os);
@@ -143,14 +143,12 @@ void CML::mapDistribute::printLayout(Ostream& os) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-//- Construct null
 CML::mapDistribute::mapDistribute()
 :
     mapDistributeBase()
 {}
 
 
-//- Construct from components
 CML::mapDistribute::mapDistribute
 (
     const label constructSize,
@@ -171,7 +169,6 @@ CML::mapDistribute::mapDistribute
 {}
 
 
-//- Construct from components
 CML::mapDistribute::mapDistribute
 (
     const label constructSize,
@@ -242,7 +239,6 @@ CML::mapDistribute::mapDistribute
 {}
 
 
-
 CML::mapDistribute::mapDistribute
 (
     const globalIndex& globalNumbering,
@@ -270,10 +266,10 @@ CML::mapDistribute::mapDistribute
     forAll(transformedElements, i)
     {
         labelPair elem = transformedElements[i];
-        label proci = globalIndexAndTransform::processor(elem);
+        label proci = globalTransforms.processor(elem);
         if (proci != Pstream::myProcNo())
         {
-            label index = globalIndexAndTransform::index(elem);
+            label index = globalTransforms.index(elem);
             label nCompact = compactMap[proci].size();
             compactMap[proci].insert(index, nCompact);
         }
@@ -301,7 +297,7 @@ CML::mapDistribute::mapDistribute
     forAll(transformedElements, i)
     {
         labelPair elem = transformedElements[i];
-        label trafoI = globalIndexAndTransform::transformIndex(elem);
+        label trafoI = globalTransforms.transformIndex(elem);
         nPerTransform[trafoI]++;
     }
     // Offset per transformIndex
@@ -321,9 +317,9 @@ CML::mapDistribute::mapDistribute
     forAll(transformedElements, i)
     {
         labelPair elem = transformedElements[i];
-        label proci = globalIndexAndTransform::processor(elem);
-        label index = globalIndexAndTransform::index(elem);
-        label trafoI = globalIndexAndTransform::transformIndex(elem);
+        label proci = globalTransforms.processor(elem);
+        label index = globalTransforms.index(elem);
+        label trafoI = globalTransforms.transformIndex(elem);
 
         // Get compact index for untransformed element
         label rawElemI =
@@ -378,10 +374,10 @@ CML::mapDistribute::mapDistribute
 
         forAll(elems, i)
         {
-            label proci = globalIndexAndTransform::processor(elems[i]);
+            label proci = globalTransforms.processor(elems[i]);
             if (proci != Pstream::myProcNo())
             {
-                label index = globalIndexAndTransform::index(elems[i]);
+                label index = globalTransforms.index(elems[i]);
                 label nCompact = compactMap[proci].size();
                 compactMap[proci].insert(index, nCompact);
             }
@@ -413,7 +409,7 @@ CML::mapDistribute::mapDistribute
 
         forAll(elems, i)
         {
-            label trafoI = globalIndexAndTransform::transformIndex(elems[i]);
+            label trafoI = globalTransforms.transformIndex(elems[i]);
             nPerTransform[trafoI]++;
         }
     }
@@ -438,9 +434,9 @@ CML::mapDistribute::mapDistribute
 
         forAll(elems, i)
         {
-            label proci = globalIndexAndTransform::processor(elems[i]);
-            label index = globalIndexAndTransform::index(elems[i]);
-            label trafoI = globalIndexAndTransform::transformIndex(elems[i]);
+            label proci = globalTransforms.processor(elems[i]);
+            label index = globalTransforms.index(elems[i]);
+            label trafoI = globalTransforms.transformIndex(elems[i]);
 
             // Get compact index for untransformed element
             label rawElemI =

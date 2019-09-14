@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,7 +27,6 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-
 namespace CML
 {
     defineTypeNameAndDebug(globalPoints, 0);
@@ -36,8 +35,6 @@ namespace CML
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Total number of points on coupled patches. Is upper limit for number
-// of shared points
 CML::label CML::globalPoints::countPatchPoints
 (
     const polyBoundaryMesh& patches
@@ -63,15 +60,15 @@ CML::label CML::globalPoints::findSamePoint
     const labelPair& info
 ) const
 {
-    const label proci = globalIndexAndTransform::processor(info);
-    const label index = globalIndexAndTransform::index(info);
+    const label proci = globalTransforms_.processor(info);
+    const label index = globalTransforms_.index(info);
 
     forAll(allInfo, i)
     {
         if
         (
-            globalIndexAndTransform::processor(allInfo[i]) == proci
-         && globalIndexAndTransform::index(allInfo[i]) == index
+            globalTransforms_.processor(allInfo[i]) == proci
+         && globalTransforms_.index(allInfo[i]) == index
         )
         {
             return i;
@@ -87,28 +84,34 @@ CML::labelPairList CML::globalPoints::addSendTransform
     const labelPairList& info
 ) const
 {
+    scalar tol = refCast<const coupledPolyPatch>
+    (
+        mesh_.boundaryMesh()[patchi]
+    ).matchTolerance();
+
     labelPairList sendInfo(info.size());
 
     forAll(info, i)
     {
         //Pout<< "    adding send transform to" << nl
-        //    << "    proc:" << globalIndexAndTransform::processor(info[i])
+        //    << "    proc:" << globalTransforms_.processor(info[i])
         //    << nl
-        //    << "    index:" << globalIndexAndTransform::index(info[i]) << nl
+        //    << "    index:" << globalTransforms_.index(info[i]) << nl
         //    << "    trafo:"
         //    <<  globalTransforms_.decodeTransformIndex
-        //        (globalIndexAndTransform::transformIndex(info[i]))
+        //        (globalTransforms_.transformIndex(info[i]))
         //    << endl;
 
-        sendInfo[i] = globalIndexAndTransform::encode
+        sendInfo[i] = globalTransforms_.encode
         (
-            globalIndexAndTransform::processor(info[i]),
-            globalIndexAndTransform::index(info[i]),
+            globalTransforms_.processor(info[i]),
+            globalTransforms_.index(info[i]),
             globalTransforms_.addToTransformIndex
             (
-                globalIndexAndTransform::transformIndex(info[i]),
+                globalTransforms_.transformIndex(info[i]),
                 patchi,
-                true           // patchi is sending side
+                true,           // patchi is sending side
+                tol             // tolerance for comparison
             )
         );
     }
@@ -116,9 +119,6 @@ CML::labelPairList CML::globalPoints::addSendTransform
 }
 
 
-// Collect all topological information about a point on a patch.
-// (this information is the patch faces using the point and the relative
-// position of the point in the face)
 void CML::globalPoints::addToSend
 (
     const polyPatch& pp,
@@ -130,6 +130,10 @@ void CML::globalPoints::addToSend
     DynamicList<labelPairList>& allInfo
 ) const
 {
+    // Collect all topological information about a point on a patch.  (this
+    // information is the patch faces using the point and the relative position
+    // of the point in the face)
+
     label meshPointi = pp.meshPoints()[patchPointi];
 
     // Add all faces using the point so we are sure we find it on the
@@ -151,8 +155,6 @@ void CML::globalPoints::addToSend
 }
 
 
-// Add nbrInfo to myInfo. Return true if anything changed.
-// nbrInfo is for a point a list of all the global points using it
 bool CML::globalPoints::mergeInfo
 (
     const labelPairList& nbrInfo,
@@ -160,6 +162,9 @@ bool CML::globalPoints::mergeInfo
     labelPairList& myInfo
 ) const
 {
+    // Add nbrInfo to myInfo. Return true if anything changed.  nbrInfo is for a
+    // point a list of all the global points using it
+
     bool anyChanged = false;
 
     // Extend to make space for the nbrInfo (trimmed later)
@@ -195,11 +200,11 @@ bool CML::globalPoints::mergeInfo
             }
             else
             {
-                label myTransform = globalIndexAndTransform::transformIndex
+                label myTransform = globalTransforms_.transformIndex
                 (
                     myInfo[index]
                 );
-                label nbrTransform = globalIndexAndTransform::transformIndex
+                label nbrTransform = globalTransforms_.transformIndex
                 (
                     nbrInfo[i]
                 );
@@ -258,14 +263,15 @@ CML::label CML::globalPoints::localToMeshPoint
 }
 
 
-// Updates database of current information on meshpoints with nbrInfo.
-// Uses mergeInfo above. Returns true if data kept for meshPointi changed.
 bool CML::globalPoints::mergeInfo
 (
     const labelPairList& nbrInfo,
     const label localPointi
 )
 {
+    // Updates database of current information on meshpoints with nbrInfo.  Uses
+    // mergeInfo above. Returns true if data kept for meshPointi changed.
+
     label infoChanged = false;
 
     // Get the index into the procPoints list.
@@ -284,7 +290,7 @@ bool CML::globalPoints::mergeInfo
         labelPairList knownInfo
         (
             1,
-            globalIndexAndTransform::encode
+            globalTransforms_.encode
             (
                 Pstream::myProcNo(),
                 localPointi,
@@ -306,14 +312,15 @@ bool CML::globalPoints::mergeInfo
 }
 
 
-// Updates database of current information on meshpoints with nbrInfo.
-// Uses mergeInfo above. Returns true if data kept for meshPointi changed.
 bool CML::globalPoints::storeInitialInfo
 (
     const labelPairList& nbrInfo,
     const label localPointi
 )
 {
+    // Updates database of current information on meshpoints with nbrInfo.  Uses
+    // mergeInfo above. Returns true if data kept for meshPointi changed.
+
     label infoChanged = false;
 
     // Get the index into the procPoints list.
@@ -345,9 +352,9 @@ void CML::globalPoints::printProcPoint
     const labelPair& pointInfo
 ) const
 {
-    label proci = globalIndexAndTransform::processor(pointInfo);
-    label index = globalIndexAndTransform::index(pointInfo);
-    label trafoI = globalIndexAndTransform::transformIndex(pointInfo);
+    label proci = globalTransforms_.processor(pointInfo);
+    label index = globalTransforms_.index(pointInfo);
+    label trafoI = globalTransforms_.transformIndex(pointInfo);
 
     Pout<< "    proc:" << proci;
     Pout<< " localpoint:";
@@ -378,7 +385,6 @@ void CML::globalPoints::printProcPoints
 }
 
 
-// Insert my own points into structure and mark as changed.
 void CML::globalPoints::initOwnPoints
 (
     const Map<label>& meshToPatchPoint,
@@ -411,7 +417,7 @@ void CML::globalPoints::initOwnPoints
                     labelPairList knownInfo
                     (
                         1,
-                        globalIndexAndTransform::encode
+                        globalTransforms_.encode
                         (
                             Pstream::myProcNo(),
                             localPointi,
@@ -447,7 +453,7 @@ void CML::globalPoints::initOwnPoints
                     labelPairList knownInfo
                     (
                         1,
-                        globalIndexAndTransform::encode
+                        globalTransforms_.encode
                         (
                             Pstream::myProcNo(),
                             localPointi,
@@ -466,7 +472,6 @@ void CML::globalPoints::initOwnPoints
 }
 
 
-// Send all my info on changedPoints_ to my neighbours.
 void CML::globalPoints::sendPatchPoints
 (
     const bool mergeSeparated,
@@ -554,11 +559,6 @@ void CML::globalPoints::sendPatchPoints
 }
 
 
-// Receive all my neighbours' information and merge with mine.
-// After finishing will have updated
-// - procPoints_ : all neighbour information merged in.
-// - meshToProcPoint_
-// - changedPoints: all points for which something changed.
 void CML::globalPoints::receivePatchPoints
 (
     const bool mergeSeparated,
@@ -568,6 +568,12 @@ void CML::globalPoints::receivePatchPoints
     labelHashSet& changedPoints
 )
 {
+    // Receive all my neighbours' information and merge with mine.
+    // After finishing will have updated
+    // - procPoints_ : all neighbour information merged in.
+    // - meshToProcPoint_
+    // - changedPoints: all points for which something changed.
+
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
     const labelPairList& patchInfo = globalTransforms_.patchTransformSign();
 
@@ -712,14 +718,15 @@ void CML::globalPoints::receivePatchPoints
 }
 
 
-// Remove entries which are handled by normal face-face communication. I.e.
-// those points where the equivalence list is only me and my (face)neighbour
 void CML::globalPoints::remove
 (
     const labelList& patchToMeshPoint,
     const Map<label>& directNeighbours
 )
 {
+    // Remove entries which are handled by normal face-face communication. I.e.
+    // those points where the equivalence list is only me and my (face)neighbour
+
     // Save old ones.
     Map<label> oldMeshToProcPoint(meshToProcPoint_.xfer());
     meshToProcPoint_.resize(oldMeshToProcPoint.size());
@@ -739,8 +746,8 @@ void CML::globalPoints::remove
             // is in it. This would be an ordinary connection and can be
             // handled by normal face-face connectivity.
 
-            label proc0 = globalIndexAndTransform::processor(pointInfo[0]);
-            label proc1 = globalIndexAndTransform::processor(pointInfo[1]);
+            label proc0 = globalTransforms_.processor(pointInfo[0]);
+            label proc1 = globalTransforms_.processor(pointInfo[1]);
 
             if
             (
@@ -748,14 +755,14 @@ void CML::globalPoints::remove
                     proc0 == Pstream::myProcNo()
                  && directNeighbours.found
                     (
-                        globalIndexAndTransform::index(pointInfo[0])
+                        globalTransforms_.index(pointInfo[0])
                     )
                 )
              || (
                     proc1 == Pstream::myProcNo()
                  && directNeighbours.found
                     (
-                        globalIndexAndTransform::index(pointInfo[1])
+                        globalTransforms_.index(pointInfo[1])
                     )
                 )
             )
@@ -765,14 +772,14 @@ void CML::globalPoints::remove
                 {
                     //Pout<< "Removing direct neighbour:"
                     //    << mesh_.points()
-                    //       [globalIndexAndTransform::index(pointInfo[0])]
+                    //       [globalTransforms_.index(pointInfo[0])]
                     //    << endl;
                 }
                 else if (proc1 == Pstream::myProcNo())
                 {
                     //Pout<< "Removing direct neighbour:"
                     //    << mesh_.points()
-                    //       [globalIndexAndTransform::index(pointInfo[1])]
+                    //       [globalTransforms_.index(pointInfo[1])]
                     //    << endl;
                 }
             }
@@ -801,11 +808,11 @@ void CML::globalPoints::remove
             // So this meshPoint will have info of size one only.
             if
             (
-                globalIndexAndTransform::processor(pointInfo[0])
+                globalTransforms_.processor(pointInfo[0])
              != Pstream::myProcNo()
              || !directNeighbours.found
                 (
-                    globalIndexAndTransform::index(pointInfo[0])
+                    globalTransforms_.index(pointInfo[0])
                 )
             )
             {
@@ -984,7 +991,7 @@ void CML::globalPoints::calculateSharedPoints
     forAllConstIter(Map<label>, meshToProcPoint_, iter)
     {
         labelPairList& pointInfo = procPoints_[iter()];
-        sort(pointInfo, globalIndexAndTransform::less());
+        sort(pointInfo, globalIndexAndTransform::less(globalTransforms_));
     }
 
 
@@ -1006,10 +1013,10 @@ void CML::globalPoints::calculateSharedPoints
             if
             (
                 (
-                    globalIndexAndTransform::processor(masterInfo)
+                    globalTransforms_.processor(masterInfo)
                  == Pstream::myProcNo()
                 )
-             && (globalIndexAndTransform::index(masterInfo) == iter.key())
+             && (globalTransforms_.index(masterInfo) == iter.key())
             )
             {
                 labelList& pPoints = pointPoints_[iter.key()];
@@ -1024,9 +1031,9 @@ void CML::globalPoints::calculateSharedPoints
                 for (label i = 1; i < pointInfo.size(); i++)
                 {
                     const labelPair& info = pointInfo[i];
-                    label proci = globalIndexAndTransform::processor(info);
-                    label index = globalIndexAndTransform::index(info);
-                    label transform = globalIndexAndTransform::transformIndex
+                    label proci = globalTransforms_.processor(info);
+                    label index = globalTransforms_.index(info);
+                    label transform = globalTransforms_.transformIndex
                     (
                         info
                     );
@@ -1078,7 +1085,6 @@ void CML::globalPoints::calculateSharedPoints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from mesh
 CML::globalPoints::globalPoints
 (
     const polyMesh& mesh,
@@ -1107,7 +1113,6 @@ CML::globalPoints::globalPoints
 }
 
 
-// Construct from mesh and patch of coupled faces
 CML::globalPoints::globalPoints
 (
     const polyMesh& mesh,

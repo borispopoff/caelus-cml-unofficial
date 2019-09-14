@@ -29,8 +29,8 @@ bool CML::globalIndexAndTransform::less::operator()
     const labelPair& b
 ) const
 {
-    label procA = globalIndexAndTransform::processor(a);
-    label procB = globalIndexAndTransform::processor(b);
+    label procA = gi_.processor(a);
+    label procB = gi_.processor(b);
 
     if (procA < procB)
     {
@@ -43,8 +43,8 @@ bool CML::globalIndexAndTransform::less::operator()
     else
     {
         // Equal proc.
-        label indexA = globalIndexAndTransform::index(a);
-        label indexB = globalIndexAndTransform::index(b);
+        label indexA = gi_.index(a);
+        label indexB = gi_.index(b);
 
         if (indexA < indexB)
         {
@@ -57,8 +57,8 @@ bool CML::globalIndexAndTransform::less::operator()
         else
         {
             // Equal index
-            label transformA = globalIndexAndTransform::transformIndex(a);
-            label transformB = globalIndexAndTransform::transformIndex(b);
+            label transformA = gi_.transformIndex(a);
+            label transformB = gi_.transformIndex(b);
 
             return transformA < transformB;
         }
@@ -68,7 +68,7 @@ bool CML::globalIndexAndTransform::less::operator()
 
 CML::label CML::globalIndexAndTransform::encodeTransformIndex
 (
-    const List<label>& permutationIndices
+    const labelList& permutationIndices
 ) const
 {
     if (permutationIndices.size() != transforms_.size())
@@ -102,67 +102,19 @@ CML::label CML::globalIndexAndTransform::encodeTransformIndex
 }
 
 
-CML::label CML::globalIndexAndTransform::encodeTransformIndex
-(
-    const FixedList<CML::label, 3>& permutation
-) const
-{
-    if (nIndependentTransforms() == 0)
-    {
-        return 0;
-    }
-    if (nIndependentTransforms() == 1)
-    {
-        return permutation[0]+1;
-    }
-    else if (nIndependentTransforms() == 2)
-    {
-        return (permutation[1]+1)*3 + (permutation[0]+1);
-    }
-    else
-    {
-        return
-            (permutation[2]+1)*9
-          + (permutation[1]+1)*3
-          + (permutation[0]+1);
-    }
-}
-
-
-CML::FixedList<CML::label, 3>
-CML::globalIndexAndTransform::decodeTransformIndex
+CML::labelList CML::globalIndexAndTransform::decodeTransformIndex
 (
     const label transformIndex
 ) const
 {
-    FixedList<label, 3> permutation(label(0));
+    labelList permutation(transforms_.size(), 0);
 
     label t = transformIndex;
-    if (nIndependentTransforms() > 0)
+    forAll(permutation, i)
     {
-        permutation[0] = (t%3)-1;
-        if (nIndependentTransforms() > 1)
-        {
-            t /= 3;
-            permutation[1] = (t%3)-1;
-            if (nIndependentTransforms() > 2)
-            {
-                t /= 3;
-                permutation[2] = (t%3)-1;
-            }
-        }
+        permutation[i] = (t%3)-1;
+        t /= 3;
     }
-
-#   ifdef FULLDEBUG
-    t /= 3;
-    if (t != 0)
-    {
-        FatalErrorInFunction
-            << "transformIndex : " << transformIndex
-            << " has more than 3 fields."
-            << abort(FatalError);
-    }
-#   endif
 
     return permutation;
 }
@@ -176,15 +128,28 @@ CML::label CML::globalIndexAndTransform::addToTransformIndex
     const scalar tol
 ) const
 {
-    const Pair<label>& transSign = patchTransformSign_[patchi];
+    const labelPair& transSign = patchTransformSign_[patchi];
 
     label matchTransI = transSign.first();
 
-    // Hardcoded for max 3 transforms only!
-
-    if (matchTransI > -1 && matchTransI < 3)
+    if (matchTransI >= transforms_.size())
     {
-        FixedList<label, 3> permutation = decodeTransformIndex(transformIndex);
+        FatalErrorInFunction
+            << "patch:" << mesh_.boundaryMesh()[patchi].name()
+            << " transform:" << matchTransI
+            << " out of possible transforms:" << transforms_
+            << exit(FatalError);
+        return labelMin;
+    }
+    else if (matchTransI == -1)
+    {
+        // No additional transformation for this patch
+        return transformIndex;
+    }
+    else
+    {
+        // Decode current set of transforms
+        labelList permutation(decodeTransformIndex(transformIndex));
 
 
         // Add patch transform
@@ -211,13 +176,41 @@ CML::label CML::globalIndexAndTransform::addToTransformIndex
             }
             else if (sign == permutation[matchTransI])
             {
-                FatalErrorInFunction
-                    << "More than one patch accessing the same transform "
-                    << "but not of the same sign." << endl
-                    << "patch:" << mesh_.boundaryMesh()[patchi].name()
-                    << " transform:" << matchTransI << " sign:" << sign
-                    << "  current transforms:" << permutation
-                    << exit(FatalError);
+                // This is usually illegal. The only exception is for points
+                // on the axis of a 180 degree cyclic wedge when the
+                // transformation is going to be (-1 0 0 0 -1 0 0 0 +1)
+                // (or a different permutation but always two times -1 and
+                // once +1)
+                bool antiCyclic = false;
+
+                const vectorTensorTransform& vt = transforms_[matchTransI];
+                if (mag(vt.t()) < SMALL && vt.hasR())
+                {
+                    const tensor& R = vt.R();
+                    scalar sumDiag = tr(R);
+                    scalar sumMagDiag = mag(R.xx())+mag(R.yy())+mag(R.zz());
+
+                    if (mag(sumMagDiag-3) < tol && mag(sumDiag+1) < tol)
+                    {
+                        antiCyclic = true;
+                    }
+                }
+
+                if (antiCyclic)
+                {
+                    // 180 degree rotational. Reset transformation.
+                    permutation[matchTransI] = 0;
+                }
+                else
+                {
+                    FatalErrorInFunction
+                        << "More than one patch accessing the same transform "
+                        << "but not of the same sign." << endl
+                        << "patch:" << mesh_.boundaryMesh()[patchi].name()
+                        << " transform:" << matchTransI << " sign:" << sign
+                        << "  current transforms:" << permutation
+                        << exit(FatalError);
+                }
             }
             else
             {
@@ -235,10 +228,6 @@ CML::label CML::globalIndexAndTransform::addToTransformIndex
 
         return encodeTransformIndex(permutation);
     }
-    else
-    {
-        return transformIndex;
-    }
 }
 
 
@@ -255,7 +244,7 @@ CML::label CML::globalIndexAndTransform::minimumTransformIndex
 
 
     // Count number of transforms
-    FixedList<label, 3> permutation0 = decodeTransformIndex(transformIndex0);
+    labelList permutation0(decodeTransformIndex(transformIndex0));
     label n0 = 0;
     forAll(permutation0, i)
     {
@@ -265,7 +254,7 @@ CML::label CML::globalIndexAndTransform::minimumTransformIndex
         }
     }
 
-    FixedList<label, 3> permutation1 = decodeTransformIndex(transformIndex1);
+    labelList permutation1(decodeTransformIndex(transformIndex1));
     label n1 = 0;
     forAll(permutation1, i)
     {
@@ -292,8 +281,8 @@ CML::label CML::globalIndexAndTransform::subtractTransformIndex
     const label transformIndex1
 ) const
 {
-    FixedList<label, 3> permutation0 = decodeTransformIndex(transformIndex0);
-    FixedList<label, 3> permutation1 = decodeTransformIndex(transformIndex1);
+    labelList permutation0(decodeTransformIndex(transformIndex0));
+    labelList permutation1(decodeTransformIndex(transformIndex1));
 
     forAll(permutation0, i)
     {
@@ -308,7 +297,7 @@ CML::labelPair CML::globalIndexAndTransform::encode
 (
     const label index,
     const label transformIndex
-)
+) const
 {
     return encode(Pstream::myProcNo(), index, transformIndex);
 }
@@ -319,21 +308,22 @@ CML::labelPair CML::globalIndexAndTransform::encode
     const label proci,
     const label index,
     const label transformIndex
-)
+) const
 {
-    if (transformIndex < 0 || transformIndex >= base_)
+    if (transformIndex < 0 || transformIndex >= transformPermutations_.size())
     {
         FatalErrorInFunction
             << "TransformIndex " << transformIndex
             << " is outside allowed range of 0 to "
-            << base_ - 1
+            << transformPermutations_.size() - 1
             << abort(FatalError);
     }
 
-    if (proci > labelMax/base_)
+    if (proci > labelMax/transformPermutations_.size())
     {
         FatalErrorInFunction
-            << "Overflow : encoding processor " << proci << " in base " << base_
+            << "Overflow : encoding processor " << proci
+            << " in base " << transformPermutations_.size()
             << " exceeds capability of label (" << labelMax
             << "). Please recompile with larger datatype for label."
             << exit(FatalError);
@@ -342,7 +332,7 @@ CML::labelPair CML::globalIndexAndTransform::encode
     return labelPair
     (
         index,
-        transformIndex + proci*base_
+        transformIndex + proci*transformPermutations_.size()
     );
 }
 
@@ -350,7 +340,7 @@ CML::labelPair CML::globalIndexAndTransform::encode
 CML::label CML::globalIndexAndTransform::index
 (
     const labelPair& globalIAndTransform
-)
+) const
 {
     return globalIAndTransform.first();
 }
@@ -359,18 +349,18 @@ CML::label CML::globalIndexAndTransform::index
 CML::label CML::globalIndexAndTransform::processor
 (
     const labelPair& globalIAndTransform
-)
+) const
 {
-    return globalIAndTransform.second()/base_;
+    return globalIAndTransform.second()/transformPermutations_.size();
 }
 
 
 CML::label CML::globalIndexAndTransform::transformIndex
 (
     const labelPair& globalIAndTransform
-)
+) const
 {
-    return globalIAndTransform.second() % base_;
+    return globalIAndTransform.second()%transformPermutations_.size();
 }
 
 
@@ -400,7 +390,7 @@ CML::label CML::globalIndexAndTransform::nullTransformIndex() const
 }
 
 
-const CML::List<CML::Pair<CML::label>>&
+const CML::labelPairList&
 CML::globalIndexAndTransform::patchTransformSign() const
 {
     return patchTransformSign_;
@@ -418,23 +408,23 @@ const CML::vectorTensorTransform& CML::globalIndexAndTransform::transform
 
 CML::labelList CML::globalIndexAndTransform::transformIndicesForPatches
 (
-    const labelHashSet& patchIs
+    const labelHashSet& patchis
 ) const
 {
-    List<label> permutation(transforms_.size(), 0);
+    labelList permutation(transforms_.size(), 0);
 
     labelList selectedTransformIs(0);
 
-    if (patchIs.empty() || transforms_.empty())
+    if (patchis.empty() || transforms_.empty())
     {
         return selectedTransformIs;
     }
 
-    forAllConstIter(labelHashSet, patchIs, iter)
+    forAllConstIter(labelHashSet, patchis, iter)
     {
         label patchi = iter.key();
 
-        const Pair<label>& transSign = patchTransformSign_[patchi];
+        const labelPair& transSign = patchTransformSign_[patchi];
 
         label matchTransI = transSign.first();
 
@@ -488,7 +478,7 @@ CML::labelList CML::globalIndexAndTransform::transformIndicesForPatches
         }
         case 2:
         {
-            List<label> tempPermutation = permutation;
+            labelList tempPermutation = permutation;
 
             label a = 0;
             label b = 1;
@@ -533,7 +523,7 @@ CML::labelList CML::globalIndexAndTransform::transformIndicesForPatches
         }
         case 3:
         {
-            List<label> tempPermutation = permutation;
+            labelList tempPermutation = permutation;
 
             tempPermutation[0] = 0;
             tempPermutation[1] = 0;
@@ -593,13 +583,13 @@ CML::labelList CML::globalIndexAndTransform::transformIndicesForPatches
 
 CML::pointField CML::globalIndexAndTransform::transformPatches
 (
-    const labelHashSet& patchIs,
+    const labelHashSet& patchis,
     const point& pt
 ) const
 {
-    labelList transIs = transformIndicesForPatches(patchIs);
+    labelList transIs = transformIndicesForPatches(patchis);
 
-    // Pout<< patchIs << nl << transIs << endl;
+    // Pout<< patchis << nl << transIs << endl;
 
     pointField transPts(transIs.size());
 

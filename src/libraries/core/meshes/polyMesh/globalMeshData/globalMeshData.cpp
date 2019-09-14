@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -20,35 +20,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "globalMeshData.hpp"
-#include "Time.hpp"
 #include "Pstream.hpp"
 #include "PstreamCombineReduceOps.hpp"
 #include "processorPolyPatch.hpp"
-#include "demandDrivenData.hpp"
 #include "globalPoints.hpp"
 #include "polyMesh.hpp"
 #include "mapDistribute.hpp"
 #include "labelIOList.hpp"
-#include "PackedList.hpp"
 #include "mergePoints.hpp"
-#include "matchPoints.hpp"
-#include "OFstream.hpp"
 #include "globalIndexAndTransform.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-
 namespace CML
 {
-    defineTypeNameAndDebug(globalMeshData, 0);
-}
+defineTypeNameAndDebug(globalMeshData, 0);
 
+const scalar globalMeshData::matchTol_ = 1e-8;
 
-// Geometric matching tolerance. Factor of mesh bounding box.
-const CML::scalar CML::globalMeshData::matchTol_ = 1e-8;
-
-namespace CML
-{
 template<>
 class minEqOp<labelPair>
 {
@@ -64,7 +53,6 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Collect processor patch addressing.
 void CML::globalMeshData::initProcAddr()
 {
     processorPatchIndices_.setSize(mesh_.boundaryMesh().size());
@@ -252,7 +240,6 @@ void CML::globalMeshData::calcSharedPoints() const
 }
 
 
-// Given information about locally used edges allocate global shared edges.
 void CML::globalMeshData::countSharedEdges
 (
     const EdgeMap<labelList>& procSharedEdges,
@@ -587,7 +574,7 @@ void CML::globalMeshData::calcPointConnectivity
     labelPairList myData(globalPointSlavesMap().constructSize());
     forAll(slaves, pointi)
     {
-        myData[pointi] = globalIndexAndTransform::encode
+        myData[pointi] = transforms.encode
         (
             Pstream::myProcNo(),
             pointi,
@@ -634,9 +621,9 @@ void CML::globalMeshData::calcPointConnectivity
                 );
                 // Add transform to connectivity
                 const labelPair& n = myData[pTransformSlaves[i]];
-                label proci = globalIndexAndTransform::processor(n);
-                label index = globalIndexAndTransform::index(n);
-                pConnectivity[connI++] = globalIndexAndTransform::encode
+                label proci = transforms.processor(n);
+                label index = transforms.index(n);
+                pConnectivity[connI++] = transforms.encode
                 (
                     proci,
                     index,
@@ -688,6 +675,8 @@ void CML::globalMeshData::calcGlobalPointEdges
     const globalIndex& globalEdgeNumbers = globalEdgeNumbering();
     const labelListList& slaves = globalPointSlaves();
     const labelListList& transformedSlaves = globalPointTransformedSlaves();
+    const globalIndexAndTransform& transforms = globalTransforms();
+
 
     // Create local version
     globalPointEdges.setSize(globalPointSlavesMap().constructSize());
@@ -707,11 +696,11 @@ void CML::globalMeshData::calcGlobalPointEdges
         forAll(pEdges, i)
         {
             label otherPointi = edges[pEdges[i]].otherVertex(pointi);
-            globalPPoints[i] = globalIndexAndTransform::encode
+            globalPPoints[i] = transforms.encode
             (
                 Pstream::myProcNo(),
                 otherPointi,
-                globalTransforms().nullTransformIndex()
+                transforms.nullTransformIndex()
             );
         }
     }
@@ -800,9 +789,9 @@ void CML::globalMeshData::calcGlobalPointEdges
                 {
                     // Add transform to connectivity
                     const labelPair& n = otherData[j];
-                    label proci = globalIndexAndTransform::processor(n);
-                    label index = globalIndexAndTransform::index(n);
-                    globalPPoints[sz++] = globalIndexAndTransform::encode
+                    label proci = transforms.processor(n);
+                    label index = transforms.index(n);
+                    globalPPoints[sz++] = transforms.encode
                     (
                         proci,
                         index,
@@ -837,8 +826,6 @@ void CML::globalMeshData::calcGlobalPointEdges
 }
 
 
-// Find transformation to take remotePoint to localPoint. Use info to find
-// the transforms.
 CML::label CML::globalMeshData::findTransform
 (
     const labelPairList& info,
@@ -846,16 +833,18 @@ CML::label CML::globalMeshData::findTransform
     const label localPoint
 ) const
 {
-    const label remoteProci = globalIndexAndTransform::processor(remotePoint);
-    const label remoteIndex = globalIndexAndTransform::index(remotePoint);
+    const globalIndexAndTransform& transforms = globalTransforms();
+
+    const label remoteProci = transforms.processor(remotePoint);
+    const label remoteIndex = transforms.index(remotePoint);
 
     label remoteTransformI = -1;
     label localTransformI = -1;
     forAll(info, i)
     {
-        label proci = globalIndexAndTransform::processor(info[i]);
-        label pointi = globalIndexAndTransform::index(info[i]);
-        label transformI = globalIndexAndTransform::transformIndex(info[i]);
+        label proci = transforms.processor(info[i]);
+        label pointi = transforms.index(info[i]);
+        label transformI = transforms.transformIndex(info[i]);
 
         if (proci == Pstream::myProcNo() && pointi == localPoint)
         {
@@ -878,14 +867,16 @@ CML::label CML::globalMeshData::findTransform
     {
         FatalErrorInFunction
             << "Problem. Cannot find " << remotePoint
-            << " or " << localPoint << " in " << info
+            << " or " << localPoint  << " "
+            << coupledPatch().localPoints()[localPoint]
+            << " in " << info
             << endl
             << "remoteTransformI:" << remoteTransformI << endl
             << "localTransformI:" << localTransformI
             << abort(FatalError);
     }
 
-    return globalTransforms().subtractTransformIndex
+    return transforms.subtractTransformIndex
     (
         remoteTransformI,
         localTransformI
@@ -903,10 +894,11 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
 
     const edgeList& edges = coupledPatch().edges();
     const globalIndex& globalEdgeNumbers = globalEdgeNumbering();
+    const globalIndexAndTransform& transforms = globalTransforms();
 
 
     // The whole problem with deducting edge-connectivity from
-    // point-connectivity is that one of the endpoints might be
+    // point-connectivity is that one of the the endpoints might be
     // a local master but the other endpoint might not. So we first
     // need to make sure that all points know about connectivity and
     // the transformations.
@@ -951,11 +943,11 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
         // Append myself.
         eEdges.append
         (
-            globalIndexAndTransform::encode
+            transforms.encode
             (
                 Pstream::myProcNo(),
                 edgeI,
-                globalTransforms().nullTransformIndex()
+                transforms.nullTransformIndex()
             )
         );
 
@@ -996,7 +988,7 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
                         label proci = globalEdgeNumbers.whichProcID(pEdges0[i]);
                         eEdges.append
                         (
-                            globalIndexAndTransform::encode
+                            transforms.encode
                             (
                                 proci,
                                 globalEdgeNumbers.toLocal(proci, pEdges0[i]),
@@ -1012,7 +1004,7 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
         sort
         (
             allEdgeConnectivity[edgeI],
-            globalIndexAndTransform::less()
+            globalIndexAndTransform::less(transforms)
         );
     }
 
@@ -1034,10 +1026,10 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
             if
             (
                 (
-                    globalIndexAndTransform::processor(masterInfo)
+                    transforms.processor(masterInfo)
                  == Pstream::myProcNo()
                 )
-             && (globalIndexAndTransform::index(masterInfo) == edgeI)
+             && (transforms.index(masterInfo) == edgeI)
             )
             {
                 // Sort into transformed and untransformed
@@ -1053,14 +1045,14 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
                 for (label i = 1; i < edgeInfo.size(); i++)
                 {
                     const labelPair& info = edgeInfo[i];
-                    label proci = globalIndexAndTransform::processor(info);
-                    label index = globalIndexAndTransform::index(info);
-                    label transform = globalIndexAndTransform::transformIndex
+                    label proci = transforms.processor(info);
+                    label index = transforms.index(info);
+                    label transform = transforms.transformIndex
                     (
                         info
                     );
 
-                    if (transform == globalTransforms().nullTransformIndex())
+                    if (transform == transforms.nullTransformIndex())
                     {
                         eEdges[nonTransformI++] = globalEdgeNumbers.toGlobal
                         (
@@ -1092,7 +1084,7 @@ void CML::globalMeshData::calcGlobalEdgeSlaves() const
             globalEdgeNumbers,
             globalEdgeSlaves,
 
-            globalTransforms(),
+            transforms,
             transformedEdges,
             globalEdgeTransformedSlavesPtr_(),
 
@@ -1232,8 +1224,6 @@ void CML::globalMeshData::calcGlobalEdgeOrientation() const
 }
 
 
-// Calculate uncoupled boundary faces (without calculating
-// primitiveMesh::pointFaces())
 void CML::globalMeshData::calcPointBoundaryFaces
 (
     labelListList& pointBoundaryFaces
@@ -1367,6 +1357,7 @@ void CML::globalMeshData::calcGlobalPointBoundaryFaces() const
     const labelListList& pointSlaves = globalPointSlaves();
     const labelListList& pointTransformSlaves =
         globalPointTransformedSlaves();
+    const globalIndexAndTransform& transforms = globalTransforms();
 
 
     // Any faces coming in through transformation
@@ -1448,7 +1439,7 @@ void CML::globalMeshData::calcGlobalPointBoundaryFaces() const
                         label proci = globalIndices.whichProcID(slave);
                         label facei = globalIndices.toLocal(proci, slave);
 
-                        myBFaces[n++] = globalIndexAndTransform::encode
+                        myBFaces[n++] = transforms.encode
                         (
                             proci,
                             facei,
@@ -1482,7 +1473,7 @@ void CML::globalMeshData::calcGlobalPointBoundaryFaces() const
             globalIndices,
             globalPointBoundaryFaces,
 
-            globalTransforms(),
+            transforms,
             transformedFaces,
             globalPointTransformedBoundaryFacesPtr_(),
 
@@ -1597,6 +1588,7 @@ void CML::globalMeshData::calcGlobalPointBoundaryCells() const
     const labelListList& pointSlaves = globalPointSlaves();
     const labelListList& pointTransformSlaves =
         globalPointTransformedSlaves();
+    const globalIndexAndTransform& transforms = globalTransforms();
 
     List<labelPairList> transformedCells(pointSlaves.size());
 
@@ -1676,7 +1668,7 @@ void CML::globalMeshData::calcGlobalPointBoundaryCells() const
                     {
                         label proci = globalIndices.whichProcID(slave);
                         label celli = globalIndices.toLocal(proci, slave);
-                        myBCells[n++] = globalIndexAndTransform::encode
+                        myBCells[n++] = transforms.encode
                         (
                             proci,
                             celli,
@@ -1709,7 +1701,7 @@ void CML::globalMeshData::calcGlobalPointBoundaryCells() const
             globalIndices,
             globalPointBoundaryCells,
 
-            globalTransforms(),
+            transforms,
             transformedCells,
             globalPointTransformedBoundaryCellsPtr_(),
 
@@ -1770,7 +1762,6 @@ void CML::globalMeshData::calcGlobalCoPointSlaves() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from polyMesh
 CML::globalMeshData::globalMeshData(const polyMesh& mesh)
 :
     processorTopology(mesh.boundaryMesh()),
@@ -1853,7 +1844,6 @@ void CML::globalMeshData::clearOut()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Return shared point global labels.
 const CML::labelList& CML::globalMeshData::sharedPointGlobalLabels() const
 {
     if (!sharedPointGlobalLabelsPtr_.valid())
@@ -1904,7 +1894,6 @@ const CML::labelList& CML::globalMeshData::sharedPointGlobalLabels() const
 }
 
 
-// Collect coordinates of shared points. (does parallel communication!)
 CML::pointField CML::globalMeshData::sharedPoints() const
 {
     // Get all processors to send their shared points to master.
@@ -1994,7 +1983,6 @@ CML::pointField CML::globalMeshData::sharedPoints() const
 }
 
 
-// Collect coordinates of shared points. (does parallel communication!)
 CML::pointField CML::globalMeshData::geometricSharedPoints() const
 {
     // Get coords of my shared points
@@ -2768,7 +2756,6 @@ void CML::globalMeshData::movePoints(const pointField& newPoints)
 }
 
 
-// Update all data after morph
 void CML::globalMeshData::updateMesh()
 {
     // Clear out old data
