@@ -456,7 +456,7 @@ bool CML::dynamicRefineBalancedFvMesh::writeObject
 {
     bool writeOk =
     (
-        dynamicRefineFvMesh::writeObjects(fmt, ver, cmp)
+        dynamicRefineFvMesh::writeObject(fmt, ver, cmp)
     );
 
     // Get the cell level field from dynamicRefineFvMesh

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -765,19 +765,12 @@ void CML::fvMesh::updateMesh(const mapPolyMesh& mpm)
 }
 
 
-bool CML::fvMesh::writeObjects
+bool CML::fvMesh::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp
 ) const
-{
-    return polyMesh::writeObject(fmt, ver, cmp);
-}
-
-
-//- Write mesh using IO settings from the time
-bool CML::fvMesh::write() const
 {
     bool ok = true;
     if (phiPtr_)
@@ -785,7 +778,13 @@ bool CML::fvMesh::write() const
         ok = phiPtr_->write();
     }
 
-    return ok && polyMesh::write();
+    return ok && polyMesh::writeObject(fmt, ver, cmp);
+}
+
+
+bool CML::fvMesh::write() const
+{
+    return polyMesh::write();
 }
 
 

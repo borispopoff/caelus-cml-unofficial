@@ -76,6 +76,7 @@ CML::label CML::dynamicRefineFvMesh::count
             Info<< "n=" << n << endl;
         }
     }
+
     return n;
 }
 
@@ -274,6 +275,7 @@ CML::dynamicRefineFvMesh::refine
     // Update fields
     updateMesh(map);
 
+
     // Move mesh
     /*
     pointField newPoints;
@@ -440,6 +442,7 @@ CML::dynamicRefineFvMesh::refine
             }
         }
     }
+
 
 
     // Update numbering of cells/vertices.
@@ -1478,7 +1481,7 @@ bool CML::dynamicRefineFvMesh::writeObject
 
     bool writeOk =
     (
-        dynamicFvMesh::writeObjects(fmt, ver, cmp)
+        dynamicFvMesh::writeObject(fmt, ver, cmp)
      && meshCutter_.write()
     );
 

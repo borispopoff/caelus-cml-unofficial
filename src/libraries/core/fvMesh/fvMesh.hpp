@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM 
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,7 @@ namespace CML
 
 class fvMeshLduAddressing;
 class volMesh;
+
 
 /*---------------------------------------------------------------------------*\
                            Class fvMesh Declaration
@@ -380,7 +381,7 @@ public:
         // Write
 
             //- Write the underlying polyMesh and other data
-            virtual bool writeObjects
+            virtual bool writeObject
             (
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
