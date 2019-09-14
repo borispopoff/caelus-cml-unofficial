@@ -150,8 +150,13 @@ typedef multivariateScheme                                                     \
     scalar,                                                                    \
     LimitedScheme<scalar, LIMITER<NVDTVD>, limitFuncs::magSqr>                 \
 >                                                                              \
-    multivariateScheme##LIMITER_;                                              \
-defineTemplateTypeNameAndDebugWithName(multivariateScheme##LIMITER_, #SS, 0);  \
+    multivariateScheme##LIMITER##_;                                            \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        multivariateScheme##LIMITER##_,                                        \
+        #SS,                                                                   \
+        0                                                                      \
+    );                                                                         \
                                                                                \
 multivariateSurfaceInterpolationScheme<scalar>::addIstreamConstructorToTable   \
 <                                                                              \
@@ -178,12 +183,12 @@ typedef multivariateScheme                                                     \
     LimitedScheme<scalar, LLIMITER<LIMITER<NVDTVD>>, limitFuncs::LIMFUNC>      \
 >                                                                              \
     multivariateScheme##LLIMITER##LIMITER##NVDTVD##LIMFUNC##_;                 \
-defineTemplateTypeNameAndDebugWithName                                         \
-(                                                                              \
-    multivariateScheme##LLIMITER##LIMITER##NVDTVD##LIMFUNC##_,                 \
-    #SS,                                                                       \
-    0                                                                          \
-);                                                                             \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        multivariateScheme##LLIMITER##LIMITER##NVDTVD##LIMFUNC##_,             \
+        #SS,                                                                   \
+        0                                                                      \
+    );                                                                         \
                                                                                \
 multivariateSurfaceInterpolationScheme<scalar>::addIstreamConstructorToTable   \
 <                                                                              \
