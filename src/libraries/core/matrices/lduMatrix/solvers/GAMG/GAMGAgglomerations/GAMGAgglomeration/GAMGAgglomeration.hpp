@@ -95,7 +95,11 @@ protected:
         void compactLevels(const label nCreatedLevels);
 
         //- Check the need for further agglomeration
-        bool continueAgglomerating(const label nCoarseCells) const;
+        bool continueAgglomerating
+        (
+            const label nCells,
+            const label nCoarseCells
+        ) const;
 
 
     // Private Member Functions

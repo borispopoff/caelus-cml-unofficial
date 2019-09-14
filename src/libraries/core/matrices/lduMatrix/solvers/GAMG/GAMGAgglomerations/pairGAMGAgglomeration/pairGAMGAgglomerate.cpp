@@ -167,7 +167,6 @@ CML::tmp<CML::labelField> CML::pairGAMGAgglomeration::agglomerate
         }
     }
 
-
     // Check that all cells are part of clusters,
     // if not create single-cell "clusters" for each
     for (label celli=0; celli<nFineCells; celli++)
@@ -227,7 +226,7 @@ void CML::pairGAMGAgglomeration::agglomerate
             *faceWeightsPtr
         );
 
-        if (continueAgglomerating(nCoarseCells))
+        if (continueAgglomerating(finalAgglomPtr().size(), nCoarseCells))
         {
             nCells_[nCreatedLevels] = nCoarseCells;
             restrictAddressing_.set(nCreatedLevels, finalAgglomPtr);
