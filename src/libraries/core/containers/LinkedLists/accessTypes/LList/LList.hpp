@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -30,7 +30,7 @@ Description
 #define LList_H
 
 #include "label.hpp"
-#include "uLabel.hpp"
+#include <initializer_list>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -114,6 +114,9 @@ public:
         //- Construct as copy
         LList(const LList<LListBase, T>&);
 
+        //- Construct from an initializer list
+        LList(std::initializer_list<T>);
+
 
     //- Destructor
     ~LList();
@@ -196,9 +199,14 @@ public:
             //  and annul the argument list.
             void transfer(LList<LListBase, T>&);
 
+
     // Member operators
 
+        //- Assignment operator
         void operator=(const LList<LListBase, T>&);
+
+        //- Assignment to an initializer list
+        void operator=(std::initializer_list<T>);
 
 
     // STL type definitions
@@ -258,6 +266,16 @@ public:
                 }
         };
 
+        inline iterator begin()
+        {
+            return LListBase::begin();
+        }
+
+        inline const iterator& end()
+        {
+            return static_cast<const iterator&>(LListBase::end());
+        }
+
 
     // STL const_iterator
 
@@ -306,6 +324,26 @@ public:
                 }
         };
 
+        inline const_iterator cbegin() const
+        {
+            return LListBase::cbegin();
+        }
+
+        inline const const_iterator& cend() const
+        {
+            return static_cast<const const_iterator&>(LListBase::cend());
+        }
+
+        inline const_iterator begin() const
+        {
+            return LListBase::begin();
+        }
+
+        inline const const_iterator& end() const
+        {
+            return static_cast<const const_iterator&>(LListBase::end());
+        }
+
 
     // IOstream operators
 
@@ -323,11 +361,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-#include "error.hpp"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -336,9 +371,21 @@ CML::LList<LListBase, T>::LList(const LList<LListBase, T>& lst)
 :
     LListBase()
 {
-    for (const_iterator iter = lst.begin(); iter != lst.end(); ++iter)
+    for (const T& val : lst)
     {
-        this->append(iter());
+        this->append(val);
+    }
+}
+
+
+template<class LListBase, class T>
+CML::LList<LListBase, T>::LList(std::initializer_list<T> lst)
+:
+    LListBase()
+{
+    for (const T& val : lst)
+    {
+        this->append(val);
     }
 }
 
@@ -380,9 +427,21 @@ void CML::LList<LListBase, T>::operator=(const LList<LListBase, T>& lst)
 {
     this->clear();
 
-    for (const_iterator iter = lst.begin(); iter != lst.end(); ++iter)
+    for (const T& val : lst)
     {
-        this->append(iter());
+        this->append(val);
+    }
+}
+
+
+template<class LListBase, class T>
+void CML::LList<LListBase, T>::operator=(std::initializer_list<T> lst)
+{
+    this->clear();
+
+    for (const T& val : lst)
+    {
+        this->append(val);
     }
 }
 
@@ -455,8 +514,10 @@ CML::Istream& CML::operator>>(Istream& is, LList<LListBase, T>& L)
     {
         if (firstToken.pToken() != token::BEGIN_LIST)
         {
-            FatalIOErrorInFunction(is)
-                << "incorrect first token, '(', found " << firstToken.info()
+            FatalIOErrorInFunction
+            (
+                is
+            )   << "incorrect first token, '(', found " << firstToken.info()
                 << exit(FatalIOError);
         }
 
@@ -507,14 +568,9 @@ CML::Ostream& CML::operator<<(Ostream& os, const LList<LListBase, T>& lst)
     os << nl << token::BEGIN_LIST << nl;
 
     // Write contents
-    for
-    (
-        typename LList<LListBase, T>::const_iterator iter = lst.begin();
-        iter != lst.end();
-        ++iter
-    )
+    for (const T& val : lst)
     {
-        os << iter() << nl;
+        os << val << nl;
     }
 
     // Write end of contents
@@ -526,10 +582,6 @@ CML::Ostream& CML::operator<<(Ostream& os, const LList<LListBase, T>& lst)
     return os;
 }
 
-
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

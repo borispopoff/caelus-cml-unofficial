@@ -53,13 +53,11 @@ template<class T> class List;
 template<class T> class SubList;
 
 // Forward declaration of friend functions and operators
-template<class T> class SLList;
 template<class T> class UList;
 template<class T> Ostream& operator<<(Ostream&, const UList<T>&);
 template<class T> Istream& operator>>(Istream&, UList<T>&);
 
 typedef UList<label> labelUList;
-
 
 /*---------------------------------------------------------------------------*\
                            Class UList Declaration
@@ -157,6 +155,7 @@ public:
 
     // Member Functions
 
+
         // Access
 
             //- Return the forward circular index, i.e. the next index
@@ -209,14 +208,22 @@ public:
             inline void checkIndex(const label i) const;
 
 
-        // Edit
+        //- Copy the pointer held by the given UList
+        inline void shallowCopy(const UList<T>&);
 
-            //- Copy the pointer held by the given UList
-            inline void shallowCopy(const UList<T>&);
+        //- Copy elements of the given UList
+        void deepCopy(const UList<T>&);
 
-            //- Copy elements of the given UList
-            void deepCopy(const UList<T>&);
+        //- Write the UList as a dictionary entry
+        void writeEntry(Ostream&) const;
 
+        //- Write the UList as a dictionary entry with keyword
+        void writeEntry(const word& keyword, Ostream&) const;
+
+        //- Write the List, with line-breaks in ASCII if the list length
+        //- exceeds shortListLen.
+        //  Using '0' suppresses line-breaks entirely.
+        Ostream& writeList(Ostream& os, const label shortListLen=0) const;
 
     // Member Operators
 
@@ -356,19 +363,6 @@ public:
         //- Return true if !(a < b). Takes linear time
         bool operator>=(const UList<T>&) const;
 
-
-    // Writing
-
-        //- Write the UList as a dictionary entry.
-        void writeEntry(Ostream&) const;
-
-        //- Write the List as a dictionary entry with keyword
-        void writeEntry(const word& keyword, Ostream& os) const;
-
-        //- Write the List, with line-breaks in ASCII if the list length
-        //- exceeds shortListLen.
-        //  Using '0' suppresses line-breaks entirely.
-        Ostream& writeList(Ostream& os, const label shortListLen=0) const;
 
     // Ostream operator
 
@@ -1340,7 +1334,6 @@ CML::Istream& CML::operator>>(Istream& is, UList<T>& L)
     return is;
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

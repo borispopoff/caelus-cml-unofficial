@@ -55,8 +55,11 @@ template<class T, unsigned Size>
 Ostream& operator<<(Ostream&, const FixedList<T, Size>&);
 
 template<class T> class UList;
-template<class T> class SLList;
 
+class SLListBase;
+template<class LListBase, class T> class LList;
+template<class T>
+using SLList = LList<SLListBase, T>;
 
 /*---------------------------------------------------------------------------*\
                            Class FixedList Declaration
@@ -198,6 +201,16 @@ public:
             //  needed to make FixedList consistent with List
             void transfer(const FixedList<T, Size>&);
 
+        //- Write the FixedList as a dictionary entry
+        void writeEntry(Ostream&) const;
+
+        //- Write the FixedList as a dictionary entry with keyword
+        void writeEntry(const word& keyword, Ostream&) const;
+
+        //- Write the List, with line-breaks in ASCII if the list length
+        //- exceeds shortListLen.
+        //  Using '0' suppresses line-breaks entirely.
+        Ostream& writeList(Ostream& os, const label shortListLen=0) const;
 
     // Member operators
 
@@ -216,7 +229,7 @@ public:
         //- Assignment to SLList operator. Takes linear time
         inline void operator=(const SLList<T>&);
 
-        //- Assignment from an initializer list. Takes linear time
+        //- Assignment to an initializer list. Takes linear time
         inline void operator=(std::initializer_list<T>);
 
         //- Assignment of all entries to the given value
@@ -340,19 +353,6 @@ public:
 
         //- Return true if !(a < b). Takes linear time
         bool operator>=(const FixedList<T, Size>&) const;
-
-    // Writing
-
-        //- Write the FixedList as a dictionary entry
-        void writeEntry(Ostream&) const;
-
-        //- Write the List as a dictionary entry with keyword
-        void writeEntry(const word& keyword, Ostream& os) const;
-
-        //- Write the List, with line-breaks in ASCII if the list length
-        //- exceeds shortListLen.
-        //  Using '0' suppresses line-breaks entirely.
-        Ostream& writeList(Ostream& os, const label shortListLen=0) const;
 
 
     // IOstream operators
