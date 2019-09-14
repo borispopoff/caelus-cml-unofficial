@@ -31,8 +31,8 @@ Description
     {
         type              timeActivatedFileUpdate;
         functionObjectLibs ("libutilityFunctionObjects.so");
-        outputControl     timeStep;
-        outputInterval    1;
+        writeControl     timeStep;
+        writeInterval    1;
         fileToUpdate      "$CAELUS_CASE/system/fvSolution";
         timeVsFile
         (

@@ -49,7 +49,7 @@ functions
         type            systemCall;
         functionObjectLibs ("libsystemCall.so");
         enabled         true;
-        outputControl   outputTime;
+        writeControl   outputTime;
 
         // called every time step
         executeCalls

@@ -25,7 +25,7 @@ Description
     solvers with adjustTimeStep control (e.g. pimpleCML). Makes no attempt
     to cooperate with other timeStep 'controllers' (maxCo, other
     functionObjects). Supports 'enabled' flag but none of othe other ones
-    'timeStart', 'timeEnd', 'outputControl' etc.
+    'timeStart', 'timeEnd', 'writeControl' etc.
 
 SourceFiles
     setTimeStepFunctionObject.cpp

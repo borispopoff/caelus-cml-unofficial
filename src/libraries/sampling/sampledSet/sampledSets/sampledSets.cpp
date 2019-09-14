@@ -26,12 +26,14 @@ License
 #include "ListListOps.hpp"
 #include "SortableList.hpp"
 #include "volPointInterpolation.hpp"
+#include "mapPolyMesh.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace CML
 {
     defineTypeNameAndDebug(sampledSets, 0);
+
     bool sampledSets::verbose_ = false;
 }
 
@@ -173,21 +175,15 @@ void CML::sampledSets::verbose(const bool verbosity)
 
 
 void CML::sampledSets::execute()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void CML::sampledSets::end()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void CML::sampledSets::timeSet()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void CML::sampledSets::write()
@@ -297,9 +293,12 @@ void CML::sampledSets::correct()
 }
 
 
-void CML::sampledSets::updateMesh(const mapPolyMesh&)
+void CML::sampledSets::updateMesh(const mapPolyMesh& mpm)
 {
-    correct();
+    if (&mpm.mesh() == &mesh_)
+    {
+        correct();
+    }
 }
 
 

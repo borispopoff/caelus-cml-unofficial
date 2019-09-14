@@ -28,8 +28,8 @@ Description
     residuals
     {
         type            residuals;
-        outputControl   timeStep;
-        outputInterval  1;
+        writeControl   timeStep;
+        writeInterval  1;
         fields
         (
             U

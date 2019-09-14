@@ -354,9 +354,11 @@ void CML::probes::read(const dictionary& dict)
 
 void CML::probes::updateMesh(const mapPolyMesh& mpm)
 {
-    if (debug)
+    DebugInfo<< "probes: updateMesh" << endl;
+
+    if (&mpm.mesh() != &mesh_)
     {
-        Info<< "probes: updateMesh" << endl;
+        return;
     }
 
     if (fixedLocations_)
@@ -427,6 +429,7 @@ void CML::probes::updateMesh(const mapPolyMesh& mpm)
         }
     }
 }
+
 
 void CML::probes::movePoints(const pointField&)
 {
