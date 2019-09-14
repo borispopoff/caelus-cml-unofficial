@@ -48,9 +48,13 @@ namespace CML
 template<class T> class autoPtr;
 template<class T> class tmp;
 
+class SLListBase;
+template<class LListBase, class T> class LPtrList;
+template<class T>
+using SLPtrList = LPtrList<SLListBase, T>;
+
 // Forward declaration of friend functions and operators
 template<class T> class PtrList;
-template<class T> class SLPtrList;
 
 template<class T>
 Istream& operator>>(Istream&, PtrList<T>&);
@@ -118,7 +122,7 @@ public:
         // Edit
 
             //- Reset size of PtrList. If extending the PtrList, new entries are
-            //  set to NULL. If truncating the PtrList, removed entries are
+            //  set to nullptr. If truncating the PtrList, removed entries are
             //  deleted
             void setSize(const label);
 

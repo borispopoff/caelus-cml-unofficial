@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -17,7 +17,7 @@ License
     You should have received a copy of the GNU General Public License
     along with CAELUS.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
+Alias
     CML::SLPtrList
 
 Description
@@ -35,49 +35,9 @@ Description
 
 namespace CML
 {
-
-/*---------------------------------------------------------------------------*\
-                           Class SLPtrList Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class T>
-class SLPtrList
-:
-    public LPtrList<SLListBase, T>
-{
-
-public:
-
-    // Constructors
-
-        //- Null construct
-        SLPtrList()
-        {}
-
-        //- Construct given initial T*
-        SLPtrList(T* a)
-        :
-            LPtrList<SLListBase, T>(a)
-        {}
-
-        //- Construct from Istream using given Istream constructor class
-        template<class INew>
-        SLPtrList(Istream& is, const INew& inewt)
-        :
-            LPtrList<SLListBase, T>(is, inewt)
-        {}
-
-        //- Construct from Istream
-        SLPtrList(Istream& is)
-        :
-            LPtrList<SLListBase, T>(is)
-        {}
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
+    template<class T>
+    using SLPtrList = LPtrList<SLListBase, T>;
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

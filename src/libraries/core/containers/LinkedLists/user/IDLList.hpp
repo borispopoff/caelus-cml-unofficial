@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -17,7 +17,7 @@ License
     You should have received a copy of the GNU General Public License
     along with CAELUS.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
+Alias
     CML::IDLList
 
 Description
@@ -35,56 +35,9 @@ Description
 
 namespace CML
 {
-
-/*---------------------------------------------------------------------------*\
-                           Class IDLList Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class T>
-class IDLList
-:
-    public ILList<DLListBase, T>
-{
-
-public:
-
-    // Constructors
-
-        //- Null construct
-        IDLList()
-        {}
-
-        //- Construct given initial T
-        IDLList(const T& a)
-        :
-            ILList<DLListBase, T>(a)
-        {}
-
-        //- Construct from Istream using given Istream constructor class
-        template<class INew>
-        IDLList(Istream& is, const INew& inewt)
-        :
-            ILList<DLListBase, T>(is, inewt)
-        {}
-
-        //- Construct from Istream
-        IDLList(Istream& is)
-        :
-            ILList<DLListBase, T>(is)
-        {}
-
-        //- Copy constructor with additional argument for clone
-        template<class CloneArg>
-        IDLList(const IDLList<T>& idll, const CloneArg& cloneArg)
-        :
-            ILList<DLListBase, T>(idll, cloneArg)
-        {}
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
+    template<class T>
+    using IDLList = ILList<DLListBase, T>;
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
