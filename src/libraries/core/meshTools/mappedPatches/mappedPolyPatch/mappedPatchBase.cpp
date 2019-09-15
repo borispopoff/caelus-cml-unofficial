@@ -103,7 +103,7 @@ CML::tmp<CML::pointField> CML::mappedPatchBase::facePoints
         (
             mesh,
             pp.start()+facei,
-            polyMesh::FACEDIAGTETS
+            polyMesh::FACE_DIAG_TRIS
         ).rawPoint();
     }
 
@@ -1304,15 +1304,15 @@ CML::pointIndexHit CML::mappedPatchBase::facePoint
 (
     const polyMesh& mesh,
     const label facei,
-    const polyMesh::cellRepresentation decompMode
+    const polyMesh::cellDecomposition decompMode
 )
 {
     const point& fc = mesh.faceCentres()[facei];
 
     switch (decompMode)
     {
-        case polyMesh::FACEPLANES:
-        case polyMesh::FACECENTRETETS:
+        case polyMesh::FACE_PLANES:
+        case polyMesh::FACE_CENTRE_TRIS:
         {
             // For both decompositions the face centre is guaranteed to be
             // on the face
@@ -1320,7 +1320,8 @@ CML::pointIndexHit CML::mappedPatchBase::facePoint
         }
         break;
 
-        case polyMesh::FACEDIAGTETS:
+        case polyMesh::FACE_DIAG_TRIS:
+        case polyMesh::CELL_TETS:
         {
             // Find the intersection of a ray from face centre to cell centre
             // Find intersection of (face-centre-decomposition) centre to

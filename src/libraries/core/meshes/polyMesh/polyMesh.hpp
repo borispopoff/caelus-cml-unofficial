@@ -91,13 +91,13 @@ public:
             TOPO_PATCH_CHANGE
         };
 
-        //- Enumeration defining the representation of the cell for
+        //- Enumeration defining the decomposition of the cell for
         //  inside/outside test
-        enum cellRepresentation
+        enum cellDecomposition 
         {
-            FACEPLANES,     // cell bound by planes of faces
-            FACECENTRETETS, // tet decomposition using facectr and cellctr
-            FACEDIAGTETS,   // tet decomposition using face diagonal and cellctr
+            FACE_PLANES,     // cell bound by planes of faces
+            FACE_CENTRE_TRIS, // tet decomposition using facectr and cellctr
+            FACE_DIAG_TRIS,   // tet decomposition using face diagonal and cellctr
             CELL_TETS       // Cell decomposed into tets
         };
 
@@ -709,14 +709,14 @@ public:
             (
                 const point& p,
                 label celli,
-                const cellRepresentation = CELL_TETS
+                const cellDecomposition  = CELL_TETS
             ) const;
 
             //- Find cell enclosing this location (-1 if not in mesh)
             virtual label findCell
             (
                 const point& p,
-                const cellRepresentation = CELL_TETS
+                const cellDecomposition  = CELL_TETS
             ) const;
 };
 

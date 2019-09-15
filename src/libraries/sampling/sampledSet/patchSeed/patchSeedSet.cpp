@@ -135,7 +135,7 @@ void CML::patchSeedSet::calcSamples
         (
             mesh(),
             facei,
-            polyMesh::FACEDIAGTETS
+            polyMesh::FACE_DIAG_TRIS
         );
         label celli = mesh().faceOwner()[facei];
 

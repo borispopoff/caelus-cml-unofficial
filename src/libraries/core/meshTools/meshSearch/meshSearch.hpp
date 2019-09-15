@@ -59,12 +59,12 @@ class meshSearch
         const polyMesh& mesh_;
 
         //- Whether to use cell decomposition for all geometric tests
-        const polyMesh::cellRepresentation cellDecompMode_;
+        const polyMesh::cellDecomposition cellDecompMode_;
 
-        //- data bounding box
+        //- Data bounding box
         mutable autoPtr<treeBoundBox> overallBbPtr_;
 
-        //- demand driven octrees
+        //- Demand driven octrees
         mutable autoPtr<indexedOctree<treeDataFace>> boundaryTreePtr_;
         mutable autoPtr<indexedOctree<treeDataCell>> cellTreePtr_;
 
@@ -93,20 +93,20 @@ class meshSearch
 
         // Cells
 
-            //- nearest cell centre using octree
+            //- Nearest cell centre using octree
             label findNearestCellTree(const point&) const;
 
-            //- nearest cell centre going through all cells
+            //- Nearest cell centre going through all cells
             label findNearestCellLinear(const point&) const;
 
-            //- walk from seed. Does not 'go around' boundary, just returns
+            //- Walk from seed. Does not 'go around' boundary, just returns
             //  last cell before boundary.
             label findNearestCellWalk(const point&, const label) const;
 
-            //- cell containing location. Linear search.
+            //- Cell containing location. Linear search.
             label findCellLinear(const point&) const;
 
-            //- walk from seed. Does not 'go around' boundary, just returns
+            //- Walk from seed. Does not 'go around' boundary, just returns
             //  last cell before boundary.
             label findCellWalk(const point&, const label) const;
 
@@ -123,7 +123,7 @@ class meshSearch
 
         // Boundary faces
 
-            //- walk from seed to find nearest boundary face. Gets stuck in
+            //- Walk from seed to find nearest boundary face. Gets stuck in
             //  local minimum.
             label findNearestBoundaryFaceWalk
             (
@@ -156,7 +156,7 @@ public:
 
     // Static data members
 
-        //- tolerance on linear dimensions
+        //- Tolerance on linear dimensions
         static scalar tol_;
 
 
@@ -167,7 +167,7 @@ public:
         meshSearch
         (
             const polyMesh& mesh,
-            const polyMesh::cellRepresentation = polyMesh::FACEDIAGTETS
+            const polyMesh::cellDecomposition = polyMesh::CELL_TETS
         );
 
         //- Construct with a custom bounding box. Any mesh element outside
@@ -177,7 +177,7 @@ public:
         (
             const polyMesh& mesh,
             const treeBoundBox& bb,
-            const polyMesh::cellRepresentation = polyMesh::FACEDIAGTETS
+            const polyMesh::cellDecomposition = polyMesh::CELL_TETS
         );
 
     //- Destructor
@@ -193,7 +193,7 @@ public:
                 return mesh_;
             }
 
-            polyMesh::cellRepresentation decompMode() const
+            polyMesh::cellDecomposition decompMode() const
             {
                 return cellDecompMode_;
             }
@@ -217,7 +217,7 @@ public:
             label findNearestCell
             (
                 const point& location,
-                const label seedCellI = -1,
+                const label seedCelli = -1,
                 const bool useTreeSearch = true
             ) const;
 
@@ -235,7 +235,7 @@ public:
             label findCell
             (
                 const point& location,
-                const label seedCellI = -1,
+                const label seedCelli = -1,
                 const bool useTreeSearch = true
             ) const;
 
@@ -267,7 +267,7 @@ public:
             bool isInside(const point&) const;
 
 
-        //- delete all storage
+        //- Delete all storage
         void clearOut();
 
         //- Correct for mesh geom/topo changes

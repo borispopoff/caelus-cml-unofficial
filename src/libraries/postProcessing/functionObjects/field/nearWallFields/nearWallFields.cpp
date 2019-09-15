@@ -87,7 +87,7 @@ void CML::nearWallFields::calcAddressing()
                 (
                     mesh,
                     meshFacei,
-                    polyMesh::FACEDIAGTETS
+                    polyMesh::FACE_DIAG_TRIS
                 )
             );
 

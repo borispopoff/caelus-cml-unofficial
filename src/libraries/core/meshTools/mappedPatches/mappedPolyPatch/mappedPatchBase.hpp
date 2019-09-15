@@ -410,7 +410,7 @@ public:
             (
                 const polyMesh&,
                 const label facei,
-                const polyMesh::cellRepresentation
+                const polyMesh::cellDecomposition
             );
 
 

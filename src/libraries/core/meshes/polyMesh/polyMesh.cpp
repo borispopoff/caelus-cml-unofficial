@@ -892,7 +892,7 @@ CML::polyMesh::cellTree() const
                 (
                     false,      // not cache bb
                     *this,
-                    FACEDIAGTETS   // use tet-decomposition for any inside test
+                    CELL_TETS   // use tet-decomposition for any inside test
                 ),
                 treeBoundBox(points()).extend(1e-4),
                 8,              // maxLevel
@@ -1308,18 +1308,18 @@ bool CML::polyMesh::pointInCell
 (
     const point& p,
     label celli,
-    const cellRepresentation decompMode
+    const cellDecomposition  decompMode
 ) const
 {
     switch (decompMode)
     {
-        case FACEPLANES:
+        case FACE_PLANES:
         {
             return primitiveMesh::pointInCell(p, celli);
         }
         break;
 
-        case FACECENTRETETS:
+        case FACE_CENTRE_TRIS:
         {
             // only test that point is on inside of plane defined by cell face
             // triangles
@@ -1367,7 +1367,7 @@ bool CML::polyMesh::pointInCell
         }
         break;
 
-        case FACEDIAGTETS:
+        case FACE_DIAG_TRIS:
         {
             // only test that point is on inside of plane defined by cell face
             // triangles
@@ -1417,50 +1417,63 @@ bool CML::polyMesh::pointInCell
 CML::label CML::polyMesh::findCell
 (
     const point& p,
-    const cellRepresentation decompMode
+    const cellDecomposition  decompMode
 ) const
 {
-    if
-    (
-        Pstream::parRun()
-     && decompMode == FACEDIAGTETS
-    )
-    {
-        // Force construction of face-diagonal decomposition before testing
-        // for zero cells.
-        //
-        // If parallel running a local domain might have zero cells so never
-        // construct the face-diagonal decomposition which uses parallel
-        // transfers.
-        (void)tetBasePtIs();
-    }
-
     if (nCells() == 0)
     {
         return -1;
     }
 
-    // Find the nearest cell centre to this location
-    label celli = findNearestCell(p);
-
-    // If point is in the nearest cell return
-    if (pointInCell(p, celli, decompMode))
+    if (decompMode == CELL_TETS)
     {
+        // Advanced search method utilizing an octree
+        // and tet-decomposition of the cells
+
+        label celli;
+        label tetFacei;
+        label tetPti;
+
+        findCellFacePt(p, celli, tetFacei, tetPti);
+
         return celli;
     }
     else
     {
-        // Point is not in the nearest cell so search all cells
+        // Approximate search avoiding the construction of an octree
+        // and cell decomposition
 
-        for (label celli = 0; celli < nCells(); celli++)
+        if (Pstream::parRun() && decompMode == FACE_DIAG_TRIS)
         {
-            if (pointInCell(p, celli, decompMode))
-            {
-                return celli;
-            }
+            // Force construction of face-diagonal decomposition before testing
+            // for zero cells. If parallel running a local domain might have
+            // zero cells so never construct the face-diagonal decomposition
+            // (which uses parallel transfers)
+            (void)tetBasePtIs();
         }
 
-        return -1;
+        // Find the nearest cell centre to this location
+        label celli = findNearestCell(p);
+
+        // If point is in the nearest cell return
+        if (pointInCell(p, celli, decompMode))
+        {
+            return celli;
+        }
+        else
+        {
+            // Point is not in the nearest cell so search all cells
+
+            for (label celli = 0; celli < nCells(); celli++)
+            {
+                if (pointInCell(p, celli, decompMode))
+                {
+                    return celli;
+                }
+            }
+
+            return -1;
+        }
     }
 }
 

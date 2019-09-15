@@ -85,7 +85,7 @@ CML::treeDataCell::treeDataCell
     const bool cacheBb,
     const polyMesh& mesh,
     const labelUList& cellLabels,
-    const polyMesh::cellRepresentation decompMode
+    const polyMesh::cellDecomposition  decompMode
 )
 :
     mesh_(mesh),
@@ -102,7 +102,7 @@ CML::treeDataCell::treeDataCell
     const bool cacheBb,
     const polyMesh& mesh,
     const Xfer<labelList>& cellLabels,
-    const polyMesh::cellRepresentation decompMode
+    const polyMesh::cellDecomposition  decompMode
 )
 :
     mesh_(mesh),
@@ -118,7 +118,7 @@ CML::treeDataCell::treeDataCell
 (
     const bool cacheBb,
     const polyMesh& mesh,
-    const polyMesh::cellRepresentation decompMode
+    const polyMesh::cellDecomposition  decompMode
 )
 :
     mesh_(mesh),

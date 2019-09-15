@@ -55,7 +55,7 @@ static label findCell(const Cloud<passiveParticle>& cloud, const point& pt)
         meshSearch meshSearcher
         (
             mesh,
-            polyMesh::FACEPLANES    // no decomposition needed
+            polyMesh::FACE_PLANES    // no decomposition needed
         );
 
         label facei = meshSearcher.findNearestBoundaryFace(pt);

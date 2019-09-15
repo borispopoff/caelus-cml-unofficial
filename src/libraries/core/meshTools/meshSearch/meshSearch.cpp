@@ -114,7 +114,6 @@ CML::label CML::meshSearch::findNearestCellTree(const point& location) const
 }
 
 
-// linear searching
 CML::label CML::meshSearch::findNearestCellLinear(const point& location) const
 {
     const vectorField& centres = mesh_.cellCentres();
@@ -134,7 +133,6 @@ CML::label CML::meshSearch::findNearestCellLinear(const point& location) const
 }
 
 
-// walking from seed
 CML::label CML::meshSearch::findNearestCellWalk
 (
     const point& location,
@@ -171,7 +169,6 @@ CML::label CML::meshSearch::findNearestCellWalk
 }
 
 
-// tree based searching
 CML::label CML::meshSearch::findNearestFaceTree(const point& location) const
 {
     // Search nearest cell centre.
@@ -211,7 +208,6 @@ CML::label CML::meshSearch::findNearestFaceTree(const point& location) const
 }
 
 
-// linear searching
 CML::label CML::meshSearch::findNearestFaceLinear(const point& location) const
 {
     const vectorField& centres = mesh_.faceCentres();
@@ -231,7 +227,6 @@ CML::label CML::meshSearch::findNearestFaceLinear(const point& location) const
 }
 
 
-// walking from seed
 CML::label CML::meshSearch::findNearestFaceWalk
 (
     const point& location,
@@ -319,7 +314,6 @@ CML::label CML::meshSearch::findCellLinear(const point& location) const
 }
 
 
-// walking from seed
 CML::label CML::meshSearch::findCellWalk
 (
     const point& location,
@@ -490,17 +484,19 @@ CML::vector CML::meshSearch::offset
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 CML::meshSearch::meshSearch
 (
     const polyMesh& mesh,
-    const polyMesh::cellRepresentation cellDecompMode
+    const polyMesh::cellDecomposition cellDecompMode
 )
 :
     mesh_(mesh),
     cellDecompMode_(cellDecompMode)
 {
-    if (cellDecompMode_ == polyMesh::FACEDIAGTETS)
+    if
+    (
+        cellDecompMode_ == polyMesh::FACE_DIAG_TRIS
+     || cellDecompMode_ == polyMesh::CELL_TETS)
     {
         // Force construction of face diagonals
         (void)mesh.tetBasePtIs();
@@ -508,12 +504,11 @@ CML::meshSearch::meshSearch
 }
 
 
-// Construct with a custom bounding box
 CML::meshSearch::meshSearch
 (
     const polyMesh& mesh,
     const treeBoundBox& bb,
-    const polyMesh::cellRepresentation cellDecompMode
+    const polyMesh::cellDecomposition cellDecompMode
 )
 :
     mesh_(mesh),
@@ -521,7 +516,11 @@ CML::meshSearch::meshSearch
 {
     overallBbPtr_.reset(new treeBoundBox(bb));
 
-    if (cellDecompMode_ == polyMesh::FACEDIAGTETS)
+    if
+    (
+        cellDecompMode_ == polyMesh::FACE_DIAG_TRIS
+     || cellDecompMode_ == polyMesh::CELL_TETS
+    )
     {
         // Force construction of face diagonals
         (void)mesh.tetBasePtIs();
@@ -632,92 +631,6 @@ const
 
     return cellTreePtr_();
 }
-
-
-//// Is the point in the cell
-//// Works by checking if there is a face inbetween the point and the cell
-//// centre.
-//// Check for internal uses proper face decomposition or just average normal.
-//bool CML::meshSearch::pointInCell(const point& p, label celli) const
-//{
-//    if (faceDecomp_)
-//    {
-//        const point& ctr = mesh_.cellCentres()[celli];
-//
-//        vector dir(p - ctr);
-//        scalar magDir = mag(dir);
-//
-//        // Check if any faces are hit by ray from cell centre to p.
-//        // If none -> p is in cell.
-//        const labelList& cFaces = mesh_.cells()[celli];
-//
-//        // Make sure half_ray does not pick up any faces on the wrong
-//        // side of the ray.
-//        scalar oldTol = intersection::setPlanarTol(0.0);
-//
-//        forAll(cFaces, i)
-//        {
-//            label facei = cFaces[i];
-//
-//            pointHit inter = mesh_.faces()[facei].ray
-//            (
-//                ctr,
-//                dir,
-//                mesh_.points(),
-//                intersection::HALF_RAY,
-//                intersection::VECTOR
-//            );
-//
-//            if (inter.hit())
-//            {
-//                scalar dist = inter.distance();
-//
-//                if (dist < magDir)
-//                {
-//                    // Valid hit. Hit face so point is not in cell.
-//                    intersection::setPlanarTol(oldTol);
-//
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        intersection::setPlanarTol(oldTol);
-//
-//        // No face inbetween point and cell centre so point is inside.
-//        return true;
-//    }
-//    else
-//    {
-//        const labelList& f = mesh_.cells()[celli];
-//        const labelList& owner = mesh_.faceOwner();
-//        const vectorField& cf = mesh_.faceCentres();
-//        const vectorField& Sf = mesh_.faceAreas();
-//
-//        forAll(f, facei)
-//        {
-//            label nFace = f[facei];
-//            vector proj = p - cf[nFace];
-//            vector normal = Sf[nFace];
-//            if (owner[nFace] == celli)
-//            {
-//                if ((normal & proj) > 0)
-//                {
-//                    return false;
-//                }
-//            }
-//            else
-//            {
-//                if ((normal & proj) < 0)
-//                {
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        return true;
-//    }
-//}
 
 
 CML::label CML::meshSearch::findNearestCell
@@ -935,7 +848,6 @@ bool CML::meshSearch::isInside(const point& p) const
 }
 
 
-// Delete all storage
 void CML::meshSearch::clearOut()
 {
     boundaryTreePtr_.clear();
