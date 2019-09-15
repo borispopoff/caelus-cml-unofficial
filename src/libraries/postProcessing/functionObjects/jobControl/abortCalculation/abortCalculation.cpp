@@ -65,7 +65,7 @@ void CML::abortCalculation::removeFile() const
 
     if (hasAbort && Pstream::master())
     {
-        // cleanup ABORT file (on master only)
+        // Cleanup ABORT file (on master only)
         rm(abortFile_);
     }
 }
@@ -89,7 +89,7 @@ CML::abortCalculation::abortCalculation
     abortFile_.expand();
     read(dict);
 
-    // remove any old files from previous runs
+    // Remove any old files from previous runs
     removeFile();
 }
 
@@ -113,7 +113,7 @@ void CML::abortCalculation::read(const dictionary& dict)
         action_ = nextWrite;
     }
 
-    if (dict.readIfPresent("fileName", abortFile_))
+    if (dict.readIfPresent("file", abortFile_))
     {
         abortFile_.expand();
     }

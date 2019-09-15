@@ -28,7 +28,7 @@ Description
         <entryName> tableFile;
         <entryName>Coeffs
         {
-            fileName            dataFile;    // name of data file
+            file                dataFile;    // name of data file
             outOfBounds         clamp;       // optional out-of-bounds handling
             interpolationScheme linear;      // optional interpolation method
         }
@@ -132,8 +132,10 @@ CML::DataEntryTypes::TableFile<Type>::TableFile
 
     if (!is.good())
     {
-        FatalIOErrorInFunction(is)
-            << "Cannot open file." << exit(FatalIOError);
+        FatalIOErrorInFunction
+        (
+            is
+        )   << "Cannot open file." << exit(FatalIOError);
     }
 
     is  >> this->table_;

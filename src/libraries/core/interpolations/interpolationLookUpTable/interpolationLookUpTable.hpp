@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -539,7 +539,7 @@ CML::interpolationLookUpTable<Type>::interpolationLookUpTable
 )
 :
     List<scalarField>(),
-    fileName_(fileName(dict.lookup("fileName")).expand()),
+    fileName_(fileName(dict.lookup("file")).expand()),
     dim_(0),
     min_(0.0),
     delta_(0.0),
