@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -302,12 +302,12 @@ void CML::MULES::limiter
 
     const dictionary& MULEScontrols = mesh.solverDict(psi.name());
 
-    label nLimiterIter
+    const label nLimiterIter
     (
         MULEScontrols.lookupOrDefault<label>("nLimiterIter", 3)
     );
 
-    scalar smoothLimiter
+    const scalar smoothLimiter
     (
         MULEScontrols.lookupOrDefault<scalar>("smoothLimiter", 0)
     );
@@ -358,13 +358,13 @@ void CML::MULES::limiter
 
     scalarField sumPhiBD(psiIf.size(), 0.0);
 
-    scalarField sumPhip(psiIf.size(), VSMALL);
-    scalarField mSumPhim(psiIf.size(), VSMALL);
+    scalarField sumPhip(psiIf.size(), 0.0);
+    scalarField mSumPhim(psiIf.size(), 0.0);
 
     forAll(phiCorrIf, facei)
     {
-        label own = owner[facei];
-        label nei = neighb[facei];
+        const label own = owner[facei];
+        const label nei = neighb[facei];
 
         psiMaxn[own] = max(psiMaxn[own], psiIf[nei]);
         psiMinn[own] = min(psiMinn[own], psiIf[nei]);
@@ -375,7 +375,7 @@ void CML::MULES::limiter
         sumPhiBD[own] += phiBDIf[facei];
         sumPhiBD[nei] -= phiBDIf[facei];
 
-        scalar phiCorrf = phiCorrIf[facei];
+        const scalar phiCorrf = phiCorrIf[facei];
 
         if (phiCorrf > 0.0)
         {
@@ -403,7 +403,7 @@ void CML::MULES::limiter
 
             forAll(phiCorrPf, pFacei)
             {
-                label pfCelli = pFaceCells[pFacei];
+                const label pfCelli = pFaceCells[pFacei];
 
                 psiMaxn[pfCelli] = max(psiMaxn[pfCelli], psiPNf[pFacei]);
                 psiMinn[pfCelli] = min(psiMinn[pfCelli], psiPNf[pFacei]);
@@ -413,20 +413,30 @@ void CML::MULES::limiter
         {
             forAll(phiCorrPf, pFacei)
             {
-                label pfCelli = pFaceCells[pFacei];
+                const label pfCelli = pFaceCells[pFacei];
 
                 psiMaxn[pfCelli] = max(psiMaxn[pfCelli], psiPf[pFacei]);
                 psiMinn[pfCelli] = min(psiMinn[pfCelli], psiPf[pFacei]);
             }
         }
+        else
+        {
+            forAll(phiCorrPf, pFacei)
+            {
+                const label pfCelli = pFaceCells[pFacei];
+
+                psiMaxn[pfCelli] = max(psiMaxn[pfCelli], psiMax);
+                psiMinn[pfCelli] = min(psiMinn[pfCelli], psiMin);
+            }
+        }
 
         forAll(phiCorrPf, pFacei)
         {
-            label pfCelli = pFaceCells[pFacei];
+            const label pfCelli = pFaceCells[pFacei];
 
             sumPhiBD[pfCelli] += phiBDPf[pFacei];
 
-            scalar phiCorrf = phiCorrPf[pFacei];
+            const scalar phiCorrf = phiCorrPf[pFacei];
 
             if (phiCorrf > 0.0)
             {
@@ -503,8 +513,8 @@ void CML::MULES::limiter
 
         forAll(lambdaIf, facei)
         {
-            label own = owner[facei];
-            label nei = neighb[facei];
+            const label own = owner[facei];
+            const label nei = neighb[facei];
 
             scalar lambdaPhiCorrf = lambdaIf[facei]*phiCorrIf[facei];
 
@@ -529,9 +539,9 @@ void CML::MULES::limiter
 
             forAll(lambdaPf, pFacei)
             {
-                label pfCelli = pFaceCells[pFacei];
-
-                scalar lambdaPhiCorrf = lambdaPf[pFacei]*phiCorrfPf[pFacei];
+                const label pfCelli = pFaceCells[pFacei];
+                const scalar lambdaPhiCorrf =
+                    lambdaPf[pFacei]*phiCorrfPf[pFacei];
 
                 if (lambdaPhiCorrf > 0.0)
                 {
@@ -550,7 +560,7 @@ void CML::MULES::limiter
                 max(min
                 (
                     (sumlPhip[celli] + psiMaxn[celli])
-                   /(mSumPhim[celli] - SMALL),
+                   /(mSumPhim[celli] + ROOTVSMALL),
                     1.0), 0.0
                 );
 
@@ -558,7 +568,7 @@ void CML::MULES::limiter
                 max(min
                 (
                     (mSumlPhim[celli] + psiMinn[celli])
-                   /(sumPhip[celli] + SMALL),
+                   /(sumPhip[celli] + ROOTVSMALL),
                     1.0), 0.0
                 );
         }
@@ -586,7 +596,6 @@ void CML::MULES::limiter
             }
         }
 
-
         forAll(lambdaBf, patchi)
         {
             fvsPatchScalarField& lambdaPf = lambdaBf[patchi];
@@ -604,7 +613,7 @@ void CML::MULES::limiter
 
                 forAll(lambdaPf, pFacei)
                 {
-                    label pfCelli = pFaceCells[pFacei];
+                    const label pfCelli = pFaceCells[pFacei];
 
                     if (phiCorrfPf[pFacei] > 0.0)
                     {
@@ -731,7 +740,7 @@ void CML::MULES::limitSum(SurfaceScalarFieldList& phiPsiCorrs)
         limitSum(phiPsiCorrsInternal);
     }
 
-    surfaceScalarField::GeometricBoundaryField& bfld =
+    const surfaceScalarField::GeometricBoundaryField& bfld =
         phiPsiCorrs[0].boundaryField();
 
     forAll(bfld, patchi)
