@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -64,9 +64,10 @@ class triSurfaceMesh
     public triSurface,
     public triSurfaceRegionSearch
 {
-private:
-
     // Private member data
+
+        //- Supplied fileName override
+        fileName fName_;
 
         //- Optional min triangle quality. Triangles below this get
         //  ignored for normal calculation
@@ -84,20 +85,11 @@ private:
 
     // Private Member Functions
 
-        ////- Helper: find instance of files without header
-        //static word findRawInstance
-        //(
-        //    const Time&,
-        //    const fileName&,
-        //    const word&
-        //);
+        //- Return fileName to load IOobject from
+        static fileName checkFile(const IOobject& io);
 
-        //- Check file existence
-        static const fileName& checkFile
-        (
-            const fileName& fName,
-            const fileName& objectName
-        );
+        //- Return fileName to load IOobject from. Optional override of fileName
+        static fileName checkFile(const IOobject&, const dictionary&);
 
         //- Helper function for isSurfaceClosed
         static bool addFaceToEdge

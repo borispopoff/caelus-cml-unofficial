@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -23,7 +23,7 @@ Class
 
 Description
     Geometric class that creates a 2D plane and can return the intersection
-     point between a line and the plane.
+    point between a line and the plane.
 
 SourceFiles
     plane.cpp
@@ -59,31 +59,31 @@ class plane
 {
 public:
 
-        //- A direction and a reference point
+    //- A direction and a reference point
         class ray
         {
             point refPoint_;
 
             vector dir_;
 
-        public:
+    public:
 
-            ray(const point& refPoint, const vector& dir)
-            :
-                refPoint_(refPoint),
-                dir_(dir)
-            {}
+        ray(const point& refPoint, const vector& dir)
+        :
+            refPoint_(refPoint),
+            dir_(dir)
+        {}
 
-            const point& refPoint() const
-            {
-                return refPoint_;
-            }
+        const point& refPoint() const
+        {
+            return refPoint_;
+        }
 
-            const vector& dir() const
-            {
-                return dir_;
-            }
-        };
+        const vector& dir() const
+        {
+            return dir_;
+        }
+    };
 
 
 private:
@@ -117,23 +117,28 @@ public:
     // Constructors
 
         //- Construct from normal vector through the origin
-        plane(const vector& normalVector);
+        explicit plane(const vector& normalVector);
 
         //- Construct from normal vector and point in plane
         plane(const point& basePoint, const vector& normalVector);
 
         //- Construct from three points in plane
-        plane(const point& point1, const point& point2, const point& point3);
+        plane
+        (
+            const point& point1,
+            const point& point2,
+            const point& point3
+        );
 
         //- Construct from coefficients for the
         //  plane equation: ax + by + cz + d = 0
-        plane(const scalarList& C);
+        explicit plane(const scalarList& C);
 
         //- Construct from dictionary
-        plane(const dictionary& planeDict);
+        explicit plane(const dictionary& planeDict);
 
         //- Construct from Istream. Assumes the base + normal notation.
-        plane(Istream& is);
+        explicit plane(Istream& is);
 
 
     // Member Functions

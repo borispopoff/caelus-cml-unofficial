@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,7 +27,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Returns edgeI between two points.
 CML::label CML::primitiveMesh::getEdge
 (
     List<DynamicList<label>>& pe,
@@ -53,7 +52,14 @@ CML::label CML::primitiveMesh::getEdge
     // Make new edge.
     label edgeI = es.size();
     pe[pointi].append(edgeI);
-    pe[nextPointi].append(edgeI);
+
+    if (nextPointi != pointi)
+    {
+        // Very occasionally (e.g. blockMesh) a face can have duplicate
+        // vertices. Make sure we register pointEdges only once.
+        pe[nextPointi].append(edgeI);
+    }
+
     if (pointi < nextPointi)
     {
         es.append(edge(pointi, nextPointi));

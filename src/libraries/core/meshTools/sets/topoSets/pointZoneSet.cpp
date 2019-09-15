@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -226,7 +226,13 @@ void pointZoneSet::deleteSet(const topoSet& set)
 
 
 void pointZoneSet::sync(const polyMesh& mesh)
-{}
+{
+    pointSet::sync(mesh);
+
+    // Take over contents of pointSet into addressing.
+    addressing_ = sortedToc();
+    updateSet();
+}
 
 
 label pointZoneSet::maxSize(const polyMesh& mesh) const
@@ -235,7 +241,6 @@ label pointZoneSet::maxSize(const polyMesh& mesh) const
 }
 
 
-//- Write using given format, version and compression
 bool pointZoneSet::writeObject
 (
     IOstream::streamFormat s,

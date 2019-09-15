@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -21,7 +21,8 @@ Class
     CML::pointZoneSet
 
 Description
-    Like pointSet but updates pointZone when writing.
+    Like pointSet but -reads data from pointZone -updates pointZone when
+    writing.
 
 SourceFiles
     pointZone.cpp
@@ -149,10 +150,6 @@ public:
 
         //- Return max index+1.
         virtual label maxSize(const polyMesh& mesh) const;
-
-
-
-
 };
 
 

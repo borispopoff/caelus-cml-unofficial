@@ -31,82 +31,58 @@ License
 
 namespace CML
 {
-
-defineTypeNameAndDebug(triSurfaceMesh, 0);
-addToRunTimeSelectionTable(searchableSurface, triSurfaceMesh, dict);
-
+    defineTypeNameAndDebug(triSurfaceMesh, 0);
+    addToRunTimeSelectionTable(searchableSurface, triSurfaceMesh, dict);
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-//// Special version of Time::findInstance that does not check headerOk
-//// to search for instances of raw files
-//CML::word CML::triSurfaceMesh::findRawInstance
-//(
-//    const Time& runTime,
-//    const fileName& dir,
-//    const word& name
-//)
-//{
-//    // Check current time first
-//    if (isFile(runTime.path()/runTime.timeName()/dir/name))
-//    {
-//        return runTime.timeName();
-//    }
-//    instantList ts = runTime.times();
-//    label instanceI;
-//
-//    for (instanceI = ts.size()-1; instanceI >= 0; --instanceI)
-//    {
-//        if (ts[instanceI].value() <= runTime.timeOutputValue())
-//        {
-//            break;
-//        }
-//    }
-//
-//    // continue searching from here
-//    for (; instanceI >= 0; --instanceI)
-//    {
-//        if (isFile(runTime.path()/ts[instanceI].name()/dir/name))
-//        {
-//            return ts[instanceI].name();
-//        }
-//    }
-//
-//
-//    // not in any of the time directories, try constant
-//
-//    // Note. This needs to be a hard-coded constant, rather than the
-//    // constant function of the time, because the latter points to
-//    // the case constant directory in parallel cases
-//
-//    if (isFile(runTime.path()/runTime.constant()/dir/name))
-//    {
-//        return runTime.constant();
-//    }
-//
-//    FatalErrorInFunction
-//        << "Cannot find file \"" << name << "\" in directory "
-//        << runTime.constant()/dir
-//        << exit(FatalError);
-//
-//    return runTime.constant();
-//}
-
-
-//- Check file existence
-const CML::fileName& CML::triSurfaceMesh::checkFile
-(
-    const fileName& fName,
-    const fileName& objectName
-)
+CML::fileName CML::triSurfaceMesh::checkFile(const IOobject& io)
 {
+    const fileName fName(io.filePath());
     if (fName.empty())
     {
         FatalErrorInFunction
             << "Cannot find triSurfaceMesh starting from "
-            << objectName << exit(FatalError);
+            << io.objectPath() << exit(FatalError);
     }
+
+    return fName;
+}
+
+
+CML::fileName CML::triSurfaceMesh::checkFile
+(
+    const IOobject& io,
+    const dictionary& dict
+)
+{
+    fileName fName;
+    if (dict.readIfPresent("file", fName, false, false))
+    {
+        fName.expand();
+        if (!fName.isAbsolute())
+        {
+            fName = io.objectPath().path()/fName;
+        }
+        if (!exists(fName))
+        {
+            FatalErrorInFunction
+                << "Cannot find triSurfaceMesh at " << fName
+                << exit(FatalError);
+        }
+    }
+    else
+    {
+        fName = io.filePath();
+        if (!exists(fName))
+        {
+            FatalErrorInFunction
+                << "Cannot find triSurfaceMesh starting from "
+                << io.objectPath() << exit(FatalError);
+        }
+    }
+
     return fName;
 }
 
@@ -244,25 +220,13 @@ CML::triSurfaceMesh::triSurfaceMesh(const IOobject& io)
 :
     // Find instance for triSurfaceMesh
     searchableSurface(io),
-    //(
-    //    IOobject
-    //    (
-    //        io.name(),
-    //        io.time().findInstance(io.local(), word::null),
-    //        io.local(),
-    //        io.db(),
-    //        io.readOpt(),
-    //        io.writeOpt(),
-    //        io.registerObject()
-    //    )
-    //),
     // Reused found instance in objectRegistry
     objectRegistry
     (
         IOobject
         (
             io.name(),
-            static_cast<const searchableSurface&>(*this).instance(),
+            searchableSurface::instance(),
             io.local(),
             io.db(),
             io.readOpt(),
@@ -270,14 +234,7 @@ CML::triSurfaceMesh::triSurfaceMesh(const IOobject& io)
             false       // searchableSurface already registered under name
         )
     ),
-    triSurface
-    (
-        checkFile
-        (
-            searchableSurface::filePath(),
-            searchableSurface::objectPath()
-        )
-    ),
+    triSurface(checkFile(static_cast<const searchableSurface&>(*this))),
     triSurfaceRegionSearch(static_cast<const triSurface&>(*this)),
     minQuality_(-1),
     surfaceClosed_(-1)
@@ -295,25 +252,13 @@ CML::triSurfaceMesh::triSurfaceMesh
 )
 :
     searchableSurface(io),
-    //(
-    //    IOobject
-    //    (
-    //        io.name(),
-    //        io.time().findInstance(io.local(), word::null),
-    //        io.local(),
-    //        io.db(),
-    //        io.readOpt(),
-    //        io.writeOpt(),
-    //        io.registerObject()
-    //    )
-    //),
     // Reused found instance in objectRegistry
     objectRegistry
     (
         IOobject
         (
             io.name(),
-            static_cast<const searchableSurface&>(*this).instance(),
+            searchableSurface::instance(),
             io.local(),
             io.db(),
             io.readOpt(),
@@ -321,18 +266,14 @@ CML::triSurfaceMesh::triSurfaceMesh
             false       // searchableSurface already registered under name
         )
     ),
-    triSurface
-    (
-        checkFile
-        (
-            searchableSurface::filePath(),
-            searchableSurface::objectPath()
-        )
-    ),
+    triSurface(checkFile(static_cast<const searchableSurface&>(*this), dict)),
     triSurfaceRegionSearch(static_cast<const triSurface&>(*this), dict),
     minQuality_(-1),
     surfaceClosed_(-1)
 {
+    // Reading from supplied file name instead of objectPath/filePath
+    dict.readIfPresent("file", fName_, false, false);
+
     scalar scaleFactor = 0;
 
     // Allow rescaling of the surface points
@@ -356,6 +297,7 @@ CML::triSurfaceMesh::triSurfaceMesh
             << minQuality_ << " for normals calculation." << endl;
     }
 }
+
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
@@ -466,7 +408,7 @@ CML::triSurfaceMesh::edgeTree() const
             label nPoints;
             PatchTools::calcBounds
             (
-                static_cast<const triSurface&>(*this),
+                *this,
                 bb,
                 nPoints
             );
@@ -517,7 +459,6 @@ const CML::wordList& CML::triSurfaceMesh::regions() const
 }
 
 
-// Find out if surface is closed.
 bool CML::triSurfaceMesh::hasVolumeType() const
 {
     if (surfaceClosed_ == -1)
@@ -625,7 +566,7 @@ void CML::triSurfaceMesh::getNormal
     vectorField& normal
 ) const
 {
-    const triSurface& s = static_cast<const triSurface&>(*this);
+    const triSurface& s = *this;
     const pointField& pts = s.points();
 
     normal.setSize(info.size());
@@ -778,7 +719,6 @@ void CML::triSurfaceMesh::getVolumeType
 }
 
 
-//- Write using given format, version and compression
 bool CML::triSurfaceMesh::writeObject
 (
     IOstream::streamFormat fmt,
@@ -786,7 +726,24 @@ bool CML::triSurfaceMesh::writeObject
     IOstream::compressionType cmp
 ) const
 {
-    fileName fullPath(searchableSurface::objectPath());
+    fileName fullPath;
+    if (fName_.size())
+    {
+        // Override file name
+
+        fullPath = fName_;
+
+        fullPath.expand();
+        if (!fullPath.isAbsolute())
+        {
+            // Add directory from regIOobject
+            fullPath = searchableSurface::objectPath().path()/fullPath;
+        }
+    }
+    else
+    {
+        fullPath = searchableSurface::objectPath();
+    }
 
     if (!mkDir(fullPath.path()))
     {

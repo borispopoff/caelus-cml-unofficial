@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,13 +27,15 @@ License
 
 void CML::processorMeshes::read()
 {
+    // Make sure to clear (and hence unregister) any previously loaded meshes
+    // and fields
     forAll(databases_, proci)
     {
-        meshes_.set(proci, nullptr);
-        pointProcAddressing_.set(proci, nullptr);
-        faceProcAddressing_.set(proci, nullptr);
-        cellProcAddressing_.set(proci, nullptr);
         boundaryProcAddressing_.set(proci, nullptr);
+        cellProcAddressing_.set(proci, nullptr);
+        faceProcAddressing_.set(proci, nullptr);
+        pointProcAddressing_.set(proci, nullptr);
+        meshes_.set(proci, nullptr);
     }
 
     forAll(databases_, proci)

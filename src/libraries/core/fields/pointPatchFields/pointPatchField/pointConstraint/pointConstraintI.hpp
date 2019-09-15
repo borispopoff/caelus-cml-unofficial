@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -41,7 +41,7 @@ inline CML::pointConstraint::pointConstraint(Istream& is)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void CML::pointConstraint::applyConstraint(const vector& cd)
+inline void CML::pointConstraint::applyConstraint(const vector& cd)
 {
     if (first() == 0)
     {
@@ -70,7 +70,7 @@ void CML::pointConstraint::applyConstraint(const vector& cd)
 }
 
 
-void CML::pointConstraint::combine(const pointConstraint& pc)
+inline void CML::pointConstraint::combine(const pointConstraint& pc)
 {
     if (first() == 0)
     {
@@ -111,7 +111,7 @@ void CML::pointConstraint::combine(const pointConstraint& pc)
 }
 
 
-CML::tensor CML::pointConstraint::constraintTransformation() const
+inline CML::tensor CML::pointConstraint::constraintTransformation() const
 {
     if (first() == 0)
     {
@@ -132,8 +132,11 @@ CML::tensor CML::pointConstraint::constraintTransformation() const
 }
 
 
-void CML::pointConstraint::unconstrainedDirections(label& n, tensor& tt)
-const
+inline void CML::pointConstraint::unconstrainedDirections
+(
+    label& n,
+    tensor& tt
+) const
 {
     n = 3-first();
 
@@ -175,7 +178,36 @@ const
 }
 
 
-void CML::combineConstraintsEqOp::operator()
+inline CML::vector CML::pointConstraint::constrainDisplacement
+(
+    const vector& d
+) const
+{
+    vector cd;
+
+    if (first() == 0)
+    {
+        cd = d;
+    }
+    else if (first() == 1)
+    {
+        // Remove plane normal
+        cd = d-(d&second())*second();
+    }
+    else if (first() == 2)
+    {
+        // Keep line direction only
+        cd = (d&second())*second();
+    }
+    else
+    {
+        cd = Zero;
+    }
+    return cd;
+}
+
+
+inline void CML::combineConstraintsEqOp::operator()
 (
     pointConstraint& x,
     const pointConstraint& y
@@ -185,7 +217,7 @@ void CML::combineConstraintsEqOp::operator()
 }
 
 
-CML::pointConstraint CML::transform
+inline CML::pointConstraint CML::transform
 (
     const tensor& tt,
     const pointConstraint& v

@@ -133,7 +133,7 @@ void CML::directMethod::calculateAddressing
         mapFlag[srcCelli] = false;
 
         // accumulate intersection volume
-        V_ += srcVc[srcCellI];
+        V_ += srcVc[srcCelli];
 
         // find new source seed cell
         appendToDirectSeeds
