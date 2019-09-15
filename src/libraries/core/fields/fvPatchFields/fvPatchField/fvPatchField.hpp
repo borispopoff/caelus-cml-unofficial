@@ -168,6 +168,7 @@ public:
             const DimensionedField<Type, volMesh>&
         );
 
+        //- Construct from patch, internal field and value
         fvPatchField
         (
             const fvPatch&,
@@ -1375,7 +1376,7 @@ defineTemplateRunTimeSelectionTable(fvPatchTypeField, dictionary);
     );
 
 
-// use with caution
+// Use with caution
 #define addRemovableToPatchFieldRunTimeSelection\
 (PatchTypeField, typePatchTypeField)                                           \
                                                                                \

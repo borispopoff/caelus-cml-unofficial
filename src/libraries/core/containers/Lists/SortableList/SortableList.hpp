@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,6 +80,9 @@ public:
         //- Copy constructor
         SortableList(const SortableList<T>&);
 
+        //- Construct from an initializer list, sorting immediately
+        SortableList(std::initializer_list<T>);
+
 
     // Member Functions
 
@@ -123,6 +126,8 @@ public:
         //- Assignment operator. Takes linear time
         inline void operator=(const SortableList<T>&);
 
+        //- Assignment to an initializer list
+        void operator=(std::initializer_list<T>);
 };
 
 
@@ -198,6 +203,15 @@ CML::SortableList<T>::SortableList(const SortableList<T>& lst)
 {}
 
 
+template<class T>
+CML::SortableList<T>::SortableList(std::initializer_list<T> values)
+:
+    List<T>(values)
+{
+    sort();
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
@@ -265,22 +279,28 @@ inline void CML::SortableList<T>::operator=(const T& t)
 
 
 template<class T>
-inline void CML::SortableList<T>::operator=(const UList<T>& rhs)
+inline void CML::SortableList<T>::operator=(const UList<T>& lst)
 {
-    List<T>::operator=(rhs);
+    List<T>::operator=(lst);
     indices_.clear();
 }
 
 
 template<class T>
-inline void CML::SortableList<T>::operator=(const SortableList<T>& rhs)
+inline void CML::SortableList<T>::operator=(const SortableList<T>& lst)
 {
-    List<T>::operator=(rhs);
-    indices_ = rhs.indices();
+    List<T>::operator=(lst);
+    indices_ = lst.indices();
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class T>
+inline void CML::SortableList<T>::operator=(std::initializer_list<T> lst)
+{
+    List<T>::operator=(lst);
+    sort();
+}
+
 
 #endif
 

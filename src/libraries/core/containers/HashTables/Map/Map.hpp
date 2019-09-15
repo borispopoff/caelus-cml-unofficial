@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -87,6 +87,11 @@ public:
             HashTable<T, label, Hash<label>>(map)
         {}
 
+        //- Construct from an initializer list
+        Map(std::initializer_list<Tuple2<label, T>> map)
+        :
+            HashTable<T, label, Hash<label>>(map)
+        {}
 };
 
 

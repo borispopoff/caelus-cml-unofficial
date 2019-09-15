@@ -24,8 +24,7 @@ Class
 Description
     This boundary condition sets the patch-normal component to a fixed value.
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         fixedValue   | fixed value             | yes         |
@@ -33,14 +32,14 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fixedNormalSlip;
         fixedValue      uniform 0;     // example entry for a scalar field
     }
     \endverbatim
 
-SeeAlso
+See also
     CML::transformFvPatchField
 
 

@@ -117,6 +117,9 @@ public:
         //- Construct as copy of a UList\<Type\>
         explicit Field(const UList<Type>&);
 
+        //- Construct as copy of a UIndirectList\<Type\>
+        explicit Field(const UIndirectList<Type>&);
+
         //- Construct by transferring the List contents
         explicit Field(const Xfer<List<Type>>&);
 
@@ -213,15 +216,10 @@ public:
         //- Construct by transferring the Field contents
         Field(const Xfer<Field<Type>>&);
 
-#ifdef __INTEL_COMPILER
-        //- Construct as copy of subField
-        Field(const typename Field<Type>::subField&);
-#endif
-
         //- Construct as copy of tmp<Field>
-#       ifdef ConstructFromTmp
+        #ifdef ConstructFromTmp
         Field(const tmp<Field<Type>>&);
-#       endif
+        #endif
 
         //- Construct from Istream
         Field(Istream&);
@@ -614,15 +612,6 @@ CML::Field<Type>::Field(const Xfer<Field<Type>>& f)
 {}
 
 
-#ifdef __INTEL_COMPILER
-template<class Type>
-CML::Field<Type>::Field(const typename Field<Type>::subField& sf)
-:
-    List<Type>(sf)
-{}
-#endif
-
-
 template<class Type>
 CML::Field<Type>::Field(const UList<Type>& list)
 :
@@ -630,7 +619,13 @@ CML::Field<Type>::Field(const UList<Type>& list)
 {}
 
 
-// Construct as copy of tmp<Field>
+template<class Type>
+CML::Field<Type>::Field(const UIndirectList<Type>& list)
+:
+    List<Type>(list)
+{}
+
+
 #ifdef ConstructFromTmp
 template<class Type>
 CML::Field<Type>::Field(const tmp<Field<Type>>& tf)
@@ -676,16 +671,20 @@ CML::Field<Type>::Field
                 is >> static_cast<List<Type>&>(*this);
                 if (this->size() != s)
                 {
-                    FatalIOErrorInFunction(dict)
-                        << "size " << this->size()
+                    FatalIOErrorInFunction
+                    (
+                        dict
+                    )   << "size " << this->size()
                         << " is not equal to the given value of " << s
                         << exit(FatalIOError);
                 }
             }
             else
             {
-                FatalIOErrorInFunction(dict)
-                    << "expected keyword 'uniform' or 'nonuniform', found "
+                FatalIOErrorInFunction
+                (
+                    dict
+                )   << "expected keyword 'uniform' or 'nonuniform', found "
                     << firstToken.wordToken()
                     << exit(FatalIOError);
             }
@@ -694,8 +693,10 @@ CML::Field<Type>::Field
         {
             if (is.version() == 2.0)
             {
-                IOWarningInFunction(dict)
-                    << "expected keyword 'uniform' or 'nonuniform', "
+                IOWarningInFunction
+                (
+                    dict
+                )   << "expected keyword 'uniform' or 'nonuniform', "
                        "assuming deprecated Field format from "
                        "CML version 2.0." << endl;
 
@@ -706,8 +707,10 @@ CML::Field<Type>::Field
             }
             else
             {
-                FatalIOErrorInFunction(dict)
-                    << "expected keyword 'uniform' or 'nonuniform', found "
+                FatalIOErrorInFunction
+                (
+                    dict
+                )   << "expected keyword 'uniform' or 'nonuniform', found "
                     << firstToken.info()
                     << exit(FatalIOError);
             }
@@ -784,7 +787,6 @@ void CML::Field<Type>::map
     if (mapWeights.size() != mapAddressing.size())
     {
         FatalErrorInFunction
-            << "Weights and addressing map have different sizes.  Weights size: "
             << mapWeights.size() << " map size: " << mapAddressing.size()
             << abort(FatalError);
     }
