@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,7 +58,7 @@ class faceOnlySet
 
     // Private Member Functions
 
-        //- Samples from startTrackPt/CellI. Updates particle/samplePt/sampleI
+        //- Samples from startTrackPt/Celli. Updates particle/samplePt/sampleI
         //  and puts
         //  samples in the DynamicLists. Returns false if end of all samples
         //  reached
@@ -92,6 +92,14 @@ public:
 
     //- Runtime type information
     TypeName("face");
+
+
+    // Static data
+
+        //- Tolerance when comparing points relative to difference between
+        //  start_ and end_
+        static const scalar tol;
+
 
     // Constructors
 
