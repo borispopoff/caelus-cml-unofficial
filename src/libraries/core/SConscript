@@ -543,6 +543,22 @@ src_core = Split("""
     meshTools/coordinateSystems/coordinateRotation/STARCDCoordinateRotation.cpp
     meshTools/coordinateSystems/coordinateRotation/localAxesRotation.cpp
     meshTools/edgeFaceCirculator/edgeFaceCirculator.cpp
+    meshTools/edgeMesh/edgeMesh.cpp
+    meshTools/edgeMesh/edgeMeshIO.cpp
+    meshTools/edgeMesh/edgeMeshNew.cpp
+    meshTools/edgeMesh/edgeFormats/edgeFormatsCore.cpp
+    meshTools/edgeMesh/edgeFormats/emesh/EMESHedgeFormat.cpp
+    meshTools/edgeMesh/edgeFormats/emesh/EMESHedgeFormatRunTime.cpp
+    meshTools/edgeMesh/edgeFormats/nas/NASedgeFormat.cpp
+    meshTools/edgeMesh/edgeFormats/nas/NASedgeFormatRunTime.cpp
+    meshTools/edgeMesh/edgeFormats/obj/OBJedgeFormat.cpp
+    meshTools/edgeMesh/edgeFormats/obj/OBJedgeFormatRunTime.cpp
+    meshTools/edgeMesh/edgeFormats/starcd/STARCDedgeFormat.cpp
+    meshTools/edgeMesh/edgeFormats/starcd/STARCDedgeFormatRunTime.cpp
+    meshTools/edgeMesh/edgeFormats/vtk/VTKedgeFormat.cpp
+    meshTools/edgeMesh/edgeFormats/vtk/VTKedgeFormatRunTime.cpp
+    meshTools/edgeMesh/extendedFeatureEdgeMesh/extendedFeatureEdgeMesh.cpp
+    meshTools/edgeMesh/featureEdgeMesh/featureEdgeMesh.cpp
     meshTools/polyMeshZipUpCells/polyMeshZipUpCells.cpp
     meshTools/primitiveMeshGeometry/primitiveMeshGeometry.cpp
     meshTools/meshSearch/meshSearch.cpp
