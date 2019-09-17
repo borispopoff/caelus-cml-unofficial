@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -251,6 +251,13 @@ public:
                 const GeometricField&
             ) const;
 
+            //- Return the corresponding patchField reference of the named field
+            template<class GeometricField, class Type>
+            typename GeometricField::PatchFieldType& patchField
+            (
+                GeometricField&
+            ) const;
+
             //- Lookup and return the patchField of the named field from the
             //  local objectRegistry.
             //  N.B.  The dummy pointer arguments are used if this function is
@@ -321,7 +328,14 @@ const typename GeometricField::PatchFieldType& CML::fvPatch::patchField
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class GeometricField, class Type>
+typename GeometricField::PatchFieldType& CML::fvPatch::patchField
+(
+    GeometricField& gf
+) const
+{
+    return gf.boundaryField()[index()];
+}
 
 #endif
 

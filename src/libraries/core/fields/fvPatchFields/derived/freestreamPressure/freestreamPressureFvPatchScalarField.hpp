@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -26,8 +26,7 @@ Description
     It is a zero-gradient condition that constrains the flux across the patch
     based on the free-stream velocity.
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         U            | velocity field name     | no          | U
@@ -37,7 +36,7 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            freestreamPressure;
     }
@@ -46,7 +45,7 @@ Description
 Note
     This condition is designed to operate with a freestream velocity condition
 
-SeeAlso
+See also
     CML::zeroGradientFvPatchField
     CML::freestreamFvPatchField
 
@@ -83,7 +82,7 @@ class freestreamPressureFvPatchScalarField
         word phiName_;
 
         //- Name of the density field used to normalise the mass flux
-        //  if necessary
+        //  if neccessary
         word rhoName_;
 
 

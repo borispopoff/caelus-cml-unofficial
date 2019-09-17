@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -221,10 +221,7 @@ void CML::wallShearStress::execute()
         const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
         volVectorField& wallShearStress =
-            const_cast<volVectorField&>
-            (
-                mesh.lookupObject<volVectorField>(type())
-            );
+            mesh.lookupObjectRef<volVectorField>(type());
 
         Info(log_)<< type() << " " << name_ << " output:" << nl;
 

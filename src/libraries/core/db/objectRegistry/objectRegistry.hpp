@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,7 +42,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class objectRegistry Declaration
+                       Class objectRegistry Declaration
 \*---------------------------------------------------------------------------*/
 
 class objectRegistry
@@ -177,6 +177,10 @@ public:
             template<class Type>
             const Type& lookupObject(const word& name) const;
 
+            //- Lookup and return the object reference of the given Type
+            template<class Type>
+            Type& lookupObjectRef(const word& name) const;
+
             //- Return new event number.
             label getEvent() const;
 
@@ -236,8 +240,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::wordList
-CML::objectRegistry::names() const
+CML::wordList CML::objectRegistry::names() const
 {
     wordList objectNames(size());
 
@@ -257,8 +260,7 @@ CML::objectRegistry::names() const
 
 
 template<class Type>
-CML::wordList
-CML::objectRegistry::names(const wordRe& name) const
+CML::wordList CML::objectRegistry::names(const wordRe& name) const
 {
     wordList objectNames(size());
 
@@ -283,8 +285,7 @@ CML::objectRegistry::names(const wordRe& name) const
 
 
 template<class Type>
-CML::wordList
-CML::objectRegistry::names(const wordReList& patterns) const
+CML::wordList CML::objectRegistry::names(const wordReList& patterns) const
 {
     wordList names(this->names<Type>());
 
@@ -410,11 +411,16 @@ const Type& CML::objectRegistry::lookupObject(const word& name) const
             << abort(FatalError);
     }
 
-    return NullSingletonRef< Type >();
+    return NullSingletonRef<Type>();
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Type>
+Type& CML::objectRegistry::lookupObjectRef(const word& name) const
+{
+    return const_cast<Type&>(lookupObject<Type>(name));
+}
+
 
 #endif
 

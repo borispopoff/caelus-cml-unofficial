@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2015 OpenFOAM Foundation
+Copyright (C) 2012-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -36,9 +36,7 @@ void CML::turbulenceFields::processField
 
     if (obr_.foundObject<FieldType>(scopedName))
     {
-        FieldType& fld =
-            const_cast<FieldType&>(obr_.lookupObject<FieldType>(scopedName));
-        fld == tvalue();
+        obr_.lookupObjectRef<FieldType>(scopedName) == tvalue();
     }
     else if (obr_.found(scopedName))
     {

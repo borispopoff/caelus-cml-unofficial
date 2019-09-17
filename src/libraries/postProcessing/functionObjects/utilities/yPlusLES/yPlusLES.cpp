@@ -264,10 +264,7 @@ void CML::yPlusLES::execute()
         const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
         volScalarField& yPlusLES =
-            const_cast<volScalarField&>
-            (
-                mesh.lookupObject<volScalarField>(type())
-            );
+            mesh.lookupObjectRef<volScalarField>(type());
 
         Info(log_)<< type() << " " << name_ << " output:" << nl;
 

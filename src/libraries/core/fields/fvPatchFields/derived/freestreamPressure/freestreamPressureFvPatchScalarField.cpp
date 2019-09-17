@@ -38,7 +38,7 @@ freestreamPressureFvPatchScalarField
     zeroGradientFvPatchScalarField(p, iF),
     UName_("U"),
     phiName_("phi"),
-    rhoName_("none")
+    rhoName_("rho")
 {}
 
 
@@ -53,7 +53,7 @@ freestreamPressureFvPatchScalarField
     zeroGradientFvPatchScalarField(p, iF, dict),
     UName_(dict.lookupOrDefault<word>("U", "U")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    rhoName_(dict.lookupOrDefault<word>("rho", "none"))
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
 {}
 
 
@@ -115,14 +115,11 @@ void CML::freestreamPressureFvPatchScalarField::updateCoeffs()
             patch().lookupPatchField<volVectorField, vector>(UName_)
         );
 
-    const surfaceScalarField& phi =
-        db().lookupObject<surfaceScalarField>(phiName_);
+    surfaceScalarField& phi =
+        db().lookupObjectRef<surfaceScalarField>(phiName_);
 
     fvsPatchField<scalar>& phip =
-        const_cast<fvsPatchField<scalar>&>
-        (
-            patch().patchField<surfaceScalarField, scalar>(phi)
-        );
+        patch().patchField<surfaceScalarField, scalar>(phi);
 
     if (phi.dimensions() == dimVelocity*dimArea)
     {

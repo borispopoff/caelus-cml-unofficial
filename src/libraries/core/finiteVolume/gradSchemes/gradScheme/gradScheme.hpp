@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -218,16 +218,15 @@ CML::tmp<CML::fv::gradScheme<Type>> CML::fv::gradScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "gradScheme<Type>::New"
-               "(const fvMesh& mesh, Istream& schemeData) : "
-               "constructing gradScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing gradScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Grad scheme not specified" << endl << endl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Grad scheme not specified" << endl << endl
             << "Valid grad schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -240,8 +239,10 @@ CML::tmp<CML::fv::gradScheme<Type>> CML::fv::gradScheme<Type>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown grad scheme " << schemeName << nl << nl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown grad scheme " << schemeName << nl << nl
             << "Valid grad schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -307,10 +308,11 @@ CML::fv::gradScheme<Type>::grad
         }
 
         cachePrintMessage("Retrieving", name, vsf);
-        GradFieldType& gGrad = const_cast<GradFieldType&>
-        (
-            mesh().objectRegistry::template lookupObject<GradFieldType>(name)
-        );
+        GradFieldType& gGrad =
+            mesh().objectRegistry::template lookupObjectRef<GradFieldType>
+            (
+                name
+            );
 
         if (gGrad.upToDate(vsf))
         {
@@ -327,13 +329,11 @@ CML::fv::gradScheme<Type>::grad
 
             cachePrintMessage("Storing", name, vsf);
             regIOobject::store(tgGrad.ptr());
-            GradFieldType& gGrad = const_cast<GradFieldType&>
-            (
-                mesh().objectRegistry::template lookupObject<GradFieldType>
+            GradFieldType& gGrad =
+                mesh().objectRegistry::template lookupObjectRef<GradFieldType>
                 (
                     name
-                )
-            );
+                );
 
             return gGrad;
         }
@@ -342,13 +342,11 @@ CML::fv::gradScheme<Type>::grad
     {
         if (mesh().objectRegistry::template foundObject<GradFieldType>(name))
         {
-            GradFieldType& gGrad = const_cast<GradFieldType&>
-            (
-                mesh().objectRegistry::template lookupObject<GradFieldType>
+            GradFieldType& gGrad =
+                mesh().objectRegistry::template lookupObjectRef<GradFieldType>
                 (
                     name
-                )
-            );
+                );
 
             if (gGrad.ownedByRegistry())
             {
@@ -407,9 +405,5 @@ CML::fv::gradScheme<Type>::grad
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
 // ************************************************************************* //

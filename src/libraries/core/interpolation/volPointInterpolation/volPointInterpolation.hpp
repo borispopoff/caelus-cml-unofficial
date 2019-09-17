@@ -447,7 +447,10 @@ void CML::volPointInterpolation::interpolateBoundaryField
     tmp<Field<Type>> tboundaryVals(flatBoundaryField(vf));
     const Field<Type>& boundaryVals = tboundaryVals();
 
+
     // Do points on 'normal' patches from the surrounding patch faces
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     forAll(boundary.meshPoints(), i)
     {
         label pointi = boundary.meshPoints()[i];
@@ -591,13 +594,14 @@ CML::volPointInterpolation::interpolate
 
     if (!cache || vf.mesh().changing())
     {
-        // Delete any old occurrences to avoid double registration
+        // Delete any old occurences to avoid double registration
         if (db.objectRegistry::template foundObject<PointFieldType>(name))
         {
-            PointFieldType& pf = const_cast<PointFieldType&>
-            (
-                db.objectRegistry::template lookupObject<PointFieldType>(name)
-            );
+            PointFieldType& pf =
+                db.objectRegistry::template lookupObjectRef<PointFieldType>
+                (
+                    name
+                );
 
             if (pf.ownedByRegistry())
             {
@@ -639,10 +643,11 @@ CML::volPointInterpolation::interpolate
         }
         else
         {
-            PointFieldType& pf = const_cast<PointFieldType&>
-            (
-                db.objectRegistry::template lookupObject<PointFieldType>(name)
-            );
+            PointFieldType& pf =
+                db.objectRegistry::template lookupObjectRef<PointFieldType>
+                (
+                    name
+                );
 
             if (pf.upToDate(vf))    //TBD: , vf.mesh().points()))
             {

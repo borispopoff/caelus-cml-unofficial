@@ -147,10 +147,7 @@ void CML::rawTopoChangerFvMesh::zeroUnmappedValues
     {
         //Pout<< "Checking field " << fldNames[i] << endl;
 
-        FieldType& fld = const_cast<FieldType&>
-        (
-            lookupObject<FieldType>(fldNames[i])
-        );
+        FieldType& fld = lookupObjectRef<FieldType>(fldNames[i]);
 
         setUnmappedValues
         (

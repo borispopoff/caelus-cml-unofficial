@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -186,17 +186,15 @@ void CML::fieldAverage::calculateMeanFieldType(const label fieldi) const
     {
         const Type& baseField = obr_.lookupObject<Type>(fieldName);
 
-        Type& meanField = const_cast<Type&>
-        (
-            obr_.lookupObject<Type>(faItems_[fieldi].meanFieldName())
-        );
+        Type& meanField =
+            obr_.lookupObjectRef<Type>(faItems_[fieldi].meanFieldName());
 
         scalar dt = obr_.time().deltaTValue();
         scalar Dt = totalTime_[fieldi];
 
         if (faItems_[fieldi].iterBase())
         {
-            dt = 1.0;
+            dt = 1;
             Dt = scalar(totalIter_[fieldi]);
         }
 
@@ -247,17 +245,15 @@ void CML::fieldAverage::calculatePrime2MeanFieldType(const label fieldi) const
         const Type1& meanField =
             obr_.lookupObject<Type1>(faItems_[fieldi].meanFieldName());
 
-        Type2& prime2MeanField = const_cast<Type2&>
-        (
-            obr_.lookupObject<Type2>(faItems_[fieldi].prime2MeanFieldName())
-        );
+        Type2& prime2MeanField =
+            obr_.lookupObjectRef<Type2>(faItems_[fieldi].prime2MeanFieldName());
 
         scalar dt = obr_.time().deltaTValue();
         scalar Dt = totalTime_[fieldi];
 
         if (faItems_[fieldi].iterBase())
         {
-            dt = 1.0;
+            dt = 1;
             Dt = scalar(totalIter_[fieldi]);
         }
 
@@ -313,10 +309,8 @@ void CML::fieldAverage::addMeanSqrToPrime2MeanType(const label fieldi) const
         const Type1& meanField =
             obr_.lookupObject<Type1>(faItems_[fieldi].meanFieldName());
 
-        Type2& prime2MeanField = const_cast<Type2&>
-        (
-            obr_.lookupObject<Type2>(faItems_[fieldi].prime2MeanFieldName())
-        );
+        Type2& prime2MeanField =
+            obr_.lookupObjectRef<Type2>(faItems_[fieldi].prime2MeanFieldName());
 
         prime2MeanField += sqr(meanField);
     }

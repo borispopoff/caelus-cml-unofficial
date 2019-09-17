@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -151,10 +151,7 @@ void CML::CourantNo::execute()
             mesh.lookupObject<surfaceScalarField>(phiName_);
 
         volScalarField& CourantNo =
-            const_cast<volScalarField&>
-            (
-                mesh.lookupObject<volScalarField>(type())
-            );
+            mesh.lookupObjectRef<volScalarField>(type());
 
         scalarField& iField = CourantNo.internalField();
 

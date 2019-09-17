@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -40,9 +40,9 @@ CML::dynamicInkJetFvMesh::dynamicInkJetFvMesh(const IOobject& io)
     dynamicFvMesh(io),
     dynamicMeshCoeffs_
     (
-	    IOdictionary
+        IOdictionary
         (
-			IOobject		
+            IOobject
             (
                 "dynamicMeshDict",
                 io.time().constant(),
@@ -51,14 +51,14 @@ CML::dynamicInkJetFvMesh::dynamicInkJetFvMesh(const IOobject& io)
                 IOobject::NO_WRITE,
                 false
             )
-        ).subDict(typeName + "Coeffs")
+        ).optionalSubDict(typeName + "Coeffs")
     ),
     amplitude_(readScalar(dynamicMeshCoeffs_.lookup("amplitude"))),
     frequency_(readScalar(dynamicMeshCoeffs_.lookup("frequency"))),
     refPlaneX_(readScalar(dynamicMeshCoeffs_.lookup("refPlaneX"))),
     stationaryPoints_
     (
-		IOobject
+        IOobject
         (
             "points",
             io.time().constant(),
@@ -113,9 +113,7 @@ bool CML::dynamicInkJetFvMesh::update()
 
     fvMesh::movePoints(newPoints);
 
-    volVectorField& U =
-        const_cast<volVectorField&>(lookupObject<volVectorField>("U"));
-    U.correctBoundaryConditions();
+    lookupObjectRef<volVectorField>("U").correctBoundaryConditions();
 
     return true;
 }

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -152,10 +152,8 @@ void CML::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
     const volVectorField& UField =
         nbrMesh.lookupObject<volVectorField>(fieldName);
 
-    surfaceScalarField& phiField = const_cast<surfaceScalarField&>
-    (
-        nbrMesh.lookupObject<surfaceScalarField>(phiName_)
-    );
+    surfaceScalarField& phiField =
+        nbrMesh.lookupObjectRef<surfaceScalarField>(phiName_);
 
     vectorField newUValues;
     scalarField newPhiValues;
