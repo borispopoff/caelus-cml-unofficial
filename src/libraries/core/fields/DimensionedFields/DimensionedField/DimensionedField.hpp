@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014-2015 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -583,7 +583,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
     const DimensionedField<Type, GeoMesh>& df
 )
 :
-    regIOobject(newName, df, newName == df.name()),
+    regIOobject(newName, df, newName != df.name()),
     Field<Type>(df),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
