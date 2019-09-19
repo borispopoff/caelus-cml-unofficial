@@ -423,8 +423,10 @@ src_core = Split("""
     fields/Fields/labelField/labelFieldIOField.cpp
     fields/Fields/scalarField/scalarIOField.cpp
     fields/Fields/scalarField/scalarFieldIOField.cpp
+    fields/Fields/vectorField/vectorField.cpp
     fields/Fields/vectorField/vectorIOField.cpp
     fields/Fields/vectorField/vectorFieldIOField.cpp
+    fields/Fields/vector2DField/vector2DField.cpp
     fields/Fields/vector2DField/vector2DIOField.cpp
     fields/Fields/vector2DField/vector2DFieldIOField.cpp
     fields/Fields/sphericalTensorField/sphericalTensorIOField.cpp
