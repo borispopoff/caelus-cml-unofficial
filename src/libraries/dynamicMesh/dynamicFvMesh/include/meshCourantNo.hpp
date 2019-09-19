@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -28,7 +28,7 @@ Description
 scalar meshCoNum = 0.0;
 scalar meanMeshCoNum = 0.0;
 
-if (mesh.nInternalFaces())
+
 {
     scalarField sumPhi
     (
