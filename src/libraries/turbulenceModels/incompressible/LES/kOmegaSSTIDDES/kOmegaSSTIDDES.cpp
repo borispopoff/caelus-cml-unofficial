@@ -138,7 +138,7 @@ tmp<volScalarField> kOmegaSSTIDDES::FDES() const
     return max
     (
         Lt()/LIDDES(),
-        scalar(1.0)
+        scalar(1)
     );
 }
 

@@ -508,12 +508,12 @@ void kOmegaSST::correct()
         volScalarField const rStar(sqrt(sqrS)/sqrt(sqrOmega+smallOmega));
         volSymmTensorField const DSijDt(fvc::DDt(this->phi_,Sij));
         volScalarField const rTilda(  
-            (scalar(2.0)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
-        volScalarField const frotation ((scalar(1.0) + Cr1_)
-            *scalar(2.0)*rStar/(scalar(1.0) + rStar)*
-            (scalar(1.0)-Cr3_*atan(Cr2_*rTilda)) - Cr1_);
+            (scalar(2)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
+        volScalarField const frotation ((scalar(1) + Cr1_)
+            *scalar(2)*rStar/(scalar(1) + rStar)*
+            (scalar(1)-Cr3_*atan(Cr2_*rTilda)) - Cr1_);
         volScalarField const frTilda(max(min(frotation, frMax_), scalar(0))); 
-        fr1_ = max(scalar(0.0), scalar(1.0) + Cscale_*(frTilda - scalar(1.0)));
+        fr1_ = max(scalar(0), scalar(1) + Cscale_*(frTilda - scalar(1)));
     }
 
     // Turbulent frequency equation

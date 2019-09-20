@@ -96,9 +96,9 @@ CML::noSlipWallFvPatchVectorField::gradientInternalCoeffs() const
  
     forAll(coeffs,f)
     {
-        coeffs[f][0] = scalar(1.0) - n[f][0]*n[f][0];
-        coeffs[f][1] = scalar(1.0) - n[f][1]*n[f][1];
-        coeffs[f][2] = scalar(1.0) - n[f][2]*n[f][2];
+        coeffs[f][0] = scalar(1) - n[f][0]*n[f][0];
+        coeffs[f][1] = scalar(1) - n[f][1]*n[f][1];
+        coeffs[f][2] = scalar(1) - n[f][2]*n[f][2];
     }
 
     return -coeffs*this->patch().deltaCoeffs();

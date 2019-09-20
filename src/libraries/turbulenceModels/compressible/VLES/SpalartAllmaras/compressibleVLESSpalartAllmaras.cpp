@@ -81,7 +81,7 @@ tmp<volScalarField> SpalartAllmarasVLES::fv2
     volScalarField const& fv1
 ) const
 {
-    return (scalar(1.0) - chi/(scalar(1.0)+chi*fv1));
+    return (scalar(1) - chi/(scalar(1)+chi*fv1));
 }
 
 
@@ -392,7 +392,7 @@ tmp<volScalarField> SpalartAllmarasVLES::epsilon() const
                 runTime_.timeName(),
                 mesh_
             ),
-            scalar(2.0)*(muEff()/rho_)*magSqr(symm(fvc::grad(U())))
+            scalar(2)*(muEff()/rho_)*magSqr(symm(fvc::grad(U())))
         )
     );
 }
@@ -526,12 +526,12 @@ void SpalartAllmarasVLES::correct()
     {
         Fr_ = min
         (
-            scalar(1.0),
+            scalar(1),
             pow
             (
-                (scalar(1.0)-(1-F1())*exp(-0.002*Lc/Lk()))
+                (scalar(1)-(1-F1())*exp(-0.002*Lc/Lk()))
                 /
-                (scalar(1.0)-(1-F1())*exp(-0.002*Li()/Lk())),
+                (scalar(1)-(1-F1())*exp(-0.002*Li()/Lk())),
                 2.0
             )
         );
@@ -542,16 +542,16 @@ void SpalartAllmarasVLES::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-exp(-0.002*Lc/Lk()))
+                    (scalar(1)-exp(-0.002*Lc/Lk()))
                     /
-                    (scalar(1.0)-exp(-0.002*Li()/Lk())),
+                    (scalar(1)-exp(-0.002*Li()/Lk())),
                     2.0
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
 
@@ -573,10 +573,10 @@ void SpalartAllmarasVLES::correct()
         volScalarField const rStar(sqrt(sqrS)/sqrt(sqrOmega+smallOmega));
         volSymmTensorField const DSijDt(fvc::DDt(this->phi_,Sij));
         volScalarField const rTilda(  
-            (scalar(2.0)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
+            (scalar(2)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
         fr1_ = 
-            (scalar(1.0) + Cr1_)*scalar(2.0)*rStar/(scalar(1.0) + rStar)
-             *(scalar(1.0)-Cr3_*atan(Cr2_*rTilda)) - Cr1_;
+            (scalar(1) + Cr1_)*scalar(2)*rStar/(scalar(1) + rStar)
+             *(scalar(1)-Cr3_*atan(Cr2_*rTilda)) - Cr1_;
     }
 
     volScalarField const Stilda

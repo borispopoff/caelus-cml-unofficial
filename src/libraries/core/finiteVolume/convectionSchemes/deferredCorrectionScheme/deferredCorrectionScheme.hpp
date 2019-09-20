@@ -77,7 +77,7 @@ public:
     {
         if(is.eof())
         {
-            r_ = scalar(1.0);
+            r_ = scalar(1);
         }
         else
         {

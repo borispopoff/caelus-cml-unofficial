@@ -432,16 +432,16 @@ void realizableVLESKE::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-(1-this->F1())*exp(-0.002*Lc/Lk()))
+                    (scalar(1)-(1-this->F1())*exp(-0.002*Lc/Lk()))
                     /
-                    (scalar(1.0)-(1-this->F1())*exp(-0.002*Li()/Lk())),
+                    (scalar(1)-(1-this->F1())*exp(-0.002*Li()/Lk())),
                     2.0
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
     else
@@ -450,16 +450,16 @@ void realizableVLESKE::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-exp(-0.002*Lc/Lk()))
+                    (scalar(1)-exp(-0.002*Lc/Lk()))
                     /
-                    (scalar(1.0)-exp(-0.002*Li()/Lk())),
+                    (scalar(1)-exp(-0.002*Li()/Lk())),
                     2.0
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
 

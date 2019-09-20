@@ -98,7 +98,7 @@ void CML::writeFields
         (
             radToDeg
             (
-                CML::acos(min(scalar(1.0), faceOrthogonality))
+                CML::acos(min(scalar(1), faceOrthogonality))
             )
         );
 

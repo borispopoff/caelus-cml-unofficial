@@ -189,7 +189,7 @@ const CML::scalarField CML::fvMesh::patchWeights(const fvPatch& patch) const
          << "patch: " << patch.name() << " is not a wall patch"
          << abort(FatalError);
 
-   scalarField weights(patch.size(), scalar(1.0));
+   scalarField weights(patch.size(), scalar(1));
 
    return weights;
 }

@@ -55,7 +55,7 @@ tmp<volScalarField> SpalartAllmarasDES::fv1() const
 
 tmp<volScalarField> SpalartAllmarasDES::fv2() const
 {
-    return (scalar(1.0) - chi()/(scalar(1.0)+chi()*fv1()));
+    return (scalar(1) - chi()/(scalar(1)+chi()*fv1()));
 }
 
 // Magnitude of vorticity 

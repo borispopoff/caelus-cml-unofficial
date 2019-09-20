@@ -95,10 +95,10 @@ CML::dcLinearUpwind##limiterType<Type>::correction                             \
                                                                                \
         scalar const r                                                         \
         (                                                                      \
-            (scalar(2.0)*mag((C[cellD]-C[cellC])&gradVf[cellC])                \
+            (scalar(2)*mag((C[cellD]-C[cellC])&gradVf[cellC])                  \
             /(mag(vf[cellD]-vf[cellC]) + VSMALL))                              \
             -                                                                  \
-            scalar(1.0)                                                        \
+            scalar(1)                                                          \
         );                                                                     \
                                                                                \
         scalar const limiter = slopeLimiter(r);                                \
@@ -144,11 +144,11 @@ CML::dcLinearUpwind##limiterType<Type>::correction                             \
                                                                                \
                 if (pFaceFlux[facei] > 0)                                      \
                 {                                                              \
-                    r = (scalar(2.0)                                           \
+                    r = (scalar(2)                                             \
                       *mag(pd[facei]&gradVf[pown]))                            \
                       /(mag(vfNei[facei]-vf[pown]) + VSMALL)                   \
                       -                                                        \
-                      scalar(1.0);                                             \
+                      scalar(1);                                               \
                                                                                \
                     limiter = slopeLimiter(r);                                 \
                                                                                \
@@ -157,11 +157,11 @@ CML::dcLinearUpwind##limiterType<Type>::correction                             \
                 }                                                              \
                 else                                                           \
                 {                                                              \
-                    r = (scalar(2.0)                                           \
+                    r = (scalar(2)                                             \
                         *mag(pd[facei]&pGradVfNei[facei]))                     \
                         /(mag(vf[pown]-vfNei[facei]) + VSMALL)                 \
                         -                                                      \
-                        scalar(1.0);                                           \
+                        scalar(1);                                             \
                                                                                \
                     limiter = slopeLimiter(r);                                 \
                                                                                \

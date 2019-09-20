@@ -98,10 +98,10 @@ CML::limitedCentral##limiterType<Type>::correction                             \
                                                                                \
         scalar const r                                                         \
         (                                                                      \
-            (scalar(2.0)*mag((C[cellD]-C[cellC])&gradVf[cellC])                \
+            (scalar(2)*mag((C[cellD]-C[cellC])&gradVf[cellC])                  \
             /(mag(vf[cellD]-vf[cellC]) + VSMALL))                              \
             -                                                                  \
-            scalar(1.0)                                                        \
+            scalar(1)                                                          \
         );                                                                     \
                                                                                \
         scalar const sLimiter = slopeLimiter(r);                               \
@@ -158,10 +158,10 @@ CML::limitedCentral##limiterType<Type>::correction                             \
                                                                                \
                 if (pFaceFlux[facei] > 0)                                      \
                 {                                                              \
-                    r = (scalar(2.0)                                           \
+                    r = (scalar(2)                                             \
                         *mag(pd[facei]&gradVf[pown]))                          \
                         /(mag(vfNei[facei]-vf[pown]) + VSMALL)                 \
-                        - scalar(1.0);                                         \
+                        - scalar(1);                                           \
                                                                                \
                     sLimiter = slopeLimiter(r);                                \
                                                                                \
@@ -185,10 +185,10 @@ CML::limitedCentral##limiterType<Type>::correction                             \
                 }                                                              \
                 else                                                           \
                 {                                                              \
-                    r = (scalar(2.0)                                           \
+                    r = (scalar(2)                                             \
                         *mag(pd[facei]&pGradVfNei[facei]))                     \
                         /(mag(vf[pown]-vfNei[facei]) + VSMALL)                 \
-                        - scalar(1.0);                                         \
+                        - scalar(1);                                           \
                                                                                \
                     sLimiter = slopeLimiter(r);                                \
                                                                                \

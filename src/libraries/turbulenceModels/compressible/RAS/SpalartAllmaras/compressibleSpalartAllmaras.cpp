@@ -53,7 +53,7 @@ tmp<volScalarField> SpalartAllmaras::fv2
     const volScalarField& fv1
 ) const
 {
-    return (scalar(1.0) - chi/(scalar(1.0)+chi*fv1));
+    return (scalar(1) - chi/(scalar(1)+chi*fv1));
 }
 
 
@@ -437,10 +437,10 @@ void SpalartAllmaras::correct()
        const volScalarField rStar(sqrt(sqrS)/sqrt(sqrOmega+smallOmega));
        const volSymmTensorField DSijDt(fvc::DDt(this->phi_,Sij));
        const volScalarField rTilda(  
-           (scalar(2.0)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
+           (scalar(2)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
        fr1_ = 
-           (scalar(1.0) + Cr1_)*scalar(2.0)*rStar/(scalar(1.0) + rStar)
-            *(scalar(1.0)-Cr3_*atan(Cr2_*rTilda)) - Cr1_;
+           (scalar(1) + Cr1_)*scalar(2)*rStar/(scalar(1) + rStar)
+            *(scalar(1)-Cr3_*atan(Cr2_*rTilda)) - Cr1_;
     }
 
     const volScalarField Stilda

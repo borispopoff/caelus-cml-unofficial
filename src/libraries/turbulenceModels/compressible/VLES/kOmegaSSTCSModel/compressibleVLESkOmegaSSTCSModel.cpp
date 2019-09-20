@@ -647,12 +647,12 @@ void kOmegaSSTCSModelVLES::correct()
         surfaceScalarField const u(this->phi_/fvc::interpolate(rho_));
         volSymmTensorField const DSijDt(fvc::DDt(u,Sij));
         volScalarField const rTilda(  
-            (scalar(2.0)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
-        volScalarField const frotation ((scalar(1.0) + Cr1_)
-            *scalar(2.0)*rStar/(scalar(1.0) + rStar)*
-            (scalar(1.0)-Cr3_*atan(Cr2_*rTilda)) - Cr1_);
+            (scalar(2)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
+        volScalarField const frotation ((scalar(1) + Cr1_)
+            *scalar(2)*rStar/(scalar(1) + rStar)*
+            (scalar(1)-Cr3_*atan(Cr2_*rTilda)) - Cr1_);
         volScalarField const frTilda(max(min(frotation, frMax_), scalar(0))); 
-        fr1_ = max(scalar(0.0), scalar(1.0) + Cscale_*(frTilda - scalar(1.0)));
+        fr1_ = max(scalar(0), scalar(1) + Cscale_*(frTilda - scalar(1)));
     }
 
     volScalarField rhoGammaF1(rho_*gamma(F1));
@@ -702,16 +702,16 @@ void kOmegaSSTCSModelVLES::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-(1-F1)*exp(-betaPrime_*Lc/Lk()))
+                    (scalar(1)-(1-F1)*exp(-betaPrime_*Lc/Lk()))
                     /
-                    (scalar(1.0)-(1-F1)*exp(-betaPrime_*Li()/Lk())),
+                    (scalar(1)-(1-F1)*exp(-betaPrime_*Li()/Lk())),
                     nPrime_
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
     else
@@ -720,16 +720,16 @@ void kOmegaSSTCSModelVLES::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-exp(-betaPrime_*Lc/Lk()))
+                    (scalar(1)-exp(-betaPrime_*Lc/Lk()))
                     /
-                    (scalar(1.0)-exp(-betaPrime_*Li()/Lk())),
+                    (scalar(1)-exp(-betaPrime_*Li()/Lk())),
                     nPrime_
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
 

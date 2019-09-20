@@ -38,7 +38,7 @@ void CML::lduMatrix::Amul
 ) const
 {
     // Reset multiplication result to zero
-    Apsi = scalar(0.0);
+    Apsi = scalar(0);
 
     scalar* RESTRICT ApsiPtr = Apsi.begin();
 
@@ -108,7 +108,7 @@ void CML::lduMatrix::Tmul
 ) const
 {
     // Reset multiplication result to zero  //NEW
-    Tpsi = scalar(0.0);
+    Tpsi = scalar(0);
 
     scalar* RESTRICT TpsiPtr = Tpsi.begin();
 
@@ -227,7 +227,7 @@ void CML::lduMatrix::residual
 ) const
 {
     // Reset multiplication result to zero
-    rA = scalar(0.0);
+    rA = scalar(0);
 
     scalar* RESTRICT rAPtr = rA.begin();
 

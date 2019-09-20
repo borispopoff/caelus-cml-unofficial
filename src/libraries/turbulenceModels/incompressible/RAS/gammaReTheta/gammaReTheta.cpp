@@ -162,7 +162,7 @@ tmp<volScalarField> gammaReTheta::FThetat() const
         (
             Fwake()*exp(-pow4(magSqr(this->U_)
            /(c7*nu()*magVort*this->ReThetaTilda_))),
-            c8-sqr((this->ce2_*this->intermittency_-scalar(1.0))/(this->ce2_ - c8))
+            c8-sqr((this->ce2_*this->intermittency_-scalar(1))/(this->ce2_ - c8))
         ),
         c8
     );
@@ -247,15 +247,15 @@ void gammaReTheta::ReTheta(volScalarField& ReThetaField) const
             scalar(0.0962e6)*K+scalar(0.148e12)*sqr(K)
            +scalar(0.0141e18)*pow3(K);
         FlamK = 
-            scalar(1.0)+FK*(scalar(1.0)-exp(-Tu/scalar(1.5)))
-           +scalar(0.556)*(scalar(1.0)-exp(-scalar(23.9)*lambda))
+            scalar(1)+FK*(scalar(1)-exp(-Tu/scalar(1.5)))
+           +scalar(0.556)*(scalar(1)-exp(-scalar(23.9)*lambda))
            *exp(-Tu/scalar(1.5)); 
     }
     else 
     {
         scalar Flam = 
             scalar(10.32)*lambda+scalar(89.47)*sqr(lambda)+265.51*pow3(lambda);
-            FlamK = scalar(1.0)+Flam*exp(-Tu/scalar(3.0));
+            FlamK = scalar(1)+Flam*exp(-Tu/scalar(3));
      }
 
     return FTu*FlamK;
@@ -271,10 +271,10 @@ tmp<volScalarField> gammaReTheta::intermittencySep() const
         (
             sqr(y_)*sqrt(scalar(2))
            *mag(symm(gradU))
-           /(scalar(3.235)*nu()*ReThetac())-scalar(1.0),
-            scalar(0.0)
+           /(scalar(3.235)*nu()*ReThetac())-scalar(1),
+            scalar(0)
         ),
-        scalar(2.0)
+        scalar(2)
     );
 }
 
@@ -806,10 +806,10 @@ void gammaReTheta::correct()
       - fvm::laplacian(DReThetaTildaEff(), ReThetaTilda_)
      ==
         cThetat_*magSqr(U_)
-      * (scalar(1.0)-FThetat())*ReThetaField/(scalar(500.0)*nu())
+      * (scalar(1)-FThetat())*ReThetaField/(scalar(500.0)*nu())
       - fvm::Sp
         (
-            cThetat_*magSqr(U_)*(scalar(1.0)-FThetat())/(scalar(500.0)*nu()), 
+            cThetat_*magSqr(U_)*(scalar(1)-FThetat())/(scalar(500.0)*nu()), 
             ReThetaTilda_
         )
     );

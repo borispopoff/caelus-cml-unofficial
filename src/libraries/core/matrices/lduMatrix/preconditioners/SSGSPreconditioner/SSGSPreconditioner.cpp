@@ -70,7 +70,7 @@ void CML::SSGSPreconditioner::approximateInverse()
     // Generate reciprocal diagonal
     for (label cell=0; cell<nCells; cell++)
     {
-        rDPtr[cell] = scalar(1.0)/rDPtr[cell];
+        rDPtr[cell] = scalar(1)/rDPtr[cell];
     }
 
     for (label face=0; face<nFaces; face++)

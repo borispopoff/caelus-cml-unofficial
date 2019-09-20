@@ -104,7 +104,7 @@ maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
         else
         {
             this->refValue() = *this;
-            this->valueFraction() = scalar(1.0);
+            this->valueFraction() = scalar(1);
         }
     }
 }

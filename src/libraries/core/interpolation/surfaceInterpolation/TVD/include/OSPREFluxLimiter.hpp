@@ -45,7 +45,7 @@ CML::classType##OSPRE<Type>::fluxLimiter(CML::scalar const r) const            \
 {                                                                              \
     return CML::scalar                                                         \
     (                                                                          \
-        scalar(1.5)*r*(r+scalar(1.0))/(r*(r+1)+scalar(1.0))                    \
+        scalar(1.5)*r*(r+scalar(1))/(r*(r+1)+scalar(1))                        \
     );                                                                         \
 }                                                                              
 #endif

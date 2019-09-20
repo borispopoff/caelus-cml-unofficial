@@ -46,7 +46,7 @@ forAll(pCorr.boundaryField(), patchi)
                 pCorr.boundaryField()[patchi]
             );
         
-        pCorrB == scalarField(pCorrB.size(),scalar(0.0));
+        pCorrB == scalarField(pCorrB.size(),scalar(0));
     }
 }
 

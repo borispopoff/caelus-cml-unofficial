@@ -80,7 +80,7 @@ void CML::autoLayerDriver::sumWeights
         meshPoints,
         invSumWeight,
         plusEqOp<scalar>(),
-        scalar(0.0)         // null value
+        scalar(0)         // null value
     );
 
     forAll(invSumWeight, pointi)
