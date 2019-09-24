@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -135,15 +135,19 @@ void CML::globalIndexAndTransform::determineTransforms()
 
         // Note: special check for unordered cyclics. These are in fact
         // transform bcs and should probably be split off.
+        // Note: We don't want to be finding transforms for patches marked as
+        // coincident full match. These should have no transform by definition.
         if
         (
             isA<coupledPolyPatch>(pp)
         && !(
                 isA<cyclicPolyPatch>(pp)
-             && (
-                    refCast<const cyclicPolyPatch>(pp).transform()
-                 == cyclicPolyPatch::NOORDERING
-                )
+             && refCast<const cyclicPolyPatch>(pp).transform()
+             == cyclicPolyPatch::NOORDERING
+            )
+        && !(
+                refCast<const coupledPolyPatch>(pp).transform()
+             == coupledPolyPatch::COINCIDENTFULLMATCH
             )
         )
         {
@@ -315,15 +319,19 @@ void CML::globalIndexAndTransform::determinePatchTransformSign()
 
         // Note: special check for unordered cyclics. These are in fact
         // transform bcs and should probably be split off.
+        // Note: We don't want to be finding transforms for patches marked as
+        // coincident full match. These should have no transform by definition.
         if
         (
             isA<coupledPolyPatch>(pp)
         && !(
                 isA<cyclicPolyPatch>(pp)
-             && (
-                    refCast<const cyclicPolyPatch>(pp).transform()
-                 == cyclicPolyPatch::NOORDERING
-                )
+             && refCast<const cyclicPolyPatch>(pp).transform()
+             == cyclicPolyPatch::NOORDERING
+            )
+        && !(
+                refCast<const coupledPolyPatch>(pp).transform()
+             == coupledPolyPatch::COINCIDENTFULLMATCH
             )
         )
         {
