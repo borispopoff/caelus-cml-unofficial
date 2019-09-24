@@ -34,6 +34,7 @@ namespace CML
     defineTypeNameAndDebug(mergePolyMesh, 1);
 }
 
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 CML::label CML::mergePolyMesh::patchIndex(const polyPatch& p)
@@ -367,7 +368,6 @@ void CML::mergePolyMesh::addMesh(const polyMesh& m)
                 )
             );
     }
-
 }
 
 
@@ -399,7 +399,9 @@ void CML::mergePolyMesh::merge()
         Info<< "Adding new patches. " << endl;
 
         label endOfLastPatch =
-            oldPatches[patchi - 1].start() + oldPatches[patchi - 1].size();
+            patchi == 0
+          ? 0
+          : oldPatches[patchi - 1].start() + oldPatches[patchi - 1].size();
 
         for (; patchi < patchNames_.size(); patchi++)
         {
