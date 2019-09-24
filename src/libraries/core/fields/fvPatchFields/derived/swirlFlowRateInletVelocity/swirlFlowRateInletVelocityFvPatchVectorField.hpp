@@ -30,19 +30,20 @@ Description
     dimensions of the flux, phi. The current density is used to correct the
     velocity when applying the mass basis.
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
         rho          | density field name      | no          | rho
+        origin       | origin of rotation      | no          | patch centre
+        axis         | axis of rotation        | no          | -patch normal
         flowRate     | flow rate profile       | yes         |
         rpm          | rotational speed profile | yes        |
     \endtable
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            swirlFlowRateInletVelocity;
         flowRate        constant 0.2;
@@ -76,7 +77,7 @@ SourceFiles
 namespace CML
 {
 /*---------------------------------------------------------------------------*\
-       Class swirlFlowRateInletVelocityFvPatchVectorField Declaration
+        Class swirlFlowRateInletVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
 class swirlFlowRateInletVelocityFvPatchVectorField
@@ -90,6 +91,12 @@ class swirlFlowRateInletVelocityFvPatchVectorField
 
         //- Name of the density field used to normalize the mass flux
         const word rhoName_;
+
+        //- Origin of the rotation
+        const vector origin_;
+
+        //- Axis of the rotation
+        const vector axis_;
 
         //- Inlet integral flow rate
         autoPtr<DataEntry<scalar>> flowRate_;
