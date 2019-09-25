@@ -51,6 +51,24 @@ void CML::primitiveEntry::append
             newElmt(tokenIndex()++) = currToken;
         }
     }
+    else if (currToken.isVariable())
+    {
+        const string& w = currToken.stringToken();
+
+        if
+        (
+            disableFunctionEntries
+         || w.size() <= 3
+         || !(
+                w[0] == '$'
+             && w[1] == token::BEGIN_BLOCK
+             && expandVariable(w, dict)
+            )
+        )
+        {
+            newElmt(tokenIndex()++) = currToken;
+        }
+    }
     else
     {
         newElmt(tokenIndex()++) = currToken;
@@ -160,7 +178,11 @@ void CML::primitiveEntry::readEntry(const dictionary& dict, Istream& is)
             << " on line " << keywordLineNumber
             << " and ending at line " << is.lineNumber();
 
-        SafeFatalIOErrorInFunction(is, os.str());
+        SafeFatalIOErrorInFunction
+        (
+            is,
+            os.str()
+        );
     }
 }
 

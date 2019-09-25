@@ -70,6 +70,11 @@ CML::Ostream& CML::operator<<(Ostream& os, const token& t)
             os << *t.stringTokenPtr_;
         break;
 
+        case token::VARIABLE:
+            // Behaviour differs according to stream type
+            os.write(t);
+        break;
+
         case token::LABEL:
             os << t.labelToken_;
         break;
@@ -153,6 +158,10 @@ ostream& CML::operator<<(ostream& os, const InfoProxy<token>& ip)
             os  << " the string " << t.stringToken();
         break;
 
+        case token::VARIABLE:
+            os  << " the variable " << t.stringToken();
+        break;
+
         case token::VERBATIMSTRING:
             os  << " the verbatim string " << t.stringToken();
         break;
@@ -225,6 +234,10 @@ Ostream& operator<<(Ostream& os, const InfoProxy<token>& ip)
 
         case token::STRING:
             os  << " the string " << t.stringToken();
+        break;
+
+        case token::VARIABLE:
+            os  << " the variable " << t.stringToken();
         break;
 
         case token::VERBATIMSTRING:

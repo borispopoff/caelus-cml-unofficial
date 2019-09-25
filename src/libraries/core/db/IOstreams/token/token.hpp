@@ -54,6 +54,7 @@ namespace CML
 // Forward declaration of friend functions and operators
 
 class token;
+
 Istream& operator>>(Istream&, token&);
 Ostream& operator<<(Ostream&, const token&);
 
@@ -68,12 +69,13 @@ class token
 public:
 
     //- Enumeration defining the types of token
-    enum tokenType
+    enum tokenType : char
     {
-        UNDEFINED,
+        UNDEFINED      = 0,
 
-        PUNCTUATION,
+        PUNCTUATION    = char(128),
         WORD,
+        VARIABLE,
         STRING,
         VERBATIMSTRING,
         LABEL,
@@ -84,9 +86,8 @@ public:
         ERROR
     };
 
-
     //- Standard punctuation tokens
-    enum punctuationToken
+    enum punctuationToken : char
     {
         NULL_TOKEN     = '\0',
         SPACE          = ' ',
@@ -113,7 +114,6 @@ public:
         MULTIPLY       = '*',
         DIVIDE         = '/'
     };
-
 
     //- Abstract base class for complex tokens
     class compound
@@ -328,6 +328,8 @@ public:
             inline bool isWord() const;
             inline const word& wordToken() const;
 
+            inline bool isVariable() const;
+
             inline bool isString() const;
             inline const string& stringToken() const;
 
@@ -462,7 +464,7 @@ inline void token::clear()
     {
         delete wordTokenPtr_;
     }
-    else if (type_ == STRING || type_ == VERBATIMSTRING)
+    else if (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING)
     {
         delete stringTokenPtr_;
     }
@@ -511,6 +513,7 @@ inline token::token(const token& t)
         break;
 
         case STRING:
+        case VARIABLE:
         case VERBATIMSTRING:
             stringTokenPtr_ = new string(*t.stringTokenPtr_);
         break;
@@ -653,25 +656,30 @@ inline const word& token::wordToken() const
     }
     else
     {
-        parseError("word");
+        parseError(word::typeName);
         return word::null;
     }
 }
 
+inline bool token::isVariable() const
+{
+    return (type_ == VARIABLE);
+}
+
 inline bool token::isString() const
 {
-    return (type_ == STRING || type_ == VERBATIMSTRING);
+    return (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING);
 }
 
 inline const string& token::stringToken() const
 {
-    if (type_ == STRING || type_ == VERBATIMSTRING)
+    if (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING)
     {
         return *stringTokenPtr_;
     }
     else
     {
-        parseError("string");
+        parseError(string::typeName);
         return string::null;
     }
 }
@@ -689,7 +697,7 @@ inline label token::labelToken() const
     }
     else
     {
-        parseError("label");
+        parseError(pTraits<label>::typeName);
         return 0;
     }
 }
@@ -749,7 +757,7 @@ inline scalar token::scalarToken() const
     }
     else
     {
-        parseError("scalar");
+        parseError(pTraits<scalar>::typeName);
         return 0.0;
     }
 }
@@ -834,6 +842,7 @@ inline void token::operator=(const token& t)
         break;
 
         case STRING:
+        case VARIABLE:
         case VERBATIMSTRING:
             stringTokenPtr_ = new string(*t.stringTokenPtr_);
         break;
@@ -941,6 +950,7 @@ inline bool token::operator==(const token& t) const
             return *wordTokenPtr_ == *t.wordTokenPtr_;
 
         case STRING:
+        case VARIABLE:
         case VERBATIMSTRING:
             return *stringTokenPtr_ == *t.stringTokenPtr_;
 
@@ -975,7 +985,11 @@ inline bool token::operator==(const word& w) const
 
 inline bool token::operator==(const string& s) const
 {
-    return ((type_ == STRING || type_ == VERBATIMSTRING) && stringToken() == s);
+    return
+    (
+        (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING)
+     && stringToken() == s
+    );
 }
 
 inline bool token::operator==(const label l) const
