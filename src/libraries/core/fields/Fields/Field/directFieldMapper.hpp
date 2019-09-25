@@ -50,7 +50,7 @@ public:
     // Constructors
 
         //- Construct given addressing
-        patchFieldSubset(const labelUList& directAddressing)
+        directFieldMapper(const labelUList& directAddressing)
         :
             directAddressing_(directAddressing),
             hasUnmapped_(false)
