@@ -748,6 +748,12 @@ bool CML::processorPolyPatch::order
     }
     else
     {
+        // Calculate the absolute matching tolerance
+        scalarField tols
+        (
+            matchTolerance()*calcFaceTol(pp, pp.points(), pp.faceCentres())
+        );
+
         if (transform() == COINCIDENTFULLMATCH)
         {
             vectorField masterPts;
@@ -763,21 +769,21 @@ bool CML::processorPolyPatch::order
 
             label nMatches = 0;
 
-            forAll(pp, lFaceI)
+            forAll(pp, lFacei)
             {
-                const face& localFace = localFaces[lFaceI];
+                const face& localFace = localFaces[lFacei];
                 label faceRotation = -1;
 
-                const scalar absTolSqr = sqr(SMALL);
+                const scalar absTolSqr = sqr(tols[lFacei]);
 
                 scalar closestMatchDistSqr = sqr(GREAT);
                 scalar matchDistSqr = sqr(GREAT);
                 label closestFaceMatch = -1;
                 label closestFaceRotation = -1;
 
-                forAll(masterFaces, mFaceI)
+                forAll(masterFaces, mFacei)
                 {
-                    const face& masterFace = masterFaces[mFaceI];
+                    const face& masterFace = masterFaces[mFacei];
 
                     faceRotation = matchFace
                     (
@@ -797,7 +803,7 @@ bool CML::processorPolyPatch::order
                     )
                     {
                         closestMatchDistSqr = matchDistSqr;
-                        closestFaceMatch = mFaceI;
+                        closestFaceMatch = mFacei;
                         closestFaceRotation = faceRotation;
                     }
 
@@ -807,13 +813,17 @@ bool CML::processorPolyPatch::order
                     }
                 }
 
-                if (closestFaceRotation != -1 && closestMatchDistSqr == 0)
+                if
+                (
+                    closestFaceRotation != -1
+                 && closestMatchDistSqr < absTolSqr
+                )
                 {
-                    faceMap[lFaceI] = closestFaceMatch;
+                    faceMap[lFacei] = closestFaceMatch;
 
-                    rotation[lFaceI] = closestFaceRotation;
+                    rotation[lFacei] = closestFaceRotation;
 
-                    if (lFaceI != closestFaceMatch || closestFaceRotation > 0)
+                    if (lFacei != closestFaceMatch || closestFaceRotation > 0)
                     {
                         change = true;
                     }
@@ -853,12 +863,6 @@ bool CML::processorPolyPatch::order
                 fromNeighbour >> masterCtrs >> masterNormals
                               >> masterAnchors >> masterFacePointAverages;
             }
-
-            // Calculate typical distance from face centre
-            scalarField tols
-            (
-                matchTolerance()*calcFaceTol(pp, pp.points(), pp.faceCentres())
-            );
 
             if (debug || masterCtrs.size() != pp.size())
             {
@@ -909,7 +913,7 @@ bool CML::processorPolyPatch::order
             {
                 const pointField& ppPoints = pp.points();
 
-                pointField facePointAverages(pp.size(), point::zero);
+                pointField facePointAverages(pp.size(), Zero);
                 forAll(pp, fI)
                 {
                     const labelList& facePoints = pp[fI];
@@ -986,11 +990,11 @@ bool CML::processorPolyPatch::order
 
                 forAll(pp.faceCentres(), facei)
                 {
-                    label masterFaceI = faceMap[facei];
+                    label masterFacei = faceMap[facei];
 
-                    if (masterFaceI != -1)
+                    if (masterFacei != -1)
                     {
-                        const point& c0 = masterCtrs[masterFaceI];
+                        const point& c0 = masterCtrs[masterFacei];
                         const point& c1 = pp.faceCentres()[facei];
                         writeOBJ(ccStr, c0, c1, vertI);
                     }
