@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -214,6 +214,16 @@ class faceCoupleInfo
                 const label size
             );
 
+            //- Calculate face point averages from (subset of) faces.
+            template<template<class> class FaceList>
+            static pointField calcFacePointAverages
+            (
+                const FaceList<face>&,
+                const pointField&,
+                const label start,
+                const label size
+            );
+
             //- Write edges
             static void writeOBJ
             (
@@ -274,9 +284,9 @@ class faceCoupleInfo
 
         // Face matching
 
-            //- Matches two faces.Determines rotation for f1 to match up
-            // with f0, i.e. the index in f0 of
-            // the first point of f1.
+            //- Matches two faces.
+            //  Determines rotation for f1 to match up with f0,
+            //  i.e. the index in f0 of the first point of f1.
             static label matchFaces
             (
                 const scalar absTol,
@@ -518,6 +528,31 @@ CML::pointField CML::faceCoupleInfo::calcFaceCentres
         fc[i] = faces[facei++].centre(points);
     }
     return fc;
+}
+
+
+template<template<class> class FaceList>
+CML::pointField CML::faceCoupleInfo::calcFacePointAverages
+(
+    const FaceList<face>& faces,
+    const pointField& points,
+    const label start,
+    const label size
+)
+{
+    pointField fpa(size, Zero);
+
+    label facei = start;
+
+    forAll(fpa, i)
+    {
+        forAll(faces[facei], j)
+        {
+            fpa[i] += points[faces[facei][j]];
+        }
+        fpa[i] /= faces[facei++].size();
+    }
+    return fpa;
 }
 
 
