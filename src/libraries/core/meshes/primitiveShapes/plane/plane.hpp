@@ -59,12 +59,18 @@ class plane
 {
 public:
 
-    //- A direction and a reference point
-        class ray
-        {
-            point refPoint_;
+    //- Side of the plane
+    enum side
+    {
+        NORMAL,
+        FLIP
+    };
 
-            vector dir_;
+    //- A direction and a reference point
+    class ray
+    {
+        point refPoint_;
+        vector dir_;
 
     public:
 
@@ -90,11 +96,11 @@ private:
 
     // Private data
 
-        //- Plane normal
-        vector unitVector_;
+        //- Normal
+        vector normal_;
 
-        //- Base point
-        point basePoint_;
+        //- Reference point
+        point point_;
 
 
     // Private Member Functions
@@ -183,6 +189,13 @@ public:
 
         //- Return the cutting point between this plane and two other planes
         point planePlaneIntersect(const plane&, const plane&) const;
+
+        //- Return the side of the plane that the point is on.
+        //  If the point is on the plane, then returns NORMAL.
+        side sideOfPlane(const point& p) const;
+
+        //- Mirror the supplied point in the plane. Return the mirrored point.
+        point mirror(const point& p) const;
 
         //- Write to dictionary
         void writeDict(Ostream&) const;

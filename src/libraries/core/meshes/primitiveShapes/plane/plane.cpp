@@ -24,45 +24,29 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Calculate base point and unit normal vector from plane equation
 void CML::plane::calcPntAndVec(const scalarList& C)
 {
-    if (mag(C[0]) > VSMALL)
-    {
-        basePoint_ = vector((-C[3]/C[0]), 0, 0);
-    }
-    else
-    {
-        if (mag(C[1]) > VSMALL)
-        {
-            basePoint_ = vector(0, (-C[3]/C[1]), 0);
-        }
-        else
-        {
-            if (mag(C[2]) > VSMALL)
-            {
-                basePoint_ = vector(0, 0, (-C[3]/C[2]));
-            }
-            else
-            {
-                FatalErrorInFunction
-                    << "At least one plane coefficient must have a value"
-                    << abort(FatalError);
-            }
-        }
-    }
+    normal_ = vector(C[0], C[1], C[2]);
 
-    unitVector_ = vector(C[0], C[1], C[2]);
-    scalar magUnitVector(mag(unitVector_));
+    const scalar magNormal = mag(normal_);
 
-    if (magUnitVector < VSMALL)
+    if (magNormal == 0)
     {
         FatalErrorInFunction
-            << "Plane normal defined with zero length"
+            << "Plane normal has zero length"
             << abort(FatalError);
     }
 
-    unitVector_ /= magUnitVector;
+    normal_ /= magNormal;
+
+    if (magNormal < mag(C[3])*VSMALL)
+    {
+        FatalErrorInFunction
+            << "Plane is too far from the origin"
+            << abort(FatalError);
+    }
+
+    point_ = - C[3]/magNormal*normal_;
 }
 
 
@@ -73,7 +57,7 @@ void CML::plane::calcPntAndVec
     const point& point3
 )
 {
-    basePoint_ = (point1 + point2 + point3)/3;
+    point_ = (point1 + point2 + point3)/3;
     vector line12 = point1 - point2;
     vector line23 = point2 - point3;
 
@@ -89,8 +73,8 @@ void CML::plane::calcPntAndVec
             << abort(FatalError);
     }
 
-    unitVector_ = line12 ^ line23;
-    scalar magUnitVector(mag(unitVector_));
+    normal_ = line12 ^ line23;
+    scalar magUnitVector(mag(normal_));
 
     if (magUnitVector < VSMALL)
     {
@@ -100,62 +84,58 @@ void CML::plane::calcPntAndVec
             << abort(FatalError);
     }
 
-    unitVector_ /= magUnitVector;
+    normal_ /= magUnitVector;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from normal vector through the origin
 CML::plane::plane(const vector& normalVector)
 :
-    unitVector_(normalVector),
-    basePoint_(Zero)
+    normal_(normalVector),
+    point_(Zero)
 {
-    scalar magUnitVector(mag(unitVector_));
+    scalar magUnitVector(mag(normal_));
 
     if (magUnitVector > VSMALL)
     {
-        unitVector_ /= magUnitVector;
+        normal_ /= magUnitVector;
     }
     else
     {
         FatalErrorInFunction
-            << "plane normal has zero length. basePoint:" << basePoint_
+            << "plane normal has zero length. basePoint:" << point_
             << abort(FatalError);
     }
 }
 
 
-// Construct from point and normal vector
 CML::plane::plane(const point& basePoint, const vector& normalVector)
 :
-    unitVector_(normalVector),
-    basePoint_(basePoint)
+    normal_(normalVector),
+    point_(basePoint)
 {
-    scalar magUnitVector(mag(unitVector_));
+    scalar magUnitVector(mag(normal_));
 
     if (magUnitVector > VSMALL)
     {
-        unitVector_ /= magUnitVector;
+        normal_ /= magUnitVector;
     }
     else
     {
         FatalErrorInFunction
-            << "plane normal has zero length. basePoint:" << basePoint_
+            << "plane normal has zero length. basePoint:" << point_
             << abort(FatalError);
     }
 }
 
 
-// Construct from plane equation
 CML::plane::plane(const scalarList& C)
 {
     calcPntAndVec(C);
 }
 
 
-// Construct from three points
 CML::plane::plane
 (
     const point& a,
@@ -167,11 +147,10 @@ CML::plane::plane
 }
 
 
-// Construct from dictionary
 CML::plane::plane(const dictionary& dict)
 :
-    unitVector_(Zero),
-    basePoint_(point::zero)
+    normal_(Zero),
+    point_(Zero)
 {
     const word planeType(dict.lookup("planeType"));
 
@@ -190,7 +169,7 @@ CML::plane::plane(const dictionary& dict)
     }
     else if (planeType == "embeddedPoints")
     {
-        const dictionary& subDict = dict.subDict("embeddedPoints");
+        const dictionary& subDict = dict.subDict("embeddedPointsDict");
 
         point point1(subDict.lookup("point1"));
         point point2(subDict.lookup("point2"));
@@ -202,35 +181,44 @@ CML::plane::plane(const dictionary& dict)
     {
         const dictionary& subDict = dict.subDict("pointAndNormalDict");
 
-        basePoint_ = subDict.lookup("basePoint");
-        unitVector_ = subDict.lookup("normalVector");
-        unitVector_ /= mag(unitVector_);
+        point_ =
+            subDict.found("basePoint")
+          ? subDict.lookup("basePoint")
+          : subDict.lookup("point");
+
+        normal_ =
+            subDict.found("normalVector")
+          ? subDict.lookup("normalVector")
+          : subDict.lookup("normal");
+
+        normal_ /= mag(normal_);
     }
     else
     {
         FatalIOErrorInFunction(dict)
-            << "Invalid plane type: " << planeType
+            << "Invalid plane type: " << planeType << nl
+            << "Valid options include: planeEquation, embeddedPoints and "
+            << "pointAndNormal"
             << abort(FatalIOError);
     }
 }
 
 
-// Construct from Istream. Assumes point and normal vector.
 CML::plane::plane(Istream& is)
 :
-    unitVector_(is),
-    basePoint_(is)
+    normal_(is),
+    point_(is)
 {
-    scalar magUnitVector(mag(unitVector_));
+    scalar magUnitVector(mag(normal_));
 
     if (magUnitVector > VSMALL)
     {
-        unitVector_ /= magUnitVector;
+        normal_ /= magUnitVector;
     }
     else
     {
         FatalErrorInFunction
-            << "plane normal has zero length. basePoint:" << basePoint_
+            << "plane normal has zero length. basePoint:" << point_
             << abort(FatalError);
     }
 }
@@ -238,41 +226,38 @@ CML::plane::plane(Istream& is)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Return plane normal vector
 const CML::vector& CML::plane::normal() const
 {
-    return unitVector_;
+    return normal_;
 }
 
 
-// Return plane base point
 const CML::point& CML::plane::refPoint() const
 {
-    return basePoint_;
+    return point_;
 }
 
 
-// Return coefficients for plane equation: ax + by + cz + d = 0
 CML::FixedList<CML::scalar, 4> CML::plane::planeCoeffs() const
 {
     FixedList<scalar, 4> C(4);
 
-    scalar magX = mag(unitVector_.x());
-    scalar magY = mag(unitVector_.y());
-    scalar magZ = mag(unitVector_.z());
+    scalar magX = mag(normal_.x());
+    scalar magY = mag(normal_.y());
+    scalar magZ = mag(normal_.z());
 
     if (magX > magY)
     {
         if (magX > magZ)
         {
             C[0] = 1;
-            C[1] = unitVector_.y()/unitVector_.x();
-            C[2] = unitVector_.z()/unitVector_.x();
+            C[1] = normal_.y()/normal_.x();
+            C[2] = normal_.z()/normal_.x();
         }
         else
         {
-            C[0] = unitVector_.x()/unitVector_.z();
-            C[1] = unitVector_.y()/unitVector_.z();
+            C[0] = normal_.x()/normal_.z();
+            C[1] = normal_.y()/normal_.z();
             C[2] = 1;
         }
     }
@@ -280,54 +265,51 @@ CML::FixedList<CML::scalar, 4> CML::plane::planeCoeffs() const
     {
         if (magY > magZ)
         {
-            C[0] = unitVector_.x()/unitVector_.y();
+            C[0] = normal_.x()/normal_.y();
             C[1] = 1;
-            C[2] = unitVector_.z()/unitVector_.y();
+            C[2] = normal_.z()/normal_.y();
         }
         else
         {
-            C[0] = unitVector_.x()/unitVector_.z();
-            C[1] = unitVector_.y()/unitVector_.z();
+            C[0] = normal_.x()/normal_.z();
+            C[1] = normal_.y()/normal_.z();
             C[2] = 1;
         }
     }
 
-    C[3] = - C[0] * basePoint_.x()
-           - C[1] * basePoint_.y()
-           - C[2] * basePoint_.z();
+    C[3] = - C[0] * point_.x()
+           - C[1] * point_.y()
+           - C[2] * point_.z();
 
     return C;
 }
 
 
-// Return nearest point in the plane for the given point
 CML::point CML::plane::nearestPoint(const point& p) const
 {
-    return p - unitVector_*((p - basePoint_) & unitVector_);
+    return p - normal_*((p - point_) & normal_);
 }
 
 
-// Return distance from the given point to the plane
 CML::scalar CML::plane::distance(const point& p) const
 {
-    return mag((p - basePoint_) & unitVector_);
+    return mag((p - point_) & normal_);
 }
 
 
-// Cutting point for plane and line defined by origin and direction
 CML::scalar CML::plane::normalIntersect
 (
     const point& pnt0,
     const vector& dir
 ) const
 {
-    scalar denom = stabilise((dir & unitVector_), VSMALL);
+    const scalar num = (point_ - pnt0) & normal_;
+    const scalar den = dir & normal_;
 
-    return ((basePoint_ - pnt0) & unitVector_)/denom;
+    return mag(den) > mag(num)*VSMALL ? num/den : VGREAT;
 }
 
 
-// Cutting line of two planes
 CML::plane::ray CML::plane::planeIntersect(const plane& plane2) const
 {
     // Mathworld plane-plane intersection. Assume there is a point on the
@@ -395,7 +377,6 @@ CML::plane::ray CML::plane::planeIntersect(const plane& plane2) const
 }
 
 
-// Cutting point of three planes
 CML::point CML::plane::planePlaneIntersect
 (
     const plane& plane2,
@@ -419,14 +400,37 @@ CML::point CML::plane::planePlaneIntersect
 }
 
 
+CML::plane::side CML::plane::sideOfPlane(const point& p) const
+{
+    const scalar angle((p - point_) & normal_);
+
+    return (angle < 0 ? FLIP : NORMAL);
+}
+
+
+CML::point CML::plane::mirror(const point& p) const
+{
+    const vector mirroredPtDir = p - nearestPoint(p);
+
+    if ((normal() & mirroredPtDir) > 0)
+    {
+        return p - 2.0*distance(p)*normal();
+    }
+    else
+    {
+        return p + 2.0*distance(p)*normal();
+    }
+}
+
+
 void CML::plane::writeDict(Ostream& os) const
 {
     os.writeKeyword("planeType") << "pointAndNormal"
         << token::END_STATEMENT << nl;
     os  << indent << "pointAndNormalDict" << nl
         << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    os.writeKeyword("basePoint") << basePoint_ << token::END_STATEMENT << nl;
-    os.writeKeyword("normalVector") << unitVector_ << token::END_STATEMENT
+    os.writeKeyword("point") << point_ << token::END_STATEMENT << nl;
+    os.writeKeyword("normal") << normal_ << token::END_STATEMENT
         << nl;
     os << decrIndent << indent << token::END_BLOCK << endl;
 }
@@ -436,7 +440,7 @@ void CML::plane::writeDict(Ostream& os) const
 
 bool CML::operator==(const plane& a, const plane& b)
 {
-    if (a.basePoint_ == b.basePoint_ && a.unitVector_ == b.unitVector_)
+    if (a.point_ == b.point_ && a.normal_ == b.normal_)
     {
         return true;
     }
@@ -456,7 +460,7 @@ bool CML::operator!=(const plane& a, const plane& b)
 
 CML::Ostream& CML::operator<<(Ostream& os, const plane& a)
 {
-    os  << a.unitVector_ << token::SPACE << a.basePoint_;
+    os  << a.normal_ << token::SPACE << a.point_;
 
     return os;
 }
