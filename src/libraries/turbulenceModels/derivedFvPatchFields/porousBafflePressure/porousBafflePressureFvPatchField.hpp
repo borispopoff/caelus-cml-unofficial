@@ -252,7 +252,6 @@ CML::porousBafflePressureFvPatchField<Type>::porousBafflePressureFvPatchField
     const porousBafflePressureFvPatchField<Type>& ptf
 )
 :
-    cyclicLduInterfaceField(),
     fixedJumpFvPatchField<Type>(ptf),
     D_(ptf.D_),
     I_(ptf.I_),

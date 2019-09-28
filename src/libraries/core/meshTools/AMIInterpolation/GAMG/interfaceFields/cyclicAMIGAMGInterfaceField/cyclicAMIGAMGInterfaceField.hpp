@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,7 +47,7 @@ namespace CML
 class cyclicAMIGAMGInterfaceField
 :
     public GAMGInterfaceField,
-    virtual public cyclicAMILduInterfaceField
+    public cyclicAMILduInterfaceField
 {
     // Private data
 
@@ -125,7 +125,7 @@ public:
 
         //- Cyclic interface functions
 
-            //- Does the interface field perform the transfromation
+            //- Does the interface field perform the transformation
             virtual bool doTransform() const
             {
                 return doTransform_;

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -46,8 +46,8 @@ namespace CML
 template<class Type>
 class cyclicFvPatchField
 :
-    virtual public cyclicLduInterfaceField,
-    public coupledFvPatchField<Type>
+    public coupledFvPatchField<Type>,
+    public cyclicLduInterfaceField
 {
     // Private data
 
@@ -235,6 +235,34 @@ CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 template<class Type>
 CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    coupledFvPatchField<Type>(p, iF, dict),
+    cyclicPatch_(refCast<const cyclicFvPatch>(p))
+{
+    if (!isA<cyclicFvPatch>(p))
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "    patch type '" << p.type()
+            << "' not constraint type '" << typeName << "'"
+            << "\n    for patch " << p.name()
+            << " of field " << this->dimensionedInternalField().name()
+            << " in file " << this->dimensionedInternalField().objectPath()
+            << exit(FatalIOError);
+    }
+
+    this->evaluate(Pstream::blocking);
+}
+
+
+template<class Type>
+CML::cyclicFvPatchField<Type>::cyclicFvPatchField
+(
     const cyclicFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -242,6 +270,7 @@ CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 )
 :
     coupledFvPatchField<Type>(ptf, p, iF, mapper),
+    cyclicLduInterfaceField(),
     cyclicPatch_(refCast<const cyclicFvPatch>(p))
 {
     if (!isA<cyclicFvPatch>(this->patch()))
@@ -257,30 +286,6 @@ CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 }
 
 
-template<class Type>
-CML::cyclicFvPatchField<Type>::cyclicFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    coupledFvPatchField<Type>(p, iF, dict),
-    cyclicPatch_(refCast<const cyclicFvPatch>(p))
-{
-    if (!isA<cyclicFvPatch>(p))
-    {
-        FatalIOErrorInFunction(dict)
-            << "    patch type '" << p.type()
-            << "' not constraint type '" << typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
-            << exit(FatalIOError);
-    }
-
-    this->evaluate(Pstream::blocking);
-}
 
 
 template<class Type>
@@ -289,8 +294,8 @@ CML::cyclicFvPatchField<Type>::cyclicFvPatchField
     const cyclicFvPatchField<Type>& ptf
 )
 :
-    cyclicLduInterfaceField(),
     coupledFvPatchField<Type>(ptf),
+    cyclicLduInterfaceField(),
     cyclicPatch_(ptf.cyclicPatch_)
 {}
 
@@ -303,6 +308,7 @@ CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 )
 :
     coupledFvPatchField<Type>(ptf, iF),
+    cyclicLduInterfaceField(),
     cyclicPatch_(ptf.cyclicPatch_)
 {}
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -46,7 +46,7 @@ namespace CML
 class cyclicAMIGAMGInterface
 :
     public GAMGInterface,
-    virtual public cyclicAMILduInterface
+    public cyclicAMILduInterface
 {
     // Private data
 

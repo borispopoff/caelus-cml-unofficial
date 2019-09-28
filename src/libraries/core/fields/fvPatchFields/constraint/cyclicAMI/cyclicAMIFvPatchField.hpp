@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,8 +66,8 @@ namespace CML
 template<class Type>
 class cyclicAMIFvPatchField
 :
-    virtual public cyclicAMILduInterfaceField,
-    public coupledFvPatchField<Type>
+    public coupledFvPatchField<Type>,
+    public cyclicAMILduInterfaceField
 {
     // Private data
 
@@ -233,36 +233,10 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
     const DimensionedField<Type, volMesh>& iF
 )
 :
-    cyclicAMILduInterfaceField(),
     coupledFvPatchField<Type>(p, iF),
+    cyclicAMILduInterfaceField(),
     cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
 {}
-
-
-template<class Type>
-CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
-(
-    const cyclicAMIFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    cyclicAMILduInterfaceField(),
-    coupledFvPatchField<Type>(ptf, p, iF, mapper),
-    cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
-{
-    if (!isA<cyclicAMIFvPatch>(this->patch()))
-    {
-        FatalErrorInFunction
-            << "    patch type '" << p.type()
-            << "' not constraint type '" << typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
-            << exit(FatalIOError);
-    }
-}
 
 
 template<class Type>
@@ -273,14 +247,16 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
     const dictionary& dict
 )
 :
-    cyclicAMILduInterfaceField(),
     coupledFvPatchField<Type>(p, iF, dict),
+    cyclicAMILduInterfaceField(),
     cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
 {
     if (!isA<cyclicAMIFvPatch>(p))
     {
-        FatalIOErrorInFunction(dict)
-            << "    patch type '" << p.type()
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
             << " of field " << this->dimensionedInternalField().name()
@@ -298,11 +274,36 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
 template<class Type>
 CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
 (
+    const cyclicAMIFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    coupledFvPatchField<Type>(ptf, p, iF, mapper),
+    cyclicAMILduInterfaceField(),
+    cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
+{
+    if (!isA<cyclicAMIFvPatch>(this->patch()))
+    {
+        FatalErrorInFunction
+            << "' not constraint type '" << typeName << "'"
+            << "\n    for patch " << p.name()
+            << " of field " << this->dimensionedInternalField().name()
+            << " in file " << this->dimensionedInternalField().objectPath()
+            << exit(FatalIOError);
+    }
+}
+
+
+template<class Type>
+CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
+(
     const cyclicAMIFvPatchField<Type>& ptf
 )
 :
-    cyclicAMILduInterfaceField(),
     coupledFvPatchField<Type>(ptf),
+    cyclicAMILduInterfaceField(),
     cyclicAMIPatch_(ptf.cyclicAMIPatch_)
 {}
 
@@ -314,8 +315,8 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
     const DimensionedField<Type, volMesh>& iF
 )
 :
-    cyclicAMILduInterfaceField(),
     coupledFvPatchField<Type>(ptf, iF),
+    cyclicAMILduInterfaceField(),
     cyclicAMIPatch_(ptf.cyclicAMIPatch_)
 {}
 
