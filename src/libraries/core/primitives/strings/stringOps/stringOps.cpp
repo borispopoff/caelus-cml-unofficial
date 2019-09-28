@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -265,7 +265,7 @@ CML::string CML::stringOps::getVariable
         OStringStream buf;
         // Force floating point numbers to be printed with at least
         // some decimal digits.
-        buf << fixed;
+        buf << scientific;
         buf.precision(IOstream::defaultPrecision());
 
         // fail for non-primitiveEntry
@@ -282,15 +282,19 @@ CML::string CML::stringOps::getVariable
 
         if (value.empty())
         {
-            FatalIOErrorInFunction(dict)
-                << "Cannot find dictionary or environment variable "
+            FatalIOErrorInFunction
+            (
+                dict
+            )   << "Cannot find dictionary or environment variable "
                 << name << exit(FatalIOError);
         }
     }
     else
     {
-        FatalIOErrorInFunction(dict)
-            << "Cannot find dictionary variable "
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "Cannot find dictionary variable "
             << name << exit(FatalIOError);
     }
 
@@ -576,7 +580,7 @@ CML::string& CML::stringOps::inplaceExpand
                     OStringStream buf;
                     // Force floating point numbers to be printed with at least
                     // some decimal digits.
-                    buf << fixed;
+                    buf << scientific;
                     buf.precision(IOstream::defaultPrecision());
                     if (ePtr->isDict())
                     {
