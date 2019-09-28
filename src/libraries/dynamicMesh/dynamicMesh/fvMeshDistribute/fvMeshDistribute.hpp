@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -158,30 +158,33 @@ class fvMeshDistribute
                 labelListList& constructFaceMap
             );
 
-            //- Merge any shared points that are geometrically shared. Needs
-            //  parallel valid mesh - uses globalMeshData.
+            //- Merge any local points that were remotely coupled.
             //  constructPointMap is adapted for the new point labels.
             autoPtr<mapPolyMesh> mergeSharedPoints
             (
+                const labelList& pointToGlobalMaster,
                 labelListList& constructPointMap
             );
+
 
         // Coupling information
 
             //- Construct the local environment of all boundary faces.
-            void getNeighbourData
+            void getCouplingData
             (
                 const labelList& distribution,
                 labelList& sourceFace,
                 labelList& sourceProc,
                 labelList& sourcePatch,
-                labelList& sourceNewProc
+                labelList& sourceNewProc,
+                labelList& sourcePointMaster
             ) const;
 
             // Subset the neighbourCell/neighbourProc fields
-            static void subsetBoundaryData
+            static void subsetCouplingData
             (
                 const fvMesh& mesh,
+                const labelList& pointMap,
                 const labelList& faceMap,
                 const labelList& cellMap,
 
@@ -194,11 +197,13 @@ class fvMeshDistribute
                 const labelList& sourceProc,
                 const labelList& sourcePatch,
                 const labelList& sourceNewProc,
+                const labelList& sourcePointMaster,
 
                 labelList& subFace,
                 labelList& subProc,
                 labelList& subPatch,
-                labelList& subNewProc
+                labelList& subNewProc,
+                labelList& subPointMaster
             );
 
             //- Find cells on mesh whose faceID/procID match the neighbour
@@ -231,6 +236,14 @@ class fvMeshDistribute
                 const labelList& boundaryData1  // added mesh
             );
 
+            //- Map point data to new mesh (resulting from adding two meshes)
+            static labelList mapPointData
+            (
+                const primitiveMesh& mesh,      // mesh after adding
+                const mapAddedPolyMesh& map,
+                const labelList& boundaryData0, // on mesh before adding
+                const labelList& boundaryData1  // on added mesh
+            );
 
         // Other
 
@@ -255,7 +268,7 @@ class fvMeshDistribute
             (
                 const labelList& neighbourNewProc,  // new processor per b. face
                 const labelList& referPatchID,      // -1 or original patch
-                const List<Map<label>>& procPatchID// patchID
+                const List<Map<label>>& procPatchID // patchID
             );
 
             //- Send mesh and coupling data.
@@ -270,7 +283,8 @@ class fvMeshDistribute
                 const labelList& sourceProc,
                 const labelList& sourcePatch,
                 const labelList& sourceNewProc,
-                UOPstream& toDomain
+                const labelList& sourcePointMaster,
+                Ostream& toDomain
             );
             //- Send subset of fields
             template<class GeoField>
@@ -279,7 +293,7 @@ class fvMeshDistribute
                 const label domain,
                 const wordList& fieldNames,
                 const fvMeshSubset&,
-                UOPstream& toNbr
+                Ostream& toNbr
             );
 
             //- Receive mesh. Opposite of sendMesh
@@ -294,7 +308,8 @@ class fvMeshDistribute
                 labelList& domainSourceProc,
                 labelList& domainSourcePatch,
                 labelList& domainSourceNewProc,
-                UIPstream& fromNbr
+                labelList& domainSourcePointMaster,
+                Istream& fromNbr
             );
 
             //- Receive fields. Opposite of sendFields
@@ -442,7 +457,7 @@ void CML::fvMeshDistribute::mapBoundaryFields
 
     if (flds.size() != oldBflds.size())
     {
-        FatalErrorInFunction << "problem"
+        FatalErrorInFunction
             << abort(FatalError);
     }
 
@@ -626,7 +641,7 @@ void CML::fvMeshDistribute::sendFields
     const label domain,
     const wordList& fieldNames,
     const fvMeshSubset& subsetter,
-    UOPstream& toNbr
+    Ostream& toNbr
 )
 {
     // Send fields. Note order supplied so we can receive in exactly the same

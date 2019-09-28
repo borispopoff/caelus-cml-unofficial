@@ -991,11 +991,10 @@ void CML::autoLayerDriver::determineSidePatches
         for (label patchi = nOldPatches; patchi < nPatches; patchi++)
         {
             label nbrProci = patchToNbrProc[patchi];
-            word name =
-                    "procBoundary"
-                  + CML::name(Pstream::myProcNo())
-                  + "to"
-                  + CML::name(nbrProci);
+            word name
+            (
+                processorPolyPatch::newName(Pstream::myProcNo(), nbrProci)
+            );
 
             dictionary patchDict;
             patchDict.add("type", processorPolyPatch::typeName);
@@ -1003,11 +1002,6 @@ void CML::autoLayerDriver::determineSidePatches
             patchDict.add("neighbProcNo", nbrProci);
             patchDict.add("nFaces", 0);
             patchDict.add("startFace", mesh.nFaces());
-
-            //Pout<< "Adding patch " << patchi
-            //    << " name:" << name
-            //    << " between " << Pstream::myProcNo()
-            //    << " and " << nbrProci << endl;
 
             label procPatchI = meshRefiner_.appendPatch
             (

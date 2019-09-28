@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -57,6 +57,36 @@ CML::processorPolyPatch::processorPolyPatch
 )
 :
     coupledPolyPatch(name, size, start, index, bm, patchType, transform),
+    myProcNo_(myProcNo),
+    neighbProcNo_(neighbProcNo),
+    neighbFaceCentres_(),
+    neighbFaceAreas_(),
+    neighbFaceCellCentres_()
+{}
+
+
+CML::processorPolyPatch::processorPolyPatch
+(
+    const label size,
+    const label start,
+    const label index,
+    const polyBoundaryMesh& bm,
+    const int myProcNo,
+    const int neighbProcNo,
+    const transformType transform,
+    const word& patchType
+)
+:
+    coupledPolyPatch
+    (
+        newName(myProcNo, neighbProcNo),
+        size,
+        start,
+        index,
+        bm,
+        patchType,
+        transform
+    ),
     myProcNo_(myProcNo),
     neighbProcNo_(neighbProcNo),
     neighbFaceCentres_(),
@@ -144,6 +174,20 @@ CML::processorPolyPatch::~processorPolyPatch()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+CML::word CML::processorPolyPatch::newName
+(
+    const label myProcNo,
+    const label neighbProcNo
+)
+{
+    return
+        "procBoundary"
+      + CML::name(myProcNo)
+      + "to"
+      + CML::name(neighbProcNo);
+}
+
 
 void CML::processorPolyPatch::initGeometry(PstreamBuffers& pBufs)
 {

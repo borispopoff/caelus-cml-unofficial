@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -1035,12 +1035,10 @@ void addCoupledPatches
             else
             {
                 // Processor patch
-
-                word name =
-                    "procBoundary"
-                  + CML::name(Pstream::myProcNo())
-                  + "to"
-                  + CML::name(nbrProci);
+                word name
+                (
+                    processorPolyPatch::newName(Pstream::myProcNo(), nbrProci)
+                );
 
                 sidePatchID[edgeI] = findPatchID(newPatches, name);
 

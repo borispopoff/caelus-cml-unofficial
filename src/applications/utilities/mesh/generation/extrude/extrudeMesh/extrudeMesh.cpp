@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -485,24 +485,15 @@ int main(int argc, char *argv[])
             {
                 label nbrProci = patchToNbrProc[patchi];
 
-                word name =
-                        "procBoundary"
-                      + CML::name(Pstream::myProcNo())
-                      + "to"
-                      + CML::name(nbrProci);
-
                 Pout<< "Adding patch " << patchi
-                    << " name:" << name
                     << " between " << Pstream::myProcNo()
                     << " and " << nbrProci
                     << endl;
-
 
                 newPatches.append
                 (
                     new processorPolyPatch
                     (
-                        name,
                         0,                  // size
                         mesh.nFaces(),      // start
                         patchi,             // index

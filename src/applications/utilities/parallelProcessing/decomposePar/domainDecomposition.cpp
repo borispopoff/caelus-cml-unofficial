@@ -500,9 +500,6 @@ bool CML::domainDecomposition::writeDecomposition(const bool decomposeSets)
                     procPatches[nPatches] =
                         new processorPolyPatch
                         (
-                            word("procBoundary") + CML::name(proci)
-                          + "to"
-                          + CML::name(curNeighbourProcessors[procPatchi]),
                             size,
                             curStart,
                             nPatches,
@@ -513,19 +510,15 @@ bool CML::domainDecomposition::writeDecomposition(const bool decomposeSets)
                 }
                 else
                 {
-                    const coupledPolyPatch& pcPatch = refCast<const coupledPolyPatch>(boundaryMesh()[subPatchID[i]]);
-
-                    // From cyclic
-                    const word& referPatch = boundaryMesh()[subPatchID[i]].name();
+                    const coupledPolyPatch& pcPatch
+                        = refCast<const coupledPolyPatch>
+                          (
+                              boundaryMesh()[subPatchID[i]]
+                          );
 
                     procPatches[nPatches] =
                         new processorCyclicPolyPatch
                         (
-                            word("procBoundary") + CML::name(proci)
-                          + "to"
-                          + CML::name(curNeighbourProcessors[procPatchi])
-                          + "through"
-                          + referPatch,
                             size,
                             curStart,
                             nPatches,
