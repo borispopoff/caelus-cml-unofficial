@@ -437,7 +437,7 @@ int main(int argc, char *argv[])
     PtrList<volTensorField> volTensorFields;
     ReadFields(mesh, objects, volTensorFields);
 
-    //- uncomment if you want to interpolate surface fields (usually bad idea)
+    //- Uncomment if you want to interpolate surface fields (usually bad idea)
     //Info<< "Reading all current surfaceFields" << endl;
     //PtrList<surfaceScalarField> surfaceScalarFields;
     //ReadFields(mesh, objects, surfaceScalarFields);
@@ -463,12 +463,13 @@ int main(int argc, char *argv[])
     {
         mesh.setInstance(oldInstance);
         stitcher.instance() = oldInstance;
+        stitcher.writeOpt() = IOobject::NO_WRITE;
     }
     Info<< nl << "Writing polyMesh to time " << runTime.timeName() << endl;
 
-    IOstream::defaultPrecision(10);
+    IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
 
-    // Bypass runTime write (since only writes at outputTime)
+    // Bypass runTime write (since only writes at writeTime)
     if
     (
        !runTime.objectRegistry::writeObject
@@ -491,7 +492,7 @@ int main(int argc, char *argv[])
     // Write fields
     runTime.write();
 
-    Info<< nl << "end" << endl;
+    Info<< "End\n" << endl;
 
     return 0;
 }
