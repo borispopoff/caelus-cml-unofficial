@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -119,9 +119,14 @@ average
                 IOobject::NO_WRITE
             ),
             mesh,
-            ssf.dimensions()
+            dimensioned<Type>("0", ssf.dimensions(), Zero)
         )
     );
+
+    if (!mesh.nGeometricD())
+    {
+        return taverage;
+    }
 
     GeometricField<Type, fvPatchField, volMesh>& av = taverage();
 

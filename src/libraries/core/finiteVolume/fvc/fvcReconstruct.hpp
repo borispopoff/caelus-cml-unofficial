@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -131,11 +131,18 @@ reconstruct
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            inv(surfaceSum(mesh.Sf()*faceVols))&surfaceSum(faceVols*ssf),
+            mesh,
+            dimensioned<GradType>("0", ssf.dimensions()/dimArea, Zero),
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
 
+    if (!mesh.nGeometricD())
+    {
+        return treconField;
+    }
+
+    treconField() = inv(surfaceSum(mesh.Sf()*faceVols))&surfaceSum(faceVols*ssf);
     treconField().correctBoundaryConditions();
 
     return treconField;
