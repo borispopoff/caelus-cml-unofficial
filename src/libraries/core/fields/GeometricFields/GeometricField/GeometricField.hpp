@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014-2015 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -90,11 +90,19 @@ public:
 
     // Public typedefs
 
+        //- Type of mesh on which this GeometricField is instantiated
         typedef typename GeoMesh::Mesh Mesh;
+
+        //- Type of boundary mesh on which this
+        //  GeometricField::Boundary is instantiated
         typedef typename GeoMesh::BoundaryMesh BoundaryMesh;
 
+        //- Type of the internal field from which this GeometricField is derived
         typedef DimensionedField<Type, GeoMesh> DimensionedInternalField;
         typedef Field<Type> InternalField;
+
+        //- Type of the patch field of which the
+        //  GeometricField::Boundary is composed
         typedef PatchField<Type> PatchFieldType;
 
 
@@ -536,9 +544,11 @@ public:
         void operator=(const GeometricField<Type, PatchField, GeoMesh>&);
         void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
         void operator=(const dimensioned<Type>&);
+        void operator=(const zero&);
 
         void operator==(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
         void operator==(const dimensioned<Type>&);
+        void operator==(const zero&);
 
         void operator+=(const GeometricField<Type, PatchField, GeoMesh>&);
         void operator+=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
@@ -1797,6 +1807,17 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
+(
+    const zero&
+)
+{
+    dimensionedInternalField() = Zero;
+    boundaryField() = Zero;
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
 (
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
@@ -1806,7 +1827,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
 
     checkField(*this, gf, "==");
 
-    // only equate field contents not ID
+    // Only assign field contents not ID
 
     dimensionedInternalField() = gf.dimensionedInternalField();
     boundaryField() == gf.boundaryField();
@@ -1826,38 +1847,49 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
 }
 
 
-#define COMPUTED_ASSIGNMENT(TYPE, op)                                         \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-void CML::GeometricField<Type, PatchField, GeoMesh>::operator op             \
-(                                                                             \
-    const GeometricField<TYPE, PatchField, GeoMesh>& gf                       \
-)                                                                             \
-{                                                                             \
-    checkField(*this, gf, #op);                                               \
-                                                                              \
-    dimensionedInternalField() op gf.dimensionedInternalField();              \
-    boundaryField() op gf.boundaryField();                                    \
-}                                                                             \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-void CML::GeometricField<Type, PatchField, GeoMesh>::operator op             \
-(                                                                             \
-    const tmp<GeometricField<TYPE, PatchField, GeoMesh>>& tgf                \
-)                                                                             \
-{                                                                             \
-    operator op(tgf());                                                       \
-    tgf.clear();                                                              \
-}                                                                             \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-void CML::GeometricField<Type, PatchField, GeoMesh>::operator op             \
-(                                                                             \
-    const dimensioned<TYPE>& dt                                               \
-)                                                                             \
-{                                                                             \
-    dimensionedInternalField() op dt;                                         \
-    boundaryField() op dt.value();                                            \
+template<class Type, template<class> class PatchField, class GeoMesh>
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
+(
+    const zero&
+)
+{
+    dimensionedInternalField() = Zero;
+    boundaryField() == Zero;
+}
+
+
+#define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator op               \
+(                                                                              \
+    const GeometricField<TYPE, PatchField, GeoMesh>& gf                        \
+)                                                                              \
+{                                                                              \
+    checkField(*this, gf, #op);                                                \
+                                                                               \
+    dimensionedInternalField() op gf.dimensionedInternalField();               \
+    boundaryField() op gf.boundaryField();                                     \
+}                                                                              \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator op               \
+(                                                                              \
+    const tmp<GeometricField<TYPE, PatchField, GeoMesh>>& tgf                  \
+)                                                                              \
+{                                                                              \
+    operator op(tgf());                                                        \
+    tgf.clear();                                                               \
+}                                                                              \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator op               \
+(                                                                              \
+    const dimensioned<TYPE>& dt                                                \
+)                                                                              \
+{                                                                              \
+    dimensionedInternalField() op dt;                                          \
+    boundaryField() op dt.value();                                             \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)
