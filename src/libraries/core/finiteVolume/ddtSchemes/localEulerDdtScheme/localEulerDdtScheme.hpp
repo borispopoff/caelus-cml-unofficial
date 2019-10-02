@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -148,64 +148,60 @@ public:
 
     // Member Functions
 
-        //- Return mesh reference
-        const fvMesh& mesh() const
-        {
-            return fv::ddtScheme<Type>::mesh();
-        }
+        using ddtScheme<Type>::mesh;
 
-        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const dimensioned<Type>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const volScalarField& alpha,
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& psi
         );
 
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvcDdt
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvcDdt
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>&
         );
 
-        tmp<fvMatrix<Type>> fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type>> fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type>> fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type>> fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const volScalarField& alpha,
             const volScalarField& rho,
@@ -214,33 +210,42 @@ public:
 
         typedef typename ddtScheme<Type>::fluxFieldType fluxFieldType;
 
-        tmp<fluxFieldType> fvcDdtUfCorr
+        using ddtScheme<Type>::fvcDdtPhiCoeff;
+
+        virtual tmp<surfaceScalarField> fvcDdtPhiCoeff
+        (
+            const GeometricField<Type, fvPatchField, volMesh>& U,
+            const fluxFieldType& phi,
+            const fluxFieldType& phiCorr
+        );
+
+        virtual tmp<fluxFieldType> fvcDdtUfCorr
         (
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
         );
 
-        tmp<fluxFieldType> fvcDdtPhiCorr
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
         );
 
-        tmp<fluxFieldType> fvcDdtUfCorr
+        virtual tmp<fluxFieldType> fvcDdtUfCorr
         (
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
         );
 
-        tmp<fluxFieldType> fvcDdtPhiCorr
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
         );
 
-        tmp<surfaceScalarField> meshPhi
+        virtual tmp<surfaceScalarField> meshPhi
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
@@ -611,6 +616,50 @@ localEulerDdtScheme<Type>::fvmDdt
 
 
 template<class Type>
+tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
+(
+    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const fluxFieldType& phi,
+    const fluxFieldType& phiCorr
+)
+{
+    tmp<surfaceScalarField> tddtCouplingCoeff = scalar(1)
+      - min
+        (
+            mag(phiCorr)*mesh().deltaCoeffs()
+           /(fvc::interpolate(localRDeltaT())*mesh().magSf()),
+            scalar(1)
+        );
+
+    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff();
+
+    forAll(U.boundaryField(), patchi)
+    {
+        if
+        (
+            U.boundaryField()[patchi].fixesValue()
+         || isA<cyclicAMIFvPatch>(mesh().boundary()[patchi])
+        )
+        {
+            ddtCouplingCoeff.boundaryField()[patchi] = 0.0;
+        }
+    }
+
+    if (debug > 1)
+    {
+        InfoInFunction
+            << "ddtCouplingCoeff mean max min = "
+            << gAverage(ddtCouplingCoeff.internalField())
+            << " " << gMax(ddtCouplingCoeff.internalField())
+            << " " << gMin(ddtCouplingCoeff.internalField())
+            << endl;
+    }
+
+    return tddtCouplingCoeff;
+}
+
+
+template<class Type>
 tmp<typename localEulerDdtScheme<Type>::fluxFieldType>
 localEulerDdtScheme<Type>::fvcDdtUfCorr
 (
@@ -711,7 +760,8 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
                     mesh().time().timeName(),
                     mesh()
                 ),
-                this->fvcDdtPhiCoeff(rhoU0, phiUf0, phiCorr)*rDeltaT*phiCorr
+                this->fvcDdtPhiCoeff(rhoU0, phiUf0, phiCorr, rho.oldTime())
+               *rDeltaT*phiCorr
             )
         );
     }
@@ -721,7 +771,32 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
      && Uf.dimensions() == dimDensity*dimVelocity
     )
     {
-        return fvcDdtUfCorr(U, Uf);
+        fluxFieldType phiUf0(mesh().Sf() & Uf.oldTime());
+        fluxFieldType phiCorr
+        (
+            phiUf0 - fvc::dotInterpolate(mesh().Sf(), U.oldTime())
+        );
+
+        return tmp<fluxFieldType>
+        (
+            new fluxFieldType
+            (
+                IOobject
+                (
+                    "ddtCorr("
+                  + rho.name() + ',' + U.name() + ',' + Uf.name() + ')',
+                    mesh().time().timeName(),
+                    mesh()
+                ),
+                this->fvcDdtPhiCoeff
+                (
+                    U.oldTime(),
+                    phiUf0,
+                    phiCorr,
+                    rho.oldTime()
+                )*rDeltaT*phiCorr
+            )
+        );
     }
     else
     {
@@ -772,8 +847,13 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
                     mesh().time().timeName(),
                     mesh()
                 ),
-                this->fvcDdtPhiCoeff(rhoU0, phi.oldTime(), phiCorr)
-               *rDeltaT*phiCorr
+                this->fvcDdtPhiCoeff
+                (
+                    rhoU0,
+                    phi.oldTime(),
+                    phiCorr,
+                    rho.oldTime()
+                )*rDeltaT*phiCorr
             )
         );
     }
@@ -783,7 +863,31 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
      && phi.dimensions() == rho.dimensions()*dimVelocity*dimArea
     )
     {
-        return fvcDdtPhiCorr(U, phi);
+        fluxFieldType phiCorr
+        (
+            phi.oldTime() - fvc::dotInterpolate(mesh().Sf(), U.oldTime())
+        );
+
+        return tmp<fluxFieldType>
+        (
+            new fluxFieldType
+            (
+                IOobject
+                (
+                    "ddtCorr("
+                  + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
+                    mesh().time().timeName(),
+                    mesh()
+                ),
+                this->fvcDdtPhiCoeff
+                (
+                    U.oldTime(),
+                    phi.oldTime(),
+                    phiCorr,
+                    rho.oldTime()
+                )*rDeltaT*phiCorr
+            )
+        );
     }
     else
     {
