@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -75,14 +75,14 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class mappedFieldFvPatchField Declaration
+                  Class mappedFieldFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
 class mappedFieldFvPatchField
 :
-    public mappedPatchBase,
-    public fixedValueFvPatchField<Type>
+    public fixedValueFvPatchField<Type>,
+    public mappedPatchBase
 {
     // Private data
 
@@ -205,6 +205,22 @@ public:
 
     // Member functions
 
+        // Mapping functions
+
+            //- Map (and resize as needed) from self given a mapping object
+            virtual void autoMap
+            (
+                const fvPatchFieldMapper&
+            );
+
+            //- Reverse map the given fvPatchField onto this fvPatchField
+            virtual void rmap
+            (
+                const fvPatchField<Type>&,
+                const labelList&
+            );
+
+
         // Evaluation functions
 
             //- Update the coefficients associated with the patch field
@@ -236,30 +252,12 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
     const DimensionedField<Type, volMesh>& iF
 )
 :
-    mappedPatchBase(p.patch()),
     fixedValueFvPatchField<Type>(p, iF),
+    mappedPatchBase(p.patch()),
     fieldName_(iF.name()),
     setAverage_(false),
     average_(Zero),
     interpolationScheme_(interpolationCell<Type>::typeName)
-{}
-
-
-template<class Type>
-mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
-(
-    const mappedFieldFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mappedPatchBase(p.patch(), ptf),
-    fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
-    fieldName_(ptf.fieldName_),
-    setAverage_(ptf.setAverage_),
-    average_(ptf.average_),
-    interpolationScheme_(ptf.interpolationScheme_)
 {}
 
 
@@ -271,8 +269,8 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
     const dictionary& dict
 )
 :
-    mappedPatchBase(p.patch(), dict),
     fixedValueFvPatchField<Type>(p, iF, dict),
+    mappedPatchBase(p.patch(), dict),
     fieldName_(dict.template lookupOrDefault<word>("field", iF.name())),
     setAverage_(readBool(dict.lookup("setAverage"))),
     average_(pTraits<Type>(dict.lookup("average"))),
@@ -283,6 +281,22 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
         dict.lookup("interpolationScheme") >> interpolationScheme_;
     }
 }
+template<class Type>
+mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
+(
+    const mappedFieldFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
+    mappedPatchBase(p.patch(), ptf),
+    fieldName_(ptf.fieldName_),
+    setAverage_(ptf.setAverage_),
+    average_(ptf.average_),
+    interpolationScheme_(ptf.interpolationScheme_)
+{}
 
 
 template<class Type>
@@ -304,6 +318,7 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
     const word& interpolationScheme
 )
 :
+    fixedValueFvPatchField<Type>(p, iF),
     mappedPatchBase
     (
         p.patch(),
@@ -312,7 +327,6 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
         samplePatch,
         distance
     ),
-    fixedValueFvPatchField<Type>(p, iF),
     fieldName_(fieldName),
     setAverage_(setAverage),
     average_(average),
@@ -326,8 +340,8 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
     const mappedFieldFvPatchField<Type>& ptf
 )
 :
-    mappedPatchBase(ptf.patch().patch(), ptf),
     fixedValueFvPatchField<Type>(ptf),
+    mappedPatchBase(ptf.patch().patch(), ptf),
     fieldName_(ptf.fieldName_),
     setAverage_(ptf.setAverage_),
     average_(ptf.average_),
@@ -342,8 +356,8 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
     const DimensionedField<Type, volMesh>& iF
 )
 :
-    mappedPatchBase(ptf.patch().patch(), ptf),
     fixedValueFvPatchField<Type>(ptf, iF),
+    mappedPatchBase(ptf.patch().patch(), ptf),
     fieldName_(ptf.fieldName_),
     setAverage_(ptf.setAverage_),
     average_(ptf.average_),
@@ -352,6 +366,29 @@ mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void CML::mappedFieldFvPatchField<Type>::autoMap
+(
+    const fvPatchFieldMapper& m
+)
+{
+    fixedValueFvPatchField<Type>::autoMap(m);
+    mappedPatchBase::clearOut();
+}
+
+
+template<class Type>
+void CML::mappedFieldFvPatchField<Type>::rmap
+(
+    const fvPatchField<Type>& ptf,
+    const labelList& addr
+)
+{
+    fixedValueFvPatchField<Type>::rmap(ptf, addr);
+    mappedPatchBase::clearOut();
+}
+
 
 template<class Type>
 const GeometricField<Type, fvPatchField, volMesh>&
