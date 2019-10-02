@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 
 -------------------------------------------------------------------------------
 License
@@ -88,19 +88,19 @@ public:
 
     // Constructors
 
-        //- Construct given a name, a value and its dimensionSet.
-        dimensioned(const word&, const dimensionSet&, const Type);
+        //- Construct given name, dimensions and value
+        dimensioned(const word&, const dimensionSet&, const Type&);
+
+        //- Construct given dimensions and value
+        //  with the name obtained from the value
+        dimensioned(const dimensionSet&, const Type&);
+
+        //- Construct dimensionless given value only
+        //  with a name obtained from the value
+        dimensioned(const Type&);
 
         //- Construct from a dimensioned<Type> changing the name.
         dimensioned(const word&, const dimensioned<Type>&);
-
-        //- Construct given a value (creates dimensionless value).
-        dimensioned(const Type& t)
-        :
-            name_(::CML::name(t)),
-            dimensions_(dimless),
-            value_(t)
-        {}
 
         //- Construct from Istream.
         dimensioned(Istream&);
@@ -120,13 +120,21 @@ public:
 
     // Static member functions
 
-        //- Construct from dictionary, with default value.
+        //- Construct from dictionary, with default dimensions and value.
         static dimensioned<Type> lookupOrDefault
         (
             const word&,
             const dictionary&,
-            const Type& defaultValue = pTraits<Type>::zero,
-            const dimensionSet& dims = dimless
+            const dimensionSet& dims = dimless,
+            const Type& defaultValue = pTraits<Type>::zero
+        );
+
+        //- Construct from dictionary dimensionless with value.
+        static dimensioned<Type> lookupOrDefault
+        (
+            const word&,
+            const dictionary&,
+            const Type& defaultValue = pTraits<Type>::zero
         );
 
         //- Construct from dictionary, with default value.
@@ -135,8 +143,17 @@ public:
         (
             const word&,
             dictionary&,
-            const Type& defaultValue = pTraits<Type>::zero,
-            const dimensionSet& dims = dimless
+            const dimensionSet& dims = dimless,
+            const Type& defaultValue = pTraits<Type>::zero
+        );
+
+        //- Construct from dictionary, dimensionless with default value.
+        //  If the value is not found, it is added into the dictionary.
+        static dimensioned<Type> lookupOrAddToDict
+        (
+            const word&,
+            dictionary&,
+            const Type& defaultValue = pTraits<Type>::zero
         );
 
 
@@ -174,6 +191,18 @@ public:
 
         //- Update the value of dimensioned<Type> if found in the dictionary.
         bool readIfPresent(const dictionary&);
+
+
+    // I/O
+
+        //- Read value from stream and units from dictionary
+        Istream& read(Istream& is, const dictionary&);
+
+        //- Read value from stream and units from table
+        Istream& read(Istream& is, const HashTable<dimensionedScalar>&);
+
+        //- Read value from stream and units from system table
+        Istream& read(Istream& is);
 
 
     // Member operators
@@ -268,29 +297,26 @@ dimensioned<Type> operator/
 );
 
 
-// Products
-// ~~~~~~~~
-
-#define PRODUCT_OPERATOR(product, op, opFunc)                                 \
-                                                                              \
-template<class Type1, class Type2>                                            \
-dimensioned<typename product<Type1, Type2>::type>                             \
-operator op(const dimensioned<Type1>&, const dimensioned<Type2>&);            \
-                                                                              \
-template<class Type, class Form, class Cmpt, CML::direction nCmpt>            \
-dimensioned<typename product<Type, Form>::type>                               \
-operator op                                                                   \
-(                                                                             \
-    const dimensioned<Type>&,                                                 \
-    const VectorSpace<Form,Cmpt,nCmpt>&                                       \
-);                                                                            \
-                                                                              \
-template<class Type, class Form, class Cmpt, CML::direction nCmpt>            \
-dimensioned<typename product<Form, Type>::type>                               \
-operator op                                                                   \
-(                                                                             \
-    const VectorSpace<Form,Cmpt,nCmpt>&,                                      \
-    const dimensioned<Type>&                                                  \
+#define PRODUCT_OPERATOR(product, op, opFunc)                                  \
+                                                                               \
+template<class Type1, class Type2>                                             \
+dimensioned<typename product<Type1, Type2>::type>                              \
+operator op(const dimensioned<Type1>&, const dimensioned<Type2>&);             \
+                                                                               \
+template<class Type, class Form, class Cmpt, CML::direction nCmpt>             \
+dimensioned<typename product<Type, Form>::type>                                \
+operator op                                                                    \
+(                                                                              \
+    const dimensioned<Type>&,                                                  \
+    const VectorSpace<Form,Cmpt,nCmpt>&                                        \
+);                                                                             \
+                                                                               \
+template<class Type, class Form, class Cmpt, CML::direction nCmpt>             \
+dimensioned<typename product<Form, Type>::type>                                \
+operator op                                                                    \
+(                                                                              \
+    const VectorSpace<Form,Cmpt,nCmpt>&,                                       \
+    const dimensioned<Type>&                                                   \
 );
 
 PRODUCT_OPERATOR(outerProduct, *, outer)
@@ -333,14 +359,19 @@ void dimensioned<Type>::initialize(Istream& is)
     }
 
     // If the dimensions are provided compare with the argument
+    scalar multiplier = 1.0;
+
     if (nextToken == token::BEGIN_SQR)
     {
-        dimensionSet dims(is);
+        dimensionSet dims(dimless);
+        dims.read(is, multiplier);
 
         if (dims != dimensions_)
         {
-            FatalIOErrorInFunction(is)
-              << "The dimensions " << dims
+            FatalIOErrorInFunction
+            (
+                is
+            ) << "The dimensions " << dims
               << " provided do not match the required dimensions "
               << dimensions_
               << abort(FatalIOError);
@@ -348,6 +379,7 @@ void dimensioned<Type>::initialize(Istream& is)
     }
 
     is >> value_;
+    value_ *= multiplier;
 }
 
 
@@ -358,11 +390,33 @@ dimensioned<Type>::dimensioned
 (
     const word& name,
     const dimensionSet& dimSet,
-    const Type t
+    const Type& t
 )
 :
     name_(name),
     dimensions_(dimSet),
+    value_(t)
+{}
+
+
+template<class Type>
+dimensioned<Type>::dimensioned
+(
+    const dimensionSet& dimSet,
+    const Type& t
+)
+:
+    name_(::CML::name(t)),
+    dimensions_(dimSet),
+    value_(t)
+{}
+
+
+template<class Type>
+dimensioned<Type>::dimensioned(const Type& t)
+:
+    name_(::CML::name(t)),
+    dimensions_(dimless),
     value_(t)
 {}
 
@@ -386,10 +440,10 @@ dimensioned<Type>::dimensioned
     Istream& is
 )
 :
-    name_(is),
-    dimensions_(is),
-    value_(pTraits<Type>(is))
-{}
+    dimensions_(dimless)
+{
+    read(is);
+}
 
 
 template<class Type>
@@ -400,9 +454,13 @@ dimensioned<Type>::dimensioned
 )
 :
     name_(name),
-    dimensions_(is),
-    value_(pTraits<Type>(is))
-{}
+    dimensions_(dimless)
+{
+    scalar multiplier;
+    dimensions_.read(is, multiplier);
+    is >> value_;
+    value_ *= multiplier;
+}
 
 
 template<class Type>
@@ -454,8 +512,8 @@ dimensioned<Type> dimensioned<Type>::lookupOrDefault
 (
     const word& name,
     const dictionary& dict,
-    const Type& defaultValue,
-    const dimensionSet& dims
+    const dimensionSet& dims,
+    const Type& defaultValue
 )
 {
     if (dict.found(name))
@@ -470,16 +528,40 @@ dimensioned<Type> dimensioned<Type>::lookupOrDefault
 
 
 template<class Type>
+dimensioned<Type> dimensioned<Type>::lookupOrDefault
+(
+    const word& name,
+    const dictionary& dict,
+    const Type& defaultValue
+)
+{
+    return lookupOrDefault(name, dict, dimless, defaultValue);
+}
+
+
+template<class Type>
 dimensioned<Type> dimensioned<Type>::lookupOrAddToDict
 (
     const word& name,
     dictionary& dict,
-    const Type& defaultValue,
-    const dimensionSet& dims
+    const dimensionSet& dims,
+    const Type& defaultValue
 )
 {
     Type value = dict.lookupOrAddDefault<Type>(name, defaultValue);
     return dimensioned<Type>(name, dims, value);
+}
+
+
+template<class Type>
+dimensioned<Type> dimensioned<Type>::lookupOrAddToDict
+(
+    const word& name,
+    dictionary& dict,
+    const Type& defaultValue
+)
+{
+    return lookupOrAddToDict(name, dict, dimless, defaultValue);
 }
 
 
@@ -525,7 +607,8 @@ Type& dimensioned<Type>::value()
 
 
 template<class Type>
-dimensioned<typename dimensioned<Type>::cmptType> dimensioned<Type>::component
+dimensioned<typename dimensioned<Type>::cmptType>
+dimensioned<Type>::component
 (
     const direction d
 ) const
@@ -565,10 +648,89 @@ bool dimensioned<Type>::readIfPresent(const dictionary& dict)
 }
 
 
+template<class Type>
+Istream&
+dimensioned<Type>::read(Istream& is, const dictionary& readSet)
+{
+    // Read name
+    is >> name_;
+
+    // Read dimensionSet + multiplier
+    scalar mult;
+    dimensions_.read(is, mult, readSet);
+
+    // Read value
+    is >> value_;
+    value_ *= mult;
+
+    // Check state of Istream
+    is.check
+    (
+        "Istream& dimensioned<Type>::read(Istream& is, const dictionary&)"
+    );
+
+    return is;
+}
+
+
+template<class Type>
+Istream& dimensioned<Type>::read
+(
+    Istream& is,
+    const HashTable<dimensionedScalar>& readSet
+)
+{
+    // Read name
+    is >> name_;
+
+    // Read dimensionSet + multiplier
+    scalar mult;
+    dimensions_.read(is, mult, readSet);
+
+    // Read value
+    is >> value_;
+    value_ *= mult;
+
+    // Check state of Istream
+    is.check
+    (
+        "Istream& dimensioned<Type>::read"
+        "(Istream& is, const HashTable<dimensionedScalar>&)"
+    );
+
+    return is;
+}
+
+
+template<class Type>
+Istream& dimensioned<Type>::read(Istream& is)
+{
+    // Read name
+    is >> name_;
+
+    // Read dimensionSet + multiplier
+    scalar mult;
+    dimensions_.read(is, mult);
+
+    // Read value
+    is >> value_;
+    value_ *= mult;
+
+    // Check state of Istream
+    is.check
+    (
+        "Istream& dimensioned<Type>::read(Istream& is)"
+    );
+
+    return is;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
-dimensioned<typename dimensioned<Type>::cmptType> dimensioned<Type>::operator[]
+dimensioned<typename dimensioned<Type>::cmptType>
+dimensioned<Type>::operator[]
 (
     const direction d
 ) const
@@ -621,7 +783,7 @@ void dimensioned<Type>::operator/=
 
 // * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
 
-template<class Type, CML::direction r>
+template<class Type, direction r>
 dimensioned<typename powProduct<Type, r>::type>
 pow(const dimensioned<Type>& dt, typename powProduct<Type, r>::type)
 {
@@ -764,13 +926,15 @@ Istream& operator>>(Istream& is, dimensioned<Type>& dt)
     }
 
     // If the dimensions are provided reset the dimensions to those read
+    scalar multiplier = 1.0;
     if (nextToken == token::BEGIN_SQR)
     {
-        is >> dt.dimensions_;
+        dt.dimensions_.read(is, multiplier);
     }
 
     // Read the value
     is >> dt.value_;
+    dt.value_ *= multiplier;
 
     // Check state of Istream
     is.check("Istream& operator>>(Istream&, dimensioned<Type>&)");
@@ -782,10 +946,17 @@ Istream& operator>>(Istream& is, dimensioned<Type>& dt)
 template<class Type>
 Ostream& operator<<(Ostream& os, const dimensioned<Type>& dt)
 {
-    // Do a stream write op for a dimensionSet
-    os  << dt.name() << token::SPACE
-        << dt.dimensions() << token::SPACE
-        << dt.value();
+    // Write the name
+    os << dt.name() << token::SPACE;
+
+    // Write the dimensions
+    scalar mult;
+    dt.dimensions().write(os, mult);
+
+    os << token::SPACE;
+
+    // Write the value
+    os << dt.value()/mult;
 
     // Check state of Ostream
     os.check("Ostream& operator<<(Ostream&, const dimensioned<Type>&)");
@@ -894,53 +1065,54 @@ dimensioned<Type> operator/
 }
 
 
-// Products
-// ~~~~~~~~
-
-#define PRODUCT_OPERATOR(product, op, opFunc)                                 \
-                                                                              \
-template<class Type1, class Type2>                                            \
-dimensioned<typename product<Type1, Type2>::type>                             \
-operator op(const dimensioned<Type1>& dt1, const dimensioned<Type2>& dt2)     \
-{                                                                             \
-    return dimensioned<typename product<Type1, Type2>::type>                  \
-    (                                                                         \
-        '(' + dt1.name() + #op + dt2.name() + ')',                            \
-        dt1.dimensions() op dt2.dimensions(),                                 \
-        dt1.value() op dt2.value()                                            \
-    );                                                                        \
-}                                                                             \
-                                                                              \
-template<class Type, class Form, class Cmpt, CML::direction nCmpt>            \
-dimensioned<typename product<Type, Form>::type>                               \
-operator op                                                                   \
-(                                                                             \
-    const dimensioned<Type>& dt1,                                             \
-    const VectorSpace<Form,Cmpt,nCmpt>& t2                                    \
-)                                                                             \
-{                                                                             \
-    return dimensioned<typename product<Type, Form>::type>                    \
-    (                                                                         \
-        '(' + dt1.name() + #op + name(t2) + ')',                              \
-        dt1.dimensions(),                                                     \
-        dt1.value() op static_cast<const Form&>(t2)                           \
-    );                                                                        \
-}                                                                             \
-                                                                              \
-template<class Type, class Form, class Cmpt, CML::direction nCmpt>            \
-dimensioned<typename product<Form, Type>::type>                               \
-operator op                                                                   \
-(                                                                             \
-    const VectorSpace<Form,Cmpt,nCmpt>& t1,                                   \
-    const dimensioned<Type>& dt2                                              \
-)                                                                             \
-{                                                                             \
-    return dimensioned<typename product<Form, Type>::type>                    \
-    (                                                                         \
-        '(' + name(t1) + #op + dt2.name() + ')',                              \
-        dt2.dimensions(),                                                     \
-        static_cast<const Form&>(t1) op dt2.value()                           \
-    );                                                                        \
+#define PRODUCT_OPERATOR(product, op, opFunc)                                  \
+                                                                               \
+template<class Type1, class Type2>                                             \
+dimensioned<typename product<Type1, Type2>::type>                              \
+operator op                                                                    \
+(                                                                              \
+    const dimensioned<Type1>& dt1,                                             \
+    const dimensioned<Type2>& dt2                                              \
+)                                                                              \
+{                                                                              \
+    return dimensioned<typename product<Type1, Type2>::type>                   \
+    (                                                                          \
+        '(' + dt1.name() + #op + dt2.name() + ')',                             \
+        dt1.dimensions() op dt2.dimensions(),                                  \
+        dt1.value() op dt2.value()                                             \
+    );                                                                         \
+}                                                                              \
+                                                                               \
+template<class Type, class Form, class Cmpt, CML::direction nCmpt>             \
+dimensioned<typename product<Type, Form>::type>                                \
+operator op                                                                    \
+(                                                                              \
+    const dimensioned<Type>& dt1,                                              \
+    const VectorSpace<Form,Cmpt,nCmpt>& t2                                     \
+)                                                                              \
+{                                                                              \
+    return dimensioned<typename product<Type, Form>::type>                     \
+    (                                                                          \
+        '(' + dt1.name() + #op + name(t2) + ')',                               \
+        dt1.dimensions(),                                                      \
+        dt1.value() op static_cast<const Form&>(t2)                            \
+    );                                                                         \
+}                                                                              \
+                                                                               \
+template<class Type, class Form, class Cmpt, CML::direction nCmpt>             \
+dimensioned<typename product<Form, Type>::type>                                \
+operator op                                                                    \
+(                                                                              \
+    const VectorSpace<Form,Cmpt,nCmpt>& t1,                                    \
+    const dimensioned<Type>& dt2                                               \
+)                                                                              \
+{                                                                              \
+    return dimensioned<typename product<Form, Type>::type>                     \
+    (                                                                          \
+        '(' + name(t1) + #op + dt2.name() + ')',                               \
+        dt2.dimensions(),                                                      \
+        static_cast<const Form&>(t1) op dt2.value()                            \
+    );                                                                         \
 }
 
 

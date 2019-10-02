@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -75,6 +75,12 @@ CML::dimensionSet::dimensionSet
 }
 
 
+CML::dimensionSet::dimensionSet(const dimensionSet& ds)
+{
+    reset(ds);
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool CML::dimensionSet::dimensionless() const
@@ -105,83 +111,6 @@ void CML::dimensionSet::reset(const dimensionSet& ds)
 }
 
 
-CML::string CML::dimensionSet::asText() const
-{
-    OStringStream buf;
-
-    bool Dimensionless = true;
-
-    for (int Dimension=0; Dimension < dimensionSet::nDimensions-1; ++Dimension)
-    {
-        const scalar& expt = exponents_[Dimension];
-
-        if (expt < smallExponent && expt > -smallExponent)
-        {
-            continue;
-        }
-
-        if (Dimensionless)
-        {
-            Dimensionless = false;
-        }
-        else
-        {
-            buf << ' ';
-        }
-
-        // note: currently only handle SI
-        switch (Dimension)
-        {
-            case MASS:
-                buf << "kg";
-                break;
-
-            case LENGTH:
-                buf << "m";
-                break;
-
-            case TIME:
-                buf << "s";
-                break;
-
-            case TEMPERATURE:
-                buf << "K";
-                break;
-
-            case MOLES:
-                buf << "mol";
-                break;
-
-            case CURRENT:
-                buf << "A";
-                break;
-
-            case LUMINOUS_INTENSITY:
-                buf << "Cd";
-                break;
-
-            default:
-                buf << "??";  // this shouldn't be - flag as being weird
-                break;
-        }
-
-        if (expt != 1)
-        {
-            buf << '^' << expt;
-        }
-    }
-
-    if (Dimensionless)
-    {
-        return "none";
-    }
-    else
-    {
-        return buf.str();
-    }
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 CML::scalar CML::dimensionSet::operator[](const dimensionType type) const
@@ -191,6 +120,18 @@ CML::scalar CML::dimensionSet::operator[](const dimensionType type) const
 
 
 CML::scalar& CML::dimensionSet::operator[](const dimensionType type)
+{
+    return exponents_[type];
+}
+
+
+CML::scalar CML::dimensionSet::operator[](const label type) const
+{
+    return exponents_[type];
+}
+
+
+CML::scalar& CML::dimensionSet::operator[](const label type)
 {
     return exponents_[type];
 }

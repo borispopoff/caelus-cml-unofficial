@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -37,10 +37,12 @@ SourceFiles
 #ifndef dimensionSet_H
 #define dimensionSet_H
 
-#include "scalar.hpp"
 #include "bool.hpp"
 #include "dimensionedScalarFwd.hpp"
 #include "className.hpp"
+#include "scalarField.hpp"
+#include "PtrList.hpp"
+#include "HashTable.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,6 +52,7 @@ namespace CML
 // Forward declaration of friend functions and operators
 
 class dimensionSet;
+class dimensionSets;
 
 // Friend functions
 
@@ -140,6 +143,69 @@ public:
 
 private:
 
+    // Private classes
+
+        class tokeniser
+        {
+            // Private data
+
+                Istream& is_;
+
+                List<token> tokens_;
+
+                label start_;
+
+                label size_;
+
+
+            // Private Member Functions
+
+                void push(const token&);
+
+                token pop();
+
+                void unpop(const token&);
+
+        public:
+
+            // Constructors
+
+                 tokeniser(Istream&);
+
+
+            // Member Functions
+
+                Istream& stream()
+                {
+                    return is_;
+                }
+
+                bool hasToken() const;
+
+                token nextToken();
+
+                void putBack(const token&);
+
+                void splitWord(const word&);
+
+                static bool valid(char c);
+
+                static label priority(const token& t);
+        };
+
+
+        //- Reset exponents to nearest integer if close to it. Used to
+        //  handle reading with insufficient precision.
+        void round(const scalar tol);
+
+        dimensionedScalar parse
+        (
+            const label lastPrior,
+            tokeniser& tis,
+            const HashTable<dimensionedScalar>&
+        ) const;
+
+
     // private data
 
         // dimensionSet stored as an array of dimension exponents
@@ -178,6 +244,15 @@ public:
             const scalar moles
         );
 
+        //- Copy constructor
+        dimensionSet(const dimensionSet& ds);
+
+        //- Construct and return a clone
+        autoPtr<dimensionSet> clone() const
+        {
+            return autoPtr<dimensionSet>(new dimensionSet(*this));
+        }
+
         //- Construct from Istream
         dimensionSet(Istream&);
 
@@ -189,14 +264,56 @@ public:
 
         void reset(const dimensionSet&);
 
-        //- Return a text representation for added readability
-        string asText() const;
+
+    // I/O
+
+        //- Read using provided units. Used only in initial parsing
+        Istream& read
+        (
+            Istream& is,
+            scalar& multiplier,
+            const dictionary&
+        );
+
+        //- Read using provided units
+        Istream& read
+        (
+            Istream& is,
+            scalar& multiplier,
+            const HashTable<dimensionedScalar>&
+        );
+
+        //- Read using system units
+        Istream& read
+        (
+            Istream& is,
+            scalar& multiplier
+        );
+
+        //- Write using provided units
+        Ostream& write
+        (
+            Ostream& os,
+            scalar& multiplier,
+            const dimensionSets&
+        ) const;
+
+        //- Write using system units
+        Ostream& write
+        (
+            Ostream& os,
+            scalar& multiplier
+        ) const;
 
 
     // Member operators
 
         scalar operator[](const dimensionType) const;
         scalar& operator[](const dimensionType);
+
+        scalar operator[](const label) const;
+        scalar& operator[](const label);
+
         bool operator==(const dimensionSet&) const;
         bool operator!=(const dimensionSet&) const;
 

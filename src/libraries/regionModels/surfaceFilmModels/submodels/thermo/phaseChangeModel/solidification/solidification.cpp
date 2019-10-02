@@ -63,8 +63,8 @@ solidification::solidification
         (
             "maxSolidificationRate",
             coeffDict_,
-            GREAT,
-            dimless/dimTime
+            dimless/dimTime,
+            GREAT
         )
     ),
     mass_
