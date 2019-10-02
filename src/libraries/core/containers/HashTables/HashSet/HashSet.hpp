@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,6 +80,10 @@ public:
 
         //- Construct from UList of Key
         HashSet(const UList<Key>&);
+
+        //- Construct from FixedList of Key
+        template<unsigned Size>
+        HashSet(const FixedList<Key, Size>&);
 
         //- Construct as copy
         HashSet(const HashSet<Key, Hash>& hs)
@@ -222,6 +226,19 @@ typedef HashSet<label, Hash<label>> labelHashSet;
 
 template<class Key, class Hash>
 CML::HashSet<Key, Hash>::HashSet(const UList<Key>& lst)
+:
+    HashTable<nil, Key, Hash>(2*lst.size())
+{
+    forAll(lst, elemI)
+    {
+        this->insert(lst[elemI]);
+    }
+}
+
+
+template<class Key, class Hash>
+template<unsigned Size>
+CML::HashSet<Key, Hash>::HashSet(const FixedList<Key, Size>& lst)
 :
     HashTable<nil, Key, Hash>(2*lst.size())
 {
