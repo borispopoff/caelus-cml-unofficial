@@ -1028,8 +1028,6 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
             << exit(FatalIOError);
     }
 
-    readOldTimeIfPresent();
-
     if (debug)
     {
         Info<< "Finishing dictionary-construct of "
