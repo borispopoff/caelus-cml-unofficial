@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,32 +59,30 @@ private:
 
     // Private data
 
-    typedef typename Reaction<ReactionThermo>::specieCoeffs specieCoeffs;
+        //- List of gas species present in reaction system
+        speciesTable pyrolisisGases_;
 
-    //- List of gas species present in reaction system
-    speciesTable pyrolisisGases_;
+        //- Gas specie index for the left-hand-side of the reaction
+        List<specieCoeffs> glhs_;
 
-    //- Gas specie index for the left-hand-side of the reaction
-    List<specieCoeffs> glhs_;
-
-    //- Gas specie index for the right-hand-side of the reaction
-    List<specieCoeffs> grhs_;
+        //- Gas specie index for the right-hand-side of the reaction
+        List<specieCoeffs> grhs_;
 
 
     // Private Member Functions
 
 
-    //- Return string representation of reaction
-    string solidReactionStr(OStringStream&) const;
+        //- Return string representation of reaction
+        string solidReactionStr(OStringStream&) const;
 
-    //- Return string representation of the left of the reaction
-    void solidReactionStrLeft(OStringStream&) const;
+        //- Return string representation of the left of the reaction
+        void solidReactionStrLeft(OStringStream&) const;
 
-    //- Return string representation of the right of the reaction
-    void solidReactionStrRight(OStringStream&) const;
+        //- Return string representation of the right of the reaction
+        void solidReactionStrRight(OStringStream&) const;
 
-    //- Disallow default bitwise assignment
-    void operator=(const SolidReaction&);
+        //- Disallow default bitwise assignment
+        void operator=(const SolidReaction&);
 
 
 public:
@@ -93,29 +91,31 @@ public:
     TypeName("SolidReaction");
 
 
-    //- Construct from components
-    SolidReaction
-    (
-        const Reaction<ReactionThermo>& reaction,
-        const speciesTable& pyrolisisGases,
-        const List<specieCoeffs>& glhs,
-        const List<specieCoeffs>& grhs
-    );
+        //- Construct from components
+        SolidReaction
+        (
+            const Reaction<ReactionThermo>& reaction,
+            const speciesTable& pyrolisisGases,
+            const List<specieCoeffs>& glhs,
+            const List<specieCoeffs>& grhs
+        );
 
-    //- Construct as copy given new speciesTable
-    SolidReaction
-    (
-        const SolidReaction<ReactionThermo>&,
-        const speciesTable& pyrolisisGases
-    );
 
-    //- Construct from dictionary
-    SolidReaction
-    (
-        const speciesTable& species,
-        const HashPtrTable<ReactionThermo>& thermoDatabase,
-        const dictionary& dict
-    );
+        //- Construct as copy given new speciesTable
+        SolidReaction
+        (
+            const SolidReaction<ReactionThermo>&,
+            const speciesTable& pyrolisisGases
+        );
+
+
+        //- Construct from dictionary
+        SolidReaction
+        (
+            const speciesTable& species,
+            const HashPtrTable<ReactionThermo>& thermoDatabase,
+            const dictionary& dict
+        );
 
 
     //- Destructor
@@ -125,34 +125,34 @@ public:
 
     // Member Functions
 
-    // Access
+        // Access
 
-    //- Access to the gas components of the left hand side
-    virtual const List<specieCoeffs>& grhs() const;
+            //- Access to the gas components of the left hand side
+            virtual const List<specieCoeffs>& grhs() const;
 
-    //- Access to the gas components of the right hand side
-    virtual const List<specieCoeffs>& glhs() const;
+            //- Access to the gas components of the right hand side
+            virtual const List<specieCoeffs>& glhs() const;
 
-    //- Access to gas specie list
-    virtual const speciesTable& gasSpecies() const;
+            //- Access to gas specie list
+            virtual const speciesTable& gasSpecies() const;
 
 
-    //- Write
-    virtual void write(Ostream&) const;
+        //- Write
+        virtual void write(Ostream&) const;
 
 
     // Ostream Operator
 
-    friend Ostream& operator<<
-    (
-        Ostream& os,
-        const SolidReaction<ReactionThermo>& r
-    )
-    {
-        OStringStream reaction;
-        os << r.solidReactionStr(reaction)<< token::END_STATEMENT <<nl;
-        return os;
-    }
+        friend Ostream& operator<<
+        (
+            Ostream& os,
+            const SolidReaction<ReactionThermo>& r
+        )
+        {
+            OStringStream reaction;
+            os << r.solidReactionStr(reaction)<< token::END_STATEMENT <<nl;
+            return os;
+        }
 };
 
 
@@ -206,7 +206,7 @@ CML::SolidReaction<ReactionThermo>::SolidReaction
     glhs_(),
     grhs_()
 {
-    this->setLRhs
+    specieCoeffs::setLRhs
     (
         IStringStream(dict.lookup("reaction"))(),
         pyrolisisGases_,
@@ -219,7 +219,7 @@ CML::SolidReaction<ReactionThermo>::SolidReaction
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-const CML::List<typename CML::SolidReaction<ReactionThermo>::specieCoeffs>&
+const CML::List<CML::specieCoeffs>&
 CML::SolidReaction<ReactionThermo>::glhs() const
 {
     return glhs_;
@@ -227,7 +227,7 @@ CML::SolidReaction<ReactionThermo>::glhs() const
 
 
 template<class ReactionThermo>
-const CML::List<typename CML::Reaction<ReactionThermo>::specieCoeffs>&
+const CML::List<CML::specieCoeffs>&
 CML::SolidReaction<ReactionThermo>::grhs() const
 {
     return grhs_;
@@ -257,14 +257,14 @@ CML::string CML::SolidReaction<ReactionThermo>::solidReactionStr
     OStringStream& reaction
 ) const
 {
-    this->reactionStrLeft(reaction);
+    specieCoeffs::reactionStr(reaction, this->species(), this->lhs());
     if (glhs().size() > 0)
     {
         reaction << " + ";
         solidReactionStrLeft(reaction);
     }
     reaction << " = ";
-    this->reactionStrRight(reaction);
+    specieCoeffs::reactionStr(reaction, this->species(), this->rhs());
     if (grhs().size() > 0)
     {
         reaction << " + ";

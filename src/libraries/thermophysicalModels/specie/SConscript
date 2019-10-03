@@ -8,6 +8,7 @@ target = 'specie'
 sources = Split("""
 atomicWeights/atomicWeights.cpp
 specie/specie.cpp
+reaction/specieCoeffs/specieCoeffs.cpp
 reaction/reactions/makeReactions.cpp
 reaction/reactions/makeLangmuirHinshelwoodReactions.cpp
 reaction/reactions/makeMichaelisMentenReactions.cpp
