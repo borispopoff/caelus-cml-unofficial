@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -323,7 +323,7 @@ CML::tmp<CML::pointField> CML::triSurfaceMesh::coordinates() const
     pointField& pt = tPts();
 
     // Use copy to calculate face centres so they don't get stored
-    pt = PrimitivePatch<triSurface::FaceType, SubList, const pointField&>
+    pt = PrimitivePatch<SubList<triSurface::FaceType>, const pointField&>
     (
         SubList<triSurface::FaceType>(*this, triSurface::size()),
         triSurface::points()

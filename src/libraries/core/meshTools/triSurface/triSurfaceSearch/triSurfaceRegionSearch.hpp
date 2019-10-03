@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,12 +55,8 @@ class triSurfaceRegionSearch
 {
     // Private typedefs
 
-        typedef PrimitivePatch
-        <
-            labelledTri,
-            IndirectList,
-            const pointField&
-        > indirectTriSurface;
+        typedef PrimitivePatch<IndirectList<labelledTri>, const pointField&>
+            indirectTriSurface;
 
         typedef treeDataPrimitivePatch<indirectTriSurface>
             treeDataIndirectTriSurface;
@@ -112,7 +108,6 @@ public:
             //  @todo Currently creates a tree for each region; could optimise
             //        by only constructing trees when they are in regionIndices
             const PtrList<treeType>& treeByRegion() const;
-
 
         // Query
 

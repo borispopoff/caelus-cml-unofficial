@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,7 +53,7 @@ class surfMesh
 :
     public  surfaceRegistry,
     private MeshedSurfaceIOAllocator,
-    public  PrimitivePatch<face, ::CML::UList, ::CML::SubField<point>, point>
+    public  PrimitivePatch<::CML::UList<face>, ::CML::SubField<point>>
 {
     // friends
     template<class Face> friend class MeshedSurface;
@@ -65,7 +65,7 @@ public:
 
         //- Enumeration defining the state of the mesh after a read update.
         //  Used for post-processing applications, where the mesh
-        //  needs to update based on the files written in time directores
+        //  needs to update based on the files written in time directories
         enum readUpdateState
         {
             UNCHANGED,
@@ -81,14 +81,8 @@ private:
 
         typedef MeshedSurfaceIOAllocator Allocator;
 
-        typedef PrimitivePatch
-        <
-            face,
-            ::CML::UList,
-            ::CML::SubField<point>,
-            point
-        >
-        MeshReference;
+        typedef PrimitivePatch<::CML::UList<face>, ::CML::SubField<point>>
+            MeshReference;
 
 
     // Private Member Functions

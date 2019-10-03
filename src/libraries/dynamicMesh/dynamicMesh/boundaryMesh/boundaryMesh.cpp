@@ -42,7 +42,7 @@ namespace CML
     const vector boundaryMesh::splitNormal_(3, 2, 1);
 
     // Distance to face tolerance for getNearest
-    const scalar boundaryMesh::distanceTol_ = 1E-2;
+    const scalar boundaryMesh::distanceTol_ = 1e-2;
 }
 
 
@@ -532,7 +532,7 @@ void CML::boundaryMesh::read(const polyMesh& mesh)
     //
 
     // Temporary primitivePatch to calculate compact points & faces.
-    PrimitivePatch<face, List, const pointField&> globalPatch
+    PrimitivePatch<faceList, const pointField&> globalPatch
     (
         bFaces,
         mesh.points()

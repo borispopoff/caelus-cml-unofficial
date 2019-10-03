@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ template<class Face> class UnsortedMeshedSurface;
 template<class Face>
 class MeshedSurface
 :
-    public PrimitivePatch<Face, ::CML::List, pointField, point>,
+    public PrimitivePatch<::CML::List<Face>, pointField>,
     public fileFormats::surfaceFormatsCore
 {
     // friends - despite different face representationsx
@@ -92,14 +92,7 @@ private:
 
     // Private typedefs for convenience
 
-        typedef PrimitivePatch
-        <
-            Face,
-            ::CML::List,
-            pointField,
-            point
-        >
-        ParentType;
+        typedef PrimitivePatch<::CML::List<Face>, pointField> ParentType;
 
         typedef UnsortedMeshedSurface<Face>  FriendType;
         typedef MeshedSurfaceProxy<Face>     ProxyType;
@@ -119,7 +112,7 @@ protected:
         //- Transfer points/zones and transcribe face -> triFace
         void transcribe(MeshedSurface<face>&);
 
-        //- basic sanity check on zones
+        //- Basic sanity check on zones
         void checkZones();
 
         //- Non-const access to global points
@@ -140,7 +133,7 @@ protected:
             return zones_;
         }
 
-        //- sort faces by zones and store sorted faces
+        //- Sort faces by zones and store sorted faces
         void sortFacesAndStore
         (
             const Xfer<List<Face>>& unsortedFaces,

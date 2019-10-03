@@ -34,8 +34,8 @@ namespace CML
 {
     typedef AMIInterpolation
     <
-        PrimitivePatch<face, SubList, const pointField&>,
-        PrimitivePatch<face, SubList, const pointField&>
+        PrimitivePatch<SubList<face>, const pointField&>,
+        PrimitivePatch<SubList<face>, const pointField&>
     >   AMIPatchToPatchInterpolation;
 }
 

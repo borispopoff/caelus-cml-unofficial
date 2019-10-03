@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,16 +66,10 @@ public:
     //- Check for orientation issues.
     //  Returns true if problems were found.
     //  If a normal flips across an edge, places it in the HashSet
-    template
-    <
-        class Face,
-        template<class> class FaceList,
-        class PointField,
-        class PointType
-    >
+    template<class FaceList, class PointField>
     static bool checkOrientation
     (
-        const PrimitivePatch<Face, FaceList, PointField, PointType>&,
+        const PrimitivePatch<FaceList, PointField>&,
         const bool report = false,
         labelHashSet* marked = 0
     );
@@ -84,17 +78,10 @@ public:
     //- Fill faceZone with currentZone for every face reachable
     //  from facei without crossing edge marked in borderEdge.
     //  Note: faceZone has to be sized nFaces before calling.
-    template
-    <
-        class BoolListType,
-        class Face,
-        template<class> class FaceList,
-        class PointField,
-        class PointType
-    >
+    template<class BoolListType, class FaceList, class PointField>
     static void markZone
     (
-        const PrimitivePatch<Face, FaceList, PointField, PointType>&,
+        const PrimitivePatch<FaceList, PointField>&,
         const BoolListType& borderEdge,
         const label facei,
         const label currentZone,
@@ -104,17 +91,10 @@ public:
     //- Size and fills faceZone with zone of face.
     //  Zone is area reachable by edge crossing without crossing borderEdge.
     //  Returns number of zones.
-    template
-    <
-        class BoolListType,
-        class Face,
-        template<class> class FaceList,
-        class PointField,
-        class PointType
-    >
+    template<class BoolListType, class FaceList, class PointField>
     static label markZones
     (
-        const PrimitivePatch<Face, FaceList, PointField, PointType>&,
+        const PrimitivePatch<FaceList, PointField>&,
         const BoolListType& borderEdge,
         labelList& faceZone
     );
@@ -125,78 +105,47 @@ public:
     //  \param[in]  includeFaces faces to include
     //  \param[out] pointMap mapping new to old localPoints
     //  \param[out] faceMap  mapping new to old faces
-    template
-    <
-        class BoolListType,
-        class Face,
-        template<class> class FaceList,
-        class PointField,
-        class PointType
-    >
+    template<class BoolListType, class FaceList, class PointField>
     static void subsetMap
     (
-        const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+        const PrimitivePatch<FaceList, PointField>& p,
         const BoolListType& includeFaces,
         labelList& pointMap,
         labelList& faceMap
     );
 
     //-
-    template
-    <
-        class Face,
-        template<class> class FaceList,
-        class PointField,
-        class PointType
-    >
+    template<class FaceList, class PointField>
     static void calcBounds
     (
-        const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+        const PrimitivePatch<FaceList, PointField>& p,
         boundBox& bb,
         label& nPoints
     );
 
     //- Return edge-face addressing sorted by angle around the edge.
     //  Orientation is anticlockwise looking from edge.vec(localPoints())
-    template
-    <
-        class Face,
-        template<class> class FaceList,
-        class PointField,
-        class PointType
-    >
+    template<class FaceList, class PointField>
     static labelListList sortedEdgeFaces
     (
-        const PrimitivePatch<Face, FaceList, PointField, PointType>&
+        const PrimitivePatch<FaceList, PointField>&
     );
 
     //- Return point-edge addressing sorted by order around the point.
-    template
-    <
-        class Face,
-        template<class> class FaceList,
-        class PointField,
-        class PointType
-    >
+    template<class FaceList, class PointField>
     static labelListList sortedPointEdges
     (
-        const PrimitivePatch<Face, FaceList, PointField, PointType>&
+        const PrimitivePatch<FaceList, PointField>&
     );
 
     //- If 2 face neighbours: label of face where ordering of edge
     //  is consistent with righthand walk.
     //  If 1 neighbour: label of only face.
     //  If >2 neighbours: undetermined.
-    template
-    <
-        class Face,
-        template<class> class FaceList,
-        class PointField,
-        class PointType
-    >
+    template<class FaceList, class PointField>
     static labelList edgeOwner
     (
-        const PrimitivePatch<Face, FaceList, PointField, PointType>&
+        const PrimitivePatch<FaceList, PointField>&
     );
 
 
@@ -205,19 +154,15 @@ public:
     //  p2PointLabels : corresponding points on p2
     template
     <
-        class Face1,
-        template<class> class FaceList1,
+        class FaceList1,
         class PointField1,
-        class PointType1,
-        class Face2,
-        template<class> class FaceList2,
-        class PointField2,
-        class PointType2
+        class FaceList2,
+        class PointField2
     >
     static void matchPoints
     (
-        const PrimitivePatch<Face1, FaceList1, PointField1, PointType1>& p1,
-        const PrimitivePatch<Face2, FaceList2, PointField2, PointType2>& p2,
+        const PrimitivePatch<FaceList1, PointField1>& p1,
+        const PrimitivePatch<FaceList2, PointField2>& p2,
 
         labelList& p1PointLabels,
         labelList& p2PointLabels
@@ -229,19 +174,15 @@ public:
     //  sameOrientation : same orientation?
     template
     <
-        class Face1,
-        template<class> class FaceList1,
+        class FaceList1,
         class PointField1,
-        class PointType1,
-        class Face2,
-        template<class> class FaceList2,
-        class PointField2,
-        class PointType2
+        class FaceList2,
+        class PointField2
     >
     static void matchEdges
     (
-        const PrimitivePatch<Face1, FaceList1, PointField1, PointType1>& p1,
-        const PrimitivePatch<Face2, FaceList2, PointField2, PointType2>& p2,
+        const PrimitivePatch<FaceList1, PointField1>& p1,
+        const PrimitivePatch<FaceList2, PointField2>& p2,
 
         labelList& p1EdgeLabels,
         labelList& p2EdgeLabels,
@@ -250,33 +191,21 @@ public:
 
 
     //- Return parallel consistent point normals for patches using mesh points.
-    template
-    <
-        class Face,
-        template<class> class FaceList,
-        class PointField,
-        class PointType
-    >
+    template<class FaceList, class PointField>
     static tmp<pointField> pointNormals
     (
         const polyMesh&,
-        const PrimitivePatch<Face, FaceList, PointField, PointType>&
+        const PrimitivePatch<FaceList, PointField>&
     );
 
 
     //- Return parallel consistent edge normals for patches using mesh points.
     //  Supply with patch matching info from matchEdges.
-    template
-    <
-        class Face,
-        template<class> class FaceList,
-        class PointField,
-        class PointType
-    >
+    template<class FaceList, class PointField>
     static tmp<pointField> edgeNormals
     (
         const polyMesh&,
-        const PrimitivePatch<Face, FaceList, PointField, PointType>&,
+        const PrimitivePatch<FaceList, PointField>&,
         const labelList& patchEdges,
         const labelList& coupledEdges
     );
@@ -284,19 +213,15 @@ public:
 
     //- Gather points and faces onto master and merge into single patch.
     //  Note: uses faces/points, not localFaces/localPoints.
-    template
-    <
-        class Face,
-        template<class> class FaceList,
-        class PointField,
-        class PointType
-    >
+    template<class FaceList, class PointField>
     static void gatherAndMerge
     (
         const scalar mergeDist,
-        const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
-        Field<PointType>& mergedPoints,
-        List<Face>& mergedFaces,
+        const PrimitivePatch<FaceList, PointField>& p,
+        Field<typename PrimitivePatch<FaceList, PointField>::PointType>&
+            mergedPoints,
+        List<typename PrimitivePatch<FaceList, PointField>::FaceType>&
+            mergedFaces,
         labelList& pointMergeMap
     );
 
@@ -338,22 +263,16 @@ public:
 // PatchToolsCheck
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-bool
-CML::PatchTools::checkOrientation
+template<class FaceList, class PointField>
+bool CML::PatchTools::checkOrientation
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     const bool report,
     labelHashSet* setPtr
 )
 {
+    typedef typename PrimitivePatch<FaceList, PointField>::FaceType FaceType;
+
     bool foundError = false;
 
     // Check edge normals, face normals, point normals.
@@ -402,7 +321,7 @@ CML::PatchTools::checkOrientation
         //
         //- Compute normal from 3 points, use the first as the origin
         // minor warpage should not be a problem
-        const Face& f = p[facei];
+        const FaceType& f = p[facei];
         const point& p0 = p.points()[f[0]];
         const point& p1 = p.points()[f[1]];
         const point& p2 = p.points()[f.last()];
@@ -435,8 +354,8 @@ CML::PatchTools::checkOrientation
         {
             // we use localFaces() since edges() are LOCAL
             // these are both already available
-            const Face& faceA = p.localFaces()[neighbouringFaces[0]];
-            const Face& faceB = p.localFaces()[neighbouringFaces[1]];
+            const FaceType& faceA = p.localFaces()[neighbouringFaces[0]];
+            const FaceType& faceB = p.localFaces()[neighbouringFaces[1]];
 
             // If the faces are correctly oriented, the edges must go in
             // different directions on connected faces.
@@ -492,23 +411,17 @@ CML::PatchTools::checkOrientation
 // PatchToolsEdgeOwner
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-CML::labelList
-CML::PatchTools::edgeOwner
+template<class FaceList, class PointField>
+CML::labelList CML::PatchTools::edgeOwner
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p
+    const PrimitivePatch<FaceList, PointField>& p
 )
 {
+    typedef typename PrimitivePatch<FaceList, PointField>::FaceType FaceType;
+
     const edgeList& edges = p.edges();
     const labelListList& edgeFaces = p.edgeFaces();
-    const List<Face>& localFaces = p.localFaces();
+    const List<FaceType>& localFaces = p.localFaces();
 
     // create the owner list
     labelList edgeOwner(edges.size(), -1);
@@ -527,7 +440,7 @@ CML::PatchTools::edgeOwner
             // with multiply connected edges, this is the best we can do
             forAll(nbrFaces, i)
             {
-                const Face& f = localFaces[nbrFaces[i]];
+                const FaceType& f = localFaces[nbrFaces[i]];
 
                 if (f.edgeDirection(edges[edgeI]) > 0)
                 {
@@ -542,7 +455,7 @@ CML::PatchTools::edgeOwner
                     << "Edge " << edgeI << " vertices:" << edges[edgeI]
                     << " is used by faces " << nbrFaces
                     << " vertices:"
-                    << UIndirectList<Face>(localFaces, nbrFaces)()
+                    << UIndirectList<FaceType>(localFaces, nbrFaces)()
                     << " none of which use the edge vertices in the same order"
                     << nl << "I give up" << abort(FatalError);
             }
@@ -560,22 +473,20 @@ CML::PatchTools::edgeOwner
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 void CML::PatchTools::gatherAndMerge
 (
     const scalar mergeDist,
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
-    Field<PointType>& mergedPoints,
-    List<Face>& mergedFaces,
+    const PrimitivePatch<FaceList, PointField>& p,
+    Field<typename PrimitivePatch<FaceList, PointField>::PointType>&
+        mergedPoints,
+    List<typename PrimitivePatch<FaceList, PointField>::FaceType>& mergedFaces,
     labelList& pointMergeMap
 )
 {
+    typedef typename PrimitivePatch<FaceList, PointField>::FaceType FaceType;
+    typedef typename PrimitivePatch<FaceList, PointField>::PointType PointType;
+
     // Collect points from all processors
     labelList pointSizes;
     {
@@ -603,20 +514,20 @@ void CML::PatchTools::gatherAndMerge
     // Collect faces from all processors and renumber using sizes of
     // gathered points
     {
-        List<List<Face>> gatheredFaces(Pstream::nProcs());
+        List<List<FaceType>> gatheredFaces(Pstream::nProcs());
         gatheredFaces[Pstream::myProcNo()] = p;
         Pstream::gatherList(gatheredFaces);
 
         if (Pstream::master())
         {
-            mergedFaces = static_cast<const List<Face>&>
+            mergedFaces = static_cast<const List<FaceType>&>
             (
-                ListListOps::combineOffset<List<Face>>
+                ListListOps::combineOffset<List<FaceType>>
                 (
                     gatheredFaces,
                     pointSizes,
-                    accessOp<List<Face>>(),
-                    offsetOp<Face>()
+                    accessOp<List<FaceType>>(),
+                    offsetOp<FaceType>()
                 )
             );
         }
@@ -645,7 +556,7 @@ void CML::PatchTools::gatherAndMerge
             mergedPoints.transfer(newPoints);
 
             // Relabel faces
-            List<Face>& faces = mergedFaces;
+            List<FaceType>& faces = mergedFaces;
 
             forAll(faces, facei)
             {
@@ -768,19 +679,10 @@ void CML::PatchTools::gatherAndMerge
 
 // Finds area, starting at facei, delimited by borderEdge.
 // Marks all visited faces (from face-edge-face walk) with currentZone.
-template
-<
-    class BoolListType,
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-void
-CML::PatchTools::markZone
+template<class BoolListType, class FaceList, class PointField>
+void CML::PatchTools::markZone
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     const BoolListType& borderEdge,
     const label facei,
     const label currentZone,
@@ -848,19 +750,10 @@ CML::PatchTools::markZone
 
 // Finds areas delimited by borderEdge (or 'real' edges).
 // Fills faceZone accordingly
-template
-<
-    class BoolListType,
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-CML::label
-CML::PatchTools::markZones
+template<class BoolListType, class FaceList, class PointField>
+CML::label CML::PatchTools::markZones
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     const BoolListType& borderEdge,
     labelList& faceZone
 )
@@ -891,28 +784,21 @@ CML::PatchTools::markZones
 
 // Finds areas delimited by borderEdge (or 'real' edges).
 // Fills faceZone accordingly
-template
-<
-    class BoolListType,
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-void
-CML::PatchTools::subsetMap
+template<class BoolListType, class FaceList, class PointField>
+void CML::PatchTools::subsetMap
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     const BoolListType& includeFaces,
     labelList& pointMap,
     labelList& faceMap
 )
 {
+    typedef typename PrimitivePatch<FaceList, PointField>::FaceType FaceType;
+
     label facei  = 0;
     label pointi = 0;
 
-    const List<Face>& localFaces = p.localFaces();
+    const List<FaceType>& localFaces = p.localFaces();
 
     faceMap.setSize(localFaces.size());
     pointMap.setSize(p.nPoints());
@@ -927,7 +813,7 @@ CML::PatchTools::subsetMap
             faceMap[facei++] = oldFacei;
 
             // Renumber labels for face
-            const Face& f = localFaces[oldFacei];
+            const FaceType& f = localFaces[oldFacei];
 
             forAll(f, fp)
             {
@@ -947,20 +833,16 @@ CML::PatchTools::subsetMap
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 void CML::PatchTools::calcBounds
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     boundBox& bb,
     label& nPoints
 )
 {
+    typedef typename PrimitivePatch<FaceList, PointField>::FaceType FaceType;
+
     // Unfortunately nPoints constructs meshPoints() so do compact version
     // ourselves
     const PointField& points = p.points();
@@ -972,7 +854,7 @@ void CML::PatchTools::calcBounds
 
     forAll(p, facei)
     {
-        const Face& f = p[facei];
+        const FaceType& f = p[facei];
 
         forAll(f, fp)
         {
@@ -993,23 +875,18 @@ void CML::PatchTools::calcBounds
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-CML::labelListList
-CML::PatchTools::sortedEdgeFaces
+template<class FaceList, class PointField>
+CML::labelListList CML::PatchTools::sortedEdgeFaces
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p
+    const PrimitivePatch<FaceList, PointField>& p
 )
 {
+    typedef typename PrimitivePatch<FaceList, PointField>::FaceType FaceType;
+    typedef typename PrimitivePatch<FaceList, PointField>::PointType PointType;
+
     const edgeList& edges = p.edges();
     const labelListList& edgeFaces = p.edgeFaces();
-    const List<Face>& localFaces = p.localFaces();
+    const List<FaceType>& localFaces = p.localFaces();
     const Field<PointType>& localPoints = p.localPoints();
 
     // create the lists for the various results. (resized on completion)
@@ -1032,7 +909,7 @@ CML::PatchTools::sortedEdgeFaces
 
             // Get the vertex on 0th face that forms a vector with the first
             // edge point that has the largest angle with the edge
-            const Face& f0 = localFaces[faceNbs[0]];
+            const FaceType& f0 = localFaces[faceNbs[0]];
 
             scalar maxAngle = GREAT;
             vector maxAngleEdgeDir(vector::max);
@@ -1071,7 +948,7 @@ CML::PatchTools::sortedEdgeFaces
             {
                 // Get the vertex on face that forms a vector with the first
                 // edge point that has the largest angle with the edge
-                const Face& f = localFaces[faceNbs[nbI]];
+                const FaceType& f = localFaces[faceNbs[nbI]];
 
                 maxAngle = GREAT;
                 maxAngleEdgeDir = vector::max;
@@ -1125,18 +1002,10 @@ CML::PatchTools::sortedEdgeFaces
 // PatchToolsSortPoints
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-CML::labelListList
-CML::PatchTools::sortedPointEdges
+template<class FaceList, class PointField>
+CML::labelListList CML::PatchTools::sortedPointEdges
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p
+    const PrimitivePatch<FaceList, PointField>& p
 )
 {
     // Now order the edges of each point according to whether they share a
@@ -1256,19 +1125,11 @@ CML::PatchTools::sortedPointEdges
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-CML::tmp<CML::pointField>
-CML::PatchTools::pointNormals
+template<class FaceList, class PointField>
+CML::tmp<CML::pointField> CML::PatchTools::pointNormals
 (
     const polyMesh& mesh,
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p
+    const PrimitivePatch<FaceList, PointField>& p
 )
 {
     const globalMeshData& globalData = mesh.globalData();
@@ -1419,19 +1280,11 @@ CML::PatchTools::pointNormals
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-CML::tmp<CML::pointField>
-CML::PatchTools::edgeNormals
+template<class FaceList, class PointField>
+CML::tmp<CML::pointField> CML::PatchTools::edgeNormals
 (
     const polyMesh& mesh,
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     const labelList& patchEdges,
     const labelList& coupledEdges
 )
@@ -1506,21 +1359,11 @@ CML::PatchTools::edgeNormals
 
 
 // ************************************************************************* //// PatchToolsMatch
-template
-<
-    class Face1,
-    template<class> class FaceList1,
-    class PointField1,
-    class PointType1,
-    class Face2,
-    template<class> class FaceList2,
-    class PointField2,
-    class PointType2
->
+template<class FaceList1, class PointField1, class FaceList2, class PointField2>
 void CML::PatchTools::matchPoints
 (
-    const PrimitivePatch<Face1, FaceList1, PointField1, PointType1>& p1,
-    const PrimitivePatch<Face2, FaceList2, PointField2, PointType2>& p2,
+    const PrimitivePatch<FaceList1, PointField1>& p1,
+    const PrimitivePatch<FaceList2, PointField2>& p2,
 
     labelList& p1PointLabels,
     labelList& p2PointLabels
@@ -1552,21 +1395,11 @@ void CML::PatchTools::matchPoints
 }
 
 
-template
-<
-    class Face1,
-    template<class> class FaceList1,
-    class PointField1,
-    class PointType1,
-    class Face2,
-    template<class> class FaceList2,
-    class PointField2,
-    class PointType2
->
+template<class FaceList1, class PointField1, class FaceList2, class PointField2>
 void CML::PatchTools::matchEdges
 (
-    const PrimitivePatch<Face1, FaceList1, PointField1, PointType1>& p1,
-    const PrimitivePatch<Face2, FaceList2, PointField2, PointType2>& p2,
+    const PrimitivePatch<FaceList1, PointField1>& p1,
+    const PrimitivePatch<FaceList2, PointField2>& p2,
 
     labelList& p1EdgeLabels,
     labelList& p2EdgeLabels,
