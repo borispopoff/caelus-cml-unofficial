@@ -72,6 +72,8 @@ CML::Time::fmtflags CML::Time::format_(CML::Time::general);
 
 int CML::Time::precision_(6);
 
+const int CML::Time::maxPrecision_(3 - log10(SMALL));
+
 CML::word CML::Time::controlDictName("controlDict");
 
 
@@ -173,6 +175,66 @@ void CML::Time::setControls()
     readDict();
     deltaTSave_ = deltaT_;
     deltaT0_ = deltaT_;
+
+    // Check if time directory exists
+    // If not increase time precision to see if it is formatted differently.
+    if (!exists(timePath(), false))
+    {
+        int oldPrecision = precision_;
+        int requiredPrecision = -1;
+        bool found = false;
+        word oldTime(timeName());
+
+        for
+        (
+            precision_ = maxPrecision_;
+            precision_ > oldPrecision;
+            precision_--
+        )
+        {
+            // Update the time formatting
+            setTime(startTime_, 0);
+
+            // Check that the time name has changed otherwise exit loop
+            word newTime(timeName());
+            if (newTime == oldTime)
+            {
+                break;
+            }
+            oldTime = newTime;
+
+            // Check the existence of the time directory with the new format
+            found = exists(timePath(), false);
+
+            if (found)
+            {
+                requiredPrecision = precision_;
+            }
+        }
+
+        if (requiredPrecision > 0)
+        {
+            // Update the time precision
+            precision_ = requiredPrecision;
+
+            // Update the time formatting
+            setTime(startTime_, 0);
+
+            WarningInFunction
+                << "Increasing the timePrecision from " << oldPrecision
+                << " to " << precision_
+                << " to support the formatting of the current time directory "
+                << timeName() << nl << endl;
+        }
+        else
+        {
+            // Could not find time directory so assume it is not present
+            precision_ = oldPrecision;
+
+            // Revert the time formatting
+            setTime(startTime_, 0);
+        }
+    }
 
     if (Pstream::parRun())
     {
@@ -1021,7 +1083,8 @@ CML::Time& CML::Time::operator++()
     deltaT0_ = deltaTSave_;
     deltaTSave_ = deltaT_;
 
-    // Save old time name
+    // Save old time value and name
+    const scalar oldTimeValue = timeToUserTime(value());
     const word oldTimeName = dimensionedScalar::name();
 
     // Increment time
@@ -1034,41 +1097,7 @@ CML::Time& CML::Time::operator++()
         {
             setTime(0.0, timeIndex_);
         }
-    }
 
-
-    // Check that new time representation differs from old one
-    if (dimensionedScalar::name() == oldTimeName)
-    {
-        int oldPrecision = precision_;
-        do
-        {
-            precision_++;
-            setTime(value(), timeIndex());
-        }
-        while (precision_ < 100 && dimensionedScalar::name() == oldTimeName);
-
-        WarningInFunction
-            << "Increased the timePrecision from " << oldPrecision
-            << " to " << precision_
-            << " to distinguish between timeNames at time " << value()
-            << endl;
-
-        if (precision_ == 100 && precision_ != oldPrecision)
-        {
-            // Reached limit.
-            WarningInFunction
-                << "Current time name " << dimensionedScalar::name()
-                << " is the old as the previous one " << oldTimeName
-                << endl
-                << "    This might result in overwriting old results."
-                << endl;
-        }
-    }
-
-
-    if (!subCycling_)
-    {
         if (sigStopAtWriteNow_.active() || sigWriteNow_.active())
         {
             // A signal might have been sent on one processor only
@@ -1177,7 +1206,83 @@ CML::Time& CML::Time::operator++()
             writeOnce_ = false;
         }
 
-        functionObjects_.timeSet();
+        // Adjust the precision of the time directory name if necessary
+        if (writeTime_)
+        {
+            // Tolerance used when testing time equivalence
+            const scalar timeTol =
+                max(min(pow(10.0, -precision_), 0.1*deltaT_), SMALL);
+
+            // User-time equivalent of deltaT
+            const scalar userDeltaT = timeToUserTime(deltaT_);
+
+            // Time value obtained by reading timeName
+            scalar timeNameValue = -VGREAT;
+
+            // Check that new time representation differs from old one
+            // reinterpretation of the word
+            if
+            (
+                readScalar(dimensionedScalar::name().c_str(), timeNameValue)
+             && (mag(timeNameValue - oldTimeValue - userDeltaT) > timeTol)
+            )
+            {
+                int oldPrecision = precision_;
+                while
+                (
+                    precision_ < maxPrecision_
+                 && readScalar(dimensionedScalar::name().c_str(), timeNameValue)
+                 && (mag(timeNameValue - oldTimeValue - userDeltaT) > timeTol)
+                )
+                {
+                    precision_++;
+                    setTime(value(), timeIndex());
+                }
+
+                if (precision_ != oldPrecision)
+                {
+                    WarningInFunction
+                        << "Increased the timePrecision from " << oldPrecision
+                        << " to " << precision_
+                        << " to distinguish between timeNames at time "
+                        << dimensionedScalar::name()
+                        << endl;
+
+                    if (precision_ == maxPrecision_)
+                    {
+                        // Reached maxPrecision limit
+                        WarningInFunction
+                            << "Current time name " << dimensionedScalar::name()
+                            << nl
+                            << "    The maximum time precision has been reached"
+                               " which might result in overwriting previous"
+                               " results."
+                            << endl;
+                    }
+
+                    // Check if round-off error caused time-reversal
+                    scalar oldTimeNameValue = -VGREAT;
+                    if
+                    (
+                        readScalar(oldTimeName.c_str(), oldTimeNameValue)
+                     && (
+                            sign(timeNameValue - oldTimeNameValue)
+                         != sign(deltaT_)
+                        )
+                    )
+                    {
+                        WarningInFunction
+                            << "Current time name " << dimensionedScalar::name()
+                            << " is set to an instance prior to the "
+                               "previous one "
+                            << oldTimeName << nl
+                            << "    This might result in temporal "
+                               "discontinuities."
+                            << endl;
+                    }
+                }
+            }
+        }
     }
 
     return *this;

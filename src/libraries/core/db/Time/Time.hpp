@@ -57,6 +57,7 @@ SourceFiles
 
 namespace CML
 {
+
 // Forward declaration of classes
 class argList;
 
@@ -83,6 +84,7 @@ class Time
 
         //- The controlDict
         IOdictionary controlDict_;
+
 
 public:
 
@@ -157,6 +159,9 @@ protected:
 
         //- Time directory name precision
         static int precision_;
+
+        //- Maximum time directory name precision
+        static const int maxPrecision_;
 
         //- Adjust the time step so that writing occurs at the specified time
         void adjustDeltaT();
@@ -374,6 +379,9 @@ public:
                 const scalar,
                 const word& constantName = "constant"
             );
+
+            //- Write time dictionary to the \<time\>/uniform directory
+            virtual bool writeTimeDict() const;
 
             //- Write using given format, version and compression
             virtual bool writeObject
