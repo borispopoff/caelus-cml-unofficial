@@ -39,6 +39,9 @@ Description
 #include "decompositionMethod.hpp"
 #include "fvMeshSubset.hpp"
 #include "zeroGradientFvPatchFields.hpp"
+#include "cellSet.hpp"
+#include "faceSet.hpp"
+#include "pointSet.hpp"
 
 using namespace CML;
 
@@ -110,8 +113,6 @@ labelList regionFaceOrder
     const labelList& cellToRegion   // old cell to region
 )
 {
-    Pout<< "Determining face order:" << endl;
-
     labelList reverseCellOrder(invert(cellOrder.size(), cellOrder));
 
     labelList oldToNewFace(mesh.nFaces(), -1);
@@ -127,8 +128,6 @@ labelList regionFaceOrder
         if (cellToRegion[oldCelli] != prevRegion)
         {
             prevRegion = cellToRegion[oldCelli];
-            Pout<< "    region " << prevRegion << " internal faces start at "
-                << newFacei << endl;
         }
 
         const cell& cFaces = mesh.cells()[oldCelli];
@@ -215,9 +214,6 @@ labelList regionFaceOrder
 
             if (prevKey != key)
             {
-                Pout<< "    faces inbetween region " << key/nRegions
-                    << " and " << key%nRegions
-                    << " start at " << newFacei << endl;
                 prevKey = key;
             }
 
@@ -243,7 +239,6 @@ labelList regionFaceOrder
                 << abort(FatalError);
         }
     }
-    Pout<< endl;
 
     return invert(mesh.nFaces(), oldToNewFace);
 }
@@ -251,7 +246,7 @@ labelList regionFaceOrder
 
 // cellOrder: old cell for every new cell
 // faceOrder: old face for every new face. Ordering of boundary faces not
-// changed.
+//     changed.
 autoPtr<mapPolyMesh> reorderMesh
 (
     polyMesh& mesh,
@@ -322,7 +317,7 @@ autoPtr<mapPolyMesh> reorderMesh
     (
         new mapPolyMesh
         (
-            mesh,                       //const polyMesh& mesh,
+            mesh,                       // const polyMesh& mesh,
             mesh.nPoints(),             // nOldPoints,
             mesh.nFaces(),              // nOldFaces,
             mesh.nCells(),              // nOldCells,
@@ -363,34 +358,43 @@ int main(int argc, char *argv[])
         "blockOrder",
         "order cells into regions (using decomposition)"
     );
+
+    #include "addRegionOption.hpp"
+    #include "addOverwriteOption.hpp"
+    #include "addTimeOptions.hpp"
+
     argList::addBoolOption
     (
         "orderPoints",
         "order points into internal and boundary points"
     );
+
     argList::addBoolOption
     (
         "writeMaps",
         "write cellMap, faceMap, pointMap in polyMesh/"
     );
 
-#   include "addRegionOption.hpp"
-#   include "addOverwriteOption.hpp"
-#   include "addTimeOptions.hpp"
+    argList::addBoolOption
+    (
+        "renumberSets",
+        "renumber sets"
+    );
 
-#   include "setRootCase.hpp"
-#   include "createTime.hpp"
+
+   #include "setRootCase.hpp"
+   #include "createTime.hpp"
     runTime.functionObjects().off();
 
     // Get times list
     instantList Times = runTime.times();
 
-    // set startTime and endTime depending on -time and -latestTime options
-#   include "checkTimeOptions.hpp"
+    // Set startTime and endTime depending on -time and -latestTime options
+    #include "checkTimeOptions.hpp"
 
     runTime.setTime(Times[startTime], startTime);
 
-#   include "createNamedMesh.hpp"
+    #include "createNamedMesh.hpp"
     const word oldInstance = mesh.pointsInstance();
 
     const bool blockOrder = args.optionFound("blockOrder");
@@ -413,6 +417,13 @@ int main(int argc, char *argv[])
     if (writeMaps)
     {
         Info<< "Writing renumber maps (new to old) to polyMesh." << nl
+            << endl;
+    }
+
+    const bool renumberSets = args.optionFound("renumberSets");
+    if (renumberSets)
+    {
+        Info<< "Renumbers Sets." << nl
             << endl;
     }
 
@@ -506,6 +517,7 @@ int main(int argc, char *argv[])
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.timeName());
 
+
     // Read vol fields.
 
     PtrList<volScalarField> vsFlds;
@@ -522,6 +534,7 @@ int main(int argc, char *argv[])
 
     PtrList<volTensorField> vtFlds;
     ReadFields(mesh, objects, vtFlds);
+
 
     // Read surface fields.
 
@@ -540,6 +553,23 @@ int main(int argc, char *argv[])
     PtrList<surfaceTensorField> stFlds;
     ReadFields(mesh, objects, stFlds);
 
+
+    // Read point fields.
+
+    PtrList<pointScalarField> psFlds;
+    ReadFields(pointMesh::New(mesh), objects, psFlds);
+
+    PtrList<pointVectorField> pvFlds;
+    ReadFields(pointMesh::New(mesh), objects, pvFlds);
+
+    PtrList<pointSphericalTensorField> pstFlds;
+    ReadFields(pointMesh::New(mesh), objects, pstFlds);
+
+    PtrList<pointSymmTensorField> psymtFlds;
+    ReadFields(pointMesh::New(mesh), objects, psymtFlds);
+
+    PtrList<pointTensorField> ptFlds;
+    ReadFields(pointMesh::New(mesh), objects, ptFlds);
 
     autoPtr<mapPolyMesh> map;
 
@@ -644,10 +674,11 @@ int main(int argc, char *argv[])
             mesh,
             false,      // inflate
             true,       // parallel sync
-            true,       // cell ordering
+            true,      // cell ordering
             orderPoints // point ordering
         );
     }
+
 
     // Update fields
     mesh.updateMesh(map);
@@ -895,6 +926,7 @@ int main(int argc, char *argv[])
             ),
             map().cellMap()
         ).write();
+
         labelIOList
         (
             IOobject
@@ -909,6 +941,7 @@ int main(int argc, char *argv[])
             ),
             map().faceMap()
         ).write();
+
         labelIOList
         (
             IOobject
@@ -925,7 +958,65 @@ int main(int argc, char *argv[])
         ).write();
     }
 
-    Info<< "\nEnd.\n" << endl;
+
+    // Renumber sets if required
+    if (renumberSets)
+    {
+        Info<< endl;
+
+        // Read sets
+        IOobjectList objects(mesh, mesh.facesInstance(), "polyMesh/sets");
+
+        {
+            IOobjectList cSets(objects.lookupClass(cellSet::typeName));
+            if (cSets.size())
+            {
+                Info<< "Renumbering cellSets:" << endl;
+                forAllConstIter(IOobjectList, cSets, iter)
+                {
+                    cellSet cs(*iter());
+                    Info<< "    " << cs.name() << endl;
+                    cs.updateMesh(map());
+                    cs.instance() = mesh.facesInstance();
+                    cs.write();
+                }
+            }
+        }
+
+        {
+            IOobjectList fSets(objects.lookupClass(faceSet::typeName));
+            if (fSets.size())
+            {
+                Info<< "Renumbering faceSets:" << endl;
+                forAllConstIter(IOobjectList, fSets, iter)
+                {
+                    faceSet fs(*iter());
+                    Info<< "    " << fs.name() << endl;
+                    fs.updateMesh(map());
+                    fs.instance() = mesh.facesInstance();
+                    fs.write();
+                }
+            }
+        }
+
+        {
+            IOobjectList pSets(objects.lookupClass(pointSet::typeName));
+            if (pSets.size())
+            {
+                Info<< "Renumbering pointSets:" << endl;
+                forAllConstIter(IOobjectList, pSets, iter)
+                {
+                    pointSet ps(*iter());
+                    Info<< "    " << ps.name() << endl;
+                    ps.updateMesh(map());
+                    ps.instance() = mesh.facesInstance();
+                    ps.write();
+                }
+            }
+        }
+    }
+
+    Info<< "\nEnd\n" << endl;
 
     return 0;
 }
