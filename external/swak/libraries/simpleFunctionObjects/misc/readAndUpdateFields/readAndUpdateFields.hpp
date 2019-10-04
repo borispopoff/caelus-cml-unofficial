@@ -191,7 +191,7 @@ void CML::readAndUpdateFields::correctBoundaryConditions(
     {
 	flst[i].correctBoundaryConditions();
         if(
-            this->obr_.time().outputTime()
+            this->obr_.time().writeTime()
             &&
             flst[i].writeOpt()==IOobject::AUTO_WRITE
         ) {

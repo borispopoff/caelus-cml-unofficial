@@ -166,7 +166,7 @@ void injectionModelList::info(Ostream& os)
             << mass[i] << endl;
     }
 
-    if (film().time().outputTime())
+    if (film().time().writeTime())
     {
         setBaseProperty("massInjected", mass);
         massInjected_ = 0.0;

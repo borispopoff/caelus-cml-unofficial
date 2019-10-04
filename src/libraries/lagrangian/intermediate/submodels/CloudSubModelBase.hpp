@@ -213,7 +213,7 @@ bool CML::CloudSubModelBase<CloudType>::writeTime() const
     return
         active()
      && owner_.solution().transient()
-     && owner_.db().time().outputTime();
+     && owner_.db().time().writeTime();
 }
 
 

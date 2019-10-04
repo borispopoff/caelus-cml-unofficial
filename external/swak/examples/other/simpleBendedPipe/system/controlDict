@@ -79,7 +79,7 @@ functions {
     }
     pressureLine {
         type swakExpressionAverageDistribution;
-        outputControlMode outputTime;
+        outputControlMode writeTime;
         valueType internalField;
         expression "p";
         weight "vol()";

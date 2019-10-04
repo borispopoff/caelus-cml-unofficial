@@ -99,10 +99,10 @@ public:
         //- Stop-run control options
         enum stopAtControls
         {
-            saEndTime,    /*!< stop when Time reaches the prescribed endTime */
-            saNoWriteNow, /*!< set endTime to stop immediately w/o writing */
-            saWriteNow,   /*!< set endTime to stop immediately w/ writing */
-            saNextWrite   /*!< stop the next time data are written */
+            saEndTime,    //!< stop when Time reaches the prescribed endTime
+            saNoWriteNow, //!< set endTime to stop immediately w/o writing
+            saWriteNow,   //!< set endTime to stop immediately w/ writing
+            saNextWrite   //!< stop the next time data are written
         };
 
         //- Supported time directory name formats
@@ -130,14 +130,8 @@ protected:
 
         scalar writeInterval_;
 
-        // Additional writing
-
-            writeControls secondaryWriteControl_;
-
-            scalar secondaryWriteInterval_;
-
         label  purgeWrite_;
-        mutable FIFOStack<word> previousOutputTimes_;
+        mutable FIFOStack<word> previousWriteTimes_;
 
         // One-shot writing
         bool writeOnce_;
@@ -149,7 +143,7 @@ protected:
         autoPtr<TimeState> prevTimeState_;
 
 
-        // Signal handlers for secondary writing
+        // Signal handlers for writing
 
             //- Enable one-shot writing upon signal
             sigWriteNow sigWriteNow_;
@@ -403,7 +397,12 @@ public:
         // Access
 
             //- Return time name of given scalar time
-            static word timeName(const scalar);
+            //  formatted with given precision
+            static word timeName
+            (
+                const scalar,
+                const int precision = precision_
+            );
 
             //- Return current time name
             virtual word timeName() const;

@@ -42,6 +42,7 @@ namespace fv
 }
 }
 
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void CML::fv::meanVelocityForce::writeProps
@@ -50,7 +51,7 @@ void CML::fv::meanVelocityForce::writeProps
 ) const
 {
     // Only write on output time
-    if (mesh_.time().outputTime())
+    if (mesh_.time().writeTime())
     {
         IOdictionary propsDict
         (

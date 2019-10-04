@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,6 @@ void CML::fv::rotorDiskSource::checkData()
                 }
                 case ifLocal:
                 {
-                    // Do nothing
                     break;
                 }
                 default:
@@ -599,7 +598,7 @@ void CML::fv::rotorDiskSource::addSup
     // Add source to rhs of eqn
     eqn -= force;
 
-    if (mesh_.time().outputTime())
+    if (mesh_.time().writeTime())
     {
         force.write();
     }
@@ -659,7 +658,7 @@ void CML::fv::rotorDiskSource::addSup
     // Add source to rhs of eqn
     eqn -= force;
 
-    if (mesh_.time().outputTime())
+    if (mesh_.time().writeTime())
     {
         force.write();
     }

@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 
         turbulence->correct();
 
-        if (runTime.outputTime())
+        if (runTime.writeTime())
         {
             volVectorField Uabs
             (

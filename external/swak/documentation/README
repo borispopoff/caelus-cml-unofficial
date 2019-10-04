@@ -1304,7 +1304,7 @@ S_{expl} + S_{impl} T
      Python-code whose output is consistent with OF
      - timeName :: Name of the current time as a string. Allows the
                    construction of directory names
-     - outputTime :: Boolean that indicates whether this is a timestep
+     - writeTime :: Boolean that indicates whether this is a timestep
                      where OpenFOAM will write output
 **** Additional operators from the =fvc=-namespace
      The missing operators from the =fvc=-namespace have been added to
@@ -1822,7 +1822,7 @@ S_{expl} + S_{impl} T
 **** =expressionField= and =manipulateField= did not honor the =outputControl=-entry
      =expressionFields= were calculated at every time-step, even if
      the computational cost was high. Now if =outputControl= is
-     =outputTime= the field is only calculated if it is going to be
+     =writeTime= the field is only calculated if it is going to be
      written
 **** Double =namespace Foam= makes compilation of =groovyJump= fail with =icc=
      Seems like this one was overlooked because =gcc= is more
@@ -2241,7 +2241,7 @@ S_{expl} + S_{impl} T
                    interval $1$
      - deltaT :: Approximately every =outputDeltaT= times it will be
                  executed. The nearest possible timestep is used
-     - outputTime :: Executed whenever a regular output is scheduled
+     - writeTime :: Executed whenever a regular output is scheduled
 **** =swakDataEntry= improved
      Two enhancements
      - the name of the independent variable  no can be
@@ -2385,7 +2385,7 @@ S_{expl} + S_{impl} T
 **** Gravity not correctly passed in =evolveXXCloud=
      Passed a value where a reference would have been needed. Fixed
 **** =writeOften= writes all the time
-     Reason for this was a change of the interface of =outputTime= not
+     Reason for this was a change of the interface of =writeTime= not
      being propagated to this function-object. Fixed
 **** Python-integration does not return single scalars as uniform
      The Python-integration returned single scalars (and vectors) not

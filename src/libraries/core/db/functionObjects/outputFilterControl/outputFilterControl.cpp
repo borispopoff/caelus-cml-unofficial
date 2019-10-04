@@ -19,7 +19,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "outputFilterOutputControl.hpp"
+#include "outputFilterControl.hpp"
 #include "PstreamReduceOps.hpp"
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
@@ -27,15 +27,13 @@ License
 namespace CML
 {
     template<>
-    const char* CML::NamedEnum
-    <
-        CML::outputFilterOutputControl::outputControls,
-        7
-    >::names[] =
+    const char* NamedEnum<outputFilterControl::timeControls, 8>::
+    names[] =
     {
         "timeStep",
+        "writeTime",
         "outputTime",
-        "adjustableTime",
+        "adjustableRunTime",
         "runTime",
         "clockTime",
         "cpuTime",
@@ -43,13 +41,13 @@ namespace CML
     };
 }
 
-const CML::NamedEnum<CML::outputFilterOutputControl::outputControls, 7>
-    CML::outputFilterOutputControl::outputControlNames_;
+const CML::NamedEnum<CML::outputFilterControl::timeControls, 8>
+    CML::outputFilterControl::timeControlNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-CML::outputFilterOutputControl::outputFilterOutputControl
+CML::outputFilterControl::outputFilterControl
 (
     const Time& t,
     const dictionary& dict,
@@ -58,10 +56,10 @@ CML::outputFilterOutputControl::outputFilterOutputControl
 :
     time_(t),
     prefix_(prefix),
-    outputControl_(ocTimeStep),
-    outputInterval_(0),
-    outputTimeLastDump_(0),
-    writeInterval_(-1)
+    timeControl_(ocTimeStep),
+    intervalSteps_(0),
+    interval_(-1),
+    executionIndex_(0)
 {
     read(dict);
 }
@@ -69,60 +67,61 @@ CML::outputFilterOutputControl::outputFilterOutputControl
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-CML::outputFilterOutputControl::~outputFilterOutputControl()
+CML::outputFilterControl::~outputFilterControl()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void CML::outputFilterOutputControl::read(const dictionary& dict)
+void CML::outputFilterControl::read(const dictionary& dict)
 {
     word controlName(prefix_ + "Control");
     word intervalName(prefix_ + "Interval");
 
     // For backward compatibility support the deprecated 'outputControl' option
-    // now superseded by 'writeControl'
+    // now superseded by 'writeControl' for compatibility with Time
     if (prefix_ == "write" && dict.found("outputControl"))
     {
-        IOWarningIn("outputFilterOutputControl::read(const dictionary& dict)",dict)
+        IOWarningInFunction(dict)
             << "Using deprecated 'outputControl'" << nl
             << "    Please use 'writeControl' with 'writeInterval'"
             << endl;
-        
-        // Change the old names for this option
+
+        // Change to the old names for this option
         controlName = "outputControl";
         intervalName = "outputInterval";
     }
 
     if (dict.found(controlName))
     {
-        outputControl_ = outputControlNames_.read(dict.lookup(controlName));
+        timeControl_ = timeControlNames_.read(dict.lookup(controlName));
     }
     else
     {
-        outputControl_ = ocTimeStep;
+        timeControl_ = ocTimeStep;
     }
 
-    switch (outputControl_)
+    switch (timeControl_)
     {
         case ocTimeStep:
         {
-            outputInterval_ = dict.lookupOrDefault<label>(intervalName, 0);
+            intervalSteps_ = dict.lookupOrDefault<label>(intervalName, 0);
             break;
         }
 
+        case ocWriteTime:
         case ocOutputTime:
         {
-            outputInterval_ = dict.lookupOrDefault<label>(intervalName, 1);
+            intervalSteps_ = dict.lookupOrDefault<label>(intervalName, 1);
             break;
         }
 
         case ocClockTime:
         case ocRunTime:
         case ocCpuTime:
-        case ocAdjustableTime:
+        case ocAdjustableRunTime:
         {
-            writeInterval_ = readScalar(dict.lookup(intervalName));
+            interval_ = readScalar(dict.lookup(intervalName));
             break;
         }
 
@@ -135,45 +134,46 @@ void CML::outputFilterOutputControl::read(const dictionary& dict)
 }
 
 
-bool CML::outputFilterOutputControl::output()
+bool CML::outputFilterControl::execute()
 {
-    switch (outputControl_)
+    switch (timeControl_)
     {
         case ocTimeStep:
         {
             return
             (
-                (outputInterval_ <= 1)
-             || !(time_.timeIndex() % outputInterval_)
+                (intervalSteps_ <= 1)
+             || !(time_.timeIndex() % intervalSteps_)
             );
             break;
         }
 
+        case ocWriteTime:
         case ocOutputTime:
         {
-            if (time_.outputTime())
+            if (time_.writeTime())
             {
-                outputTimeLastDump_ ++;
-                return !(outputTimeLastDump_ % outputInterval_);
+                executionIndex_++;
+                return !(executionIndex_ % intervalSteps_);
             }
             break;
         }
 
         case ocRunTime:
-        case ocAdjustableTime:
+        case ocAdjustableRunTime:
         {
-            label outputIndex = label
+            label executionIndex = label
             (
                 (
                     (time_.value() - time_.startTime().value())
                   + 0.5*time_.deltaTValue()
                 )
-                / writeInterval_
+               /interval_
             );
 
-            if (outputIndex > outputTimeLastDump_)
+            if (executionIndex > executionIndex_)
             {
-                outputTimeLastDump_ = outputIndex;
+                executionIndex_ = executionIndex;
                 return true;
             }
             break;
@@ -181,14 +181,14 @@ bool CML::outputFilterOutputControl::output()
 
         case ocCpuTime:
         {
-            label outputIndex = label
+            label executionIndex = label
             (
                 returnReduce(time_.elapsedCpuTime(), maxOp<double>())
-                / writeInterval_
+               /interval_
             );
-            if (outputIndex > outputTimeLastDump_)
+            if (executionIndex > executionIndex_)
             {
-                outputTimeLastDump_ = outputIndex;
+                executionIndex_ = executionIndex;
                 return true;
             }
             break;
@@ -196,14 +196,14 @@ bool CML::outputFilterOutputControl::output()
 
         case ocClockTime:
         {
-            label outputIndex = label
+            label executionIndex = label
             (
                 returnReduce(label(time_.elapsedClockTime()), maxOp<label>())
-                / writeInterval_
+               /interval_
             );
-            if (outputIndex > outputTimeLastDump_)
+            if (executionIndex > executionIndex_)
             {
-                outputTimeLastDump_ = outputIndex;
+                executionIndex_ = executionIndex;
                 return true;
             }
             break;
@@ -216,10 +216,9 @@ bool CML::outputFilterOutputControl::output()
 
         default:
         {
-            // this error should not actually be possible
             FatalErrorInFunction
                 << "Undefined output control: "
-                << outputControlNames_[outputControl_] << nl
+                << timeControlNames_[timeControl_] << nl
                 << abort(FatalError);
             break;
         }

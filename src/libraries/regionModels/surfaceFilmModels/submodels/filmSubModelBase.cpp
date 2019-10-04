@@ -91,7 +91,7 @@ filmSubModelBase::~filmSubModelBase()
 
 bool filmSubModelBase::writeTime() const
 {
-    return active() && filmModel_.time().outputTime();
+    return active() && filmModel_.time().writeTime();
 }
 
 

@@ -46,7 +46,7 @@ bool EvolveCloudFunctionObject<solidParticleCloud>::execute(bool forceWrite)
         << endl;
 
     if(
-        obr().time().outputTime()
+        obr().time().writeTime()
         ||
         forceWrite
     ) {

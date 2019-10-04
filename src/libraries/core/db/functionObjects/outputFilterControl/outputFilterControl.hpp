@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------* \
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -18,19 +18,19 @@ License
     along with CAELUS.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    CML::outputFilterOutputControl
+    CML::outputFilterControl
 
 Description
     An output control for function objects.
     The default is time-step execution at every interval.
 
 SourceFiles
-    outputFilterOutputControl.cpp
+    outputFilterControl.cpp
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef outputFilterOutputControl_H
-#define outputFilterOutputControl_H
+#ifndef outputFilterControl_H
+#define outputFilterControl_H
 
 #include "dictionary.hpp"
 #include "Time.hpp"
@@ -42,23 +42,24 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class outputFilterOutputControl Declaration
+                  Class outputFilterControl Declaration
 \*---------------------------------------------------------------------------*/
 
-class outputFilterOutputControl
+class outputFilterControl
 {
 public:
 
     //- The output control options
-    enum outputControls
+    enum timeControls
     {
-        ocTimeStep,       /*!< execution is coupled to the time-step */
-        ocOutputTime,     /*!< execution is coupled to the output-time */
-        ocAdjustableTime, /*!< Adjust time step for dumping */
-        ocRunTime,        /*!< run time for dumping */
-        ocClockTime,      /*!< clock time for dumping */
-        ocCpuTime,        /*!< cpu time for dumping */
-        ocNone            /*!< no output */
+        ocTimeStep,           //!< execution is coupled to the time-step
+        ocWriteTime,          //!< execution is coupled to the write-time
+        ocOutputTime,         //!< execution is coupled to the output-time
+        ocAdjustableRunTime,  //!< Adjust time step for execution
+        ocRunTime,            //!< run time for execution
+        ocClockTime,          //!< clock time for execution
+        ocCpuTime,            //!< cpu time for execution
+        ocNone                //!< no output
     };
 
 
@@ -72,28 +73,30 @@ private:
         //- Prefix
         const word prefix_;
 
-        //- String representation of outputControls enums
-        static const NamedEnum<outputControls, 7> outputControlNames_;
+        //- String representation of timeControls enums
+        static const NamedEnum<timeControls, 8> timeControlNames_;
 
         //- Type of output
-        outputControls outputControl_;
+        timeControls timeControl_;
 
-        //- The execution interval (in time steps) when using \c timeStep mode,
+        //- Execution interval steps for timeStep mode
         //  a value <= 1 means execute at every time step
-        label outputInterval_;
+        label intervalSteps_;
 
-        //- Dumping counter for ocOutputTime or index dump for ocAdjustableTime
-        label outputTimeLastDump_;
+        //- Execution interval
+        scalar interval_;
 
-        //- Dump each deltaT (adjust Ttime)
-        scalar writeInterval_;
+        //- Index of previous execution
+        label executionIndex_;
 
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        outputFilterOutputControl(const outputFilterOutputControl&);
-        void operator=(const outputFilterOutputControl&);
+        outputFilterControl(const outputFilterControl&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const outputFilterControl&);
 
 
 public:
@@ -101,11 +104,16 @@ public:
     // Constructors
 
         //- Construct from Time object and dictionary
-        outputFilterOutputControl(const Time&, const dictionary&, const word prefix = "write");
+        outputFilterControl
+        (
+            const Time&,
+            const dictionary&,
+            const word prefix = "write"
+        );
 
 
     //- Destructor
-    ~outputFilterOutputControl();
+    ~outputFilterControl();
 
 
     // Member Functions
@@ -114,30 +122,30 @@ public:
         void read(const dictionary&);
 
         //- Return const access to the Time object
-        const Time& time() const
+        inline const Time& time() const
         {
             return time_;
         }
 
-        //- Flag to indicate whether to output
-        bool output();
+        //- Flag to indicate whether to execute
+        bool execute();
 
-        //- Return outputControl
-        outputControls outputControl() const
+        //- Return control
+        inline timeControls control() const
         {
-            return outputControl_;
+            return timeControl_;
         }
 
-        //- Return writeInterval
-        scalar writeInterval() const
+        //- Return interval
+        inline scalar interval() const
         {
-            return writeInterval_;
+            return interval_;
         }
 
-        //- Return outputTimeLastDump
-        label outputTimeLastDump() const
+        //- Return the index of the previous execution
+        inline label executionIndex() const
         {
-            return outputTimeLastDump_;
+            return executionIndex_;
         }
 };
 

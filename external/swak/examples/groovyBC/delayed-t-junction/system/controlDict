@@ -74,7 +74,7 @@ functions
         fields ( p U );
 
         // Write at same frequency as fields
-        outputControl   outputTime;
+        outputControl   writeTime;
         outputInterval  1;
     }
     flows

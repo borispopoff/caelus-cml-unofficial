@@ -206,7 +206,7 @@ src_core = Split("""
     db/functionObjects/functionObject/functionObject.cpp
     db/functionObjects/functionObjectList/functionObjectList.cpp
     db/functionObjects/functionObjectFile/functionObjectFile.cpp
-    db/functionObjects/outputFilterOutputControl/outputFilterOutputControl.cpp
+    db/functionObjects/outputFilterControl/outputFilterControl.cpp
     db/Time/TimePaths.cpp
     db/Time/TimeState.cpp
     db/Time/Time.cpp

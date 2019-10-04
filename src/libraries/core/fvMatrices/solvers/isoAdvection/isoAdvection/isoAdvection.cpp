@@ -265,7 +265,7 @@ void CML::isoAdvection::timeIntegratedFlux()
                 vector n0 = isoCutCell_.isoFaceArea();
                 n0 /= (mag(n0));
 
-                if (writeIsoFacesToFile_ && mesh_.time().outputTime())
+                if (writeIsoFacesToFile_ && mesh_.time().writeTime())
                 {
                     isoFacePts.append(isoCutCell_.isoFacePoints());
                 }
@@ -358,7 +358,7 @@ void CML::isoAdvection::timeIntegratedFlux()
         }
     }
 
-    if (writeIsoFacesToFile_ && mesh_.time().outputTime())
+    if (writeIsoFacesToFile_ && mesh_.time().writeTime())
     {
         writeIsoFaces(isoFacePts);
     }

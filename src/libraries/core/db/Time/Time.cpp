@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2015-2016 OpenCFD Ltd
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -69,6 +69,7 @@ const CML::NamedEnum<CML::Time::writeControls, 5>
     CML::Time::writeControlNames_;
 
 CML::Time::fmtflags CML::Time::format_(CML::Time::general);
+
 int CML::Time::precision_(6);
 
 CML::word CML::Time::controlDictName("controlDict");
@@ -87,21 +88,7 @@ void CML::Time::adjustDeltaT()
         timeToNextWrite = max
         (
             0.0,
-            (outputTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
-        );
-    }
-    if (secondaryWriteControl_ == wcAdjustableRunTime)
-    {
-        adjustTime = true;
-        timeToNextWrite = max
-        (
-            0.0,
-            min
-            (
-                timeToNextWrite,
-                (secondaryOutputTimeIndex_ + 1)*secondaryWriteInterval_
-              - (value() - startTime_)
-            )
+            (writeTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
         );
     }
 
@@ -395,8 +382,6 @@ CML::Time::Time
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0), // bit less to allow calculations
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -464,8 +449,6 @@ CML::Time::Time
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0),
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -536,8 +519,6 @@ CML::Time::Time
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0),
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -608,8 +589,6 @@ CML::Time::Time
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0),
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -636,7 +615,7 @@ CML::Time::~Time()
         removeWatch(controlDict_.watchIndex());
     }
 
-    // destroy function objects first
+    // Destroy function objects first
     functionObjects_.clear();
 
     // cleanup profiling
@@ -678,11 +657,11 @@ void CML::Time::setUnmodified(const label watchFd) const
 }
 
 
-CML::word CML::Time::timeName(const scalar t)
+CML::word CML::Time::timeName(const scalar t, const int precision)
 {
     std::ostringstream buf;
     buf.setf(ios_base::fmtflags(format_), ios_base::floatfield);
-    buf.precision(precision_);
+    buf.precision(precision);
     buf << t;
     return buf.str();
 }
@@ -694,7 +673,6 @@ CML::word CML::Time::timeName() const
 }
 
 
-// Search the construction path for times
 CML::instantList CML::Time::times() const
 {
     return findTimes(path(), constant());
@@ -707,6 +685,8 @@ CML::word CML::Time::findInstancePath
     const instant& t
 ) const
 {
+    const word& constantName = constant();
+
     // Read directory entries into a list
     fileNameList dirEntries(readDir(directory, fileName::DIRECTORY));
 
@@ -721,8 +701,6 @@ CML::word CML::Time::findInstancePath
 
     if (t.equal(0.0))
     {
-        const word& constantName = constant();
-
         // Looking for 0 or constant. 0 already checked above.
         if (isDir(directory/constantName))
         {
@@ -744,7 +722,7 @@ CML::instant CML::Time::findClosestTime(const scalar t) const
 {
     instantList timeDirs = findTimes(path(), constant());
 
-    // there is only one time (likely "constant") so return it
+    // There is only one time (likely "constant") so return it
     if (timeDirs.size() == 1)
     {
         return timeDirs[0];
@@ -762,13 +740,13 @@ CML::instant CML::Time::findClosestTime(const scalar t) const
     label nearestIndex = -1;
     scalar deltaT = GREAT;
 
-    for (label timeI=1; timeI < timeDirs.size(); ++timeI)
+    for (label timei=1; timei < timeDirs.size(); ++timei)
     {
-        scalar diff = mag(timeDirs[timeI].value() - t);
+        scalar diff = mag(timeDirs[timei].value() - t);
         if (diff < deltaT)
         {
             deltaT = diff;
-            nearestIndex = timeI;
+            nearestIndex = timei;
         }
     }
 
@@ -796,15 +774,15 @@ CML::label CML::Time::findClosestTimeIndex
     label nearestIndex = -1;
     scalar deltaT = GREAT;
 
-    forAll(timeDirs, timeI)
+    forAll(timeDirs, timei)
     {
-        if (timeDirs[timeI].name() == constantName) continue;
+        if (timeDirs[timei].name() == constantName) continue;
 
-        scalar diff = mag(timeDirs[timeI].value() - t);
+        scalar diff = mag(timeDirs[timei].value() - t);
         if (diff < deltaT)
         {
             deltaT = diff;
-            nearestIndex = timeI;
+            nearestIndex = timei;
         }
     }
 
@@ -1046,6 +1024,7 @@ CML::Time& CML::Time::operator++()
     // Save old time name
     const word oldTimeName = dimensionedScalar::name();
 
+    // Increment time
     setTime(value() + deltaT_, timeIndex_ + 1);
 
     if (!subCycling_)
@@ -1116,123 +1095,64 @@ CML::Time& CML::Time::operator++()
             }
         }
 
-
-        outputTime_ = false;
+        writeTime_ = false;
 
         switch (writeControl_)
         {
             case wcTimeStep:
-                outputTime_ = !(timeIndex_ % label(writeInterval_));
+                writeTime_ = !(timeIndex_ % label(writeInterval_));
             break;
 
             case wcRunTime:
             case wcAdjustableRunTime:
             {
-                label outputIndex = label
+                label writeIndex = label
                 (
                     ((value() - startTime_) + 0.5*deltaT_)
                   / writeInterval_
                 );
 
-                if (outputIndex > outputTimeIndex_)
+                if (writeIndex > writeTimeIndex_)
                 {
-                    outputTime_ = true;
-                    outputTimeIndex_ = outputIndex;
+                    writeTime_ = true;
+                    writeTimeIndex_ = writeIndex;
                 }
             }
             break;
 
             case wcCpuTime:
             {
-                label outputIndex = label
+                label writeIndex = label
                 (
                     returnReduce(elapsedCpuTime(), maxOp<double>())
                   / writeInterval_
                 );
-                if (outputIndex > outputTimeIndex_)
+                if (writeIndex > writeTimeIndex_)
                 {
-                    outputTime_ = true;
-                    outputTimeIndex_ = outputIndex;
+                    writeTime_ = true;
+                    writeTimeIndex_ = writeIndex;
                 }
             }
             break;
 
             case wcClockTime:
             {
-                label outputIndex = label
+                label writeIndex = label
                 (
                     returnReduce(label(elapsedClockTime()), maxOp<label>())
                   / writeInterval_
                 );
-                if (outputIndex > outputTimeIndex_)
+                if (writeIndex > writeTimeIndex_)
                 {
-                    outputTime_ = true;
-                    outputTimeIndex_ = outputIndex;
+                    writeTime_ = true;
+                    writeTimeIndex_ = writeIndex;
                 }
             }
             break;
         }
 
 
-        // Adapt for secondaryWrite controls
-        switch (secondaryWriteControl_)
-        {
-            case wcTimeStep:
-                outputTime_ =
-                    outputTime_
-                || !(timeIndex_ % label(secondaryWriteInterval_));
-            break;
-
-            case wcRunTime:
-            case wcAdjustableRunTime:
-            {
-                label outputIndex = label
-                (
-                    ((value() - startTime_) + 0.5*deltaT_)
-                  / secondaryWriteInterval_
-                );
-
-                if (outputIndex > secondaryOutputTimeIndex_)
-                {
-                    outputTime_ = true;
-                    secondaryOutputTimeIndex_ = outputIndex;
-                }
-            }
-            break;
-
-            case wcCpuTime:
-            {
-                label outputIndex = label
-                (
-                    returnReduce(elapsedCpuTime(), maxOp<double>())
-                  / secondaryWriteInterval_
-                );
-                if (outputIndex > secondaryOutputTimeIndex_)
-                {
-                    outputTime_ = true;
-                    secondaryOutputTimeIndex_ = outputIndex;
-                }
-            }
-            break;
-
-            case wcClockTime:
-            {
-                label outputIndex = label
-                (
-                    returnReduce(label(elapsedClockTime()), maxOp<label>())
-                  / secondaryWriteInterval_
-                );
-                if (outputIndex > secondaryOutputTimeIndex_)
-                {
-                    outputTime_ = true;
-                    secondaryOutputTimeIndex_ = outputIndex;
-                }
-            }
-            break;
-        }
-
-
-        // see if endTime needs adjustment to stop at the next run()/end() check
+        // Check if endTime needs adjustment to stop at the next run()/end()
         if (!end())
         {
             if (stopAt_ == saNoWriteNow)
@@ -1242,18 +1162,18 @@ CML::Time& CML::Time::operator++()
             else if (stopAt_ == saWriteNow)
             {
                 endTime_ = value();
-                outputTime_ = true;
+                writeTime_ = true;
             }
-            else if (stopAt_ == saNextWrite && outputTime_ == true)
+            else if (stopAt_ == saNextWrite && writeTime_ == true)
             {
                 endTime_ = value();
             }
         }
 
-        // Override outputTime if one-shot writing
+        // Override writeTime if one-shot writing
         if (writeOnce_)
         {
-            outputTime_ = true;
+            writeTime_ = true;
             writeOnce_ = false;
         }
 

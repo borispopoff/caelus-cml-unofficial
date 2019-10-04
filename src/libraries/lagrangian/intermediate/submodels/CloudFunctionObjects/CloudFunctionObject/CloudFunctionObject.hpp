@@ -171,7 +171,7 @@ public:
             const fileName& outputDir() const;
 
             //- Return the output time path
-            fileName outputTimeDir() const;
+            fileName writeTimeDir() const;
 };
 
 
@@ -283,7 +283,7 @@ void CML::CloudFunctionObject<CloudType>::preEvolve()
 template<class CloudType>
 void CML::CloudFunctionObject<CloudType>::postEvolve()
 {
-    if (this->owner().time().outputTime())
+    if (this->owner().time().writeTime())
     {
         this->write();
     }
@@ -328,7 +328,7 @@ const CML::fileName& CML::CloudFunctionObject<CloudType>::outputDir() const
 
 
 template<class CloudType>
-CML::fileName CML::CloudFunctionObject<CloudType>::outputTimeDir() const
+CML::fileName CML::CloudFunctionObject<CloudType>::writeTimeDir() const
 {
     return outputDir_/this->owner().time().timeName();
 }

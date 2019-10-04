@@ -153,7 +153,7 @@ functions
         // Where to load it from (if not already in solver)
         functionObjectLibs ("libfieldFunctionObjects.so");
 
-        outputControl   outputTime;
+        outputControl   writeTime;
 
         // Fields to be  averaged - runTime modifiable
         fields
@@ -486,7 +486,7 @@ functions
                     writeComonentField {
                         type expressionField;
                         autowrite true;
-                        outputControl outputTime;
+                        outputControl writeTime;
                         fieldName componentSumFromPython;
                         expression "componentSum";
                         globalScopes (
@@ -510,7 +510,7 @@ functions
     distributionOfP {
         type fieldDistribution;
         //        outputInterval  10;
-        outputControlMode outputTime;
+        outputControlMode writeTime;
         writeTimeline true;
         writeDistribution true;
         fieldName p;
@@ -547,7 +547,7 @@ functions
     averagePressureDistributionX {
         type swakExpressionAverageDistribution;
         verbose true;
-        outputControlMode outputTime;
+        outputControlMode writeTime;
         valueType internalField;
         expression "p";
         weight "vol()";

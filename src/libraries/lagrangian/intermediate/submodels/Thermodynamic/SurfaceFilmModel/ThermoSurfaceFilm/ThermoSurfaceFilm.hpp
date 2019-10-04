@@ -911,7 +911,7 @@ void CML::ThermoSurfaceFilm<CloudType>::info(Ostream& os)
 
     os  << "    New film splash parcels         = " << nSplashTotal << endl;
 
-    if (this->outputTime())
+    if (this->writeTime())
     {
         this->setModelProperty("nParcelsSplashed", nSplashTotal);
         nParcelsSplashed_ = 0;

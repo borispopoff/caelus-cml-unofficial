@@ -216,7 +216,7 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
 
     force /= magSf;
 
-    if (filmModel_.regionMesh().time().outputTime())
+    if (filmModel_.regionMesh().time().writeTime())
     {
         tForce().write();
     }

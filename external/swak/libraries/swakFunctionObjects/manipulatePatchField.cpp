@@ -117,7 +117,7 @@ void CML::manipulatePatchField::manipulate(
         << " faces with the expression " << expression_ << endl;
 
     if(
-        obr_.time().outputTime()
+        obr_.time().writeTime()
         &&
         field.writeOpt()==IOobject::AUTO_WRITE
     ) {
@@ -194,7 +194,7 @@ void CML::manipulatePatchField::manipulatePoint(
         << " points with the expression " << expression_ << endl;
 
     if(
-        obr_.time().outputTime()
+        obr_.time().writeTime()
         &&
         field.writeOpt()==IOobject::AUTO_WRITE
     ) {

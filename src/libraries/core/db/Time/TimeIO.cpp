@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2016 OpenCFD Ltd
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -95,7 +95,6 @@ void CML::Time::readDict()
     }
 
     scalar oldWriteInterval = writeInterval_;
-    scalar oldSecondaryWriteInterval = secondaryWriteInterval_;
 
     if (controlDict_.readIfPresent("writeInterval", writeInterval_))
     {
@@ -112,77 +111,19 @@ void CML::Time::readDict()
     }
 
 
-    // Additional writing
-    if (controlDict_.found("secondaryWriteControl"))
-    {
-        secondaryWriteControl_ = writeControlNames_.read
-        (
-            controlDict_.lookup("secondaryWriteControl")
-        );
-
-        if
-        (
-            controlDict_.readIfPresent
-            (
-                "secondaryWriteInterval",
-                secondaryWriteInterval_
-            )
-        )
-        {
-            if
-            (
-                secondaryWriteControl_ == wcTimeStep
-             && label(secondaryWriteInterval_) < 1
-            )
-            {
-                FatalIOErrorInFunction(controlDict_)
-                    << "secondaryWriteInterval < 1"
-                    << " for secondaryWriteControl timeStep"
-                    << exit(FatalIOError);
-            }
-        }
-        else
-        {
-            controlDict_.lookup("secondaryWriteFrequency")
-                >> secondaryWriteInterval_;
-        }
-    }
-
-
-
     if (oldWriteInterval != writeInterval_)
     {
         switch (writeControl_)
         {
             case wcRunTime:
             case wcAdjustableRunTime:
-                // Recalculate outputTimeIndex_ to be in units of current
+                // Recalculate writeTimeIndex_ to be in units of current
                 // writeInterval.
-                outputTimeIndex_ = label
+                writeTimeIndex_ = label
                 (
-                    outputTimeIndex_
+                    writeTimeIndex_
                   * oldWriteInterval
                   / writeInterval_
-                );
-            break;
-
-            default:
-            break;
-        }
-    }
-    if (oldSecondaryWriteInterval != secondaryWriteInterval_)
-    {
-        switch (secondaryWriteControl_)
-        {
-            case wcRunTime:
-            case wcAdjustableRunTime:
-                // Recalculate secondaryOutputTimeIndex_ to be in units of
-                // current writeInterval.
-                secondaryOutputTimeIndex_ = label
-                (
-                    secondaryOutputTimeIndex_
-                  * oldSecondaryWriteInterval
-                  / secondaryWriteInterval_
                 );
             break;
 
@@ -378,7 +319,7 @@ bool CML::Time::writeObject
     IOstream::compressionType cmp
 ) const
 {
-    if (outputTime())
+    if (writeTime())
     {
         addProfiling(writing, "objectRegistry::writeObject");
 
@@ -407,13 +348,17 @@ bool CML::Time::writeObject
         timeDict.regIOobject::writeObject(fmt, ver, cmp);
         bool writeOK = objectRegistry::writeObject(fmt, ver, cmp);
 
-        if (writeOK && purgeWrite_)
+        if (writeOK)
         {
-            previousOutputTimes_.push(tmName);
-
-            while (previousOutputTimes_.size() > purgeWrite_)
+            // Does the writeTime trigger purging?
+            if (writeTime_ && purgeWrite_)
             {
-                rmDir(objectRegistry::path(previousOutputTimes_.pop()));
+                previousWriteTimes_.push(tmName);
+
+                while (previousWriteTimes_.size() > purgeWrite_)
+                {
+                    rmDir(objectRegistry::path(previousWriteTimes_.pop()));
+                }
             }
         }
 
@@ -428,7 +373,7 @@ bool CML::Time::writeObject
 
 bool CML::Time::writeNow()
 {
-    outputTime_ = true;
+    writeTime_ = true;
     return write();
 }
 

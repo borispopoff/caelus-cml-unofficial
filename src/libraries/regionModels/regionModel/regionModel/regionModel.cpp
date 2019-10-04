@@ -479,7 +479,7 @@ void CML::regionModels::regionModel::evolve()
         Info<< "\nEvolving " << modelName_ << " for region "
             << regionMesh().name() << endl;
 
-        // read();
+        //read();
 
         preEvolveRegion();
 
@@ -495,7 +495,7 @@ void CML::regionModels::regionModel::evolve()
             Info<< endl << decrIndent;
         }
 
-        if (time_.outputTime())
+        if (time_.writeTime())
         {
             outputProperties().writeObject
             (

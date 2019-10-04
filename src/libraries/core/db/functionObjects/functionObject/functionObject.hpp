@@ -144,7 +144,7 @@ public:
         virtual bool start() = 0;
 
         //- Called at each ++ or += of the time-loop. forceWrite overrides the
-        //  outputControl behaviour.
+        //  writeControl behaviour
         virtual bool execute(const bool forceWrite) = 0;
 
         //- Called when Time::run() determines that the time-loop exits.

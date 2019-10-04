@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -619,7 +619,7 @@ void CML::fv::rotorDiskSource::writeField
 {
     typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
 
-    if (mesh_.time().outputTime() || writeNow)
+    if (mesh_.time().writeTime() || writeNow)
     {
         tmp<fieldType> tfld
         (

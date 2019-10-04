@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -75,7 +75,7 @@ void CML::porosityModels::DarcyForchheimer::calcTransformModelData()
 {
     if (coordSys_.R().uniform())
     {
-        forAll (cellZoneIDs_, zoneI)
+        forAll(cellZoneIDs_, zoneI)
         {
             D_[zoneI].setSize(1);
             F_[zoneI].setSize(1);
@@ -126,7 +126,7 @@ void CML::porosityModels::DarcyForchheimer::calcTransformModelData()
         }
     }
 
-    if (debug && mesh_.time().outputTime())
+    if (debug && mesh_.time().writeTime())
     {
         volTensorField Dout
         (
@@ -191,7 +191,7 @@ void CML::porosityModels::DarcyForchheimer::correct
     const scalarField& V = mesh_.V();
     scalarField& Udiag = UEqn.diag();
     vectorField& Usource = UEqn.source();
- 
+
     if (UEqn.dimensions() == dimForce)
     {
         const volScalarField& rho = mesh_.lookupObject<volScalarField>(rhoName_);

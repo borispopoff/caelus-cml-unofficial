@@ -97,7 +97,7 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
         }
     }
 
-    if (debug && mesh.time().outputTime())
+    if (debug && mesh.time().writeTime())
     {
         tinvR1().write();
     }
@@ -188,7 +188,7 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
     }
 */
     // checks
-    if (debug && mesh.time().outputTime())
+    if (debug && mesh.time().writeTime())
     {
         volScalarField volCosAngle
         (
@@ -330,7 +330,7 @@ void curvatureSeparation::correct
 
     addToInjectedMass(sum(separated*availableMass));
 
-    if (debug && mesh.time().outputTime())
+    if (debug && mesh.time().writeTime())
     {
         volScalarField volFnet
         (

@@ -51,7 +51,7 @@ void CML::fv::pressureGradientExplicitSource::writeProps
 ) const
 {
     // Only write on output time
-    if (mesh_.time().outputTime())
+    if (mesh_.time().writeTime())
     {
         IOdictionary propsDict
         (

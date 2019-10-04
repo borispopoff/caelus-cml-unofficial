@@ -81,7 +81,7 @@ void CML::manipulateField::manipulate(
     original.correctBoundaryConditions();
 
     if(
-        obr_.time().outputTime()
+        obr_.time().writeTime()
         &&
         original.writeOpt()==IOobject::AUTO_WRITE
     ) {
@@ -119,7 +119,7 @@ void CML::manipulateField::manipulateSurface(
     //    original.correctBoundaryConditions();
 
     if(
-        obr_.time().outputTime()
+        obr_.time().writeTime()
         &&
         original.writeOpt()==IOobject::AUTO_WRITE
     ) {

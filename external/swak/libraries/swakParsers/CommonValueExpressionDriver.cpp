@@ -1814,7 +1814,7 @@ void CommonValueExpressionDriver::tryWrite() const
     if(
         writer_.valid()
         &&
-        mesh().time().outputTime()
+        mesh().time().writeTime()
     ) {
         writer_->write();
     }

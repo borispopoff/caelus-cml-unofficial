@@ -7,7 +7,7 @@ forceCoeffs1
 {
     type        forceCoeffs;
     functionObjectLibs ( "libforces.so" );
-    outputControl outputTime;
+    outputControl writeTime;
     log         yes;
 
     patches     ( "motorBike.*" );
