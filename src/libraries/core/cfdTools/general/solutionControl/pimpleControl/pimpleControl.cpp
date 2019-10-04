@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 
 -------------------------------------------------------------------------------
 License
@@ -117,9 +117,9 @@ bool CML::pimpleControl::criteriaSatisfied()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-CML::pimpleControl::pimpleControl(fvMesh& mesh)
+CML::pimpleControl::pimpleControl(fvMesh& mesh, const word& dictName)
 :
-    solutionControl(mesh, "PIMPLE"),
+    solutionControl(mesh, dictName),
     nCorrPIMPLE_(0),
     nCorrPISO_(0),
     corrPISO_(0),
@@ -223,10 +223,7 @@ bool CML::pimpleControl::loop()
 
         if (corr_ <= nCorrPIMPLE_)
         {
-            if (nCorrPIMPLE_ > 1)
-            {
-                Info<< algorithmName_ << ": iteration " << corr_ << endl;
-            }
+            Info<< algorithmName_ << ": iteration " << corr_ << endl;
             storePrevIterFields();
             completed = false;
         }

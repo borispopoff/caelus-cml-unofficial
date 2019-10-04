@@ -984,6 +984,7 @@ src_core = Split("""
     cfdTools/general/CorrectPhi/correctUphiBCs.cpp
     cfdTools/general/solutionControl/solutionControl/solutionControl.cpp
     cfdTools/general/solutionControl/simpleControl/simpleControl.cpp
+    cfdTools/general/solutionControl/pisoControl/pisoControl.cpp
     cfdTools/general/solutionControl/pimpleControl/pimpleControl.cpp
     cfdTools/general/MRF/MRFZone.cpp
     cfdTools/general/MRF/MRFZoneList.cpp

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
   
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,9 @@ Class
 Description
     PIMPLE control class to supply convergence information/checks for
     the PIMPLE loop.
+
+    May also be used to for PISO-based algorithms as PISO controls are a
+    sub-set of PIMPLE controls.
 
 \*---------------------------------------------------------------------------*/
 
@@ -95,8 +98,8 @@ public:
 
     // Constructors
 
-        //- Construct from mesh
-        pimpleControl(fvMesh& mesh);
+        //- Construct from mesh and the name of control sub-dictionary
+        pimpleControl(fvMesh& mesh, const word& dictName="PIMPLE");
 
 
     //- Destructor

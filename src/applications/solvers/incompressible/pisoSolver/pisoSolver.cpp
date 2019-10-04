@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 Copyright (C) 2014 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -22,24 +22,33 @@ Application
     pisoSolver
 
 Description
-    Transient solver for incompressible flow with generic turbulence model, 
-    i.e. laminar, RAS or LES may be selected.
+    Transient solver for incompressible flow.
+
+    Sub-models include:
+    - turbulence modelling, i.e. laminar, RAS or LES
+    - run-time selectable MRF and finite volume options, e.g. explicit porosity
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.hpp"
 #include "singlePhaseTransportModel.hpp"
 #include "turbulenceModel.hpp"
+#include "pisoControl.hpp"
+#include "fvIOoptionList.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
     #include "setRootCase.hpp"
-
     #include "createTime.hpp"
     #include "createMesh.hpp"
+
+    pisoControl piso(mesh);
+
     #include "createFields.hpp"
+    #include "createMRF.hpp"
+    #include "createFvOptions.hpp"
     #include "initContinuityErrs.hpp"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -50,79 +59,16 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        #include "readPISOControls.hpp"
         #include "CourantNo.hpp"
 
         // Pressure-velocity PISO corrector
         {
-            // Momentum predictor
-
-            fvVectorMatrix UEqn
-            (
-                fvm::ddt(U)
-              + fvm::div(phi, U)
-              + turbulence->divDevReff(U)
-            );
-
-            UEqn.relax();
-
-            if (momentumPredictor)
-            {
-                solve(UEqn == -fvc::grad(p));
-            }
+            #include "UEqn.hpp"
 
             // --- PISO loop
-
-            for (int corr=0; corr<nCorr; corr++)
+            while (piso.correct())
             {
-                volScalarField rAU(1.0/UEqn.A());
-
-                volVectorField HbyA("HbyA", U);
-                HbyA = rAU*UEqn.H();
-                surfaceScalarField phiHbyA
-                (
-                    "phiHbyA",
-                    fvc::flux(HbyA)
-                  + fvc::interpolate(rAU)*fvc::ddtCorr(U, phi)
-                );
-
-                adjustPhi(phiHbyA, U, p);
-
-                // Non-orthogonal pressure corrector loop
-                for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
-                {
-                    // Pressure corrector
-
-                    fvScalarMatrix pEqn
-                    (
-                        fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
-                    );
-
-                    pEqn.setReference(pRefCell, pRefValue);
-
-                    if
-                    (
-                        corr == nCorr-1
-                     && nonOrth == nNonOrthCorr
-                    )
-                    {
-                        pEqn.solve(mesh.solver("pFinal"));
-                    }
-                    else
-                    {
-                        pEqn.solve();
-                    }
-
-                    if (nonOrth == nNonOrthCorr)
-                    {
-                        phi = phiHbyA - pEqn.flux();
-                    }
-                }
-
-                #include "continuityErrs.hpp"
-
-                U = HbyA - rAU*fvc::grad(p);
-                U.correctBoundaryConditions();
+                #include "pEqn.hpp"
             }
         }
 
