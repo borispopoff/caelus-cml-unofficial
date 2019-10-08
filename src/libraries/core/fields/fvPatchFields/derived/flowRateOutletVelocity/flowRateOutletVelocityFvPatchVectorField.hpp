@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -19,40 +19,37 @@ License
     along with CAELUS.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    CML::flowRateInletVelocityFvPatchVectorField
+    CML::flowRateOutletVelocityFvPatchVectorField
 
 Description
-    Velocity inlet boundary condition either correcting the extrapolated
-    velocity or creating a uniform velocity field normal to the patch adjusted
-    to match the specified flow rate
+    Velocity outlet boundary condition which corrects the extrapolated velocity
+    to match the specified flow rate.
 
     For a mass-based flux:
     - the flow rate should be provided in kg/s
-    - if \c rho is "none" the flow rate is in m3/s
+    - if \c rho is "none" the flow rate is in m^3/s
     - otherwise \c rho should correspond to the name of the density field
     - if the density field cannot be found in the database, the user must
-      specify the inlet density using the \c rhoInlet entry
+      specify the outlet density using the \c rhoOutlet entry
 
     For a volumetric-based flux:
-    - the flow rate is in m3/s
+    - the flow rate is in m^3/s
 
 Usage
     \table
         Property     | Description             | Required    | Default value
         massFlowRate | mass flow rate [kg/s]   | no          |
-        volumetricFlowRate | volumetric flow rate [m3/s]| no |
+        volumetricFlowRate | volumetric flow rate [m^3/s]| no |
         rho          | density field name      | no          | rho
-        rhoInlet     | inlet density           | no          |
-        extrapolateProfile | Extrapolate velocity profile | no | false
+        rhoOutlet    | outlet density          | no          |
     \endtable
 
     Example of the boundary condition specification for a volumetric flow rate:
     \verbatim
     <patchName>
     {
-        type                flowRateInletVelocity;
+        type                flowRateOutletVelocity;
         volumetricFlowRate  0.2;
-        extrapolateProfile  yes;
         value               uniform (0 0 0);
     }
     \endverbatim
@@ -61,11 +58,9 @@ Usage
     \verbatim
     <patchName>
     {
-        type                flowRateInletVelocity;
+        type                flowRateOutletVelocity;
         massFlowRate        0.2;
-        extrapolateProfile  yes;
-        rho                 rho;
-        rhoInlet            1.0;
+        rhoOutlet           1.0;
         value               uniform (0 0 0);
     }
     \endverbatim
@@ -74,10 +69,10 @@ Usage
     specified as constant, a polynomial fuction of time, and ...
 
 Note
-    - \c rhoInlet is required for the case of a mass flow rate, where the
+    - \c rhoOutlet is required for the case of a mass flow rate, where the
       density field is not available at start-up
-    - The value is positive into the domain (as an inlet)
-    - May not work correctly for transonic inlets
+    - The value is positive out of the domain (as an outlet)
+    - May not work correctly for transonic outlets
     - Strange behaviour with potentialFoam since the U equation is not solved
 
 SeeAlso
@@ -85,12 +80,12 @@ SeeAlso
     CML::fixedValueFvPatchField
 
 SourceFiles
-    flowRateInletVelocityFvPatchVectorField.cpp
+    flowRateOutletVelocityFvPatchVectorField.cpp
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef flowRateInletVelocityFvPatchVectorField_H
-#define flowRateInletVelocityFvPatchVectorField_H
+#ifndef flowRateOutletVelocityFvPatchVectorField_H
+#define flowRateOutletVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.hpp"
 #include "DataEntry.hpp"
@@ -101,16 +96,16 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-           Class flowRateInletVelocityFvPatchVectorField Declaration
+           Class flowRateOutletVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
-class flowRateInletVelocityFvPatchVectorField
+class flowRateOutletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
     // Private data
 
-        //- Inlet integral flow rate
+        //- Outlet integral flow rate
         autoPtr<DataEntry<scalar>> flowRate_;
 
         //- Is volumetric?
@@ -120,10 +115,7 @@ class flowRateInletVelocityFvPatchVectorField
         word rhoName_;
 
         //- Rho initialisation value (for start; if value not supplied)
-        scalar rhoInlet_;
-
-        //- Set true to extrapolate the velocity profile from the interior
-        Switch extrapolateProfile_;
+        scalar rhoOutlet_;
 
 
     // Private member functions
@@ -136,20 +128,20 @@ class flowRateInletVelocityFvPatchVectorField
 public:
 
    //- Runtime type information
-   TypeName("flowRateInletVelocity");
+   TypeName("flowRateOutletVelocity");
 
 
    // Constructors
 
         //- Construct from patch and internal field
-        flowRateInletVelocityFvPatchVectorField
+        flowRateOutletVelocityFvPatchVectorField
         (
             const fvPatch&,
             const DimensionedField<vector, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        flowRateInletVelocityFvPatchVectorField
+        flowRateOutletVelocityFvPatchVectorField
         (
             const fvPatch&,
             const DimensionedField<vector, volMesh>&,
@@ -157,20 +149,20 @@ public:
         );
 
         //- Construct by mapping given
-        //  flowRateInletVelocityFvPatchVectorField
+        //  flowRateOutletVelocityFvPatchVectorField
         //  onto a new patch
-        flowRateInletVelocityFvPatchVectorField
+        flowRateOutletVelocityFvPatchVectorField
         (
-            const flowRateInletVelocityFvPatchVectorField&,
+            const flowRateOutletVelocityFvPatchVectorField&,
             const fvPatch&,
             const DimensionedField<vector, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Construct as copy
-        flowRateInletVelocityFvPatchVectorField
+        flowRateOutletVelocityFvPatchVectorField
         (
-            const flowRateInletVelocityFvPatchVectorField&
+            const flowRateOutletVelocityFvPatchVectorField&
         );
 
         //- Construct and return a clone
@@ -178,14 +170,14 @@ public:
         {
             return tmp<fvPatchVectorField>
             (
-                new flowRateInletVelocityFvPatchVectorField(*this)
+                new flowRateOutletVelocityFvPatchVectorField(*this)
             );
         }
 
         //- Construct as copy setting internal field reference
-        flowRateInletVelocityFvPatchVectorField
+        flowRateOutletVelocityFvPatchVectorField
         (
-            const flowRateInletVelocityFvPatchVectorField&,
+            const flowRateOutletVelocityFvPatchVectorField&,
             const DimensionedField<vector, volMesh>&
         );
 
@@ -197,7 +189,7 @@ public:
         {
             return tmp<fvPatchVectorField>
             (
-                new flowRateInletVelocityFvPatchVectorField(*this, iF)
+                new flowRateOutletVelocityFvPatchVectorField(*this, iF)
             );
         }
 
