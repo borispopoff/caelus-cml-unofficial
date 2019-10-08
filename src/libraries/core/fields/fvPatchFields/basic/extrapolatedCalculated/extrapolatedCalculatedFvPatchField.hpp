@@ -22,15 +22,14 @@ Class
 
 Description
     This boundary condition applies a zero-gradient condition from the patch
-    internal field onto the patch faces when evaluated but may also be
-    assigned. snGrad returns the patch gradient evaluated from the current
+    internal field onto the patch faces when \c evaluated but may also be
+    assigned.  \c snGrad returns the patch gradient evaluated from the current
     internal and patch field values rather than returning zero.
 
-    \heading Patch usage
-
+Usage
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            extrapolatedCalculated;
     }
@@ -49,7 +48,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class extrapolatedCalculatedFvPatchField Declaration
+                   Class extrapolatedCalculatedFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -78,8 +77,7 @@ public:
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const dictionary&,
-            const bool valueRequired=false
+            const dictionary&
         );
 
         //- Construct by mapping given patchField<Type> onto a new patch
@@ -161,6 +159,21 @@ template<class Type>
 CML::extrapolatedCalculatedFvPatchField<Type>::
 extrapolatedCalculatedFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    calculatedFvPatchField<Type>(p, iF, dict, false)
+{
+    evaluate();
+}
+
+
+template<class Type>
+CML::extrapolatedCalculatedFvPatchField<Type>::
+extrapolatedCalculatedFvPatchField
+(
     const extrapolatedCalculatedFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -168,20 +181,6 @@ extrapolatedCalculatedFvPatchField
 )
 :
     calculatedFvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-CML::extrapolatedCalculatedFvPatchField<Type>::
-extrapolatedCalculatedFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict,
-    const bool valueRequired
-)
-:
-    calculatedFvPatchField<Type>(p, iF, dict, valueRequired)
 {}
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 Copyright (C) 2018 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,7 @@ Class
 Description
     This boundary condition provides a uniform fixed value condition.
 
-    \heading Patch usage
-
+Usage
     \table
         Property       | Description             | Required    | Default value
         uniformValue   | uniform value           | yes         |
@@ -217,36 +216,34 @@ CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 template<class Type>
 CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
-    const uniformFixedValueFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const dictionary& dict
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),  // bypass mapper
-    uniformValue_(ptf.uniformValue_().clone().ptr()),
-    inletDiffusion_(ptf.inletDiffusion_)
+    fixedValueFvPatchField<Type>(p, iF, dict, false),
+    uniformValue_(DataEntry<Type>::New("uniformValue", dict)),
+    inletDiffusion_(dict.lookupOrDefault("inlet-diffusion", true))
 {
-    // Evaluate since value not mapped
-    const scalar t = this->db().time().timeOutputValue();
-    fvPatchField<Type>::operator==(uniformValue_->value(t));
+    this->evaluate();
 }
 
 
 template<class Type>
 CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
+    const uniformFixedValueFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),
-    uniformValue_(DataEntry<Type>::New("uniformValue", dict)),
-    inletDiffusion_(dict.lookupOrDefault("inlet-diffusion", true))
+    fixedValueFvPatchField<Type>(p, iF),   // Don't map
+    uniformValue_(ptf.uniformValue_().clone().ptr()),
+    inletDiffusion_(ptf.inletDiffusion_)
 {
-    const scalar t = this->db().time().timeOutputValue();
-    fvPatchField<Type>::operator==(uniformValue_->value(t));
+    // Evaluate since value not mapped
+    this->evaluate();
 }
 
 
@@ -283,12 +280,10 @@ CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
     ),
     inletDiffusion_(ptf.inletDiffusion_)
 {
-    // For safety re-evaluate
-    const scalar t = this->db().time().timeOutputValue();
-
+    // Evaluate the profile if defined
     if (ptf.uniformValue_.valid())
     {
-        fvPatchField<Type>::operator==(uniformValue_->value(t));
+        this->evaluate();
     }
 }
 

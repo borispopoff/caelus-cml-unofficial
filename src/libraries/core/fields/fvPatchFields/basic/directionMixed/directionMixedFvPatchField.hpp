@@ -251,22 +251,6 @@ CML::directionMixedFvPatchField<Type>::directionMixedFvPatchField
 template<class Type>
 CML::directionMixedFvPatchField<Type>::directionMixedFvPatchField
 (
-    const directionMixedFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    transformFvPatchField<Type>(ptf, p, iF, mapper),
-    refValue_(ptf.refValue_, mapper),
-    refGrad_(ptf.refGrad_, mapper),
-    valueFraction_(ptf.valueFraction_, mapper)
-{}
-
-
-template<class Type>
-CML::directionMixedFvPatchField<Type>::directionMixedFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -279,6 +263,22 @@ CML::directionMixedFvPatchField<Type>::directionMixedFvPatchField
 {
     evaluate();
 }
+
+
+template<class Type>
+CML::directionMixedFvPatchField<Type>::directionMixedFvPatchField
+(
+    const directionMixedFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    transformFvPatchField<Type>(ptf, p, iF, mapper),
+    refValue_(ptf.refValue_, mapper),
+    refGrad_(ptf.refGrad_, mapper),
+    valueFraction_(ptf.valueFraction_, mapper)
+{}
 
 
 template<class Type>

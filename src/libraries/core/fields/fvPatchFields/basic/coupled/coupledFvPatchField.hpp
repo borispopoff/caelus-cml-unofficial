@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,7 +22,7 @@ Class
     CML::coupledFvPatchField
 
 Description
-    CML::coupledFvPatchField
+    Abstract base class for coupled patches.
 
 
 \*---------------------------------------------------------------------------*/
@@ -79,7 +79,8 @@ public:
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const dictionary&
+            const dictionary&,
+            const bool valueRequired=true
         );
 
         //- Construct by mapping the given coupledFvPatchField onto a new patch
@@ -286,11 +287,12 @@ CML::coupledFvPatchField<Type>::coupledFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool valueRequired
 )
 :
     BlockLduInterfaceField<Type>(refCast<const lduInterface>(p)),
-    fvPatchField<Type>(p, iF, dict)
+    fvPatchField<Type>(p, iF, dict, valueRequired)
 {}
 
 

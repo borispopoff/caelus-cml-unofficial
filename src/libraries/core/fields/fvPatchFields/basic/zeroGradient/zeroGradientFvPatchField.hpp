@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,7 +22,17 @@ Class
     CML::zeroGradientFvPatchField
 
 Description
-    CML::zeroGradientFvPatchField
+    This boundary condition applies a zero-gradient condition from the patch
+    internal field onto the patch faces.
+
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            zeroGradient;
+    }
+    \endverbatim
 
 
 \*---------------------------------------------------------------------------*/
@@ -38,7 +48,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class zeroGradientFvPatch Declaration
+                 Class zeroGradientFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -185,6 +195,20 @@ CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 template<class Type>
 CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvPatchField<Type>(p, iF, dict, false)
+{
+    fvPatchField<Type>::operator=(this->patchInternalField());
+}
+
+
+template<class Type>
+CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
+(
     const zeroGradientFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -193,20 +217,6 @@ CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 :
     fvPatchField<Type>(ptf, p, iF, mapper)
 {}
-
-
-template<class Type>
-CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvPatchField<Type>(p, iF, dict)
-{
-    fvPatchField<Type>::operator=(this->patchInternalField());
-}
 
 
 template<class Type>

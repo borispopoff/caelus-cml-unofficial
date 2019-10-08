@@ -82,7 +82,7 @@ class fvPatchField
 :
     public Field<Type>
 {
-    // Private Data
+    // Private data
 
         //- Reference to patch
         const fvPatch& patch_;
@@ -173,7 +173,7 @@ public:
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            Type const
+            const Type& value
         );
 
         //- Construct from patch and internal field and patch type
@@ -198,7 +198,7 @@ public:
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
             const dictionary&,
-            const bool valueRequired=false
+            const bool valueRequired=true
         );
 
         //- Construct by mapping the given fvPatchField onto a new patch
@@ -210,7 +210,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Construct as copy
         fvPatchField(const fvPatchField<Type>&);
 
         //- Construct and return a clone
@@ -219,7 +219,7 @@ public:
             return tmp<fvPatchField<Type>>(new fvPatchField<Type>(*this));
         }
 
-        //- Copy constructor setting internal field reference
+        //- Construct as copy setting internal field reference
         fvPatchField
         (
             const fvPatchField<Type>&,
@@ -300,7 +300,7 @@ public:
     {}
 
 
-    // Member Functions
+    // Member functions
 
         // Attributes
 
@@ -546,7 +546,7 @@ public:
             void check(const fvPatchField<Type>&) const;
 
 
-    // Member Operators
+    // Member operators
 
         virtual void operator=(const UList<Type>&);
 
@@ -607,21 +607,23 @@ CML::fvPatchField<Type>::fvPatchField
     patchType_(word::null)
 {}
 
+
 template<class Type>
 CML::fvPatchField<Type>::fvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    Type const val
+    const Type& value
 )
 :
-    Field<Type>(p.size(),val),
+    Field<Type>(p.size(), value),
     patch_(p),
     internalField_(iF),
     updated_(false),
     manipulatedMatrix_(false),
     patchType_(word::null)
 {}
+
 
 template<class Type>
 CML::fvPatchField<Type>::fvPatchField
@@ -660,6 +662,43 @@ CML::fvPatchField<Type>::fvPatchField
 template<class Type>
 CML::fvPatchField<Type>::fvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict,
+    const bool valueRequired
+)
+:
+    Field<Type>(p.size()),
+    patch_(p),
+    internalField_(iF),
+    updated_(false),
+    manipulatedMatrix_(false),
+    patchType_(dict.lookupOrDefault<word>("patchType", word::null))
+{
+    if (valueRequired)
+    {
+        if (dict.found("value"))
+        {
+            Field<Type>::operator=
+            (
+                Field<Type>("value", dict, p.size())
+            );
+        }
+        else
+        {
+            FatalIOErrorInFunction
+            (
+                dict
+            )   << "Essential entry 'value' missing"
+                << exit(FatalIOError);
+        }
+    }
+}
+
+
+template<class Type>
+CML::fvPatchField<Type>::fvPatchField
+(
     const fvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -679,42 +718,6 @@ CML::fvPatchField<Type>::fvPatchField
         fvPatchField<Type>::operator=(this->patchInternalField());
     }
     this->map(ptf, mapper);
-}
-
-
-template<class Type>
-CML::fvPatchField<Type>::fvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict,
-    const bool valueRequired
-)
-:
-    Field<Type>(p.size()),
-    patch_(p),
-    internalField_(iF),
-    updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(dict.lookupOrDefault<word>("patchType", word::null))
-{
-    if (dict.found("value"))
-    {
-        Field<Type>::operator=
-        (
-            Field<Type>("value", dict, p.size())
-        );
-    }
-    else if (!valueRequired)
-    {
-        Field<Type>::operator=(pTraits<Type>::zero);
-    }
-    else
-    {
-        FatalIOErrorInFunction(dict)
-            << "Essential entry 'value' missing"
-            << exit(FatalIOError);
-    }
 }
 
 
@@ -770,7 +773,6 @@ void CML::fvPatchField<Type>::check(const fvPatchField<Type>& ptf) const
 }
 
 
-// Return gradient at boundary
 template<class Type>
 CML::tmp<CML::Field<Type>> CML::fvPatchField<Type>::snGrad() const
 {
@@ -778,7 +780,6 @@ CML::tmp<CML::Field<Type>> CML::fvPatchField<Type>::snGrad() const
 }
 
 
-// Return internal field next to patch as patch field
 template<class Type>
 CML::tmp<CML::Field<Type>>
 CML::fvPatchField<Type>::patchInternalField() const
@@ -1117,7 +1118,6 @@ void CML::fvPatchField<Type>::operator/=
 }
 
 
-// Force an assignment, overriding fixedValue status
 template<class Type>
 void CML::fvPatchField<Type>::operator==
 (
@@ -1448,7 +1448,7 @@ defineTemplateRunTimeSelectionTable(fvPatchTypeField, dictionary);
 #define makePatchFieldsTypeName(type)                                          \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchScalarField, 0);          \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchVectorField, 0);          \
-    defineNamedTemplateTypeNameAndDebug(type##FvPatchSphericalTensorField, 0);\
+    defineNamedTemplateTypeNameAndDebug(type##FvPatchSphericalTensorField, 0); \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchSymmTensorField, 0);      \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchTensorField, 0)
 

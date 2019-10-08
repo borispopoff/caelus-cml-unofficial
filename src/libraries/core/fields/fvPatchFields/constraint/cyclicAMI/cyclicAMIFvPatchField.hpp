@@ -26,11 +26,10 @@ Description
     boundaries, whereby communication between the patches is performed using
     an arbitrary mesh interface (AMI) interpolation.
 
-    \heading Patch usage
-
+Usage
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            cyclicAMI;
     }
@@ -247,7 +246,7 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
     const dictionary& dict
 )
 :
-    coupledFvPatchField<Type>(p, iF, dict),
+    coupledFvPatchField<Type>(p, iF, dict, dict.found("value")),
     cyclicAMILduInterfaceField(),
     cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
 {

@@ -94,13 +94,13 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Construct as copy
         slicedFvPatchField(const slicedFvPatchField<Type>&);
 
         //- Construct and return a clone
         virtual tmp<fvPatchField<Type>> clone() const;
 
-        //- Copy constructor setting internal field reference
+        //- Construct as copy setting internal field reference
         slicedFvPatchField
         (
             const slicedFvPatchField<Type>&,
@@ -118,7 +118,7 @@ public:
     virtual ~slicedFvPatchField<Type>();
 
 
-    // Member Functions
+    // Member functions
 
         // Attributes
 
@@ -202,7 +202,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member Operators
+    // Member operators
 
         virtual void operator=(const UList<Type>&) {}
 
@@ -260,13 +260,12 @@ CML::slicedFvPatchField<Type>::slicedFvPatchField
 template<class Type>
 CML::slicedFvPatchField<Type>::slicedFvPatchField
 (
-    const slicedFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const dictionary& dict
 )
 :
-    fvPatchField<Type>(ptf, p, iF, mapper)
+    fvPatchField<Type>(p, iF, dict, false)
 {
     NotImplemented;
 }
@@ -275,12 +274,13 @@ CML::slicedFvPatchField<Type>::slicedFvPatchField
 template<class Type>
 CML::slicedFvPatchField<Type>::slicedFvPatchField
 (
+    const slicedFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const fvPatchFieldMapper& mapper
 )
 :
-    fvPatchField<Type>(p, iF, dict)
+    fvPatchField<Type>(ptf, p, iF, mapper)
 {
     NotImplemented;
 }

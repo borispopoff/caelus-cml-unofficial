@@ -29,8 +29,7 @@ Description
 
     The tangential patch velocity can be optionally specified.
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -39,7 +38,7 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            pressureInletOutletVelocity;
         phi             phi;
@@ -78,7 +77,7 @@ class pressureInletOutletVelocityFvPatchVectorField
 :
     public directionMixedFvPatchVectorField
 {
-    // Private Data
+    // Private data
 
         //- Flux field name
         word phiName_;
@@ -120,7 +119,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Construct as copy
         pressureInletOutletVelocityFvPatchVectorField
         (
             const pressureInletOutletVelocityFvPatchVectorField&
@@ -135,7 +134,7 @@ public:
             );
         }
 
-        //- Copy constructor setting internal field reference
+        //- Construct as copy setting internal field reference
         pressureInletOutletVelocityFvPatchVectorField
         (
             const pressureInletOutletVelocityFvPatchVectorField&,
@@ -155,7 +154,7 @@ public:
         }
 
 
-    // Member Functions
+    // Member functions
 
         // Attributes
 
@@ -208,7 +207,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member Operators
+    // Member operators
 
         virtual void operator=(const fvPatchField<vector>& pvf);
 };

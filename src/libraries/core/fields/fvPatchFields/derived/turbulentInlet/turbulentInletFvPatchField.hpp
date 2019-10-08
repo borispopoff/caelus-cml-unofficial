@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -40,8 +40,7 @@ Description
         s       | fluctuation scale
     \endvartable
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         fluctuationScale | RMS fluctuation scale (fraction of mean) | yes |
@@ -51,7 +50,7 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            turbulentInlet;
         fluctuationScale 0.1;
@@ -80,7 +79,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class turbulentInletFvPatch Declaration
+                 Class turbulentInletFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -254,30 +253,12 @@ CML::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 template<class Type>
 CML::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 (
-    const turbulentInletFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
-    ranGen_(label(0)),
-    fluctuationScale_(ptf.fluctuationScale_),
-    referenceField_(ptf.referenceField_, mapper),
-    alpha_(ptf.alpha_),
-    curTimeIndex_(-1)
-{}
-
-
-template<class Type>
-CML::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),
+    fixedValueFvPatchField<Type>(p, iF, dict, false),
     ranGen_(label(0)),
     fluctuationScale_(pTraits<Type>(dict.lookup("fluctuationScale"))),
     referenceField_("referenceField", dict, p.size()),
@@ -296,6 +277,24 @@ CML::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
         fixedValueFvPatchField<Type>::operator==(referenceField_);
     }
 }
+
+
+template<class Type>
+CML::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
+(
+    const turbulentInletFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
+    ranGen_(label(0)),
+    fluctuationScale_(ptf.fluctuationScale_),
+    referenceField_(ptf.referenceField_, mapper),
+    alpha_(ptf.alpha_),
+    curTimeIndex_(-1)
+{}
 
 
 template<class Type>

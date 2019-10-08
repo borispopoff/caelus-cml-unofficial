@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -167,10 +167,8 @@ CML::cellMotionFvPatchField<Type>::cellMotionFvPatchField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<Type>(p, iF)
-{
-    fvPatchField<Type>::operator=(Field<Type>("value", dict, p.size()));
-}
+    fixedValueFvPatchField<Type>(p, iF, dict)
+{}
 
 
 template<class Type>

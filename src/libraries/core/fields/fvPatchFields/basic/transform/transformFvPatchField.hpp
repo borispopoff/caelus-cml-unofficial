@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,7 +80,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Construct as copy
         transformFvPatchField
         (
             const transformFvPatchField<Type>&
@@ -89,7 +89,7 @@ public:
         //- Construct and return a clone
         virtual tmp<fvPatchField<Type>> clone() const = 0;
 
-        //- Copy constructor setting internal field reference
+        //- Construct as copy setting internal field reference
         transformFvPatchField
         (
             const transformFvPatchField<Type>&,
@@ -103,7 +103,7 @@ public:
         ) const = 0;
 
 
-    // Member Functions
+    // Member functions
 
         // Attributes
 
@@ -146,7 +146,7 @@ public:
             virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
-    // Member Operators
+    // Member operators
 
         virtual void operator=(const fvPatchField<Type>&);
 };
@@ -187,6 +187,18 @@ CML::transformFvPatchField<Type>::transformFvPatchField
 template<class Type>
 CML::transformFvPatchField<Type>::transformFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvPatchField<Type>(p, iF, dict, false)
+{}
+
+
+template<class Type>
+CML::transformFvPatchField<Type>::transformFvPatchField
+(
     const transformFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -194,18 +206,6 @@ CML::transformFvPatchField<Type>::transformFvPatchField
 )
 :
     fvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-CML::transformFvPatchField<Type>::transformFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvPatchField<Type>(p, iF, dict)
 {}
 
 

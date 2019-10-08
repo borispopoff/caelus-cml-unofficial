@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,8 +22,23 @@ Class
     CML::cyclicSlipFvPatchField
 
 Description
-    CML::cyclicSlipFvPatchField
+    This boundary condition is a light wrapper around the cyclicFvPatchField
+    condition, providing no new functionality.
 
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            cyclicSlip;
+    }
+    \endverbatim
+
+See also
+    Foam::cyclicFvPatchField
+
+SourceFiles
+    cyclicSlipFvPatchField.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -47,7 +62,6 @@ class cyclicSlipFvPatchField
 :
     public cyclicFvPatchField<Type>
 {
-    // Private data
 
 public:
 
@@ -114,7 +128,6 @@ public:
                 new cyclicSlipFvPatchField<Type>(*this, iF)
             );
         }
-
 };
 
 

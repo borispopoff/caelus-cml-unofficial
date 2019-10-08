@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -206,14 +206,16 @@ CML::genericFvPatchField<Type>::genericFvPatchField
     const dictionary& dict
 )
 :
-    calculatedFvPatchField<Type>(p, iF, dict, false),
+    calculatedFvPatchField<Type>(p, iF, dict),
     actualTypeName_(dict.lookup("type")),
     dict_(dict)
 {
     if (!dict.found("value"))
     {
-        FatalIOErrorInFunction(dict)
-            << "\n    Cannot find 'value' entry"
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "\n    Cannot find 'value' entry"
             << " on patch " << this->patch().name()
             << " of field " << this->dimensionedInternalField().name()
             << " in file " << this->dimensionedInternalField().objectPath()
@@ -265,8 +267,10 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                         }
                         else
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    token following 'nonuniform' "
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    token following 'nonuniform' "
                                   "is not a compound"
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
@@ -293,8 +297,10 @@ CML::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
@@ -325,8 +331,10 @@ CML::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
@@ -360,8 +368,10 @@ CML::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
@@ -395,8 +405,10 @@ CML::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
@@ -427,8 +439,10 @@ CML::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
@@ -444,8 +458,10 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                     }
                     else
                     {
-                        FatalIOErrorInFunction(dict)
-                            << "\n    compound " << fieldToken.compoundToken()
+                        FatalIOErrorInFunction
+                        (
+                            dict
+                        )   << "\n    compound " << fieldToken.compoundToken()
                             << " not supported"
                             << "\n    on patch " << this->patch().name()
                             << " of field "
@@ -529,8 +545,10 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                         }
                         else
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    unrecognised native type " << l
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    unrecognised native type " << l
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
                                 << this->dimensionedInternalField().name()

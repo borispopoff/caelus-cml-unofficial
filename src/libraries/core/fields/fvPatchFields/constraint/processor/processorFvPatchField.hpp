@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,6 +24,15 @@ Class
 Description
     CML::processorFvPatchField
 
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            processor;
+    }
+    \endverbatim
+
 
 \*---------------------------------------------------------------------------*/
 
@@ -40,7 +49,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class processorFvPatch Declaration
+                    Class processorFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -210,6 +219,7 @@ public:
                 const Pstream::commsTypes commsType
             ) const;
 
+
         //- Processor coupled interface functions
 
             //- Return processor number
@@ -241,6 +251,7 @@ public:
             {
                 return pTraits<Type>::rank;
             }
+
 };
 
 
@@ -282,7 +293,38 @@ CML::processorFvPatchField<Type>::processorFvPatchField
 {}
 
 
-// Construct by mapping given processorFvPatchField<Type>
+template<class Type>
+CML::processorFvPatchField<Type>::processorFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    coupledFvPatchField<Type>(p, iF, dict, dict.found("value")),
+    procPatch_(refCast<const processorFvPatch>(p))
+{
+    if (!isA<processorFvPatch>(p))
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "\n    patch type '" << p.type()
+            << "' not constraint type '" << typeName << "'"
+            << "\n    for patch " << p.name()
+            << " of field " << this->dimensionedInternalField().name()
+            << " in file " << this->dimensionedInternalField().objectPath()
+            << exit(FatalIOError);
+    }
+
+    // If the value is not supplied set to the internal field
+    if (!dict.found("value"))
+    {
+        fvPatchField<Type>::operator=(this->patchInternalField());
+    }
+}
+
+
 template<class Type>
 CML::processorFvPatchField<Type>::processorFvPatchField
 (
@@ -298,30 +340,6 @@ CML::processorFvPatchField<Type>::processorFvPatchField
     if (!isA<processorFvPatch>(this->patch()))
     {
         FatalErrorInFunction
-            << "\n    patch type '" << p.type()
-            << "' not constraint type '" << typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class Type>
-CML::processorFvPatchField<Type>::processorFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    coupledFvPatchField<Type>(p, iF, dict),
-    procPatch_(refCast<const processorFvPatch>(p))
-{
-    if (!isA<processorFvPatch>(p))
-    {
-        FatalIOErrorInFunction(dict)
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,8 +22,38 @@ Class
     CML::fixedGradientFvPatchField
 
 Description
-    CML::fixedGradientFvPatchField
+    This boundary condition supplies a fixed gradient condition, such that
+    the patch values are calculated using:
 
+        \f[
+            x_p = x_c + \frac{\nabla(x)}{\Delta}
+        \f]
+
+    where
+    \vartable
+        x_p      | patch values
+        x_c      | internal field values
+        \nabla(x)| gradient (user-specified)
+        \Delta   | inverse distance from patch face centre to cell centre
+    \endvartable
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        gradient     | gradient                | yes         |
+    \endtable
+
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            fixedGradient;
+        gradient        uniform 0;
+    }
+    \endverbatim
+
+SourceFiles
+    fixedGradientFvPatchField.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -38,7 +68,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class fixedGradientFvPatch Declaration
+                 Class fixedGradientFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -221,6 +251,21 @@ CML::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 template<class Type>
 CML::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvPatchField<Type>(p, iF, dict, false),
+    gradient_("gradient", dict, p.size())
+{
+    evaluate();
+}
+
+
+template<class Type>
+CML::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
+(
     const fixedGradientFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -230,21 +275,6 @@ CML::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
     fvPatchField<Type>(ptf, p, iF, mapper),
     gradient_(ptf.gradient_, mapper)
 {}
-
-
-template<class Type>
-CML::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvPatchField<Type>(p, iF, dict),
-    gradient_("gradient", dict, p.size())
-{
-    evaluate();
-}
 
 
 template<class Type>
@@ -340,8 +370,7 @@ CML::fixedGradientFvPatchField<Type>::valueBoundaryCoeffs
 
 template<class Type>
 CML::tmp<CML::Field<Type>>
-CML::fixedGradientFvPatchField<Type>::
-gradientInternalCoeffs() const
+CML::fixedGradientFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return tmp<Field<Type>>
     (
@@ -352,8 +381,7 @@ gradientInternalCoeffs() const
 
 template<class Type>
 CML::tmp<CML::Field<Type>>
-CML::fixedGradientFvPatchField<Type>::
-gradientBoundaryCoeffs() const
+CML::fixedGradientFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return gradient();
 }

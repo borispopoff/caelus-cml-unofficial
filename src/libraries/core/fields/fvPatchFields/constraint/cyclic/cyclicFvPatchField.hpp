@@ -22,7 +22,22 @@ Class
     CML::cyclicFvPatchField
 
 Description
-    CML::cyclicFvPatchField
+    This boundary condition enforces a cyclic condition between a pair of
+    boundaries.
+
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            cyclic;
+    }
+    \endverbatim
+
+Note
+    The patches must be topologically similar, i.e. if the owner patch is
+    transformed to the neighbour patch, the patches should be identical (or
+    very similar).
 
 
 \*---------------------------------------------------------------------------*/
@@ -240,7 +255,7 @@ CML::cyclicFvPatchField<Type>::cyclicFvPatchField
     const dictionary& dict
 )
 :
-    coupledFvPatchField<Type>(p, iF, dict),
+    coupledFvPatchField<Type>(p, iF, dict, false),
     cyclicPatch_(refCast<const cyclicFvPatch>(p))
 {
     if (!isA<cyclicFvPatch>(p))
@@ -284,8 +299,6 @@ CML::cyclicFvPatchField<Type>::cyclicFvPatchField
             << exit(FatalIOError);
     }
 }
-
-
 
 
 template<class Type>
@@ -351,8 +364,7 @@ CML::cyclicFvPatchField<Type>::patchNeighbourField() const
 
 template<class Type>
 const CML::cyclicFvPatchField<Type>& 
-CML::cyclicFvPatchField<Type>::neighbourPatchField()
-const
+CML::cyclicFvPatchField<Type>::neighbourPatchField() const
 {
     const GeometricField<Type, fvPatchField, volMesh>& fld =
     static_cast<const GeometricField<Type, fvPatchField, volMesh>&>

@@ -26,8 +26,7 @@ Description
     pressure is specified.  The inflow velocity is obtained from the flux with
     the specified inlet direction" direction.
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -37,7 +36,7 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            pressureDirectedInletVelocity;
         phi             phi;
@@ -48,7 +47,7 @@ Description
     \endverbatim
 
 Note
-    If reverse flow is possible or expected use the 
+    If reverse flow is possible or expected use the
     pressureDirectedInletOutletVelocityFvPatchVectorField condition instead.
 
 
@@ -80,7 +79,7 @@ class pressureDirectedInletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private Data
+    // Private data
 
         //- Flux field name
         word phiName_;
@@ -126,7 +125,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Construct as copy
         pressureDirectedInletVelocityFvPatchVectorField
         (
             const pressureDirectedInletVelocityFvPatchVectorField&
@@ -141,7 +140,7 @@ public:
             );
         }
 
-        //- Copy constructor setting internal field reference
+        //- Construct as copy setting internal field reference
         pressureDirectedInletVelocityFvPatchVectorField
         (
             const pressureDirectedInletVelocityFvPatchVectorField&,
@@ -165,7 +164,7 @@ public:
         }
 
 
-    // Member Functions
+    // Member functions
 
         // Attributes
 

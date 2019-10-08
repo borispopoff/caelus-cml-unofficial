@@ -29,8 +29,7 @@ Description
 
     A slip condition is applied tangential to the patch.
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -39,7 +38,7 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            pressureInletOutletParSlipVelocity;
         value           uniform 0;
@@ -80,7 +79,7 @@ class pressureInletOutletParSlipVelocityFvPatchVectorField
 :
     public mixedFvPatchVectorField
 {
-    // Private Data
+    // Private data
 
         //- Flux field name
         word phiName_;
@@ -123,7 +122,7 @@ public:
             const dictionary&
         );
 
-        //- Copy constructor
+        //- Construct as copy
         pressureInletOutletParSlipVelocityFvPatchVectorField
         (
             const pressureInletOutletParSlipVelocityFvPatchVectorField&
@@ -141,7 +140,7 @@ public:
             );
         }
 
-        //- Copy constructor setting internal field reference
+        //- Construct as copy setting internal field reference
         pressureInletOutletParSlipVelocityFvPatchVectorField
         (
             const pressureInletOutletParSlipVelocityFvPatchVectorField&,
@@ -165,7 +164,7 @@ public:
         }
 
 
-    // Member Functions
+    // Member functions
 
         // Attributes
 
@@ -210,7 +209,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member Operators
+    // Member operators
 
         virtual void operator=(const fvPatchField<vector>& pvf);
 };

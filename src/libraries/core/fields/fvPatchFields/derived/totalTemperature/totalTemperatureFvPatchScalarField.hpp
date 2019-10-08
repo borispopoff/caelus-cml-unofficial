@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2016 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,8 +24,7 @@ Class
 Description
     This boundary condition provides a total temperature condition.
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         U            | Velocity field name     | no          | U
@@ -37,7 +36,7 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            totalTemperature;
         T0              uniform 300;
@@ -60,23 +59,31 @@ SeeAlso
 namespace CML
 {
 
-class totalTemperatureFvPatchScalarField : public fixedValueFvPatchScalarField
+/*---------------------------------------------------------------------------*\
+             Class totalTemperatureFvPatchScalarField Declaration
+\*---------------------------------------------------------------------------*/
+
+class totalTemperatureFvPatchScalarField
+:
+    public fixedValueFvPatchScalarField
 {
+    // Private data
 
-    //- Name of the velocity field
-    word UName_;
+        //- Name of the velocity field
+        word UName_;
 
-    //- Name of the flux transporting the field
-    word phiName_;
+        //- Name of the flux transporting the field
+        word phiName_;
 
-    //- Name of the compressibility field used to calculate the wave speed
-    word psiName_;
+        //- Name of the compressibility field used to calculate the wave speed
+        word psiName_;
 
-    //- Heat capacity ratio
-    scalar gamma_;
+        //- Heat capacity ratio
+        scalar gamma_;
 
-    //- Total pressure
-    scalarField T0_;
+        //- Total pressure
+        scalarField T0_;
+
 
 public:
 
@@ -84,95 +91,109 @@ public:
     TypeName("totalTemperature");
 
 
-    //- Construct from patch and internal field
-    totalTemperatureFvPatchScalarField
-    (
-        fvPatch const&,
-        DimensionedField<scalar, volMesh> const&
-    );
+    // Constructors
 
-    //- Construct from patch, internal field and dictionary
-    totalTemperatureFvPatchScalarField
-    (
-        fvPatch const&,
-        DimensionedField<scalar, volMesh> const&,
-        dictionary const&
-    );
-
-    //- Construct by mapping given totalTemperatureFvPatchScalarField
-    //  onto a new patch
-    totalTemperatureFvPatchScalarField
-    (
-        totalTemperatureFvPatchScalarField const&,
-        fvPatch const&,
-        DimensionedField<scalar, volMesh> const&,
-        fvPatchFieldMapper const&
-    );
-
-    //- Construct as copy
-    totalTemperatureFvPatchScalarField
-    (
-        totalTemperatureFvPatchScalarField const&
-    );
-
-    //- Construct and return a clone
-    virtual tmp<fvPatchScalarField> clone() const
-    {
-        return tmp<fvPatchScalarField>
+        //- Construct from patch and internal field
+        totalTemperatureFvPatchScalarField
         (
-            new totalTemperatureFvPatchScalarField(*this)
+            const fvPatch&,
+            const DimensionedField<scalar, volMesh>&
         );
-    }
 
-    //- Construct as copy setting internal field reference
-    totalTemperatureFvPatchScalarField
-    (
-        totalTemperatureFvPatchScalarField const&,
-        DimensionedField<scalar, volMesh> const&
-    );
-
-    //- Construct and return a clone setting internal field reference
-    virtual tmp<fvPatchScalarField> clone
-    (
-        DimensionedField<scalar, volMesh> const& iF
-    ) const
-    {
-        return tmp<fvPatchScalarField>
+        //- Construct from patch, internal field and dictionary
+        totalTemperatureFvPatchScalarField
         (
-            new totalTemperatureFvPatchScalarField(*this, iF)
+            const fvPatch&,
+            const DimensionedField<scalar, volMesh>&,
+            const dictionary&
         );
-    }
 
-    //- Return the total pressure
-    scalarField const& T0() const
-    {
-        return T0_;
-    }
+        //- Construct by mapping given totalTemperatureFvPatchScalarField
+        //  onto a new patch
+        totalTemperatureFvPatchScalarField
+        (
+            const totalTemperatureFvPatchScalarField&,
+            const fvPatch&,
+            const DimensionedField<scalar, volMesh>&,
+            const fvPatchFieldMapper&
+        );
 
-    //- Return reference to the total pressure to allow adjustment
-    scalarField& T0()
-    {
-        return T0_;
-    }
+        //- Construct as copy
+        totalTemperatureFvPatchScalarField
+        (
+            const totalTemperatureFvPatchScalarField&
+        );
 
-    //- Map (and resize as needed) from self given a mapping object
-    virtual void autoMap
-    (
-        fvPatchFieldMapper const&
-    );
+        //- Construct and return a clone
+        virtual tmp<fvPatchScalarField> clone() const
+        {
+            return tmp<fvPatchScalarField>
+            (
+                new totalTemperatureFvPatchScalarField(*this)
+            );
+        }
 
-    //- Reverse map the given fvPatchField onto this fvPatchField
-    virtual void rmap
-    (
-        fvPatchScalarField const&,
-        labelList const&
-    );
+        //- Construct as copy setting internal field reference
+        totalTemperatureFvPatchScalarField
+        (
+            const totalTemperatureFvPatchScalarField&,
+            const DimensionedField<scalar, volMesh>&
+        );
 
-    //- Update the coefficients associated with the patch field
-    virtual void updateCoeffs();
+        //- Construct and return a clone setting internal field reference
+        virtual tmp<fvPatchScalarField> clone
+        (
+            const DimensionedField<scalar, volMesh>& iF
+        ) const
+        {
+            return tmp<fvPatchScalarField>
+            (
+                new totalTemperatureFvPatchScalarField(*this, iF)
+            );
+        }
 
-    //- Write
-    virtual void write(Ostream&) const;
+
+    // Member functions
+
+        // Access
+
+            //- Return the total pressure
+            const scalarField& T0() const
+            {
+                return T0_;
+            }
+
+            //- Return reference to the total pressure to allow adjustment
+            scalarField& T0()
+            {
+                return T0_;
+            }
+
+
+        // Mapping functions
+
+            //- Map (and resize as needed) from self given a mapping object
+            virtual void autoMap
+            (
+                const fvPatchFieldMapper&
+            );
+
+            //- Reverse map the given fvPatchField onto this fvPatchField
+            virtual void rmap
+            (
+                const fvPatchScalarField&,
+                const labelList&
+            );
+
+
+        // Evaluation functions
+
+            //- Update the coefficients associated with the patch field
+            virtual void updateCoeffs();
+
+
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 

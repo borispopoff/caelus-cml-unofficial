@@ -79,7 +79,7 @@ class mixedFvPatchField
 :
     public fvPatchField<Type>
 {
-    // Private Data
+    // Private data
 
         //- Value field
         Field<Type> refValue_;
@@ -123,7 +123,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Construct as copy
         mixedFvPatchField
         (
             const mixedFvPatchField<Type>&
@@ -138,7 +138,7 @@ public:
             );
         }
 
-        //- Copy constructor setting internal field reference
+        //- Construct as copy setting internal field reference
         mixedFvPatchField
         (
             const mixedFvPatchField<Type>&,
@@ -158,7 +158,7 @@ public:
         }
 
 
-    // Member Functions
+    // Member functions
 
         // Access
 
@@ -260,7 +260,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member Operators
+    // Member operators
 
         virtual void operator=(const UList<Type>&) {}
 
@@ -306,6 +306,23 @@ CML::mixedFvPatchField<Type>::mixedFvPatchField
 template<class Type>
 CML::mixedFvPatchField<Type>::mixedFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvPatchField<Type>(p, iF, dict, false),
+    refValue_("refValue", dict, p.size()),
+    refGrad_("refGradient", dict, p.size()),
+    valueFraction_("valueFraction", dict, p.size())
+{
+    evaluate();
+}
+
+
+template<class Type>
+CML::mixedFvPatchField<Type>::mixedFvPatchField
+(
     const mixedFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -317,23 +334,6 @@ CML::mixedFvPatchField<Type>::mixedFvPatchField
     refGrad_(ptf.refGrad_, mapper),
     valueFraction_(ptf.valueFraction_, mapper)
 {}
-
-
-template<class Type>
-CML::mixedFvPatchField<Type>::mixedFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvPatchField<Type>(p, iF, dict),
-    refValue_("refValue", dict, p.size()),
-    refGrad_("refGradient", dict, p.size()),
-    valueFraction_("valueFraction", dict, p.size())
-{
-    evaluate();
-}
 
 
 template<class Type>

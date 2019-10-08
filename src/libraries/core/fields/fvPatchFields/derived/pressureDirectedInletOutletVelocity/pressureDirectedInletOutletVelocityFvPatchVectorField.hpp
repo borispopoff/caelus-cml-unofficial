@@ -27,8 +27,7 @@ Description
     applied for outflow (as defined by the flux); for inflow, the velocity
     is obtained from the flux with the specified inlet direction.
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -38,7 +37,7 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            pressureDirectedInletOutletVelocity;
         phi             phi;
@@ -74,14 +73,14 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-          Class pressureDirectedInletOutletVelocityFvPatch Declaration
+    Class pressureDirectedInletOutletVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
 class pressureDirectedInletOutletVelocityFvPatchVectorField
 :
     public mixedFvPatchVectorField
 {
-    // Private Data
+    // Private data
 
         //- Flux field name
         word phiName_;
@@ -127,7 +126,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Construct as copy
         pressureDirectedInletOutletVelocityFvPatchVectorField
         (
             const pressureDirectedInletOutletVelocityFvPatchVectorField&
@@ -145,7 +144,7 @@ public:
             );
         }
 
-        //- Copy constructor setting internal field reference
+        //- Construct as copy setting internal field reference
         pressureDirectedInletOutletVelocityFvPatchVectorField
         (
             const pressureDirectedInletOutletVelocityFvPatchVectorField&,
@@ -169,7 +168,7 @@ public:
         }
 
 
-    // Member Functions
+    // Member functions
 
         // Attributes
 
@@ -225,7 +224,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member Operators
+    // Member operators
 
         virtual void operator=(const fvPatchField<vector>& pvf);
 };

@@ -78,12 +78,12 @@ public:
             const DimensionedField<Type, volMesh>&
         );
 
-        //- Construct from patch, internal field, and value
+        //- Construct from patch, internal field and value
         fixedValueFvPatchField
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            Type const
+            const Type& value
         );
 
         //- Construct from patch, internal field and dictionary
@@ -91,7 +91,8 @@ public:
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const dictionary&
+            const dictionary&,
+            const bool valueRequired=true
         );
 
         //- Construct by mapping the given fixedValueFvPatchField<Type>
@@ -139,7 +140,7 @@ public:
         }
 
 
-    // Member Functions
+    // Member functions
 
         // Attributes
 
@@ -187,7 +188,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member Operators
+    // Member operators
 
         virtual void operator=(const UList<Type>&) {}
 
@@ -232,10 +233,10 @@ CML::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    Type const val
+    const Type& value
 )
 :
-    fvPatchField<Type>(p, iF, val)
+    fvPatchField<Type>(p, iF, value)
 {}
 
 
@@ -244,10 +245,11 @@ CML::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool valueRequired
 )
 :
-    fvPatchField<Type>(p, iF, dict, true)
+    fvPatchField<Type>(p, iF, dict, valueRequired)
 {}
 
 

@@ -168,19 +168,6 @@ CML::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
 template<class Type>
 CML::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
 (
-    const basicSymmetryFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    transformFvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-CML::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -190,6 +177,19 @@ CML::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
 {
     this->evaluate();
 }
+
+
+template<class Type>
+CML::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
+(
+    const basicSymmetryFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    transformFvPatchField<Type>(ptf, p, iF, mapper)
+{}
 
 
 template<class Type>

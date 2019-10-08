@@ -25,11 +25,10 @@ Description
     boundaries, whereby communication between the patches is performed using
     an arbitrarily coupled mesh interface (ACMI) interpolation.
 
-    \heading Patch usage
-
+Usage
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            cyclicACMI;
     }
@@ -208,6 +207,7 @@ public:
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
 
+
         // Cyclic AMI coupled interface functions
 
             //- Does the patch field perform the transformation
@@ -271,7 +271,7 @@ CML::cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField
     const dictionary& dict
 )
 :
-    coupledFvPatchField<Type>(p, iF, dict),
+    coupledFvPatchField<Type>(p, iF, dict, dict.found("value")),
     cyclicACMILduInterfaceField(),
     cyclicACMIPatch_(refCast<const cyclicACMIFvPatch>(p))
 {

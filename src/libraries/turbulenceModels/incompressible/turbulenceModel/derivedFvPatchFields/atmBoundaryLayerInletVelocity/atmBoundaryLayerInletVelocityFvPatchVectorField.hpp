@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,42 +22,29 @@ Class
     atmBoundaryLayerInletVelocityFvPatchVectorField
 
 Description
-    Boundary condition specifies a atmospheric boundary layer (ABL)
-    velocity inlet profile given the friction velocity value,
-    flow direction n and direction of the parabolic coordinate z.
+    This boundary condition specifies a velocity inlet profile appropriate
+    for atmospheric boundary layers (ABL).
 
+    See CML::atmBoundaryLayer for details.
+
+    Example of the boundary condition specification:
     \verbatim
-        U = (Ustar/K) ln((z - zGround + z0)/z0)
-
-    where:
-
-        Ustar is the frictional velocity
-        K is karman's constant
-        z0 is the surface roughness length
-        z is the verical coordinate
-        zGround is the minimum coordinate value in z direction.
-
-    and:
-
-        Ustar = K Uref/ln((Zref + z0)/z0)
-
-    where:
-
-        Uref is the reference velocity at Zref
-        Zref is the reference height.
-
+    ground
+    {
+        type            atmBoundaryLayerInletVelocity;
+        n               (1 0 0);
+        z               (0 0 1);
+        Uref            10.0;
+        Zref            20.0;
+        z0              uniform 0.1;
+        zGround         uniform 0.0;
+    }
     \endverbatim
 
-    Reference:
-    D.M. Hargreaves and N.G. Wright
-    "On the use of the k-epsilon model in commercial CFD software to model the
-     neutral atmospheric boundary layer"
-    Journal of Wind Engineering and Industrial Aerodynamics 95(2007) 355-369.
-
-NOTE: D.M. Hargreaves and N.G. Wright recommend Gamma epsilon in the k-epsilon
-      model should be changed from 1.3 to 1.11 for consistency.
-      The roughness height (Er) is given by Er = 20 z0 following the same
-      reference
+See also
+    CML::atmBoundaryLayer,
+    CML::atmBoundaryLayerInletKFvPatchScalarField,
+    CML::atmBoundaryLayerInletEpsilonFvPatchScalarField
 
 SourceFiles
     atmBoundaryLayerInletVelocityFvPatchVectorField.cpp
@@ -69,6 +56,7 @@ SourceFiles
 
 #include "fvPatchFields.hpp"
 #include "fixedValueFvPatchFields.hpp"
+#include "atmBoundaryLayer.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -83,34 +71,9 @@ namespace incompressible
 
 class atmBoundaryLayerInletVelocityFvPatchVectorField
 :
-    public fixedValueFvPatchVectorField
+    public fixedValueFvPatchVectorField,
+    public atmBoundaryLayer
 {
-    // Private data
-
-        //- Frictional velocity
-        scalarField Ustar_;
-
-        //- Flow direction
-        vector n_;
-
-        //- Direction of the z-coordinate
-        vector z_;
-
-        //- Surface roughness length
-        scalarField z0_;
-
-        //- Von Karman constant
-        const scalar kappa_;
-
-        //- Reference velocity
-        const scalar Uref_;
-
-        //- Reference height
-        const scalar Href_;
-
-        //- Minimum corrdinate value in z direction
-        scalarField zGround_;
-
 
 public:
 
@@ -175,27 +138,6 @@ public:
 
 
     // Member functions
-
-        // Access
-
-            //- Return Ustar
-            const scalarField& Ustar() const
-            {
-                return Ustar_;
-            }
-
-            //- Return flow direction
-            const vector& n() const
-            {
-                return n_;
-            }
-
-            //- Return z direction
-            const vector& z() const
-            {
-                return z_;
-            }
-
 
         // Mapping functions
 

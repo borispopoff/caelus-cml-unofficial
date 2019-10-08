@@ -1,29 +1,28 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2014-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
-    This file is part of CAELUS.
+    This file is part of Caelus.
 
-    CAELUS is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the
-    Free Software Foundation; either version 3 of the License, or (at your
-    option) any later version.
+    Caelus is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-    CAELUS is distributed in the hope that it will be useful, but WITHOUT
+    Caelus is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
     for more details.
 
     You should have received a copy of the GNU General Public License
-    along with CAELUS; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+    along with Caelus.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    atmBoundaryLayerInletEpsilonFvPatchScalarField
+    CML::atmBoundaryLayerInletKFvPatchScalarField
 
 Description
     This boundary condition specifies an inlet value for the turbulence
-    dissipation, \f$\epsilon\f$, appropriate for atmospheric boundary layers.
+    kinetic energy, \f$k\f$, appropriate for atmospheric boundary layers.
 
     See CML::atmBoundaryLayer for details.
 
@@ -31,7 +30,7 @@ Description
     \verbatim
     ground
     {
-        type            atmBoundaryLayerInletEpsilon;
+        type            atmBoundaryLayerInletK;
         z               (0 0 1);
         Uref            10.0;
         Zref            20.0;
@@ -41,17 +40,17 @@ Description
     \endverbatim
 
 See also
-    CML:atmBoundaryLayer,
+    CML::atmBoundaryLayer,
     CML::atmBoundaryLayerInletVelocityFvPatchVectorField,
-    CML::atmBoundaryLayerInletKFvPatchScalarField
+    CML::atmBoundaryLayerInletEpsilonFvPatchScalarField
 
 SourceFiles
-    atmBoundaryLayerInletEpsilonFvPatchScalarField.cpp
+    atmBoundaryLayerInletKFvPatchScalarField.cpp
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef atmBoundaryLayerInletEpsilonFvPatchScalarField_H
-#define atmBoundaryLayerInletEpsilonFvPatchScalarField_H
+#ifndef atmBoundaryLayerInletKFvPatchScalarField_HPP
+#define atmBoundaryLayerInletKFvPatchScalarField_HPP
 
 #include "fvPatchFields.hpp"
 #include "fixedValueFvPatchFields.hpp"
@@ -61,14 +60,12 @@ SourceFiles
 
 namespace CML
 {
-namespace incompressible
-{
 
 /*---------------------------------------------------------------------------*\
-        Class atmBoundaryLayerInletEpsilonFvPatchScalarField Declaration
+        Class atmBoundaryLayerInletKFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class atmBoundaryLayerInletEpsilonFvPatchScalarField
+class atmBoundaryLayerInletKFvPatchScalarField
 :
     public fixedValueFvPatchScalarField,
     public atmBoundaryLayer
@@ -77,20 +74,20 @@ class atmBoundaryLayerInletEpsilonFvPatchScalarField
 public:
 
     //- Runtime type information
-    TypeName("atmBoundaryLayerInletEpsilon");
+    TypeName("atmBoundaryLayerInletK");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        atmBoundaryLayerInletEpsilonFvPatchScalarField
+        atmBoundaryLayerInletKFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        atmBoundaryLayerInletEpsilonFvPatchScalarField
+        atmBoundaryLayerInletKFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -98,10 +95,10 @@ public:
         );
 
         //- Construct by mapping given
-        //  atmBoundaryLayerInletEpsilonFvPatchScalarField onto a new patch
-        atmBoundaryLayerInletEpsilonFvPatchScalarField
+        //  atmBoundaryLayerInletKFvPatchScalarField onto a new patch
+        atmBoundaryLayerInletKFvPatchScalarField
         (
-            const atmBoundaryLayerInletEpsilonFvPatchScalarField&,
+            const atmBoundaryLayerInletKFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
@@ -112,14 +109,14 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new atmBoundaryLayerInletEpsilonFvPatchScalarField(*this)
+                new atmBoundaryLayerInletKFvPatchScalarField(*this)
             );
         }
 
         //- Construct as copy setting internal field reference
-        atmBoundaryLayerInletEpsilonFvPatchScalarField
+        atmBoundaryLayerInletKFvPatchScalarField
         (
-            const atmBoundaryLayerInletEpsilonFvPatchScalarField&,
+            const atmBoundaryLayerInletKFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -131,7 +128,7 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new atmBoundaryLayerInletEpsilonFvPatchScalarField(*this, iF)
+                new atmBoundaryLayerInletKFvPatchScalarField(*this, iF)
             );
         }
 
@@ -161,7 +158,6 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace incompressible
 } // End namespace CML
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
