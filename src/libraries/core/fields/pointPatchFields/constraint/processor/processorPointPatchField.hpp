@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,7 +50,6 @@ class processorPointPatchField
 
         //- Local reference to processor patch
         const processorPointPatch& procPatch_;
-
 
 public:
 
@@ -152,7 +151,7 @@ public:
             }
 
 
-        //- Constraint handling
+        // Constraint handling
 
             //- Return the constraint type this pointPatchField implements
             virtual const word& constraintType() const
@@ -166,7 +165,8 @@ public:
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             )
             {}
 

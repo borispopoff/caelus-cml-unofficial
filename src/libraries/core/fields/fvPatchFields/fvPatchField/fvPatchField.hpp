@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014-2016 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -437,7 +437,7 @@ public:
             virtual void initEvaluate
             (
                 const Pstream::commsTypes commsType =
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
             )
             {}
 
@@ -445,7 +445,7 @@ public:
             virtual void evaluate
             (
                 const Pstream::commsTypes commsType =
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
             );
 
 

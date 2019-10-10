@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2015 OpenFOAM Foundation
+Copyright (C) 2012-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -263,7 +263,7 @@ void CML::meshToMesh::calculate(const word& methodName)
         // set up as a reverse distribute
         mapDistributeBase::distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             tgtRegion_.nCells(),
             map.constructMap(),
@@ -279,7 +279,7 @@ void CML::meshToMesh::calculate(const word& methodName)
         // set up as a reverse distribute
         mapDistributeBase::distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             tgtRegion_.nCells(),
             map.constructMap(),

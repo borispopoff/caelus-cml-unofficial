@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014-2015 OpenFOAM Foundation
+Copyright (C) 2014-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -80,7 +80,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
             slave++
         )
         {
-            IPstream fromSlave(Pstream::scheduled, slave, 0, tag);
+            IPstream fromSlave(Pstream::commsTypes::scheduled, slave, 0, tag);
             List<labelPair> nbrData(fromSlave);
 
             forAll(nbrData, i)
@@ -101,7 +101,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
             slave++
         )
         {
-            OPstream toSlave(Pstream::scheduled, slave, 0, tag);
+            OPstream toSlave(Pstream::commsTypes::scheduled, slave, 0, tag);
             toSlave << allComms;
         }
     }
@@ -110,7 +110,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
         {
             OPstream toMaster
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 0,
                 tag
@@ -120,7 +120,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
         {
             IPstream fromMaster
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 0,
                 tag
@@ -866,7 +866,7 @@ void CML::mapDistributeBase::compact(const boolList& elemIsUsed, const int tag)
                 recvFields[domain].setSize(map.size());
                 IPstream::read
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<char*>(recvFields[domain].begin()),
                     recvFields[domain].size()*sizeof(bool),
@@ -899,7 +899,7 @@ void CML::mapDistributeBase::compact(const boolList& elemIsUsed, const int tag)
 
                 OPstream::write
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<const char*>(subField.begin()),
                     subField.size()*sizeof(bool),
@@ -1033,7 +1033,7 @@ void CML::mapDistributeBase::compact
                 recvFields[domain].setSize(map.size());
                 IPstream::read
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<char*>(recvFields[domain].begin()),
                     recvFields[domain].size()*sizeof(bool),
@@ -1065,7 +1065,7 @@ void CML::mapDistributeBase::compact
 
                 OPstream::write
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<const char*>(subField.begin()),
                     subField.size()*sizeof(bool),

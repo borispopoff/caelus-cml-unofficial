@@ -228,7 +228,7 @@ CML::fixedJumpAMIFvPatchField<Type>::fixedJumpAMIFvPatchField
     }
     else
     {
-        this->evaluate(Pstream::blocking);
+        this->evaluate(Pstream::commsTypes::blocking);
     }
 }
 

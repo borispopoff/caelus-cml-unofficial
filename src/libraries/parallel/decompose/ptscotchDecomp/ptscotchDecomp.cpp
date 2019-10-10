@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -233,7 +233,8 @@ void CML::ptscotchDecomp::check(const int retVal, const char* str)
 //    if (Pstream::myProcNo() >= 1 && nSendCells[Pstream::myProcNo()-1] > 0)
 //    {
 //        // Receive cells from previous processor
-//        IPstream fromPrevProc(Pstream::blocking, Pstream::myProcNo()-1);
+//        IPstream fromPrevProc(Pstream::commsTypes::blocking,
+//            Pstream::myProcNo()-1);
 //
 //        Field<label> prevXadj(fromPrevProc);
 //        Field<label> prevAdjncy(fromPrevProc);
@@ -263,7 +264,8 @@ void CML::ptscotchDecomp::check(const int retVal, const char* str)
 //    if (nSendCells[Pstream::myProcNo()] > 0)
 //    {
 //        // Send cells to next processor
-//        OPstream toNextProc(Pstream::blocking, Pstream::myProcNo()+1);
+//        OPstream toNextProc(Pstream::commsTypes::blocking,
+//            Pstream::myProcNo()+1);
 //
 //        label nCells = nSendCells[Pstream::myProcNo()];
 //        label startCell = xadj.size()-1 - nCells;
@@ -312,7 +314,8 @@ void CML::ptscotchDecomp::check(const int retVal, const char* str)
 //    // Receive back from next processor if I sent something
 //    if (nSendCells[Pstream::myProcNo()] > 0)
 //    {
-//        IPstream fromNextProc(Pstream::blocking, Pstream::myProcNo()+1);
+//        IPstream fromNextProc(Pstream::commsTypes::blocking,
+//            Pstream::myProcNo()+1);
 //
 //        List<label> nextFinalDecomp(fromNextProc);
 //
@@ -331,7 +334,8 @@ void CML::ptscotchDecomp::check(const int retVal, const char* str)
 //    // Send back to previous processor.
 //    if (Pstream::myProcNo() >= 1 && nSendCells[Pstream::myProcNo()-1] > 0)
 //    {
-//        OPstream toPrevProc(Pstream::blocking, Pstream::myProcNo()-1);
+//        OPstream toPrevProc(Pstream::commsTypes::blocking,
+//            Pstream::myProcNo()-1);
 //
 //        label nToPrevious = nSendCells[Pstream::myProcNo()-1];
 //

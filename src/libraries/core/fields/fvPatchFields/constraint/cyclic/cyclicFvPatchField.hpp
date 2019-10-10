@@ -271,7 +271,7 @@ CML::cyclicFvPatchField<Type>::cyclicFvPatchField
             << exit(FatalIOError);
     }
 
-    this->evaluate(Pstream::blocking);
+    this->evaluate(Pstream::commsTypes::blocking);
 }
 
 

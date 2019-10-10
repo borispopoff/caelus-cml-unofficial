@@ -32,7 +32,7 @@ Description
 
     Example usage:
 
-        PstreamBuffers pBuffers(Pstream::nonBlocking);
+        PstreamBuffers pBuffers(Pstream::commsTypes::nonBlocking);
 
         for (label proci = 0; proci < Pstream::nProcs(); proci++)
         {

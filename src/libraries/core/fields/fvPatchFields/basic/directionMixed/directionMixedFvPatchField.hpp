@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -48,7 +48,7 @@ class directionMixedFvPatchField
 :
     public transformFvPatchField<Type>
 {
-    // Private Data
+    // Private data
 
         //- Value field
         Field<Type> refValue_;
@@ -122,7 +122,7 @@ public:
         }
 
 
-    // Member Functions
+    // Member functions
 
         // Attributes
 
@@ -194,7 +194,7 @@ public:
             virtual void evaluate
             (
                 const Pstream::commsTypes commsType =
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
             );
 
             //- Return face-gradient transform diagonal
@@ -205,7 +205,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member Operators
+    // Member operators
 
         virtual void operator=(const fvPatchField<Type>&) {}
         virtual void operator+=(const fvPatchField<Type>&) {}

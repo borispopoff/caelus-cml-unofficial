@@ -88,7 +88,7 @@ CML::autoPtr<CML::fvMesh> CML::loadOrCreateMesh
             slave++
         )
         {
-            OPstream toSlave(Pstream::scheduled, slave);
+            OPstream toSlave(Pstream::commsTypes::scheduled, slave);
             toSlave << patchEntries;
         }
     }
@@ -97,7 +97,7 @@ CML::autoPtr<CML::fvMesh> CML::loadOrCreateMesh
         // Receive patches
         IPstream fromMaster
         (
-            Pstream::scheduled,
+            Pstream::commsTypes::scheduled,
             Pstream::masterNo()
         );
         fromMaster >> patchEntries;

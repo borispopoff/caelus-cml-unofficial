@@ -542,12 +542,12 @@ void CML::motionSmoother::checkConstraints
 
     forAllReverse(bFld, patchi)
     {
-        bFld[patchi].initEvaluate(Pstream::blocking);   // buffered
+        bFld[patchi].initEvaluate(Pstream::commsTypes::blocking);   // buffered
     }
 
     forAllReverse(bFld, patchi)
     {
-        bFld[patchi].evaluate(Pstream::blocking);
+        bFld[patchi].evaluate(Pstream::commsTypes::blocking);
     }
 
 

@@ -210,7 +210,7 @@ void CML::PairCollision<CloudType>::preInteraction()
 template<class CloudType>
 void CML::PairCollision<CloudType>::parcelInteraction()
 {
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
     label startOfRequests = Pstream::nRequests();
 

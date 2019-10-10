@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -165,7 +165,11 @@ void CML::processorLduInterface::send
 {
     label nBytes = f.byteSize();
 
-    if (commsType == Pstream::blocking || commsType == Pstream::scheduled)
+    if
+    (
+        commsType == Pstream::commsTypes::blocking
+     || commsType == Pstream::commsTypes::scheduled
+    )
     {
         OPstream::write
         (
@@ -176,7 +180,7 @@ void CML::processorLduInterface::send
             tag()
         );
     }
-    else if (commsType == Pstream::nonBlocking)
+    else if (commsType == Pstream::commsTypes::nonBlocking)
     {
         resizeBuf(receiveBuf_, nBytes);
 
@@ -204,7 +208,7 @@ void CML::processorLduInterface::send
     else
     {
         FatalErrorInFunction
-            << "Unsupported communications type " << commsType
+            << "Unsupported communications type " << int(commsType)
             << exit(FatalError);
     }
 }
@@ -217,7 +221,11 @@ void CML::processorLduInterface::receive
     UList<Type>& f
 ) const
 {
-    if (commsType == Pstream::blocking || commsType == Pstream::scheduled)
+    if
+    (
+        commsType == Pstream::commsTypes::blocking
+     || commsType == Pstream::commsTypes::scheduled
+    )
     {
         IPstream::read
         (
@@ -228,14 +236,14 @@ void CML::processorLduInterface::receive
             tag()
         );
     }
-    else if (commsType == Pstream::nonBlocking)
+    else if (commsType == Pstream::commsTypes::nonBlocking)
     {
         memcpy(f.begin(), receiveBuf_.begin(), f.byteSize());
     }
     else
     {
         FatalErrorInFunction
-            << "Unsupported communications type " << commsType
+            << "Unsupported communications type " << int(commsType)
             << exit(FatalError);
     }
 }
@@ -281,7 +289,11 @@ void CML::processorLduInterface::compressedSend
 
         reinterpret_cast<Type&>(fArray[nm1]) = f.last();
 
-        if (commsType == Pstream::blocking || commsType == Pstream::scheduled)
+        if
+        (
+            commsType == Pstream::commsTypes::blocking
+         || commsType == Pstream::commsTypes::scheduled
+        )
         {
             OPstream::write
             (
@@ -292,7 +304,7 @@ void CML::processorLduInterface::compressedSend
                 tag()
             );
         }
-        else if (commsType == Pstream::nonBlocking)
+        else if (commsType == Pstream::commsTypes::nonBlocking)
         {
             resizeBuf(receiveBuf_, nBytes);
 
@@ -317,7 +329,7 @@ void CML::processorLduInterface::compressedSend
         else
         {
             FatalErrorInFunction
-                << "Unsupported communications type " << commsType
+                << "Unsupported communications type " << int(commsType)
                 << exit(FatalError);
         }
     }
@@ -342,7 +354,11 @@ void CML::processorLduInterface::compressedReceive
         label nFloats = nm1 + nlast;
         label nBytes = nFloats*sizeof(float);
 
-        if (commsType == Pstream::blocking || commsType == Pstream::scheduled)
+        if
+        (
+            commsType == Pstream::commsTypes::blocking
+         || commsType == Pstream::commsTypes::scheduled
+        )
         {
             resizeBuf(receiveBuf_, nBytes);
 
@@ -355,10 +371,10 @@ void CML::processorLduInterface::compressedReceive
                 tag()
             );
         }
-        else if (commsType != Pstream::nonBlocking)
+        else if (commsType != Pstream::commsTypes::nonBlocking)
         {
             FatalErrorInFunction
-                << "Unsupported communications type " << commsType
+                << "Unsupported communications type " << int(commsType)
                 << exit(FatalError);
         }
 

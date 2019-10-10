@@ -358,7 +358,7 @@ void Pstream::gather
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     reinterpret_cast<char*>(&value),
                     sizeof(T),
@@ -369,7 +369,7 @@ void Pstream::gather
             {
                 IPstream fromBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     0,
                     tag
@@ -387,7 +387,7 @@ void Pstream::gather
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -398,7 +398,7 @@ void Pstream::gather
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -449,7 +449,7 @@ void Pstream::scatter
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(&Value),
                     sizeof(T),
@@ -460,7 +460,7 @@ void Pstream::scatter
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -478,7 +478,7 @@ void Pstream::scatter
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -489,7 +489,7 @@ void Pstream::scatter
             {
                 OPstream toBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     0,
                     tag
@@ -554,7 +554,7 @@ void Pstream::combineGather
                 T value;
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<char*>(&value),
                     sizeof(T),
@@ -573,7 +573,7 @@ void Pstream::combineGather
             {
                 IPstream fromBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -603,7 +603,7 @@ void Pstream::combineGather
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -614,7 +614,7 @@ void Pstream::combineGather
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -677,7 +677,7 @@ void Pstream::combineScatter
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(&Value),
                     sizeof(T),
@@ -688,7 +688,7 @@ void Pstream::combineScatter
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -717,7 +717,7 @@ void Pstream::combineScatter
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -728,7 +728,7 @@ void Pstream::combineScatter
             {
                 OPstream toBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -783,7 +783,7 @@ void Pstream::listCombineGather
 
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<char*>(receivedValues.begin()),
                     receivedValues.byteSize(),
@@ -805,7 +805,7 @@ void Pstream::listCombineGather
             {
                 IPstream fromBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -838,7 +838,7 @@ void Pstream::listCombineGather
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(Values.begin()),
                     Values.byteSize(),
@@ -849,7 +849,7 @@ void Pstream::listCombineGather
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -912,7 +912,7 @@ void Pstream::listCombineScatter
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(Values.begin()),
                     Values.byteSize(),
@@ -923,7 +923,7 @@ void Pstream::listCombineScatter
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -952,7 +952,7 @@ void Pstream::listCombineScatter
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<const char*>(Values.begin()),
                     Values.byteSize(),
@@ -963,7 +963,7 @@ void Pstream::listCombineScatter
             {
                 OPstream toBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -1024,7 +1024,7 @@ void Pstream::mapCombineGather
 
             IPstream fromBelow
             (
-                UPstream::scheduled,
+                UPstream::commsTypes::scheduled,
                 belowID,
                 0,
                 tag
@@ -1070,7 +1070,7 @@ void Pstream::mapCombineGather
 
             OPstream toAbove
             (
-                UPstream::scheduled,
+                UPstream::commsTypes::scheduled,
                 myComm.above(),
                 0,
                 tag
@@ -1130,7 +1130,7 @@ void Pstream::mapCombineScatter
         {
             IPstream fromAbove
             (
-                UPstream::scheduled,
+                UPstream::commsTypes::scheduled,
                 myComm.above(),
                 0,
                 tag
@@ -1156,7 +1156,7 @@ void Pstream::mapCombineScatter
 
             OPstream toBelow
             (
-                UPstream::scheduled,
+                UPstream::commsTypes::scheduled,
                 belowID,
                 0,
                 tag
@@ -1243,7 +1243,7 @@ void Pstream::gatherList
 
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<char*>(receivedValues.begin()),
                     receivedValues.byteSize(),
@@ -1261,7 +1261,7 @@ void Pstream::gatherList
             {
                 IPstream fromBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -1317,7 +1317,7 @@ void Pstream::gatherList
 
                 OPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(sendingValues.begin()),
                     sendingValues.byteSize(),
@@ -1328,7 +1328,7 @@ void Pstream::gatherList
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -1400,7 +1400,7 @@ void Pstream::scatterList
 
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(receivedValues.begin()),
                     receivedValues.byteSize(),
@@ -1416,7 +1416,7 @@ void Pstream::scatterList
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -1454,7 +1454,7 @@ void Pstream::scatterList
 
                 OPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<const char*>(sendingValues.begin()),
                     sendingValues.byteSize(),
@@ -1465,7 +1465,7 @@ void Pstream::scatterList
             {
                 OPstream toBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -1564,7 +1564,7 @@ void Pstream::exchange
                 recvBufs[proci].setSize(nRecv);
                 UIPstream::read
                 (
-                    UPstream::nonBlocking,
+                    UPstream::commsTypes::nonBlocking,
                     proci,
                     reinterpret_cast<char*>(recvBufs[proci].begin()),
                     nRecv*sizeof(T),
@@ -1585,7 +1585,7 @@ void Pstream::exchange
                 (
                    !UOPstream::write
                     (
-                        UPstream::nonBlocking,
+                        UPstream::commsTypes::nonBlocking,
                         proci,
                         reinterpret_cast<const char*>(sendBufs[proci].begin()),
                         sendBufs[proci].size()*sizeof(T),

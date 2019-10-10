@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 Copyright (C) 2014 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -227,7 +227,7 @@ CML::label CML::scotchDecomp::decompose
 
             for (label slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 Field<label> nbrAdjncy(fromSlave);
                 Field<label> nbrXadj(fromSlave);
                 scalarField nbrWeights(fromSlave);
@@ -262,7 +262,7 @@ CML::label CML::scotchDecomp::decompose
             // Send allFinalDecomp back
             for (label slave=1; slave<Pstream::nProcs(); slave++)
             {
-                OPstream toSlave(Pstream::scheduled, slave);
+                OPstream toSlave(Pstream::commsTypes::scheduled, slave);
                 toSlave << SubField<label>
                 (
                     allFinalDecomp,
@@ -281,13 +281,21 @@ CML::label CML::scotchDecomp::decompose
         {
             // Send my part of the graph (already in global numbering)
             {
-                OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::scheduled,
+                    Pstream::masterNo()
+                );
                 toMaster<< adjncy << SubField<label>(xadj, xadj.size()-1)
                     << cWeights;
             }
 
             // Receive back decomposition
-            IPstream fromMaster(Pstream::scheduled, Pstream::masterNo());
+            IPstream fromMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             fromMaster >> finalDecomp;
         }
     }

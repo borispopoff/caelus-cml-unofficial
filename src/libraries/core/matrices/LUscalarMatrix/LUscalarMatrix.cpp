@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -77,13 +77,24 @@ CML::LUscalarMatrix::LUscalarMatrix
                 lduMatrices.set
                 (
                     lduMatrixi++,
-                    new procLduMatrix(IPstream(Pstream::scheduled, slave)())
+                    new procLduMatrix
+                    (
+                        IPstream
+                        (
+                            Pstream::commsTypes::scheduled,
+                            slave
+                        )()
+                    )
                 );
             }
         }
         else
         {
-            OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+            OPstream toMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             procLduMatrix cldum
             (
                 ldum,

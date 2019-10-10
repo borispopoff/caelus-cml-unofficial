@@ -341,7 +341,11 @@ void syncPoints
                     }
                 }
 
-                OPstream toNbr(Pstream::blocking, procPatch.neighbProcNo());
+                OPstream toNbr
+                (
+                    Pstream::commsTypes::blocking,
+                    procPatch.neighbProcNo()
+                );
                 toNbr << patchInfo;
             }
         }
@@ -369,7 +373,7 @@ void syncPoints
                     // so cannot use Pstream::read.
                     IPstream fromNbr
                     (
-                        Pstream::blocking,
+                        Pstream::commsTypes::blocking,
                         procPatch.neighbProcNo()
                     );
                     fromNbr >> nbrPatchInfo;

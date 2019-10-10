@@ -905,7 +905,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRemoveCells
 //    {
 //        if (proci != Pstream::myProcNo())
 //        {
-//            OPstream str(Pstream::blocking, proci);
+//            OPstream str(Pstream::commsTypes::blocking, proci);
 //            str << regionConnectivity[proci];
 //        }
 //    }
@@ -914,7 +914,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRemoveCells
 //    {
 //        if (proci != Pstream::myProcNo())
 //        {
-//            IPstream str(Pstream::blocking, proci);
+//            IPstream str(Pstream::commsTypes::blocking, proci);
 //            str >> regionConnectivity[proci];
 //        }
 //    }

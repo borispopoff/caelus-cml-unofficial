@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -39,7 +39,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class symmetryFvPatch Declaration
+                         Class symmetryFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

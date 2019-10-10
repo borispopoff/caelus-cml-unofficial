@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -897,8 +897,8 @@ void CML::globalPoints::calculateSharedPoints
         PstreamBuffers pBufs
         (
             (
-                Pstream::defaultCommsType == Pstream::scheduled
-              ? Pstream::nonBlocking
+                Pstream::defaultCommsType == Pstream::commsTypes::scheduled
+              ? Pstream::commsTypes::nonBlocking
               : Pstream::defaultCommsType
             )
         );
@@ -935,8 +935,8 @@ void CML::globalPoints::calculateSharedPoints
         PstreamBuffers pBufs
         (
             (
-                Pstream::defaultCommsType == Pstream::scheduled
-              ? Pstream::nonBlocking
+                Pstream::defaultCommsType == Pstream::commsTypes::scheduled
+              ? Pstream::commsTypes::nonBlocking
               : Pstream::defaultCommsType
             )
         );

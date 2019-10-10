@@ -2242,8 +2242,8 @@ evaluate()
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         label nReq = Pstream::nRequests();
@@ -2257,7 +2257,7 @@ evaluate()
         if
         (
             Pstream::parRun()
-         && Pstream::defaultCommsType == Pstream::nonBlocking
+         && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
         )
         {
             Pstream::waitRequests(nReq);
@@ -2268,7 +2268,7 @@ evaluate()
             this->operator[](patchi).evaluate(Pstream::defaultCommsType);
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule =
             bmesh_.mesh().globalData().patchSchedule();
@@ -2278,12 +2278,12 @@ evaluate()
             if (patchSchedule[patchEvali].init)
             {
                 this->operator[](patchSchedule[patchEvali].patch)
-                    .initEvaluate(Pstream::scheduled);
+                    .initEvaluate(Pstream::commsTypes::scheduled);
             }
             else
             {
                 this->operator[](patchSchedule[patchEvali].patch)
-                    .evaluate(Pstream::scheduled);
+                    .evaluate(Pstream::commsTypes::scheduled);
             }
         }
     }

@@ -117,7 +117,7 @@ public:
 
             OPstream toOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo(),
                 groupOwner.byteSize()
             );
@@ -134,7 +134,7 @@ public:
 
             IPstream fromOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo()
             );
 

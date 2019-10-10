@@ -1963,8 +1963,8 @@ void BlockLduMatrix<Type>::initInterfaces
 {
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll (interfaces_, interfaceI)
@@ -1982,7 +1982,7 @@ void BlockLduMatrix<Type>::initInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
@@ -2003,7 +2003,7 @@ void BlockLduMatrix<Type>::initInterfaces
                     psi,
                     *this,
                     interfaceCoeffs[interfaceI],
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }
@@ -2026,7 +2026,7 @@ void BlockLduMatrix<Type>::updateInterfaces
     const TypeField& psi
 ) const
 {
-    if (Pstream::defaultCommsType == Pstream::blocking)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::blocking)
     {
         forAll (interfaces_, interfaceI)
         {
@@ -2043,7 +2043,7 @@ void BlockLduMatrix<Type>::updateInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::nonBlocking)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking)
     {
         // Block until all sends/receives have been finished
         IPstream::waitRequests();
@@ -2064,7 +2064,7 @@ void BlockLduMatrix<Type>::updateInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
@@ -2083,7 +2083,7 @@ void BlockLduMatrix<Type>::updateInterfaces
                         psi,
                         *this,
                         interfaceCoeffs[interfaceI],
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
                 else
@@ -2094,7 +2094,7 @@ void BlockLduMatrix<Type>::updateInterfaces
                         psi,
                         *this,
                         interfaceCoeffs[interfaceI],
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
             }
@@ -2117,7 +2117,7 @@ void BlockLduMatrix<Type>::updateInterfaces
                     psi,
                     *this,
                     interfaceCoeffs[interfaceI],
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }
@@ -2142,7 +2142,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
     Field<Type>& result
 ) const
 {
-    if (Pstream::defaultCommsType == Pstream::blocking)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::blocking)
     {
         forAll(interfaces, interfaceI)
         {
@@ -2158,7 +2158,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::nonBlocking)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking)
     {
         // Try and consume interfaces as they become available
         bool allUpdated = false;
@@ -2235,7 +2235,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
@@ -2253,7 +2253,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
                         result,
                         psiif,
                         coupleCoeffs[interfaceI],
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
                 else
@@ -2263,7 +2263,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
                         result,
                         psiif,
                         coupleCoeffs[interfaceI],
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
             }
@@ -2285,7 +2285,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
                     result,
                     psiif,
                     coupleCoeffs[interfaceI],
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }
@@ -2313,8 +2313,8 @@ BlockLduMatrix<Type>::initMatrixInterfaces
 {
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(interfaces, interfaceI)
@@ -2331,7 +2331,7 @@ BlockLduMatrix<Type>::initMatrixInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
@@ -2351,7 +2351,7 @@ BlockLduMatrix<Type>::initMatrixInterfaces
                     result,
                     psiif,
                     coupleCoeffs[interfaceI],
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }

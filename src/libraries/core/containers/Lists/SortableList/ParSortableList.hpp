@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -219,7 +219,6 @@ void CML::ParSortableList<Type>::write
 }
 
 
-// Copy src, starting at destI into dest.
 template<class Type>
 void CML::ParSortableList<Type>::copyInto
 (
@@ -269,22 +268,22 @@ void CML::ParSortableList<Type>::checkAndSend
     List<Type>& values,
     labelList& indices,
     const label bufSize,
-    const label destProcI
+    const label destProci
 ) const
 {
-    if (destProcI != Pstream::myProcNo())
+    if (destProci != Pstream::myProcNo())
     {
         values.setSize(bufSize);
         indices.setSize(bufSize);
 
         if (debug)
         {
-            Pout<<  "Sending to " << destProcI << " elements:" << values
+            Pout<<  "Sending to " << destProci << " elements:" << values
                 << endl;
         }
 
         {
-            OPstream toSlave(Pstream::blocking, destProcI);
+            OPstream toSlave(Pstream::commsTypes::blocking, destProci);
             toSlave << values << indices;
         }
     }
@@ -293,7 +292,6 @@ void CML::ParSortableList<Type>::checkAndSend
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from List, sorting the elements
 template<class Type>
 CML::ParSortableList<Type>::ParSortableList(const UList<Type>& values)
 :
@@ -305,7 +303,6 @@ CML::ParSortableList<Type>::ParSortableList(const UList<Type>& values)
 }
 
 
-// Construct given size. Sort later on.
 template<class Type>
 CML::ParSortableList<Type>::ParSortableList(const label size)
 :
@@ -317,7 +314,6 @@ CML::ParSortableList<Type>::ParSortableList(const label size)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Sort
 template<class Type>
 void CML::ParSortableList<Type>::sort()
 {
@@ -389,7 +385,7 @@ void CML::ParSortableList<Type>::sort()
     //
 
     label pivotI = 1;
-    label destProcI = 0;
+    label destProci = 0;
 
     // Buffer for my own data. Keep original index together with value.
     labelList ownValues(sorted.size());
@@ -405,7 +401,7 @@ void CML::ParSortableList<Type>::sort()
     {
         if ((pivotI < Pstream::nProcs()) && (sorted[sortedI] > pivots[pivotI]))
         {
-            checkAndSend(sendValues, sendIndices, sendI, destProcI);
+            checkAndSend(sendValues, sendIndices, sendI, destProci);
 
             // Reset buffer.
             sendValues.setSize(sorted.size());
@@ -413,10 +409,10 @@ void CML::ParSortableList<Type>::sort()
             sendI = 0;
 
             pivotI++;
-            destProcI++;
+            destProci++;
         }
 
-        if (destProcI != Pstream::myProcNo())
+        if (destProci != Pstream::myProcNo())
         {
             sendValues[sendI] = sorted[sortedI];
             sendIndices[sendI] = sorted.indices()[sortedI];
@@ -434,7 +430,7 @@ void CML::ParSortableList<Type>::sort()
     // Handle trailing send buffer
     if (sendI != 0)
     {
-        checkAndSend(sendValues, sendIndices, sendI, destProcI);
+        checkAndSend(sendValues, sendIndices, sendI, destProci);
     }
 
     // Print ownValues
@@ -481,7 +477,7 @@ void CML::ParSortableList<Type>::sort()
                     Pout<< "Receiving from " << proci << endl;
                 }
 
-                IPstream fromSlave(Pstream::blocking, proci);
+                IPstream fromSlave(Pstream::commsTypes::blocking, proci);
 
                 fromSlave >> recValues >> recIndices;
 

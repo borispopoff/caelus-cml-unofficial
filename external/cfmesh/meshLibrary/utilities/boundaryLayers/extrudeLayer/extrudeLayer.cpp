@@ -370,7 +370,7 @@ void extrudeLayer::createNewVertices()
 
             OPstream toOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo(),
                 globalLabels.byteSize()
             );
@@ -386,7 +386,7 @@ void extrudeLayer::createNewVertices()
             labelList receivedData;
             IPstream fromOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo()
             );
 

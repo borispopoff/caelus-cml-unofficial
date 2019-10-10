@@ -452,7 +452,7 @@ void CML::Cloud<ParticleType>::move
     );
 
     // Allocate transfer buffers
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
     // Clear the global positions as there are about to change
     globalPositionsPtr_.clear();

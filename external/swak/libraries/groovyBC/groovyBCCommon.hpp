@@ -237,7 +237,7 @@ groovyBCCommon<Type>::groovyBCCommon
     if(
         Pstream::parRun()
         &&
-        Pstream::defaultCommsType == Pstream::blocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
     ) {
         WarningInFunction
             << "The commsType is set to 'blocking'. This might cause the run to"

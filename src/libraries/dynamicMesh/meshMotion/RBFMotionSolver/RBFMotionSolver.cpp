@@ -118,7 +118,7 @@ void CML::RBFMotionSolver::mergeControlPoints()
                 slave++
             )
             {
-                OPstream toSlaveSize(Pstream::blocking, slave, sizeof(label));
+                OPstream toSlaveSize(Pstream::commsTypes::blocking, slave, sizeof(label));
                 toSlaveSize << allControlPoints_.size();
             }
 
@@ -132,7 +132,7 @@ void CML::RBFMotionSolver::mergeControlPoints()
             {
                 OPstream toSlaveData
                 (
-                    Pstream::blocking,
+                    Pstream::commsTypes::blocking,
                     slave,
                     allControlPoints_.size()*sizeof(vector)
                 );
@@ -144,14 +144,14 @@ void CML::RBFMotionSolver::mergeControlPoints()
             // Parallel data exchange - receive size of control points
             IPstream fromMasterSize
             (
-                Pstream::blocking, Pstream::masterNo(), sizeof(label)
+                Pstream::commsTypes::blocking, Pstream::masterNo(), sizeof(label)
             );
             fromMasterSize >> allControlPointsSize;
 
             // Parallel data exchange - receive all control points
             IPstream fromMasterData
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 Pstream::masterNo(),
                 allControlPointsSize*sizeof(vector)
             );
@@ -578,7 +578,7 @@ CML::tmp<CML::pointField> CML::RBFMotionSolver::curPoints() const
                 slave++
             )
             {
-                OPstream toSlaveSize(Pstream::blocking, slave, sizeof(label));
+                OPstream toSlaveSize(Pstream::commsTypes::blocking, slave, sizeof(label));
                 toSlaveSize << motionOfAllControl.size();
             }
 
@@ -592,7 +592,7 @@ CML::tmp<CML::pointField> CML::RBFMotionSolver::curPoints() const
             {
                 OPstream toSlaveData
                 (
-                    Pstream::blocking,
+                    Pstream::commsTypes::blocking,
                     slave,
                     motionOfAllControl.size()*sizeof(vector)
                 );
@@ -604,14 +604,14 @@ CML::tmp<CML::pointField> CML::RBFMotionSolver::curPoints() const
             // Parallel data exchange - receive size of motion data
             IPstream fromMasterSize
             (
-                Pstream::blocking, Pstream::masterNo(), sizeof(label)
+                Pstream::commsTypes::blocking, Pstream::masterNo(), sizeof(label)
             );
             fromMasterSize >> motionOfAllControlSize;
 
             // Parallel data exchange - receive motion data
             IPstream fromMasterData
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 Pstream::masterNo(),
                 motionOfAllControlSize*sizeof(vector)
             );

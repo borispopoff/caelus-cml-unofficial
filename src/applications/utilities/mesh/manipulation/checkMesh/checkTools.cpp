@@ -448,7 +448,7 @@ void CML::mergeAndWrite
             // Receive slave ones
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
 
                 pointField slavePts(fromSlave);
                 labelList slaveIDs(fromSlave);
@@ -464,7 +464,7 @@ void CML::mergeAndWrite
             // be improved.
             OPstream toMaster
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 myPoints.byteSize() + myIDs.byteSize()
             );

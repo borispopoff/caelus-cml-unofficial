@@ -2181,7 +2181,7 @@ void CML::distributedTriSurfaceMesh::distribute
         {
             if (faceSendSizes[Pstream::myProcNo()][proci] > 0)
             {
-                OPstream str(Pstream::blocking, proci);
+                OPstream str(Pstream::commsTypes::blocking, proci);
 
                 labelList pointMap;
                 triSurface subSurface
@@ -2217,7 +2217,7 @@ void CML::distributedTriSurfaceMesh::distribute
         {
             if (faceSendSizes[proci][Pstream::myProcNo()] > 0)
             {
-                IPstream str(Pstream::blocking, proci);
+                IPstream str(Pstream::commsTypes::blocking, proci);
 
                 // Receive
                 triSurface subSurface(str);

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -1646,7 +1646,7 @@ void CML::AMIInterpolation<SourcePatch, TargetPatch>::update
 
         mapDistributeBase::distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             tgtPatch.size(),
             map.constructMap(),
@@ -1661,7 +1661,7 @@ void CML::AMIInterpolation<SourcePatch, TargetPatch>::update
 
         mapDistributeBase::distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             tgtPatch.size(),
             map.constructMap(),
@@ -2315,7 +2315,7 @@ void CML::AMIInterpolation<SourcePatch, TargetPatch>::distributePatches
     List<labelList>& faceIDs
 ) const
 {
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
     for (label domain = 0; domain < Pstream::nProcs(); domain++)
     {

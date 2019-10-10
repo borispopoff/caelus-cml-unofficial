@@ -237,7 +237,7 @@ CML::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
             << exit(FatalIOError);
     }
 
-    if (Pstream::defaultCommsType == Pstream::scheduled)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         WarningInFunction
             << "Scheduled communication with split cyclics not supported."

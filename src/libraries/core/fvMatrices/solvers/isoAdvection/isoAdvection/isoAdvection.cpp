@@ -897,7 +897,7 @@ void CML::isoAdvection::syncProcPatches
             );
 
             // Send data to neighbouring processor
-            OPstream toNbr(Pstream::blocking, procPatch.neighbProcNo());
+            OPstream toNbr(Pstream::commsTypes::blocking, procPatch.neighbProcNo());
             toNbr << surfCellFacesOnProcPatch << dVfPatch;
         }
 
@@ -911,7 +911,7 @@ void CML::isoAdvection::syncProcPatches
 
             List<label> faceIDs;
             List<scalar> nbrdVfs;
-            IPstream fromNbr(Pstream::blocking, procPatch.neighbProcNo());
+            IPstream fromNbr(Pstream::commsTypes::blocking, procPatch.neighbProcNo());
             fromNbr >> faceIDs >> nbrdVfs;
 
             if (debug)

@@ -483,7 +483,7 @@ void writeProcAddressing
             // Apply face flips
             mapDistributeBase::distribute
             (
-                Pstream::nonBlocking,
+                Pstream::commsTypes::nonBlocking,
                 List<labelPair>(),
                 faceDistMap.constructSize(),
                 faceDistMap.subMap(),
@@ -505,7 +505,7 @@ void writeProcAddressing
         // provide one ...
         mapDistributeBase::distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             patchDistMap.constructSize(),
             patchDistMap.subMap(),
@@ -536,7 +536,7 @@ void writeProcAddressing
 
             mapDistributeBase::distribute
             (
-                Pstream::nonBlocking,
+                Pstream::commsTypes::nonBlocking,
                 List<labelPair>(),
                 map.nOldFaces(),
                 faceDistMap.constructMap(),
@@ -665,7 +665,7 @@ void readFields
                 {
                     if (!haveMesh[proci])
                     {
-                        OPstream toProc(Pstream::blocking, proci);
+                        OPstream toProc(Pstream::commsTypes::blocking, proci);
                         toProc<< tsubfld();
                     }
                 }
@@ -683,7 +683,7 @@ void readFields
             // Receive field
             IPstream fromMaster
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 Pstream::masterNo()
             );
             dictionary fieldDict(fromMaster);
@@ -744,8 +744,8 @@ void correctCoupledBoundaryConditions(fvMesh& mesh)
             fld.boundaryField();
         if
         (
-            Pstream::defaultCommsType == Pstream::blocking
-         || Pstream::defaultCommsType == Pstream::nonBlocking
+            Pstream::defaultCommsType == Pstream::commsTypes::blocking
+         || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
         )
         {
             label nReq = Pstream::nRequests();
@@ -764,7 +764,7 @@ void correctCoupledBoundaryConditions(fvMesh& mesh)
             if
             (
                 Pstream::parRun()
-             && Pstream::defaultCommsType == Pstream::nonBlocking
+             && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
             )
             {
                 Pstream::waitRequests(nReq);
@@ -780,7 +780,7 @@ void correctCoupledBoundaryConditions(fvMesh& mesh)
                 }
             }
         }
-        else if (Pstream::defaultCommsType == Pstream::scheduled)
+        else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
         {
             const lduSchedule& patchSchedule =
                 fld.mesh().globalData().patchSchedule();
@@ -794,11 +794,11 @@ void correctCoupledBoundaryConditions(fvMesh& mesh)
                 {
                     if (patchSchedule[patchEvali].init)
                     {
-                        pfld.initEvaluate(Pstream::scheduled);
+                        pfld.initEvaluate(Pstream::commsTypes::scheduled);
                     }
                     else
                     {
-                        pfld.evaluate(Pstream::scheduled);
+                        pfld.evaluate(Pstream::commsTypes::scheduled);
                     }
                 }
             }

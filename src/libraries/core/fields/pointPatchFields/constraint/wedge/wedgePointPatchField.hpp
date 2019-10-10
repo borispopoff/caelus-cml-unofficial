@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -118,21 +118,17 @@ public:
 
     // Member functions
 
-        //- Constraint handling
+        //- Return the constraint type this pointPatchField implements
+        virtual const word& constraintType() const
+        {
+            return type();
+        }
 
-            //- Return the constraint type this pointPatchField implements
-            virtual const word& constraintType() const
-            {
-                return type();
-            }
-
-        // Evaluation functions
-
-            //- Update the patch field
-            virtual void evaluate
-            (
-                const Pstream::commsTypes commsType=Pstream::blocking
-            );
+        //- Update the patch field
+        virtual void evaluate
+        (
+            const Pstream::commsTypes commsType=Pstream::commsTypes::blocking
+        );
 };
 
 

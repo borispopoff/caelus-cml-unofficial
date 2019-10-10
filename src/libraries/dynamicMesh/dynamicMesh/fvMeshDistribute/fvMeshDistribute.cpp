@@ -1886,7 +1886,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
 
 
     // Allocate buffers
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
 
     // What to send to neighbouring domains
@@ -1915,7 +1915,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             }
 
             // Pstream for sending mesh and fields
-            //OPstream str(Pstream::blocking, recvProc);
+            //OPstream str(Pstream::commsTypes::blocking, recvProc);
             UOPstream str(recvProc, pBufs);
 
             // Mesh subsetting engine

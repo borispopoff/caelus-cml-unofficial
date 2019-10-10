@@ -183,7 +183,7 @@ CML::jumpCyclicAMIFvPatchField<Type>::jumpCyclicAMIFvPatchField
     cyclicAMIFvPatchField<Type>(p, iF, dict)
 {
     // Call this evaluation in derived classes
-    // this->evaluate(Pstream::blocking);
+    //this->evaluate(Pstream::commsTypes::blocking);
 }
 
 

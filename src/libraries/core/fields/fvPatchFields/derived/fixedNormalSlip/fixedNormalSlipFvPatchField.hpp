@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -64,7 +64,7 @@ class fixedNormalSlipFvPatchField
 :
     public transformFvPatchField<Type>
 {
-    // Private Data
+    // Private data
 
         //- Value the normal component of which the boundary is set to
         Field<Type> fixedValue_;
@@ -103,7 +103,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Construct as copy
         fixedNormalSlipFvPatchField
         (
             const fixedNormalSlipFvPatchField<Type>&
@@ -118,7 +118,7 @@ public:
             );
         }
 
-        //- Copy constructor setting internal field reference
+        //- Construct as copy setting internal field reference
         fixedNormalSlipFvPatchField
         (
             const fixedNormalSlipFvPatchField<Type>&,
@@ -138,7 +138,7 @@ public:
         }
 
 
-    // Member Functions
+    // Member functions
 
         // Access
 
@@ -182,7 +182,7 @@ public:
             virtual void evaluate
             (
                 const Pstream::commsTypes commsType =
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
             );
 
             //- Return face-gradient transform diagonal
@@ -193,7 +193,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member Operators
+    // Member operators
 
         virtual void operator=(const UList<Type>&) {}
 

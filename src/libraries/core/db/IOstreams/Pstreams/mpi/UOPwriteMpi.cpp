@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -48,7 +48,7 @@ bool CML::UOPstream::write
 
     bool transferFailed = true;
 
-    if (commsType == blocking)
+    if (commsType == commsTypes::blocking)
     {
         transferFailed = MPI_Bsend
         (
@@ -69,7 +69,7 @@ bool CML::UOPstream::write
                 << CML::endl;
         }
     }
-    else if (commsType == scheduled)
+    else if (commsType == commsTypes::scheduled)
     {
         transferFailed = MPI_Send
         (
@@ -90,7 +90,7 @@ bool CML::UOPstream::write
                 << CML::endl;
         }
     }
-    else if (commsType == nonBlocking)
+    else if (commsType == commsTypes::nonBlocking)
     {
         MPI_Request request;
 

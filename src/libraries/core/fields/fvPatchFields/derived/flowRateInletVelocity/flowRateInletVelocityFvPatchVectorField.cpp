@@ -90,7 +90,7 @@ flowRateInletVelocityFvPatchVectorField
     }
     else
     {
-        evaluate(Pstream::blocking);
+        evaluate(Pstream::commsTypes::blocking);
     }
 }
 

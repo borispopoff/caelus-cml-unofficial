@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -639,7 +639,7 @@ void CML::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 {
     // 1. Send all point info on processor patches.
 
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
     DynamicList<Type> patchInfo;
     DynamicList<label> thisPoints;

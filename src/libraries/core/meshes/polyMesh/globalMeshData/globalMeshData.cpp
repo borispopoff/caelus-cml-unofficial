@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,7 +80,7 @@ void CML::globalMeshData::initProcAddr()
 
     if (Pstream::parRun())
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         // Send indices of my processor patches to my neighbours
         forAll(processorPatches_, i)
@@ -397,7 +397,7 @@ void CML::globalMeshData::calcSharedEdges() const
             )
             {
                 // Receive the edges using shared points from the slave.
-                IPstream fromSlave(Pstream::blocking, slave);
+                IPstream fromSlave(Pstream::commsTypes::blocking, slave);
                 EdgeMap<labelList> procSharedEdges(fromSlave);
 
                 if (debug)
@@ -446,7 +446,7 @@ void CML::globalMeshData::calcSharedEdges() const
             )
             {
                 // Receive the edges using shared points from the slave.
-                OPstream toSlave(Pstream::blocking, slave);
+                OPstream toSlave(Pstream::commsTypes::blocking, slave);
                 toSlave << globalShared;
             }
         }
@@ -457,7 +457,7 @@ void CML::globalMeshData::calcSharedEdges() const
         {
             OPstream toMaster
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 Pstream::masterNo()
             );
             toMaster << localShared;
@@ -466,7 +466,7 @@ void CML::globalMeshData::calcSharedEdges() const
         {
             IPstream fromMaster
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 Pstream::masterNo()
             );
             fromMaster >> globalShared;
@@ -1922,7 +1922,7 @@ CML::pointField CML::globalMeshData::sharedPoints() const
             slave++
         )
         {
-            IPstream fromSlave(Pstream::blocking, slave);
+            IPstream fromSlave(Pstream::commsTypes::blocking, slave);
 
             labelList nbrSharedPointAddr;
             pointField nbrSharedPoints;
@@ -1946,7 +1946,7 @@ CML::pointField CML::globalMeshData::sharedPoints() const
         {
             OPstream toSlave
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 slave,
                 sharedPoints.size()*sizeof(Zero)
             );
@@ -1960,7 +1960,7 @@ CML::pointField CML::globalMeshData::sharedPoints() const
         {
             OPstream toMaster
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 Pstream::masterNo()
             );
             toMaster
@@ -1972,7 +1972,7 @@ CML::pointField CML::globalMeshData::sharedPoints() const
         {
             IPstream fromMaster
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 Pstream::masterNo()
             );
             fromMaster >> sharedPoints;

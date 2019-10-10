@@ -145,13 +145,13 @@ int main(int argc, char *argv[])
             {
                 Perr<< "slave sending to master "
                     << Pstream::masterNo() << endl;
-                OPstream toMaster(Pstream::blocking, Pstream::masterNo());
+                OPstream toMaster(Pstream::commsTypes::blocking, Pstream::masterNo());
                 toMaster << data;
             }
 
             Perr<< "slave receiving from master "
                 << Pstream::masterNo() << endl;
-            IPstream fromMaster(Pstream::blocking, Pstream::masterNo());
+            IPstream fromMaster(Pstream::commsTypes::blocking, Pstream::masterNo());
             fromMaster >> data;
 
             Perr<< data << endl;
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
             )
             {
                 Perr << "master receiving from slave " << slave << endl;
-                IPstream fromSlave(Pstream::blocking, slave);
+                IPstream fromSlave(Pstream::commsTypes::blocking, slave);
                 fromSlave >> data;
 
                 Perr<< data << endl;
@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
             )
             {
                 Perr << "master sending to slave " << slave << endl;
-                OPstream toSlave(Pstream::blocking, slave);
+                OPstream toSlave(Pstream::commsTypes::blocking, slave);
                 toSlave << data;
             }
         }

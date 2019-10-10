@@ -265,7 +265,7 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
 
     if (!dict.found("value") && this->coupled())
     {
-        this->evaluate(Pstream::blocking);
+        this->evaluate(Pstream::commsTypes::blocking);
     }
 }
 

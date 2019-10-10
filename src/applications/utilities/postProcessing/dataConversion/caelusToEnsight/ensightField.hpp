@@ -161,7 +161,7 @@ void writeField
 
                 for (int slave=1; slave<Pstream::nProcs(); slave++)
                 {
-                    IPstream fromSlave(Pstream::scheduled, slave);
+                    IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                     scalarField slaveData(fromSlave);
                     ensightFile.write(slaveData);
                 }
@@ -171,7 +171,11 @@ void writeField
         {
             for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
             {
-                OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::scheduled,
+                    Pstream::masterNo()
+                );
                 toMaster<< vf.component(cmpt);
             }
         }
@@ -184,7 +188,7 @@ bool writePatchField
 (
     const Field<Type>& pf,
     const label patchi,
-    const label ensightPatchI,
+    const label ensightPatchi,
     const faceSets& boundaryFaceSet,
     const ensightMesh::nFacePrimitives& nfp,
     ensightStream& ensightFile
@@ -194,7 +198,7 @@ bool writePatchField
     {
         if (Pstream::master())
         {
-            ensightFile.writePartHeader(ensightPatchI);
+            ensightFile.writePartHeader(ensightPatchi);
         }
 
         writeField
@@ -248,7 +252,7 @@ void writePatchField
     const HashTable<ensightMesh::nFacePrimitives>&
         nPatchPrims = eMesh.nPatchPrims();
 
-    label ensightPatchI = eMesh.patchPartOffset();
+    label ensightPatchi = eMesh.patchPartOffset();
 
     label patchi = -1;
 
@@ -259,7 +263,7 @@ void writePatchField
             patchi = i;
             break;
         }
-        ensightPatchI++;
+        ensightPatchi++;
     }
 
 
@@ -316,7 +320,7 @@ void writePatchField
         (
             pf,
             patchi,
-            ensightPatchI,
+            ensightPatchi,
             boundaryFaceSets[patchi],
             nPatchPrims.find(patchName)(),
             ensightFile
@@ -330,7 +334,7 @@ void writePatchField
         (
             Field<Type>(),
             -1,
-            ensightPatchI,
+            ensightPatchi,
             nullFaceSets,
             nPatchPrims.find(patchName)(),
             ensightFile
@@ -469,7 +473,7 @@ void ensightField
         );
     }
 
-    label ensightPatchI = eMesh.patchPartOffset();
+    label ensightPatchi = eMesh.patchPartOffset();
 
     forAll(allPatchNames, patchi)
     {
@@ -485,14 +489,14 @@ void ensightField
                 (
                     vf.boundaryField()[patchi],
                     patchi,
-                    ensightPatchI,
+                    ensightPatchi,
                     boundaryFaceSets[patchi],
                     nPatchPrims.find(patchName)(),
                     ensightFile
                 )
             )
             {
-                ensightPatchI++;
+                ensightPatchi++;
             }
         }
     }
@@ -559,14 +563,14 @@ void ensightField
                 (
                     values,
                     zoneID,
-                    ensightPatchI,
+                    ensightPatchi,
                     faceZoneFaceSets[zoneID],
                     nFaceZonePrims.find(faceZoneName)(),
                     ensightFile
                 )
             )
             {
-                ensightPatchI++;
+                ensightPatchi++;
             }
         }
     }
@@ -660,7 +664,7 @@ void ensightPointField
     }
 
 
-    label ensightPatchI = eMesh.patchPartOffset();
+    label ensightPatchi = eMesh.patchPartOffset();
 
     forAll(allPatchNames, patchi)
     {
@@ -691,7 +695,7 @@ void ensightPointField
 
                 if (Pstream::master())
                 {
-                    ensightFile.writePartHeader(ensightPatchI);
+                    ensightFile.writePartHeader(ensightPatchi);
                 }
 
                 writeField
@@ -701,7 +705,7 @@ void ensightPointField
                     ensightFile
                 );
 
-                ensightPatchI++;
+                ensightPatchi++;
             }
         }
     }
@@ -735,7 +739,7 @@ void ensightPointField
 
                 if (Pstream::master())
                 {
-                    ensightFile.writePartHeader(ensightPatchI);
+                    ensightFile.writePartHeader(ensightPatchi);
                 }
 
                 writeField
@@ -749,7 +753,7 @@ void ensightPointField
                     ensightFile
                 );
 
-                ensightPatchI++;
+                ensightPatchi++;
             }
         }
     }

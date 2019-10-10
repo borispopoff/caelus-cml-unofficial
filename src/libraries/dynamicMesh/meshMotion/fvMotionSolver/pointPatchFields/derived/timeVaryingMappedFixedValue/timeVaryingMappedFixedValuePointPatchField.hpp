@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2015 OpenFOAM Foundation
+Copyright (C) 2012-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -315,7 +315,7 @@ timeVaryingMappedFixedValuePointPatchField
         //       of the pointPatchField::updated_ flag. This is
         //       so if first use is in the next time step it retriggers
         //       a new update.
-        pointPatchField<Type>::evaluate(Pstream::blocking);
+        pointPatchField<Type>::evaluate(Pstream::commsTypes::blocking);
     }
 }
 

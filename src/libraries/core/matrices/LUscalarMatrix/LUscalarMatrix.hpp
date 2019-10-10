@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -156,7 +156,7 @@ void CML::LUscalarMatrix::solve
             {
                 IPstream::read
                 (
-                    Pstream::scheduled,
+                    Pstream::commsTypes::scheduled,
                     slave,
                     reinterpret_cast<char*>
                     (
@@ -170,7 +170,7 @@ void CML::LUscalarMatrix::solve
         {
             OPstream::write
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 reinterpret_cast<const char*>(x.begin()),
                 x.byteSize()
@@ -196,7 +196,7 @@ void CML::LUscalarMatrix::solve
             {
                 OPstream::write
                 (
-                    Pstream::scheduled,
+                    Pstream::commsTypes::scheduled,
                     slave,
                     reinterpret_cast<const char*>
                     (
@@ -210,7 +210,7 @@ void CML::LUscalarMatrix::solve
         {
             IPstream::read
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 reinterpret_cast<char*>(x.begin()),
                 x.byteSize()

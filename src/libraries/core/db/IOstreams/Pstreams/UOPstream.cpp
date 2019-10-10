@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -108,7 +108,7 @@ CML::UOPstream::UOPstream(const int toProcNo, PstreamBuffers& buffers)
     toProcNo_(toProcNo),
     sendBuf_(buffers.sendBuf_[toProcNo]),
     tag_(buffers.tag_),
-    sendAtDestruct_(buffers.commsType_ != UPstream::nonBlocking)
+    sendAtDestruct_(buffers.commsType_ != UPstream::commsTypes::nonBlocking)
 {
     setOpened();
     setGood();

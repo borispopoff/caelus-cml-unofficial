@@ -324,7 +324,7 @@ void CML::volPointInterpolation::addSeparated
             refCast<coupledPointPatchField<Type>>
                 (pfbf[patchi]).initSwapAddSeparated
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     pf.internalField()
                 );
         }
@@ -340,7 +340,7 @@ void CML::volPointInterpolation::addSeparated
             refCast<coupledPointPatchField<Type>>
                 (pfbf[patchi]).swapAddSeparated
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     pf.internalField()
                 );
         }

@@ -1430,7 +1430,7 @@ void CML::refinementHistory::distribute(const mapDistributePolyMesh& map)
 
 
         // Send to neighbours
-        OPstream toNbr(Pstream::blocking, proci);
+        OPstream toNbr(Pstream::commsTypes::blocking, proci);
         toNbr << newSplitCells << newVisibleCells;
     }
 
@@ -1448,7 +1448,7 @@ void CML::refinementHistory::distribute(const mapDistributePolyMesh& map)
 
     for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
-        IPstream fromNbr(Pstream::blocking, proci);
+        IPstream fromNbr(Pstream::commsTypes::blocking, proci);
         List<splitCell8> newSplitCells(fromNbr);
         labelList newVisibleCells(fromNbr);
 

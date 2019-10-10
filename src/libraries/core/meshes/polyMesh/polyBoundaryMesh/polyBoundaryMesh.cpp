@@ -212,8 +212,8 @@ void CML::polyBoundaryMesh::calcGeometry()
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(*this, patchi)
@@ -228,7 +228,7 @@ void CML::polyBoundaryMesh::calcGeometry()
             operator[](patchi).calcGeometry(pBufs);
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = mesh().globalData().patchSchedule();
 
@@ -879,6 +879,7 @@ bool CML::polyBoundaryMesh::checkParallelSync(const bool report) const
         return false;
     }
 
+
     const polyBoundaryMesh& bm = *this;
 
     bool hasError = false;
@@ -1021,8 +1022,8 @@ void CML::polyBoundaryMesh::movePoints(const pointField& p)
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(*this, patchi)
@@ -1037,7 +1038,7 @@ void CML::polyBoundaryMesh::movePoints(const pointField& p)
             operator[](patchi).movePoints(pBufs, p);
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = mesh().globalData().patchSchedule();
 
@@ -1071,8 +1072,8 @@ void CML::polyBoundaryMesh::updateMesh()
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(*this, patchi)
@@ -1087,7 +1088,7 @@ void CML::polyBoundaryMesh::updateMesh()
             operator[](patchi).updateMesh(pBufs);
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = mesh().globalData().patchSchedule();
 

@@ -623,7 +623,7 @@ void CML::PatchTools::gatherAndMerge
             // Receive slave ones
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
 
                 pointField slavePoints(fromSlave);
                 List<FaceType> slaveFaces(fromSlave);
@@ -651,7 +651,7 @@ void CML::PatchTools::gatherAndMerge
             // be improved.
             OPstream toMaster
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 myPoints.byteSize() + 4*sizeof(label)*myFaces.size()
             );

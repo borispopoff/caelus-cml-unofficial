@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -390,7 +390,7 @@ void getInterfaceSizes
                 slave++
             )
             {
-                IPstream fromSlave(Pstream::blocking, slave);
+                IPstream fromSlave(Pstream::commsTypes::blocking, slave);
 
                 EdgeMap<Map<label>> slaveSizes(fromSlave);
 
@@ -435,7 +435,11 @@ void getInterfaceSizes
         {
             // Send to master
             {
-                OPstream toMaster(Pstream::blocking, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::blocking,
+                    Pstream::masterNo()
+                );
                 toMaster << regionsToSize;
             }
         }

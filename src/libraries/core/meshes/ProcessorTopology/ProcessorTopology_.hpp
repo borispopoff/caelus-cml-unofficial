@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -200,7 +200,11 @@ CML::ProcessorTopology<Patch, ProcPatch>::ProcessorTopology
         Pstream::scatterList(*this);
     }
 
-    if (Pstream::parRun() && Pstream::defaultCommsType == Pstream::scheduled)
+    if
+    (
+        Pstream::parRun()
+     && Pstream::defaultCommsType == Pstream::commsTypes::scheduled
+    )
     {
         label patchEvali = 0;
 

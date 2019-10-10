@@ -148,8 +148,8 @@ void CML::dynamicRefineBalancedFvMesh::correctBoundaries()
         // and only for blocking or nonBlocking comms (no scheduled comms)
         if
         (
-            Pstream::defaultCommsType == Pstream::blocking
-         || Pstream::defaultCommsType == Pstream::nonBlocking
+            Pstream::defaultCommsType == Pstream::commsTypes::blocking
+         || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
         )
         {
             label nReq = Pstream::nRequests();
@@ -169,7 +169,7 @@ void CML::dynamicRefineBalancedFvMesh::correctBoundaries()
             if
             (
                 Pstream::parRun()
-             && Pstream::defaultCommsType == Pstream::nonBlocking
+             && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
             )
             {
                 Pstream::waitRequests(nReq);

@@ -137,7 +137,7 @@ CML::parLagrangianRedistributor::redistributeLagrangianPositions
 
 
     // Allocate transfer buffers
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
     {
         // List of lists of particles to be transferred for all of the

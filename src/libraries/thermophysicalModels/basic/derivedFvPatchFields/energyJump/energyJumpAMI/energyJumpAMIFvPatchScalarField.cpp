@@ -66,7 +66,7 @@ CML::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField
     }
     else
     {
-        evaluate(Pstream::blocking);
+        evaluate(Pstream::commsTypes::blocking);
     }
 }
 

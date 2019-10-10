@@ -103,7 +103,7 @@ void CML::fvMeshSubset::doCoupledPatches
 
     if (syncPar && Pstream::parRun())
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         // Send face usage across processor patches
         forAll(oldPatches, oldPatchi)
