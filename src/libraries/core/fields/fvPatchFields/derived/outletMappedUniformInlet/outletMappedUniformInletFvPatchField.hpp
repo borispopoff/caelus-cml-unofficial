@@ -205,6 +205,22 @@ template<class Type>
 CML::outletMappedUniformInletFvPatchField<Type>::
 outletMappedUniformInletFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<Type>(p, iF, dict),
+    outletPatchName_(dict.lookup("outletPatch")),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
+    fraction_(dict.lookupOrDefault<scalar>("fraction", 1.0))
+{}
+
+
+template<class Type>
+CML::outletMappedUniformInletFvPatchField<Type>::
+outletMappedUniformInletFvPatchField
+(
     const outletMappedUniformInletFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -222,22 +238,6 @@ template<class Type>
 CML::outletMappedUniformInletFvPatchField<Type>::
 outletMappedUniformInletFvPatchField
 (
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<Type>(p, iF, dict),
-    outletPatchName_(dict.lookup("outletPatch")),
-    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    fraction_(dict.lookupOrDefault<scalar>("fraction", 1.0))
-{}
-
-
-template<class Type>
-CML::outletMappedUniformInletFvPatchField<Type>::
-outletMappedUniformInletFvPatchField
-(
     const outletMappedUniformInletFvPatchField<Type>& ptf
 )
 :
@@ -246,7 +246,6 @@ outletMappedUniformInletFvPatchField
     phiName_(ptf.phiName_),
     fraction_(ptf.fraction_)
 {}
-
 
 
 template<class Type>
