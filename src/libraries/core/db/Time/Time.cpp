@@ -750,7 +750,7 @@ CML::word CML::Time::findInstancePath
     const word& constantName = constant();
 
     // Read directory entries into a list
-    fileNameList dirEntries(readDir(directory, fileName::DIRECTORY));
+    fileNameList dirEntries(readDir(directory, fileType::directory));
 
     forAll(dirEntries, i)
     {

@@ -62,7 +62,7 @@ void removeSubDirs::evaluate()
 {
     fileName fn(directDir_);
 
-    CML::fileNameList fnl = CML::readDir(fn, CML::fileName::DIRECTORY);
+    CML::fileNameList fnl = CML::readDir(fn, CML::fileType::directory);
 
     forAll (fnl, i)
     {

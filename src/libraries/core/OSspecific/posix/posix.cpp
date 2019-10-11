@@ -586,22 +586,22 @@ mode_t CML::mode(const fileName& name)
 }
 
 
-// Return the file type: FILE or DIRECTORY
-CML::fileName::Type CML::type(const fileName& name)
+// Return the file type: file or directory
+CML::fileType CML::type(const fileName& name)
 {
     mode_t m = mode(name);
 
     if (S_ISREG(m))
     {
-        return fileName::FILE;
+        return fileType::file;
     }
     else if (S_ISDIR(m))
     {
-        return fileName::DIRECTORY;
+        return fileType::directory;
     }
     else
     {
-        return fileName::UNDEFINED;
+        return fileType::undefined;
     }
 }
 
@@ -661,7 +661,7 @@ time_t CML::lastModified(const fileName& name)
 CML::fileNameList CML::readDir
 (
     const fileName& directory,
-    const fileName::Type type,
+    const fileType type,
     const bool filtergz
 )
 {
@@ -711,10 +711,10 @@ CML::fileNameList CML::readDir
 
                 if
                 (
-                    (type == fileName::DIRECTORY)
+                    (type == fileType::directory)
                  ||
                     (
-                        type == fileName::FILE
+                        type == fileType::file
                      && fName[fName.size()-1] != '~'
                      && fExt != "bak"
                      && fExt != "BAK"
@@ -765,10 +765,10 @@ bool CML::cp(const fileName& src, const fileName& dest)
     fileName destFile(dest);
 
     // Check type of source file.
-    if (src.type() == fileName::FILE)
+    if (src.type() == fileType::file)
     {
         // If dest is a directory, create the destination file name.
-        if (destFile.type() == fileName::DIRECTORY)
+        if (destFile.type() == fileType::directory)
         {
             destFile = destFile/src.name();
         }
@@ -805,10 +805,10 @@ bool CML::cp(const fileName& src, const fileName& dest)
             return false;
         }
     }
-    else if (src.type() == fileName::DIRECTORY)
+    else if (src.type() == fileType::directory)
     {
         // If dest is a directory, create the destination file name.
-        if (destFile.type() == fileName::DIRECTORY)
+        if (destFile.type() == fileType::directory)
         {
             destFile = destFile/src.component(src.components().size() -1);
         }
@@ -820,7 +820,7 @@ bool CML::cp(const fileName& src, const fileName& dest)
         }
 
         // Copy files
-        fileNameList contents = readDir(src, fileName::FILE, false);
+        fileNameList contents = readDir(src, fileType::file, false);
         forAll(contents, i)
         {
             if (POSIX::debug)
@@ -834,7 +834,7 @@ bool CML::cp(const fileName& src, const fileName& dest)
         }
 
         // Copy sub directories.
-        fileNameList subdirs = readDir(src, fileName::DIRECTORY);
+        fileNameList subdirs = readDir(src, fileType::directory);
         forAll(subdirs, i)
         {
             if (POSIX::debug)
@@ -899,8 +899,8 @@ bool CML::mv(const fileName& src, const fileName& dst)
 
     if
     (
-        dst.type() == fileName::DIRECTORY
-     && src.type() != fileName::DIRECTORY
+        dst.type() == fileType::directory
+     && src.type() != fileType::directory
     )
     {
         const fileName dstName(dst/src.name());
@@ -1004,7 +1004,7 @@ bool CML::rmDir(const fileName& directory)
             {
                 fileName path = directory/fName;
 
-                if (path.type() == fileName::DIRECTORY)
+                if (path.type() == fileType::directory)
                 {
                     if (!rmDir(path))
                     {

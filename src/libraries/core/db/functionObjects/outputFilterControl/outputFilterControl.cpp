@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,7 +56,7 @@ CML::outputFilterControl::outputFilterControl
 :
     time_(t),
     prefix_(prefix),
-    timeControl_(ocTimeStep),
+    timeControl_(timeControls::timeStep),
     intervalSteps_(0),
     interval_(-1),
     executionIndex_(0)
@@ -98,28 +98,28 @@ void CML::outputFilterControl::read(const dictionary& dict)
     }
     else
     {
-        timeControl_ = ocTimeStep;
+        timeControl_ = timeControls::timeStep;
     }
 
     switch (timeControl_)
     {
-        case ocTimeStep:
+        case timeControls::timeStep:
         {
             intervalSteps_ = dict.lookupOrDefault<label>(intervalName, 0);
             break;
         }
 
-        case ocWriteTime:
-        case ocOutputTime:
+        case timeControls::writeTime:
+        case timeControls::outputTime:
         {
             intervalSteps_ = dict.lookupOrDefault<label>(intervalName, 1);
             break;
         }
 
-        case ocClockTime:
-        case ocRunTime:
-        case ocCpuTime:
-        case ocAdjustableRunTime:
+        case timeControls::clockTime:
+        case timeControls::runTime:
+        case timeControls::cpuTime:
+        case timeControls::adjustableRunTime:
         {
             interval_ = readScalar(dict.lookup(intervalName));
             break;
@@ -127,7 +127,6 @@ void CML::outputFilterControl::read(const dictionary& dict)
 
         default:
         {
-            // do nothing
             break;
         }
     }
@@ -138,7 +137,7 @@ bool CML::outputFilterControl::execute()
 {
     switch (timeControl_)
     {
-        case ocTimeStep:
+        case timeControls::timeStep:
         {
             return
             (
@@ -148,8 +147,8 @@ bool CML::outputFilterControl::execute()
             break;
         }
 
-        case ocWriteTime:
-        case ocOutputTime:
+        case timeControls::writeTime:
+        case timeControls::outputTime:
         {
             if (time_.writeTime())
             {
@@ -159,8 +158,8 @@ bool CML::outputFilterControl::execute()
             break;
         }
 
-        case ocRunTime:
-        case ocAdjustableRunTime:
+        case timeControls::runTime:
+        case timeControls::adjustableRunTime:
         {
             label executionIndex = label
             (
@@ -179,7 +178,7 @@ bool CML::outputFilterControl::execute()
             break;
         }
 
-        case ocCpuTime:
+        case timeControls::cpuTime:
         {
             label executionIndex = label
             (
@@ -194,7 +193,7 @@ bool CML::outputFilterControl::execute()
             break;
         }
 
-        case ocClockTime:
+        case timeControls::clockTime:
         {
             label executionIndex = label
             (
@@ -209,7 +208,7 @@ bool CML::outputFilterControl::execute()
             break;
         }
 
-        case ocNone:
+        case timeControls::none:
         {
             return false;
         }

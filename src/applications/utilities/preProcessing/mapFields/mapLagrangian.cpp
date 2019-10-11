@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -92,7 +92,7 @@ void mapLagrangian(const meshToMesh& interp)
         readDir
         (
             meshSource.time().timePath()/cloud::prefix,
-            fileName::DIRECTORY
+            fileType::directory
         )
     );
 

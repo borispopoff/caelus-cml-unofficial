@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -85,7 +85,7 @@ CML::Istream& CML::operator>>(Istream& is, Switch& s)
 
 CML::Ostream& CML::operator<<(Ostream& os, const Switch& s)
 {
-    os << Switch::names[s.switch_];
+    os << Switch::names[int(s.switch_)];
     os.check("Ostream& operator<<(Ostream&, const Switch&)");
     return os;
 }

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,6 +60,16 @@ Istream& operator>>(Istream&, fileName&);
 Ostream& operator<<(Ostream&, const fileName&);
 
 
+//- Enumeration of file types
+enum class fileType
+{
+    undefined,
+    file,
+    directory,
+    link
+};
+
+
 /*---------------------------------------------------------------------------*\
                           Class fileName Declaration
 \*---------------------------------------------------------------------------*/
@@ -76,16 +86,6 @@ class fileName
 
 public:
 
-    //- Enumerations to handle file types and modes.
-    enum Type
-    {
-        UNDEFINED,
-        FILE,
-        DIRECTORY,
-        LINK
-    };
-
-
     // Static data members
 
         static const char* const typeName;
@@ -100,19 +100,19 @@ public:
         //- Construct null
         inline fileName();
 
-        //- Copy constructor
+        //- Construct as copy
         inline fileName(const fileName&);
 
         //- Construct as copy of word
         inline fileName(const word&);
 
-        //- Copy constructor of string
+        //- Construct as copy of string
         inline fileName(const string&);
 
-        //- Copy constructor of std::string
+        //- Construct as copy of std::string
         inline fileName(const std::string&);
 
-        //- Copy constructor of character array
+        //- Construct as copy of character array
         inline fileName(const char*);
 
         //- Construct by concatenating elements of wordList separated by '/'
@@ -122,7 +122,7 @@ public:
         fileName(Istream&);
 
 
-    // Member Functions
+    // Member functions
 
         //- Is this character valid for a fileName?
         inline static bool valid(char);
@@ -151,8 +151,8 @@ public:
 
         // Interrogation
 
-            //- Return the file type: FILE, DIRECTORY or UNDEFINED
-            Type type() const;
+            //- Return the file type: file, directory or undefined
+            fileType type() const;
 
             //- Return true if file name is absolute
             bool isAbsolute() const;
@@ -176,7 +176,7 @@ public:
             //
             word name() const;
 
-            //- Return file name (part beyond last /), subsitute for CAELUS_CASE
+            //- Return file name (part beyond last /), substitute for CAELUS_CASE
             string caseName() const;
 
             //- Return file name, optionally without extension
@@ -217,7 +217,7 @@ public:
             word component(const size_type, const char delimiter='/') const;
 
 
-    // Member Operators
+    // Member operators
 
         // Assignment
 
@@ -228,7 +228,7 @@ public:
             void operator=(const char*);
 
 
-    // IOstream Operators
+    // IOstream operators
 
         friend Istream& operator>>(Istream&, fileName&);
         friend Ostream& operator<<(Ostream&, const fileName&);

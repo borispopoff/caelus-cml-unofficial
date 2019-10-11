@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -44,7 +44,7 @@ CML::fileName::fileName(const wordList& lst)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-CML::fileName::Type CML::fileName::type() const
+CML::fileType CML::fileName::type() const
 {
     return ::CML::type(*this);
 }
@@ -413,7 +413,7 @@ CML::fileName CML::search(const word& file, const fileName& directory)
     }
 
     // If not found search each of the sub-directories
-    fileNameList dirs(readDir(directory, fileName::DIRECTORY));
+    fileNameList dirs(readDir(directory, fileType::directory));
     forAll(dirs, i)
     {
         fileName path = search(file, directory/dirs[i]);

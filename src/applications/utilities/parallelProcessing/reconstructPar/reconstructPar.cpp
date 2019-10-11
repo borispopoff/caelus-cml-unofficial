@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 Copyright (C) 2015 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
@@ -554,7 +554,7 @@ int main(int argc, char *argv[])
                             databases[proci].timePath()
                           / regionDir
                           / cloud::prefix,
-                            fileName::DIRECTORY
+                            fileType::directory
                         )
                     );
 

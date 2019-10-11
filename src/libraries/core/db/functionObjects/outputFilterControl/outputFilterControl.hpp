@@ -50,16 +50,16 @@ class outputFilterControl
 public:
 
     //- The output control options
-    enum timeControls
+    enum class timeControls
     {
-        ocTimeStep,           //!< execution is coupled to the time-step
-        ocWriteTime,          //!< execution is coupled to the write-time
-        ocOutputTime,         //!< execution is coupled to the output-time
-        ocAdjustableRunTime,  //!< Adjust time step for execution
-        ocRunTime,            //!< run time for execution
-        ocClockTime,          //!< clock time for execution
-        ocCpuTime,            //!< cpu time for execution
-        ocNone                //!< no output
+        timeStep,           //!< execution is coupled to the time-step
+        writeTime,          //!< execution is coupled to the write-time
+        outputTime,         //!< execution is coupled to the output-time
+        adjustableRunTime,  //!< Adjust time step for execution
+        runTime,            //!< run time for execution
+        clockTime,          //!< clock time for execution
+        cpuTime,            //!< cpu time for execution
+        none                //!< no execution
     };
 
 
@@ -121,7 +121,7 @@ public:
         //- Read from dictionary
         void read(const dictionary&);
 
-        //- Return const access to the Time object
+        //- Return Time
         inline const Time& time() const
         {
             return time_;

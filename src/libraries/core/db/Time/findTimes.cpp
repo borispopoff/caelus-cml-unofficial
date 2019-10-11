@@ -43,7 +43,7 @@ CML::instantList CML::Time::findTimes
     }
 
     // Read directory entries into a list
-    fileNameList dirEntries(readDir(directory, fileName::DIRECTORY));
+    fileNameList dirEntries(readDir(directory, fileType::directory));
 
     // Initialise instant list
     instantList Times(dirEntries.size() + 1);

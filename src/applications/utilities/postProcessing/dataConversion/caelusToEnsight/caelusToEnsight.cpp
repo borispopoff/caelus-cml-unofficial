@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -301,7 +301,7 @@ int main(int argc, char *argv[])
         fileNameList cloudDirs = readDir
         (
             runTime.timePath()/regionPrefix/cloud::prefix,
-            fileName::DIRECTORY
+            fileType::directory
         );
 
         forAll(cloudDirs, cloudI)
@@ -551,7 +551,7 @@ int main(int argc, char *argv[])
             fileNameList currentCloudDirs = readDir
             (
                 runTime.timePath()/regionPrefix/cloud::prefix,
-                fileName::DIRECTORY
+                fileType::directory
             );
 
             bool cloudExists = inFileNameList(currentCloudDirs, cloudName);

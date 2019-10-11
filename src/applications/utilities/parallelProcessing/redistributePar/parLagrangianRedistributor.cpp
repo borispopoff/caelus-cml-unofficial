@@ -67,7 +67,7 @@ void CML::parLagrangianRedistributor::findClouds
             mesh.time().timePath()
           / mesh.dbDir()
           / cloud::prefix,
-            fileName::DIRECTORY
+            fileType::directory
         )
     );
 

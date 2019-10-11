@@ -580,7 +580,7 @@ int main(int argc, char *argv[])
 
             fileNameList cloudDirs
             (
-                readDir(runTime.timePath()/cloud::prefix, fileName::DIRECTORY)
+                readDir(runTime.timePath()/cloud::prefix, fileType::directory)
             );
 
             // Particles

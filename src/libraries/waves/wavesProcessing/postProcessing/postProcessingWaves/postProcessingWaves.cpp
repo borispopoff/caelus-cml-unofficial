@@ -62,7 +62,7 @@ void postProcessingWaves::getTimeDirs
     {
         // Get the time directories
         fileNameList fnl =
-            CML::readDir(inputDir, CML::fileName::DIRECTORY);
+            CML::readDir(inputDir, CML::fileType::directory);
 
         timeDirs.setSize(fnl.size());
 

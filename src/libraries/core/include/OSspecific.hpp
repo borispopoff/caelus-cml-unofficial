@@ -132,17 +132,17 @@ bool chMod(const fileName&, const mode_t);
 //- Return the file mode
 mode_t mode(const fileName&);
 
-//- Return the file type: DIRECTORY or FILE
-fileName::Type type(const fileName&);
+//- Return the file type: directory or file
+fileType type(const fileName&);
 
-//- Does the name exist (as DIRECTORY or FILE) in the file system?
+//- Does the name exist (as directory or file) in the file system?
 //  Optionally enable/disable check for gzip file.
 bool exists(const fileName&, const bool checkGzip=true);
 
-//- Does the name exist as a DIRECTORY in the file system?
+//- Does the name exist as a directory in the file system?
 bool isDir(const fileName&);
 
-//- Does the name exist as a FILE in the file system?
+//- Does the name exist as a file in the file system?
 //  Optionally enable/disable check for gzip file.
 bool isFile(const fileName&, const bool checkGzip=true);
 
@@ -156,7 +156,7 @@ time_t lastModified(const fileName&);
 fileNameList readDir
 (
     const fileName&,
-    const fileName::Type=fileName::FILE,
+    const fileType = fileType::file,
     const bool filtergz=true
 );
 

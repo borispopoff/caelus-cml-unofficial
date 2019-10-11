@@ -421,7 +421,7 @@ bool CML::OutputFilterFunctionObject<OutputFilter>::adjustTimeStep()
     (
         active()
      && writeControl_.control()
-     == outputFilterControl::ocAdjustableRunTime
+     == outputFilterControl::timeControls::adjustableRunTime
     )
     {
         const label  writeTimeIndex = writeControl_.executionIndex();
