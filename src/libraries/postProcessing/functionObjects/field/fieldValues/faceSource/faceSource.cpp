@@ -35,7 +35,7 @@ License
 namespace CML
 {
     template<>
-    const char* NamedEnum<fieldValues::faceSource::sourceType, 3>::names[] =
+    const char* NamedEnum<fieldValues::faceSource::sourceTypes, 3>::names[] =
     {
         "faceZone",
         "patch",
@@ -71,7 +71,7 @@ namespace CML
 }
 
 
-const CML::NamedEnum<CML::fieldValues::faceSource::sourceType, 3>
+const CML::NamedEnum<CML::fieldValues::faceSource::sourceTypes, 3>
     CML::fieldValues::faceSource::sourceTypeNames_;
 
 const CML::NamedEnum<CML::fieldValues::faceSource::operationType, 15>
@@ -400,17 +400,17 @@ void CML::fieldValues::faceSource::initialise(const dictionary& dict)
 
     switch (source_)
     {
-        case stFaceZone:
+        case sourceTypes::faceZone:
         {
             setFaceZoneFaces();
             break;
         }
-        case stPatch:
+        case sourceTypes::patch:
         {
             setPatchFaces();
             break;
         }
-        case stSampledSurface:
+        case sourceTypes::sampledSurface:
         {
             sampledSurfaceFaces(dict);
             break;
@@ -453,7 +453,7 @@ void CML::fieldValues::faceSource::initialise(const dictionary& dict)
     {
         Info<< "    weight field = " << weightFieldName_ << nl;
 
-        if (source_ == stSampledSurface)
+        if (source_ == sourceTypes::sampledSurface)
         {
             FatalIOErrorInFunction(dict)
                 << "Cannot use weightField for a sampledSurface"
@@ -545,12 +545,12 @@ CML::scalar CML::fieldValues::faceSource::processValues
 {
     switch (operation_)
     {
-        case opSumDirection:
+        case operationType::sumDirection:
         {
             vector n(dict_.lookup("direction"));
             return sum(pos(values*(Sf & n))*mag(values));
         }
-        case opSumDirectionBalance:
+        case operationType::sumDirectionBalance:
         {
             vector n(dict_.lookup("direction"));
             const scalarField nv(values*(Sf & n));
@@ -576,7 +576,7 @@ CML::vector CML::fieldValues::faceSource::processValues
 {
     switch (operation_)
     {
-        case opSumDirection:
+        case operationType::sumDirection:
         {
             vector n(dict_.lookup("direction"));
             n /= mag(n) + ROOTVSMALL;
@@ -584,7 +584,7 @@ CML::vector CML::fieldValues::faceSource::processValues
 
             return sum(pos(nv)*n*(nv));
         }
-        case opSumDirectionBalance:
+        case operationType::sumDirectionBalance:
         {
             vector n(dict_.lookup("direction"));
             n /= mag(n) + ROOTVSMALL;
@@ -592,12 +592,12 @@ CML::vector CML::fieldValues::faceSource::processValues
 
             return sum(pos(nv)*n*(nv));
         }
-        case opAreaNormalAverage:
+        case operationType::areaNormalAverage:
         {
             scalar result = sum(values & Sf)/sum(mag(Sf));
             return vector(result, 0.0, 0.0);
         }
-        case opAreaNormalIntegrate:
+        case operationType::areaNormalIntegrate:
         {
             scalar result = sum(values & Sf);
             return vector(result, 0.0, 0.0);

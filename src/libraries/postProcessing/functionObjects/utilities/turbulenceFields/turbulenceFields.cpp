@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -162,32 +162,32 @@ void CML::turbulenceFields::execute()
             const word& f = iter.key();
             switch (compressibleFieldNames_[f])
             {
-                case cfR:
+                case compressibleField::R:
                 {
                     processField<symmTensor>(f, model.R());
                     break;
                 }
-                case cfDevRhoReff:
+                case compressibleField::devRhoReff:
                 {
                     processField<symmTensor>(f, model.devRhoReff());
                     break;
                 }
-                case cfMut:
+                case compressibleField::mut:
                 {
                     processField<scalar>(f, model.mut());
                     break;
                 }
-                case cfMuEff:
+                case compressibleField::muEff:
                 {
                     processField<scalar>(f, model.muEff());
                     break;
                 }
-                case cfAlphat:
+                case compressibleField::alphat:
                 {
                     processField<scalar>(f, model.alphat());
                     break;
                 }
-                case cfAlphaEff:
+                case compressibleField::alphaEff:
                 {
                     processField<scalar>(f, model.alphaEff());
                     break;
@@ -210,22 +210,22 @@ void CML::turbulenceFields::execute()
             const word& f = iter.key();
             switch (incompressibleFieldNames_[f])
             {
-                case ifR:
+                case incompressibleField::R:
                 {
                     processField<symmTensor>(f, model.R());
                     break;
                 }
-                case ifDevReff:
+                case incompressibleField::devReff:
                 {
                     processField<symmTensor>(f, model.devReff());
                     break;
                 }
-                case ifNut:
+                case incompressibleField::nut:
                 {
                     processField<scalar>(f, model.nut());
                     break;
                 }
-                case ifNuEff:
+                case incompressibleField::nuEff:
                 {
                     processField<scalar>(f, model.nuEff());
                     break;

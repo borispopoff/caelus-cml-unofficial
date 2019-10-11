@@ -65,7 +65,7 @@ CML::fieldValues::fieldValueDelta::fieldValueDelta
     obr_(obr),
     loadFromFiles_(loadFromFiles),
     log_(true),
-    operation_(opSubtract),
+    operation_(operationType::subtract),
     source1Ptr_(nullptr),
     source2Ptr_(nullptr)
 {

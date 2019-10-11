@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
- 
+
     Caelus is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -139,6 +139,7 @@ class forces
 :
     public functionObjectFile
 {
+
 protected:
 
     // Protected data
@@ -188,7 +189,7 @@ protected:
             //- Reference pressure
             scalar pRef_;
 
-            //- Coordinate system used when evaluting forces/moments
+            //- Coordinate system used when evaluating forces/moments
             coordinateSystem coordSys_;
 
             //- Flag to indicate whether we are using a local co-ordinate sys

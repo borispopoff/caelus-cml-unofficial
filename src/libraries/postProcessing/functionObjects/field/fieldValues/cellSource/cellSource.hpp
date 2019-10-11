@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -127,30 +127,30 @@ public:
     // Public data types
 
         //- Source type enumeration
-        enum sourceType
+        enum class sourceTypes
         {
-            stCellZone,
-            stAll
+            cellZone,
+            all
         };
 
         //- Source type names
-        static const NamedEnum<sourceType, 2> sourceTypeNames_;
+        static const NamedEnum<sourceTypes, 2> sourceTypeNames_;
 
 
         //- Operation type enumeration
-        enum operationType
+        enum class operationType
         {
-            opNone,
-            opSum,
-            opSumMag,
-            opAverage,
-            opWeightedAverage,
-            opVolAverage,
-            opWeightedVolAverage,
-            opVolIntegrate,
-            opMin,
-            opMax,
-            opCoV
+            none,
+            sum,
+            sumMag,
+            average,
+            weightedAverage,
+            volAverage,
+            weightedVolAverage,
+            volIntegrate,
+            min,
+            max,
+            CoV
         };
 
         //- Operation type names
@@ -176,7 +176,7 @@ protected:
     // Protected data
 
         //- Source type
-        sourceType source_;
+        sourceTypes source_;
 
         //- Operation to apply to values
         operationType operation_;
@@ -252,7 +252,7 @@ public:
         // Access
 
             //- Return the source type
-            inline const sourceType& source() const;
+            inline const sourceTypes& source() const;
 
             //- Return the local list of cell IDs
             inline const labelList& cellId() const;
@@ -293,7 +293,10 @@ public:
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-bool CML::fieldValues::cellSource::validField(const word& fieldName) const
+bool CML::fieldValues::cellSource::validField
+(
+    const word& fieldName
+) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vf;
 
@@ -307,7 +310,8 @@ bool CML::fieldValues::cellSource::validField(const word& fieldName) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type>> CML::fieldValues::cellSource::setFieldValues
+CML::tmp<CML::Field<Type>>
+CML::fieldValues::cellSource::setFieldValues
 (
     const word& fieldName,
     const bool mustGet
@@ -323,7 +327,7 @@ CML::tmp<CML::Field<Type>> CML::fieldValues::cellSource::setFieldValues
     if (mustGet)
     {
         FatalErrorInFunction
-           << "Field " << fieldName << " not found in database"
+            << "Field " << fieldName << " not found in database"
             << abort(FatalError);
     }
 
@@ -339,55 +343,55 @@ Type CML::fieldValues::cellSource::processValues
     const scalarField& weightField
 ) const
 {
-    Type result = pTraits<Type>::zero;
+    Type result = Zero;
     switch (operation_)
     {
-        case opSum:
+        case operationType::sum:
         {
             result = sum(values);
             break;
         }
-        case opSumMag:
+        case operationType::sumMag:
         {
             result = sum(cmptMag(values));
             break;
         }
-        case opAverage:
+        case operationType::average:
         {
             result = sum(values)/values.size();
             break;
         }
-        case opWeightedAverage:
+        case operationType::weightedAverage:
         {
             result = sum(weightField*values)/sum(weightField);
             break;
         }
-        case opVolAverage:
+        case operationType::volAverage:
         {
             result = sum(V*values)/sum(V);
             break;
         }
-        case opWeightedVolAverage:
+        case operationType::weightedVolAverage:
         {
             result = sum(weightField*V*values)/sum(weightField*V);
             break;
         }
-        case opVolIntegrate:
+        case operationType::volIntegrate:
         {
             result = sum(V*values);
             break;
         }
-        case opMin:
+        case operationType::min:
         {
             result = min(values);
             break;
         }
-        case opMax:
+        case operationType::max:
         {
             result = max(values);
             break;
         }
-        case opCoV:
+        case operationType::CoV:
         {
             Type meanValue = sum(values*V)/sum(V);
 
@@ -404,10 +408,8 @@ Type CML::fieldValues::cellSource::processValues
 
             break;
         }
-        default:
-        {
-            // Do nothing
-        }
+        case operationType::none:
+        {}
     }
 
     return result;
@@ -417,7 +419,10 @@ Type CML::fieldValues::cellSource::processValues
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-bool CML::fieldValues::cellSource::writeValues(const word& fieldName)
+bool CML::fieldValues::cellSource::writeValues
+(
+    const word& fieldName
+)
 {
     const bool ok = validField<Type>(fieldName);
 

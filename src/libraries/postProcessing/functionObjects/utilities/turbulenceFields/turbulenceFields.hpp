@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -100,23 +100,23 @@ class turbulenceFields
 {
 public:
 
-    enum compressibleField
+    enum class compressibleField
     {
-        cfR,
-        cfDevRhoReff,
-        cfMut,
-        cfMuEff,
-        cfAlphat,
-        cfAlphaEff
+        R,
+        devRhoReff,
+        mut,
+        muEff,
+        alphat,
+        alphaEff
     };
     static const NamedEnum<compressibleField, 6> compressibleFieldNames_;
 
-    enum incompressibleField
+    enum class incompressibleField
     {
-        ifR,
-        ifDevReff,
-        ifNut,
-        ifNuEff
+        R,
+        devReff,
+        nut,
+        nuEff
     };
     static const NamedEnum<incompressibleField, 4> incompressibleFieldNames_;
 

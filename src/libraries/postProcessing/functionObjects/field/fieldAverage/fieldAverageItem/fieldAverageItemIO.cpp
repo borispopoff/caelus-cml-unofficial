@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
- 
+
     Caelus is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -33,10 +33,13 @@ CML::fieldAverageItem::fieldAverageItem(Istream& is)
     meanFieldName_("unknown"),
     prime2Mean_(0),
     prime2MeanFieldName_("unknown"),
-    base_(ITER),
+    base_(baseType::iter),
     window_(-1.0)
 {
-    is.check("CML::fieldAverageItem::fieldAverageItem(CML::Istream&)");
+    is.check
+    (
+        "CML::fieldAverageItem::fieldAverageItem(CML::Istream&)"
+    );
 
     const dictionaryEntry entry(dictionary::null, is);
 
@@ -59,7 +62,11 @@ CML::fieldAverageItem::fieldAverageItem(Istream& is)
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-CML::Istream& CML::operator>>(Istream& is, fieldAverageItem& faItem)
+CML::Istream& CML::operator>>
+(
+    Istream& is,
+    fieldAverageItem& faItem
+)
 {
     is.check
     (
@@ -93,7 +100,11 @@ CML::Istream& CML::operator>>(Istream& is, fieldAverageItem& faItem)
 }
 
 
-CML::Ostream& CML::operator<<(Ostream& os, const fieldAverageItem& faItem)
+CML::Ostream& CML::operator<<
+(
+    Ostream& os,
+    const fieldAverageItem& faItem
+)
 {
     os.check
     (

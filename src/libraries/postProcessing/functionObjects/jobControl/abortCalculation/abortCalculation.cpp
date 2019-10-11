@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
- 
+
     Caelus is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -84,7 +84,7 @@ CML::abortCalculation::abortCalculation
     name_(name),
     obr_(obr),
     abortFile_("$CAELUS_CASE/" + name),
-    action_(nextWrite)
+    action_(actionType::nextWrite)
 {
     abortFile_.expand();
     read(dict);
@@ -110,7 +110,7 @@ void CML::abortCalculation::read(const dictionary& dict)
     }
     else
     {
-        action_ = nextWrite;
+        action_ = actionType::nextWrite;
     }
 
     if (dict.readIfPresent("file", abortFile_))
@@ -129,7 +129,7 @@ void CML::abortCalculation::execute()
     {
         switch (action_)
         {
-            case noWriteNow :
+            case actionType::noWriteNow :
             {
                 if (obr_.time().stopAt(Time::saNoWriteNow))
                 {
@@ -141,7 +141,7 @@ void CML::abortCalculation::execute()
                 break;
             }
 
-            case writeNow :
+            case actionType::writeNow :
             {
                 if (obr_.time().stopAt(Time::saWriteNow))
                 {
@@ -153,7 +153,7 @@ void CML::abortCalculation::execute()
                 break;
             }
 
-            case nextWrite :
+            case actionType::nextWrite :
             {
                 if (obr_.time().stopAt(Time::saNextWrite))
                 {

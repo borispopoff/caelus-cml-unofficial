@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -164,35 +164,35 @@ public:
     // Public data types
 
         //- Source type enumeration
-        enum sourceType
+        enum class sourceTypes
         {
-            stFaceZone,
-            stPatch,
-            stSampledSurface
+            faceZone,
+            patch,
+            sampledSurface
         };
 
         //- Source type names
-        static const NamedEnum<sourceType, 3> sourceTypeNames_;
+        static const NamedEnum<sourceTypes, 3> sourceTypeNames_;
 
 
         //- Operation type enumeration
-        enum operationType
+        enum class operationType
         {
-            opNone,
-            opSum,
-            opSumMag,
-            opSumDirection,
-            opSumDirectionBalance,
-            opAverage,
-            opWeightedAverage,
-            opAreaAverage,
-            opWeightedAreaAverage,
-            opAreaIntegrate,
-            opMin,
-            opMax,
-            opCoV,
-            opAreaNormalAverage,
-            opAreaNormalIntegrate
+            none,
+            sum,
+            sumMag,
+            sumDirection,
+            sumDirectionBalance,
+            average,
+            weightedAverage,
+            areaAverage,
+            weightedAreaAverage,
+            areaIntegrate,
+            min,
+            max,
+            CoV,
+            areaNormalAverage,
+            areaNormalIntegrate
         };
 
         //- Operation type names
@@ -238,7 +238,7 @@ protected:
         autoPtr<surfaceWriter> surfaceWriterPtr_;
 
         //- Source type
-        sourceType source_;
+        sourceTypes source_;
 
         //- Operation to apply to values
         operationType operation_;
@@ -351,7 +351,7 @@ public:
         // Access
 
             //- Return the source type
-            inline const sourceType& source() const;
+            inline const sourceTypes& source() const;
 
             //- Return the local list of face IDs
             inline const labelList& faceId() const;
@@ -438,12 +438,19 @@ vector faceSource::processValues
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-bool CML::fieldValues::faceSource::validField(const word& fieldName) const
+bool CML::fieldValues::faceSource::validField
+(
+    const word& fieldName
+) const
 {
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> sf;
     typedef GeometricField<Type, fvPatchField, volMesh> vf;
 
-    if (source_ != stSampledSurface && obr_.foundObject<sf>(fieldName))
+    if
+    (
+        source_ != sourceTypes::sampledSurface
+     && obr_.foundObject<sf>(fieldName)
+    )
     {
         return true;
     }
@@ -457,7 +464,8 @@ bool CML::fieldValues::faceSource::validField(const word& fieldName) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::getFieldValues
+CML::tmp<CML::Field<Type>>
+CML::fieldValues::faceSource::getFieldValues
 (
     const word& fieldName,
     const bool mustGet,
@@ -467,7 +475,11 @@ CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::getFieldValues
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> sf;
     typedef GeometricField<Type, fvPatchField, volMesh> vf;
 
-    if (source_ != stSampledSurface && obr_.foundObject<sf>(fieldName))
+    if
+    (
+        source_ != sourceTypes::sampledSurface
+     && obr_.foundObject<sf>(fieldName)
+    )
     {
         return filterField(obr_.lookupObject<sf>(fieldName), applyOrientation);
     }
@@ -487,7 +499,7 @@ CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::getFieldValues
                 const faceList& faces = surfacePtr_().faces();
                 tmp<Field<Type>> tavg
                 (
-                    new Field<Type>(faces.size(), pTraits<Type>::zero)
+                    new Field<Type>(faces.size(), Zero)
                 );
                 Field<Type>& avg = tavg();
 
@@ -533,20 +545,20 @@ Type CML::fieldValues::faceSource::processSameTypeValues
     const scalarField& weightField
 ) const
 {
-    Type result = pTraits<Type>::zero;
+    Type result = Zero;
     switch (operation_)
     {
-        case opSum:
+        case operationType::sum:
         {
             result = sum(values);
             break;
         }
-        case opSumMag:
+        case operationType::sumMag:
         {
             result = sum(cmptMag(values));
             break;
         }
-        case opSumDirection:
+        case operationType::sumDirection:
         {
             FatalErrorInFunction
                 << "Operation " << operationTypeNames_[operation_]
@@ -554,10 +566,10 @@ Type CML::fieldValues::faceSource::processSameTypeValues
                 << pTraits<Type>::typeName
                 << exit(FatalError);
 
-            result = pTraits<Type>::zero;
+            result = Zero;
             break;
         }
-        case opSumDirectionBalance:
+        case operationType::sumDirectionBalance:
         {
             FatalErrorInFunction
                 << "Operation " << operationTypeNames_[operation_]
@@ -565,15 +577,15 @@ Type CML::fieldValues::faceSource::processSameTypeValues
                 << pTraits<Type>::typeName
                 << exit(FatalError);
 
-            result = pTraits<Type>::zero;
+            result = Zero;
             break;
         }
-        case opAverage:
+        case operationType::average:
         {
             result = sum(values)/values.size();
             break;
         }
-        case opWeightedAverage:
+        case operationType::weightedAverage:
         {
             if (weightField.size())
             {
@@ -585,14 +597,14 @@ Type CML::fieldValues::faceSource::processSameTypeValues
             }
             break;
         }
-        case opAreaAverage:
+        case operationType::areaAverage:
         {
             const scalarField magSf(mag(Sf));
 
             result = sum(magSf*values)/sum(magSf);
             break;
         }
-        case opWeightedAreaAverage:
+        case operationType::weightedAreaAverage:
         {
             const scalarField magSf(mag(Sf));
 
@@ -606,24 +618,24 @@ Type CML::fieldValues::faceSource::processSameTypeValues
             }
             break;
         }
-        case opAreaIntegrate:
+        case operationType::areaIntegrate:
         {
             const scalarField magSf(mag(Sf));
 
             result = sum(magSf*values);
             break;
         }
-        case opMin:
+        case operationType::min:
         {
             result = min(values);
             break;
         }
-        case opMax:
+        case operationType::max:
         {
             result = max(values);
             break;
         }
-        case opCoV:
+        case operationType::CoV:
         {
             const scalarField magSf(mag(Sf));
 
@@ -642,10 +654,12 @@ Type CML::fieldValues::faceSource::processSameTypeValues
 
             break;
         }
-        default:
-        {
-            // Do nothing
-        }
+        case operationType::areaNormalAverage:
+        {}
+        case operationType::areaNormalIntegrate:
+        {}
+        case operationType::none:
+        {}
     }
 
     return result;

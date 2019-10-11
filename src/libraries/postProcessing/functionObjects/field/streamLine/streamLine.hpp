@@ -134,11 +134,11 @@ public:
     // Public data types
 
         //- Track direction enumerations
-        enum trackDirection
+        enum class trackDirection
         {
-            FORWARD,
-            BACKWARD,
-            BOTH
+            forward,
+            backward,
+            both
         };
 
         //- Track direction enumeration names

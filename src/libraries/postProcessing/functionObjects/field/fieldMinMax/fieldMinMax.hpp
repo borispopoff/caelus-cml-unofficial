@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -100,10 +100,10 @@ class fieldMinMax
 {
 public:
 
-    enum modeType
+    enum class modeType
     {
-        mdMag,
-        mdCmpt
+        mag,
+        cmpt
     };
 
 protected:
@@ -135,7 +135,7 @@ protected:
         wordList fieldSet_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Helper function to write the output
         template<class Type>
@@ -330,7 +330,7 @@ void CML::fieldMinMax::calcMinMaxFields
 
         switch (mode)
         {
-            case mdMag:
+            case modeType::mag:
             {
                 const volScalarField magField(mag(field));
                 const volScalarField::GeometricBoundaryField& magFieldBoundary =
@@ -416,7 +416,7 @@ void CML::fieldMinMax::calcMinMaxFields
                 }
                 break;
             }
-            case mdCmpt:
+            case modeType::cmpt:
             {
                 const typename fieldType::GeometricBoundaryField&
                     fieldBoundary = field.boundaryField();
