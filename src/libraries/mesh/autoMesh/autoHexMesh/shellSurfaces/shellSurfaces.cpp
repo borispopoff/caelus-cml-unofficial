@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -327,11 +327,11 @@ void CML::shellSurfaces::findHigherLevel
             (
                 (
                     modes_[shellI] == INSIDE
-                 && volType[i] == volumeType::INSIDE
+                 && volType[i] == volumeType::inside
                 )
              || (
                     modes_[shellI] == OUTSIDE
-                 && volType[i] == volumeType::OUTSIDE
+                 && volType[i] == volumeType::outside
                 )
             )
             {

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2015-2016 OpenCFD Ltd
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -37,7 +37,7 @@ namespace CML
     template<>
     const char* CML::NamedEnum
     <
-        CML::Time::stopAtControls,
+        CML::Time::stopAtControl,
         4
     >::names[] =
     {
@@ -50,7 +50,7 @@ namespace CML
     template<>
     const char* CML::NamedEnum
     <
-        CML::Time::writeControls,
+        CML::Time::writeControl,
         5
     >::names[] =
     {
@@ -62,13 +62,13 @@ namespace CML
     };
 }
 
-const CML::NamedEnum<CML::Time::stopAtControls, 4>
+const CML::NamedEnum<CML::Time::stopAtControl, 4>
     CML::Time::stopAtControlNames_;
 
-const CML::NamedEnum<CML::Time::writeControls, 5>
+const CML::NamedEnum<CML::Time::writeControl, 5>
     CML::Time::writeControlNames_;
 
-CML::Time::fmtflags CML::Time::format_(CML::Time::general);
+CML::Time::format CML::Time::format_(CML::Time::format::general);
 
 int CML::Time::precision_(6);
 
@@ -84,7 +84,7 @@ void CML::Time::adjustDeltaT()
     bool adjustTime = false;
     scalar timeToNextWrite = VGREAT;
 
-    if (writeControl_ == wcAdjustableRunTime)
+    if (writeControl_ == writeControl::adjustableRunTime)
     {
         adjustTime = true;
         timeToNextWrite = max
@@ -441,8 +441,8 @@ CML::Time::Time
     startTime_(0),
     endTime_(0),
 
-    stopAt_(saEndTime),
-    writeControl_(wcTimeStep),
+    stopAt_(stopAtControl::endTime),
+    writeControl_(writeControl::timeStep),
     writeInterval_(GREAT),
     purgeWrite_(0),
     writeOnce_(false),
@@ -508,8 +508,8 @@ CML::Time::Time
     startTime_(0),
     endTime_(0),
 
-    stopAt_(saEndTime),
-    writeControl_(wcTimeStep),
+    stopAt_(stopAtControl::endTime),
+    writeControl_(writeControl::timeStep),
     writeInterval_(GREAT),
     purgeWrite_(0),
     writeOnce_(false),
@@ -578,8 +578,8 @@ CML::Time::Time
     startTime_(0),
     endTime_(0),
 
-    stopAt_(saEndTime),
-    writeControl_(wcTimeStep),
+    stopAt_(stopAtControl::endTime),
+    writeControl_(writeControl::timeStep),
     writeInterval_(GREAT),
     purgeWrite_(0),
     writeOnce_(false),
@@ -648,8 +648,8 @@ CML::Time::Time
     startTime_(0),
     endTime_(0),
 
-    stopAt_(saEndTime),
-    writeControl_(wcTimeStep),
+    stopAt_(stopAtControl::endTime),
+    writeControl_(writeControl::timeStep),
     writeInterval_(GREAT),
     purgeWrite_(0),
     writeOnce_(false),
@@ -938,13 +938,13 @@ bool CML::Time::end() const
 }
 
 
-bool CML::Time::stopAt(const stopAtControls sa) const
+bool CML::Time::stopAt(const stopAtControl sa) const
 {
     const bool changed = (stopAt_ != sa);
     stopAt_ = sa;
 
     // adjust endTime
-    if (sa == saEndTime)
+    if (sa == stopAtControl::endTime)
     {
         controlDict_.lookup("endTime") >> endTime_;
     }
@@ -1104,7 +1104,11 @@ CML::Time& CML::Time::operator++()
             // Reduce so all decide the same.
 
             label flag = 0;
-            if (sigStopAtWriteNow_.active() && stopAt_ == saWriteNow)
+            if
+            (
+                sigStopAtWriteNow_.active()
+             && stopAt_ == stopAtControl::writeNow
+            )
             {
                 flag += 1;
             }
@@ -1116,7 +1120,7 @@ CML::Time& CML::Time::operator++()
 
             if (flag & 1)
             {
-                stopAt_ = saWriteNow;
+                stopAt_ = stopAtControl::writeNow;
             }
             if (flag & 2)
             {
@@ -1128,12 +1132,12 @@ CML::Time& CML::Time::operator++()
 
         switch (writeControl_)
         {
-            case wcTimeStep:
+            case writeControl::timeStep:
                 writeTime_ = !(timeIndex_ % label(writeInterval_));
             break;
 
-            case wcRunTime:
-            case wcAdjustableRunTime:
+            case writeControl::runTime:
+            case writeControl::adjustableRunTime:
             {
                 label writeIndex = label
                 (
@@ -1149,7 +1153,7 @@ CML::Time& CML::Time::operator++()
             }
             break;
 
-            case wcCpuTime:
+            case writeControl::cpuTime:
             {
                 label writeIndex = label
                 (
@@ -1164,7 +1168,7 @@ CML::Time& CML::Time::operator++()
             }
             break;
 
-            case wcClockTime:
+            case writeControl::clockTime:
             {
                 label writeIndex = label
                 (
@@ -1184,16 +1188,16 @@ CML::Time& CML::Time::operator++()
         // Check if endTime needs adjustment to stop at the next run()/end()
         if (!end())
         {
-            if (stopAt_ == saNoWriteNow)
+            if (stopAt_ == stopAtControl::noWriteNow)
             {
                 endTime_ = value();
             }
-            else if (stopAt_ == saWriteNow)
+            else if (stopAt_ == stopAtControl::writeNow)
             {
                 endTime_ = value();
                 writeTime_ = true;
             }
-            else if (stopAt_ == saNextWrite && writeTime_ == true)
+            else if (stopAt_ == stopAtControl::nextWrite && writeTime_ == true)
             {
                 endTime_ = value();
             }

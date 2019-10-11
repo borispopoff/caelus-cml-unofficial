@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,7 +24,6 @@ License
 #include "polyMesh.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
 
 namespace CML
 {
@@ -85,7 +84,7 @@ CML::treeDataCell::treeDataCell
     const bool cacheBb,
     const polyMesh& mesh,
     const labelUList& cellLabels,
-    const polyMesh::cellDecomposition  decompMode
+    const polyMesh::cellDecomposition decompMode
 )
 :
     mesh_(mesh),
@@ -102,7 +101,7 @@ CML::treeDataCell::treeDataCell
     const bool cacheBb,
     const polyMesh& mesh,
     const Xfer<labelList>& cellLabels,
-    const polyMesh::cellDecomposition  decompMode
+    const polyMesh::cellDecomposition decompMode
 )
 :
     mesh_(mesh),
@@ -118,7 +117,7 @@ CML::treeDataCell::treeDataCell
 (
     const bool cacheBb,
     const polyMesh& mesh,
-    const polyMesh::cellDecomposition  decompMode
+    const polyMesh::cellDecomposition decompMode
 )
 :
     mesh_(mesh),
@@ -250,7 +249,7 @@ bool CML::treeDataCell::findIntersectOp::operator()
 
         if ((cellBb.posBits(start) & cellBb.posBits(end)) != 0)
         {
-            // start and end in same block outside of cellBb.
+            // Start and end in same block outside of cellBb.
             return false;
         }
     }
@@ -260,7 +259,7 @@ bool CML::treeDataCell::findIntersectOp::operator()
 
         if ((cellBb.posBits(start) & cellBb.posBits(end)) != 0)
         {
-            // start and end in same block outside of cellBb.
+            // Start and end in same block outside of cellBb.
             return false;
         }
     }
@@ -287,7 +286,7 @@ bool CML::treeDataCell::findIntersectOp::operator()
             start,
             dir,
             shape.mesh_.points(),
-            intersection::HALF_RAY
+            intersection::algorithm::halfRay
         );
 
         if (inter.hit() && sqr(inter.distance()) <= minDistSqr)

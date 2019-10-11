@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -726,7 +726,7 @@ void CML::searchableCylinder::getVolumeType
 ) const
 {
     volType.setSize(points.size());
-    volType = volumeType::INSIDE;
+    volType = volumeType::inside;
 
     forAll(points, pointi)
     {
@@ -740,12 +740,12 @@ void CML::searchableCylinder::getVolumeType
         if (parallel < 0)
         {
             // left of point1 endcap
-            volType[pointi] = volumeType::OUTSIDE;
+            volType[pointi] = volumeType::outside;
         }
         else if (parallel > magDir_)
         {
             // right of point2 endcap
-            volType[pointi] = volumeType::OUTSIDE;
+            volType[pointi] = volumeType::outside;
         }
         else
         {
@@ -754,11 +754,11 @@ void CML::searchableCylinder::getVolumeType
 
             if (mag(v) > radius_)
             {
-                volType[pointi] = volumeType::OUTSIDE;
+                volType[pointi] = volumeType::outside;
             }
             else
             {
-                volType[pointi] = volumeType::INSIDE;
+                volType[pointi] = volumeType::inside;
             }
         }
     }

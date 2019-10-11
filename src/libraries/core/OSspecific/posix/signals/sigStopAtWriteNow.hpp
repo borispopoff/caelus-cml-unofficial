@@ -51,7 +51,7 @@ class sigStopAtWriteNow
 {
     // Private data
 
-        //- number of signal to use
+        //- Number of signal to use
         static int signal_;
 
         //- Pointer to Time

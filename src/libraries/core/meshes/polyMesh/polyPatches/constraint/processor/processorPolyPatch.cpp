@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -627,12 +627,11 @@ CML::label CML::processorPolyPatch::matchFace
         return -1;
     }
 
-    enum CirculatorBase::direction circulateDirection
-        = CirculatorBase::CLOCKWISE;
+    CirculatorBase::direction circulateDirection = CirculatorBase::direction::clockwise;
 
     if (!sameOrientation)
     {
-        circulateDirection = CirculatorBase::ANTICLOCKWISE;
+        circulateDirection = CirculatorBase::direction::anticlockwise;
     }
 
     label matchFp = -1;
@@ -679,7 +678,7 @@ CML::label CML::processorPolyPatch::matchFace
             }
             while
             (
-                aCirc.circulate(CirculatorBase::CLOCKWISE),
+                aCirc.circulate(CirculatorBase::direction::clockwise),
                 bCirc2.circulate(circulateDirection)
             );
 

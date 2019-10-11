@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -133,7 +133,7 @@ CML::volumeType CML::treeDataEdge::getVolumeType
     const point& sample
 ) const
 {
-    return volumeType::UNKNOWN;
+    return volumeType::unknown;
 }
 
 

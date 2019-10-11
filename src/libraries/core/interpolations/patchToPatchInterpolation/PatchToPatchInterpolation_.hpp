@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -154,8 +154,8 @@ public:
         (
             const FromPatch& fromPatch,
             const ToPatch& toPatch,
-            const intersection::algorithm alg = intersection::FULL_RAY,
-            const intersection::direction dir = intersection::VECTOR
+            const intersection::algorithm alg = intersection::algorithm::fullRay,
+            const intersection::direction dir = intersection::direction::vector
         );
 
 
@@ -458,7 +458,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
                 );
 
             // Grab distance to target
-            if (dir_ == intersection::CONTACT_SPHERE)
+            if (dir_ == intersection::direction::contactSphere)
             {
                 pointDistance[pointi] =
                     hitFace.contactSphereDiameter
@@ -537,7 +537,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
                 hitPoint = ph.missPoint();
 
                 // Grab distance to target
-                if (dir_ == intersection::CONTACT_SPHERE)
+                if (dir_ == intersection::direction::contactSphere)
                 {
                     pointDistance[pointi] =
                         hitFace.contactSphereDiameter

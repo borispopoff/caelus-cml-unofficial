@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -175,8 +175,6 @@ CML::pointField CML::treeDataFace::shapePoints() const
 }
 
 
-//- Get type (inside,outside,mixed,unknown) of point w.r.t. surface.
-//  Only makes sense for closed surfaces.
 CML::volumeType CML::treeDataFace::getVolumeType
 (
     const indexedOctree<treeDataFace>& oc,
@@ -427,7 +425,7 @@ CML::volumeType CML::treeDataFace::getVolumeType
     // - tolerances are wrong. (if e.g. face has zero area)
     // - or (more likely) surface is not closed.
 
-    return volumeType::UNKNOWN;
+    return volumeType::unknown;
 }
 
 
@@ -567,7 +565,7 @@ bool CML::treeDataFace::findIntersectOp::operator()
         dir,
         shape.mesh_.faceCentres()[facei],
         shape.mesh_.points(),
-        intersection::HALF_RAY
+        intersection::algorithm::halfRay
     );
 
     if (inter.hit() && inter.distance() <= 1)

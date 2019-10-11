@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -1297,7 +1297,11 @@ void CML::refinementSurfaces::findInside
     {
         label surfI = testSurfaces[i];
 
-        if (zoneInside_[surfI] != INSIDE && zoneInside_[surfI] != OUTSIDE)
+        if
+        (
+            zoneInside_[surfI] != INSIDE
+         && zoneInside_[surfI] != OUTSIDE
+        )
         {
             FatalErrorInFunction
                 << "Trying to use surface "
@@ -1319,11 +1323,11 @@ void CML::refinementSurfaces::findInside
                     if
                     (
                         (
-                            volType[pointi] == volumeType::INSIDE
+                            volType[pointi] == volumeType::inside
                          && zoneInside_[surfI] == INSIDE
                         )
                      || (
-                            volType[pointi] == volumeType::OUTSIDE
+                            volType[pointi] == volumeType::outside
                          && zoneInside_[surfI] == OUTSIDE
                         )
                     )

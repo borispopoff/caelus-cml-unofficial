@@ -886,7 +886,7 @@ CML::List<CML::pointIndexHit> CML::meshSearch::intersections
 
 bool CML::meshSearch::isInside(const point& p) const
 {
-    return (boundaryTree().getVolumeType(p) == volumeType::INSIDE);
+    return (boundaryTree().getVolumeType(p) == volumeType::inside);
 }
 
 

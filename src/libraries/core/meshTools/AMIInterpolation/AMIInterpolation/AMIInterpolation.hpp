@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -2108,7 +2108,8 @@ const
         const label srcFacei = addr[i];
         const face& f = srcPatch[srcFacei];
 
-        pointHit ray = f.ray(tgtPoint, n, srcPoints);
+        pointHit ray =
+            f.ray(tgtPoint, n, srcPoints);
 
         if (ray.hit())
         {

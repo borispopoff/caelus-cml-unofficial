@@ -162,7 +162,7 @@ bool CML::searchableRotatedBox::overlaps(const boundBox& bb) const
                 bbPoints[e[1]],
                 fc,
                 points_,
-                intersection::HALF_RAY
+                intersection::algorithm::halfRay
             );
 
             if (inter.hit() && inter.distance() <= 1)

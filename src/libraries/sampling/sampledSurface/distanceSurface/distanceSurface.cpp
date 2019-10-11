@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -99,11 +99,11 @@ void CML::distanceSurface::createGeometry()
             {
                 volumeType vT = volType[i];
 
-                if (vT == volumeType::OUTSIDE)
+                if (vT == volumeType::outside)
                 {
                     fld[i] = CML::mag(cc[i] - nearest[i].hitPoint());
                 }
-                else if (vT == volumeType::INSIDE)
+                else if (vT == volumeType::inside)
                 {
                     fld[i] = -CML::mag(cc[i] - nearest[i].hitPoint());
                 }
@@ -149,11 +149,11 @@ void CML::distanceSurface::createGeometry()
                 {
                     volumeType vT = volType[i];
 
-                    if (vT == volumeType::OUTSIDE)
+                    if (vT == volumeType::outside)
                     {
                         fld[i] = CML::mag(cc[i] - nearest[i].hitPoint());
                     }
-                    else if (vT == volumeType::INSIDE)
+                    else if (vT == volumeType::inside)
                     {
                         fld[i] = -CML::mag(cc[i] - nearest[i].hitPoint());
                     }
@@ -204,12 +204,12 @@ void CML::distanceSurface::createGeometry()
             {
                 volumeType vT = volType[i];
 
-                if (vT == volumeType::OUTSIDE)
+                if (vT == volumeType::outside)
                 {
                     pointDistance_[i] =
                         CML::mag(pts[i] - nearest[i].hitPoint());
                 }
-                else if (vT == volumeType::INSIDE)
+                else if (vT == volumeType::inside)
                 {
                     pointDistance_[i] =
                         -CML::mag(pts[i] - nearest[i].hitPoint());

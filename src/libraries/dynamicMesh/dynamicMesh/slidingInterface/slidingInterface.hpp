@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -321,7 +321,7 @@ public:
             const word& slavePatchName,
             const typeOfMatch tom,
             const bool coupleDecouple = false,
-            const intersection::algorithm algo = intersection::VISIBLE
+            const intersection::algorithm algo = intersection::algorithm::visible
         );
 
         //- Construct from dictionary

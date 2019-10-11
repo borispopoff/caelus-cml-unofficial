@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,10 +55,10 @@ public:
     //- Volume types
     enum type
     {
-        UNKNOWN = 0,
-        MIXED   = 1,
-        INSIDE  = 2,
-        OUTSIDE = 3
+        unknown = 0,
+        mixed   = 1,
+        inside  = 2,
+        outside = 3
     };
 
 
@@ -82,7 +82,7 @@ public:
         //- Construct null
         volumeType()
         :
-            t_(UNKNOWN)
+            t_(unknown)
         {}
 
         //- Construct from components

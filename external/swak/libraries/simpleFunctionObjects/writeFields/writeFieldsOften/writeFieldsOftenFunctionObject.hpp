@@ -80,7 +80,7 @@ protected:
     virtual bool outputTime(const bool forceWrite);
 
     //- how writting is controlled
-    Time::writeControls writeControl_;
+    Time::writeControl writeControl_;
 
     //- how often we write
     scalar writeInterval_;

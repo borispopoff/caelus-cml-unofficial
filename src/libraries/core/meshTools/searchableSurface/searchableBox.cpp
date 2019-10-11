@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -71,7 +71,7 @@ CML::pointIndexHit CML::searchableBox::findNearest
 ) const
 {
     // Point can be inside or outside. For every component direction can be
-    // left of min, right of max or inbetween.
+    // left of min, right of max or in between.
     // - outside points: project first one x plane (either min().x()
     // or max().x()), then onto y plane and finally z. You should be left
     // with intersection point
@@ -598,7 +598,7 @@ void CML::searchableBox::getVolumeType
 ) const
 {
     volType.setSize(points.size());
-    volType = volumeType::INSIDE;
+    volType = volumeType::inside;
 
     forAll(points, pointi)
     {
@@ -608,7 +608,7 @@ void CML::searchableBox::getVolumeType
         {
             if (pt[dir] < min()[dir] || pt[dir] > max()[dir])
             {
-                volType[pointi] = volumeType::OUTSIDE;
+                volType[pointi] = volumeType::outside;
                 break;
             }
         }

@@ -392,8 +392,10 @@ public:
             (
                 const ToPatch& targetPatch,
                 const Field<PointType>& projectionDirection,
-                const intersection::algorithm = intersection::FULL_RAY,
-                const intersection::direction = intersection::VECTOR
+                const intersection::algorithm =
+                    intersection::algorithm::fullRay,
+                const intersection::direction =
+                    intersection::direction::vector
             ) const;
 
             //- Project vertices of patch onto another patch
@@ -402,8 +404,10 @@ public:
             (
                 const ToPatch& targetPatch,
                 const Field<PointType>& projectionDirection,
-                const intersection::algorithm = intersection::FULL_RAY,
-                const intersection::direction = intersection::VECTOR
+                const intersection::algorithm =
+                    intersection::algorithm::fullRay,
+                const intersection::direction =
+                    intersection::direction::vector
             ) const;
 
             //- Return list of closed loops of boundary vertices.

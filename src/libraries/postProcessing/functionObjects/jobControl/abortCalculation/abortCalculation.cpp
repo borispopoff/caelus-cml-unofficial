@@ -131,7 +131,7 @@ void CML::abortCalculation::execute()
         {
             case actionType::noWriteNow :
             {
-                if (obr_.time().stopAt(Time::saNoWriteNow))
+                if (obr_.time().stopAt(Time::stopAtControl::noWriteNow))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
                         << obr_.time().timeIndex()
@@ -143,7 +143,7 @@ void CML::abortCalculation::execute()
 
             case actionType::writeNow :
             {
-                if (obr_.time().stopAt(Time::saWriteNow))
+                if (obr_.time().stopAt(Time::stopAtControl::writeNow))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
                         << obr_.time().timeIndex()
@@ -155,7 +155,7 @@ void CML::abortCalculation::execute()
 
             case actionType::nextWrite :
             {
-                if (obr_.time().stopAt(Time::saNextWrite))
+                if (obr_.time().stopAt(Time::stopAtControl::nextWrite))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
                         << obr_.time().timeIndex()

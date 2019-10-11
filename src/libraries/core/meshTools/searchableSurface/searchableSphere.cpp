@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -347,7 +347,7 @@ void CML::searchableSphere::getVolumeType
 ) const
 {
     volType.setSize(points.size());
-    volType = volumeType::INSIDE;
+    volType = volumeType::inside;
 
     forAll(points, pointi)
     {
@@ -355,11 +355,11 @@ void CML::searchableSphere::getVolumeType
 
         if (magSqr(pt - centre_) <= sqr(radius_))
         {
-            volType[pointi] = volumeType::INSIDE;
+            volType[pointi] = volumeType::inside;
         }
         else
         {
-            volType[pointi] = volumeType::OUTSIDE;
+            volType[pointi] = volumeType::outside;
         }
     }
 }

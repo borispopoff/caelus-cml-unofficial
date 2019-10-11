@@ -47,7 +47,7 @@ namespace CML
     // copied from Time.C because the original is protected
     // to work the order of values in writeControls must not change
 template<>
-const char* NamedEnum<CML::Time::writeControls, 5>::names[] =
+const char* NamedEnum<CML::Time::writeControl, 5>::names[] =
 {
     "timeStep",
     "runTime",
@@ -56,7 +56,7 @@ const char* NamedEnum<CML::Time::writeControls, 5>::names[] =
     "cpuTime"
 };
 
-const NamedEnum<CML::Time::writeControls, 5> writeControlNames;
+const NamedEnum<CML::Time::writeControl, 5> writeControlNames;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -68,7 +68,7 @@ writeFieldsOftenFunctionObject::writeFieldsOftenFunctionObject
 )
 :
     writeFieldsGeneralFunctionObject(name,t,dict),
-    writeControl_(Time::wcTimeStep),
+    writeControl_(Time::writeControl::timeStep),
     writeInterval_(GREAT),
     outputTimeIndex_(0)
 {
@@ -86,7 +86,7 @@ bool writeFieldsOftenFunctionObject::start()
         );
 
     writeInterval_ = readScalar(dict_.lookup("writeIntervall"));
-    if(writeControl_ == Time::wcTimeStep && label(writeInterval_) <1) {
+    if(writeControl_ == Time::writeControl::timeStep && label(writeInterval_) <1) {
         WarningInFunction
             << "writeInterval " << writeInterval_
                 << " < 1 for writeControl timeStep. Reseting to 1 "<< endl;
@@ -96,7 +96,7 @@ bool writeFieldsOftenFunctionObject::start()
     Info << "Additional fields " << fieldNames() << " will be written "
         << "with writeControl " << wcName << " and intervall " << writeInterval_ << endl;
 
-    if(writeControl_ == Time::wcAdjustableRunTime) {
+    if(writeControl_ == Time::writeControl::adjustableRunTime) {
         WarningInFunction
             << "Cant adjust the run-time. Defaulting to runTime" << endl;
 
@@ -121,12 +121,12 @@ bool writeFieldsOftenFunctionObject::outputTime(const bool forceWrite)
 
     // lifted from Time::operator++
     switch(writeControl_){
-        case Time::wcTimeStep:
+        case Time::writeControl::timeStep:
             writeNow = !(time().timeIndex()%label(writeInterval_));
             break;
 
-        case Time::wcRunTime:
-        case Time::wcAdjustableRunTime:
+        case Time::writeControl::runTime:
+        case Time::writeControl::adjustableRunTime:
             {
                 label outputTimeIndex =
                     label(((time().time().value() - time().startTime().value()) + 0.5*time().deltaT().value())/writeInterval_);
@@ -143,7 +143,7 @@ bool writeFieldsOftenFunctionObject::outputTime(const bool forceWrite)
             }
         break;
 
-        case Time::wcCpuTime:
+        case Time::writeControl::cpuTime:
             {
                 label outputTimeIndex =
                     label(time().elapsedCpuTime()/writeInterval_);
@@ -160,7 +160,7 @@ bool writeFieldsOftenFunctionObject::outputTime(const bool forceWrite)
             }
         break;
 
-        case Time::wcClockTime:
+        case Time::writeControl::clockTime:
             {
                 label outputTimeIndex = label(time().elapsedClockTime()/writeInterval_);
                 if (outputTimeIndex > outputTimeIndex_)

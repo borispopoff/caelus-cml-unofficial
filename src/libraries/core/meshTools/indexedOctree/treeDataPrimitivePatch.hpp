@@ -618,7 +618,7 @@ CML::volumeType CML::treeDataPrimitivePatch<PatchType>::getVolumeType
     // - tolerances are wrong. (if e.g. face has zero area)
     // - or (more likely) surface is not closed.
 
-    return volumeType::UNKNOWN;
+    return volumeType::unknown;
 }
 
 
@@ -888,7 +888,7 @@ bool CML::treeDataPrimitivePatch<PatchType>::findIntersection
             points[f[0]],
             points[f[1]],
             points[f[2]]
-        ).intersection(start, dir, intersection::HALF_RAY, shape.planarTol_);
+        ).intersection(start, dir, intersection::algorithm::halfRay, shape.planarTol_);
     }
     else
     {
@@ -900,7 +900,7 @@ bool CML::treeDataPrimitivePatch<PatchType>::findIntersection
             dir,
             faceCentres[index],
             points,
-            intersection::HALF_RAY,
+            intersection::algorithm::halfRay,
             shape.planarTol_
         );
     }

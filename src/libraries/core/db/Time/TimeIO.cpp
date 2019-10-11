@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2016 OpenCFD Ltd
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -98,7 +98,11 @@ void CML::Time::readDict()
 
     if (controlDict_.readIfPresent("writeInterval", writeInterval_))
     {
-        if (writeControl_ == wcTimeStep && label(writeInterval_) < 1)
+        if
+        (
+            writeControl_ == writeControl::timeStep
+         && label(writeInterval_) < 1
+        )
         {
             FatalIOErrorInFunction(controlDict_)
                 << "writeInterval < 1 for writeControl timeStep"
@@ -115,8 +119,8 @@ void CML::Time::readDict()
     {
         switch (writeControl_)
         {
-            case wcRunTime:
-            case wcAdjustableRunTime:
+            case writeControl::runTime:
+            case writeControl::adjustableRunTime:
                 // Recalculate writeTimeIndex_ to be in units of current
                 // writeInterval.
                 writeTimeIndex_ = label
@@ -151,15 +155,15 @@ void CML::Time::readDict()
 
         if (formatName == "general")
         {
-            format_ = general;
+            format_ = format::general;
         }
         else if (formatName == "fixed")
         {
-            format_ = fixed;
+            format_ = format::fixed;
         }
         else if (formatName == "scientific")
         {
-            format_ = scientific;
+            format_ = format::scientific;
         }
         else
         {
@@ -177,7 +181,7 @@ void CML::Time::readDict()
     {
         stopAt_ = stopAtControlNames_.read(controlDict_.lookup("stopAt"));
 
-        if (stopAt_ == saEndTime)
+        if (stopAt_ == stopAtControl::endTime)
         {
             controlDict_.lookup("endTime") >> endTime_;
         }
@@ -413,7 +417,7 @@ bool CML::Time::writeNow()
 
 bool CML::Time::writeAndEnd()
 {
-    stopAt_  = saWriteNow;
+    stopAt_  = stopAtControl::writeNow;
     endTime_ = value();
 
     return writeNow();
