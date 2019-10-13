@@ -65,7 +65,7 @@ SourceFiles
 #define SemiImplicitSource_H
 
 #include "Tuple2.hpp"
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -97,7 +97,7 @@ Ostream& operator<<
 template<class Type>
 class SemiImplicitSource
 :
-    public option
+    public cellSetOption
 {
 public:
 
@@ -196,10 +196,7 @@ public:
             );
 
 
-        // I-O
-
-            //- Write the source properties
-            virtual void writeData(Ostream&) const;
+        // IO
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
@@ -305,7 +302,7 @@ CML::fv::SemiImplicitSource<Type>::SemiImplicitSource
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh),
+    cellSetOption(name, modelType, dict, mesh),
     volumeMode_(vmAbsolute),
     VDash_(1.0),
     injectionRate_()
@@ -399,17 +396,9 @@ void CML::fv::SemiImplicitSource<Type>::addSup
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void CML::fv::SemiImplicitSource<Type>::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-}
-
-
-template<class Type>
 bool CML::fv::SemiImplicitSource<Type>::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         volumeMode_ = wordToVolumeModeType(coeffs_.lookup("volumeMode"));
         setFieldData(coeffs_.subDict("injectionRateSuSp"));

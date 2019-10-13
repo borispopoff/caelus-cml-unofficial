@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -19,15 +19,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "pressureGradientExplicitSource.hpp"
+#include "interRegionOption.hpp"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool CML::fv::pressureGradientExplicitSource::read(const dictionary& dict)
+bool CML::fv::interRegionOption::read(const dictionary& dict)
 {
-    NotImplemented;
-
-    return false;
+    if (option::read(dict))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

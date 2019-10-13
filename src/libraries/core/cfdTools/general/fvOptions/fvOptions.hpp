@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -18,19 +18,19 @@ License
     along with Caelus.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    CML::fv::IOoptionList
+    CML::fv::options
 
 Description
-    IOoptionList
+    Finite-volume options
 
 SourceFiles
-    IOoptionList.cpp
+    options.cpp
 
 \*---------------------------------------------------------------------------*/
 
 
-#ifndef IOoptionList_HPP
-#define IOoptionList_HPP
+#ifndef options_HPP
+#define options_HPP
 
 #include "fvOptionList.hpp"
 #include "IOdictionary.hpp"
@@ -41,50 +41,60 @@ namespace CML
 namespace fv
 {
 
-class IOoptionList
+/*---------------------------------------------------------------------------*\
+                        Class options Declaration
+\*---------------------------------------------------------------------------*/
+
+class options
 :
     public IOdictionary,
     public optionList
 {
-private:
-
     // Private Member Functions
 
         //- Create IO object if dictionary is present
         IOobject createIOobject(const fvMesh& mesh) const;
 
         //- Disallow default bitwise copy construct
-        IOoptionList(const IOoptionList&);
+        options(const options&);
 
         //- Disallow default bitwise assignment
-        void operator=(const IOoptionList&);
+        void operator=(const options&);
 
 
 public:
 
+    // Declare name of the class and its debug switch
+    ClassName("fvOptions");
+
+
     // Constructors
 
         //- Construct from components with list of field names
-        IOoptionList(const fvMesh& mesh);
+        options(const fvMesh& mesh);
+
+        //- Construct fvOptions and register to datbase if not present
+        //  otherwise lookup and return
+        static options& New(const fvMesh& mesh);
 
 
-        //- Destructor
-        virtual ~IOoptionList()
-        {}
+    //- Destructor
+    virtual ~options()
+    {}
 
 
     // Member Functions
-    
+
         //- Inherit read from optionList
         using optionList::read;
-    
+
         //- Read dictionary
         virtual bool read();
 };
 
 
-}
-}
+} // End namespace fv
+} // End namespace CML
 
 #endif
 

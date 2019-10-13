@@ -32,16 +32,30 @@ SourceFile
 #ifndef optionList_HPP
 #define optionList_HPP
 
+#include "fvOption.hpp"
 #include "PtrList.hpp"
 #include "GeometricField.hpp"
 #include "fvPatchField.hpp"
-#include "fvOption.hpp"
 #include "profiling.hpp"
 
 namespace CML
 {
+
+// Forward declaration of friend functions and operators
+
 namespace fv
 {
+    class optionList;
+}
+
+Ostream& operator<<(Ostream& os, const fv::optionList& options);
+
+namespace fv
+{
+
+/*---------------------------------------------------------------------------*\
+                         Class optionList Declaration
+\*---------------------------------------------------------------------------*/
 
 class optionList
 :
@@ -101,10 +115,6 @@ public:
         //- Reset the source list
         void reset(const dictionary& dict);
 
-        //- Correct
-        template<class Type>
-        void correct(GeometricField<Type, fvPatchField, volMesh>& fld);
-
 
         // Sources
 
@@ -112,14 +122,14 @@ public:
             template<class Type>
             tmp<fvMatrix<Type>> operator()
             (
-                GeometricField<Type, fvPatchField, volMesh>& fld
+                GeometricField<Type, fvPatchField, volMesh>& field
             );
 
             //- Return source for equation with specified name
             template<class Type>
             tmp<fvMatrix<Type>> operator()
             (
-                GeometricField<Type, fvPatchField, volMesh>& fld,
+                GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
             );
 
@@ -128,7 +138,7 @@ public:
             tmp<fvMatrix<Type>> operator()
             (
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& fld
+                GeometricField<Type, fvPatchField, volMesh>& field
             );
 
             //- Return source for equation with specified name
@@ -136,7 +146,7 @@ public:
             tmp<fvMatrix<Type>> operator()
             (
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& fld,
+                GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
             );
 
@@ -146,7 +156,7 @@ public:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& fld
+                GeometricField<Type, fvPatchField, volMesh>& field
             );
 
             //- Return source for equation with specified name
@@ -155,7 +165,7 @@ public:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& fld,
+                GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
             );
 
@@ -166,7 +176,15 @@ public:
             template<class Type>
             void constrain(fvMatrix<Type>& eqn);
 
-        // I-O
+
+        // Correction
+
+            //- Apply correction to field
+            template<class Type>
+            void correct(GeometricField<Type, fvPatchField, volMesh>& field);
+
+
+        // IO
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);
@@ -186,63 +204,29 @@ public:
 } // End namespace CML
 
 
+
 template<class Type>
-void CML::fv::optionList::correct
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
-    GeometricField<Type, fvPatchField, volMesh>& fld
+    GeometricField<Type, fvPatchField, volMesh>& field
 )
 {
-    const word& fieldName = fld.name();
-
-    forAll(*this, i)
-    {
-        option& source = this->operator[](i);
-
-        label fieldi = source.applyToField(fieldName);
-
-        if (fieldi != -1)
-        {
-            addProfiling(fvopt, "fvOption::correct." + source.name());
-
-            source.setApplied(fieldi);
-
-            if (source.isActive())
-            {
-                if (debug)
-                {
-                    Info<< "Correcting source " << source.name()
-                        << " for field " << fieldName << endl;
-                }
-
-                source.correct(fld);
-            }
-        }
-    }
+    return this->operator()(field, field.name());
 }
 
 
 template<class Type>
 CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
-    GeometricField<Type, fvPatchField, volMesh>& fld
-)
-{
-    return this->operator()(fld, fld.name());
-}
-
-
-template<class Type>
-CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
-(
-    GeometricField<Type, fvPatchField, volMesh>& fld,
+    GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 )
 {
     checkApplied();
 
-    const dimensionSet ds = fld.dimensions()/dimTime*dimVolume;
+    const dimensionSet ds = field.dimensions()/dimTime*dimVolume;
 
-    tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(fld, ds));
+    tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(field, ds));
     fvMatrix<Type>& mtx = tmtx();
 
     forAll(*this, i)
@@ -278,10 +262,10 @@ template<class Type>
 CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& fld
+    GeometricField<Type, fvPatchField, volMesh>& field
 )
 {
-    return this->operator()(rho, fld, fld.name());
+    return this->operator()(rho, field, field.name());
 }
 
 
@@ -289,15 +273,18 @@ template<class Type>
 CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& fld,
+    GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 )
 {
     checkApplied();
 
-    const dimensionSet ds = rho.dimensions()*fld.dimensions()/dimTime*dimVolume;
+    const dimensionSet ds
+    (
+        rho.dimensions()*field.dimensions()/dimTime*dimVolume
+    );
 
-    tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(fld, ds));
+    tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(field, ds));
     fvMatrix<Type>& mtx = tmtx();
 
     forAll(*this, i)
@@ -334,10 +321,10 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& fld
+    GeometricField<Type, fvPatchField, volMesh>& field
 )
 {
-    return this->operator()(alpha, rho, fld, fld.name());
+    return this->operator()(alpha, rho, field, field.name());
 }
 
 
@@ -346,16 +333,19 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& fld,
+    GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 )
 {
     checkApplied();
 
-    const dimensionSet ds =
-        alpha.dimensions()*rho.dimensions()*fld.dimensions()/dimTime*dimVolume;
+    const dimensionSet ds
+    (
+        alpha.dimensions()*rho.dimensions()*field.dimensions()
+       /dimTime*dimVolume
+    );
 
-    tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(fld, ds));
+    tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(field, ds));
     fvMatrix<Type>& mtx = tmtx();
 
     forAll(*this, i)
@@ -412,13 +402,44 @@ void CML::fv::optionList::constrain(fvMatrix<Type>& eqn)
                         << " to field " << eqn.psi().name() << endl;
                 }
 
-                source.setValue(eqn, fieldi);
+                source.constrain(eqn, fieldi);
             }
         }
     }
 }
 
 
+template<class Type>
+void CML::fv::optionList::correct
+(
+    GeometricField<Type, fvPatchField, volMesh>& field
+)
+{
+    const word& fieldName = field.name();
+
+    forAll(*this, i)
+    {
+        option& source = this->operator[](i);
+
+        label fieldI = source.applyToField(fieldName);
+
+        if (fieldI != -1)
+        {
+            source.setApplied(fieldI);
+
+            if (source.isActive())
+            {
+                if (debug)
+                {
+                    Info<< "Correcting source " << source.name()
+                        << " for field " << fieldName << endl;
+                }
+
+                source.correct(field);
+            }
+        }
+    }
+}
 #endif
 
 

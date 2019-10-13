@@ -17,7 +17,6 @@ caelus_inc = [
 'turbulenceModels/compressible/RAS/lnInclude',
 'thermophysicalModels/basic/lnInclude',
 'thermophysicalModels/radiation/lnInclude',
-'fvOptions/lnInclude',
 'sampling/lnInclude'
 ]
 

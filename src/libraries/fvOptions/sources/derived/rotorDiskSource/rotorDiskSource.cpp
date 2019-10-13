@@ -511,7 +511,7 @@ CML::fv::rotorDiskSource::rotorDiskSource
 
 )
 :
-    option(name, modelType, dict, mesh),
+    cellSetOption(name, modelType, dict, mesh),
     rhoRef_(1.0),
     rotorDebug_(false),
     rotorURF_(1.0),
@@ -665,16 +665,9 @@ void CML::fv::rotorDiskSource::addSup
 }
 
 
-void CML::fv::rotorDiskSource::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-}
-
-
 bool CML::fv::rotorDiskSource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         coeffs_.lookup("fields") >> fieldNames_;
         applied_.setSize(fieldNames_.size(), false);

@@ -92,7 +92,7 @@ SourceFiles
 #ifndef rotorDiskSource_HPP
 #define rotorDiskSource_HPP
 
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 #include "cylindricalCS.hpp"
 #include "NamedEnum.hpp"
 #include "bladeModel.hpp"
@@ -118,7 +118,7 @@ namespace fv
 
 class rotorDiskSource
 :
-    public option
+    public cellSetOption
 {
 public:
 
@@ -323,9 +323,7 @@ public:
             const label fieldi
         );
 
-        // I-O
-        //- Write the source properties
-        virtual void writeData(Ostream&) const;
+        // IO
 
         //- Read source dictionary
         virtual bool read(const dictionary& dict);
@@ -373,6 +371,7 @@ CML::scalar CML::fv::rotorDiskSource::omega() const
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "volFields.hpp"
+#include "unitConversion.hpp"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -621,7 +620,7 @@ void CML::fv::rotorDiskSource::writeField
 
     if (mesh_.time().writeTime() || writeNow)
     {
-        tmp<fieldType> tfld
+        tmp<fieldType> tfield
         (
             new fieldType
             (
@@ -638,7 +637,7 @@ void CML::fv::rotorDiskSource::writeField
             )
         );
 
-        Field<Type>& fld = tfld().internalField();
+        Field<Type>& field = tfield().internalField();
 
         if (cells_.size() != values.size())
         {
@@ -649,10 +648,10 @@ void CML::fv::rotorDiskSource::writeField
         forAll(cells_, i)
         {
             const label celli = cells_[i];
-            fld[celli] = values[i];
+            field[celli] = values[i];
         }
 
-        tfld().write();
+        tfield().write();
     }
 }
 

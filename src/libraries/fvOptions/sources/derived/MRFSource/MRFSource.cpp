@@ -77,7 +77,7 @@ CML::fv::MRFSource::MRFSource
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh),
+    cellSetOption(name, modelType, dict, mesh),
     mrfPtr_(nullptr),
     UName_(coeffs_.lookupOrDefault<word>("U", "U"))
 {

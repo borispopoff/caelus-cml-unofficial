@@ -99,13 +99,13 @@ CML::fv::optionList::optionList(const fvMesh& mesh)
 
 void CML::fv::optionList::reset(const dictionary& dict)
 {
+    // Count number of active fvOptions
     label count = 0;
     forAllConstIter(dictionary, dict, iter)
     {
-        // safety:
         if (iter().isDict())
         {
-            count ++;
+            count++;
         }
     }
 
@@ -140,7 +140,9 @@ bool CML::fv::optionList::writeData(Ostream& os) const
     forAll(*this, i)
     {
         os  << nl;
+        this->operator[](i).writeHeader(os);
         this->operator[](i).writeData(os);
+        this->operator[](i).writeFooter(os);
     }
 
     // Check state of IOstream
@@ -150,11 +152,7 @@ bool CML::fv::optionList::writeData(Ostream& os) const
 
 namespace CML
 {
-    Ostream& operator<<
-    (
-        Ostream& os,
-        const fv::optionList& options
-    )
+    Ostream& operator<<(Ostream& os, const fv::optionList& options)
     {
         options.writeData(os);
         return os;

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016-2017 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -18,33 +18,21 @@ License
     along with Caelus.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    CML::fv::limitVelocity
+    CML::fv::interRegionOption
 
 Description
-    Limits the maximum velocity magnitude to the specified \c max value.
-
-Usage
-    Example usage:
-    \verbatim
-    limitU
-    {
-        type            limitVelocity;
-        active          yes;
-
-        selectionMode   all;
-        max             100;
-    }
-    \endverbatim
-
-SourceFiles
-    limitVelocity.cpp
+    Base class for inter region exchange.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef limitVelocity_HPP
-#define limitVelocity_HPP
+#ifndef interRegionOption_HPP
+#define interRegionOption_HPP
 
-#include "cellSetOption.hpp"
+#include "fvOption.hpp"
+#include "volFields.hpp"
+#include "autoPtr.hpp"
+#include "meshToMesh.hpp"
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,46 +42,43 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class limitVelocity Declaration
+                Class interRegionOption Declaration
 \*---------------------------------------------------------------------------*/
 
-class limitVelocity
+class interRegionOption
 :
-    public cellSetOption
+    public option
 {
-
 protected:
 
     // Protected data
 
-        //- Velocity field name, default = U
-        word UName_;
+        //- Master or slave region
+        bool master_;
 
-        //- Maximum velocity magnitude
-        scalar max_;
+        //- Name of the neighbour region to map
+        word nbrRegionName_;
+
+        //- Mesh to mesh interpolation object
+        autoPtr<meshToMesh> meshInterpPtr_;
 
 
-private:
+    // Protected member functions
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        limitVelocity(const limitVelocity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const limitVelocity&);
+        //- Set the mesh to mesh interpolation object
+        void setMapper();
 
 
 public:
 
     //- Runtime type information
-    TypeName("limitVelocity");
+    TypeName("interRegionOption");
 
 
     // Constructors
 
-        //- Construct from components
-        limitVelocity
+        //- Construct from dictionary
+        interRegionOption
         (
             const word& name,
             const word& modelType,
@@ -103,17 +88,24 @@ public:
 
 
     //- Destructor
-    virtual ~limitVelocity()
-    {}
+    virtual ~interRegionOption();
 
 
     // Member Functions
 
-        //- Read dictionary
-        virtual bool read(const dictionary& dict);
+        // Access
 
-        //- Correct the velocity field
-        virtual void correct(volVectorField& U);
+            //- Return const access to the neighbour region name
+            inline const word& nbrRegionName() const;
+
+            //- Return const access to the mapToMap pointer
+            inline const meshToMesh& meshInterp() const;
+
+
+        // IO
+
+            //- Read dictionary
+            virtual bool read(const dictionary& dict);
 };
 
 
@@ -121,6 +113,29 @@ public:
 
 } // End namespace fv
 } // End namespace CML
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+inline const CML::word&
+CML::fv::interRegionOption::nbrRegionName() const
+{
+    return nbrRegionName_;
+}
+
+
+inline const CML::meshToMesh&
+CML::fv::interRegionOption::meshInterp() const
+{
+    if (!meshInterpPtr_.valid())
+    {
+        FatalErrorInFunction  << "Interpolation object not set"
+            << abort(FatalError);
+    }
+
+    return meshInterpPtr_();
+}
+
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

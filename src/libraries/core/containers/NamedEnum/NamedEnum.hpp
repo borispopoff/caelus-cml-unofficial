@@ -106,10 +106,7 @@ public:
         }
 
         //- Return the name of the given enumeration element
-        const char* operator[](const Enum e) const
-        {
-            return names[unsigned(e)];
-        }
+        const char* operator[](const Enum e) const;
 };
 
 
@@ -211,6 +208,26 @@ CML::wordList CML::NamedEnum<Enum, nEnum>::words()
     return lst;
 }
 
+
+template<class Enum, unsigned int nEnum>
+const char* CML::NamedEnum<Enum, nEnum>::operator[](const Enum e) const
+{
+    unsigned int ue = unsigned(e);
+
+    if (ue < nEnum)
+    {
+        return names[ue];
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "names array index " << ue << " out of range 0-"
+            << nEnum - 1
+            << exit(FatalError);
+
+        return names[0];
+    }
+}
 
 #endif
 

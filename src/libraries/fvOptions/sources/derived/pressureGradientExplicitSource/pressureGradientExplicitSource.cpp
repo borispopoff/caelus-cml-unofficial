@@ -81,7 +81,7 @@ CML::fv::pressureGradientExplicitSource::pressureGradientExplicitSource
     const fvMesh& mesh
 )
 :
-    option(sourceName, modelType, dict, mesh),
+    cellSetOption(sourceName, modelType, dict, mesh),
     Ubar_(coeffs_.lookup("Ubar")),
     gradP0_(0.0),
     dGradP_(0.0),

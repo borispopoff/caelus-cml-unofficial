@@ -16,12 +16,13 @@ disk1
 {
     type            actuationDiskSource;
     active          on;            //on/off switch
-    selectionMode   cellSet;       //cellSet // points //cellZone
-    cellSet         actuationDisk1;//cellSet name when selectionMode = cellSet
 
     actuationDiskSourceCoeffs
     {
         fieldNames  (U);
+
+        selectionMode   cellSet;       //cellSet // points //cellZone
+        cellSet         actuationDisk1;//cellSet name when selectionMode = cellSet
         diskDir     (1 0 0);   // orientation of the disk
         Cp          0.386;      // Cp
         Ct          0.58;       // Ct
@@ -34,12 +35,13 @@ disk2
 {
     type            actuationDiskSource;
     active          on;
-    selectionMode   cellSet;
-    cellSet         actuationDisk2;
 
     actuationDiskSourceCoeffs
     {
         fieldNames  (U);
+
+        selectionMode   cellSet;
+        cellSet         actuationDisk2;
         diskDir     (1 0 0);
         Cp          0.53;
         Ct          0.58;

@@ -45,7 +45,7 @@ Description
 #include "fvCFD.hpp"
 #include "singlePhaseTransportModel.hpp"
 #include "RASModel.hpp"
-#include "fvIOoptionList.hpp"
+#include "fvOptions.hpp"
 #include "simpleControl.hpp"
 
 int main(int argc, char *argv[])

@@ -19,7 +19,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-
 #include "fvOption.hpp"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -39,60 +38,17 @@ void CML::fv::option::writeFooter(Ostream& os) const
 
 void CML::fv::option::writeData(Ostream& os) const
 {
-    os.writeKeyword("active") << active_ << token::END_STATEMENT << nl;
-    os.writeKeyword("timeStart") << timeStart_ << token::END_STATEMENT << nl;
-    os.writeKeyword("duration") << duration_ << token::END_STATEMENT << nl;
-    os.writeKeyword("selectionMode")
-        << selectionModeTypeNames_[selectionMode_] << nl;
+    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
+    os.writeKeyword("active") << active_ << token::END_STATEMENT << nl << nl;
 
-    switch (selectionMode_)
-    {
-        case smPoints:
-        {
-            os.writeKeyword("points") << points_
-                << token::END_STATEMENT << nl;
-            break;
-        }
-        case smCellSet:
-        {
-            os.writeKeyword("cellSet") << cellSetName_
-                << token::END_STATEMENT << nl;
-            break;
-        }
-        case smCellZone:
-        {
-            os.writeKeyword("cellZone") << cellSetName_
-                << token::END_STATEMENT << nl;
-            break;
-        }
-        case smAll:
-        {
-            break;
-        }
-        case smMapRegion:
-        {
-            break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unknown selectionMode "
-                << selectionMode_
-                << abort(FatalError);
-        }
-    }
+    os << indent << word(type() + "Coeffs");
+    coeffs_.write(os);
 }
 
 
 bool CML::fv::option::read(const dictionary& dict)
 {
-    active_ = readBool(dict.lookup("active"));
-
-    if (dict.readIfPresent("timeStart", timeStart_))
-    {
-        dict.lookup("duration") >> duration_;
-    }
-
+    dict.readIfPresent("active", active_);
     coeffs_ = dict.subDict(modelType_ + "Coeffs");
 
     return true;

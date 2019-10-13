@@ -983,6 +983,10 @@ src_core = Split("""
     cfdTools/general/bound/bound.cpp
     cfdTools/general/constrainHbyA/constrainHbyA.cpp
     cfdTools/general/CorrectPhi/correctUphiBCs.cpp
+    cfdTools/general/fvOptions/fvOption.cpp
+    cfdTools/general/fvOptions/fvOptionIO.cpp
+    cfdTools/general/fvOptions/fvOptionList.cpp
+    cfdTools/general/fvOptions/fvOptions.cpp
     cfdTools/general/solutionControl/solutionControl/solutionControl.cpp
     cfdTools/general/solutionControl/simpleControl/simpleControl.cpp
     cfdTools/general/solutionControl/pisoControl/pisoControl.cpp

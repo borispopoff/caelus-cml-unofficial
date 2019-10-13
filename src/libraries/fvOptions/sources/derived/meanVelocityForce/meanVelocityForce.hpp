@@ -50,7 +50,7 @@ SourceFiles
 #include "cellSet.hpp"
 #include "fvMesh.hpp"
 #include "volFields.hpp"
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,7 +65,7 @@ namespace fv
 
 class meanVelocityForce
 :
-    public option
+    public cellSetOption
 {
 protected:
 

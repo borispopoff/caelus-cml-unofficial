@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -51,7 +51,7 @@ SourceFiles
 #include "cellSet.hpp"
 #include "fvMesh.hpp"
 #include "volFields.hpp"
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,7 +66,7 @@ namespace fv
 
 class pressureGradientExplicitSource
 :
-    public option
+    public cellSetOption
 {
     // Private data
 
@@ -149,10 +149,7 @@ public:
             );
 
 
-        // I-O
-
-            //- Write the source properties
-            virtual void writeData(Ostream&) const;
+        // IO
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);

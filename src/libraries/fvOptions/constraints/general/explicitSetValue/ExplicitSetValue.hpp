@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -47,7 +47,7 @@ SourceFiles
 #ifndef ExplicitSetValue_H
 #define ExplicitSetValue_H
 
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 #include "Tuple2.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -64,7 +64,7 @@ namespace fv
 template<class Type>
 class ExplicitSetValue
 :
-    public option
+    public cellSetOption
 {
 
 protected:
@@ -104,13 +104,10 @@ public:
         // Evaluation
 
             //- Set value on field
-            virtual void setValue(fvMatrix<Type>& eqn, const label fieldi);
+            virtual void constrain(fvMatrix<Type>& eqn, const label fieldI);
 
 
-        // I-O
-
-            //- Write the source properties
-            virtual void writeData(Ostream&) const;
+        // IO
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
@@ -159,7 +156,7 @@ CML::fv::ExplicitSetValue<Type>::ExplicitSetValue
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh),
+    cellSetOption(name, modelType, dict, mesh),
     injectionRate_()
 {
     read(dict);
@@ -169,7 +166,7 @@ CML::fv::ExplicitSetValue<Type>::ExplicitSetValue
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void CML::fv::ExplicitSetValue<Type>::setValue
+void CML::fv::ExplicitSetValue<Type>::constrain
 (
     fvMatrix<Type>& eqn,
     const label fieldi
@@ -178,7 +175,7 @@ void CML::fv::ExplicitSetValue<Type>::setValue
     if (debug)
     {
         Info<< "ExplicitSetValue<"<< pTraits<Type>::typeName
-            << ">::setValue for source " << name_ << endl;
+            << ">::constrain for source " << name_ << endl;
     }
 
     List<Type> values(cells_.size(), injectionRate_[fieldi]);
@@ -190,17 +187,9 @@ void CML::fv::ExplicitSetValue<Type>::setValue
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void CML::fv::ExplicitSetValue<Type>::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-}
-
-
-template<class Type>
 bool CML::fv::ExplicitSetValue<Type>::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         setFieldData(coeffs_.subDict("injectionRate"));
         return true;

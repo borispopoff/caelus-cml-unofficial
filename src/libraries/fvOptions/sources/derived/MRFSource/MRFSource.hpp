@@ -44,7 +44,7 @@ SourceFiles
 #ifndef MRFSource_HPP
 #define MRFSource_HPP
 
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 
 namespace CML
 {
@@ -60,7 +60,7 @@ namespace fv
 
 class MRFSource
 :
-    public option
+    public cellSetOption
 {
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -26,12 +26,9 @@ Description
 
         type            scalarExplicitSource    // source type
         active          on;                     // on/off switch
-        timeStart       0.0;                    // start time
-        duration        1000.0;                 // duration
-        selectionMode   cellSet;                // cellSet // points //cellZone
-                                                // mapRegion
+
 Note:
-    On evaluation, source/sink options are to be added to the equation rhs
+    On evaluation, source/sink options are to be added to the equation R.H.S.
 
 SourceFiles
     fvOption.cpp
@@ -45,10 +42,8 @@ SourceFiles
 
 #include "fvMatricesFwd.hpp"
 #include "volFieldsFwd.hpp"
-#include "cellSet.hpp"
-#include "autoPtr.hpp"
-#include "meshToMesh.hpp"
-
+#include "dictionary.hpp"
+#include "Switch.hpp"
 #include "runTimeSelectionTables.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -67,25 +62,6 @@ namespace fv
 
 class option
 {
-public:
-
-    // Public data
-
-        //- Enumeration for selection mode types
-        enum selectionModeType
-        {
-            smPoints,
-            smCellSet,
-            smCellZone,
-            smMapRegion,
-            smAll
-        };
-
-        //- Word list of selection mode type names
-        static const NamedEnum<selectionModeType, 5>
-            selectionModeTypeNames_;
-
-
 protected:
 
     // Protected data
@@ -106,40 +82,7 @@ protected:
         dictionary coeffs_;
 
         //- Source active flag
-        bool active_;
-
-        //- Time start
-        scalar timeStart_;
-
-        //- Duration
-        scalar duration_;
-
-        //- Cell selection mode
-        selectionModeType selectionMode_;
-
-        //- Name of cell set for "cellSet" and "cellZone" selectionMode
-        word cellSetName_;
-
-        //- List of points for "points" selectionMode
-        List<point> points_;
-
-        //- Set of cells to apply source to
-        labelList cells_;
-
-        //- Sum of cell volumes
-        scalar V_;
-
-        // Data for smMapRegion only
-
-            //- Mesh to mesh interpolation object
-            autoPtr<meshToMesh> meshInterpPtr_;
-
-            //- Name of the neighbour region to map
-            word nbrRegionName_;
-
-            //- Master or slave region
-            bool master_;
-
+        Switch active_;
 
         //- Field names to apply source to - populated by derived models
         wordList fieldNames_;
@@ -152,12 +95,6 @@ protected:
 
         //- Flag to bypass the apply flag list checking
         virtual bool alwaysApply() const;
-
-        //- Set the cellSet or points selection
-        void setSelection(const dictionary& dict);
-
-        //- Set the cell set based on the user input selection mode
-        void setCellSet();
 
 
 public:
@@ -191,8 +128,7 @@ public:
             const word& name,
             const word& modelType,
             const dictionary& dict,
-            const fvMesh& mesh,
-            const bool master = false
+            const fvMesh& mesh
         );
 
         //- Return clone
@@ -206,7 +142,7 @@ public:
         //  on the freestore from an Istream
         class iNew
         {
-            //- Reference to the mesh database
+            //- Reference to the mesh
             const fvMesh& mesh_;
 
             const word& name_;
@@ -267,34 +203,6 @@ public:
             //- Return const access to the source active flag
             inline bool active() const;
 
-            //- Return const access to the time start
-            inline scalar timeStart() const;
-
-            //- Return const access to the duration
-            inline scalar duration() const;
-
-            //- Return true if within time limits
-            inline bool inTimeLimits(const scalar time) const;
-
-            //- Return const access to the cell selection mode
-            inline const selectionModeType& selectionMode() const;
-
-            //- Return const access to the name of cell set for "cellSet"
-            //  selectionMode
-            inline const word& cellSetName() const;
-
-            //- Return const access to the total cell volume
-            inline scalar V() const;
-
-            //- Return const access to the neighbour region name
-            inline const word& nbrRegionName() const;
-
-            //- Return const access to the mapToMap pointer
-            inline const meshToMesh& meshInterp() const;
-
-            //- Return const access to the cell set
-            inline const labelList& cells() const;
-
             //- Set the applied flag to true for field index fieldi
             inline void setApplied(const label fieldi);
 
@@ -302,13 +210,7 @@ public:
         // Edit
 
             //- Return access to the source active flag
-            inline bool& active();
-
-            //- Return access to the time start
-            inline scalar& timeStart();
-
-            //- Return access to the duration
-            inline scalar& duration();
+            inline Switch& active();
 
 
         // Checks
@@ -325,55 +227,32 @@ public:
 
         // Evaluation
 
-            // Correct
+            // Explicit and implicit sources
 
-                //- Scalar
-                virtual void correct(volScalarField& fld);
-
-                //- Vector
-                virtual void correct(volVectorField& fld);
-
-                //- Spherical tensor
-                virtual void correct(volSphericalTensorField& fld);
-
-                //- Symmetric tensor
-                virtual void correct(volSymmTensorField& fld);
-
-                //- Tensor
-                virtual void correct(volTensorField& fld);
-
-
-            // Add explicit and implicit contributions
-
-                //- Scalar
-                virtual void addSup
+               virtual void addSup
                 (
                     fvMatrix<scalar>& eqn,
                     const label fieldi
                 );
 
-                //- Vector
                 virtual void addSup
                 (
                     fvMatrix<vector>& eqn,
                     const label fieldi
                 );
 
-                //- Spherical tensor
                 virtual void addSup
                 (
                     fvMatrix<symmTensor>& eqn,
                     const label fieldi
                 );
 
-                //- Symmetric tensor
                 virtual void addSup
                 (
                     fvMatrix<sphericalTensor>& eqn,
                     const label fieldi
                 );
 
-                //- Tensor
                 virtual void addSup
                 (
                     fvMatrix<tensor>& eqn,
@@ -381,9 +260,8 @@ public:
                 );
 
 
-            // Add explicit and implicit contributions to compressible equations
+            // Explicit and implicit sources for compressible equations
 
-                //- Scalar
                 virtual void addSup
                 (
                     const volScalarField& rho,
@@ -391,7 +269,6 @@ public:
                     const label fieldi
                 );
 
-                //- Vector
                 virtual void addSup
                 (
                     const volScalarField& rho,
@@ -399,7 +276,6 @@ public:
                     const label fieldi
                 );
 
-                //- Spherical tensor
                 virtual void addSup
                 (
                     const volScalarField& rho,
@@ -407,7 +283,6 @@ public:
                     const label fieldi
                 );
 
-                //- Symmetric tensor
                 virtual void addSup
                 (
                     const volScalarField& rho,
@@ -415,7 +290,6 @@ public:
                     const label fieldi
                 );
 
-                //- Tensor
                 virtual void addSup
                 (
                     const volScalarField& rho,
@@ -424,9 +298,8 @@ public:
                 );
 
 
-            // Add explicit and implicit contributions to phase equations
+            // Explicit and implicit sources for phase equations
 
-                //- Scalar
                 virtual void addSup
                 (
                     const volScalarField& alpha,
@@ -435,7 +308,6 @@ public:
                     const label fieldi
                 );
 
-                //- Vector
                 virtual void addSup
                 (
                     const volScalarField& alpha,
@@ -444,7 +316,6 @@ public:
                     const label fieldi
                 );
 
-                //- Spherical tensor
                 virtual void addSup
                 (
                     const volScalarField& alpha,
@@ -453,7 +324,6 @@ public:
                     const label fieldi
                 );
 
-                //- Symmetric tensor
                 virtual void addSup
                 (
                     const volScalarField& alpha,
@@ -462,7 +332,6 @@ public:
                     const label fieldi
                 );
 
-                //- Tensor
                 virtual void addSup
                 (
                     const volScalarField& alpha,
@@ -472,45 +341,49 @@ public:
                 );
 
 
-            // Set values directly
+            // Constraints
 
-                //- Scalar
-                virtual void setValue
+                virtual void constrain
                 (
                     fvMatrix<scalar>& eqn,
                     const label fieldi
                 );
 
-                //- Vector
-                virtual void setValue
+                virtual void constrain
                 (
                     fvMatrix<vector>& eqn,
                     const label fieldi
                 );
 
-                //- Spherical tensor
-                virtual void setValue
+                virtual void constrain
                 (
                     fvMatrix<sphericalTensor>& eqn,
                     const label fieldi
                 );
 
-                //- Symmetric tensor
-                virtual void setValue
+                virtual void constrain
                 (
                     fvMatrix<symmTensor>& eqn,
                     const label fieldi
                 );
 
-                //- Tensor
-                virtual void setValue
+                virtual void constrain
                 (
                     fvMatrix<tensor>& eqn,
                     const label fieldi
                 );
 
 
-        // I-O
+            // Correction
+
+                virtual void correct(volScalarField& field);
+                virtual void correct(volVectorField& field);
+                virtual void correct(volSphericalTensorField& field);
+                virtual void correct(volSymmTensorField& field);
+                virtual void correct(volTensorField& field);
+
+
+        // IO
 
             //- Write the source header information
             virtual void writeHeader(Ostream&) const;

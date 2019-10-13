@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2014 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -156,10 +156,7 @@ public:
         );
 
 
-    // I-O
-
-        //- Write data
-        virtual void writeData(Ostream&) const;
+    // IO
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -18,8 +18,6 @@ License
     along with Caelus.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-
-#include "fvMesh.hpp"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -47,97 +45,15 @@ inline bool CML::fv::option::active() const
 }
 
 
-inline CML::scalar CML::fv::option::timeStart() const
-{
-    return timeStart_;
-}
-
-
-inline CML::scalar CML::fv::option::duration() const
-{
-    return duration_;
-}
-
-
-inline bool CML::fv::option::inTimeLimits(const scalar time) const
-{
-    return
-    (
-        (timeStart_ < 0)
-     ||
-        (
-            (mesh_.time().value() >= timeStart_)
-         && (mesh_.time().value() <= (timeStart_ + duration_))
-        )
-    );
-}
-
-
-inline const CML::fv::option::selectionModeType&
-CML::fv::option::selectionMode() const
-{
-    return selectionMode_;
-}
-
-
-inline const CML::word& CML::fv::option::cellSetName() const
-{
-    return cellSetName_;
-}
-
-
-inline CML::scalar CML::fv::option::V() const
-{
-    return V_;
-}
-
-
-inline const CML::labelList& CML::fv::option::cells() const
-{
-    return cells_;
-}
-
-
 inline void CML::fv::option::setApplied(const label fieldi)
 {
     applied_[fieldi] = true;
 }
 
 
-inline bool& CML::fv::option::active()
+inline CML::Switch& CML::fv::option::active()
 {
     return active_;
-}
-
-
-inline CML::scalar& CML::fv::option::timeStart()
-{
-    return timeStart_;
-}
-
-
-inline CML::scalar& CML::fv::option::duration()
-{
-    return duration_;
-}
-
-
-inline const CML::word& CML::fv::option::nbrRegionName() const
-{
-    return nbrRegionName_;
-}
-
-
-inline const CML::meshToMesh& CML::fv::option::meshInterp() const
-{
-    if (!meshInterpPtr_.valid())
-    {
-        FatalErrorInFunction
-            << "Interpolation object not set"
-            << abort(FatalError);
-    }
-
-    return meshInterpPtr_();
 }
 
 

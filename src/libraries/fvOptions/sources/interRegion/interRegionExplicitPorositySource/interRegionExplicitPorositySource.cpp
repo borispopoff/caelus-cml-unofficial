@@ -111,7 +111,7 @@ CML::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh, true),
+    interRegionOption(name, modelType, dict, mesh),
     porosityPtr_(nullptr),
     firstIter_(-1),
     UName_(coeffs_.lookupOrDefault<word>("U", "U")),
@@ -281,16 +281,9 @@ void CML::fv::interRegionExplicitPorositySource::addSup
 }
 
 
-void CML::fv::interRegionExplicitPorositySource::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-}
-
-
 bool CML::fv::interRegionExplicitPorositySource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (interRegionOption::read(dict))
     {
         coeffs_.readIfPresent("U", UName_);
         coeffs_.readIfPresent("mu", muName_);

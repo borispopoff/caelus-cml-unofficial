@@ -6,9 +6,10 @@ Import('env')
 target = 'fvOptions'
 
 sources = Split("""
-fvOptions/fvOption.cpp
-fvOptions/fvOptionList.cpp
-fvOptions/fvIOoptionList.cpp
+cellSetOption/cellSetOption.cpp
+cellSetOption/cellSetOptionIO.cpp
+interRegionOption/interRegionOption.cpp
+interRegionOption/interRegionOptionIO.cpp
 sources/general/semiImplicitSource/semiImplicitSource.cpp
 sources/derived/actuationDiskSource/actuationDiskSource.cpp
 sources/derived/explicitPorositySource/explicitPorositySource.cpp

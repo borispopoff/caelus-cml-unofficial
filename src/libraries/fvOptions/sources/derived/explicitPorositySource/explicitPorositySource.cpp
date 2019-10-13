@@ -52,7 +52,7 @@ CML::fv::explicitPorositySource::explicitPorositySource
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh),
+    cellSetOption(name, modelType, dict, mesh),
     porosityPtr_(nullptr)
 {
     read(dict);
@@ -119,16 +119,9 @@ void CML::fv::explicitPorositySource::addSup
 }
 
 
-void CML::fv::explicitPorositySource::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-}
-
-
 bool CML::fv::explicitPorositySource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         if (coeffs_.found("UNames"))
         {
