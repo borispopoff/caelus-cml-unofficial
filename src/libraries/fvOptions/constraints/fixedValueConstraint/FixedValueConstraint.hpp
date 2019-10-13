@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -18,20 +18,27 @@ License
     along with Caelus.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    CML::fv::explicitSetValue
+    CML::fv::FixedValueConstraint
 
 Description
-    Set values field values explicity.
+    Constrain the field values within a specified region.
 
-    Sources described by:
-
+    For example to set the turbulence properties within a porous region:
     \verbatim
-    <Type>ExplicitSetValueCoeffs
+    porosityTurbulence
     {
-        injectionRate
+        type            scalarFixedValueConstraint;
+        active          yes;
+
+        scalarFixedValueConstraintCoeffs
         {
-            k           30.7;
-            epsilon     1.5;
+            selectionMode   cellZone;
+            cellZone        porosity;
+            fieldValues
+            {
+                k           1;
+                epsilon     150;
+            }
         }
     }
     \endverbatim
@@ -40,12 +47,13 @@ SeeAlso
     CML::fvOption
 
 SourceFiles
-    explicitSetValue.C
+    FixedValueConstraint.cpp
+    fixedValueConstraints.cpp
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ExplicitSetValue_H
-#define ExplicitSetValue_H
+#ifndef FixedValueConstraint_H
+#define FixedValueConstraint_H
 
 #include "cellSetOption.hpp"
 #include "Tuple2.hpp"
@@ -58,39 +66,30 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class explicitSetValue Declaration
+                       Class FixedValueConstraint Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class ExplicitSetValue
+class FixedValueConstraint
 :
     public cellSetOption
 {
+    // Private member data
 
-protected:
-
-    // Protected data
-
-        //- Source value per field
-        List<Type> injectionRate_;
-
-
-    // Protected functions
-
-        //- Set the local field data
-        void setFieldData(const dictionary& dict);
+        //- Field values
+        List<Type> fieldValues_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("explicitSetValue");
+    TypeName("FixedValueConstraint");
 
 
     // Constructors
 
         //- Construct from components
-        ExplicitSetValue
+        FixedValueConstraint
         (
             const word& name,
             const word& modelType,
@@ -101,16 +100,11 @@ public:
 
     // Member Functions
 
-        // Evaluation
+        //- Read source dictionary
+        virtual bool read(const dictionary& dict);
 
-            //- Set value on field
-            virtual void constrain(fvMatrix<Type>& eqn, const label fieldI);
-
-
-        // IO
-
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
+        //- Set value on field
+        virtual void constrain(fvMatrix<Type>& eqn, const label fieldi);
 };
 
 
@@ -125,30 +119,10 @@ public:
 #include "fvMatrices.hpp"
 #include "DimensionedField.hpp"
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void CML::fv::ExplicitSetValue<Type>::setFieldData(const dictionary& dict)
-{
-    fieldNames_.setSize(dict.toc().size());
-    injectionRate_.setSize(fieldNames_.size());
-
-    applied_.setSize(fieldNames_.size(), false);
-
-    label i = 0;
-    forAllConstIter(dictionary, dict, iter)
-    {
-        fieldNames_[i] = iter().keyword();
-        dict.lookup(iter().keyword()) >> injectionRate_[i];
-        i++;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::fv::ExplicitSetValue<Type>::ExplicitSetValue
+CML::fv::FixedValueConstraint<Type>::FixedValueConstraint
 (
     const word& name,
     const word& modelType,
@@ -156,8 +130,7 @@ CML::fv::ExplicitSetValue<Type>::ExplicitSetValue
     const fvMesh& mesh
 )
 :
-    cellSetOption(name, modelType, dict, mesh),
-    injectionRate_()
+    cellSetOption(name, modelType, dict, mesh)
 {
     read(dict);
 }
@@ -166,32 +139,25 @@ CML::fv::ExplicitSetValue<Type>::ExplicitSetValue
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void CML::fv::ExplicitSetValue<Type>::constrain
-(
-    fvMatrix<Type>& eqn,
-    const label fieldi
-)
-{
-    if (debug)
-    {
-        Info<< "ExplicitSetValue<"<< pTraits<Type>::typeName
-            << ">::constrain for source " << name_ << endl;
-    }
-
-    List<Type> values(cells_.size(), injectionRate_[fieldi]);
-
-    eqn.setValues(cells_, values);
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-bool CML::fv::ExplicitSetValue<Type>::read(const dictionary& dict)
+bool CML::fv::FixedValueConstraint<Type>::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {
-        setFieldData(coeffs_.subDict("injectionRate"));
+        const dictionary& fieldValuesDict = coeffs_.subDict("fieldValues");
+
+        fieldNames_.setSize(fieldValuesDict.size());
+        fieldValues_.setSize(fieldNames_.size());
+
+        label i = 0;
+        forAllConstIter(dictionary, fieldValuesDict, iter)
+        {
+            fieldNames_[i] = iter().keyword();
+            fieldValuesDict.lookup(iter().keyword()) >> fieldValues_[i];
+            i++;
+        }
+
+        applied_.setSize(fieldNames_.size(), false);
+
         return true;
     }
     else
@@ -199,6 +165,25 @@ bool CML::fv::ExplicitSetValue<Type>::read(const dictionary& dict)
         return false;
     }
 }
+
+
+template<class Type>
+void CML::fv::FixedValueConstraint<Type>::constrain
+(
+    fvMatrix<Type>& eqn,
+    const label fieldi
+)
+{
+    DebugInfo
+        << "FixedValueConstraint<"
+        << pTraits<Type>::typeName
+        << ">::constrain for source " << name_ << endl;
+
+    eqn.setValues(cells_, List<Type>(cells_.size(), fieldValues_[fieldi]));
+}
+
+
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
