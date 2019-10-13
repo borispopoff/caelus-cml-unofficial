@@ -21,6 +21,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SpalartAllmaras.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -395,6 +396,7 @@ bool SpalartAllmaras::read()
 
 void SpalartAllmaras::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     RASModel::correct();
 
     if (!turbulence_)
@@ -446,11 +448,14 @@ void SpalartAllmaras::correct()
      ==
         fr1_*Cb1_*Stilda*nuTilda_
       - fvm::Sp(Cw1_*fw(Stilda)*nuTilda_/sqr(d_), nuTilda_)
+      + fvOptions(nuTilda_)
     );
 
     nuTildaEqn().relax();
+    fvOptions.constrain(nuTildaEqn());
     mesh_.updateFvMatrix(nuTildaEqn());
     solve(nuTildaEqn);
+    fvOptions.correct(nuTilda_);
     bound(nuTilda_, dimensionedScalar("0", nuTilda_.dimensions(), 0.0));
     nuTilda_.correctBoundaryConditions();
 

@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VLESkOmegaSST.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -474,6 +475,7 @@ bool VLESKOmegaSST::read()
 
 void VLESKOmegaSST::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     VLESModel::correct();
 
     if (!turbulence_)
@@ -584,14 +586,16 @@ void VLESKOmegaSST::correct()
         gamma(F1)* min(fr1_*G, c1_*betaStar_*k_*omega_)/(nut_ + nutMin)
       - fvm::Sp(beta(F1)*omega_, omega_)
       + 2*(1-F1)*alphaOmega2_*(fvc::grad(k_)&fvc::grad(omega_))/omega_
+      + fvOptions(omega_)
     );
 
     omegaEqn().relax();
-
+    fvOptions.constrain(omegaEqn());
     omegaEqn().boundaryManipulate(omega_.boundaryField());
     
     mesh_.updateFvMatrix(omegaEqn());
     solve(omegaEqn);
+    fvOptions.correct(omega_);
     bound(omega_, omegaMin_);
 
     // Turbulent kinetic energy equation
@@ -603,11 +607,14 @@ void VLESKOmegaSST::correct()
      ==
         min(fr1_*G, c1_*betaStar_*k_*omega_)
       - fvm::Sp(betaStar_*omega_, k_)
+      + fvOptions(k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     mesh_.updateFvMatrix(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
     // Re-calculate viscosity

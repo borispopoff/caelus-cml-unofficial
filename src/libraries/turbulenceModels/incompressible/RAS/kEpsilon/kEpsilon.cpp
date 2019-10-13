@@ -21,6 +21,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kEpsilon.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -226,6 +227,7 @@ bool kEpsilon::read()
 
 void kEpsilon::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     RASModel::correct();
 
     if (!turbulence_)
@@ -256,14 +258,16 @@ void kEpsilon::correct()
             C2_*epsilon_/k_,
             epsilon_
         )
+      + fvOptions(epsilon_)
     );
 
     epsEqn().relax();
-
+    fvOptions.constrain(epsEqn());
     epsEqn().boundaryManipulate(epsilon_.boundaryField());
 
     mesh_.updateFvMatrix(epsEqn());
     solve(epsEqn);
+    fvOptions.correct(epsilon_);
     bound(epsilon_, epsilonMin_);
 
 
@@ -276,11 +280,14 @@ void kEpsilon::correct()
       - fvm::laplacian(DkEff(), k_)
      ==
         G - fvm::Sp(epsilon_/k_, k_)
+      + fvOptions(k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     mesh_.updateFvMatrix(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
 

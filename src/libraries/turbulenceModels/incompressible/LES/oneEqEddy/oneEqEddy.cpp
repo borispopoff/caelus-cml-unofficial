@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "oneEqEddy.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -95,6 +96,7 @@ oneEqEddy::oneEqEddy
 
 void oneEqEddy::correct(const tmp<volTensorField>& gradU)
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     GenEddyVisc::correct(gradU);
 
     tmp<volScalarField> G = 2.0*nuSgs_*magSqr(symm(gradU));
@@ -107,12 +109,14 @@ void oneEqEddy::correct(const tmp<volTensorField>& gradU)
     ==
        G
      - fvm::Sp(ce_*sqrt(k_)/delta(), k_)
+      + fvOptions(k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     mesh_.updateFvMatrix(kEqn());
     kEqn().solve();
-
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
     updateSubGridScaleFields();

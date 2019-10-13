@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coherentStructureModel.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -40,6 +41,7 @@ void CoherentStructureModel::updateSubGridScaleFields
     const volScalarField S2(2*magSqr(symm(gradU)));
     nuSgs_ = C(gradU)*sqrt(S2)*delta()*delta();
     nuSgs_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nuSgs_);
 }
 
 volScalarField CoherentStructureModel::C(volTensorField const& gradU) const

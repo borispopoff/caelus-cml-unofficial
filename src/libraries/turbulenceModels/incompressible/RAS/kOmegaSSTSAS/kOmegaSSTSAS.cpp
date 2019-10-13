@@ -22,6 +22,7 @@ License
 
 
 #include "kOmegaSSTSAS.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -387,6 +388,7 @@ bool kOmegaSSTSAS::read()
 
 void kOmegaSSTSAS::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     RASModel::correct();
 
     if (!turbulence_)
@@ -514,14 +516,16 @@ void kOmegaSSTSAS::correct()
       - fvm::Sp(beta(F1)*omega_, omega_)
       + 2*(1-F1)*alphaOmega2_*(fvc::grad(k_)&fvc::grad(omega_))/omega_
       + Qsas
+      + fvOptions(omega_)
     );
 
     omegaEqn().relax();
-
+    fvOptions.constrain(omegaEqn());
     omegaEqn().boundaryManipulate(omega_.boundaryField());
 
     mesh_.updateFvMatrix(omegaEqn());
     solve(omegaEqn);
+    fvOptions.correct(omega_);
     bound(omega_, omegaMin_);
 
     // Turbulent kinetic energy equation
@@ -533,11 +537,14 @@ void kOmegaSSTSAS::correct()
      ==
         min(G, c1_*betaStar_*k_*omega_)
       - fvm::Sp(betaStar_*omega_, k_)
+      + fvOptions(k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     mesh_.updateFvMatrix(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
 

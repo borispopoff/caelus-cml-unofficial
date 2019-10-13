@@ -21,6 +21,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VLESRealizableKE.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -310,7 +311,8 @@ bool realizableVLESKE::read()
 
 
 void realizableVLESKE::correct()
-{
+{    
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     VLESModel::correct();
 
     if (!turbulence_)
@@ -435,14 +437,16 @@ void realizableVLESKE::correct()
             C2_*epsilon_/(k_ + sqrt(nu()*epsilon_)),
             epsilon_
         )
+      + fvOptions(epsilon_)
     );
 
     epsEqn().relax();
-
+    fvOptions.constrain(epsEqn());
     epsEqn().boundaryManipulate(epsilon_.boundaryField());
 
     mesh_.updateFvMatrix(epsEqn());
     solve(epsEqn);
+    fvOptions.correct(epsilon_);
     bound(epsilon_, epsilonMin_);
 
 
@@ -455,11 +459,14 @@ void realizableVLESKE::correct()
       - fvm::laplacian(DkEff(), k_)
      ==
         G - fvm::Sp(epsilon_/k_, k_)
+      + fvOptions(k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     mesh_.updateFvMatrix(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
     nut_ = rCmu(gradU, S2, magS)*sqr(k_)/epsilon_;

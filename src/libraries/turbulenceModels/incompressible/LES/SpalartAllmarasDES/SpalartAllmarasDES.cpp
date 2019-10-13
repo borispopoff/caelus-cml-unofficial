@@ -22,6 +22,7 @@ License
 
 
 #include "SpalartAllmarasDES.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -251,6 +252,7 @@ SpalartAllmarasDES::SpalartAllmarasDES
 
 void SpalartAllmarasDES::correct(const tmp<volTensorField>& gradU)
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     LESModel::correct(gradU);
 
     if (mesh_.changing())
@@ -277,12 +279,14 @@ void SpalartAllmarasDES::correct(const tmp<volTensorField>& gradU)
      ==
         Cb1_*STilda*nuTilda_
       - fvm::Sp(Cw1_*fw(STilda, dTilda)*nuTilda_/sqr(dTilda), nuTilda_)
+      + fvOptions(nuTilda_)
     );
 
     nuTildaEqn().relax();
+    fvOptions.constrain(nuTildaEqn());
     mesh_.updateFvMatrix(nuTildaEqn());
     nuTildaEqn().solve();
-
+    fvOptions.correct(nuTilda_);
     bound(nuTilda_, dimensionedScalar("zero", nuTilda_.dimensions(), 0.0));
     nuTilda_.correctBoundaryConditions();
 

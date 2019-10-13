@@ -22,6 +22,7 @@ License
 #include "gammaReTheta.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 #include "wallFvPatch.hpp"
+#include "fvOptions.hpp"
 
 namespace CML
 {
@@ -680,6 +681,7 @@ bool gammaReTheta::read()
 
 void gammaReTheta::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     RASModel::correct();
 
     if (!turbulence_)
@@ -727,13 +729,15 @@ void gammaReTheta::correct()
             (F1 - scalar(1))*CDkOmega/omega_,
             omega_
         )
+      + fvOptions(omega_)
     );
 
     omegaEqn().relax();
-
+    fvOptions.constrain(omegaEqn());
     omegaEqn().boundaryManipulate(omega_.boundaryField());
 
     solve(omegaEqn);
+    fvOptions.correct(omega_);
     bound(omega_, omegaMin_);
 
 
@@ -765,10 +769,13 @@ void gammaReTheta::correct()
              )*betaStar_*omega_, 
              k_
         )
+      + fvOptions(k_)
     );
     
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
 
@@ -812,9 +819,12 @@ void gammaReTheta::correct()
             cThetat_*magSqr(U_)*(scalar(1)-FThetat())/(scalar(500.0)*nu()), 
             ReThetaTilda_
         )
+      + fvOptions(ReThetaTilda_)
     );
 
     ReThetaTildaEqn().relax();
+    fvOptions.constrain(ReThetaTildaEqn());
+    fvOptions.correct(ReThetaTilda_);
     solve(ReThetaTildaEqn);
 
     bound(ReThetaTilda_,scalar(20));
@@ -841,11 +851,13 @@ void gammaReTheta::correct()
             ce2_*ca2_*sqrt(scalar(2))*mag(skew(fvc::grad(U_)))*Fturb()*intermittency_,
             intermittency_
         )
+      + fvOptions(intermittency_)
     );
 
     intermittencyEqn().relax();
+    fvOptions.constrain(intermittencyEqn());
     solve(intermittencyEqn);
-
+    fvOptions.correct(intermittency_);
     bound(intermittency_,scalar(0));
 }
 
