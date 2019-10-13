@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressiblekEpsilon.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -253,6 +254,7 @@ void kEpsilon::correct()
         return;
     }
 
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     RASModel::correct();
 
     volScalarField divU(fvc::div(phi_/fvc::interpolate(rho_)));
@@ -279,13 +281,15 @@ void kEpsilon::correct()
         C1_*G*epsilon_/k_
       - fvm::SuSp(((2.0/3.0)*C1_)*rho_*divU, epsilon_)
       - fvm::Sp(C2_*rho_*epsilon_/k_, epsilon_)
+      + fvOptions(rho_, epsilon_)
     );
 
     epsEqn().relax();
-
+    fvOptions.constrain(epsEqn());
     epsEqn().boundaryManipulate(epsilon_.boundaryField());
 
     solve(epsEqn);
+    fvOptions.correct(epsilon_);
     bound(epsilon_, epsilonMin_);
 
 
@@ -300,10 +304,13 @@ void kEpsilon::correct()
         G
       - fvm::SuSp((2.0/3.0)*rho_*divU, k_)
       - fvm::Sp(rho_*epsilon_/k_, k_)
+      + fvOptions(rho_, k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
     // Re-calculate viscosity

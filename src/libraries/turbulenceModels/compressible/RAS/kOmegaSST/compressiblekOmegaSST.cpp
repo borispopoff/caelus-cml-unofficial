@@ -21,6 +21,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressiblekOmegaSST.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -483,6 +484,7 @@ void kOmegaSST::correct()
         y_.correct();
     }
 
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     RASModel::correct();
 
     volScalarField divU(fvc::div(phi_/fvc::interpolate(rho_)));
@@ -547,13 +549,15 @@ void kOmegaSST::correct()
       - fvm::SuSp((2.0/3.0)*rhoGammaF1*divU, omega_)
       - fvm::Sp(beta(F1)*rho_*omega_, omega_)
       + (1-F1)*CDkOmega
+      + fvOptions(rho_, omega_)
     );
 
     omegaEqn().relax();
-
+    fvOptions.constrain(omegaEqn());
     omegaEqn().boundaryManipulate(omega_.boundaryField());
 
     solve(omegaEqn);
+    fvOptions.constrain(omegaEqn());
     bound(omega_, omegaMin_);
 
     // Turbulent kinetic energy equation
@@ -566,10 +570,13 @@ void kOmegaSST::correct()
         min(fr1_*G, c1_*rho_*betaStar_*k_*omega_)
       - fvm::SuSp(2.0/3.0*rho_*divU, k_)
       - fvm::Sp(betaStar_*rho_*omega_, k_)
+      + fvOptions(rho_, k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
 

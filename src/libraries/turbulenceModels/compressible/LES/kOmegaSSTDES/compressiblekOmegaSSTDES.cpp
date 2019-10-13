@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressiblekOmegaSSTDES.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -479,6 +480,7 @@ void kOmegaSSTDES::correct()
         y_.correct();
     }
 
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     LESModel::correct();
 
     volScalarField divU(fvc::div(phi_/fvc::interpolate(rho_)));
@@ -553,13 +555,15 @@ void kOmegaSSTDES::correct()
       - fvm::SuSp((2.0/3.0)*rhoGammaF1*divU, omega_)
       - fvm::Sp(beta(F1)*rho_*omega_, omega_)
       + 2*(1-F1)*rho_*alphaOmega2_*(fvc::grad(k_)&fvc::grad(omega_))/omega_
+      + fvOptions(rho_, omega_)
     );
 
     omegaEqn().relax();
-
+    fvOptions.constrain(omegaEqn());
     omegaEqn().boundaryManipulate(omega_.boundaryField());
 
     solve(omegaEqn);
+    fvOptions.correct(omega_);
     bound(omega_,dimensionedScalar("omegaMin",omega_.dimensions(),0.0));
 
     // Turbulent kinetic energy equation
@@ -572,10 +576,13 @@ void kOmegaSSTDES::correct()
         min(fr1_*G, c1_*rho_*betaStar_*k_*omega_)
       - fvm::SuSp(2.0/3.0*rho_*divU, k_)
         - fvm::Sp(betaStar_*rho_*FDES()*omega_, k_)
+      + fvOptions(rho_, k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_,dimensionedScalar("kMin",k_.dimensions(),0.0));
 
     if (damped_)

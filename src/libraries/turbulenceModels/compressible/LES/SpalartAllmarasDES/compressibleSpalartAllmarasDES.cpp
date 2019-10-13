@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressibleSpalartAllmarasDES.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -335,6 +336,7 @@ bool SpalartAllmarasDES::read()
 
 void SpalartAllmarasDES::correct(const tmp<volTensorField>& gradU)
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     LESModel::correct(gradU);
 
     if (mesh_.changing())
@@ -361,10 +363,13 @@ void SpalartAllmarasDES::correct(const tmp<volTensorField>& gradU)
      ==
         rho()*Cb1_*STilda*nuTilda_
       - fvm::Sp(rho()*Cw1_*fw(STilda, dTilda)*nuTilda_/sqr(dTilda), nuTilda_)
+      + fvOptions(rho(), nuTilda_)
     );
 
     nuTildaEqn().relax();
+    fvOptions.constrain(nuTildaEqn());
     nuTildaEqn().solve();
+    fvOptions.correct(nuTilda_);
 
     bound(nuTilda_, dimensionedScalar("zero", nuTilda_.dimensions(), 0.0));
     nuTilda_.correctBoundaryConditions();

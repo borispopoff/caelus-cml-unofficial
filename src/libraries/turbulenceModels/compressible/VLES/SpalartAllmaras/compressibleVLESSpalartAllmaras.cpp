@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressibleVLESSpalartAllmaras.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -449,6 +450,7 @@ bool SpalartAllmarasVLES::read()
 
 void SpalartAllmarasVLES::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     VLESModel::correct();
 
     if (!turbulence_)
@@ -593,10 +595,13 @@ void SpalartAllmarasVLES::correct()
      ==
         fr1_*rho_*Cb1_*Stilda*nuTilda_
       - fvm::Sp(rho_*Cw1_*fw(Stilda)*nuTilda_/sqr(d_), nuTilda_)
+      + fvOptions(rho_, nuTilda_)
     );
 
     nuTildaEqn().relax();
+    fvOptions.constrain(nuTildaEqn());
     solve(nuTildaEqn);
+    fvOptions.correct(nuTilda_);
     bound(nuTilda_, dimensionedScalar("0", nuTilda_.dimensions(), 0.0));
     nuTilda_.correctBoundaryConditions();
 

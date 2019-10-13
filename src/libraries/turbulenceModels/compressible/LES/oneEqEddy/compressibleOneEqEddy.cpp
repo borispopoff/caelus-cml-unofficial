@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressibleOneEqEddy.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -42,6 +43,7 @@ void oneEqEddy::updateSubGridScaleFields()
 {
     muSgs_ = ck_*rho()*sqrt(k_)*delta();
     muSgs_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->muSgs_);
 
     alphaSgs_ = muSgs_/Prt_;
     alphaSgs_.correctBoundaryConditions();
@@ -98,6 +100,7 @@ void oneEqEddy::correct(const tmp<volTensorField>& tgradU)
 {
     const volTensorField& gradU = tgradU();
 
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     GenEddyVisc::correct(gradU);
 
     volScalarField divU(fvc::div(phi()/fvc::interpolate(rho())));
@@ -112,10 +115,13 @@ void oneEqEddy::correct(const tmp<volTensorField>& tgradU)
         G
       - fvm::SuSp(2.0/3.0*rho()*divU, k_)
       - fvm::Sp(ce_*rho()*sqrt(k_)/delta(), k_)
+      + fvOptions(rho_, k_)
     );
 
     kEqn().relax();
+    fvOptions.constrain(kEqn());
     kEqn().solve();
+    fvOptions.correct(k_);
 
     bound(k_, kMin_);
 
