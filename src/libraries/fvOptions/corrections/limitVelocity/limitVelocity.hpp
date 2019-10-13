@@ -31,8 +31,11 @@ Usage
         type            limitVelocity;
         active          yes;
 
-        selectionMode   all;
-        max             100;
+        limitVelocityCoeffs
+        {
+            selectionMode   all;
+            max             100;
+        }
     }
     \endverbatim
 
