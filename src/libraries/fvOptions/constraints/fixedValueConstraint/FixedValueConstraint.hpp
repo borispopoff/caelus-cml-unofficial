@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -23,6 +23,7 @@ Class
 Description
     Constrain the field values within a specified region.
 
+Usage
     For example to set the turbulence properties within a porous region:
     \verbatim
     porosityTurbulence
@@ -30,20 +31,17 @@ Description
         type            scalarFixedValueConstraint;
         active          yes;
 
-        scalarFixedValueConstraintCoeffs
+        selectionMode   cellZone;
+        cellZone        porosity;
+        fieldValues
         {
-            selectionMode   cellZone;
-            cellZone        porosity;
-            fieldValues
-            {
-                k           1;
-                epsilon     150;
-            }
+            k           1;
+            epsilon     150;
         }
     }
     \endverbatim
 
-SeeAlso
+See also
     CML::fvOption
 
 SourceFiles

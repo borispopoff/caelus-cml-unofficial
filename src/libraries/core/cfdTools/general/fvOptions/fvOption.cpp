@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -36,14 +36,6 @@ namespace CML
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-bool CML::fv::option::alwaysApply() const
-{
-    return false;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 CML::fv::option::option
@@ -58,7 +50,12 @@ CML::fv::option::option
     modelType_(modelType),
     mesh_(mesh),
     dict_(dict),
-    coeffs_(dict.subDict(modelType + "Coeffs")),
+    coeffs_
+    (
+        dict.found(modelType + "Coeffs")
+      ? dict.subDict(modelType + "Coeffs")
+      : dict
+    ),
     active_(dict_.lookupOrDefault<Switch>("active", true)),
     fieldNames_(),
     applied_()
@@ -80,6 +77,13 @@ CML::autoPtr<CML::fv::option> CML::fv::option::New
 
     Info<< indent
         << "Selecting finite volume options model type " << modelType << endl;
+
+    const_cast<Time&>(mesh.time()).libs().open
+    (
+        coeffs,
+        "libs",
+        dictionaryConstructorTablePtr_
+    );
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
@@ -109,11 +113,6 @@ bool CML::fv::option::isActive()
 
 CML::label CML::fv::option::applyToField(const word& fieldName) const
 {
-    if (alwaysApply())
-    {
-        return 0;
-    }
-
     return findIndex(fieldNames_, fieldName);
 }
 

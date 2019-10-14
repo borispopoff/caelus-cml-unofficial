@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -21,13 +21,14 @@ Class
     CML::fv::option
 
 Description
-    Finite volume options abtract base class.  Provides a base set of controls,
-    e.g.
-
+    Finite volume options abstract base class.  Provides a base set of
+    controls, e.g.:
+    \verbatim
         type            scalarExplicitSource    // source type
         active          on;                     // on/off switch
+    \endverbatim
 
-Note:
+Note
     On evaluation, source/sink options are to be added to the equation R.H.S.
 
 SourceFiles
@@ -35,7 +36,6 @@ SourceFiles
     fvOptionIO.cpp
 
 \*---------------------------------------------------------------------------*/
-
 
 #ifndef fvOption_HPP
 #define fvOption_HPP
@@ -89,12 +89,6 @@ protected:
 
         //- Applied flag list - corresponds to each fieldNames_ entry
         List<bool> applied_;
-
-
-    // Protected functions
-
-        //- Flag to bypass the apply flag list checking
-        virtual bool alwaysApply() const;
 
 
 public:
@@ -229,7 +223,7 @@ public:
 
             // Explicit and implicit sources
 
-               virtual void addSup
+                virtual void addSup
                 (
                     fvMatrix<scalar>& eqn,
                     const label fieldi

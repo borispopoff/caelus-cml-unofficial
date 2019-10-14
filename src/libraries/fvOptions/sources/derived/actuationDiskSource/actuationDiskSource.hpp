@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -40,19 +40,15 @@ Description
         U_1 | velocity at the disk
     \endvartable
 
-    \heading Source usage
-
+Usage
     Example usage:
     \verbatim
-    actuationDiskSourceCoeffs
-    {
-        fields          (U);        // names of fields to apply source
-        diskDir         (-1 0 0);   // disk direction
-        Cp              0.1;        // power coefficient
-        Ct              0.5;        // thrust coefficient
-        diskArea        5.0;        // disk area
-        upstreamPoint   (0 0 0);    // upstream point
-    }
+    fields          (U);        // names of fields to apply source
+    diskDir         (-1 0 0);   // disk direction
+    Cp              0.1;        // power coefficient
+    Ct              0.5;        // thrust coefficient
+    diskArea        5.0;        // disk area
+    upstreamPoint   (0 0 0);    // upstream point
     \endverbatim
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2015 OpenFOAM Foundation
+Copyright (C) 2012-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -23,8 +23,7 @@ Class
 Description
     Explicit porosity source
 
-    \heading Source usage
-
+Usage
     Example usage, here employing the Darcy-Forchheimer model:
     \verbatim
     explicitPorositySourceCoeffs

@@ -29,12 +29,13 @@ SourceFile
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef optionList_HPP
-#define optionList_HPP
+#ifndef fvOptionList_HPP
+#define fvOptionList_HPP
 
 #include "fvOption.hpp"
 #include "PtrList.hpp"
 #include "GeometricField.hpp"
+#include "geometricOneField.hpp"
 #include "fvPatchField.hpp"
 #include "profiling.hpp"
 
@@ -167,6 +168,33 @@ public:
                 const volScalarField& rho,
                 GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
+            );
+
+            //- Return source for equation
+            template<class Type>
+            tmp<fvMatrix<Type>> operator()
+            (
+                const volScalarField& alpha,
+                const geometricOneField& rho,
+                GeometricField<Type, fvPatchField, volMesh>& field
+            );
+
+            //- Return source for equation
+            template<class Type>
+            tmp<fvMatrix<Type>> operator()
+            (
+                const geometricOneField& alpha,
+                const volScalarField& rho,
+                GeometricField<Type, fvPatchField, volMesh>& field
+            );
+
+            //- Return source for equation
+            template<class Type>
+            tmp<fvMatrix<Type>> operator()
+            (
+                const geometricOneField& alpha,
+                const geometricOneField& rho,
+                GeometricField<Type, fvPatchField, volMesh>& field
             );
 
 
@@ -378,6 +406,57 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 
 
 template<class Type>
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
+(
+    const geometricOneField& alpha,
+    const geometricOneField& rho,
+    GeometricField<Type, fvPatchField, volMesh>& field
+)
+{
+    return this->operator()(field, field.name());
+}
+
+
+template<class Type>
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
+(
+    const volScalarField& alpha,
+    const geometricOneField& rho,
+    GeometricField<Type, fvPatchField, volMesh>& field
+)
+{
+    volScalarField one
+    (
+        IOobject
+        (
+            "one",
+            this->mesh_.time().timeName(),
+            this->mesh_,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ),
+        this->mesh_,
+        dimensionedScalar("one", dimless, 1.0)
+    );
+
+    return this->operator()(alpha, one, field, field.name());
+}
+
+
+template<class Type>
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
+(
+    const geometricOneField& alpha,
+    const volScalarField& rho,
+    GeometricField<Type, fvPatchField, volMesh>& field
+)
+{
+    return this->operator()(rho, field, field.name());
+}
+
+
+template<class Type>
 void CML::fv::optionList::constrain(fvMatrix<Type>& eqn)
 {
     checkApplied();
@@ -421,11 +500,11 @@ void CML::fv::optionList::correct
     {
         option& source = this->operator[](i);
 
-        label fieldI = source.applyToField(fieldName);
+        label fieldi = source.applyToField(fieldName);
 
-        if (fieldI != -1)
+        if (fieldi != -1)
         {
-            source.setApplied(fieldI);
+            source.setApplied(fieldi);
 
             if (source.isActive())
             {

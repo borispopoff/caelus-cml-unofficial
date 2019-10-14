@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -22,22 +22,20 @@ Class
 
 Description
     Cell-set options abtract base class.  Provides a base set of controls,
-    e.g.
-
+    e.g.:
+    \verbatim
         type            scalarExplicitSource    // Source type
         active          on;                     // on/off switch
 
-        scalarExplicitSourceCoeffs
-        {
-            timeStart       0.0;        // Start time
-            duration        1000.0;     // Duration
-            selectionMode   cellSet;    // cellSet, points, cellZone
-            .
-            .
-            .
-        }
+        timeStart       0.0;        // Start time
+        duration        1000.0;     // Duration
+        selectionMode   cellSet;    // cellSet, points, cellZone
+        .
+        .
+        .
+    \endverbatim
 
-Note:
+Note
     Source/sink options are to be added to the equation R.H.S.
 
 SourceFiles

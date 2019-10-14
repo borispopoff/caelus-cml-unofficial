@@ -38,14 +38,11 @@ Description
     Example of the source specification:
 
     \verbatim
-    <Type>SemiImplicitSourceCoeffs
+    volumeMode      absolute; // specific
+    injectionRateSuSp
     {
-        volumeMode      absolute; // specific
-        injectionRateSuSp
-        {
-            k           (30.7 0);
-            epsilon     (1.5  0);
-        }
+        k           (30.7 0);
+        epsilon     (1.5  0);
     }
     \endverbatim
 
@@ -53,7 +50,7 @@ Description
     - absolute: values are given as \<quantity\>
     - specific: values are given as \<quantity\>/m3
 
-SeeAlso
+See also
     CML::fvOption
 
 SourceFiles

@@ -22,6 +22,8 @@ License
 #include "fvOptionList.hpp"
 #include "surfaceFields.hpp"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
 namespace CML
 {
 namespace fv
@@ -97,6 +99,8 @@ CML::fv::optionList::optionList(const fvMesh& mesh)
 {}
 
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 void CML::fv::optionList::reset(const dictionary& dict)
 {
     // Count number of active fvOptions
@@ -150,13 +154,12 @@ bool CML::fv::optionList::writeData(Ostream& os) const
 }
 
 
-namespace CML
+// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
+
+CML::Ostream& CML::operator<<(Ostream& os, const fv::optionList& options)
 {
-    Ostream& operator<<(Ostream& os, const fv::optionList& options)
-    {
-        options.writeData(os);
-        return os;
-    }
+    options.writeData(os);
+    return os;
 }
 
 

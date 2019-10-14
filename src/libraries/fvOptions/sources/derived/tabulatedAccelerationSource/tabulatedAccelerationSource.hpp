@@ -31,10 +31,7 @@ Usage
         type            tabulatedAccelerationSource;
         active          yes;
 
-        tabulatedAccelerationSourceCoeffs
-        {
-            timeDataFileName "constant/acceleration-terms.dat";
-        }
+        timeDataFileName "constant/acceleration-terms.dat";
     }
     \endverbatim
 

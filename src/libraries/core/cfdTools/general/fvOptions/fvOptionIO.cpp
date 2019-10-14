@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -49,7 +49,15 @@ void CML::fv::option::writeData(Ostream& os) const
 bool CML::fv::option::read(const dictionary& dict)
 {
     dict.readIfPresent("active", active_);
-    coeffs_ = dict.subDict(modelType_ + "Coeffs");
+
+    if (dict.found(modelType_ + "Coeffs"))
+    {
+        coeffs_ = dict.subDict(modelType_ + "Coeffs");
+    }
+    else
+    {
+        coeffs_ = dict;
+    }
 
     return true;
 }

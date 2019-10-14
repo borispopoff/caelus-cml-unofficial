@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2014 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -46,20 +46,16 @@ Description
         thrust(r) = T (C_0 + C_1 r^2 + C_2 r^4)
     \f]
 
-    \heading Source usage
-
+Usage
     Example usage:
     \verbatim
-    actuationDiskSourceCoeffs
-    {
-        fieldName       U;          // name of field to apply source
-        diskDir         (-1 0 0);   // disk direction
-        Cp              0.1;        // power coefficient
-        Ct              0.5;        // thrust coefficient
-        diskArea        5.0;        // disk area
-        coeffs          (0.1 0.5 0.01); // radial distribution coefficients
-        upstreamPoint   (0 0 0);    // upstream point
-    }
+    fieldName       U;          // name of field to apply source
+    diskDir         (-1 0 0);   // disk direction
+    Cp              0.1;        // power coefficient
+    Ct              0.5;        // thrust coefficient
+    diskArea        5.0;        // disk area
+    coeffs          (0.1 0.5 0.01); // radial distribution coefficients
+    upstreamPoint   (0 0 0);    // upstream point
     \endverbatim
 
 

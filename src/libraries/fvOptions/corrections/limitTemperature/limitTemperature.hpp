@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2016 OpenFOAM Foundation
+Copyright (C) 2012-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -32,12 +32,9 @@ Usage
         type            limitTemperature;
         active          yes;
 
-        limitTemperatureCoeffs
-        {
-            selectionMode   all;
-            min             200;
-            max             500;
-        }
+        selectionMode   all;
+        min             200;
+        max             500;
     }
     \endverbatim
 

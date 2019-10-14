@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,6 @@ Description
 
     Example usage:
     \verbatim
-    rotorDiskSourceCoeffs
-    {
         fields          (U);    // names of fields on which to apply source
         nBlades         3;      // number of blades
         tipEffect       0.96;   // normalised radius above which lift = 0
@@ -70,7 +68,6 @@ Description
         {
             ...
         }
-    }
     \endverbatim
 
     Where:

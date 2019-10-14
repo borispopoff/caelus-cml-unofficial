@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -26,15 +26,13 @@ Description
 
     Note: Currently only handles kinematic pressure (incompressible solvers).
 
-    \heading Source usage
+Usage
     Example usage:
     \verbatim
-    meanVelocityForceCoeffs
-    {
-        fields          (U);                    // Name of velocity field
-        Ubar            (10.0 0 0);             // Desired mean velocity
-        relaxation      0.2;                    // Optional relaxation factor
-    }
+    selectionMode   all;                    // Apply force to all cells
+    fields          (U);                    // Name of velocity field
+    Ubar            (10.0 0 0);             // Desired mean velocity
+    relaxation      0.2;                    // Optional relaxation factor
     \endverbatim
 
 SourceFiles
