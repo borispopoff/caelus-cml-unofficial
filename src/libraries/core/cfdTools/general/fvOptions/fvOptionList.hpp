@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 Copyright (C) 2016 OpenCFD Ltd
 -------------------------------------------------------------------------------
 License
@@ -124,6 +124,9 @@ public:
 
         //- Reset the source list
         void reset(const dictionary& dict);
+
+        //- Return whether there is something to apply to the field
+        bool appliesToField(const word& fieldName) const;
 
 
         // Sources
