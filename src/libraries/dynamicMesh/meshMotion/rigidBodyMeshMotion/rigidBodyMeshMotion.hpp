@@ -38,7 +38,7 @@ SourceFiles
 #include "displacementMotionSolver.hpp"
 #include "rigidBodyMotion.hpp"
 #include "OFstream.hpp"
-#include "outputFilterOutputControl.hpp"
+#include "outputFilterControl.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -115,7 +115,7 @@ class rigidBodyMeshMotion
         label curTimeIndex_;
 
         //- Output controls
-        outputFilterOutputControl motionOutputControl_;
+        outputFilterControl motionOutputControl_;
         
         //- List of stateFiles for bodies
 		List<autoPtr<OFstream>> bodyStateFilePtrs_; 

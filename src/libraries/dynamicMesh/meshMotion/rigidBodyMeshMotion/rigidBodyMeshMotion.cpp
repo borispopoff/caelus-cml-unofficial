@@ -327,7 +327,7 @@ void CML::rigidBodyMeshMotion::solve()
         fx
     );
 
-    if (Pstream::master() && motionOutputControl_.output() && model_.report())
+    if (Pstream::master() && motionOutputControl_.execute() && model_.report())
     {
         forAll(bodyMeshes_, bi)
         {
