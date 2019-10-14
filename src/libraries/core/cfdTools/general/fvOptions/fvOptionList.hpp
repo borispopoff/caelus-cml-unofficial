@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 Copyright (C) 2016 OpenCFD Ltd
 -------------------------------------------------------------------------------
 License
@@ -83,6 +83,15 @@ protected:
 
         //- Check that all sources have been applied
         void checkApplied() const;
+
+        //- Return source for equation with specified name and dimensions
+        template<class Type>
+        tmp<fvMatrix<Type>> source
+        (
+            GeometricField<Type, fvPatchField, volMesh>& field,
+            const word& fieldName,
+            const dimensionSet& ds
+        );
 
         //- Disallow default bitwise copy construct
         optionList(const optionList&);
@@ -197,6 +206,21 @@ public:
                 GeometricField<Type, fvPatchField, volMesh>& field
             );
 
+            //- Return source for equation with second time derivative
+            template<class Type>
+            tmp<fvMatrix<Type>> d2dt2
+            (
+                GeometricField<Type, fvPatchField, volMesh>& field
+            );
+
+            //- Return source for equation with second time derivative
+            template<class Type>
+            tmp<fvMatrix<Type>> d2dt2
+            (
+                GeometricField<Type, fvPatchField, volMesh>& field,
+                const word& fieldName
+            );
+
 
         // Constraints
 
@@ -234,25 +258,14 @@ public:
 
 
 template<class Type>
-CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
-(
-    GeometricField<Type, fvPatchField, volMesh>& field
-)
-{
-    return this->operator()(field, field.name());
-}
-
-
-template<class Type>
-CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::source
 (
     GeometricField<Type, fvPatchField, volMesh>& field,
-    const word& fieldName
+    const word& fieldName,
+    const dimensionSet& ds
 )
 {
     checkApplied();
-
-    const dimensionSet ds = field.dimensions()/dimTime*dimVolume;
 
     tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(field, ds));
     fvMatrix<Type>& mtx = tmtx();
@@ -283,6 +296,27 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
     }
 
     return tmtx;
+}
+
+
+template<class Type>
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
+(
+    GeometricField<Type, fvPatchField, volMesh>& field
+)
+{
+    return this->operator()(field, field.name());
+}
+
+
+template<class Type>
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
+(
+    GeometricField<Type, fvPatchField, volMesh>& field,
+    const word& fieldName
+)
+{
+    return source(field, fieldName, field.dimensions()/dimTime*dimVolume);
 }
 
 
@@ -453,6 +487,27 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
 )
 {
     return this->operator()(rho, field, field.name());
+}
+
+
+template<class Type>
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::d2dt2
+(
+    GeometricField<Type, fvPatchField, volMesh>& field
+)
+{
+    return this->d2dt2(field, field.name());
+}
+
+
+template<class Type>
+CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::d2dt2
+(
+    GeometricField<Type, fvPatchField, volMesh>& field,
+    const word& fieldName
+)
+{
+    return source(field, fieldName, field.dimensions()/sqr(dimTime)*dimVolume);
 }
 
 
