@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -38,10 +38,7 @@ const CML::scalar CML::cyclicACMIPolyPatch::tolerance_ = 1e-10;
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void CML::cyclicACMIPolyPatch::resetAMI
-(
-    const AMIPatchToPatchInterpolation::interpolationMethod&
-) const
+void CML::cyclicACMIPolyPatch::resetAMI() const
 {
     if (owner())
     {
@@ -85,10 +82,7 @@ void CML::cyclicACMIPolyPatch::resetAMI
         // Calculate the AMI using partial face-area-weighted. This leaves
         // the weights as fractions of local areas (sum(weights) = 1 means
         // face is fully covered)
-        cyclicAMIPolyPatch::resetAMI
-        (
-            AMIPatchToPatchInterpolation::imPartialFaceAreaWeight
-        );
+        cyclicAMIPolyPatch::resetAMI();
 
         AMIPatchToPatchInterpolation& AMI =
             const_cast<AMIPatchToPatchInterpolation&>(this->AMI());
@@ -181,11 +175,9 @@ void CML::cyclicACMIPolyPatch::initGeometry(PstreamBuffers& pBufs)
         Pout<< "cyclicACMIPolyPatch::initGeometry : " << name() << endl;
     }
 
-    // Note: calculates transformation and triggers face centre calculation
     cyclicAMIPolyPatch::initGeometry(pBufs);
 
-    // Initialise the AMI early to make sure we adapt the face areas before the
-    // cell centre calculation gets triggered.
+    // Initialise the AMI
     resetAMI();
 }
 
@@ -210,11 +202,9 @@ void CML::cyclicACMIPolyPatch::initMovePoints
     {
         Pout<< "cyclicACMIPolyPatch::initMovePoints : " << name() << endl;
     }
-
-    // Note: calculates transformation and triggers face centre calculation
     cyclicAMIPolyPatch::initMovePoints(pBufs, p);
 
-    // Initialise the AMI early. See initGeometry.
+    // Initialise the AMI
     resetAMI();
 }
 
@@ -288,15 +278,24 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
     const transformType transform
 )
 :
-    cyclicAMIPolyPatch(name, size, start, index, bm, patchType, transform),
+    cyclicAMIPolyPatch
+    (
+        name,
+        size,
+        start,
+        index,
+        bm,
+        patchType,
+        transform,
+        false,
+        AMIPatchToPatchInterpolation::imPartialFaceAreaWeight
+    ),
     nonOverlapPatchName_(word::null),
     nonOverlapPatchID_(-1),
     srcMask_(),
     tgtMask_(),
     updated_(false)
 {
-    AMIRequireMatch_ = false;
-
     // Non-overlapping patch might not be valid yet so cannot determine
     // associated patchID
 }
@@ -311,19 +310,28 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
     const word& patchType
 )
 :
-    cyclicAMIPolyPatch(name, dict, index, bm, patchType),
+    cyclicAMIPolyPatch
+    (
+        name,
+        dict,
+        index,
+        bm,
+        patchType,
+        false,
+        AMIPatchToPatchInterpolation::imPartialFaceAreaWeight
+    ),
     nonOverlapPatchName_(dict.lookup("nonOverlapPatch")),
     nonOverlapPatchID_(-1),
     srcMask_(),
     tgtMask_(),
     updated_(false)
 {
-    AMIRequireMatch_ = false;
-
     if (nonOverlapPatchName_ == name)
     {
-        FatalIOErrorInFunction(dict)
-            << "Non-overlapping patch name " << nonOverlapPatchName_
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "Non-overlapping patch name " << nonOverlapPatchName_
             << " cannot be the same as this patch " << name
             << exit(FatalIOError);
     }
@@ -346,8 +354,6 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
     tgtMask_(),
     updated_(false)
 {
-    AMIRequireMatch_ = false;
-
     // Non-overlapping patch might not be valid yet so cannot determine
     // associated patchID
 }
@@ -371,8 +377,6 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
     tgtMask_(),
     updated_(false)
 {
-    AMIRequireMatch_ = false;
-
     if (nonOverlapPatchName_ == name())
     {
         FatalErrorInFunction
@@ -402,7 +406,8 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
     tgtMask_(),
     updated_(false)
 {
-    AMIRequireMatch_ = false;
+    // Non-overlapping patch might not be valid yet so cannot determine
+    // associated patchID
 }
 
 

@@ -108,10 +108,13 @@ protected:
         const bool AMIReverse_;
 
         //- Flag to indicate that patches should match/overlap
-        bool AMIRequireMatch_;
+        const bool AMIRequireMatch_;
 
         //- Low weight correction threshold for AMI
         const scalar AMILowWeightCorrection_;
+
+        //- AMI Method
+        const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod_;
 
         //- Projection surface
         mutable autoPtr<searchableSurface> surfPtr_;
@@ -123,11 +126,7 @@ protected:
     // Protected Member Functions
 
         //- Reset the AMI interpolator
-        virtual void resetAMI
-        (
-            const AMIPatchToPatchInterpolation::interpolationMethod& AMIMethod =
-                AMIPatchToPatchInterpolation::imFaceAreaWeight
-        ) const;
+        virtual void resetAMI() const;
 
         //- Recalculate the transformation tensors
         virtual void calcTransforms();
@@ -171,7 +170,10 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType,
-            const transformType transform = UNKNOWN
+            const transformType transform = UNKNOWN,
+            const bool AMIRequireMatch = true,
+            const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod =
+                AMIPatchToPatchInterpolation::imFaceAreaWeight
         );
 
         //- Construct from dictionary
@@ -181,7 +183,10 @@ public:
             const dictionary& dict,
             const label index,
             const polyBoundaryMesh& bm,
-            const word& patchType
+            const word& patchType,
+            const bool AMIRequireMatch = true,
+            const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod =
+                AMIPatchToPatchInterpolation::imFaceAreaWeight
         );
 
         //- Construct as copy, resetting the boundary mesh
@@ -423,15 +428,6 @@ inline const CML::word& CML::cyclicAMIPolyPatch::neighbPatchName() const
 {
     return nbrPatchName_;
 }
-
-
-inline const CML::cyclicAMIPolyPatch&
-CML::cyclicAMIPolyPatch::neighbPatch() const
-{
-    const polyPatch& pp = this->boundaryMesh()[neighbPatchID()];
-    return refCast<const cyclicAMIPolyPatch>(pp);
-}
-
 
 
 inline const CML::vector& CML::cyclicAMIPolyPatch::rotationAxis() const

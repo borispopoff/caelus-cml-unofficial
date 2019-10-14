@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017 OpenFOAM Foundation
+Copyright (C) 2017-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -620,7 +620,7 @@ CML::scalar CML::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
     }
     if (debugTgtFace)
     {
-        writeFaceOBJ(tgtFace, tgtPoints, "target" + std::to_string(tgtFacei));
+        writeFaceOBJ(tgtFace, tgtPoints, "target" + name(tgtFacei));
     }
 
     // Triangulate the faces
@@ -704,12 +704,14 @@ CML::scalar CML::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
                         srcNrm[i+1],
                         tgtTri
                     );
+
                 cutTriList<8> cutTrisTmp;
-                for (label i = 0; i < cutTris.size(); ++ i)
+
+                for (label j = 0; j < cutTris.size(); ++j)
                 {
                     triCut
                     (
-                        cutTris[i],
+                        cutTris[j],
                         cutPlane,
                         cut::noOp(),
                         cut::appendOp<cutTriList<8>>(cutTrisTmp)
@@ -720,7 +722,7 @@ CML::scalar CML::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
                 // Write the triangles resulting from the cut
                 if (debugWrite)
                 {
-                    writeCutTrisVTK(cutTris, "tris" + std::to_string(i + 1));
+                    writeCutTrisVTK(cutTris, "tris" + name(i + 1));
                 }
             }
 
@@ -770,13 +772,13 @@ CML::scalar CML::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
                 writeCutTrisVTK
                 (
                     cutTris,
-                    "target" + std::to_string(tgtFacei) + "_"
-                  + "tris" + std::to_string(writeCutTrisVTKIndex ++)
+                    "target" + name(tgtFacei) + "_"
+                  + "tris" + name(writeCutTrisVTKIndex ++)
                 );
             }
             if (debugWrite)
             {
-                writeCutTrisVTK(cutTris, "tris" + std::to_string(srcN));
+                writeCutTrisVTK(cutTris, "tris" + name(srcN));
 
                 Info << "view triangles then press ENTER to continue ...";
                 getchar();

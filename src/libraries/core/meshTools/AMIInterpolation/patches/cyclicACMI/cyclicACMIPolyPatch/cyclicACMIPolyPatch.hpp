@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2016 OpenFOAM Foundation
+Copyright (C) 2013-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -75,11 +75,7 @@ protected:
     // Protected Member Functions
 
         //- Reset the AMI interpolator
-        virtual void resetAMI
-        (
-            const AMIPatchToPatchInterpolation::interpolationMethod& AMIMethod =
-                AMIPatchToPatchInterpolation::imFaceAreaWeight
-        ) const;
+        virtual void resetAMI() const;
 
         //- Initialise the calculation of the patch geometry
         virtual void initGeometry(PstreamBuffers&);

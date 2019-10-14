@@ -119,7 +119,7 @@ void CML::cyclicAMIPolyPatch::calcTransforms
         FatalErrorInFunction
             << "Patch " << name()
             << " has transform type " << transformTypeNames[transform()]
-            << ", neighbour patch " << nbrPatchName_
+            << ", neighbour patch " << neighbPatchName()
             << " has transform type "
             << neighbPatch().transformTypeNames[neighbPatch().transform()]
             << exit(FatalError);
@@ -319,12 +319,9 @@ void CML::cyclicAMIPolyPatch::calcTransforms
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
-void CML::cyclicAMIPolyPatch::resetAMI
-(
-    const AMIPatchToPatchInterpolation::interpolationMethod& AMIMethod
-) const
+void CML::cyclicAMIPolyPatch::resetAMI() const
 {
     if (owner())
     {
@@ -376,7 +373,7 @@ void CML::cyclicAMIPolyPatch::resetAMI
                 surfPtr(),
                 faceAreaIntersect::tmMesh,
                 AMIRequireMatch_,
-                AMIMethod,
+                AMIMethod_,
                 AMILowWeightCorrection_,
                 AMIReverse_
             )
@@ -479,7 +476,9 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     const label index,
     const polyBoundaryMesh& bm,
     const word& patchType,
-    const transformType transform
+    const transformType transform,
+    const bool AMIRequireMatch,
+    const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod
 )
 :
     coupledPolyPatch(name, size, start, index, bm, patchType, transform),
@@ -492,8 +491,9 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     separationVector_(Zero),
     AMIPtr_(nullptr),
     AMIReverse_(false),
-    AMIRequireMatch_(true),
+    AMIRequireMatch_(AMIRequireMatch),
     AMILowWeightCorrection_(-1.0),
+    AMIMethod_(AMIMethod),
     surfPtr_(nullptr),
     surfDict_(fileName("surface"))
 {
@@ -508,7 +508,9 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     const dictionary& dict,
     const label index,
     const polyBoundaryMesh& bm,
-    const word& patchType
+    const word& patchType,
+    const bool AMIRequireMatch,
+    const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod
 )
 :
     coupledPolyPatch(name, dict, index, bm, patchType),
@@ -521,15 +523,26 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     separationVector_(Zero),
     AMIPtr_(nullptr),
     AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
-    AMIRequireMatch_(true),
+    AMIRequireMatch_(AMIRequireMatch),
     AMILowWeightCorrection_(dict.lookupOrDefault("lowWeightCorrection", -1.0)),
+    AMIMethod_
+    (
+        dict.found("method")
+      ? AMIPatchToPatchInterpolation::wordTointerpolationMethod
+        (
+            dict.lookup("method")
+        )
+      : AMIMethod
+    ),
     surfPtr_(nullptr),
     surfDict_(dict.subOrEmptyDict("surface"))
 {
     if (nbrPatchName_ == name)
     {
-        FatalIOErrorInFunction(dict)
-            << "Neighbour patch name " << nbrPatchName_
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "Neighbour patch name " << nbrPatchName_
             << " cannot be the same as this patch " << name
             << exit(FatalIOError);
     }
@@ -555,8 +568,10 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
             scalar magRot = mag(rotationAxis_);
             if (magRot < SMALL)
             {
-                FatalIOErrorInFunction(dict)
-                    << "Illegal rotationAxis " << rotationAxis_ << endl
+                FatalIOErrorInFunction
+                (
+                    dict
+                )   << "Illegal rotationAxis " << rotationAxis_ << endl
                     << "Please supply a non-zero vector."
                     << exit(FatalIOError);
             }
@@ -598,6 +613,7 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     AMIReverse_(pp.AMIReverse_),
     AMIRequireMatch_(pp.AMIRequireMatch_),
     AMILowWeightCorrection_(pp.AMILowWeightCorrection_),
+    AMIMethod_(pp.AMIMethod_),
     surfPtr_(nullptr),
     surfDict_(pp.surfDict_)
 {
@@ -628,6 +644,7 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     AMIReverse_(pp.AMIReverse_),
     AMIRequireMatch_(pp.AMIRequireMatch_),
     AMILowWeightCorrection_(pp.AMILowWeightCorrection_),
+    AMIMethod_(pp.AMIMethod_),
     surfPtr_(nullptr),
     surfDict_(pp.surfDict_)
 {
@@ -665,6 +682,7 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     AMIReverse_(pp.AMIReverse_),
     AMIRequireMatch_(pp.AMIRequireMatch_),
     AMILowWeightCorrection_(pp.AMILowWeightCorrection_),
+    AMIMethod_(pp.AMIMethod_),
     surfPtr_(nullptr),
     surfDict_(pp.surfDict_)
 {}
@@ -682,12 +700,12 @@ CML::label CML::cyclicAMIPolyPatch::neighbPatchID() const
 {
     if (nbrPatchID_ == -1)
     {
-        nbrPatchID_ = this->boundaryMesh().findPatchID(nbrPatchName_);
+        nbrPatchID_ = this->boundaryMesh().findPatchID(neighbPatchName());
 
         if (nbrPatchID_ == -1)
         {
             FatalErrorInFunction
-                << "Illegal neighbourPatch name " << nbrPatchName_
+                << "Illegal neighbourPatch name " << neighbPatchName()
                 << nl << "Valid patch names are "
                 << this->boundaryMesh().names()
                 << exit(FatalError);
@@ -717,6 +735,13 @@ CML::label CML::cyclicAMIPolyPatch::neighbPatchID() const
 bool CML::cyclicAMIPolyPatch::owner() const
 {
     return index() < neighbPatchID();
+}
+
+
+const CML::cyclicAMIPolyPatch& CML::cyclicAMIPolyPatch::neighbPatch() const
+{
+    const polyPatch& pp = this->boundaryMesh()[neighbPatchID()];
+    return refCast<const cyclicAMIPolyPatch>(pp);
 }
 
 
@@ -976,11 +1001,11 @@ CML::label CML::cyclicAMIPolyPatch::pointFace
     vector nrt(n);
     reverseTransformDirection(nrt, facei);
 
-    label nbrFaceI = -1;
+    label nbrFacei = -1;
 
     if (owner())
     {
-        nbrFaceI = AMI().tgtPointFace
+        nbrFacei = AMI().tgtPointFace
         (
             *this,
             neighbPatch(),
@@ -991,7 +1016,7 @@ CML::label CML::cyclicAMIPolyPatch::pointFace
     }
     else
     {
-        nbrFaceI = neighbPatch().AMI().srcPointFace
+        nbrFacei = neighbPatch().AMI().srcPointFace
         (
             neighbPatch(),
             *this,
@@ -1001,12 +1026,12 @@ CML::label CML::cyclicAMIPolyPatch::pointFace
         );
     }
 
-    if (nbrFaceI >= 0)
+    if (nbrFacei >= 0)
     {
         p = prt;
     }
 
-    return nbrFaceI;
+    return nbrFacei;
 }
 
 
@@ -1063,6 +1088,10 @@ void CML::cyclicAMIPolyPatch::write(Ostream& os) const
         os.writeKeyword("lowWeightCorrection") << AMILowWeightCorrection_
             << token::END_STATEMENT << nl;
     }
+
+    os.writeKeyword("method")
+        << AMIPatchToPatchInterpolation::interpolationMethodToWord(AMIMethod_)
+        << token::END_STATEMENT << nl;
 
     if (!surfDict_.empty())
     {
