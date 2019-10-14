@@ -1,0 +1,136 @@
+/*---------------------------------------------------------------------------*\
+Copyright (C) 2012-2016 OpenFOAM Foundation
+-------------------------------------------------------------------------------
+License
+    This file is part of Caelus.
+
+    Caelus is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Caelus is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Caelus.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "limitTemperature.hpp"
+#include "fvMesh.hpp"
+#include "basicThermo.hpp"
+#include "addToRunTimeSelectionTable.hpp"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace CML
+{
+namespace fv
+{
+    defineTypeNameAndDebug(limitTemperature, 0);
+    addToRunTimeSelectionTable
+    (
+        option,
+        limitTemperature,
+        dictionary
+    );
+}
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+CML::fv::limitTemperature::limitTemperature
+(
+    const word& name,
+    const word& modelType,
+    const dictionary& dict,
+    const fvMesh& mesh
+)
+:
+    cellSetOption(name, modelType, dict, mesh),
+    Tmin_(readScalar(coeffs_.lookup("min"))),
+    Tmax_(readScalar(coeffs_.lookup("max")))
+{
+    // Set the field name to that of the energy field from which the temperature
+    // is obtained
+
+    const basicThermo& thermo =
+        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
+
+    fieldNames_.setSize(1, thermo.he().name());
+
+    applied_.setSize(1, false);
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool CML::fv::limitTemperature::read(const dictionary& dict)
+{
+    if (cellSetOption::read(dict))
+    {
+        coeffs_.lookup("min") >> Tmin_;
+        coeffs_.lookup("max") >> Tmax_;
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+void CML::fv::limitTemperature::correct(volScalarField& he)
+{
+    const basicThermo& thermo =
+        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
+
+    scalarField Tmin(cells_.size(), Tmin_);
+    scalarField Tmax(cells_.size(), Tmax_);
+
+    scalarField heMin(thermo.he(thermo.p(), Tmin, cells_));
+    scalarField heMax(thermo.he(thermo.p(), Tmax, cells_));
+
+    scalarField& heif = he.internalField();
+
+    forAll(cells_, i)
+    {
+        label celli = cells_[i];
+        heif[celli]= max(min(heif[celli], heMax[i]), heMin[i]);
+    }
+
+    // handle boundaries in the case of 'all'
+    if (selectionMode_ == smAll)
+    {
+
+        forAll(he.boundaryField(), patchi)
+        {
+            fvPatchScalarField& hep = he.boundaryField()[patchi];
+
+            if (!hep.fixesValue())
+            {
+                const scalarField& pp = thermo.p().boundaryField()[patchi];
+
+                scalarField Tminp(pp.size(), Tmin_);
+                scalarField Tmaxp(pp.size(), Tmax_);
+
+                scalarField heMinp(thermo.he(pp, Tminp, patchi));
+                scalarField heMaxp(thermo.he(pp, Tmaxp, patchi));
+
+                forAll(hep, facei)
+                {
+                    hep[facei] =
+                        max(min(hep[facei], heMaxp[facei]), heMinp[facei]);
+                }
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //

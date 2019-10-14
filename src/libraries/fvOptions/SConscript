@@ -26,8 +26,12 @@ sources/derived/rotorDiskSource/trimModel/trimModel/trimModel.cpp
 sources/derived/rotorDiskSource/trimModel/trimModel/trimModelNew.cpp
 sources/derived/rotorDiskSource/trimModel/fixed/fixedTrim.cpp
 sources/derived/rotorDiskSource/trimModel/targetCoeff/targetCoeffTrim.cpp
+sources/derived/tabulatedAccelerationSource/tabulatedAccelerationSource.cpp
+sources/derived/tabulatedAccelerationSource/tabulated6DoFAcceleration/tabulated6DoFAcceleration.cpp
 constraints/fixedValueConstraint/fixedValueConstraints.cpp
+constraints/fixedTemperatureConstraint/fixedTemperatureConstraint.cpp
 corrections/limitVelocity/limitVelocity.cpp
+corrections/limitTemperature/limitTemperature.cpp
 """)
 
 caelus_inc = [
