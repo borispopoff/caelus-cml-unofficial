@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -114,8 +114,8 @@ protected:
                 scalarListList& srcWeights,
                 labelListList& tgtAddress,
                 scalarListList& tgtWeights,
-                label& srcFaceI,
-                label& tgtFaceI
+                label& srcFacei,
+                label& tgtFacei
             );
 
             //- Write triangle intersection to OBJ file
@@ -135,7 +135,7 @@ protected:
             void resetTree();
 
             //- Find face on target patch that overlaps source face
-            label findTargetFace(const label srcFaceI) const;
+            label findTargetFace(const label srcFacei) const;
 
             //- Add faces neighbouring facei to the ID list
             void appendNbrFaces
@@ -145,6 +145,9 @@ protected:
                 const DynamicList<label>& visitedFaces,
                 DynamicList<label>& faceIDs
             ) const;
+
+            //- The maximum edge angle that the walk will cross
+            virtual scalar maxWalkAngle() const;
 
 
 public:
@@ -229,8 +232,8 @@ public:
                 scalarListList& srcWeights,
                 labelListList& tgtAddress,
                 scalarListList& tgtWeights,
-                label srcFaceI = -1,
-                label tgtFaceI = -1
+                label srcFacei = -1,
+                label tgtFacei = -1
             ) = 0;
 };
 
@@ -241,24 +244,24 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeAMIMethod(AMIType)                                                \
-                                                                              \
-    typedef AMIMethod<AMIType::sourcePatchType,AMIType::targetPatchType>      \
-        AMIMethod##AMIType;                                                   \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(AMIMethod##AMIType, 0);               \
+#define makeAMIMethod(AMIType)                                                 \
+                                                                               \
+    typedef AMIMethod<AMIType::sourcePatchType,AMIType::targetPatchType>       \
+        AMIMethod##AMIType;                                                    \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(AMIMethod##AMIType, 0);                \
     defineTemplateRunTimeSelectionTable(AMIMethod##AMIType, components);
 
 
-#define makeAMIMethodType(AMIType, Method)                                    \
-                                                                              \
-    typedef Method<AMIType::sourcePatchType,AMIType::targetPatchType>         \
-        Method##AMIType;                                                      \
-                                                                              \
-    defineNamedTemplateTypeNameAndDebug(Method##AMIType, 0);                  \
-                                                                              \
-    AMIMethod<AMIType::sourcePatchType,AMIType::targetPatchType>::            \
-        addcomponentsConstructorToTable<Method##AMIType>                      \
+#define makeAMIMethodType(AMIType, Method)                                     \
+                                                                               \
+    typedef Method<AMIType::sourcePatchType,AMIType::targetPatchType>          \
+        Method##AMIType;                                                       \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(Method##AMIType, 0);                   \
+                                                                               \
+    AMIMethod<AMIType::sourcePatchType,AMIType::targetPatchType>::             \
+        addcomponentsConstructorToTable<Method##AMIType>                       \
         add##Method##AMIType##ConstructorToTable_;
 
 
@@ -325,8 +328,8 @@ bool CML::AMIMethod<SourcePatch, TargetPatch>::initialise
     scalarListList& srcWeights,
     labelListList& tgtAddress,
     scalarListList& tgtWeights,
-    label& srcFaceI,
-    label& tgtFaceI
+    label& srcFacei,
+    label& tgtFacei
 )
 {
     checkPatches();
@@ -355,17 +358,17 @@ bool CML::AMIMethod<SourcePatch, TargetPatch>::initialise
     resetTree();
 
     // find initial face match using brute force/octree search
-    if ((srcFaceI == -1) || (tgtFaceI == -1))
+    if ((srcFacei == -1) || (tgtFacei == -1))
     {
-        srcFaceI = 0;
-        tgtFaceI = 0;
+        srcFacei = 0;
+        tgtFacei = 0;
         bool foundFace = false;
         forAll(srcPatch_, facei)
         {
-            tgtFaceI = findTargetFace(facei);
-            if (tgtFaceI >= 0)
+            tgtFacei = findTargetFace(facei);
+            if (tgtFacei >= 0)
             {
-                srcFaceI = facei;
+                srcFacei = facei;
                 foundFace = true;
                 break;
             }
@@ -386,7 +389,7 @@ bool CML::AMIMethod<SourcePatch, TargetPatch>::initialise
 
     if (debug)
     {
-        Pout<< "AMI: initial target face = " << tgtFaceI << endl;
+        Pout<< "AMI: initial target face = " << tgtFacei << endl;
     }
 
     return true;
@@ -479,21 +482,21 @@ void CML::AMIMethod<SourcePatch, TargetPatch>::resetTree()
 template<class SourcePatch, class TargetPatch>
 CML::label CML::AMIMethod<SourcePatch, TargetPatch>::findTargetFace
 (
-    const label srcFaceI
+    const label srcFacei
 ) const
 {
-    label targetFaceI = -1;
+    label targetFacei = -1;
 
     const pointField& srcPts = srcPatch_.points();
-    const face& srcFace = srcPatch_[srcFaceI];
+    const face& srcFace = srcPatch_[srcFacei];
     const point srcPt = srcFace.centre(srcPts);
-    const scalar srcFaceArea = srcMagSf_[srcFaceI];
+    const scalar srcFaceArea = srcMagSf_[srcFacei];
 
     pointIndexHit sample = treePtr_->findNearest(srcPt, 10.0*srcFaceArea);
 
     if (sample.hit())
     {
-        targetFaceI = sample.index();
+        targetFacei = sample.index();
 
         if (debug)
         {
@@ -503,7 +506,7 @@ CML::label CML::AMIMethod<SourcePatch, TargetPatch>::findTargetFace
         }
     }
 
-    return targetFaceI;
+    return targetFacei;
 }
 
 
@@ -521,11 +524,11 @@ void CML::AMIMethod<SourcePatch, TargetPatch>::appendNbrFaces
     // filter out faces already visited from face neighbours
     forAll(nbrFaces, i)
     {
-        label nbrFaceI = nbrFaces[i];
+        label nbrFacei = nbrFaces[i];
         bool valid = true;
         forAll(visitedFaces, j)
         {
-            if (nbrFaceI == visitedFaces[j])
+            if (nbrFacei == visitedFaces[j])
             {
                 valid = false;
                 break;
@@ -536,7 +539,7 @@ void CML::AMIMethod<SourcePatch, TargetPatch>::appendNbrFaces
         {
             forAll(faceIDs, j)
             {
-                if (nbrFaceI == faceIDs[j])
+                if (nbrFacei == faceIDs[j])
                 {
                     valid = false;
                     break;
@@ -548,16 +551,23 @@ void CML::AMIMethod<SourcePatch, TargetPatch>::appendNbrFaces
         if (valid)
         {
             const vector& n1 = patch.faceNormals()[facei];
-            const vector& n2 = patch.faceNormals()[nbrFaceI];
+            const vector& n2 = patch.faceNormals()[nbrFacei];
 
             scalar cosI = n1 & n2;
 
-            if (cosI > CML::cos(degToRad(89.0)))
+            if (cosI > cos(maxWalkAngle()))
             {
-                faceIDs.append(nbrFaceI);
+                faceIDs.append(nbrFacei);
             }
         }
     }
+}
+
+
+template<class SourcePatch, class TargetPatch>
+CML::scalar CML::AMIMethod<SourcePatch, TargetPatch>::maxWalkAngle() const
+{
+    return degToRad(89);
 }
 
 
