@@ -25,6 +25,7 @@ License
 #include "mapNearestAMI.hpp"
 #include "faceAreaWeightAMI.hpp"
 #include "partialFaceAreaWeightAMI.hpp"
+#include "sweptFaceAreaWeightAMI.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,6 +37,7 @@ namespace CML
     makeAMIMethodType(AMIPatchToPatchInterpolation, mapNearestAMI);
     makeAMIMethodType(AMIPatchToPatchInterpolation, faceAreaWeightAMI);
     makeAMIMethodType(AMIPatchToPatchInterpolation, partialFaceAreaWeightAMI);
+    makeAMIMethodType(AMIPatchToPatchInterpolation, sweptFaceAreaWeightAMI);
 }
 
 

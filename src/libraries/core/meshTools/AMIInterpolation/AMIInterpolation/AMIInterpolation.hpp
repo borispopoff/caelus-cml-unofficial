@@ -84,7 +84,8 @@ public:
             imDirect,
             imMapNearest,
             imFaceAreaWeight,
-            imPartialFaceAreaWeight
+            imPartialFaceAreaWeight,
+            imSweptFaceAreaWeight
         };
 
         //- Convert interpolationMethod to word representation
@@ -752,6 +753,11 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolationMethodToWord
             method = "partialFaceAreaWeightAMI";
             break;
         }
+        case imSweptFaceAreaWeight:
+        {
+            method = "sweptFaceAreaWeightAMI";
+            break;
+        }
         default:
         {
             FatalErrorInFunction
@@ -781,7 +787,8 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::wordTointerpolationMethod
                 "directAMI "
                 "mapNearestAMI "
                 "faceAreaWeightAMI "
-                "partialFaceAreaWeightAMI"
+                "partialFaceAreaWeightAMI "
+                "sweptFaceAreaWeightAMI"
             ")"
         )()
     );
@@ -801,6 +808,10 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::wordTointerpolationMethod
     else if (im == "partialFaceAreaWeightAMI")
     {
         method = imPartialFaceAreaWeight;
+    }
+    else if (im == "sweptFaceAreaWeightAMI")
+    {
+        method = imSweptFaceAreaWeight;
     }
     else
     {
@@ -1581,16 +1592,8 @@ void CML::AMIInterpolation<SourcePatch, TargetPatch>::update
         << endl;
 
     // Calculate face areas
-    srcMagSf_.setSize(srcPatch.size());
-    forAll(srcMagSf_, facei)
-    {
-        srcMagSf_[facei] = srcPatch[facei].mag(srcPatch.points());
-    }
-    tgtMagSf_.setSize(tgtPatch.size());
-    forAll(tgtMagSf_, facei)
-    {
-        tgtMagSf_[facei] = tgtPatch[facei].mag(tgtPatch.points());
-    }
+    srcMagSf_ = patchMagSf(srcPatch, triMode_);
+    tgtMagSf_ = patchMagSf(tgtPatch, triMode_);
 
     // Calculate if patches present on multiple processors
     singlePatchProc_ = calcDistribution(srcPatch, tgtPatch);
@@ -2158,8 +2161,7 @@ const
         const label srcFacei = addr[i];
         const face& f = srcPatch[srcFacei];
 
-        pointHit ray =
-            f.ray(tgtPoint, n, srcPoints);
+        pointHit ray = f.ray(tgtPoint, n, srcPoints);
 
         if (ray.hit())
         {
@@ -2210,7 +2212,7 @@ const
 
         pointHit ray = f.ray(srcPoint, n, tgtPoints);
 
-        if (ray.hit())
+        if (ray.hit() || ray.eligibleMiss())
         {
             // srcPoint = ray.rawPoint();
             return tgtFacei;
