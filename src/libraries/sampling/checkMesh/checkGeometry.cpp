@@ -479,6 +479,102 @@ bool CML::checkCoupledPoints
 }
 
 
+void CML::writeAMIWeightsSum
+(
+    const polyMesh& mesh,
+    const primitivePatch& patch,
+    const scalarField& wghtSum,
+    const fileName& file
+)
+{
+    // Collect geometry
+    labelList pointToGlobal;
+    labelList uniqueMeshPointLabels;
+    autoPtr<globalIndex> globalPoints;
+    autoPtr<globalIndex> globalFaces;
+    faceList mergedFaces;
+    pointField mergedPoints;
+    CML::PatchTools::gatherAndMerge
+    (
+        mesh,
+        patch.localFaces(),
+        patch.meshPoints(),
+        patch.meshPointMap(),
+
+        pointToGlobal,
+        uniqueMeshPointLabels,
+        globalPoints,
+        globalFaces,
+
+        mergedFaces,
+        mergedPoints
+    );
+
+    // Collect field
+    scalarField mergedWeights;
+    globalFaces().gather
+    (
+        labelList(UPstream::procIDs()),
+        wghtSum,
+        mergedWeights
+    );
+
+    // Write the surface
+    if (Pstream::master())
+    {
+        vtkSurfaceWriter().write
+        (
+            file.path(),
+            file.name(),
+            mergedPoints,
+            mergedFaces,
+            "weightsSum",
+            mergedWeights,
+            false
+        );
+    }
+}
+
+
+void CML::writeAMIWeightsSums(const polyMesh& mesh)
+{
+    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+    const word tmName(mesh.time().timeName());
+
+    forAll(pbm, patchi)
+    {
+        if (isA<cyclicAMIPolyPatch>(pbm[patchi]))
+        {
+            const cyclicAMIPolyPatch& cpp =
+                refCast<const cyclicAMIPolyPatch>(pbm[patchi]);
+
+            if (cpp.owner())
+            {
+                Info<< "Calculating AMI weights between owner patch: "
+                    << cpp.name() << " and neighbour patch: "
+                    << cpp.neighbPatch().name() << endl;
+
+                writeAMIWeightsSum
+                (
+                    mesh,
+                    cpp,
+                    cpp.weightsSum(),
+                    fileName("postProcessing") / "src_" + tmName
+                );
+                writeAMIWeightsSum
+                (
+                    mesh,
+                    cpp.neighbPatch(),
+                    cpp.neighbWeightsSum(),
+                    fileName("postProcessing") / "tgt_" + tmName
+                );
+            }
+        }
+    }
+}
+
+
 CML::label CML::checkGeometry
 (
     const polyMesh& mesh,
@@ -725,6 +821,10 @@ CML::label CML::checkGeometry
                     << faces.name() << endl;
                 faces.instance() = mesh.pointsInstance();
                 faces.write();
+                if (surfWriter.valid())
+                {
+                    mergeAndWrite(surfWriter(), faces);
+                }
             }
         }
     }
@@ -754,6 +854,10 @@ CML::label CML::checkGeometry
                     << "decomposition tets to set " << faces.name() << endl;
                 faces.instance() = mesh.pointsInstance();
                 faces.write();
+                if (surfWriter.valid())
+                {
+                    mergeAndWrite(surfWriter(), faces);
+                }
             }
         }
     }
@@ -937,134 +1041,7 @@ CML::label CML::checkGeometry
 
     if (allGeometry)
     {
-        const polyBoundaryMesh& pbm = mesh.boundaryMesh();
-
-        const word tmName(mesh.time().timeName());
-        const word procAndTime(CML::name(Pstream::myProcNo()) + "_" + tmName);
-
-        autoPtr<surfaceWriter> patchWriter;
-        if (!surfWriter.valid())
-        {
-            patchWriter.reset(new vtkSurfaceWriter());
-        }
-        const surfaceWriter& wr =
-        (
-            surfWriter.valid()
-          ? surfWriter()
-          : patchWriter()
-        );
-
-        forAll(pbm, patchi)
-        {
-            if (isA<cyclicAMIPolyPatch>(pbm[patchi]))
-            {
-                const cyclicAMIPolyPatch& cpp =
-                    refCast<const cyclicAMIPolyPatch>(pbm[patchi]);
-
-                if (cpp.owner())
-                {
-                    Info<< "Calculating AMI weights between owner patch: "
-                        << cpp.name() << " and neighbour patch: "
-                        << cpp.neighbPatch().name() << endl;
-
-                    const AMIPatchToPatchInterpolation& ami =
-                        cpp.AMI();
-
-                    {
-                        // Collect geometry
-                        labelList pointToGlobal;
-                        labelList uniqueMeshPointLabels;
-                        autoPtr<globalIndex> globalPoints;
-                        autoPtr<globalIndex> globalFaces;
-                        faceList mergedFaces;
-                        pointField mergedPoints;
-                        CML::PatchTools::gatherAndMerge
-                        (
-                            mesh,
-                            cpp.localFaces(),
-                            cpp.meshPoints(),
-                            cpp.meshPointMap(),
-
-                            pointToGlobal,
-                            uniqueMeshPointLabels,
-                            globalPoints,
-                            globalFaces,
-
-                            mergedFaces,
-                            mergedPoints
-                        );
-                        // Collect field
-                        scalarField mergedWeights;
-                        globalFaces().gather
-                        (
-                            labelList(UPstream::procIDs()),
-                            ami.srcWeightsSum(),
-                            mergedWeights
-                        );
-
-                        if (Pstream::master())
-                        {
-                            wr.write
-                            (
-                                "postProcessing",
-                                "src_" + tmName,
-                                mergedPoints,
-                                mergedFaces,
-                                "weightsSum",
-                                mergedWeights,
-                                false
-                            );
-                        }
-                    }
-                    {
-                        // Collect geometry
-                        labelList pointToGlobal;
-                        labelList uniqueMeshPointLabels;
-                        autoPtr<globalIndex> globalPoints;
-                        autoPtr<globalIndex> globalFaces;
-                        faceList mergedFaces;
-                        pointField mergedPoints;
-                        CML::PatchTools::gatherAndMerge
-                        (
-                            mesh,
-                            cpp.neighbPatch().localFaces(),
-                            cpp.neighbPatch().meshPoints(),
-                            cpp.neighbPatch().meshPointMap(),
-
-                            pointToGlobal,
-                            uniqueMeshPointLabels,
-                            globalPoints,
-                            globalFaces,
-
-                            mergedFaces,
-                            mergedPoints
-                        );
-                        // Collect field
-                        scalarField mergedWeights;
-                        globalFaces().gather
-                        (
-                            labelList(UPstream::procIDs()),
-                            ami.tgtWeightsSum(),
-                            mergedWeights
-                        );
-
-                        if (Pstream::master())
-                        {
-                            wr.write
-                            (
-                                "postProcessing",
-                                "tgt_" + tmName,
-                                mergedPoints,
-                                mergedFaces,
-                                "weightsSum",
-                                mergedWeights,
-                                false
-                            );
-                        }
-                    }
-                }
-            }
-        }
+        writeAMIWeightsSums(mesh);
     }
 
     return noFailedChecks;

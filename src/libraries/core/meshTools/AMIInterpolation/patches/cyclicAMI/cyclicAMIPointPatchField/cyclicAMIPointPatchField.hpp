@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -179,7 +179,7 @@ public:
 
         // Cyclic AMI coupled interface functions
 
-            //- Does the patch field perform the transfromation
+            //- Does the patch field perform the transformation
             virtual bool doTransform() const
             {
                 return
@@ -262,8 +262,10 @@ CML::cyclicAMIPointPatchField<Type>::cyclicAMIPointPatchField
 {
     if (!isType<cyclicAMIPointPatch>(p))
     {
-        FatalIOErrorInFunction(dict)
-            << "patch " << this->patch().index() << " not cyclicAMI type. "
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "patch " << this->patch().index() << " not cyclicAMI type. "
             << "Patch type = " << p.type()
             << exit(FatalIOError);
     }

@@ -45,7 +45,7 @@ Description
 
     The surface is, in general, not flat. Any deviation between the two end
     normals generates expansion, contraction, and twist in the surface. The
-    surface connects with surfaces eminating from connected edges along the end
+    surface connects with surfaces emanating from connected edges along the end
     normals. This is what makes the projection fill space and generate
     consistent overlaps between neighbouring faces.
 
@@ -192,7 +192,7 @@ private:
         //- Convert the source tris and normals to a projection. Most of the
         //  time this does nothing, but if some of the normals point in the
         //  reverse direction the projection will be reduced to span only the
-        //  region in which the projection points forward throught the target
+        //  region in which the projection points forward through the target
         //  plane. Returns the number of edges in the projection (0, 3 or 4).
         label getSourceProjection
         (

@@ -65,8 +65,8 @@ private:
                 labelList& srcTgtSeed,
                 DynamicList<label>& srcSeeds,
                 DynamicList<label>& nonOverlapFaces,
-                label& srcFaceI,
-                label& tgtFaceI
+                label& srcFacei,
+                label& tgtFacei
             ) const;
 
             //- Restart the advancing front - typically happens for
@@ -75,8 +75,8 @@ private:
             (
                 labelList& mapFlag,
                 DynamicList<label>& nonOverlapFaces,
-                label& srcFaceI,
-                label& tgtFaceI
+                label& srcFacei,
+                label& tgtFacei
             ) const;
 
 
@@ -85,8 +85,8 @@ private:
             //- Area of intersection between source and target faces
             scalar interArea
             (
-                const label srcFaceI,
-                const label tgtFaceI
+                const label srcFacei,
+                const label tgtFacei
             ) const;
 
 
@@ -126,8 +126,8 @@ public:
                 scalarListList& srcWeights,
                 labelListList& tgtAddress,
                 scalarListList& tgtWeights,
-                label srcFaceI = -1,
-                label tgtFaceI = -1
+                label srcFacei = -1,
+                label tgtFacei = -1
             );
 };
 
@@ -422,15 +422,13 @@ void CML::directAMI<SourcePatch, TargetPatch>::calculate
     // transfer data to persistent storage
     forAll(srcAddr, i)
     {
-        scalar magSf = this->srcMagSf_[i];
         srcAddress[i].transfer(srcAddr[i]);
-        srcWeights[i] = scalarList(1, magSf);
+        srcWeights[i] = scalarList(1, 1.0);
     }
     forAll(tgtAddr, i)
     {
-        scalar magSf = this->tgtMagSf_[i];
         tgtAddress[i].transfer(tgtAddr[i]);
-        tgtWeights[i] = scalarList(1, magSf);
+        tgtWeights[i] = scalarList(1, 1.0);
     }
 }
 

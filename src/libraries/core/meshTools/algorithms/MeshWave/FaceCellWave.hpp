@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,6 +56,7 @@ namespace CML
 // Forward declaration of classes
 class polyMesh;
 class polyPatch;
+class vectorTensorTransform;
 
 /*---------------------------------------------------------------------------*\
                         Class FaceCellWaveName Declaration
@@ -85,6 +86,8 @@ private:
 
 
 protected:
+
+    // Protected data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -224,6 +227,14 @@ protected:
                 List<Type>& faceInfo
             );
 
+            //- Apply transformation to Type
+            void transform
+            (
+                const vectorTensorTransform& trans,
+                const label nFaces,
+                List<Type>& faceInfo
+            );
+
             //- Merge data from across processor boundaries
             void handleProcPatches();
 
@@ -309,7 +320,6 @@ public:
         );
 
 
-
     //- Destructor
     virtual ~FaceCellWave()
     {}
@@ -375,7 +385,6 @@ public:
             //- Iterate until no changes or maxIter reached.  Returns actual
             //  number of iterations.
             virtual label iterate(const label maxIter);
-
 };
 
 
@@ -846,6 +855,26 @@ void CML::FaceCellWave<Type, TrackingData>::transform
 
 
 template<class Type, class TrackingData>
+void CML::FaceCellWave<Type, TrackingData>::transform
+(
+    const vectorTensorTransform& trans,
+    const label nFaces,
+    List<Type>& faceInfo
+)
+{
+    // Transform. Implementation referred to Type
+
+    if (trans.hasR())
+    {
+        for (label facei = 0; facei < nFaces; facei++)
+        {
+            faceInfo[facei].transform(mesh_, trans.R(), td_);
+        }
+    }
+}
+
+
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::offset
 (
     const polyPatch&,
@@ -1112,18 +1141,51 @@ void CML::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
                 // Transfer sendInfo to cycPatch
                 combine<Type, TrackingData> cmb(*this, cycPatch);
 
+                List<Type> defVals;
                 if (cycPatch.applyLowWeightCorrection())
                 {
-                    List<Type> defVals
-                    (
-                        cycPatch.patchInternalList(allCellInfo_)
-                    );
+                    defVals = cycPatch.patchInternalList(allCellInfo_);
+                }
 
-                    cycPatch.interpolate(sendInfo, cmb, receiveInfo, defVals);
+                if (cycPatch.owner())
+                {
+                    forAll(cycPatch.AMIs(), i)
+                    {
+                        List<Type> sendInfoT(sendInfo);
+                        transform
+                        (
+                            cycPatch.AMITransforms()[i],
+                            sendInfoT.size(),
+                            sendInfoT
+                        );
+                        cycPatch.AMIs()[i].interpolateToSource
+                        (
+                            sendInfoT,
+                            cmb,
+                            receiveInfo,
+                            defVals
+                        );
+                    }
                 }
                 else
                 {
-                    cycPatch.interpolate(sendInfo, cmb, receiveInfo);
+                    forAll(cycPatch.neighbPatch().AMIs(), i)
+                    {
+                        List<Type> sendInfoT(sendInfo);
+                        transform
+                        (
+                            cycPatch.neighbPatch().AMITransforms()[i],
+                            sendInfoT.size(),
+                            sendInfoT
+                        );
+                        cycPatch.neighbPatch().AMIs()[i].interpolateToTarget
+                        (
+                            sendInfoT,
+                            cmb,
+                            receiveInfo,
+                            defVals
+                        );
+                    }
                 }
             }
 

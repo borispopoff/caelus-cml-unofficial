@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -34,18 +34,6 @@ defineTypeNameAndDebug(cyclicACMILduInterfaceField, 0);
 
 CML::cyclicACMILduInterfaceField::~cyclicACMILduInterfaceField()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void CML::cyclicACMILduInterfaceField::transformCoupleField
-(
-    scalarField& f,
-    const direction cmpt
-) const
-{
-    cyclicAMILduInterfaceField::transformCoupleField(f, cmpt);
-}
 
 
 // ************************************************************************* //

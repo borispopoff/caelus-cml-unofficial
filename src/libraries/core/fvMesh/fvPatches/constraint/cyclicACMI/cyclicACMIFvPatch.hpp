@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2016 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -125,15 +125,26 @@ public:
                 return this->boundaryMesh()[nonOverlapPatchID()];
             }
 
-            //- Return a reference to the AMI interpolator
-            virtual const AMIPatchToPatchInterpolation& AMI() const
+            //- Return a reference to the AMI interpolators
+            virtual const PtrList<AMIPatchToPatchInterpolation>& AMIs() const
             {
-                const AMIPatchToPatchInterpolation& AMI =
-                    cyclicACMIPolyPatch_.AMI();
+                const PtrList<AMIPatchToPatchInterpolation>& AMIs =
+                    cyclicACMIPolyPatch_.AMIs();
 
                 updateAreas();
 
-                return AMI;
+                return AMIs;
+            }
+
+            //- Return a reference to the AMI transformations
+            virtual const List<vectorTensorTransform>& AMITransforms() const
+            {
+                const List<vectorTensorTransform>& AMITransforms =
+                    cyclicACMIPolyPatch_.AMITransforms();
+
+                updateAreas();
+
+                return AMITransforms;
             }
 
             //- Are the cyclic planes parallel

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -140,13 +140,6 @@ CML::tmp<CML::vectorField> CML::cyclicAMIFvPatch::delta() const
         return coupledFvPatch::delta();
     }
 }
-
-
-CML::tmp<CML::vectorField> CML::cyclicAMIFvPatch::deltaFull() const
-{
-    return cyclicAMIFvPatch::delta();
-}
-
 
 
 CML::tmp<CML::labelField> CML::cyclicAMIFvPatch::interfaceInternalField

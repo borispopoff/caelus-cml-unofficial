@@ -8,9 +8,7 @@ target = 'checkMesh'
 sources = Split("""
 checkMesh.cpp
 checkMeshQuality.cpp
-checkGeometry.cpp
 checkTopology.cpp
-checkTools.cpp
 writeFields.cpp
 """)
 

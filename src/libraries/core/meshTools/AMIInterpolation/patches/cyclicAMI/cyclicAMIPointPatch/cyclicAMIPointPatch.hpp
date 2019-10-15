@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -107,13 +107,6 @@ public:
 
 
     // Member Functions
-
-        //- Is patch 'coupled'. Note that on AMI the geometry is not
-        //  coupled but the fields are!
-        virtual bool coupled() const
-        {
-            return false;
-        }
 
         //- Return the constraint type this pointPatch implements.
         virtual const word& constraintType() const

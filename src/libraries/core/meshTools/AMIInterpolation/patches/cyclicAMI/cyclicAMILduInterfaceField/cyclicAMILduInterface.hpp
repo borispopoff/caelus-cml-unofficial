@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -70,12 +70,19 @@ public:
             //- Return neighbour
             virtual label neighbPatchID() const = 0;
 
+            //- Does this side own the interface?
             virtual bool owner() const = 0;
 
             //- Return processor number
             virtual const cyclicAMILduInterface& neighbPatch() const = 0;
 
-            virtual const AMIPatchToPatchInterpolation& AMI() const = 0;
+            //- Return a reference to the AMI interpolators
+            virtual const PtrList<AMIPatchToPatchInterpolation>&
+                AMIs() const = 0;
+
+            // Return a reference to the AMI transformations
+            virtual const List<vectorTensorTransform>&
+                AMITransforms() const = 0;
 
             //- Return face transformation tensor
             virtual const tensorField& forwardT() const = 0;

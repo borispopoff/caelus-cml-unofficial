@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -62,40 +62,12 @@ public:
 
     //- Destructor
     virtual ~cyclicACMILduInterfaceField();
-
-
-    // Member Functions
-
-        //- Transform given patch field
-        template<class Type>
-        void transformCoupleField(Field<Type>& f) const;
-
-        //- Transform given patch internal field
-        void transformCoupleField
-        (
-            scalarField& psiInternal,
-            const direction cmpt
-        ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "tensorField.hpp"
-
-template<class Type>
-void CML::cyclicACMILduInterfaceField::transformCoupleField
-(
-    Field<Type>& f
-) const
-{
-    cyclicAMILduInterfaceField::transformCoupleField(f);
-}
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

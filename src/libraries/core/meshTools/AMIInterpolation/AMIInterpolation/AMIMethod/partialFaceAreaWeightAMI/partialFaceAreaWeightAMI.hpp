@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -62,8 +62,8 @@ private:
             virtual void setNextFaces
             (
                 label& startSeedI,
-                label& srcFaceI,
-                label& tgtFaceI,
+                label& srcFacei,
+                label& tgtFacei,
                 const boolList& mapFlag,
                 labelList& seedFaces,
                 const DynamicList<label>& visitedFaces,
@@ -113,8 +113,8 @@ public:
                 scalarListList& srcWeights,
                 labelListList& tgtAddress,
                 scalarListList& tgtWeights,
-                label srcFaceI = -1,
-                label tgtFaceI = -1
+                label srcFacei = -1,
+                label tgtFacei = -1
             );
 };
 
@@ -131,8 +131,8 @@ template<class SourcePatch, class TargetPatch>
 void CML::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
 (
     label& startSeedI,
-    label& srcFaceI,
-    label& tgtFaceI,
+    label& srcFacei,
+    label& tgtFacei,
     const boolList& mapFlag,
     labelList& seedFaces,
     const DynamicList<label>& visitedFaces,
@@ -142,8 +142,8 @@ void CML::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
     faceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
     (
         startSeedI,
-        srcFaceI,
-        tgtFaceI,
+        srcFacei,
+        tgtFacei,
         mapFlag,
         seedFaces,
         visitedFaces,
@@ -204,8 +204,8 @@ void CML::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
     scalarListList& srcWeights,
     labelListList& tgtAddress,
     scalarListList& tgtWeights,
-    label srcFaceI,
-    label tgtFaceI
+    label srcFacei,
+    label tgtFacei
 )
 {
     bool ok =
@@ -215,8 +215,8 @@ void CML::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
             srcWeights,
             tgtAddress,
             tgtWeights,
-            srcFaceI,
-            tgtFaceI
+            srcFacei,
+            tgtFacei
         );
 
     if (!ok)
@@ -236,8 +236,8 @@ void CML::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
         srcWght,
         tgtAddr,
         tgtWght,
-        srcFaceI,
-        tgtFaceI
+        srcFacei,
+        tgtFacei
     );
 
     // transfer data to persistent storage

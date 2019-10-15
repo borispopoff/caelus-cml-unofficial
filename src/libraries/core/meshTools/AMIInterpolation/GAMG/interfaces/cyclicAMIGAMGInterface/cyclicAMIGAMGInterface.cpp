@@ -60,7 +60,9 @@ CML::cyclicAMIGAMGInterface::cyclicAMIGAMGInterface
     fineCyclicAMIInterface_
     (
         refCast<const cyclicAMILduInterface>(fineInterface)
-    )
+    ),
+    AMIs_(),
+    AMITransforms_()
 {
     // Construct face agglomeration from cell agglomeration
     {
@@ -148,20 +150,29 @@ CML::cyclicAMIGAMGInterface::cyclicAMIGAMGInterface
             nbrFaceRestrictAddressing.transfer(dynNbrFaceRestrictAddressing);
         }
 
-        amiPtr_.reset
-        (
-            new AMIPatchToPatchInterpolation
+        AMIs_.resize(fineCyclicAMIInterface_.AMIs().size());
+        AMITransforms_.resize(fineCyclicAMIInterface_.AMITransforms().size());
+
+        forAll(AMIs(), i)
+        {
+            AMIs_.set
             (
-                fineCyclicAMIInterface_.AMI(),
-                faceRestrictAddressing_,
-                nbrFaceRestrictAddressing
-            )
-        );
+                i,
+                new AMIPatchToPatchInterpolation
+                (
+                    fineCyclicAMIInterface_.AMIs()[i],
+                    faceRestrictAddressing_,
+                    nbrFaceRestrictAddressing
+                )
+            );
+
+            AMITransforms_[i] = fineCyclicAMIInterface_.AMITransforms()[i];
+        }
     }
 }
 
 
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 CML::cyclicAMIGAMGInterface::~cyclicAMIGAMGInterface()
 {}
@@ -177,6 +188,7 @@ CML::tmp<CML::labelField> CML::cyclicAMIGAMGInterface::internalFieldTransfer
 {
     const cyclicAMIGAMGInterface& nbr =
         dynamic_cast<const cyclicAMIGAMGInterface&>(neighbPatch());
+
     const labelUList& nbrFaceCells = nbr.faceCells();
 
     tmp<labelField> tpnf(new labelField(nbrFaceCells.size()));

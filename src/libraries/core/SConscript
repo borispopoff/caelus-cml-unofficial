@@ -666,8 +666,10 @@ src_core = Split("""
     meshTools/AMIInterpolation/faceAreaIntersect/faceAreaIntersect.cpp
     meshTools/AMIInterpolation/GAMG/interfaces/cyclicAMIGAMGInterface/cyclicAMIGAMGInterface.cpp
     meshTools/AMIInterpolation/GAMG/interfaceFields/cyclicAMIGAMGInterfaceField/cyclicAMIGAMGInterfaceField.cpp
-    meshTools/AMIInterpolation//GAMG/interfaces/cyclicACMIGAMGInterface/cyclicACMIGAMGInterface.cpp
-    meshTools/AMIInterpolation//GAMG/interfaceFields/cyclicACMIGAMGInterfaceField/cyclicACMIGAMGInterfaceField.cpp
+    meshTools/AMIInterpolation/GAMG/interfaces/cyclicACMIGAMGInterface/cyclicACMIGAMGInterface.cpp
+    meshTools/AMIInterpolation/GAMG/interfaceFields/cyclicACMIGAMGInterfaceField/cyclicACMIGAMGInterfaceField.cpp
+    meshTools/AMIInterpolation/GAMG/interfaces/cyclicRepeatAMIGAMGInterface/cyclicRepeatAMIGAMGInterface.cpp
+    meshTools/AMIInterpolation/GAMG/interfaceFields/cyclicRepeatAMIGAMGInterfaceField/cyclicRepeatAMIGAMGInterfaceField.cpp
     meshTools/AMIInterpolation/patches/cyclicAMI/cyclicAMILduInterfaceField/cyclicAMILduInterface.cpp
     meshTools/AMIInterpolation/patches/cyclicAMI/cyclicAMILduInterfaceField/cyclicAMILduInterfaceField.cpp
     meshTools/AMIInterpolation/patches/cyclicAMI/cyclicAMIPolyPatch/cyclicAMIPolyPatch.cpp
@@ -678,6 +680,11 @@ src_core = Split("""
     meshTools/AMIInterpolation/patches/cyclicACMI/cyclicACMIPolyPatch/cyclicACMIPolyPatch.cpp
     meshTools/AMIInterpolation/patches/cyclicACMI/cyclicACMIPointPatch/cyclicACMIPointPatch.cpp
     meshTools/AMIInterpolation/patches/cyclicACMI/cyclicACMIPointPatchField/cyclicACMIPointPatchFields.cpp
+    meshTools/AMIInterpolation/patches/cyclicRepeatAMI/cyclicRepeatAMILduInterfaceField/cyclicRepeatAMILduInterface.cpp
+    meshTools/AMIInterpolation/patches/cyclicRepeatAMI/cyclicRepeatAMILduInterfaceField/cyclicRepeatAMILduInterfaceField.cpp
+    meshTools/AMIInterpolation/patches/cyclicRepeatAMI/cyclicRepeatAMIPolyPatch/cyclicRepeatAMIPolyPatch.cpp
+    meshTools/AMIInterpolation/patches/cyclicRepeatAMI/cyclicRepeatAMIPointPatch/cyclicRepeatAMIPointPatch.cpp
+    meshTools/AMIInterpolation/patches/cyclicRepeatAMI/cyclicRepeatAMIPointPatchField/cyclicRepeatAMIPointPatchFields.cpp
     meshTools/mappedPatches/mappedPolyPatch/mappedPatchBase.cpp
     meshTools/mappedPatches/mappedPolyPatch/mappedPolyPatch.cpp
     meshTools/mappedPatches/mappedPolyPatch/mappedWallPolyPatch.cpp
@@ -696,6 +703,7 @@ src_core = Split("""
     fvMesh/fvPatches/constraint/cyclic/cyclicFvPatch.cpp
     fvMesh/fvPatches/constraint/cyclicAMI/cyclicAMIFvPatch.cpp
     fvMesh/fvPatches/constraint/cyclicACMI/cyclicACMIFvPatch.cpp
+    fvMesh/fvPatches/constraint/cyclicRepeatAMI/cyclicRepeatAMIFvPatch.cpp
     fvMesh/fvPatches/constraint/cyclicSlip/cyclicSlipFvPatch.cpp
     fvMesh/fvPatches/constraint/empty/emptyFvPatch.cpp
     fvMesh/fvPatches/constraint/nonuniformTransformCyclic/nonuniformTransformCyclicFvPatch.cpp
@@ -758,6 +766,7 @@ src_core = Split("""
     fields/fvPatchFields/constraint/cyclic/cyclicFvPatchFields.cpp
     fields/fvPatchFields/constraint/cyclicAMI/cyclicAMIFvPatchFields.cpp
     fields/fvPatchFields/constraint/cyclicACMI/cyclicACMIFvPatchFields.cpp
+    fields/fvPatchFields/constraint/cyclicRepeatAMI/cyclicRepeatAMIFvPatchFields.cpp
     fields/fvPatchFields/constraint/cyclicSlip/cyclicSlipFvPatchFields.cpp
     fields/fvPatchFields/constraint/empty/emptyFvPatchFields.cpp
     fields/fvPatchFields/constraint/jumpCyclic/jumpCyclicFvPatchFields.cpp
@@ -820,6 +829,7 @@ src_core = Split("""
     fields/fvsPatchFields/constraint/cyclic/cyclicFvsPatchFields.cpp
     fields/fvsPatchFields/constraint/cyclicAMI/cyclicAMIFvsPatchFields.cpp
     fields/fvsPatchFields/constraint/cyclicACMI/cyclicACMIFvsPatchFields.cpp
+    fields/fvsPatchFields/constraint/cyclicRepeatAMI/cyclicRepeatAMIFvsPatchFields.cpp
     fields/fvsPatchFields/constraint/cyclicSlip/cyclicSlipFvsPatchFields.cpp
     fields/fvsPatchFields/constraint/empty/emptyFvsPatchFields.cpp
     fields/fvsPatchFields/constraint/nonuniformTransformCyclic/nonuniformTransformCyclicFvsPatchFields.cpp

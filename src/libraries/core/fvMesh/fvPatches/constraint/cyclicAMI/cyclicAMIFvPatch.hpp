@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -110,10 +110,16 @@ public:
                 );
             }
 
-            //- Return a reference to the AMI interpolator
-            virtual const AMIPatchToPatchInterpolation& AMI() const
+            //- Return a reference to the AMI interpolators
+            virtual const PtrList<AMIPatchToPatchInterpolation>& AMIs() const
             {
-                return cyclicAMIPolyPatch_.AMI();
+                return cyclicAMIPolyPatch_.AMIs();
+            }
+
+            //- Return a reference to the AMI transforms
+            virtual const List<vectorTensorTransform>& AMITransforms() const
+            {
+                return cyclicAMIPolyPatch_.AMITransforms();
             }
 
             //- Return true if applying the low weight correction
@@ -121,7 +127,6 @@ public:
             {
                 return cyclicAMIPolyPatch_.applyLowWeightCorrection();
             }
-
 
             //- Are the cyclic planes parallel
             virtual bool parallel() const
@@ -156,9 +161,6 @@ public:
 
             //- Return delta (P to N) vectors across coupled patch
             virtual tmp<vectorField> delta() const;
-
-            //- Return delta (P to N) vectors across coupled patch
-            virtual tmp<vectorField> deltaFull() const;
 
             template<class Type>
             tmp<Field<Type>> interpolate

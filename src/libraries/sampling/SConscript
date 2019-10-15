@@ -6,6 +6,8 @@ Import('env')
 target = 'sampling'
 
 sources = Split("""
+checkMesh/checkGeometry.cpp
+checkMesh/checkTools.cpp
 probes/probes.cpp
 probes/patchProbes.cpp
 probes/probesGrouping.cpp
