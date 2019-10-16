@@ -1127,8 +1127,8 @@ CML::labelPair CML::cyclicAMIPolyPatch::pointAMIAndFace
             const label nbrFacei =
                 neighbPatch().AMIs()[i].srcPointFace
                 (
-                    *this,
                     neighbPatch(),
+                    *this,
                     ntt,
                     facei,
                     ptt

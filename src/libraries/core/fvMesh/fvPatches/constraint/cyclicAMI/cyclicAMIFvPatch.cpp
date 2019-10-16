@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -33,26 +33,24 @@ namespace CML
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-bool CML::cyclicAMIFvPatch::coupled() const
+CML::tmp<CML::scalarField> CML::cyclicAMIFvPatch::deltan() const
 {
-    return Pstream::parRun() || (this->size() && neighbFvPatch().size());
+    return nf() & coupledFvPatch::delta();
 }
 
 
-void CML::cyclicAMIFvPatch::makeWeights(scalarField& w) const
+CML::tmp<CML::scalarField> CML::cyclicAMIFvPatch::nbrDeltan() const
 {
     if (coupled())
     {
         const cyclicAMIFvPatch& nbrPatch = neighbFvPatch();
 
-        const scalarField deltas(nf() & coupledFvPatch::delta());
-
-        tmp<scalarField> tnbrDeltas;
+        tmp<scalarField> tnbrDeltan;
         if (applyLowWeightCorrection())
         {
-            tnbrDeltas =
+            tnbrDeltan =
                 interpolate
                 (
                     nbrPatch.nf() & nbrPatch.coupledFvPatch::delta(),
@@ -61,16 +59,30 @@ void CML::cyclicAMIFvPatch::makeWeights(scalarField& w) const
         }
         else
         {
-            tnbrDeltas =
+            tnbrDeltan =
                 interpolate(nbrPatch.nf() & nbrPatch.coupledFvPatch::delta());
         }
 
-        const scalarField& nbrDeltas = tnbrDeltas();
+        return tnbrDeltan;
+    }
+    else
+    {
+        return tmp<scalarField>();
+    }
+}
 
-        forAll(deltas, facei)
+
+void CML::cyclicAMIFvPatch::makeWeights(scalarField& w) const
+{
+    if (coupled())
+    {
+        const scalarField deltan(this->deltan());
+        const scalarField nbrDeltan(this->nbrDeltan());
+
+        forAll(deltan, facei)
         {
-            scalar di = deltas[facei];
-            scalar dni = nbrDeltas[facei];
+            scalar di = deltan[facei];
+            scalar dni = nbrDeltan[facei];
 
             w[facei] = dni/(di + dni);
         }
@@ -80,6 +92,14 @@ void CML::cyclicAMIFvPatch::makeWeights(scalarField& w) const
         // Behave as uncoupled patch
         fvPatch::makeWeights(w);
     }
+}
+
+
+
+
+bool CML::cyclicAMIFvPatch::coupled() const
+{
+    return Pstream::parRun() || (this->size() && neighbFvPatch().size());
 }
 
 

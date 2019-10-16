@@ -40,7 +40,7 @@ Note
     patch is transformed to the neighbour patch, the outer perimiter of each
     patch should be identical (or very similar).
 
-SeeAlso
+See also
     CML::AMIInterpolation
 
 
@@ -72,16 +72,6 @@ class cyclicAMIFvPatchField
 
         //- Local reference cast into the cyclic patch
         const cyclicAMIFvPatch& cyclicAMIPatch_;
-
-
-    // Private Member Functions
-
-        //- Return neighbour side field given internal fields
-        template<class Type2>
-        tmp<Field<Type2>> neighbourSideField
-        (
-            const Field<Type2>&
-        ) const;
 
 
 public:

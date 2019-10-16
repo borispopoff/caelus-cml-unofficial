@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -31,7 +31,7 @@ SourceFiles
 #ifndef cyclicACMIFvsPatchField_H
 #define cyclicACMIFvsPatchField_H
 
-#include "coupledFvsPatchField.hpp"
+#include "cyclicAMIFvsPatchField.hpp"
 #include "cyclicACMIFvPatch.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,14 +46,8 @@ namespace CML
 template<class Type>
 class cyclicACMIFvsPatchField
 :
-    public coupledFvsPatchField<Type>
+    public cyclicAMIFvsPatchField<Type>
 {
-    // Private data
-
-        //- Local reference cast into the cyclic patch
-        const cyclicACMIFvPatch& cyclicACMIPatch_;
-
-
 public:
 
     //- Runtime type information
@@ -62,35 +56,8 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        cyclicACMIFvsPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&
-        );
-
-        //- Construct from patch, internal field and dictionary
-        cyclicACMIFvsPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&,
-            const dictionary&
-        );
-
-        //- Construct by mapping given cyclicACMIFvsPatchField onto a new patch
-        cyclicACMIFvsPatchField
-        (
-            const cyclicACMIFvsPatchField<Type>&,
-            const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&,
-            const fvPatchFieldMapper&
-        );
-
-        //- Construct as copy
-        cyclicACMIFvsPatchField
-        (
-            const cyclicACMIFvsPatchField<Type>&
-        );
+        //- Inherit parent constructors
+        using cyclicAMIFvsPatchField<Type>::cyclicAMIFvsPatchField;
 
         //- Construct and return a clone
         virtual tmp<fvsPatchField<Type>> clone() const
@@ -100,13 +67,6 @@ public:
                 new cyclicACMIFvsPatchField<Type>(*this)
             );
         }
-
-        //- Construct as copy setting internal field reference
-        cyclicACMIFvsPatchField
-        (
-            const cyclicACMIFvsPatchField<Type>&,
-            const DimensionedField<Type, surfaceMesh>&
-        );
 
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvsPatchField<Type>> clone
@@ -119,122 +79,10 @@ public:
                 new cyclicACMIFvsPatchField<Type>(*this, iF)
             );
         }
-
-    // Member functions
-
-        // Access
-
-            //- Return true if running parallel
-            virtual bool coupled() const;
 };
 
 
 } // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Type>
-CML::cyclicACMIFvsPatchField<Type>::cyclicACMIFvsPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF
-)
-:
-    coupledFvsPatchField<Type>(p, iF),
-    cyclicACMIPatch_(refCast<const cyclicACMIFvPatch>(p))
-{}
-
-
-template<class Type>
-CML::cyclicACMIFvsPatchField<Type>::cyclicACMIFvsPatchField
-(
-    const cyclicACMIFvsPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    coupledFvsPatchField<Type>(ptf, p, iF, mapper),
-    cyclicACMIPatch_(refCast<const cyclicACMIFvPatch>(p))
-{
-    if (!isA<cyclicACMIFvPatch>(this->patch()))
-    {
-        FatalErrorInFunction
-            << "Field type does not correspond to patch type for patch "
-            << this->patch().index() << "." << endl
-            << "Field type: " << typeName << endl
-            << "Patch type: " << this->patch().type()
-            << exit(FatalError);
-    }
-}
-
-
-template<class Type>
-CML::cyclicACMIFvsPatchField<Type>::cyclicACMIFvsPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
-    const dictionary& dict
-)
-:
-    coupledFvsPatchField<Type>(p, iF, dict),
-    cyclicACMIPatch_(refCast<const cyclicACMIFvPatch>(p))
-{
-    if (!isA<cyclicACMIFvPatch>(p))
-    {
-        FatalIOErrorInFunction(dict)
-            << "patch " << this->patch().index() << " not cyclicACMI type. "
-            << "Patch type = " << p.type()
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class Type>
-CML::cyclicACMIFvsPatchField<Type>::cyclicACMIFvsPatchField
-(
-    const cyclicACMIFvsPatchField<Type>& ptf
-)
-:
-    coupledFvsPatchField<Type>(ptf),
-    cyclicACMIPatch_(ptf.cyclicACMIPatch_)
-{}
-
-
-template<class Type>
-CML::cyclicACMIFvsPatchField<Type>::cyclicACMIFvsPatchField
-(
-    const cyclicACMIFvsPatchField<Type>& ptf,
-    const DimensionedField<Type, surfaceMesh>& iF
-)
-:
-    coupledFvsPatchField<Type>(ptf, iF),
-    cyclicACMIPatch_(ptf.cyclicACMIPatch_)
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-bool CML::cyclicACMIFvsPatchField<Type>::coupled() const
-{
-    if
-    (
-        Pstream::parRun()
-     || (
-            this->cyclicACMIPatch_.size()
-         && this->cyclicACMIPatch_.cyclicACMIPatch().neighbPatch().size()
-        )
-    )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
 
 
 #endif

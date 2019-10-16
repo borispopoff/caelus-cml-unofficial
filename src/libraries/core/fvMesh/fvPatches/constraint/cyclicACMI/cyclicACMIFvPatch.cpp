@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -33,16 +33,16 @@ namespace CML
 }
 
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void CML::cyclicACMIFvPatch::updateAreas() const
 {
-    if (cyclicACMIPolyPatch_.updated())
+    if (cyclicACMIPatch().updated())
     {
         if (debug)
         {
             Pout<< "cyclicACMIFvPatch::updateAreas() : updating fv areas for "
-                << name() << " and " << this->nonOverlapPatch().name()
+                << name() << " and " << nonOverlapFvPatch().name()
                 << endl;
         }
 
@@ -51,58 +51,49 @@ void CML::cyclicACMIFvPatch::updateAreas() const
         const_cast<scalarField&>(magSf()) = mag(patch().faceAreas());
 
         // owner non-overlapping
-        const fvPatch& nonOverlapPatch = this->nonOverlapPatch();
+        const fvPatch& nonOverlapPatch = nonOverlapFvPatch();
         const_cast<vectorField&>(nonOverlapPatch.Sf()) =
             nonOverlapPatch.patch().faceAreas();
         const_cast<scalarField&>(nonOverlapPatch.magSf()) =
             mag(nonOverlapPatch.patch().faceAreas());
 
         // neighbour couple
-        const cyclicACMIFvPatch& nbrACMI = neighbPatch();
+        const cyclicACMIFvPatch& nbrACMI = neighbFvPatch();
         const_cast<vectorField&>(nbrACMI.Sf()) =
             nbrACMI.patch().faceAreas();
         const_cast<scalarField&>(nbrACMI.magSf()) =
             mag(nbrACMI.patch().faceAreas());
 
         // neighbour non-overlapping
-        const fvPatch& nbrNonOverlapPatch = nbrACMI.nonOverlapPatch();
+        const fvPatch& nbrNonOverlapPatch = nbrACMI.nonOverlapFvPatch();
         const_cast<vectorField&>(nbrNonOverlapPatch.Sf()) =
             nbrNonOverlapPatch.patch().faceAreas();
         const_cast<scalarField&>(nbrNonOverlapPatch.magSf()) =
             mag(nbrNonOverlapPatch.patch().faceAreas());
 
         // set the updated flag
-        cyclicACMIPolyPatch_.setUpdated(false);
+        cyclicACMIPatch().setUpdated(false);
     }
 }
 
+
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 void CML::cyclicACMIFvPatch::makeWeights(scalarField& w) const
 {
     if (coupled())
     {
-        const cyclicACMIFvPatch& nbrPatch = neighbFvPatch();
-        const scalarField deltas(nf() & coupledFvPatch::delta());
-
         // These deltas are of the cyclic part alone - they are
         // not affected by the amount of overlap with the nonOverlapPatch
-        scalarField nbrDeltas
-        (
-            interpolate
-            (
-                nbrPatch.nf() & nbrPatch.coupledFvPatch::delta()
-            )
-        );
+        const scalarField deltan(this->deltan());
+        const scalarField nbrDeltan(this->nbrDeltan());
 
-        scalar tol = cyclicACMIPolyPatch::tolerance();
-
-
-        forAll(deltas, facei)
+        forAll(deltan, facei)
         {
-            scalar di = deltas[facei];
-            scalar dni = nbrDeltas[facei];
+            scalar di = deltan[facei];
+            scalar dni = nbrDeltan[facei];
 
-            if (dni < tol)
+            if (dni < cyclicACMIPolyPatch::tolerance())
             {
                 // Avoid zero weights on disconnected faces. This value
                 // will be weighted with the (zero) face area so will not
@@ -120,78 +111,6 @@ void CML::cyclicACMIFvPatch::makeWeights(scalarField& w) const
         // Behave as uncoupled patch
         fvPatch::makeWeights(w);
     }
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool CML::cyclicACMIFvPatch::coupled() const
-{
-    return Pstream::parRun() || (this->size() && neighbFvPatch().size());
-}
-
-
-CML::tmp<CML::vectorField> CML::cyclicACMIFvPatch::delta() const
-{
-    if (coupled())
-    {
-        const cyclicACMIFvPatch& nbrPatch = neighbFvPatch();
-
-        const vectorField patchD(coupledFvPatch::delta());
-
-        vectorField nbrPatchD(interpolate(nbrPatch.coupledFvPatch::delta()));
-
-
-        tmp<vectorField> tpdv(new vectorField(patchD.size()));
-        vectorField& pdv = tpdv();
-
-        // do the transformation if necessary
-        if (parallel())
-        {
-            forAll(patchD, facei)
-            {
-                const vector& ddi = patchD[facei];
-                const vector& dni = nbrPatchD[facei];
-
-                pdv[facei] = ddi - dni;
-            }
-        }
-        else
-        {
-            forAll(patchD, facei)
-            {
-                const vector& ddi = patchD[facei];
-                const vector& dni = nbrPatchD[facei];
-
-                pdv[facei] = ddi - transform(forwardT()[0], dni);
-            }
-        }
-
-        return tpdv;
-    }
-    else
-    {
-        return coupledFvPatch::delta();
-    }
-}
-
-
-CML::tmp<CML::labelField> CML::cyclicACMIFvPatch::interfaceInternalField
-(
-    const labelUList& internalData
-) const
-{
-    return patchInternalField(internalData);
-}
-
-
-CML::tmp<CML::labelField> CML::cyclicACMIFvPatch::internalFieldTransfer
-(
-    const Pstream::commsTypes commsType,
-    const labelUList& iF
-) const
-{
-    return neighbFvPatch().patchInternalField(iF);
 }
 
 
