@@ -30,7 +30,7 @@ Description
 #define cyclicACMIPolyPatch_H
 
 #include "cyclicAMIPolyPatch.hpp"
-#include "AMIPatchToPatchInterpolation.hpp"
+#include "AMIInterpolation.hpp"
 #include "polyBoundaryMesh.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

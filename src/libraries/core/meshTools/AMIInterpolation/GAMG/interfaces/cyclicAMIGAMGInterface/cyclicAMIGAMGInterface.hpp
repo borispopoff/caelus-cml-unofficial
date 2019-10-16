@@ -55,7 +55,7 @@ class cyclicAMIGAMGInterface
         const cyclicAMILduInterface& fineCyclicAMIInterface_;
 
         //- AMI interfaces
-        PtrList<AMIPatchToPatchInterpolation> AMIs_;
+        PtrList<AMIInterpolation> AMIs_;
 
         //- AMI transformations
         List<vectorTensorTransform> AMITransforms_;
@@ -130,7 +130,7 @@ public:
             }
 
             //- Return a reference to the AMI interpolators
-            virtual const PtrList<AMIPatchToPatchInterpolation>& AMIs() const
+            virtual const PtrList<AMIInterpolation>& AMIs() const
             {
                 return AMIs_;
             }
@@ -159,7 +159,7 @@ public:
             //- Write to stream
             virtual void write(Ostream&) const
             {
-                //TBD. How to serialise the AMI such that we can stream
+                // TBD. How to serialise the AMI such that we can stream
                 // cyclicAMIGAMGInterface.
                 NotImplemented;
             }

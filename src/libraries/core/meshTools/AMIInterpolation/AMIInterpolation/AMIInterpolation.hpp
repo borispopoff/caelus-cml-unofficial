@@ -59,31 +59,12 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class AMIInterpolationName Declaration
+                  Class AMIInterpolation Declaration
 \*---------------------------------------------------------------------------*/
 
-TemplateName(AMIInterpolation);
-
-
-/*---------------------------------------------------------------------------*\
-                      Class AMIInterpolation Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class SourcePatch, class TargetPatch>
 class AMIInterpolation
-:
-    public AMIInterpolationName
 {
 public:
-
-    // Public typedefs
-
-        // Typedef to SourcePatch type this AMIInterplation is instantiated on
-        typedef SourcePatch sourcePatchType;
-
-        // Typedef to TargetPatch type this AMIInterplation is instantiated on
-        typedef TargetPatch targetPatchType;
-
 
     // Public data types
 
@@ -110,10 +91,9 @@ public:
         );
 
         //- Calculate the patch face magnitudes for the given tri-mode
-        template<class Patch>
         static tmp<scalarField> patchMagSf
         (
-            const Patch& patch,
+            const primitivePatch& patch,
             const faceAreaIntersect::triangulationMode triMode
         );
 
@@ -195,8 +175,8 @@ private:
             //- Calculate if patches are on multiple processors
             label calcDistribution
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch
             ) const;
 
             label calcOverlappingProcs
@@ -209,7 +189,7 @@ private:
             void distributePatches
             (
                 const mapDistribute& map,
-                const TargetPatch& pp,
+                const primitivePatch& pp,
                 const globalIndex& gi,
                 List<faceList>& faces,
                 List<pointField>& points,
@@ -219,7 +199,7 @@ private:
             void distributeAndMergePatches
             (
                 const mapDistribute& map,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& tgtPatch,
                 const globalIndex& gi,
                 faceList& tgtFaces,
                 pointField& tgtPoints,
@@ -228,8 +208,8 @@ private:
 
             autoPtr<mapDistribute> calcProcMap
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch
             ) const;
 
 
@@ -307,21 +287,25 @@ private:
 
             void constructFromSurface
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch,
                 const autoPtr<searchableSurface>& surfPtr,
                 const bool report
             );
 
 public:
 
+    //- Runtime type information
+    TypeName("cyclicAMI");
+
+
     // Constructors
 
         //- Construct from components
         AMIInterpolation
         (
-            const SourcePatch& srcPatch,
-            const TargetPatch& tgtPatch,
+            const primitivePatch& srcPatch,
+            const primitivePatch& tgtPatch,
             const faceAreaIntersect::triangulationMode& triMode,
             const bool requireMatch = true,
             const interpolationMethod& method = imFaceAreaWeight,
@@ -333,8 +317,8 @@ public:
         //- Construct from components
         AMIInterpolation
         (
-            const SourcePatch& srcPatch,
-            const TargetPatch& tgtPatch,
+            const primitivePatch& srcPatch,
+            const primitivePatch& tgtPatch,
             const faceAreaIntersect::triangulationMode& triMode,
             const bool requireMatch = true,
             const word& methodName =
@@ -347,8 +331,8 @@ public:
         //- Construct from components, with projection surface
         AMIInterpolation
         (
-            const SourcePatch& srcPatch,
-            const TargetPatch& tgtPatch,
+            const primitivePatch& srcPatch,
+            const primitivePatch& tgtPatch,
             const autoPtr<searchableSurface>& surf,
             const faceAreaIntersect::triangulationMode& triMode,
             const bool requireMatch = true,
@@ -361,8 +345,8 @@ public:
         //- Construct from components, with projection surface
         AMIInterpolation
         (
-            const SourcePatch& srcPatch,
-            const TargetPatch& tgtPatch,
+            const primitivePatch& srcPatch,
+            const primitivePatch& tgtPatch,
             const autoPtr<searchableSurface>& surf,
             const faceAreaIntersect::triangulationMode& triMode,
             const bool requireMatch = true,
@@ -373,11 +357,12 @@ public:
             const bool report = true
         );
 
-        //- Construct from agglomeration of AMIInterpolation. Agglomeration
-        //  passed in as new coarse size and addressing from fine from coarse
+        //- Construct from agglomeration of AMIInterpolation.
+        //  Agglomeration passed in as new coarse size and addressing from fine
+        //  from coarse
         AMIInterpolation
         (
-            const AMIInterpolation<SourcePatch, TargetPatch>& fineAMI,
+            const AMIInterpolation& fineAMI,
             const labelList& sourceRestrictAddressing,
             const labelList& neighbourRestrictAddressing,
             const bool report = false
@@ -385,7 +370,7 @@ public:
 
 
     //- Destructor
-    ~AMIInterpolation();
+    virtual ~AMIInterpolation();
 
 
     // Member Functions
@@ -464,42 +449,27 @@ public:
             //- Update addressing and weights
             void update
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch,
                 const bool report
             );
 
             //- Sum the weights on both sides of an AMI
-            static void sumWeights
-            (
-                AMIInterpolation<SourcePatch, TargetPatch>& AMI
-            );
+            static void sumWeights(AMIInterpolation& AMI);
 
             //- As above, but for multiple AMI-s
-            static void sumWeights
-            (
-                PtrList<AMIInterpolation<SourcePatch, TargetPatch>>& AMIs
-            );
+            static void sumWeights(PtrList<AMIInterpolation>& AMIs);
 
             //- Print out information relating to the weights sum. Values close
             //  to one are ideal. This information acts as a measure of the
             //  quality of the AMI.
-            static void reportSumWeights
-            (
-                AMIInterpolation<SourcePatch, TargetPatch>& AMI
-            );
+            static void reportSumWeights(AMIInterpolation& AMI);
 
             //- Normalise the weights on both sides of an AMI
-            static void normaliseWeights
-            (
-                AMIInterpolation<SourcePatch, TargetPatch>& AMI
-            );
+            static void normaliseWeights(AMIInterpolation& AMI);
 
             //- As above, but for multiple AMI-s
-            static void normaliseWeights
-            (
-                UPtrList<AMIInterpolation<SourcePatch, TargetPatch>>& AMIs
-            );
+            static void normaliseWeights(UPtrList<AMIInterpolation>& AMIs);
 
 
         // Evaluation
@@ -603,8 +573,8 @@ public:
             //- Return source patch face index of point on target patch face
             label srcPointFace
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch,
                 const vector& n,
                 const label tgtFacei,
                 point& tgtPoint
@@ -614,8 +584,8 @@ public:
             //- Return target patch face index of point on source patch face
             label tgtPointFace
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch,
                 const vector& n,
                 const label srcFacei,
                 point& srcPoint
@@ -628,8 +598,8 @@ public:
             //- Write face connectivity as OBJ file
             void writeFaceConnectivity
             (
-                const SourcePatch& srcPatch,
-                const TargetPatch& tgtPatch,
+                const primitivePatch& srcPatch,
+                const primitivePatch& tgtPatch,
                 const labelListList& srcAddress
             ) const;
 };
@@ -641,138 +611,103 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class SourcePatch, class TargetPatch>
-inline CML::label
-CML::AMIInterpolation<SourcePatch, TargetPatch>::singlePatchProc() const
+inline CML::label CML::AMIInterpolation::singlePatchProc() const
 {
     return singlePatchProc_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline CML::scalar
-CML::AMIInterpolation<SourcePatch, TargetPatch>::lowWeightCorrection() const
+inline CML::scalar CML::AMIInterpolation::lowWeightCorrection() const
 {
     return lowWeightCorrection_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline bool
-CML::AMIInterpolation<SourcePatch, TargetPatch>::
-applyLowWeightCorrection() const
+inline bool CML::AMIInterpolation::applyLowWeightCorrection() const
 {
     return lowWeightCorrection_ > 0;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline const CML::scalarField&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::srcMagSf() const
+inline const CML::scalarField& CML::AMIInterpolation::srcMagSf() const
 {
     return srcMagSf_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline const CML::labelListList&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::srcAddress() const
+inline const CML::labelListList& CML::AMIInterpolation::srcAddress() const
 {
     return srcAddress_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline const CML::scalarListList&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::srcWeights() const
+inline const CML::scalarListList& CML::AMIInterpolation::srcWeights() const
 {
     return srcWeights_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline CML::scalarListList&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::srcWeights()
+inline CML::scalarListList& CML::AMIInterpolation::srcWeights()
 {
     return srcWeights_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline const CML::scalarField&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::srcWeightsSum() const
+inline const CML::scalarField& CML::AMIInterpolation::srcWeightsSum() const
 {
     return srcWeightsSum_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline CML::scalarField&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::srcWeightsSum()
+inline CML::scalarField& CML::AMIInterpolation::srcWeightsSum()
 {
     return srcWeightsSum_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline const CML::mapDistribute&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::srcMap() const
+inline const CML::mapDistribute& CML::AMIInterpolation::srcMap() const
 {
     return srcMapPtr_();
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline const CML::scalarField&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtMagSf() const
+inline const CML::scalarField& CML::AMIInterpolation::tgtMagSf() const
 {
     return tgtMagSf_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline const CML::labelListList&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtAddress() const
+inline const CML::labelListList& CML::AMIInterpolation::tgtAddress() const
 {
     return tgtAddress_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline const CML::scalarListList&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeights() const
+inline const CML::scalarListList& CML::AMIInterpolation::tgtWeights() const
 {
     return tgtWeights_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline CML::scalarListList&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeights()
+inline CML::scalarListList& CML::AMIInterpolation::tgtWeights()
 {
     return tgtWeights_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline const CML::scalarField&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeightsSum() const
+inline const CML::scalarField& CML::AMIInterpolation::tgtWeightsSum() const
 {
     return tgtWeightsSum_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline CML::scalarField&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeightsSum()
+inline CML::scalarField& CML::AMIInterpolation::tgtWeightsSum()
 {
     return tgtWeightsSum_;
 }
 
 
-template<class SourcePatch, class TargetPatch>
-inline const CML::mapDistribute&
-CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtMap() const
+inline const CML::mapDistribute& CML::AMIInterpolation::tgtMap() const
 {
     return tgtMapPtr_();
 }
@@ -785,1231 +720,8 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtMap() const
 #include "mapDistribute.hpp"
 #include "flipOp.hpp"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-template<class SourcePatch, class TargetPatch>
-CML::word
-CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolationMethodToWord
-(
-    const interpolationMethod& im
-)
-{
-    word method = "unknown-interpolationMethod";
-
-    switch (im)
-    {
-        case imDirect:
-        {
-            method = "directAMI";
-            break;
-        }
-        case imMapNearest:
-        {
-            method = "mapNearestAMI";
-            break;
-        }
-        case imFaceAreaWeight:
-        {
-            method = "faceAreaWeightAMI";
-            break;
-        }
-        case imPartialFaceAreaWeight:
-        {
-            method = "partialFaceAreaWeightAMI";
-            break;
-        }
-        case imSweptFaceAreaWeight:
-        {
-            method = "sweptFaceAreaWeightAMI";
-            break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unhandled interpolationMethod enumeration " << method
-                << abort(FatalError);
-        }
-    }
-
-    return method;
-}
-
-
-template<class SourcePatch, class TargetPatch>
-typename CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolationMethod
-CML::AMIInterpolation<SourcePatch, TargetPatch>::wordTointerpolationMethod
-(
-    const word& im
-)
-{
-    interpolationMethod method = imDirect;
-
-    wordList methods
-    (
-        IStringStream
-        (
-            "("
-                "directAMI "
-                "mapNearestAMI "
-                "faceAreaWeightAMI "
-                "partialFaceAreaWeightAMI "
-                "sweptFaceAreaWeightAMI"
-            ")"
-        )()
-    );
-
-    if (im == "directAMI")
-    {
-        method = imDirect;
-    }
-    else if (im == "mapNearestAMI")
-    {
-        method = imMapNearest;
-    }
-    else if (im == "faceAreaWeightAMI")
-    {
-        method = imFaceAreaWeight;
-    }
-    else if (im == "partialFaceAreaWeightAMI")
-    {
-        method = imPartialFaceAreaWeight;
-    }
-    else if (im == "sweptFaceAreaWeightAMI")
-    {
-        method = imSweptFaceAreaWeight;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Invalid interpolationMethod " << im
-            << ".  Valid methods are:" << methods
-            << exit(FatalError);
-    }
-
-    return method;
-}
-
-
-template<class SourcePatch, class TargetPatch>
-template<class Patch>
-CML::tmp<CML::scalarField>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::patchMagSf
-(
-    const Patch& patch,
-    const faceAreaIntersect::triangulationMode triMode
-)
-{
-    tmp<scalarField> tResult(new scalarField(patch.size(), Zero));
-    scalarField& result = tResult();
-
-    const pointField& patchPoints = patch.localPoints();
-
-    faceList patchFaceTris;
-
-    forAll(result, patchFacei)
-    {
-        faceAreaIntersect::triangulate
-        (
-            patch.localFaces()[patchFacei],
-            patchPoints,
-            triMode,
-            patchFaceTris
-        );
-
-        forAll(patchFaceTris, i)
-        {
-            result[patchFacei] +=
-                triPointRef
-                (
-                    patchPoints[patchFaceTris[i][0]],
-                    patchPoints[patchFaceTris[i][1]],
-                    patchPoints[patchFaceTris[i][2]]
-                ).mag();
-        }
-    }
-
-    return tResult;
-}
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::projectPointsToSurface
-(
-    const searchableSurface& surf,
-    pointField& pts
-) const
-{
-    if (debug)
-    {
-        Info<< "AMI: projecting points to surface" << endl;
-    }
-
-    List<pointIndexHit> nearInfo;
-
-    surf.findNearest(pts, scalarField(pts.size(), GREAT), nearInfo);
-
-    label nMiss = 0;
-    forAll(nearInfo, i)
-    {
-        const pointIndexHit& pi = nearInfo[i];
-
-        if (pi.hit())
-        {
-            pts[i] = pi.hitPoint();
-        }
-        else
-        {
-            pts[i] = pts[i];
-            nMiss++;
-        }
-    }
-
-    if (nMiss > 0)
-    {
-        FatalErrorInFunction
-            << "Error projecting points to surface: "
-            << nMiss << " faces could not be determined"
-            << abort(FatalError);
-    }
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::sumWeights
-(
-    const scalarListList& wght,
-    scalarField& wghtSum
-)
-{
-    wghtSum.setSize(wght.size());
-    wghtSum = Zero;
-
-    forAll(wght, facei)
-    {
-        wghtSum[facei] = sum(wght[facei]);
-    }
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::sumWeights
-(
-    const UPtrList<scalarListList>& wghts,
-    scalarField& wghtSum
-)
-{
-    wghtSum.setSize(wghts[0].size());
-    wghtSum = Zero;
-
-    forAll(wghts[0], facei)
-    {
-        forAll(wghts, wghtsi)
-        {
-            forAll(wghts[wghtsi][facei], i)
-            {
-                wghtSum[facei] += wghts[wghtsi][facei][i];
-            }
-        }
-    }
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::reportSumWeights
-(
-    const scalarField& patchAreas,
-    const word& patchName,
-    const scalarField& wghtSum,
-    const scalar lowWeightTol
-)
-{
-    if (returnReduce(wghtSum.size(), sumOp<label>()) == 0)
-    {
-        return;
-    }
-
-    label nLowWeight = 0;
-    forAll(wghtSum, facei)
-    {
-        if (wghtSum[facei] < lowWeightTol)
-        {
-            ++ nLowWeight;
-        }
-    }
-    reduce(nLowWeight, sumOp<label>());
-
-    Info<< indent << "AMI: Patch " << patchName
-        << " sum(weights) min/max/average = " << gMin(wghtSum) << ", "
-        << gMax(wghtSum) << ", "
-        << gSum(wghtSum*patchAreas)/gSum(patchAreas) << endl;
-
-    if (nLowWeight)
-    {
-        Info<< indent << "AMI: Patch " << patchName << " identified "
-            << nLowWeight << " faces with weights less than "
-            << lowWeightTol << endl;
-    }
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::normaliseWeights
-(
-    scalarListList& wght,
-    const scalarField& wghtSum
-)
-{
-    forAll(wghtSum, facei)
-    {
-        scalarList& w = wght[facei];
-
-        forAll(w, i)
-        {
-            w[i] /= wghtSum[facei];
-        }
-    }
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::normaliseWeights
-(
-    UPtrList<scalarListList>& wghts,
-    const scalarField& wghtSum
-)
-{
-    forAll(wghtSum, facei)
-    {
-        forAll(wghts, wghtsi)
-        {
-            scalarList& w = wghts[wghtsi][facei];
-
-            forAll(w, i)
-            {
-                w[i] /= wghtSum[facei];
-            }
-        }
-    }
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
-(
-    const autoPtr<mapDistribute>& targetMapPtr,
-    const scalarField& fineSrcMagSf,
-    const labelListList& fineSrcAddress,
-    const scalarListList& fineSrcWeights,
-
-    const labelList& sourceRestrictAddressing,
-    const labelList& targetRestrictAddressing,
-
-    scalarField& srcMagSf,
-    labelListList& srcAddress,
-    scalarListList& srcWeights,
-    scalarField& srcWeightsSum,
-    autoPtr<mapDistribute>& tgtMap
-)
-{
-    label sourceCoarseSize =
-    (
-        sourceRestrictAddressing.size()
-      ? max(sourceRestrictAddressing)+1
-      : 0
-    );
-
-    label targetCoarseSize =
-    (
-        targetRestrictAddressing.size()
-      ? max(targetRestrictAddressing)+1
-      : 0
-    );
-
-    // Agglomerate face areas
-    {
-        srcMagSf.setSize(sourceRestrictAddressing.size(), 0.0);
-        forAll(sourceRestrictAddressing, facei)
-        {
-            label coarseFacei = sourceRestrictAddressing[facei];
-            srcMagSf[coarseFacei] += fineSrcMagSf[facei];
-        }
-    }
-
-
-    // Agglomerate weights and indices
-    if (targetMapPtr.valid())
-    {
-        const mapDistribute& map = targetMapPtr();
-
-        // Get all restriction addressing.
-        labelList allRestrict(targetRestrictAddressing);
-        map.distribute(allRestrict);
-
-        // So now we have agglomeration of the target side in
-        // allRestrict:
-        //   0..size-1 : local agglomeration (= targetRestrictAddressing)
-        //   size..    : agglomeration data from other processors
-
-        labelListList tgtSubMap(Pstream::nProcs());
-
-        // Local subMap is just identity
-        {
-            tgtSubMap[Pstream::myProcNo()] = identity(targetCoarseSize);
-        }
-
-        forAll(map.subMap(), proci)
-        {
-            if (proci != Pstream::myProcNo())
-            {
-                // Combine entries that point to the same coarse element. All
-                // the elements refer to local data so index into
-                // targetRestrictAddressing or allRestrict (since the same
-                // for local data).
-                const labelList& elems = map.subMap()[proci];
-                labelList& newSubMap = tgtSubMap[proci];
-                newSubMap.setSize(elems.size());
-
-                labelList oldToNew(targetCoarseSize, -1);
-                label newi = 0;
-
-                forAll(elems, i)
-                {
-                    label fineElem = elems[i];
-                    label coarseElem = allRestrict[fineElem];
-                    if (oldToNew[coarseElem] == -1)
-                    {
-                        oldToNew[coarseElem] = newi;
-                        newSubMap[newi] = coarseElem;
-                        newi++;
-                    }
-                }
-                newSubMap.setSize(newi);
-            }
-        }
-
-        // Reconstruct constructMap by combining entries. Note that order
-        // of handing out indices should be the same as loop above to compact
-        // the sending map
-
-        labelListList tgtConstructMap(Pstream::nProcs());
-        labelList tgtCompactMap;
-
-        // Local constructMap is just identity
-        {
-            tgtConstructMap[Pstream::myProcNo()] =
-                identity(targetCoarseSize);
-
-            tgtCompactMap = targetRestrictAddressing;
-        }
-        tgtCompactMap.setSize(map.constructSize());
-        label compacti = targetCoarseSize;
-
-        // Compact data from other processors
-        forAll(map.constructMap(), proci)
-        {
-            if (proci != Pstream::myProcNo())
-            {
-                // Combine entries that point to the same coarse element. All
-                // elements now are remote data so we cannot use any local
-                // data here - use allRestrict instead.
-                const labelList& elems = map.constructMap()[proci];
-
-                labelList& newConstructMap = tgtConstructMap[proci];
-                newConstructMap.setSize(elems.size());
-
-                if (elems.size())
-                {
-                    // Get the maximum target coarse size for this set of
-                    // received data.
-                    label remoteTargetCoarseSize = labelMin;
-                    forAll(elems, i)
-                    {
-                        remoteTargetCoarseSize = max
-                        (
-                            remoteTargetCoarseSize,
-                            allRestrict[elems[i]]
-                        );
-                    }
-                    remoteTargetCoarseSize += 1;
-
-                    // Combine locally data coming from proci
-                    labelList oldToNew(remoteTargetCoarseSize, -1);
-                    label newi = 0;
-
-                    forAll(elems, i)
-                    {
-                        label fineElem = elems[i];
-                        // fineElem now points to section from proci
-                        label coarseElem = allRestrict[fineElem];
-                        if (oldToNew[coarseElem] == -1)
-                        {
-                            oldToNew[coarseElem] = newi;
-                            tgtCompactMap[fineElem] = compacti;
-                            newConstructMap[newi] = compacti++;
-                            newi++;
-                        }
-                        else
-                        {
-                            // Get compact index
-                            label compacti = oldToNew[coarseElem];
-                            tgtCompactMap[fineElem] = newConstructMap[compacti];
-                        }
-                    }
-                    newConstructMap.setSize(newi);
-                }
-            }
-        }
-
-
-        srcAddress.setSize(sourceCoarseSize);
-        srcWeights.setSize(sourceCoarseSize);
-
-        forAll(fineSrcAddress, facei)
-        {
-            // All the elements contributing to facei. Are slots in
-            // mapDistribute'd data.
-            const labelList& elems = fineSrcAddress[facei];
-            const scalarList& weights = fineSrcWeights[facei];
-            const scalar fineArea = fineSrcMagSf[facei];
-
-            label coarseFacei = sourceRestrictAddressing[facei];
-
-            const scalar coarseArea = srcMagSf[coarseFacei];
-
-            labelList& newElems = srcAddress[coarseFacei];
-            scalarList& newWeights = srcWeights[coarseFacei];
-
-            forAll(elems, i)
-            {
-                label elemi = elems[i];
-                label coarseElemi = tgtCompactMap[elemi];
-
-                label index = findIndex(newElems, coarseElemi);
-                if (index == -1)
-                {
-                    newElems.append(coarseElemi);
-                    newWeights.append(fineArea/coarseArea*weights[i]);
-                }
-                else
-                {
-                    newWeights[index] += fineArea/coarseArea*weights[i];
-                }
-            }
-        }
-
-        tgtMap.reset
-        (
-            new mapDistribute
-            (
-                compacti,
-                tgtSubMap.xfer(),
-                tgtConstructMap.xfer()
-            )
-        );
-    }
-    else
-    {
-        srcAddress.setSize(sourceCoarseSize);
-        srcWeights.setSize(sourceCoarseSize);
-
-        forAll(fineSrcAddress, facei)
-        {
-            // All the elements contributing to facei. Are slots in
-            // mapDistribute'd data.
-            const labelList& elems = fineSrcAddress[facei];
-            const scalarList& weights = fineSrcWeights[facei];
-            const scalar fineArea = fineSrcMagSf[facei];
-
-            label coarseFacei = sourceRestrictAddressing[facei];
-
-            const scalar coarseArea = srcMagSf[coarseFacei];
-
-            labelList& newElems = srcAddress[coarseFacei];
-            scalarList& newWeights = srcWeights[coarseFacei];
-
-            forAll(elems, i)
-            {
-                label elemi = elems[i];
-                label coarseElemi = targetRestrictAddressing[elemi];
-
-                label index = findIndex(newElems, coarseElemi);
-                if (index == -1)
-                {
-                    newElems.append(coarseElemi);
-                    newWeights.append(fineArea/coarseArea*weights[i]);
-                }
-                else
-                {
-                    newWeights[index] += fineArea/coarseArea*weights[i];
-                }
-            }
-        }
-    }
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::constructFromSurface
-(
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
-    const autoPtr<searchableSurface>& surfPtr,
-    const bool report
-)
-{
-    if (surfPtr.valid())
-    {
-        // Create new patches for source and target
-        pointField srcPoints = srcPatch.points();
-        SourcePatch srcPatch0
-        (
-            SubList<face>
-            (
-                srcPatch,
-                srcPatch.size(),
-                0
-            ),
-            srcPoints
-        );
-
-        if (debug)
-        {
-            OFstream os("amiSrcPoints.obj");
-            forAll(srcPoints, i)
-            {
-                meshTools::writeOBJ(os, srcPoints[i]);
-            }
-        }
-
-        pointField tgtPoints = tgtPatch.points();
-        TargetPatch tgtPatch0
-        (
-            SubList<face>
-            (
-                tgtPatch,
-                tgtPatch.size(),
-                0
-            ),
-            tgtPoints
-        );
-
-        if (debug)
-        {
-            OFstream os("amiTgtPoints.obj");
-            forAll(tgtPoints, i)
-            {
-                meshTools::writeOBJ(os, tgtPoints[i]);
-            }
-        }
-
-
-        // Map source and target patches onto projection surface
-        projectPointsToSurface(surfPtr(), srcPoints);
-        projectPointsToSurface(surfPtr(), tgtPoints);
-
-
-        // Calculate AMI interpolation
-        update(srcPatch0, tgtPatch0, report);
-    }
-    else
-    {
-        update(srcPatch, tgtPatch, report);
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class SourcePatch, class TargetPatch>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
-(
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
-    const faceAreaIntersect::triangulationMode& triMode,
-    const bool requireMatch,
-    const interpolationMethod& method,
-    const scalar lowWeightCorrection,
-    const bool reverseTarget,
-    const bool report
-)
-:
-    methodName_(interpolationMethodToWord(method)),
-    reverseTarget_(reverseTarget),
-    requireMatch_(requireMatch),
-    singlePatchProc_(-999),
-    lowWeightCorrection_(lowWeightCorrection),
-    srcAddress_(),
-    srcWeights_(),
-    srcWeightsSum_(),
-    tgtAddress_(),
-    tgtWeights_(),
-    tgtWeightsSum_(),
-    triMode_(triMode),
-    srcMapPtr_(nullptr),
-    tgtMapPtr_(nullptr)
-{
-    update(srcPatch, tgtPatch, report);
-}
-
-
-template<class SourcePatch, class TargetPatch>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
-(
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
-    const faceAreaIntersect::triangulationMode& triMode,
-    const bool requireMatch,
-    const word& methodName,
-    const scalar lowWeightCorrection,
-    const bool reverseTarget,
-    const bool report
-)
-:
-    methodName_(methodName),
-    reverseTarget_(reverseTarget),
-    requireMatch_(requireMatch),
-    singlePatchProc_(-999),
-    lowWeightCorrection_(lowWeightCorrection),
-    srcAddress_(),
-    srcWeights_(),
-    srcWeightsSum_(),
-    tgtAddress_(),
-    tgtWeights_(),
-    tgtWeightsSum_(),
-    triMode_(triMode),
-    srcMapPtr_(nullptr),
-    tgtMapPtr_(nullptr)
-{
-    update(srcPatch, tgtPatch, report);
-}
-
-
-template<class SourcePatch, class TargetPatch>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
-(
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
-    const autoPtr<searchableSurface>& surfPtr,
-    const faceAreaIntersect::triangulationMode& triMode,
-    const bool requireMatch,
-    const interpolationMethod& method,
-    const scalar lowWeightCorrection,
-    const bool reverseTarget,
-    const bool report
-)
-:
-    methodName_(interpolationMethodToWord(method)),
-    reverseTarget_(reverseTarget),
-    requireMatch_(requireMatch),
-    singlePatchProc_(-999),
-    lowWeightCorrection_(lowWeightCorrection),
-    srcAddress_(),
-    srcWeights_(),
-    srcWeightsSum_(),
-    tgtAddress_(),
-    tgtWeights_(),
-    tgtWeightsSum_(),
-    triMode_(triMode),
-    srcMapPtr_(nullptr),
-    tgtMapPtr_(nullptr)
-{
-    constructFromSurface(srcPatch, tgtPatch, surfPtr, report);
-}
-
-
-template<class SourcePatch, class TargetPatch>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
-(
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
-    const autoPtr<searchableSurface>& surfPtr,
-    const faceAreaIntersect::triangulationMode& triMode,
-    const bool requireMatch,
-    const word& methodName,
-    const scalar lowWeightCorrection,
-    const bool reverseTarget,
-    const bool report
-)
-:
-    methodName_(methodName),
-    reverseTarget_(reverseTarget),
-    requireMatch_(requireMatch),
-    singlePatchProc_(-999),
-    lowWeightCorrection_(lowWeightCorrection),
-    srcAddress_(),
-    srcWeights_(),
-    srcWeightsSum_(),
-    tgtAddress_(),
-    tgtWeights_(),
-    tgtWeightsSum_(),
-    triMode_(triMode),
-    srcMapPtr_(nullptr),
-    tgtMapPtr_(nullptr)
-{
-    constructFromSurface(srcPatch, tgtPatch, surfPtr, report);
-}
-
-
-template<class SourcePatch, class TargetPatch>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
-(
-    const AMIInterpolation<SourcePatch, TargetPatch>& fineAMI,
-    const labelList& sourceRestrictAddressing,
-    const labelList& targetRestrictAddressing,
-    const bool report
-)
-:
-    methodName_(fineAMI.methodName_),
-    reverseTarget_(fineAMI.reverseTarget_),
-    requireMatch_(fineAMI.requireMatch_),
-    singlePatchProc_(fineAMI.singlePatchProc_),
-    lowWeightCorrection_(-1.0),
-    srcAddress_(),
-    srcWeights_(),
-    srcWeightsSum_(),
-    tgtAddress_(),
-    tgtWeights_(),
-    tgtWeightsSum_(),
-    triMode_(fineAMI.triMode_),
-    srcMapPtr_(nullptr),
-    tgtMapPtr_(nullptr)
-{
-    label sourceCoarseSize =
-    (
-        sourceRestrictAddressing.size()
-      ? max(sourceRestrictAddressing)+1
-      : 0
-    );
-
-    label neighbourCoarseSize =
-    (
-        targetRestrictAddressing.size()
-      ? max(targetRestrictAddressing)+1
-      : 0
-    );
-
-    if (debug & 2)
-    {
-        Pout<< "AMI: Creating addressing and weights as agglomeration of AMI :"
-            << " source:" << fineAMI.srcAddress().size()
-            << " target:" << fineAMI.tgtAddress().size()
-            << " coarse source size:" << sourceCoarseSize
-            << " neighbour source size:" << neighbourCoarseSize
-            << endl;
-    }
-
-    if
-    (
-        fineAMI.srcAddress().size() != sourceRestrictAddressing.size()
-     || fineAMI.tgtAddress().size() != targetRestrictAddressing.size()
-    )
-    {
-        FatalErrorInFunction
-            << "Size mismatch." << nl
-            << "Source patch size:" << fineAMI.srcAddress().size() << nl
-            << "Source agglomeration size:"
-            << sourceRestrictAddressing.size() << nl
-            << "Target patch size:" << fineAMI.tgtAddress().size() << nl
-            << "Target agglomeration size:"
-            << targetRestrictAddressing.size()
-            << exit(FatalError);
-    }
-
-    // Agglomerate addresses and weights
-    agglomerate
-    (
-        fineAMI.tgtMapPtr_,
-        fineAMI.srcMagSf(),
-        fineAMI.srcAddress(),
-        fineAMI.srcWeights(),
-
-        sourceRestrictAddressing,
-        targetRestrictAddressing,
-
-        srcMagSf_,
-        srcAddress_,
-        srcWeights_,
-        srcWeightsSum_,
-        tgtMapPtr_
-    );
-
-    agglomerate
-    (
-        fineAMI.srcMapPtr_,
-        fineAMI.tgtMagSf(),
-        fineAMI.tgtAddress(),
-        fineAMI.tgtWeights(),
-
-        targetRestrictAddressing,
-        sourceRestrictAddressing,
-
-        tgtMagSf_,
-        tgtAddress_,
-        tgtWeights_,
-        tgtWeightsSum_,
-        srcMapPtr_
-    );
-
-    // Weight summation and normalisation
-    sumWeights(*this);
-    if (report)
-    {
-        reportSumWeights(*this);
-    }
-    if (requireMatch_)
-    {
-        normaliseWeights(*this);
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * //
-
-template<class SourcePatch, class TargetPatch>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::~AMIInterpolation()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::update
-(
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
-    const bool report
-)
-{
-    label srcTotalSize = returnReduce(srcPatch.size(), sumOp<label>());
-    label tgtTotalSize = returnReduce(tgtPatch.size(), sumOp<label>());
-
-    if (srcTotalSize == 0)
-    {
-        if (debug)
-        {
-            Info<< "AMI: no source faces present - no addressing constructed"
-                << endl;
-        }
-
-        return;
-    }
-
-    if (report)
-    {
-        Info<< indent
-            << "AMI: Creating addressing and weights between "
-            << srcTotalSize << " source faces and "
-            << tgtTotalSize << " target faces"
-            << endl;
-    }
-
-    // Calculate face areas
-    srcMagSf_ = patchMagSf(srcPatch, triMode_);
-    tgtMagSf_ = patchMagSf(tgtPatch, triMode_);
-
-    // Calculate if patches present on multiple processors
-    singlePatchProc_ = calcDistribution(srcPatch, tgtPatch);
-
-    if (singlePatchProc_ == -1)
-    {
-        // Convert local addressing to global addressing
-        globalIndex globalSrcFaces(srcPatch.size());
-        globalIndex globalTgtFaces(tgtPatch.size());
-
-        // Create processor map of overlapping faces. This map gets
-        // (possibly remote) faces from the tgtPatch such that they (together)
-        // cover all of the srcPatch
-        autoPtr<mapDistribute> mapPtr = calcProcMap(srcPatch, tgtPatch);
-        const mapDistribute& map = mapPtr();
-
-        // Create new target patch that fully encompasses source patch
-
-        // Faces and points
-        faceList newTgtFaces;
-        pointField newTgtPoints;
-
-        // Original faces from tgtPatch (in globalIndexing since might be
-        // remote)
-        labelList tgtFaceIDs;
-        distributeAndMergePatches
-        (
-            map,
-            tgtPatch,
-            globalTgtFaces,
-            newTgtFaces,
-            newTgtPoints,
-            tgtFaceIDs
-        );
-
-        TargetPatch
-            newTgtPatch
-            (
-                SubList<face>
-                (
-                    newTgtFaces,
-                    newTgtFaces.size()
-                ),
-                newTgtPoints
-            );
-        scalarField newTgtMagSf(patchMagSf(newTgtPatch, triMode_));
-
-        // Calculate AMI interpolation
-        autoPtr<AMIMethod<SourcePatch, TargetPatch>> AMIPtr
-        (
-            AMIMethod<SourcePatch, TargetPatch>::New
-            (
-                methodName_,
-                srcPatch,
-                newTgtPatch,
-                srcMagSf_,
-                newTgtMagSf,
-                triMode_,
-                reverseTarget_,
-                requireMatch_ && (lowWeightCorrection_ < 0)
-            )
-        );
-
-        AMIPtr->calculate
-        (
-            srcAddress_,
-            srcWeights_,
-            tgtAddress_,
-            tgtWeights_
-        );
-
-        // Now
-        // ~~~
-        //  srcAddress_ :   per srcPatch face a list of the newTgtPatch (not
-        //                  tgtPatch) faces it overlaps
-        //  tgtAddress_ :   per newTgtPatch (not tgtPatch) face a list of the
-        //                  srcPatch faces it overlaps
-
-
-        // Rework newTgtPatch indices into globalIndices of tgtPatch
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-        forAll(srcAddress_, i)
-        {
-            labelList& addressing = srcAddress_[i];
-            forAll(addressing, addri)
-            {
-                addressing[addri] = tgtFaceIDs[addressing[addri]];
-            }
-        }
-
-        forAll(tgtAddress_, i)
-        {
-            labelList& addressing = tgtAddress_[i];
-            forAll(addressing, addri)
-            {
-                addressing[addri] = globalSrcFaces.toGlobal(addressing[addri]);
-            }
-        }
-
-        // Send data back to originating procs. Note that contributions
-        // from different processors get added (ListAppendEqOp)
-
-        mapDistributeBase::distribute
-        (
-            Pstream::commsTypes::nonBlocking,
-            List<labelPair>(),
-            tgtPatch.size(),
-            map.constructMap(),
-            false,                      // has flip
-            map.subMap(),
-            false,                      // has flip
-            tgtAddress_,
-            ListAppendEqOp<label>(),
-            flipOp(),                   // flip operation
-            labelList()
-        );
-
-        mapDistributeBase::distribute
-        (
-            Pstream::commsTypes::nonBlocking,
-            List<labelPair>(),
-            tgtPatch.size(),
-            map.constructMap(),
-            false,
-            map.subMap(),
-            false,
-            tgtWeights_,
-            ListAppendEqOp<scalar>(),
-            flipOp(),
-            scalarList()
-        );
-
-        // Cache maps and reset addresses
-        List<Map<label>> cMap;
-        srcMapPtr_.reset(new mapDistribute(globalSrcFaces, tgtAddress_, cMap));
-        tgtMapPtr_.reset(new mapDistribute(globalTgtFaces, srcAddress_, cMap));
-
-        if (debug)
-        {
-            writeFaceConnectivity(srcPatch, newTgtPatch, srcAddress_);
-        }
-    }
-    else
-    {
-        // Calculate AMI interpolation
-        autoPtr<AMIMethod<SourcePatch, TargetPatch>> AMIPtr
-        (
-            AMIMethod<SourcePatch, TargetPatch>::New
-            (
-                methodName_,
-                srcPatch,
-                tgtPatch,
-                srcMagSf_,
-                tgtMagSf_,
-                triMode_,
-                reverseTarget_,
-                requireMatch_ && (lowWeightCorrection_ < 0)
-            )
-        );
-
-        AMIPtr->calculate
-        (
-            srcAddress_,
-            srcWeights_,
-            tgtAddress_,
-            tgtWeights_
-        );
-    }
-
-    // Weight summation and normalisation
-    sumWeights(*this);
-    if (report)
-    {
-        reportSumWeights(*this);
-    }
-    if (requireMatch_)
-    {
-        normaliseWeights(*this);
-    }
-
-    if (debug)
-    {
-        Info<< "AMIInterpolation : Constructed addressing and weights" << nl
-            << "    triMode        :"
-            << faceAreaIntersect::triangulationModeNames_[triMode_] << nl
-            << "    singlePatchProc:" << singlePatchProc_ << nl
-            << "    srcMagSf       :" << gSum(srcMagSf_) << nl
-            << "    tgtMagSf       :" << gSum(tgtMagSf_) << nl
-            << endl;
-    }
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::sumWeights
-(
-    AMIInterpolation<SourcePatch, TargetPatch>& AMI
-)
-{
-    sumWeights(AMI.srcWeights_, AMI.srcWeightsSum_);
-    sumWeights(AMI.tgtWeights_, AMI.tgtWeightsSum_);
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::sumWeights
-(
-    PtrList<AMIInterpolation<SourcePatch, TargetPatch>>& AMIs
-)
-{
-    UPtrList<scalarListList> srcWeights(AMIs.size());
-    forAll(AMIs, i)
-    {
-        srcWeights.set(i, &AMIs[i].srcWeights_);
-    }
-
-    sumWeights(srcWeights, AMIs[0].srcWeightsSum_);
-
-    for (label i = 1; i < AMIs.size(); ++ i)
-    {
-        AMIs[i].srcWeightsSum_ = AMIs[0].srcWeightsSum_;
-    }
-
-    UPtrList<scalarListList> tgtWeights(AMIs.size());
-    forAll(AMIs, i)
-    {
-        tgtWeights.set(i, &AMIs[i].tgtWeights_);
-    }
-
-    sumWeights(tgtWeights, AMIs[0].tgtWeightsSum_);
-
-    for (label i = 1; i < AMIs.size(); ++ i)
-    {
-        AMIs[i].tgtWeightsSum_ = AMIs[0].tgtWeightsSum_;
-    }
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::reportSumWeights
-(
-    AMIInterpolation<SourcePatch, TargetPatch>& AMI
-)
-{
-    reportSumWeights
-    (
-        AMI.srcMagSf_,
-        "source",
-        AMI.srcWeightsSum_,
-        AMI.lowWeightCorrection_
-    );
-
-    reportSumWeights
-    (
-        AMI.tgtMagSf_,
-        "target",
-        AMI.tgtWeightsSum_,
-        AMI.lowWeightCorrection_
-    );
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::normaliseWeights
-(
-    AMIInterpolation<SourcePatch, TargetPatch>& AMI
-)
-{
-    normaliseWeights(AMI.srcWeights_, AMI.srcWeightsSum_);
-    normaliseWeights(AMI.tgtWeights_, AMI.tgtWeightsSum_);
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::normaliseWeights
-(
-    UPtrList<AMIInterpolation<SourcePatch, TargetPatch>>& AMIs
-)
-{
-    UPtrList<scalarListList> srcWeights(AMIs.size());
-    forAll(AMIs, i)
-    {
-        srcWeights.set(i, &AMIs[i].srcWeights_);
-    }
-
-    normaliseWeights(srcWeights, AMIs[0].srcWeightsSum_);
-
-    UPtrList<scalarListList> tgtWeights(AMIs.size());
-    forAll(AMIs, i)
-    {
-        tgtWeights.set(i, &AMIs[i].tgtWeights_);
-    }
-
-    normaliseWeights(tgtWeights, AMIs[0].tgtWeightsSum_);
-}
-
-
-template<class SourcePatch, class TargetPatch>
 template<class Type, class CombineOp>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
+void CML::AMIInterpolation::interpolateToTarget
 (
     const UList<Type>& fld,
     const CombineOp& cop,
@@ -2092,9 +804,8 @@ void CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
 }
 
 
-template<class SourcePatch, class TargetPatch>
 template<class Type, class CombineOp>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
+void CML::AMIInterpolation::interpolateToSource
 (
     const UList<Type>& fld,
     const CombineOp& cop,
@@ -2177,10 +888,9 @@ void CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 }
 
 
-template<class SourcePatch, class TargetPatch>
 template<class Type, class CombineOp>
 CML::tmp<CML::Field<Type>>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
+CML::AMIInterpolation::interpolateToSource
 (
     const Field<Type>& fld,
     const CombineOp& cop,
@@ -2208,10 +918,9 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 }
 
 
-template<class SourcePatch, class TargetPatch>
 template<class Type, class CombineOp>
 CML::tmp<CML::Field<Type>>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
+CML::AMIInterpolation::interpolateToSource
 (
     const tmp<Field<Type>>& tFld,
     const CombineOp& cop,
@@ -2222,10 +931,9 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 }
 
 
-template<class SourcePatch, class TargetPatch>
 template<class Type, class CombineOp>
 CML::tmp<CML::Field<Type>>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
+CML::AMIInterpolation::interpolateToTarget
 (
     const Field<Type>& fld,
     const CombineOp& cop,
@@ -2253,10 +961,9 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
 }
 
 
-template<class SourcePatch, class TargetPatch>
 template<class Type, class CombineOp>
 CML::tmp<CML::Field<Type>>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
+CML::AMIInterpolation::interpolateToTarget
 (
     const tmp<Field<Type>>& tFld,
     const CombineOp& cop,
@@ -2267,10 +974,9 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
 }
 
 
-template<class SourcePatch, class TargetPatch>
 template<class Type>
 CML::tmp<CML::Field<Type>>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
+CML::AMIInterpolation::interpolateToSource
 (
     const Field<Type>& fld,
     const UList<Type>& defaultValues
@@ -2280,10 +986,9 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 }
 
 
-template<class SourcePatch, class TargetPatch>
 template<class Type>
 CML::tmp<CML::Field<Type>>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
+CML::AMIInterpolation::interpolateToSource
 (
     const tmp<Field<Type>>& tFld,
     const UList<Type>& defaultValues
@@ -2293,10 +998,9 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToSource
 }
 
 
-template<class SourcePatch, class TargetPatch>
 template<class Type>
 CML::tmp<CML::Field<Type>>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
+CML::AMIInterpolation::interpolateToTarget
 (
     const Field<Type>& fld,
     const UList<Type>& defaultValues
@@ -2306,10 +1010,9 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
 }
 
 
-template<class SourcePatch, class TargetPatch>
 template<class Type>
 CML::tmp<CML::Field<Type>>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
+CML::AMIInterpolation::interpolateToTarget
 (
     const tmp<Field<Type>>& tFld,
     const UList<Type>& defaultValues
@@ -2318,594 +1021,6 @@ CML::AMIInterpolation<SourcePatch, TargetPatch>::interpolateToTarget
     return interpolateToTarget(tFld(), plusEqOp<Type>(), defaultValues);
 }
 
-
-template<class SourcePatch, class TargetPatch>
-CML::label CML::AMIInterpolation<SourcePatch, TargetPatch>::srcPointFace
-(
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
-    const vector& n,
-    const label tgtFacei,
-    point& tgtPoint
-)
-const
-{
-    const pointField& srcPoints = srcPatch.points();
-
-    // Source face addresses that intersect target face tgtFacei
-    const labelList& addr = tgtAddress_[tgtFacei];
-
-    pointHit nearest;
-    nearest.setDistance(GREAT);
-    label nearestFacei = -1;
-
-    forAll(addr, i)
-    {
-        const label srcFacei = addr[i];
-        const face& f = srcPatch[srcFacei];
-
-        pointHit ray = f.ray(tgtPoint, n, srcPoints);
-
-        if (ray.hit())
-        {
-            // tgtPoint = ray.rawPoint();
-            return srcFacei;
-        }
-        else if (ray.distance() < nearest.distance())
-        {
-            nearest = ray;
-            nearestFacei = srcFacei;
-        }
-    }
-
-    if (nearest.hit() || nearest.eligibleMiss())
-    {
-        // tgtPoint = nearest.rawPoint();
-        return nearestFacei;
-    }
-
-    return -1;
-}
-
-
-template<class SourcePatch, class TargetPatch>
-CML::label CML::AMIInterpolation<SourcePatch, TargetPatch>::tgtPointFace
-(
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
-    const vector& n,
-    const label srcFacei,
-    point& srcPoint
-)
-const
-{
-    const pointField& tgtPoints = tgtPatch.points();
-
-    pointHit nearest;
-    nearest.setDistance(GREAT);
-    label nearestFacei = -1;
-
-    // Target face addresses that intersect source face srcFacei
-    const labelList& addr = srcAddress_[srcFacei];
-
-    forAll(addr, i)
-    {
-        const label tgtFacei = addr[i];
-        const face& f = tgtPatch[tgtFacei];
-
-        pointHit ray = f.ray(srcPoint, n, tgtPoints);
-
-        if (ray.hit())
-        {
-            // srcPoint = ray.rawPoint();
-            return tgtFacei;
-        }
-        else if (ray.distance() < nearest.distance())
-        {
-            nearest = ray;
-            nearestFacei = tgtFacei;
-        }
-    }
-
-    if (nearest.hit() || nearest.eligibleMiss())
-    {
-        // srcPoint = nearest.rawPoint();
-        return nearestFacei;
-    }
-
-    return -1;
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::writeFaceConnectivity
-(
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch,
-    const labelListList& srcAddress
-)
-const
-{
-    OFstream os("faceConnectivity" + CML::name(Pstream::myProcNo()) + ".obj");
-
-    label pti = 1;
-
-    forAll(srcAddress, i)
-    {
-        const labelList& addr = srcAddress[i];
-        const point& srcPt = srcPatch.faceCentres()[i];
-
-        forAll(addr, j)
-        {
-            label tgtPti = addr[j];
-            const point& tgtPt = tgtPatch.faceCentres()[tgtPti];
-
-            meshTools::writeOBJ(os, srcPt);
-            meshTools::writeOBJ(os, tgtPt);
-
-            os  << "l " << pti << " " << pti + 1 << endl;
-
-            pti += 2;
-        }
-    }
-}
-
-
-#include "mergePoints.hpp"
-#include "mapDistribute.hpp"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class SourcePatch, class TargetPatch>
-CML::label CML::AMIInterpolation<SourcePatch, TargetPatch>::calcDistribution
-(
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch
-) const
-{
-    label proci = 0;
-
-    if (Pstream::parRun())
-    {
-        List<label> facesPresentOnProc(Pstream::nProcs(), 0);
-        if ((srcPatch.size() > 0) || (tgtPatch.size() > 0))
-        {
-            facesPresentOnProc[Pstream::myProcNo()] = 1;
-        }
-        else
-        {
-            facesPresentOnProc[Pstream::myProcNo()] = 0;
-        }
-
-        Pstream::gatherList(facesPresentOnProc);
-        Pstream::scatterList(facesPresentOnProc);
-
-        label nHaveFaces = sum(facesPresentOnProc);
-
-        if (nHaveFaces > 1)
-        {
-            proci = -1;
-            if (debug)
-            {
-                InfoInFunction
-                    << "AMI split across multiple processors" << endl;
-            }
-        }
-        else if (nHaveFaces == 1)
-        {
-            proci = findIndex(facesPresentOnProc, 1);
-            if (debug)
-            {
-                InfoInFunction
-                    << "AMI local to processor" << proci << endl;
-            }
-        }
-    }
-
-
-    // Either not parallel or no faces on any processor
-    return proci;
-}
-
-
-template<class SourcePatch, class TargetPatch>
-CML::label
-CML::AMIInterpolation<SourcePatch, TargetPatch>::calcOverlappingProcs
-(
-    const List<treeBoundBoxList>& procBb,
-    const treeBoundBox& bb,
-    boolList& overlaps
-) const
-{
-    overlaps.setSize(procBb.size());
-    overlaps = false;
-
-    label nOverlaps = 0;
-
-    forAll(procBb, proci)
-    {
-        const List<treeBoundBox>& bbs = procBb[proci];
-
-        forAll(bbs, bbi)
-        {
-            if (bbs[bbi].overlaps(bb))
-            {
-                overlaps[proci] = true;
-                nOverlaps++;
-                break;
-            }
-        }
-    }
-    return nOverlaps;
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::distributePatches
-(
-    const mapDistribute& map,
-    const TargetPatch& pp,
-    const globalIndex& gi,
-    List<faceList>& faces,
-    List<pointField>& points,
-    List<labelList>& faceIDs
-) const
-{
-    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
-
-    for (label domain = 0; domain < Pstream::nProcs(); domain++)
-    {
-        const labelList& sendElems = map.subMap()[domain];
-
-        if (domain != Pstream::myProcNo() && sendElems.size())
-        {
-            labelList globalElems(sendElems.size());
-            forAll(sendElems, i)
-            {
-                globalElems[i] = gi.toGlobal(sendElems[i]);
-            }
-
-            faceList subFaces(UIndirectList<face>(pp, sendElems));
-            primitivePatch subPatch
-            (
-                SubList<face>(subFaces, subFaces.size()),
-                pp.points()
-            );
-
-            if (debug & 2)
-            {
-                Pout<< "distributePatches: to processor " << domain
-                    << " sending faces " << subPatch.faceCentres() << endl;
-            }
-
-            UOPstream toDomain(domain, pBufs);
-            toDomain
-                << subPatch.localFaces() << subPatch.localPoints()
-                << globalElems;
-        }
-    }
-
-    // Start receiving
-    pBufs.finishedSends();
-
-    faces.setSize(Pstream::nProcs());
-    points.setSize(Pstream::nProcs());
-    faceIDs.setSize(Pstream::nProcs());
-
-    {
-        // Set up 'send' to myself
-        const labelList& sendElems = map.subMap()[Pstream::myProcNo()];
-        faceList subFaces(UIndirectList<face>(pp, sendElems));
-        primitivePatch subPatch
-        (
-            SubList<face>(subFaces, subFaces.size()),
-            pp.points()
-        );
-
-        // Receive
-        if (debug & 2)
-        {
-            Pout<< "distributePatches: to processor " << Pstream::myProcNo()
-                << " sending faces " << subPatch.faceCentres() << endl;
-        }
-
-        faces[Pstream::myProcNo()] = subPatch.localFaces();
-        points[Pstream::myProcNo()] = subPatch.localPoints();
-
-        faceIDs[Pstream::myProcNo()].setSize(sendElems.size());
-        forAll(sendElems, i)
-        {
-            faceIDs[Pstream::myProcNo()][i] = gi.toGlobal(sendElems[i]);
-        }
-    }
-
-    // Consume
-    for (label domain = 0; domain < Pstream::nProcs(); domain++)
-    {
-        const labelList& recvElems = map.constructMap()[domain];
-
-        if (domain != Pstream::myProcNo() && recvElems.size())
-        {
-            UIPstream str(domain, pBufs);
-
-            str >> faces[domain]
-                >> points[domain]
-                >> faceIDs[domain];
-        }
-    }
-}
-
-
-template<class SourcePatch, class TargetPatch>
-void CML::AMIInterpolation<SourcePatch, TargetPatch>::
-distributeAndMergePatches
-(
-    const mapDistribute& map,
-    const TargetPatch& tgtPatch,
-    const globalIndex& gi,
-    faceList& tgtFaces,
-    pointField& tgtPoints,
-    labelList& tgtFaceIDs
-) const
-{
-    // Exchange per-processor data
-    List<faceList> allFaces;
-    List<pointField> allPoints;
-    List<labelList> allTgtFaceIDs;
-    distributePatches(map, tgtPatch, gi, allFaces, allPoints, allTgtFaceIDs);
-
-    // Renumber and flatten
-    label nFaces = 0;
-    label nPoints = 0;
-    forAll(allFaces, proci)
-    {
-        nFaces += allFaces[proci].size();
-        nPoints += allPoints[proci].size();
-    }
-
-    tgtFaces.setSize(nFaces);
-    tgtPoints.setSize(nPoints);
-    tgtFaceIDs.setSize(nFaces);
-
-    nFaces = 0;
-    nPoints = 0;
-
-    // My own data first
-    {
-        const labelList& faceIDs = allTgtFaceIDs[Pstream::myProcNo()];
-        SubList<label>(tgtFaceIDs, faceIDs.size()) = faceIDs;
-
-        const faceList& fcs = allFaces[Pstream::myProcNo()];
-        forAll(fcs, i)
-        {
-            const face& f = fcs[i];
-            face& newF = tgtFaces[nFaces++];
-            newF.setSize(f.size());
-            forAll(f, fp)
-            {
-                newF[fp] = f[fp] + nPoints;
-            }
-        }
-
-        const pointField& pts = allPoints[Pstream::myProcNo()];
-        forAll(pts, i)
-        {
-            tgtPoints[nPoints++] = pts[i];
-        }
-    }
-
-
-    // Other proc data follows
-    forAll(allFaces, proci)
-    {
-        if (proci != Pstream::myProcNo())
-        {
-            const labelList& faceIDs = allTgtFaceIDs[proci];
-            SubList<label>(tgtFaceIDs, faceIDs.size(), nFaces) = faceIDs;
-
-            const faceList& fcs = allFaces[proci];
-            forAll(fcs, i)
-            {
-                const face& f = fcs[i];
-                face& newF = tgtFaces[nFaces++];
-                newF.setSize(f.size());
-                forAll(f, fp)
-                {
-                    newF[fp] = f[fp] + nPoints;
-                }
-            }
-
-            const pointField& pts = allPoints[proci];
-            forAll(pts, i)
-            {
-                tgtPoints[nPoints++] = pts[i];
-            }
-        }
-    }
-
-    // Merge
-    labelList oldToNew;
-    pointField newTgtPoints;
-    bool hasMerged = mergePoints
-    (
-        tgtPoints,
-        SMALL,
-        false,
-        oldToNew,
-        newTgtPoints
-    );
-
-    if (hasMerged)
-    {
-        if (debug)
-        {
-            Pout<< "Merged from " << tgtPoints.size()
-                << " down to " << newTgtPoints.size() << " points" << endl;
-        }
-
-        tgtPoints.transfer(newTgtPoints);
-        forAll(tgtFaces, i)
-        {
-            inplaceRenumber(oldToNew, tgtFaces[i]);
-        }
-    }
-}
-
-
-template<class SourcePatch, class TargetPatch>
-CML::autoPtr<CML::mapDistribute>
-CML::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
-(
-    const SourcePatch& srcPatch,
-    const TargetPatch& tgtPatch
-) const
-{
-    // Get decomposition of patch
-    List<treeBoundBoxList> procBb(Pstream::nProcs());
-
-    if (srcPatch.size())
-    {
-        procBb[Pstream::myProcNo()] = treeBoundBoxList
-        (
-            1,  // For now single bounding box per proc
-            treeBoundBox
-            (
-                srcPatch.points(),
-                srcPatch.meshPoints()
-            )
-        );
-    }
-    else
-    {
-        procBb[Pstream::myProcNo()] = treeBoundBoxList();
-    }
-
-    // slightly increase size of bounding boxes to allow for cases where
-    // bounding boxes are perfectly aligned
-    forAll(procBb[Pstream::myProcNo()], bbi)
-    {
-        treeBoundBox& bb = procBb[Pstream::myProcNo()][bbi];
-        bb.inflate(0.01);
-    }
-
-    Pstream::gatherList(procBb);
-    Pstream::scatterList(procBb);
-
-
-    if (debug)
-    {
-        Info<< "Determining extent of srcPatch per processor:" << nl
-            << "\tproc\tbb" << endl;
-        forAll(procBb, proci)
-        {
-            Info<< '\t' << proci << '\t' << procBb[proci] << endl;
-        }
-    }
-
-
-    // Determine which faces of tgtPatch overlaps srcPatch per proc
-    const faceList& faces = tgtPatch.localFaces();
-    const pointField& points = tgtPatch.localPoints();
-
-    labelListList sendMap;
-
-    {
-        // Per processor indices into all segments to send
-        List<DynamicList<label>> dynSendMap(Pstream::nProcs());
-
-        // Work array - whether processor bb overlaps the face bounds
-        boolList procBbOverlaps(Pstream::nProcs());
-
-        forAll(faces, facei)
-        {
-            if (faces[facei].size())
-            {
-                treeBoundBox faceBb(points, faces[facei]);
-
-                // Find the processor this face overlaps
-                calcOverlappingProcs(procBb, faceBb, procBbOverlaps);
-
-                forAll(procBbOverlaps, proci)
-                {
-                    if (procBbOverlaps[proci])
-                    {
-                        dynSendMap[proci].append(facei);
-                    }
-                }
-            }
-        }
-
-        // Convert dynamicList to labelList
-        sendMap.setSize(Pstream::nProcs());
-        forAll(sendMap, proci)
-        {
-            sendMap[proci].transfer(dynSendMap[proci]);
-        }
-    }
-
-    // Debug printing
-    if (debug)
-    {
-        Pout<< "Of my " << faces.size() << " I need to send to:" << nl
-            << "\tproc\tfaces" << endl;
-        forAll(sendMap, proci)
-        {
-            Pout<< '\t' << proci << '\t' << sendMap[proci].size() << endl;
-        }
-    }
-
-
-    // Send over how many faces I need to receive
-    labelListList sendSizes(Pstream::nProcs());
-    sendSizes[Pstream::myProcNo()].setSize(Pstream::nProcs());
-    forAll(sendMap, proci)
-    {
-        sendSizes[Pstream::myProcNo()][proci] = sendMap[proci].size();
-    }
-    Pstream::gatherList(sendSizes);
-    Pstream::scatterList(sendSizes);
-
-
-    // Determine order of receiving
-    labelListList constructMap(Pstream::nProcs());
-
-    // My local segment first
-    constructMap[Pstream::myProcNo()] = identity
-    (
-        sendMap[Pstream::myProcNo()].size()
-    );
-
-    label segmenti = constructMap[Pstream::myProcNo()].size();
-    forAll(constructMap, proci)
-    {
-        if (proci != Pstream::myProcNo())
-        {
-            // What I need to receive is what other processor is sending to me
-            label nRecv = sendSizes[proci][Pstream::myProcNo()];
-            constructMap[proci].setSize(nRecv);
-
-            for (label i = 0; i < nRecv; i++)
-            {
-                constructMap[proci][i] = segmenti++;
-            }
-        }
-    }
-
-    autoPtr<mapDistribute> mapPtr
-    (
-        new mapDistribute
-        (
-            segmenti,       // size after construction
-            sendMap.xfer(),
-            constructMap.xfer()
-        )
-    );
-
-    return mapPtr;
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

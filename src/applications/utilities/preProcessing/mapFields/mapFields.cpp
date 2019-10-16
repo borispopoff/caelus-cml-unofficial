@@ -255,7 +255,7 @@ int main(int argc, char *argv[])
         meshToMesh::interpolationMethod method =
             meshToMesh::interpolationMethodNames_[mapMethod];
 
-        patchMapMethod = AMIPatchToPatchInterpolation::interpolationMethodToWord
+        patchMapMethod = AMIInterpolation::interpolationMethodToWord
         (
             meshToMesh::interpolationMethodAMI(method)
         );

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2017 OpenFOAM Foundation
+Copyright (C) 2012-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -344,24 +344,24 @@ void CML::meshToMesh::calculate(const word& methodName)
 }
 
 
-CML::AMIPatchToPatchInterpolation::interpolationMethod
+CML::AMIInterpolation::interpolationMethod
 CML::meshToMesh::interpolationMethodAMI(const interpolationMethod method)
 {
     switch (method)
     {
         case imDirect:
         {
-            return AMIPatchToPatchInterpolation::imDirect;
+            return AMIInterpolation::imDirect;
             break;
         }
         case imMapNearest:
         {
-            return AMIPatchToPatchInterpolation::imMapNearest;
+            return AMIInterpolation::imMapNearest;
             break;
         }
         case imCellVolumeWeight:
         {
-            return AMIPatchToPatchInterpolation::imFaceAreaWeight;
+            return AMIInterpolation::imFaceAreaWeight;
             break;
         }
         default:
@@ -372,7 +372,7 @@ CML::meshToMesh::interpolationMethodAMI(const interpolationMethod method)
         }
     }
 
-    return AMIPatchToPatchInterpolation::imDirect;
+    return AMIInterpolation::imDirect;
 }
 
 
@@ -389,11 +389,11 @@ void CML::meshToMesh::calculatePatchAMIs(const word& AMIMethodName)
 
     forAll(srcPatchID_, i)
     {
-        label srcPatchI = srcPatchID_[i];
-        label tgtPatchI = tgtPatchID_[i];
+        label srcPatchi = srcPatchID_[i];
+        label tgtPatchi = tgtPatchID_[i];
 
-        const polyPatch& srcPP = srcRegion_.boundaryMesh()[srcPatchI];
-        const polyPatch& tgtPP = tgtRegion_.boundaryMesh()[tgtPatchI];
+        const polyPatch& srcPP = srcRegion_.boundaryMesh()[srcPatchi];
+        const polyPatch& tgtPP = tgtRegion_.boundaryMesh()[tgtPatchi];
 
         Info<< "Creating AMI between source patch " << srcPP.name()
             << " and target patch " << tgtPP.name()
@@ -405,7 +405,7 @@ void CML::meshToMesh::calculatePatchAMIs(const word& AMIMethodName)
         patchAMIs_.set
         (
             i,
-            new AMIPatchToPatchInterpolation
+            new AMIInterpolation
             (
                 srcPP,
                 tgtPP,
@@ -443,11 +443,11 @@ void CML::meshToMesh::constructNoCuttingPatches
             {
                 srcPatchID.append(pp.index());
 
-                label tgtPatchI = tgtBM.findPatchID(pp.name());
+                label tgtPatchi = tgtBM.findPatchID(pp.name());
 
-                if (tgtPatchI != -1)
+                if (tgtPatchi != -1)
                 {
-                    tgtPatchID.append(tgtPatchI);
+                    tgtPatchID.append(tgtPatchi);
                 }
                 else
                 {
@@ -541,7 +541,7 @@ CML::meshToMesh::meshToMesh
     constructNoCuttingPatches
     (
         interpolationMethodNames_[method],
-        AMIPatchToPatchInterpolation::interpolationMethodToWord
+        AMIInterpolation::interpolationMethodToWord
         (
             interpolationMethodAMI(method)
         ),
@@ -605,7 +605,7 @@ CML::meshToMesh::meshToMesh
     constructFromCuttingPatches
     (
         interpolationMethodNames_[method],
-        AMIPatchToPatchInterpolation::interpolationMethodToWord
+        AMIInterpolation::interpolationMethodToWord
         (
             interpolationMethodAMI(method)
         ),

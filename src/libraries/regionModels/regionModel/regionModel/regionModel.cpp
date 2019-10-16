@@ -182,7 +182,7 @@ bool CML::regionModels::regionModel::read(const dictionary& dict)
 }
 
 
-const CML::AMIPatchToPatchInterpolation&
+const CML::AMIInterpolation&
 CML::regionModels::regionModel::interRegionAMI
 (
     const regionModel& nbrRegion,
@@ -208,13 +208,13 @@ CML::regionModels::regionModel::interRegionAMI
             interRegionAMI_[nbrRegionID].set
             (
                 regionPatchi,
-                new AMIPatchToPatchInterpolation
+                new AMIInterpolation
                 (
                     p,
                     nbrP,
                     faceAreaIntersect::tmMesh,
                     true,
-                    AMIPatchToPatchInterpolation::imFaceAreaWeight,
+                    AMIInterpolation::imFaceAreaWeight,
                     -1,
                     flip
                 )
@@ -242,7 +242,7 @@ CML::regionModels::regionModel::interRegionAMI
         interRegionAMI_.set
         (
             nbrRegionID,
-            new PtrList<AMIPatchToPatchInterpolation>(nPatch)
+            new PtrList<AMIInterpolation>(nPatch)
         );
 
         int oldTag = UPstream::msgType();
@@ -251,13 +251,13 @@ CML::regionModels::regionModel::interRegionAMI
         interRegionAMI_[nbrRegionID].set
         (
             regionPatchi,
-            new AMIPatchToPatchInterpolation
+            new AMIInterpolation
             (
                 p,
                 nbrP,
                 faceAreaIntersect::tmMesh,
                 true,
-                AMIPatchToPatchInterpolation::imFaceAreaWeight,
+                AMIInterpolation::imFaceAreaWeight,
                 -1,
                 flip
             )

@@ -120,8 +120,7 @@ protected:
             mutable wordList interRegionAMINames_;
 
             //- List of AMI objects per coupled region
-            mutable PtrList<PtrList<AMIPatchToPatchInterpolation>>
-                interRegionAMI_;
+            mutable PtrList<PtrList<AMIInterpolation>> interRegionAMI_;
 
 
     // Protected member functions
@@ -133,7 +132,7 @@ protected:
         virtual bool read(const dictionary& dict);
 
         //- Create or return a new inter-region AMI object
-        virtual const AMIPatchToPatchInterpolation& interRegionAMI
+        virtual const AMIInterpolation& interRegionAMI
         (
             const regionModel& nbrRegion,
             const label regionPatchi,
@@ -531,7 +530,7 @@ CML::regionModels::regionModel::mapRegionPatchField
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag + 1;
 
-    const AMIPatchToPatchInterpolation& ami =
+    const AMIInterpolation& ami =
         interRegionAMI(nbrRegion, regionPatchi, nbrPatchi, flip);
 
     tmp<Field<Type>> tresult(ami.interpolateToSource(nbrField));
@@ -563,7 +562,7 @@ CML::regionModels::regionModel::mapRegionPatchField
         int oldTag = UPstream::msgType();
         UPstream::msgType() = oldTag + 1;
 
-        const AMIPatchToPatchInterpolation& ami =
+        const AMIInterpolation& ami =
             interRegionAMI(nbrRegion, regionPatchi, nbrPatchi, flip);
 
         const fieldType& nbrField =
@@ -615,7 +614,7 @@ CML::regionModels::regionModel::mapRegionPatchInternalField
         int oldTag = UPstream::msgType();
         UPstream::msgType() = oldTag + 1;
 
-        const AMIPatchToPatchInterpolation& ami =
+        const AMIInterpolation& ami =
             interRegionAMI(nbrRegion, regionPatchi, nbrPatchi, flip);
 
         const fieldType& nbrField =

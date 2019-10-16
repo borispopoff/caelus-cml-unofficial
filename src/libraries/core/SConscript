@@ -661,8 +661,8 @@ src_core = Split("""
     meshTools/triSurface/triSurfaceTools/geompack/geompack.cpp
     meshTools/triSurface/triSurfaceTools/pointToPointPlanarInterpolation.cpp
     meshTools/twoDPointCorrector/twoDPointCorrector.cpp
-    meshTools/AMIInterpolation/AMIInterpolation/AMIInterpolationName.cpp
-    meshTools/AMIInterpolation/AMIInterpolation/AMIPatchToPatchInterpolation.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIInterpolation.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIInterpolationParallelOps.cpp
     meshTools/AMIInterpolation/faceAreaIntersect/faceAreaIntersect.cpp
     meshTools/AMIInterpolation/GAMG/interfaces/cyclicAMIGAMGInterface/cyclicAMIGAMGInterface.cpp
     meshTools/AMIInterpolation/GAMG/interfaceFields/cyclicAMIGAMGInterfaceField/cyclicAMIGAMGInterfaceField.cpp
@@ -670,6 +670,12 @@ src_core = Split("""
     meshTools/AMIInterpolation/GAMG/interfaceFields/cyclicACMIGAMGInterfaceField/cyclicACMIGAMGInterfaceField.cpp
     meshTools/AMIInterpolation/GAMG/interfaces/cyclicRepeatAMIGAMGInterface/cyclicRepeatAMIGAMGInterface.cpp
     meshTools/AMIInterpolation/GAMG/interfaceFields/cyclicRepeatAMIGAMGInterfaceField/cyclicRepeatAMIGAMGInterfaceField.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/AMIMethod/AMIMethod.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/directAMI/directAMI.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/faceAreaWeightAMI/faceAreaWeightAMI.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/mapNearestAMI/mapNearestAMI.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/partialFaceAreaWeightAMI/partialFaceAreaWeightAMI.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/sweptFaceAreaWeightAMI/sweptFaceAreaWeightAMI.cpp
     meshTools/AMIInterpolation/patches/cyclicAMI/cyclicAMILduInterfaceField/cyclicAMILduInterface.cpp
     meshTools/AMIInterpolation/patches/cyclicAMI/cyclicAMILduInterfaceField/cyclicAMILduInterfaceField.cpp
     meshTools/AMIInterpolation/patches/cyclicAMI/cyclicAMIPolyPatch/cyclicAMIPolyPatch.cpp

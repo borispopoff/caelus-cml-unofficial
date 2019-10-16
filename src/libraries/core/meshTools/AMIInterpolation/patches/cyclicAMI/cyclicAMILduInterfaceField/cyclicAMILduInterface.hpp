@@ -32,7 +32,7 @@ SourceFiles
 #define cyclicAMILduInterface_H
 
 #include "primitiveFieldsFwd.hpp"
-#include "AMIPatchToPatchInterpolation.hpp"
+#include "AMIInterpolation.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -77,8 +77,7 @@ public:
             virtual const cyclicAMILduInterface& neighbPatch() const = 0;
 
             //- Return a reference to the AMI interpolators
-            virtual const PtrList<AMIPatchToPatchInterpolation>&
-                AMIs() const = 0;
+            virtual const PtrList<AMIInterpolation>& AMIs() const = 0;
 
             // Return a reference to the AMI transformations
             virtual const List<vectorTensorTransform>&

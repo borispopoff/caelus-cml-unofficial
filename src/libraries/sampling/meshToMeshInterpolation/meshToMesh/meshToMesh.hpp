@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2015 OpenFOAM Foundation
+Copyright (C) 2012-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,7 +42,7 @@ SourceFiles
 #include "mapDistribute.hpp"
 #include "volFieldsFwd.hpp"
 #include "NamedEnum.hpp"
-#include "AMIPatchToPatchInterpolation.hpp"
+#include "AMIInterpolation.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -87,7 +87,7 @@ private:
         List<label> tgtPatchID_;
 
         //- List of AMIs between source and target patches
-        PtrList<AMIPatchToPatchInterpolation> patchAMIs_;
+        PtrList<AMIInterpolation> patchAMIs_;
 
         //- Cutting patches whose values are set using a zero-gradient condition
         List<label> cuttingPatches_;
@@ -168,7 +168,7 @@ private:
         );
 
         //- Return the list of AMIs between source and target patches
-        inline const PtrList<AMIPatchToPatchInterpolation>&
+        inline const PtrList<AMIInterpolation>&
         patchAMIs() const;
 
 
@@ -311,11 +311,8 @@ public:
             inline scalar V() const;
 
             //- Conversion between mesh and patch interpolation methods
-            static AMIPatchToPatchInterpolation::interpolationMethod
-            interpolationMethodAMI
-            (
-                const interpolationMethod method
-            );
+            static AMIInterpolation::interpolationMethod
+            interpolationMethodAMI(const interpolationMethod method);
 
 
         // Evaluation
@@ -771,7 +768,11 @@ CML::tmp<CML::Field<Type>> CML::meshToMesh::mapTgtToSrc
 {
     tmp<Field<Type>> tresult
     (
-        new Field<Type>(srcToTgtCellAddr_.size(), Zero)
+        new Field<Type>
+        (
+            srcToTgtCellAddr_.size(),
+            Zero
+        )
     );
 
     mapTgtToSrc(tgtField, cop, tresult());
@@ -821,15 +822,15 @@ void CML::meshToMesh::mapSrcToTgt
 {
     mapSrcToTgt(field, cop, result.internalField());
 
-    const PtrList<AMIPatchToPatchInterpolation>& AMIList = patchAMIs();
+    const PtrList<AMIInterpolation>& AMIList = patchAMIs();
 
     forAll(AMIList, i)
     {
-        label srcPatchI = srcPatchID_[i];
-        label tgtPatchI = tgtPatchID_[i];
+        label srcPatchi = srcPatchID_[i];
+        label tgtPatchi = tgtPatchID_[i];
 
-        const Field<Type>& srcField = field.boundaryField()[srcPatchI];
-        Field<Type>& tgtField = result.boundaryField()[tgtPatchI];
+        const Field<Type>& srcField = field.boundaryField()[srcPatchi];
+        Field<Type>& tgtField = result.boundaryField()[tgtPatchi];
 
         tgtField = Type(Zero);
 
@@ -869,27 +870,27 @@ CML::meshToMesh::mapSrcToTgt
 
     PtrList<fvPatchField<Type>> tgtPatchFields(tgtBm.size());
 
-    // constuct tgt boundary patch types as copy of 'field' boundary types
+    // construct tgt boundary patch types as copy of 'field' boundary types
     // note: this will provide place holders for fields with additional
     // entries, but these values will need to be reset
     forAll(tgtPatchID_, i)
     {
-        label srcPatchI = srcPatchID_[i];
-        label tgtPatchI = tgtPatchID_[i];
+        label srcPatchi = srcPatchID_[i];
+        label tgtPatchi = tgtPatchID_[i];
 
-        if (!tgtPatchFields.set(tgtPatchI))
+        if (!tgtPatchFields.set(tgtPatchi))
         {
             tgtPatchFields.set
             (
-                tgtPatchI,
+                tgtPatchi,
                 fvPatchField<Type>::New
                 (
-                    srcBfld[srcPatchI],
-                    tgtMesh.boundary()[tgtPatchI],
+                    srcBfld[srcPatchi],
+                    tgtMesh.boundary()[tgtPatchi],
                     DimensionedField<Type, volMesh>::null(),
                     directFvPatchFieldMapper
                     (
-                        labelList(tgtMesh.boundary()[tgtPatchI].size(), -1)
+                        labelList(tgtMesh.boundary()[tgtPatchi].size(), -1)
                     )
                 )
             );
@@ -897,19 +898,19 @@ CML::meshToMesh::mapSrcToTgt
     }
 
     // Any unset tgtPatchFields become calculated
-    forAll(tgtPatchFields, tgtPatchI)
+    forAll(tgtPatchFields, tgtPatchi)
     {
-        if (!tgtPatchFields.set(tgtPatchI))
+        if (!tgtPatchFields.set(tgtPatchi))
         {
             // Note: use factory New method instead of direct generation of
             //       calculated so we keep constraints
             tgtPatchFields.set
             (
-                tgtPatchI,
+                tgtPatchi,
                 fvPatchField<Type>::New
                 (
                     calculatedFvPatchField<Type>::typeName,
-                    tgtMesh.boundary()[tgtPatchI],
+                    tgtMesh.boundary()[tgtPatchi],
                     DimensionedField<Type, volMesh>::null()
                 )
             );
@@ -985,15 +986,15 @@ void CML::meshToMesh::mapTgtToSrc
 {
     mapTgtToSrc(field, cop, result.internalField());
 
-    const PtrList<AMIPatchToPatchInterpolation>& AMIList = patchAMIs();
+    const PtrList<AMIInterpolation>& AMIList = patchAMIs();
 
     forAll(AMIList, i)
     {
-        label srcPatchI = srcPatchID_[i];
-        label tgtPatchI = tgtPatchID_[i];
+        label srcPatchi = srcPatchID_[i];
+        label tgtPatchi = tgtPatchID_[i];
 
-        Field<Type>& srcField = result.boundaryField()[srcPatchI];
-        const Field<Type>& tgtField = field.boundaryField()[tgtPatchI];
+        Field<Type>& srcField = result.boundaryField()[srcPatchi];
+        const Field<Type>& tgtField = field.boundaryField()[tgtPatchi];
 
         srcField = Type(Zero);
 
@@ -1037,22 +1038,22 @@ CML::meshToMesh::mapTgtToSrc
     // entries, but these values will need to be reset
     forAll(srcPatchID_, i)
     {
-        label srcPatchI = srcPatchID_[i];
-        label tgtPatchI = tgtPatchID_[i];
+        label srcPatchi = srcPatchID_[i];
+        label tgtPatchi = tgtPatchID_[i];
 
-        if (!srcPatchFields.set(tgtPatchI))
+        if (!srcPatchFields.set(tgtPatchi))
         {
             srcPatchFields.set
             (
-                srcPatchI,
+                srcPatchi,
                 fvPatchField<Type>::New
                 (
-                    tgtBfld[srcPatchI],
-                    srcMesh.boundary()[tgtPatchI],
+                    tgtBfld[srcPatchi],
+                    srcMesh.boundary()[tgtPatchi],
                     DimensionedField<Type, volMesh>::null(),
                     directFvPatchFieldMapper
                     (
-                        labelList(srcMesh.boundary()[srcPatchI].size(), -1)
+                        labelList(srcMesh.boundary()[srcPatchi].size(), -1)
                     )
                 )
             );
@@ -1060,19 +1061,19 @@ CML::meshToMesh::mapTgtToSrc
     }
 
     // Any unset srcPatchFields become calculated
-    forAll(srcPatchFields, srcPatchI)
+    forAll(srcPatchFields, srcPatchi)
     {
-        if (!srcPatchFields.set(srcPatchI))
+        if (!srcPatchFields.set(srcPatchi))
         {
             // Note: use factory New method instead of direct generation of
             //       calculated so we keep constraints
             srcPatchFields.set
             (
-                srcPatchI,
+                srcPatchi,
                 fvPatchField<Type>::New
                 (
                     calculatedFvPatchField<Type>::typeName,
-                    srcMesh.boundary()[srcPatchI],
+                    srcMesh.boundary()[srcPatchi],
                     DimensionedField<Type, volMesh>::null()
                 )
             );

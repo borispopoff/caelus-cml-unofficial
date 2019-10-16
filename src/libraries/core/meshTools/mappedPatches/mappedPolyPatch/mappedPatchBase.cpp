@@ -839,14 +839,14 @@ void CML::mappedPatchBase::calcAMI() const
     // Construct/apply AMI interpolation to determine addressing and weights
     AMIPtr_.reset
     (
-        new AMIPatchToPatchInterpolation
+        new AMIInterpolation
         (
             patch_,
             samplePolyPatch(), // nbrPatch0,
             surfPtr(),
             faceAreaIntersect::tmMesh,
             true,
-            AMIPatchToPatchInterpolation::imFaceAreaWeight,
+            AMIInterpolation::imFaceAreaWeight,
             -1,
             AMIReverse_
         )

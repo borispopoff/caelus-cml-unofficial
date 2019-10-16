@@ -32,7 +32,7 @@ SourceFiles
 #define cyclicRepeatAMIPolyPatch_HPP
 
 #include "cyclicAMIPolyPatch.hpp"
-#include "AMIPatchToPatchInterpolation.hpp"
+#include "AMIInterpolation.hpp"
 #include "polyBoundaryMesh.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

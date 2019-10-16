@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2017 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -74,7 +74,7 @@ void CML::cyclicACMIPolyPatch::resetAMI() const
         // face is fully covered)
         cyclicAMIPolyPatch::resetAMI();
 
-        AMIPatchToPatchInterpolation& AMI = this->AMIs_[0];
+        AMIInterpolation& AMI = this->AMIs_[0];
 
         srcMask_ =
             min(scalar(1) - tolerance_, max(tolerance_, AMI.srcWeightsSum()));
@@ -214,7 +214,7 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
         patchType,
         transform,
         false,
-        AMIPatchToPatchInterpolation::imPartialFaceAreaWeight
+        AMIInterpolation::imPartialFaceAreaWeight
     ),
     nonOverlapPatchName_(word::null),
     nonOverlapPatchID_(-1),
@@ -244,7 +244,7 @@ CML::cyclicACMIPolyPatch::cyclicACMIPolyPatch
         bm,
         patchType,
         false,
-        AMIPatchToPatchInterpolation::imPartialFaceAreaWeight
+        AMIInterpolation::imPartialFaceAreaWeight
     ),
     nonOverlapPatchName_(dict.lookup("nonOverlapPatch")),
     nonOverlapPatchID_(-1),

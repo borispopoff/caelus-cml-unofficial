@@ -81,7 +81,7 @@ SourceFiles
 #include "pointField.hpp"
 #include "Tuple2.hpp"
 #include "pointIndexHit.hpp"
-#include "AMIPatchToPatchInterpolation.hpp"
+#include "AMIInterpolation.hpp"
 #include "coupleGroupIdentifier.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -226,7 +226,7 @@ protected:
         // AMI interpolator (only for NEARESTPATCHFACEAMI)
 
             //- Pointer to AMI interpolator
-            mutable autoPtr<AMIPatchToPatchInterpolation> AMIPtr_;
+            mutable autoPtr<AMIInterpolation> AMIPtr_;
 
             //- Flag to indicate that slave patch should be reversed for AMI
             const bool AMIReverse_;
@@ -380,7 +380,7 @@ public:
             inline const mapDistribute& map() const;
 
             //- Return reference to the AMI interpolator
-            inline const AMIPatchToPatchInterpolation& AMI
+            inline const AMIInterpolation& AMI
             (
                 const bool forceUpdate = false
             ) const;
@@ -571,7 +571,7 @@ inline const CML::mapDistribute& CML::mappedPatchBase::map() const
 }
 
 
-inline const CML::AMIPatchToPatchInterpolation& CML::mappedPatchBase::AMI
+inline const CML::AMIInterpolation& CML::mappedPatchBase::AMI
 (
     bool forceUpdate
 ) const

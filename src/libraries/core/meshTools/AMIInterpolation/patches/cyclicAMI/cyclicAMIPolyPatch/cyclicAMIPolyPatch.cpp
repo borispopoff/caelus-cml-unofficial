@@ -20,13 +20,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cyclicAMIPolyPatch.hpp"
-//#include "transformField.hpp"
 #include "SubField.hpp"
-//#include "polyMesh.hpp"
 #include "Time.hpp"
+#include "unitConversion.hpp"
 #include "addToRunTimeSelectionTable.hpp"
-//#include "faceAreaIntersect.hpp"
-//#include "ops.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -366,7 +363,7 @@ void CML::cyclicAMIPolyPatch::resetAMI() const
         AMIs_.set
         (
             0,
-            new AMIPatchToPatchInterpolation
+            new AMIInterpolation
             (
                 *this,
                 nbrPatch0,
@@ -486,7 +483,7 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     const word& patchType,
     const transformType transform,
     const bool AMIRequireMatch,
-    const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod
+    const AMIInterpolation::interpolationMethod AMIMethod
 )
 :
     coupledPolyPatch(name, size, start, index, bm, patchType, transform),
@@ -519,7 +516,7 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     const polyBoundaryMesh& bm,
     const word& patchType,
     const bool AMIRequireMatch,
-    const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod
+    const AMIInterpolation::interpolationMethod AMIMethod
 )
 :
     coupledPolyPatch(name, dict, index, bm, patchType),
@@ -538,7 +535,7 @@ CML::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     AMIMethod_
     (
         dict.found("method")
-      ? AMIPatchToPatchInterpolation::wordTointerpolationMethod
+      ? AMIInterpolation::wordTointerpolationMethod
         (
             dict.lookup("method")
         )
@@ -790,7 +787,7 @@ CML::cyclicAMIPolyPatch::surfPtr() const
 }
 
 
-const CML::PtrList<CML::AMIPatchToPatchInterpolation>&
+const CML::PtrList<CML::AMIInterpolation>&
 CML::cyclicAMIPolyPatch::AMIs() const
 {
     if (!owner())
@@ -1219,7 +1216,7 @@ void CML::cyclicAMIPolyPatch::write(Ostream& os) const
     }
 
     os.writeKeyword("method")
-        << AMIPatchToPatchInterpolation::interpolationMethodToWord(AMIMethod_)
+        << AMIInterpolation::interpolationMethodToWord(AMIMethod_)
         << token::END_STATEMENT << nl;
 
     if (!surfDict_.empty())

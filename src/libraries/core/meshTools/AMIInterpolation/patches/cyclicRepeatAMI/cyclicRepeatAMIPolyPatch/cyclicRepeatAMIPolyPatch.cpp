@@ -225,15 +225,15 @@ void CML::cyclicRepeatAMIPolyPatch::resetAMI() const
     // Do the three bounding AMI interpolations
     thisPoints = TLeft.transformPosition(localPoints());
     thisPatch.movePoints(thisPoints);
-    autoPtr<AMIPatchToPatchInterpolation> AMILeftPtr
+    autoPtr<AMIInterpolation> AMILeftPtr
     (
-        new AMIPatchToPatchInterpolation
+        new AMIInterpolation
         (
             thisPatch,
             nbrPatch,
             faceAreaIntersect::tmMesh,
             false,
-            AMIPatchToPatchInterpolation::imPartialFaceAreaWeight,
+            AMIInterpolation::imPartialFaceAreaWeight,
             AMILowWeightCorrection_,
             AMIReverse_,
             false
@@ -245,15 +245,15 @@ void CML::cyclicRepeatAMIPolyPatch::resetAMI() const
 
     thisPoints = T.transformPosition(localPoints());
     thisPatch.movePoints(thisPoints);
-    autoPtr<AMIPatchToPatchInterpolation> AMIPtr
+    autoPtr<AMIInterpolation> AMIPtr
     (
-        new AMIPatchToPatchInterpolation
+        new AMIInterpolation
         (
             thisPatch,
             nbrPatch,
             faceAreaIntersect::tmMesh,
             false,
-            AMIPatchToPatchInterpolation::imPartialFaceAreaWeight,
+            AMIInterpolation::imPartialFaceAreaWeight,
             AMILowWeightCorrection_,
             AMIReverse_,
             false
@@ -265,15 +265,15 @@ void CML::cyclicRepeatAMIPolyPatch::resetAMI() const
 
     thisPoints = TRight.transformPosition(localPoints());
     thisPatch.movePoints(thisPoints);
-    autoPtr<AMIPatchToPatchInterpolation> AMIRightPtr
+    autoPtr<AMIInterpolation> AMIRightPtr
     (
-        new AMIPatchToPatchInterpolation
+        new AMIInterpolation
         (
             thisPatch,
             nbrPatch,
             faceAreaIntersect::tmMesh,
             false,
-            AMIPatchToPatchInterpolation::imPartialFaceAreaWeight,
+            AMIInterpolation::imPartialFaceAreaWeight,
             AMILowWeightCorrection_,
             AMIReverse_,
             false
@@ -298,9 +298,9 @@ void CML::cyclicRepeatAMIPolyPatch::resetAMI() const
     AMITransforms_[1] = sLeft > sRight ? T : TRight;
 
     // Sum and normalise the two AMI interpolators
-    AMIPatchToPatchInterpolation::sumWeights(AMIs_);
-    AMIPatchToPatchInterpolation::reportSumWeights(AMIs_[0]);
-    AMIPatchToPatchInterpolation::normaliseWeights(AMIs_);
+    AMIInterpolation::sumWeights(AMIs_);
+    AMIInterpolation::reportSumWeights(AMIs_[0]);
+    AMIInterpolation::normaliseWeights(AMIs_);
 }
 
 
@@ -327,7 +327,7 @@ CML::cyclicRepeatAMIPolyPatch::cyclicRepeatAMIPolyPatch
         patchType,
         transform,
         false,
-        AMIPatchToPatchInterpolation::imFaceAreaWeight
+        AMIInterpolation::imFaceAreaWeight
     ),
     transformPatchName_(word::null),
     transformPatchID_(-1)
@@ -354,7 +354,7 @@ CML::cyclicRepeatAMIPolyPatch::cyclicRepeatAMIPolyPatch
         bm,
         patchType,
         false,
-        AMIPatchToPatchInterpolation::imFaceAreaWeight
+        AMIInterpolation::imFaceAreaWeight
     ),
     transformPatchName_(dict.lookup("transformPatch")),
     transformPatchID_(-1)

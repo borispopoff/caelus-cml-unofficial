@@ -158,7 +158,7 @@ CML::cyclicAMIGAMGInterface::cyclicAMIGAMGInterface
             AMIs_.set
             (
                 i,
-                new AMIPatchToPatchInterpolation
+                new AMIInterpolation
                 (
                     fineCyclicAMIInterface_.AMIs()[i],
                     faceRestrictAddressing_,
