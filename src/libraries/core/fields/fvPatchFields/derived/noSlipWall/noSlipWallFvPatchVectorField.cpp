@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 Applied CCM
+Copyright (C) 2016-2019 Applied CCM
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,44 +24,59 @@ License
 
 CML::noSlipWallFvPatchVectorField::noSlipWallFvPatchVectorField
 (
-    fvPatch const& p,
-    DimensionedField<vector, volMesh> const& iF
-) :
-    fixedValueFvPatchField<vector>(p, iF, pTraits<vector>::zero)
-{}
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF
+)
+:
+    fixedValueFvPatchVectorField(p, iF)
+{
+    operator==(Zero);
+}
+
 
 CML::noSlipWallFvPatchVectorField::noSlipWallFvPatchVectorField
 (
-    fvPatch const& p,
-    DimensionedField<vector, volMesh> const& iF,
-    dictionary const& dict
-) :
-  fixedValueFvPatchField<vector>(p, iF, pTraits<vector>::zero)
-{}
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchVectorField(p, iF, dict, false)
+{
+    operator==(Zero);
+}
+
 
 CML::noSlipWallFvPatchVectorField::noSlipWallFvPatchVectorField
 (
-    noSlipWallFvPatchVectorField const& ptf,
-    fvPatch const& p,
-    DimensionedField<vector, volMesh> const& iF,
-    fvPatchFieldMapper const& mapper
-) :
-    fixedValueFvPatchField<vector>(ptf, p, iF, mapper)
-{}
+    const noSlipWallFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchVectorField(ptf, p, iF, mapper, false) // Don't map
+{
+    operator==(Zero);
+}
+
 
 CML::noSlipWallFvPatchVectorField::noSlipWallFvPatchVectorField
 (
-    noSlipWallFvPatchVectorField const& ptf
-) :
-    fixedValueFvPatchField<vector>(ptf)
+    const noSlipWallFvPatchVectorField& ptf
+)
+:
+    fixedValueFvPatchVectorField(ptf)
 {}
+
 
 CML::noSlipWallFvPatchVectorField::noSlipWallFvPatchVectorField
 (
-    noSlipWallFvPatchVectorField const& ptf,
-    DimensionedField<vector, volMesh> const& iF
-) :
-    fixedValueFvPatchField<vector>(ptf, iF)
+    const noSlipWallFvPatchVectorField& ptf,
+    const DimensionedField<vector, volMesh>& iF
+)
+:
+    fixedValueFvPatchVectorField(ptf, iF)
 {}
 
 CML::tmp<CML::Field<CML::vector>>

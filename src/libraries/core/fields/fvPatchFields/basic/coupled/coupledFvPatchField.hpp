@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -89,7 +89,8 @@ public:
             const coupledFvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const fvPatchFieldMapper&,
+            const bool mappingRequired=true
         );
 
         //- Construct as copy
@@ -274,11 +275,12 @@ CML::coupledFvPatchField<Type>::coupledFvPatchField
     const coupledFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
 )
 :
     BlockLduInterfaceField<Type>(refCast<const lduInterface>(p)),
-    fvPatchField<Type>(ptf, p, iF, mapper)
+    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired)
 {}
 
 

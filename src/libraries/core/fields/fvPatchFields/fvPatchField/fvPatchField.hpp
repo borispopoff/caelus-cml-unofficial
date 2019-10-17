@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014-2016 Applied CCM
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -168,22 +168,6 @@ public:
             const DimensionedField<Type, volMesh>&
         );
 
-        //- Construct from patch, internal field and value
-        fvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-            const Type& value
-        );
-
-        //- Construct from patch and internal field and patch type
-        fvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-            const word& patchType
-        );
-
         //- Construct from patch and internal field and patch field
         fvPatchField
         (
@@ -207,7 +191,8 @@ public:
             const fvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const fvPatchFieldMapper&,
+            const bool mappingRequired=true
         );
 
         //- Construct as copy
@@ -613,40 +598,6 @@ CML::fvPatchField<Type>::fvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const Type& value
-)
-:
-    Field<Type>(p.size(), value),
-    patch_(p),
-    internalField_(iF),
-    updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(word::null)
-{}
-
-
-template<class Type>
-CML::fvPatchField<Type>::fvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const word& patchType
-)
-:
-    Field<Type>(p.size()),
-    patch_(p),
-    internalField_(iF),
-    updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(patchType)
-{}
-
-
-template<class Type>
-CML::fvPatchField<Type>::fvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
     const Field<Type>& f
 )
 :
@@ -702,7 +653,8 @@ CML::fvPatchField<Type>::fvPatchField
     const fvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
 )
 :
     Field<Type>(p.size()),
@@ -712,12 +664,15 @@ CML::fvPatchField<Type>::fvPatchField
     manipulatedMatrix_(false),
     patchType_(ptf.patchType_)
 {
-    // For unmapped faces set to internal field value (zero-gradient)
-    if (notNull(iF) && mapper.hasUnmapped())
+    if (mappingRequired)
     {
-        fvPatchField<Type>::operator=(this->patchInternalField());
+        // For unmapped faces set to internal field value (zero-gradient)
+        if (notNull(iF) && mapper.hasUnmapped())
+        {
+            fvPatchField<Type>::operator=(this->patchInternalField());
+        }
+        this->map(ptf, mapper);
     }
-    this->map(ptf, mapper);
 }
 
 

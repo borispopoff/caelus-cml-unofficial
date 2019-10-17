@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,7 +22,9 @@ Class
     CML::calculatedFvPatchField
 
 Description
-    CML::calculatedFvPatchField
+    This boundary condition is not designed to be evaluated; it is assmued
+    that the value is assigned via field assignment, and not via a call to
+    e.g. \c updateCoeffs or \c evaluate.
 
 Usage
     Example of the boundary condition specification:
@@ -87,10 +89,11 @@ public:
             const calculatedFvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const fvPatchFieldMapper&,
+            const bool mappingRequired=true
         );
 
-        //- Copy constructor
+        //- Construct as copy
         calculatedFvPatchField
         (
             const calculatedFvPatchField<Type>&
@@ -105,7 +108,7 @@ public:
             );
         }
 
-        //- Copy constructor setting internal field reference
+        //- Construct as copy setting internal field reference
         calculatedFvPatchField
         (
             const calculatedFvPatchField<Type>&,
@@ -125,7 +128,7 @@ public:
         }
 
 
-    // Member Functions
+    // Member functions
 
         // Attributes
 
@@ -199,19 +202,6 @@ CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 template<class Type>
 CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
-    const calculatedFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-CML::calculatedFvPatchField<Type>::calculatedFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict,
@@ -219,6 +209,20 @@ CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 )
 :
     fvPatchField<Type>(p, iF, dict, valueRequired)
+{}
+
+
+template<class Type>
+CML::calculatedFvPatchField<Type>::calculatedFvPatchField
+(
+    const calculatedFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
+)
+:
+    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired)
 {}
 
 
@@ -369,7 +373,6 @@ CML::calculatedFvPatchField<Type>::gradientBoundaryCoeffs() const
 }
 
 
-// Write
 template<class Type>
 void CML::calculatedFvPatchField<Type>::write(Ostream& os) const
 {

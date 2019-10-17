@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -120,7 +120,8 @@ public:
             const mixedFvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const fvPatchFieldMapper&,
+            const bool mappingRequired=true
         );
 
         //- Construct as copy
@@ -326,14 +327,25 @@ CML::mixedFvPatchField<Type>::mixedFvPatchField
     const mixedFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
 )
 :
-    fvPatchField<Type>(ptf, p, iF, mapper),
+    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired),
     refValue_(ptf.refValue_, mapper),
     refGrad_(ptf.refGrad_, mapper),
     valueFraction_(ptf.valueFraction_, mapper)
-{}
+{
+    if (mappingRequired && notNull(iF) && mapper.hasUnmapped())
+    {
+        WarningInFunction
+            << "On field " << iF.name() << " patch " << p.name()
+            << " patchField " << this->type()
+            << " : mapper does not map all values." << nl
+            << "    To avoid this warning fully specify the mapping in derived"
+            << " patch fields." << endl;
+    }
+}
 
 
 template<class Type>

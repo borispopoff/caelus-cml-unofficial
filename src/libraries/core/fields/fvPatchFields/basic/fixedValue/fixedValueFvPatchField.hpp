@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014-2016 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -102,10 +102,11 @@ public:
             const fixedValueFvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const fvPatchFieldMapper&,
+            const bool mappingRequired=true
         );
 
-        //- Copy constructor
+        //- Construct as copy
         fixedValueFvPatchField
         (
             const fixedValueFvPatchField<Type>&
@@ -120,7 +121,7 @@ public:
             );
         }
 
-        //- Copy constructor setting internal field reference
+        //- Construct as copy setting internal field reference
         fixedValueFvPatchField
         (
             const fixedValueFvPatchField<Type>&,
@@ -259,11 +260,22 @@ CML::fixedValueFvPatchField<Type>::fixedValueFvPatchField
     const fixedValueFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
 )
 :
-    fvPatchField<Type>(ptf, p, iF, mapper)
-{}
+    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired)
+{
+    if (mappingRequired && notNull(iF) && mapper.hasUnmapped())
+    {
+        WarningInFunction
+            << "On field " << iF.name() << " patch " << p.name()
+            << " patchField " << this->type()
+            << " : mapper does not map all values." << nl
+            << "    To avoid this warning fully specify the mapping in derived"
+            << " patch fields." << endl;
+    }
+}
 
 
 template<class Type>

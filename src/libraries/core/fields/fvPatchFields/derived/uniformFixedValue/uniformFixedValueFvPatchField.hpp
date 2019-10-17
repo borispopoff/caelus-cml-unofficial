@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2018 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
@@ -238,7 +238,7 @@ CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),   // Don't map
+    fixedValueFvPatchField<Type>(ptf, p, iF, mapper, false), // Don't map
     uniformValue_(ptf.uniformValue_().clone().ptr()),
     inletDiffusion_(ptf.inletDiffusion_)
 {
@@ -348,6 +348,7 @@ void CML::uniformFixedValueFvPatchField<Type>::write(Ostream& os) const
     fvPatchField<Type>::write(os);
     uniformValue_->writeData(os);
     os.writeKeyword("inlet-diffusion") << inletDiffusion_ << token::END_STATEMENT << nl;
+    this->writeEntry("value", os);
 }
 
 
