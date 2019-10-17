@@ -1584,7 +1584,7 @@ void CML::dynamicRefineFvMesh::adjustDeltaT()
               if (newDeltaT <= deltaT*scalar(1.01))
               {
                   deltaT = max(newDeltaT, 0.2*deltaT);
-                  const_cast<Time&>(time()).setDeltaT(deltaT, false);
+                  const_cast<Time&>(time()).setDeltaT(deltaT);
                   deltaTchanged_ = true;
                   deltaTSave_ = deltaT;
               }

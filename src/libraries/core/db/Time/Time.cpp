@@ -76,48 +76,38 @@ const int CML::Time::maxPrecision_(3 - log10(SMALL));
 CML::word CML::Time::controlDictName("controlDict");
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void CML::Time::adjustDeltaT()
 {
-    bool adjustTime = false;
-    scalar timeToNextWrite = VGREAT;
+    scalar timeToNextWrite = max
+    (
+        0.0,
+        (writeTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
+    );
 
-    if (writeControl_ == writeControl::adjustableRunTime)
+    timeToNextWrite = min(timeToNextWrite, functionObjects_.timeToNextWrite());
+
+    scalar nSteps = timeToNextWrite/deltaT_;
+
+    // For tiny deltaT the label can overflow!
+    if (nSteps < labelMax)
     {
-        adjustTime = true;
-        timeToNextWrite = max
-        (
-            0.0,
-            (writeTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
-        );
-    }
+        label nStepsToNextWrite = label(nSteps + 0.5);
 
-    if (adjustTime)
-    {
-        scalar nSteps = timeToNextWrite/deltaT_ - SMALL;
+        scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
 
-        // For tiny deltaT the label can overflow!
-        if (nSteps < labelMax)
+        // Control the increase of the time step to within a factor of 2
+        // and the decrease within a factor of 5.
+        if (newDeltaT >= deltaT_)
         {
-            label nStepsToNextWrite = label(nSteps) + 1;
-
-            scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
-
-            // Control the increase of the time step to within a factor of 2
-            // and the decrease within a factor of 5.
-            if (newDeltaT >= deltaT_)
-            {
-                deltaT_ = min(newDeltaT, 2.0*deltaT_);
-            }
-            else
-            {
-                deltaT_ = max(newDeltaT, 0.2*deltaT_);
-            }
+            deltaT_ = min(newDeltaT, 2.0*deltaT_);
+        }
+        else
+        {
+            deltaT_ = max(newDeltaT, 0.2*deltaT_);
         }
     }
-
-    functionObjects_.adjustTimeStep();
 }
 
 
@@ -183,7 +173,6 @@ void CML::Time::setControls()
         int requiredPrecision = -1;
         bool found = false;
         word oldTime(timeName());
-
         for
         (
             precision_ = maxPrecision_;
@@ -194,7 +183,6 @@ void CML::Time::setControls()
             // Update the time formatting
             setTime(startTime_, 0);
 
-            // Check that the time name has changed otherwise exit loop
             word newTime(timeName());
             if (newTime == oldTime)
             {
@@ -815,16 +803,6 @@ CML::instant CML::Time::findClosestTime(const scalar t) const
 }
 
 
-// This should work too,
-// if we don't worry about checking "constant" explicitly
-//
-// CML::instant CML::Time::findClosestTime(const scalar t) const
-// {
-//     instantList timeDirs = findTimes(path(), constant());
-//     label timeIndex = min(findClosestTimeIndex(timeDirs, t), 0, constant());
-//     return timeDirs[timeIndex];
-// }
-
 CML::label CML::Time::findClosestTimeIndex
 (
     const instantList& timeDirs,
@@ -1020,25 +998,29 @@ void CML::Time::setEndTime(const scalar endTime)
 }
 
 
-void CML::Time::setDeltaT
-(
-    const dimensionedScalar& deltaT,
-    const bool bAdjustDeltaT
-)
+void CML::Time::setDeltaT(const dimensionedScalar& deltaT)
 {
-    setDeltaT(deltaT.value(), bAdjustDeltaT);
+    setDeltaT(deltaT.value());
 }
 
 
-void CML::Time::setDeltaT(const scalar deltaT, const bool bAdjustDeltaT)
+void CML::Time::setDeltaT(const scalar deltaT)
 {
-    deltaT_ = deltaT;
-    deltaTchanged_ = true;
+    setDeltaTNoAdjust(deltaT);
 
-    if (bAdjustDeltaT)
+    functionObjects_.setTimeStep();
+
+    if (writeControl_ == writeControl::adjustableRunTime)
     {
         adjustDeltaT();
     }
+}
+
+
+void CML::Time::setDeltaTNoAdjust(const scalar deltaT)
+{
+    deltaT_ = deltaT;
+    deltaTchanged_ = true;
 }
 
 

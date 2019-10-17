@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,7 +66,7 @@ class functionObjectList
 
         //- The parent dictionary containing a "functions" entry
         //  This entry can either be a list or a dictionary of
-        //  functionObject specifications.
+        //  functionObject specifications
         const dictionary& parentDict_;
 
         //- Switch for the execution of the functionObjects
@@ -80,7 +80,7 @@ class functionObjectList
 
         //- Remove and return the function object pointer by name,
         //  and returns the old index via the parameter.
-        //  Returns a nullptr pointer (and index -1) if it didn't exist.
+        //  Returns a nullptr (and index -1) if it didn't exist
         functionObject* remove(const word&, label& oldIndex);
 
         //- Disallow default bitwise copy construct
@@ -94,23 +94,25 @@ public:
 
     // Constructors
 
-        //- Construct from Time and the execution setting
+        //- Construct from Time and the execution setting.
         //  The functionObject specifications are read from the controlDict
         functionObjectList
         (
-            const Time&,
+            const Time& runTime,
             const bool execution=true
         );
 
-
         //- Construct from Time, a dictionary with "functions" entry
         //  and the execution setting.
+        //  \param[in]  t - the other Time instance to construct from
         //  \param[in]  parentDict - the parent dictionary containing
         //    a "functions" entry, which can either be a list or a dictionary
         //    of functionObject specifications.
+        //  \param[in]  execution - whether the function objects should execute
+        //    or not. Default: true.
         functionObjectList
         (
-            const Time&,
+            const Time& runTime,
             const dictionary& parentDict,
             const bool execution=true
         );
@@ -137,6 +139,9 @@ public:
         //- Find the ID of a given function object by name
         virtual label findObjectID(const word& name) const;
 
+        //- Read and set the function objects if their data have changed
+        virtual bool read();
+
         //- Switch the function objects on
         virtual void on();
 
@@ -151,21 +156,20 @@ public:
         virtual bool start();
 
         //- Called at each ++ or += of the time-loop. forceWrite overrides
-        //  the usual outputControl behaviour and forces writing always
+        //  the usual executeControl behaviour and forces writing always
         //  (used in postprocessing mode)
         virtual bool execute(const bool forceWrite = false);
 
         //- Called when Time::run() determines that the time-loop exits
         virtual bool end();
 
-        //- Called when time was set at the end of the Time::operator++
-        virtual bool timeSet();
+        //- Override the time-step value
+        bool setTimeStep();
 
-        //- Called at the end of Time::adjustDeltaT() if adjustTime is true
-        virtual bool adjustTimeStep();
+        //- Return the time to the next write
+        scalar timeToNextWrite();
 
-        //- Read and set the function objects if their data have changed
-        virtual bool read();
+
 };
 
 

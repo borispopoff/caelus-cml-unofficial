@@ -54,6 +54,12 @@ CML::setTimeStepFunctionObject::setTimeStepFunctionObject
 }
 
 
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+CML::setTimeStepFunctionObject::~setTimeStepFunctionObject()
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void CML::setTimeStepFunctionObject::on()
@@ -86,27 +92,14 @@ bool CML::setTimeStepFunctionObject::end()
 }
 
 
-bool CML::setTimeStepFunctionObject::timeSet()
+bool CML::setTimeStepFunctionObject::setTimeStep()
 {
+    const_cast<Time&>(time()).setDeltaTNoAdjust
+    (
+        timeStepPtr_().value(time_.timeOutputValue())
+    );
+
     return true;
-}
-
-
-bool CML::setTimeStepFunctionObject::adjustTimeStep()
-{
-    if (enabled())
-    {
-        // Wanted timestep
-        scalar newDeltaT = timeStepPtr_().value(time_.timeOutputValue());
-
-        const_cast<Time&>(time()).setDeltaT(newDeltaT, false);
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }
 
 

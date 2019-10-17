@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -82,8 +82,8 @@ public:
             autoPtr,
             functionObject,
             dictionary,
-            (const word& name, const Time& t, const dictionary& dict),
-            (name, t, dict)
+            (const word& name, const Time& runTime, const dictionary& dict),
+            (name, runTime, dict)
         );
 
 
@@ -140,6 +140,9 @@ public:
         //- Name
         virtual const word& name() const;
 
+        //- Read and set the function object if its data have changed
+        virtual bool read(const dictionary&) = 0;
+
         //- Called at the start of the time-loop
         virtual bool start() = 0;
 
@@ -151,14 +154,16 @@ public:
         //  By default it simply calls execute().
         virtual bool end();
 
-        //- Called when time was set at the end of the Time::operator++
-        virtual bool timeSet();
+        //- Called by Time::setDeltaT(). Allows the function object to override
+        //  the time-step value. Returns whether or not the value was overriden.
+        virtual bool setTimeStep();
 
-        //- Called at the end of Time::adjustDeltaT() if adjustTime is true
-        virtual bool adjustTimeStep();
+        //- Called by Time::adjustTimeStep(). Allows the function object to
+        //  insert a write time earlier than that already in use by the run
+        //  time. Returns the write time, or vGreat.
+        virtual scalar timeToNextWrite();
 
-        //- Read and set the function object if its data have changed
-        virtual bool read(const dictionary&) = 0;
+
 };
 
 

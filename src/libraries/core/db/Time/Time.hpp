@@ -85,7 +85,6 @@ class Time
         //- The controlDict
         IOdictionary controlDict_;
 
-
 public:
 
         //- Write control options
@@ -537,18 +536,14 @@ public:
             virtual void setEndTime(const scalar);
 
             //- Reset time step
-            virtual void setDeltaT
-            (
-                const dimensionedScalar&,
-                const bool adjustDeltaT = true
-            );
+            virtual void setDeltaT(const dimensionedScalar&);
 
             //- Reset time step
-            virtual void setDeltaT
-            (
-                const scalar,
-                const bool adjustDeltaT = true
-            );
+            virtual void setDeltaT(const scalar);
+
+            //- Reset time step without additional adjustment or modification
+            //  by function objects
+            virtual void setDeltaTNoAdjust(const scalar);
 
             //- Set time to sub-cycle for the given number of steps
             virtual TimeState subCycle(const label nSubCycles);

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -139,43 +139,43 @@ public:
         // Access
 
             //- Return time database
-            virtual inline const Time& time() const
+            inline const Time& time() const
             {
                 return time_;
             }
 
             //- Return the input dictionary
-            virtual inline const dictionary& dict() const
+            inline const dictionary& dict() const
             {
                 return dict_;
             }
 
             //- Return the region name
-            virtual inline const word& regionName() const
+            inline const word& regionName() const
             {
                 return regionName_;
             }
 
             //- Return the optional dictionary name
-            virtual inline const word& dictName() const
+            inline const word& dictName() const
             {
                 return dictName_;
             }
 
             //- Return the enabled flag
-            virtual inline bool enabled() const
+            inline bool enabled() const
             {
                 return enabled_;
             }
 
             //- Return the output control object
-            virtual inline const outputFilterControl& writeControl() const
+            inline const outputFilterControl& writeControl() const
             {
                 return writeControl_;
             }
 
             //- Return the output filter
-            virtual inline const OutputFilter& outputFilter() const
+            inline const OutputFilter& outputFilter() const
             {
                 return ptr_();
             }
@@ -201,11 +201,8 @@ public:
             //- Called when Time::run() determines that the time-loop exits
             virtual bool end();
 
-            //- Called when time was set at the end of the Time::operator++
-            virtual bool timeSet();
-
-            //- Called at the end of Time::adjustDeltaT() if adjustTime is true
-            virtual bool adjustTimeStep();
+            //- Return the time to the next write
+            virtual scalar timeToNextWrite();
 
             //- Read and set the function object if its data have changed
             virtual bool read(const dictionary&);
@@ -402,20 +399,9 @@ bool CML::OutputFilterFunctionObject<OutputFilter>::end()
 }
 
 
-template<class OutputFilter>
-bool CML::OutputFilterFunctionObject<OutputFilter>::timeSet()
-{
-    if (active())
-    {
-        ptr_->timeSet();
-    }
-
-    return true;
-}
-
 
 template<class OutputFilter>
-bool CML::OutputFilterFunctionObject<OutputFilter>::adjustTimeStep()
+CML::scalar CML::OutputFilterFunctionObject<OutputFilter>::timeToNextWrite()
 {
     if
     (
@@ -427,36 +413,16 @@ bool CML::OutputFilterFunctionObject<OutputFilter>::adjustTimeStep()
         const label  writeTimeIndex = writeControl_.executionIndex();
         const scalar writeInterval = writeControl_.interval();
 
-        scalar timeToNextWrite = max
-        (
-            0.0,
-            (writeTimeIndex + 1)*writeInterval
-          - (time_.value() - time_.startTime().value())
-        );
-
-        scalar deltaT = time_.deltaTValue();
-
-        scalar nSteps = timeToNextWrite/deltaT - SMALL;
-
-        // functionObjects modify deltaT within nStepsToStartTimeChange
-        // NOTE: Potential problems arise if two function objects dump within
-        // the same interval
-        if (nSteps < nStepsToStartTimeChange_)
-        {
-            label nStepsToNextWrite = label(nSteps) + 1;
-
-            scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
-
-            // Adjust time step
-            if (newDeltaT < deltaT)
-            {
-                deltaT = max(newDeltaT, 0.2*deltaT);
-                const_cast<Time&>(time_).setDeltaT(deltaT, false);
-            }
-        }
+        return
+            max
+            (
+                0.0,
+                (writeTimeIndex + 1)*writeInterval
+              - (time_.value() - time_.startTime().value())
+            );
     }
 
-    return true;
+    return VGREAT;
 }
 
 
@@ -469,6 +435,7 @@ bool CML::OutputFilterFunctionObject<OutputFilter>::read
     if (dict != dict_)
     {
         dict_ = dict;
+
         writeControl_.read(dict);
 
         return start();

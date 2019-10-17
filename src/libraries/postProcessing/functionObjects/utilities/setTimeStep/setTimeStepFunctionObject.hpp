@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -22,9 +22,9 @@ Class
 
 Description
     Overrides the timeStep. Can only be used with
-    solvers with adjustTimeStep control (e.g. pimpleCML). Makes no attempt
+    solvers with adjustTimeStep control (e.g. pimpleSolver). Makes no attempt
     to cooperate with other timeStep 'controllers' (maxCo, other
-    functionObjects). Supports 'enabled' flag but none of othe other ones
+    functionObjects). Supports 'enabled' flag but none of the other ones
     'timeStart', 'timeEnd', 'writeControl' etc.
 
 SourceFiles
@@ -60,15 +60,13 @@ class setTimeStepFunctionObject
         //- Reference to the time database
         const Time& time_;
 
+        //- Time step
+        autoPtr<DataEntry<scalar>> timeStepPtr_;
 
-        // Optional user inputs
+        //- Switch for the execution - defaults to 'yes/on'
+        bool enabled_;
 
-            //- Switch for the execution - defaults to 'yes/on'
-            bool enabled_;
-
-            //- Time step
-            autoPtr<DataEntry<scalar>> timeStepPtr_;
-
+    // Private member functions
 
         //- Disallow default bitwise copy construct
         setTimeStepFunctionObject(const setTimeStepFunctionObject&);
@@ -78,8 +76,10 @@ class setTimeStepFunctionObject
 
 
 public:
+
     //- Runtime type information
     TypeName("setTimeStep");
+
 
     // Constructors
 
@@ -90,6 +90,10 @@ public:
             const Time& runTime,
             const dictionary& dict
         );
+
+
+    // Destructor
+    virtual ~setTimeStepFunctionObject();
 
 
     // Member Functions
@@ -127,11 +131,8 @@ public:
             //- Called when Time::run() determines that the time-loop exits
             virtual bool end();
 
-            //- Called when time was set at the end of the Time::operator++
-            virtual bool timeSet();
-
-            //- Called at the end of Time::adjustDeltaT() if adjustTime is true
-            virtual bool adjustTimeStep();
+            //- Override the time-step value
+            virtual bool setTimeStep();
 
             //- Read and set the function object if its data have changed
             virtual bool read(const dictionary&);
