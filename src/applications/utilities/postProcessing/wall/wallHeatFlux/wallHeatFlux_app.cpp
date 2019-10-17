@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
                 mesh
             ),
             mesh,
-            dimensionedScalar("wallHeatFlux", heatFlux.dimensions(), 0.0)
+            dimensionedScalar("wallHeatFlux", heatFlux.dimensions(), 0)
         );
 
         forAll(wallHeatFlux.boundaryField(), patchi)

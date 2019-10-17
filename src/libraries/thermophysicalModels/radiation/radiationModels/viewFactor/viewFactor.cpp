@@ -709,7 +709,7 @@ CML::radiation::viewFactor::Ru() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0.0)
+            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0)
         )
     );
 }

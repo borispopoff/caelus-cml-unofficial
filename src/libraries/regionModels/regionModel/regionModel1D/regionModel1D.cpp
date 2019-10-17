@@ -49,7 +49,7 @@ void CML::regionModels::regionModel1D::constructMeshObjects()
                 IOobject::NO_WRITE
             ),
             regionMesh(),
-            dimensionedScalar("zero", dimArea, 0.0)
+            dimensionedScalar("zero", dimArea, 0)
         )
     );
 }

@@ -80,7 +80,7 @@ CML::radiation::cloudAbsorptionEmission::aDisp(const label) const
                 false
             ),
             mesh_,
-            dimensionedScalar("a", dimless/dimLength, 0.0)
+            dimensionedScalar("a", dimless/dimLength, 0)
         )
     );
 
@@ -115,7 +115,7 @@ CML::radiation::cloudAbsorptionEmission::eDisp(const label bandI) const
                 false
             ),
             mesh_,
-            dimensionedScalar("e", dimless/dimLength, 0.0)
+            dimensionedScalar("e", dimless/dimLength, 0)
         )
     );
 
@@ -140,7 +140,7 @@ CML::radiation::cloudAbsorptionEmission::EDisp(const label bandI) const
                 false
             ),
             mesh_,
-            dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0.0)
+            dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0)
         )
     );
 

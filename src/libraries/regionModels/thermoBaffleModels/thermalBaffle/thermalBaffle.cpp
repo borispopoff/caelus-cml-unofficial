@@ -84,7 +84,7 @@ void thermalBaffle::solveEnergy()
                 false
             ),
             regionMesh(),
-            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0)
         )
     );
 

@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
                     IOobject::NO_WRITE
                 ),
                 pMesh,
-                dimensionedScalar("zero", phi.dimensions(), 0.0)
+                dimensionedScalar("zero", phi.dimensions(), 0)
             );
 
             labelList visitedPoint(mesh.nPoints());

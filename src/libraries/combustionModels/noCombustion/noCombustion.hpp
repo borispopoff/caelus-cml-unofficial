@@ -154,7 +154,7 @@ CML::combustionModels::noCombustion<ReactionThermo>::Qdot() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0.0)
+            dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0)
         )
     );
 }

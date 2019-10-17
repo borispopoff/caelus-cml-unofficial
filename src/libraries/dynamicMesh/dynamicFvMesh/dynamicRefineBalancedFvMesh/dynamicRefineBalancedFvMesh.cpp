@@ -91,7 +91,7 @@ void CML::dynamicRefineBalancedFvMesh::updateRefinementField()
     volScalarField& intRefFld = *internalRefinementFieldPtr_;
     
     // Set the internal refinement field to zero to start with
-    intRefFld = dimensionedScalar("zero", dimless, 0.0);
+    intRefFld = dimensionedScalar("zero", dimless, 0);
     
     // Get the cell level field from dynamicRefineFvMesh
     const labelList& cellLevel = meshCutter().cellLevel();
@@ -281,7 +281,7 @@ CML::dynamicRefineBalancedFvMesh::dynamicRefineBalancedFvMesh
                 IOobject::AUTO_WRITE
             ),
             *this,
-            dimensionedScalar("zero", dimless, 0.0)
+            dimensionedScalar("zero", dimless, 0)
         );
     }
 }

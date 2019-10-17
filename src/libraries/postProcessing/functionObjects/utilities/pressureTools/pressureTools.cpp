@@ -136,7 +136,7 @@ CML::tmp<CML::volScalarField> CML::pressureTools::pDyn
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("zero", dimPressure, 0.0)
+            dimensionedScalar("zero", dimPressure, 0)
         )
     );
 
@@ -231,7 +231,7 @@ CML::pressureTools::pressureTools
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("0", pDims, 0.0)
+                dimensionedScalar("0", pDims, 0)
             )
         );
 

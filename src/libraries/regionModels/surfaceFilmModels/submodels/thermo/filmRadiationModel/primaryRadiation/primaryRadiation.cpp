@@ -63,7 +63,7 @@ primaryRadiation::primaryRadiation
             IOobject::NO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
+        dimensionedScalar("zero", dimMass/pow3(dimTime), 0),
         film.mappedPushedFieldPatchTypes<scalar>()
     )
 {}
@@ -99,7 +99,7 @@ tmp<volScalarField> primaryRadiation::Shs()
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
+            dimensionedScalar("zero", dimMass/pow3(dimTime), 0)
         )
     );
 

@@ -203,7 +203,7 @@ void CML::VoidFraction<CloudType>::preEvolve()
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimless, 0.0)
+                dimensionedScalar("zero", dimless, 0)
             )
         );
     }

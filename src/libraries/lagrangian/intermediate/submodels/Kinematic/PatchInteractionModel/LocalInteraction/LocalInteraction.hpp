@@ -239,7 +239,7 @@ CML::volScalarField& CML::LocalInteraction<CloudType>::massEscape()
                     IOobject::AUTO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimMass, 0.0)
+                dimensionedScalar("zero", dimMass, 0)
             )
         );
     }
@@ -268,7 +268,7 @@ CML::volScalarField& CML::LocalInteraction<CloudType>::massStick()
                     IOobject::AUTO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimMass, 0.0)
+                dimensionedScalar("zero", dimMass, 0)
             )
         );
     }

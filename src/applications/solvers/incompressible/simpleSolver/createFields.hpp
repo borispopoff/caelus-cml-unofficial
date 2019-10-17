@@ -26,7 +26,7 @@ volScalarField pCorr
         IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar("zero", p.dimensions(), 0.0),
+    dimensionedScalar("zero", p.dimensions(), 0),
     pBT
 );
 

@@ -64,7 +64,7 @@ standardRadiation::standardRadiation
             IOobject::NO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
+        dimensionedScalar("zero", dimMass/pow3(dimTime), 0),
         film.mappedPushedFieldPatchTypes<scalar>()
     ),
     qrNet_
@@ -78,7 +78,7 @@ standardRadiation::standardRadiation
             IOobject::NO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("zero", dimMass/pow3(dimTime), 0)
     ),
     beta_(readScalar(coeffDict_.lookup("beta"))),
     kappaBar_(readScalar(coeffDict_.lookup("kappaBar")))
@@ -115,7 +115,7 @@ tmp<volScalarField> standardRadiation::Shs()
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
+            dimensionedScalar("zero", dimMass/pow3(dimTime), 0)
         )
     );
 

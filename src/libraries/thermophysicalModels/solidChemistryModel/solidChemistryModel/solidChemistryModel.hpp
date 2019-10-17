@@ -204,7 +204,7 @@ public:
                     IOobject::NO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
             )
         );
 
@@ -317,7 +317,7 @@ CML::solidChemistryModel<CompType, SolidThermo>::solidChemistryModel
                     IOobject::NO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
             )
         );
    }
@@ -364,7 +364,7 @@ CML::solidChemistryModel<CompType, SolidThermo>::Qdot() const
                 false
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0)
         )
     );
 

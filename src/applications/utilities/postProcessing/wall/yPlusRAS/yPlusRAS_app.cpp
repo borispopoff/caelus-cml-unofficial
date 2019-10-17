@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("yPlus", dimless, 0.0)
+            dimensionedScalar("yPlus", dimless, 0)
         );
 
         IOobject UHeader

@@ -73,7 +73,7 @@ CML::viscosityModel::viscosityModel
             outputShearStrainRate_ ? IOobject::AUTO_WRITE : IOobject::NO_WRITE 
         ),
         U.mesh(), 
-        dimensionedScalar("ssrInit",dimensionSet(0, 0, -1, 0, 0, 0, 0), 0.0)
+        dimensionedScalar("ssrInit",dimensionSet(0, 0, -1, 0, 0, 0, 0), 0)
     )
 {
     printCoeffs();

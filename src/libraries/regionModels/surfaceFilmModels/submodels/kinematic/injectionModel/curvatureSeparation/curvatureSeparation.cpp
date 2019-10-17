@@ -200,7 +200,7 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
                 IOobject::NO_READ
             ),
             mesh,
-            dimensionedScalar("zero", dimless, 0.0),
+            dimensionedScalar("zero", dimless, 0),
             zeroGradientFvPatchScalarField::typeName
         );
         volCosAngle.internalField() = cosAngle;
@@ -342,7 +342,7 @@ void curvatureSeparation::correct
                 IOobject::NO_READ
             ),
             mesh,
-            dimensionedScalar("zero", dimForce, 0.0),
+            dimensionedScalar("zero", dimForce, 0),
             zeroGradientFvPatchScalarField::typeName
         );
         volFnet.internalField() = Fnet;

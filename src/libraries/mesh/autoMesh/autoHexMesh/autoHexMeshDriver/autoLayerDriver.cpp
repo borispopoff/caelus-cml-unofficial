@@ -2698,7 +2698,7 @@ void CML::autoLayerDriver::addLayers
             false
         ),
         meshMover().pMesh(),
-        dimensionedScalar("pointMedialDist", dimLength, 0.0)
+        dimensionedScalar("pointMedialDist", dimLength, 0)
     );
 
     pointVectorField dispVec
@@ -2728,7 +2728,7 @@ void CML::autoLayerDriver::addLayers
             false
         ),
         meshMover().pMesh(),
-        dimensionedScalar("medialRatio", dimless, 0.0)
+        dimensionedScalar("medialRatio", dimless, 0)
     );
 
     pointVectorField medialVec

@@ -57,7 +57,7 @@ CML::volScalarField& CML::calcFvcDiv::divField
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dims/dimLength, 0.0)
+                dimensionedScalar("zero", dims/dimLength, 0)
             )
         );
 

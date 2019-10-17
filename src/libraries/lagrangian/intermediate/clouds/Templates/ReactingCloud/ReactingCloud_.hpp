@@ -411,7 +411,7 @@ inline CML::tmp<CML::fvScalarMatrix> CML::ReactingCloud<CloudType>::SYi
                         false
                     ),
                     this->mesh(),
-                    dimensionedScalar("zero", dimMass/dimTime/dimVolume, 0.0)
+                    dimensionedScalar("zero", dimMass/dimTime/dimVolume, 0)
                 )
             );
 
@@ -540,7 +540,7 @@ CML::ReactingCloud<CloudType>::Srho(volScalarField& rho) const
                     false
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimMass/dimTime/dimVolume, 0.0)
+                dimensionedScalar("zero", dimMass/dimTime/dimVolume, 0)
             )
         );
 
@@ -682,7 +682,7 @@ CML::ReactingCloud<CloudType>::ReactingCloud
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimMass, 0.0)
+                dimensionedScalar("zero", dimMass, 0)
             )
         );
     }

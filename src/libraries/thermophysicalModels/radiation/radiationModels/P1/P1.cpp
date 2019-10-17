@@ -68,7 +68,7 @@ CML::radiation::P1::P1(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qr", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qr", dimMass/pow3(dimTime), 0)
     ),
     a_
     (
@@ -81,7 +81,7 @@ CML::radiation::P1::P1(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("a", dimless/dimLength, 0.0)
+        dimensionedScalar("a", dimless/dimLength, 0)
     ),
     e_
     (
@@ -94,7 +94,7 @@ CML::radiation::P1::P1(const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("a", dimless/dimLength, 0.0)
+        dimensionedScalar("a", dimless/dimLength, 0)
     ),
     E_
     (
@@ -107,7 +107,7 @@ CML::radiation::P1::P1(const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0.0)
+        dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0)
     )
 {}
 
@@ -138,7 +138,7 @@ CML::radiation::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qr", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qr", dimMass/pow3(dimTime), 0)
     ),
     a_
     (
@@ -151,7 +151,7 @@ CML::radiation::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("a", dimless/dimLength, 0.0)
+        dimensionedScalar("a", dimless/dimLength, 0)
     ),
     e_
     (
@@ -164,7 +164,7 @@ CML::radiation::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("a", dimless/dimLength, 0.0)
+        dimensionedScalar("a", dimless/dimLength, 0)
     ),
     E_
     (
@@ -177,7 +177,7 @@ CML::radiation::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0.0)
+        dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0)
     )
 {}
 

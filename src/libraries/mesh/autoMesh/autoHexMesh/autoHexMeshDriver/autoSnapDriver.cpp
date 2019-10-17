@@ -468,7 +468,7 @@ CML::tmp<CML::scalarField> CML::autoSnapDriver::edgePatchDist
     //            IOobject::AUTO_WRITE
     //        ),
     //        pMesh,
-    //        dimensionedScalar("pointDist", dimless, 0.0)
+    //        dimensionedScalar("pointDist", dimless, 0)
     //    );
     //
     //    forAll(allEdgeInfo, edgeI)

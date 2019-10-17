@@ -1077,7 +1077,7 @@ CML::KinematicCloud<CloudType>::vDotSweep() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless/dimTime, 0.0),
+            dimensionedScalar("zero", dimless/dimTime, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -1116,7 +1116,7 @@ CML::KinematicCloud<CloudType>::theta() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless, 0.0),
+            dimensionedScalar("zero", dimless, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -1155,7 +1155,7 @@ CML::KinematicCloud<CloudType>::alpha() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless, 0.0)
+            dimensionedScalar("zero", dimless, 0)
         )
     );
 
@@ -1192,7 +1192,7 @@ CML::KinematicCloud<CloudType>::rhoEff() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimDensity, 0.0)
+            dimensionedScalar("zero", dimDensity, 0)
         )
     );
 
@@ -1564,7 +1564,7 @@ CML::KinematicCloud<CloudType>::KinematicCloud
                 IOobject::AUTO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero",  dimMass, 0.0)
+            dimensionedScalar("zero",  dimMass, 0)
         )
     )
 {

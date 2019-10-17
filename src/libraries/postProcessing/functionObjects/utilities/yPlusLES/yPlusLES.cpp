@@ -223,7 +223,7 @@ CML::yPlusLES::yPlusLES
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("0", dimless, 0.0)
+                dimensionedScalar("0", dimless, 0)
             )
         );
 

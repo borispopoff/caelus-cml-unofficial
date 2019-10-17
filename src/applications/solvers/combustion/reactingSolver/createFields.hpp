@@ -117,5 +117,5 @@ volScalarField Qdot
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0.0)
+    dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0)
 );

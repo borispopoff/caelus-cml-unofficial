@@ -63,7 +63,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("I", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("I", dimMass/pow3(dimTime), 0)
     ),
     qr_
     (
@@ -76,7 +76,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qr", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qr", dimMass/pow3(dimTime), 0)
     ),
     qin_
     (
@@ -89,7 +89,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qin", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qin", dimMass/pow3(dimTime), 0)
     ),
     qem_
     (
@@ -102,7 +102,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qem", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qem", dimMass/pow3(dimTime), 0)
     ),
     d_(Zero),
     dAve_(Zero),
@@ -276,7 +276,7 @@ CML::scalar CML::radiation::radiativeIntensityRay::correct()
 
 void CML::radiation::radiativeIntensityRay::addIntensity()
 {
-    I_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0);
+    I_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0);
 
     forAll(ILambda_, lambdaI)
     {

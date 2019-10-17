@@ -920,7 +920,7 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::meshPhi
                 false
             ),
             mesh(),
-            dimensionedScalar("0", dimVolume/dimTime, 0.0)
+            dimensionedScalar("0", dimVolume/dimTime, 0)
         )
     );
 }

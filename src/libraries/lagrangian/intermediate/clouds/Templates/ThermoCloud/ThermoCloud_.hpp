@@ -626,7 +626,7 @@ inline CML::tmp<CML::volScalarField> CML::ThermoCloud<CloudType>::Ep() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0.0)
+            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0)
         )
     );
 
@@ -662,7 +662,7 @@ inline CML::tmp<CML::volScalarField> CML::ThermoCloud<CloudType>::ap() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimless/dimLength, 0.0)
+            dimensionedScalar("zero", dimless/dimLength, 0)
         )
     );
 
@@ -699,7 +699,7 @@ CML::ThermoCloud<CloudType>::sigmap() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimless/dimLength, 0.0)
+            dimensionedScalar("zero", dimless/dimLength, 0)
         )
     );
 
@@ -814,7 +814,7 @@ void CML::ThermoCloud<CloudType>::setModels()
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimArea, 0.0)
+                dimensionedScalar("zero", dimArea, 0)
             )
         );
 
@@ -831,7 +831,7 @@ void CML::ThermoCloud<CloudType>::setModels()
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", pow4(dimTemperature), 0.0)
+                dimensionedScalar("zero", pow4(dimTemperature), 0)
             )
         );
 
@@ -919,7 +919,7 @@ CML::ThermoCloud<CloudType>::ThermoCloud
                 IOobject::AUTO_WRITE
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimEnergy, 0.0)
+            dimensionedScalar("zero", dimEnergy, 0)
         )
     ),
     hsCoeff_
@@ -935,7 +935,7 @@ CML::ThermoCloud<CloudType>::ThermoCloud
                 IOobject::AUTO_WRITE
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimEnergy/dimTemperature, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimTemperature, 0)
         )
     )
 {

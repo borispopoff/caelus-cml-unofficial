@@ -304,7 +304,7 @@ void CML::ParticleErosion<CloudType>::preEvolve()
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimVolume, 0.0)
+                dimensionedScalar("zero", dimVolume, 0)
             )
         );
     }

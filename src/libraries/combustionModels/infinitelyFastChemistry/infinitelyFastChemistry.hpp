@@ -123,7 +123,7 @@ template<class ReactionThermo, class ThermoType>
 void infinitelyFastChemistry<ReactionThermo, ThermoType>::correct()
 {
     this->wFuel_ ==
-        dimensionedScalar("zero", dimMass/pow3(dimLength)/dimTime, 0.0);
+        dimensionedScalar("zero", dimMass/pow3(dimLength)/dimTime, 0);
 
     this->singleMixturePtr_->fresCorrect();
 

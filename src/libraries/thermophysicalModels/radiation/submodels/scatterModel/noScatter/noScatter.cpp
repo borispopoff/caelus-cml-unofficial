@@ -64,7 +64,7 @@ CML::tmp<CML::volScalarField> CML::radiation::noScatter::sigmaEff() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless/dimLength, 0.0)
+            dimensionedScalar("zero", dimless/dimLength, 0)
         )
     );
 }

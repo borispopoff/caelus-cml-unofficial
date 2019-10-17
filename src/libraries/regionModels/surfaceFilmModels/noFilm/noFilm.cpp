@@ -82,7 +82,7 @@ tmp<DimensionedField<scalar, volMesh>> noFilm::Srho() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
         )
     );
 }
@@ -104,7 +104,7 @@ tmp<DimensionedField<scalar, volMesh>> noFilm::Srho(const label i) const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
         )
     );
 }
@@ -126,7 +126,7 @@ tmp<DimensionedField<scalar, volMesh>> noFilm::Sh() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0)
         )
     );
 }

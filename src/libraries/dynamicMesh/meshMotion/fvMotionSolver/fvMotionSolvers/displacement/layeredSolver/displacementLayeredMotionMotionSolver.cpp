@@ -422,7 +422,7 @@ void CML::displacementLayeredMotionMotionSolver::cellZoneSolve
                 false
             ),
             pointMesh::New(mesh()),
-            dimensionedScalar("zero", dimLength, 0.0)
+            dimensionedScalar("zero", dimLength, 0)
         );
         forAll(distance, pointi)
         {
