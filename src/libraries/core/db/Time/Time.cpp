@@ -29,7 +29,6 @@ License
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
-
 namespace CML
 {
     defineTypeNameAndDebug(Time, 0);
@@ -870,9 +869,15 @@ CML::dimensionedScalar CML::Time::endTime() const
 }
 
 
+bool CML::Time::running() const
+{
+    return value() < (endTime_ - 0.5*deltaT_);
+}
+
+
 bool CML::Time::run() const
 {
-    bool running = value() < (endTime_ - 0.5*deltaT_);
+    bool running = this->running();
 
     if (!subCycling_)
     {
@@ -910,9 +915,8 @@ bool CML::Time::run() const
             }
         }
 
-        // Update the "running" status following the
-        // possible side-effects from functionObjects
-        running = value() < (endTime_ - 0.5*deltaT_);
+        // Re-evaluate if running in case a function object has changed things
+        running = this->running();
     }
 
     return running;

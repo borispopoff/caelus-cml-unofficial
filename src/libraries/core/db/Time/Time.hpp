@@ -464,6 +464,9 @@ public:
 
         // Check
 
+            //- Return true if run should continue without any side effects
+            virtual bool running() const;
+
             //- Return true if run should continue,
             //  also invokes the functionObjectList::end() method
             //  when the time goes out of range
