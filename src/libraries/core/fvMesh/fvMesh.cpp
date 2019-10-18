@@ -778,6 +778,12 @@ bool CML::fvMesh::writeObject
         ok = phiPtr_->write();
     }
 
+    // Write V0 only if V00 exists
+    if (V00Ptr_)
+    {
+        ok = ok && V0Ptr_->write();
+    }
+
     return ok && polyMesh::writeObject(fmt, ver, cmp);
 }
 

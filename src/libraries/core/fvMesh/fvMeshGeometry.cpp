@@ -344,9 +344,7 @@ const volScalarField::DimensionedInternalField& fvMesh::V00() const
     {
         if (debug)
         {
-            Info<< "fvMesh::V00() const: "
-                << "constructing from V0"
-                << endl;
+            InfoInFunction << "Constructing from V0" << endl;
         }
 
         V00Ptr_ = new DimensionedField<scalar, volMesh>
@@ -362,9 +360,6 @@ const volScalarField::DimensionedInternalField& fvMesh::V00() const
             ),
             V0()
         );
-
-        // If V00 is used then V0 should be stored for restart
-        V0Ptr_->writeOpt() = IOobject::AUTO_WRITE;
     }
 
     return *V00Ptr_;
