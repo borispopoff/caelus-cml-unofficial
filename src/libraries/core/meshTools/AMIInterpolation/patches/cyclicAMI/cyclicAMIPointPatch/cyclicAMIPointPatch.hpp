@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -107,6 +107,9 @@ public:
 
 
     // Member Functions
+
+        //- Return true if this patch field is coupled
+        virtual bool coupled() const;
 
         //- Return the constraint type this pointPatch implements.
         virtual const word& constraintType() const

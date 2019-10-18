@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -204,6 +204,10 @@ public:
 
         // Evaluation functions
 
+            //- Return true if coupled. Note that the underlying patch
+            //  is not coupled() - the points don't align.
+            virtual bool coupled() const;
+
             //- Evaluate the patch field
             virtual void evaluate
             (
@@ -313,6 +317,13 @@ CML::cyclicAMIPointPatchField<Type>::cyclicAMIPointPatchField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+bool CML::cyclicAMIPointPatchField<Type>::coupled() const
+{
+    return cyclicAMIPatch_.coupled();
+}
+
 
 template<class Type>
 void CML::cyclicAMIPointPatchField<Type>::swapAddSeparated
