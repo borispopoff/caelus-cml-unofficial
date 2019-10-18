@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,62 +49,6 @@ template<class T> class PtrList;
 
 // Forward declaration of friend functions and operators
 template<class T> class UPtrList;
-
-template<class T>
-inline typename UPtrList<T>::iterator operator+
-(
-    const typename UPtrList<T>::iterator&,
-    label
-);
-
-template<class T>
-inline typename UPtrList<T>::iterator operator+
-(
-    label,
-    const typename UPtrList<T>::iterator&
-);
-
-template<class T>
-inline typename UPtrList<T>::iterator operator-
-(
-    const typename UPtrList<T>::iterator&,
-    label
-);
-
-template<class T>
-inline label operator-
-(
-    const typename UPtrList<T>::iterator&,
-    const typename UPtrList<T>::iterator&
-);
-
-template<class T>
-inline typename UPtrList<T>::const_iterator operator+
-(
-    const typename UPtrList<T>::const_iterator&,
-    label
-);
-
-template<class T>
-inline typename UPtrList<T>::const_iterator operator+
-(
-    label,
-    const typename UPtrList<T>::const_iterator&
-);
-
-template<class T>
-inline typename UPtrList<T>::const_iterator operator-
-(
-    const typename UPtrList<T>::const_iterator&,
-    label
-);
-
-template<class T>
-inline label operator-
-(
-    const typename UPtrList<T>::const_iterator&,
-    const typename UPtrList<T>::const_iterator&
-);
 
 template<class T>
 Istream& operator>>(Istream&, UPtrList<T>&);
@@ -206,6 +150,21 @@ public:
             void reorder(const labelUList&);
 
 
+        // Write
+
+            //- Write the UPtrList as a dictionary entry
+            void writeEntry(Ostream&) const;
+
+            //- Write the UPtrList as a dictionary entry with keyword
+            void writeEntry(const word& keyword, Ostream&) const;
+
+            //- Write the UPtrList as a dictionary entry
+            void writeEntryList(Ostream&) const;
+
+            //- Write the UPtrList as a dictionary entry with keyword
+            void writeEntryList(const word& keyword, Ostream&) const;
+
+
     // Member operators
 
         //- Return element const reference
@@ -235,6 +194,7 @@ public:
     // Random access iterator for traversing UPtrList
 
         class iterator;
+        class const_iterator;
         friend class iterator;
 
         //- An STL iterator
@@ -243,6 +203,8 @@ public:
             T** ptr_;
 
         public:
+
+            friend class const_iterator;
 
             //- Construct for a given UPtrList entry
             inline iterator(T**);
@@ -256,27 +218,20 @@ public:
                 inline T& operator()();
 
                 inline iterator operator++();
-                inline iterator operator++(int);
+                inline iterator operator++(const int);
 
                 inline iterator operator--();
-                inline iterator operator--(int);
+                inline iterator operator--(const int);
 
-                inline iterator operator+=(label);
+                inline iterator operator+=(const label);
+                inline iterator operator-=(const label);
 
-                friend iterator operator+ <T>(const iterator&, label);
-                friend iterator operator+ <T>(label, const iterator&);
+                inline iterator operator+(const label) const;
+                inline iterator operator-(const label) const;
 
-                inline iterator operator-=(label);
+                inline label operator-(const iterator&) const;
 
-                friend iterator operator- <T>(const iterator&, label);
-
-                friend label operator- <T>
-                (
-                    const iterator&,
-                    const iterator&
-                );
-
-                inline T& operator[](label);
+                inline T& operator[](const label);
 
                 inline bool operator<(const iterator&) const;
                 inline bool operator>(const iterator&) const;
@@ -319,39 +274,20 @@ public:
                 inline Tref operator()();
 
                 inline const_iterator operator++();
-                inline const_iterator operator++(int);
+                inline const_iterator operator++(const int);
 
                 inline const_iterator operator--();
-                inline const_iterator operator--(int);
+                inline const_iterator operator--(const int);
 
-                inline const_iterator operator+=(label);
+                inline const_iterator operator+=(const label);
+                inline const_iterator operator-=(const label);
 
-                friend const_iterator operator+ <T>
-                (
-                    const const_iterator&,
-                    label
-                );
-                friend const_iterator operator+ <T>
-                (
-                    label,
-                    const const_iterator&
-                );
+                inline const_iterator operator+(const label) const;
+                inline const_iterator operator-(const label) const;
 
-                inline const_iterator operator-=(label);
+                inline label operator-(const const_iterator&) const;
 
-                friend const_iterator operator- <T>
-                (
-                    const const_iterator&,
-                    label
-                );
-
-                friend label operator- <T>
-                (
-                    const const_iterator&,
-                    const const_iterator&
-                );
-
-                inline const T& operator[](label);
+                inline const T& operator[](const label);
 
                 inline bool operator<(const const_iterator&) const;
                 inline bool operator>(const const_iterator&) const;
@@ -548,7 +484,7 @@ CML::UPtrList<T>::iterator::operator++()
 
 template<class T>
 inline typename CML::UPtrList<T>::iterator
-CML::UPtrList<T>::iterator::operator++(int)
+CML::UPtrList<T>::iterator::operator++(const int)
 {
     iterator tmp = *this;
     ++ptr_;
@@ -567,7 +503,7 @@ CML::UPtrList<T>::iterator::operator--()
 
 template<class T>
 inline typename CML::UPtrList<T>::iterator
-CML::UPtrList<T>::iterator::operator--(int)
+CML::UPtrList<T>::iterator::operator--(const int)
 {
     iterator tmp = *this;
     --ptr_;
@@ -577,7 +513,7 @@ CML::UPtrList<T>::iterator::operator--(int)
 
 template<class T>
 inline typename CML::UPtrList<T>::iterator
-CML::UPtrList<T>::iterator::operator+=(label n)
+CML::UPtrList<T>::iterator::operator+=(const label n)
 {
     ptr_ += n;
     return *this;
@@ -586,51 +522,43 @@ CML::UPtrList<T>::iterator::operator+=(label n)
 
 template<class T>
 inline typename CML::UPtrList<T>::iterator
-CML::operator+(const typename UPtrList<T>::iterator& iter, label n)
-{
-    typename UPtrList<T>::iterator tmp = iter;
-    return tmp += n;
-}
-
-
-template<class T>
-inline typename CML::UPtrList<T>::iterator
-CML::operator+(label n, const typename UPtrList<T>::iterator& iter)
-{
-    typename UPtrList<T>::iterator tmp = iter;
-    return tmp += n;
-}
-
-template<class T>
-inline typename CML::UPtrList<T>::iterator
-CML::UPtrList<T>::iterator::operator-=(label n)
+CML::UPtrList<T>::iterator::operator-=(const label n)
 {
     ptr_ -= n;
     return *this;
 }
 
+
 template<class T>
 inline typename CML::UPtrList<T>::iterator
-CML::operator-(const typename UPtrList<T>::iterator& iter, label n)
+CML::UPtrList<T>::iterator::operator+(const label n) const
 {
-    typename UPtrList<T>::iterator tmp = iter;
+    typename UPtrList<T>::iterator tmp = *this;
+    return tmp += n;
+}
+
+
+template<class T>
+inline typename CML::UPtrList<T>::iterator
+CML::UPtrList<T>::iterator::operator-(const label n) const
+{
+    typename UPtrList<T>::iterator tmp = *this;
     return tmp -= n;
 }
 
 
 template<class T>
-inline CML::label CML::operator-
+inline CML::label CML::UPtrList<T>::iterator::operator-
 (
-    const typename UPtrList<T>::iterator& iter1,
-    const typename UPtrList<T>::iterator& iter2
-)
+    const typename UPtrList<T>::iterator& iter
+) const
 {
-    return (iter1.ptr_ - iter2.ptr_)/sizeof(T*);
+    return (ptr_ - iter.ptr_);
 }
 
 
 template<class T>
-inline T& CML::UPtrList<T>::iterator::operator[](label n)
+inline T& CML::UPtrList<T>::iterator::operator[](const label n)
 {
     return *(*this + n);
 }
@@ -741,7 +669,7 @@ CML::UPtrList<T>::const_iterator::operator++()
 
 template<class T>
 inline typename CML::UPtrList<T>::const_iterator
-CML::UPtrList<T>::const_iterator::operator++(int)
+CML::UPtrList<T>::const_iterator::operator++(const int)
 {
     const_iterator tmp = *this;
     ++ptr_;
@@ -760,7 +688,7 @@ CML::UPtrList<T>::const_iterator::operator--()
 
 template<class T>
 inline typename CML::UPtrList<T>::const_iterator
-CML::UPtrList<T>::const_iterator::operator--(int)
+CML::UPtrList<T>::const_iterator::operator--(const int)
 {
     const_iterator tmp = *this;
     --ptr_;
@@ -770,7 +698,7 @@ CML::UPtrList<T>::const_iterator::operator--(int)
 
 template<class T>
 inline typename CML::UPtrList<T>::const_iterator
-CML::UPtrList<T>::const_iterator::operator+=(label n)
+CML::UPtrList<T>::const_iterator::operator+=(const label n)
 {
     ptr_ += n;
     return *this;
@@ -779,25 +707,7 @@ CML::UPtrList<T>::const_iterator::operator+=(label n)
 
 template<class T>
 inline typename CML::UPtrList<T>::const_iterator
-CML::operator+(const typename UPtrList<T>::const_iterator& iter, label n)
-{
-    typename UPtrList<T>::const_iterator tmp = iter;
-    return tmp += n;
-}
-
-
-template<class T>
-inline typename CML::UPtrList<T>::const_iterator
-CML::operator+(label n, const typename UPtrList<T>::const_iterator& iter)
-{
-    typename UPtrList<T>::const_iterator tmp = iter;
-    return tmp += n;
-}
-
-
-template<class T>
-inline typename CML::UPtrList<T>::const_iterator
-CML::UPtrList<T>::const_iterator::operator-=(label n)
+CML::UPtrList<T>::const_iterator::operator-=(const label n)
 {
     ptr_ -= n;
     return *this;
@@ -806,26 +716,34 @@ CML::UPtrList<T>::const_iterator::operator-=(label n)
 
 template<class T>
 inline typename CML::UPtrList<T>::const_iterator
-CML::operator-(const typename UPtrList<T>::const_iterator& iter, label n)
+CML::UPtrList<T>::const_iterator::operator+(const label n) const
 {
-    typename UPtrList<T>::const_iterator tmp = iter;
+    typename UPtrList<T>::const_iterator tmp = *this;
+    return tmp += n;
+}
+
+
+template<class T>
+inline typename CML::UPtrList<T>::const_iterator
+CML::UPtrList<T>::const_iterator::operator-(const label n) const
+{
+    typename UPtrList<T>::const_iterator tmp = *this;
     return tmp -= n;
 }
 
 
 template<class T>
-inline CML::label CML::operator-
+inline CML::label CML::UPtrList<T>::const_iterator::operator-
 (
-    const typename UPtrList<T>::const_iterator& iter1,
-    const typename UPtrList<T>::const_iterator& iter2
-)
+    const typename UPtrList<T>::const_iterator& iter
+) const
 {
-    return (iter1.ptr_ - iter2.ptr_)/sizeof(T*);
+    return (ptr_ - iter.ptr_);
 }
 
 
 template<class T>
-inline const T& CML::UPtrList<T>::const_iterator::operator[](label n)
+inline const T& CML::UPtrList<T>::const_iterator::operator[](const label n)
 {
     return *(*this + n);
 }
@@ -1024,6 +942,63 @@ void CML::UPtrList<T>::reorder(const labelUList& oldToNew)
 
 
 #include "Ostream.hpp"
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class T>
+void CML::UPtrList<T>::writeEntry(Ostream& os) const
+{
+    if
+    (
+        size()
+     && token::compound::isCompound
+        (
+            "List<" + word(pTraits<T>::typeName) + '>'
+        )
+    )
+    {
+        os  << word("List<" + word(pTraits<T>::typeName) + '>') << " ";
+    }
+
+    os << *this;
+}
+
+
+template<class T>
+void CML::UPtrList<T>::writeEntry(const word& keyword, Ostream& os) const
+{
+    os.writeKeyword(keyword);
+    writeEntry(os);
+    os << token::END_STATEMENT << endl;
+}
+
+
+template<class T>
+void CML::UPtrList<T>::writeEntryList(Ostream& os) const
+{
+    // Write size and start delimiter
+    os << nl << size() << nl << token::BEGIN_LIST;
+
+    // Write contents
+    forAll(*this, i)
+    {
+        this->operator[](i).writeEntry(os);
+        os << nl;
+    }
+
+    // Write end delimiter
+    os << nl << token::END_LIST << nl;
+}
+
+
+template<class T>
+void CML::UPtrList<T>::writeEntryList(const word& keyword, Ostream& os) const
+{
+    os.writeKeyword(keyword);
+    writeEntryList(os);
+    os << token::END_STATEMENT << endl;
+}
+
 
 // * * * * * * * * * * * * * * * Ostream Operators * * * * * * * * * * * * * //
 

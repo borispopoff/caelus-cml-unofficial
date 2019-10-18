@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 Copyright (C) 2017-2018 OpenCFD Ltd.
 -------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ typedef UList<label> labelUList;
 template<class T>
 class UList
 {
-    // Private Data
+    // Private data
 
         //- Number of elements in UList
         label size_;
@@ -155,7 +155,6 @@ public:
 
     // Member Functions
 
-
         // Access
 
             //- Return the forward circular index, i.e. the next index
@@ -208,24 +207,35 @@ public:
             inline void checkIndex(const label i) const;
 
 
-        //- Copy the pointer held by the given UList
-        inline void shallowCopy(const UList<T>&);
+        // Edit
 
-        //- Copy elements of the given UList
-        void deepCopy(const UList<T>&);
+            //- Copy the pointer held by the given UList
+            inline void shallowCopy(const UList<T>&);
 
-        //- Write the UList as a dictionary entry
-        void writeEntry(Ostream&) const;
+            //- Copy elements of the given UList
+            void deepCopy(const UList<T>&);
 
-        //- Write the UList as a dictionary entry with keyword
-        void writeEntry(const word& keyword, Ostream&) const;
 
-        //- Write the List, with line-breaks in ASCII if the list length
-        //- exceeds shortListLen.
-        //  Using '0' suppresses line-breaks entirely.
-        Ostream& writeList(Ostream& os, const label shortListLen=0) const;
+        // Write
 
-    // Member Operators
+            //- Write the UList as a dictionary entry
+            void writeEntry(Ostream&) const;
+
+            //- Write the UList as a dictionary entry with keyword
+            void writeEntry(const word& keyword, Ostream&) const;
+
+            //- Write the UList as a dictionary entry
+            void writeEntryList(Ostream&) const;
+
+            //- Write the UList as a dictionary entry with keyword
+            void writeEntryList(const word& keyword, Ostream&) const;
+
+            //- Write the List, with line-breaks in ASCII if the list length
+            //- exceeds shortListLen.
+            //  Using '0' suppresses line-breaks entirely.
+            Ostream& writeList(Ostream& os, const label shortListLen=0) const;
+
+    // Member operators
 
         //- Return element of UList
         inline T& operator[](const label);
@@ -440,7 +450,7 @@ inline CML::UList<T>::UList(T* RESTRICT v, label size)
 template<class T>
 inline const CML::UList<T>& CML::UList<T>::null()
 {
-    return NullSingletonRef< UList<T>>();
+    return NullSingletonRef<UList<T>>();
 }
 
 
@@ -1001,7 +1011,7 @@ bool CML::UList<T>::operator>=(const UList<T>& a) const
 #include "SLList.hpp"
 #include "contiguous.hpp"
 
-// * * * * * * * * * * * * * * * Ostream Operator *  * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T>
 void CML::UList<T>::writeEntry(Ostream& os) const
@@ -1032,6 +1042,33 @@ void CML::UList<T>::writeEntry(const word& keyword, Ostream& os) const
 
 
 template<class T>
+void CML::UList<T>::writeEntryList(Ostream& os) const
+{
+    // Write size and start delimiter
+    os << nl << size() << nl << token::BEGIN_LIST;
+
+    // Write contents
+    forAll(*this, i)
+    {
+        this->operator[](i).writeEntry(os);
+        os << nl;
+    }
+
+    // Write end delimiter
+    os << nl << token::END_LIST << nl;
+}
+
+
+template<class T>
+void CML::UList<T>::writeEntryList(const word& keyword, Ostream& os) const
+{
+    os.writeKeyword(keyword);
+    writeEntryList(os);
+    os << token::END_STATEMENT << endl;
+}
+
+
+template<class T>
 CML::Ostream& CML::UList<T>::writeList
 (
     Ostream& os,
@@ -1045,7 +1082,7 @@ CML::Ostream& CML::UList<T>::writeList
     // Write list contents depending on data format
     if (os.format() == IOstream::ASCII || !contiguous<T>())
     {
-        if (contiguous<T>() && list.uniform())
+        if (len > 1 && contiguous<T>() && list.uniform())
         {
             // Two or more entries, and all entries have identical values.
             os  << len << token::BEGIN_BLOCK << list[0] << token::END_BLOCK;
@@ -1104,6 +1141,8 @@ CML::Ostream& CML::UList<T>::writeList
     return os;
 }
 
+
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
 template<class T>
 CML::Ostream& CML::operator<<(CML::Ostream& os, const CML::UList<T>& L)
