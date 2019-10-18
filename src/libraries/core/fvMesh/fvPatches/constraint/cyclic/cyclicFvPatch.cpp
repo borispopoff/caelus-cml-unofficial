@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -35,25 +35,38 @@ namespace CML
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Make patch weighting factors
 void CML::cyclicFvPatch::makeWeights(scalarField& w) const
 {
     const cyclicFvPatch& nbrPatch = neighbFvPatch();
 
-    const scalarField deltas(nf()&coupledFvPatch::delta());
-    const scalarField nbrDeltas(nbrPatch.nf()&nbrPatch.coupledFvPatch::delta());
+    const vectorField delta(coupledFvPatch::delta());
+    const vectorField nbrDelta(nbrPatch.coupledFvPatch::delta());
 
-    forAll(deltas, facei)
+    const scalarField nfDelta(nf() & delta);
+    const scalarField nbrNfDelta(nbrPatch.nf() & nbrDelta);
+
+    forAll(delta, facei)
     {
-        scalar di = deltas[facei];
-        scalar dni = nbrDeltas[facei];
+        const scalar ndoi = nfDelta[facei];
+        const scalar ndni = nbrNfDelta[facei];
+        const scalar ndi = ndoi + ndni;
 
-        w[facei] = dni/(di + dni);
+        if (ndni/VGREAT < ndi)
+        {
+            w[facei] = ndni/ndi;
+        }
+        else
+        {
+            const scalar doi = mag(delta[facei]);
+            const scalar dni = mag(nbrDelta[facei]);
+            const scalar di = doi + dni;
+
+            w[facei] = dni/di;
+        }
     }
 }
 
 
-// Return delta (P to N) vectors across coupled patch
 CML::tmp<CML::vectorField> CML::cyclicFvPatch::delta() const
 {
     const vectorField patchD(coupledFvPatch::delta());

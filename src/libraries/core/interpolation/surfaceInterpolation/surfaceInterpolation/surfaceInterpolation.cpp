@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,7 +60,7 @@ CML::surfaceInterpolation::surfaceInterpolation(const fvMesh& fvm)
     deltaCoeffs_(nullptr),
     nonOrthDeltaCoeffs_(nullptr),
     nonOrthCorrectionVectors_(nullptr),
-	fvNonOrthCorrectionVectors_(nullptr)
+    fvNonOrthCorrectionVectors_(nullptr)
 {}
 
 
@@ -191,9 +191,22 @@ void CML::surfaceInterpolation::makeWeights() const
         // 90 deg and the dot-product will be positive.  For invalid
         // meshes (d & s <= 0), this will stabilise the calculation
         // but the result will be poor.
-        scalar SfdOwn = mag(Sf[facei] & (Cf[facei] - C[owner[facei]]));
-        scalar SfdNei = mag(Sf[facei] & (C[neighbour[facei]] - Cf[facei]));
-        w[facei] = SfdNei/(SfdOwn + SfdNei);
+        const scalar SfdOwn = mag(Sf[facei]&(Cf[facei] - C[owner[facei]]));
+        const scalar SfdNei = mag(Sf[facei]&(C[neighbour[facei]] - Cf[facei]));
+        const scalar SfdOwnNei = SfdOwn + SfdNei;
+
+        if (SfdNei/VGREAT < SfdOwnNei)
+        {
+            w[facei] = SfdNei/SfdOwnNei;
+        }
+        else
+        {
+            const scalar dOwn = mag(Cf[facei] - C[owner[facei]]);
+            const scalar dNei = mag(C[neighbour[facei]] - Cf[facei]);
+            const scalar dOwnNei = dOwn + dNei;
+
+            w[facei] = dNei/dOwnNei;
+        }
     }
 
     forAll(mesh_.boundary(), patchi)
@@ -298,13 +311,13 @@ void CML::surfaceInterpolation::makeNonOrthDeltaCoeffs() const
         vector unitArea = Sf[facei]/magSf[facei];
 
         // Standard cell-centre distance form
-        //NonOrthDeltaCoeffs[facei] = (unitArea & delta)/magSqr(delta);
+        // NonOrthDeltaCoeffs[facei] = (unitArea & delta)/magSqr(delta);
 
         // Slightly under-relaxed form
-        //NonOrthDeltaCoeffs[facei] = 1.0/mag(delta);
+        // NonOrthDeltaCoeffs[facei] = 1.0/mag(delta);
 
         // More under-relaxed form
-        //NonOrthDeltaCoeffs[facei] = 1.0/(mag(unitArea & delta) + VSMALL);
+        // NonOrthDeltaCoeffs[facei] = 1.0/(mag(unitArea & delta) + VSMALL);
 
         // Stabilised form for bad meshes
         nonOrthDeltaCoeffs[facei] = 1.0/max(unitArea & delta, 0.05*mag(delta));
