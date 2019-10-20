@@ -54,6 +54,16 @@ sampledSurface/writers/proxy/proxySurfaceWriter.cpp
 sampledSurface/writers/raw/rawSurfaceWriter.cpp
 sampledSurface/writers/starcd/starcdSurfaceWriter.cpp
 sampledSurface/writers/vtk/vtkSurfaceWriter.cpp
+sampledSurface/writers/vtk/caelusToVTK/surfaceMeshWriter.cpp
+sampledSurface/writers/vtk/caelusToVTK/internalWriter.cpp
+sampledSurface/writers/vtk/caelusToVTK/lagrangianWriter.cpp
+sampledSurface/writers/vtk/caelusToVTK/patchWriter.cpp
+sampledSurface/writers/vtk/caelusToVTK/writeFuns.cpp
+sampledSurface/writers/vtk/caelusToVTK/writeFaceSet.cpp
+sampledSurface/writers/vtk/caelusToVTK/writePointSet.cpp
+sampledSurface/writers/vtk/caelusToVTK/writeSurfFields.cpp
+sampledSurface/writers/vtk/caelusToVTK/vtkMesh.cpp
+sampledSurface/writers/vtk/caelusToVTK/vtkTopo.cpp
 graphField/writePatchGraph.cpp
 graphField/writeCellGraph.cpp
 graphField/makeGraph.cpp
@@ -79,7 +89,6 @@ caelus_libs = [
 'lagrangian',
 'conversion',
 'dynamicMesh'
-
 ]
 
 build_lib(env,

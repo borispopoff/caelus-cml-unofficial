@@ -12,16 +12,15 @@ caelusToVTK.cpp
 
 caelus_inc = [
 'lagrangian/basic/lnInclude',
-'dynamicMesh/dynamicMesh/lnInclude'
+'dynamicMesh/dynamicMesh/lnInclude',
+'sampling/lnInclude'
 ]
-
-append_args = dict(CPPPATH = ["libcaelusToVTK"])
 
 caelus_libs = [
 'core',
 'lagrangian',
 'dynamicMesh',
-'caelusToVTK'
+'sampling'
 ]
 
 ostype = utils.ostype()
@@ -36,5 +35,4 @@ build_app(env,
           sources=sources,
           caelus_inc=caelus_inc,
           caelus_libs=caelus_libs,
-          append_args=append_args,
           prepend_args=prepend_args)
