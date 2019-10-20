@@ -7,28 +7,20 @@ Import('env')
 target = 'caelusToVTK'
 
 sources = Split("""
-surfaceMeshWriter.cpp
 caelusToVTK.cpp
-internalWriter.cpp
-lagrangianWriter.cpp
-patchWriter.cpp
-writeFuns.cpp
-writeFaceSet.cpp
-writePointSet.cpp
-writeSurfFields.cpp
-vtkMesh.cpp
-vtkTopo.cpp
 """)
 
 caelus_inc = [
 'lagrangian/basic/lnInclude',
-'dynamicMesh/dynamicMesh/lnInclude'
+'dynamicMesh/dynamicMesh/lnInclude',
+'sampling/lnInclude'
 ]
 
 caelus_libs = [
 'core',
 'lagrangian',
-'dynamicMesh'
+'dynamicMesh',
+'sampling'
 ]
 
 ostype = utils.ostype()
