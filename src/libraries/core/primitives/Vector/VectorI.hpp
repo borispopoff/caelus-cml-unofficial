@@ -131,8 +131,26 @@ template<class Cmpt>
 inline const CML::Vector<Cmpt>& CML::Vector<Cmpt>::centre
 (
     const CML::List<Vector<Cmpt> >&
-)const
+) const
 {
+    return *this;
+}
+
+
+template<class Cmpt>
+inline CML::Vector<Cmpt>& CML::Vector<Cmpt>::normalise()
+{
+    const scalar s(CML::mag(*this));
+
+    if (s < ROOTVSMALL)
+    {
+        *this = Zero;
+    }
+    else
+    {
+        *this /= s;
+    }
+
     return *this;
 }
 
