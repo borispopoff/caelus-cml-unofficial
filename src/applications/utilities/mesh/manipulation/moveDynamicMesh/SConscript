@@ -11,6 +11,7 @@ moveDynamicMesh.cpp
 
 caelus_inc = [
 'dynamicMesh/dynamicFvMesh/lnInclude',
+'dynamicMesh/dynamicMesh/lnInclude',
 'sampling/lnInclude'
 ]
 
