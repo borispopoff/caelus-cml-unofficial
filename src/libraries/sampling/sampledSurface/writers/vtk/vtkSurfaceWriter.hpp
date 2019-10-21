@@ -32,6 +32,8 @@ SourceFiles
 #define vtkSurfaceWriter_H
 
 #include "surfaceWriter.hpp"
+#include "writeFuns.hpp"
+#include "OFstream.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,12 +48,14 @@ class vtkSurfaceWriter
 :
     public surfaceWriter
 {
+    bool binary_;
+
     // Private Member Functions
 
-        static void writeGeometry(Ostream&, const pointField&, const faceList&);
+        static void writeGeometry(ofstream&, const bool binary, const pointField&, const faceList&);
 
         template<class Type>
-        static void writeData(Ostream&, const Field<Type>&);
+        static void writeData(ofstream&, const bool binary, const Field<Type>&);
 
 
         //- Templated write operation
@@ -78,6 +82,9 @@ public:
 
         //- Construct null
         vtkSurfaceWriter();
+
+        //- Construct with some output options
+        vtkSurfaceWriter(const dictionary& options);
 
 
     //- Destructor
@@ -175,6 +182,76 @@ public:
 } // End namespace CML
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+// Write generic field in vtk format
+template<class Type>
+void CML::vtkSurfaceWriter::writeData
+(
+    ofstream& os,
+    const bool binary,
+    const Field<Type>& values
+)
+{
+    label nValues = values.size(); 
+
+    os  << "1 " << nValues << " float" << nl;
+
+    DynamicList<floatScalar> fField(nValues);
+
+    forAll(values, elemI)
+    {
+        writeFuns::insert(0, fField);
+    }
+    writeFuns::write(os, binary, fField);
+}
+
+
+template<class Type>
+void CML::vtkSurfaceWriter::writeTemplate
+(
+    const fileName& outputDir,
+    const fileName& surfaceName,
+    const pointField& points,
+    const faceList& faces,
+    const word& fieldName,
+    const Field<Type>& values,
+    const bool isNodeValues,
+    const bool verbose
+) const
+{
+    if (!isDir(outputDir))
+    {
+        mkDir(outputDir);
+    }
+
+    std::ofstream os(outputDir/fieldName + '_' + surfaceName + ".vtk");
+
+    if (verbose)
+    {
+        Info<< "Writing field " << fieldName << " to " 
+            << outputDir/fieldName + '_' + surfaceName + ".vtk" << endl;
+    }
+
+    writeGeometry(os, binary_, points, faces);
+
+    // start writing data
+    if (isNodeValues)
+    {
+        os  << "POINT_DATA ";
+    }
+    else
+    {
+        os  << "CELL_DATA ";
+    }
+
+    os  << values.size() << nl
+        << "FIELD attributes 1" << nl
+        << fieldName << " ";
+
+    // Write data
+    writeData(os, binary_, values);
+}
 
 #endif
 
