@@ -137,6 +137,24 @@ inline const CML::Vector<Cmpt>& CML::Vector<Cmpt>::centre
 }
 
 
+template<class Cmpt>
+inline CML::Vector<Cmpt>& CML::Vector<Cmpt>::normalise()
+{
+    const scalar s(CML::mag(*this));
+
+    if (s < ROOTVSMALL)
+    {
+        *this = Zero;
+    }
+    else
+    {
+        *this /= s;
+    }
+
+    return *this;
+}
+
+
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
 namespace CML
