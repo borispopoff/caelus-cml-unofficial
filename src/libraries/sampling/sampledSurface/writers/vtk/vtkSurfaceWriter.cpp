@@ -20,10 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "vtkSurfaceWriter.hpp"
-
-#include "OFstream.hpp"
 #include "OSspecific.hpp"
-
 #include "makeSurfaceWriterMethods.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -31,6 +28,7 @@ License
 namespace CML
 {
     makeSurfaceWriterType(vtkSurfaceWriter);
+    addToRunTimeSelectionTable(surfaceWriter, vtkSurfaceWriter, wordDict);
 }
 
 
@@ -38,29 +36,23 @@ namespace CML
 
 void CML::vtkSurfaceWriter::writeGeometry
 (
-    Ostream& os,
+    ofstream& os,
+    const bool binary,
     const pointField& points,
     const faceList& faces
 )
 {
-    // header
-    os
-        << "# vtk DataFile Version 2.0" << nl
-        << "sampleSurface" << nl
-        << "ASCII" << nl
-        << "DATASET POLYDATA" << nl;
+    // Header
+    writeFuns::writeHeader(os, binary, "sampleSurface");
+    os << "DATASET POLYDATA" << std::endl;
 
     // Write vertex coords
-    os  << "POINTS " << points.size() << " float" << nl;
-    forAll(points, pointI)
-    {
-        const point& pt = points[pointI];
-        os  << float(pt.x()) << ' '
-            << float(pt.y()) << ' '
-            << float(pt.z()) << nl;
-    }
-    os  << nl;
+    label nPoints = points.size();
+    os << "POINTS " << nPoints << " float" << nl;
 
+   DynamicList<floatScalar> ptField(3*nPoints);
+   writeFuns::insert(points, ptField);
+   writeFuns::write(os, binary, ptField);
 
     // Write faces
     label nNodes = 0;
@@ -69,20 +61,17 @@ void CML::vtkSurfaceWriter::writeGeometry
         nNodes += faces[faceI].size();
     }
 
-    os  << "POLYGONS " << faces.size() << ' '
-        << faces.size() + nNodes << nl;
+    os  << "POLYGONS " << faces.size() << ' ' << faces.size() + nNodes << nl;
+
+    DynamicList<label> vertLabels(faces.size() + nNodes);
 
     forAll(faces, faceI)
     {
         const face& f = faces[faceI];
-
-        os  << f.size();
-        forAll(f, fp)
-        {
-            os  << ' ' << f[fp];
-        }
-        os  << nl;
+        vertLabels.append(f.size());
+        writeFuns::insert(f, vertLabels);
     }
+    writeFuns::write(os, binary, vertLabels);
 }
 
 
@@ -92,172 +81,100 @@ namespace CML
     template<>
     void CML::vtkSurfaceWriter::writeData
     (
-        Ostream& os,
+        ofstream& os,
+        const bool binary,
         const Field<scalar>& values
     )
     {
-        os  << "1 " << values.size() << " float" << nl;
+        label nValues = values.size(); 
 
-        forAll(values, elemI)
-        {
-            if (elemI)
-            {
-                if (elemI % 10)
-                {
-                    os  << ' ';
-                }
-                else
-                {
-                    os  << nl;
-                }
-            }
+        os  << "1 " << nValues << " float" << std::endl;
 
-            os  << float(values[elemI]);
-        }
-        os  << nl;
+        DynamicList<floatScalar> fField(nValues);
+
+        writeFuns::insert(values, fField);
+        writeFuns::write(os, binary, fField);
     }
 
 
     template<>
     void CML::vtkSurfaceWriter::writeData
     (
-        Ostream& os,
+        ofstream& os,
+        const bool binary,
         const Field<vector>& values
     )
     {
-        os  << "3 " << values.size() << " float" << nl;
+        label nValues = values.size(); 
 
-        forAll(values, elemI)
-        {
-            const vector& v = values[elemI];
-            os  << float(v[0]) << ' ' << float(v[1]) << ' ' << float(v[2])
-                << nl;
-        }
+        os  << "3 " << nValues << " float" << std::endl;
+
+        DynamicList<floatScalar> fField(3*nValues);
+
+        writeFuns::insert(values, fField);
+        writeFuns::write(os, binary, fField);
     }
 
 
     template<>
     void CML::vtkSurfaceWriter::writeData
     (
-        Ostream& os,
+        ofstream& os,
+        const bool binary,
         const Field<sphericalTensor>& values
     )
     {
-        os  << "1 " << values.size() << " float" << nl;
+        label nValues = values.size(); 
 
-        forAll(values, elemI)
-        {
-            const sphericalTensor& v = values[elemI];
-            os  << float(v[0]) << nl;
-        }
+        os  << "1 " << nValues << " float" << std::endl;
+
+        DynamicList<floatScalar> fField(nValues);
+
+        writeFuns::insert(values, fField);
+        writeFuns::write(os, binary, fField);
     }
 
 
     template<>
     void CML::vtkSurfaceWriter::writeData
     (
-        Ostream& os,
+        ofstream& os,
+        const bool binary,
         const Field<symmTensor>& values
     )
     {
+
+        label nValues = values.size(); 
+
+        os  << "6 " << nValues << " float" << std::endl;
+
+        DynamicList<floatScalar> fField(6*nValues);
+
+        writeFuns::insert(values, fField);
+        writeFuns::write(os, binary, fField);
+
         os  << "6 " << values.size() << " float" << nl;
-
-        forAll(values, elemI)
-        {
-            const symmTensor& v = values[elemI];
-            os  << float(v[0]) << ' ' << float(v[1]) << ' ' << float(v[2])
-                << ' '
-                << float(v[3]) << ' ' << float(v[4]) << ' ' << float(v[5])
-                << nl;
-
-        }
     }
 
 
     template<>
     void CML::vtkSurfaceWriter::writeData
     (
-        Ostream& os,
+        ofstream& os,
+        const bool binary,
         const Field<tensor>& values
     )
     {
-        os  << "9 " << values.size() << " float" << nl;
+        label nValues = values.size(); 
 
-        forAll(values, elemI)
-        {
-            const tensor& v = values[elemI];
-            os  << float(v[0]) << ' ' << float(v[1]) << ' ' << float(v[2])
-                << ' '
-                << float(v[3]) << ' ' << float(v[4]) << ' ' << float(v[5])
-                << ' '
-                << float(v[6]) << ' ' << float(v[7]) << ' ' << float(v[8])
-                << nl;
-        }
+        os  << "9 " << nValues << " float" << std::endl;
+
+        DynamicList<floatScalar> fField(9*nValues);
+
+        writeFuns::insert(values, fField);
+        writeFuns::write(os, binary, fField);
     }
 
-}
-
-
-// Write generic field in vtk format
-template<class Type>
-void CML::vtkSurfaceWriter::writeData
-(
-    Ostream& os,
-    const Field<Type>& values
-)
-{
-    os  << "1 " << values.size() << " float" << nl;
-
-    forAll(values, elemI)
-    {
-        os  << float(0) << nl;
-    }
-}
-
-
-template<class Type>
-void CML::vtkSurfaceWriter::writeTemplate
-(
-    const fileName& outputDir,
-    const fileName& surfaceName,
-    const pointField& points,
-    const faceList& faces,
-    const word& fieldName,
-    const Field<Type>& values,
-    const bool isNodeValues,
-    const bool verbose
-) const
-{
-    if (!isDir(outputDir))
-    {
-        mkDir(outputDir);
-    }
-
-    OFstream os(outputDir/fieldName + '_' + surfaceName + ".vtk");
-
-    if (verbose)
-    {
-        Info<< "Writing field " << fieldName << " to " << os.name() << endl;
-    }
-
-    writeGeometry(os, points, faces);
-
-    // start writing data
-    if (isNodeValues)
-    {
-        os  << "POINT_DATA ";
-    }
-    else
-    {
-        os  << "CELL_DATA ";
-    }
-
-    os  << values.size() << nl
-        << "FIELD attributes 1" << nl
-        << fieldName << " ";
-
-    // Write data
-    writeData(os, values);
 }
 
 
@@ -265,7 +182,8 @@ void CML::vtkSurfaceWriter::writeTemplate
 
 CML::vtkSurfaceWriter::vtkSurfaceWriter()
 :
-    surfaceWriter()
+    surfaceWriter(),
+    binary_(false)
 {}
 
 
@@ -273,6 +191,19 @@ CML::vtkSurfaceWriter::vtkSurfaceWriter()
 
 CML::vtkSurfaceWriter::~vtkSurfaceWriter()
 {}
+
+
+CML::vtkSurfaceWriter::vtkSurfaceWriter(const dictionary& options)
+:
+    surfaceWriter(),
+    binary_(false)
+{
+    // Choose ascii or binary format
+    if (options.found("binary"))
+    {
+        binary_ = options.lookup("binary");
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -291,14 +222,14 @@ void CML::vtkSurfaceWriter::write
         mkDir(outputDir);
     }
 
-    OFstream os(outputDir/surfaceName + ".vtk");
+    std::ofstream os(outputDir/surfaceName + ".vtk");
 
     if (verbose)
     {
-        Info<< "Writing geometry to " << os.name() << endl;
+        Info<< "Writing geometry to " << outputDir/surfaceName + ".vtk" << endl;
     }
 
-    writeGeometry(os, points, faces);
+    writeGeometry(os, binary_, points, faces);
 }
 
 
