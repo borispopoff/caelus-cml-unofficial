@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -347,7 +347,7 @@ CML::symmTensor CML::localAxesRotation::transformVector
 
 void CML::localAxesRotation::write(Ostream& os) const
 {
-     os.writeKeyword("e3") << e3() << token::END_STATEMENT << nl;
+     writeEntry(os, "e3", e3());
 }
 
 

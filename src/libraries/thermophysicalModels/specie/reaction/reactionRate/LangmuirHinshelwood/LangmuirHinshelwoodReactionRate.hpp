@@ -59,151 +59,171 @@ Ostream& operator<<(Ostream&, const LangmuirHinshelwoodReactionRate&);
 
 class LangmuirHinshelwoodReactionRate
 {
+    // Private data
 
-    //- List of species present in reaction system
-    const speciesTable& species_;
+        //- List of species present in reaction system
+        const speciesTable& species_;
 
-    static const label n_ = 3;
-    scalar A_[n_];
-    scalar Ta_[n_];
+        //- Reactant names
+        FixedList<word, 2> reactantNames_;
 
-    //- Index of specie "A"
-    label a_;
+        //- Reactant indices
+        FixedList<label, 3> r_;
 
-    //- Index of specie "B"
-    label b_;
+        scalar a_;
+        FixedList<scalar, 3> A_;
+        FixedList<scalar, 3> Ta_;
+        FixedList<scalar, 3> beta_;
+        FixedList<scalar, 3> m_;
 
 
 public:
 
+    // Constructors
 
-    //- Construct from dictionary
-    inline LangmuirHinshelwoodReactionRate
-    (
-        const speciesTable& st,
-        const dictionary& dict
-    )
-    :
+        //- Construct from dictionary
+        inline LangmuirHinshelwoodReactionRate
+        (
+            const speciesTable& st,
+            const dictionary& dict
+        )
+        :
         species_(st),
-        a_(st["A"]),
-        b_(st["B"])
+        reactantNames_(dict.lookup("reactants")),
+        a_(dict.lookupOrDefault<scalar>("a", 1)),
+        A_(dict.lookup("A")),
+        Ta_(dict.lookup("Ta")),
+        beta_
+        (
+            dict.lookupOrDefault<FixedList<scalar, 3>>
+            (
+                "beta",
+                FixedList<scalar, 3>({0, 0, 0})
+            )
+        ),
+        m_
+        (
+            dict.lookupOrDefault<FixedList<scalar, 3>>
+            (
+                "m",
+                FixedList<scalar, 3>({1, 1, 2})
+            )
+        )
     {
-        // Read (A, Ta) pairs
-        FixedList<Tuple2<scalar, scalar>, n_> coeffs(dict.lookup("coeffs"));
-
-        forAll(coeffs, i)
+        forAll(reactantNames_, i)
         {
-            A_[i] = coeffs[i].first();
-            Ta_[i] = coeffs[i].second();
+            r_[i] = st[reactantNames_[i]];
         }
     }
 
 
     // Member Functions
 
-    //- Return the type name
-    static word type()
-    {
-        return "LangmuirHinshelwood";
-    }
-
-    inline scalar operator()
-    (
-        const scalar p,
-        const scalar T,
-        const scalarField& c
-    ) const
-    {
-        return A_[0]*exp(-Ta_[0]/T)/
-        (
-            T*sqr(1 + A_[1]*exp(-Ta_[1]/T)*c[a_] + A_[2]*exp(-Ta_[2]/T)*c[b_])
-        );
-    }
-
-    inline scalar ddT
-    (
-        const scalar p,
-        const scalar T,
-        const scalarField& c
-    ) const
-    {
-        const scalar den =
-        (
-            T*sqr(1 + A_[1]*exp(-Ta_[1]/T)*c[a_] + A_[2]*exp(-Ta_[2]/T)*c[b_])
-        );
-        const scalar rate = A_[0]*exp(-Ta_[0]/T)/den;
-
-        const scalar derivDen =
-        (
-            sqr(1 + A_[1]*exp(-Ta_[1]/T)*c[a_] + A_[2]*exp(-Ta_[2]/T)*c[b_])
-          + 2*T*(1 + A_[1]*exp(-Ta_[1]/T)*c[a_] + A_[2]*exp(-Ta_[2]/T)*c[b_])
-           *(
-                A_[1]*exp(-Ta_[1]/T)*c[a_]*Ta_[1]/sqr(T)
-              + A_[2]*exp(-Ta_[2]/T)*c[b_]*Ta_[2]/sqr(T)
-            )
-        );
-
-        return rate*(Ta_[0]/sqr(T) - derivDen/den);
-    }
-
-    //- Third-body efficiencies (beta = 1-alpha)
-    //  non-empty only for third-body reactions
-    //  with enhanced molecularity (alpha != 1)
-    inline const List<Tuple2<label, scalar>>& beta() const
-    {
-        return NullSingletonRef<List<Tuple2<label, scalar>>>();
-    }
-
-    //- Species concentration derivative of the pressure dependent term
-    inline void dcidc
-    (
-        const scalar p,
-        const scalar T,
-        const scalarField& c,
-        scalarField& dcidc
-    ) const
-    {}
-
-    //- Temperature derivative of the pressure dependent term
-    inline scalar dcidT
-    (
-        const scalar p,
-        const scalar T,
-        const scalarField& c
-    ) const
-    {
-        return 0;
-    }
-
-    //- Write to stream
-    inline void write(Ostream& os) const
-    {
-        os.writeKeyword("A") << species_[a_] << token::END_STATEMENT << nl;
-        os.writeKeyword("B") << species_[b_] << token::END_STATEMENT << nl;
-
-        FixedList<Tuple2<scalar, scalar>, n_> coeffs;
-
-        forAll(coeffs, i)
+        //- Return the type name
+        static word type()
         {
-            coeffs[i].first() = A_[i];
-            coeffs[i].second() = Ta_[i];
+            return "LangmuirHinshelwood";
         }
 
-        os.writeKeyword("coeffs") << coeffs << nl;
-    }
+        inline scalar operator()
+        (
+            const scalar p,
+            const scalar T,
+            const scalarField& c
+        ) const
+        {
+            const scalar c0m = pow(c[r_[0]], m_[0]);
+            const scalar c1m = pow(c[r_[1]], m_[1]);
+
+            const scalar TaByT0 = Ta_[0]/T;
+            const scalar TaByT1 = Ta_[1]/T;
+            const scalar TaByT2 = Ta_[2]/T;
+
+            const scalar k0 = A_[0]*pow(T, beta_[0])*exp(-TaByT0);
+            const scalar k1 = A_[1]*pow(T, beta_[1])*exp(-TaByT1);
+            const scalar k2 = A_[2]*pow(T, beta_[2])*exp(-TaByT2);
+
+            return k0/pow(a_ + k1*c0m + k2*c1m, m_[2]);
+        }
+
+        inline scalar ddT
+        (
+            const scalar p,
+            const scalar T,
+            const scalarField& c
+        ) const
+        {
+            const scalar c0m = pow(c[r_[0]], m_[0]);
+            const scalar c1m = pow(c[r_[1]], m_[1]);
+
+            const scalar TaByT0 = Ta_[0]/T;
+            const scalar TaByT1 = Ta_[1]/T;
+            const scalar TaByT2 = Ta_[2]/T;
+
+            const scalar k0 = A_[0]*pow(T, beta_[0])*exp(-TaByT0);
+            const scalar k1 = A_[1]*pow(T, beta_[1])*exp(-TaByT1);
+            const scalar k2 = A_[2]*pow(T, beta_[2])*exp(-TaByT2);
+
+            return
+            (
+                (beta_[0] + TaByT0)*k0
+               - m_[2]*k0*((beta_[1] + TaByT1)*k1*c0m + (beta_[2] + TaByT2)*k2*c1m)
+                /(a_ + k1*c0m + k2*c1m)
+            )/(pow(a_ + k1*c0m + k2*c1m, m_[2])*T);
+        }
+
+        //- Third-body efficiencies (beta = 1-alpha)
+        //  non-empty only for third-body reactions
+        //  with enhanced molecularity (alpha != 1)
+        inline const List<Tuple2<label, scalar>>& beta() const
+        {
+            return NullSingletonRef<List<Tuple2<label, scalar>>>();
+        }
+
+        //- Species concentration derivative of the pressure dependent term
+        inline void dcidc
+        (
+            const scalar p,
+            const scalar T,
+            const scalarField& c,
+            scalarField& dcidc
+        ) const
+        {}
+
+        //- Temperature derivative of the pressure dependent term
+        inline scalar dcidT
+        (
+            const scalar p,
+            const scalar T,
+            const scalarField& c
+        ) const
+        {
+            return 0;
+        }
+
+        //- Write to stream
+        inline void write(Ostream& os) const
+        {
+            writeEntry(os, "reactants", reactantNames_);
+            writeEntry(os, "a", a_);
+            writeEntry(os, "A", A_);
+            writeEntry(os, "Ta", Ta_);
+            writeEntry(os, "beta", beta_);
+            writeEntry(os, "m", m_);
+        }
 
 
     // Ostream Operator
 
-    inline friend Ostream& operator<<
-    (
-        Ostream& os,
-        const LangmuirHinshelwoodReactionRate& lhrr
-    )
-    {
-        lhrr.write(os);
-        return os;
-    }
+        inline friend Ostream& operator<<
+        (
+            Ostream& os,
+            const LangmuirHinshelwoodReactionRate& lhrr
+        )
+        {
+            lhrr.write(os);
+            return os;
+        }
 
 };
 

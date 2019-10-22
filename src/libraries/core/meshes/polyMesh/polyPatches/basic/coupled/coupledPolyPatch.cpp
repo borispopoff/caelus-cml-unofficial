@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -556,12 +556,10 @@ CML::coupledPolyPatch::~coupledPolyPatch()
 void CML::coupledPolyPatch::write(Ostream& os) const
 {
     polyPatch::write(os);
-    //if (matchTolerance_ != defaultMatchTol_)
+    // if (matchTolerance_ != defaultMatchTol_)
     {
-        os.writeKeyword("matchTolerance") << matchTolerance_
-            << token::END_STATEMENT << nl;
-        os.writeKeyword("transform") << transformTypeNames[transform_]
-            << token::END_STATEMENT << nl;
+        CML::writeEntry(os, "matchTolerance", matchTolerance_);
+        CML::writeEntry(os, "transform", transformTypeNames[transform_]);
     }
 }
 

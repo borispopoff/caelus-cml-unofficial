@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -337,12 +337,10 @@ bool CML::processorCyclicPolyPatch::order
 void CML::processorCyclicPolyPatch::write(Ostream& os) const
 {
     processorPolyPatch::write(os);
-    os.writeKeyword("referPatch") << referPatchName_
-        << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "referPatch", referPatchName_);
     if (tag_ != -1)
     {
-        os.writeKeyword("tag") << tag_
-            << token::END_STATEMENT << nl;
+        CML::writeEntry(os, "tag", tag_);
     }
 }
 

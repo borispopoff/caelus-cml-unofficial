@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -467,9 +467,7 @@ bool CML::cyclicACMIPolyPatch::order
 void CML::cyclicACMIPolyPatch::write(Ostream& os) const
 {
     cyclicAMIPolyPatch::write(os);
-
-    os.writeKeyword("nonOverlapPatch") << nonOverlapPatchName_
-        << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "nonOverlapPatch", nonOverlapPatchName_);
 }
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -105,7 +105,7 @@ void CML::RBD::restraints::sphericalAngularDamper::write
 {
     restraint::write(os);
 
-    os.writeKeyword("coeff") << coeff_ << token::END_STATEMENT << nl;
+    writeEntry(os, "coeff", coeff_);
 }
 
 

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014-2015 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -995,8 +995,8 @@ bool CML::DimensionedField<Type, GeoMesh>::writeData
     const word& fieldDictEntry
 ) const
 {
-    os.writeKeyword("dimensions") << dimensions() << token::END_STATEMENT
-        << nl << nl;
+    writeEntry(os, "dimensions", dimensions());
+    os << nl;
 
     Field<Type>::writeEntry(fieldDictEntry, os);
 

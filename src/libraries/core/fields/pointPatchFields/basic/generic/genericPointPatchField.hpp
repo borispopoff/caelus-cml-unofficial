@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -220,8 +220,10 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                         }
                         else
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    token following 'nonuniform' "
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    token following 'nonuniform' "
                                   "is not a compound"
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
@@ -248,8 +250,10 @@ CML::genericPointPatchField<Type>::genericPointPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
@@ -280,8 +284,10 @@ CML::genericPointPatchField<Type>::genericPointPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
@@ -315,8 +321,10 @@ CML::genericPointPatchField<Type>::genericPointPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
@@ -350,8 +358,10 @@ CML::genericPointPatchField<Type>::genericPointPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
@@ -382,8 +392,10 @@ CML::genericPointPatchField<Type>::genericPointPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
@@ -399,8 +411,10 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                     }
                     else
                     {
-                        FatalIOErrorInFunction(dict)
-                            << "\n    compound " << fieldToken.compoundToken()
+                        FatalIOErrorInFunction
+                        (
+                            dict
+                        )   << "\n    compound " << fieldToken.compoundToken()
                             << " not supported"
                             << "\n    on patch " << this->patch().name()
                             << " of field "
@@ -674,7 +688,7 @@ void CML::genericPointPatchField<Type>::rmap
 template<class Type>
 void CML::genericPointPatchField<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("type") << actualTypeName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "type", actualTypeName_);
 
     forAllConstIter(dictionary, dict_, iter)
     {

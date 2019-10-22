@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2018 OpenFOAM Foundation
+Copyright (C) 2018-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -485,9 +485,7 @@ CML::cyclicRepeatAMIPolyPatch::neighbWeightsSum() const
 void CML::cyclicRepeatAMIPolyPatch::write(Ostream& os) const
 {
     cyclicAMIPolyPatch::write(os);
-
-    os.writeKeyword("transformPatch") << transformPatchName_
-        << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "transformPatch", transformPatchName_);
 }
 
 

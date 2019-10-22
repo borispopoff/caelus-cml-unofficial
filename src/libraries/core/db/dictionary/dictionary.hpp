@@ -563,6 +563,28 @@ dictionary operator+(const dictionary& dict1, const dictionary& dict2);
 dictionary operator|(const dictionary& dict1, const dictionary& dict2);
 
 
+//- Helper function to write the keyword and entry
+template<class EntryType>
+void writeEntry
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value
+);
+
+
+//- Helper function to write the keyword and entry only if the
+//  values are not equal. The value is then output as value2
+template<class EntryType>
+void writeEntryIfDifferent
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value1,
+    const EntryType& value2
+);
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace CML
@@ -585,8 +607,10 @@ T CML::dictionary::lookupType
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction(*this)
-            << "keyword " << keyword << " is undefined in dictionary "
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "keyword " << keyword << " is undefined in dictionary "
             << name()
             << exit(FatalIOError);
     }
@@ -676,6 +700,33 @@ void CML::dictionary::set(const keyType& k, const T& t)
     set(new primitiveEntry(k, t));
 }
 
+
+template<class EntryType>
+void CML::writeEntry
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value
+)
+{
+    os.writeKeyword(entryName) << value << token::END_STATEMENT << nl;
+}
+
+
+template<class EntryType>
+void CML::writeEntryIfDifferent
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value1,
+    const EntryType& value2
+)
+{
+    if (value1 != value2)
+    {
+        writeEntry(os, entryName, value2);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

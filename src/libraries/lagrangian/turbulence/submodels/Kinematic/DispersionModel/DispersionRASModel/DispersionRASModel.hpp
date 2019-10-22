@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -288,10 +288,8 @@ template<class CloudType>
 void CML::DispersionRASModel<CloudType>::write(Ostream& os) const
 {
     DispersionModel<CloudType>::write(os);
-
-    os.writeKeyword("ownK") << ownK_ << token::END_STATEMENT << endl;
-    os.writeKeyword("ownEpsilon") << ownEpsilon_ << token::END_STATEMENT
-        << endl;
+    writeEntry(os, "ownK", ownK_);
+    writeEntry(os, "ownEpsilon", ownEpsilon_);
 }
 
 

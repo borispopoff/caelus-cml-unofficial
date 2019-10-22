@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -203,7 +203,7 @@ void CML::ReactionList<ThermoType>::write(Ostream& os) const
         const Reaction<ThermoType>& r = iter();
         os  << indent << r.name() << nl
             << indent << token::BEGIN_BLOCK << incrIndent << nl;
-        os.writeKeyword("type") << r.type() << token::END_STATEMENT << nl;
+        writeEntry(os, "type", r.type());
         r.write(os);
         os  << decrIndent << indent << token::END_BLOCK << nl;
     }

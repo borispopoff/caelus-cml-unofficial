@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -136,7 +136,7 @@ public:
             coeffs[i].second() = operator[](i);
         }
 
-        os.writeKeyword("coeffs") << coeffs << token::END_STATEMENT << nl;
+        CML::writeEntry(os, "coeffs", coeffs);
     }
 
 

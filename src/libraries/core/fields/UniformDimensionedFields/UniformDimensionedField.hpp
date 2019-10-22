@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -170,10 +170,9 @@ bool CML::UniformDimensionedField<Type>::writeData(Ostream& os) const
 {
     scalar multiplier;
     os.writeKeyword("dimensions");
-    this->dimensions().write(os, multiplier) << token::END_STATEMENT
-        << nl;
-    os.writeKeyword("value") << this->value()/multiplier << token::END_STATEMENT
-        << nl << nl;
+    this->dimensions().write(os, multiplier) << token::END_STATEMENT << nl;
+    writeEntry(os, "value", this->value()/multiplier);
+    os << nl;
 
     return (os.good());
 }

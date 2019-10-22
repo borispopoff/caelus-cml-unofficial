@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2018 OpenFOAM Foundation
+Copyright (C) 2018-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -154,9 +154,9 @@ public:
     //- Write to stream
     inline void write(Ostream& os) const
     {
-        os.writeKeyword("Vmax") << Vmax_ << token::END_STATEMENT << nl;
-        os.writeKeyword("Km") << Km_ << token::END_STATEMENT << nl;
-        os.writeKeyword("S") << species_[s_] << token::END_STATEMENT << nl;
+        writeEntry(os, "Vmax", Vmax_);
+        writeEntry(os, "Km", Km_);
+        writeEntry(os, "S", species_[s_]);
     }
 
 

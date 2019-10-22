@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -94,8 +94,7 @@ void CML::RBD::joints::Pa::jcalc
 void CML::RBD::joints::Pa::write(Ostream& os) const
 {
     joint::write(os);
-    os.writeKeyword("axis")
-        << S_[0].l() << token::END_STATEMENT << nl;
+    writeEntry(os, "axis", S_[0].l());
 }
 
 

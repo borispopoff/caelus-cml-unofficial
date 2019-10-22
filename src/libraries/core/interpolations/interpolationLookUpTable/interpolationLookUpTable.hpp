@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -609,19 +609,16 @@ void CML::interpolationLookUpTable<Type>::write
 
     control.writeHeader(os);
 
-    os.writeKeyword("fields")
-        << entries_ << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "fields", entries_);
 
-    os.writeKeyword("output")
-        << output_ << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "output", output_);
 
     if (this->size() == 0)
     {
         FatalErrorInFunction
             << "table is empty" << nl << exit(FatalError);
     }
-    os.writeKeyword("values")
-        << *this << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "values", *this);
 }
 
 

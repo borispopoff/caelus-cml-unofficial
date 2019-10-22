@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -84,8 +84,7 @@ void CML::surfZoneIdentifier::write(Ostream& os) const
 {
     if (geometricType_.size())
     {
-        os.writeKeyword("geometricType") << geometricType_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "geometricType", geometricType_);
     }
 }
 

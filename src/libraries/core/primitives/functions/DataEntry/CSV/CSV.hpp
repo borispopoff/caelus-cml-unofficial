@@ -393,18 +393,13 @@ void CML::DataEntryTypes::CSV<Type>::writeData(Ostream& os) const
     // the values themselves
     TableBase<Type>::writeEntries(os);
 
-    os.writeKeyword("nHeaderLine") << nHeaderLine_ << token::END_STATEMENT
-        << nl;
-
-    os.writeKeyword("refColumn") << refColumn_ << token::END_STATEMENT << nl;
-
+    writeEntry(os, "nHeaderLine", nHeaderLine_);
+    writeEntry(os, "refColumn", refColumn_);
     componentColumns_.writeEntry("componentColumns", os);
+    writeEntry(os, "separator", string(separator_));
+    writeEntry(os, "mergeSeparators", mergeSeparators_);
+    writeEntry(os, "file", fName_);
 
-    os.writeKeyword("separator") << string(separator_)
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("mergeSeparators") << mergeSeparators_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("file") << fName_ << token::END_STATEMENT << nl;
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 

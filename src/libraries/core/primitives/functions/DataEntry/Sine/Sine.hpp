@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -221,7 +221,7 @@ void CML::DataEntryTypes::Sine<Type>::writeData(Ostream& os) const
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    os.writeKeyword("t0") << t0_ << token::END_STATEMENT << nl;
+    writeEntry(os, "t0", t0_);
     amplitude_->writeData(os);
     frequency_->writeData(os);
     scale_->writeData(os);

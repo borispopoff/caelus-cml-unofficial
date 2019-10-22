@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -163,7 +163,7 @@ CML::mappedVariableThicknessWallPolyPatch::
 void CML::mappedVariableThicknessWallPolyPatch::
 write(CML::Ostream& os) const
 {
-    os.writeKeyword("thickness") << thickness_ << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "thickness", thickness_);
 }
 
 

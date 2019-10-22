@@ -246,8 +246,7 @@ template<class ReactionThermo>
 void CML::SolidReaction<ReactionThermo>::write(Ostream& os) const
 {
     OStringStream reaction;
-    os.writeKeyword("reaction") << solidReactionStr(reaction)
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "reaction", solidReactionStr(reaction));
 }
 
 

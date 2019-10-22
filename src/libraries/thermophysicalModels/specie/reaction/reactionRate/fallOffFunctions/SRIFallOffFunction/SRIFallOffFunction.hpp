@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -139,11 +139,11 @@ public:
     //- Write to stream
     inline void write(Ostream& os) const
     {
-        os.writeKeyword("a") << a_ << token::END_STATEMENT << nl;
-        os.writeKeyword("b") << b_ << token::END_STATEMENT << nl;
-        os.writeKeyword("c") << c_ << token::END_STATEMENT << nl;
-        os.writeKeyword("d") << d_ << token::END_STATEMENT << nl;
-        os.writeKeyword("e") << e_ << token::END_STATEMENT << nl;
+        writeEntry(os, "a", a_);
+        writeEntry(os, "b", b_);
+        writeEntry(os, "c", c_);
+        writeEntry(os, "d", d_);
+        writeEntry(os, "e", e_);
     }
 
 

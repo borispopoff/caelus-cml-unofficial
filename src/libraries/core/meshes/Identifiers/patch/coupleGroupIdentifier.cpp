@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -218,7 +218,7 @@ void CML::coupleGroupIdentifier::write(Ostream& os) const
 {
     if (valid())
     {
-        os.writeKeyword("coupleGroup") << name() << token::END_STATEMENT << nl;
+        writeEntry(os, "coupleGroup", name());
     }
 }
 

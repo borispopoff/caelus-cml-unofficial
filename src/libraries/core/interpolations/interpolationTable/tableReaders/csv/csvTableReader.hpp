@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -267,10 +267,8 @@ void CML::csvTableReader<Type>::write(Ostream& os) const
 {
     tableReader<Type>::write(os);
 
-    os.writeKeyword("hasHeaderLine")
-        << headerLine_ << token::END_STATEMENT << nl;
-    os.writeKeyword("timeColumn")
-        << timeColumn_ << token::END_STATEMENT << nl;
+    writeEntry(os, "hasHeaderLine", headerLine_);
+    writeEntry(os, "timeColumn", timeColumn_);
 
     // Force writing labelList in ascii
     os.writeKeyword("valueColumns");
@@ -282,8 +280,7 @@ void CML::csvTableReader<Type>::write(Ostream& os) const
     }
     os  << token::END_STATEMENT << nl;
 
-    os.writeKeyword("separator")
-        << string(separator_) << token::END_STATEMENT << nl;
+    writeEntry(os, "separator", string(separator_));
 }
 
 

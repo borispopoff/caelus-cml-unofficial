@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -468,20 +468,14 @@ void surfaceDisplacementPointPatchVectorField::updateCoeffs()
 void surfaceDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     fixedValuePointPatchVectorField::write(os);
-    os.writeKeyword("velocity") << velocity_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("geometry") << surfacesDict_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("projectMode") << projectModeNames_[projectMode_]
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("projectDirection") << projectDir_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("wedgePlane") << wedgePlane_
-        << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "velocity", velocity_);
+    CML::writeEntry(os, "geometry", surfacesDict_);
+    CML::writeEntry(os, "projectMode", projectModeNames_[projectMode_]);
+    CML::writeEntry(os, "projectDirection", projectDir_);
+    CML::writeEntry(os, "wedgePlane", wedgePlane_);
     if (frozenPointsZone_ != word::null)
     {
-        os.writeKeyword("frozenPointsZone") << frozenPointsZone_
-            << token::END_STATEMENT << nl;
+        CML::writeEntry(os, "frozenPointsZone", frozenPointsZone_);
     }
 }
 

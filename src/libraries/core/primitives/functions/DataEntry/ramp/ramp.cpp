@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -56,8 +56,8 @@ void CML::DataEntryTypes::ramp::writeData(Ostream& os) const
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    os.writeKeyword("start") << start_ << token::END_STATEMENT << nl;
-    os.writeKeyword("duration") << duration_ << token::END_STATEMENT << nl;
+    writeEntry(os, "start", start_);
+    writeEntry(os, "duration", duration_);
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 

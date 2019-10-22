@@ -542,9 +542,7 @@ template<class ReactionThermo>
 void CML::Reaction<ReactionThermo>::write(Ostream& os) const
 {
     OStringStream reaction;
-    os.writeKeyword("reaction") 
-        << specieCoeffs::reactionStr(reaction, species_, lhs_, rhs_)
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "reaction", specieCoeffs::reactionStr(reaction, species_, lhs_, rhs_));
 }
 
 

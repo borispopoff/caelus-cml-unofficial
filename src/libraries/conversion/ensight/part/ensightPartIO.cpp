@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -126,10 +126,10 @@ bool CML::ensightPart::writeSummary(Ostream& os) const
         << indent << token::BEGIN_BLOCK << incrIndent << nl;
 
     // Ensight starts with 1
-    os.writeKeyword("id") << (number() + 1) << token::END_STATEMENT << nl;
-    os.writeKeyword("name") << name() << token::END_STATEMENT << nl;
-    os.writeKeyword("offset") << offset() << token::END_STATEMENT << nl;
-    os.writeKeyword("size") << size() << token::END_STATEMENT << nl;
+    writeEntry(os, "id", (number() + 1));
+    writeEntry(os, "name", name());
+    writeEntry(os, "offset", offset());
+    writeEntry(os, "size", size());
 
     os  << decrIndent << indent << token::END_BLOCK << nl << endl;
 
@@ -142,9 +142,9 @@ bool CML::ensightPart::writeData(Ostream& os) const
     os  << indent << type() << nl
         << indent << token::BEGIN_BLOCK << incrIndent << nl;
 
-    os.writeKeyword("id") << number() << token::END_STATEMENT << nl;
-    os.writeKeyword("name") << name() << token::END_STATEMENT << nl;
-    os.writeKeyword("offset") << offset() << token::END_STATEMENT << nl;
+    writeEntry(os, "id", number());
+    writeEntry(os, "name", name());
+    writeEntry(os, "offset", offset());
 
     forAll(elementTypes(), typeI)
     {

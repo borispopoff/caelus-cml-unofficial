@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -175,16 +175,11 @@ void angularOscillatingDisplacementPointPatchVectorField::write
 ) const
 {
     pointPatchField<vector>::write(os);
-    os.writeKeyword("axis")
-        << axis_ << token::END_STATEMENT << nl;
-    os.writeKeyword("origin")
-        << origin_ << token::END_STATEMENT << nl;
-    os.writeKeyword("angle0")
-        << angle0_ << token::END_STATEMENT << nl;
-    os.writeKeyword("amplitude")
-        << amplitude_ << token::END_STATEMENT << nl;
-    os.writeKeyword("omega")
-        << omega_ << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "axis", axis_);
+    CML::writeEntry(os, "origin", origin_);
+    CML::writeEntry(os, "angle0", angle0_);
+    CML::writeEntry(os, "amplitude", amplitude_);
+    CML::writeEntry(os, "omega", omega_);
     p0_.writeEntry("p0", os);
     writeEntry("value", os);
 }

@@ -558,13 +558,11 @@ void CML::DataEntryTypes::TableBase<Type>::writeEntries(Ostream& os) const
 {
     if (boundsHandling_ != CLAMP)
     {
-        os.writeKeyword("outOfBounds") << boundsHandlingToWord(boundsHandling_)
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "outOfBounds", boundsHandlingToWord(boundsHandling_));
     }
     if (interpolationScheme_ != "linear")
     {
-        os.writeKeyword("interpolationScheme") << interpolationScheme_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "interpolationScheme", interpolationScheme_);
     }
 }
 

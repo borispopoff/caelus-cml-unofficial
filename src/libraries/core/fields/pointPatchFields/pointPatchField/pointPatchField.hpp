@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -566,12 +566,11 @@ const objectRegistry& pointPatchField<Type>::db() const
 template<class Type>
 void pointPatchField<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
 
     if (patchType_.size())
     {
-        os.writeKeyword("patchType") << patchType_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "patchType", patchType_);
     }
 }
 

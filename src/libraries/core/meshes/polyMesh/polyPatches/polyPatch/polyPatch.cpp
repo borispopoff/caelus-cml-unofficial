@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -352,10 +352,10 @@ void CML::polyPatch::clearAddressing()
 
 void CML::polyPatch::write(Ostream& os) const
 {
-    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "type", type());
     patchIdentifier::write(os);
-    os.writeKeyword("nFaces") << size() << token::END_STATEMENT << nl;
-    os.writeKeyword("startFace") << start() << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "nFaces", size());
+    CML::writeEntry(os, "startFace", start());
 }
 
 

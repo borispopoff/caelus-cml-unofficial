@@ -220,9 +220,7 @@ bool CML::CloudSubModelBase<CloudType>::writeTime() const
 template<class CloudType>
 void CML::CloudSubModelBase<CloudType>::write(Ostream& os) const
 {
-    os.writeKeyword("owner") << owner_.name() << token::END_STATEMENT
-        << nl;
-
+    writeEntry(os, "owner", owner_.name());
     subModelBase::write(os);
 }
 

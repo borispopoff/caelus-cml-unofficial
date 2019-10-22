@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -174,7 +174,7 @@ void CML::DataEntryTypes::TableFile<Type>::writeData(Ostream& os) const
     // the values themselves
     TableBase<Type>::writeEntries(os);
 
-    os.writeKeyword("file")<< fName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "file", fName_);
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 

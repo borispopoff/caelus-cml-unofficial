@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -122,12 +122,9 @@ void waveDisplacementPointPatchVectorField::updateCoeffs()
 void waveDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     pointPatchField<vector>::write(os);
-    os.writeKeyword("amplitude")
-        << amplitude_ << token::END_STATEMENT << nl;
-    os.writeKeyword("omega")
-        << omega_ << token::END_STATEMENT << nl;
-    os.writeKeyword("waveNumber")
-        << waveNumber_ << token::END_STATEMENT << nl;
+    CML::writeEntry(os, "amplitude", amplitude_);
+    CML::writeEntry(os, "omega", omega_);
+    CML::writeEntry(os, "waveNumber", waveNumber_);
     writeEntry("value", os);
 }
 

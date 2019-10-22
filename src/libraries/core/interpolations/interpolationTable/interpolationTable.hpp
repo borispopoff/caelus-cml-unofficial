@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -245,7 +245,7 @@ CML::interpolationTable<Type>::interpolationTable(const dictionary& dict)
 :
     List<Tuple2<scalar, Type>>(),
     boundsHandling_(wordToBoundsHandling(dict.lookup("outOfBounds"))),
-    fileName_(dict.lookup("fileName")),
+    fileName_(dict.lookup("file")),
     reader_(tableReader<Type>::New(dict))
 {
     readTable();
@@ -377,10 +377,8 @@ void CML::interpolationTable<Type>::check() const
 template<class Type>
 void CML::interpolationTable<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("fileName")
-        << fileName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("outOfBounds")
-        << boundsHandlingToWord(boundsHandling_) << token::END_STATEMENT << nl;
+    writeEntry(os, "file", fileName_);
+    writeEntry(os, "outOfBounds", boundsHandlingToWord(boundsHandling_));
     if (reader_.valid())
     {
         reader_->write(os);

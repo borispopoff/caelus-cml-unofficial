@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -176,6 +176,8 @@ void CML::interpolation2DTable<Type>::readTable()
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
 template<class Type>
 CML::interpolation2DTable<Type>::interpolation2DTable()
 :
@@ -238,6 +240,8 @@ CML::interpolation2DTable<Type>::interpolation2DTable
 {}
 
 
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
 Type CML::interpolation2DTable<Type>::interpolateValue
@@ -415,6 +419,8 @@ CML::label CML::interpolation2DTable<Type>::Xi
 }
 
 
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
 template<class Type>
 Type CML::interpolation2DTable<Type>::operator()
 (
@@ -569,10 +575,8 @@ void CML::interpolation2DTable<Type>::checkOrder() const
 template<class Type>
 void CML::interpolation2DTable<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("file")
-        << fileName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("outOfBounds")
-        << boundsHandlingToWord(boundsHandling_) << token::END_STATEMENT << nl;
+    writeEntry(os, "file", fileName_);
+    writeEntry(os, "outOfBounds", boundsHandlingToWord(boundsHandling_));
 
     *this >> os;
 }
