@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -186,9 +186,9 @@ const
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     if (tangentialVelocity_.size())
     {
-        tangentialVelocity_.writeEntry("tangentialVelocity", os);
+        writeEntry(os, "tangentialVelocity", tangentialVelocity_);
     }
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

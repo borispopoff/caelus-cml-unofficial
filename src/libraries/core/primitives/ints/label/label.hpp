@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -67,6 +67,11 @@ namespace CML
     inline label readLabel(Istream& is)
     {
         return readInt(is);
+    }
+
+    inline void writeEntry(Ostream& os, const label value)
+    {
+        os << value;
     }
 
 } // End namespace CML
@@ -262,7 +267,7 @@ public:
 //- Raise one label to the power of another
 label pow(label a, label b);
 
-//- Evaluate n! : n <= 12
+//- Evaluate n! : 0 < n <= 12
 label factorial(label n);
 
 

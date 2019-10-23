@@ -163,7 +163,7 @@ CML::mappedVariableThicknessWallPolyPatch::
 void CML::mappedVariableThicknessWallPolyPatch::
 write(CML::Ostream& os) const
 {
-    CML::writeEntry(os, "thickness", thickness_);
+    writeEntry(os, "thickness", thickness_);
 }
 
 

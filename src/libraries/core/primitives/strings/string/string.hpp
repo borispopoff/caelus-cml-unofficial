@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -219,6 +219,10 @@ public:
         friend Istream& operator>>(Istream&, string&);
         friend Ostream& operator<<(Ostream&, const string&);
 };
+
+
+void writeEntry(Ostream& os, const char* value);
+void writeEntry(Ostream& os, const string& value);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

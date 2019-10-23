@@ -331,14 +331,13 @@ template<class Type>
 void CML::outletMappedUniformInletFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("outletPatch")
-        << outletPatchName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "outletPatch", outletPatchName_);
     if (phiName_ != "phi")
     {
-        os.writeKeyword("phi") << phiName_ << token::END_STATEMENT << nl;
+        writeEntry(os, "phi", phiName_);
     }
-    os.writeKeyword("fraction") << fraction_ << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "fraction", fraction_);
+    writeEntry(os, "value", *this);
 }
 
 

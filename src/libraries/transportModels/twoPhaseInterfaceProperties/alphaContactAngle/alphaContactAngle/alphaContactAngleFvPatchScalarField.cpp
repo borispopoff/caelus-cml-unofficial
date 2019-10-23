@@ -75,19 +75,6 @@ CML::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 
 CML::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 (
-    const alphaContactAngleFvPatchScalarField& acpsf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedGradientFvPatchScalarField(acpsf, p, iF, mapper),
-    limit_(acpsf.limit_)
-{}
-
-
-CML::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -108,6 +95,19 @@ CML::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
         gradient() = 0.0;
     }
 }
+
+
+CML::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
+(
+    const alphaContactAngleFvPatchScalarField& acpsf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedGradientFvPatchScalarField(acpsf, p, iF, mapper),
+    limit_(acpsf.limit_)
+{}
 
 
 CML::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
@@ -170,8 +170,7 @@ void CML::alphaContactAngleFvPatchScalarField::write
 ) const
 {
     fixedGradientFvPatchScalarField::write(os);
-    os.writeKeyword("limit")
-        << limitControlNames_[limit_] << token::END_STATEMENT << nl;
+    writeEntry(os, "limit", limitControlNames_[limit_]);
 }
 
 

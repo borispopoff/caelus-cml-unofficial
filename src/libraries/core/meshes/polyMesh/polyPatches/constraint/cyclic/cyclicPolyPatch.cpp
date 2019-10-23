@@ -1422,19 +1422,19 @@ void CML::cyclicPolyPatch::write(Ostream& os) const
     coupledPolyPatch::write(os);
     if (!neighbPatchName_.empty())
     {
-        CML::writeEntry(os, "neighbourPatch", neighbPatchName_);
+        writeEntry(os, "neighbourPatch", neighbPatchName_);
     }
     switch (transform())
     {
         case ROTATIONAL:
         {
-            CML::writeEntry(os, "rotationAxis", rotationAxis_);
-            CML::writeEntry(os, "rotationCentre", rotationCentre_);
+            writeEntry(os, "rotationAxis", rotationAxis_);
+            writeEntry(os, "rotationCentre", rotationCentre_);
             break;
         }
         case TRANSLATIONAL:
         {
-            CML::writeEntry(os, "separationVector", separationVector_);
+            writeEntry(os, "separationVector", separationVector_);
             break;
         }
         case NOORDERING:

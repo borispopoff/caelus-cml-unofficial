@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 Copyright (C) 2017-2018 OpenCFD Ltd.
 -------------------------------------------------------------------------------
@@ -47,6 +47,9 @@ namespace CML
 // Forward declaration of friend functions and operators
 
 template<class T, unsigned Size> class FixedList;
+
+template<class T, unsigned Size>
+void writeEntry(Ostream& os, const FixedList<T, Size>&);
 
 template<class T, unsigned Size>
 Istream& operator>>(Istream&, FixedList<T, Size>&);
@@ -200,12 +203,6 @@ public:
             //- Copy (not transfer) the argument contents
             //  needed to make FixedList consistent with List
             void transfer(const FixedList<T, Size>&);
-
-        //- Write the FixedList as a dictionary entry
-        void writeEntry(Ostream&) const;
-
-        //- Write the FixedList as a dictionary entry with keyword
-        void writeEntry(const word& keyword, Ostream&) const;
 
         //- Write the List, with line-breaks in ASCII if the list length
         //- exceeds shortListLen.
@@ -923,12 +920,19 @@ bool CML::FixedList<T, Size>::operator>=(const FixedList<T, Size>& a) const
 }
 
 
-// * * * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * //
-
 #include "Istream.hpp"
 #include "Ostream.hpp"
 #include "token.hpp"
 #include "contiguous.hpp"
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class T, unsigned Size>
+void CML::writeEntry(Ostream& os, const FixedList<T, Size>& l)
+{
+    writeListEntry(os, l);
+}
+
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
@@ -1033,34 +1037,6 @@ CML::Istream& CML::operator>>(CML::Istream& is, FixedList<T, Size>& L)
 
 
 // * * * * * * * * * * * * * * * Ostream Operator *  * * * * * * * * * * * * //
-
-template<class T, unsigned Size>
-void CML::FixedList<T, Size>::writeEntry(Ostream& os) const
-{
-    if
-    (
-        token::compound::isCompound("List<" + word(pTraits<T>::typeName) + '>')
-    )
-    {
-        os  << word("List<" + word(pTraits<T>::typeName) + '>') << " ";
-    }
-
-    os << *this;
-}
-
-
-template<class T, unsigned Size>
-void CML::FixedList<T, Size>::writeEntry
-(
-    const word& keyword,
-    Ostream& os
-) const
-{
-    os.writeKeyword(keyword);
-    writeEntry(os);
-    os << token::END_STATEMENT << endl;
-}
-
 
 template<class T, unsigned Size>
 CML::Ostream& CML::FixedList<T, Size>::writeList

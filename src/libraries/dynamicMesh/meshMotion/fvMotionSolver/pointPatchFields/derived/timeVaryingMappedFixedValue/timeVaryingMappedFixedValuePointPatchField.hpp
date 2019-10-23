@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2017 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -166,7 +166,7 @@ public:
 
         // Utility functions
 
-            //- Find boundary data inbetween current time and interpolate
+            //- Find boundary data in between current time and interpolate
             void checkTable();
 
 
@@ -770,33 +770,30 @@ void CML::timeVaryingMappedFixedValuePointPatchField<Type>::write
 ) const
 {
     fixedValuePointPatchField<Type>::write(os);
-    os.writeKeyword("setAverage") << setAverage_ << token::END_STATEMENT << nl;
-    if (perturb_ != 1e-5)
-    {
-        os.writeKeyword("perturb") << perturb_ << token::END_STATEMENT << nl;
-    }
 
-    if (fieldTableName_ != this->dimensionedInternalField().name())
-    {
-        os.writeKeyword("fieldTableName") << fieldTableName_
-            << token::END_STATEMENT << nl;
-    }
+    writeEntryIfDifferent(os, "setAverage", bool(false), setAverage_);
 
-    if
+    writeEntryIfDifferent(os, "perturb", scalar(1e-5), perturb_);
+
+    writeEntryIfDifferent
     (
-        (
-           !mapMethod_.empty()
-         && mapMethod_ != "planarInterpolation"
-        )
-    )
-    {
-        os.writeKeyword("mapMethod") << mapMethod_
-            << token::END_STATEMENT << nl;
-    }
+        os,
+        "fieldTable",
+        this->dimensionedInternalField().name(),
+        fieldTableName_
+    );
+
+    writeEntryIfDifferent
+    (
+        os,
+        "mapMethod",
+        word("planarInterpolation"),
+        mapMethod_
+    );
 
     if (offset_.valid())
     {
-        offset_->writeData(os);
+        writeEntry(os, offset_());
     }
 }
 #endif

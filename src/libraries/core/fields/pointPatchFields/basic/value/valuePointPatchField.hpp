@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -292,7 +292,7 @@ CML::valuePointPatchField<Type>::valuePointPatchField
     const pointPatchFieldMapper& mapper
 )
 :
-    pointPatchField<Type>(p, iF),
+    pointPatchField<Type>(ptf, p, iF, mapper),
     Field<Type>(ptf, mapper)
 {}
 
@@ -372,7 +372,7 @@ template<class Type>
 void CML::valuePointPatchField<Type>::write(Ostream& os) const
 {
     pointPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", static_cast<const Field<Type>&>(*this));
 }
 
 
@@ -418,7 +418,6 @@ void CML::valuePointPatchField<Type>::operator=
 }
 
 
-// Force an assignment
 template<class Type>
 void CML::valuePointPatchField<Type>::operator==
 (

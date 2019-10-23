@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -131,7 +131,7 @@ void CML::filmHeightInletVelocityFvPatchVectorField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
     writeEntryIfDifferent<word>(os, "deltaf", "deltaf", deltafName_);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

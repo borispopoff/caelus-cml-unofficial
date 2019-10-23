@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014-2016 OpenFOAM Foundation
+Copyright (C) 2014-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -149,20 +149,14 @@ tmp<scalarField> atmBoundaryLayer::epsilon(const vectorField& p) const
 
 void atmBoundaryLayer::write(Ostream& os) const
 {
-    z0_.writeEntry("z0", os) ;
-    os.writeKeyword("flowDir")
-        << flowDir_ << token::END_STATEMENT << nl;
-    os.writeKeyword("zDir")
-        << zDir_ << token::END_STATEMENT << nl;
-    os.writeKeyword("kappa")
-        << kappa_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Cmu")
-        << Cmu_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Uref")
-        << Uref_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Zref")
-        << Zref_ << token::END_STATEMENT << nl;
-    zGround_.writeEntry("zGround", os) ;
+    writeEntry(os, "z0", z0_) ;
+    writeEntry(os, "flowDir", flowDir_);
+    writeEntry(os, "zDir", zDir_);
+    writeEntry(os, "kappa", kappa_);
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "Uref", Uref_);
+    writeEntry(os, "Zref", Zref_);
+    writeEntry(os, "zGround", zGround_) ;
 }
 
 

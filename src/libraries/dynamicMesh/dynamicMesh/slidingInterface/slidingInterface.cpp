@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -793,10 +793,10 @@ void CML::slidingInterface::writeDict(Ostream& os) const
 
     if (attached_)
     {
-        masterFaceCellsPtr_->writeEntry("masterFaceCells", os);
-        slaveFaceCellsPtr_->writeEntry("slaveFaceCells", os);
-        masterStickOutFacesPtr_->writeEntry("masterStickOutFaces", os);
-        slaveStickOutFacesPtr_->writeEntry("slaveStickOutFaces", os);
+        writeEntry(os, "masterFaceCells", *masterFaceCellsPtr_);
+        writeEntry(os, "slaveFaceCells", *slaveFaceCellsPtr_);
+        writeEntry(os, "masterStickOutFaces", *masterStickOutFacesPtr_);
+        writeEntry(os, "slaveStickOutFaces", *slaveStickOutFacesPtr_);
 
          os << "    retiredPointMap " << retiredPointMap()
             << token::END_STATEMENT << nl

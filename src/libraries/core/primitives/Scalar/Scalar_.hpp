@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -337,9 +337,15 @@ inline Scalar stabilise(const Scalar s, const Scalar small)
 }
 
 
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
 
 Scalar readScalar(Istream&);
+
+void writeEntry(Ostream& os, const Scalar value);
+
+
+// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
+
 Istream& operator>>(Istream&, Scalar&);
 Ostream& operator<<(Ostream&, const Scalar);
 

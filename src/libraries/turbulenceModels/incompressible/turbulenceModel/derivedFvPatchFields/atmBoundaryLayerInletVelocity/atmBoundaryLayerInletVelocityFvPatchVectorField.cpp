@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -119,7 +119,7 @@ void atmBoundaryLayerInletVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
     atmBoundaryLayer::write(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

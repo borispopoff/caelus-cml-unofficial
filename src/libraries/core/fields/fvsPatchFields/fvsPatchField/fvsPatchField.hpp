@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -536,8 +536,8 @@ void fvsPatchField<Type>::rmap
 template<class Type>
 void fvsPatchField<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "type", type());
+    writeEntry(os, "value", *this);
 }
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -185,9 +185,9 @@ void CML::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::
 write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    os.writeKeyword("phi") << phiName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("rho") << rhoName_ << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "phi", phiName_);
+    writeEntry(os, "rho", rhoName_);
+    writeEntry(os, "value", *this);
 }
 
 

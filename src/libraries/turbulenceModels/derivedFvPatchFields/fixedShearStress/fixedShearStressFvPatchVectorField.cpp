@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -165,11 +165,11 @@ void fixedShearStressFvPatchVectorField::updateCoeffs()
 
 void fixedShearStressFvPatchVectorField::write(Ostream& os) const
 {
-    fixedValueFvPatchVectorField::write(os);
+    fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    os.writeKeyword("tau") << tau0_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "tau", tau0_);
+    writeEntry(os, "value", *this);
 }
 
 

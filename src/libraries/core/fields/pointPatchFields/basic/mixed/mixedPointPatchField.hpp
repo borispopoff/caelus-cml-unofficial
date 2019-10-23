@@ -332,8 +332,8 @@ template<class Type>
 void CML::mixedPointPatchField<Type>::write(Ostream& os) const
 {
     pointPatchField<Type>::write(os);
-    refValue_.writeEntry("refValue", os);
-    valueFraction_.writeEntry("valueFraction", os);
+    writeEntry(os, "refValue", refValue_);
+    writeEntry(os, "valueFraction", valueFraction_);
 }
 
 

@@ -1217,24 +1217,24 @@ bool CML::oldCyclicPolyPatch::order
 void CML::oldCyclicPolyPatch::write(Ostream& os) const
 {
     // Replacement of polyPatch::write to write 'cyclic' instead of type():
-    CML::writeEntry(os, "type", cyclicPolyPatch::typeName);
+    writeEntry(os, "type", cyclicPolyPatch::typeName);
     patchIdentifier::write(os);
-    CML::writeEntry(os, "nFaces", size());
-    CML::writeEntry(os, "startFace", start());
+    writeEntry(os, "nFaces", size());
+    writeEntry(os, "startFace", start());
 
 
-    CML::writeEntry(os, "featureCos", featureCos_);
+    writeEntry(os, "featureCos", featureCos_);
     switch (transform())
     {
         case ROTATIONAL:
         {
-            CML::writeEntry(os, "rotationAxis", rotationAxis_);
-            CML::writeEntry(os, "rotationCentre", rotationCentre_);
+            writeEntry(os, "rotationAxis", rotationAxis_);
+            writeEntry(os, "rotationCentre", rotationCentre_);
             break;
         }
         case TRANSLATIONAL:
         {
-            CML::writeEntry(os, "separationVector", separationVector_);
+            writeEntry(os, "separationVector", separationVector_);
             break;
         }
         default:

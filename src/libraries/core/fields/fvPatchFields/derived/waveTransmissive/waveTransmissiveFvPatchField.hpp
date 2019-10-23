@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -317,17 +317,15 @@ void CML::waveTransmissiveFvPatchField<Type>::write(Ostream& os) const
     this->template
         writeEntryIfDifferent<word>(os, "psi", "psi", psiName_);
 
-    os.writeKeyword("gamma") << gamma_ << token::END_STATEMENT << nl;
+    writeEntry(os, "gamma", gamma_);
 
     if (this->lInf_ > SMALL)
     {
-        os.writeKeyword("fieldInf") << this->fieldInf_
-            << token::END_STATEMENT << nl;
-        os.writeKeyword("lInf") << this->lInf_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "fieldInf", this->fieldInf_);
+        writeEntry(os, "lInf", this->lInf_);
     }
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

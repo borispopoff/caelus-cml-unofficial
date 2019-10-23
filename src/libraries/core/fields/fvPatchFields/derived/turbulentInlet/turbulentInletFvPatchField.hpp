@@ -403,11 +403,10 @@ template<class Type>
 void CML::turbulentInletFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("fluctuationScale")
-        << fluctuationScale_ << token::END_STATEMENT << nl;
-    referenceField_.writeEntry("referenceField", os);
-    os.writeKeyword("alpha") << alpha_ << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "fluctuationScale", fluctuationScale_);
+    writeEntry(os, "referenceField", referenceField_);
+    writeEntry(os, "alpha", alpha_);
+    writeEntry(os, "value", *this);
 }
 
 

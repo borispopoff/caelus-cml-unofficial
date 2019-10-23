@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -421,6 +421,9 @@ public:
         friend Istream& operator>>(Istream&, dimensionSet&);
         friend Ostream& operator<<(Ostream&, const dimensionSet&);
 };
+
+
+void writeEntry(Ostream& os, const dimensionSet& value);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -799,16 +799,15 @@ void CML::timeVaryingMappedFixedValueFvPatchField<Type>::write
 ) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("setAverage") << setAverage_ << token::END_STATEMENT << nl;
+    writeEntry(os, "setAverage", setAverage_);
     if (perturb_ != 1e-5)
     {
-        os.writeKeyword("perturb") << perturb_ << token::END_STATEMENT << nl;
+        writeEntry(os, "perturb", perturb_);
     }
 
     if (fieldTableName_ != this->dimensionedInternalField().name())
     {
-        os.writeKeyword("fieldTable") << fieldTableName_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "fieldTable", fieldTableName_);
     }
 
     if
@@ -819,13 +818,12 @@ void CML::timeVaryingMappedFixedValueFvPatchField<Type>::write
         )
     )
     {
-        os.writeKeyword("mapMethod") << mapMethod_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "mapMethod", mapMethod_);
     }
 
-    offset_->writeData(os);
+    writeEntry(os, offset_());
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

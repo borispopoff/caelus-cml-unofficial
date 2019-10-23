@@ -485,7 +485,7 @@ CML::cyclicRepeatAMIPolyPatch::neighbWeightsSum() const
 void CML::cyclicRepeatAMIPolyPatch::write(Ostream& os) const
 {
     cyclicAMIPolyPatch::write(os);
-    CML::writeEntry(os, "transformPatch", transformPatchName_);
+    writeEntry(os, "transformPatch", transformPatchName_);
 }
 
 

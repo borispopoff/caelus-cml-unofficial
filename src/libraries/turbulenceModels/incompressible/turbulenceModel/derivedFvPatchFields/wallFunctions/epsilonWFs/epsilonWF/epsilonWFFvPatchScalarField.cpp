@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-201 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,11 +51,14 @@ void epsilonWallFunctionFvPatchScalarField::checkType()
 }
 
 
-void epsilonWallFunctionFvPatchScalarField::writeLocalEntries(Ostream& os) const
+void epsilonWallFunctionFvPatchScalarField::writeLocalEntries
+(
+    Ostream& os
+) const
 {
-    os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
-    os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
-    os.writeKeyword("E") << E_ << token::END_STATEMENT << nl;
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "kappa", kappa_);
+    writeEntry(os, "E", E_);
 }
 
 
@@ -216,7 +219,7 @@ void epsilonWallFunctionFvPatchScalarField::evaluate
 void epsilonWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     writeLocalEntries(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
     fixedInternalValueFvPatchField<scalar>::write(os);
 }
 

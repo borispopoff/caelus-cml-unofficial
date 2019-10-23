@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2018 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -129,7 +129,7 @@ void CML::energyJumpFvPatchScalarField::updateCoeffs()
 void CML::energyJumpFvPatchScalarField::write(Ostream& os) const
 {
     fixedJumpFvPatchField<scalar>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -113,9 +113,9 @@ void oscillatingDisplacementPointPatchVectorField::updateCoeffs()
 void oscillatingDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     pointPatchField<vector>::write(os);
-    CML::writeEntry(os, "amplitude", amplitude_);
-    CML::writeEntry(os, "omega", omega_);
-    writeEntry("value", os);
+    writeEntry(os, "amplitude", amplitude_);
+    writeEntry(os, "omega", omega_);
+    writeEntry(os, "value", *this);
 }
 
 

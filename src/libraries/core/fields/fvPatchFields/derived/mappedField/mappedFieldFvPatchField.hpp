@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -586,12 +586,11 @@ void mappedFieldFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     mappedPatchBase::write(os);
-    os.writeKeyword("field") << fieldName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("setAverage") << setAverage_ << token::END_STATEMENT << nl;
-    os.writeKeyword("average") << average_ << token::END_STATEMENT << nl;
-    os.writeKeyword("interpolationScheme") << interpolationScheme_
-        << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "field", fieldName_);
+    writeEntry(os, "setAverage", setAverage_);
+    writeEntry(os, "average", average_);
+    writeEntry(os, "interpolationScheme", interpolationScheme_);
+    writeEntry(os, "value", *this);
 }
 
 

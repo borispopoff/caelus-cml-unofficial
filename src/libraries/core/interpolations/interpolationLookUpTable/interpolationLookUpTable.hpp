@@ -609,16 +609,16 @@ void CML::interpolationLookUpTable<Type>::write
 
     control.writeHeader(os);
 
-    CML::writeEntry(os, "fields", entries_);
+    writeEntry(os, "fields", entries_);
 
-    CML::writeEntry(os, "output", output_);
+    writeEntry(os, "output", output_);
 
     if (this->size() == 0)
     {
         FatalErrorInFunction
             << "table is empty" << nl << exit(FatalError);
     }
-    CML::writeEntry(os, "values", *this);
+    writeEntry(os, "values", *this);
 }
 
 

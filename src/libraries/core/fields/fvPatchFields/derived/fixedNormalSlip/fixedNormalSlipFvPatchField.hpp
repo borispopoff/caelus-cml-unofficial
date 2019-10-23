@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -374,7 +374,7 @@ template<class Type>
 void CML::fixedNormalSlipFvPatchField<Type>::write(Ostream& os) const
 {
     transformFvPatchField<Type>::write(os);
-    fixedValue_.writeEntry("fixedValue", os);
+    writeEntry(os, "fixedValue", fixedValue_);
 }
 
 

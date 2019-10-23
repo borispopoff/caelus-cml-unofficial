@@ -337,10 +337,10 @@ bool CML::processorCyclicPolyPatch::order
 void CML::processorCyclicPolyPatch::write(Ostream& os) const
 {
     processorPolyPatch::write(os);
-    CML::writeEntry(os, "referPatch", referPatchName_);
+    writeEntry(os, "referPatch", referPatchName_);
     if (tag_ != -1)
     {
-        CML::writeEntry(os, "tag", tag_);
+        writeEntry(os, "tag", tag_);
     }
 }
 

@@ -69,7 +69,6 @@ subdirs = Split("""
     postProcessing/dataConversion/caelusToEnsight
     postProcessing/dataConversion/caelusToEnsightParts
     postProcessing/dataConversion/caelusToTetDualMesh
-    postProcessing/dataConversion/caelusToVTK/libcaelusToVTK
     postProcessing/dataConversion/caelusToVTK
     postProcessing/caelusCalc
     postProcessing/lagrangian/particleTracks

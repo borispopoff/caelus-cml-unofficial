@@ -46,16 +46,21 @@ class Ostream;
 // Forward declaration of friend functions and operators
 template<class T, class BaseType> class ListCompactIO;
 
+template<class T, class BaseType>
+void writeEntry(Ostream& os, const ListCompactIO<T, BaseType>& l);
+
 template<class T, class BaseType> Istream& operator>>
 (
     Istream&,
     ListCompactIO<T, BaseType>&
 );
+
 template<class T, class BaseType> Ostream& operator<<
 (
     Ostream&,
     const ListCompactIO<T, BaseType>&
 );
+
 
 /*---------------------------------------------------------------------------*\
                            Class ListCompactIO Declaration
@@ -100,21 +105,20 @@ public:
         ListCompactIO(Istream&);
 
 
-    // Member functions
-
-        //- Write the list in compact form as a dictionary entry to Ostream
-        void writeEntry(Ostream& os) const;
-
-        //- Write the list in compact form as a dictionary entry with keyword
-        //  to Ostream
-        void writeEntry(const word& keyword, Ostream& os) const;
-
-
     // Member operators
 
         void operator=(const ListCompactIO<T, BaseType>&);
 
         void operator=(const List<T>&);
+
+
+    // IOstream functions
+
+        friend void writeEntry <T, BaseType>
+        (
+            Ostream& os,
+            const ListCompactIO<T, BaseType>& l
+        );
 
 
     // IOstream operators
@@ -243,40 +247,6 @@ CML::ListCompactIO<T, BaseType>::ListCompactIO(Istream& is)
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class T, class BaseType>
-void CML::ListCompactIO<T, BaseType>::writeEntry(Ostream& os) const
-{
-    // Keep ascii writing same.
-    if (os.format() == IOstream::ASCII)
-    {
-        os << static_cast<const List<T>&>(*this);
-    }
-    else
-    {
-        labelList start;
-        List<BaseType> elems;
-        convertToCompact(start, elems);
-        start.writeEntry(os);
-        elems.writeEntry(os);
-    }
-}
-
-
-template<class T, class BaseType>
-void CML::ListCompactIO<T, BaseType>::writeEntry
-(
-    const word& keyword,
-    Ostream& os
-) const
-{
-    os.writeKeyword(keyword);
-    writeEntry(os);
-    os << token::END_STATEMENT << endl;
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class T, class BaseType>
@@ -293,6 +263,27 @@ template<class T, class BaseType>
 void CML::ListCompactIO<T, BaseType>::operator=(const List<T>& rhs)
 {
     List<T>::operator=(rhs);
+}
+
+
+// * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
+
+template<class T, class BaseType>
+void CML::writeEntry(Ostream& os, const ListCompactIO<T, BaseType>& l)
+{
+    // Keep ascii writing same.
+    if (os.format() == IOstream::ASCII)
+    {
+        os << static_cast<const List<T>&>(l);
+    }
+    else
+    {
+        labelList start;
+        List<BaseType> elems;
+        l.convertToCompact(start, elems);
+        writeEntry(os, start);
+        writeEntry(os, elems);
+    }
 }
 
 

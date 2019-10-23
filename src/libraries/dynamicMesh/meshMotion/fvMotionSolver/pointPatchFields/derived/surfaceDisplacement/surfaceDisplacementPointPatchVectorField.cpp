@@ -468,14 +468,14 @@ void surfaceDisplacementPointPatchVectorField::updateCoeffs()
 void surfaceDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     fixedValuePointPatchVectorField::write(os);
-    CML::writeEntry(os, "velocity", velocity_);
-    CML::writeEntry(os, "geometry", surfacesDict_);
-    CML::writeEntry(os, "projectMode", projectModeNames_[projectMode_]);
-    CML::writeEntry(os, "projectDirection", projectDir_);
-    CML::writeEntry(os, "wedgePlane", wedgePlane_);
+    writeEntry(os, "velocity", velocity_);
+    writeEntry(os, "geometry", surfacesDict_);
+    writeEntry(os, "projectMode", projectModeNames_[projectMode_]);
+    writeEntry(os, "projectDirection", projectDir_);
+    writeEntry(os, "wedgePlane", wedgePlane_);
     if (frozenPointsZone_ != word::null)
     {
-        CML::writeEntry(os, "frozenPointsZone", frozenPointsZone_);
+        writeEntry(os, "frozenPointsZone", frozenPointsZone_);
     }
 }
 

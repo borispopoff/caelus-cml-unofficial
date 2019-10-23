@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -159,7 +159,7 @@ write
 {
     fixedValueFvPatchScalarField::write(os);
     radiationCoupledBase::write(os);
-    qro_.writeEntry("qro", os);
+    writeEntry(os, "qro", qro_);
 }
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------* \
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -149,9 +149,9 @@ void CML::SRFVelocityFvPatchVectorField::updateCoeffs()
 void CML::SRFVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("relative") << relative_ << token::END_STATEMENT << nl;
-    inletValue_.writeEntry("inletValue", os);
-    writeEntry("value", os);
+    writeEntry(os, "relative", relative_);
+    writeEntry(os, "inletValue", inletValue_);
+    writeEntry(os, "value", *this);
 }
 
 

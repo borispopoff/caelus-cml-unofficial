@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -45,9 +45,7 @@ void CML::faceZone::calcFaceZonePatch() const
 {
     if (debug)
     {
-        Info<< "void faceZone::calcFaceZonePatch() const : "
-            << "Calculating primitive patch"
-            << endl;
+        InfoInFunction << "Calculating primitive patch" << endl;
     }
 
     if (patchPtr_)
@@ -85,9 +83,7 @@ void CML::faceZone::calcFaceZonePatch() const
 
     if (debug)
     {
-        Info<< "void faceZone::calcFaceZonePatch() const : "
-            << "Finished calculating primitive patch"
-            << endl;
+        InfoInFunction << "Finished calculating primitive patch" << endl;
     }
 }
 
@@ -96,9 +92,7 @@ void CML::faceZone::calcCellLayers() const
 {
     if (debug)
     {
-        Info<< "void CML::faceZone::calcCellLayers() const : "
-            << "calculating master cells"
-            << endl;
+        InfoInFunction << "Calculating master cells" << endl;
     }
 
     // It is an error to attempt to recalculate edgeCells
@@ -129,8 +123,8 @@ void CML::faceZone::calcCellLayers() const
 
         forAll(mf, facei)
         {
-            label ownCellI = own[mf[facei]];
-            label neiCellI =
+            label ownCelli = own[mf[facei]];
+            label neiCelli =
             (
                 zoneMesh().mesh().isInternalFace(mf[facei])
               ? nei[mf[facei]]
@@ -140,17 +134,15 @@ void CML::faceZone::calcCellLayers() const
             if (!faceFlip[facei])
             {
                 // Face is oriented correctly, no flip needed
-                mc[facei] = neiCellI;
-                sc[facei] = ownCellI;
+                mc[facei] = neiCelli;
+                sc[facei] = ownCelli;
             }
             else
             {
-                mc[facei] = ownCellI;
-                sc[facei] = neiCellI;
+                mc[facei] = ownCelli;
+                sc[facei] = neiCelli;
             }
         }
-        //Info<< "masterCells: " << mc << endl;
-        //Info<< "slaveCells: " << sc << endl;
     }
 }
 
@@ -334,28 +326,6 @@ const CML::labelList& CML::faceZone::meshEdges() const
 {
     if (!mePtr_)
     {
-        //labelList faceCells(size());
-        //
-        //const labelList& own = zoneMesh().mesh().faceOwner();
-        //
-        //const labelList& faceLabels = *this;
-        //
-        //forAll(faceCells, facei)
-        //{
-        //    faceCells[facei] = own[faceLabels[facei]];
-        //}
-        //
-        //mePtr_ =
-        //    new labelList
-        //    (
-        //        operator()().meshEdges
-        //        (
-        //            zoneMesh().mesh().edges(),
-        //            zoneMesh().mesh().cellEdges(),
-        //            faceCells
-        //        )
-        //    );
-
         mePtr_ =
             new labelList
             (
@@ -542,8 +512,8 @@ void CML::faceZone::writeDict(Ostream& os) const
     os  << nl << name() << nl << token::BEGIN_BLOCK << nl
         << "    type " << type() << token::END_STATEMENT << nl;
 
-    writeEntry(this->labelsName, os);
-    flipMap().writeEntry("flipMap", os);
+    writeEntry(os, this->labelsName, *this);
+    writeEntry(os, "flipMap", flipMap());
 
     os  << token::END_BLOCK << endl;
 }

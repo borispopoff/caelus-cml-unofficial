@@ -35,6 +35,7 @@ SourceFiles
 #include "label.hpp"
 #include "scalar.hpp"
 #include "string.hpp"
+#include "dictionary.hpp"
 
 namespace CML
 {

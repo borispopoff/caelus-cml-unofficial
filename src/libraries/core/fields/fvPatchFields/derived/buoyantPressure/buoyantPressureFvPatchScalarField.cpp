@@ -133,7 +133,7 @@ void CML::buoyantPressureFvPatchScalarField::write(Ostream& os) const
 {
     fixedGradientFvPatchScalarField::write(os);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    writeEntry("value", os);
+    writeEntry(os, "value");
 }
 
 

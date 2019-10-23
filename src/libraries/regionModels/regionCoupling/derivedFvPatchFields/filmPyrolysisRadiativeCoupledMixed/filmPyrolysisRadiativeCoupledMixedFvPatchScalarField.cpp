@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -394,14 +394,11 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::write
         "pyrolysisProperties",
         pyrolysisRegionName_
     );
-    os.writeKeyword("Tnbr")<< TnbrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("convectiveScaling") << convectiveScaling_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("filmDeltaDry") << filmDeltaDry_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("filmDeltaWet") << filmDeltaWet_
-        << token::END_STATEMENT << endl;
+    writeEntry(os, "Tnbr", TnbrName_);
+    writeEntry(os, "qr", qrName_);
+    writeEntry(os, "convectiveScaling", convectiveScaling_);
+    writeEntry(os, "filmDeltaDry", filmDeltaDry_);
+    writeEntry(os, "filmDeltaWet", filmDeltaWet_);
     temperatureCoupledBase::write(os);
 }
 

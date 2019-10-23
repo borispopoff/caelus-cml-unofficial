@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -116,7 +116,7 @@ void atmBoundaryLayerInletKFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
     atmBoundaryLayer::write(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

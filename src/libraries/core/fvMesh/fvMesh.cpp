@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -258,7 +258,7 @@ CML::fvMesh::fvMesh(const IOobject& io, const bool defectCorr, const scalar area
                 *this,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
-                false
+                true
             ),
             *this
         );
@@ -670,7 +670,6 @@ CML::tmp<CML::scalarField> CML::fvMesh::movePoints(const pointField& p)
         curTimeIndex_ = time().timeIndex();
     }
 
-
     if (!phiPtr_)
     {
         // Create mesh motion flux
@@ -683,7 +682,7 @@ CML::tmp<CML::scalarField> CML::fvMesh::movePoints(const pointField& p)
                 *this,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                true
             ),
             *this,
             dimVolume/dimTime

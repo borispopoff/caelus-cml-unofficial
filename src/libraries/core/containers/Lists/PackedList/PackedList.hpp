@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2017-2018 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Note
 
     The lazy evaluation used means that reading an out-of-range element
     returns zero, but does not affect the list size.  Even in a non-const
-    context, only the assigment itself causes the element to be created.
+    context, only the assignment itself causes the element to be created.
     For example,
     \code
         list.resize(4);
@@ -86,7 +86,7 @@ Note
     \endverbatim
     In both cases, the supplied indices can be randomly ordered.
 
-SeeAlso
+See also
     CML::DynamicList
 
 SourceFiles
@@ -113,6 +113,9 @@ class Ostream;
 
 // Forward declaration of friend functions and operators
 template<unsigned nBits> class PackedList;
+
+template<unsigned nBits>
+void writeEntry(Ostream& os, const PackedList<nBits>&);
 
 template<unsigned nBits>
 Istream& operator>>(Istream&, PackedList<nBits>&);
@@ -379,14 +382,7 @@ public:
             //  Using '0' suppresses line-breaks entirely.
             Ostream& writeList(Ostream& os, const label shortListLen=0) const;
 
-            //- Write as a dictionary entry
-            void writeEntry(Ostream&) const;
-
-            //- Write as a dictionary entry with keyword
-            void writeEntry(const word& keyword, Ostream&) const;
-
-
-    // Member Operators
+    // Member operators
 
             //- Append a value at the end of the list
             inline PackedList<nBits>& append(const unsigned int val);
@@ -406,13 +402,13 @@ public:
             //- Assignment of all entries to the given value. Takes linear time.
             inline void operator=(const unsigned int val);
 
-            //- Assignment operator
+            //- Assignment operator.
             void operator=(const PackedList<nBits>&);
 
-            //- Assignment operator
+            //- Assignment operator.
             void operator=(const labelUList&);
 
-            //- Assignment operator
+            //- Assignment operator.
             void operator=(const UIndirectList<label>&);
 
 
@@ -495,7 +491,7 @@ public:
             public iteratorBase
         {
 
-            //- Disallow default bitwise copy construction
+            //- Disallow copy constructor from const_iterator
             //  This would violate const-ness!
             iterator(const const_iterator&);
 
@@ -581,7 +577,7 @@ public:
                 inline const_iterator(const iterator&);
 
 
-            // Member Operators
+            // Member operators
 
                 //- Compare positions (not values)
                 inline bool operator==(const iteratorBase&) const;
@@ -2258,26 +2254,6 @@ CML::Ostream& CML::PackedList<nBits>::write
 }
 
 
-template<unsigned nBits>
-void CML::PackedList<nBits>::writeEntry(Ostream& os) const
-{
-    os  << *this;
-}
-
-
-template<unsigned nBits>
-void CML::PackedList<nBits>::writeEntry
-(
-    const word& keyword,
-    Ostream& os
-) const
-{
-    os.writeKeyword(keyword);
-    writeEntry(os);
-    os  << token::END_STATEMENT << endl;
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<unsigned nBits>
@@ -2311,6 +2287,15 @@ void CML::PackedList<nBits>::operator=(const UIndirectList<label>& lst)
     {
         set(i, lst[i]);
     }
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<unsigned nBits>
+void CML::writeEntry(Ostream& os, const PackedList<nBits>& l)
+{
+    os << l;
 }
 
 

@@ -116,10 +116,10 @@ CML::genericPolyPatch::~genericPolyPatch()
 
 void CML::genericPolyPatch::write(Ostream& os) const
 {
-    CML::writeEntry(os, "type", actualTypeName_);
+    writeEntry(os, "type", actualTypeName_);
     patchIdentifier::write(os);
-    CML::writeEntry(os, "nFaces", size());
-    CML::writeEntry(os, "startFace", start());
+    writeEntry(os, "nFaces", size());
+    writeEntry(os, "startFace", start());
 
     forAllConstIter(dictionary, dict_, iter)
     {

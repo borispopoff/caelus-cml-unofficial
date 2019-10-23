@@ -54,10 +54,12 @@ template<class T> class SubList;
 
 // Forward declaration of friend functions and operators
 template<class T> class UList;
+template<class T> void writeEntry(Ostream& os, const UList<T>&);
 template<class T> Ostream& operator<<(Ostream&, const UList<T>&);
 template<class T> Istream& operator>>(Istream&, UList<T>&);
 
 typedef UList<label> labelUList;
+
 
 /*---------------------------------------------------------------------------*\
                            Class UList Declaration
@@ -217,18 +219,6 @@ public:
 
 
         // Write
-
-            //- Write the UList as a dictionary entry
-            void writeEntry(Ostream&) const;
-
-            //- Write the UList as a dictionary entry with keyword
-            void writeEntry(const word& keyword, Ostream&) const;
-
-            //- Write the UList as a dictionary entry
-            void writeEntryList(Ostream&) const;
-
-            //- Write the UList as a dictionary entry with keyword
-            void writeEntryList(const word& keyword, Ostream&) const;
 
             //- Write the List, with line-breaks in ASCII if the list length
             //- exceeds shortListLen.
@@ -414,6 +404,15 @@ inline void reverse(UList<T>&, const label n);
 // Reverse all the elements of the list
 template<class T>
 inline void reverse(UList<T>&);
+
+template<class ListType>
+void writeListEntry(Ostream& os, const ListType& l);
+
+template<class ListType>
+void writeListEntries(Ostream& os, const ListType& l);
+
+template<class ListType>
+void writeListEntries(Ostream& os, const word& keyword, const ListType& l);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -1011,46 +1010,42 @@ bool CML::UList<T>::operator>=(const UList<T>& a) const
 #include "SLList.hpp"
 #include "contiguous.hpp"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
 
-template<class T>
-void CML::UList<T>::writeEntry(Ostream& os) const
+template<class ListType>
+void CML::writeListEntry(Ostream& os, const ListType& l)
 {
     if
     (
-        size()
+        l.size()
      && token::compound::isCompound
         (
-            "List<" + word(pTraits<T>::typeName) + '>'
+            "List<"
+          + word(pTraits<typename ListType::value_type>::typeName) + '>'
         )
     )
     {
-        os  << word("List<" + word(pTraits<T>::typeName) + '>') << " ";
+        os << word
+        (
+            "List<"
+          + word(pTraits<typename ListType::value_type>::typeName) + '>'
+        ) << " ";
     }
 
-    os << *this;
+    os << l;
 }
 
 
-template<class T>
-void CML::UList<T>::writeEntry(const word& keyword, Ostream& os) const
-{
-    os.writeKeyword(keyword);
-    writeEntry(os);
-    os << token::END_STATEMENT << endl;
-}
-
-
-template<class T>
-void CML::UList<T>::writeEntryList(Ostream& os) const
+template<class ListType>
+void CML::writeListEntries(Ostream& os, const ListType& l)
 {
     // Write size and start delimiter
-    os << nl << size() << nl << token::BEGIN_LIST;
+    os << nl << l.size() << nl << token::BEGIN_LIST;
 
     // Write contents
-    forAll(*this, i)
+    forAll(l, i)
     {
-        this->operator[](i).writeEntry(os);
+        writeEntry(os, l[i]);
         os << nl;
     }
 
@@ -1059,12 +1054,19 @@ void CML::UList<T>::writeEntryList(Ostream& os) const
 }
 
 
-template<class T>
-void CML::UList<T>::writeEntryList(const word& keyword, Ostream& os) const
+template<class ListType>
+void CML::writeListEntries(Ostream& os, const word& keyword, const ListType& l)
 {
     os.writeKeyword(keyword);
-    writeEntryList(os);
+    writeListEntries(os, l);
     os << token::END_STATEMENT << endl;
+}
+
+
+template<class T>
+void CML::writeEntry(Ostream& os, const UList<T>& l)
+{
+    writeListEntry(os, l);
 }
 
 

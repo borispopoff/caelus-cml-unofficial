@@ -30,7 +30,7 @@ CML::label CML::profilingInformation::nextId_(0);
 
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
-
+/*
 // File-scope function
 template<class T>
 inline static void writeEntry
@@ -40,7 +40,7 @@ inline static void writeEntry
 {
     os.writeKeyword(key) << value << CML::token::END_STATEMENT << '\n';
 }
-
+*/
 
 CML::label CML::profilingInformation::getNextId()
 {

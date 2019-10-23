@@ -82,6 +82,12 @@ Scalar readScalar(Istream& is)
 }
 
 
+void writeEntry(Ostream& os, const Scalar value)
+{
+    os << value;
+}
+
+
 Istream& operator>>(Istream& is, Scalar& s)
 {
     token t(is);

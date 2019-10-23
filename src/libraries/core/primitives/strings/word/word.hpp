@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -65,7 +65,7 @@ class word
 
 public:
 
-    // Static Data Members
+    // Static data members
 
         static const char* const typeName;
         static int debug;
@@ -79,13 +79,13 @@ public:
         //- Construct null
         inline word();
 
-        //- Copy constructor
+        //- Construct as copy
         inline word(const word&);
 
-        //- Copy constructor of character array
+        //- Construct as copy of character array
         inline word(const char*, const bool doStripInvalid=true);
 
-        //- Copy constructor with a maximum number of characters
+        //- Construct as copy with a maximum number of characters
         inline word
         (
             const char*,
@@ -93,23 +93,23 @@ public:
             const bool doStripInvalid
         );
 
-        //- Copy constructor of string
+        //- Construct as copy of string
         inline word(const string&, const bool doStripInvalid=true);
 
-        //- Copy constructor of std::string
+        //- Construct as copy of std::string
         inline word(const std::string&, const bool doStripInvalid=true);
 
         //- Construct from Istream
         word(Istream&);
 
 
-    // Member Functions
+    // Member functions
 
         //- Is this character valid for a word
         inline static bool valid(char);
 
 
-    // Member Operators
+    // Member operators
 
         // Assignment
 
@@ -124,11 +124,14 @@ public:
         friend word operator&(const word&, const word&);
 
 
-    // IOstream Operators
+    // IOstream operators
 
         friend Istream& operator>>(Istream&, word&);
         friend Ostream& operator<<(Ostream&, const word&);
 };
+
+
+void writeEntry(Ostream& os, const word& value);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

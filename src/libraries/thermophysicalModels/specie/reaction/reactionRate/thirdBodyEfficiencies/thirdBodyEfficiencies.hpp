@@ -136,7 +136,7 @@ public:
             coeffs[i].second() = operator[](i);
         }
 
-        CML::writeEntry(os, "coeffs", coeffs);
+        writeEntry(os, "coeffs", coeffs);
     }
 
 

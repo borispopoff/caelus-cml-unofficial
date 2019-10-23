@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,30 +47,12 @@ turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 template<class Type>
 turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 (
-    const turbulentInletFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
-    ranGen_(label(0)),
-    fluctuationScale_(ptf.fluctuationScale_),
-    referenceField_(ptf.referenceField_, mapper),
-    alpha_(ptf.alpha_),
-    curTimeIndex_(-1)
-{}
-
-
-template<class Type>
-turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),
+    fixedValueFvPatchField<Type>(p, iF, dict, false),
     ranGen_(label(0)),
     fluctuationScale_(pTraits<Type>(dict.lookup("fluctuationScale"))),
     referenceField_("referenceField", dict, p.size()),
@@ -89,6 +71,24 @@ turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
         fixedValueFvPatchField<Type>::operator==(referenceField_);
     }
 }
+
+
+template<class Type>
+turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
+(
+    const turbulentInletFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
+    ranGen_(label(0)),
+    fluctuationScale_(ptf.fluctuationScale_),
+    referenceField_(ptf.referenceField_, mapper),
+    alpha_(ptf.alpha_),
+    curTimeIndex_(-1)
+{}
 
 
 template<class Type>
@@ -197,11 +197,10 @@ template<class Type>
 void turbulentInletFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("fluctuationScale")
-        << fluctuationScale_ << token::END_STATEMENT << nl;
-    referenceField_.writeEntry("referenceField", os);
-    os.writeKeyword("alpha") << alpha_ << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "fluctuationScale", fluctuationScale_);
+    writeEntry(os, "referenceField", referenceField_);
+    writeEntry(os, "alpha", alpha_);
+    writeEntry(os, "value", *this);
 }
 
 

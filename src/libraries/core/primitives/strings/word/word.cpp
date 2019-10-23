@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,5 +27,12 @@ License
 const char* const CML::word::typeName = "word";
 int CML::word::debug(CML::debug::debugSwitch(word::typeName, 0));
 const CML::word CML::word::null;
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+void CML::writeEntry(Ostream& os, const word& value)
+{
+    os << value;
+}
+
 
 // ************************************************************************* //

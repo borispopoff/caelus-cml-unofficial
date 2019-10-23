@@ -467,7 +467,7 @@ bool CML::cyclicACMIPolyPatch::order
 void CML::cyclicACMIPolyPatch::write(Ostream& os) const
 {
     cyclicAMIPolyPatch::write(os);
-    CML::writeEntry(os, "nonOverlapPatch", nonOverlapPatchName_);
+    writeEntry(os, "nonOverlapPatch", nonOverlapPatchName_);
 }
 
 

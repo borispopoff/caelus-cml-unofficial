@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -201,13 +201,12 @@ kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 template<class Type>
 kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 (
-    const kqRWallFunctionFvPatchField& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const dictionary& dict
 )
 :
-    zeroGradientFvPatchField<Type>(ptf, p, iF, mapper)
+    zeroGradientFvPatchField<Type>(p, iF, dict)
 {
     checkType();
 }
@@ -216,12 +215,13 @@ kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 template<class Type>
 kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 (
+    const kqRWallFunctionFvPatchField& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const fvPatchFieldMapper& mapper
 )
 :
-    zeroGradientFvPatchField<Type>(p, iF, dict)
+    zeroGradientFvPatchField<Type>(ptf, p, iF, mapper)
 {
     checkType();
 }
@@ -268,7 +268,7 @@ template<class Type>
 void kqRWallFunctionFvPatchField<Type>::write(Ostream& os) const
 {
     zeroGradientFvPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

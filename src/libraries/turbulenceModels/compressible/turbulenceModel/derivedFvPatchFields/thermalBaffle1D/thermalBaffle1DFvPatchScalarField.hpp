@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -643,15 +643,14 @@ void thermalBaffle1DFvPatchScalarField<solidType>::write(Ostream& os) const
 
     if (this->owner())
     {
-        baffleThickness()().writeEntry("thickness", os);
-        Qs()().writeEntry("Qs", os);
+        writeEntry(os, "thickness", baffleThickness()());
+        writeEntry(os, "Qs", Qs()());
         solid().write(os);
     }
 
-    qrPrevious_.writeEntry("qrPrevious", os);
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qrRelaxation")<< qrRelaxation_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "qrPrevious", qrPrevious_);
+    writeEntry(os, "qr", qrName_);
+    writeEntry(os, "qrRelaxation", qrRelaxation_);
 }
 
 

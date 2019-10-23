@@ -266,23 +266,16 @@ void CML::groovyFixedNormalSlipPointPatchField<Type>::write(Ostream& os) const
 {
     SlipPointPatchFieldType::write(os);
 
-    os.writeKeyword("fixedValueExpression")
-        << fixedValueExpression_ << token::END_STATEMENT << nl;
+    writeEntry(os, "fixedValueExpression", fixedValueExpression_);
 
-    os.writeKeyword("normalExpression")
-        << normalExpression_ << token::END_STATEMENT << nl;
+    writeEntry(os, "normalExpression", normalExpression_);
 
-    os.writeKeyword("value")
-        << this->patchInternalField() << token::END_STATEMENT << nl;
+    writeEntry(os, "value", this->patchInternalField()());
 
     if(this->fixedValueExpression_!="") {
-        os.writeKeyword("fixedValue")
-            << const_cast<PatchValueExpressionDriver&>(driver_).evaluate<Type>(this->fixedValueExpression_,true)
-                << token::END_STATEMENT << nl;
+        writeEntry(os, "fixedValue", const_cast<PatchValueExpressionDriver&>(driver_).evaluate<Type>(this->fixedValueExpression_,true)());
     }
-    os.writeKeyword("normal")
-        << const_cast<PatchValueExpressionDriver&>(driver_).evaluate<Type>(this->normalExpression_,true)
-            << token::END_STATEMENT << nl;
+    writeEntry(os, "normal", const_cast<PatchValueExpressionDriver&>(driver_).evaluate<Type>(this->normalExpression_,true)());
 
     driver_.writeCommon(os,debug);
 }

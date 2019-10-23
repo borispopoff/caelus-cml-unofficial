@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -77,9 +77,9 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
 
     forAll(nutw, facei)
     {
-        label faceCellI = patch().faceCells()[facei];
+        label celli = patch().faceCells()[facei];
 
-        scalar uStar = Cmu25*sqrt(k[faceCellI]);
+        scalar uStar = Cmu25*sqrt(k[celli]);
         scalar yPlus = uStar*y[facei]/nuw[facei];
         scalar KsPlus = uStar*Ks_[facei]/nuw[facei];
 
@@ -215,9 +215,9 @@ void nutkRoughWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    Cs_.writeEntry("Cs", os);
-    Ks_.writeEntry("Ks", os);
-    writeEntry("value", os);
+    writeEntry(os, "Cs", Cs_);
+    writeEntry(os, "Ks", Ks_);
+    writeEntry(os, "value", *this);
 }
 
 

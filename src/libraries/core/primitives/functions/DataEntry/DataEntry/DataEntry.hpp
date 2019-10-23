@@ -163,6 +163,10 @@ public:
 };
 
 
+template<class Type>
+void writeEntry(Ostream& os, const DataEntry<Type>& f1);
+
+
 /*---------------------------------------------------------------------------*\
                         Class FieldDataEntry Declaration
 \*---------------------------------------------------------------------------*/
@@ -371,6 +375,15 @@ void CML::DataEntry<Type>::writeData(Ostream& os) const
 }
 
 
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class Type>
+void  CML::writeEntry(Ostream& os, const DataEntry<Type>& f1)
+{
+    f1.writeData(os);
+}
+
+
 // * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //
 
 template<class Type>
@@ -386,7 +399,6 @@ CML::Ostream& CML::operator<<
         "Ostream& operator<<(Ostream&, const DataEntry<Type>&)"
     );
 
-    os  << f1.name_;
     f1.writeData(os);
 
     return os;

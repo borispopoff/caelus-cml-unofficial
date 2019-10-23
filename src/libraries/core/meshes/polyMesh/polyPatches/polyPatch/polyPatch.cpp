@@ -352,10 +352,10 @@ void CML::polyPatch::clearAddressing()
 
 void CML::polyPatch::write(Ostream& os) const
 {
-    CML::writeEntry(os, "type", type());
+    writeEntry(os, "type", type());
     patchIdentifier::write(os);
-    CML::writeEntry(os, "nFaces", size());
-    CML::writeEntry(os, "startFace", start());
+    writeEntry(os, "nFaces", size());
+    writeEntry(os, "startFace", start());
 }
 
 

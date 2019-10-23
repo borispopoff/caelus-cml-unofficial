@@ -148,7 +148,7 @@ CML::noSlipWallFvPatchVectorField::gradientBoundaryCoeffs() const
 void CML::noSlipWallFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value");
 }
 
 namespace CML

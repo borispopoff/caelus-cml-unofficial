@@ -1723,45 +1723,45 @@ label CommonValueExpressionDriver::parse(
 }
 
 
-void CommonValueExpressionDriver::outputResult(Ostream &o)
+void CommonValueExpressionDriver::outputResult(Ostream &os)
 {
     word rType=getResultType();
 
     if(rType==pTraits<scalar>::typeName) {
-        o << getResult<scalar>();
+        os << getResult<scalar>();
     } else if(rType==pTraits<vector>::typeName) {
-        o << getResult<vector>();
+        os << getResult<vector>();
     } else if(rType==pTraits<tensor>::typeName) {
-        o << getResult<tensor>();
+        os << getResult<tensor>();
     } else if(rType==pTraits<symmTensor>::typeName) {
-        o << getResult<symmTensor>();
+        os << getResult<symmTensor>();
     } else if(rType==pTraits<sphericalTensor>::typeName) {
-        o << getResult<sphericalTensor>();
+        os << getResult<sphericalTensor>();
     } else {
-        o << "No implementation for " << rType;
+        os << "No implementation for " << rType;
     }
 }
 
 string CommonValueExpressionDriver::outputEntry()
 {
-    OStringStream o;
+    OStringStream os;
 
     word rType=getResultType();
     if(rType==pTraits<scalar>::typeName) {
-        result_.getResult<scalar>(true)().writeEntry("",o);
+        writeEntry(os, "", result_.getResult<scalar>(true)());
     } else if(rType==pTraits<vector>::typeName) {
-        result_.getResult<vector>(true)().writeEntry("",o);
+        writeEntry(os, "", result_.getResult<vector>(true)());
     } else if(rType==pTraits<tensor>::typeName) {
-        result_.getResult<tensor>(true)().writeEntry("",o);
+        writeEntry(os, "", result_.getResult<tensor>(true)());
     } else if(rType==pTraits<symmTensor>::typeName) {
-        result_.getResult<symmTensor>(true)().writeEntry("",o);
+        writeEntry(os, "", result_.getResult<symmTensor>(true)());
     } else if(rType==pTraits<sphericalTensor>::typeName) {
-        result_.getResult<sphericalTensor>(true)().writeEntry("",o);
+        writeEntry(os, "", result_.getResult<sphericalTensor>(true)());
     } else {
-        o << "No implementation for " << rType << ";";
+        os << "No implementation for " << rType << ";";
     }
 
-    return o.str();
+    return os.str();
 }
 
 const word CommonValueExpressionDriver::time() const

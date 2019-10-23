@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,6 +55,8 @@ SourceFiles
 #include "HashTable.hpp"
 #include "wordList.hpp"
 #include "className.hpp"
+
+#include "VectorSpace.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -563,15 +565,14 @@ dictionary operator+(const dictionary& dict1, const dictionary& dict2);
 dictionary operator|(const dictionary& dict1, const dictionary& dict2);
 
 
+// Global Functions
+
+//- Write a dictionary entry
+void writeEntry(Ostream& os, const dictionary& dict);
+
 //- Helper function to write the keyword and entry
 template<class EntryType>
-void writeEntry
-(
-    Ostream& os,
-    const word& entryName,
-    const EntryType& value
-);
-
+void writeEntry(Ostream& os, const word& entryName, const EntryType& value);
 
 //- Helper function to write the keyword and entry only if the
 //  values are not equal. The value is then output as value2
@@ -701,6 +702,8 @@ void CML::dictionary::set(const keyType& k, const T& t)
 }
 
 
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
 template<class EntryType>
 void CML::writeEntry
 (
@@ -709,7 +712,9 @@ void CML::writeEntry
     const EntryType& value
 )
 {
-    os.writeKeyword(entryName) << value << token::END_STATEMENT << nl;
+    os.writeKeyword(entryName);
+    writeEntry(os, value);
+    os << token::END_STATEMENT << endl;
 }
 
 

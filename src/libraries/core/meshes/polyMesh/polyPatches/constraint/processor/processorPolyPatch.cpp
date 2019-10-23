@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -1115,8 +1115,8 @@ bool CML::processorPolyPatch::order
 void CML::processorPolyPatch::write(Ostream& os) const
 {
     coupledPolyPatch::write(os);
-    CML::writeEntry(os, "myProcNo", myProcNo_);
-    CML::writeEntry(os, "neighbProcNo", neighbProcNo_);
+    writeEntry(os, "myProcNo", myProcNo_);
+    writeEntry(os, "neighbProcNo", neighbProcNo_);
 }
 
 

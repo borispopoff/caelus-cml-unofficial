@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,6 +54,9 @@ class Field;
 //- Pre-declare related SubField type
 template<class Type>
 class SubField;
+
+template<class Type>
+void writeEntry(Ostream& os, const Field<Type>&);
 
 template<class Type>
 Ostream& operator<<(Ostream&, const Field<Type>&);
@@ -344,9 +347,6 @@ public:
 
         //- Return the field transpose (only defined for second rank tensors)
         tmp<Field<Type>> T() const;
-
-        //- Write the field as a dictionary entry
-        void writeEntry(const word& keyword, Ostream& os) const;
 
 
     // Member operators
@@ -1097,42 +1097,6 @@ CML::tmp<CML::Field<Type>> CML::Field<Type>::T() const
 }
 
 
-template<class Type>
-void CML::Field<Type>::writeEntry(const word& keyword, Ostream& os) const
-{
-    os.writeKeyword(keyword);
-
-    bool uniform = false;
-
-    if (this->size() && contiguous<Type>())
-    {
-        uniform = true;
-
-        forAll(*this, i)
-        {
-            if (this->operator[](i) != this->operator[](0))
-            {
-                uniform = false;
-                break;
-            }
-        }
-    }
-
-    if (uniform)
-    {
-        os << "uniform " << this->operator[](0) << token::END_STATEMENT;
-    }
-    else
-    {
-        os << "nonuniform ";
-        List<Type>::writeEntry(os);
-        os << token::END_STATEMENT;
-    }
-
-    os << endl;
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
@@ -1229,6 +1193,39 @@ COMPUTED_ASSIGNMENT(scalar, *=)
 COMPUTED_ASSIGNMENT(scalar, /=)
 
 #undef COMPUTED_ASSIGNMENT
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class Type>
+void CML::writeEntry(Ostream& os, const Field<Type>& f)
+{
+    bool uniform = false;
+
+    if (f.size() && contiguous<Type>())
+    {
+        uniform = true;
+
+        forAll(f, i)
+        {
+            if (f[i] != f[0])
+            {
+                uniform = false;
+                break;
+            }
+        }
+    }
+
+    if (uniform)
+    {
+        os << "uniform " << f[0];
+    }
+    else
+    {
+        os << "nonuniform ";
+        writeEntry(os, static_cast<const List<Type>&>(f));
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //

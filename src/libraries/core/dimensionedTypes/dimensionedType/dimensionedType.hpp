@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 
 -------------------------------------------------------------------------------
 License
@@ -226,9 +226,13 @@ public:
 };
 
 
+template<class Type>
+void writeEntry(Ostream& os, const dimensioned<Type>& dt);
+
+
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
-template<class Type, CML::direction r>
+template<class Type, direction r>
 dimensioned<typename powProduct<Type, r>::type>
 pow
 (
@@ -905,6 +909,15 @@ dimensioned<Type> min
         dt1.dimensions(),
         min(dt1.value(), dt2.value())
     );
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class Type>
+void writeEntry(Ostream& os, const dimensioned<Type>& dt)
+{
+    os << dt;
 }
 
 

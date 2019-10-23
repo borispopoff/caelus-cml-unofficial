@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -154,8 +154,8 @@ void CML::alphaFixedPressureFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-    p_.writeEntry("p", os);
-    writeEntry("value", os);
+    writeEntry(os, "p", p_);
+    writeEntry(os, "value", *this);
 }
 
 

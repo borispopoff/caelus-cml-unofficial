@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -278,7 +278,7 @@ write(Ostream& os) const
 {
     // Note: write value
     fixedValuePointPatchField<Type>::write(os);
-    uniformValue_->writeData(os);
+    writeEntry(os, uniformValue_());
 }
 
 

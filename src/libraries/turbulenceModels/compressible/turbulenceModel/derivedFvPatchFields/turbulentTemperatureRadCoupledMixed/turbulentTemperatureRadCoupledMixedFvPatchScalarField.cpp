@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -256,11 +256,11 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::write
 ) const
 {
     mixedFvPatchScalarField::write(os);
-    os.writeKeyword("Tnbr")<< TnbrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qrNbr")<< qrNbrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
-    thicknessLayers_.writeEntry("thicknessLayers", os);
-    kappaLayers_.writeEntry("kappaLayers", os);
+    writeEntry(os, "Tnbr", TnbrName_);
+    writeEntry(os, "qrNbr", qrNbrName_);
+    writeEntry(os, "qr", qrName_);
+    writeEntry(os, "thicknessLayers", thicknessLayers_);
+    writeEntry(os, "kappaLayers", kappaLayers_);
 
     temperatureCoupledBase::write(os);
 }

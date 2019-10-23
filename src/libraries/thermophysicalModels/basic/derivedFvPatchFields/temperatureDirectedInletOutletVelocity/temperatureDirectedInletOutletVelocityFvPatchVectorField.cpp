@@ -251,13 +251,13 @@ temperatureDirectedInletOutletVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("phi") << phiName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("T") << TName_ << token::END_STATEMENT << nl;
-    T0_.writeEntry("T0", os);
-    inletDir_.writeEntry("inletDirection", os);
-    os.writeKeyword("cylindricalCCS") << cylindricalCCS_ << token::END_STATEMENT << nl;
-    os.writeKeyword("omega")<< omega_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "phi", phiName_);
+    writeEntry(os, "T", TName_);
+    writeEntry(os, "T0", T0_);
+    writeEntry(os, "inletDirection", inletDir_);
+    writeEntry(os, "cylindricalCCS", cylindricalCCS_);
+    writeEntry(os, "omega", omega_);
+    writeEntry(os, "value");
 }
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- Copyright (C) 2011-2016 OpenFOAM Foundation
+ Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -238,15 +238,14 @@ void CML::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
 void CML::flowRateInletVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
-    flowRate_->writeData(os);
+    writeEntry(os, flowRate_());
     if (!volumetric_)
     {
         writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
         writeEntryIfDifferent<scalar>(os, "rhoInlet", -VGREAT, rhoInlet_);
     }
-    os.writeKeyword("extrapolateProfile")
-        << extrapolateProfile_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "extrapolateProfile", extrapolateProfile_);
+    writeEntry(os, "value", *this);
 }
 
 

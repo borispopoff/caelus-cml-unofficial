@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,6 +58,9 @@ template<class T, class Key, class Hash> class HashPtrTable;
 
 template<class Type1, class Type2>
 class Tuple2;
+
+template<class T, class Key, class Hash>
+void writeEntry(Ostream& os, const HashTable<T, Key, Hash>& ht);
 
 template<class T, class Key, class Hash>
 Istream& operator>>(Istream&, HashTable<T, Key, Hash>&);
@@ -1716,6 +1719,15 @@ CML::HashTable<T, Key, Hash>::printInfo(Ostream& os) const
         << "/" << maxChain << endl;
 
     return os;
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class T, class Key, class Hash>
+void CML::writeEntry(Ostream& os, const HashTable<T, Key, Hash>& ht)
+{
+    os << ht;
 }
 
 

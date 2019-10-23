@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2016 Applied CCM
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -173,9 +173,9 @@ void CML::totalTemperatureFvPatchScalarField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
-    os.writeKeyword("gamma") << gamma_ << token::END_STATEMENT << nl;
-    T0_.writeEntry("T0", os);
-    writeEntry("value", os);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "T0", T0_);
+    writeEntry(os, "value", *this);
 }
 
 

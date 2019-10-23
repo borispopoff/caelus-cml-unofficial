@@ -168,6 +168,15 @@ public:
             const dictionary&
         );
 
+        //- Construct by mapping given patchField<Type> onto a new patch
+        pointPatchField
+        (
+            const pointPatchField<Type>&,
+            const pointPatch&,
+            const DimensionedField<Type, pointMesh>&,
+            const pointPatchFieldMapper&
+        );
+
         //- Construct as copy
         pointPatchField(const pointPatchField<Type>&);
 
@@ -425,7 +434,6 @@ public:
             virtual void write(Ostream&) const;
 
 
-
     // Member operators
 
         virtual void operator=(const pointPatchField<Type>&){}
@@ -530,6 +538,22 @@ pointPatchField<Type>::pointPatchField
 template<class Type>
 pointPatchField<Type>::pointPatchField
 (
+    const pointPatchField<Type>& ptf,
+    const pointPatch& p,
+    const DimensionedField<Type, pointMesh>& iF,
+    const pointPatchFieldMapper&
+)
+:
+    patch_(p),
+    internalField_(iF),
+    updated_(false),
+    patchType_(ptf.patchType_)
+{}
+
+
+template<class Type>
+pointPatchField<Type>::pointPatchField
+(
     const pointPatchField<Type>& ptf
 )
 :
@@ -576,7 +600,8 @@ void pointPatchField<Type>::write(Ostream& os) const
 
 
 template<class Type>
-tmp<Field<Type>> pointPatchField<Type>::patchInternalField() const
+tmp<Field<Type>>
+pointPatchField<Type>::patchInternalField() const
 {
     return patchInternalField(internalField());
 }
@@ -584,7 +609,8 @@ tmp<Field<Type>> pointPatchField<Type>::patchInternalField() const
 
 template<class Type>
 template<class Type1>
-tmp<Field<Type1>> pointPatchField<Type>::patchInternalField
+tmp<Field<Type1>>
+pointPatchField<Type>::patchInternalField
 (
     const Field<Type1>& iF,
     const labelList& meshPoints
@@ -606,7 +632,8 @@ tmp<Field<Type1>> pointPatchField<Type>::patchInternalField
 
 template<class Type>
 template<class Type1>
-tmp<Field<Type1>> pointPatchField<Type>::patchInternalField
+tmp<Field<Type1>>
+pointPatchField<Type>::patchInternalField
 (
     const Field<Type1>& iF
 ) const

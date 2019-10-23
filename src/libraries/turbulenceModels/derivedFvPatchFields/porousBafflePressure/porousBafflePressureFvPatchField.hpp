@@ -281,12 +281,10 @@ void CML::porousBafflePressureFvPatchField<Type>::write(Ostream& os) const
 {
 
     fixedJumpFvPatchField<Type>::write(os);
-
-    os.writeKeyword("D") << D_ << token::END_STATEMENT << nl;
-    os.writeKeyword("I") << I_ << token::END_STATEMENT << nl;
-    os.writeKeyword("length") << length_ << token::END_STATEMENT << nl;
-
-    this->writeEntry("value", os);
+    writeEntry(os, "D", D_);
+    writeEntry(os, "I", I_);
+    writeEntry(os, "length", length_);
+    writeEntry(os, "value", *this);
 }
 
 

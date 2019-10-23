@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -924,7 +924,7 @@ CML::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
 template<class Type>
 void CML::genericFvPatchField<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("type") << actualTypeName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "type", actualTypeName_);
 
     forAllConstIter(dictionary, dict_, iter)
     {
@@ -940,28 +940,48 @@ void CML::genericFvPatchField<Type>::write(Ostream& os) const
             {
                 if (scalarFields_.found(iter().keyword()))
                 {
-                    scalarFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *scalarFields_.find(iter().keyword())()
+                    );
                 }
                 else if (vectorFields_.found(iter().keyword()))
                 {
-                    vectorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *vectorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (sphericalTensorFields_.found(iter().keyword()))
                 {
-                    sphericalTensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *sphericalTensorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (symmTensorFields_.found(iter().keyword()))
                 {
-                    symmTensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *symmTensorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (tensorFields_.found(iter().keyword()))
                 {
-                    tensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *tensorFields_.find(iter().keyword())()
+                    );
                 }
             }
             else
@@ -971,7 +991,7 @@ void CML::genericFvPatchField<Type>::write(Ostream& os) const
         }
     }
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

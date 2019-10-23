@@ -346,9 +346,9 @@ void CML::uniformFixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     // Note: do not write value
     fvPatchField<Type>::write(os);
-    uniformValue_->writeData(os);
-    os.writeKeyword("inlet-diffusion") << inletDiffusion_ << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, uniformValue_());
+    writeEntry(os, "inlet-diffusion", inletDiffusion_);
+    writeEntry(os, "value", *this);
 }
 
 

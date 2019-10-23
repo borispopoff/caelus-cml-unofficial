@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -701,6 +701,12 @@ CML::Ostream& CML::dimensionSet::write
 ) const
 {
     return write(os, multiplier, writeUnitSet());
+}
+
+
+void CML::writeEntry(Ostream& os, const dimensionSet& value)
+{
+    os << value;
 }
 
 

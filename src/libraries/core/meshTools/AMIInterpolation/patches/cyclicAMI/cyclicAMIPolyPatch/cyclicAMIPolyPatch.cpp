@@ -1166,26 +1166,26 @@ void CML::cyclicAMIPolyPatch::write(Ostream& os) const
     coupledPolyPatch::write(os);
     if (!nbrPatchName_.empty())
     {
-        CML::writeEntry(os, "neighbourPatch", nbrPatchName_);
+        writeEntry(os, "neighbourPatch", nbrPatchName_);
     }
 
     switch (transform())
     {
         case ROTATIONAL:
         {
-            CML::writeEntry(os, "rotationAxis", rotationAxis_);
-            CML::writeEntry(os, "rotationCentre", rotationCentre_);
+            writeEntry(os, "rotationAxis", rotationAxis_);
+            writeEntry(os, "rotationCentre", rotationCentre_);
 
             if (rotationAngleDefined_)
             {
-                CML::writeEntry(os, "rotationAngle", radToDeg(rotationAngle_));
+                writeEntry(os, "rotationAngle", radToDeg(rotationAngle_));
             }
 
             break;
         }
         case TRANSLATIONAL:
         {
-            CML::writeEntry(os, "separationVector", separationVector_);
+            writeEntry(os, "separationVector", separationVector_);
             break;
         }
         case NOORDERING:
@@ -1200,15 +1200,15 @@ void CML::cyclicAMIPolyPatch::write(Ostream& os) const
 
     if (AMIReverse_)
     {
-        CML::writeEntry(os, "flipNormals", AMIReverse_);
+        writeEntry(os, "flipNormals", AMIReverse_);
     }
 
     if (AMILowWeightCorrection_ > 0)
     {
-        CML::writeEntry(os, "lowWeightCorrection", AMILowWeightCorrection_);
+        writeEntry(os, "lowWeightCorrection", AMILowWeightCorrection_);
     }
 
-    CML::writeEntry
+    writeEntry
     (
         os,
         "method",
