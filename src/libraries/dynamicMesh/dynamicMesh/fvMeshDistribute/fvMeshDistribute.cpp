@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -1502,10 +1502,10 @@ CML::autoPtr<CML::fvMesh> CML::fvMeshDistribute::receiveMesh
                 runTime,
                 IOobject::NO_READ
             ),
-            xferMove(domainPoints),
-            xferMove(domainFaces),
-            xferMove(domainAllOwner),
-            xferMove(domainAllNeighbour),
+            move(domainPoints),
+            move(domainFaces),
+            move(domainAllOwner),
+            move(domainAllNeighbour),
             false                   // no parallel comms
         )
     );
@@ -1647,7 +1647,6 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     }
 
 
-
     // Short circuit trivial case.
     if (!Pstream::parRun())
     {
@@ -1661,18 +1660,18 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                 nOldPoints,
                 nOldFaces,
                 nOldCells,
-                oldPatchStarts.xfer(),
-                oldPatchNMeshPoints.xfer(),
+                move(oldPatchStarts),
+                move(oldPatchNMeshPoints),
 
-                labelListList(1, identity(mesh_.nPoints())).xfer(),//subPointMap
-                labelListList(1, identity(mesh_.nFaces())).xfer(), //subFaceMap
-                labelListList(1, identity(mesh_.nCells())).xfer(), //subCellMap
-                labelListList(1, identity(patches.size())).xfer(), //subPatchMap
+                labelListList(1, identity(mesh_.nPoints())),
+                labelListList(1, identity(mesh_.nFaces())),
+                labelListList(1, identity(mesh_.nCells())),
+                labelListList(1, identity(patches.size())),
 
-                labelListList(1, identity(mesh_.nPoints())).xfer(),//pointMap
-                labelListList(1, identity(mesh_.nFaces())).xfer(), //faceMap
-                labelListList(1, identity(mesh_.nCells())).xfer(), //cellMap
-                labelListList(1, identity(patches.size())).xfer()  //patchMap
+                labelListList(1, identity(mesh_.nPoints())),
+                labelListList(1, identity(mesh_.nFaces())),
+                labelListList(1, identity(mesh_.nCells())),
+                labelListList(1, identity(patches.size()))
             )
         );
     }
@@ -1682,7 +1681,6 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     const wordList pointZoneNames(mergeWordList(mesh_.pointZones().names()));
     const wordList faceZoneNames(mergeWordList(mesh_.faceZones().names()));
     const wordList cellZoneNames(mergeWordList(mesh_.cellZones().names()));
-
 
 
     // Local environment of all boundary faces
@@ -1915,7 +1913,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             }
 
             // Pstream for sending mesh and fields
-            //OPstream str(Pstream::commsTypes::blocking, recvProc);
+            // OPstream str(Pstream::commsTypes::blocking, recvProc);
             UOPstream str(recvProc, pBufs);
 
             // Mesh subsetting engine
@@ -2762,18 +2760,18 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             nOldPoints,
             nOldFaces,
             nOldCells,
-            oldPatchStarts.xfer(),
-            oldPatchNMeshPoints.xfer(),
+            move(oldPatchStarts),
+            move(oldPatchNMeshPoints),
 
-            subPointMap.xfer(),
-            subFaceMap.xfer(),
-            subCellMap.xfer(),
-            subPatchMap.xfer(),
+            move(subPointMap),
+            move(subFaceMap),
+            move(subCellMap),
+            move(subPatchMap),
 
-            constructPointMap.xfer(),
-            constructFaceMap.xfer(),
-            constructCellMap.xfer(),
-            constructPatchMap.xfer(),
+            move(constructPointMap),
+            move(constructFaceMap),
+            move(constructCellMap),
+            move(constructPatchMap),
 
             true,           // subFaceMap has flip
             true            // constructFaceMap has flip

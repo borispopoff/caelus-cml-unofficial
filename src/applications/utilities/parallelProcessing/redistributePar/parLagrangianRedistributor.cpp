@@ -272,8 +272,8 @@ CML::parLagrangianRedistributor::redistributeLagrangianPositions
         new mapDistributeBase
         (
             constructSize,
-            subMap.xfer(),
-            constructMap.xfer()
+            std::move(subMap),
+            std::move(constructMap)
         )
     );
 }

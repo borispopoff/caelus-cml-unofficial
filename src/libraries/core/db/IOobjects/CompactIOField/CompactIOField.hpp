@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -76,6 +76,7 @@ public:
     //- Runtime type information
     TypeName("FieldField");
 
+
     // Constructors
 
         //- Construct from IOobject
@@ -87,8 +88,11 @@ public:
         //- Construct from IOobject and a Field
         CompactIOField(const IOobject&, const Field<Type>&);
 
-        //- Construct by transferring the Field contents
-        CompactIOField(const IOobject&, const Xfer<Field<Type>>&);
+        //- Move construct by transferring the Field contents
+        CompactIOField(const IOobject&, Field<Type>&&);
+
+        //- Move constructor
+        CompactIOField(CompactIOField<Type, BaseType>&&);
 
 
     // Destructor
@@ -111,8 +115,10 @@ public:
     // Member operators
 
         void operator=(const CompactIOField<Type, BaseType>&);
+        void operator=(CompactIOField<Type, BaseType>&&);
 
         void operator=(const Field<Type>&);
+        void operator=(Field<Type>&&);
 };
 
 
@@ -223,13 +229,12 @@ template<class Type, class BaseType>
 CML::CompactIOField<Type, BaseType>::CompactIOField
 (
     const IOobject& io,
-    const Xfer<Field<Type>>& list
+    Field<Type>&& field
 )
 :
-    regIOobject(io)
+    regIOobject(io),
+    Field<Type>(move(field))
 {
-    Field<Type>::transfer(list());
-
     if
     (
         io.readOpt() == IOobject::MUST_READ
@@ -239,6 +244,17 @@ CML::CompactIOField<Type, BaseType>::CompactIOField
         readFromStream();
     }
 }
+
+
+template<class Type, class BaseType>
+CML::CompactIOField<Type, BaseType>::CompactIOField
+(
+    CompactIOField<Type, BaseType>&& field
+)
+:
+    regIOobject(move(field)),
+    Field<Type>(move(field))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -300,9 +316,26 @@ void CML::CompactIOField<Type, BaseType>::operator=
 
 
 template<class Type, class BaseType>
+void CML::CompactIOField<Type, BaseType>::operator=
+(
+    CompactIOField<Type, BaseType>&& rhs
+)
+{
+    Field<Type>::operator=(move(rhs));
+}
+
+
+template<class Type, class BaseType>
 void CML::CompactIOField<Type, BaseType>::operator=(const Field<Type>& rhs)
 {
     Field<Type>::operator=(rhs);
+}
+
+
+template<class Type, class BaseType>
+void CML::CompactIOField<Type, BaseType>::operator=(Field<Type>&& rhs)
+{
+    Field<Type>::operator=(move(rhs));
 }
 
 

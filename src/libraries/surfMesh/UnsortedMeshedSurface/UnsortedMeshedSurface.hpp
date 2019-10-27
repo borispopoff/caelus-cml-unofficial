@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -168,18 +168,18 @@ public:
         //  (points, faces, zone ids, zone info).
         UnsortedMeshedSurface
         (
-            const Xfer<pointField>&,
-            const Xfer<List<Face>>&,
-            const Xfer<List<label>>& zoneIds,
-            const Xfer<surfZoneIdentifierList>&
+            pointField&&,
+            List<Face>&&,
+            List<label>&& zoneIds,
+            surfZoneIdentifierList&&
         );
 
         //- Construct by transferring points, faces.
         //  Use zone information, or set single default zone
         UnsortedMeshedSurface
         (
-            const Xfer<pointField>&,
-            const Xfer<List<Face>>&,
+            pointField&&,
+            List<Face>&&,
             const labelUList& zoneSizes = labelUList(),
             const UList<word>& zoneNames = UList<word>()
         );
@@ -191,10 +191,10 @@ public:
         UnsortedMeshedSurface(const MeshedSurface<Face>&);
 
         //- Construct by transferring the contents from a UnsortedMeshedSurface
-        UnsortedMeshedSurface(const Xfer<UnsortedMeshedSurface<Face>>&);
+        UnsortedMeshedSurface(UnsortedMeshedSurface<Face>&&);
 
         //- Construct by transferring the contents from a meshedSurface
-        UnsortedMeshedSurface(const Xfer<MeshedSurface<Face>>&);
+        UnsortedMeshedSurface(MeshedSurface<Face>&&);
 
         //- Construct from file name (uses extension to determine type)
         UnsortedMeshedSurface(const fileName&);
@@ -283,6 +283,7 @@ public:
 
             //- Sort faces according to zoneIds
             //  Returns a surfZoneList and sets faceMap to index within faces()
+            //  (i.e. map from original,unsorted to sorted)
             surfZoneList sortedZones(labelList& faceMap) const;
 
             //- Set zones to 0 and set a single zone
@@ -317,24 +318,24 @@ public:
             (
                 const labelHashSet& include
             ) const;
-    
+
             //- Inherit reset from MeshedSurface<Face>
             using MeshedSurface<Face>::reset;
-    
+
             //- Transfer components (points, faces, zone ids).
             virtual void reset
             (
-                const Xfer<pointField>&,
-                const Xfer<List<Face>>&,
-                const Xfer<List<label>>& zoneIds
+                pointField&&,
+                List<Face>&&,
+                List<label>&& zoneIds
             );
 
             //- Transfer components (points, faces, zone ids).
             virtual void reset
             (
-                const Xfer<List<point>>&,
-                const Xfer<List<Face>>&,
-                const Xfer<List<label>>& zoneIds
+                List<point>&&,
+                List<Face>&&,
+                List<label>&& zoneIds
             );
 
             //- Transfer the contents of the argument and annul the argument
@@ -342,9 +343,6 @@ public:
 
             //- Transfer the contents of the argument and annul the argument
             void transfer(MeshedSurface<Face>&);
-
-            //- Transfer contents to the Xfer container
-            Xfer<UnsortedMeshedSurface<Face>> xfer();
 
 
         // Read
@@ -505,28 +503,28 @@ CML::UnsortedMeshedSurface<Face>::UnsortedMeshedSurface()
 template<class Face>
 CML::UnsortedMeshedSurface<Face>::UnsortedMeshedSurface
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face>>& faceLst,
-    const Xfer<List<label>>& zoneIds,
-    const Xfer<surfZoneIdentifierList>& zoneTofc
+    pointField&& pointLst,
+    List<Face>&& faceLst,
+    List<label>&& zoneIds,
+    surfZoneIdentifierList&& zoneTofc
 )
 :
-    ParentType(pointLst, faceLst),
-    zoneIds_(zoneIds),
-    zoneToc_(zoneTofc)
+    ParentType(move(pointLst), move(faceLst)),
+    zoneIds_(move(zoneIds)),
+    zoneToc_(move(zoneTofc))
 {}
 
 
 template<class Face>
 CML::UnsortedMeshedSurface<Face>::UnsortedMeshedSurface
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face>>& faceLst,
+    pointField&& pointLst,
+    List<Face>&& faceLst,
     const labelUList& zoneSizes,
     const UList<word>& zoneNames
 )
 :
-    ParentType(pointLst, faceLst)
+    ParentType(move(pointLst), move(faceLst))
 {
     if (zoneSizes.size())
     {
@@ -554,8 +552,8 @@ CML::UnsortedMeshedSurface<Face>::UnsortedMeshedSurface
 :
     ParentType
     (
-        xferCopy(surf.points()),
-        xferCopy(surf.faces())
+        surf.points(),
+        surf.faces()
     ),
     zoneIds_(surf.zoneIds()),
     zoneToc_(surf.zoneToc())
@@ -570,8 +568,8 @@ CML::UnsortedMeshedSurface<Face>::UnsortedMeshedSurface
 :
     ParentType
     (
-        xferCopy(surf.points()),
-        xferCopy(surf.faces())
+        surf.points(),
+        surf.faces()
     )
 {
     setZones(surf.surfZones());
@@ -581,24 +579,24 @@ CML::UnsortedMeshedSurface<Face>::UnsortedMeshedSurface
 template<class Face>
 CML::UnsortedMeshedSurface<Face>::UnsortedMeshedSurface
 (
-    const Xfer<UnsortedMeshedSurface<Face>>& surf
+    UnsortedMeshedSurface<Face>&& surf
 )
 :
     ParentType()
 {
-    transfer(surf());
+    transfer(surf);
 }
 
 
 template<class Face>
 CML::UnsortedMeshedSurface<Face>::UnsortedMeshedSurface
 (
-    const Xfer<MeshedSurface<Face>>& surf
+    MeshedSurface<Face>&& surf
 )
 :
     ParentType()
 {
-    transfer(surf());
+    transfer(surf);
 }
 
 
@@ -925,10 +923,10 @@ CML::UnsortedMeshedSurface<Face>::subsetMesh
     // construct a sub-surface
     return UnsortedMeshedSurface
     (
-        xferMove(newPoints),
-        xferMove(newFaces),
-        xferMove(newZones),
-        xferCopy(zoneToc_)
+        move(newPoints),
+        move(newFaces),
+        move(newZones),
+        List<surfZoneIdentifier>(zoneToc_)
     );
 }
 
@@ -947,21 +945,21 @@ CML::UnsortedMeshedSurface<Face> CML::UnsortedMeshedSurface<Face>::subsetMesh
 template<class Face>
 void CML::UnsortedMeshedSurface<Face>::reset
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face>>& faceLst,
-    const Xfer<List<label>>& zoneIds
+   pointField&& pointLst,
+   List<Face>&& faceLst,
+   List<label>&& zoneIds
 )
 {
     ParentType::reset
     (
-        pointLst,
-        faceLst,
-        Xfer<surfZoneList>()
+        move(pointLst),
+        move(faceLst),
+        NullSingletonMove<surfZoneList>()
     );
 
     if (notNull(zoneIds))
     {
-        zoneIds_.transfer(zoneIds());
+        zoneIds_.transfer(zoneIds);
     }
 }
 
@@ -969,21 +967,21 @@ void CML::UnsortedMeshedSurface<Face>::reset
 template<class Face>
 void CML::UnsortedMeshedSurface<Face>::reset
 (
-    const Xfer<List<point>>& pointLst,
-    const Xfer<List<Face>>& faceLst,
-    const Xfer<List<label>>& zoneIds
+    List<point>&& pointLst,
+    List<Face>&& faceLst,
+    List<label>&& zoneIds
 )
 {
     ParentType::reset
     (
-        pointLst,
-        faceLst,
-        Xfer<surfZoneList>()
+        move(pointLst),
+        move(faceLst),
+        NullSingletonMove<surfZoneList>()
     );
 
     if (notNull(zoneIds))
     {
-        zoneIds_.transfer(zoneIds());
+        zoneIds_.transfer(zoneIds);
     }
 }
 
@@ -996,9 +994,9 @@ void CML::UnsortedMeshedSurface<Face>::transfer
 {
     ParentType::reset
     (
-        xferMove(surf.storedPoints()),
-        xferMove(surf.storedFaces()),
-        Xfer<surfZoneList>()
+        move(surf.storedPoints()),
+        move(surf.storedFaces()),
+        NullSingletonMove<surfZoneList>()
     );
 
     zoneIds_.transfer(surf.zoneIds_);
@@ -1016,21 +1014,13 @@ void CML::UnsortedMeshedSurface<Face>::transfer
 {
     ParentType::reset
     (
-        xferMove(surf.storedPoints()),
-        xferMove(surf.storedFaces()),
-        Xfer<surfZoneList>()
+        move(surf.storedPoints()),
+        move(surf.storedFaces()),
+        NullSingletonMove<surfZoneList>()
     );
 
     setZones(surf.surfZones());
     surf.clear();
-}
-
-
-template<class Face>
-CML::Xfer<CML::UnsortedMeshedSurface<Face>>
-CML::UnsortedMeshedSurface<Face>::xfer()
-{
-    return xferMove(*this);
 }
 
 

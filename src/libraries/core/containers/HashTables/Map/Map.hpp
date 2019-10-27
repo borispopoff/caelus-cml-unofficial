@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -69,22 +69,22 @@ public:
             HashTable<T, label, Hash<label>>(is)
         {}
 
-        //- Construct as copy
+        //- Copy constructor
         Map(const Map<T>& map)
         :
             HashTable<T, label, Hash<label>>(map)
         {}
 
-        //- Construct by transferring the parameter contents
-        Map(const Xfer<Map<T>>& map)
+        //- Move constructor
+        Map(Map<T>&& map)
         :
-            HashTable<T, label, Hash<label>>(map)
+            HashTable<T, label, Hash<label>>(move(map))
         {}
 
-        //- Construct by transferring the parameter contents
-        Map(const Xfer<HashTable<T, label, Hash<label>>>& map)
+        //- Move constructor
+        Map(HashTable<T, label, Hash<label>>&& map)
         :
-            HashTable<T, label, Hash<label>>(map)
+            HashTable<T, label, Hash<label>>(move(map))
         {}
 
         //- Construct from an initializer list
@@ -92,6 +92,19 @@ public:
         :
             HashTable<T, label, Hash<label>>(map)
         {}
+
+
+    // Member operators
+
+        void operator=(const Map<T>& map)
+        {
+            HashTable<T, label, Hash<label>>::operator=(map);
+        }
+
+        void operator=(Map<T>&& map)
+        {
+            HashTable<T, label, Hash<label>>::operator=(move(map));
+        }
 };
 
 

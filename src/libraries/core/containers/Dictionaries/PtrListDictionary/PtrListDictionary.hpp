@@ -60,6 +60,9 @@ public:
         //- Copy constructor
         PtrListDictionary(const PtrListDictionary&);
 
+        //- Move constructor
+        PtrListDictionary(PtrListDictionary&&);
+
         //- Construct from Istream using given Istream constructor class
         template<class INew>
         PtrListDictionary(Istream&, const INew&);
@@ -68,7 +71,7 @@ public:
         PtrListDictionary(Istream&);
 
 
-    // Member Functions
+    // Member functions
 
         //- Set element to pointer provided and return old element
         autoPtr<T> set(const label, const word& key, T*);
@@ -80,7 +83,7 @@ public:
         autoPtr<T> set(const label, const word& key, tmp<T>&);
 
 
-    // Member Operators
+    // Member operators
 
         using PtrList<T>::operator[];
 
@@ -118,6 +121,13 @@ template<class T>
 CML::PtrListDictionary<T>::PtrListDictionary(const PtrListDictionary& dict)
 :
     DictionaryBase<PtrList<T>, T>(dict)
+{}
+
+
+template<class T>
+CML::PtrListDictionary<T>::PtrListDictionary(PtrListDictionary&& dict)
+:
+    DictionaryBase<PtrList<T>, T>(move(dict))
 {}
 
 

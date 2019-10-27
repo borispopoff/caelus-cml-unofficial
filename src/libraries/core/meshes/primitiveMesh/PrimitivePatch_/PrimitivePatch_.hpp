@@ -236,11 +236,18 @@ public:
             const Field<PointType>& points
         );
 
-        //- Construct from components
+        //- Move constructor from components
         PrimitivePatch
         (
-            const Xfer<FaceList>& faces,
-            const Xfer<List<PointType>>& points
+            FaceList&& faces,
+            Field<PointType>&& points
+        );
+
+        //- Move constructor from components
+        PrimitivePatch
+        (
+            FaceList&& faces,
+            List<PointType>&& points
         );
 
         //- Construct from components, reuse storage
@@ -251,12 +258,17 @@ public:
             const bool reuse
         );
 
-        //- Construct as copy
+        //- Copy constructor
         PrimitivePatch
         (
             const PrimitivePatch<FaceList, PointField>&
         );
 
+        //- Move constructor
+        PrimitivePatch
+        (
+            PrimitivePatch<FaceList, PointField>&&
+        );
 
     //- Destructor
     virtual ~PrimitivePatch();
@@ -272,18 +284,16 @@ public:
 
     // Member Functions
 
-    // Access
+        // Access
 
-        //- Return reference to global points
-        const Field<PointType>& points() const
-        {
-            return points_;
-        }
+            //- Return reference to global points
+            const Field<PointType>& points() const
+            {
+                return points_;
+            }
 
 
-    // Access functions for demand driven data
-
-        // Topological data; no mesh required.
+        // Access functions for Topological data; no mesh required.
 
             //- Return number of points supporting patch faces
             label nPoints() const
@@ -416,49 +426,55 @@ public:
             const labelListList& edgeLoops() const;
 
 
-    // Check
+        // Check
 
-        //- Calculate surface type formed by patch.
-        //  Types:
-        //  - all edges have two neighbours (manifold)
-        //  - some edges have more than two neighbours (illegal)
-        //  - other (open)
-        surfaceTopo surfaceType() const;
+            //- Calculate surface type formed by patch.
+            //  Types:
+            //  - all edges have two neighbours (manifold)
+            //  - some edges have more than two neighbours (illegal)
+            //  - other (open)
+            surfaceTopo surfaceType() const;
 
-        //- Check surface formed by patch for manifoldness (see above).
-        //  Return true if any incorrect edges are found.
-        //  Insert vertices of incorrect edges into set.
-        bool checkTopology
-        (
-            const bool report = false,
-            labelHashSet* setPtr = nullptr
-        ) const;
+            //- Check surface formed by patch for manifoldness (see above).
+            //  Return true if any incorrect edges are found.
+            //  Insert vertices of incorrect edges into set.
+            bool checkTopology
+            (
+                const bool report = false,
+                labelHashSet* setPtr = nullptr
+            ) const;
 
-        //- Checks primitivePatch for faces sharing point but not edge.
-        //  This denotes a surface that is pinched at a single point
-        //  (test for pinched at single edge is already in PrimitivePatch)
-        //  Returns true if this situation found and puts conflicting
-        //  (mesh)point in set. Based on all the checking routines in
-        //  primitiveMesh.
-        bool checkPointManifold
-        (
-            const bool report = false,
-            labelHashSet* setPtr = nullptr
-        ) const;
+            //- Checks primitivePatch for faces sharing point but not edge.
+            //  This denotes a surface that is pinched at a single point
+            //  (test for pinched at single edge is already in PrimitivePatch)
+            //  Returns true if this situation found and puts conflicting
+            //  (mesh)point in set. Based on all the checking routines in
+            //  primitiveMesh.
+            bool checkPointManifold
+            (
+                const bool report = false,
+                labelHashSet* setPtr = nullptr
+            ) const;
 
 
-    // Edit
+        // Edit
 
-        //- Correct patch after moving points
-        virtual void movePoints(const Field<PointType>&);
+            //- Correct patch after moving points
+            virtual void movePoints(const Field<PointType>&);
 
 
     // Member operators
 
-        //- Assignment
+        //- Assignment operator
         void operator=
         (
             const PrimitivePatch<FaceList, PointField>&
+        );
+
+        //- Move assignment operator
+        void operator=
+        (
+            PrimitivePatch<FaceList, PointField>&&
         );
 };
 
@@ -502,12 +518,41 @@ CML::PrimitivePatch<FaceList, PointField>::PrimitivePatch
 template<class FaceList, class PointField>
 CML::PrimitivePatch<FaceList, PointField>::PrimitivePatch
 (
-    const Xfer<FaceList>& faces,
-    const Xfer<List<PointType>>& points
+    FaceList&& faces,
+    Field<PointType>&& points
 )
 :
-    FaceList(faces),
-    points_(points),
+    FaceList(move(faces)),
+    points_(move(points)),
+    edgesPtr_(nullptr),
+    nInternalEdges_(-1),
+    boundaryPointsPtr_(nullptr),
+    faceFacesPtr_(nullptr),
+    edgeFacesPtr_(nullptr),
+    faceEdgesPtr_(nullptr),
+    pointEdgesPtr_(nullptr),
+    pointFacesPtr_(nullptr),
+    localFacesPtr_(nullptr),
+    meshPointsPtr_(nullptr),
+    meshPointMapPtr_(nullptr),
+    edgeLoopsPtr_(nullptr),
+    localPointsPtr_(nullptr),
+    localPointOrderPtr_(nullptr),
+    faceCentresPtr_(nullptr),
+    faceNormalsPtr_(nullptr),
+    pointNormalsPtr_(nullptr)
+{}
+
+
+template<class FaceList, class PointField>
+CML::PrimitivePatch<FaceList, PointField>::PrimitivePatch
+(
+    FaceList&& faces,
+    List<PointType>&& points
+)
+:
+    FaceList(move(faces)),
+    points_(move(points)),
     edgesPtr_(nullptr),
     nInternalEdges_(-1),
     boundaryPointsPtr_(nullptr),
@@ -567,6 +612,35 @@ CML::PrimitivePatch<FaceList, PointField>::PrimitivePatch
     PrimitivePatchName(),
     FaceList(pp),
     points_(pp.points_),
+    edgesPtr_(nullptr),
+    nInternalEdges_(-1),
+    boundaryPointsPtr_(nullptr),
+    faceFacesPtr_(nullptr),
+    edgeFacesPtr_(nullptr),
+    faceEdgesPtr_(nullptr),
+    pointEdgesPtr_(nullptr),
+    pointFacesPtr_(nullptr),
+    localFacesPtr_(nullptr),
+    meshPointsPtr_(nullptr),
+    meshPointMapPtr_(nullptr),
+    edgeLoopsPtr_(nullptr),
+    localPointsPtr_(nullptr),
+    localPointOrderPtr_(nullptr),
+    faceCentresPtr_(nullptr),
+    faceNormalsPtr_(nullptr),
+    pointNormalsPtr_(nullptr)
+{}
+
+
+template<class FaceList, class PointField>
+CML::PrimitivePatch<FaceList, PointField>::PrimitivePatch
+(
+    PrimitivePatch<FaceList, PointField>&& pp
+)
+:
+    PrimitivePatchName(),
+    FaceList(move(pp)),
+    points_(move(pp.points_)),
     edgesPtr_(nullptr),
     nInternalEdges_(-1),
     boundaryPointsPtr_(nullptr),
@@ -791,8 +865,7 @@ CML::PrimitivePatch<FaceList, PointField>::localPointOrder() const
 
 
 template<class FaceList, class PointField>
-CML::label
-CML::PrimitivePatch<FaceList, PointField>::whichPoint
+CML::label CML::PrimitivePatch<FaceList, PointField>::whichPoint
 (
     const label gp
 ) const
@@ -871,6 +944,21 @@ CML::PrimitivePatch<FaceList, PointField>::operator=
     clearOut();
 
     FaceList::shallowCopy(pp);
+}
+
+
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::operator=
+(
+    PrimitivePatch<FaceList, PointField>&& pp
+)
+{
+    clearOut();
+
+    FaceList::operator=(move(pp));
+
+    // This is only valid if PointField is not a reference
+    // points_ = move(pp.points_);
 }
 
 

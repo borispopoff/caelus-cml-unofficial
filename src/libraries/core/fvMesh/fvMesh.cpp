@@ -291,7 +291,7 @@ CML::fvMesh::fvMesh(const IOobject& io, const bool defectCorr, const scalar area
 CML::fvMesh::fvMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
+    pointField&& points,
     const cellShapeList& shapes,
     const faceListList& boundaryFaces,
     const wordList& boundaryPatchNames,
@@ -306,7 +306,7 @@ CML::fvMesh::fvMesh
     polyMesh
     (
         io,
-        points,
+        move(points),
         shapes,
         boundaryFaces,
         boundaryPatchNames,
@@ -345,16 +345,26 @@ CML::fvMesh::fvMesh
 CML::fvMesh::fvMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<labelList>& allOwner,
-    const Xfer<labelList>& allNeighbour,
+    pointField&& points,
+    faceList&& faces,
+    labelList&& allOwner,
+    labelList&& allNeighbour,
     const bool syncPar,
     const bool defectCorr,
     const scalar areaSwitch
 )
 :
-    polyMesh(io, points, faces, allOwner, allNeighbour, syncPar, defectCorr, areaSwitch),
+    polyMesh
+    (
+        io,
+        move(points),
+        move(faces),
+        move(allOwner),
+        move(allNeighbour),
+        syncPar,
+        defectCorr,
+        areaSwitch
+    ),
     surfaceInterpolation(*this),
     fvSchemes(static_cast<const objectRegistry&>(*this)),
     fvSolution(static_cast<const objectRegistry&>(*this)),
@@ -383,15 +393,15 @@ CML::fvMesh::fvMesh
 CML::fvMesh::fvMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<cellList>& cells,
+    pointField&& points,
+    faceList&& faces,
+    cellList&& cells,
     const bool syncPar,
     const bool defectCorr,
     const scalar areaSwitch
 )
 :
-    polyMesh(io, points, faces, cells, syncPar, defectCorr, areaSwitch),
+    polyMesh(io, move(points), move(faces), move(cells), syncPar, defectCorr, areaSwitch),
     surfaceInterpolation(*this),
     fvSchemes(static_cast<const objectRegistry&>(*this)),
     fvSolution(static_cast<const objectRegistry&>(*this)),

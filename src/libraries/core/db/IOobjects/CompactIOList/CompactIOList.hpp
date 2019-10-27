@@ -73,8 +73,11 @@ public:
         //- Construct from IOobject and a List
         CompactIOList(const IOobject&, const List<T>&);
 
-        //- Construct by transferring the List contents
-        CompactIOList(const IOobject&, const Xfer<List<T>>&);
+        //- Move construct by transferring the List contents
+        CompactIOList(const IOobject&, List<T>&&);
+
+        //- Move constructor
+        CompactIOList(CompactIOList<T, BaseType>&&);
 
 
     // Destructor
@@ -97,6 +100,10 @@ public:
     // Member operators
 
         void operator=(const CompactIOList<T, BaseType>&);
+        void operator=(CompactIOList<T, BaseType>&&);
+
+        void operator=(const List<T>&);
+        void operator=(List<T>&&);
 };
 
 
@@ -209,13 +216,12 @@ template<class T, class BaseType>
 CML::CompactIOList<T, BaseType>::CompactIOList
 (
     const IOobject& io,
-    const Xfer<List<T>>& list
+    List<T>&& list
 )
 :
-    regIOobject(io)
+    regIOobject(io),
+    ListCompactIO<T, BaseType>(move(list))
 {
-    this->transfer(list());
-
     if
     (
         io.readOpt() == IOobject::MUST_READ
@@ -225,6 +231,17 @@ CML::CompactIOList<T, BaseType>::CompactIOList
         readFromStream();
     }
 }
+
+
+template<class T, class BaseType>
+CML::CompactIOList<T, BaseType>::CompactIOList
+(
+    CompactIOList<T, BaseType>&& list
+)
+:
+    regIOobject(move(list)),
+    List<T>(move(list))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -301,6 +318,36 @@ void CML::CompactIOList<T, BaseType>::operator=
 )
 {
     ListCompactIO<T, BaseType>::operator=(rhs);
+}
+
+
+template<class T, class BaseType>
+void CML::CompactIOList<T, BaseType>::operator=
+(
+    CompactIOList<T, BaseType>&& rhs
+)
+{
+    ListCompactIO<T, BaseType>::operator=(move(rhs));
+}
+
+
+template<class T, class BaseType>
+void CML::CompactIOList<T, BaseType>::operator=
+(
+    const List<T>& rhs
+)
+{
+    ListCompactIO<T, BaseType>::operator=(rhs);
+}
+
+
+template<class T, class BaseType>
+void CML::CompactIOList<T, BaseType>::operator=
+(
+    List<T>&& rhs
+)
+{
+    ListCompactIO<T, BaseType>::operator=(move(rhs));
 }
 
 

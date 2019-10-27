@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -156,7 +156,7 @@ public:
         explicit inline face(const labelList&);
 
         //- Construct by transferring the parameter contents
-        explicit inline face(const Xfer<labelList>&);
+        explicit inline face(labelList&&);
 
         //- Copy construct from triFace
         face(const triFace&);
@@ -223,7 +223,7 @@ public:
         tensor inertia
         (
             const pointField&,
-            const point& refPt = Zero,
+            const point& refPt = vector::zero,
             scalar density = 1.0
         ) const;
 
@@ -377,6 +377,12 @@ public:
         static bool sameVertices(const face&, const face&);
 
 
+    // Member Operators
+
+        //- Move assignment labelList
+        inline void operator=(labelList&&);
+
+
     // Friend Operators
 
         friend bool operator==(const face& a, const face& b);
@@ -466,9 +472,9 @@ inline CML::face::face(const labelList& lst)
 {}
 
 
-inline CML::face::face(const Xfer<labelList>& lst)
+inline CML::face::face(labelList&& lst)
 :
-    labelList(lst)
+    labelList(move(lst))
 {}
 
 
@@ -534,6 +540,15 @@ inline CML::label CML::face::nTriangles() const
 {
     return size() - 2;
 }
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+inline void CML::face::operator=(labelList&& l)
+{
+    labelList::operator=(move(l));
+}
+
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 

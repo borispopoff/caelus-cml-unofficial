@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -811,9 +811,9 @@ void CML::fvMeshSubset::setCellSubset
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            xferMove(newPoints),
-            xferMove(newFaces),
-            xferMove(newCells)
+            move(newPoints),
+            move(newFaces),
+            move(newCells)
         )
     );
 
@@ -1195,9 +1195,9 @@ void CML::fvMeshSubset::setLargeCellSubset
         }
     }
 
-    //Pout<< "Number of cells in new mesh : " << cellMap_.size() << endl;
-    //Pout<< "Number of faces in new mesh : " << faceMap_.size() << endl;
-    //Pout<< "Number of points in new mesh: " << pointMap_.size() << endl;
+    // Pout<< "Number of cells in new mesh : " << cellMap_.size() << endl;
+    // Pout<< "Number of faces in new mesh : " << faceMap_.size() << endl;
+    // Pout<< "Number of points in new mesh: " << pointMap_.size() << endl;
 
     // Make a new mesh
     pointField newPoints(pointMap_.size());
@@ -1309,9 +1309,9 @@ void CML::fvMeshSubset::setLargeCellSubset
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            xferMove(newPoints),
-            xferMove(newFaces),
-            xferMove(newCells),
+            move(newPoints),
+            move(newFaces),
+            move(newCells),
             syncPar           // parallel synchronisation
         )
     );
@@ -1419,7 +1419,7 @@ void CML::fvMeshSubset::setLargeCellSubset
                 emptyPolyPatch::typeName
             );
 
-            //Pout<< "    oldInternalFaces : "
+            // Pout<< "    oldInternalFaces : "
             //    << boundaryPatchSizes[oldInternalPatchID] << endl;
 
             // The index for the first patch is -1 as it originates from
@@ -1450,7 +1450,7 @@ void CML::fvMeshSubset::setLargeCellSubset
             patchStart
         ).ptr();
 
-        //Pout<< "    " << oldPatches[oldPatchi].name() << " : "
+        // Pout<< "    " << oldPatches[oldPatchi].name() << " : "
         //    << newSize << endl;
 
         patchStart += newSize;

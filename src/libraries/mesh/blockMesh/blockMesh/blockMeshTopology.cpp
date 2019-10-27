@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -515,7 +515,6 @@ CML::polyMesh* CML::blockMesh::createTopology
             }
         }
 
-
         blockMeshPtr = new polyMesh
         (
             IOobject
@@ -527,7 +526,7 @@ CML::polyMesh* CML::blockMesh::createTopology
                 IOobject::NO_WRITE,
                 false
             ),
-            xferCopy(blockPointField_),   // copy these points, do NOT move
+            clone(blockPointField_),   // Copy these points, do NOT move
             tmpBlockCells,
             tmpBlocksPatches,
             patchNames,
@@ -576,7 +575,7 @@ CML::polyMesh* CML::blockMesh::createTopology
                 IOobject::NO_WRITE,
                 false
             ),
-            xferCopy(blockPointField_),   // copy these points, do NOT move
+            clone(blockPointField_),   // Copy these points, do NOT move
             tmpBlockCells,
             tmpBlocksPatches,
             patchNames,

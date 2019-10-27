@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,10 +50,18 @@ inline CML::fileName::fileName()
     string()
 {}
 
+
 inline CML::fileName::fileName(const fileName& fn)
 :
     string(fn)
 {}
+
+
+inline CML::fileName::fileName(fileName&& fn)
+:
+    string(move(fn))
+{}
+
 
 inline CML::fileName::fileName(const word& w)
 :

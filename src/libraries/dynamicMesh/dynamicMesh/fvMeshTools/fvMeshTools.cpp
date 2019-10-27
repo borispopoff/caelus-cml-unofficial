@@ -529,10 +529,10 @@ CML::autoPtr<CML::fvMesh> CML::fvMeshTools::newMesh
         new fvMesh
         (
             meshIO,
-            xferCopy(pointField()),
-            xferCopy(faceList()),
-            xferCopy(labelList()),
-            xferCopy(labelList())
+            pointField(),
+            faceList(),
+            labelList(),
+            labelList()
         )
     );
     fvMesh& mesh = meshPtr();

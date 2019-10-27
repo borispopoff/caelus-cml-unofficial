@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 
 
         // Construct distribute map (destructively)
-        mapDistribute map(constructSize, sendMap.xfer(), recvMap.xfer());
+        mapDistribute map(constructSize, move(sendMap), move(recvMap));
 
         // Distribute complexData
         map.distribute(complexData);
@@ -145,13 +145,21 @@ int main(int argc, char *argv[])
             {
                 Perr<< "slave sending to master "
                     << Pstream::masterNo() << endl;
-                OPstream toMaster(Pstream::commsTypes::blocking, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::blocking,
+                    Pstream::masterNo()
+                );
                 toMaster << data;
             }
 
             Perr<< "slave receiving from master "
                 << Pstream::masterNo() << endl;
-            IPstream fromMaster(Pstream::commsTypes::blocking, Pstream::masterNo());
+            IPstream fromMaster
+            (
+                Pstream::commsTypes::blocking,
+                Pstream::masterNo()
+            );
             fromMaster >> data;
 
             Perr<< data << endl;

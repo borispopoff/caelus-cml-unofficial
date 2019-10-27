@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -93,7 +93,7 @@ CML::labelPairList CML::globalPoints::addSendTransform
 
     forAll(info, i)
     {
-        //Pout<< "    adding send transform to" << nl
+        // Pout<< "    adding send transform to" << nl
         //    << "    proc:" << globalTransforms_.processor(info[i])
         //    << nl
         //    << "    index:" << globalTransforms_.index(info[i]) << nl
@@ -728,9 +728,9 @@ void CML::globalPoints::remove
     // those points where the equivalence list is only me and my (face)neighbour
 
     // Save old ones.
-    Map<label> oldMeshToProcPoint(meshToProcPoint_.xfer());
+    Map<label> oldMeshToProcPoint(move(meshToProcPoint_));
     meshToProcPoint_.resize(oldMeshToProcPoint.size());
-    DynamicList<labelPairList> oldProcPoints(procPoints_.xfer());
+    DynamicList<labelPairList> oldProcPoints(move(procPoints_));
     procPoints_.setCapacity(oldProcPoints.size());
 
     // Go through all equivalences

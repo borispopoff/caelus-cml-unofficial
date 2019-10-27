@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -81,7 +81,7 @@ public:
         surfZoneIOList(const IOobject&, const surfZoneList&);
 
         //- Construct from IOobject and surfZoneList
-        surfZoneIOList(const IOobject&, const Xfer<surfZoneList>&);
+        surfZoneIOList(const IOobject&, surfZoneList&&);
 
 
     //- Destructor

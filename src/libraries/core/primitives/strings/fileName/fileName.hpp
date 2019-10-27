@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -102,6 +102,9 @@ public:
 
         //- Construct as copy
         inline fileName(const fileName&);
+
+        //- Move constructor
+        inline fileName(fileName&&);
 
         //- Construct as copy of word
         inline fileName(const word&);
@@ -222,6 +225,7 @@ public:
         // Assignment
 
             void operator=(const fileName&);
+            void operator=(fileName&&);
             void operator=(const word&);
             void operator=(const string&);
             void operator=(const std::string&);

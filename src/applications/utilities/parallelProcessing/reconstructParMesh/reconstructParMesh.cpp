@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -628,9 +628,9 @@ int main(int argc, char *argv[])
                     runTime,
                     IOobject::NO_READ
                 ),
-                xferCopy(pointField()),
-                xferCopy(faceList()),
-                xferCopy(cellList())
+                pointField(),
+                faceList(),
+                cellList()
             );
 
             for (label proci = 0; proci < nProcs; proci++)

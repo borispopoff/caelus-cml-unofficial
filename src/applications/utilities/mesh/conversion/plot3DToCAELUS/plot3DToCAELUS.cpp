@@ -1,9 +1,5 @@
 /*---------------------------------------------------------------------------*\
-  =========                 |
-  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
-     \\/     M anipulation  |
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -78,7 +74,7 @@ int main(int argc, char *argv[])
     (
         "2D",
         "thickness",
-        "use when converting a 2-D geometry"
+        "use when converting a 2-D mesh (applied before scale)"
     );
 
     argList args(argc, argv);
@@ -245,7 +241,7 @@ int main(int argc, char *argv[])
             runTime.constant(),
             runTime
         ),
-        xferMove(newPoints),
+        move(newPoints),
         cellShapes,
         boundary,
         patchNames,

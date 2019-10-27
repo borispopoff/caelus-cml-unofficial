@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -102,11 +102,11 @@ CML::primitiveEntry::primitiveEntry
 CML::primitiveEntry::primitiveEntry
 (
     const keyType& key,
-    const Xfer<List<token>>& tokens
+    List<token>&& tokens
 )
 :
     entry(key),
-    ITstream(key, tokens)
+    ITstream(key, move(tokens))
 {}
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,8 +58,10 @@ bool CML::cellVolumeWeightMethod::findInitialSeeds
 
         if (mapFlag[srcI])
         {
-            const pointField
-                pts(srcCells[srcI].points(srcFaces, srcPts).xfer());
+            const pointField pts
+            (
+                srcCells[srcI].points(srcFaces, srcPts)
+            );
 
             forAll(pts, ptI)
             {

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -626,6 +626,20 @@ CML::triSurface::triSurface
 
 CML::triSurface::triSurface
 (
+    List<labelledTri>&& triangles,
+    const geometricSurfacePatchList& patches,
+    List<point>&& points
+)
+:
+    ParentType(move(triangles), move(points)),
+    patches_(patches),
+    sortedEdgeFacesPtr_(nullptr),
+    edgeOwnerPtr_(nullptr)
+{}
+
+
+CML::triSurface::triSurface
+(
     const List<labelledTri>& triangles,
     const pointField& points
 )
@@ -705,6 +719,15 @@ CML::triSurface::triSurface(const triSurface& ts)
 :
     ParentType(ts, ts.points()),
     patches_(ts.patches()),
+    sortedEdgeFacesPtr_(nullptr),
+    edgeOwnerPtr_(nullptr)
+{}
+
+
+CML::triSurface::triSurface(triSurface&& ts)
+:
+    ParentType(move(ts), move(ts.points())),
+    patches_(move(ts.patches())),
     sortedEdgeFacesPtr_(nullptr),
     edgeOwnerPtr_(nullptr)
 {}
@@ -1157,6 +1180,15 @@ void CML::triSurface::operator=(const triSurface& ts)
     clearOut();
     storedPoints() = ts.points();
     patches_ = ts.patches();
+}
+
+
+void CML::triSurface::operator=(triSurface&& ts)
+{
+    List<labelledTri>::operator=(move(ts));
+    clearOut();
+    storedPoints() = move(ts.points());
+    patches_ = move(ts.patches());
 }
 
 

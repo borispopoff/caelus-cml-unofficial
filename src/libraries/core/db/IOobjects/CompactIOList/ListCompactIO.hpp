@@ -104,12 +104,20 @@ public:
         //- Construct from Istream
         ListCompactIO(Istream&);
 
+        //- Move constructor
+        ListCompactIO(ListCompactIO<T, BaseType>&&);
+
+        //- Move constructor from List
+        ListCompactIO(List<T>&&);
+
 
     // Member operators
 
         void operator=(const ListCompactIO<T, BaseType>&);
+        void operator=(ListCompactIO<T, BaseType>&&);
 
         void operator=(const List<T>&);
+        void operator=(List<T>&&);
 
 
     // IOstream functions
@@ -247,6 +255,20 @@ CML::ListCompactIO<T, BaseType>::ListCompactIO(Istream& is)
 }
 
 
+template<class T, class BaseType>
+CML::ListCompactIO<T, BaseType>::ListCompactIO(ListCompactIO<T, BaseType>&& l)
+:
+    List<T>(move(l))
+{}
+
+
+template<class T, class BaseType>
+CML::ListCompactIO<T, BaseType>::ListCompactIO(List<T>&& l)
+:
+    List<T>(move(l))
+{}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class T, class BaseType>
@@ -260,9 +282,26 @@ void CML::ListCompactIO<T, BaseType>::operator=
 
 
 template<class T, class BaseType>
+void CML::ListCompactIO<T, BaseType>::operator=
+(
+    ListCompactIO<T, BaseType>&& rhs
+)
+{
+    List<T>::operator=(move(rhs));
+}
+
+
+template<class T, class BaseType>
 void CML::ListCompactIO<T, BaseType>::operator=(const List<T>& rhs)
 {
     List<T>::operator=(rhs);
+}
+
+
+template<class T, class BaseType>
+void CML::ListCompactIO<T, BaseType>::operator=(List<T>&& rhs)
+{
+    List<T>::operator=(move(rhs));
 }
 
 

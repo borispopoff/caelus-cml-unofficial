@@ -598,8 +598,8 @@ void CML::streamLine::write()
             const mapDistribute distMap
             (
                 globalTrackIDs.size(),
-                sendMap.xfer(),
-                recvMap.xfer()
+                move(sendMap),
+                move(recvMap)
             );
 
 

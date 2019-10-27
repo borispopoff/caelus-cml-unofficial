@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -105,7 +105,7 @@ tmp<Field<Type>> readParticleField
     if (obj != nullptr)
     {
         IOField<Type> newField(*obj);
-        return tmp<Field<Type>>(new Field<Type>(newField.xfer()));
+        return tmp<Field<Type>>(new Field<Type>(move(newField)));
     }
 
     FatalErrorInFunction
@@ -133,7 +133,7 @@ void readFields
         {
             Info<< "        reading field " << fieldNames[j] << endl;
             IOField<Type> newField(*obj);
-            values.set(j, new List<Type>(newField.xfer()));
+            values.set(j, new List<Type>(move(newField)));
         }
         else
         {

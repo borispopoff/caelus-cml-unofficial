@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -219,7 +219,7 @@ public:
 
 
         //- Write
-        void write(Ostream&) const;
+        virtual void write(Ostream&) const;
 
         //- Read coefficients dictionary and update system parameters,
         //  constraints and restraints but not the current state

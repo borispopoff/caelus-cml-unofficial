@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -749,10 +749,10 @@ bool CML::polyMeshZipUpCells(polyMesh& mesh)
         // (patches guaranteed to be in increasing order)
         mesh.resetPrimitives
         (
-            Xfer<pointField>::null(),
-            xferMove(newFaces),
-            Xfer<labelList>::null(),
-            Xfer<labelList>::null(),
+            NullSingletonMove<pointField>(),
+            move(newFaces),
+            NullSingletonMove<labelList>(),
+            NullSingletonMove<labelList>(),
             patchSizes,
             patchStarts,
             true                // boundary forms valid boundary mesh.

@@ -152,8 +152,8 @@ public:
         surfMesh
         (
             const IOobject&,
-            const Xfer<pointField>&,
-            const Xfer<faceList>&,
+            pointField&&,
+            faceList&&,
             const word& surfName=""
         );
 
@@ -161,7 +161,7 @@ public:
         surfMesh
         (
             const IOobject&,
-            const Xfer<MeshedSurface<face>>& surf,
+            MeshedSurface<face>&& surf,
             const word& surfName=""
         );
 
@@ -238,9 +238,9 @@ public:
             //- Reset mesh primitive data.
             void resetPrimitives
             (
-                const Xfer<pointField>& points,
-                const Xfer<faceList>& faces,
-                const Xfer<surfZoneList>& zones,
+                pointField&& points,
+                faceList&& faces,
+                surfZoneList&& zones,
                 const bool validate = true
             );
 
@@ -259,9 +259,6 @@ public:
         void write(const fileName&);
 
         //  Storage management
-
-            //- Transfer contents to the Xfer container as a MeshedSurface
-            Xfer<MeshedSurface<face>> xfer();
 
             //- Clear geometry
             void clearGeom();

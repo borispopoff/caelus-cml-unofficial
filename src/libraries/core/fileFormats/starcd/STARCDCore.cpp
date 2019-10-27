@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -107,8 +107,8 @@ bool CML::fileFormats::STARCDCore::readPoints
 
 
     // reuse memory if possible
-    DynamicList<point> dynPoints(points.xfer());
-    DynamicList<label> dynPointId(ids.xfer());    // STAR-CD index of points
+    DynamicList<point> dynPoints(move(points));
+    DynamicList<label> dynPointId(move(ids));    // STAR-CD index of points
 
     dynPoints.clear();
     dynPointId.clear();

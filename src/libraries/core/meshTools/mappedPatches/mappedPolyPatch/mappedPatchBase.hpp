@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -595,7 +595,7 @@ void CML::mappedPatchBase::distribute(List<Type>& lst) const
     {
         case NEARESTPATCHFACEAMI:
         {
-            lst = AMI().interpolateToSource(Field<Type>(lst.xfer()));
+            lst = AMI().interpolateToSource(Field<Type>(move(lst)));
             break;
         }
         default:
@@ -619,7 +619,7 @@ void CML::mappedPatchBase::distribute
         {
             lst = AMI().interpolateToSource
                 (
-                    Field<Type>(lst.xfer()),
+                    Field<Type>(move(lst)),
                     cop
                 );
             break;
@@ -652,7 +652,7 @@ void CML::mappedPatchBase::reverseDistribute(List<Type>& lst) const
     {
         case NEARESTPATCHFACEAMI:
         {
-            lst = AMI().interpolateToTarget(Field<Type>(lst.xfer()));
+            lst = AMI().interpolateToTarget(Field<Type>(move(lst)));
             break;
         }
         default:
@@ -677,7 +677,7 @@ void CML::mappedPatchBase::reverseDistribute
         {
             lst = AMI().interpolateToTarget
                 (
-                    Field<Type>(lst.xfer()),
+                    Field<Type>(move(lst)),
                     cop
                 );
             break;

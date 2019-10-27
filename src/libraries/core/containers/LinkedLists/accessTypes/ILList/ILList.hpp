@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -86,31 +86,15 @@ public:
         //- Construct from Istream
         ILList(Istream&);
 
-        //- Construct as copy
+        //- Copy constructor
         ILList(const ILList<LListBase, T>&);
+
+        //- Move constructor
+        ILList(ILList<LListBase, T>&&);
 
         //- Copy constructor with additional argument for clone
         template<class CloneArg>
-        ILList(const ILList<LListBase, T>& lst, const CloneArg& cloneArg)
-		
-        #ifdef __INTEL_COMPILER
-        :
-            UILList<LListBase, T>()
-        {
-            for
-            (
-                typename UILList<LListBase, T>::const_iterator iter =
-                    lst.begin();
-                iter != lst.end();
-                ++iter
-            )
-            {
-                this->append(iter().clone(cloneArg).ptr());
-            }
-        }
-        #else
-        ;
-        #endif
+        ILList(const ILList<LListBase, T>& lst, const CloneArg& cloneArg);
 
         //- Construct from Istream using given Istream constructor class
         template<class INew>
@@ -141,7 +125,11 @@ public:
 
     // Member operators
 
+        //- Assignment operator
         void operator=(const ILList<LListBase, T>&);
+
+        //- Move assignment operator
+        void operator=(ILList<LListBase, T>&&);
 
 
     // Istream operator
@@ -163,8 +151,6 @@ public:
 
 template<class LListBase, class T>
 CML::ILList<LListBase, T>::ILList(const ILList<LListBase, T>& lst)
-:
-    UILList<LListBase, T>()
 {
     for
     (
@@ -178,7 +164,13 @@ CML::ILList<LListBase, T>::ILList(const ILList<LListBase, T>& lst)
 }
 
 
-#ifndef __INTEL_COMPILER
+template<class LListBase, class T>
+CML::ILList<LListBase, T>::ILList(ILList<LListBase, T>&& lst)
+{
+    transfer(lst);
+}
+
+
 template<class LListBase, class T>
 template<class CloneArg>
 CML::ILList<LListBase, T>::ILList
@@ -199,7 +191,6 @@ CML::ILList<LListBase, T>::ILList
         this->append(iter().clone(cloneArg).ptr());
     }
 }
-#endif
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -282,6 +273,14 @@ void CML::ILList<LListBase, T>::operator=(const ILList<LListBase, T>& lst)
         this->append(iter().clone().ptr());
     }
 }
+
+
+template<class LListBase, class T>
+void CML::ILList<LListBase, T>::operator=(ILList<LListBase, T>&& lst)
+{
+    transfer(lst);
+}
+
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 

@@ -57,7 +57,7 @@ class treeDataFace
 {
     // Static data
 
-        //- tolerance on linear dimensions
+        //- Tolerance on linear dimensions
         static scalar tolSqr;
 
 
@@ -75,7 +75,7 @@ class treeDataFace
         //- Whether to precalculate and store face bounding box
         const bool cacheBb_;
 
-        //- face bounding boxes (valid only if cacheBb_)
+        //- Face bounding boxes (valid only if cacheBb_)
         treeBoundBoxList bbs_;
 
 
@@ -160,7 +160,7 @@ public:
         (
             const bool cacheBb,
             const primitiveMesh&,
-            const Xfer<labelList>&
+            labelList&&
         );
 
         //- Construct from mesh. Uses all faces in mesh.

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014-2017 OpenFOAM Foundation
+Copyright (C) 2014-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -144,7 +144,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
     return List<labelPair>(UIndirectList<labelPair>(allComms, mySchedule));
 
 
-    //if (debug)
+    // if (debug)
     //{
     //    Pout<< "I need to:" << endl;
     //    const List<labelPair>& comms = schedule();
@@ -561,15 +561,15 @@ CML::mapDistributeBase::mapDistributeBase()
 CML::mapDistributeBase::mapDistributeBase
 (
     const label constructSize,
-    const Xfer<labelListList>& subMap,
-    const Xfer<labelListList>& constructMap,
+    const labelListList&& subMap,
+    const labelListList&& constructMap,
     const bool subHasFlip,
     const bool constructHasFlip
 )
 :
     constructSize_(constructSize),
-    subMap_(subMap),
-    constructMap_(constructMap),
+    subMap_(move(subMap)),
+    constructMap_(move(constructMap)),
     subHasFlip_(subHasFlip),
     constructHasFlip_(constructHasFlip),
     schedulePtr_()
@@ -674,13 +674,13 @@ CML::mapDistributeBase::mapDistributeBase
     );
 
     //// Sort remote elements needed (not really necessary)
-    //forAll(compactMap, proci)
+    // forAll(compactMap, proci)
     //{
     //    if (proci != Pstream::myProcNo())
     //    {
     //        Map<label>& globalMap = compactMap[proci];
     //
-    //        SortableList<label> sorted(globalMap.toc().xfer());
+    //        SortableList<label> sorted(move(globalMap.toc()));
     //
     //        forAll(sorted, i)
     //        {
@@ -734,13 +734,13 @@ CML::mapDistributeBase::mapDistributeBase
     );
 
     //// Sort remote elements needed (not really necessary)
-    //forAll(compactMap, proci)
+    // forAll(compactMap, proci)
     //{
     //    if (proci != Pstream::myProcNo())
     //    {
     //        Map<label>& globalMap = compactMap[proci];
     //
-    //        SortableList<label> sorted(globalMap.toc().xfer());
+    //        SortableList<label> sorted(move(globalMap.toc()));
     //
     //        forAll(sorted, i)
     //        {
@@ -781,13 +781,13 @@ CML::mapDistributeBase::mapDistributeBase(const mapDistributeBase& map)
 {}
 
 
-CML::mapDistributeBase::mapDistributeBase(const Xfer<mapDistributeBase>& map)
+CML::mapDistributeBase::mapDistributeBase(mapDistributeBase&& map)
 :
-    constructSize_(map().constructSize_),
-    subMap_(map().subMap_.xfer()),
-    constructMap_(map().constructMap_.xfer()),
-    subHasFlip_(map().subHasFlip_),
-    constructHasFlip_(map().constructHasFlip_),
+    constructSize_(map.constructSize_),
+    subMap_(move(map.subMap_)),
+    constructMap_(move(map.constructMap_)),
+    subHasFlip_(map.subHasFlip_),
+    constructHasFlip_(map.constructHasFlip_),
     schedulePtr_()
 {}
 
@@ -808,12 +808,6 @@ void CML::mapDistributeBase::transfer(mapDistributeBase& rhs)
     subHasFlip_ = rhs.subHasFlip_;
     constructHasFlip_ = rhs.constructHasFlip_;
     schedulePtr_.clear();
-}
-
-
-CML::Xfer<CML::mapDistributeBase> CML::mapDistributeBase::xfer()
-{
-    return xferMove(*this);
 }
 
 

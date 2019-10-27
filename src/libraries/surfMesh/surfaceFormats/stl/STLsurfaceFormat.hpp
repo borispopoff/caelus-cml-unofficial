@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -270,9 +270,9 @@ bool CML::fileFormats::STLsurfaceFormat<Face>::read
     this->storedPoints().transfer(reader.points());
 
     // retrieve the original zone information
-    List<word>  names(reader.names().xfer());
-    List<label> sizes(reader.sizes().xfer());
-    List<label> zoneIds(reader.zoneIds().xfer());
+    List<word>  names(move(reader.names()));
+    List<label> sizes(move(reader.sizes()));
+    List<label> zoneIds(move(reader.zoneIds()));
 
     // generate the (sorted) faces
     List<Face> faceLst(zoneIds.size());

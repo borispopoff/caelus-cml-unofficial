@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -86,22 +86,10 @@ public:
         HashSet(const FixedList<Key, Size>&);
 
         //- Construct as copy
-        HashSet(const HashSet<Key, Hash>& hs)
-        :
-            HashTable<nil, Key, Hash>(hs)
-        {}
+        HashSet(const HashSet<Key, Hash>& hs) = default;
 
-        //- Construct by transferring the parameter contents
-        HashSet(const Xfer<HashSet<Key, Hash>>& hs)
-        :
-            HashTable<nil, Key, Hash>(hs)
-        {}
-
-        //- Construct by transferring the parameter contents
-        HashSet(const Xfer<HashTable<nil, Key, Hash>>& hs)
-        :
-            HashTable<nil, Key, Hash>(hs)
-        {}
+        //- Move constructor
+        HashSet(HashSet<Key, Hash>&& hs) = default;
 
         //- Construct from the keys of another HashTable,
         //  the type of values held is arbitrary.
@@ -146,6 +134,12 @@ public:
 
         //- Return true if the entry exists, same as found()
         inline bool operator[](const Key&) const;
+
+        //- Assignment operator
+        void operator=(const HashSet<Key, Hash>&);
+
+        //- Move assignment operator
+        void operator=(HashSet<Key, Hash>&&);
 
         //- Equality. Two hashtables are equal when their contents are equal.
         //  Independent of table size or order.
@@ -295,6 +289,36 @@ template<class Key, class Hash>
 inline bool CML::HashSet<Key, Hash>::operator[](const Key& key) const
 {
     return this->found(key);
+}
+
+
+template<class Key, class Hash>
+void CML::HashSet<Key, Hash>::operator=(const HashSet<Key, Hash>& rhs)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    HashTable<nil, Key, Hash>::operator=(rhs);
+}
+
+
+template<class Key, class Hash>
+void CML::HashSet<Key, Hash>::operator=(HashSet<Key, Hash>&& rhs)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    HashTable<nil, Key, Hash>::operator=(move(rhs));
 }
 
 

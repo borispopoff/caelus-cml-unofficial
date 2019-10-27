@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,7 +27,7 @@ License
 
 namespace CML
 {
-defineTypeNameAndDebug(mapDistribute, 0);
+    defineTypeNameAndDebug(mapDistribute, 0);
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -152,8 +152,8 @@ CML::mapDistribute::mapDistribute()
 CML::mapDistribute::mapDistribute
 (
     const label constructSize,
-    const Xfer<labelListList>& subMap,
-    const Xfer<labelListList>& constructMap,
+    labelListList&& subMap,
+    labelListList&& constructMap,
     const bool subHasFlip,
     const bool constructHasFlip
 )
@@ -161,8 +161,8 @@ CML::mapDistribute::mapDistribute
     mapDistributeBase
     (
         constructSize,
-        subMap,
-        constructMap,
+        move(subMap),
+        move(constructMap),
         subHasFlip,
         constructHasFlip
     )
@@ -172,10 +172,10 @@ CML::mapDistribute::mapDistribute
 CML::mapDistribute::mapDistribute
 (
     const label constructSize,
-    const Xfer<labelListList>& subMap,
-    const Xfer<labelListList>& constructMap,
-    const Xfer<labelListList>& transformElements,
-    const Xfer<labelList>& transformStart,
+    labelListList&& subMap,
+    labelListList&& constructMap,
+    labelListList&& transformElements,
+    labelList&& transformStart,
     const bool subHasFlip,
     const bool constructHasFlip
 )
@@ -183,13 +183,13 @@ CML::mapDistribute::mapDistribute
     mapDistributeBase
     (
         constructSize,
-        subMap,
-        constructMap,
+        move(subMap),
+        move(constructMap),
         subHasFlip,
         constructHasFlip
     ),
-    transformElements_(transformElements),
-    transformStart_(transformStart)
+    transformElements_(move(transformElements)),
+    transformStart_(move(transformStart))
 {}
 
 
@@ -470,18 +470,11 @@ CML::mapDistribute::mapDistribute(const mapDistribute& map)
 {}
 
 
-CML::mapDistribute::mapDistribute(const Xfer<mapDistribute>& map)
+CML::mapDistribute::mapDistribute(mapDistribute&& map)
 :
-    mapDistributeBase
-    (
-        map().constructSize_,
-        map().subMap_.xfer(),
-        map().constructMap_.xfer(),
-        map().subHasFlip(),
-        map().constructHasFlip()
-    ),
-    transformElements_(map().transformElements_.xfer()),
-    transformStart_(map().transformStart_.xfer())
+    mapDistributeBase(move(map)),
+    transformElements_(move(map.transformElements_)),
+    transformStart_(move(map.transformStart_))
 {}
 
 
@@ -511,12 +504,6 @@ void CML::mapDistribute::transfer(mapDistribute& rhs)
     mapDistributeBase::transfer(rhs);
     transformElements_.transfer(rhs.transformElements_);
     transformStart_.transfer(rhs.transformStart_);
-}
-
-
-CML::Xfer<CML::mapDistribute> CML::mapDistribute::xfer()
-{
-    return xferMove(*this);
 }
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,6 +60,9 @@ public:
         //- Copy constructor
         PtrDictionary(const PtrDictionary&);
 
+        //- Move constructor
+        PtrDictionary(PtrDictionary&&);
+
         //- Construct from Istream using given Istream constructor class
         template<class INew>
         PtrDictionary(Istream&, const INew&);
@@ -88,6 +91,13 @@ CML::PtrDictionary<T>::PtrDictionary(const PtrDictionary& dict)
 
 
 template<class T>
+CML::PtrDictionary<T>::PtrDictionary(PtrDictionary&& dict)
+:
+    DictionaryBase<DLPtrList<T>, T>(move(dict))
+{}
+
+
+template<class T>
 template<class INew>
 CML::PtrDictionary<T>::PtrDictionary(Istream& is, const INew& iNew)
 :
@@ -100,7 +110,6 @@ CML::PtrDictionary<T>::PtrDictionary(Istream& is)
 :
     DictionaryBase<DLPtrList<T>, T>(is)
 {}
-
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

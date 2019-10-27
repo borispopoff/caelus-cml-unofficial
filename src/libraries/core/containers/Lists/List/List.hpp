@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -35,13 +35,20 @@ Description
 
 #include "UList.hpp"
 #include "autoPtr.hpp"
-#include "Xfer.hpp"
 #include <initializer_list>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace CML
 {
+
+using std::move;
+
+template<class T>
+inline T clone(const T& t)
+{
+    return move(T(t));
+}
 
 // Forward declaration of classes
 
@@ -137,8 +144,8 @@ public:
         template<class T2>
         explicit List(const List<T2>&);
 
-        //- Construct by transferring the parameter contents
-        List(const Xfer<List<T>>&);
+        //- Move constructor
+        List(List<T>&&);
 
         //- Construct as copy or re-use as specified
         List(List<T>&, bool reuse);
@@ -231,9 +238,6 @@ public:
             //  and annul the argument list
             void transfer(SortableList<T>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<List<T>> xfer();
-
             //- Return subscript-checked element of UList
             inline T& newElmt(const label);
 
@@ -242,13 +246,16 @@ public:
         void shallowCopy(const UList<T>&) = delete;
 
 
-    // Member Operators
+    // Member operators
 
         //- Assignment to UList operator. Takes linear time
         void operator=(const UList<T>&);
 
         //- Assignment operator. Takes linear time
         void operator=(const List<T>&);
+
+        //- Move assignment operator
+        void operator=(List<T>&&);
 
         //- Assignment to SLList operator. Takes linear time
         void operator=(const SLList<T>&);
@@ -295,7 +302,7 @@ List<T> readList(Istream&);
 template<class T>
 inline void CML::List<T>::alloc()
 {
-    if (this->size_)
+    if (this->size_ > 0)
     {
         this->v_ = new T[this->size_];
     }
@@ -437,13 +444,6 @@ template<class T>
 inline CML::label CML::List<T>::size() const
 {
     return UList<T>::size_;
-}
-
-
-template<class T>
-inline CML::Xfer<CML::List<T>> CML::List<T>::xfer()
-{
-    return xferMove(*this);
 }
 
 
@@ -627,9 +627,9 @@ CML::List<T>::List(const List<T2>& a)
 
 
 template<class T>
-CML::List<T>::List(const Xfer<List<T>>& lst)
+CML::List<T>::List(List<T>&& lst)
 {
-    transfer(lst());
+    transfer(lst);
 }
 
 
@@ -889,6 +889,20 @@ void CML::List<T>::operator=(const List<T>& a)
     }
 
     operator=(static_cast<const UList<T>&>(a));
+}
+
+
+template<class T>
+void CML::List<T>::operator=(List<T>&& a)
+{
+    if (this == &a)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    transfer(a);
 }
 
 

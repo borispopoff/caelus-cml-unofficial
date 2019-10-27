@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -99,6 +99,9 @@ public:
         //- Construct as copy
         HashPtrTable(const HashPtrTable<T, Key, Hash>&);
 
+        //- Move constructor
+        HashPtrTable(HashPtrTable<T, Key, Hash>&&);
+
 
     //- Destructor
     ~HashPtrTable();
@@ -123,7 +126,11 @@ public:
 
     // Member Operators
 
+        //- Assignment operator
         void operator=(const HashPtrTable<T, Key, Hash>&);
+
+        //- Move assignment operator
+        void operator=(HashPtrTable<T, Key, Hash>&&);
 
 
     // IOstream Operators
@@ -153,7 +160,6 @@ public:
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct given initial table size
 template<class T, class Key, class Hash>
 CML::HashPtrTable<T, Key, Hash>::HashPtrTable(const label size)
 :
@@ -161,7 +167,6 @@ CML::HashPtrTable<T, Key, Hash>::HashPtrTable(const label size)
 {}
 
 
-// Construct as copy
 template<class T, class Key, class Hash>
 CML::HashPtrTable<T, Key, Hash>::HashPtrTable
 (
@@ -175,6 +180,16 @@ CML::HashPtrTable<T, Key, Hash>::HashPtrTable
         this->insert(iter.key(), new T(**iter));
     }
 }
+
+
+template<class T, class Key, class Hash>
+CML::HashPtrTable<T, Key, Hash>::HashPtrTable
+(
+    HashPtrTable<T, Key, Hash>&& ht
+)
+:
+    HashTable<T*, Key, Hash>(move(ht))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -258,6 +273,25 @@ void CML::HashPtrTable<T, Key, Hash>::operator=
         this->insert(iter.key(), new T(**iter));
     }
 }
+
+
+template<class T, class Key, class Hash>
+void CML::HashPtrTable<T, Key, Hash>::operator=
+(
+    HashPtrTable<T, Key, Hash>&& rhs
+)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    HashTable<T*, Key, Hash>::operator=(move(rhs));
+}
+
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 

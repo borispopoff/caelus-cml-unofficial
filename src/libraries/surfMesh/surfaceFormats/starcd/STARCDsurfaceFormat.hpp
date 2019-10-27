@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -336,7 +336,7 @@ bool CML::fileFormats::STARCDsurfaceFormat<Face>::read
     }
     mapPointId.clear();
 
-    this->sortFacesAndStore(dynFaces.xfer(), dynZones.xfer(), sorted);
+    this->sortFacesAndStore(move(dynFaces), move(dynZones), sorted);
 
     // add zones, culling empty ones
     this->addZones(dynSizes, dynNames, true);
@@ -378,7 +378,7 @@ void CML::fileFormats::STARCDsurfaceFormat<Face>::write
 
         if (useFaceMap)
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceMap[faceIndex++]];
                 writeShell(os, f, faceIndex, zoneI + 1);
@@ -386,7 +386,7 @@ void CML::fileFormats::STARCDsurfaceFormat<Face>::write
         }
         else
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceIndex++];
                 writeShell(os, f, faceIndex, zoneI + 1);

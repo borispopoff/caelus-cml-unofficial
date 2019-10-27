@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -64,11 +64,30 @@ public:
             HashPtrTable<T, label, Hash<label>>(is)
         {}
 
-        //- Construct as copy
+        //- Copy construct
         PtrMap(const PtrMap<T>& map)
         :
             HashPtrTable<T, label, Hash<label>>(map)
         {}
+
+        //- Move constructor
+        PtrMap(PtrMap<T>&& map)
+        :
+            HashPtrTable<T, label, Hash<label>>(move(map))
+        {}
+
+
+    // Member operators
+
+        void operator=(const PtrMap<T>& map)
+        {
+            HashPtrTable<T, label, Hash<label>>::operator=(map);
+        }
+
+        void operator=(PtrMap<T>&& map)
+        {
+            HashPtrTable<T, label, Hash<label>>::operator=(move(map));
+        }
 };
 
 

@@ -166,10 +166,10 @@ public:
             bool reuse
         );
 
-        //- Construct by transferring the DimensionedField
+        //- Move constructor
         DimensionedField
         (
-            const Xfer<DimensionedField<Type, GeoMesh>>&
+            DimensionedField<Type, GeoMesh>&&
         );
 
         //- Construct as copy of tmp<DimensionedField> deleting argument
@@ -210,21 +210,12 @@ public:
             bool reuse
         );
 
-        //- Construct by transferring the DimensionedField with a new name
-        DimensionedField
-        (
-            const word& newName,
-            const Xfer<DimensionedField<Type, GeoMesh>>&
-        );
-
         //- Construct as copy resetting name
-        #ifdef ConstructFromTmp
         DimensionedField
         (
             const word& newName,
             const tmp<DimensionedField<Type, GeoMesh>>&
         );
-        #endif
 
         //- Clone
         tmp<DimensionedField<Type, GeoMesh>> clone() const;
@@ -304,6 +295,7 @@ public:
     // Member Operators
 
         void operator=(const DimensionedField<Type, GeoMesh>&);
+        void operator=(DimensionedField<Type, GeoMesh>&&);
         void operator=(const tmp<DimensionedField<Type, GeoMesh>>&);
         void operator=(const dimensioned<Type>&);
         void operator=(const zero&);
@@ -521,13 +513,13 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (
-    const Xfer<DimensionedField<Type, GeoMesh>>& df
+    DimensionedField<Type, GeoMesh>&& df
 )
 :
-    regIOobject(df(), true),
-    Field<Type>(df),
-    mesh_(df->mesh_),
-    dimensions_(df->dimensions_)
+    regIOobject(move(df), true),
+    Field<Type>(move(df)),
+    mesh_(df.mesh_),
+    dimensions_(move(df.dimensions_))
 {}
 
 
@@ -607,20 +599,6 @@ DimensionedField<Type, GeoMesh>::DimensionedField
     Field<Type>(df, reuse),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
-{}
-
-
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
-(
-    const word& newName,
-    const Xfer<DimensionedField<Type, GeoMesh>>& df
-)
-:
-    regIOobject(newName, df, true),
-    Field<Type>(df),
-    mesh_(df->mesh_),
-    dimensions_(df->dimensions_)
 {}
 
 
@@ -815,6 +793,27 @@ void DimensionedField<Type, GeoMesh>::operator=
 
     dimensions_ = df.dimensions();
     Field<Type>::operator=(df);
+}
+
+
+template<class Type, class GeoMesh>
+void DimensionedField<Type, GeoMesh>::operator=
+(
+    DimensionedField<Type, GeoMesh>&& df
+)
+{
+    // Check for assignment to self
+    if (this == &df)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    checkField(*this, df, "=");
+
+    dimensions_ = move(df.dimensions());
+    Field<Type>::operator=(move(df));
 }
 
 

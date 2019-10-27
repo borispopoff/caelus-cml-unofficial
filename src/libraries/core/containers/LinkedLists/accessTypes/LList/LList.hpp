@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -111,8 +111,11 @@ public:
         //- Construct from Istream
         LList(Istream&);
 
-        //- Construct as copy
+        //- Copy constructor
         LList(const LList<LListBase, T>&);
+
+        //- Move constructor
+        LList(LList<LListBase, T>&&);
 
         //- Construct from an initializer list
         LList(std::initializer_list<T>);
@@ -204,6 +207,9 @@ public:
 
         //- Assignment operator
         void operator=(const LList<LListBase, T>&);
+
+        //- Move assignment operator
+        void operator=(LList<LListBase, T>&&);
 
         //- Assignment to an initializer list
         void operator=(std::initializer_list<T>);
@@ -379,6 +385,15 @@ CML::LList<LListBase, T>::LList(const LList<LListBase, T>& lst)
 
 
 template<class LListBase, class T>
+CML::LList<LListBase, T>::LList(LList<LListBase, T>&& lst)
+:
+    LListBase()
+{
+    transfer(lst);
+}
+
+
+template<class LListBase, class T>
 CML::LList<LListBase, T>::LList(std::initializer_list<T> lst)
 :
     LListBase()
@@ -431,6 +446,13 @@ void CML::LList<LListBase, T>::operator=(const LList<LListBase, T>& lst)
     {
         this->append(val);
     }
+}
+
+
+template<class LListBase, class T>
+void CML::LList<LListBase, T>::operator=(LList<LListBase, T>&& lst)
+{
+    transfer(lst);
 }
 
 

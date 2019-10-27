@@ -120,11 +120,23 @@ public:
         //- Construct as copy of a UList\<Type\>
         explicit Field(const UList<Type>&);
 
+        //- Mover constructor transferring the List contents
+        explicit Field(List<Type>&&);
+
         //- Construct as copy of a UIndirectList\<Type\>
         explicit Field(const UIndirectList<Type>&);
 
-        //- Construct by transferring the List contents
-        explicit Field(const Xfer<List<Type>>&);
+        //- Construct as copy
+        Field(const Field<Type>&);
+
+        //- Construct as copy or re-use as specified.
+        Field(Field<Type>&, bool reuse);
+
+        //- Move Constructor transferring the Field contents
+        Field(Field<Type>&&);
+
+        //- Construct as copy of tmp<Field>
+        Field(const tmp<Field<Type>>&);
 
         //- Construct by 1 to 1 mapping from the given field
         Field
@@ -209,20 +221,6 @@ public:
             const UList<Type>& defaultValues,
             const bool applyFlip = true
         );
-
-        //- Construct as copy
-        Field(const Field<Type>&);
-
-        //- Construct as copy or re-use as specified.
-        Field(Field<Type>&, bool reuse);
-
-        //- Construct by transferring the Field contents
-        Field(const Xfer<Field<Type>>&);
-
-        //- Construct as copy of tmp<Field>
-        #ifdef ConstructFromTmp
-        Field(const tmp<Field<Type>>&);
-        #endif
 
         //- Construct from Istream
         Field(Istream&);
@@ -352,7 +350,9 @@ public:
     // Member operators
 
         void operator=(const Field<Type>&);
+        void operator=(Field<Type>&&);
         void operator=(const UList<Type>&);
+        void operator=(List<Type>&&);
         void operator=(const SubField<Type>&);
         void operator=(const tmp<Field<Type>>&);
         void operator=(const Type&);
@@ -439,6 +439,59 @@ CML::Field<Type>::Field(const label size, const zero)
 :
     List<Type>(size, Zero)
 {}
+
+
+template<class Type>
+CML::Field<Type>::Field(const UList<Type>& list)
+:
+    List<Type>(list)
+{}
+
+
+template<class Type>
+CML::Field<Type>::Field(List<Type>&& f)
+:
+    List<Type>(move(f))
+{}
+
+
+template<class Type>
+CML::Field<Type>::Field(const UIndirectList<Type>& list)
+:
+    List<Type>(list)
+{}
+
+
+template<class Type>
+CML::Field<Type>::Field(const Field<Type>& f)
+:
+    refCount(),
+    List<Type>(f)
+{}
+
+
+template<class Type>
+CML::Field<Type>::Field(Field<Type>& f, bool reuse)
+:
+    List<Type>(f, reuse)
+{}
+
+
+template<class Type>
+CML::Field<Type>::Field(Field<Type>&& f)
+:
+    refCount(),
+    List<Type>(move(f))
+{}
+
+
+template<class Type>
+CML::Field<Type>::Field(const tmp<Field<Type>>& tf)
+:
+    List<Type>(const_cast<Field<Type>&>(tf()), tf.isTmp())
+{
+    tf.clear();
+}
 
 
 template<class Type>
@@ -581,60 +634,6 @@ CML::Field<Type>::Field
 {
     map(tmapF, mapper, applyFlip);
 }
-
-
-template<class Type>
-CML::Field<Type>::Field(const Field<Type>& f)
-:
-    refCount(),
-    List<Type>(f)
-{}
-
-
-template<class Type>
-CML::Field<Type>::Field(Field<Type>& f, bool reuse)
-:
-    List<Type>(f, reuse)
-{}
-
-
-template<class Type>
-CML::Field<Type>::Field(const Xfer<List<Type>>& f)
-:
-    List<Type>(f)
-{}
-
-
-template<class Type>
-CML::Field<Type>::Field(const Xfer<Field<Type>>& f)
-:
-    List<Type>(f)
-{}
-
-
-template<class Type>
-CML::Field<Type>::Field(const UList<Type>& list)
-:
-    List<Type>(list)
-{}
-
-
-template<class Type>
-CML::Field<Type>::Field(const UIndirectList<Type>& list)
-:
-    List<Type>(list)
-{}
-
-
-#ifdef ConstructFromTmp
-template<class Type>
-CML::Field<Type>::Field(const tmp<Field<Type>>& tf)
-:
-    List<Type>(const_cast<Field<Type>&>(tf()), tf.isTmp())
-{
-    tf.clear();
-}
-#endif
 
 
 template<class Type>
@@ -1114,6 +1113,20 @@ void CML::Field<Type>::operator=(const Field<Type>& rhs)
 
 
 template<class Type>
+void CML::Field<Type>::operator=(Field<Type>&& rhs)
+{
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    List<Type>::operator=(move(rhs));
+}
+
+
+template<class Type>
 void CML::Field<Type>::operator=(const SubField<Type>& rhs)
 {
     List<Type>::operator=(rhs);
@@ -1128,6 +1141,13 @@ void CML::Field<Type>::operator=(const UList<Type>& rhs)
 
 
 template<class Type>
+void CML::Field<Type>::operator=(List<Type>&& rhs)
+{
+    List<Type>::operator=(move(rhs));
+}
+
+
+template<class Type>
 void CML::Field<Type>::operator=(const tmp<Field>& rhs)
 {
     if (this == &(rhs()))
@@ -1137,10 +1157,7 @@ void CML::Field<Type>::operator=(const tmp<Field>& rhs)
             << abort(FatalError);
     }
 
-    // This is dodgy stuff, don't try it at home.
-    Field* fieldPtr = rhs.ptr();
-    List<Type>::transfer(*fieldPtr);
-    delete fieldPtr;
+    List<Type>::operator=(rhs());
 }
 
 

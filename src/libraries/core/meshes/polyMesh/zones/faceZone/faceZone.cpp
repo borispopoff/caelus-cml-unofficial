@@ -39,7 +39,8 @@ namespace CML
 
 const char* const CML::faceZone::labelsName = "faceLabels";
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void CML::faceZone::calcFaceZonePatch() const
 {
@@ -187,14 +188,14 @@ CML::faceZone::faceZone
 CML::faceZone::faceZone
 (
     const word& name,
-    const Xfer<labelList>& addr,
-    const Xfer<boolList>& fm,
+    labelList&& addr,
+    boolList&& fm,
     const label index,
     const faceZoneMesh& zm
 )
 :
-    zone(name, addr, index),
-    flipMap_(fm),
+    zone(name, move(addr), index),
+    flipMap_(move(fm)),
     zoneMesh_(zm),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -249,14 +250,14 @@ CML::faceZone::faceZone
 CML::faceZone::faceZone
 (
     const faceZone& fz,
-    const Xfer<labelList>& addr,
-    const Xfer<boolList>& fm,
+    labelList&& addr,
+    boolList&& fm,
     const label index,
     const faceZoneMesh& zm
 )
 :
-    zone(fz, addr, index),
-    flipMap_(fm),
+    zone(fz, move(addr), index),
+    flipMap_(move(fm)),
     zoneMesh_(zm),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -516,6 +517,24 @@ void CML::faceZone::writeDict(Ostream& os) const
     writeEntry(os, "flipMap", flipMap());
 
     os  << token::END_BLOCK << endl;
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+void CML::faceZone::operator=(const faceZone& zn)
+{
+    clearAddressing();
+    zone::operator=(zn);
+    flipMap_ = zn.flipMap_;
+}
+
+
+void CML::faceZone::operator=(faceZone&& zn)
+{
+    clearAddressing();
+    zone::operator=(move(zn));
+    flipMap_ = move(zn.flipMap_);
 }
 
 

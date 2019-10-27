@@ -40,7 +40,6 @@ Note
 #include "label.hpp"
 #include "uLabel.hpp"
 #include "word.hpp"
-#include "Xfer.hpp"
 #include "className.hpp"
 #include <initializer_list>
 
@@ -205,8 +204,8 @@ public:
         //- Construct as copy
         HashTable(const HashTable<T, Key, Hash>&);
 
-        //- Construct by transferring the parameter contents
-        HashTable(const Xfer<HashTable<T, Key, Hash>>&);
+        //- More Constructor
+        HashTable(HashTable<T, Key, Hash>&&);
 
         //- Construct from an initializer list
         HashTable(std::initializer_list<Tuple2<Key, T>>);
@@ -293,9 +292,6 @@ public:
             //  and annul the argument table.
             void transfer(HashTable<T, Key, Hash>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<HashTable<T, Key, Hash>> xfer();
-
 
     // Member Operators
 
@@ -308,8 +304,11 @@ public:
         //- Find and return a hashedEntry, create it null if not present
         inline T& operator()(const Key&);
 
-        //- Assignment
+        //- Assignment operator
         void operator=(const HashTable<T, Key, Hash>&);
+
+        //- Move assignment operator
+        void operator=(HashTable<T, Key, Hash>&&);
 
         //- Assignment to an initializer list
         void operator=(std::initializer_list<Tuple2<Key, T>>);
@@ -622,14 +621,6 @@ inline bool CML::HashTable<T, Key, Hash>::set
 )
 {
     return this->set(key, newEntry, false);
-}
-
-
-template<class T, class Key, class Hash>
-inline CML::Xfer<CML::HashTable<T, Key, Hash>>
-CML::HashTable<T, Key, Hash>::xfer()
-{
-    return xferMove(*this);
 }
 
 
@@ -1099,7 +1090,7 @@ CML::HashTable<T, Key, Hash>::HashTable(const HashTable<T, Key, Hash>& ht)
 template<class T, class Key, class Hash>
 CML::HashTable<T, Key, Hash>::HashTable
 (
-    const Xfer<HashTable<T, Key, Hash>>& ht
+    HashTable<T, Key, Hash>&& ht
 )
 :
     HashTableCore(),
@@ -1107,7 +1098,7 @@ CML::HashTable<T, Key, Hash>::HashTable
     tableSize_(0),
     table_(nullptr)
 {
-    transfer(ht());
+    transfer(ht);
 }
 
 
@@ -1592,6 +1583,24 @@ void CML::HashTable<T, Key, Hash>::operator=
     {
         insert(iter.key(), *iter);
     }
+}
+
+
+template<class T, class Key, class Hash>
+void CML::HashTable<T, Key, Hash>::operator=
+(
+    HashTable<T, Key, Hash>&& rhs
+)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    transfer(rhs);
 }
 
 

@@ -56,12 +56,12 @@ CML::pointZone::pointZone
 CML::pointZone::pointZone
 (
     const word& name,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index,
     const pointZoneMesh& zm
 )
 :
-    zone(name, addr, index),
+    zone(name, move(addr), index),
     zoneMesh_(zm)
 {}
 
@@ -95,12 +95,12 @@ CML::pointZone::pointZone
 CML::pointZone::pointZone
 (
     const pointZone& pz,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index,
     const pointZoneMesh& zm
 )
 :
-    zone(pz, addr, index),
+    zone(pz, move(addr), index),
     zoneMesh_(zm)
 {}
 
@@ -198,21 +198,28 @@ void CML::pointZone::writeDict(Ostream& os) const
 void CML::pointZone::operator=(const pointZone& zn)
 {
     clearAddressing();
-    labelList::operator=(zn);
+    zone::operator=(zn);
+}
+
+
+void CML::pointZone::operator=(pointZone&& zn)
+{
+    clearAddressing();
+    zone::operator=(move(zn));
 }
 
 
 void CML::pointZone::operator=(const labelUList& addr)
 {
     clearAddressing();
-    labelList::operator=(addr);
+    zone::operator=(addr);
 }
 
 
-void CML::pointZone::operator=(const Xfer<labelList>& addr)
+void CML::pointZone::operator=(labelList&& addr)
 {
     clearAddressing();
-    labelList::operator=(addr);
+    zone::operator=(move(addr));
 }
 
 

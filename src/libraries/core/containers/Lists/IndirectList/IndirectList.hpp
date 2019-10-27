@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -23,7 +23,7 @@ Class
 Description
     A List with indirect addressing.
 
-SeeAlso
+See also
     CML::UIndirectList for a version without any allocation for the
     addressing.
 
@@ -71,8 +71,8 @@ protected:
         //- Construct by copying the addressing array
         explicit inline IndirectListAddressing(const labelUList& addr);
 
-        //- Construct by transferring addressing array
-        explicit inline IndirectListAddressing(const Xfer<List<label>>& addr);
+        //- Move constructor which moves the addressing array
+        explicit inline IndirectListAddressing(List<label>&& addr);
 
 
     // Member Functions
@@ -82,12 +82,11 @@ protected:
             //- Return the list addressing
             inline const List<label>& addressing() const;
 
+
         // Edit
 
             //- Reset addressing
             inline void resetAddressing(const labelUList&);
-            inline void resetAddressing(const Xfer<List<label>>&);
-
 };
 
 
@@ -103,10 +102,10 @@ class IndirectList
 {
     // Private Member Functions
 
-        //- Disable default assignment operator
+        //- Disallow default assignment operator
         void operator=(const IndirectList<T>&);
 
-        //- Disable assignment from UIndirectList
+        //- Disallow assignment from UIndirectList
         void operator=(const UIndirectList<T>&);
 
 
@@ -117,8 +116,8 @@ public:
         //- Construct given the complete list and the addressing array
         inline IndirectList(const UList<T>&, const labelUList&);
 
-        //- Construct given the complete list and by transferring addressing
-        inline IndirectList(const UList<T>&, const Xfer<List<label>>&);
+        //- Move constructor given the complete list and moves the addressing
+        inline IndirectList(const UList<T>&, List<label>&&);
 
         //- Copy constructor
         inline IndirectList(const IndirectList<T>&);
@@ -128,7 +127,6 @@ public:
 
 
     // Member Functions
-
 
         // Access
 

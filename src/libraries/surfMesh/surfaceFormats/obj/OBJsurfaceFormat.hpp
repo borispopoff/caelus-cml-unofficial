@@ -281,7 +281,7 @@ bool CML::fileFormats::OBJsurfaceFormat<Face>::read
     // transfer to normal lists
     this->storedPoints().transfer(dynPoints);
 
-    this->sortFacesAndStore(dynFaces.xfer(), dynZones.xfer(), sorted);
+    this->sortFacesAndStore(move(dynFaces), move(dynZones), sorted);
 
     // add zones, culling empty ones
     this->addZones(dynSizes, dynNames, true);

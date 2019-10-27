@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -320,7 +320,7 @@ CML::wordList CML::fileName::components(const char delimiter) const
     }
 
     // Transfer to wordList
-    return wordList(wrdList.xfer());
+    return wordList(move(wrdList));
 }
 
 
@@ -339,6 +339,12 @@ CML::word CML::fileName::component
 void CML::fileName::operator=(const fileName& str)
 {
     string::operator=(str);
+}
+
+
+void CML::fileName::operator=(fileName&& str)
+{
+    string::operator=(move(str));
 }
 
 

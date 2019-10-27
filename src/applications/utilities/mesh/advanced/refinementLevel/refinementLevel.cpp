@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -205,9 +205,9 @@ int main(int argc, char *argv[])
             runTime.timeName(),
             runTime
         ),
-        xferCopy(mesh.points()),   // could we safely re-use the data?
-        xferCopy(mesh.faces()),
-        xferCopy(mesh.cells())
+        clone(mesh.points()),   // could we safely re-use the data?
+        clone(mesh.faces()),
+        clone(mesh.cells())
     );
 
     // Add the boundary patches

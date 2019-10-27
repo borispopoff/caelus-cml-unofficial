@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -168,6 +168,24 @@ CML::IOdictionary::IOdictionary(const IOobject& io, Istream& is)
 }
 
 
+CML::IOdictionary::IOdictionary
+(
+    const IOdictionary& dict
+)
+:
+    regIOobject(dict),
+    dictionary(dict)
+{}
+
+
+CML::IOdictionary::IOdictionary
+(
+    IOdictionary&& dict
+)
+:
+    regIOobject(move(dict)),
+    dictionary(move(dict))
+{}
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
 CML::IOdictionary::~IOdictionary()
@@ -187,6 +205,12 @@ const CML::word& CML::IOdictionary::name() const
 void CML::IOdictionary::operator=(const IOdictionary& rhs)
 {
     dictionary::operator=(rhs);
+}
+
+
+void CML::IOdictionary::operator=(IOdictionary&& rhs)
+{
+    dictionary::operator=(move(rhs));
 }
 
 

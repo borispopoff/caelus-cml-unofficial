@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -91,6 +91,9 @@ public:
         //- Copy constructor
         DictionaryBase(const DictionaryBase&);
 
+        //- Move constructor
+        DictionaryBase(DictionaryBase&&);
+
         //- Construct from Istream using given Istream constructor class
         template<class INew>
         DictionaryBase(Istream&, const INew&);
@@ -99,7 +102,7 @@ public:
         DictionaryBase(Istream&);
 
 
-    // Member Functions
+    // Member functions
 
         // Search and lookup
 
@@ -145,7 +148,7 @@ public:
             void transfer(DictionaryBase<IDLListType, T>&);
 
 
-    // Member Operators
+    // Member operators
 
         void operator=(const DictionaryBase&);
 
@@ -212,6 +215,17 @@ CML::DictionaryBase<IDLListType, T>::DictionaryBase
 {
     addEntries();
 }
+
+
+template<class IDLListType, class T>
+CML::DictionaryBase<IDLListType, T>::DictionaryBase
+(
+    DictionaryBase&& dict
+)
+:
+    IDLListType(move(dict)),
+    hashedTs_(move(dict.hashedTs_))
+{}
 
 
 template<class IDLListType, class T>

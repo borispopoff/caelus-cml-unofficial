@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -48,7 +48,7 @@ class SortableList
 :
     public List<T>
 {
-    // Private Data
+    // Private data
 
         //- Original indices
         labelList indices_;
@@ -66,8 +66,8 @@ public:
         //- Construct from UList, sorting immediately
         explicit SortableList(const UList<T>&);
 
-        //- Construct from transferred List, sorting immediately.
-        explicit SortableList(const Xfer<List<T>>&);
+        //- Move constructor transferring List, sorting immediately
+        explicit SortableList(List<T>&&);
 
         //- Construct given size. Sort later on
         //  The indices remain empty until the list is sorted
@@ -79,6 +79,9 @@ public:
 
         //- Copy constructor
         SortableList(const SortableList<T>&);
+
+        //- Move constructor
+        SortableList(SortableList<T>&&);
 
         //- Construct from an initializer list, sorting immediately
         SortableList(std::initializer_list<T>);
@@ -111,9 +114,6 @@ public:
         //- Reverse (stable) sort the list
         void reverseSort();
 
-        //- Transfer contents to the Xfer container as a plain List
-        inline Xfer<List<T>> xfer();
-
 
     // Member Operators
 
@@ -125,6 +125,9 @@ public:
 
         //- Assignment operator. Takes linear time
         inline void operator=(const SortableList<T>&);
+
+        //- Move assignment operator
+        inline void operator=(SortableList<T>&&);
 
         //- Assignment to an initializer list
         void operator=(std::initializer_list<T>);
@@ -173,9 +176,9 @@ CML::SortableList<T>::SortableList(const UList<T>& values)
 
 
 template<class T>
-CML::SortableList<T>::SortableList(const Xfer<List<T>>& values)
+CML::SortableList<T>::SortableList(List<T>&& values)
 :
-    List<T>(values)
+    List<T>(move(values))
 {
     sort();
 }
@@ -200,6 +203,14 @@ CML::SortableList<T>::SortableList(const SortableList<T>& lst)
 :
     List<T>(lst),
     indices_(lst.indices())
+{}
+
+
+template<class T>
+CML::SortableList<T>::SortableList(SortableList<T>&& lst)
+:
+    List<T>(move(lst)),
+    indices_(move(lst.indices()))
 {}
 
 
@@ -262,13 +273,6 @@ void CML::SortableList<T>::reverseSort()
 }
 
 
-template<class T>
-CML::Xfer<CML::List<T>> CML::SortableList<T>::xfer()
-{
-    return xferMoveTo<List<T>>(*this);
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class T>
@@ -291,6 +295,14 @@ inline void CML::SortableList<T>::operator=(const SortableList<T>& lst)
 {
     List<T>::operator=(lst);
     indices_ = lst.indices();
+}
+
+
+template<class T>
+inline void CML::SortableList<T>::operator=(SortableList<T>&& lst)
+{
+    List<T>::operator=(move(lst));
+    indices_ = move(lst.indices());
 }
 
 

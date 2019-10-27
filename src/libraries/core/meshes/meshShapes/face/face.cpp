@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -631,7 +631,7 @@ CML::face CML::face::reverseFace() const
         newList[pointi] = f[size() - pointi];
     }
 
-    return face(xferMove(newList));
+    return face(move(newList));
 }
 
 

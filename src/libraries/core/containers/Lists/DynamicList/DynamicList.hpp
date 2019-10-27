@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -81,7 +81,7 @@ class DynamicList
         "Invalid sizing parameters"
     );
 
-    // Private Data
+    // Private data
 
         //- The capacity (allocated size) of the underlying list.
         label capacity_;
@@ -109,6 +109,9 @@ public:
         //- Copy constructor
         inline DynamicList(const DynamicList<T, SizeInc, SizeMult, SizeDiv>&);
 
+        //- Move constructor
+        inline DynamicList(DynamicList<T, SizeInc, SizeMult, SizeDiv>&&);
+
         //- Construct from UList. Size set to UList size.
         //  Also constructs from DynamicList with different sizing parameters.
         explicit inline DynamicList(const UList<T>&);
@@ -116,8 +119,8 @@ public:
         //- Construct from UIndirectList. Size set to UIndirectList size.
         explicit inline DynamicList(const UIndirectList<T>&);
 
-        //- Construct by transferring the parameter contents
-        explicit inline DynamicList(const Xfer<List<T>>&);
+        //- Move constructor
+        explicit inline DynamicList(List<T>&&);
 
         //- Construct from Istream. Size set to size of list read.
         explicit DynamicList(Istream&);
@@ -180,9 +183,6 @@ public:
             //- Transfer contents of the argument DynamicList into this.
             inline void transfer(DynamicList<T, SizeInc, SizeMult, SizeDiv>&);
 
-            //- Transfer contents to the Xfer container as a plain List
-            inline Xfer<List<T>> xfer();
-
 
         // Member Operators
 
@@ -220,8 +220,17 @@ public:
                 const DynamicList<T, SizeInc, SizeMult, SizeDiv>&
             );
 
+            //- Move assignment operator
+            inline void operator=
+            (
+                DynamicList<T, SizeInc, SizeMult, SizeDiv>&&
+            );
+
             //- Assignment to UList
             inline void operator=(const UList<T>&);
+
+            //- Move assignment to List
+            inline void operator=(List<T>&&);
 
             //- Assignment to UIndirectList
             inline void operator=(const UIndirectList<T>&);
@@ -234,7 +243,7 @@ public:
             typename UList<T>::iterator erase(typename UList<T>::iterator);
 
 
-        // IOstream Operators
+        // IOstream operators
 
             // Write DynamicList to Ostream.
             friend Ostream& operator<< <T, SizeInc, SizeMult, SizeDiv>
@@ -261,11 +270,8 @@ public:
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList()
 :
-    List<T>(0),
     capacity_(0)
-{
-    List<T>::size(0);
-}
+{}
 
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
@@ -308,6 +314,19 @@ inline CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 (
+    DynamicList<T, SizeInc, SizeMult, SizeDiv>&& lst
+)
+:
+    List<T>(move(lst)),
+    capacity_(lst.capacity_)
+{
+    lst.capacity_ = 0;
+}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
+(
     const UList<T>& lst
 )
 :
@@ -330,10 +349,10 @@ inline CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 (
-    const Xfer<List<T>>& lst
+    List<T>&& lst
 )
 :
-    List<T>(lst),
+    List<T>(move(lst)),
     capacity_(List<T>::size())
 {}
 
@@ -362,6 +381,7 @@ inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::setCapacity
         // Truncate addressed sizes too
         nextFree = capacity_;
     }
+
     // We could also enforce SizeInc granularity when (!SizeMult || !SizeDiv)
 
     List<T>::setSize(capacity_);
@@ -490,15 +510,6 @@ CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::shrink()
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline void
-CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::transfer(List<T>& lst)
-{
-    capacity_ = lst.size();
-    List<T>::transfer(lst);   // take over storage, clear addressing for lst.
-}
-
-
-template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-inline void
 CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::transfer
 (
     DynamicList<T, SizeInc, SizeMult, SizeDiv>& lst
@@ -512,10 +523,12 @@ CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::transfer
 
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-inline CML::Xfer<CML::List<T>>
-CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::xfer()
+inline void
+CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::transfer(List<T>& lst)
 {
-    return xferMoveTo< List<T>>(*this);
+    // Take over storage, clear addressing for lst.
+    capacity_ = lst.size();
+    List<T>::transfer(lst);
 }
 
 
@@ -648,6 +661,41 @@ inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::operator=
         List<T>::operator=(lst);
         capacity_ = List<T>::size();
     }
+}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::operator=
+(
+    DynamicList<T, SizeInc, SizeMult, SizeDiv>&& lst
+)
+{
+    if (this == &lst)
+    {
+        FatalErrorInFunction
+            << "Attempted assignment to self" << abort(FatalError);
+    }
+
+    List<T>::operator=(move(lst));
+    capacity_ = lst.capacity_;
+    lst.capacity_ = 0;
+}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline void CML::DynamicList<T, SizeInc, SizeMult, SizeDiv>::operator=
+(
+    List<T>&& lst
+)
+{
+    if (this == &lst)
+    {
+        FatalErrorInFunction
+            << "Attempted assignment to self" << abort(FatalError);
+    }
+
+    List<T>::operator=(move(lst));
+    capacity_ = List<T>::size();
 }
 
 

@@ -58,7 +58,7 @@ class extrudedMesh
 
         //- Construct and return the extruded mesh points
         template<class FaceList, class PointField>
-        Xfer<pointField> extrudedPoints
+        pointField extrudedPoints
         (
             const PrimitivePatch<FaceList, PointField>& extrudePatch,
             const extrudeModel&
@@ -66,7 +66,7 @@ class extrudedMesh
 
         //- Construct and return the extruded mesh faces
         template<class FaceList, class PointField>
-        Xfer<faceList> extrudedFaces
+        faceList extrudedFaces
         (
             const PrimitivePatch<FaceList, PointField>& extrudePatch,
             const extrudeModel&
@@ -74,7 +74,7 @@ class extrudedMesh
 
         //- Construct and return the extruded mesh cells
         template<class FaceList, class PointField>
-        Xfer<cellList> extrudedCells
+        cellList extrudedCells
         (
             const PrimitivePatch<FaceList, PointField>& extrudePatch,
             const extrudeModel&
@@ -117,7 +117,7 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class FaceList, class PointField>
-CML::Xfer<CML::pointField> CML::extrudedMesh::extrudedPoints
+CML::pointField CML::extrudedMesh::extrudedPoints
 (
     const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
@@ -145,13 +145,12 @@ CML::Xfer<CML::pointField> CML::extrudedMesh::extrudedPoints
         }
     }
 
-    // return points for transferring
-    return xferMove(ePoints);
+    return ePoints;
 }
 
 
 template<class FaceList, class PointField>
-CML::Xfer<CML::faceList> CML::extrudedMesh::extrudedFaces
+CML::faceList CML::extrudedMesh::extrudedFaces
 (
     const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
@@ -271,13 +270,12 @@ CML::Xfer<CML::faceList> CML::extrudedMesh::extrudedFaces
             );
     }
 
-    // return points for transferring
-    return xferMove(eFaces);
+    return eFaces;
 }
 
 
 template<class FaceList, class PointField>
-CML::Xfer<CML::cellList> CML::extrudedMesh::extrudedCells
+CML::cellList CML::extrudedMesh::extrudedCells
 (
     const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
@@ -378,8 +376,7 @@ CML::Xfer<CML::cellList> CML::extrudedMesh::extrudedCells
         facei++;
     }
 
-    // return points for transferring
-    return xferMove(eCells);
+    return eCells;
 }
 
 

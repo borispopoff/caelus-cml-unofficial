@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -177,7 +177,7 @@ bool CML::triSurface::readOBJ(const fileName& OBJfileName)
 
 
     // Transfer DynamicLists to straight ones.
-    pointField allPoints(points.xfer());
+    pointField allPoints(move(points));
 
     // Create triSurface
     *this = triSurface(faces, patches, allPoints, true);

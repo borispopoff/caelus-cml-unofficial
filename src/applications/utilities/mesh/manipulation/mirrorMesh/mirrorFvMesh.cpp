@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -370,9 +370,9 @@ CML::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     mirrorMeshPtr_ = new fvMesh
     (
         io,
-        xferMove(newPoints),
-        xferMove(newFaces),
-        xferMove(newCells)
+        move(newPoints),
+        move(newFaces),
+        move(newCells)
     );
 
     fvMesh& pMesh = *mirrorMeshPtr_;

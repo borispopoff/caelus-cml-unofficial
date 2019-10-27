@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -59,10 +59,10 @@ extrudePatchMesh::extrudePatchMesh
             IOobject::NO_WRITE,
             true
         ),
-        xferCopy(pointField()),
-        xferCopy(faceList()),
-        xferCopy(labelList()),
-        xferCopy(labelList()),
+        pointField(),
+        faceList(),
+        labelList(),
+        labelList(),
         false
     ),
     extrudedPatch_(patch.patch()),
@@ -91,10 +91,10 @@ extrudePatchMesh::extrudePatchMesh
             IOobject::NO_WRITE,
             true
         ),
-        xferCopy(pointField()),
-        xferCopy(faceList()),
-        xferCopy(labelList()),
-        xferCopy(labelList()),
+        pointField(),
+        faceList(),
+        labelList(),
+        labelList(),
         false
     ),
     extrudedPatch_(patch.patch()),

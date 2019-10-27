@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014-2015 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -159,7 +159,7 @@ public:
                 const GeometricBoundaryField&
             );
 
-            //- Construct as copy
+            //- Copy constructor
             //  Dangerous because Field may be set to a field which gets deleted
             //  Need new type of BoundaryField, one which is part of a geometric
             //  field for which snGrad etc. may be called and a free standing
@@ -167,6 +167,16 @@ public:
             GeometricBoundaryField
             (
                 const GeometricBoundaryField&
+            );
+
+            //- Move constructor
+            //  Dangerous because Field may be set to a field which gets deleted
+            //  Need new type of BoundaryField, one which is part of a geometric
+            //  field for which snGrad etc. may be called and a free standing
+            //  BoundaryField for which such operations are unavailable.
+            GeometricBoundaryField
+            (
+                GeometricBoundaryField&&
             );
 
             //- Construct from dictionary
@@ -208,8 +218,10 @@ public:
 
         // Member operators
 
-            //- Assignment to BoundaryField<Type, PatchField, BoundaryMesh>
+            //- Assignment operator
             void operator=(const GeometricBoundaryField&);
+            //- Move assignment operator
+            void operator=(GeometricBoundaryField&&);
 
             //- Assignment to FieldField<PatchField, Type>
             void operator=(const FieldField<PatchField, Type>&);
@@ -343,10 +355,16 @@ public:
             const dictionary&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         GeometricField
         (
             const GeometricField<Type, PatchField, GeoMesh>&
+        );
+
+        //- Move constructor
+        GeometricField
+        (
+            GeometricField<Type, PatchField, GeoMesh>&&
         );
 
         //- Construct as copy of tmp<GeometricField> deleting argument
@@ -542,6 +560,7 @@ public:
     // Member operators
 
         void operator=(const GeometricField<Type, PatchField, GeoMesh>&);
+        void operator=(GeometricField<Type, PatchField, GeoMesh>&&);
         void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
         void operator=(const dimensioned<Type>&);
         void operator=(const zero&);
@@ -1062,9 +1081,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy"
-            << endl << this->info() << endl;
+        InfoInFunction
+            << "Constructing as copy" << endl << this->info() << endl;
     }
 
     if (gf.field0Ptr_)
@@ -1077,6 +1095,35 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     this->writeOpt() = IOobject::NO_WRITE;
 }
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
+(
+    GeometricField<Type, PatchField, GeoMesh>&& gf
+)
+:
+     DimensionedField<Type, GeoMesh>(move(gf)),
+    timeIndex_(gf.timeIndex()),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
+    boundaryField_(move(gf.boundaryField_))
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing by moving" << endl << this->info() << endl;
+    }
+
+    if (gf.field0Ptr_)
+    {
+        field0Ptr_ = gf.field0Ptr_;
+        gf.field0Ptr_ = nullptr;
+    }
+
+    this->writeOpt() = IOobject::NO_WRITE;
+}
+
 
 // construct as copy of tmp<GeometricField> deleting argument
 #ifdef ConstructFromTmp
@@ -1098,9 +1145,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy"
-            << endl << this->info() << endl;
+        InfoInFunction
+            << "Constructing from tmp" << endl << this->info() << endl;
     }
 
     this->writeOpt() = IOobject::NO_WRITE;
@@ -1126,8 +1172,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting IO params"
+        InfoInFunction
+            << "Constructing as copy resetting IO params"
             << endl << this->info() << endl;
     }
 
@@ -1163,8 +1209,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing from tmp resetting IO params"
+        InfoInFunction
+            << "Constructing from tmp resetting IO params"
             << endl << this->info() << endl;
     }
 
@@ -1191,8 +1237,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting name"
+        InfoInFunction
+            << "Constructing as copy resetting name"
             << endl << this->info() << endl;
     }
 
@@ -1229,8 +1275,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing from tmp resetting name"
+        InfoInFunction
+            << "Constructing from tmp resetting name"
             << endl << this->info() << endl;
     }
 
@@ -1255,8 +1301,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting IO params"
+        InfoInFunction
+            << "Constructing as copy resetting IO params"
             << endl << this->info() << endl;
     }
 
@@ -1298,8 +1344,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting IO params"
+        InfoInFunction
+            << "Constructing as copy resetting IO params and patch types"
             << endl << this->info() << endl;
     }
 
@@ -1403,7 +1449,8 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::storeOldTime() const
 
         if (debug)
         {
-            Info<< "Storing old time field for field" << endl
+            InfoInFunction
+                << "Storing old time field for field" << endl
                 << this->info() << endl;
         }
 
@@ -1480,7 +1527,8 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::storePrevIter() const
     {
         if (debug)
         {
-            Info<< "Allocating previous iteration field" << endl
+            InfoInFunction
+                << "Allocating previous iteration field" << endl
                 << this->info() << endl;
         }
 
@@ -1755,10 +1803,32 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
 
     checkField(*this, gf, "=");
 
-    // only equate field contents not ID
+    // Only assign field contents not ID
 
     dimensionedInternalField() = gf.dimensionedInternalField();
     boundaryField() = gf.boundaryField();
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
+(
+    GeometricField<Type, PatchField, GeoMesh>&& gf
+)
+{
+    if (this == &gf)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    checkField(*this, gf, "=");
+
+    // Only assign field contents not ID
+
+    dimensionedInternalField() = move(gf.dimensionedInternalField());
+    boundaryField() = move(gf.boundaryField());
 }
 
 
@@ -1779,7 +1849,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
 
     checkField(*this, gf, "=");
 
-    // only equate field contents not ID
+    // Only assign field contents not ID
 
     this->dimensions() = gf.dimensions();
 
@@ -1964,11 +2034,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const BoundaryMesh&, "
-               "const Field<Type>&, const word&)"
-            << endl;
+        InfoInFunction << endl;
     }
 
     forAll(bmesh_, patchi)
@@ -2002,11 +2068,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const BoundaryMesh&, "
-               "const Field<Type>&, const wordList&, const wordList&)"
-            << endl;
+        InfoInFunction << endl;
     }
 
     if
@@ -2073,11 +2135,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const BoundaryMesh&, "
-               "const Field<Type>&, const PatchField<Type>List&)"
-            << endl;
+        InfoInFunction << endl;
     }
 
     forAll(bmesh_, patchi)
@@ -2101,11 +2159,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const GeometricBoundaryField<Type, "
-               "PatchField, BoundaryMesh>&)"
-            << endl;
+        InfoInFunction << endl;
     }
 
     forAll(bmesh_, patchi)
@@ -2133,11 +2187,25 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const GeometricBoundaryField<Type, "
-               "PatchField, BoundaryMesh>&)"
-            << endl;
+        InfoInFunction << endl;
+    }
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+GeometricBoundaryField
+(
+    typename GeometricField<Type, PatchField, GeoMesh>::
+    GeometricBoundaryField&& btf
+)
+:
+    FieldField<PatchField, Type>(move(btf)),
+    bmesh_(btf.bmesh_)
+{
+    if (debug)
+    {
+        InfoInFunction << endl;
     }
 }
 
@@ -2217,9 +2285,7 @@ updateCoeffs()
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "updateCoeffs()" << endl;
+        InfoInFunction << endl;
     }
 
     forAll(*this, patchi)
@@ -2235,9 +2301,7 @@ evaluate()
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "evaluate()" << endl;
+        InfoInFunction << endl;
     }
 
     if
@@ -2421,6 +2485,18 @@ operator=
 )
 {
     FieldField<PatchField, Type>::operator=(bf);
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+operator=
+(
+    typename GeometricField<Type, PatchField, GeoMesh>::
+    GeometricBoundaryField&& bf
+)
+{
+    FieldField<PatchField, Type>::operator=(move(bf));
 }
 
 

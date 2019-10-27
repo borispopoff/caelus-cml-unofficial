@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -142,12 +142,12 @@ public:
             const polyMesh::cellDecomposition decompMode
         );
 
-        //- Construct from mesh and subset of cells, transferring contents
+        //- Move construct from mesh and subset of cells, transferring contents
         treeDataCell
         (
             const bool cacheBb,
             const polyMesh&,
-            const Xfer<labelList>&,
+            labelList&&,
             const polyMesh::cellDecomposition decompMode
         );
 

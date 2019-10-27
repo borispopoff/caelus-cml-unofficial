@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2017 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 Copyright (C) 2015 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
@@ -127,10 +127,10 @@ CML::autoPtr<CML::fvMesh> CML::loadOrCreateMesh
         fvMesh dummyMesh
         (
             noReadIO,
-            xferCopy(pointField()),
-            xferCopy(faceList()),
-            xferCopy(labelList()),
-            xferCopy(labelList()),
+            pointField(),
+            faceList(),
+            labelList(),
+            labelList(),
             false
         );
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2015-2017 OpenFOAM Foundation
+Copyright (C) 2015-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -194,12 +194,12 @@ public:
         //- Construct null
         mapDistributeBase();
 
-        //- Construct from components
+        //- Move construct from components
         mapDistributeBase
         (
             const label constructSize,
-            const Xfer<labelListList>& subMap,
-            const Xfer<labelListList>& constructMap,
+            const labelListList&& subMap,
+            const labelListList&& constructMap,
             const bool subHasFlip = false,
             const bool constructHasFlip = false
         );
@@ -236,11 +236,11 @@ public:
             const int tag = Pstream::msgType()
         );
 
-        //- Construct by transferring parameter content
-        mapDistributeBase(const Xfer<mapDistributeBase>&);
-
         //- Construct copy
         mapDistributeBase(const mapDistributeBase&);
+
+        //- Move constructor
+        mapDistributeBase(mapDistributeBase&&);
 
         //- Construct from Istream
         mapDistributeBase(Istream&);
@@ -326,9 +326,6 @@ public:
 
             //- Transfer the contents of the argument and annul the argument.
             void transfer(mapDistributeBase&);
-
-            //- Transfer contents to the Xfer container
-            Xfer<mapDistributeBase> xfer();
 
             //- Helper for construct from globalIndex. Renumbers element
             //  (in globalIndex numbering) into compact indices.
@@ -460,9 +457,12 @@ public:
                 NotImplemented;
             }
 
+
     // Member Operators
 
         void operator=(const mapDistributeBase&);
+        void operator=(mapDistributeBase&&);
+
 
     // IOstream operators
 
@@ -471,7 +471,6 @@ public:
 
         //- Write dictionary to Ostream
         friend Ostream& operator<<(Ostream&, const mapDistributeBase&);
-
 };
 
 

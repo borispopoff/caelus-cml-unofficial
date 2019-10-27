@@ -1226,7 +1226,7 @@ autoPtr<mapDistributePolyMesh> redistributeAndWrite
 
     return autoPtr<mapDistributePolyMesh>
     (
-        new mapDistributePolyMesh(map.xfer())
+        new mapDistributePolyMesh(std::move(map))
     );
 }
 
@@ -1288,8 +1288,8 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
         mapDistribute cellMap
         (
             baseMesh.nCells(),
-            cellSubMap.xfer(),
-            cellAddressing.xfer()
+            std::move(cellSubMap),
+            std::move(cellAddressing)
         );
 
         labelListList faceSubMap(Pstream::nProcs());
@@ -1298,8 +1298,8 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
         mapDistribute faceMap
         (
             baseMesh.nFaces(),
-            faceSubMap.xfer(),
-            faceAddressing.xfer(),
+            std::move(faceSubMap),
+            std::move(faceAddressing),
             false,          //subHasFlip
             true            //constructHasFlip
         );
@@ -1310,8 +1310,8 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
         mapDistribute pointMap
         (
             baseMesh.nPoints(),
-            pointSubMap.xfer(),
-            pointAddressing.xfer()
+            std::move(pointSubMap),
+            std::move(pointAddressing)
         );
 
         labelListList patchSubMap(Pstream::nProcs());
@@ -1322,8 +1322,8 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
         mapDistribute patchMap
         (
             baseMesh.boundaryMesh().size(),
-            patchSubMap.xfer(),
-            boundaryAddressing.xfer()
+            std::move(patchSubMap),
+            std::move(boundaryAddressing)
         );
 
         const label nOldPoints = mesh.nPoints();
@@ -1346,12 +1346,12 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
                 nOldPoints,
                 nOldFaces,
                 nOldCells,
-                oldPatchStarts.xfer(),
-                oldPatchNMeshPoints.xfer(),
-                pointMap.xfer(),
-                faceMap.xfer(),
-                cellMap.xfer(),
-                patchMap.xfer()
+                std::move(oldPatchStarts),
+                std::move(oldPatchNMeshPoints),
+                std::move(pointMap),
+                std::move(faceMap),
+                std::move(cellMap),
+                std::move(patchMap)
             )
         );
     }
@@ -1364,8 +1364,8 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
         mapDistribute cellMap
         (
             0,
-            cellSubMap.xfer(),
-            cellConstructMap.xfer()
+            std::move(cellSubMap),
+            std::move(cellConstructMap)
         );
 
         labelListList faceSubMap(Pstream::nProcs());
@@ -1375,8 +1375,8 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
         mapDistribute faceMap
         (
             0,
-            faceSubMap.xfer(),
-            faceConstructMap.xfer(),
+            std::move(faceSubMap),
+            std::move(faceConstructMap),
             false,          //subHasFlip
             true            //constructHasFlip
         );
@@ -1388,8 +1388,8 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
         mapDistribute pointMap
         (
             0,
-            pointSubMap.xfer(),
-            pointConstructMap.xfer()
+            std::move(pointSubMap),
+            std::move(pointConstructMap)
         );
 
         labelListList patchSubMap(Pstream::nProcs());
@@ -1401,8 +1401,8 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
         mapDistribute patchMap
         (
             0,
-            patchSubMap.xfer(),
-            patchConstructMap.xfer()
+            std::move(patchSubMap),
+            std::move(patchConstructMap)
         );
 
         const label nOldPoints = mesh.nPoints();
@@ -1425,12 +1425,12 @@ autoPtr<mapDistributePolyMesh> createReconstructMap
                 nOldPoints,
                 nOldFaces,
                 nOldCells,
-                oldPatchStarts.xfer(),
-                oldPatchNMeshPoints.xfer(),
-                pointMap.xfer(),
-                faceMap.xfer(),
-                cellMap.xfer(),
-                patchMap.xfer()
+                std::move(oldPatchStarts),
+                std::move(oldPatchNMeshPoints),
+                std::move(pointMap),
+                std::move(faceMap),
+                std::move(cellMap),
+                std::move(patchMap)
             )
         );
     }

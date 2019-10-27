@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -77,8 +77,8 @@ public:
         //- Construct from components
         globalIndex(const labelList& offsets);
 
-        //- Construct from components
-        inline globalIndex(const Xfer<labelList>& offsets);
+        //- Move constructor from components
+        inline globalIndex(labelList&& offsets);
 
         //- Construct from Istream
         globalIndex(Istream& is);

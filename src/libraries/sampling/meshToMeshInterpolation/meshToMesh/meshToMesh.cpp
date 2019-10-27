@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2018 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -82,7 +82,7 @@ CML::labelList CML::meshToMesh::maskCells
         Pout<< "participating source mesh cells: " << cells.size() << endl;
     }
 
-    return cells;
+    return move(cells);
 }
 
 
@@ -196,10 +196,10 @@ void CML::meshToMesh::calculate(const word& methodName)
                 tgtRegion_.time(),
                 IOobject::NO_READ
             ),
-            xferMove(newTgtPoints),
-            xferMove(newTgtFaces),
-            xferMove(newTgtFaceOwners),
-            xferMove(newTgtFaceNeighbours),
+            move(newTgtPoints),
+            move(newTgtFaces),
+            move(newTgtFaceOwners),
+            move(newTgtFaceNeighbours),
             false                                   // no parallel comms
         );
 

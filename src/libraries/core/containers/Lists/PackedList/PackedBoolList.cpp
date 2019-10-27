@@ -257,7 +257,7 @@ CML::label CML::PackedBoolList::subset(const UIndirectList<label>& indices)
 }
 
 
-CML::Xfer<CML::labelList> CML::PackedBoolList::used() const
+CML::labelList CML::PackedBoolList::used() const
 {
     labelList lst(this->count());
 
@@ -276,11 +276,12 @@ CML::Xfer<CML::labelList> CML::PackedBoolList::used() const
         lst.setSize(nElem);
     }
 
-    return lst.xfer();
+    return lst;
 }
 
 
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
+
 void CML::PackedBoolList::operator=(const CML::UList<bool>& lst)
 {
     this->setSize(lst.size());

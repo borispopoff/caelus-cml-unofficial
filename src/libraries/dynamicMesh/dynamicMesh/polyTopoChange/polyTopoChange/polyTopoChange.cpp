@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -3086,10 +3086,10 @@ CML::autoPtr<CML::mapPolyMesh> CML::polyTopoChange::changeMesh
 
         mesh.resetPrimitives
         (
-            xferMove(renumberedMeshPoints),
-            faces_.xfer(),
-            faceOwner_.xfer(),
-            faceNeighbour_.xfer(),
+            move(renumberedMeshPoints),
+            move(faces_),
+            move(faceOwner_),
+            move(faceNeighbour_),
             patchSizes,
             patchStarts,
             syncParallel
@@ -3104,10 +3104,10 @@ CML::autoPtr<CML::mapPolyMesh> CML::polyTopoChange::changeMesh
         // Set new points.
         mesh.resetPrimitives
         (
-            xferMove(newPoints),
-            faces_.xfer(),
-            faceOwner_.xfer(),
-            faceNeighbour_.xfer(),
+            move(newPoints),
+            move(faces_),
+            move(faceOwner_),
+            move(faceNeighbour_),
             patchSizes,
             patchStarts,
             syncParallel
@@ -3332,10 +3332,10 @@ CML::autoPtr<CML::mapPolyMesh> CML::polyTopoChange::makeMesh
         new fvMesh
         (
             io,
-            xferMove(newPoints),
-            faces_.xfer(),
-            faceOwner_.xfer(),
-            faceNeighbour_.xfer()
+            move(newPoints),
+            move(faces_),
+            move(faceOwner_),
+            move(faceNeighbour_)
         )
     );
     fvMesh& newMesh = newMeshPtr();

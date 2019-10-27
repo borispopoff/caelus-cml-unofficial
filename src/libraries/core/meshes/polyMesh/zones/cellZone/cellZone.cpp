@@ -56,12 +56,12 @@ CML::cellZone::cellZone
 CML::cellZone::cellZone
 (
     const word& name,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index,
     const cellZoneMesh& zm
 )
 :
-    zone(name, addr, index),
+    zone(name, move(addr), index),
     zoneMesh_(zm)
 {}
 
@@ -91,15 +91,16 @@ CML::cellZone::cellZone
     zoneMesh_(zm)
 {}
 
+
 CML::cellZone::cellZone
 (
     const cellZone& cz,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index,
     const cellZoneMesh& zm
 )
 :
-    zone(cz, addr, index),
+    zone(cz, move(addr), index),
     zoneMesh_(zm)
 {}
 
@@ -146,31 +147,28 @@ void CML::cellZone::writeDict(Ostream& os) const
 void CML::cellZone::operator=(const cellZone& zn)
 {
     clearAddressing();
-    labelList::operator=(zn);
+    zone::operator=(zn);
+}
+
+
+void CML::cellZone::operator=(cellZone&& zn)
+{
+    clearAddressing();
+    zone::operator=(move(zn));
 }
 
 
 void CML::cellZone::operator=(const labelUList& addr)
 {
     clearAddressing();
-    labelList::operator=(addr);
+    zone::operator=(addr);
 }
 
 
-void CML::cellZone::operator=(const Xfer<labelList>& addr)
+void CML::cellZone::operator=(labelList&& addr)
 {
     clearAddressing();
-    labelList::operator=(addr);
-}
-
-
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-CML::Ostream& CML::operator<<(Ostream& os, const cellZone& zn)
-{
-    zn.write(os);
-    os.check("Ostream& operator<<(Ostream&, const cellZone&");
-    return os;
+    zone::operator=(move(addr));
 }
 
 

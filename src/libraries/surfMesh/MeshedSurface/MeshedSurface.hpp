@@ -136,8 +136,8 @@ protected:
         //- Sort faces by zones and store sorted faces
         void sortFacesAndStore
         (
-            const Xfer<List<Face>>& unsortedFaces,
-            const Xfer<List<label>>& zoneIds,
+            List<Face>&& unsortedFaces,
+            List<label>&& zoneIds,
             const bool sorted
         );
 
@@ -182,17 +182,17 @@ public:
         //- Construct by transferring components (points, faces, zones).
         MeshedSurface
         (
-            const Xfer<pointField>&,
-            const Xfer<List<Face>>&,
-            const Xfer<surfZoneList>&
+            pointField&&,
+            List<Face>&&,
+            surfZoneList&&
         );
 
         //- Construct by transferring components (points, faces).
         //  Use zone information if available
         MeshedSurface
         (
-            const Xfer<pointField>&,
-            const Xfer<List<Face>>&,
+            pointField&&,
+            List<Face>&&,
             const labelUList& zoneSizes = labelUList(),
             const UList<word>& zoneNames = UList<word>()
         );
@@ -214,10 +214,10 @@ public:
         MeshedSurface(const surfMesh&);
 
         //- Construct by transferring the contents from a UnsortedMeshedSurface
-        MeshedSurface(const Xfer<UnsortedMeshedSurface<Face>>&);
+        MeshedSurface(UnsortedMeshedSurface<Face>&&);
 
         //- Construct by transferring the contents from a MeshedSurface
-        MeshedSurface(const Xfer<MeshedSurface<Face>>&);
+        MeshedSurface(MeshedSurface<Face>&&);
 
         //- Construct from file name (uses extension to determine type)
         MeshedSurface(const fileName&);
@@ -341,21 +341,21 @@ public:
             virtual void scalePoints(const scalar);
 
             //- Reset primitive data (points, faces and zones)
-            //  Note, optimized to avoid overwriting data (with Xfer::null)
+            //  Note, optimized to avoid overwriting data (with null)
             virtual void reset
             (
-                const Xfer<pointField >& points,
-                const Xfer<List<Face>>& faces,
-                const Xfer<surfZoneList>& zones
+                pointField&& points,
+                List<Face>&& faces,
+                surfZoneList&& zones
             );
 
             //- Reset primitive data (points, faces and zones)
-            //  Note, optimized to avoid overwriting data (with Xfer::null)
+            //  Note, optimized to avoid overwriting data (with null)
             virtual void reset
             (
-                const Xfer<List<point>>& points,
-                const Xfer<List<Face>>& faces,
-                const Xfer<surfZoneList >& zones
+                List<point>&& points,
+                List<Face>&& faces,
+                surfZoneList&& zones
             );
 
             //- Remove invalid faces
@@ -401,9 +401,6 @@ public:
 
             //- Transfer the contents of the argument and annul the argument
             void transfer(UnsortedMeshedSurface<Face>&);
-
-            //- Transfer contents to the Xfer container
-            Xfer<MeshedSurface<Face>> xfer();
 
 
         // Read
@@ -616,30 +613,30 @@ CML::MeshedSurface<Face>::MeshedSurface()
 template<class Face>
 CML::MeshedSurface<Face>::MeshedSurface
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face>>& faceLst,
-    const Xfer<surfZoneList>& zoneLst
+    pointField&& pointLst,
+    List<Face>&& faceLst,
+    surfZoneList&& zoneLst
 )
 :
     ParentType(List<Face>(), pointField()),
     zones_()
 {
-    reset(pointLst, faceLst, zoneLst);
+    reset(move(pointLst), move(faceLst), move(zoneLst));
 }
 
 
 template<class Face>
 CML::MeshedSurface<Face>::MeshedSurface
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face>>& faceLst,
+    pointField&& pointLst,
+    List<Face>&& faceLst,
     const labelUList& zoneSizes,
     const UList<word>& zoneNames
 )
 :
     ParentType(List<Face>(), pointField())
 {
-    reset(pointLst, faceLst, Xfer<surfZoneList>());
+    reset(move(pointLst), move(faceLst), surfZoneList());
 
     if (zoneSizes.size())
     {
@@ -698,9 +695,9 @@ CML::MeshedSurface<Face>::MeshedSurface(const surfMesh& mesh)
     // same face type as surfMesh
     MeshedSurface<face> surf
     (
-        xferCopy(mesh.points()),
-        xferCopy(mesh.faces()),
-        xferCopy(mesh.surfZones())
+        clone(mesh.points()),
+        clone(mesh.faces()),
+        clone(mesh.surfZones())
     );
 
     this->transcribe(surf);
@@ -773,9 +770,9 @@ CML::MeshedSurface<Face>::MeshedSurface
     // same face type as the polyBoundaryMesh
     MeshedSurface<face> surf
     (
-        xferCopy(bPoints),
-        xferCopy(bFaces),
-        xferMove(newZones)
+        pointField(bPoints),
+        faceList(bFaces),
+        move(newZones)
     );
 
     this->transcribe(surf);
@@ -830,38 +827,13 @@ CML::MeshedSurface<Face>::MeshedSurface
     // same face type as surfMesh
     MeshedSurface<face> surf
     (
-        xferMove(mesh.storedPoints()),
-        xferMove(mesh.storedFaces()),
-        xferMove(mesh.storedZones())
+        move(mesh.storedPoints()),
+        move(mesh.storedFaces()),
+        move(mesh.storedZones())
     );
 
     this->transcribe(surf);
 }
-
-
-template<class Face>
-CML::MeshedSurface<Face>::MeshedSurface
-(
-    const Xfer<UnsortedMeshedSurface<Face>>& surf
-)
-:
-    ParentType(List<Face>(), pointField())
-{
-    transfer(surf());
-}
-
-
-template<class Face>
-CML::MeshedSurface<Face>::MeshedSurface
-(
-    const Xfer<MeshedSurface<Face>>& surf
-)
-:
-    ParentType(List<Face>(), pointField())
-{
-    transfer(surf());
-}
-
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -964,9 +936,9 @@ void CML::MeshedSurface<Face>::scalePoints(const scalar scaleFactor)
 template<class Face>
 void CML::MeshedSurface<Face>::reset
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face>>& faceLst,
-    const Xfer<surfZoneList>& zoneLst
+    pointField&& pointLst,
+    List<Face>&& faceLst,
+    surfZoneList&& zoneLst
 )
 {
     ParentType::clearOut();
@@ -975,17 +947,17 @@ void CML::MeshedSurface<Face>::reset
     // Optimized to avoid overwriting data at all
     if (notNull(pointLst))
     {
-        storedPoints().transfer(pointLst());
+        storedPoints().transfer(pointLst);
     }
 
     if (notNull(faceLst))
     {
-        storedFaces().transfer(faceLst());
+        storedFaces().transfer(faceLst);
     }
 
     if (notNull(zoneLst))
     {
-        storedZones().transfer(zoneLst());
+        storedZones().transfer(zoneLst);
     }
 }
 
@@ -993,9 +965,9 @@ void CML::MeshedSurface<Face>::reset
 template<class Face>
 void CML::MeshedSurface<Face>::reset
 (
-    const Xfer<List<point>>& pointLst,
-    const Xfer<List<Face>>& faceLst,
-    const Xfer<surfZoneList>& zoneLst
+    List<point>&& pointLst,
+    List<Face>&& faceLst,
+    surfZoneList&& zoneLst
 )
 {
     ParentType::clearOut();
@@ -1004,17 +976,17 @@ void CML::MeshedSurface<Face>::reset
     // Optimized to avoid overwriting data at all
     if (notNull(pointLst))
     {
-        storedPoints().transfer(pointLst());
+        storedPoints().transfer(pointLst);
     }
 
     if (notNull(faceLst))
     {
-        storedFaces().transfer(faceLst());
+        storedFaces().transfer(faceLst);
     }
 
     if (notNull(zoneLst))
     {
-        storedZones().transfer(zoneLst());
+        storedZones().transfer(zoneLst);
     }
 }
 
@@ -1053,8 +1025,7 @@ bool CML::MeshedSurface<Face>::stitchFaces
 
     if (verbose)
     {
-        Info<< "MeshedSurface::stitchFaces : Renumbering all faces"
-            << endl;
+        InfoInFunction<< "Renumbering all faces" << endl;
     }
 
     // Set the coordinates to the merged ones
@@ -1463,9 +1434,9 @@ CML::MeshedSurface<Face> CML::MeshedSurface<Face>::subsetMesh
     // construct a sub-surface
     return MeshedSurface
     (
-        xferMove(newPoints),
-        xferMove(newFaces),
-        xferMove(newZones)
+        move(newPoints),
+        move(newFaces),
+        move(newZones)
     );
 }
 
@@ -1490,9 +1461,9 @@ void CML::MeshedSurface<Face>::transfer
 {
     reset
     (
-        xferMove(surf.storedPoints()),
-        xferMove(surf.storedFaces()),
-        xferMove(surf.storedZones())
+        move(surf.storedPoints()),
+        move(surf.storedFaces()),
+        move(surf.storedZones())
     );
 }
 
@@ -1512,9 +1483,9 @@ void CML::MeshedSurface<Face>::transfer
     {
         reset
         (
-            xferMove(surf.storedPoints()),
-            xferMove(surf.storedFaces()),
-            Xfer<surfZoneList>()
+            move(surf.storedPoints()),
+            move(surf.storedFaces()),
+            surfZoneList()
         );
     }
     else
@@ -1529,21 +1500,14 @@ void CML::MeshedSurface<Face>::transfer
 
         reset
         (
-            xferMove(surf.storedPoints()),
-            xferMove(newFaces),
-            xferMove(zoneLst)
+            move(surf.storedPoints()),
+            move(newFaces),
+            move(zoneLst)
         );
     }
 
     faceMap.clear();
     surf.clear();
-}
-
-
-template<class Face>
-CML::Xfer<CML::MeshedSurface<Face>> CML::MeshedSurface<Face>::xfer()
-{
-    return xferMove(*this);
 }
 
 
@@ -1655,8 +1619,8 @@ void CML::MeshedSurface<Face>::checkZones()
 template<class Face>
 void CML::MeshedSurface<Face>::sortFacesAndStore
 (
-    const Xfer<List<Face>>& unsortedFaces,
-    const Xfer<List<label>>& zoneIds,
+    List<Face>&& unsortedFaces,
+    List<label>&& zoneIds,
     const bool sorted
 )
 {

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -26,6 +26,15 @@ inline CML::edgeMesh::edgeMesh(const edgeMesh& em)
     fileFormats::edgeFormatsCore(),
     points_(em.points_),
     edges_(em.edges_),
+    pointEdgesPtr_(nullptr)
+{}
+
+
+inline CML::edgeMesh::edgeMesh(edgeMesh&& em)
+:
+    fileFormats::edgeFormatsCore(),
+    points_(move(em.points_)),
+    edges_(move(em.edges_)),
     pointEdgesPtr_(nullptr)
 {}
 
@@ -72,6 +81,14 @@ void CML::edgeMesh::operator=(const edgeMesh& rhs)
 {
     points_ = rhs.points_;
     edges_ = rhs.edges_;
+    pointEdgesPtr_.clear();
+}
+
+
+void CML::edgeMesh::operator=(edgeMesh&& rhs)
+{
+    points_ = move(rhs.points_);
+    edges_ = move(rhs.edges_);
     pointEdgesPtr_.clear();
 }
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,7 +51,7 @@ class treeDataEdge
 {
     // Static data
 
-        //- tolerance on linear dimensions
+        //- Tolerance on linear dimensions
         static scalar tol;
 
 
@@ -63,13 +63,13 @@ class treeDataEdge
         //- Reference to points
         const pointField& points_;
 
-        //- labels of edges
+        //- Labels of edges
         const labelList edgeLabels_;
 
         //- Whether to precalculate and store face bounding box
         const bool cacheBb_;
 
-        //- bbs for all above edges (valid only if cacheBb_)
+        //- Bbs for all above edges (valid only if cacheBb_)
         treeBoundBoxList bbs_;
 
 
@@ -155,7 +155,7 @@ public:
             const bool cacheBb,
             const edgeList& edges,
             const pointField& points,
-            const Xfer<labelList>& edgeLabels
+            labelList&& edgeLabels
         );
 
 

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,13 +68,13 @@ class faceZone
         //- The name associated with the zone-labels dictionary entry
         static const word labelsName_;
 
+
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
         faceZone(const faceZone&);
 
-        //- Disallow default bitwise assignment
-        void operator=(const faceZone&);
+
 protected:
 
     // Protected data
@@ -100,6 +100,9 @@ protected:
 
             //- Global edge addressing
             mutable labelList* mePtr_;
+
+
+    // Protected Member Functions
 
         //- Build primitive patch
         void calcFaceZonePatch() const;
@@ -155,12 +158,12 @@ public:
             const faceZoneMesh& zm
         );
 
-        //- Construct from components, transferring contents
+        //- Construct from components, moving contents
         faceZone
         (
             const word& name,
-            const Xfer<labelList>& addr,
-            const Xfer<boolList>& fm,
+            labelList&& addr,
+            boolList&& fm,
             const label index,
             const faceZoneMesh&
         );
@@ -190,8 +193,8 @@ public:
         faceZone
         (
             const faceZone&,
-            const Xfer<labelList>& addr,
-            const Xfer<boolList>& fm,
+            labelList&& addr,
+            boolList&& fm,
             const label index,
             const faceZoneMesh&
         );
@@ -294,6 +297,16 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Assignment to zone, clearing demand-driven data
+        void operator=(const faceZone&);
+
+        //- Move assignment to zone, clearing demand-driven data
+        void operator=(faceZone&&);
+
 
     // I-O
 

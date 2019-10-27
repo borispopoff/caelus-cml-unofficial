@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -344,8 +344,8 @@ CML::distributedTriSurfaceMesh::distributeSegments
         new mapDistribute
         (
             segmentI,       // size after construction
-            sendMap.xfer(),
-            constructMap.xfer()
+            move(sendMap),
+            move(constructMap)
         )
     );
 }
@@ -623,8 +623,8 @@ CML::distributedTriSurfaceMesh::calcLocalQueries
         new mapDistribute
         (
             segmentI,       // size after construction
-            sendMap.xfer(),
-            constructMap.xfer()
+            move(sendMap),
+            move(constructMap)
         )
     );
     const mapDistribute& map = mapPtr();
@@ -776,8 +776,8 @@ CML::distributedTriSurfaceMesh::calcLocalQueries
         new mapDistribute
         (
             segmentI,       // size after construction
-            sendMap.xfer(),
-            constructMap.xfer()
+            move(sendMap),
+            move(constructMap)
         )
     );
     return mapPtr;
@@ -2043,9 +2043,8 @@ void CML::distributedTriSurfaceMesh::distribute
         Pstream::gatherList(nTris);
         Pstream::scatterList(nTris);
 
-        Info<< "distributedTriSurfaceMesh::distribute : before distribution:"
-            << endl
-            << "\tproc\ttris" << endl;
+        InfoInFunction
+            << "before distribution:" << endl << "\tproc\ttris" << endl;
 
         forAll(nTris, proci)
         {
@@ -2073,7 +2072,7 @@ void CML::distributedTriSurfaceMesh::distribute
 
         if (debug)
         {
-            //Pout<< "Overlapping with proc " << proci
+            // Pout<< "Overlapping with proc " << proci
             //    << " faces:" << faceSendMap[proci].size()
             //    << " points:" << pointSendMap[proci].size() << endl << endl;
         }
@@ -2194,7 +2193,7 @@ void CML::distributedTriSurfaceMesh::distribute
                     )
                 );
 
-                //if (debug)
+                // if (debug)
                 //{
                 //    Pout<< "Sending to " << proci
                 //        << " faces:" << faceSendMap[proci].size()
@@ -2222,7 +2221,7 @@ void CML::distributedTriSurfaceMesh::distribute
                 // Receive
                 triSurface subSurface(str);
 
-                //if (debug)
+                // if (debug)
                 //{
                 //    Pout<< "Received from " << proci
                 //        << " faces:" << subSurface.size()
@@ -2243,7 +2242,7 @@ void CML::distributedTriSurfaceMesh::distribute
                     pointConstructMap[proci]
                 );
 
-                //if (debug)
+                // if (debug)
                 //{
                 //    Pout<< "Current merged surface : faces:" << allTris.size()
                 //        << " points:" << allPoints.size() << endl << endl;
@@ -2258,8 +2257,8 @@ void CML::distributedTriSurfaceMesh::distribute
         new mapDistribute
         (
             allTris.size(),
-            faceSendMap.xfer(),
-            faceConstructMap.xfer()
+            move(faceSendMap),
+            move(faceConstructMap)
         )
     );
     pointMap.reset
@@ -2267,8 +2266,8 @@ void CML::distributedTriSurfaceMesh::distribute
         new mapDistribute
         (
             allPoints.size(),
-            pointSendMap.xfer(),
-            pointConstructMap.xfer()
+            move(pointSendMap),
+            move(pointConstructMap)
         )
     );
 
@@ -2300,9 +2299,8 @@ void CML::distributedTriSurfaceMesh::distribute
         Pstream::gatherList(nTris);
         Pstream::scatterList(nTris);
 
-        Info<< "distributedTriSurfaceMesh::distribute : after distribution:"
-            << endl
-            << "\tproc\ttris" << endl;
+        InfoInFunction
+            << "after distribution:" << endl << "\tproc\ttris" << endl;
 
         forAll(nTris, proci)
         {

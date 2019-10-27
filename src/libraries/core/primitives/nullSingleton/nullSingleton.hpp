@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014 OpenFOAM Foundation
+Copyright (C) 2014-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -71,6 +71,10 @@ inline const T& NullSingletonRef();
 template<class T>
 inline const T* NullSingletonPtr();
 
+//- Return reference to the nullObject of type T
+template<class T>
+inline T&& NullSingletonMove();
+
 
 //- Return true if t is a reference to the nullSingleton of type T
 template<class T>
@@ -101,6 +105,12 @@ template<class T>
 inline const T& CML::NullSingletonRef()
 {
     return *reinterpret_cast<const T*>(nullSingletonPtr);
+}
+
+template<class T>
+inline T&& CML::NullSingletonMove()
+{
+    return move(const_cast<T&>(*reinterpret_cast<const T*>(nullSingletonPtr)));
 }
 
 template<class T>

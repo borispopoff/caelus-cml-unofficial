@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -1214,9 +1214,9 @@ void CML::InteractionLists<ParticleType>::findExtendedProcBbsInRange
         }
     }
 
-    extendedProcBbsInRange = tmpExtendedProcBbsInRange.xfer();
-    extendedProcBbsTransformIndex = tmpExtendedProcBbsTransformIndex.xfer();
-    extendedProcBbsOrigProc = tmpExtendedProcBbsOrigProc.xfer();
+    extendedProcBbsInRange = move(tmpExtendedProcBbsInRange);
+    extendedProcBbsTransformIndex = move(tmpExtendedProcBbsTransformIndex);
+    extendedProcBbsOrigProc = move(tmpExtendedProcBbsOrigProc);
 }
 
 
@@ -1296,8 +1296,8 @@ void CML::InteractionLists<ParticleType>::buildMap
         new mapDistribute
         (
             constructSize,
-            sendMap.xfer(),
-            constructMap.xfer()
+            move(sendMap),
+            move(constructMap)
         )
     );
 }

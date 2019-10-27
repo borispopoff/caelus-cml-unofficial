@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -166,18 +166,15 @@ CML::edgeMesh::edgeMesh
 
 CML::edgeMesh::edgeMesh
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<edgeList>& edgeLst
+    pointField&& pointLst,
+    edgeList&& edgeLst
 )
 :
     fileFormats::edgeFormatsCore(),
-    points_(0),
-    edges_(0),
+    points_(move(pointLst)),
+    edges_(move(edgeLst)),
     pointEdgesPtr_(nullptr)
-{
-    points_.transfer(pointLst());
-    edges_.transfer(edgeLst());
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -198,20 +195,20 @@ void CML::edgeMesh::clear()
 
 void CML::edgeMesh::reset
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<edgeList>& edgeLst
+    pointField&& pointLst,
+    edgeList&& edgeLst
 )
 {
     // Take over new primitive data.
     // Optimized to avoid overwriting data at all
     if (notNull(pointLst))
     {
-        points_.transfer(pointLst());
+        points_.transfer(pointLst);
     }
 
     if (notNull(edgeLst))
     {
-        edges_.transfer(edgeLst());
+        edges_.transfer(edgeLst);
 
         // connectivity likely changed
         pointEdgesPtr_.clear();
@@ -224,12 +221,6 @@ void CML::edgeMesh::transfer(edgeMesh& mesh)
     points_.transfer(mesh.points_);
     edges_.transfer(mesh.edges_);
     pointEdgesPtr_ = mesh.pointEdgesPtr_;
-}
-
-
-CML::Xfer<CML::edgeMesh> CML::edgeMesh::xfer()
-{
-    return xferMove(*this);
 }
 
 

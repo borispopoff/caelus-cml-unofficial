@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,7 +66,7 @@ CML::labelList CML::meshToMeshMethod::maskCells() const
         Pout<< "participating source mesh cells: " << cells.size() << endl;
     }
 
-    return cells;
+    return move(cells);
 }
 
 

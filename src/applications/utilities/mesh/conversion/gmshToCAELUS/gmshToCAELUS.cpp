@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -912,7 +912,7 @@ int main(int argc, char *argv[])
             runTime.constant(),
             runTime
         ),
-        xferMove(points),
+        move(points),
         cells,
         boundaryFaces,
         boundaryPatchNames,
@@ -997,7 +997,7 @@ int main(int argc, char *argv[])
     Info<< endl;
 
 
-    //Get polyMesh to write to constant
+    // Get polyMesh to write to constant
 
     runTime.setTime(instant(runTime.constant()), 0);
 

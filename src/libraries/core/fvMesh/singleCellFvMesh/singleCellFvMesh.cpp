@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -221,8 +221,8 @@ void CML::singleCellFvMesh::agglomerateMesh
         patchSizes[patchi] = coarseI-patchStarts[patchi];
     }
 
-    //Pout<< "patchStarts:" << patchStarts << endl;
-    //Pout<< "patchSizes:" << patchSizes << endl;
+    // Pout<< "patchStarts:" << patchStarts << endl;
+    // Pout<< "patchSizes:" << patchSizes << endl;
 
     // Compact numbering for points
     reversePointMap_.setSize(mesh.nPoints());
@@ -271,13 +271,13 @@ void CML::singleCellFvMesh::agglomerateMesh
     // actually change the mesh
     resetPrimitives
     (
-        xferMove(boundaryPoints),
-        xferMove(patchFaces),
-        xferMove(owner),
-        xferMove(neighbour),
+        move(boundaryPoints),
+        move(patchFaces),
+        move(owner),
+        move(neighbour),
         patchSizes,
         patchStarts,
-        true                //syncPar
+        true                // syncPar
     );
 
 
@@ -291,10 +291,10 @@ void CML::singleCellFvMesh::agglomerateMesh
 
             DynamicList<label> newAddressing;
 
-            //Note: uncomment if you think it makes sense. Note that value
+            // Note: uncomment if you think it makes sense. Note that value
             // of cell0 is the average.
             //// Was old cell0 in this cellZone?
-            //if (oldFz.localID(0) != -1)
+            // if (oldFz.localID(0) != -1)
             //{
             //    newAddressing.append(0);
             //}
@@ -392,11 +392,11 @@ CML::singleCellFvMesh::singleCellFvMesh
     fvMesh
     (
         io,
-        xferCopy(pointField()), //points
-        xferCopy(faceList()),   //faces
-        xferCopy(labelList()),  //allOwner
-        xferCopy(labelList()),  //allNeighbour
-        false                   //syncPar
+        pointField(), // points
+        faceList(),   // faces
+        labelList(),  // allOwner
+        labelList(),  // allNeighbour
+        false         // syncPar
     ),
     patchFaceAgglomeration_
     (
@@ -487,11 +487,11 @@ CML::singleCellFvMesh::singleCellFvMesh
     fvMesh
     (
         io,
-        xferCopy(pointField()), //points
-        xferCopy(faceList()),   //faces
-        xferCopy(labelList()),  //allOwner
-        xferCopy(labelList()),  //allNeighbour
-        false                   //syncPar
+        pointField(), // points
+        faceList(),   // faces
+        labelList(),  // allOwner
+        labelList(),  // allNeighbour
+        false         // syncPar
     ),
     patchFaceAgglomeration_
     (

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -225,7 +225,7 @@ bool CML::fileFormats::OFFsurfaceFormat<Face>::read
     }
 
     // transfer to normal lists, no zone information
-    this->reset(pointLst.xfer(), dynFaces.xfer(), Xfer<surfZoneList>());
+    this->reset(move(pointLst), move(dynFaces), NullSingletonMove<surfZoneList>());
 
     return true;
 }

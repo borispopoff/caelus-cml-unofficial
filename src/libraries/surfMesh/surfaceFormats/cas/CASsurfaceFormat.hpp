@@ -184,9 +184,9 @@ bool CML::fileFormats::CASsurfaceFormat<Face>::read
 
         MeshedSurface<face> surf
         (
-            xferMove(this->storedPoints()),
-            xferMove(faceLst),
-            xferMove(this->storedZones())
+            move(this->storedPoints()),
+            move(faceLst),
+            move(this->storedZones())
         );
 
         this->transcribe(surf);
@@ -231,9 +231,9 @@ bool CML::fileFormats::CASsurfaceFormat<Face>::read
 
         MeshedSurface<face> origSurf
         (
-            xferMove(pointLst),
-            xferMove(origFaces),
-            xferMove(zoneLst)
+            move(pointLst),
+            move(origFaces),
+            move(zoneLst)
         );
 
         MeshedSurface<Face> surf;
@@ -273,9 +273,9 @@ bool CML::fileFormats::CASsurfaceFormat<Face>::read
 
     surf.reset
     (
-        xferMove(pointLst),
-        xferMove(faceLst),
-        xferMove(zoneLst)
+        move(pointLst),
+        move(faceLst),
+        move(zoneLst)
     );
 
     return true;

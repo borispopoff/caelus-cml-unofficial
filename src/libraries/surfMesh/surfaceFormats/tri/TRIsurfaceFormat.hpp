@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -182,8 +182,8 @@ bool CML::fileFormats::TRIsurfaceFormat<Face>::read
     this->storedPoints().transfer(reader.points());
 
     // retrieve the original zone information
-    List<label> sizes(reader.sizes().xfer());
-    List<label> zoneIds(reader.zoneIds().xfer());
+    List<label> sizes(move(reader.sizes()));
+    List<label> zoneIds(move(reader.zoneIds()));
 
     // generate the (sorted) faces
     List<Face> faceLst(zoneIds.size());
@@ -257,7 +257,7 @@ void CML::fileFormats::TRIsurfaceFormat<Face>::write
 
         if (useFaceMap)
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceMap[faceIndex++]];
                 writeShell(os, pointLst, f, zoneI);
@@ -265,7 +265,7 @@ void CML::fileFormats::TRIsurfaceFormat<Face>::write
         }
         else
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceIndex++];
                 writeShell(os, pointLst, f, zoneI);
@@ -312,7 +312,7 @@ void CML::fileFormats::TRIsurfaceFormat<Face>::write
         label faceIndex = 0;
         forAll(zoneLst, zoneI)
         {
-            forAll(zoneLst[zoneI], localFaceI)
+            forAll(zoneLst[zoneI], localFacei)
             {
                 const Face& f = faceLst[faceMap[faceIndex++]];
                 writeShell(os, pointLst, f, zoneI);

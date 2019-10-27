@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
 
             forAll(cellCentres, celli)
             {
-                //point cc = b.blockShape().centre(b.points());
+                // point cc = b.blockShape().centre(b.points());
                 const point& cc = cellCentres[celli];
 
                 str << "v " << cc.x() << ' ' << cc.y() << ' ' << cc.z() << nl;
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
             runTime.constant(),
             runTime
         ),
-        xferCopy(blocks.points()),           // could we re-use space?
+        clone(blocks.points()),           // could we re-use space?
         blocks.cells(),
         blocks.patches(),
         blocks.patchNames(),
@@ -336,9 +336,7 @@ int main(int argc, char *argv[])
     }
 
 
-    //
-    // write some information
-    //
+    // Write summary
     {
         const polyPatchList& patches = mesh.boundaryMesh();
 

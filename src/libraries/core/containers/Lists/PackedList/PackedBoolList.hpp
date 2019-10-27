@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -31,7 +31,7 @@ SourceFiles
     PackedBoolListI.hpp
     PackedBoolList.cpp
 
-SeeAlso
+See also
     CML::PackedList
 
 \*---------------------------------------------------------------------------*/
@@ -105,12 +105,6 @@ public:
         //- Copy constructor
         explicit inline PackedBoolList(const PackedList<1>&);
 
-        //- Construct by transferring the parameter contents
-        inline PackedBoolList(const Xfer<PackedBoolList>&);
-
-        //- Construct by transferring the parameter contents
-        inline PackedBoolList(const Xfer<PackedList<1>>&);
-
         //- Construct from a list of bools
         explicit inline PackedBoolList(const CML::UList<bool>&);
 
@@ -167,7 +161,7 @@ public:
             label subset(const UIndirectList<label>& indices);
 
             //- Return indices of the used (true) elements as a list of labels
-            Xfer<labelList> used() const;
+            labelList used() const;
 
 
         // Edit
@@ -179,9 +173,6 @@ public:
             //- Transfer the contents of the argument list into this list
             //  and annul the argument list.
             inline void transfer(PackedList<1>&);
-
-            //- Transfer contents to the Xfer container
-            inline Xfer<PackedBoolList> xfer();
 
 
     // Member Operators

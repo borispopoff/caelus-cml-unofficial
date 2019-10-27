@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -87,8 +87,8 @@ public:
         //- Construct as a copy of item, with a key
         inline Keyed(const T& item, const label key=0);
 
-        //- Construct by transferring the item, with a key
-        inline Keyed(const Xfer<T>& item, const label key=0);
+        //- Move constructor transferring the item, with a key
+        inline Keyed(T&& item, const label key=0);
 
         //- Construct from Istream
         inline Keyed(Istream&);

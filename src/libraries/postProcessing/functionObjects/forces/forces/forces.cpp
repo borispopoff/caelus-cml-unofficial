@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -47,19 +47,21 @@ CML::wordList CML::forces::createFileNames(const dictionary& dict) const
 
     const word forceType(dict.lookup("type"));
 
+    // Name for file(fileID::mainFile=0)
+    names.append(forceType);
+
     if (dict.found("binData"))
     {
         const dictionary& binDict(dict.subDict("binData"));
         label nb = readLabel(binDict.lookup("nBin"));
         if (nb > 0)
         {
+            // Name for file(fileID::binsFile=1)
             names.append(forceType + "_bins");
         }
     }
 
-    names.append(forceType);
-
-    return names;
+    return move(names);
 }
 
 

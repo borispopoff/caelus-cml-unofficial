@@ -169,6 +169,7 @@ public:
             //  and annul the argument list.
             inline void transfer(DLListBase&);
 
+
     // STL iterator
 
         //- An STL-conforming iterator
@@ -258,7 +259,7 @@ public:
 
 private:
 
-        //- iterator returned by end()
+        //- Iterator returned by end()
         static iterator endIter_;
 
         //- const_iterator returned by end()

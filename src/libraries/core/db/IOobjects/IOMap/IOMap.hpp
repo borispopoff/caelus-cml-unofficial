@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -70,8 +70,11 @@ public:
         //- Construct from IOobject and a Map
         IOMap(const IOobject&, const Map<T>&);
 
-        //- Construct by transferring the Map contents
-        IOMap(const IOobject&, const Xfer<Map<T>>&);
+        //- Move construct by transferring the Map contents
+        IOMap(const IOobject&, Map<T>&&);
+
+        //- Move constructor
+        IOMap(IOMap<T>&&);
 
 
     //- Destructor
@@ -88,8 +91,14 @@ public:
         //- Assignment of other IOMap's entries to this IOMap
         void operator=(const IOMap<T>&);
 
+        //- Move assignment of other IOMap's entries to this IOMap
+        void operator=(IOMap<T>&&);
+
         //- Assignment of other Map's entries to this IOMap
         void operator=(const Map<T>&);
+
+        //- Move assignment of other Map's entries to this IOMap
+        void operator=(Map<T>&&);
 };
 
 
@@ -169,12 +178,11 @@ CML::IOMap<T>::IOMap(const IOobject& io, const Map<T>& map)
 
 
 template<class T>
-CML::IOMap<T>::IOMap(const IOobject& io, const Xfer<Map<T>>& map)
+CML::IOMap<T>::IOMap(const IOobject& io, Map<T>&& map)
 :
-    regIOobject(io)
+    regIOobject(io),
+    Map<T>(move(map))
 {
-    Map<T>::transfer(map());
-
     if
     (
         (
@@ -188,6 +196,14 @@ CML::IOMap<T>::IOMap(const IOobject& io, const Xfer<Map<T>>& map)
         close();
     }
 }
+
+
+template<class T>
+CML::IOMap<T>::IOMap(IOMap<T>&& map)
+:
+    regIOobject(move(map)),
+    Map<T>(move(map))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -216,12 +232,24 @@ void CML::IOMap<T>::operator=(const IOMap<T>& rhs)
 
 
 template<class T>
+void CML::IOMap<T>::operator=(IOMap<T>&& rhs)
+{
+    Map<T>::operator=(move(rhs));
+}
+
+
+template<class T>
 void CML::IOMap<T>::operator=(const Map<T>& rhs)
 {
     Map<T>::operator=(rhs);
 }
 
 
+template<class T>
+void CML::IOMap<T>::operator=(Map<T>&& rhs)
+{
+    Map<T>::operator=(move(rhs));
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -41,9 +41,9 @@ inline CML::Keyed<T>::Keyed(const T& item, const label key)
 
 
 template<class T>
-inline CML::Keyed<T>::Keyed(const Xfer<T>& item, const label key)
+inline CML::Keyed<T>::Keyed(T&& item, const label key)
 :
-    T(item),
+    T(move(item)),
     key_(key)
 {}
 

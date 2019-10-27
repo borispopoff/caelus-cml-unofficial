@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,20 +55,6 @@ inline CML::PackedBoolList::PackedBoolList(const PackedList<1>& lst)
 {}
 
 
-inline CML::PackedBoolList::PackedBoolList(const Xfer<PackedBoolList>& lst)
-:
-    PackedList<1>()
-{
-    transfer(lst());
-}
-
-
-inline CML::PackedBoolList::PackedBoolList(const Xfer<PackedList<1>>& lst)
-:
-    PackedList<1>(lst)
-{}
-
-
 inline CML::PackedBoolList::PackedBoolList(const CML::UList<bool>& lst)
 :
     PackedList<1>()
@@ -111,12 +97,6 @@ inline void CML::PackedBoolList::transfer(PackedBoolList& lst)
 inline void CML::PackedBoolList::transfer(PackedList<1>& lst)
 {
     PackedList<1>::transfer(lst);
-}
-
-
-inline CML::Xfer<CML::PackedBoolList> CML::PackedBoolList::xfer()
-{
-    return xferMove(*this);
 }
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2014-16 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -489,7 +489,6 @@ public:
             cellList& cells
         );
 
-
         //- Reset this primitiveMesh given the primitive array sizes and cells
         void reset
         (
@@ -497,7 +496,7 @@ public:
             const label nInternalFaces,
             const label nFaces,
             const label nCells,
-            const Xfer<cellList>& cells
+            cellList&& cells
         );
 
 

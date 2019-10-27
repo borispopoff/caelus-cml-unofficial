@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -687,7 +687,7 @@ bool CML::searchableSurfaces::checkIntersection
                             << " locations."
                             << endl;
 
-                        //vtkSetWriter<scalar> setWriter;
+                        // vtkSetWriter<scalar> setWriter;
                         if (setWriter.valid())
                         {
                             scalarField dist(mag(intersections));
@@ -695,7 +695,7 @@ bool CML::searchableSurfaces::checkIntersection
                             (
                                 names()[i] + '_' + names()[j],
                                 "xyz",
-                                intersections.xfer(),
+                                move(intersections),
                                 dist
                             );
                             wordList valueSetNames(1, "edgeIndex");

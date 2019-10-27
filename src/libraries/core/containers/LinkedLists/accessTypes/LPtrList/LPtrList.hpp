@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -104,8 +104,11 @@ public:
         //- Construct from Istream using default Istream constructor class
         LPtrList(Istream&);
 
-        //- Construct as copy
+        //- Copy constructor
         LPtrList(const LPtrList&);
+
+        //- Move constructor
+        LPtrList(LPtrList&&);
 
 
     //- Destructor
@@ -156,8 +159,11 @@ public:
 
     // Member operators
 
-        //- Assign copy
+        //- Assignment operator
         void operator=(const LPtrList<LListBase, T>&);
+
+        //- Move assignment operator
+        void operator=(LPtrList<LListBase, T>&&);
 
 
     // STL type definitions
@@ -267,13 +273,18 @@ public:
 
 template<class LListBase, class T>
 CML::LPtrList<LListBase, T>::LPtrList(const LPtrList<LListBase, T>& lst)
-:
-    LList<LListBase, T*>()
 {
     for (const_iterator iter = lst.begin(); iter != lst.end(); ++iter)
     {
         this->append(iter().clone().ptr());
     }
+}
+
+
+template<class LListBase, class T>
+CML::LPtrList<LListBase, T>::LPtrList(LPtrList<LListBase, T>&& lst)
+{
+    transfer(lst);
 }
 
 
@@ -336,6 +347,13 @@ void CML::LPtrList<LListBase, T>::operator=(const LPtrList<LListBase, T>& lst)
     {
         this->append(iter().clone().ptr());
     }
+}
+
+
+template<class LListBase, class T>
+void CML::LPtrList<LListBase, T>::operator=(LPtrList<LListBase, T>&& lst)
+{
+    transfer(lst);
 }
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -293,7 +293,7 @@ void CML::primitiveMesh::reset
     const label nInternalFaces,
     const label nFaces,
     const label nCells,
-    const Xfer<cellList>& clst
+    cellList&& clst
 )
 {
     reset
@@ -304,7 +304,7 @@ void CML::primitiveMesh::reset
         nCells
     );
 
-    cfPtr_ = new cellList(clst);
+    cfPtr_ = new cellList(move(clst));
 }
 
 

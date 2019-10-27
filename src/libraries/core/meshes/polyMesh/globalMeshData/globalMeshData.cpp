@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -539,14 +539,14 @@ void CML::globalMeshData::calcGlobalPointSlaves() const
     (
         new labelListList
         (
-            globalData.pointPoints().xfer()
+            move(globalData.pointPoints())
         )
     );
     globalPointTransformedSlavesPtr_.reset
     (
         new labelListList
         (
-            globalData.transformedPointPoints().xfer()
+            move(globalData.transformedPointPoints())
         )
     );
 
@@ -554,7 +554,7 @@ void CML::globalMeshData::calcGlobalPointSlaves() const
     (
         new mapDistribute
         (
-            globalData.map().xfer()
+            move(globalData.map())
         )
     );
 }
@@ -1740,14 +1740,14 @@ void CML::globalMeshData::calcGlobalCoPointSlaves() const
     (
         new labelListList
         (
-            globalData.pointPoints().xfer()
+            move(globalData.pointPoints())
         )
     );
     globalCoPointSlavesMapPtr_.reset
     (
         new mapDistribute
         (
-            globalData.map().xfer()
+            move(globalData.map())
         )
     );
 

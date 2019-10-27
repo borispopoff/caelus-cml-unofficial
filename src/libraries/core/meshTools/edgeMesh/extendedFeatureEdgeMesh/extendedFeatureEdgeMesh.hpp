@@ -200,8 +200,8 @@ public:
         extendedFeatureEdgeMesh
         (
             const IOobject&,
-            const Xfer<pointField>&,
-            const Xfer<edgeList>&
+            pointField&&,
+            edgeList&&
         );
 
         //- Construct (read) given surfaceFeatures, an objectRegistry and a

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -323,7 +323,7 @@ bool triSurface::readAC(const fileName& ACfileName)
     faces.shrink();
 
     // Transfer DynamicLists to straight ones.
-    pointField allPoints(points.xfer());
+    pointField allPoints(move(points));
 
     *this = triSurface(faces, patches, allPoints, true);
 

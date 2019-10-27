@@ -165,12 +165,12 @@ CML::extendedFeatureEdgeMesh::extendedFeatureEdgeMesh
 CML::extendedFeatureEdgeMesh::extendedFeatureEdgeMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& pointLst,
-    const Xfer<edgeList>& edgeLst
+    pointField&& pointLst,
+    edgeList&& edgeLst
 )
 :
     regIOobject(io),
-    edgeMesh(pointLst, edgeLst),
+    edgeMesh(move(pointLst), move(edgeLst)),
     concaveStart_(0),
     mixedStart_(0),
     nonFeatureStart_(0),

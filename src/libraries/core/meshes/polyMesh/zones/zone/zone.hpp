@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -102,11 +102,11 @@ public:
             const label index
         );
 
-        //- Construct from components, transferring contents
+        //- Construct from components, moving contents
         zone
         (
             const word& name,
-            const Xfer<labelList>& addr,
+            labelList&& addr,
             const label index
         );
 
@@ -133,7 +133,7 @@ public:
         zone
         (
             const zone&,
-            const Xfer<labelList>& addr,
+            labelList&& addr,
             const label index
         );
 
@@ -183,6 +183,21 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const = 0;
+
+
+    // Member Operators
+
+        //- Assignment operator
+        void operator=(const zone&);
+
+        //- Move assignment operator
+        void operator=(zone&&);
+
+        //- Assignment operator to addressing
+        void operator=(const labelUList&);
+
+        //- Move assignment of addressing
+        void operator=(labelList&&);
 
 
     // I-O

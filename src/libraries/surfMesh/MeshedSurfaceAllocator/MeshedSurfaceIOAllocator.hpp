@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -94,11 +94,11 @@ public:
         MeshedSurfaceIOAllocator
         (
             const IOobject& ioPoints,
-            const Xfer<pointField>& points,
+            pointField&& points,
             const IOobject& ioFaces,
-            const Xfer<faceList>& faces,
+            faceList&& faces,
             const IOobject& ioZones,
-            const Xfer<surfZoneList>& zones
+            surfZoneList&& zones
         );
 
 
@@ -149,29 +149,27 @@ public:
             void clear();
 
             //- Reset primitive data (points, faces and zones)
-            //  Note, optimized to avoid overwriting data (with Xfer::null)
             void resetFaces
             (
-                const Xfer<faceList>& faces,
-                const Xfer<surfZoneList>& zones
+                faceList&& faces,
+                surfZoneList&& zones
             );
 
             //- Reset primitive data (points, faces and zones)
-            //  Note, optimized to avoid overwriting data (with Xfer::null)
             void reset
             (
-                const Xfer<pointField>& points,
-                const Xfer<faceList>& faces,
-                const Xfer<surfZoneList>& zones
+                pointField&& points,
+                faceList&& faces,
+                surfZoneList&& zones
             );
 
             //- Reset primitive data (points, faces and zones)
-            //  Note, optimized to avoid overwriting data (with Xfer::null)
+            //  Note, optimized to avoid overwriting data (with null)
             void reset
             (
-                const Xfer<List<point>>& points,
-                const Xfer<faceList>& faces,
-                const Xfer<surfZoneList>& zones
+                List<point>&& points,
+                faceList&& faces,
+                surfZoneList&& zones
             );
 };
 

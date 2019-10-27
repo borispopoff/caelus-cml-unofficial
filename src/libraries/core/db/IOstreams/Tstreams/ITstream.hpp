@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -81,17 +81,17 @@ public:
         }
 
 
-        //- Construct from components, transferring the tokens
+        //- Move construct from components, transferring the tokens
         ITstream
         (
             const string& name,
-            const Xfer<List<token>>& tokens,
+            List<token>&& tokens,
             streamFormat format=ASCII,
             versionNumber version=currentVersion
         )
         :
             Istream(format, version),
-            tokenList(tokens),
+            tokenList(move(tokens)),
             name_(name),
             tokenIndex_(0)
         {

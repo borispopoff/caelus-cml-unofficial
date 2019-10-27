@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -57,9 +57,16 @@ CML::hashedWordList::hashedWordList(const hashedWordList& names)
 }
 
 
-CML::hashedWordList::hashedWordList(const Xfer<List<word>>& names)
+CML::hashedWordList::hashedWordList(hashedWordList&& names)
 :
-    List<word>(names)
+    List<word>(move(names)),
+    indices_(move(names.indices_))
+{}
+
+
+CML::hashedWordList::hashedWordList(List<word>&& names)
+:
+    List<word>(move(names))
 {
     rehash();
 }

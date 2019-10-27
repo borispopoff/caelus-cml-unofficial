@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -118,7 +118,7 @@ public:
         pointZone
         (
             const word& name,
-            const Xfer<labelList>& addr,
+            labelList&& addr,
             const label index,
             const pointZoneMesh&
         );
@@ -147,7 +147,7 @@ public:
         pointZone
         (
             const pointZone&,
-            const Xfer<labelList>& addr,
+            labelList&& addr,
             const label index,
             const pointZoneMesh&
         );
@@ -219,14 +219,17 @@ public:
 
     // Member Operators
 
-        //- Assign to zone, clearing demand-driven data
+        //- Assignment to zone, clearing demand-driven data
         void operator=(const pointZone&);
+
+        //- Move assignment to zone, clearing demand-driven data
+        void operator=(pointZone&&);
 
         //- Assign addressing, clearing demand-driven data
         void operator=(const labelUList&);
 
-        //- Assign addressing, clearing demand-driven data
-        void operator=(const Xfer<labelList>&);
+        //- Move addressing, clearing demand-driven data
+        void operator=(labelList&&);
 
 
     // I-O

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -454,7 +454,7 @@ bool CML::fileFormats::NASsurfaceFormat<Face>::read
         }
     }
 
-    this->sortFacesAndStore(dynFaces.xfer(), dynZones.xfer(), sorted);
+    this->sortFacesAndStore(move(dynFaces), move(dynZones), sorted);
 
     // add zones, culling empty ones
     this->addZones(dynSizes, names, true);

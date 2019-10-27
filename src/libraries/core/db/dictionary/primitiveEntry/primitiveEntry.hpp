@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -109,8 +109,8 @@ public:
         //- Construct from keyword and a list of tokens
         primitiveEntry(const keyType&, const UList<token>&);
 
-        //- Construct from keyword and by transferring a list of tokens
-        primitiveEntry(const keyType&, const Xfer<List<token>>&);
+        //- Move construct from keyword and by transferring a list of tokens
+        primitiveEntry(const keyType&, List<token>&&);
 
         //- Construct from keyword and a T
         template<class T>
@@ -123,10 +123,10 @@ public:
 
 
     // Member functions
-    
+
         //- Inherit read from ITstream
         using ITstream::read;
-    
+
         //- Return the dictionary name
         const fileName& name() const
         {

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -167,6 +167,20 @@ CML::dictionary::dictionary
 
 CML::dictionary::dictionary
 (
+    dictionary&& dict
+)
+:
+    dictionaryName(move(dict.name())),
+    IDLList<entry>(move(dict)),
+    hashedEntries_(move(dict.hashedEntries_)),
+    parent_(dict.parent_),
+    patternEntries_(move(dict.patternEntries_)),
+    patternRegexps_(move(dict.patternRegexps_))
+{}
+
+
+CML::dictionary::dictionary
+(
     const dictionary* dictPtr
 )
 :
@@ -182,24 +196,17 @@ CML::dictionary::dictionary
 CML::dictionary::dictionary
 (
     const dictionary& parentDict,
-    const Xfer<dictionary>& dict
+    dictionary&& dict
 )
 :
-    parent_(parentDict)
+    dictionaryName(move(dict.name())),
+    IDLList<entry>(move(dict)),
+    hashedEntries_(move(dict.hashedEntries_)),
+    parent_(parentDict),
+    patternEntries_(move(dict.patternEntries_)),
+    patternRegexps_(move(dict.patternRegexps_))
 {
-    transfer(dict());
     name() = parentDict.name() + "::" + name();
-}
-
-
-CML::dictionary::dictionary
-(
-    const Xfer<dictionary>& dict
-)
-:
-    parent_(dictionary::null)
-{
-    transfer(dict());
 }
 
 
@@ -407,8 +414,10 @@ const CML::entry& CML::dictionary::lookupEntry
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction(*this)
-            << "keyword " << keyword << " is undefined in dictionary "
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "keyword " << keyword << " is undefined in dictionary "
             << name()
             << exit(FatalIOError);
     }
@@ -617,8 +626,10 @@ CML::dictionary& CML::dictionary::subDict(const word& keyword)
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction(*this)
-            << "keyword " << keyword << " is undefined in dictionary "
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "keyword " << keyword << " is undefined in dictionary "
             << name()
             << exit(FatalIOError);
     }
@@ -638,8 +649,10 @@ CML::dictionary CML::dictionary::subOrEmptyDict
     {
         if (mustRead)
         {
-            FatalIOErrorInFunction(*this)
-                << "keyword " << keyword << " is undefined in dictionary "
+            FatalIOErrorInFunction
+            (
+                *this
+            )   << "keyword " << keyword << " is undefined in dictionary "
                 << name()
                 << exit(FatalIOError);
             return entryPtr->dict();
@@ -919,8 +932,10 @@ bool CML::dictionary::changeKeyword
 
     if (iter()->keyword().isPattern())
     {
-        FatalIOErrorInFunction(*this)
-            << "Old keyword "<< oldKeyword
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "Old keyword "<< oldKeyword
             << " is a pattern."
             << "Pattern replacement not yet implemented."
             << exit(FatalIOError);
@@ -929,7 +944,7 @@ bool CML::dictionary::changeKeyword
 
     HashTable<entry*>::iterator iter2 = hashedEntries_.find(newKeyword);
 
-    // NewKeyword already exists
+    // newKeyword already exists
     if (iter2 != hashedEntries_.end())
     {
         if (forceOverwrite)
@@ -957,8 +972,10 @@ bool CML::dictionary::changeKeyword
         }
         else
         {
-            IOWarningInFunction(*this)
-                << "cannot rename keyword "<< oldKeyword
+            IOWarningInFunction
+            (
+                *this
+            )   << "cannot rename keyword "<< oldKeyword
                 << " to existing keyword " << newKeyword
                 << " in dictionary " << name() << endl;
             return false;
@@ -1051,12 +1068,6 @@ void CML::dictionary::transfer(dictionary& dict)
 }
 
 
-CML::Xfer<CML::dictionary> CML::dictionary::xfer()
-{
-    return xferMove(*this);
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 CML::ITstream& CML::dictionary::operator[](const word& keyword) const
@@ -1085,6 +1096,24 @@ void CML::dictionary::operator=(const dictionary& rhs)
     {
         add(iter().clone(*this).ptr());
     }
+}
+
+
+void CML::dictionary::operator=(dictionary&& rhs)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalIOErrorInFunction(*this)
+            << "attempted assignment to self for dictionary " << name()
+            << abort(FatalIOError);
+    }
+
+    dictionaryName::operator=(move(rhs));
+    IDLList<entry>::operator=(move(rhs));
+    hashedEntries_ = move(rhs.hashedEntries_);
+    patternEntries_ = move(rhs.patternEntries_);
+    patternRegexps_ = move(rhs.patternRegexps_);
 }
 
 

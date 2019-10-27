@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -94,8 +94,11 @@ public:
         //  Used for temporary fields which are initialised after construction
         FieldField(const word&, const FieldField<Field, Type>&);
 
-        //- Construct as copy
+        //- Copy constructor
         FieldField(const FieldField<Field, Type>&);
+
+        //- Move constructor
+        FieldField(FieldField<Field, Type>&&);
 
         //- Construct as copy or re-use as specified.
         FieldField(FieldField<Field, Type>&, bool reuse);
@@ -120,7 +123,7 @@ public:
         static tmp<FieldField<Field, Type>> NewCalculatedType
         (
             const FieldField<Field, Type2>& ff
-        )
+        );
 
 #       ifdef __INTEL_COMPILER
         {
@@ -161,6 +164,7 @@ public:
     // Member operators
 
         void operator=(const FieldField<Field, Type>&);
+        void operator=(FieldField<Field, Type>&&);
         void operator=(const tmp<FieldField<Field, Type>>&);
         void operator=(const Type&);
 
@@ -324,6 +328,14 @@ FieldField<Field, Type>::FieldField(const FieldField<Field, Type>& f)
 
 
 template<template<class> class Field, class Type>
+FieldField<Field, Type>::FieldField(FieldField<Field, Type>&& f)
+:
+    refCount(),
+    PtrList<Field<Type>>(move(f))
+{}
+
+
+template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField(FieldField<Field, Type>& f, bool reuse)
 :
     refCount(),
@@ -479,6 +491,20 @@ void FieldField<Field, Type>::operator=(const FieldField<Field, Type>& f)
     {
         this->operator[](i) = f[i];
     }
+}
+
+
+template<template<class> class Field, class Type>
+void FieldField<Field, Type>::operator=(FieldField<Field, Type>&& f)
+{
+    if (this == &f)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    PtrList<Field<Type>>::operator=(move(f));
 }
 
 

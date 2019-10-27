@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -96,8 +96,8 @@ public:
         template<class CloneArg>
         PtrList(const PtrList<T>&, const CloneArg&);
 
-        //- Construct by transferring the parameter contents
-        PtrList(const Xfer<PtrList<T>>&);
+        //- Move constructor
+        PtrList(PtrList<T>&&);
 
         //- Construct as copy or re-use as specified
         PtrList(PtrList<T>&, bool reuse);
@@ -142,9 +142,6 @@ public:
             //  and annul the argument list
             void transfer(PtrList<T>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<PtrList<T>> xfer();
-
             //- Is element set
             inline bool set(const label) const;
 
@@ -165,8 +162,11 @@ public:
 
     // Member operators
 
-        //- Assignment
+        //- Assignment operator
         void operator=(const PtrList<T>&);
+
+        //- Move assignment operator
+        void operator=(PtrList<T>&&);
 
 
     // IOstream operator
@@ -258,13 +258,6 @@ inline CML::autoPtr<T> CML::PtrList<T>::set
 }
 
 
-template<class T>
-inline CML::Xfer<CML::PtrList<T>> CML::PtrList<T>::xfer()
-{
-    return xferMove(*this);
-}
-
-
 #include "SLPtrList.hpp"
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
@@ -309,9 +302,9 @@ CML::PtrList<T>::PtrList(const PtrList<T>& a, const CloneArg& cloneArg)
 
 
 template<class T>
-CML::PtrList<T>::PtrList(const Xfer<PtrList<T>>& lst)
+CML::PtrList<T>::PtrList(PtrList<T>&& lst)
 {
-    transfer(lst());
+    transfer(lst);
 }
 
 
@@ -520,6 +513,20 @@ void CML::PtrList<T>::operator=(const PtrList<T>& a)
             << " for type " << typeid(T).name()
             << abort(FatalError);
     }
+}
+
+
+template<class T>
+void CML::PtrList<T>::operator=(PtrList<T>&& a)
+{
+    if (this == &a)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self for type " << typeid(T).name()
+            << abort(FatalError);
+    }
+
+    transfer(a);
 }
 
 

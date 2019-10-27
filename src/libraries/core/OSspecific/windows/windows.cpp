@@ -1408,7 +1408,7 @@ fileNameList dlLoaded()
         InfoInFunction
             << "determined loaded libraries :" << libs.size() << endl;
     }
-    return libs;
+    return move(libs);
 }
 
 

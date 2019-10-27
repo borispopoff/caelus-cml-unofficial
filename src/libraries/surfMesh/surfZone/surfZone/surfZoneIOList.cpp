@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -114,10 +114,10 @@ CML::surfZoneIOList::surfZoneIOList
 CML::surfZoneIOList::surfZoneIOList
 (
     const IOobject& io,
-    const Xfer<surfZoneList>& zones
+    surfZoneList&& zones
 )
 :
-    surfZoneList(zones),
+    surfZoneList(move(zones)),
     regIOobject(io)
 {}
 

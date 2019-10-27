@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,7 +68,9 @@ protected:
         //- Reference to zone list
         const cellZoneMesh& zoneMesh_;
 
+
 private:
+
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
@@ -119,7 +121,7 @@ public:
         cellZone
         (
             const word& name,
-            const Xfer<labelList>& addr,
+            labelList&& addr,
             const label index,
             const cellZoneMesh&
         );
@@ -148,7 +150,7 @@ public:
         cellZone
         (
             const cellZone&,
-            const Xfer<labelList>& addr,
+            labelList&& addr,
             const label index,
             const cellZoneMesh&
         );
@@ -219,14 +221,17 @@ public:
 
     // Member Operators
 
-        //- Assign to zone, clearing demand-driven data
+        //- Assignment to zone, clearing demand-driven data
         void operator=(const cellZone&);
+
+        //- Move assignment to zone, clearing demand-driven data
+        void operator=(cellZone&&);
 
         //- Assign addressing, clearing demand-driven data
         void operator=(const labelUList&);
 
-        //- Assign addressing, clearing demand-driven data
-        void operator=(const Xfer<labelList>&);
+        //- Move addressing, clearing demand-driven data
+        void operator=(labelList&&);
 
 
     // I-O

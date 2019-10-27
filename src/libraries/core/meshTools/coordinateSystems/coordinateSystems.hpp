@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -100,7 +100,7 @@ public:
         coordinateSystems
         (
             const IOobject&,
-            const Xfer<PtrList<coordinateSystem>>&
+            PtrList<coordinateSystem>&&
         );
 
 
@@ -128,9 +128,8 @@ public:
         //- Return the table of contents (list of all keywords)
         wordList toc() const;
 
-        //- write data    
+        //- Write data
         bool writeData(Ostream&) const;
-    
 };
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -304,10 +304,10 @@ autoPtr<mapPolyMesh> reorderMesh
 
     mesh.resetPrimitives
     (
-        Xfer<pointField>::null(),
-        xferMove(newFaces),
-        xferMove(newOwner),
-        xferMove(newNeighbour),
+        NullSingletonMove<pointField>(),
+        move(newFaces),
+        move(newOwner),
+        move(newNeighbour),
         patchSizes,
         patchStarts,
         true

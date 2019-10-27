@@ -230,8 +230,8 @@ public:
         //- Copy constructor
         inline PackedList(const PackedList<nBits>&);
 
-        //- Construct by transferring the parameter contents
-        inline PackedList(const Xfer<PackedList<nBits>>&);
+        //- Move constructor
+        inline PackedList(PackedList<nBits>&&);
 
         //- Construct from a list of labels
         explicit inline PackedList(const labelUList&);
@@ -289,7 +289,7 @@ public:
             unsigned int count() const;
 
             //- Return the values as a list of labels
-            Xfer<labelList> values() const;
+            labelList values() const;
 
             //- Print bit patterns, optionally output unused elements
             //
@@ -348,9 +348,6 @@ public:
             //  and annul the argument list.
             inline void transfer(PackedList<nBits>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<PackedList<nBits>> xfer();
-
 
         // IO
 
@@ -402,13 +399,16 @@ public:
             //- Assignment of all entries to the given value. Takes linear time.
             inline void operator=(const unsigned int val);
 
-            //- Assignment operator.
+            //- Assignment operator
             void operator=(const PackedList<nBits>&);
 
-            //- Assignment operator.
+            //- Move assignment operator
+            void operator=(PackedList<nBits>&&);
+
+            //- Assignment operator
             void operator=(const labelUList&);
 
-            //- Assignment operator.
+            //- Assignment operator
             void operator=(const UIndirectList<label>&);
 
 
@@ -834,9 +834,9 @@ inline CML::PackedList<nBits>::PackedList(const PackedList<nBits>& lst)
 
 
 template<unsigned nBits>
-inline CML::PackedList<nBits>::PackedList(const Xfer<PackedList<nBits>>& lst)
+inline CML::PackedList<nBits>::PackedList(PackedList<nBits>&& lst)
 {
-    transfer(lst());
+    transfer(lst);
 }
 
 
@@ -877,8 +877,6 @@ CML::PackedList<nBits>::clone() const
 
 
 // * * * * * * * * * * * * * * * * Iterators * * * * * * * * * * * * * * * * //
-
-// iteratorBase
 
 template<unsigned nBits>
 inline CML::PackedList<nBits>::iteratorBase::iteratorBase()
@@ -1008,7 +1006,6 @@ unsigned int () const
 }
 
 
-// const_iterator, iterator
 template<unsigned nBits>
 inline CML::PackedList<nBits>::iterator::iterator()
 :
@@ -1567,16 +1564,9 @@ inline void CML::PackedList<nBits>::transfer(PackedList<nBits>& lst)
 
 
 template<unsigned nBits>
-inline CML::Xfer<CML::PackedList<nBits>> CML::PackedList<nBits>::xfer()
-{
-    return xferMove(*this);
-}
-
-
-template<unsigned nBits>
 inline unsigned int CML::PackedList<nBits>::get(const label i) const
 {
-    // lazy evaluation - return 0 for out-of-range
+    // Lazy evaluation - return 0 for out-of-range
     if (i < 0 || i >= size_)
     {
         return 0;
@@ -1835,7 +1825,7 @@ void CML::PackedList<nBits>::flip()
 
 
 template<unsigned nBits>
-CML::Xfer<CML::labelList> CML::PackedList<nBits>::values() const
+CML::labelList CML::PackedList<nBits>::values() const
 {
     labelList elems(size_);
 
@@ -1844,7 +1834,7 @@ CML::Xfer<CML::labelList> CML::PackedList<nBits>::values() const
         elems[i] = get(i);
     }
 
-    return elems.xfer();
+    return elems;
 }
 
 
@@ -2261,6 +2251,13 @@ void CML::PackedList<nBits>::operator=(const PackedList<nBits>& lst)
 {
     StorageList::operator=(lst);
     size_ = lst.size();
+}
+
+
+template<unsigned nBits>
+void CML::PackedList<nBits>::operator=(PackedList<nBits>&& lst)
+{
+    transfer(lst);
 }
 
 

@@ -260,6 +260,14 @@ public:
             const bool reuse
         );
 
+        //- Construct from triangles, patches, points.
+        triSurface
+        (
+            List<labelledTri>&&,
+            const geometricSurfacePatchList&,
+            List<point>&&
+        );
+
         //- Construct from triangles, points. Set patchnames to default.
         triSurface(const List<labelledTri>&, const pointField&);
 
@@ -276,8 +284,11 @@ public:
         //- Construct from objectRegistry
         triSurface(const Time& d);
 
-        //- Construct as copy
+        //- Copy constructor
         triSurface(const triSurface&);
+
+        //- Move constructor
+        triSurface(triSurface&&);
 
 
     //- Destructor
@@ -423,6 +434,7 @@ public:
     // Member operators
 
         void operator=(const triSurface&);
+        void operator=(triSurface&&);
 
 
     // Ostream Operator

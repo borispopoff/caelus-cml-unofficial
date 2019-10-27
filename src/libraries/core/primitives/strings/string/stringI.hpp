@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -33,21 +33,30 @@ inline CML::string::string(const std::string& str)
 {}
 
 
-// Copy character array
+inline CML::string::string(const string& str)
+:
+    std::string(str)
+{}
+
+
+inline CML::string::string(string&& str)
+:
+    std::string(move(str))
+{}
+
+
 inline CML::string::string(const char* str)
 :
     std::string(str)
 {}
 
 
-// Construct from a given number of characters in a character array
 inline CML::string::string(const char* str, const size_type len)
 :
     std::string(str, len)
 {}
 
 
-// Construct from a single character
 inline CML::string::string(const char c)
 :
     std::string(1, c)
@@ -205,5 +214,18 @@ inline unsigned CML::string::hash::operator()
 {
     return Hasher(key.data(), key.size(), seed);
 }
+
+
+void CML::string::operator=(const string& str)
+{
+    std::string::operator=(str);
+}
+
+
+void CML::string::operator=(string&& str)
+{
+    std::string::operator=(move(str));
+}
+
 
 // ************************************************************************* //

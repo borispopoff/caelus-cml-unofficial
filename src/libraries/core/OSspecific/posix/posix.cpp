@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -1299,7 +1299,8 @@ CML::fileNameList CML::dlLoaded()
             << "dlLoaded()"
             << " : determined loaded libraries :" << libs.size() << std::endl;
     }
-    return libs;
+
+    return move(libs);
 }
 
 std::string CML::toUnixPath(const std::string & path)

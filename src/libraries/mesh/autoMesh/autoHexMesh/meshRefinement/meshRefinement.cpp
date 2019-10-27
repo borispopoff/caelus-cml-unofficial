@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -2003,7 +2003,7 @@ CML::labelList CML::meshRefinement::meshedPatches() const
         }
     }
 
-    return patchIDs;
+    return move(patchIDs);
 }
 
 

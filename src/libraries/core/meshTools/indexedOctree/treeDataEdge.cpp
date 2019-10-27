@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -81,12 +81,12 @@ CML::treeDataEdge::treeDataEdge
     const bool cacheBb,
     const edgeList& edges,
     const pointField& points,
-    const Xfer<labelList>& edgeLabels
+    labelList&& edgeLabels
 )
 :
     edges_(edges),
     points_(points),
-    edgeLabels_(edgeLabels),
+    edgeLabels_(move(edgeLabels)),
     cacheBb_(cacheBb)
 {
     update();

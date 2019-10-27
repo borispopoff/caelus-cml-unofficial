@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,21 +68,15 @@ bool CML::directMethod::findInitialSeeds
 
         if (mapFlag[srcI])
         {
-            const pointField
-                pts(srcCells[srcI].points(srcFaces, srcPts).xfer());
-
-            forAll(pts, ptI)
-            {
-                const point& pt = pts[ptI];
-                label tgtI = tgt_.cellTree().findInside(pt);
+            const point srcCtr(srcCells[srcI].centre(srcPts, srcFaces));
+            label tgtI = tgt_.cellTree().findInside(srcCtr);
 
                 if (tgtI != -1 && intersect(srcI, tgtI))
                 {
                     srcSeedI = srcI;
                     tgtSeedI = tgtI;
 
-                    return true;
-                }
+                return true;
             }
         }
     }
@@ -174,8 +168,6 @@ void CML::directMethod::appendToDirectSeeds
     const labelList& srcNbr = src_.cellCells()[srcSeedI];
     const labelList& tgtNbr = tgt_.cellCells()[tgtSeedI];
 
-    const vectorField& srcCentre = src_.cellCentres();
-
     forAll(srcNbr, i)
     {
         label srcI = srcNbr[i];
@@ -190,15 +182,7 @@ void CML::directMethod::appendToDirectSeeds
             {
                 label tgtI = tgtNbr[j];
 
-                if
-                (
-                    tgt_.pointInCell
-                    (
-                        srcCentre[srcI],
-                        tgtI,
-                        polyMesh::FACE_PLANES
-                    )
-                )
+                if (intersect(srcI, tgtI))
                 {
                     // new match - append to lists
                     found = true;

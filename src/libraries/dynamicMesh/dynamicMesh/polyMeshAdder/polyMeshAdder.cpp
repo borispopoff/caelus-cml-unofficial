@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -344,7 +344,7 @@ CML::List<CML::polyPatch*> CML::polyMeshAdder::combinePatches
 
     allPatches.shrink();
 
-    return allPatches;
+    return move(allPatches);
 }
 
 
@@ -1434,10 +1434,10 @@ CML::autoPtr<CML::polyMesh> CML::polyMeshAdder::add
         new polyMesh
         (
             io,
-            xferMove(allPoints),
-            xferMove(allFaces),
-            xferMove(allOwner),
-            xferMove(allNeighbour)
+            move(allPoints),
+            move(allFaces),
+            move(allOwner),
+            move(allNeighbour)
         )
     );
     polyMesh& mesh = tmesh();
@@ -1745,10 +1745,10 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
     mesh0.resetMotion();    // delete any oldPoints.
     mesh0.resetPrimitives
     (
-        xferMove(allPoints),
-        xferMove(allFaces),
-        xferMove(allOwner),
-        xferMove(allNeighbour),
+        move(allPoints),
+        move(allFaces),
+        move(allOwner),
+        move(allNeighbour),
         patchSizes,     // size
         patchStarts,    // patchstarts
         validBoundary   // boundary valid?
