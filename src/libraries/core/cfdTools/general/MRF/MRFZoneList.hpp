@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2018 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -40,6 +40,10 @@ namespace CML
 class MRFZoneList;
 Ostream& operator<<(Ostream& os, const MRFZoneList& models);
 
+/*---------------------------------------------------------------------------*\
+                         Class MRFZoneList Declaration
+\*---------------------------------------------------------------------------*/
+
 class MRFZoneList
 :
     public PtrList<MRFZone>
@@ -47,10 +51,10 @@ class MRFZoneList
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MRFZoneList(const MRFZoneList&);
+        MRFZoneList(const MRFZoneList&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MRFZoneList&);
+        void operator=(const MRFZoneList&) = delete;
 
 
 protected:

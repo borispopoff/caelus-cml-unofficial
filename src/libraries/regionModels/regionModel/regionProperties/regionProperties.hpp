@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -53,10 +53,10 @@ class regionProperties
 {
 
         //- Disallow default bitwise copy construct
-        regionProperties(const regionProperties&);
+        regionProperties(const regionProperties&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const regionProperties&);
+        void operator=(const regionProperties&) = delete;
 
 public:
 

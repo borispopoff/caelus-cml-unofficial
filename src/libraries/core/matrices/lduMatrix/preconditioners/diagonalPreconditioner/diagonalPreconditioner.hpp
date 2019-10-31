@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2014 - 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -61,10 +61,10 @@ class diagonalPreconditioner : public lduMatrix::preconditioner
     // Private Member Functions
 
     //- Disallow default bitwise copy construct
-    diagonalPreconditioner(const diagonalPreconditioner&);
+    diagonalPreconditioner(const diagonalPreconditioner&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const diagonalPreconditioner&);
+    void operator=(const diagonalPreconditioner&) = delete;
 
 public:
 

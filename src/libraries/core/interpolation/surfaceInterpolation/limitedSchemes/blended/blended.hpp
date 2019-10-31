@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,10 +55,10 @@ class blended
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        blended(const blended&);
+        blended(const blended&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const blended&);
+        void operator=(const blended&) = delete;
 
 
 public:

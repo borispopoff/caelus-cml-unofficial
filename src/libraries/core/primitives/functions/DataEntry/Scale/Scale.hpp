@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -59,10 +59,13 @@ Description
         <entryName>
         {
             type      scale;
+
             scale     2;
+
             value
             {
                 type        sine;
+
                 frequency   10;
                 amplitude   1;
                 scale       (1 0.1 0);
@@ -70,16 +73,20 @@ Description
             }
         }
     \endverbatim
+
     Usage including the optional 'xScale' function:
     \verbatim
         <entryName>
         {
             type      scale;
+
             xScale    0.5;
             scale     2;
+
             value
             {
                 type        sine;
+
                 frequency   10;
                 amplitude   1;
                 scale       (1 0.1 0);
@@ -138,7 +145,7 @@ class Scale
         void read(const dictionary& coeffs);
 
         //- Disallow default bitwise assignment
-        void operator=(const Scale<Type>&);
+        void operator=(const Scale<Type>&) = delete;
 
 
 public:

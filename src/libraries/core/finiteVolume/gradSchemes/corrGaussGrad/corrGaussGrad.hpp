@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2015 Applied CCM
+Copyright (C) 2015-2019 Applied CCM
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,9 +51,9 @@ class CorrGaussGrad : public fv::gradScheme<Type>
     //- Number of iteration for correction loop
     label corrIter_;
 
-    CorrGaussGrad(CorrGaussGrad const&);
+    CorrGaussGrad(CorrGaussGrad const&) = delete;
 
-    void operator=(CorrGaussGrad const&);
+    void operator=(CorrGaussGrad const&) = delete;
  
 
 public:

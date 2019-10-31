@@ -241,7 +241,7 @@ public:
             const bool active
         );
 
-        //- Construct as copy
+        //- Copy constructor
         refinementHistory(const IOobject&, const refinementHistory&);
 
         //- Construct from multiple refinement histories. If global number of
@@ -353,6 +353,7 @@ public:
         //  Can only distribute clusters sent across in one go; cannot
         //  handle parts recombined in multiple passes.
         void distribute(const mapDistributePolyMesh&);
+
 
         //- Compact splitCells_. Removes all freeSplitCells_ elements.
         void compact();

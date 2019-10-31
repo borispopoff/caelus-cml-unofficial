@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -103,10 +103,10 @@ class cellFeatures
 
 
         //- Disallow default bitwise copy construct
-        cellFeatures(const cellFeatures&);
+        cellFeatures(const cellFeatures&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cellFeatures&);
+        void operator=(const cellFeatures&) = delete;
 
 public:
 

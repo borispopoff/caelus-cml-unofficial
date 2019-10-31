@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2014-2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -189,7 +189,7 @@ private:
         polyMesh(const polyMesh&);
 
         //- Disallow default bitwise assignment
-        void operator=(const polyMesh&);
+        void operator=(const polyMesh&) = delete;
 
         //- Initialise the polyMesh from the primitive data
         void initMesh();
@@ -710,14 +710,14 @@ public:
             (
                 const point& p,
                 label celli,
-                const cellDecomposition  = CELL_TETS
+                const cellDecomposition = CELL_TETS
             ) const;
 
             //- Find cell enclosing this location (-1 if not in mesh)
             virtual label findCell
             (
                 const point& p,
-                const cellDecomposition  = CELL_TETS
+                const cellDecomposition = CELL_TETS
             ) const;
 };
 

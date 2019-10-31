@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,10 +49,10 @@ class staticFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        staticFvMesh(const staticFvMesh&);
+        staticFvMesh(const staticFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const staticFvMesh&);
+        void operator=(const staticFvMesh&) = delete;
 
 
 public:

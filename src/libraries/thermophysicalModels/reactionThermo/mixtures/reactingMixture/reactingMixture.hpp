@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,10 +53,10 @@ class reactingMixture
 
 
     //- Disallow default bitwise copy construct
-    reactingMixture(const reactingMixture&);
+    reactingMixture(const reactingMixture&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const reactingMixture&);
+    void operator=(const reactingMixture&) = delete;
 
 
 public:

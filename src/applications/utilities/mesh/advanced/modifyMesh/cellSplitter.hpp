@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -88,10 +88,10 @@ class cellSplitter
         ) const;
 
         //- Disallow default bitwise copy construct
-        cellSplitter(const cellSplitter&);
+        cellSplitter(const cellSplitter&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cellSplitter&);
+        void operator=(const cellSplitter&) = delete;
 
 public:
 

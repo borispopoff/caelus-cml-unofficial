@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -75,10 +75,10 @@ class singleCellFvMesh
 
 
         //- Disallow default bitwise copy construct
-        singleCellFvMesh(const singleCellFvMesh&);
+        singleCellFvMesh(const singleCellFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const singleCellFvMesh&);
+        void operator=(const singleCellFvMesh&) = delete;
 
 
 public:
@@ -93,6 +93,7 @@ public:
                 const labelListList& addressing_;
                 const scalarListList& weights_;
                 bool hasUnmapped_;
+
 
         public:
 

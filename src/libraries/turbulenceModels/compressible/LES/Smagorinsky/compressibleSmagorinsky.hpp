@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -75,8 +75,8 @@ class Smagorinsky
         void updateSubGridScaleFields(const volTensorField& gradU);
 
         // Disallow default bitwise copy construct and assignment
-        Smagorinsky(const Smagorinsky&);
-        Smagorinsky& operator=(const Smagorinsky&);
+        Smagorinsky(const Smagorinsky&) = delete;
+        Smagorinsky& operator=(const Smagorinsky&) = delete;
 
 
 public:

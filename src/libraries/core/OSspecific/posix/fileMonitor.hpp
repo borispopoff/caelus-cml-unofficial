@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -100,10 +100,10 @@ private:
         void checkFiles() const;
 
         //- Disallow default bitwise copy construct
-        fileMonitor(const fileMonitor&);
+        fileMonitor(const fileMonitor&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fileMonitor&);
+        void operator=(const fileMonitor&) = delete;
 
 
 public:

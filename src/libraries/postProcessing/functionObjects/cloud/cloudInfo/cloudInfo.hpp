@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2013 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -111,15 +111,16 @@ protected:
         //- File header information
         virtual void writeFileHeader(const label i);
 
+
 private:
 
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        cloudInfo(const cloudInfo&);
+        cloudInfo(const cloudInfo&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cloudInfo&);
+        void operator=(const cloudInfo&) = delete;
 
 
 public:

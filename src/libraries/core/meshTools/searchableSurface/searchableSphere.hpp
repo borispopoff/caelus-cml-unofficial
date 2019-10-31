@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -64,10 +64,10 @@ private:
 
 
     // Private Member Functions
-    
+
         //- Inherit findNearest from searchableSurface
         using searchableSurface::findNearest;
-    
+
         //- Find nearest point on sphere.
         pointIndexHit findNearest
         (
@@ -86,10 +86,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        searchableSphere(const searchableSphere&);
+        searchableSphere(const searchableSphere&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableSphere&);
+        void operator=(const searchableSphere&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -84,10 +84,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        ReactingCloud(const ReactingCloud&);
+        ReactingCloud(const ReactingCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const ReactingCloud&);
+        void operator=(const ReactingCloud&) = delete;
 
 
 protected:

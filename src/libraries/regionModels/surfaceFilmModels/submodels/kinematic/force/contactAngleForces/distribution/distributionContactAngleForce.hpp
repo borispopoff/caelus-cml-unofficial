@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017-2018 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -68,10 +68,13 @@ class distributionContactAngleForce
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        distributionContactAngleForce(const distributionContactAngleForce&);
+        distributionContactAngleForce
+        (
+            const distributionContactAngleForce&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const distributionContactAngleForce&);
+        void operator=(const distributionContactAngleForce&) = delete;
 
 
 protected:

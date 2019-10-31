@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -300,10 +300,10 @@ class globalMeshData
 
 
         //- Disallow default bitwise copy construct
-        globalMeshData(const globalMeshData&);
+        globalMeshData(const globalMeshData&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const globalMeshData&);
+        void operator=(const globalMeshData&) = delete;
 
 
 public:

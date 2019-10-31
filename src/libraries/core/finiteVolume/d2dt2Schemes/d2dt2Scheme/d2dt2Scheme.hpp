@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -74,7 +74,7 @@ protected:
         d2dt2Scheme(const d2dt2Scheme&);
 
         //- Disallow default bitwise assignment
-        void operator=(const d2dt2Scheme&);
+        void operator=(const d2dt2Scheme&) = delete;
 
 
 public:

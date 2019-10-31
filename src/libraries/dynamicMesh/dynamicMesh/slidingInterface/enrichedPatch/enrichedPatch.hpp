@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -130,10 +130,10 @@ class enrichedPatch
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        enrichedPatch(const enrichedPatch&);
+        enrichedPatch(const enrichedPatch&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const enrichedPatch&);
+        void operator=(const enrichedPatch&) = delete;
 
         // Creation of demand-driven private data
 

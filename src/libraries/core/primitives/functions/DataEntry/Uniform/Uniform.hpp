@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -60,7 +60,7 @@ class Uniform
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const Uniform<Type>&);
+        void operator=(const Uniform<Type>&) = delete;
 
 
 public:

@@ -78,10 +78,10 @@ class STARCDsurfaceFormat
         );
 
         //- Disallow default bitwise copy construct
-        STARCDsurfaceFormat(const STARCDsurfaceFormat<Face>&);
+        STARCDsurfaceFormat(const STARCDsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const STARCDsurfaceFormat<Face>&);
+        void operator=(const STARCDsurfaceFormat<Face>&) = delete;
 
 
 public:

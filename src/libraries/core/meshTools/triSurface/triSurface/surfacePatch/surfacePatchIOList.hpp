@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,10 +63,10 @@ class surfacePatchIOList
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        surfacePatchIOList(const surfacePatchIOList&);
+        surfacePatchIOList(const surfacePatchIOList&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const surfacePatchIOList&);
+        void operator=(const surfacePatchIOList&) = delete;
 
 
 public:

@@ -61,7 +61,7 @@ class secondOrderCorrectedSnGrad
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const secondOrderCorrectedSnGrad&);
+        void operator=(const secondOrderCorrectedSnGrad&) = delete;
 
 
 public:

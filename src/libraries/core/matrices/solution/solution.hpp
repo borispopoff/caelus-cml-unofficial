@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -77,7 +77,7 @@ class solution
         void read(const dictionary&);
 
         //- Disallow default bitwise copy construct and assignment
-        solution(const solution&);
+        solution(const solution&) = delete;
         void operator=(const solution&);
 
 

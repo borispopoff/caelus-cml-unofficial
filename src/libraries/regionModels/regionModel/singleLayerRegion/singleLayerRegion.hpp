@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,10 +53,10 @@ class singleLayerRegion
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        singleLayerRegion(const singleLayerRegion&);
+        singleLayerRegion(const singleLayerRegion&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const singleLayerRegion&);
+        void operator=(const singleLayerRegion&) = delete;
 
         //- Construct region mesh and fields
         void constructMeshObjects();

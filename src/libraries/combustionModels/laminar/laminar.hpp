@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -49,27 +49,28 @@ class laminar
 :
     public ChemistryCombustion<ReactionThermo>
 {
+    // Private data
 
-    //- Integrate reaction rate over the time-step
-    //  using the selected ODE solver
-    bool integrateReactionRate_;
+        //- Integrate reaction rate over the time-step
+        //  using the selected ODE solver
+        bool integrateReactionRate_;
 
 protected:
 
     // Protected Member Functions
 
-    //- Return the chemical time scale
-    tmp<volScalarField> tc() const;
+        //- Return the chemical time scale
+        tmp<volScalarField> tc() const;
 
 private:
 
     // Private Member Functions
 
-    //- Disallow copy construct
-    laminar(const laminar&);
+        //- Disallow copy construct
+        laminar(const laminar&);
 
-    //- Disallow default bitwise assignment
-    void operator=(const laminar&);
+        //- Disallow default bitwise assignment
+        void operator=(const laminar&) = delete;
 
 
 public:
@@ -78,14 +79,16 @@ public:
     TypeName("laminar");
 
 
-    //- Construct from components
-    laminar
-    (
-        const word& modelType,
-        ReactionThermo& thermo,
-        const compressible::turbulenceModel& turb,
-        const word& combustionProperties
-    );
+    // Constructors
+
+        //- Construct from components
+        laminar
+        (
+            const word& modelType,
+            ReactionThermo& thermo,
+            const compressible::turbulenceModel& turb,
+            const word& combustionProperties
+        );
 
 
     //- Destructor
@@ -95,18 +98,17 @@ public:
 
     // Member Functions
 
-    //- Correct combustion rate
-    virtual void correct();
+        //- Correct combustion rate
+        virtual void correct();
 
-    //- Fuel consumption rate matrix.
-    virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
+        //- Fuel consumption rate matrix.
+        virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
 
-    //- Heat release rate [kg/m/s3]
-    virtual tmp<volScalarField> Qdot() const;
+        //- Heat release rate [kg/m/s3]
+        virtual tmp<volScalarField> Qdot() const;
 
-    //- Update properties from given dictionary
-    virtual bool read();
-
+        //- Update properties from given dictionary
+        virtual bool read();
 };
 
 

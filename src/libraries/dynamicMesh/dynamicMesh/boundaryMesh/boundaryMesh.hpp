@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,6 +66,7 @@ class boundaryMesh
         //  the largest distance from face centre to one of its vertices.
         static const scalar distanceTol_;
 
+
     // Private data
 
         //- All boundary mesh data. Reconstructed every time faces are repatched
@@ -83,16 +84,16 @@ class boundaryMesh
         // Edge handling
         //
 
-        //- points referenced by feature edges.
+        //- Points referenced by feature edges.
         pointField featurePoints_;
 
-        //- feature edges. Indices into featurePoints.
+        //- Feature edges. Indices into featurePoints.
         edgeList featureEdges_;
 
-        //- from feature edge to mesh edge.
+        //- From feature edge to mesh edge.
         labelList featureToEdge_;
 
-        //- from mesh edges to featureEdges_;
+        //- From mesh edges to featureEdges_;
         labelList edgeToFeature_;
 
         //- Feature 'segments'. Collections of connected featureEdges.
@@ -168,10 +169,10 @@ class boundaryMesh
 
 
         //- Disallow default bitwise copy construct
-        boundaryMesh(const boundaryMesh&);
+        boundaryMesh(const boundaryMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const boundaryMesh&);
+        void operator=(const boundaryMesh&) = delete;
 
 
 public:

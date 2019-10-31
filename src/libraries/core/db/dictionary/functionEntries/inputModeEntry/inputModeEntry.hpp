@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -30,12 +30,12 @@ Description
     \endverbatim
 
     The possible input modes:
-    \param merge      merge sub-dictionaries when possible
-    \param overwrite  keep last entry and silently remove previous ones
-    \param protect    keep initial entry and silently ignore subsequent ones
-    \param warn       keep initial entry and warn about subsequent ones
-    \param error      issue a FatalError for duplicate entries
-    \param default    currently identical to merge
+      - \par merge      merge sub-dictionaries when possible
+      - \par overwrite  keep last entry and silently remove previous ones
+      - \par protect    keep initial entry and silently ignore subsequent ones
+      - \par warn       keep initial entry and warn about subsequent ones
+      - \par error      issue a FatalError for duplicate entries
+      - \par default    currently identical to merge
 
 SourceFiles
     inputModeEntry.cpp
@@ -82,10 +82,10 @@ class inputModeEntry
         static void setMode(Istream&);
 
         //- Disallow default bitwise copy construct
-        inputModeEntry(const inputModeEntry&);
+        inputModeEntry(const inputModeEntry&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const inputModeEntry&);
+        void operator=(const inputModeEntry&) = delete;
 
 
 public:

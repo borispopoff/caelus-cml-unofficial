@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,10 +59,13 @@ class multivariateSelectionScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        multivariateSelectionScheme(const multivariateSelectionScheme&);
+        multivariateSelectionScheme
+        (
+            const multivariateSelectionScheme&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const multivariateSelectionScheme&);
+        void operator=(const multivariateSelectionScheme&) = delete;
 
 
 public:

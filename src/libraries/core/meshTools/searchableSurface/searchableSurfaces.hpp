@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -78,15 +78,16 @@ class searchableSurfaces
 
 
         //- Disallow default bitwise copy construct
-        searchableSurfaces(const searchableSurfaces&);
+        searchableSurfaces(const searchableSurfaces&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaces&);
+        void operator=(const searchableSurfaces&) = delete;
 
 
 public:
 
     ClassName("searchableSurfaces");
+
 
     // Constructors
 
@@ -115,6 +116,7 @@ public:
         {
             return names_;
         }
+
         wordList& names()
         {
             return names_;
@@ -124,6 +126,7 @@ public:
         {
             return regionNames_;
         }
+
         List<wordList>& regionNames()
         {
             return regionNames_;

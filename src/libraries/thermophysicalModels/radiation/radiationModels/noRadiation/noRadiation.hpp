@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,12 +49,13 @@ class noRadiation
 :
     public radiationModel
 {
+    // Private Member Functions
 
-    //- Disallow default bitwise copy construct
-    noRadiation(const noRadiation&);
+        //- Disallow default bitwise copy construct
+        noRadiation(const noRadiation&) = delete;
 
-    //- Disallow default bitwise assignment
-    void operator=(const noRadiation&);
+        //- Disallow default bitwise assignment
+        void operator=(const noRadiation&) = delete;
 
 
 public:

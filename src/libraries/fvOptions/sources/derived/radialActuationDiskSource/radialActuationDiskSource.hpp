@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -105,10 +105,10 @@ class radialActuationDiskSource
         ) const;
 
         //- Disallow default bitwise copy construct
-        radialActuationDiskSource(const radialActuationDiskSource&);
+        radialActuationDiskSource(const radialActuationDiskSource&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const radialActuationDiskSource&);
+        void operator=(const radialActuationDiskSource&) = delete;
 
 
 public:

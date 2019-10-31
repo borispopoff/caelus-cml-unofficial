@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -63,7 +63,7 @@ class Constant
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const Constant<Type>&);
+        void operator=(const Constant<Type>&) = delete;
 
 
 public:

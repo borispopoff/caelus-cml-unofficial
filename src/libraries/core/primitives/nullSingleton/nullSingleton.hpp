@@ -47,10 +47,10 @@ class NullSingleton
     {}
 
     //- Prevent copy-construction
-    NullSingleton(const NullSingleton&);
+    NullSingleton(const NullSingleton&) = delete;
 
     //- Prevent assignment
-    void operator=(const NullSingleton&);
+    void operator=(const NullSingleton&) = delete;
 
 public:
 

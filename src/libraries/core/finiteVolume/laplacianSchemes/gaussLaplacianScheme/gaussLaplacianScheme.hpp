@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -65,10 +65,10 @@ class gaussLaplacianScheme
         );
 
         //- Disallow default bitwise copy construct
-        gaussLaplacianScheme(const gaussLaplacianScheme&);
+        gaussLaplacianScheme(const gaussLaplacianScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const gaussLaplacianScheme&);
+        void operator=(const gaussLaplacianScheme&) = delete;
 
 
 public:

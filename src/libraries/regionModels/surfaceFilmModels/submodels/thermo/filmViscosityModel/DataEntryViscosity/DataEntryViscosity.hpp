@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017-2018 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -55,10 +55,10 @@ class DataEntryViscosity
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        DataEntryViscosity(const DataEntryViscosity&);
+        DataEntryViscosity(const DataEntryViscosity&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const DataEntryViscosity&);
+        void operator=(const DataEntryViscosity&) = delete;
 
 
 protected:

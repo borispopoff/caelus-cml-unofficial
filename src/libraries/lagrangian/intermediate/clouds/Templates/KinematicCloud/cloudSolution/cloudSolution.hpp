@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -102,7 +102,7 @@ class cloudSolution
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const cloudSolution&);
+        void operator=(const cloudSolution&) = delete;
 
 
 public:

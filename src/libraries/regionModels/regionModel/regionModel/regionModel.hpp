@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,10 +60,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        regionModel(const regionModel&);
+        regionModel(const regionModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const regionModel&);
+        void operator=(const regionModel&) = delete;
 
         //- Construct region mesh and fields
         void constructMeshObjects();

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -86,10 +86,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        writeDictionary(const writeDictionary&);
+        writeDictionary(const writeDictionary&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const writeDictionary&);
+        void operator=(const writeDictionary&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -41,7 +41,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class smoothDelta Declaration
+                         Class smoothDelta Declaration
 \*---------------------------------------------------------------------------*/
 
 class smoothDelta
@@ -145,8 +145,8 @@ public:
                 inline bool updateCell
                 (
                     const polyMesh&,
-                    const label thisCellI,
-                    const label neighbourFaceI,
+                    const label thisCelli,
+                    const label neighbourFacei,
                     const deltaData& neighbourInfo,
                     const scalar tol,
                     TrackingData& td
@@ -157,8 +157,8 @@ public:
                 inline bool updateFace
                 (
                     const polyMesh&,
-                    const label thisFaceI,
-                    const label neighbourCellI,
+                    const label thisFacei,
+                    const label neighbourCelli,
                     const deltaData& neighbourInfo,
                     const scalar tol,
                     TrackingData& td
@@ -169,7 +169,7 @@ public:
                 inline bool updateFace
                 (
                     const polyMesh&,
-                    const label thisFaceI,
+                    const label thisFacei,
                     const deltaData& neighbourInfo,
                     const scalar tol,
                     TrackingData& td
@@ -215,7 +215,7 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        smoothDelta(const smoothDelta&);
+        smoothDelta(const smoothDelta&) = delete;
         void operator=(const smoothDelta&);
 
         // Calculate the delta values

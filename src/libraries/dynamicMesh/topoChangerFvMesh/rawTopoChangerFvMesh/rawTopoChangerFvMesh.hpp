@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,10 +66,10 @@ class rawTopoChangerFvMesh
         void zeroUnmappedValues(const PackedBoolList&) const;
 
         //- Disallow default bitwise copy construct
-        rawTopoChangerFvMesh(const rawTopoChangerFvMesh&);
+        rawTopoChangerFvMesh(const rawTopoChangerFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const rawTopoChangerFvMesh&);
+        void operator=(const rawTopoChangerFvMesh&) = delete;
 
 public:
 

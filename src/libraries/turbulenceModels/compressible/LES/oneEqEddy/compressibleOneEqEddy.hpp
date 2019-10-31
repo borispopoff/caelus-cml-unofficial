@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -82,8 +82,8 @@ class oneEqEddy
         void updateSubGridScaleFields();
 
         // Disallow default bitwise copy construct and assignment
-        oneEqEddy(const oneEqEddy&);
-        oneEqEddy& operator=(const oneEqEddy&);
+        oneEqEddy(const oneEqEddy&) = delete;
+        oneEqEddy& operator=(const oneEqEddy&) = delete;
 
 
 public:

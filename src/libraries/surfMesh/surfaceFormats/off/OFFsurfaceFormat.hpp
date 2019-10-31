@@ -67,10 +67,10 @@ class OFFsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        OFFsurfaceFormat(const OFFsurfaceFormat&);
+        OFFsurfaceFormat(const OFFsurfaceFormat&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const OFFsurfaceFormat&);
+        void operator=(const OFFsurfaceFormat&) = delete;
 
 
 public:

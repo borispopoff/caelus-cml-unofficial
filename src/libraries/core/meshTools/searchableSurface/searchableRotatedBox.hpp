@@ -79,10 +79,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        searchableRotatedBox(const searchableRotatedBox&);
+        searchableRotatedBox(const searchableRotatedBox&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableRotatedBox&);
+        void operator=(const searchableRotatedBox&) = delete;
 
 
 public:

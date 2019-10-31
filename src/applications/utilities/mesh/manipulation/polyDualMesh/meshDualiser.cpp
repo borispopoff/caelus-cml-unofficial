@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -35,6 +35,7 @@ namespace CML
     defineTypeNameAndDebug(meshDualiser, 0);
 }
 
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void CML::meshDualiser::checkPolyTopoChange(const polyTopoChange& meshMod)
@@ -51,7 +52,7 @@ void CML::meshDualiser::checkPolyTopoChange(const polyTopoChange& meshMod)
     bool hasMerged = mergePoints
     (
         points,
-        1E-6,
+        1e-6,
         false,
         oldToNew,
         newPoints
@@ -200,7 +201,7 @@ CML::label CML::meshDualiser::addInternalFace
 (
     const label masterPointi,
     const label masterEdgeI,
-    const label masterFaceI,
+    const label masterFacei,
 
     const bool edgeOrder,
     const label dualCell0,
@@ -225,7 +226,7 @@ CML::label CML::meshDualiser::addInternalFace
         bool hasMerged = mergePoints
         (
             facePoints,
-            1E-6,
+            1e-6,
             false,
             oldToNew,
             newPoints
@@ -243,15 +244,15 @@ CML::label CML::meshDualiser::addInternalFace
 
     label zoneID = -1;
     bool zoneFlip = false;
-    if (masterFaceI != -1)
+    if (masterFacei != -1)
     {
-        zoneID = mesh_.faceZones().whichZone(masterFaceI);
+        zoneID = mesh_.faceZones().whichZone(masterFacei);
 
         if (zoneID != -1)
         {
             const faceZone& fZone = mesh_.faceZones()[zoneID];
 
-            zoneFlip = fZone.flipMap()[fZone.whichFace(masterFaceI)];
+            zoneFlip = fZone.flipMap()[fZone.whichFace(masterFacei)];
         }
     }
 
@@ -266,22 +267,22 @@ CML::label CML::meshDualiser::addInternalFace
             dualCell1,      // nei
             masterPointi,   // masterPointID
             masterEdgeI,    // masterEdgeID
-            masterFaceI,    // masterFaceID
+            masterFacei,    // masterFaceID
             false,          // flipFaceFlux
             -1,             // patchID
             zoneID,         // zoneID
             zoneFlip        // zoneFlip
         );
 
-        //pointField dualPoints(meshMod.points());
-        //vector n(newFace.normal(dualPoints));
-        //n /= mag(n);
-        //Pout<< "Generated internal dualFace:" << dualFacei
+        // pointField dualPoints(meshMod.points());
+        // vector n(newFace.normal(dualPoints));
+        // n /= mag(n);
+        // Pout<< "Generated internal dualFace:" << dualFacei
         //    << " verts:" << newFace
         //    << " points:" << UIndirectList<point>(meshMod.points(), newFace)()
         //    << " n:" << n
         //    << " between dualowner:" << dualCell0
-        //    << " dualneigbour:" << dualCell1
+        //    << " dualneighbour:" << dualCell1
         //    << endl;
     }
     else
@@ -293,22 +294,22 @@ CML::label CML::meshDualiser::addInternalFace
             dualCell0,      // nei
             masterPointi,   // masterPointID
             masterEdgeI,    // masterEdgeID
-            masterFaceI,    // masterFaceID
+            masterFacei,    // masterFaceID
             false,          // flipFaceFlux
             -1,             // patchID
             zoneID,         // zoneID
             zoneFlip        // zoneFlip
         );
 
-        //pointField dualPoints(meshMod.points());
-        //vector n(newFace.normal(dualPoints));
-        //n /= mag(n);
-        //Pout<< "Generated internal dualFace:" << dualFacei
+        // pointField dualPoints(meshMod.points());
+        // vector n(newFace.normal(dualPoints));
+        // n /= mag(n);
+        // Pout<< "Generated internal dualFace:" << dualFacei
         //    << " verts:" << newFace
         //    << " points:" << UIndirectList<point>(meshMod.points(), newFace)()
         //    << " n:" << n
         //    << " between dualowner:" << dualCell1
-        //    << " dualneigbour:" << dualCell0
+        //    << " dualneighbour:" << dualCell0
         //    << endl;
     }
     return dualFacei;
@@ -319,9 +320,9 @@ CML::label CML::meshDualiser::addBoundaryFace
 (
     const label masterPointi,
     const label masterEdgeI,
-    const label masterFaceI,
+    const label masterFacei,
 
-    const label dualCellI,
+    const label dualCelli,
     const label patchi,
     const DynamicList<label>& verts,
     polyTopoChange& meshMod
@@ -331,40 +332,40 @@ CML::label CML::meshDualiser::addBoundaryFace
 
     label zoneID = -1;
     bool zoneFlip = false;
-    if (masterFaceI != -1)
+    if (masterFacei != -1)
     {
-        zoneID = mesh_.faceZones().whichZone(masterFaceI);
+        zoneID = mesh_.faceZones().whichZone(masterFacei);
 
         if (zoneID != -1)
         {
             const faceZone& fZone = mesh_.faceZones()[zoneID];
 
-            zoneFlip = fZone.flipMap()[fZone.whichFace(masterFaceI)];
+            zoneFlip = fZone.flipMap()[fZone.whichFace(masterFacei)];
         }
     }
 
     label dualFacei = meshMod.addFace
     (
         newFace,
-        dualCellI,      // own
+        dualCelli,      // own
         -1,             // nei
         masterPointi,   // masterPointID
         masterEdgeI,    // masterEdgeID
-        masterFaceI,    // masterFaceID
+        masterFacei,    // masterFaceID
         false,          // flipFaceFlux
         patchi,         // patchID
         zoneID,         // zoneID
         zoneFlip        // zoneFlip
     );
 
-    //pointField dualPoints(meshMod.points());
-    //vector n(newFace.normal(dualPoints));
-    //n /= mag(n);
-    //Pout<< "Generated boundary dualFace:" << dualFacei
+    // pointField dualPoints(meshMod.points());
+    // vector n(newFace.normal(dualPoints));
+    // n /= mag(n);
+    // Pout<< "Generated boundary dualFace:" << dualFacei
     //    << " verts:" << newFace
     //    << " points:" << UIndirectList<point>(meshMod.points(), newFace)()
     //    << " n:" << n
-    //    << " on dualowner:" << dualCellI
+    //    << " on dualowner:" << dualCelli
     //    << endl;
     return dualFacei;
 }
@@ -407,7 +408,7 @@ void CML::meshDualiser::createFacesAroundEdge
     bool edgeOrder = ie.sameOrder(e[0], e[1]);
     label startFaceLabel = ie.faceLabel();
 
-    //Pout<< "At edge:" << edgeI << " verts:" << e
+    // Pout<< "At edge:" << edgeI << " verts:" << e
     //    << " points:" << mesh_.points()[e[0]] << mesh_.points()[e[1]]
     //    << " started walking at face:" << ie.faceLabel()
     //    << " verts:" << mesh_.faces()[ie.faceLabel()]
@@ -478,7 +479,7 @@ void CML::meshDualiser::createFacesAroundEdge
             (
                 -1,         // masterPointi
                 edgeI,      // masterEdgeI
-                -1,         // masterFaceI
+                -1,         // masterFacei
                 edgeOrder,
                 currentDualCell0,
                 currentDualCell1,
@@ -530,7 +531,7 @@ void CML::meshDualiser::createFacesAroundEdge
     (
         -1,         // masterPointi
         edgeI,      // masterEdgeI
-        -1,         // masterFaceI
+        -1,         // masterFacei
         edgeOrder,
         currentDualCell0,
         currentDualCell1,
@@ -555,7 +556,7 @@ void CML::meshDualiser::createFaceFromInternalFace
     label own = mesh_.faceOwner()[facei];
     label nei = mesh_.faceNeighbour()[facei];
 
-    //Pout<< "createFaceFromInternalFace : At face:" << facei
+    // Pout<< "createFaceFromInternalFace : At face:" << facei
     //    << " verts:" << f
     //    << " points:" << UIndirectList<point>(mesh_.points(), f)()
     //    << " started walking at edge:" << fEdges[fp]
@@ -624,7 +625,7 @@ void CML::meshDualiser::createFaceFromInternalFace
             (
                 -1,         // masterPointi
                 -1,         // masterEdgeI
-                facei,      // masterFaceI
+                facei,      // masterFacei
                 true,       // edgeOrder,
                 currentDualCell0,
                 currentDualCell1,
@@ -681,7 +682,7 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
             // Insert face centre
             verts.append(faceToDualPoint_[facei]);
 
-            label dualCellI = findDualCell(own[facei], pointi);
+            label dualCelli = findDualCell(own[facei], pointi);
 
             // Get the edge before the patchPointi
             const face& f = mesh_.faces()[facei];
@@ -724,11 +725,11 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
             }
 
             // Check if different cell.
-            if (dualCellI != findDualCell(own[facei], pointi))
+            if (dualCelli != findDualCell(own[facei], pointi))
             {
                 FatalErrorInFunction
                     << "Different dual cells but no feature edge"
-                    << " inbetween point:" << pointi
+                    << " in between point:" << pointi
                     << " coord:" << mesh_.points()[pointi]
                     << abort(FatalError);
             }
@@ -736,19 +737,19 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
 
         verts.shrink();
 
-        label dualCellI = findDualCell(own[facei], pointi);
+        label dualCelli = findDualCell(own[facei], pointi);
 
-        //Bit dodgy: create dualface from the last face (instead of from
+        // Bit dodgy: create dualface from the last face (instead of from
         // the central point). This will also use the original faceZone to
         // put the new face (which might span multiple original faces) in.
 
         addBoundaryFace
         (
-            //pointi,     // masterPointi
+            // pointi,     // masterPointi
             -1,         // masterPointi
             -1,         // masterEdgeI
-            facei,      // masterFaceI
-            dualCellI,
+            facei,      // masterFacei
+            dualCelli,
             patchi,
             verts,
             meshMod
@@ -801,7 +802,7 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
                 (
                     -1,     // masterPointi
                     -1,     // masterEdgeI
-                    facei,  // masterFaceI
+                    facei,  // masterFacei
                     findDualCell(own[facei], pointi),
                     patchi,
                     verts.shrink(),
@@ -846,7 +847,7 @@ void CML::meshDualiser::createFacesAroundBoundaryPoint
             (
                 -1,             // masterPointi
                 -1,             // masterEdgeI
-                startFacei,     // masterFaceI
+                startFacei,     // masterFacei
                 findDualCell(own[facei], pointi),
                 patchi,
                 verts.shrink(),
@@ -1033,11 +1034,11 @@ void CML::meshDualiser::setRefinement
         pointToDualCells_[pointi].setSize(1);
         pointToDualCells_[pointi][0] = meshMod.addCell
         (
-            pointi, //masterPointID,
-            -1,     //masterEdgeID,
-            -1,     //masterFaceID,
-            -1,     //masterCellID,
-            -1      //zoneID
+            pointi, // masterPointID,
+            -1,     // masterEdgeID,
+            -1,     // masterFaceID,
+            -1,     // masterCellID,
+            -1      // zoneID
         );
         if (dualCcStr.valid())
         {
@@ -1077,11 +1078,11 @@ void CML::meshDualiser::setRefinement
         {
             pointToDualCells_[pointi][pCelli] = meshMod.addCell
             (
-                pointi,                                     //masterPointID
-                -1,                                         //masterEdgeID
-                -1,                                         //masterFaceID
-                -1,                                         //masterCellID
-                mesh_.cellZones().whichZone(pCells[pCelli]) //zoneID
+                pointi,                                     // masterPointID
+                -1,                                         // masterEdgeID
+                -1,                                         // masterFaceID
+                -1,                                         // masterCellID
+                mesh_.cellZones().whichZone(pCells[pCelli]) // zoneID
             );
             if (dualCcStr.valid())
             {
@@ -1101,11 +1102,11 @@ void CML::meshDualiser::setRefinement
             pointToDualCells_[pointi].setSize(1);
             pointToDualCells_[pointi][0] = meshMod.addCell
             (
-                pointi, //masterPointID,
-                -1,     //masterEdgeID,
-                -1,     //masterFaceID,
-                -1,     //masterCellID,
-                -1      //zoneID
+                pointi, // masterPointID,
+                -1,     // masterEdgeID,
+                -1,     // masterFaceID,
+                -1,     // masterCellID,
+                -1      // zoneID
             );
 
             if (dualCcStr.valid())
@@ -1304,7 +1305,7 @@ void CML::meshDualiser::setRefinement
 
                 label startFacei = eFaces[i];
 
-                //Pout<< "Walking edge:" << edgeI
+                // Pout<< "Walking edge:" << edgeI
                 //    << " points:" << mesh_.points()[e[0]]
                 //    << mesh_.points()[e[1]]
                 //    << " startFace:" << startFacei
@@ -1334,7 +1335,7 @@ void CML::meshDualiser::setRefinement
     //      - single cells on either side: triangulate
     //      - multiple cells: create single face between unique cell pair. Only
     //                        create face where cells differ on either side.
-    // - non-feature face : inbetween cell zones.
+    // - non-feature face : in between cell zones.
     forAll(faceToDualPoint_, facei)
     {
         if (faceToDualPoint_[facei] != -1 && mesh_.isInternalFace(facei))
@@ -1412,7 +1413,7 @@ void CML::meshDualiser::setRefinement
                     // Starting face
                     label startFacei = pp.start()+pFaces[i];
 
-                    //Pout<< "Walking around point:" << pointi
+                    // Pout<< "Walking around point:" << pointi
                     //    << " coord:" << mesh_.points()[pointi]
                     //    << " on patch:" << patchi
                     //    << " startFace:" << startFacei

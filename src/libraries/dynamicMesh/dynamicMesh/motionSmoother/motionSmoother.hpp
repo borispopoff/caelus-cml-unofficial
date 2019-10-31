@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -279,10 +279,10 @@ class motionSmoother
         ) const;
 
         //- Disallow default bitwise copy construct
-        motionSmoother(const motionSmoother&);
+        motionSmoother(const motionSmoother&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const motionSmoother&);
+        void operator=(const motionSmoother&) = delete;
 
 
 public:

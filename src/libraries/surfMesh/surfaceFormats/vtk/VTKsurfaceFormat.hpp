@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,10 +58,10 @@ class VTKsurfaceFormat
         static void writeHeaderPolygons(Ostream&, const UList<Face>&);
 
         //- Disallow default bitwise copy construct
-        VTKsurfaceFormat(const VTKsurfaceFormat<Face>&);
+        VTKsurfaceFormat(const VTKsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const VTKsurfaceFormat<Face>&);
+        void operator=(const VTKsurfaceFormat<Face>&) = delete;
 
 
 public:

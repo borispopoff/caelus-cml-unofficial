@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,10 +58,10 @@ class GAMGInterfaceField
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        GAMGInterfaceField(const GAMGInterfaceField&);
+        GAMGInterfaceField(const GAMGInterfaceField&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const GAMGInterfaceField&);
+        void operator=(const GAMGInterfaceField&) = delete;
 
 
 public:

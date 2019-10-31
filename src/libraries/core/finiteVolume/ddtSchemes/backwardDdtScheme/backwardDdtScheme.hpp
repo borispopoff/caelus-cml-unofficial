@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -65,10 +65,10 @@ class backwardDdtScheme
         scalar deltaT0_(const GeoField&) const;
 
         //- Disallow default bitwise copy construct
-        backwardDdtScheme(const backwardDdtScheme&);
+        backwardDdtScheme(const backwardDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const backwardDdtScheme&);
+        void operator=(const backwardDdtScheme&) = delete;
 
 
 public:

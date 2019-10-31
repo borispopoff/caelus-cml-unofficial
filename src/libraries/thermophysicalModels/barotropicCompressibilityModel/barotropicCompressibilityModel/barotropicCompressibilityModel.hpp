@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,10 +66,10 @@ protected:
     const volScalarField& gamma_;
 
     //- Disallow copy construct
-    barotropicCompressibilityModel(const barotropicCompressibilityModel&);
+    barotropicCompressibilityModel(const barotropicCompressibilityModel&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const barotropicCompressibilityModel&);
+    void operator=(const barotropicCompressibilityModel&) = delete;
 
 
 public:

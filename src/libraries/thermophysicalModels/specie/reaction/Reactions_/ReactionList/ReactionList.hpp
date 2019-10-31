@@ -64,7 +64,7 @@ class ReactionList
 
 
     //- Disallow default bitwise assignment
-    void operator=(const ReactionList&);
+    void operator=(const ReactionList&) = delete;
 
 
 public:

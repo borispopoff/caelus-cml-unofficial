@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -97,7 +97,7 @@ class meshCutAndRemove
         void faceCells
         (
             const cellCuts& cuts,
-            const label exposedPatchI,
+            const label exposedPatchi,
             const label facei,
             label& own,
             label& nei,
@@ -172,10 +172,10 @@ class meshCutAndRemove
 
 
         //- Disallow default bitwise copy construct
-        meshCutAndRemove(const meshCutAndRemove&);
+        meshCutAndRemove(const meshCutAndRemove&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const meshCutAndRemove&);
+        void operator=(const meshCutAndRemove&) = delete;
 
 public:
 
@@ -200,7 +200,7 @@ public:
             //  exposedPatch: patch for other exposed faces
             void setRefinement
             (
-                const label exposedPatchI,
+                const label exposedPatchi,
                 const cellCuts& cuts,
                 const labelList& cutPatch,
                 polyTopoChange& meshMod

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,10 +68,10 @@ class SVD
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        SVD(const SVD&);
+        SVD(const SVD&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const SVD&);
+        void operator=(const SVD&) = delete;
 
         template<class T>
         inline const T sign(const T& a, const T& b);

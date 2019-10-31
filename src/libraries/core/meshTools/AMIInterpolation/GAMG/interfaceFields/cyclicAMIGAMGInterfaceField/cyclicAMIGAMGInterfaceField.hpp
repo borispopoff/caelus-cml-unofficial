@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -64,10 +64,13 @@ class cyclicAMIGAMGInterfaceField
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        cyclicAMIGAMGInterfaceField(const cyclicAMIGAMGInterfaceField&);
+        cyclicAMIGAMGInterfaceField
+        (
+            const cyclicAMIGAMGInterfaceField&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cyclicAMIGAMGInterfaceField&);
+        void operator=(const cyclicAMIGAMGInterfaceField&) = delete;
 
 
 public:

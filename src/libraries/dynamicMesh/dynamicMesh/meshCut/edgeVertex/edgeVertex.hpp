@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -57,10 +57,10 @@ class edgeVertex
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        edgeVertex(const edgeVertex&);
+        edgeVertex(const edgeVertex&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const edgeVertex&);
+        void operator=(const edgeVertex&) = delete;
 
 
 public:
@@ -100,7 +100,7 @@ public:
 
     // EdgeVertex handling
 
-        //- is eVert an edge?
+        //- Is eVert an edge?
         static bool isEdge(const primitiveMesh& mesh, const label eVert)
         {
             if (eVert < 0 || eVert >= (mesh.nPoints() + mesh.nEdges()))
@@ -119,7 +119,7 @@ public:
             return isEdge(mesh_, eVert);
         }
 
-        //- convert eVert to edge label
+        //- Convert eVert to edge label
         static label getEdge(const primitiveMesh& mesh, const label eVert)
         {
             if (!isEdge(mesh, eVert))
@@ -135,7 +135,7 @@ public:
             return getEdge(mesh_, eVert);
         }
 
-        //- convert eVert to vertex label
+        //- Convert eVert to vertex label
         static label getVertex(const primitiveMesh& mesh, const label eVert)
         {
             if (isEdge(mesh, eVert) || (eVert < 0))

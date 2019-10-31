@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -150,10 +150,10 @@ private:
         labelList patchStarts_;
         labelList patchSizes_;
 
-        //- association between two faces
+        //- Association between two faces
         List<labelPair> interfaces_;
 
-        //- list of cells/faces id pairs for each baffle
+        //- List of cells/faces id pairs for each baffle
         List<List<cellFaceIdentifier>> baffleIds_;
 
         //- Global face list for polyMesh
@@ -169,10 +169,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        meshReader(const meshReader&);
+        meshReader(const meshReader&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const meshReader&);
+        void operator=(const meshReader&) = delete;
 
         //- Calculate pointCells
         void calcPointCells() const;
@@ -234,7 +234,7 @@ private:
 
 protected:
 
-    // Protected data
+    // Protected member data
 
         //- Pointers to cell shape models
         static const cellModel* unknownModel;
@@ -281,10 +281,11 @@ protected:
         cellTable cellTable_;
 
 
-    // Member Functions
+    // Protected member functions
 
         //- Subclasses are required to supply this information
         virtual bool readGeometry(const scalar scaleFactor = 1.0) = 0;
+
 
 public:
 

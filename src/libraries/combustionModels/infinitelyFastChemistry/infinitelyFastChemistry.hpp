@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -49,18 +49,19 @@ class infinitelyFastChemistry
 :
     public singleStepCombustion<ReactionThermo, ThermoType>
 {
+    // Private data
 
-    //- Model constant
-    scalar C_;
+        //- Model constant
+        scalar C_;
 
 
     // Private Member Functions
 
-    //- Disallow copy construct
-    infinitelyFastChemistry(const infinitelyFastChemistry&);
+        //- Disallow copy construct
+        infinitelyFastChemistry(const infinitelyFastChemistry&);
 
-    //- Disallow default bitwise assignment
-    void operator=(const infinitelyFastChemistry&);
+        //- Disallow default bitwise assignment
+        void operator=(const infinitelyFastChemistry&) = delete;
 
 
 public:
@@ -69,14 +70,16 @@ public:
     TypeName("infinitelyFastChemistry");
 
 
-    //- Construct from components
-    infinitelyFastChemistry
-    (
-        const word& modelType,
-        ReactionThermo& thermo,
-        const compressible::turbulenceModel& turb,
-        const word& combustionProperties
-    );
+    // Constructors
+
+        //- Construct from components
+        infinitelyFastChemistry
+        (
+            const word& modelType,
+            ReactionThermo& thermo,
+            const compressible::turbulenceModel& turb,
+            const word& combustionProperties
+        );
 
 
     //- Destructor
@@ -86,12 +89,11 @@ public:
 
     // Member Functions
 
-    //- Correct combustion rate
-    virtual void correct();
+        //- Correct combustion rate
+        virtual void correct();
 
-    //- Update properties
-    virtual bool read();
-
+        //- Update properties
+        virtual bool read();
 };
 
 

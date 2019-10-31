@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -87,10 +87,10 @@ class yPlusRAS
         void calcCompressibleYPlus(const fvMesh& mesh, volScalarField& yPlus);
 
         //- Disallow default bitwise copy construct
-        yPlusRAS(const yPlusRAS&);
+        yPlusRAS(const yPlusRAS&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const yPlusRAS&);
+        void operator=(const yPlusRAS&) = delete;
 
 
 public:

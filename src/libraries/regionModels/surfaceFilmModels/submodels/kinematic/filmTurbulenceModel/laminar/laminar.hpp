@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -61,10 +61,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        laminar(const laminar&);
+        laminar(const laminar&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const laminar&);
+        void operator=(const laminar&) = delete;
 
 
 public:

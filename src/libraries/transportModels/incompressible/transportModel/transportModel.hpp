@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,7 +55,7 @@ class transportModel
         transportModel(const transportModel&);
 
         //- Disallow default bitwise assignment
-        void operator=(const transportModel&);
+        void operator=(const transportModel&) = delete;
 
 
 public:

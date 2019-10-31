@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -112,10 +112,10 @@ class combineFaces
 
 
         //- Disallow default bitwise copy construct
-        combineFaces(const combineFaces&);
+        combineFaces(const combineFaces&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const combineFaces&);
+        void operator=(const combineFaces&) = delete;
 
 public:
 

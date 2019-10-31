@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,10 +54,10 @@ class chemistryReader
 {
 
     //- Disallow default bitwise copy construct
-    chemistryReader(const chemistryReader&);
+    chemistryReader(const chemistryReader&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const chemistryReader&);
+    void operator=(const chemistryReader&) = delete;
 
 
 public:

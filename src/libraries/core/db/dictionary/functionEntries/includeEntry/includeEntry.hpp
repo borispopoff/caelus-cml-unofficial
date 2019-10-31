@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -32,7 +32,7 @@ Description
     The usual expansion of environment variables and other constructs
     (eg, the \c ~CAELUS/ expansion) is retained.
 
-See Also
+See also
     fileName, string::expand()
 
 SourceFiles
@@ -63,10 +63,10 @@ class includeEntry
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        includeEntry(const includeEntry&);
+        includeEntry(const includeEntry&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const includeEntry&);
+        void operator=(const includeEntry&) = delete;
 
 protected:
 

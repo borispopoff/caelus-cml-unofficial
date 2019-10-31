@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,10 +63,10 @@ class injectionModel
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        injectionModel(const injectionModel&);
+        injectionModel(const injectionModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const injectionModel&);
+        void operator=(const injectionModel&) = delete;
 
 
 protected:

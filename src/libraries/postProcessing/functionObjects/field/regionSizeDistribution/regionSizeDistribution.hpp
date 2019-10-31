@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -227,10 +227,10 @@ class regionSizeDistribution
         ) const;
 
         //- Disallow default bitwise copy construct
-        regionSizeDistribution(const regionSizeDistribution&);
+        regionSizeDistribution(const regionSizeDistribution&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const regionSizeDistribution&);
+        void operator=(const regionSizeDistribution&) = delete;
 
 
 public:

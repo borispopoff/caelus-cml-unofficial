@@ -59,10 +59,10 @@ class extendedLeastSquaresGrad
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        extendedLeastSquaresGrad(const extendedLeastSquaresGrad&);
+        extendedLeastSquaresGrad(const extendedLeastSquaresGrad&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const extendedLeastSquaresGrad&);
+        void operator=(const extendedLeastSquaresGrad&) = delete;
 
 
 public:

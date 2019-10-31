@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -93,10 +93,10 @@ class createShellMesh
 
 
         //- Disallow default bitwise copy construct
-        createShellMesh(const createShellMesh&);
+        createShellMesh(const createShellMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const createShellMesh&);
+        void operator=(const createShellMesh&) = delete;
 
 
 public:

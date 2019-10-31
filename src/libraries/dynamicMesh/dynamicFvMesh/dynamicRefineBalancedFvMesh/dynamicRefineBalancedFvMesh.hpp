@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Tyler Voskuilen
-Copyright (C) 2018 Applied CCM Pty Ltd
+Copyright (C) 2018-2019 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -78,10 +78,10 @@ private:
     Switch dumpCellDist_;
 
     //- Disallow default bitwise copy construct
-    dynamicRefineBalancedFvMesh(const dynamicRefineBalancedFvMesh&);
+    dynamicRefineBalancedFvMesh(const dynamicRefineBalancedFvMesh&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const dynamicRefineBalancedFvMesh&);
+    void operator=(const dynamicRefineBalancedFvMesh&) = delete;
 
     // Return parent cellID for this cell
     label topParentID(label p);

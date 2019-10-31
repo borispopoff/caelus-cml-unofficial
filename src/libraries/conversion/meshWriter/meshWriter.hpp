@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -88,10 +88,10 @@ class meshWriter
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        meshWriter(const meshWriter&);
+        meshWriter(const meshWriter&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const meshWriter&);
+        void operator=(const meshWriter&) = delete;
 
 
 protected:
@@ -133,7 +133,7 @@ public:
 
     // Constructors
 
-        //- Create a writer obejct
+        //- Create a writer object
         meshWriter
         (
             const polyMesh&,

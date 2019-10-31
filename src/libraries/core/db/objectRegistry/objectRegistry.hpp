@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -75,7 +75,7 @@ class objectRegistry
         objectRegistry(const objectRegistry&);
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const objectRegistry&);
+        void operator=(const objectRegistry&) = delete;
 
 
 public:

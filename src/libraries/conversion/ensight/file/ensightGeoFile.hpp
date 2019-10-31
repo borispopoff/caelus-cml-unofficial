@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -46,7 +46,7 @@ class ensightGeoFile
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const ensightGeoFile&);
+        void operator=(const ensightGeoFile&) = delete;
 
         //- Disallow default copy constructor
         ensightGeoFile(const ensightGeoFile&);
@@ -70,7 +70,7 @@ public:
 
     // Output
 
-        //- write keyword with trailing newline
+        //- Write keyword with trailing newline
         virtual Ostream& writeKeyword(const string& key);
 };
 

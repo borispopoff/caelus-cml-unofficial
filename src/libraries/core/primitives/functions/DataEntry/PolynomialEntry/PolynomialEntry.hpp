@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -71,7 +71,7 @@ class Polynomial
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const Polynomial<Type>&);
+        void operator=(const Polynomial<Type>&) = delete;
 
 
 public:

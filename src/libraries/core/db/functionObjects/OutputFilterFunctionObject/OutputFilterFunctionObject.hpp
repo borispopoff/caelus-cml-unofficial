@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -111,10 +111,10 @@ class OutputFilterFunctionObject
         bool active() const;
 
         //- Disallow default bitwise copy construct
-        OutputFilterFunctionObject(const OutputFilterFunctionObject&);
+        OutputFilterFunctionObject(const OutputFilterFunctionObject&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const OutputFilterFunctionObject&);
+        void operator=(const OutputFilterFunctionObject&) = delete;
 
 
 public:

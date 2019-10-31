@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -86,10 +86,10 @@ class pointMapper
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        pointMapper(const pointMapper&);
+        pointMapper(const pointMapper&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pointMapper&);
+        void operator=(const pointMapper&) = delete;
 
 
         //- Calculate addressing for mapping with inserted points

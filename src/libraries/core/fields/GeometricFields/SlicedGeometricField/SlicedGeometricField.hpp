@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -91,10 +91,10 @@ private:
         );
 
         ////- Disallow default bitwise copy construct
-        //SlicedGeometricField(const SlicedGeometricField&);
+        // SlicedGeometricField(const SlicedGeometricField&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const SlicedGeometricField&);
+        void operator=(const SlicedGeometricField&) = delete;
 
         //- Disallow standard assignment to GeometricField,
         //  == assignment is allowed.
@@ -141,7 +141,7 @@ public:
             const bool preserveCouples=true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         SlicedGeometricField
         (
             const SlicedGeometricField
@@ -156,6 +156,7 @@ public:
         //- Clone
         tmp<SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>>
             clone() const;
+
 
     //- Destructor
     ~SlicedGeometricField();

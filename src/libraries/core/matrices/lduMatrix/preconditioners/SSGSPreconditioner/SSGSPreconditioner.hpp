@@ -61,10 +61,10 @@ class SSGSPreconditioner : public lduMatrix::preconditioner
     scalarField rDlUpper_;
 
     //- Disallow default bitwise copy construct
-    SSGSPreconditioner(const SSGSPreconditioner&);
+    SSGSPreconditioner(const SSGSPreconditioner&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const SSGSPreconditioner&);
+    void operator=(const SSGSPreconditioner&) = delete;
 
 public:
 

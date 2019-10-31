@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ class limitedSnGrad
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const limitedSnGrad&);
+        void operator=(const limitedSnGrad&) = delete;
 
         //- Lookup function for the corrected to support backward compatibility
         //  of dictionary specification

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,10 +80,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        searchableBox(const searchableBox&);
+        searchableBox(const searchableBox&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableBox&);
+        void operator=(const searchableBox&) = delete;
 
 
 public:

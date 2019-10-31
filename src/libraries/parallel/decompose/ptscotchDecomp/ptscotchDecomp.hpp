@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -79,7 +79,7 @@ class ptscotchDecomp
         ) const;
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const ptscotchDecomp&);
+        void operator=(const ptscotchDecomp&) = delete;
         ptscotchDecomp(const ptscotchDecomp&);
 
 
@@ -107,10 +107,10 @@ public:
             // ptscotch does not know about proc boundaries
             return true;
         }
-    
+
         //- Inherit decompose from decompositionMethod
         using decompositionMethod::decompose;
-    
+
         //- Return for every coordinate the wanted processor number. Use the
         //  mesh connectivity (if needed). See note on weights in scotchDecomp.H
         virtual labelList decompose

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -61,10 +61,10 @@ class AC3DsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        AC3DsurfaceFormat(const AC3DsurfaceFormat<Face>&);
+        AC3DsurfaceFormat(const AC3DsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const AC3DsurfaceFormat<Face>&);
+        void operator=(const AC3DsurfaceFormat<Face>&) = delete;
 
 
 public:

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,10 +52,10 @@ class dlLibraryTable
 
 
         //- Disallow default bitwise copy construct
-        dlLibraryTable(const dlLibraryTable&);
+        dlLibraryTable(const dlLibraryTable&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const dlLibraryTable&);
+        void operator=(const dlLibraryTable&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -103,16 +103,16 @@ class geomCellLooper
             vector& e1
         ) const;
 
-        //- Return true if the cut edge at loop[index] is inbetween the cuts
+        //- Return true if the cut edge at loop[index] is in between the cuts
         //  through the edge end points.
         bool edgeEndsCut(const labelList&, const label index) const;
 
 
         //- Disallow default bitwise copy construct
-        geomCellLooper(const geomCellLooper&);
+        geomCellLooper(const geomCellLooper&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const geomCellLooper&);
+        void operator=(const geomCellLooper&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,10 +51,10 @@ class closedTriSurfaceMesh
 private:
 
         //- Disallow default bitwise copy construct
-        closedTriSurfaceMesh(const closedTriSurfaceMesh&);
+        closedTriSurfaceMesh(const closedTriSurfaceMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const closedTriSurfaceMesh&);
+        void operator=(const closedTriSurfaceMesh&) = delete;
 
 
 public:

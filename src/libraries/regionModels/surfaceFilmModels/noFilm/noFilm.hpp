@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,10 +60,10 @@ class noFilm
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        noFilm(const noFilm&);
+        noFilm(const noFilm&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const noFilm&);
+        void operator=(const noFilm&) = delete;
 
 
 public:

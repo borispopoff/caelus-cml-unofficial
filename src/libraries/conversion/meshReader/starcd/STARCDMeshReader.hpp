@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,16 +59,6 @@ class STARCD
 :
     public meshReader
 {
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        STARCD(const STARCD&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const STARCD&);
-
 
 protected:
 
@@ -118,6 +108,17 @@ protected:
 
         //- Read header
         static bool readHeader(IFstream&, word fileSignature);
+
+
+private:
+
+    // Private member functions
+
+        //- Disallow default bitwise copy construct
+        STARCD(const STARCD&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const STARCD&) = delete;
 
 
 protected:

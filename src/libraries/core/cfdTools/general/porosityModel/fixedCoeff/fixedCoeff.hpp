@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -60,10 +60,10 @@ private:
 
     // Private data
 
-        //- alpha coefficient XYZ components (user-supplied) [1/s]
+        //- Alpha coefficient XYZ components (user-supplied) [1/s]
         dimensionedVector alphaXYZ_;
 
-        //- beta coefficient XYZ components (user-supplied) [1/m]
+        //- Beta coefficient XYZ components (user-supplied) [1/m]
         dimensionedVector betaXYZ_;
 
         //- Model alpha coefficient - converted from alphaXYZ [1/s]
@@ -94,10 +94,10 @@ private:
         ) const;
 
         //- Disallow default bitwise copy construct
-        fixedCoeff(const fixedCoeff&);
+        fixedCoeff(const fixedCoeff&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fixedCoeff&);
+        void operator=(const fixedCoeff&) = delete;
 
 
 public:

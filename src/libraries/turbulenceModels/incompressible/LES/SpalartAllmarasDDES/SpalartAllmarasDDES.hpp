@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2014 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ class SpalartAllmarasDDES
         ) const;
 
         // Disallow default bitwise copy construct and assignment
-        SpalartAllmarasDDES(const SpalartAllmarasDDES&);
-        SpalartAllmarasDDES& operator=(const SpalartAllmarasDDES&);
+        SpalartAllmarasDDES(const SpalartAllmarasDDES&) = delete;
+        SpalartAllmarasDDES& operator=(const SpalartAllmarasDDES&) = delete;
 
 
 protected:

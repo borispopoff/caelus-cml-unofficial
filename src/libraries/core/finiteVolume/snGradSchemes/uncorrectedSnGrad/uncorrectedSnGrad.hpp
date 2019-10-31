@@ -53,7 +53,7 @@ class uncorrectedSnGrad
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const uncorrectedSnGrad&);
+        void operator=(const uncorrectedSnGrad&) = delete;
 
 
 public:

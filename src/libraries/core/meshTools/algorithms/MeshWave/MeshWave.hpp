@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,10 +68,10 @@ class MeshWave
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MeshWave(const MeshWave&);
+        MeshWave(const MeshWave&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MeshWave&);
+        void operator=(const MeshWave&) = delete;
 
       // Private static data
 

@@ -64,10 +64,10 @@ class NASsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        NASsurfaceFormat(const NASsurfaceFormat<Face>&);
+        NASsurfaceFormat(const NASsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const NASsurfaceFormat<Face>&);
+        void operator=(const NASsurfaceFormat<Face>&) = delete;
 
 
 public:

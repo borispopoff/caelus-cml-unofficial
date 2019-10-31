@@ -72,7 +72,7 @@ class CompatibilityConstant
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const CompatibilityConstant<Type>&);
+        void operator=(const CompatibilityConstant<Type>&) = delete;
 
 
 public:

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,7 +60,7 @@ class OSstream
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const OSstream&);
+        void operator=(const OSstream&) = delete;
 
 
 public:

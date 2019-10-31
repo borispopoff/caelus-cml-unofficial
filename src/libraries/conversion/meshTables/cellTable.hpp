@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -94,7 +94,7 @@ class cellTable
         void setEntry(const label id, const word& keyWord, const word& value);
 
         //- Disallow default bitwise copy construct
-        cellTable(const cellTable&);
+        cellTable(const cellTable&) = delete;
 
 
 public:
@@ -169,7 +169,7 @@ public:
             const fileName& instance = "constant"
         );
 
-        //- write constant/cellTable for later reuse
+        //- Write constant/cellTable for later reuse
         void writeDict
         (
             const objectRegistry&,

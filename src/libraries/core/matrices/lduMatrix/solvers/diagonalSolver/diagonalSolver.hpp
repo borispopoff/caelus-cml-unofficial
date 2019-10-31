@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -43,10 +43,10 @@ class diagonalSolver
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        diagonalSolver(const diagonalSolver&);
+        diagonalSolver(const diagonalSolver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const diagonalSolver&);
+        void operator=(const diagonalSolver&) = delete;
 
 
 public:

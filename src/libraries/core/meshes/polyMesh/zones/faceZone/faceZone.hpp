@@ -72,7 +72,7 @@ class faceZone
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        faceZone(const faceZone&);
+        faceZone(const faceZone&) = delete;
 
 
 protected:

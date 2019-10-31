@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,10 +53,10 @@ class pointLinear
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        pointLinear(const pointLinear&);
+        pointLinear(const pointLinear&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pointLinear&);
+        void operator=(const pointLinear&) = delete;
 
 
 public:

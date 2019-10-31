@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -114,10 +114,10 @@ class triSurfaceMesh
         );
 
         //- Disallow default bitwise copy construct
-        triSurfaceMesh(const triSurfaceMesh&);
+        triSurfaceMesh(const triSurfaceMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const triSurfaceMesh&);
+        void operator=(const triSurfaceMesh&) = delete;
 
 
 public:

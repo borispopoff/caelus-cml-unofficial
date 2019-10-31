@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------* \
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -93,10 +93,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        outputFilterControl(const outputFilterControl&);
+        outputFilterControl(const outputFilterControl&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const outputFilterControl&);
+        void operator=(const outputFilterControl&) = delete;
 
 
 public:

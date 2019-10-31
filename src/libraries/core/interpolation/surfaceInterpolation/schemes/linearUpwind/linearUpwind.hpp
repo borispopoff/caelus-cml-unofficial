@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,10 +59,10 @@ class linearUpwind
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        linearUpwind(const linearUpwind&);
+        linearUpwind(const linearUpwind&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const linearUpwind&);
+        void operator=(const linearUpwind&) = delete;
 
 
 public:

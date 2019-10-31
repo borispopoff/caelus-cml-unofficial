@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2014 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -48,20 +48,28 @@ References
 namespace CML
 {
 
-class PCG : public lduMatrix::solver
+/*---------------------------------------------------------------------------*\
+                           Class PCG Declaration
+\*---------------------------------------------------------------------------*/
+
+class PCG
+:
+    public lduMatrix::solver
 {
     // Private Member Functions
 
-    //- Disallow default bitwise copy construct
-    PCG(const PCG&);
+        //- Disallow default bitwise copy construct
+        PCG(const PCG&) = delete;
 
-    //- Disallow default bitwise assignment
-    void operator=(const PCG&);
+        //- Disallow default bitwise assignment
+        void operator=(const PCG&) = delete;
+
 
 public:
 
     //- Runtime type information
     TypeName("PCG");
+
 
     // Constructors
 

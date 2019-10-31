@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,10 +56,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        interpolationWeights(const interpolationWeights&);
+        interpolationWeights(const interpolationWeights&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const interpolationWeights&);
+        void operator=(const interpolationWeights&) = delete;
 
 protected:
 

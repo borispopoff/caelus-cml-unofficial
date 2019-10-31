@@ -72,7 +72,7 @@ protected:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        pointZone(const pointZone&);
+        pointZone(const pointZone&) = delete;
 
 public:
 

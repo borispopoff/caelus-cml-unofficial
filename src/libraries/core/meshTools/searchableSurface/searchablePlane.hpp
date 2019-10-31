@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -69,10 +69,10 @@ private:
         boundBox calcBounds() const;
 
         //- Disallow default bitwise copy construct
-        searchablePlane(const searchablePlane&);
+        searchablePlane(const searchablePlane&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const searchablePlane&);
+        void operator=(const searchablePlane&) = delete;
 
 
 public:

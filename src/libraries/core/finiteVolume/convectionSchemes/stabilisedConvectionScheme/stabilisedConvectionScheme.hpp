@@ -55,10 +55,10 @@ class stabilisedConvectionScheme
     tmp<fv::convectionScheme<Type>> scheme_;
 
     //- Disallow default bitwise copy construct
-    stabilisedConvectionScheme(const stabilisedConvectionScheme&);
+    stabilisedConvectionScheme(const stabilisedConvectionScheme&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const stabilisedConvectionScheme&);
+    void operator=(const stabilisedConvectionScheme&) = delete;
 
 
 public:

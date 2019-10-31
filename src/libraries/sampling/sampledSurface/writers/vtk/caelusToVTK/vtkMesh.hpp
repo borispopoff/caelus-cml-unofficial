@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 
 -------------------------------------------------------------------------------
 License
@@ -69,10 +69,10 @@ class vtkMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        vtkMesh(const vtkMesh&);
+        vtkMesh(const vtkMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const vtkMesh&);
+        void operator=(const vtkMesh&) = delete;
 
 
 public:

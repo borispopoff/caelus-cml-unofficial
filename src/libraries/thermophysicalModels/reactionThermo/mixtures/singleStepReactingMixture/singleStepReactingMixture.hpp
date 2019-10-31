@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -92,10 +92,10 @@ protected:
 private:
 
     //- Disallow default bitwise copy construct
-    singleStepReactingMixture(const singleStepReactingMixture&);
+    singleStepReactingMixture(const singleStepReactingMixture&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const singleStepReactingMixture&);
+    void operator=(const singleStepReactingMixture&) = delete;
 
 
 public:

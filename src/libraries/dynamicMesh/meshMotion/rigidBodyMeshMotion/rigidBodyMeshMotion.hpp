@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 Copyright (C) 2017 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ class rigidBodyMeshMotion
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const rigidBodyMeshMotion&);
+        void operator=(const rigidBodyMeshMotion&) = delete;
 
 
 public:

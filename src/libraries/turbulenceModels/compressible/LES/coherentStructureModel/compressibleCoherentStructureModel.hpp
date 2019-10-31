@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2015 Applied CCM
+Copyright (C) 2015-2019 Applied CCM
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -61,8 +61,8 @@ class CoherentStructureModel : public GenEddyVisc
     volScalarField C(volTensorField const& gradU) const;
 
     // Disallow default bitwise copy construct and assignment
-    CoherentStructureModel(CoherentStructureModel const&);
-    CoherentStructureModel& operator=(CoherentStructureModel const&);
+    CoherentStructureModel(CoherentStructureModel const&) = delete;
+    CoherentStructureModel& operator=(CoherentStructureModel const&) = delete;
 
 public:
 

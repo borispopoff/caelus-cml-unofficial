@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,10 +56,10 @@ class multivariateUpwind
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        multivariateUpwind(const multivariateUpwind&);
+        multivariateUpwind(const multivariateUpwind&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const multivariateUpwind&);
+        void operator=(const multivariateUpwind&) = delete;
 
 
 public:

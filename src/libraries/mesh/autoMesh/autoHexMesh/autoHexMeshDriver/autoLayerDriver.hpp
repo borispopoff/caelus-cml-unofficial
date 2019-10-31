@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -498,10 +498,10 @@ class autoLayerDriver
 
 
         //- Disallow default bitwise copy construct
-        autoLayerDriver(const autoLayerDriver&);
+        autoLayerDriver(const autoLayerDriver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const autoLayerDriver&);
+        void operator=(const autoLayerDriver&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -55,7 +55,7 @@ class halfCosineRamp
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const halfCosineRamp&);
+        void operator=(const halfCosineRamp&) = delete;
 
 
 public:

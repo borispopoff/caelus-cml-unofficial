@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,7 +50,7 @@ class subModelBase
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const subModelBase&);
+        void operator=(const subModelBase&) = delete;
 
 
 protected:
@@ -109,7 +109,7 @@ public:
             const word& modelType
         );
 
-        //- Construct as copy
+        //- Copy constructor
         subModelBase(const subModelBase& smb);
 
 
@@ -145,7 +145,7 @@ public:
             //- Return the model 'active' status - default active = true
             virtual bool active() const;
 
-            //- Cache dependant sub-model fields
+            //- Cache dependent sub-model fields
             virtual void cacheFields(const bool store);
 
             //- Flag to indicate when to write a property

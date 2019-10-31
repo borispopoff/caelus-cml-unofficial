@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -128,10 +128,10 @@ public:
         // Private Member Functions
 
             //- Disallow default bitwise copy construct
-            compound(const compound&);
+            compound(const compound&) = delete;
 
             //- Disallow default bitwise assignment
-            void operator=(const compound&);
+            void operator=(const compound&) = delete;
 
 
     public:

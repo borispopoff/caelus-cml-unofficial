@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2015 OpenFOAM Foundation
+Copyright (C) 2015-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -46,10 +46,10 @@ class pisoControl
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        pisoControl(const pisoControl&);
+        pisoControl(const pisoControl&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pisoControl&);
+        void operator=(const pisoControl&) = delete;
 
 
 public:

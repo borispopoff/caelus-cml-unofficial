@@ -50,10 +50,10 @@ class dynamicFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        dynamicFvMesh(const dynamicFvMesh&);
+        dynamicFvMesh(const dynamicFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const dynamicFvMesh&);
+        void operator=(const dynamicFvMesh&) = delete;
 
 
 public:

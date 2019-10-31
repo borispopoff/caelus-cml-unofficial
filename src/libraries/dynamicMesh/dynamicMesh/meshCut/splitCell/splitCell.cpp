@@ -27,7 +27,7 @@ License
 // Construct from cell number and parent
 CML::splitCell::splitCell(const label celli, splitCell* parent)
 :
-    cellI_(celli),
+    celli_(celli),
     parent_(parent),
     master_(nullptr),
     slave_(nullptr)

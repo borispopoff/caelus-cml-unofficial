@@ -62,10 +62,10 @@ class CASsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        CASsurfaceFormat(const CASsurfaceFormat<Face>&);
+        CASsurfaceFormat(const CASsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const CASsurfaceFormat<Face>&);
+        void operator=(const CASsurfaceFormat<Face>&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,10 +56,10 @@ class OBJedgeFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        OBJedgeFormat(const OBJedgeFormat&);
+        OBJedgeFormat(const OBJedgeFormat&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const OBJedgeFormat&);
+        void operator=(const OBJedgeFormat&) = delete;
 
 
 public:

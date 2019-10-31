@@ -139,10 +139,10 @@ class HashTable
 
         private:
             //- Disallow default bitwise copy construct
-            hashedEntry(const hashedEntry&);
+            hashedEntry(const hashedEntry&) = delete;
 
             //- Disallow default bitwise assignment
-            void operator=(const hashedEntry&);
+            void operator=(const hashedEntry&) = delete;
         };
 
 
@@ -201,7 +201,7 @@ public:
         //- Construct from Istream
         HashTable(Istream&, const label size = 128);
 
-        //- Construct as copy
+        //- Copy constructor
         HashTable(const HashTable<T, Key, Hash>&);
 
         //- More Constructor

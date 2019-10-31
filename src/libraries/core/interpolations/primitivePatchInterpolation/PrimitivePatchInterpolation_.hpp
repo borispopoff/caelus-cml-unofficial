@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -65,10 +65,13 @@ class PrimitivePatchInterpolation
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        PrimitivePatchInterpolation(const PrimitivePatchInterpolation&);
+        PrimitivePatchInterpolation
+        (
+            const PrimitivePatchInterpolation&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const PrimitivePatchInterpolation&);
+        void operator=(const PrimitivePatchInterpolation&) = delete;
 
 
         //- Face-to-point weights

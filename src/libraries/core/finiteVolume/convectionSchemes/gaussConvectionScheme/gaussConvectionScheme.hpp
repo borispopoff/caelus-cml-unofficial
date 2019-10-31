@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2014 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -51,10 +51,10 @@ class gaussConvectionScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        gaussConvectionScheme(const gaussConvectionScheme&);
+        gaussConvectionScheme(const gaussConvectionScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const gaussConvectionScheme&);
+        void operator=(const gaussConvectionScheme&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -94,24 +94,24 @@ protected:
         virtual void setNextNearestCells
         (
             label& startSeedI,
-            label& srcCellI,
-            label& tgtCellI,
+            label& srcCelli,
+            label& tgtCelli,
             boolList& mapFlag,
             const labelList& srcCellIDs
         ) const;
 
-        //- Find a source cell mapped to target cell tgtCellI
+        //- Find a source cell mapped to target cell tgtCelli
         virtual label findMappedSrcCell
         (
-            const label tgtCellI,
+            const label tgtCelli,
             const List<DynamicList<label>>& tgtToSrc
         ) const;
 
         //- Disallow default bitwise copy construct
-        mapNearestMethod(const mapNearestMethod&);
+        mapNearestMethod(const mapNearestMethod&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const mapNearestMethod&);
+        void operator=(const mapNearestMethod&) = delete;
 
 
 public:

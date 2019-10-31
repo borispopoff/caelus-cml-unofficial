@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -253,10 +253,10 @@ protected:
 
 
         //- Disallow default bitwise copy construct
-        fieldAverage(const fieldAverage&);
+        fieldAverage(const fieldAverage&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fieldAverage&);
+        void operator=(const fieldAverage&) = delete;
 
 
 public:

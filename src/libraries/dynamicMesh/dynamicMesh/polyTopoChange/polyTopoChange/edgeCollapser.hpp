@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,7 +49,7 @@ class face;
 class mapPolyMesh;
 
 /*---------------------------------------------------------------------------*\
-                           Class edgeCollapser Declaration
+                        Class edgeCollapser Declaration
 \*---------------------------------------------------------------------------*/
 
 class edgeCollapser
@@ -105,10 +105,10 @@ class edgeCollapser
         void collapseEdges(const labelList& edgeLabels);
 
         //- Disallow default bitwise copy construct
-        edgeCollapser(const edgeCollapser&);
+        edgeCollapser(const edgeCollapser&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const edgeCollapser&);
+        void operator=(const edgeCollapser&) = delete;
 
 
 public:

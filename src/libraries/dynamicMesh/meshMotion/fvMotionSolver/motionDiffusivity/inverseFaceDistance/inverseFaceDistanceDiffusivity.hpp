@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,10 +55,13 @@ class inverseFaceDistanceDiffusivity
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        inverseFaceDistanceDiffusivity(const inverseFaceDistanceDiffusivity&);
+        inverseFaceDistanceDiffusivity
+        (
+            const inverseFaceDistanceDiffusivity&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const inverseFaceDistanceDiffusivity&);
+        void operator=(const inverseFaceDistanceDiffusivity&) = delete;
 
 
 public:

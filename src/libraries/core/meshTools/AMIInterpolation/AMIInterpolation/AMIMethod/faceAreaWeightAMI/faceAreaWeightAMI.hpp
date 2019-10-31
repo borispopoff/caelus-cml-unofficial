@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,10 +59,10 @@ protected:
     // Protected Member Functions
 
         //- Disallow default bitwise copy construct
-        faceAreaWeightAMI(const faceAreaWeightAMI&);
+        faceAreaWeightAMI(const faceAreaWeightAMI&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const faceAreaWeightAMI&);
+        void operator=(const faceAreaWeightAMI&) = delete;
 
         // Marching front
 

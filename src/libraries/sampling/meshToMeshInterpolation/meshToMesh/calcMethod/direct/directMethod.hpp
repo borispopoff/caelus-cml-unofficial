@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -100,10 +100,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        directMethod(const directMethod&);
+        directMethod(const directMethod&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const directMethod&);
+        void operator=(const directMethod&) = delete;
 
 
 public:

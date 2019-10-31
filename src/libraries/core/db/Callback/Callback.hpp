@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,7 +58,7 @@ class Callback
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const Callback<CallbackType>&);
+        void operator=(const Callback<CallbackType>&) = delete;
 
 
 public:
@@ -68,7 +68,7 @@ public:
         //- Construct and register with CallbackRegistry
         Callback(CallbackRegistry<CallbackType>&);
 
-        //- Construct as copy
+        //- Copy constructor
         Callback(const Callback<CallbackType>&);
 
 

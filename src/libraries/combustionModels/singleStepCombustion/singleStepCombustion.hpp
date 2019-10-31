@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -51,37 +51,39 @@ class singleStepCombustion
 {
     // Private Member Functions
 
-    //- Disallow copy construct
-    singleStepCombustion(const singleStepCombustion&);
+        //- Disallow copy construct
+        singleStepCombustion(const singleStepCombustion&);
 
-    //- Disallow default bitwise assignment
-    void operator=(const singleStepCombustion&);
+        //- Disallow default bitwise assignment
+        void operator=(const singleStepCombustion&) = delete;
 
 
 protected:
 
     // Protected data
 
-    //- Pointer to singleStepReactingMixture mixture
-    singleStepReactingMixture<ThermoType>* singleMixturePtr_;
+        //- Pointer to singleStepReactingMixture mixture
+        singleStepReactingMixture<ThermoType>* singleMixturePtr_;
 
-    //- Fuel consumption rate
-    volScalarField wFuel_;
+        //- Fuel consumption rate
+        volScalarField wFuel_;
 
-    //- Semi-implicit (true) or explicit (false) treatment
-    bool semiImplicit_;
+        //- Semi-implicit (true) or explicit (false) treatment
+        bool semiImplicit_;
 
 
 public:
 
-    //- Construct from components
-    singleStepCombustion
-    (
-        const word& modelType,
-        ReactionThermo& thermo,
-        const compressible::turbulenceModel& turb,
-        const word& combustionProperties
-    );
+    // Constructors
+
+        //- Construct from components
+        singleStepCombustion
+        (
+            const word& modelType,
+            ReactionThermo& thermo,
+            const compressible::turbulenceModel& turb,
+            const word& combustionProperties
+        );
 
 
     //- Destructor
@@ -91,15 +93,14 @@ public:
 
     // Member Functions
 
-    //- Fuel consumption rate matrix
-    virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
+        //- Fuel consumption rate matrix
+        virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
 
-    //- Heat release rate [kg/m/s3]
-    virtual tmp<volScalarField> Qdot() const;
+        //- Heat release rate [kg/m/s3]
+        virtual tmp<volScalarField> Qdot() const;
 
-    //- Update properties from given dictionary
-    virtual bool read();
-
+        //- Update properties from given dictionary
+        virtual bool read();
 };
 
 

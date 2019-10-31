@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -148,10 +148,10 @@ class PatchEdgeFaceWave
         void syncEdges();
 
         //- Disallow default bitwise copy construct
-        PatchEdgeFaceWave(const PatchEdgeFaceWave&);
+        PatchEdgeFaceWave(const PatchEdgeFaceWave&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const PatchEdgeFaceWave&);
+        void operator=(const PatchEdgeFaceWave&) = delete;
 
 
 public:

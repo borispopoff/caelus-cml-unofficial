@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -76,7 +76,7 @@ class topoCellLooper
             DynamicList<T>& lst
         );
 
-        //- walk across superface discarding non-feature points.
+        //- Walk across superface discarding non-feature points.
         void walkFace
         (
             const cellFeatures& features,
@@ -91,7 +91,7 @@ class topoCellLooper
 
         //- Returns list of vertices on 'superEdge' i.e. list of edges connected
         // by non-feature points. First and last are feature points, ones
-        // inbetween are not.
+        // in between are not.
         labelList getSuperEdge
         (
             const cellFeatures& features,
@@ -131,7 +131,7 @@ class topoCellLooper
         (
             const label celli,
             const cellFeatures& features,
-            const label fromFaceI,
+            const label fromFacei,
             const label fromEdgeI,
             const label fromVertI,
 
@@ -141,10 +141,10 @@ class topoCellLooper
 
 
         //- Disallow default bitwise copy construct
-        topoCellLooper(const topoCellLooper&);
+        topoCellLooper(const topoCellLooper&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const topoCellLooper&);
+        void operator=(const topoCellLooper&) = delete;
 
 
 public:
@@ -154,7 +154,7 @@ public:
 
     // Static data members
 
-        //- cos of angle for feature recognition (of splitHexes)
+        //- Cos of angle for feature recognition (of splitHexes)
         static const scalar featureCos;
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -38,7 +38,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class multivariateSurfaceInterpolationScheme Declaration
+           Class multivariateSurfaceInterpolationScheme Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -86,7 +86,7 @@ private:
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const multivariateSurfaceInterpolationScheme&);
+        void operator=(const multivariateSurfaceInterpolationScheme&) = delete;
 
 
 public:

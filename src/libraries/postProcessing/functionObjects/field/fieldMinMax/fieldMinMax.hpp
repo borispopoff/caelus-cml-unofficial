@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -154,10 +154,10 @@ protected:
         );
 
         //- Disallow default bitwise copy construct
-        fieldMinMax(const fieldMinMax&);
+        fieldMinMax(const fieldMinMax&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fieldMinMax&);
+        void operator=(const fieldMinMax&) = delete;
 
         //- Output file header information
         virtual void writeFileHeader(const label i);

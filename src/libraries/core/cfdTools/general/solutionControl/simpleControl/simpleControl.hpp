@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,10 +63,10 @@ protected:
         bool criteriaSatisfied();
 
         //- Disallow default bitwise copy construct
-        simpleControl(const simpleControl&);
+        simpleControl(const simpleControl&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const simpleControl&);
+        void operator=(const simpleControl&) = delete;
 
 
 public:

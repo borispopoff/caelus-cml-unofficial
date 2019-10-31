@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -81,64 +81,68 @@ class fvDOM
 :
     public radiationModel
 {
-
-    //- Incident radiation  [W/m2]
-    volScalarField G_;
-
-    //- Total radiative heat flux [W/m2]
-    volScalarField qr_;
-
-    //- Emitted radiative heat flux [W/m2]
-    volScalarField qem_;
-
-    //- Incidet radiative heat flux [W/m2]
-    volScalarField qin_;
-
-    //- Total absorption coefficient [1/m]
-    volScalarField a_;
-
-    //- Number of solid angles in theta
-    label nTheta_;
-
-    //- Number of solid angles in phi
-    label nPhi_ ;
-
-    //- Total number of rays (1 per direction)
-    label nRay_;
-
-    //- Number of wavelength bands
-    label nLambda_;
-
-    //- Wavelength total absorption coefficient [1/m]
-    PtrList<volScalarField> aLambda_;
-
-    //- Black body
-    blackBodyEmission blackBody_;
-
-    //- List of pointers to radiative intensity rays
-    PtrList<radiativeIntensityRay> IRay_;
-
-    //- Convergence tolerance
-    scalar tolerance_;
-
-    //- Maximum number of iterations
-    label maxIter_;
-
-    //- Maximum omega weight
-    scalar omegaMax_;
+    // Private data
 
 
-    //- Initialise
-    void initialise();
+        //- Incident radiation  [W/m2]
+        volScalarField G_;
 
-    //- Disallow default bitwise copy construct
-    fvDOM(const fvDOM&);
+        //- Total radiative heat flux [W/m2]
+        volScalarField qr_;
 
-    //- Disallow default bitwise assignment
-    void operator=(const fvDOM&);
+         //- Emitted radiative heat flux [W/m2]
+        volScalarField qem_;
 
-    //- Update nlack body emission
-    void updateBlackBodyEmission();
+        //- Incidet radiative heat flux [W/m2]
+        volScalarField qin_;
+
+        //- Total absorption coefficient [1/m]
+        volScalarField a_;
+
+        //- Number of solid angles in theta
+        label nTheta_;
+
+        //- Number of solid angles in phi
+        label nPhi_ ;
+
+        //- Total number of rays (1 per direction)
+        label nRay_;
+
+        //- Number of wavelength bands
+        label nLambda_;
+
+        //- Wavelength total absorption coefficient [1/m]
+        PtrList<volScalarField> aLambda_;
+
+        //- Black body
+        blackBodyEmission blackBody_;
+
+        //- List of pointers to radiative intensity rays
+        PtrList<radiativeIntensityRay> IRay_;
+
+        //- Convergence tolerance
+        scalar tolerance_;
+
+        //- Maximum number of iterations
+        label maxIter_;
+
+        //- Maximum omega weight
+        scalar omegaMax_;
+
+
+    // Private Member Functions
+
+        //- Initialise
+        void initialise();
+
+        //- Disallow default bitwise copy construct
+        fvDOM(const fvDOM&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvDOM&) = delete;
+
+        //- Update nlack body emission
+        void updateBlackBodyEmission();
 
 
 public:

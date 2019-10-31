@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -121,10 +121,10 @@ private:
         ) const;
 
         //- Disallow default bitwise copy construct
-        actuationDiskSource(const actuationDiskSource&);
+        actuationDiskSource(const actuationDiskSource&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const actuationDiskSource&);
+        void operator=(const actuationDiskSource&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -62,10 +62,10 @@ class nearWallDistNoSearch
         void doAll();
 
         //- Disallow default bitwise copy construct
-        nearWallDistNoSearch(const nearWallDistNoSearch&);
+        nearWallDistNoSearch(const nearWallDistNoSearch&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const nearWallDistNoSearch&);
+        void operator=(const nearWallDistNoSearch&) = delete;
 
 
 public:

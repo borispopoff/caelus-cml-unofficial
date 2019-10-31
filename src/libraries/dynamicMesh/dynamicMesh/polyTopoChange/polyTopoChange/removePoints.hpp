@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -87,10 +87,10 @@ class removePoints
 
 
         //- Disallow default bitwise copy construct
-        removePoints(const removePoints&);
+        removePoints(const removePoints&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const removePoints&);
+        void operator=(const removePoints&) = delete;
 
 public:
 

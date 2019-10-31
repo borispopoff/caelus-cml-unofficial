@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -79,10 +79,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        FaceCellWave(const FaceCellWave&);
+        FaceCellWave(const FaceCellWave&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const FaceCellWave&);
+        void operator=(const FaceCellWave&) = delete;
 
 
 protected:

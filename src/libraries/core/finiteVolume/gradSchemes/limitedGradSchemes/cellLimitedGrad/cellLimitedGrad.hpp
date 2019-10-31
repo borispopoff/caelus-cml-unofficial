@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -78,10 +78,10 @@ class cellLimitedGrad
     ) const;
 
     //- Disallow default bitwise copy construct
-    cellLimitedGrad(const cellLimitedGrad&);
+    cellLimitedGrad(const cellLimitedGrad&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const cellLimitedGrad&);
+    void operator=(const cellLimitedGrad&) = delete;
 
 
 public:

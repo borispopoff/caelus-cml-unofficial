@@ -95,10 +95,10 @@ class pressureGradientExplicitSource
         void update(fvMatrix<vector>& eqn);
 
         //- Disallow default bitwise copy construct
-        pressureGradientExplicitSource(const pressureGradientExplicitSource&);
+        pressureGradientExplicitSource(const pressureGradientExplicitSource&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pressureGradientExplicitSource&);
+        void operator=(const pressureGradientExplicitSource&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -98,10 +98,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        removeRegisteredObject(const removeRegisteredObject&);
+        removeRegisteredObject(const removeRegisteredObject&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const removeRegisteredObject&);
+        void operator=(const removeRegisteredObject&) = delete;
 
 
 public:

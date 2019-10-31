@@ -62,10 +62,10 @@ class spai0Preconditioner : public lduMatrix::preconditioner
     // Private Member Functions
 
     //- Disallow default bitwise copy construct
-    spai0Preconditioner(const spai0Preconditioner&);
+    spai0Preconditioner(const spai0Preconditioner&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const spai0Preconditioner&);
+    void operator=(const spai0Preconditioner&) = delete;
 
 public:
 

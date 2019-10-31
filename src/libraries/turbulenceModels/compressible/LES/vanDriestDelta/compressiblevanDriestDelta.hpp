@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -62,8 +62,8 @@ class vanDriestDelta
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        vanDriestDelta(const vanDriestDelta&);
-        void operator=(const vanDriestDelta&);
+        vanDriestDelta(const vanDriestDelta&) = delete;
+        void operator=(const vanDriestDelta&) = delete;
 
         // Calculate the delta values
         void calcDelta();

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,7 +52,7 @@ class simpleFilter
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        simpleFilter(const simpleFilter&);
+        simpleFilter(const simpleFilter&) = delete;
         void operator=(const simpleFilter&);
 
 

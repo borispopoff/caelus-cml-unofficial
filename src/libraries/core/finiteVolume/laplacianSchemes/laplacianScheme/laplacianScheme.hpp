@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -73,14 +73,16 @@ protected:
         tmp<surfaceInterpolationScheme<GType>> tinterpGammaScheme_;
         tmp<snGradScheme<Type>> tsnGradScheme_;
 
+
 private:
+
     // Private Member Functions
 
         //- Disallow copy construct
         laplacianScheme(const laplacianScheme&);
 
         //- Disallow default bitwise assignment
-        void operator=(const laplacianScheme&);
+        void operator=(const laplacianScheme&) = delete;
 
 
 public:

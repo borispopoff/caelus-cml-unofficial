@@ -86,10 +86,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MRFSource(const MRFSource&);
+        MRFSource(const MRFSource&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MRFSource&);
+        void operator=(const MRFSource&) = delete;
 
 
 public:

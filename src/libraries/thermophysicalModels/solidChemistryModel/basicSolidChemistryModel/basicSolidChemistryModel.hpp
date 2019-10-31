@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,8 +59,8 @@ class basicSolidChemistryModel
     //- Construct as copy (not implemented)
     basicSolidChemistryModel(const basicSolidChemistryModel&);
 
-    //- Disallow default bitwise assignment
-    void operator=(const basicSolidChemistryModel&);
+        //- Disallow default bitwise assignment
+        void operator=(const basicSolidChemistryModel&) = delete;
 
 
 protected:

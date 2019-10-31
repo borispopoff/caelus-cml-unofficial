@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -77,7 +77,7 @@ protected:
         ddtScheme(const ddtScheme&);
 
         //- Disallow default bitwise assignment
-        void operator=(const ddtScheme&);
+        void operator=(const ddtScheme&) = delete;
 
 
 public:

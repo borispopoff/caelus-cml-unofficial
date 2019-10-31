@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,10 +52,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        partialFaceAreaWeightAMI(const partialFaceAreaWeightAMI&);
+        partialFaceAreaWeightAMI(const partialFaceAreaWeightAMI&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const partialFaceAreaWeightAMI&);
+        void operator=(const partialFaceAreaWeightAMI&) = delete;
 
         // Marching front
 

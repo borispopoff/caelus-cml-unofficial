@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -70,7 +70,7 @@ class displacementSBRStressFvMotionSolver
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementSBRStressFvMotionSolver&);
+        void operator=(const displacementSBRStressFvMotionSolver&) = delete;
 
 
 public:

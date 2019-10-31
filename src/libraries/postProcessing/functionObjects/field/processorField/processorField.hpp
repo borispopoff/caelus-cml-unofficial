@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -97,10 +97,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        processorField(const processorField&);
+        processorField(const processorField&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const processorField&);
+        void operator=(const processorField&) = delete;
 
 
 public:

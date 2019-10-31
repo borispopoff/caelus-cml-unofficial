@@ -98,11 +98,11 @@ class CSV
         //- Read csv data table
         void read();
 
-        //- Read the next value from the splitted string
+        //- Read the next value from the split string
         Type readValue(const List<string>&);
 
         //- Disallow default bitwise assignment
-        void operator=(const CSV<Type>&);
+        void operator=(const CSV<Type>&) = delete;
 
 
 public:

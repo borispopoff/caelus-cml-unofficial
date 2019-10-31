@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,31 +54,33 @@ class reactionRateFlameArea
 
 protected:
 
-    //- Dictionary
-    dictionary coeffDict_;
+    // Protected data
 
-    //- Mesh reference
-    const fvMesh& mesh_;
+        //- Dictionary
+        dictionary coeffDict_;
 
-    //- Combstion model owner
-    const combustionModel& combModel_;
+        //- Mesh reference
+        const fvMesh& mesh_;
 
-    //- Fuel name
-    word fuel_;
+        //- Combstion model owner
+        const combustionModel& combModel_;
 
-    //- Fuel consumption rate per unit of flame area
-    volScalarField omega_;
+        //- Fuel name
+        word fuel_;
+
+        //- Fuel consumption rate per unit of flame area
+        volScalarField omega_;
 
 
 private:
 
     // Private member functions
 
-    //- Disallow copy construct
-    reactionRateFlameArea(const reactionRateFlameArea&);
+         //- Disallow copy construct
+        reactionRateFlameArea(const reactionRateFlameArea&);
 
-    //- Disallow default bitwise assignment
-    void operator=(const reactionRateFlameArea&);
+         //- Disallow default bitwise assignment
+        void operator=(const reactionRateFlameArea&) = delete;
 
 
 public:
@@ -88,60 +90,65 @@ public:
 
 
     // Declare run-time constructor selection table
-    declareRunTimeSelectionTable
-    (
-        autoPtr,
-        reactionRateFlameArea,
-        dictionary,
+
+        declareRunTimeSelectionTable
         (
-            const word modelType,
+            autoPtr,
+            reactionRateFlameArea,
+            dictionary,
+            (
+                const word modelType,
+                const dictionary& dict,
+                const fvMesh& mesh,
+                const combustionModel& combModel
+            ),
+            (modelType, dict, mesh, combModel)
+        );
+
+
+    // Constructors
+
+        //- Construct from components
+        reactionRateFlameArea
+        (
+            const word& modelType,
             const dictionary& dict,
             const fvMesh& mesh,
             const combustionModel& combModel
-        ),
-        (modelType, dict, mesh, combModel)
-    );
-
-
-    //- Construct from components
-    reactionRateFlameArea
-    (
-        const word& modelType,
-        const dictionary& dict,
-        const fvMesh& mesh,
-        const combustionModel& combModel
-    );
+        );
 
 
     // Selector
-    static autoPtr<reactionRateFlameArea> New
-    (
-        const dictionary& dict,
-        const fvMesh& mesh,
-        const combustionModel& combModel
-    );
+
+        static autoPtr<reactionRateFlameArea> New
+        (
+            const dictionary& dict,
+            const fvMesh& mesh,
+            const combustionModel& combModel
+        );
 
 
     // Destructor
-    virtual ~reactionRateFlameArea()
-    {}
+        virtual ~reactionRateFlameArea()
+        {}
 
 
     // Member functions
-    //- Access functions
 
-    //- Return omega
-    const volScalarField& omega() const
-    {
-        return omega_;
-    }
+        //- Access functions
 
-    //- Correct omega
-    virtual void correct(const volScalarField& sigma) = 0;
+            //- Return omega
+            const volScalarField& omega() const
+            {
+                return omega_;
+            }
 
-    //- Update from dictionary
-    virtual bool read(const dictionary& dictProperties);
 
+        //- Correct omega
+        virtual void correct(const volScalarField& sigma) = 0;
+
+        //- Update from dictionary
+        virtual bool read(const dictionary& dictProperties);
 };
 
 

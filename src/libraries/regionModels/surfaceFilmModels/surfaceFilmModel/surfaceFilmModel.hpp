@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,10 +52,10 @@ class surfaceFilmModel
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        surfaceFilmModel(const surfaceFilmModel&);
+        surfaceFilmModel(const surfaceFilmModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const surfaceFilmModel&);
+        void operator=(const surfaceFilmModel&) = delete;
 
 
 public:

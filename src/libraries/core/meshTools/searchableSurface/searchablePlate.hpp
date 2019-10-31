@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,7 +50,7 @@ namespace CML
 // Forward declaration of classes
 
 /*---------------------------------------------------------------------------*\
-                           Class searchablePlate Declaration
+                       Class searchablePlate Declaration
 \*---------------------------------------------------------------------------*/
 
 class searchablePlate
@@ -78,7 +78,7 @@ private:
 
         //- Inherit findNearest from searchableSurface
         using searchableSurface::findNearest;
-    
+
         pointIndexHit findNearest
         (
             const point& sample,
@@ -92,10 +92,10 @@ private:
         ) const;
 
         //- Disallow default bitwise copy construct
-        searchablePlate(const searchablePlate&);
+        searchablePlate(const searchablePlate&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const searchablePlate&);
+        void operator=(const searchablePlate&) = delete;
 
 
 public:

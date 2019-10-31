@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -67,8 +67,6 @@ class cellLooper
 :
     public edgeVertex
 {
-    // Private data
-
 
 protected:
 
@@ -101,15 +99,16 @@ protected:
         //  to refinement direction.
         label getMisAlignedEdge(const vector& refDir, const label celli) const;
 
+
 private:
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        cellLooper(const cellLooper&);
+        cellLooper(const cellLooper&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cellLooper&);
+        void operator=(const cellLooper&) = delete;
 
 
 public:

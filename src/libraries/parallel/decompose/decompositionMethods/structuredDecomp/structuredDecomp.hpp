@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,7 +56,7 @@ class structuredDecomp
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const structuredDecomp&);
+        void operator=(const structuredDecomp&) = delete;
         structuredDecomp(const structuredDecomp&);
 
 

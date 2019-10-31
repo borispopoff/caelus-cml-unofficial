@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -65,10 +65,10 @@ class fvMeshLduAddressing
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        fvMeshLduAddressing(const fvMeshLduAddressing&);
+        fvMeshLduAddressing(const fvMeshLduAddressing&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fvMeshLduAddressing&);
+        void operator=(const fvMeshLduAddressing&) = delete;
 
 
 public:

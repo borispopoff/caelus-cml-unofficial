@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -45,20 +45,28 @@ References:
 namespace CML
 {
 
-class PBiCGStab : public lduMatrix::solver
+/*---------------------------------------------------------------------------*\
+                           Class PBiCGStab Declaration
+\*---------------------------------------------------------------------------*/
+
+class PBiCGStab
+:
+    public lduMatrix::solver
 {
     // Private Member Functions
 
-    //- Disallow default bitwise copy construct
-    PBiCGStab(const PBiCGStab&);
+        //- Disallow default bitwise copy construct
+        PBiCGStab(const PBiCGStab&) = delete;
 
-    //- Disallow default bitwise assignment
-    void operator=(const PBiCGStab&);
+        //- Disallow default bitwise assignment
+        void operator=(const PBiCGStab&) = delete;
+
 
 public:
 
     //- Runtime type information
     TypeName("PBiCGStab");
+
 
     // Constructors
 

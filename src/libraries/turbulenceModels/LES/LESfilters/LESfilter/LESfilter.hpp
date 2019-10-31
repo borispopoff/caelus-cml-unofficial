@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,7 +58,7 @@ class LESfilter
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        LESfilter(const LESfilter&);
+        LESfilter(const LESfilter&) = delete;
         void operator=(const LESfilter&);
 
 

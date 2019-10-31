@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -135,10 +135,10 @@ class OSHA1stream
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        OSHA1stream(const OSHA1stream&);
+        OSHA1stream(const OSHA1stream&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const OSHA1stream&);
+        void operator=(const OSHA1stream&) = delete;
 
 public:
 

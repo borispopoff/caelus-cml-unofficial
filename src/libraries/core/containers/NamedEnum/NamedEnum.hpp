@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,10 +55,10 @@ class NamedEnum
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        NamedEnum(const NamedEnum&);
+        NamedEnum(const NamedEnum&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const NamedEnum&);
+        void operator=(const NamedEnum&) = delete;
 
 
 public:

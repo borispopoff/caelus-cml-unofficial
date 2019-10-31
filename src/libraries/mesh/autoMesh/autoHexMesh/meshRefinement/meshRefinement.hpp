@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -428,10 +428,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        meshRefinement(const meshRefinement&);
+        meshRefinement(const meshRefinement&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const meshRefinement&);
+        void operator=(const meshRefinement&) = delete;
 
 public:
 

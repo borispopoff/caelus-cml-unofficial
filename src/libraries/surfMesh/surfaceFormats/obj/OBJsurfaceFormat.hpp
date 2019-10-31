@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,10 +60,10 @@ class OBJsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        OBJsurfaceFormat(const OBJsurfaceFormat<Face>&);
+        OBJsurfaceFormat(const OBJsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const OBJsurfaceFormat<Face>&);
+        void operator=(const OBJsurfaceFormat<Face>&) = delete;
 
 
 public:

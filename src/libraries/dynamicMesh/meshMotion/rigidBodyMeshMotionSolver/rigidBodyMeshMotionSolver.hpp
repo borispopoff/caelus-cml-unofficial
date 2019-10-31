@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -131,7 +131,7 @@ class rigidBodyMeshMotionSolver
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const rigidBodyMeshMotionSolver&);
+        void operator=(const rigidBodyMeshMotionSolver&) = delete;
 
 
 public:

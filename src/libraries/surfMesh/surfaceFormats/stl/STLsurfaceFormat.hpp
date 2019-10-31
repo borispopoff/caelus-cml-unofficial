@@ -76,10 +76,10 @@ class STLsurfaceFormat
         );
 
         //- Disallow default bitwise copy construct
-        STLsurfaceFormat(const STLsurfaceFormat<Face>&);
+        STLsurfaceFormat(const STLsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const STLsurfaceFormat<Face>&);
+        void operator=(const STLsurfaceFormat<Face>&) = delete;
 
 
 public:

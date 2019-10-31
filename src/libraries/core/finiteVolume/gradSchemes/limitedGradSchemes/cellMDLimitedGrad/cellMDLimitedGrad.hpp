@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,10 +68,10 @@ class cellMDLimitedGrad
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        cellMDLimitedGrad(const cellMDLimitedGrad&);
+        cellMDLimitedGrad(const cellMDLimitedGrad&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cellMDLimitedGrad&);
+        void operator=(const cellMDLimitedGrad&) = delete;
 
 
 public:
@@ -91,8 +91,10 @@ public:
         {
             if (k_ < 0 || k_ > 1)
             {
-                FatalIOErrorInFunction(schemeData)
-                    << "coefficient = " << k_
+                FatalIOErrorInFunction
+                (
+                    schemeData
+                )   << "coefficient = " << k_
                     << " should be >= 0 and <= 1"
                     << exit(FatalIOError);
             }

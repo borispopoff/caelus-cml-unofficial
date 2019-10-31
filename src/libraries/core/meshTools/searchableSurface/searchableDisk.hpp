@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014 OpenFOAM Foundation
+Copyright (C) 2014-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -66,10 +66,10 @@ private:
 
 
     // Private Member Functions
-    
+
         //- Inherit findNearest from searchableSurface
         using searchableSurface::findNearest;
-    
+
         //- Find nearest point on disk
         pointIndexHit findNearest
         (
@@ -86,10 +86,10 @@ private:
         ) const;
 
         //- Disallow default bitwise copy construct
-        searchableDisk(const searchableDisk&);
+        searchableDisk(const searchableDisk&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableDisk&);
+        void operator=(const searchableDisk&) = delete;
 
 public:
 

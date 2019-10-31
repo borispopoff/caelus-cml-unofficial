@@ -102,7 +102,7 @@ class rigidBodyMotion
         rigidBodyMotion(const rigidBodyMotion&);
 
         //- Disallow default bitwise assignment
-        void operator=(const rigidBodyMotion&);
+        void operator=(const rigidBodyMotion&) = delete;
 
 
 public:

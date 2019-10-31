@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -105,10 +105,10 @@ protected:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        GAMGAgglomeration(const GAMGAgglomeration&);
+        GAMGAgglomeration(const GAMGAgglomeration&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const GAMGAgglomeration&);
+        void operator=(const GAMGAgglomeration&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -157,10 +157,10 @@ class CrankNicolsonDdtScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        CrankNicolsonDdtScheme(const CrankNicolsonDdtScheme&);
+        CrankNicolsonDdtScheme(const CrankNicolsonDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const CrankNicolsonDdtScheme&);
+        void operator=(const CrankNicolsonDdtScheme&) = delete;
 
         template<class GeoField>
         DDt0Field<GeoField>& ddt0_

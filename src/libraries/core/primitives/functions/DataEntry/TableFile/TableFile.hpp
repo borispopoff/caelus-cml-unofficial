@@ -78,7 +78,7 @@ class TableFile
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const TableFile<Type>&);
+        void operator=(const TableFile<Type>&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -110,10 +110,10 @@ class volPointInterpolation
         ) const;
 
         //- Disallow default bitwise copy construct
-        volPointInterpolation(const volPointInterpolation&);
+        volPointInterpolation(const volPointInterpolation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const volPointInterpolation&);
+        void operator=(const volPointInterpolation&) = delete;
 
 
 public:

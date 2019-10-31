@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
  -------------------------------------------------------------------------------
  License
     This file is part of Caelus.
@@ -99,10 +99,10 @@ class timeActivatedFileUpdate
         void updateFile();
 
         //- Disallow default bitwise copy construct
-        timeActivatedFileUpdate(const timeActivatedFileUpdate&);
+        timeActivatedFileUpdate(const timeActivatedFileUpdate&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const timeActivatedFileUpdate&);
+        void operator=(const timeActivatedFileUpdate&) = delete;
 
 
 public:

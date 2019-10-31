@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2016 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,7 +42,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class IOobjectList Declaration
+                        Class IOobjectList Declaration
 \*---------------------------------------------------------------------------*/
 
 class IOobjectList
@@ -52,7 +52,7 @@ class IOobjectList
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const IOobjectList&);
+        void operator=(const IOobjectList&) = delete;
 
 
 public:
@@ -73,7 +73,7 @@ public:
             bool registerObject = true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         IOobjectList(const IOobjectList&);
 
 

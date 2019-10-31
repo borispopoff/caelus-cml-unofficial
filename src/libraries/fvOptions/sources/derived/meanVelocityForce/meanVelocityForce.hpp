@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -100,10 +100,10 @@ protected:
 private:
 
     //- Disallow default bitwise copy construct
-    meanVelocityForce(const meanVelocityForce&);
+    meanVelocityForce(const meanVelocityForce&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const meanVelocityForce&);
+    void operator=(const meanVelocityForce&) = delete;
 
 public:
 

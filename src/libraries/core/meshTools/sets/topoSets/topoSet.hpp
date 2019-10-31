@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -102,7 +102,7 @@ protected:
 
 
         //- Disallow default bitwise copy construct
-        topoSet(const topoSet&);
+        topoSet(const topoSet&) = delete;
 
 public:
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -259,10 +259,10 @@ class globalPoints
         );
 
         //- Disallow default bitwise copy construct
-        globalPoints(const globalPoints&);
+        globalPoints(const globalPoints&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const globalPoints&);
+        void operator=(const globalPoints&) = delete;
 
 
 public:

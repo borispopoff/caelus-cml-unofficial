@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class limitedSurfaceInterpolationScheme
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const limitedSurfaceInterpolationScheme&);
+        void operator=(const limitedSurfaceInterpolationScheme&) = delete;
 
 
 protected:

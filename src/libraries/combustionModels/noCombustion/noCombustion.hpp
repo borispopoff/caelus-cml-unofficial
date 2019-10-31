@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -53,7 +53,7 @@ class noCombustion
     noCombustion(const noCombustion&);
 
     //- Disallow default bitwise assignment
-    void operator=(const noCombustion&);
+    void operator=(const noCombustion&) = delete;
 
 
 public:
@@ -62,14 +62,16 @@ public:
     TypeName("none");
 
 
-    //- Construct from components
-    noCombustion
-    (
-        const word& modelType,
-        ReactionThermo& thermo,
-        const compressible::turbulenceModel& turb,
-        const word& combustionProperties
-    );
+    // Constructors
+
+        //- Construct from components
+        noCombustion
+        (
+            const word& modelType,
+            ReactionThermo& thermo,
+            const compressible::turbulenceModel& turb,
+            const word& combustionProperties
+        );
 
 
     //- Destructor
@@ -79,18 +81,17 @@ public:
 
     // Member Functions
 
-    //- Correct combustion rate
-    virtual void correct();
+        //- Correct combustion rate
+        virtual void correct();
 
-    //- Fuel consumption rate matrix
-    virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
+        //- Fuel consumption rate matrix
+        virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
 
-    //- Heat release rate [kg/m/s3]
-    virtual tmp<volScalarField> Qdot() const;
+        //- Heat release rate [kg/m/s3]
+        virtual tmp<volScalarField> Qdot() const;
 
-    //- Update properties from given dictionary
-    virtual bool read();
-
+        //- Update properties from given dictionary
+        virtual bool read();
 };
 
 

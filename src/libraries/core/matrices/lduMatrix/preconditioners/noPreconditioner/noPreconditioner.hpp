@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,10 +49,10 @@ class noPreconditioner
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        noPreconditioner(const noPreconditioner&);
+        noPreconditioner(const noPreconditioner&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const noPreconditioner&);
+        void operator=(const noPreconditioner&) = delete;
 
 
 public:

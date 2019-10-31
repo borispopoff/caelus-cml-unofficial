@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -70,7 +70,7 @@ private:
 
     // Private Member Functions
 
-        //- walk across faces of hex. Update loop/loopWeights with edges cut.
+        //- Walk across faces of hex. Update loop/loopWeights with edges cut.
         //  Return true if successful walk. (should be always!)
         bool walkHex
         (
@@ -94,10 +94,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        hexCellLooper(const hexCellLooper&);
+        hexCellLooper(const hexCellLooper&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const hexCellLooper&);
+        void operator=(const hexCellLooper&) = delete;
 
 
 public:

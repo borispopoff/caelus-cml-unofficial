@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2015 OpenFOAM Foundation
+Copyright (C) 2015-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -74,7 +74,7 @@ class tabulated6DoFAcceleration
         tabulated6DoFAcceleration(const tabulated6DoFAcceleration&);
 
         //- Disallow default bitwise assignment
-        void operator=(const tabulated6DoFAcceleration&);
+        void operator=(const tabulated6DoFAcceleration&) = delete;
 
 
 public:

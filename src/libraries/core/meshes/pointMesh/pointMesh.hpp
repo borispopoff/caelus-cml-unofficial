@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,10 +59,10 @@ class pointMesh
         void mapFields(const mapPolyMesh&);
 
         //- Disallow default bitwise copy construct
-        pointMesh(const pointMesh&);
+        pointMesh(const pointMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pointMesh&);
+        void operator=(const pointMesh&) = delete;
 
 
 public:

@@ -95,10 +95,10 @@ protected:
 private:
 
     //- Disallow default bitwise copy construct
-    RASModel(const RASModel&);
+    RASModel(const RASModel&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const RASModel&);
+    void operator=(const RASModel&) = delete;
 
 
 public:

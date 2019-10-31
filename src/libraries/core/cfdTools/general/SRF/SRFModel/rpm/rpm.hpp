@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,10 +59,10 @@ class rpm
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        rpm(const rpm&);
+        rpm(const rpm&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const rpm&);
+        void operator=(const rpm&) = delete;
 
 
 public:

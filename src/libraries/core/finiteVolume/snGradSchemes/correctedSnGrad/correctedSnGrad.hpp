@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,7 +58,7 @@ class correctedSnGrad
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const correctedSnGrad&);
+        void operator=(const correctedSnGrad&) = delete;
 
 
 public:

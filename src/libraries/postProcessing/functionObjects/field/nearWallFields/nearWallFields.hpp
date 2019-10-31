@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -170,10 +170,10 @@ protected:
 private:
 
         //- Disallow default bitwise copy construct
-        nearWallFields(const nearWallFields&);
+        nearWallFields(const nearWallFields&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const nearWallFields&);
+        void operator=(const nearWallFields&) = delete;
 
 public:
 

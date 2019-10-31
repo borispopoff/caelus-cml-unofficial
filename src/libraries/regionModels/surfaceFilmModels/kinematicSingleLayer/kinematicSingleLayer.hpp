@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -71,10 +71,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        kinematicSingleLayer(const kinematicSingleLayer&);
+        kinematicSingleLayer(const kinematicSingleLayer&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const kinematicSingleLayer&);
+        void operator=(const kinematicSingleLayer&) = delete;
 
 
 protected:

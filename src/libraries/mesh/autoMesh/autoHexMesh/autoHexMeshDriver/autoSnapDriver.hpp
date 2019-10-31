@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -368,10 +368,10 @@ class autoSnapDriver
 
 
         //- Disallow default bitwise copy construct
-        autoSnapDriver(const autoSnapDriver&);
+        autoSnapDriver(const autoSnapDriver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const autoSnapDriver&);
+        void operator=(const autoSnapDriver&) = delete;
 
 
 public:

@@ -56,10 +56,10 @@ class EMESHedgeFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        EMESHedgeFormat(const EMESHedgeFormat&);
+        EMESHedgeFormat(const EMESHedgeFormat&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const EMESHedgeFormat&);
+        void operator=(const EMESHedgeFormat&) = delete;
 
 
 protected:

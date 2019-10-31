@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,10 +53,10 @@ class leastSquaresGrad
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        leastSquaresGrad(const leastSquaresGrad&);
+        leastSquaresGrad(const leastSquaresGrad&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const leastSquaresGrad&);
+        void operator=(const leastSquaresGrad&) = delete;
 
 
 public:

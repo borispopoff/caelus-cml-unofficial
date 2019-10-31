@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2018 Applied CCM
+Copyright (C) 2018-2019 Applied CCM
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -81,8 +81,8 @@ class kOmegaSSTIDDES : public kOmegaSSTDES
         tmp<volScalarField> LIDDES() const;
 
     // Disallow default bitwise copy construct and assignment
-    kOmegaSSTIDDES(kOmegaSSTIDDES const&);
-    kOmegaSSTIDDES& operator=(kOmegaSSTIDDES const&);
+    kOmegaSSTIDDES(kOmegaSSTIDDES const&) = delete;
+    kOmegaSSTIDDES& operator=(kOmegaSSTIDDES const&) = delete;
 
 protected:
 

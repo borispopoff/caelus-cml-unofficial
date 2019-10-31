@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,7 +52,7 @@ class manualDecomp
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const manualDecomp&);
+        void operator=(const manualDecomp&) = delete;
         manualDecomp(const manualDecomp&);
 
 
@@ -74,7 +74,7 @@ public:
 
     // Member Functions
 
-        //- manual decompose does not care about proc boundaries - is all
+        //- Manual decompose does not care about proc boundaries - is all
         //  up to the user.
         virtual bool parallelAware() const
         {

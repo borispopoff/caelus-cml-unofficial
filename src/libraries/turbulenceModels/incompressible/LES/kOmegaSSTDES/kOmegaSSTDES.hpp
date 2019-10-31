@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014-2016 Applied CCM 
+Copyright (C) 2014-2019 Applied CCM 
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,8 +50,8 @@ class kOmegaSSTDES : public LESModel
 {
 
     // Disallow default bitwise copy construct and assignment
-    kOmegaSSTDES(const kOmegaSSTDES&);
-    kOmegaSSTDES& operator=(kOmegaSSTDES const&);
+    kOmegaSSTDES(const kOmegaSSTDES&) = delete;
+    kOmegaSSTDES& operator=(kOmegaSSTDES const&) = delete;
         
 protected:
 

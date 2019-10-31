@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,7 +63,7 @@ class solidChemistryModel
     solidChemistryModel(const solidChemistryModel&);
 
     //- Disallow default bitwise assignment
-    void operator=(const solidChemistryModel&);
+    void operator=(const solidChemistryModel&) = delete;
 
 
 protected:

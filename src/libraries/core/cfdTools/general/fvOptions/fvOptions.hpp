@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -56,10 +56,10 @@ class options
         IOobject createIOobject(const fvMesh& mesh) const;
 
         //- Disallow default bitwise copy construct
-        options(const options&);
+        options(const options&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const options&);
+        void operator=(const options&) = delete;
 
 
 public:

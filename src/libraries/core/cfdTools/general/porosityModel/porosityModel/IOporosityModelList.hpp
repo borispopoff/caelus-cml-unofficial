@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -56,10 +56,10 @@ private:
         IOobject createIOobject(const fvMesh& mesh) const;
 
         //- Disallow default bitwise copy construct
-        IOporosityModelList(const IOporosityModelList&);
+        IOporosityModelList(const IOporosityModelList&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const IOporosityModelList&);
+        void operator=(const IOporosityModelList&) = delete;
 
 
 public:

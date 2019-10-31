@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -144,10 +144,10 @@ class polyDualMesh
 
 
         //- Disallow default bitwise copy construct
-        polyDualMesh(const polyDualMesh&);
+        polyDualMesh(const polyDualMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const polyDualMesh&);
+        void operator=(const polyDualMesh&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -71,10 +71,10 @@ class cellDistFuncs
 
 
         //- Disallow default bitwise copy construct
-        cellDistFuncs(const cellDistFuncs&);
+        cellDistFuncs(const cellDistFuncs&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cellDistFuncs&);
+        void operator=(const cellDistFuncs&) = delete;
 
 public:
 

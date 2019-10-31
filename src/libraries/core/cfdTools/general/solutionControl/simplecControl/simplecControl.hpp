@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014 Applied CCM
+Copyright (C) 2014-2019 Applied CCM
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,9 +51,9 @@ private:
 
     // Private member functions
 
-    simplecControl(const simplecControl&);
+    simplecControl(const simplecControl&) = delete;
 
-    void operator=(const simplecControl&);
+    void operator=(const simplecControl&) = delete;
 
 public:
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -88,7 +88,7 @@ public:
 
 private:
 
-    // Private member data
+    // Private data
 
         //- Merging distance
         scalar mergeDist_;
@@ -99,7 +99,7 @@ private:
         //- Bounding box settings
         IOdictionary dict_;
 
-        //- bounding boxes of all processors
+        //- Bounding boxes of all processors
         List<List<treeBoundBox>> procBb_;
 
         //- Global triangle numbering
@@ -208,7 +208,7 @@ private:
 
         // Surface redistribution
 
-            //- Finds new bounds based on an indepedent decomposition.
+            //- Finds new bounds based on an independent decomposition.
             List<List<treeBoundBox>> independentlyDistributedBbs
             (
                 const triSurface&
@@ -288,10 +288,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        distributedTriSurfaceMesh(const distributedTriSurfaceMesh&);
+        distributedTriSurfaceMesh(const distributedTriSurfaceMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const distributedTriSurfaceMesh&);
+        void operator=(const distributedTriSurfaceMesh&) = delete;
 
 
 public:

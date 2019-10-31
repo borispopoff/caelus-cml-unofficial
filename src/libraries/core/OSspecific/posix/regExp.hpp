@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -62,7 +62,7 @@ class regExp
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        regExp(const regExp&);
+        regExp(const regExp&) = delete;
 
         //- Disallow default bitwise assignment
         void operator=(const regExp&);
@@ -138,7 +138,6 @@ public:
             //- Compile pattern into a regular expression, optionally ignoring
             //  case
             void set(const std::string&, const bool ignoreCase=false) const;
-
 
             //- Release precompiled expression.
             //  Returns true if precompiled expression existed before clear

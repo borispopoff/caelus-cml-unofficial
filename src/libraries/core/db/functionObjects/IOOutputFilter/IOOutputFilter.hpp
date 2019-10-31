@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------* \
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,7 +59,7 @@ class IOOutputFilter
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        IOOutputFilter(const IOOutputFilter&);
+        IOOutputFilter(const IOOutputFilter&) = delete;
         void operator=(const IOOutputFilter&);
 
 

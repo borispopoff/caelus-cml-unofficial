@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -123,10 +123,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        surfaceInterpolateFields(const surfaceInterpolateFields&);
+        surfaceInterpolateFields(const surfaceInterpolateFields&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const surfaceInterpolateFields&);
+        void operator=(const surfaceInterpolateFields&) = delete;
 public:
 
     //- Runtime type information

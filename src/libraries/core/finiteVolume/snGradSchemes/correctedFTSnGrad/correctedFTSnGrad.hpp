@@ -59,7 +59,7 @@ class correctedFTSnGrad
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const correctedFTSnGrad&);
+        void operator=(const correctedFTSnGrad&) = delete;
 
 
 public:

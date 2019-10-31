@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -122,10 +122,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        pointFieldDecomposer(const pointFieldDecomposer&);
+        pointFieldDecomposer(const pointFieldDecomposer&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pointFieldDecomposer&);
+        void operator=(const pointFieldDecomposer&) = delete;
 
 
 public:

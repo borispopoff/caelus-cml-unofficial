@@ -122,10 +122,10 @@ protected:
     void storePrevIter() const;
 
     //- Disallow default bitwise copy construct
-    solutionControl(const solutionControl&);
+    solutionControl(const solutionControl&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const solutionControl&);
+    void operator=(const solutionControl&) = delete;
 
 
 public:

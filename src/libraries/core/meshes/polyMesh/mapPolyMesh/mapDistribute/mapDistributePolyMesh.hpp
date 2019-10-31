@@ -102,7 +102,7 @@ class mapDistributePolyMesh
         void calcPatchSizes();
 
         //- Disallow default bitwise copy construct
-        mapDistributePolyMesh(const mapDistributePolyMesh&);
+        mapDistributePolyMesh(const mapDistributePolyMesh&) = delete;
 
 
 public:

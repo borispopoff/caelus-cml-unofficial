@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2015 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -109,7 +109,7 @@ private:
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const interRegionExplicitPorositySource&);
+        void operator=(const interRegionExplicitPorositySource&) = delete;
 
 
 public:

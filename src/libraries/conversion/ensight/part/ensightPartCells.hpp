@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,7 +50,7 @@ class ensightPartCells
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const ensightPartCells&);
+        void operator=(const ensightPartCells&) = delete;
 
         //- Classify the cell types, set elemLists.
         void classify
@@ -59,13 +59,13 @@ class ensightPartCells
             const labelUList& idLabels = labelUList::null()
         );
 
-        //- track points used
+        //- Track points used
         virtual localPoints calcLocalPoints() const;
 
-        //- track the points used
+        //- Track the points used
         // virtual void makeLocalPointMap();
 
-        //- element connectivity
+        //- Element connectivity
         virtual void writeConnectivity
         (
             ensightGeoFile&,
@@ -77,7 +77,7 @@ class ensightPartCells
 
 protected:
 
-        //- addressable ensight element types
+        //- Addressable ensight element types
         enum elemType
         {
             tetra4Elements,
@@ -89,15 +89,15 @@ protected:
 
 
     // Static data members
-    
-    static const polyMesh* const polyMeshNullPtr_;
-    
-    static const List<word> elemTypes_;
+
+        static const polyMesh* const polyMeshNullPtr_;
+
+        static const List<word> elemTypes_;
 
 
     // Protected data
 
-        //- mesh referenced
+        //- Mesh referenced
         const polyMesh& mesh_;
 
 
@@ -130,7 +130,7 @@ public:
             const cellZone&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         ensightPartCells(const ensightPartCells&);
 
         //- Reconstruct part characteristics (eg, element types) from Istream
@@ -152,10 +152,10 @@ public:
 
     // Member Functions
 
-        //- write geometry
+        //- Write geometry
         virtual void writeGeometry(ensightGeoFile&) const;
 
-        //- static listing of the element types
+        //- Static listing of the element types
         virtual const List<word>& elementTypes() const
         {
             return elemTypes_;

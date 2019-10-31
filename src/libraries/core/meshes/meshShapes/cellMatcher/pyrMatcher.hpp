@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,7 +51,7 @@ class pyrMatcher
 {
     // Static data members
 
-        //- constants for this shape
+        //- Constants for this shape
         static const label vertPerCell;
         static const label facePerCell;
         static const label maxVertPerFace;
@@ -60,10 +60,10 @@ class pyrMatcher
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        pyrMatcher(const pyrMatcher&);
+        pyrMatcher(const pyrMatcher&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pyrMatcher&);
+        void operator=(const pyrMatcher&) = delete;
 
 
 public:

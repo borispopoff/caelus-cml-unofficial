@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -64,10 +64,10 @@ private:
         IOobject createIOobject(const fvMesh& mesh) const;
 
         //- Disallow default bitwise copy construct
-        IOMRFZoneList(const IOMRFZoneList&);
+        IOMRFZoneList(const IOMRFZoneList&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const IOMRFZoneList&);
+        void operator=(const IOMRFZoneList&) = delete;
 
 
 public:

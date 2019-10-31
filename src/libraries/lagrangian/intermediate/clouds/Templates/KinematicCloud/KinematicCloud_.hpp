@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2016 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
@@ -142,10 +142,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        KinematicCloud(const KinematicCloud&);
+        KinematicCloud(const KinematicCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const KinematicCloud&);
+        void operator=(const KinematicCloud&) = delete;
 
 
 protected:

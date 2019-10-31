@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -65,10 +65,10 @@ class pointMeshMapper
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        pointMeshMapper(const pointMeshMapper&);
+        pointMeshMapper(const pointMeshMapper&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pointMeshMapper&);
+        void operator=(const pointMeshMapper&) = delete;
 
 
 public:

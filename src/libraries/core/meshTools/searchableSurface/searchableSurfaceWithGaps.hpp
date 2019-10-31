@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -61,7 +61,7 @@ private:
 
     // Private Member Data
 
-        //- gap size in metre
+        //- Gap size in metre
         const scalar gap_;
 
         //- Underlying geometry (size 1)
@@ -95,10 +95,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        searchableSurfaceWithGaps(const searchableSurfaceWithGaps&);
+        searchableSurfaceWithGaps(const searchableSurfaceWithGaps&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaceWithGaps&);
+        void operator=(const searchableSurfaceWithGaps&) = delete;
 
 
 public:
@@ -257,7 +257,7 @@ public:
             //  bounding boxes. The bounds are hints to the surface as for
             //  the range of queries it can expect. faceMap/pointMap can be
             //  set if the surface has done any redistribution.
-            //virtual void distribute
+            // virtual void distribute
             //(
             //    const List<treeBoundBox>& bbs,
             //    const bool keepNonLocal,

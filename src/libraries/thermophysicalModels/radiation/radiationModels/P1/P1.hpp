@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,28 +54,31 @@ class P1
 :
     public radiationModel
 {
+    // Private data
 
-    //- Incident radiation / [W/m2]
-    volScalarField G_;
+        //- Incident radiation / [W/m2]
+        volScalarField G_;
 
-    //- Total radiative heat flux [W/m2]
-    volScalarField qr_;
+        //- Total radiative heat flux [W/m2]
+        volScalarField qr_;
 
-    //- Absorption coefficient
-    volScalarField a_;
+        //- Absorption coefficient
+        volScalarField a_;
 
-    //- Emission coefficient
-    volScalarField e_;
+        //- Emission coefficient
+        volScalarField e_;
 
-    //- Emission contribution
-    volScalarField E_;
+        //- Emission contribution
+        volScalarField E_;
 
 
-    //- Disallow default bitwise copy construct
-    P1(const P1&);
+    // Private Member Functions
 
-    //- Disallow default bitwise assignment
-    void operator=(const P1&);
+        //- Disallow default bitwise copy construct
+        P1(const P1&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const P1&) = delete;
 
 
 public:

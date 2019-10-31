@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -240,7 +240,7 @@ class sampledSets
 
 
         //- Disallow default bitwise copy construct and assignment
-        sampledSets(const sampledSets&);
+        sampledSets(const sampledSets&) = delete;
         void operator=(const sampledSets&);
 
 

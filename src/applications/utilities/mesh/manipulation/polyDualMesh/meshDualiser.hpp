@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -30,7 +30,7 @@ Description
 
     Usually to preserve boundaries:
         - all boundary faces are featureFaces
-        - all edges and points inbetween different patches are
+        - all edges and points in between different patches are
           featureEdges/points.
 
     In same way you can also preserve internal faces (e.g. faceZones)
@@ -113,7 +113,7 @@ class meshDualiser
         (
             const label masterPointi,
             const label masterEdgeI,
-            const label masterFaceI,
+            const label masterFacei,
 
             const bool edgeOrder,
             const label dualCell0,
@@ -127,9 +127,9 @@ class meshDualiser
         (
             const label masterPointi,
             const label masterEdgeI,
-            const label masterFaceI,
+            const label masterFacei,
 
-            const label dualCellI,
+            const label dualCelli,
             const label patchi,
             const DynamicList<label>& verts,
             polyTopoChange& meshMod
@@ -165,10 +165,10 @@ class meshDualiser
         ) const;
 
         //- Disallow default bitwise copy construct
-        meshDualiser(const meshDualiser&);
+        meshDualiser(const meshDualiser&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const meshDualiser&);
+        void operator=(const meshDualiser&) = delete;
 
 
 public:

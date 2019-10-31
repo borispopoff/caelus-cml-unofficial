@@ -88,10 +88,10 @@ class FTRsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        FTRsurfaceFormat(const FTRsurfaceFormat<Face>&);
+        FTRsurfaceFormat(const FTRsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const FTRsurfaceFormat<Face>&);
+        void operator=(const FTRsurfaceFormat<Face>&) = delete;
 
 
 public:

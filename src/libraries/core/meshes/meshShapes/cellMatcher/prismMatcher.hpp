@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,7 +51,7 @@ class prismMatcher
 {
     // Static data members
 
-        //- constants for this shape
+        //- Constants for this shape
         static const label vertPerCell;
         static const label facePerCell;
         static const label maxVertPerFace;
@@ -60,10 +60,10 @@ class prismMatcher
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        prismMatcher(const prismMatcher&);
+        prismMatcher(const prismMatcher&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const prismMatcher&);
+        void operator=(const prismMatcher&) = delete;
 
 
 public:

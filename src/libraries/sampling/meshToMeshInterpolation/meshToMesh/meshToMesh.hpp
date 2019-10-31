@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2018 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -227,10 +227,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        meshToMesh(const meshToMesh&);
+        meshToMesh(const meshToMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const meshToMesh&);
+        void operator=(const meshToMesh&) = delete;
 
 
 public:

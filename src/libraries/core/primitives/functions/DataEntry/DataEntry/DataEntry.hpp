@@ -60,7 +60,7 @@ class DataEntry
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const DataEntry<Type>&);
+        void operator=(const DataEntry<Type>&) = delete;
 
 
 protected:

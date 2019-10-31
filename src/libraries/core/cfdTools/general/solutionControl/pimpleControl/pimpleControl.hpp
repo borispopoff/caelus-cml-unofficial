@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
   
 -------------------------------------------------------------------------------
 License
@@ -51,10 +51,10 @@ class pimpleControl
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        pimpleControl(const pimpleControl&);
+        pimpleControl(const pimpleControl&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pimpleControl&);
+        void operator=(const pimpleControl&) = delete;
 
 
 protected:

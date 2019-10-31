@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -70,21 +70,21 @@ protected:
         //- Return the true if cells intersect
         virtual bool intersect
         (
-            const label srcCellI,
-            const label tgtCellI
+            const label srcCelli,
+            const label tgtCelli
         ) const;
 
         //- Return the intersection volume between two cells
         virtual scalar interVol
         (
-            const label srcCellI,
-            const label tgtCellI
+            const label srcCelli,
+            const label tgtCelli
         ) const;
 
         //- Append target cell neihgbour cells to cellIDs list
         virtual void appendNbrCells
         (
-            const label tgtCellI,
+            const label tgtCelli,
             const polyMesh& mesh,
             const DynamicList<label>& visitedTgtCells,
             DynamicList<label>& nbrTgtCellIDs
@@ -104,10 +104,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        meshToMeshMethod(const meshToMeshMethod&);
+        meshToMeshMethod(const meshToMeshMethod&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const meshToMeshMethod&);
+        void operator=(const meshToMeshMethod&) = delete;
 
 
 public:

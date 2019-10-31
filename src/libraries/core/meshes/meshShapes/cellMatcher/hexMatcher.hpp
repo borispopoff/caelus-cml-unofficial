@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,7 +52,7 @@ class hexMatcher
 {
     // Static data members
 
-        //- constants for this shape
+        //- Constants for this shape
         static const label vertPerCell;
         static const label facePerCell;
         static const label maxVertPerFace;
@@ -61,10 +61,10 @@ class hexMatcher
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        hexMatcher(const hexMatcher&);
+        hexMatcher(const hexMatcher&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const hexMatcher&);
+        void operator=(const hexMatcher&) = delete;
 
 
 public:

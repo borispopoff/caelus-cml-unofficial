@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -43,7 +43,7 @@ namespace CML
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                           Class nearWallDist Declaration
+                        Class nearWallDist Declaration
 \*---------------------------------------------------------------------------*/
 
 class nearWallDist
@@ -62,10 +62,10 @@ class nearWallDist
         void calculate();
 
         //- Disallow default bitwise copy construct
-        nearWallDist(const nearWallDist&);
+        nearWallDist(const nearWallDist&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const nearWallDist&);
+        void operator=(const nearWallDist&) = delete;
 
 
 public:

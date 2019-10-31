@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 Applied CCM
+Copyright (C) 2016-2019 Applied CCM
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,8 +49,8 @@ class kOmegaSSTDDES : public kOmegaSSTDES
     // Private Member Functions
 
     // Disallow default bitwise copy construct and assignment
-    kOmegaSSTDDES(kOmegaSSTDDES const&);
-    kOmegaSSTDDES& operator=(kOmegaSSTDDES const&);
+    kOmegaSSTDDES(kOmegaSSTDDES const&) = delete;
+    kOmegaSSTDDES& operator=(kOmegaSSTDDES const&) = delete;
 
 protected:
 

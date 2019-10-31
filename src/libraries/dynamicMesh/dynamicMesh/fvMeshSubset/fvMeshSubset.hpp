@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -135,10 +135,10 @@ private:
         ) const;
 
         //- Disallow default bitwise copy construct
-        fvMeshSubset(const fvMeshSubset&);
+        fvMeshSubset(const fvMeshSubset&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fvMeshSubset&);
+        void operator=(const fvMeshSubset&) = delete;
 
 public:
 
@@ -304,7 +304,7 @@ public:
                 const GeometricField<Type, pointPatchField, pointMesh>&
             ) const;
 
-            //- Map dimensioned fields
+            //- Map dimensioned field
             template<class Type>
             static tmp<DimensionedField<Type, volMesh>>
             interpolate
