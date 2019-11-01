@@ -101,9 +101,6 @@ class CSV
         //- Read the next value from the split string
         Type readValue(const List<string>&);
 
-        //- Disallow default bitwise assignment
-        void operator=(const CSV<Type>&) = delete;
-
 
 public:
 
@@ -135,6 +132,12 @@ public:
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CSV<Type>&) = delete;
 };
 
 

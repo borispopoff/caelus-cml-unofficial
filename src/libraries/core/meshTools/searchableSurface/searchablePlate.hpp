@@ -91,12 +91,6 @@ private:
             const point& end
         ) const;
 
-        //- Disallow default bitwise copy construct
-        searchablePlate(const searchablePlate&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchablePlate&) = delete;
-
 
 public:
 
@@ -120,6 +114,9 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        searchablePlate(const searchablePlate&) = delete;
 
 
     //- Destructor
@@ -222,6 +219,12 @@ public:
                 NotImplemented;
                 return false;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchablePlate&) = delete;
 };
 
 

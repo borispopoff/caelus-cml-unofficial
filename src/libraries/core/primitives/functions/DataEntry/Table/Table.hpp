@@ -60,11 +60,6 @@ class Table
 :
     public TableBase<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const Table<Type>&) = delete;
-
 
 public:
 
@@ -83,6 +78,12 @@ public:
 
     //- Destructor
     virtual ~Table();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Table<Type>&) = delete;
 };
 
 

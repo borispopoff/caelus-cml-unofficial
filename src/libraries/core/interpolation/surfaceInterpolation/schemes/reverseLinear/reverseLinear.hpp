@@ -50,12 +50,6 @@ class reverseLinear
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const reverseLinear&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -139,6 +133,12 @@ public:
 
             return treverseLinearWeights;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const reverseLinear&) = delete;
 };
 
 

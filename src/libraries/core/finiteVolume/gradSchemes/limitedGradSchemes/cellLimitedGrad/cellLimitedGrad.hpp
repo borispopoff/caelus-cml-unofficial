@@ -77,12 +77,6 @@ class cellLimitedGrad
         Field<tensor>& gIf
     ) const;
 
-    //- Disallow default bitwise copy construct
-    cellLimitedGrad(const cellLimitedGrad&) = delete;
-
-    //- Disallow default bitwise assignment
-    void operator=(const cellLimitedGrad&) = delete;
-
 
 public:
 
@@ -106,6 +100,9 @@ public:
                 << exit(FatalIOError);
         }
     }
+
+    //- Disallow default bitwise copy construct
+    cellLimitedGrad(const cellLimitedGrad&) = delete;
 
 
     // Member Functions
@@ -136,6 +133,12 @@ public:
         const GeometricField<Type, fvPatchField, volMesh>& vsf,
         const word& name
     ) const;
+
+
+    // Member Operators
+
+    //- Disallow default bitwise assignment
+    void operator=(const cellLimitedGrad&) = delete;
 };
 
 

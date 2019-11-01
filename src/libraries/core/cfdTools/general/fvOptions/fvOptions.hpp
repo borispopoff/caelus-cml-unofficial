@@ -55,12 +55,6 @@ class options
         //- Create IO object if dictionary is present
         IOobject createIOobject(const fvMesh& mesh) const;
 
-        //- Disallow default bitwise copy construct
-        options(const options&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const options&) = delete;
-
 
 public:
 
@@ -72,6 +66,9 @@ public:
 
         //- Construct from components with list of field names
         options(const fvMesh& mesh);
+
+        //- Disallow default bitwise copy construct
+        options(const options&) = delete;
 
         //- Construct fvOptions and register to datbase if not present
         //  otherwise lookup and return
@@ -90,6 +87,12 @@ public:
 
         //- Read dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const options&) = delete;
 };
 
 

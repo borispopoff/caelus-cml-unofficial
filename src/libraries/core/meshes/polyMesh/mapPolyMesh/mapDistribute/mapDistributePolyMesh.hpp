@@ -101,9 +101,6 @@ class mapDistributePolyMesh
 
         void calcPatchSizes();
 
-        //- Disallow default bitwise copy construct
-        mapDistributePolyMesh(const mapDistributePolyMesh&) = delete;
-
 
 public:
 
@@ -164,6 +161,9 @@ public:
 
         //- Construct from Istream
         mapDistributePolyMesh(Istream&);
+
+        //- Disallow default bitwise copy construct
+        mapDistributePolyMesh(const mapDistributePolyMesh&) = delete;
 
 
     // Member Functions
@@ -279,6 +279,7 @@ public:
             {
                 NotImplemented;
             }
+
 
     // Member operators
 

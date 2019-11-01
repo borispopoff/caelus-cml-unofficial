@@ -57,11 +57,6 @@ class DataEntry
 :
     public refCount
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const DataEntry<Type>&) = delete;
-
 
 protected:
 
@@ -160,6 +155,12 @@ public:
 
             //- Write in dictionary format
             virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DataEntry<Type>&) = delete;
 };
 
 

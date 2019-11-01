@@ -69,10 +69,6 @@ protected:
         //- Reference to zone list
         const pointZoneMesh& zoneMesh_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointZone(const pointZone&) = delete;
 
 public:
 
@@ -151,6 +147,10 @@ public:
             const label index,
             const pointZoneMesh&
         );
+
+        //- Disallow default bitwise copy construct
+        pointZone(const pointZone&) = delete;
+
 
         //- Construct and return a clone, resetting the zone mesh
         virtual autoPtr<pointZone> clone(const pointZoneMesh& zm) const

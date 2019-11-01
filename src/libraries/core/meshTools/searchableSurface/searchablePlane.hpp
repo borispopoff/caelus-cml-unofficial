@@ -68,12 +68,6 @@ private:
         //- Return the boundBox of the plane
         boundBox calcBounds() const;
 
-        //- Disallow default bitwise copy construct
-        searchablePlane(const searchablePlane&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchablePlane&) = delete;
-
 
 public:
 
@@ -97,6 +91,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        searchablePlane(const searchablePlane&) = delete;
+
 
     //- Destructor
     virtual ~searchablePlane();
@@ -212,6 +210,11 @@ public:
                 return false;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchablePlane&) = delete;
 };
 
 

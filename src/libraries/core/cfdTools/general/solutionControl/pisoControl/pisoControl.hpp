@@ -43,15 +43,6 @@ class pisoControl
 :
     public pimpleControl
 {
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        pisoControl(const pisoControl&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pisoControl&) = delete;
-
-
 public:
 
     // Static Data Members
@@ -65,9 +56,17 @@ public:
         //- Construct from mesh and the name of control sub-dictionary
         pisoControl(fvMesh& mesh, const word& dictName="PISO");
 
+        //- Disallow default bitwise copy construct
+        pisoControl(const pisoControl&) = delete;
 
     //- Destructor
     virtual ~pisoControl();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pisoControl&) = delete;
 };
 
 

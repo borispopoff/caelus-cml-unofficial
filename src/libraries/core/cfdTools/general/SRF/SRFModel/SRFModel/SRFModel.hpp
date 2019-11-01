@@ -84,17 +84,6 @@ protected:
         dimensionedVector omega_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        SRFModel(const SRFModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const SRFModel&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -124,6 +113,8 @@ public:
             const volVectorField& Urel
         );
 
+        //- Disallow default bitwise copy construct
+        SRFModel(const SRFModel&) = delete;
 
     // Selectors
 
@@ -174,6 +165,12 @@ public:
 
             //- Return absolute velocity for complete mesh
             tmp<volVectorField> Uabs() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SRFModel&) = delete;
 };
 
 

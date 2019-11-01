@@ -50,15 +50,6 @@ class steadyStateDdtScheme
 :
     public fv::ddtScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        steadyStateDdtScheme(const steadyStateDdtScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const steadyStateDdtScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -78,6 +69,9 @@ public:
         :
             ddtScheme<Type>(mesh, is)
         {}
+
+        //- Disallow default bitwise copy construct
+        steadyStateDdtScheme(const steadyStateDdtScheme&) = delete;
 
 
     // Member Functions
@@ -173,6 +167,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const steadyStateDdtScheme&) = delete;
 };
 
 

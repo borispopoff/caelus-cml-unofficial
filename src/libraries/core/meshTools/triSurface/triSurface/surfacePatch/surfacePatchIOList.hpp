@@ -57,18 +57,6 @@ class surfacePatchIOList
     public surfacePatchList,
     public regIOobject
 {
-    // Private data
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        surfacePatchIOList(const surfacePatchIOList&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfacePatchIOList&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -87,6 +75,10 @@ public:
         //- Construct from IOobject
         surfacePatchIOList(const IOobject& io, const surfacePatchList&);
 
+        //- Disallow default bitwise copy construct
+        surfacePatchIOList(const surfacePatchIOList&) = delete;
+
+
     //- Destructor
     ~surfacePatchIOList();
 
@@ -98,6 +90,9 @@ public:
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfacePatchIOList&) = delete;
 
     // Friend Functions
 

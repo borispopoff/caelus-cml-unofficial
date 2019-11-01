@@ -52,11 +52,6 @@ class quadraticRamp
 :
     public ramp
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const quadraticRamp&) = delete;
-
 
 public:
 
@@ -82,6 +77,12 @@ public:
 
         //- Return value for time t
         virtual inline scalar value(const scalar t) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const quadraticRamp&) = delete;
 };
 
 

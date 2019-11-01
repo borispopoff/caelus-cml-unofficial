@@ -46,16 +46,16 @@ class NullSingleton
     NullSingleton()
     {}
 
+public:
+
+    //- The unique null singleton
+    static const NullSingleton nullSingleton;
+
     //- Prevent copy-construction
     NullSingleton(const NullSingleton&) = delete;
 
     //- Prevent assignment
     void operator=(const NullSingleton&) = delete;
-
-public:
-
-    //- The unique null singleton
-    static const NullSingleton nullSingleton;
 };
 
 

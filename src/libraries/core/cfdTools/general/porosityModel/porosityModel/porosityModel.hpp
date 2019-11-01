@@ -53,17 +53,6 @@ class porosityModel
 :
     public regIOobject
 {
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        porosityModel(const porosityModel&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const porosityModel&) = delete;
-
-
 protected:
 
     // Protected data
@@ -160,6 +149,9 @@ public:
         const dictionary& dict,
         const word& cellZoneName = word::null
     );
+
+    //- Disallow default bitwise copy construct
+    porosityModel(const porosityModel&) = delete;
 
     //- Return pointer to new porosityModel object created on the freestore
     //  from an Istream
@@ -262,6 +254,12 @@ public:
     
         //- Read porosity dictionary
         virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const porosityModel&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -53,21 +53,15 @@ class OBJedgeFormat
 :
     public edgeMesh
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        OBJedgeFormat(const OBJedgeFormat&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const OBJedgeFormat&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from file name
         OBJedgeFormat(const fileName&);
+
+        //- Disallow default bitwise copy construct
+        OBJedgeFormat(const OBJedgeFormat&) = delete;
 
 
     // Selectors
@@ -100,6 +94,12 @@ public:
         {
             write(name, *this);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const OBJedgeFormat&) = delete;
 };
 
 

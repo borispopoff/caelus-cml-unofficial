@@ -48,15 +48,6 @@ class closedTriSurfaceMesh
 :
     public triSurfaceMesh
 {
-private:
-
-        //- Disallow default bitwise copy construct
-        closedTriSurfaceMesh(const closedTriSurfaceMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const closedTriSurfaceMesh&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -79,6 +70,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construct
+        closedTriSurfaceMesh(const closedTriSurfaceMesh&) = delete;
+
 
     // Destructor
 
@@ -92,6 +86,12 @@ public:
         {
             return true;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const closedTriSurfaceMesh&) = delete;
 
 };
 

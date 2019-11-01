@@ -132,12 +132,6 @@ class searchableCone
         //- Return the boundBox of the cylinder
         boundBox calcBounds() const;
 
-        //- No copy construct
-        searchableCone(const searchableCone&) = delete;
-
-        //- No copy assignment
-        void operator=(const searchableCone&) = delete;
-
 
 public:
 
@@ -165,6 +159,9 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- No copy construct
+        searchableCone(const searchableCone&) = delete;
 
 
     //- Destructor
@@ -281,6 +278,12 @@ public:
                 NotImplemented;
                 return false;
             }
+
+
+    // Member Operators
+
+        //- No copy assignment
+        void operator=(const searchableCone&) = delete;
 };
 
 

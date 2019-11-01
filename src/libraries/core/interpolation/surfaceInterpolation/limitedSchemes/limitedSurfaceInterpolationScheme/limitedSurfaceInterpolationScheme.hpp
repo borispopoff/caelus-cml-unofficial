@@ -46,18 +46,6 @@ class limitedSurfaceInterpolationScheme
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow copy construct
-        limitedSurfaceInterpolationScheme
-        (
-            const limitedSurfaceInterpolationScheme&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const limitedSurfaceInterpolationScheme&) = delete;
-
-
 protected:
 
     // Protected data
@@ -132,6 +120,12 @@ public:
             )
         {}
 
+        //- Disallow copy construct
+        limitedSurfaceInterpolationScheme
+        (
+            const limitedSurfaceInterpolationScheme&
+        ) = delete;
+
 
     // Selectors
 
@@ -184,6 +178,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitedSurfaceInterpolationScheme&) = delete;
 };
 
 

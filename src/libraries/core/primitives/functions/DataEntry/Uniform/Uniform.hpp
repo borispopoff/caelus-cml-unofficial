@@ -57,11 +57,6 @@ class Uniform
 :
     public Constant<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const Uniform<Type>&) = delete;
-
 
 public:
 
@@ -74,6 +69,11 @@ public:
         //- Construct from entry name and dictionary
         Uniform(const word& entryName, const dictionary& dict);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Uniform<Type>&) = delete;
 };
 
 

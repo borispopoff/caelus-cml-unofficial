@@ -56,15 +56,6 @@ class extendedLeastSquaresGrad
         scalar minDet_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        extendedLeastSquaresGrad(const extendedLeastSquaresGrad&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const extendedLeastSquaresGrad&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -88,6 +79,9 @@ public:
             }
         }
 
+        //- Disallow default bitwise copy construct
+        extendedLeastSquaresGrad(const extendedLeastSquaresGrad&) = delete;
+
 
     // Member Functions
 
@@ -102,6 +96,12 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>& vsf,
             const word& name
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extendedLeastSquaresGrad&) = delete;
 };
 
 

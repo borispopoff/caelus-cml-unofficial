@@ -181,15 +181,6 @@ class primitiveMesh
             const scalar areaSwitch_;
 
 
-    // Private Member Functions
-
-        //- Disallow construct as copy
-        primitiveMesh(const primitiveMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const primitiveMesh&);
-
-
         // Topological calculations
 
             //- Calculate cell shapes
@@ -462,6 +453,9 @@ public:
             const bool defectCorr = false,
             const scalar areaSwitch = 1e-8
         );
+
+        //- Disallow construct as copy
+        primitiveMesh(const primitiveMesh&);
 
 
     //- Destructor
@@ -909,6 +903,12 @@ public:
 
             //- Clear all geometry and addressing unnecessary for CFD
             void clearOut();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const primitiveMesh&) = delete;
 };
 
 

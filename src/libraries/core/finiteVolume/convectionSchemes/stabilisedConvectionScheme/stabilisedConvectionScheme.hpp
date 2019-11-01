@@ -54,12 +54,6 @@ class stabilisedConvectionScheme
 {
     tmp<fv::convectionScheme<Type>> scheme_;
 
-    //- Disallow default bitwise copy construct
-    stabilisedConvectionScheme(const stabilisedConvectionScheme&) = delete;
-
-    //- Disallow default bitwise assignment
-    void operator=(const stabilisedConvectionScheme&) = delete;
-
 
 public:
 
@@ -80,6 +74,9 @@ public:
         fv::convectionScheme<Type>::New(mesh, faceFlux, is)
     )
     {}
+
+    //- Disallow default bitwise copy construct
+    stabilisedConvectionScheme(const stabilisedConvectionScheme&) = delete;
 
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
     (
@@ -104,6 +101,12 @@ public:
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     ) const;
+
+
+    // Member Operators
+
+    //- Disallow default bitwise assignment
+    void operator=(const stabilisedConvectionScheme&) = delete;
 };
 
 

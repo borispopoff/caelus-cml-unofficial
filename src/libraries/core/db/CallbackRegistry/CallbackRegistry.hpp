@@ -62,14 +62,6 @@ class CallbackRegistry
     public CallbackRegistryName,
     public UIDLList<CallbackType>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        CallbackRegistry(const CallbackRegistry&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const CallbackRegistry&) = delete;
-
 
 public:
 
@@ -78,9 +70,18 @@ public:
         //- Construct null
         CallbackRegistry();
 
+        //- Disallow default bitwise copy construct
+        CallbackRegistry(const CallbackRegistry&) = delete;
+
 
     //- Destructor
     virtual ~CallbackRegistry();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CallbackRegistry&) = delete;
 };
 
 

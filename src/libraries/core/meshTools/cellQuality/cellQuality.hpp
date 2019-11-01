@@ -52,21 +52,15 @@ class cellQuality
         const polyMesh& mesh_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellQuality(const cellQuality&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellQuality&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct from mesh
         cellQuality(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construct
+        cellQuality(const cellQuality&) = delete;
 
 
     // Destructor - default
@@ -85,6 +79,12 @@ public:
 
         //- Return face skewness
         tmp<scalarField> faceSkewness() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellQuality&) = delete;
 };
 
 

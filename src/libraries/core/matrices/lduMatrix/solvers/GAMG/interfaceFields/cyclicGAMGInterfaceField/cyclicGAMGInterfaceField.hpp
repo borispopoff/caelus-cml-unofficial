@@ -61,15 +61,6 @@ class cyclicGAMGInterfaceField
         int rank_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cyclicGAMGInterfaceField(const cyclicGAMGInterfaceField&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cyclicGAMGInterfaceField&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -92,6 +83,9 @@ public:
             const bool doTransform,
             const int rank
         );
+
+        //- Disallow default bitwise copy construct
+        cyclicGAMGInterfaceField(const cyclicGAMGInterfaceField&) = delete;
 
 
     //- Destructor
@@ -148,6 +142,12 @@ public:
                 const direction cmpt,
                 const Pstream::commsTypes commsType
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cyclicGAMGInterfaceField&) = delete;
 };
 
 

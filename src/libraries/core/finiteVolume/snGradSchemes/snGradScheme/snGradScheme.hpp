@@ -62,12 +62,6 @@ class snGradScheme
         const fvMesh& mesh_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const snGradScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -159,6 +153,12 @@ public:
         (
             const tmp<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const snGradScheme&) = delete;
 };
 
 

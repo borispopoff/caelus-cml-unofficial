@@ -64,15 +64,6 @@ class lduPrimitiveMesh
         lduSchedule patchSchedule_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        lduPrimitiveMesh(const lduPrimitiveMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const lduPrimitiveMesh&) = delete;
-
-
 public:
 
     // Constructors
@@ -157,6 +148,9 @@ public:
             patchSchedule_(ps)
         {}
 
+        //- Disallow default bitwise copy construct
+        lduPrimitiveMesh(const lduPrimitiveMesh&) = delete;
+
 
     //- Destructor
     virtual ~lduPrimitiveMesh()
@@ -214,6 +208,12 @@ public:
             {
                 return patchSchedule_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lduPrimitiveMesh&) = delete;
 };
 
 

@@ -44,15 +44,6 @@ class fvBoundaryMeshMapper
 :
     public PtrList<fvPatchMapper>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        fvBoundaryMeshMapper(const fvBoundaryMeshMapper&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvBoundaryMeshMapper&) = delete;
-
-
 public:
 
     // Constructors
@@ -81,6 +72,15 @@ public:
                 );
             }
         }
+
+        //- Disallow default bitwise copy construct
+        fvBoundaryMeshMapper(const fvBoundaryMeshMapper&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvBoundaryMeshMapper&) = delete;
 };
 
 

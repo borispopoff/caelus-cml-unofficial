@@ -71,12 +71,6 @@ class objectRegistry
         //  Used to terminate searching within the ancestors
         bool parentNotTime() const;
 
-        //- Disallow Copy constructor
-        objectRegistry(const objectRegistry&);
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const objectRegistry&) = delete;
-
 
 public:
 
@@ -101,6 +95,9 @@ public:
             const IOobject& io,
             const label nIoObjects = 128
         );
+
+        //- Disallow Copy constructor
+        objectRegistry(const objectRegistry&);
 
 
     //- Destructor
@@ -226,6 +223,12 @@ public:
                 IOstream::versionNumber ver,
                 IOstream::compressionType cmp
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise copy construct and assignment
+        void operator=(const objectRegistry&) = delete;
 };
 
 

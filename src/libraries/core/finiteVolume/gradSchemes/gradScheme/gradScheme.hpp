@@ -66,9 +66,6 @@ class gradScheme
         //- Disallow copy construct
         gradScheme(const gradScheme&);
 
-        //- Disallow default bitwise assignment
-        void operator=(const gradScheme&) = delete;
-
 
 public:
 
@@ -167,6 +164,12 @@ public:
         (
             const tmp<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gradScheme&) = delete;
 };
 
 

@@ -57,21 +57,16 @@ class prismMatcher
         static const label maxVertPerFace;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        prismMatcher(const prismMatcher&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const prismMatcher&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct
         prismMatcher();
+
+        //- Disallow default bitwise copy construct
+        prismMatcher(const prismMatcher&) = delete;
+
 
     //- Destructor
     ~prismMatcher();
@@ -117,6 +112,12 @@ public:
             const label celli,
             cellShape& shape
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const prismMatcher&) = delete;
 };
 
 

@@ -85,13 +85,6 @@ private:
         ) const;
 
 
-        //- Disallow default bitwise copy construct
-        searchableSphere(const searchableSphere&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSphere&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -109,6 +102,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        searchableSphere(const searchableSphere&) = delete;
+
 
     //- Destructor
     virtual ~searchableSphere();
@@ -217,6 +214,12 @@ public:
                 NotImplemented;
                 return false;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSphere&) = delete;
 
 };
 

@@ -113,12 +113,6 @@ class triSurfaceMesh
             DynamicList<pointIndexHit, 1, 1>& hits
         );
 
-        //- Disallow default bitwise copy construct
-        triSurfaceMesh(const triSurfaceMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceMesh&) = delete;
-
 
 public:
 
@@ -141,6 +135,9 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        triSurfaceMesh(const triSurfaceMesh&) = delete;
 
 
     //- Destructor
@@ -275,6 +272,12 @@ public:
                 IOstream::versionNumber ver,
                 IOstream::compressionType cmp
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceMesh&) = delete;
 };
 
 

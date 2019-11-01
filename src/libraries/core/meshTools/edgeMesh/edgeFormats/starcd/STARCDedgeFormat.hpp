@@ -77,12 +77,6 @@ class STARCDedgeFormat
             const edgeList&
         );
 
-        //- Disallow default bitwise copy construct
-        STARCDedgeFormat(const STARCDedgeFormat&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const STARCDedgeFormat&) = delete;
-
 
 protected:
 
@@ -102,6 +96,9 @@ public:
 
         //- Construct from file name
         STARCDedgeFormat(const fileName&);
+
+        //- Disallow default bitwise copy construct
+        STARCDedgeFormat(const STARCDedgeFormat&) = delete;
 
 
     // Selectors
@@ -134,6 +131,12 @@ public:
         {
             write(name, *this);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const STARCDedgeFormat&) = delete;
 };
 
 

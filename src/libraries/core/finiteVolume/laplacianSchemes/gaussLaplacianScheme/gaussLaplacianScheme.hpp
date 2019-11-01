@@ -64,12 +64,6 @@ class gaussLaplacianScheme
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        //- Disallow default bitwise copy construct
-        gaussLaplacianScheme(const gaussLaplacianScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const gaussLaplacianScheme&) = delete;
-
 
 public:
 
@@ -102,6 +96,9 @@ public:
             laplacianScheme<Type, GType>(mesh, igs, sngs)
         {}
 
+        //- Disallow default bitwise copy construct
+        gaussLaplacianScheme(const gaussLaplacianScheme&) = delete;
+
 
     //- Destructor
     virtual ~gaussLaplacianScheme()
@@ -126,6 +123,12 @@ public:
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gaussLaplacianScheme&) = delete;
 };
 
 

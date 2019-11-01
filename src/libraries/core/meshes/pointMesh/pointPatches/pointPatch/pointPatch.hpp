@@ -58,15 +58,6 @@ class pointPatch
         const pointBoundaryMesh& boundaryMesh_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointPatch(const pointPatch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointPatch&) = delete;
-
-
 protected:
 
     // Protected Member Functions
@@ -114,6 +105,9 @@ public:
         :
             boundaryMesh_(bm)
         {}
+
+        //- Disallow default bitwise copy construct
+        pointPatch(const pointPatch&) = delete;
 
 
     //- Destructor
@@ -166,6 +160,12 @@ public:
             pointConstraint&
         ) const
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointPatch&) = delete;
 };
 
 

@@ -90,12 +90,6 @@ class walkPatch
         );
 
 
-        //- Disallow default bitwise copy construct
-        walkPatch(const walkPatch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const walkPatch&) = delete;
-
 public:
 
     ClassName("walkPatch");
@@ -115,6 +109,9 @@ public:
             boolList& visited
         );
 
+        //- Disallow default bitwise copy construct
+        walkPatch(const walkPatch&) = delete;
+
 
     // Member Functions
 
@@ -128,6 +125,11 @@ public:
             return indexInFace_;
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const walkPatch&) = delete;
 };
 
 

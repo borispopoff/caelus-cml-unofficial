@@ -55,15 +55,6 @@ class cyclicGAMGInterface
         const cyclicLduInterface& fineCyclicInterface_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cyclicGAMGInterface(const cyclicGAMGInterface&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cyclicGAMGInterface&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -82,6 +73,9 @@ public:
             const labelField& restrictAddressing,
             const labelField& neighbourRestrictAddressing
         );
+
+        //- Disallow default bitwise copy construct
+        cyclicGAMGInterface(const cyclicGAMGInterface&) = delete;
 
 
     //- Destructor
@@ -132,6 +126,12 @@ public:
             {
                 return fineCyclicInterface_.reverseT();
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cyclicGAMGInterface&) = delete;
 };
 
 

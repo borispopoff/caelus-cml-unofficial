@@ -205,13 +205,6 @@ class PointEdgeWave
             label handleCollocatedPoints();
 
 
-        //- Disallow default bitwise copy construct
-        PointEdgeWave(const PointEdgeWave&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const PointEdgeWave&) = delete;
-
-
 public:
 
     // Static Functions
@@ -256,6 +249,9 @@ public:
             UList<Type>& allEdgeInfo,
             TrackingData& td = dummyTrackData_
         );
+
+        //- Disallow default bitwise copy construct
+        PointEdgeWave(const PointEdgeWave&) = delete;
 
 
     //- Destructor
@@ -309,6 +305,12 @@ public:
         //- Iterate until no changes or maxIter reached. Returns actual
         //  number of iterations.
         label iterate(const label maxIter);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PointEdgeWave&) = delete;
 };
 
 

@@ -61,12 +61,6 @@ class nearWallDistNoSearch
         //- Do all calculations.
         void doAll();
 
-        //- Disallow default bitwise copy construct
-        nearWallDistNoSearch(const nearWallDistNoSearch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const nearWallDistNoSearch&) = delete;
-
 
 public:
 
@@ -75,6 +69,8 @@ public:
         //- Construct from components
         nearWallDistNoSearch(const fvMesh& mesh);
 
+        //- Disallow default bitwise copy construct
+        nearWallDistNoSearch(const nearWallDistNoSearch&) = delete;
 
     //- Destructor
     virtual ~nearWallDistNoSearch();
@@ -84,6 +80,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const nearWallDistNoSearch&) = delete;
 };
 
 

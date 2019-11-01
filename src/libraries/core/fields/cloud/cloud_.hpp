@@ -53,15 +53,6 @@ class cloud
     public objectRegistry
 {
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cloud(const cloud&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cloud&) = delete;
-
-
 public:
 
     //- Cloud geometry type (internal or IO representations)
@@ -89,6 +80,9 @@ public:
         //- Construct for the given objectRegistry and named cloud instance
         cloud(const objectRegistry&, const word& cloudName = defaultName);
 
+        //- Disallow default bitwise copy construct
+        cloud(const cloud&) = delete;
+
 
     //- Destructor
     virtual ~cloud()
@@ -102,6 +96,12 @@ public:
             //- Remap the cells of particles corresponding to the
             //  mesh topology change
             virtual void autoMap(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cloud&) = delete;
 };
 
 

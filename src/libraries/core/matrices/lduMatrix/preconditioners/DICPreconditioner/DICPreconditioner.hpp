@@ -63,16 +63,12 @@ class DICPreconditioner : public lduMatrix::preconditioner
     scalarField rDuUpper_;
     scalarField rDlUpper_;
 
-    //- Disallow default bitwise copy construct
-    DICPreconditioner(const DICPreconditioner&) = delete;
-
-    //- Disallow default bitwise assignment
-    void operator=(const DICPreconditioner&) = delete;
 
 public:
 
     //- Runtime type information
     TypeName("DIC");
+
 
     // Constructors
 
@@ -83,9 +79,14 @@ public:
         dictionary const& solverControlsUnused
     );
 
+    //- Disallow default bitwise copy construct
+    DICPreconditioner(const DICPreconditioner&) = delete;
+
+
     //- Destructor
     virtual ~DICPreconditioner()
     {}
+
 
     // Member Functions
 
@@ -98,6 +99,11 @@ public:
         scalarField const& r,
         direction const cmpt=0
     ) const;
+
+    // Member Operators
+
+    //- Disallow default bitwise assignment
+    void operator=(const DICPreconditioner&) = delete;
 };
 
 }

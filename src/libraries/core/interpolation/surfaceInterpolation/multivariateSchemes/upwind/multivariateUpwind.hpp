@@ -53,15 +53,6 @@ class multivariateUpwind
         const surfaceScalarField& faceFlux_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multivariateUpwind(const multivariateUpwind&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateUpwind&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -89,6 +80,9 @@ public:
             ),
             faceFlux_(faceFlux)
         {}
+
+        //- Disallow default bitwise copy construct
+        multivariateUpwind(const multivariateUpwind&) = delete;
 
 
     // Member Operators
@@ -141,6 +135,12 @@ public:
                 new fieldScheme(field, faceFlux_)
             );
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateUpwind&) = delete;
 };
 
 

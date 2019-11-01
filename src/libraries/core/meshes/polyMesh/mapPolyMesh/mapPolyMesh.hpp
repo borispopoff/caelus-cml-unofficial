@@ -266,15 +266,6 @@ class mapPolyMesh
         const labelList oldPatchNMeshPoints_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        mapPolyMesh(const mapPolyMesh&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const mapPolyMesh&) = delete;
-
-
 public:
 
     // Constructors
@@ -343,6 +334,10 @@ public:
             labelList& oldPatchNMeshPoints,
             const bool reuse
         );
+
+        //- Disallow default bitwise copy construct
+        mapPolyMesh(const mapPolyMesh&) = delete;
+
 
     // Member Functions
 
@@ -628,6 +623,12 @@ public:
             {
                 return oldPatchNMeshPoints_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mapPolyMesh&) = delete;
 };
 
 

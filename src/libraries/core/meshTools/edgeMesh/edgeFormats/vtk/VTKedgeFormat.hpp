@@ -48,15 +48,6 @@ class VTKedgeFormat
 :
     public edgeMesh
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        VTKedgeFormat(const VTKedgeFormat&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const VTKedgeFormat&) = delete;
-
-
 protected:
 
     // Protected Member Functions
@@ -80,6 +71,9 @@ public:
         //- Construct null
         VTKedgeFormat();
 
+        //- Disallow default bitwise copy construct
+        VTKedgeFormat(const VTKedgeFormat&) = delete;
+
 
     //- Destructor
     virtual ~VTKedgeFormat()
@@ -98,6 +92,12 @@ public:
 //            {
 //                write(os, *this);
 //            }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const VTKedgeFormat&) = delete;
 };
 
 

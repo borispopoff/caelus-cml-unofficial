@@ -47,17 +47,6 @@ class processorCyclicGAMGInterface
 :
     public processorGAMGInterface
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        processorCyclicGAMGInterface
-        (
-            const processorCyclicGAMGInterface&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorCyclicGAMGInterface&) = delete;
-
 
 public:
 
@@ -77,11 +66,22 @@ public:
             const labelField& neighbourRestrictAddressing
         );
 
+        //- Disallow default bitwise copy construct
+        processorCyclicGAMGInterface
+        (
+            const processorCyclicGAMGInterface&
+        ) = delete;
+
 
     // Destructor
 
         virtual ~processorCyclicGAMGInterface();
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorCyclicGAMGInterface&) = delete;
 };
 
 

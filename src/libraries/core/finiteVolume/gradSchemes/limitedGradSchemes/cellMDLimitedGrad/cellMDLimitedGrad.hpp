@@ -65,15 +65,6 @@ class cellMDLimitedGrad
         const scalar k_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellMDLimitedGrad(const cellMDLimitedGrad&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellMDLimitedGrad&) = delete;
-
-
 public:
 
     //- RunTime type information
@@ -100,6 +91,9 @@ public:
             }
         }
 
+        //- Disallow default bitwise copy construct
+        cellMDLimitedGrad(const cellMDLimitedGrad&) = delete;
+
 
     // Member Functions
 
@@ -122,6 +116,12 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>& vsf,
             const word& name
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellMDLimitedGrad&) = delete;
 };
 
 

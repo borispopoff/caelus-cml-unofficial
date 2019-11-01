@@ -55,15 +55,6 @@ class GAMGInterfaceField
         const GAMGInterface& interface_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GAMGInterfaceField(const GAMGInterfaceField&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const GAMGInterfaceField&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -143,6 +134,9 @@ public:
             interface_(GAMGCp)
         {}
 
+        //- Disallow default bitwise copy construct
+        GAMGInterfaceField(const GAMGInterfaceField&) = delete;
+
 
     // Member Functions
 
@@ -154,6 +148,11 @@ public:
                 return interface_;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GAMGInterfaceField&) = delete;
 };
 
 

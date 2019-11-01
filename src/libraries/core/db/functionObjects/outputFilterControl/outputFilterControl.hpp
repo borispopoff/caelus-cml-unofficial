@@ -90,15 +90,6 @@ private:
         label executionIndex_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        outputFilterControl(const outputFilterControl&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const outputFilterControl&) = delete;
-
-
 public:
 
     // Constructors
@@ -110,6 +101,9 @@ public:
             const dictionary&,
             const word prefix = "write"
         );
+
+        //- Disallow default bitwise copy construct and assignment
+        outputFilterControl(const outputFilterControl&) = delete;
 
 
     //- Destructor
@@ -147,6 +141,11 @@ public:
         {
             return executionIndex_;
         }
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const outputFilterControl&) = delete;
 };
 
 

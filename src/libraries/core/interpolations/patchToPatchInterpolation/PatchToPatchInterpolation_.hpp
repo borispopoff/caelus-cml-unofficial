@@ -110,12 +110,6 @@ class PatchToPatchInterpolation
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        PatchToPatchInterpolation(const PatchToPatchInterpolation&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const PatchToPatchInterpolation&) = delete;
-
         //- Calculate point weights
         void calcPointAddressing() const;
 
@@ -157,6 +151,9 @@ public:
             const intersection::algorithm alg = intersection::algorithm::fullRay,
             const intersection::direction dir = intersection::direction::vector
         );
+
+        //- Disallow default bitwise copy construct
+        PatchToPatchInterpolation(const PatchToPatchInterpolation&) = delete;
 
 
     //- Destructor
@@ -217,6 +214,11 @@ public:
         template<class Type>
         tmp<Field<Type>> faceInterpolate(const tmp<Field<Type>>& tpf) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PatchToPatchInterpolation&) = delete;
 };
 
 

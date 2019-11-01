@@ -99,12 +99,6 @@ private:
         //- Update localState_ from any events.
         void checkFiles() const;
 
-        //- Disallow default bitwise copy construct
-        fileMonitor(const fileMonitor&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fileMonitor&) = delete;
-
 
 public:
 
@@ -115,6 +109,9 @@ public:
 
         //- Construct null
         fileMonitor(const bool useInotify);
+
+        //- Disallow default bitwise copy construct
+        fileMonitor(const fileMonitor&) = delete;
 
 
     //- Destructor
@@ -144,6 +141,12 @@ public:
 
         //- Reset state (e.g. after having read it) using handle
         void setUnmodified(const label watchFd);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fileMonitor&) = delete;
 };
 
 

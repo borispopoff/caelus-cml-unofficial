@@ -58,15 +58,6 @@ class functionObject
         const word name_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        functionObject(const functionObject&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const functionObject&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -98,6 +89,9 @@ public:
             NotImplemented;
             return autoPtr<functionObject>(nullptr);
         }
+
+        //- Disallow default bitwise copy construct
+        functionObject(const functionObject&) = delete;
 
         //- Return a pointer to a new functionObject created on freestore
         //  from Istream
@@ -163,7 +157,10 @@ public:
         //  time. Returns the write time, or vGreat.
         virtual scalar timeToNextWrite();
 
+    // Member Operators
 
+        //- Disallow default bitwise assignment
+        void operator=(const functionObject&) = delete;
 };
 
 

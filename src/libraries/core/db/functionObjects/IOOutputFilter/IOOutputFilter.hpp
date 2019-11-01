@@ -56,12 +56,6 @@ class IOOutputFilter
     public IOdictionary,
     public OutputFilter
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        IOOutputFilter(const IOOutputFilter&) = delete;
-        void operator=(const IOOutputFilter&);
-
 
 public:
 
@@ -99,6 +93,9 @@ public:
             const IOobject::readOption rOpt = IOobject::MUST_READ_IF_MODIFIED,
             const bool loadFromFile = false
         );
+
+        //- Disallow default bitwise copy construct
+        IOOutputFilter(const IOOutputFilter&) = delete;
 
 
     //- Destructor
@@ -138,6 +135,12 @@ public:
             read();
             OutputFilter::movePoints(points);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const IOOutputFilter&) = delete;
 };
 
 

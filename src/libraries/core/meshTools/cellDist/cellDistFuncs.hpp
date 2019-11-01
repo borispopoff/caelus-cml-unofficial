@@ -70,12 +70,6 @@ class cellDistFuncs
         static label findIndex(const label n, const labelList&, const label);
 
 
-        //- Disallow default bitwise copy construct
-        cellDistFuncs(const cellDistFuncs&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellDistFuncs&) = delete;
-
 public:
 
     ClassName("cellDistFuncs");
@@ -84,6 +78,9 @@ public:
 
         //- Construct from mesh
         cellDistFuncs(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construct
+        cellDistFuncs(const cellDistFuncs&) = delete;
 
 
     // Member Functions
@@ -148,6 +145,12 @@ public:
             scalarField& wallDistCorrected,
             Map<label>& nearestFace
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellDistFuncs&) = delete;
 };
 
 

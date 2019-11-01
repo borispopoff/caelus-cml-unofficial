@@ -51,12 +51,6 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        directAMI(const directAMI&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const directAMI&) = delete;
-
         // Marching front
 
             //- Append to list of src face seed indices
@@ -111,6 +105,9 @@ public:
             const bool requireMatch = true
         );
 
+        //- Disallow default bitwise copy construct
+        directAMI(const directAMI&) = delete;
+
 
     //- Destructor
     virtual ~directAMI();
@@ -130,6 +127,12 @@ public:
                 label srcFacei = -1,
                 label tgtFacei = -1
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const directAMI&) = delete;
 };
 
 

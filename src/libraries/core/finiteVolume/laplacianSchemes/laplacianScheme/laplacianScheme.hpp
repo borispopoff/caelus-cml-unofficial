@@ -81,9 +81,6 @@ private:
         //- Disallow copy construct
         laplacianScheme(const laplacianScheme&);
 
-        //- Disallow default bitwise assignment
-        void operator=(const laplacianScheme&) = delete;
-
 
 public:
 
@@ -195,6 +192,12 @@ public:
             const GeometricField<GType, fvPatchField, volMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const laplacianScheme&) = delete;
 };
 
 

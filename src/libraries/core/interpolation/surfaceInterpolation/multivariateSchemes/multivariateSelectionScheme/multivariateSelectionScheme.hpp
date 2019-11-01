@@ -56,18 +56,6 @@ class multivariateSelectionScheme
         surfaceScalarField weights_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multivariateSelectionScheme
-        (
-            const multivariateSelectionScheme&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateSelectionScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -85,6 +73,12 @@ public:
             const surfaceScalarField& faceFlux,
             Istream& schemeData
         );
+
+        //- Disallow default bitwise copy construct
+        multivariateSelectionScheme
+        (
+            const multivariateSelectionScheme&
+        ) = delete;
 
 
     // Member Operators
@@ -137,6 +131,12 @@ public:
                 new fieldScheme(field, weights_)
             );
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateSelectionScheme&) = delete;
 };
 
 

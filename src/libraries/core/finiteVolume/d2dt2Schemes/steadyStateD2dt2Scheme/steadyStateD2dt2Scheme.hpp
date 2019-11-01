@@ -50,15 +50,6 @@ class steadyStateD2dt2Scheme
 :
     public fv::d2dt2Scheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        steadyStateD2dt2Scheme(const steadyStateD2dt2Scheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const steadyStateD2dt2Scheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -78,6 +69,9 @@ public:
         :
             d2dt2Scheme<Type>(mesh, is)
         {}
+
+        //- Disallow default bitwise copy construct
+        steadyStateD2dt2Scheme(const steadyStateD2dt2Scheme&) = delete;
 
 
     // Member Functions
@@ -115,6 +109,12 @@ public:
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const steadyStateD2dt2Scheme&) = delete;
 };
 
 

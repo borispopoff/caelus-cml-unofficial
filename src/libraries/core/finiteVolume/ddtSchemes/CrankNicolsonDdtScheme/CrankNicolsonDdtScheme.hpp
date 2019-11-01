@@ -156,12 +156,6 @@ class CrankNicolsonDdtScheme
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        CrankNicolsonDdtScheme(const CrankNicolsonDdtScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const CrankNicolsonDdtScheme&) = delete;
-
         template<class GeoField>
         DDt0Field<GeoField>& ddt0_
         (
@@ -211,6 +205,9 @@ public:
 
         //- Construct from mesh and Istream
         CrankNicolsonDdtScheme(const fvMesh& mesh, Istream& is);
+
+        //- Disallow default bitwise copy construct
+        CrankNicolsonDdtScheme(const CrankNicolsonDdtScheme&) = delete;
 
 
     // Member Functions
@@ -313,6 +310,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CrankNicolsonDdtScheme&) = delete;
 };
 
 

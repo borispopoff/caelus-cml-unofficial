@@ -52,12 +52,6 @@ class localMax
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const localMax&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -168,6 +162,12 @@ public:
 
             return tvff;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const localMax&) = delete;
 };
 
 

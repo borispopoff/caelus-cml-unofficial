@@ -60,15 +60,6 @@ class LimitedScheme
     public limitedSurfaceInterpolationScheme<Type>,
     public Limiter
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        LimitedScheme(const LimitedScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const LimitedScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -115,6 +106,9 @@ public:
             Limiter(is)
         {}
 
+        //- Disallow default bitwise copy construct
+        LimitedScheme(const LimitedScheme&) = delete;
+
 
     // Member Functions
 
@@ -123,6 +117,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const LimitedScheme&) = delete;
 };
 
 

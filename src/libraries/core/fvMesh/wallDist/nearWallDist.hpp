@@ -61,12 +61,6 @@ class nearWallDist
         //- Do all calculations
         void calculate();
 
-        //- Disallow default bitwise copy construct
-        nearWallDist(const nearWallDist&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const nearWallDist&) = delete;
-
 
 public:
 
@@ -75,6 +69,8 @@ public:
         //- Construct from components
         nearWallDist(const fvMesh& mesh);
 
+        //- Disallow default bitwise copy construct
+        nearWallDist(const nearWallDist&) = delete;
 
     //- Destructor
     virtual ~nearWallDist();
@@ -89,6 +85,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const nearWallDist&) = delete;
 };
 
 

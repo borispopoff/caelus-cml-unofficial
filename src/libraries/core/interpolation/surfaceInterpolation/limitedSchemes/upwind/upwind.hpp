@@ -49,12 +49,6 @@ class upwind
 :
     public limitedSurfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const upwind&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -135,6 +129,12 @@ public:
         {
             return weights();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const upwind&) = delete;
 };
 
 

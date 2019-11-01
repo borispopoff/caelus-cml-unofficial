@@ -60,13 +60,6 @@ class includeEntry
 :
     public functionEntry
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        includeEntry(const includeEntry&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const includeEntry&) = delete;
 
 protected:
 
@@ -88,6 +81,12 @@ public:
     ClassName("include");
 
 
+    // Constructors
+
+        //- Disallow default bitwise copy construct
+        includeEntry(const includeEntry&) = delete;
+
+
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
@@ -101,6 +100,11 @@ public:
             Istream&
         );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const includeEntry&) = delete;
 };
 
 

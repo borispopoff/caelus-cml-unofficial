@@ -76,15 +76,6 @@ private:
         pointField points_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        searchableRotatedBox(const searchableRotatedBox&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableRotatedBox&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -99,6 +90,9 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        searchableRotatedBox(const searchableRotatedBox&) = delete;
 
 
     //- Destructor
@@ -246,6 +240,12 @@ public:
                 notImplemented("searchableRotatedBox::writeData(Ostream&) const");
                 return false;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableRotatedBox&) = delete;
 };
 
 

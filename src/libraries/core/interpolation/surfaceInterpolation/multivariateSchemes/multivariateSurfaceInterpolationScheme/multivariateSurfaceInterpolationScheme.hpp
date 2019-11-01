@@ -77,18 +77,6 @@ private:
         const fieldTable& fields_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multivariateSurfaceInterpolationScheme
-        (
-            const multivariateSurfaceInterpolationScheme&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateSurfaceInterpolationScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -122,6 +110,12 @@ public:
             const surfaceScalarField& faceFlux,
             Istream& schemeData
         );
+
+        //- Disallow default bitwise copy construct
+        multivariateSurfaceInterpolationScheme
+        (
+            const multivariateSurfaceInterpolationScheme&
+        ) = delete;
 
 
     // Selectors
@@ -190,6 +184,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>& field
         ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateSurfaceInterpolationScheme&) = delete;
 };
 
 

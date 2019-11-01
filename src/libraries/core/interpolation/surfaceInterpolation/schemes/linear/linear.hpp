@@ -48,12 +48,6 @@ class linear
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const linear&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -96,6 +90,12 @@ public:
         {
             return this->mesh().surfaceInterpolation::weights();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const linear&) = delete;
 };
 
 

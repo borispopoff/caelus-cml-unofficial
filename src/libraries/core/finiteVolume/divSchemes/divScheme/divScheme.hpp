@@ -74,9 +74,6 @@ protected:
         //- Disallow copy construct
         divScheme(const divScheme&);
 
-        //- Disallow default bitwise assignment
-        void operator=(const divScheme&) = delete;
-
 
 public:
 
@@ -143,6 +140,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const divScheme&) = delete;
 };
 
 

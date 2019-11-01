@@ -115,12 +115,6 @@ private:
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construct
-        DarcyForchheimer(const DarcyForchheimer&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const DarcyForchheimer&) = delete;
-
 
 public:
 
@@ -136,6 +130,10 @@ public:
         const dictionary& dict,
         const word& cellZoneName
     );
+
+    //- Disallow default bitwise copy construct
+    DarcyForchheimer(const DarcyForchheimer&) = delete;
+
 
     //- Destructor
     virtual ~DarcyForchheimer();
@@ -178,6 +176,13 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DarcyForchheimer&) = delete;
+
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

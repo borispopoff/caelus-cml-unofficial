@@ -75,12 +75,6 @@ protected:
 
         void combineLevels(const label curLevel);
 
-        //- Disallow default bitwise copy construct
-        pairGAMGAgglomeration(const pairGAMGAgglomeration&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pairGAMGAgglomeration&) = delete;
-
 
 public:
 
@@ -96,6 +90,15 @@ public:
             const lduMesh& mesh,
             const dictionary& controlDict
         );
+
+        //- Disallow default bitwise copy construct
+        pairGAMGAgglomeration(const pairGAMGAgglomeration&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pairGAMGAgglomeration&) = delete;
 };
 
 

@@ -110,12 +110,6 @@ class OutputFilterFunctionObject
         //- Returns true if active (enabled and within time bounds)
         bool active() const;
 
-        //- Disallow default bitwise copy construct
-        OutputFilterFunctionObject(const OutputFilterFunctionObject&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const OutputFilterFunctionObject&) = delete;
-
 
 public:
 
@@ -132,6 +126,9 @@ public:
             const Time&,
             const dictionary&
         );
+
+        //- Disallow default bitwise copy construct
+        OutputFilterFunctionObject(const OutputFilterFunctionObject&) = delete;
 
 
     // Member Functions
@@ -206,6 +203,12 @@ public:
 
             //- Read and set the function object if its data have changed
             virtual bool read(const dictionary&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const OutputFilterFunctionObject&) = delete;
 };
 
 

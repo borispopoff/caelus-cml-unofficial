@@ -62,15 +62,6 @@ class pointMeshMapper
         pointBoundaryMeshMapper boundaryMap_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointMeshMapper(const pointMeshMapper&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointMeshMapper&) = delete;
-
-
 public:
 
     // Constructors
@@ -82,6 +73,9 @@ public:
             pointMap_(mesh, mpm),
             boundaryMap_(mesh, pointMap_, mpm)
         {}
+
+        //- Disallow default bitwise copy construct
+        pointMeshMapper(const pointMeshMapper&) = delete;
 
 
     // Member Functions
@@ -111,6 +105,12 @@ public:
         {
             return boundaryMap_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointMeshMapper&) = delete;
 };
 
 

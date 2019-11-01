@@ -80,12 +80,6 @@ class triSurfaceSearch
             const vector& lineVec
         ) const;
 
-        //- Disallow default bitwise copy construct
-        triSurfaceSearch(const triSurfaceSearch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceSearch&) = delete;
-
 
 public:
 
@@ -104,6 +98,9 @@ public:
             const scalar tolerance,
             const label maxTreeDepth
         );
+
+        //- Disallow default bitwise copy construct
+        triSurfaceSearch(const triSurfaceSearch&) = delete;
 
 
     //- Destructor
@@ -174,6 +171,12 @@ public:
             const pointField& end,
             List<List<pointIndexHit>>& info
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceSearch&) = delete;
 };
 
 

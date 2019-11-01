@@ -55,12 +55,6 @@ class Callback
         CallbackRegistry<CallbackType>& cbr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const Callback<CallbackType>&) = delete;
-
-
 public:
 
     // Constructors
@@ -85,6 +79,12 @@ public:
 
             //- Check-out Callback from CallbackRegistry
             bool checkOut();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Callback<CallbackType>&) = delete;
 };
 
 

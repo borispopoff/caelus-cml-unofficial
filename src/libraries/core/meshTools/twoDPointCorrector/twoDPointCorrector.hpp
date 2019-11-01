@@ -82,12 +82,6 @@ class twoDPointCorrector
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        twoDPointCorrector(const twoDPointCorrector&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const twoDPointCorrector&) = delete;
-
 
         //- Calculate addressing
         void calcAddressing() const;
@@ -115,6 +109,9 @@ public:
 
         //- Construct from components
         twoDPointCorrector(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construct
+        twoDPointCorrector(const twoDPointCorrector&) = delete;
 
 
     //- Destructor
@@ -149,6 +146,12 @@ public:
 
         //- Correct weighting factors for moving mesh.
         bool movePoints();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const twoDPointCorrector&) = delete;
 };
 
 

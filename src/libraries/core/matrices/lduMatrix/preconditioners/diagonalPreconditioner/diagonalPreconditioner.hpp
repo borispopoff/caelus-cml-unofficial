@@ -58,51 +58,59 @@ class diagonalPreconditioner : public lduMatrix::preconditioner
     //- The reciprocal diagonal
     scalarField rD_;
 
-    // Private Member Functions
-
-    //- Disallow default bitwise copy construct
-    diagonalPreconditioner(const diagonalPreconditioner&) = delete;
-
-    //- Disallow default bitwise assignment
-    void operator=(const diagonalPreconditioner&) = delete;
 
 public:
 
     //- Runtime type information
     TypeName("diagonal");
 
-    //- Construct from matrix components and preconditioner solver controls
-    diagonalPreconditioner
-    (
-        lduMatrix::solver const&,
-        dictionary const& solverControlsUnused
-    );
 
+    // Constructors
+
+        //- Construct from matrix components and preconditioner solver controls
+        diagonalPreconditioner
+        (
+            lduMatrix::solver const&,
+            dictionary const& solverControlsUnused
+        );
+
+        //- Disallow default bitwise copy construct
+        diagonalPreconditioner(const diagonalPreconditioner&) = delete;
+
+
+    //- Destructor
     virtual ~diagonalPreconditioner()
     {}
 
+
     // Member Functions
 
-    void appInv();
-  
-    //- Return w the preconditioned form of residual r
-    virtual void precondition
-    (
-        scalarField& w,
-        scalarField const& r,
-        direction const cmpt=0
-    ) const;
+        void appInv();
 
-    //- Return wT the transpose-matrix preconditioned form of residual rT.
-    virtual void preconditionT
-    (
-        scalarField& wT,
-        scalarField const& rT,
-        direction const cmpt=0
-    ) const
-    {
-        return precondition(wT, rT, cmpt);
-    }
+        //- Return w the preconditioned form of residual r
+        virtual void precondition
+        (
+            scalarField& w,
+            scalarField const& r,
+            direction const cmpt=0
+        ) const;
+
+        //- Return wT the transpose-matrix preconditioned form of residual rT.
+        virtual void preconditionT
+        (
+            scalarField& wT,
+            scalarField const& rT,
+            direction const cmpt=0
+        ) const
+        {
+            return precondition(wT, rT, cmpt);
+        }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const diagonalPreconditioner&) = delete;
 };
 
 

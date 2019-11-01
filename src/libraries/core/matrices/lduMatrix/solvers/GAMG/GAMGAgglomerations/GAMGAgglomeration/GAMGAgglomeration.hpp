@@ -102,15 +102,6 @@ protected:
         ) const;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GAMGAgglomeration(const GAMGAgglomeration&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const GAMGAgglomeration&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -161,6 +152,9 @@ public:
             const lduMesh& mesh,
             const dictionary& controlDict
         );
+
+        //- Disallow default bitwise copy construct
+        GAMGAgglomeration(const GAMGAgglomeration&) = delete;
 
 
     // Selectors
@@ -243,6 +237,12 @@ public:
                 const Field<Type>& cf,
                 const label coarseLevelIndex
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GAMGAgglomeration&) = delete;
 };
 
 

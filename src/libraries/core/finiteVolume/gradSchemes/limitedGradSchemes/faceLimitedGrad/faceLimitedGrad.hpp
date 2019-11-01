@@ -76,13 +76,6 @@ class faceLimitedGrad
         ) const;
 
 
-        //- Disallow default bitwise copy construct
-        faceLimitedGrad(const faceLimitedGrad&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceLimitedGrad&) = delete;
-
-
 public:
 
     //- RunTime type information
@@ -109,6 +102,9 @@ public:
             }
         }
 
+        //- Disallow default bitwise copy construct
+        faceLimitedGrad(const faceLimitedGrad&) = delete;
+
 
     // Member Functions
 
@@ -126,6 +122,12 @@ public:
         {
             return grad(vsf);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const faceLimitedGrad&) = delete;
 };
 
 

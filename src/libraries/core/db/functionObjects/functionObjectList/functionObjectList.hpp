@@ -83,11 +83,8 @@ class functionObjectList
         //  Returns a nullptr (and index -1) if it didn't exist
         functionObject* remove(const word&, label& oldIndex);
 
-        //- Disallow default bitwise copy construct
-        functionObjectList(const functionObjectList&) = delete;
 
-        //- Disallow default bitwise assignment
-        void operator=(const functionObjectList&) = delete;
+
 
 
 public:
@@ -116,6 +113,9 @@ public:
             const dictionary& parentDict,
             const bool execution=true
         );
+
+        //- Disallow default bitwise copy construct
+        functionObjectList(const functionObjectList&) = delete;
 
 
     //- Destructor
@@ -169,7 +169,10 @@ public:
         //- Return the time to the next write
         scalar timeToNextWrite();
 
+    // Member Operators
 
+        //- Disallow default bitwise assignment
+        void operator=(const functionObjectList&) = delete;
 };
 
 

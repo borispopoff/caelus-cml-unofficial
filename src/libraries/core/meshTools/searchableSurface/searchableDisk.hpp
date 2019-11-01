@@ -85,11 +85,6 @@ private:
             pointIndexHit&
         ) const;
 
-        //- Disallow default bitwise copy construct
-        searchableDisk(const searchableDisk&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableDisk&) = delete;
 
 public:
 
@@ -114,6 +109,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        searchableDisk(const searchableDisk&) = delete;
+
 
     //- Destructor
     virtual ~searchableDisk();
@@ -228,6 +227,11 @@ public:
                 return false;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableDisk&) = delete;
 };
 
 

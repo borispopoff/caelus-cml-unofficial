@@ -58,15 +58,6 @@ class gaussGrad
         tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        gaussGrad(const gaussGrad&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const gaussGrad&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -106,6 +97,9 @@ public:
             }
         }
 
+        //- Disallow default bitwise copy construct
+        gaussGrad(const gaussGrad&) = delete;
+
 
     // Member Functions
 
@@ -142,6 +136,12 @@ public:
             GeometricField
             <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gaussGrad&) = delete;
 };
 
 

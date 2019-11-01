@@ -57,14 +57,6 @@ class lduInterfaceField
         const lduInterface& interface_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        lduInterfaceField(const lduInterfaceField&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const lduInterfaceField&) = delete;
-
 
 public:
 
@@ -79,6 +71,9 @@ public:
         :
             interface_(patch)
         {}
+
+        //- Disallow default bitwise copy construct
+        lduInterfaceField(const lduInterfaceField&) = delete;
 
 
     //- Destructor
@@ -126,6 +121,12 @@ public:
                 const direction,
                 const Pstream::commsTypes commsType
             ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lduInterfaceField&) = delete;
 };
 
 

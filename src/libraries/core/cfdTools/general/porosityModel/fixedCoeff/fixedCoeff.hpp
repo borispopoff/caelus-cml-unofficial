@@ -93,12 +93,6 @@ private:
             const scalar rho
         ) const;
 
-        //- Disallow default bitwise copy construct
-        fixedCoeff(const fixedCoeff&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fixedCoeff&) = delete;
-
 
 public:
 
@@ -114,6 +108,9 @@ public:
         const dictionary& dict,
         const word& cellZoneName
     );
+
+    //- Disallow default bitwise copy construct
+    fixedCoeff(const fixedCoeff&) = delete;
 
     //- Destructor
     virtual ~fixedCoeff();
@@ -156,6 +153,13 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fixedCoeff&) = delete;
+
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

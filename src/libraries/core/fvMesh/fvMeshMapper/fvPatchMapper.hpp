@@ -81,16 +81,6 @@ class fvPatchMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        fvPatchMapper
-        (
-            const fvPatchMapper&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvPatchMapper&) = delete;
-
-
         //- Calculate addressing for mapping with inserted cells
         void calcAddressing() const;
 
@@ -110,6 +100,12 @@ public:
             const fvPatch& patch,
             const faceMapper& faceMap
         );
+
+        //- Disallow default bitwise copy construct
+        fvPatchMapper
+        (
+            const fvPatchMapper&
+        ) = delete;
 
 
     //- Destructor
@@ -149,6 +145,12 @@ public:
 
         //- Return interpolaion weights
         virtual const scalarListList& weights() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvPatchMapper&) = delete;
 
 };
 

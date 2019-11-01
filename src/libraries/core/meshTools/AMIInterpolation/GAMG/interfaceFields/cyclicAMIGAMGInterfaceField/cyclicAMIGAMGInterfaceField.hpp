@@ -61,18 +61,6 @@ class cyclicAMIGAMGInterfaceField
         int rank_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cyclicAMIGAMGInterfaceField
-        (
-            const cyclicAMIGAMGInterfaceField&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cyclicAMIGAMGInterfaceField&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -95,6 +83,12 @@ public:
             const bool doTransform,
             const int rank
         );
+
+        //- Disallow default bitwise copy construct
+        cyclicAMIGAMGInterfaceField
+        (
+            const cyclicAMIGAMGInterfaceField&
+        ) = delete;
 
 
     //- Destructor
@@ -151,6 +145,12 @@ public:
             {
                 return rank_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cyclicAMIGAMGInterfaceField&) = delete;
 };
 
 

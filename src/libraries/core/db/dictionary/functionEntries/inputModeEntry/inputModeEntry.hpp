@@ -81,17 +81,17 @@ class inputModeEntry
         //- Read the mode as a word and set enum appropriately
         static void setMode(Istream&);
 
-        //- Disallow default bitwise copy construct
-        inputModeEntry(const inputModeEntry&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const inputModeEntry&) = delete;
-
 
 public:
 
     //- Runtime type information
     ClassName("inputMode");
+
+
+    // Constructors
+
+        //- Disallow default bitwise copy construct
+        inputModeEntry(const inputModeEntry&) = delete;
 
 
     // Member Functions
@@ -113,6 +113,12 @@ public:
 
         //- Return true if the inputMode is %error
         static bool error();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const inputModeEntry&) = delete;
 };
 
 

@@ -57,21 +57,16 @@ class tetMatcher
         static const label maxVertPerFace;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        tetMatcher(const tetMatcher&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const tetMatcher&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct null
         tetMatcher();
+
+        //- Disallow default bitwise copy construct
+        tetMatcher(const tetMatcher&) = delete;
+
 
     //- Destructor
     ~tetMatcher();
@@ -117,6 +112,12 @@ public:
             const label celli,
             cellShape& shape
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const tetMatcher&) = delete;
 };
 
 

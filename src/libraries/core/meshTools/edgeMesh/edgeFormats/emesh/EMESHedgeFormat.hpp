@@ -53,15 +53,6 @@ class EMESHedgeFormat
 :
     public edgeMesh
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        EMESHedgeFormat(const EMESHedgeFormat&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const EMESHedgeFormat&) = delete;
-
-
 protected:
 
     // Protected Member Functions
@@ -82,6 +73,8 @@ public:
         //- Construct from file name
         EMESHedgeFormat(const fileName&);
 
+        //- Disallow default bitwise copy construct
+        EMESHedgeFormat(const EMESHedgeFormat&) = delete;
 
     // Selectors
 
@@ -129,6 +122,12 @@ public:
         {
             write(name, *this);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const EMESHedgeFormat&) = delete;
 };
 
 

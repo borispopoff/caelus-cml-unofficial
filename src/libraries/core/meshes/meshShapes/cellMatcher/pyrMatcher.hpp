@@ -57,21 +57,16 @@ class pyrMatcher
         static const label maxVertPerFace;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pyrMatcher(const pyrMatcher&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pyrMatcher&) = delete;
-
-
 public:
 
     // Constructors
 
         //- Construct null
         pyrMatcher();
+
+        //- Disallow default bitwise copy construct
+        pyrMatcher(const pyrMatcher&) = delete;
+
 
     //- Destructor
     ~pyrMatcher();
@@ -117,6 +112,12 @@ public:
             const label celli,
             cellShape& shape
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pyrMatcher&) = delete;
 };
 
 

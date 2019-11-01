@@ -50,10 +50,6 @@ class CorrGaussGrad : public fv::gradScheme<Type>
 
     //- Number of iteration for correction loop
     label corrIter_;
-
-    CorrGaussGrad(CorrGaussGrad const&) = delete;
-
-    void operator=(CorrGaussGrad const&) = delete;
  
 
 public:
@@ -98,6 +94,9 @@ public:
         
     }
 
+    CorrGaussGrad(CorrGaussGrad const&) = delete;
+
+
     static
     tmp
     <
@@ -131,6 +130,11 @@ public:
         GeometricField
         <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>&
     );
+
+
+    // Member Operators
+
+    void operator=(CorrGaussGrad const&) = delete;
 };
 
 }

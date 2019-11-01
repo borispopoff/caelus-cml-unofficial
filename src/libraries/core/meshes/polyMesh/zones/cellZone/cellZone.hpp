@@ -69,14 +69,6 @@ protected:
         const cellZoneMesh& zoneMesh_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellZone(const cellZone&) = delete;
-
-
 public:
 
     // Static data members
@@ -154,6 +146,10 @@ public:
             const label index,
             const cellZoneMesh&
         );
+
+        //- Disallow default bitwise copy construct
+        cellZone(const cellZone&) = delete;
+
 
         //- Construct and return a clone, resetting the zone mesh
         virtual autoPtr<cellZone> clone(const cellZoneMesh& zm) const

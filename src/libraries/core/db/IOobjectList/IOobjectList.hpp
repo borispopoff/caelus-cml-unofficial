@@ -49,11 +49,6 @@ class IOobjectList
 :
     public HashPtrTable<IOobject>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const IOobjectList&) = delete;
-
 
 public:
 
@@ -112,6 +107,12 @@ public:
 
         //- Return the sorted list of names of the IOobjects of given class
         wordList sortedNames(const word& className) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const IOobjectList&) = delete;
 };
 
 

@@ -47,13 +47,6 @@ protected:
 
     bool criteriaSatisfied();
 
-private:
-
-    // Private member functions
-
-    simplecControl(const simplecControl&) = delete;
-
-    void operator=(const simplecControl&) = delete;
 
 public:
 
@@ -61,9 +54,13 @@ public:
 
     simplecControl(fvMesh& mesh);
 
+    simplecControl(const simplecControl&) = delete;
+
     virtual ~simplecControl();
 
     virtual bool loop();
+
+    void operator=(const simplecControl&) = delete;
 };
 
 }

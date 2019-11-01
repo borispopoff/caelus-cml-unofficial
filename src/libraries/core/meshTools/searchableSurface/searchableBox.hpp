@@ -79,13 +79,6 @@ private:
         ) const;
 
 
-        //- Disallow default bitwise copy construct
-        searchableBox(const searchableBox&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableBox&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -103,6 +96,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        searchableBox(const searchableBox&) = delete;
+
 
     //- Destructor
     virtual ~searchableBox();
@@ -260,6 +257,12 @@ public:
                 NotImplemented;
                 return false;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableBox&) = delete;
 };
 
 

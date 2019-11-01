@@ -51,12 +51,6 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        partialFaceAreaWeightAMI(const partialFaceAreaWeightAMI&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const partialFaceAreaWeightAMI&) = delete;
-
         // Marching front
 
             //- Set the source and target seed faces
@@ -92,6 +86,9 @@ public:
             const bool requireMatch = true
         );
 
+        //- Disallow default bitwise copy construct
+        partialFaceAreaWeightAMI(const partialFaceAreaWeightAMI&) = delete;
+
 
     //- Destructor
     virtual ~partialFaceAreaWeightAMI();
@@ -117,6 +114,12 @@ public:
                 label srcFacei = -1,
                 label tgtFacei = -1
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const partialFaceAreaWeightAMI&) = delete;
 };
 
 

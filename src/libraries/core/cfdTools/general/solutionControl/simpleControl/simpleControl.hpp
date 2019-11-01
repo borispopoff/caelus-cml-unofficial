@@ -62,12 +62,6 @@ protected:
         //- Return true if all convergence checks are satisfied
         bool criteriaSatisfied();
 
-        //- Disallow default bitwise copy construct
-        simpleControl(const simpleControl&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const simpleControl&) = delete;
-
 
 public:
 
@@ -83,6 +77,9 @@ public:
         //- Construct from mesh
         simpleControl(fvMesh& mesh);
 
+        //- Disallow default bitwise copy construct
+        simpleControl(const simpleControl&) = delete;
+
 
     //- Destructor
     virtual ~simpleControl();
@@ -94,6 +91,12 @@ public:
 
             //- Loop loop
             virtual bool loop();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const simpleControl&) = delete;
 };
 
 

@@ -48,15 +48,6 @@ class gaussConvectionScheme
         tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        gaussConvectionScheme(const gaussConvectionScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const gaussConvectionScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -92,6 +83,8 @@ public:
             )
         {}
 
+        //- Disallow default bitwise copy construct
+        gaussConvectionScheme(const gaussConvectionScheme&) = delete;
 
     // Member Functions
 
@@ -123,6 +116,12 @@ public:
         {
             return tinterpScheme_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gaussConvectionScheme&) = delete;
        
 };
 

@@ -53,15 +53,6 @@ class EulerDdtScheme
 :
     public ddtScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        EulerDdtScheme(const EulerDdtScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const EulerDdtScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -81,6 +72,9 @@ public:
         :
             ddtScheme<Type>(mesh, is)
         {}
+
+        //- Disallow default bitwise copy construct
+        EulerDdtScheme(const EulerDdtScheme&) = delete;
 
 
     // Member Functions
@@ -177,6 +171,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const EulerDdtScheme&) = delete;
 };
 
 

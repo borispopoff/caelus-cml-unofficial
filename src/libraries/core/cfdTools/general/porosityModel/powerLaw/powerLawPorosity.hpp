@@ -94,12 +94,6 @@ private:
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construct
-        powerLaw(const powerLaw&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const powerLaw&) = delete;
-
 
 public:
 
@@ -115,6 +109,10 @@ public:
         const dictionary& dict,
         const word& cellZoneName
     );
+
+    //- Disallow default bitwise copy construct
+    powerLaw(const powerLaw&) = delete;
+
 
     //- Destructor
     virtual ~powerLaw();
@@ -157,6 +155,12 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const powerLaw&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

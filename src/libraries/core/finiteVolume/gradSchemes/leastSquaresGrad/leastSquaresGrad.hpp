@@ -50,15 +50,6 @@ class leastSquaresGrad
 :
     public fv::gradScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        leastSquaresGrad(const leastSquaresGrad&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const leastSquaresGrad&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -79,6 +70,9 @@ public:
             gradScheme<Type>(mesh)
         {}
 
+        //- Disallow default bitwise copy construct
+        leastSquaresGrad(const leastSquaresGrad&) = delete;
+
 
     // Member Functions
 
@@ -93,6 +87,12 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>& vsf,
             const word& name
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const leastSquaresGrad&) = delete;
 };
 
 

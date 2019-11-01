@@ -57,12 +57,6 @@ class OSstream
         ostream& os_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const OSstream&) = delete;
-
-
 public:
 
     // Constructors
@@ -187,6 +181,12 @@ public:
 
             //- Print description of IOstream to Ostream
             virtual void print(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const OSstream&) = delete;
 };
 
 

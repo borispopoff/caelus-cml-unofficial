@@ -85,13 +85,6 @@ class pointMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        pointMapper(const pointMapper&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointMapper&) = delete;
-
-
         //- Calculate addressing for mapping with inserted points
         void calcAddressing() const;
 
@@ -105,6 +98,9 @@ public:
 
         //- Construct from mapPolyMesh
         pointMapper(const pointMesh&, const mapPolyMesh& mpm);
+
+        //- Disallow default bitwise copy construct
+        pointMapper(const pointMapper&) = delete;
 
 
     //- Destructor
@@ -149,6 +145,12 @@ public:
 
         //- Return list of inserted points
         const labelList& insertedObjectLabels() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointMapper&) = delete;
 };
 
 

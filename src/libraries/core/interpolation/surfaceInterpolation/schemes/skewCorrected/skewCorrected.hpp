@@ -56,15 +56,6 @@ class skewCorrected
         tmp<surfaceInterpolationScheme<Type>> tScheme_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        skewCorrected(const skewCorrected&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const skewCorrected&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -102,6 +93,9 @@ public:
                 surfaceInterpolationScheme<Type>::New(mesh, faceFlux, is)
             )
         {}
+
+        //- Disallow default bitwise copy construct
+        skewCorrected(const skewCorrected&) = delete;
 
 
     // Member Functions
@@ -209,6 +203,12 @@ public:
                     );
             }
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const skewCorrected&) = delete;
 };
 
 

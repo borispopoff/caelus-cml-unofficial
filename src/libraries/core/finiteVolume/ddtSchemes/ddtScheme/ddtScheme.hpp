@@ -71,15 +71,6 @@ protected:
         const fvMesh& mesh_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        ddtScheme(const ddtScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ddtScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -111,6 +102,9 @@ public:
         :
             mesh_(mesh)
         {}
+
+        //- Disallow copy construct
+        ddtScheme(const ddtScheme&);
 
 
     // Selectors
@@ -258,6 +252,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ddtScheme&) = delete;
 };
 
 

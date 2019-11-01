@@ -79,13 +79,6 @@ class fvSurfaceMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        fvSurfaceMapper(const fvSurfaceMapper&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvSurfaceMapper&) = delete;
-
-
         //- Calculate addressing
         void calcAddressing() const;
 
@@ -103,6 +96,9 @@ public:
             const fvMesh& mesh,
             const faceMapper& fMapper
         );
+
+        //- Disallow default bitwise copy construct
+        fvSurfaceMapper(const fvSurfaceMapper&) = delete;
 
 
     //- Destructor
@@ -158,6 +154,12 @@ public:
         {
             return faceMap_.flipFaceFlux();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvSurfaceMapper&) = delete;
 };
 
 

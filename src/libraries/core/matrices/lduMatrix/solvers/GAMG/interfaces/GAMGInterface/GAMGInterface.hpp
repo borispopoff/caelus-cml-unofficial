@@ -66,17 +66,6 @@ protected:
         labelField faceRestrictAddressing_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GAMGInterface(const GAMGInterface&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const GAMGInterface&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -137,6 +126,9 @@ public:
             index_(index),
             coarseInterfaces_(coarseInterfaces)
         {}
+
+        //- Disallow default bitwise copy construct
+        GAMGInterface(const GAMGInterface&) = delete;
 
 
     // Member Functions
@@ -204,6 +196,11 @@ public:
             (
                 const scalarField& fineCoeffs
             ) const;
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GAMGInterface&) = delete;
 };
 
 

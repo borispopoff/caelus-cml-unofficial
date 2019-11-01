@@ -84,16 +84,6 @@ class pointPatchMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        pointPatchMapper
-        (
-            const pointPatchMapper&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointPatchMapper&) = delete;
-
-
         //- Calculate addressing for mapping with inserted cells
         void calcAddressing() const;
 
@@ -103,8 +93,6 @@ class pointPatchMapper
 
 public:
 
-    // Static data members
-
     // Constructors
 
         //- Construct from mappers
@@ -113,6 +101,12 @@ public:
             const pointPatch& patch,
             const pointMapper& pointMap,
             const mapPolyMesh& mpm
+        );
+
+        //- Disallow default bitwise copy construct
+        pointPatchMapper
+        (
+            const pointPatchMapper&
         );
 
 
@@ -153,6 +147,12 @@ public:
 
         //- Return interpolaion weights
         virtual const scalarListList& weights() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointPatchMapper&) = delete;
 };
 
 

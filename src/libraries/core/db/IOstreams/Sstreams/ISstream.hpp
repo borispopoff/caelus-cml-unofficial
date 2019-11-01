@@ -70,9 +70,6 @@ class ISstream
         Istream& readVerbatim(string&);
 
 
-        //- Disallow default bitwise assignment
-        void operator=(const ISstream&) = delete;
-
 
 public:
 
@@ -188,6 +185,12 @@ public:
 
             //- Print description of IOstream to Ostream
             virtual void print(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ISstream&) = delete;
 };
 
 
