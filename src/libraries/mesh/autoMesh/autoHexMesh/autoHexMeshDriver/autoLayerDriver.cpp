@@ -2442,7 +2442,7 @@ void CML::autoLayerDriver::mergePatchFacesUndo
         << "      (0=straight, 180=fully concave)" << nl
         << endl;
 
-    const fvMesh& mesh = meshRefiner_.mesh();
+//    const fvMesh& mesh = meshRefiner_.mesh();
 
     label nChanged = meshRefiner_.mergePatchFacesUndo
     (

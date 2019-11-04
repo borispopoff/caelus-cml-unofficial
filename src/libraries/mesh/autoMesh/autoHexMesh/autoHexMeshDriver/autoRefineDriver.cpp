@@ -664,7 +664,7 @@ void CML::autoRefineDriver::mergePatchFaces
         << "----------------------------" << nl
         << endl;
 
-    const fvMesh& mesh = meshRefiner_.mesh();
+ //   const fvMesh& mesh = meshRefiner_.mesh();
 
     meshRefiner_.mergePatchFacesUndo
     (
