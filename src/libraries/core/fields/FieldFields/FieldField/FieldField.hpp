@@ -107,9 +107,7 @@ public:
         FieldField(const PtrList<Field<Type>>&);
 
         //- Construct as copy of tmp<FieldField>
-#       ifdef ConstructFromTmp
         FieldField(const tmp<FieldField<Field, Type>>&);
-#       endif
 
         //- Construct from Istream
         FieldField(Istream&);
@@ -125,25 +123,8 @@ public:
             const FieldField<Field, Type2>& ff
         );
 
-#       ifdef __INTEL_COMPILER
-        {
-            FieldField<Field, Type>* nffPtr
-            (
-                new FieldField<Field, Type>(ff.size())
-            );
 
-            forAll(*nffPtr, i)
-            {
-                nffPtr->set(i, Field<Type>::NewCalculatedType(ff[i]).ptr());
-            }
-
-            return tmp<FieldField<Field, Type>>(nffPtr);
-        }
-#       else
-        ;
-#       endif
-
-    // Member functions
+    // Member Functions
 
         //- Negate this field
         void negate();
@@ -161,7 +142,7 @@ public:
         tmp<FieldField<Field, Type>> T() const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const FieldField<Field, Type>&);
         void operator=(FieldField<Field, Type>&&);
@@ -187,7 +168,7 @@ public:
         void operator/=(const scalar&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Ostream& operator<< <Field, Type>
         (
@@ -351,7 +332,6 @@ FieldField<Field, Type>::FieldField(const PtrList<Field<Type>>& tl)
 
 
 // Construct as copy of tmp<FieldField>
-#ifdef ConstructFromTmp
 template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField(const tmp<FieldField<Field, Type>>& tf)
 :
@@ -363,7 +343,6 @@ FieldField<Field, Type>::FieldField(const tmp<FieldField<Field, Type>>& tf)
 {
     tf.clear();
 }
-#endif
 
 
 template<template<class> class Field, class Type>
@@ -380,7 +359,6 @@ tmp<FieldField<Field, Type>> FieldField<Field, Type>::clone() const
 }
 
 
-#ifndef __INTEL_COMPILER
 template<template<class> class Field, class Type>
 template<class Type2>
 tmp<FieldField<Field, Type>> FieldField<Field, Type>::NewCalculatedType
@@ -400,7 +378,6 @@ tmp<FieldField<Field, Type>> FieldField<Field, Type>::NewCalculatedType
 
     return tmp<FieldField<Field, Type>>(nffPtr);
 }
-#endif
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -535,34 +512,34 @@ void FieldField<Field, Type>::operator=(const Type& t)
 }
 
 
-#define COMPUTED_ASSIGNMENT(TYPE, op)                                         \
-                                                                              \
-template<template<class> class Field, class Type>                             \
-void FieldField<Field, Type>::operator op(const FieldField<Field, TYPE>& f)   \
-{                                                                             \
-    forAll(*this, i)                                                          \
-    {                                                                         \
-        this->operator[](i) op f[i];                                          \
-    }                                                                         \
-}                                                                             \
-                                                                              \
-template<template<class> class Field, class Type>                             \
-void FieldField<Field, Type>::operator op                                     \
-(                                                                             \
-    const tmp<FieldField<Field, TYPE>>& tf                                   \
-)                                                                             \
-{                                                                             \
-    operator op(tf());                                                        \
-    tf.clear();                                                               \
-}                                                                             \
-                                                                              \
-template<template<class> class Field, class Type>                             \
-void FieldField<Field, Type>::operator op(const TYPE& t)                      \
-{                                                                             \
-    forAll(*this, i)                                                          \
-    {                                                                         \
-        this->operator[](i) op t;                                             \
-    }                                                                         \
+#define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
+                                                                               \
+template<template<class> class Field, class Type>                              \
+void FieldField<Field, Type>::operator op(const FieldField<Field, TYPE>& f)    \
+{                                                                              \
+    forAll(*this, i)                                                           \
+    {                                                                          \
+        this->operator[](i) op f[i];                                           \
+    }                                                                          \
+}                                                                              \
+                                                                               \
+template<template<class> class Field, class Type>                              \
+void FieldField<Field, Type>::operator op                                      \
+(                                                                              \
+    const tmp<FieldField<Field, TYPE>>& tf                                     \
+)                                                                              \
+{                                                                              \
+    operator op(tf());                                                         \
+    tf.clear();                                                                \
+}                                                                              \
+                                                                               \
+template<template<class> class Field, class Type>                              \
+void FieldField<Field, Type>::operator op(const TYPE& t)                       \
+{                                                                              \
+    forAll(*this, i)                                                           \
+    {                                                                          \
+        this->operator[](i) op t;                                              \
+    }                                                                          \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)

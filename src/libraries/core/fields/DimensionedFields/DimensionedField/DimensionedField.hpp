@@ -69,7 +69,7 @@ class DimensionedField
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Type of mesh on which this DimensionedField is instantiated
         typedef typename GeoMesh::Mesh Mesh;
@@ -80,7 +80,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const Mesh& mesh_;
@@ -153,13 +153,13 @@ public:
             const word& fieldDictEntry="value"
         );
 
-        //- Construct as copy
+        //- Copy constructor
         DimensionedField
         (
             const DimensionedField<Type, GeoMesh>&
         );
 
-        //- Construct as copy or re-use as specified.
+        //- Copy constructor or re-use as specified.
         DimensionedField
         (
             DimensionedField<Type, GeoMesh>&,
@@ -172,22 +172,20 @@ public:
             DimensionedField<Type, GeoMesh>&&
         );
 
-        //- Construct as copy of tmp<DimensionedField> deleting argument
-        #ifdef ConstructFromTmp
+        //- Copy constructor of tmp<DimensionedField> deleting argument
         DimensionedField
         (
             const tmp<DimensionedField<Type, GeoMesh>>&
         );
-        #endif
 
-        //- Construct as copy resetting IO parameters
+        //- Copy constructor resetting IO parameters
         DimensionedField
         (
             const IOobject&,
             const DimensionedField<Type, GeoMesh>&
         );
 
-        //- Construct as copy resetting IO parameters and re-use as specified.
+        //- Copy constructor resetting IO parameters and re-use as specified.
         DimensionedField
         (
             const IOobject&,
@@ -195,14 +193,14 @@ public:
             bool reuse
         );
 
-        //- Construct as copy resetting name
+        //- Copy constructor resetting name
         DimensionedField
         (
             const word& newName,
             const DimensionedField<Type, GeoMesh>&
         );
 
-        //- Construct as copy resetting name and re-use as specified.
+        //- Copy constructor resetting name and re-use as specified.
         DimensionedField
         (
             const word& newName,
@@ -210,7 +208,7 @@ public:
             bool reuse
         );
 
-        //- Construct as copy resetting name
+        //- Copy constructor resetting name
         DimensionedField
         (
             const word& newName,
@@ -523,7 +521,6 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 {}
 
 
-#ifdef ConstructFromTmp
 template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (
@@ -541,7 +538,6 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 {
     tdf.clear();
 }
-#endif
 
 
 template<class Type, class GeoMesh>
@@ -602,7 +598,6 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 {}
 
 
-#ifdef ConstructFromTmp
 template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (
@@ -621,7 +616,6 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 {
     tdf().clear();
 }
-#endif
 
 
 template<class Type, class GeoMesh>

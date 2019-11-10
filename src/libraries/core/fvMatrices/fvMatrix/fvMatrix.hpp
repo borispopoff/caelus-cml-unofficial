@@ -117,7 +117,7 @@ class fvMatrix
     public refCount,
     public lduMatrix
 {
-    // Private data
+    // Private Data
 
         //- Const reference to GeometricField<Type, fvPatchField, volMesh>
         //  Converted into a non-const reference at the point of solution.
@@ -219,7 +219,7 @@ public:
             {}
 
 
-        // Member functions
+        // Member Functions
 
             //- Solve returning the solution statistics.
             //  Use the given solver controls
@@ -243,13 +243,11 @@ public:
             const dimensionSet&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fvMatrix(const fvMatrix<Type>&);
 
-        //- Construct as copy of tmp<fvMatrix<Type>> deleting argument
-        #ifdef ConstructFromTmp
+        //- Copy constructor of tmp<fvMatrix<Type>> deleting argument
         fvMatrix(const tmp<fvMatrix<Type>>&);
-        #endif
 
         //- Construct from Istream given field to solve for
         fvMatrix(const GeometricField<Type, fvPatchField, volMesh>&, Istream&);
@@ -262,7 +260,7 @@ public:
     virtual ~fvMatrix();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -445,7 +443,7 @@ public:
             tmp<GeometricField<Type, fvPatchField, volMesh>> R() const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const fvMatrix<Type>&);
         void operator=(const tmp<fvMatrix<Type>>&);
@@ -581,12 +579,10 @@ solverPerformance solve
     const dictionary&
 );
 
-
 //- Solve returning the solution statistics given convergence tolerance
 //  Solver controls read fvSolution
 template<class Type>
 solverPerformance solve(fvMatrix<Type>&);
-
 
 //- Solve returning the solution statistics given convergence tolerance,
 //  deleting temporary matrix after solution.
@@ -594,12 +590,10 @@ solverPerformance solve(fvMatrix<Type>&);
 template<class Type>
 solverPerformance solve(const tmp<fvMatrix<Type>>&);
 
-
 //- Return the correction form of the given matrix
 //  by subtracting the matrix multiplied by the current field
 template<class Type>
 tmp<fvMatrix<Type>> correction(const fvMatrix<Type>&);
-
 
 //- Return the correction form of the given temporary matrix
 //  by subtracting the matrix multiplied by the current field
@@ -1330,10 +1324,8 @@ CML::fvMatrix<Type>::fvMatrix
 {
     if (debug)
     {
-        Info<< "fvMatrix<Type>(GeometricField<Type, fvPatchField, volMesh>&,"
-               " const dimensionSet&) : "
-               "constructing fvMatrix<Type> for field " << psi_.name()
-            << endl;
+        InfoInFunction
+            << "Constructing fvMatrix<Type> for field " << psi_.name() << endl;
     }
 
     // Initialise coupling coefficients
@@ -1384,9 +1376,8 @@ CML::fvMatrix<Type>::fvMatrix(const fvMatrix<Type>& fvm)
 {
     if (debug)
     {
-        Info<< "fvMatrix<Type>::fvMatrix(const fvMatrix<Type>&) : "
-            << "copying fvMatrix<Type> for field " << psi_.name()
-            << endl;
+        InfoInFunction
+            << "Copying fvMatrix<Type> for field " << psi_.name() << endl;
     }
 
     if (fvm.faceFluxCorrectionPtr_)
@@ -1400,7 +1391,6 @@ CML::fvMatrix<Type>::fvMatrix(const fvMatrix<Type>& fvm)
 }
 
 
-#ifdef ConstructFromTmp
 template<class Type>
 CML::fvMatrix<Type>::fvMatrix(const tmp<fvMatrix<Type>>& tfvm)
 :
@@ -1431,9 +1421,8 @@ CML::fvMatrix<Type>::fvMatrix(const tmp<fvMatrix<Type>>& tfvm)
 {
     if (debug)
     {
-        Info<< "fvMatrix<Type>::fvMatrix(const tmp<fvMatrix<Type>>&) : "
-            << "copying fvMatrix<Type> for field " << psi_.name()
-            << endl;
+        InfoInFunction
+            << "Copying fvMatrix<Type> for field " << psi_.name() << endl;
     }
 
     if (tfvm().faceFluxCorrectionPtr_)
@@ -1455,7 +1444,6 @@ CML::fvMatrix<Type>::fvMatrix(const tmp<fvMatrix<Type>>& tfvm)
 
     tfvm.clear();
 }
-#endif
 
 
 template<class Type>
@@ -1475,10 +1463,8 @@ CML::fvMatrix<Type>::fvMatrix
 {
     if (debug)
     {
-        Info<< "fvMatrix<Type>"
-               "(GeometricField<Type, fvPatchField, volMesh>&, Istream&) : "
-               "constructing fvMatrix<Type> for field " << psi_.name()
-            << endl;
+        InfoInFunction
+            << "Constructing fvMatrix<Type> for field " << psi_.name() << endl;
     }
 
     // Initialise coupling coefficients
@@ -1519,14 +1505,14 @@ CML::tmp<CML::fvMatrix<Type>> CML::fvMatrix<Type>::clone() const
 
 
 // * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * * //
+
 template<class Type>
 CML::fvMatrix<Type>::~fvMatrix()
 {
     if (debug)
     {
-        Info<< "fvMatrix<Type>::~fvMatrix<Type>() : "
-            << "destroying fvMatrix<Type> for field " << psi_.name()
-            << endl;
+        InfoInFunction
+            << "Destroying fvMatrix<Type> for field " << psi_.name() << endl;
     }
 
     if (faceFluxCorrectionPtr_)
@@ -1587,8 +1573,7 @@ void CML::fvMatrix<Type>::relax(const scalar alpha)
     if (debug)
     {
         InfoInFunction
-            << "Relaxing " << psi_.name() << " by " << alpha
-            << endl;
+            << "Relaxing " << psi_.name() << " by " << alpha << endl;
     }
 
     Field<Type>& S = source();

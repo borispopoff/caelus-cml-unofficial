@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -34,10 +34,6 @@ SourceFiles
 #include "refCount.hpp"
 #include <cstddef>
 
-#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
-#   define ConstructFromTmp
-#endif
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace CML
@@ -50,7 +46,7 @@ namespace CML
 template<class T>
 class tmp
 {
-    // Private data
+    // Private Data
 
         //- Flag for whether object is a temporary or a constant object
         bool isTmp_;
@@ -100,8 +96,7 @@ public:
 
         // Edit
 
-            //- Return tmp pointer for reuse.
-            //  Returns a clone if the object is not a temporary
+            //- Return tmp pointer for reuse
             inline T* ptr() const;
 
             //- If object pointer points to valid object:
@@ -109,7 +104,7 @@ public:
             inline void clear() const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Dereference operator
         inline T& operator()();
@@ -129,7 +124,7 @@ public:
         //- Assignment to pointer changing this tmp to a temporary T
         inline void operator=(T*);
 
-        //- Assignment operator
+        //- Assignment transferring the temporary T to this tmp
         inline void operator=(const tmp<T>&);
 };
 

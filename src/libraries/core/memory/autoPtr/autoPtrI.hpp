@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "error.hpp"
+#include <typeinfo>
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -85,7 +86,7 @@ template<class T>
 inline T* CML::autoPtr<T>::ptr()
 {
     T* ptr = ptr_;
-    ptr_ = 0;
+    ptr_ = nullptr;
     return ptr;
 }
 
@@ -96,7 +97,8 @@ inline void CML::autoPtr<T>::set(T* p)
     if (ptr_)
     {
         FatalErrorInFunction
-            << "object already allocated"
+            << "object of type " << typeid(T).name()
+            << " already allocated"
             << abort(FatalError);
     }
 
@@ -119,7 +121,7 @@ inline void CML::autoPtr<T>::reset(T* p)
 template<class T>
 inline void CML::autoPtr<T>::clear()
 {
-    reset(0);
+    reset(nullptr);
 }
 
 
@@ -131,7 +133,8 @@ inline T& CML::autoPtr<T>::operator()()
     if (!ptr_)
     {
         FatalErrorInFunction
-            << "object is not allocated"
+            << "object of type " << typeid(T).name()
+            << " is not allocated"
             << abort(FatalError);
     }
 
@@ -145,7 +148,38 @@ inline const T& CML::autoPtr<T>::operator()() const
     if (!ptr_)
     {
         FatalErrorInFunction
-            << "object is not allocated"
+            << "object of type " << typeid(T).name()
+            << " is not allocated"
+            << abort(FatalError);
+    }
+
+    return *ptr_;
+}
+
+
+template<class T>
+inline T& CML::autoPtr<T>::operator*()
+{
+    if (!ptr_)
+    {
+        FatalErrorInFunction
+            << "object of type " << typeid(T).name()
+            << " is not allocated"
+            << abort(FatalError);
+    }
+
+    return *ptr_;
+}
+
+
+template<class T>
+inline const T& CML::autoPtr<T>::operator*() const
+{
+    if (!ptr_)
+    {
+        FatalErrorInFunction
+            << "object of type " << typeid(T).name()
+            << " is not allocated"
             << abort(FatalError);
     }
 
@@ -166,7 +200,8 @@ inline T* CML::autoPtr<T>::operator->()
     if (!ptr_)
     {
         FatalErrorInFunction
-            << "object is not allocated"
+            << "object of type " << typeid(T).name()
+            << " is not allocated"
             << abort(FatalError);
     }
 

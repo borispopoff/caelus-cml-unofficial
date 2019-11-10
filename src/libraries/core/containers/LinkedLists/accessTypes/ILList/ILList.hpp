@@ -123,7 +123,7 @@ public:
             void transfer(ILList<LListBase, T>&);
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment operator
         void operator=(const ILList<LListBase, T>&);

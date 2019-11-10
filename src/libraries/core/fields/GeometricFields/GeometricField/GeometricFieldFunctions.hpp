@@ -208,18 +208,18 @@ tmp
 cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf);
 
 
-#define UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY(returnType, func, gFunc)       \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-dimensioned<returnType> func                                                  \
-(                                                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf                       \
-);                                                                            \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-dimensioned<returnType> func                                                  \
-(                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
+#define UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY(returnType, func, gFunc)        \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+dimensioned<returnType> func                                                   \
+(                                                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf                        \
+);                                                                             \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+dimensioned<returnType> func                                                   \
+(                                                                              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1                 \
 );
 
 UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY(Type, max, gMax)
@@ -228,18 +228,18 @@ UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY(Type, min, gMin)
 #undef UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY
 
 
-#define UNARY_REDUCTION_FUNCTION(returnType, func, gFunc)                     \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-dimensioned<returnType> func                                                  \
-(                                                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf                       \
-);                                                                            \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-dimensioned<returnType> func                                                  \
-(                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
+#define UNARY_REDUCTION_FUNCTION(returnType, func, gFunc)                      \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+dimensioned<returnType> func                                                   \
+(                                                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf                        \
+);                                                                             \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+dimensioned<returnType> func                                                   \
+(                                                                              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1                 \
 );
 
 UNARY_REDUCTION_FUNCTION(Type, sum, gSum)
@@ -264,10 +264,8 @@ BINARY_TYPE_FUNCTION(Type, Type, Type, cmptDivide)
 
 UNARY_OPERATOR(Type, Type, -, negate, transform)
 
-#ifndef __INTEL_COMPILER
 BINARY_OPERATOR(Type, Type, scalar, *, '*', multiply)
 BINARY_OPERATOR(Type, scalar, Type, *, '*', multiply)
-#endif
 BINARY_OPERATOR(Type, Type, scalar, /, '|', divide)
 
 BINARY_TYPE_OPERATOR_SF(Type, scalar, Type, *, '*', multiply)
@@ -278,216 +276,216 @@ BINARY_TYPE_OPERATOR_FS(Type, Type, scalar, /, '|', divide)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define PRODUCT_OPERATOR(product, op, opFunc)                                 \
-                                                                              \
-template                                                                      \
-<class Type1, class Type2, template<class> class PatchField, class GeoMesh>   \
-void opFunc                                                                   \
-(                                                                             \
-    GeometricField                                                            \
-    <typename product<Type1, Type2>::type, PatchField, GeoMesh>& gf,          \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                    \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                     \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<class Type1, class Type2, template<class> class PatchField, class GeoMesh>   \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-        <typename product<Type1, Type2>::type, PatchField, GeoMesh>           \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                    \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                     \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<class Type1, class Type2, template<class> class PatchField, class GeoMesh>   \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-    <typename product<Type1, Type2>::type, PatchField, GeoMesh>               \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                    \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2              \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<class Type1, class Type2, template<class> class PatchField, class GeoMesh>   \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-    <typename product<Type1, Type2>::type, PatchField, GeoMesh>               \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,             \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                     \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<class Type1, class Type2, template<class> class PatchField, class GeoMesh>   \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-    <typename product<Type1, Type2>::type, PatchField, GeoMesh>               \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,             \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2              \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-void opFunc                                                                   \
-(                                                                             \
-    GeometricField                                                            \
-    <typename product<Type, Form>::type, PatchField, GeoMesh>& gf,            \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1,                     \
-    const dimensioned<Form>& dvs                                              \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-    <typename product<Type, Form>::type, PatchField, GeoMesh>                 \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1,                     \
-    const dimensioned<Form>& dvs                                              \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<                                                                             \
-    class Form,                                                               \
-    class Cmpt,                                                               \
-    direction nCmpt,                                                          \
-    class Type, template<class> class PatchField,                             \
-    class GeoMesh                                                             \
->                                                                             \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                 \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1,                     \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs                                    \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-    <typename product<Type, Form>::type, PatchField, GeoMesh>                 \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,              \
-    const dimensioned<Form>& dvs                                              \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<                                                                             \
-    class Form,                                                               \
-    class Cmpt,                                                               \
-    direction nCmpt,                                                          \
-    class Type, template<class> class PatchField,                             \
-    class GeoMesh                                                             \
->                                                                             \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                 \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,              \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs                                    \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-void opFunc                                                                   \
-(                                                                             \
-    GeometricField                                                            \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>& gf,            \
-    const dimensioned<Form>& dvs,                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1                      \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                 \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const dimensioned<Form>& dvs,                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1                      \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<                                                                             \
-    class Form,                                                               \
-    class Cmpt,                                                               \
-    direction nCmpt,                                                          \
-    class Type, template<class> class PatchField,                             \
-    class GeoMesh                                                             \
->                                                                             \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                 \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                   \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1                      \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                 \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const dimensioned<Form>& dvs,                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
-);                                                                            \
-                                                                              \
-template                                                                      \
-<                                                                             \
-    class Form,                                                               \
-    class Cmpt,                                                               \
-    direction nCmpt,                                                          \
-    class Type, template<class> class PatchField,                             \
-    class GeoMesh                                                             \
->                                                                             \
-tmp                                                                           \
-<                                                                             \
-    GeometricField                                                            \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                 \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                   \
-    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1               \
+#define PRODUCT_OPERATOR(product, op, opFunc)                                  \
+                                                                               \
+template                                                                       \
+<class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
+void opFunc                                                                    \
+(                                                                              \
+    GeometricField                                                             \
+    <typename product<Type1, Type2>::type, PatchField, GeoMesh>& gf,           \
+    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+        <typename product<Type1, Type2>::type, PatchField, GeoMesh>            \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+    <typename product<Type1, Type2>::type, PatchField, GeoMesh>                \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+    <typename product<Type1, Type2>::type, PatchField, GeoMesh>                \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
+    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+    <typename product<Type1, Type2>::type, PatchField, GeoMesh>                \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
+    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+void opFunc                                                                    \
+(                                                                              \
+    GeometricField                                                             \
+    <typename product<Type, Form>::type, PatchField, GeoMesh>& gf,             \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1,                      \
+    const dimensioned<Form>& dvs                                               \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+    <typename product<Type, Form>::type, PatchField, GeoMesh>                  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1,                      \
+    const dimensioned<Form>& dvs                                               \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type, template<class> class PatchField,                              \
+    class GeoMesh                                                              \
+>                                                                              \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1,                      \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+    <typename product<Type, Form>::type, PatchField, GeoMesh>                  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,                \
+    const dimensioned<Form>& dvs                                               \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type, template<class> class PatchField,                              \
+    class GeoMesh                                                              \
+>                                                                              \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,                \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+void opFunc                                                                    \
+(                                                                              \
+    GeometricField                                                             \
+    <typename product<Form, Type>::type, PatchField, GeoMesh>& gf,             \
+    const dimensioned<Form>& dvs,                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1                       \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const dimensioned<Form>& dvs,                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1                       \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type, template<class> class PatchField,                              \
+    class GeoMesh                                                              \
+>                                                                              \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1                       \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const dimensioned<Form>& dvs,                                              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1                 \
+);                                                                             \
+                                                                               \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type, template<class> class PatchField,                              \
+    class GeoMesh                                                              \
+>                                                                              \
+tmp                                                                            \
+<                                                                              \
+    GeometricField                                                             \
+    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1                 \
 );
 
 PRODUCT_OPERATOR(typeOfSum, +, add)

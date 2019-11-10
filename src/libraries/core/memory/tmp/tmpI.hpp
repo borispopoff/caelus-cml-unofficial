@@ -167,7 +167,7 @@ inline T* CML::tmp<T>::ptr() const
 template<class T>
 inline void CML::tmp<T>::clear() const
 {
-    if (isTmp_ && ptr_)  // Skip this bit:  && ptr_->okToDelete())
+    if (isTmp_ && ptr_)  // skip this bit:  && ptr_->okToDelete())
     {
         delete ptr_;
         ptr_ = 0;
@@ -283,7 +283,7 @@ inline void CML::tmp<T>::operator=(T* tPtr)
     if (!tPtr)
     {
         FatalErrorInFunction
-            << "Attempted copy of a deallocated temporary"
+            << "attempted copy of a deallocated temporary"
             << " of type " << typeid(T).name()
             << abort(FatalError);
     }
@@ -312,24 +312,23 @@ inline void CML::tmp<T>::operator=(const tmp<T>& t)
     if (t.isTmp_)
     {
         isTmp_ = true;
-        ptr_ = t.ptr_;
 
-        if (ptr_)
-        {
-            ptr_->operator++();
-        }
-        else
+        if (!t.ptr_)
         {
             FatalErrorInFunction
-                << "attempted copy of a deallocated temporary"
+                << "attempted assignment to a deallocated temporary"
                 << " of type " << typeid(T).name()
                 << abort(FatalError);
         }
+
+        ptr_ = t.ptr_;
+        t.ptr_ = 0;
+        ptr_->resetRefCount();
     }
     else
     {
         FatalErrorInFunction
-            << "attempted to assign to a const reference to constant object"
+            << "attempted assignment to a const reference to constant object"
             << " of type " << typeid(T).name()
             << abort(FatalError);
     }

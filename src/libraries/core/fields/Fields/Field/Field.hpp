@@ -87,7 +87,7 @@ public:
     typedef SubField<Type> subField;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -117,25 +117,25 @@ public:
         //- Construct given size and initialed to zero
         Field(const label, const zero);
 
-        //- Construct as copy of a UList\<Type\>
+        //- Copy constructor of a UList\<Type\>
         explicit Field(const UList<Type>&);
 
         //- Mover constructor transferring the List contents
         explicit Field(List<Type>&&);
 
-        //- Construct as copy of a UIndirectList\<Type\>
+        //- Copy constructor of a UIndirectList\<Type\>
         explicit Field(const UIndirectList<Type>&);
 
-        //- Construct as copy
+        //- Copy constructor
         Field(const Field<Type>&);
 
-        //- Construct as copy or re-use as specified.
+        //- Copy constructor or re-use as specified.
         Field(Field<Type>&, bool reuse);
 
-        //- Move Constructor transferring the Field contents
+        //- Move constructor transferring the Field contents
         Field(Field<Type>&&);
 
-        //- Construct as copy of tmp<Field>
+        //- Copy constructor of tmp<Field>
         Field(const tmp<Field<Type>>&);
 
         //- Construct by 1 to 1 mapping from the given field
@@ -347,7 +347,7 @@ public:
         tmp<Field<Type>> T() const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const Field<Type>&);
         void operator=(Field<Type>&&);
@@ -380,7 +380,7 @@ public:
         void operator/=(const scalar&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Ostream& operator<< <Type>
         (Ostream&, const Field<Type>&);
@@ -745,11 +745,11 @@ void CML::Field<Type>::map
     {
         forAll(f, i)
         {
-            label mapI = mapAddressing[i];
+            const label mapi = mapAddressing[i];
 
-            if (mapI >= 0)
+            if (mapi >= 0)
             {
-                f[i] = mapF[mapI];
+                f[i] = mapF[mapi];
             }
         }
     }

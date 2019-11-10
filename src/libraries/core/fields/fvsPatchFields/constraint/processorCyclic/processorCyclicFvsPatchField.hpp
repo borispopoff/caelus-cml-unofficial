@@ -49,7 +49,7 @@ class processorCyclicFvsPatchField
 :
     public coupledFvsPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the processor patch
         const processorCyclicFvPatch& procPatch_;
@@ -96,7 +96,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         processorCyclicFvsPatchField(const processorCyclicFvsPatchField<Type>&);
 
         //- Construct and return a clone
@@ -108,7 +108,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         processorCyclicFvsPatchField
         (
             const processorCyclicFvsPatchField<Type>&,
@@ -129,11 +129,10 @@ public:
 
 
     // Destructor
+    virtual ~processorCyclicFvsPatchField();
 
-        ~processorCyclicFvsPatchField();
 
-
-    // Member functions
+    // Member Functions
 
         // Access
 

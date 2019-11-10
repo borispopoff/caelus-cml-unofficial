@@ -41,7 +41,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class processorCyclicFvPatch Declaration
+                 Class processorCyclicFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -49,7 +49,7 @@ class processorCyclicFvPatchField
 :
     public processorFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the processor patch
         const processorCyclicFvPatch& procPatch_;
@@ -95,7 +95,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         processorCyclicFvPatchField(const processorCyclicFvPatchField<Type>&);
 
         //- Construct and return a clone
@@ -107,7 +107,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         processorCyclicFvPatchField
         (
             const processorCyclicFvPatchField<Type>&,
@@ -128,15 +128,14 @@ public:
 
 
     // Destructor
+    virtual ~processorCyclicFvPatchField();
 
-        ~processorCyclicFvPatchField();
 
-
-    // Member functions
+    // Member Functions
 
         // Access
 
-            //- Does the patch field perform the transfromation
+            //- Does the patch field perform the transformation
             virtual bool doTransform() const
             {
                 return !(procPatch_.parallel() || pTraits<Type>::rank == 0);
@@ -147,8 +146,6 @@ public:
             {
                 return procPatch_.forwardT();
             }
-
-
 };
 
 
