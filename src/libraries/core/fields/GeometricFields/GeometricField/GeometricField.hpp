@@ -418,6 +418,15 @@ public:
             const wordList& actualPatchTypes = wordList()
         );
 
+        //- Construct as copy resetting IO parameters and boundary types
+        GeometricField
+        (
+            const IOobject&,
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList()
+        );
+
         //- Clone
         tmp<GeometricField<Type, PatchField, GeoMesh>> clone() const;
 
@@ -1348,6 +1357,45 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
             *gf.field0Ptr_
         );
     }
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
+(
+    const IOobject& io,
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf,
+    const wordList& patchFieldTypes,
+    const wordList& actualPatchTypes
+)
+:
+    DimensionedField<Type, GeoMesh>
+    (
+        io,
+        const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
+        tgf.isTmp()
+    ),
+    timeIndex_(tgf().timeIndex()),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
+    boundaryField_
+    (
+        this->mesh().boundary(),
+        *this,
+        patchFieldTypes,
+        actualPatchTypes
+    )
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing from tmp resetting IO params and patch types"
+            << endl << this->info() << endl;
+    }
+
+    boundaryField_ == tgf().boundaryField_;
+
+    tgf.clear();
 }
 
 
