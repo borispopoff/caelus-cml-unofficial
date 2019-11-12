@@ -728,7 +728,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::readField
 
         Field<Type>::operator+=(fieldAverage);
 
-        GeometricBoundaryField& boundaryField = tboundaryField();
+        GeometricBoundaryField& boundaryField = tboundaryField.ref();
 
         forAll(boundaryField, patchi)
         {
@@ -783,7 +783,7 @@ bool CML::GeometricField<Type, PatchField, GeoMesh>::readIfPresent()
     }
     else if (this->readOpt() == IOobject::READ_IF_PRESENT && this->headerOk())
     {
-        boundaryField_.transfer(readField(this->readStream(typeName))());
+        boundaryField_.transfer(readField(this->readStream(typeName)).ref());
         this->close();
 
         // Check compatibility between field and mesh
@@ -823,7 +823,7 @@ bool CML::GeometricField<Type, PatchField, GeoMesh>::readOldTimeIfPresent()
     {
         if (debug)
         {
-            Info<< "Reading old time level for field"
+            InfoInFunction << "Reading old time level for field"
                 << endl << this->info() << endl;
         }
 
@@ -870,9 +870,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     readIfPresent();
@@ -901,9 +899,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     readIfPresent();
@@ -928,9 +924,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     boundaryField_ == dt.value();
@@ -958,9 +952,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     boundaryField_ == dt.value();
@@ -988,9 +980,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing from components"
-            << endl << this->info() << endl;
+        InfoInFunction
+            << "Constructing from components" << endl << this->info() << endl;
     }
 
     readIfPresent();
@@ -1030,9 +1021,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     if (debug)
     {
-        Info<< "Finishing read-construct of "
-               "GeometricField<Type, PatchField, GeoMesh>"
-            << endl << this->info() << endl;
+        InfoInFunction
+            << "Finishing read-construction of" << endl << this->info() << endl;
     }
 }
 
@@ -1063,8 +1053,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     if (debug)
     {
-        Info<< "Finishing dictionary-construct of "
-               "GeometricField<Type, PatchField, GeoMesh>"
+        InfoInFunction
+            << "Finishing dictionary-construct of "
             << endl << this->info() << endl;
     }
 }
@@ -1720,8 +1710,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::T() const
         )
     );
 
-    CML::T(result().internalField(), internalField());
-    CML::T(result().boundaryField(), boundaryField());
+    CML::T(result.ref().internalField(), internalField());
+    CML::T(result.ref().boundaryField(), boundaryField());
 
     return result;
 }
@@ -1757,8 +1747,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::component
         )
     );
 
-    CML::component(Component().internalField(), internalField(), d);
-    CML::component(Component().boundaryField(), boundaryField(), d);
+    CML::component(Component.ref().internalField(), internalField(), d);
+    CML::component(Component.ref().boundaryField(), boundaryField(), d);
 
     return Component;
 }
@@ -2699,7 +2689,7 @@ pow
         )
     );
 
-    pow<Type, r, PatchField, GeoMesh>(tPow(), gf);
+    pow<Type, r, PatchField, GeoMesh>(tPow.ref(), gf);
 
     return tPow;
 }
@@ -2734,7 +2724,7 @@ pow
         )
     );
 
-    pow<Type, r, PatchField, GeoMesh>(tPow(), gf);
+    pow<Type, r, PatchField, GeoMesh>(tPow.ref(), gf);
 
     tgf.clear();
 
@@ -2785,7 +2775,7 @@ sqr(const GeometricField<Type, PatchField, GeoMesh>& gf)
         )
     );
 
-    sqr(tSqr(), gf);
+    sqr(tSqr.ref(), gf);
 
     return tSqr;
 }
@@ -2823,7 +2813,7 @@ sqr(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
         )
     );
 
-    sqr(tSqr(), gf);
+    sqr(tSqr.ref(), gf);
 
     tgf.clear();
 
@@ -2865,7 +2855,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> magSqr
         )
     );
 
-    magSqr(tMagSqr(), gf);
+    magSqr(tMagSqr.ref(), gf);
 
     return tMagSqr;
 }
@@ -2895,7 +2885,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> magSqr
         )
     );
 
-    magSqr(tMagSqr(), gf);
+    magSqr(tMagSqr.ref(), gf);
 
     tgf.clear();
 
@@ -2937,7 +2927,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> mag
         )
     );
 
-    mag(tMag(), gf);
+    mag(tMag.ref(), gf);
 
     return tMag;
 }
@@ -2967,7 +2957,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> mag
         )
     );
 
-    mag(tMag(), gf);
+    mag(tMag.ref(), gf);
 
     tgf.clear();
 
@@ -3023,7 +3013,7 @@ cmptAv(const GeometricField<Type, PatchField, GeoMesh>& gf)
         )
     );
 
-    cmptAv(CmptAv(), gf);
+    cmptAv(CmptAv.ref(), gf);
 
     return CmptAv;
 }
@@ -3062,7 +3052,7 @@ cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
         )
     );
 
-    cmptAv(CmptAv(), gf);
+    cmptAv(CmptAv.ref(), gf);
 
     tgf.clear();
 
@@ -3210,7 +3200,7 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    CML::opFunc(tRes(), gf1, gf2);                                             \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                             \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -3239,7 +3229,7 @@ operator op                                                                    \
             gf1.dimensions() op gf2.dimensions()                               \
         );                                                                     \
                                                                                \
-    CML::opFunc(tRes(), gf1, gf2);                                             \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                             \
                                                                                \
     reuseTmpGeometricField<productType, Type2, PatchField, GeoMesh>            \
     ::clear(tgf2);                                                             \
@@ -3271,7 +3261,7 @@ operator op                                                                    \
             gf1.dimensions() op gf2.dimensions()                               \
         );                                                                     \
                                                                                \
-    CML::opFunc(tRes(), gf1, gf2);                                             \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                             \
                                                                                \
     reuseTmpGeometricField<productType, Type1, PatchField, GeoMesh>            \
     ::clear(tgf1);                                                             \
@@ -3306,7 +3296,7 @@ operator op                                                                    \
             gf1.dimensions() op gf2.dimensions()                               \
         );                                                                     \
                                                                                \
-    CML::opFunc(tRes(), gf1, gf2);                                             \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                             \
                                                                                \
     reuseTmpTmpGeometricField                                                  \
         <productType, Type1, Type1, Type2, PatchField, GeoMesh>                \
@@ -3357,7 +3347,7 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    CML::opFunc(tRes(), gf1, dvs);                                             \
+    CML::opFunc(tRes.ref(), gf1, dvs);                                             \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -3402,7 +3392,7 @@ operator op                                                                    \
             gf1.dimensions() op dvs.dimensions()                               \
         );                                                                     \
                                                                                \
-    CML::opFunc(tRes(), gf1, dvs);                                             \
+    CML::opFunc(tRes.ref(), gf1, dvs);                                             \
                                                                                \
     reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>             \
     ::clear(tgf1);                                                             \
@@ -3470,7 +3460,7 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    CML::opFunc(tRes(), dvs, gf1);                                             \
+    CML::opFunc(tRes.ref(), dvs, gf1);                                             \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -3514,7 +3504,7 @@ operator op                                                                    \
             dvs.dimensions() op gf1.dimensions()                               \
         );                                                                     \
                                                                                \
-    CML::opFunc(tRes(), dvs, gf1);                                             \
+    CML::opFunc(tRes.ref(), dvs, gf1);                                             \
                                                                                \
     reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>             \
     ::clear(tgf1);                                                             \

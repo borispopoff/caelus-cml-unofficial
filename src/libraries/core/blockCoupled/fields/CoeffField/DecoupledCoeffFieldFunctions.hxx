@@ -51,7 +51,7 @@ CML::tmp<CML::DecoupledCoeffField<Type>> CML::inv
     (
         new DecoupledCoeffField<Type>(f.size())
     );
-    DecoupledCoeffField<Type>& result = tresult();
+    DecoupledCoeffField<Type>& result = tresult.ref();
 
     if (f.activeType() == blockCoeffBase::SCALAR)
     {

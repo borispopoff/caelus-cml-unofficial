@@ -204,7 +204,7 @@ CML::tmp<CML::vectorField> CML::cylindricalCS::globalToLocal
     );
 
     tmp<vectorField> tresult(new vectorField(lc.size()));
-    vectorField& result = tresult();
+    vectorField& result = tresult.ref();
 
     result.replace
     (

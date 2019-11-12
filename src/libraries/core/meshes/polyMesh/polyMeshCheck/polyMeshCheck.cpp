@@ -37,10 +37,7 @@ bool CML::polyMesh::checkFaceOrthogonality
 {
     if (debug)
     {
-        Info<< "bool CML::polyMesh::checkFaceOrthogonality("
-            << "const vectorField&, const vectorField&, "
-            << "const bool, const bool, labelHashSet*) const:"
-            << "Checking mesh non-orthogonality" << endl;
+        InfoInFunction << "Checking mesh non-orthogonality" << endl;
     }
 
     const labelList& own = faceOwner();
@@ -54,7 +51,7 @@ bool CML::polyMesh::checkFaceOrthogonality
         fAreas,
         cellCtrs
     );
-    const scalarField& ortho = tortho();
+    const scalarField& ortho = tortho.ref();
 
     // Severe nonorthogonality threshold
     const scalar severeNonorthogonalityThreshold =
@@ -179,11 +176,7 @@ bool CML::polyMesh::checkFaceSkewness
 {
     if (debug)
     {
-        Info<< "bool CML::polyMesh::checkFaceSkewness("
-            << "const pointField&, const vectorField&, "
-            << "const vectorField&, const vectorField&, "
-            << "const bool, const bool, labelHashSet*) const: "
-            << "checking face skewness" << endl;
+        InfoInFunction << "Checking face skewness" << endl;
     }
 
     const labelList& own = faceOwner();
@@ -200,7 +193,7 @@ bool CML::polyMesh::checkFaceSkewness
         fAreas,
         cellCtrs
     );
-    const scalarField& skew = tskew();
+    const scalarField& skew = tskew.ref();
 
     scalar sumSkew = 0;
     scalar maxSkew = max(skew);
@@ -305,9 +298,7 @@ bool CML::polyMesh::checkEdgeAlignment
 
     if (debug)
     {
-        Info<< "bool CML::polyMesh::checkEdgeAlignment("
-            << "const pointField&, const bool, const Vector<label>&, labelHashSet*) const: "
-            << "checking edge alignment" << endl;
+        InfoInFunction << "Checking edge alignment" << endl;
     }
 
     label nDirs = 0;
@@ -438,9 +429,7 @@ bool CML::polyMesh::checkCellDeterminant
 
     if (debug)
     {
-        Info<< "bool CML::polyMesh::checkCellDeterminant("
-            << "const vectorField&, const bool, labelHashSet*, const Vector<label>&) const: "
-            << "checking for under-determined cells" << endl;
+        InfoInFunction << "Checking for under-determined cells" << endl;
     }
 
     tmp<scalarField> tcellDeterminant = primitiveMeshTools::cellDeterminant
@@ -450,7 +439,7 @@ bool CML::polyMesh::checkCellDeterminant
         faceAreas,
         syncTools::getInternalOrCoupledFaces(*this)
     );
-    scalarField& cellDeterminant = tcellDeterminant();
+    scalarField& cellDeterminant = tcellDeterminant.ref();
 
 
     label nErrorCells = 0;
@@ -522,11 +511,7 @@ bool CML::polyMesh::checkFaceWeight
 {
     if (debug)
     {
-        Info<< "bool CML::polyMesh::checkFaceWeight("
-            << "const vectorField&, const vectorField&, "
-            << "const vectorField&, const bool, const scalar, "
-            << "labelHashSet*) const: "
-            << "checking for low face interpolation weights" << endl;
+        InfoInFunction << "Checking for low face interpolation weights" << endl;
     }
 
     tmp<scalarField> tfaceWght = polyMeshTools::faceWeights
@@ -536,7 +521,7 @@ bool CML::polyMesh::checkFaceWeight
         fAreas,
         cellCtrs
     );
-    scalarField& faceWght = tfaceWght();
+    scalarField& faceWght = tfaceWght.ref();
 
 
     label nErrorFaces = 0;
@@ -619,14 +604,11 @@ bool CML::polyMesh::checkVolRatio
 {
     if (debug)
     {
-        Info<< "bool CML::polyMesh::checkVolRatio("
-            << "const scalarField&, const bool, "
-            << "const scalar, labelHashSet*) const: "
-            << "checking for volume ratio" << minRatio << endl;
+        InfoInFunction << "Checking for volume ratio < " << minRatio << endl;
     }
 
     tmp<scalarField> tvolRatio = polyMeshTools::volRatio(*this, cellVols);
-    scalarField& volRatio = tvolRatio();
+    scalarField& volRatio = tvolRatio.ref();
 
 
     label nErrorFaces = 0;

@@ -177,7 +177,7 @@ CML::fvm::Su
             dimVol*su.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     fvm.source() -= mesh.V()*su.field();
 
@@ -243,7 +243,7 @@ CML::fvm::Sp
             dimVol*sp.dimensions()*vf.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     fvm.diag() += mesh.V()*sp.field();
 
@@ -297,7 +297,7 @@ CML::fvm::Sp
             dimVol*sp.dimensions()*vf.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     fvm.diag() += mesh.V()*sp.value();
 
@@ -335,7 +335,7 @@ CML::fvm::SuSp
             dimVol*susp.dimensions()*vf.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     fvm.diag() += mesh.V()*max(susp.field(), scalar(0));
 

@@ -463,7 +463,7 @@ surfaceInterpolationScheme<Type>::interpolate
             vf.dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
     Field<Type>& sfi = sf.internalField();
 
@@ -558,7 +558,7 @@ surfaceInterpolationScheme<Type>::dotInterpolate
             Sf.dimensions()*vf.dimensions()
         )
     );
-    GeometricField<RetType, fvsPatchField, surfaceMesh>& sf = tsf();
+    GeometricField<RetType, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
     Field<RetType>& sfi = sf.internalField();
 
@@ -654,7 +654,7 @@ surfaceInterpolationScheme<Type>::dotInterpolate
 
     if (corrected())
     {
-        tsf() += Sf & correction(vf);
+        tsf.ref() += Sf & correction(vf);
     }
 
     return tsf;
@@ -715,7 +715,7 @@ surfaceInterpolationScheme<Type>::interpolate
 
     if (corrected())
     {
-        tsf() += correction(vf);
+        tsf.ref() += correction(vf);
     }
 
     return tsf;

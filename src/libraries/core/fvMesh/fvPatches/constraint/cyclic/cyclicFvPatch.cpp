@@ -73,7 +73,7 @@ CML::tmp<CML::vectorField> CML::cyclicFvPatch::delta() const
     const vectorField nbrPatchD(neighbFvPatch().coupledFvPatch::delta());
 
     tmp<vectorField> tpdv(new vectorField(patchD.size()));
-    vectorField& pdv = tpdv();
+    vectorField& pdv = tpdv.ref();
 
     // To the transformation if necessary
     if (parallel())

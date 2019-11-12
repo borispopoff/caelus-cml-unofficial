@@ -1077,7 +1077,7 @@ CML::tmp<CML::vectorField> CML::triSurface::pointNormals2() const
     (
         new vectorField(nPoints(), Zero)
     );
-    vectorField& pointNormals = tpointNormals();
+    vectorField& pointNormals = tpointNormals.ref();
 
     const pointField& points = this->points();
     const labelListList& pointFaces = this->pointFaces();

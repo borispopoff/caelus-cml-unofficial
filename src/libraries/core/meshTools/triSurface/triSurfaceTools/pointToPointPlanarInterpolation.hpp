@@ -181,7 +181,7 @@ CML::tmp<CML::Field<Type>> CML::pointToPointPlanarInterpolation::interpolate
     }
 
     tmp<Field<Type>> tfld(new Field<Type>(nearestVertex_.size()));
-    Field<Type>& fld = tfld();
+    Field<Type>& fld = tfld.ref();
 
     forAll(fld, i)
     {

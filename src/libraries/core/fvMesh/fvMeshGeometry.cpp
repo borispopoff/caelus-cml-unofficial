@@ -41,9 +41,7 @@ void fvMesh::makeSf() const
 {
     if (debug)
     {
-        Info<< "void fvMesh::makeSf() : "
-            << "assembling face areas"
-            << endl;
+        InfoInFunction << "Assembling face areas" << endl;
     }
 
     // It is an error to attempt to recalculate
@@ -78,9 +76,7 @@ void fvMesh::makeMagSf() const
 {
     if (debug)
     {
-        Info<< "void fvMesh::makeMagSf() : "
-            << "assembling mag face areas"
-            << endl;
+        InfoInFunction << "Assembling mag face areas" << endl;
     }
 
     // It is an error to attempt to recalculate
@@ -116,9 +112,7 @@ void fvMesh::makeC() const
 {
     if (debug)
     {
-        Info<< "void fvMesh::makeC() : "
-            << "assembling cell centres"
-            << endl;
+        InfoInFunction << "Assembling cell centres" << endl;
     }
 
     // It is an error to attempt to recalculate
@@ -148,8 +142,8 @@ void fvMesh::makeC() const
         dimLength,
         cellCentres(),
         faceCentres(),
-        true,               //preserveCouples
-        true                //preserveProcOnly
+        true,               // preserveCouples
+        true                // preserveProcOnly
     );
 }
 
@@ -286,9 +280,8 @@ const volScalarField::DimensionedInternalField& fvMesh::V() const
     {
         if (debug)
         {
-            Info<< "fvMesh::V() const: "
-                << "constructing from primitiveMesh::cellVolumes()"
-                << endl;
+            InfoInFunction
+                << "Constructing from primitiveMesh::cellVolumes()" << endl;
         }
 
         VPtr_ = new slicedVolScalarField::DimensionedInternalField
@@ -516,7 +509,7 @@ tmp<surfaceVectorField> fvMesh::delta() const
             dimLength
         )
     );
-    surfaceVectorField& delta = tdelta();
+    surfaceVectorField& delta = tdelta.ref();
 
     const volVectorField& C = this->C();
     const labelUList& owner = this->owner();

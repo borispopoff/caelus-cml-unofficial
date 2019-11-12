@@ -320,7 +320,7 @@ void CML::triSurfaceMesh::clearOut()
 CML::tmp<CML::pointField> CML::triSurfaceMesh::coordinates() const
 {
     tmp<pointField> tPts(new pointField(8));
-    pointField& pt = tPts();
+    pointField& pt = tPts.ref();
 
     // Use copy to calculate face centres so they don't get stored
     pt = PrimitivePatch<SubList<triSurface::FaceType>, const pointField&>

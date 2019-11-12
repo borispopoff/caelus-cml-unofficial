@@ -43,8 +43,12 @@ CML::fv::gaussLaplacianScheme<CML::Type, CML::scalar>::fvmLaplacian            \
         gamma*mesh.magSf()                                                     \
     );                                                                         \
                                                                                \
-    tmp<fvMatrix<Type>> tfvm = fvmLaplacianUncorrected(gammaMagSf, vf);        \
-    fvMatrix<Type>& fvm = tfvm();                                              \
+    tmp<fvMatrix<Type>> tfvm = fvmLaplacianUncorrected                         \
+    (                                                                          \
+        gammaMagSf,                                                            \
+        vf                                                                     \
+    );                                                                         \
+    fvMatrix<Type>& fvm = tfvm.ref();                                          \
                                                                                \
     if (this->tsnGradScheme_().corrected())                                    \
     {                                                                          \
@@ -93,7 +97,10 @@ CML::fv::gaussLaplacianScheme<CML::Type, CML::scalar>::fvcLaplacian            \
         fvc::div(gamma*this->tsnGradScheme_().snGrad(vf)*mesh.magSf())         \
     );                                                                         \
                                                                                \
-    tLaplacian().rename("laplacian(" + gamma.name() + ',' + vf.name() + ')');  \
+    tLaplacian.ref().rename                                                    \
+    (                                                                          \
+        "laplacian(" + gamma.name() + ',' + vf.name() + ')'                    \
+    );                                                                         \
                                                                                \
     return tLaplacian;                                                         \
 }

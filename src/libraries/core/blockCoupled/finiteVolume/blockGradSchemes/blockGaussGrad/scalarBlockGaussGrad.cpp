@@ -52,7 +52,7 @@ tmp<BlockLduSystem<vector, vector>> blockGaussGrad<scalar>::fvmGrad
     (
         new BlockLduSystem<vector, vector>(mesh)
     );
-    BlockLduSystem<vector, vector>& bs = tbs();
+    BlockLduSystem<vector, vector>& bs = tbs.ref();
     vectorField& source = bs.source();
 
     // Grab ldu parts of block matrix as linear always

@@ -185,8 +185,7 @@ CML::fv::CorrGaussGrad<Type>::gradf
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
-
-    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad.ref();
 
     labelUList const& owner = mesh.owner();
     labelUList const& neighbour = mesh.neighbour();
@@ -289,7 +288,7 @@ CML::fv::CorrGaussGrad<Type>::calcGrad
     (
         gradf(tinterpScheme_().interpolate(vsf), name, vsf, corrIter_)
     );
-    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad.ref();
 
     correctBoundaryConditions(vsf, gGrad);
 

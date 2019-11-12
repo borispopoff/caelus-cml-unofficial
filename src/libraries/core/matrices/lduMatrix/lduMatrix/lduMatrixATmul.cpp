@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -318,7 +318,7 @@ CML::tmp<CML::scalarField> CML::lduMatrix::residual
 ) const
 {
     tmp<scalarField> trA(new scalarField(psi.size()));
-    residual(trA(), psi, source, interfaceBouCoeffs, interfaces, cmpt);
+    residual(trA.ref(), psi, source, interfaceBouCoeffs, interfaces, cmpt);
     return trA;
 }
 

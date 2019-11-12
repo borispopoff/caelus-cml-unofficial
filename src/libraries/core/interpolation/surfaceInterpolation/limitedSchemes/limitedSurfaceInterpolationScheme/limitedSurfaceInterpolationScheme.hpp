@@ -244,16 +244,16 @@ limitedSurfaceInterpolationScheme<Type>::New
 {
     if (surfaceInterpolation::debug)
     {
-        Info<< "limitedSurfaceInterpolationScheme<Type>::"
-               "New(const fvMesh&, Istream&)"
-               " : constructing limitedSurfaceInterpolationScheme<Type>"
-            << endl;
+        InfoInFunction
+            << "Constructing limitedSurfaceInterpolationScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Discretisation scheme not specified"
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Discretisation scheme not specified"
             << endl << endl
             << "Valid schemes are :" << endl
             << MeshConstructorTablePtr_->sortedToc()
@@ -267,8 +267,10 @@ limitedSurfaceInterpolationScheme<Type>::New
 
     if (constructorIter == MeshConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown discretisation scheme "
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown discretisation scheme "
             << schemeName << nl << nl
             << "Valid schemes are :" << endl
             << MeshConstructorTablePtr_->sortedToc()
@@ -291,16 +293,17 @@ limitedSurfaceInterpolationScheme<Type>::New
 {
     if (surfaceInterpolation::debug)
     {
-        Info<< "limitedSurfaceInterpolationScheme<Type>::New"
-               "(const fvMesh&, const surfaceScalarField&, Istream&) : "
-               "constructing limitedSurfaceInterpolationScheme<Type>"
+        InfoInFunction
+            << "Constructing limitedSurfaceInterpolationScheme<Type>"
             << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Discretisation scheme not specified"
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Discretisation scheme not specified"
             << endl << endl
             << "Valid schemes are :" << endl
             << MeshConstructorTablePtr_->sortedToc()
@@ -314,8 +317,10 @@ limitedSurfaceInterpolationScheme<Type>::New
 
     if (constructorIter == MeshFluxConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown discretisation scheme "
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown discretisation scheme "
             << schemeName << nl << nl
             << "Valid schemes are :" << endl
             << MeshFluxConstructorTablePtr_->sortedToc()
@@ -345,7 +350,7 @@ tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
 {
     // Note that here the weights field is initialised as the limiter
     // from which the weight is calculated using the limiter value
-    surfaceScalarField& Weights = tLimiter();
+    surfaceScalarField& Weights = tLimiter.ref();
 
     scalarField& pWeights = Weights.internalField();
 

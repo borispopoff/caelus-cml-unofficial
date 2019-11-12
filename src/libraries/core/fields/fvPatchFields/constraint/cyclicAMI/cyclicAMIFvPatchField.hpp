@@ -348,7 +348,7 @@ CML::cyclicAMIFvPatchField<Type>::patchNeighbourField() const
 
     if (doTransform())
     {
-        tpnf() = transform(forwardT(), tpnf());
+        tpnf.ref() = transform(forwardT(), tpnf());
     }
 
     return tpnf;

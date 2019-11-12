@@ -257,7 +257,7 @@ CML::tmp<CML::Field<Type>> CML::processorLduInterface::receive
 ) const
 {
     tmp<Field<Type>> tf(new Field<Type>(size));
-    receive(commsType, tf());
+    receive(commsType, tf.ref());
     return tf;
 }
 
@@ -403,7 +403,7 @@ CML::tmp<CML::Field<Type>> CML::processorLduInterface::compressedReceive
 ) const
 {
     tmp<Field<Type>> tf(new Field<Type>(size));
-    compressedReceive(commsType, tf());
+    compressedReceive(commsType, tf.ref());
     return tf;
 }
 

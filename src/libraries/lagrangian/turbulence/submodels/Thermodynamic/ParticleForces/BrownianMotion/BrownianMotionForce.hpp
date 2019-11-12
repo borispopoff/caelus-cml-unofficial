@@ -282,7 +282,7 @@ void CML::BrownianMotionForce<CloudType>::cacheFields(const bool store)
             }
             else
             {
-                kPtr_ = tk.operator->();
+                kPtr_ = &tk();
                 ownK_ = false;
             }
         }

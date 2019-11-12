@@ -132,7 +132,7 @@ CML::tmp<CML::vectorField> CML::cyclicAMIFvPatch::delta() const
         const vectorField& nbrPatchD = tnbrPatchD();
 
         tmp<vectorField> tpdv(new vectorField(patchD.size()));
-        vectorField& pdv = tpdv();
+        vectorField& pdv = tpdv.ref();
 
         // do the transformation if necessary
         if (parallel())

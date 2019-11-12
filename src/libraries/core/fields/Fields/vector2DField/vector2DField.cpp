@@ -30,7 +30,7 @@ CML::tmp<CML::vector2DField> CML::zip
 )
 {
     tmp<vector2DField> txy(new vector2DField(x->size()));
-    vector2DField& xy = txy();
+    vector2DField& xy = txy.ref();
     xy.replace(0, x);
     xy.replace(1, y);
     return txy;

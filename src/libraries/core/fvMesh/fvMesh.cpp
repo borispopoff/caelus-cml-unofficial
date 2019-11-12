@@ -714,7 +714,7 @@ CML::tmp<CML::scalarField> CML::fvMesh::movePoints(const pointField& p)
     scalar rDeltaT = 1.0/time().deltaTValue();
 
     tmp<scalarField> tsweptVols = polyMesh::movePoints(p);
-    scalarField& sweptVols = tsweptVols();
+    scalarField& sweptVols = tsweptVols.ref();
 
     phi.internalField() = scalarField::subField(sweptVols, nInternalFaces());
     phi.internalField() *= rDeltaT;

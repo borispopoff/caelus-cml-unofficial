@@ -273,7 +273,7 @@ const CML::vectorField::subField CML::polyPatch::faceAreas() const
 CML::tmp<CML::vectorField> CML::polyPatch::faceCellCentres() const
 {
     tmp<vectorField> tcc(new vectorField(size()));
-    vectorField& cc = tcc();
+    vectorField& cc = tcc.ref();
 
     // get reference to global cell centres
     const vectorField& gcc = boundaryMesh_.mesh().cellCentres();
@@ -292,7 +292,7 @@ CML::tmp<CML::vectorField> CML::polyPatch::faceCellCentres() const
 CML::tmp<CML::scalarField> CML::polyPatch::areaFraction() const
 {
     tmp<scalarField> tfraction(new scalarField(size()));
-    scalarField& fraction = tfraction();
+    scalarField& fraction = tfraction.ref();
 
     const vectorField::subField faceAreas = this->faceAreas();
     const pointField& points = this->points();

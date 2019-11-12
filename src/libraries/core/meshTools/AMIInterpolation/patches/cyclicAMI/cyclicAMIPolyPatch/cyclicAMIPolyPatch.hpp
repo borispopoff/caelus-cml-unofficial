@@ -481,7 +481,7 @@ CML::tmp<CML::Field<Type>> CML::cyclicAMIPolyPatch::interpolate
     {
         forAll(AMIs(), i)
         {
-            result() +=
+            result.ref() +=
                 AMIs()[i].interpolateToSource
                 (
                     AMITransforms()[i].invTransform(fld),
@@ -493,7 +493,7 @@ CML::tmp<CML::Field<Type>> CML::cyclicAMIPolyPatch::interpolate
     {
         forAll(nei.AMIs(), i)
         {
-            result() +=
+            result.ref() +=
                 nei.AMIs()[i].interpolateToTarget
                 (
                     nei.AMITransforms()[i].transform(fld),

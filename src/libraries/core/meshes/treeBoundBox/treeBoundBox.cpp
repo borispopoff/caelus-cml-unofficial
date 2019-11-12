@@ -160,7 +160,7 @@ CML::treeBoundBox::treeBoundBox
 CML::tmp<CML::pointField> CML::treeBoundBox::points() const
 {
     tmp<pointField> tPts = tmp<pointField>(new pointField(8));
-    pointField& points = tPts();
+    pointField& points = tPts.ref();
 
     forAll(points, octant)
     {

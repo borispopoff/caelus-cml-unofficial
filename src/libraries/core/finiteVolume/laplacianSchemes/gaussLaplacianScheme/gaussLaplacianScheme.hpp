@@ -207,7 +207,7 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacianUncorrected
             deltaCoeffs.dimensions()*gammaMagSf.dimensions()*vf.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     fvm.upper() = deltaCoeffs.internalField()*gammaMagSf.internalField();
     fvm.negSumDiag();
@@ -231,7 +231,6 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacianUncorrected
             fvm.internalCoeffs()[patchi] = pGamma*pvf.gradientInternalCoeffs();
             fvm.boundaryCoeffs()[patchi] = -pGamma*pvf.gradientBoundaryCoeffs();
         }
-
     }
 
     return tfvm;
@@ -268,7 +267,7 @@ gaussLaplacianScheme<Type, GType>::gammaSnGradCorr
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
-        tgammaSnGradCorr().replace
+        tgammaSnGradCorr.ref().replace
         (
             cmpt,
             fvc::dotInterpolate(SfGammaCorr, fvc::grad(vf.component(cmpt)))
@@ -295,7 +294,7 @@ gaussLaplacianScheme<Type, GType>::fvcLaplacian
         fvc::div(this->tsnGradScheme_().snGrad(vf)*mesh.magSf())
     );
 
-    tLaplacian().rename("laplacian(" + vf.name() + ')');
+    tLaplacian.ref().rename("laplacian(" + vf.name() + ')');
 
     return tLaplacian;
 }
@@ -320,15 +319,19 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacian
     );
     const surfaceVectorField SfGammaCorr(SfGamma - SfGammaSn*Sn);
 
-    tmp<fvMatrix<Type>> tfvm = fvmLaplacianUncorrected(SfGammaSn, vf);
-    fvMatrix<Type>& fvm = tfvm();
+    tmp<fvMatrix<Type>> tfvm = fvmLaplacianUncorrected
+    (
+        SfGammaSn,
+        vf
+    );
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tfaceFluxCorrection
         = gammaSnGradCorr(SfGammaCorr, vf);
 
     if (this->tsnGradScheme_().corrected())
     {
-        tfaceFluxCorrection() +=
+        tfaceFluxCorrection.ref() +=
             SfGammaSn*this->tsnGradScheme_().correction(vf);
     }
 
@@ -370,7 +373,10 @@ gaussLaplacianScheme<Type, GType>::fvcLaplacian
         )
     );
 
-    tLaplacian().rename("laplacian(" + gamma.name() + ',' + vf.name() + ')');
+    tLaplacian.ref().rename
+    (
+        "laplacian(" + gamma.name() + ',' + vf.name() + ')'
+    );
 
     return tLaplacian;
 }

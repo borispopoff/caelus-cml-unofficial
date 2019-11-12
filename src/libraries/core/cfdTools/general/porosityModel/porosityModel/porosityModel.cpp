@@ -154,7 +154,7 @@ CML::tmp<CML::vectorField> CML::porosityModel::porosityModel::force
 
     if (!cellZoneIDs_.empty())
     {
-        this->calcForce(U, rho, mu, tforce());
+        this->calcForce(U, rho, mu, tforce.ref());
     }
 
     return tforce;

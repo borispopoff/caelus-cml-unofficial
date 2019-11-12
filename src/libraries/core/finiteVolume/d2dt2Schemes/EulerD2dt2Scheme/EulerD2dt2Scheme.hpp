@@ -151,8 +151,10 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    dimensionedScalar rDeltaT2 =
-        4.0/sqr(mesh().time().deltaT() + mesh().time().deltaT0());
+    const dimensionedScalar rDeltaT2
+    (
+        4.0/sqr(mesh().time().deltaT() + mesh().time().deltaT0())
+    );
 
     IOobject d2dt2IOobject
     (
@@ -163,12 +165,12 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
         IOobject::NO_WRITE
     );
 
-    scalar deltaT = mesh().time().deltaTValue();
-    scalar deltaT0 = mesh().time().deltaT0Value();
+    const scalar deltaT = mesh().time().deltaTValue();
+    const scalar deltaT0 = mesh().time().deltaT0Value();
 
-    scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
-    scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
-    scalar coefft0  = coefft + coefft00;
+    const scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
+    const scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
+    const scalar coefft0  = coefft + coefft00;
 
     if (mesh().moving())
     {
@@ -229,8 +231,10 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    dimensionedScalar rDeltaT2 =
-        4.0/sqr(mesh().time().deltaT() + mesh().time().deltaT0());
+    const dimensionedScalar rDeltaT2
+    (
+        4.0/sqr(mesh().time().deltaT() + mesh().time().deltaT0())
+    );
 
     IOobject d2dt2IOobject
     (
@@ -241,11 +245,11 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
         IOobject::NO_WRITE
     );
 
-    scalar deltaT = mesh().time().deltaTValue();
-    scalar deltaT0 = mesh().time().deltaT0Value();
+    const scalar deltaT = mesh().time().deltaTValue();
+    const scalar deltaT0 = mesh().time().deltaT0Value();
 
-    scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
-    scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
+    const scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
+    const scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
 
     if (mesh().moving())
     {
@@ -314,7 +318,7 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
     }
     else
     {
-        dimensionedScalar halfRdeltaT2 = 0.5*rDeltaT2;
+        const dimensionedScalar halfRdeltaT2 = 0.5*rDeltaT2;
 
         const volScalarField rhoRho0(rho + rho.oldTime());
         const volScalarField rho0Rho00(rho.oldTime() +rho.oldTime().oldTime());
@@ -352,20 +356,20 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalar deltaT = mesh().time().deltaTValue();
-    scalar deltaT0 = mesh().time().deltaT0Value();
+    const scalar deltaT = mesh().time().deltaTValue();
+    const scalar deltaT0 = mesh().time().deltaT0Value();
 
-    scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
-    scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
-    scalar coefft0  = coefft + coefft00;
+    const scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
+    const scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
+    const scalar coefft0  = coefft + coefft00;
 
-    scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
+    const scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
 
     if (mesh().moving())
     {
-        scalar halfRdeltaT2 = rDeltaT2/2.0;
+        const scalar halfRdeltaT2 = rDeltaT2/2.0;
 
         const scalarField VV0(mesh().V() + mesh().V0());
         const scalarField V0V00(mesh().V0() + mesh().V00());
@@ -413,19 +417,19 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalar deltaT = mesh().time().deltaTValue();
-    scalar deltaT0 = mesh().time().deltaT0Value();
+    const scalar deltaT = mesh().time().deltaTValue();
+    const scalar deltaT0 = mesh().time().deltaT0Value();
 
-    scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
-    scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
+    const scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
+    const scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
 
-    scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
+    const scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
 
     if (mesh().moving())
     {
-        scalar halfRdeltaT2 = 0.5*rDeltaT2;
+        const scalar halfRdeltaT2 = 0.5*rDeltaT2;
 
         const scalarField VV0(mesh().V() + mesh().V0());
         const scalarField V0V00(mesh().V0() + mesh().V00());
@@ -473,19 +477,19 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalar deltaT = mesh().time().deltaTValue();
-    scalar deltaT0 = mesh().time().deltaT0Value();
+    const scalar deltaT = mesh().time().deltaTValue();
+    const scalar deltaT0 = mesh().time().deltaT0Value();
 
-    scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
-    scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
+    const scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
+    const scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
 
-    scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
+    const scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
 
     if (mesh().moving())
     {
-        scalar quarterRdeltaT2 = 0.25*rDeltaT2;
+        const scalar quarterRdeltaT2 = 0.25*rDeltaT2;
 
         const scalarField VV0rhoRho0
         (
@@ -515,7 +519,7 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
     }
     else
     {
-        scalar halfRdeltaT2 = 0.5*rDeltaT2;
+        const scalar halfRdeltaT2 = 0.5*rDeltaT2;
 
         const scalarField rhoRho0
         (

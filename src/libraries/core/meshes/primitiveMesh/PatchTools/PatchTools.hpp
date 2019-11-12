@@ -1246,7 +1246,7 @@ CML::tmp<CML::pointField> CML::PatchTools::pointNormals
     //    to avoid them being stored)
 
     tmp<pointField> textrudeN(new pointField(p.nPoints(), Zero));
-    pointField& extrudeN = textrudeN();
+    pointField& extrudeN = textrudeN.ref();
     {
         const faceList& localFaces = p.localFaces();
         const vectorField& faceNormals = p.faceNormals();
@@ -1292,7 +1292,7 @@ CML::tmp<CML::pointField> CML::PatchTools::edgeNormals
     // 1. Start off with local normals
 
     tmp<pointField> tedgeNormals(new pointField(p.nEdges(), Zero));
-    pointField& edgeNormals = tedgeNormals();
+    pointField& edgeNormals = tedgeNormals.ref();
     {
         const labelListList& edgeFaces = p.edgeFaces();
         const vectorField& faceNormals = p.faceNormals();

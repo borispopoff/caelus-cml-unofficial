@@ -51,7 +51,7 @@ CML::linearUpwind<Type>::correction
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();
 
     const surfaceScalarField& faceFlux = this->faceFlux_;
 
@@ -98,7 +98,6 @@ CML::linearUpwind<Type>::correction
                 mesh.boundary()[patchi].faceCells();
 
             const vectorField& pCf = Cf.boundaryField()[patchi];
-
             const scalarField& pFaceFlux = faceFlux.boundaryField()[patchi];
 
             const Field<typename outerProduct<vector, Type>::type> pGradVfNei

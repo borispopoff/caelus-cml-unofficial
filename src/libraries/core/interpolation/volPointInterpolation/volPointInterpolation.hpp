@@ -400,7 +400,7 @@ CML::tmp<CML::Field<Type>> CML::volPointInterpolation::flatBoundaryField
     (
         new Field<Type>(mesh.nFaces()-mesh.nInternalFaces())
     );
-    Field<Type>& boundaryVals = tboundaryVals();
+    Field<Type>& boundaryVals = tboundaryVals.ref();
 
     forAll(vf.boundaryField(), patchi)
     {
@@ -694,7 +694,7 @@ CML::volPointInterpolation::interpolate
             )
         );
 
-        interpolate(vf, tpf());
+        interpolate(vf, tpf.ref());
 
         return tpf;
     }

@@ -327,7 +327,7 @@ CML::cyclicFvPatchField<Type>::patchNeighbourField() const
         cyclicPatch().cyclicPatch().neighbPatch().faceCells();
 
     tmp<Field<Type>> tpnf(new Field<Type>(this->size()));
-    Field<Type>& pnf = tpnf();
+    Field<Type>& pnf = tpnf.ref();
 
 
     if (doTransform())

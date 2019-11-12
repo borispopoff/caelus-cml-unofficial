@@ -1202,7 +1202,7 @@ void CML::fvMatrix<Type>::addBoundarySource
         }
         else if (couples)
         {
-            tmp<Field<Type>> tpnf = ptf.patchNeighbourField();
+            const tmp<Field<Type>> tpnf = ptf.patchNeighbourField();
             const Field<Type>& pnf = tpnf();
 
             const labelUList& addr = lduAddr().patchAddr(patchi);
@@ -1733,7 +1733,7 @@ template<class Type>
 CML::tmp<CML::scalarField> CML::fvMatrix<Type>::D() const
 {
     tmp<scalarField> tdiag(new scalarField(diag()));
-    addCmptAvBoundaryDiag(tdiag());
+    addCmptAvBoundaryDiag(tdiag.ref());
     return tdiag;
 }
 
@@ -1753,7 +1753,7 @@ CML::tmp<CML::Field<Type>> CML::fvMatrix<Type>::DD() const
             (
                 lduAddr().patchAddr(patchi),
                 internalCoeffs_[patchi],
-                tdiag()
+                tdiag.ref()
             );
         }
     }
@@ -1783,8 +1783,8 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<Type>::A() const
         )
     );
 
-    tAphi().internalField() = D()/psi_.mesh().V();
-    tAphi().correctBoundaryConditions();
+    tAphi.ref().internalField() = D()/psi_.mesh().V();
+    tAphi.ref().correctBoundaryConditions();
 
     return tAphi;
 }
@@ -1811,7 +1811,7 @@ CML::fvMatrix<Type>::H() const
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& Hphi = tHphi();
+    GeometricField<Type, fvPatchField, volMesh>& Hphi = tHphi.ref();
 
     // Loop over field components
     for (direction cmpt=0; cmpt<Type::nComponents; cmpt++)
@@ -1877,7 +1877,7 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<Type>::H1() const
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-    volScalarField& H1_ = tH1();
+    volScalarField& H1_ = tH1.ref();
 
     H1_.internalField() = lduMatrix::H1();
 
@@ -1934,7 +1934,8 @@ flux() const
             dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& fieldFlux = tfieldFlux();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& fieldFlux =
+        tfieldFlux.ref();
 
     for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
     {
@@ -2010,8 +2011,8 @@ CML::fvMatrix<Type>::Ac() const
     const label nCells = psi_.mesh().V().size();
     scalarField s(nCells);
     lduMatrix::rowSum(s);
-    tAphi().internalField() = s/psi_.mesh().V();
-    tAphi().correctBoundaryConditions();
+    tAphi.ref().internalField() = s/psi_.mesh().V();
+    tAphi.ref().correctBoundaryConditions();
 
     return tAphi;
 }
@@ -2040,8 +2041,8 @@ CML::fvMatrix<Type>::spai0() const
     const label nCells = psi_.mesh().V().size();
     scalarField s(nCells);
     lduMatrix::spai0(s);
-    tAphi().internalField() = s/psi_.mesh().V();
-    tAphi().correctBoundaryConditions();
+    tAphi.ref().internalField() = s/psi_.mesh().V();
+    tAphi.ref().correctBoundaryConditions();
 
     return tAphi;
 }
@@ -2110,7 +2111,7 @@ void CML::fvMatrix<Type>::operator=(const fvMatrix<Type>& fvmv)
     {
         faceFluxCorrectionPtr_ =
             new GeometricField<Type, fvsPatchField, surfaceMesh>
-        (*fvmv.faceFluxCorrectionPtr_);
+            (*fvmv.faceFluxCorrectionPtr_);
     }
 }
 
@@ -2191,7 +2192,7 @@ void CML::fvMatrix<Type>::operator-=(const fvMatrix<Type>& fvmv)
     {
         faceFluxCorrectionPtr_ =
             new GeometricField<Type, fvsPatchField, surfaceMesh>
-        (-*fvmv.faceFluxCorrectionPtr_);
+            (-*fvmv.faceFluxCorrectionPtr_);
     }
 }
 
@@ -2597,7 +2598,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator==
 {
     checkMethod(A, su, "==");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() += su.mesh().V()*su.field();
+    tC.ref().source() += su.mesh().V()*su.field();
     return tC;
 }
 
@@ -2610,7 +2611,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator==
 {
     checkMethod(A, tsu(), "==");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() += tsu().mesh().V()*tsu().field();
+    tC.ref().source() += tsu().mesh().V()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -2624,7 +2625,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator==
 {
     checkMethod(A, tsu(), "==");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() += tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().V()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -2638,7 +2639,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator==
 {
     checkMethod(tA(), su, "==");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() += su.mesh().V()*su.field();
+    tC.ref().source() += su.mesh().V()*su.field();
     return tC;
 }
 
@@ -2651,7 +2652,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator==
 {
     checkMethod(tA(), tsu(), "==");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() += tsu().mesh().V()*tsu().field();
+    tC.ref().source() += tsu().mesh().V()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -2665,7 +2666,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator==
 {
     checkMethod(tA(), tsu(), "==");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() += tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().V()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -2679,7 +2680,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator==
 {
     checkMethod(A, su, "==");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() += A.psi().mesh().V()*su.value();
+    tC.ref().source() += A.psi().mesh().V()*su.value();
     return tC;
 }
 
@@ -2692,7 +2693,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator==
 {
     checkMethod(tA(), su, "==");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() += tC().psi().mesh().V()*su.value();
+    tC.ref().source() += tC().psi().mesh().V()*su.value();
     return tC;
 }
 
@@ -2725,7 +2726,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 )
 {
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().negate();
+    tC.ref().negate();
     return tC;
 }
 
@@ -2736,7 +2737,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 )
 {
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().negate();
+    tC.ref().negate();
     return tC;
 }
 
@@ -2750,7 +2751,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, B, "+");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC() += B;
+    tC.ref() += B;
     return tC;
 }
 
@@ -2763,7 +2764,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), B, "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC() += B;
+    tC.ref() += B;
     return tC;
 }
 
@@ -2776,7 +2777,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, tB(), "+");
     tmp<fvMatrix<Type>> tC(tB.ptr());
-    tC() += A;
+    tC.ref() += A;
     return tC;
 }
 
@@ -2789,7 +2790,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), tB(), "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC() += tB();
+    tC.ref() += tB();
     tB.clear();
     return tC;
 }
@@ -2803,7 +2804,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, su, "+");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() -= su.mesh().V()*su.field();
+    tC.ref().source() -= su.mesh().V()*su.field();
     return tC;
 }
 
@@ -2816,7 +2817,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() -= tsu().mesh().V()*tsu().field();
+    tC.ref().source() -= tsu().mesh().V()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -2830,7 +2831,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -2844,7 +2845,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), su, "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() -= su.mesh().V()*su.field();
+    tC.ref().source() -= su.mesh().V()*su.field();
     return tC;
 }
 
@@ -2857,7 +2858,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() -= tsu().mesh().V()*tsu().field();
+    tC.ref().source() -= tsu().mesh().V()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -2871,7 +2872,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -2885,7 +2886,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, su, "+");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() -= su.mesh().V()*su.field();
+    tC.ref().source() -= su.mesh().V()*su.field();
     return tC;
 }
 
@@ -2898,7 +2899,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() -= tsu().mesh().V()*tsu().field();
+    tC.ref().source() -= tsu().mesh().V()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -2912,7 +2913,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -2926,7 +2927,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), su, "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() -= su.mesh().V()*su.field();
+    tC.ref().source() -= su.mesh().V()*su.field();
     return tC;
 }
 
@@ -2939,7 +2940,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() -= tsu().mesh().V()*tsu().field();
+    tC.ref().source() -= tsu().mesh().V()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -2953,7 +2954,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -2968,7 +2969,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(A, B, "-");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC() -= B;
+    tC.ref() -= B;
     return tC;
 }
 
@@ -2981,7 +2982,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(tA(), B, "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC() -= B;
+    tC.ref() -= B;
     return tC;
 }
 
@@ -2994,8 +2995,8 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(A, tB(), "-");
     tmp<fvMatrix<Type>> tC(tB.ptr());
-    tC() -= A;
-    tC().negate();
+    tC.ref() -= A;
+    tC.ref().negate();
     return tC;
 }
 
@@ -3008,7 +3009,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(tA(), tB(), "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC() -= tB();
+    tC.ref() -= tB();
     tB.clear();
     return tC;
 }
@@ -3022,7 +3023,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(A, su, "-");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() += su.mesh().V()*su.field();
+    tC.ref().source() += su.mesh().V()*su.field();
     return tC;
 }
 
@@ -3035,7 +3036,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() += tsu().mesh().V()*tsu().field();
+    tC.ref().source() += tsu().mesh().V()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -3049,7 +3050,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() += tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().V()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -3063,7 +3064,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(tA(), su, "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() += su.mesh().V()*su.field();
+    tC.ref().source() += su.mesh().V()*su.field();
     return tC;
 }
 
@@ -3076,7 +3077,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() += tsu().mesh().V()*tsu().field();
+    tC.ref().source() += tsu().mesh().V()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -3090,7 +3091,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() += tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().V()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -3104,8 +3105,8 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(A, su, "-");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().negate();
-    tC().source() -= su.mesh().V()*su.field();
+    tC.ref().negate();
+    tC.ref().source() -= su.mesh().V()*su.field();
     return tC;
 }
 
@@ -3118,8 +3119,8 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().negate();
-    tC().source() -= tsu().mesh().V()*tsu().field();
+    tC.ref().negate();
+    tC.ref().source() -= tsu().mesh().V()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -3133,8 +3134,8 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().negate();
-    tC().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().negate();
+    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -3148,8 +3149,8 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(tA(), su, "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().negate();
-    tC().source() -= su.mesh().V()*su.field();
+    tC.ref().negate();
+    tC.ref().source() -= su.mesh().V()*su.field();
     return tC;
 }
 
@@ -3162,8 +3163,8 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().negate();
-    tC().source() -= tsu().mesh().V()*tsu().field();
+    tC.ref().negate();
+    tC.ref().source() -= tsu().mesh().V()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -3177,8 +3178,8 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().negate();
-    tC().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().negate();
+    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -3192,7 +3193,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, su, "+");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() -= su.value()*A.psi().mesh().V();
+    tC.ref().source() -= su.value()*A.psi().mesh().V();
     return tC;
 }
 
@@ -3205,7 +3206,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), su, "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() -= su.value()*tC().psi().mesh().V();
+    tC.ref().source() -= su.value()*tC().psi().mesh().V();
     return tC;
 }
 
@@ -3218,7 +3219,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, su, "+");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() -= su.value()*A.psi().mesh().V();
+    tC.ref().source() -= su.value()*A.psi().mesh().V();
     return tC;
 }
 
@@ -3231,7 +3232,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), su, "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() -= su.value()*tC().psi().mesh().V();
+    tC.ref().source() -= su.value()*tC().psi().mesh().V();
     return tC;
 }
 
@@ -3244,7 +3245,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(A, su, "-");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().source() += su.value()*tC().psi().mesh().V();
+    tC.ref().source() += su.value()*tC().psi().mesh().V();
     return tC;
 }
 
@@ -3257,7 +3258,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(tA(), su, "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().source() += su.value()*tC().psi().mesh().V();
+    tC.ref().source() += su.value()*tC().psi().mesh().V();
     return tC;
 }
 
@@ -3270,8 +3271,8 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(A, su, "-");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC().negate();
-    tC().source() -= su.value()*A.psi().mesh().V();
+    tC.ref().negate();
+    tC.ref().source() -= su.value()*A.psi().mesh().V();
     return tC;
 }
 
@@ -3284,8 +3285,8 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(tA(), su, "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC().negate();
-    tC().source() -= su.value()*tC().psi().mesh().V();
+    tC.ref().negate();
+    tC.ref().source() -= su.value()*tC().psi().mesh().V();
     return tC;
 }
 
@@ -3298,7 +3299,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator*
 )
 {
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC() *= dsf;
+    tC.ref() *= dsf;
     return tC;
 }
 
@@ -3310,7 +3311,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator*
 )
 {
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC() *= tdsf;
+    tC.ref() *= tdsf;
     return tC;
 }
 
@@ -3322,7 +3323,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator*
 )
 {
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC() *= tvsf;
+    tC.ref() *= tvsf;
     return tC;
 }
 
@@ -3334,7 +3335,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator*
 )
 {
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC() *= dsf;
+    tC.ref() *= dsf;
     return tC;
 }
 
@@ -3346,7 +3347,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator*
 )
 {
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC() *= tdsf;
+    tC.ref() *= tdsf;
     return tC;
 }
 
@@ -3358,7 +3359,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator*
 )
 {
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC() *= tvsf;
+    tC.ref() *= tvsf;
     return tC;
 }
 
@@ -3370,7 +3371,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator*
 )
 {
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC() *= ds;
+    tC.ref() *= ds;
     return tC;
 }
 
@@ -3382,7 +3383,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator*
 )
 {
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC() *= ds;
+    tC.ref() *= ds;
     return tC;
 }
 
@@ -3412,7 +3413,7 @@ CML::operator&
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& Mphi = tMphi();
+    GeometricField<Type, fvPatchField, volMesh>& Mphi = tMphi.ref();
 
     // Loop over field components
     if (M.hasDiag())
@@ -3737,7 +3738,7 @@ template<class Type>
 CML::tmp<CML::Field<Type>> CML::fvMatrix<Type>::residual() const
 {
     tmp<Field<Type>> tres(new Field<Type>(source_));
-    Field<Type>& res = tres();
+    Field<Type>& res = tres.ref();
 
     addBoundarySource(res);
 

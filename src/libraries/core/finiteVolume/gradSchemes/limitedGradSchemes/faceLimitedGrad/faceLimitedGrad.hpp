@@ -102,7 +102,7 @@ public:
             }
         }
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         faceLimitedGrad(const faceLimitedGrad&) = delete;
 
 

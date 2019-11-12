@@ -58,6 +58,7 @@ class PhiScheme
     public limitedSurfaceInterpolationScheme<Type>,
     public PhiLimiter
 {
+
 public:
 
     //- Runtime type information
@@ -103,7 +104,7 @@ public:
             PhiLimiter(is)
         {}
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         PhiScheme(const PhiScheme&) = delete;
 
 
@@ -181,7 +182,7 @@ CML::PhiScheme<Type, PhiLimiter>::limiter
             dimless
         )
     );
-    surfaceScalarField& Limiter = tLimiter();
+    surfaceScalarField& Limiter = tLimiter.ref();
 
     const surfaceScalarField& CDweights = mesh.surfaceInterpolation::weights();
 

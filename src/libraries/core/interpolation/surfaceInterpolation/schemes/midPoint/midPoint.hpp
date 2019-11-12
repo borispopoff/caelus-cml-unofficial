@@ -48,6 +48,7 @@ class midPoint
 :
     public surfaceInterpolationScheme<Type>
 {
+
 public:
 
     //- Runtime type information
@@ -104,7 +105,7 @@ public:
             );
 
             surfaceScalarField::GeometricBoundaryField& awbf =
-                taw().boundaryField();
+                taw.ref().boundaryField();
 
             forAll(awbf, patchi)
             {

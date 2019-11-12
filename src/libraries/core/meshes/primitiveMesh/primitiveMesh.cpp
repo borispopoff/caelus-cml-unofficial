@@ -326,7 +326,7 @@ CML::tmp<CML::scalarField> CML::primitiveMesh::movePoints
     const faceList& f = faces();
 
     tmp<scalarField> tsweptVols(new scalarField(f.size()));
-    scalarField& sweptVols = tsweptVols();
+    scalarField& sweptVols = tsweptVols.ref();
 
     forAll(f, facei)
     {

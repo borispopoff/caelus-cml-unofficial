@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -29,6 +29,31 @@ namespace CML
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+template<class TypeR>
+tmp<Field<TypeR>> New
+(
+    const tmp<Field<TypeR>>& tf1,
+    const bool initRet = false
+)
+{
+    if (tf1.isTmp())
+    {
+        return tf1;
+    }
+    else
+    {
+        tmp<Field<TypeR>> rtf(new Field<TypeR>(tf1().size()));
+
+        if (initRet)
+        {
+            rtf.ref() = tf1();
+        }
+
+        return rtf;
+    }
+}
+
+
 template<class TypeR, class Type1>
 class reuseTmp
 {
@@ -51,11 +76,7 @@ class reuseTmp<TypeR, TypeR>
 {
 public:
 
-    static tmp<Field<TypeR>> New
-    (
-        const tmp<Field<TypeR>>& tf1,
-        const bool initRet = false
-    )
+    static tmp<Field<TypeR>> New(const tmp<Field<TypeR>>& tf1)
     {
         if (tf1.isTmp())
         {
@@ -63,22 +84,7 @@ public:
         }
         else
         {
-            tmp<Field<TypeR>> rtf(new Field<TypeR>(tf1().size()));
-
-            if (initRet)
-            {
-                rtf() = tf1();
-            }
-
-            return rtf;
-        }
-    }
-
-    static void clear(const tmp<Field<TypeR>>& tf1)
-    {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
+            return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
         }
     }
 };

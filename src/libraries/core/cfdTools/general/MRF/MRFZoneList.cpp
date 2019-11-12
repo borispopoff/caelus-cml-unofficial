@@ -170,7 +170,7 @@ CML::tmp<CML::volVectorField> CML::MRFZoneList::DDt
             dimensionedVector("0", U.dimensions()/dimTime, Zero)
         )
     );
-    volVectorField& acceleration = tacceleration();
+    volVectorField& acceleration = tacceleration.ref();
 
     forAll(*this, i)
     {
@@ -227,7 +227,7 @@ CML::tmp<CML::surfaceScalarField> CML::MRFZoneList::relative
             )
         );
 
-        makeRelative(rphi());
+        makeRelative(rphi.ref());
 
         reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
         ::clear(tphi);
@@ -256,10 +256,10 @@ CML::MRFZoneList::relative
 
         forAll(*this, i)
         {
-            operator[](i).makeRelative(rphi());
+            operator[](i).makeRelative(rphi.ref());
         }
 
-        reuseTmpFieldField<fvsPatchField, scalar, scalar>::clear(tphi);
+        tphi.clear();
 
         return rphi;
     }
@@ -279,15 +279,11 @@ CML::MRFZoneList::relative
 {
     if (size())
     {
-        tmp<Field<scalar>> rphi
-        (
-            reuseTmp<scalar, scalar>
-            ::New(tphi)
-        );
+        tmp<Field<scalar>> rphi(New(tphi));
 
         forAll(*this, i)
         {
-            operator[](i).makeRelative(rphi(), patchi);
+            operator[](i).makeRelative(rphi.ref(), patchi);
         }
 
         tphi.clear();
@@ -349,10 +345,9 @@ CML::tmp<CML::surfaceScalarField> CML::MRFZoneList::absolute
             )
         );
 
-        makeAbsolute(rphi());
+        makeAbsolute(rphi.ref());
 
-        reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
-        ::clear(tphi);
+        tphi.clear();
 
         return rphi;
     }

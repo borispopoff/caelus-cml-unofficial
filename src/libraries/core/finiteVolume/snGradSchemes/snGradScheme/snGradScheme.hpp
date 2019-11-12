@@ -224,15 +224,15 @@ tmp<snGradScheme<Type>> snGradScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "snGradScheme<Type>::New(const fvMesh&, Istream&)"
-               " : constructing snGradScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing snGradScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Discretisation scheme not specified"
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Discretisation scheme not specified"
             << endl << endl
             << "Valid schemes are :" << endl
             << MeshConstructorTablePtr_->sortedToc()
@@ -246,8 +246,10 @@ tmp<snGradScheme<Type>> snGradScheme<Type>::New
 
     if (constructorIter == MeshConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown discretisation scheme "
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown discretisation scheme "
             << schemeName << nl << nl
             << "Valid schemes are :" << endl
             << MeshConstructorTablePtr_->sortedToc()
@@ -295,7 +297,7 @@ snGradScheme<Type>::snGrad
             vf.dimensions()*tdeltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tsf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tsf.ref();
 
     // set reference to difference factors array
     const scalarField& deltaCoeffs = tdeltaCoeffs().internalField();
@@ -343,7 +345,7 @@ snGradScheme<Type>::snGrad
 
     if (corrected())
     {
-        tsf() += correction(vf);
+        tsf.ref() += correction(vf);
     }
 
     return tsf;

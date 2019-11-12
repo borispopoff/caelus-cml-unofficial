@@ -158,7 +158,7 @@ CML::fv::leastSquaresGrad<Type>::calcGrad
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad.ref();
 
     // Get reference to least square vectors
     const leastSquaresVectors& lsv = leastSquaresVectors::New(mesh);
@@ -171,12 +171,12 @@ CML::fv::leastSquaresGrad<Type>::calcGrad
 
     forAll(own, facei)
     {
-        label ownFaceI = own[facei];
+        label ownFacei = own[facei];
         label neiFacei = nei[facei];
 
-        Type deltaVsf = vsf[neiFacei] - vsf[ownFaceI];
+        Type deltaVsf = vsf[neiFacei] - vsf[ownFacei];
 
-        lsGrad[ownFaceI] += ownLs[facei]*deltaVsf;
+        lsGrad[ownFacei] += ownLs[facei]*deltaVsf;
         lsGrad[neiFacei] -= neiLs[facei]*deltaVsf;
     }
 

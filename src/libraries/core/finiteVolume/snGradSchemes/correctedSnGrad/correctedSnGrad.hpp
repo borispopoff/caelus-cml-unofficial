@@ -161,7 +161,7 @@ CML::fv::correctedSnGrad<Type>::fullGradCorrection
 ) const
 {
     const fvMesh& mesh = this->mesh();
-		
+
     // construct GeometricField<Type, fvsPatchField, surfaceMesh>
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf =
         linear<typename outerProduct<vector, Type>::type>(mesh).dotInterpolate
@@ -173,7 +173,7 @@ CML::fv::correctedSnGrad<Type>::fullGradCorrection
                 mesh.gradScheme("grad(" + vf.name() + ')')
             )().grad(vf, "grad(" + vf.name() + ')')
         );
-    tssf().rename("snGradCorr(" + vf.name() + ')');
+    tssf.ref().rename("snGradCorr(" + vf.name() + ')');
 
     return tssf;
 }
@@ -205,7 +205,7 @@ CML::fv::correctedSnGrad<Type>::correction
             vf.dimensions()*mesh.nonOrthDeltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {

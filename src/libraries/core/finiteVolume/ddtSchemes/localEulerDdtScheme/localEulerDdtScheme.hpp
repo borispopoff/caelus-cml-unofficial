@@ -516,7 +516,7 @@ localEulerDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalarField& rDeltaT = localRDeltaT().internalField();
 
@@ -543,7 +543,7 @@ localEulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalarField& rDeltaT = localRDeltaT().internalField();
 
@@ -572,7 +572,7 @@ localEulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalarField& rDeltaT = localRDeltaT().internalField();
 
@@ -603,7 +603,7 @@ localEulerDdtScheme<Type>::fvmDdt
             alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalarField& rDeltaT = localRDeltaT().internalField();
 
@@ -626,6 +626,7 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
     const fluxFieldType& phiCorr
 )
 {
+    // Courant number limited formulation
     tmp<surfaceScalarField> tddtCouplingCoeff = scalar(1)
       - min
         (
@@ -634,7 +635,7 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
             scalar(1)
         );
 
-    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff();
+    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff.ref();
 
     forAll(U.boundaryField(), patchi)
     {

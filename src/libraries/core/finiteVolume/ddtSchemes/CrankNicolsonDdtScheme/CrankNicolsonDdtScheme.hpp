@@ -437,8 +437,7 @@ operator=(const GeoField& gf)
 
 template<class Type>
 template<class GeoField>
-typename CrankNicolsonDdtScheme<Type>::template
-    DDt0Field<GeoField>&
+typename CrankNicolsonDdtScheme<Type>::template DDt0Field<GeoField>&
 CrankNicolsonDdtScheme<Type>::ddt0_
 (
     const word& name,
@@ -727,7 +726,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             )/mesh().V0();
         }
 
-        tdtdt().dimensionedInternalField() =
+        tdtdt.ref().dimensionedInternalField() =
         (
             (rDtCoef*dt)*(mesh().V() - mesh().V0())
           - mesh().V0()*offCentre_(ddt0.dimensionedInternalField())
@@ -1170,7 +1169,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*mesh().V();
@@ -1252,7 +1251,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*rho.value()*mesh().V();
@@ -1334,7 +1333,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*rho.internalField()*mesh().V();
@@ -1425,7 +1424,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
             alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     const scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*alpha.internalField()*rho.internalField()*mesh().V();

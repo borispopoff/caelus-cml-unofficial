@@ -51,7 +51,7 @@ CML::tmp<CML::vectorField> CML::faceTriangulation::calcEdges
 )
 {
     tmp<vectorField> tedges(new vectorField(f.size()));
-    vectorField& edges = tedges();
+    vectorField& edges = tedges.ref();
 
     forAll(f, i)
     {

@@ -377,7 +377,7 @@ void CML::MULES::limiter
 
         const scalar phiCorrf = phiCorrIf[facei];
 
-        if (phiCorrf > 0.0)
+        if (phiCorrf > 0)
         {
             sumPhip[own] += phiCorrf;
             mSumPhim[nei] += phiCorrf;
@@ -438,7 +438,7 @@ void CML::MULES::limiter
 
             const scalar phiCorrf = phiCorrPf[pFacei];
 
-            if (phiCorrf > 0.0)
+            if (phiCorrf > 0)
             {
                 sumPhip[pfCelli] += phiCorrf;
             }
@@ -508,8 +508,8 @@ void CML::MULES::limiter
 
     for (int j=0; j<nLimiterIter; j++)
     {
-        sumlPhip = 0.0;
-        mSumlPhim = 0.0;
+        sumlPhip = 0;
+        mSumlPhim = 0;
 
         forAll(lambdaIf, facei)
         {
@@ -518,7 +518,7 @@ void CML::MULES::limiter
 
             scalar lambdaPhiCorrf = lambdaIf[facei]*phiCorrIf[facei];
 
-            if (lambdaPhiCorrf > 0.0)
+            if (lambdaPhiCorrf > 0)
             {
                 sumlPhip[own] += lambdaPhiCorrf;
                 mSumlPhim[nei] += lambdaPhiCorrf;
@@ -543,7 +543,7 @@ void CML::MULES::limiter
                 const scalar lambdaPhiCorrf =
                     lambdaPf[pFacei]*phiCorrfPf[pFacei];
 
-                if (lambdaPhiCorrf > 0.0)
+                if (lambdaPhiCorrf > 0)
                 {
                     sumlPhip[pfCelli] += lambdaPhiCorrf;
                 }
@@ -578,7 +578,7 @@ void CML::MULES::limiter
 
         forAll(lambdaIf, facei)
         {
-            if (phiCorrIf[facei] > 0.0)
+            if (phiCorrIf[facei] > 0)
             {
                 lambdaIf[facei] = min
                 (
@@ -615,7 +615,7 @@ void CML::MULES::limiter
                 {
                     const label pfCelli = pFaceCells[pFacei];
 
-                    if (phiCorrfPf[pFacei] > 0.0)
+                    if (phiCorrfPf[pFacei] > 0)
                     {
                         lambdaPf[pFacei] =
                             min(lambdaPf[pFacei], lambdap[pfCelli]);

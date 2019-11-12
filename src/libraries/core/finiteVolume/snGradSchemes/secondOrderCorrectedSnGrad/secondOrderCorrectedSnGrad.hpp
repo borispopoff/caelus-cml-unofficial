@@ -170,7 +170,7 @@ CML::fv::secondOrderCorrectedSnGrad<Type>::fullGradCorrection
 
     forAll(vf.boundaryField(), patchi)
     {
-        fvsPatchVectorField& patchCorrVecs = nonOrthCorrectionVectorsCP().boundaryField()[patchi];
+        fvsPatchVectorField& patchCorrVecs = nonOrthCorrectionVectorsCP.ref().boundaryField()[patchi];
 
         if (vf.boundaryField()[patchi].fixesValue())
         {
@@ -192,7 +192,7 @@ CML::fv::secondOrderCorrectedSnGrad<Type>::fullGradCorrection
                 mesh.gradScheme("grad(" + vf.name() + ')')
             )().grad(vf, "grad(" + vf.name() + ')')
         );
-    tssf().rename("snGradCorr(" + vf.name() + ')');
+    tssf.ref().rename("snGradCorr(" + vf.name() + ')');
 
     return tssf;
 }
@@ -224,7 +224,7 @@ CML::fv::secondOrderCorrectedSnGrad<Type>::correction
             vf.dimensions()*mesh.nonOrthDeltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {

@@ -211,7 +211,7 @@ public:
 
             if (initRet)
             {
-                rtgf() == tgf1();
+                rtgf.ref() == tgf1();
             }
 
             return rtgf;

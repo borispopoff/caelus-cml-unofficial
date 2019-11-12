@@ -37,14 +37,14 @@ CML::tmp<CML::volVectorField> CML::constrainHbyA
     if (tHbyA.isTmp())
     {
         tHbyANew = tHbyA;
-        tHbyANew().rename("HbyA");
+        tHbyANew.ref().rename("HbyA");
     }
     else
     {
         tHbyANew = new volVectorField("HbyA", tHbyA);
     }
 
-    volVectorField& HbyA = tHbyANew();
+    volVectorField& HbyA = tHbyANew.ref();
 //    volVectorField::boundaryField& HbyAbf = HbyA.boundaryField();
 
     forAll(U.boundaryField(), patchi)

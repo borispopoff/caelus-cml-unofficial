@@ -47,7 +47,7 @@ tmp<CoeffField<Type>> inv(const CoeffField<Type>& f)
 
     // Create result
     tmp<CoeffField<Type>> tresult(new CoeffField<Type>(f.size()));
-    CoeffField<Type>& result = tresult();
+    CoeffField<Type>& result = tresult.ref();
 
     if (f.activeType() == blockCoeffBase::SCALAR)
     {

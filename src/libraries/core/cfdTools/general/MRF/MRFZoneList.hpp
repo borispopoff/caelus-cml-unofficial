@@ -231,7 +231,7 @@ CML::MRFZoneList::zeroFilter
 
         forAll(*this, i)
         {
-            operator[](i).zero(zphi());
+            operator[](i).zero(zphi.ref());
         }
 
         return zphi;

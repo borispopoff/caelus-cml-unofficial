@@ -527,7 +527,7 @@ template<class Type>
 CML::tmp<CML::scalarField> CML::DataEntryTypes::TableBase<Type>::x() const
 {
     tmp<scalarField> tfld(new scalarField(table_.size(), 0.0));
-    scalarField& fld = tfld();
+    scalarField& fld = tfld.ref();
 
     forAll(table_, i)
     {
@@ -542,7 +542,7 @@ template<class Type>
 CML::tmp<CML::Field<Type>> CML::DataEntryTypes::TableBase<Type>::y() const
 {
     tmp<Field<Type>> tfld(new Field<Type>(table_.size(), Zero));
-    Field<Type>& fld = tfld();
+    Field<Type>& fld = tfld.ref();
 
     forAll(table_, i)
     {

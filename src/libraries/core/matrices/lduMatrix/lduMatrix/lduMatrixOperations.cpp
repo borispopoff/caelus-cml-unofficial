@@ -392,7 +392,7 @@ CML::tmp<CML::scalarField > CML::lduMatrix::H1() const
 
     if (lowerPtr_ || upperPtr_)
     {
-        scalarField& H1_ = tH1();
+        scalarField& H1_ = tH1.ref();
 
         scalar* RESTRICT H1Ptr = H1_.begin();
 

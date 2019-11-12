@@ -552,7 +552,7 @@ template<class Type>
 tmp<CoeffField<Type>> CoeffField<Type>::transpose() const
 {
     tmp<CoeffField<Type>> tt(new CoeffField<Type>(this->size()));
-    CoeffField<Type>& t = tt();
+    CoeffField<Type>& t = tt.ref();
 
     if (scalarCoeffPtr_)
     {

@@ -321,7 +321,7 @@ CML::tmp<CML::pointField>
 CML::searchableSurfaceCollection::coordinates() const
 {
     tmp<pointField> tCtrs = tmp<pointField>(new pointField(size()));
-    pointField& ctrs = tCtrs();
+    pointField& ctrs = tCtrs.ref();
 
     // Append individual coordinates
     label coordI = 0;
@@ -396,7 +396,7 @@ CML::searchableSurfaceCollection::points() const
     }
 
     tmp<pointField> tPts(new pointField(nPoints));
-    pointField& pts = tPts();
+    pointField& pts = tPts.ref();
 
     // Append individual coordinates
     nPoints = 0;

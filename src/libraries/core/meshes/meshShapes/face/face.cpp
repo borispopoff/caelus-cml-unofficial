@@ -37,7 +37,7 @@ CML::tmp<CML::vectorField>
 CML::face::calcEdges(const pointField& points) const
 {
     tmp<vectorField> tedges(new vectorField(size()));
-    vectorField& edges = tedges();
+    vectorField& edges = tedges.ref();
 
     forAll(*this, i)
     {

@@ -171,7 +171,7 @@ surfaceIntegrate
             extrapolatedCalculatedFvPatchField<Type>::typeName
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& vf = tvf();
+    GeometricField<Type, fvPatchField, volMesh>& vf = tvf.ref();
 
     surfaceIntegrate(vf.internalField(), ssf);
     vf.correctBoundaryConditions();
@@ -222,7 +222,7 @@ surfaceSum
             extrapolatedCalculatedFvPatchField<Type>::typeName
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& vf = tvf();
+    GeometricField<Type, fvPatchField, volMesh>& vf = tvf.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();

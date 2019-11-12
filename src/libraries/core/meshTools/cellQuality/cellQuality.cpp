@@ -44,7 +44,7 @@ CML::tmp<CML::scalarField> CML::cellQuality::nonOrthogonality() const
         )
     );
 
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     scalarField sumArea(mesh_.nCells(), 0.0);
 
@@ -105,7 +105,7 @@ CML::tmp<CML::scalarField> CML::cellQuality::skewness() const
             mesh_.nCells(), 0.0
         )
     );
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     scalarField sumArea(mesh_.nCells(), 0.0);
 
@@ -184,7 +184,7 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceNonOrthogonality() const
             mesh_.nFaces(), 0.0
         )
     );
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
 
     const vectorField& centres = mesh_.cellCentres();
@@ -244,7 +244,7 @@ CML::tmp<CML::scalarField> CML::cellQuality::faceSkewness() const
             mesh_.nFaces(), 0.0
         )
     );
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
 
     const vectorField& cellCtrs = mesh_.cellCentres();

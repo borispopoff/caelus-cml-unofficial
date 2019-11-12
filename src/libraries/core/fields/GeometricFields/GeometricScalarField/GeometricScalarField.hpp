@@ -206,7 +206,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
         )
     );
 
-    stabilise(tRes(), gsf, ds);
+    stabilise(tRes.ref(), gsf, ds);
 
     return tRes;
 }
@@ -223,7 +223,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
 
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tRes
     (
-        reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
+        New
         (
             tgsf,
             "stabilise(" + gsf.name() + ',' + ds.name() + ')',
@@ -231,9 +231,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
         )
     );
 
-    stabilise(tRes(), gsf, ds);
+    stabilise(tRes.ref(), gsf, ds);
 
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf);
+    tgsf.clear();
 
     return tRes;
 }
@@ -303,7 +303,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
         )
     );
 
-    pow(tPow(), gsf1, gsf2);
+    pow(tPow.ref(), gsf1, gsf2);
 
     return tPow;
 }
@@ -334,7 +334,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
-        reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
+        New
         (
             tgsf1,
             "pow(" + gsf1.name() + ',' + gsf2.name() + ')',
@@ -342,9 +342,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
         )
     );
 
-    pow(tPow(), gsf1, gsf2);
+    pow(tPow.ref(), gsf1, gsf2);
 
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf1);
+    tgsf1.clear();
 
     return tPow;
 }
@@ -375,7 +375,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
-        reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
+        New
         (
             tgsf2,
             "pow(" + gsf1.name() + ',' + gsf2.name() + ')',
@@ -383,9 +383,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
         )
     );
 
-    pow(tPow(), gsf1, gsf2);
+    pow(tPow.ref(), gsf1, gsf2);
 
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf2);
+    tgsf2.clear();
 
     return tPow;
 }
@@ -426,11 +426,10 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
         )
     );
 
-    pow(tPow(), gsf1, gsf2);
+    pow(tPow.ref(), gsf1, gsf2);
 
-    reuseTmpTmpGeometricField
-        <scalar, scalar, scalar, scalar, PatchField, GeoMesh>
-        ::clear(tgsf1, tgsf2);
+    tgsf1.clear();
+    tgsf2.clear();
 
     return tPow;
 }
@@ -480,7 +479,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
         )
     );
 
-    pow(tPow(), gsf, ds);
+    pow(tPow.ref(), gsf, ds);
 
     return tPow;
 }
@@ -511,7 +510,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
         )
     );
 
-    pow(tPow(), gsf, ds);
+    pow(tPow.ref(), gsf, ds);
 
     reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf);
 
@@ -590,7 +589,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
         )
     );
 
-    pow(tPow(), ds, gsf);
+    pow(tPow.ref(), ds, gsf);
 
     return tPow;
 }
@@ -629,7 +628,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
         )
     );
 
-    pow(tPow(), ds, gsf);
+    pow(tPow.ref(), ds, gsf);
 
     reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf);
 
@@ -1014,87 +1013,87 @@ UNARY_FUNCTION(scalar, scalar, y1, trans)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define BesselFunc(func)                                                     \
-                                                                            \
-template<template<class> class PatchField, class GeoMesh>                   \
-void func                                                                   \
-(                                                                           \
-    GeometricField<scalar, PatchField, GeoMesh>& gsf,                       \
-    const int n,                                                            \
-    const GeometricField<scalar, PatchField, GeoMesh>& gsf1                 \
-)                                                                           \
-{                                                                           \
-    func(gsf.internalField(), n, gsf1.internalField());                     \
-    func(gsf.boundaryField(), n, gsf1.boundaryField());                     \
-}                                                                           \
-                                                                            \
-template<template<class> class PatchField, class GeoMesh>                   \
-tmp<GeometricField<scalar, PatchField, GeoMesh>> func                      \
-(                                                                           \
-    const int n,                                                            \
-    const GeometricField<scalar, PatchField, GeoMesh>& gsf                  \
-)                                                                           \
-{                                                                           \
-    if (!gsf.dimensions().dimensionless())                                  \
-    {                                                                       \
-        FatalErrorInFunction                                                \
-            << "gsf not dimensionless"                                      \
-            << abort(FatalError);                                           \
-    }                                                                       \
-                                                                            \
-    tmp<GeometricField<scalar, PatchField, GeoMesh>> tFunc                 \
-    (                                                                       \
-        new GeometricField<scalar, PatchField, GeoMesh>                     \
-        (                                                                   \
-            IOobject                                                        \
-            (                                                               \
-                #func "(" + gsf.name() + ')',                               \
-                gsf.instance(),                                             \
-                gsf.db(),                                                   \
-                IOobject::NO_READ,                                          \
-                IOobject::NO_WRITE                                          \
-            ),                                                              \
-            gsf.mesh(),                                                     \
-            dimless                                                         \
-        )                                                                   \
-    );                                                                      \
-                                                                            \
-    func(tFunc(), n, gsf);                                                  \
-                                                                            \
-    return tFunc;                                                           \
-}                                                                           \
-                                                                            \
-template<template<class> class PatchField, class GeoMesh>                   \
-tmp<GeometricField<scalar, PatchField, GeoMesh>> func                      \
-(                                                                           \
-    const int n,                                                            \
-    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf           \
-)                                                                           \
-{                                                                           \
-    const GeometricField<scalar, PatchField, GeoMesh>& gsf = tgsf();        \
-                                                                            \
-    if (!gsf.dimensions().dimensionless())                                  \
-    {                                                                       \
-        FatalErrorInFunction                                                \
-            << " : gsf not dimensionless"                                   \
-            << abort(FatalError);                                           \
-    }                                                                       \
-                                                                            \
-    tmp<GeometricField<scalar, PatchField, GeoMesh>> tFunc                 \
-    (                                                                       \
-        reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New    \
-        (                                                                   \
-            tgsf,                                                           \
-            #func "(" + gsf.name() + ')',                                   \
-            dimless                                                         \
-        )                                                                   \
-    );                                                                      \
-                                                                            \
-    func(tFunc(), n, gsf);                                                  \
-                                                                            \
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>             \
-    ::clear(tgsf);                                                          \
-                                                                            \
+#define BesselFunc(func)                                                       \
+                                                                               \
+template<template<class> class PatchField, class GeoMesh>                      \
+void func                                                                      \
+(                                                                              \
+    GeometricField<scalar, PatchField, GeoMesh>& gsf,                          \
+    const int n,                                                               \
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf1                    \
+)                                                                              \
+{                                                                              \
+    func(gsf.internalField(), n, gsf1.internalField());                        \
+    func(gsf.boundaryField(), n, gsf1.boundaryField());                        \
+}                                                                              \
+                                                                               \
+template<template<class> class PatchField, class GeoMesh>                      \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                          \
+(                                                                              \
+    const int n,                                                               \
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf                     \
+)                                                                              \
+{                                                                              \
+    if (!gsf.dimensions().dimensionless())                                     \
+    {                                                                          \
+        FatalErrorInFunction                                                   \
+            << "gsf not dimensionless"                                         \
+            << abort(FatalError);                                              \
+    }                                                                          \
+                                                                               \
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tFunc                     \
+    (                                                                          \
+        new GeometricField<scalar, PatchField, GeoMesh>                        \
+        (                                                                      \
+            IOobject                                                           \
+            (                                                                  \
+                #func "(" + gsf.name() + ')',                                  \
+                gsf.instance(),                                                \
+                gsf.db(),                                                      \
+                IOobject::NO_READ,                                             \
+                IOobject::NO_WRITE                                             \
+            ),                                                                 \
+            gsf.mesh(),                                                        \
+            dimless                                                            \
+        )                                                                      \
+    );                                                                         \
+                                                                               \
+    func(tFunc.ref(), n, gsf);                                                 \
+                                                                               \
+    return tFunc;                                                              \
+}                                                                              \
+                                                                               \
+template<template<class> class PatchField, class GeoMesh>                      \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                          \
+(                                                                              \
+    const int n,                                                               \
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>& tgsf               \
+)                                                                              \
+{                                                                              \
+    const GeometricField<scalar, PatchField, GeoMesh>& gsf = tgsf();           \
+                                                                               \
+    if (!gsf.dimensions().dimensionless())                                     \
+    {                                                                          \
+        FatalErrorInFunction                                                   \
+            << " : gsf not dimensionless"                                      \
+            << abort(FatalError);                                              \
+    }                                                                          \
+                                                                               \
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tFunc                     \
+    (                                                                          \
+        reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New       \
+        (                                                                      \
+            tgsf,                                                              \
+            #func "(" + gsf.name() + ')',                                      \
+            dimless                                                            \
+        )                                                                      \
+    );                                                                         \
+                                                                               \
+    func(tFunc.ref(), n, gsf);                                                 \
+                                                                               \
+    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>                \
+    ::clear(tgsf);                                                             \
+                                                                               \
     return tFunc;                                                              \
 }
 

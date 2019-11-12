@@ -57,7 +57,7 @@ CML::linearUpwindMD##limiterType<Type>::correction                             \
         )                                                                      \
     );                                                                         \
                                                                                \
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr();      \
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();  \
                                                                                \
     surfaceScalarField const& faceFlux = this->faceFlux_;                      \
                                                                                \

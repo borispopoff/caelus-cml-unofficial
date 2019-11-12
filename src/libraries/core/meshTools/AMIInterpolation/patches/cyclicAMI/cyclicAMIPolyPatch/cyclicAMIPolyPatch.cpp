@@ -1014,7 +1014,7 @@ CML::tmp<CML::scalarField> CML::cyclicAMIPolyPatch::interpolate
             const scalar r =
                 pow(inv(AMITransforms()[i]).R()(cmpt, cmpt), rank);
 
-            result() +=
+            result.ref() +=
                 AMIs()[i].interpolateToSource(r*fld, defaultValues);
         }
     }
@@ -1025,7 +1025,7 @@ CML::tmp<CML::scalarField> CML::cyclicAMIPolyPatch::interpolate
             const scalar r =
                 pow(nei.AMITransforms()[i].R()(cmpt, cmpt), rank);
 
-            result() +=
+            result.ref() +=
                 nei.AMIs()[i].interpolateToTarget(r*fld, defaultValues);
         }
     }

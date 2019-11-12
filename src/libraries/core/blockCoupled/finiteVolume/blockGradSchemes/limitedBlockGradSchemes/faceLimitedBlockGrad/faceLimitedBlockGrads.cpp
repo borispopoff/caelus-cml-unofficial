@@ -82,7 +82,7 @@ tmp<BlockLduSystem<vector, vector>> faceLimitedBlockGrad<scalar>::fvmGrad
         return tbs;
     }
 
-    BlockLduSystem<vector, vector>& bs = tbs();
+    BlockLduSystem<vector, vector>& bs = tbs.ref();
 
     // Calculate current gradient for explicit limiting
     // Using cached gradient?  Check.  HJ, 4/Jun/2016

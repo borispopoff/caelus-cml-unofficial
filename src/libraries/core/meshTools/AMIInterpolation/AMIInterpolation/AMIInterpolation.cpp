@@ -139,7 +139,7 @@ CML::tmp<CML::scalarField> CML::AMIInterpolation::patchMagSf
 )
 {
     tmp<scalarField> tResult(new scalarField(patch.size(), Zero));
-    scalarField& result = tResult();
+    scalarField& result = tResult.ref();
 
     const pointField& patchPoints = patch.localPoints();
 

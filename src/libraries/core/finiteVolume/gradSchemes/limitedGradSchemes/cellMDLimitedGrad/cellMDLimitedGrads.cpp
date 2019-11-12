@@ -50,7 +50,7 @@ CML::fv::cellMDLimitedGrad<CML::scalar>::calcGrad
         return tGrad;
     }
 
-    volVectorField& g = tGrad();
+    volVectorField& g = tGrad.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -120,8 +120,8 @@ CML::fv::cellMDLimitedGrad<CML::scalar>::calcGrad
         maxVsf += maxMinVsf;
         minVsf -= maxMinVsf;
 
-        //maxVsf *= 1.0/k_;
-        //minVsf *= 1.0/k_;
+        // maxVsf *= 1.0/k_;
+        // minVsf *= 1.0/k_;
     }
 
 
@@ -193,7 +193,7 @@ CML::fv::cellMDLimitedGrad<CML::vector>::calcGrad
         return tGrad;
     }
 
-    volTensorField& g = tGrad();
+    volTensorField& g = tGrad.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -262,8 +262,8 @@ CML::fv::cellMDLimitedGrad<CML::vector>::calcGrad
         maxVsf += maxMinVsf;
         minVsf -= maxMinVsf;
 
-        //maxVsf *= 1.0/k_;
-        //minVsf *= 1.0/k_;
+        // maxVsf *= 1.0/k_;
+        // minVsf *= 1.0/k_;
     }
 
 

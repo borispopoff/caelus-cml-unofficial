@@ -302,7 +302,7 @@ CML::tmp<CML::tensorField> CML::momentOfInertia::meshInertia
 {
     tmp<tensorField> tTf = tmp<tensorField>(new tensorField(mesh.nCells()));
 
-    tensorField& tf = tTf();
+    tensorField& tf = tTf.ref();
 
     forAll(tf, cI)
     {

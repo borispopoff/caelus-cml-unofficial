@@ -63,7 +63,7 @@ cellLimitedBlockGrad<scalar>::fvmGrad
         return tbs;
     }
 
-    BlockLduSystem<vector, vector>& bs = tbs();
+    BlockLduSystem<vector, vector>& bs = tbs.ref();
 
     // Calculate current gradient for explicit limiting
     // In blockFvm::grad the current gradient may be cached

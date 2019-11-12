@@ -912,7 +912,7 @@ CML::AMIInterpolation::interpolateToSource
     (
         fld,
         multiplyWeightedOp<Type, CombineOp>(cop),
-        tresult(),
+        tresult.ref(),
         defaultValues
     );
 
@@ -955,7 +955,7 @@ CML::AMIInterpolation::interpolateToTarget
     (
         fld,
         multiplyWeightedOp<Type, CombineOp>(cop),
-        tresult(),
+        tresult.ref(),
         defaultValues
     );
 

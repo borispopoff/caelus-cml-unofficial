@@ -29,6 +29,34 @@ namespace CML
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+template<template<class> class Field, class TypeR>
+tmp<FieldField<Field, TypeR>> New
+(
+    const tmp<FieldField<Field, TypeR>>& tf1,
+    const bool initRet = false
+)
+{
+    if (tf1.isTmp())
+    {
+        return tf1;
+    }
+    else
+    {
+        tmp<FieldField<Field, TypeR>> rtf
+        (
+            FieldField<Field, TypeR>::NewCalculatedType(tf1())
+        );
+
+        if (initRet)
+        {
+            rtf.ref() = tf1();
+        }
+
+        return rtf;
+    }
+}
+
+
 template<template<class> class Field, class TypeR, class Type1>
 class reuseTmpFieldField
 {
@@ -59,8 +87,7 @@ public:
 
     static tmp<FieldField<Field, TypeR>> New
     (
-        const tmp<FieldField<Field, TypeR>>& tf1,
-        const bool initRet = false
+        const tmp<FieldField<Field, TypeR>>& tf1
     )
     {
         if (tf1.isTmp())
@@ -69,17 +96,10 @@ public:
         }
         else
         {
-            tmp<FieldField<Field, TypeR>> rtf
+            return tmp<FieldField<Field, TypeR>>
             (
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
-
-            if (initRet)
-            {
-                rtf() = tf1();
-            }
-
-            return rtf;
         }
     }
 

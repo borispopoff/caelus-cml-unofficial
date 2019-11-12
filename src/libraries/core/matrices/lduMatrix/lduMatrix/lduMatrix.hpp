@@ -742,7 +742,7 @@ CML::tmp<CML::Field<Type>> CML::lduMatrix::H(const Field<Type>& psi) const
 
     if (lowerPtr_ || upperPtr_)
     {
-        Field<Type> & Hpsi = tHpsi();
+        Field<Type> & Hpsi = tHpsi.ref();
 
         Type* RESTRICT HpsiPtr = Hpsi.begin();
 
@@ -789,7 +789,7 @@ CML::lduMatrix::faceH(const Field<Type>& psi) const
         const labelUList& u = lduAddr().upperAddr();
 
         tmp<Field<Type>> tfaceHpsi(new Field<Type> (Lower.size()));
-        Field<Type> & faceHpsi = tfaceHpsi();
+        Field<Type> & faceHpsi = tfaceHpsi.ref();
 
         for (label face=0; face<l.size(); face++)
         {

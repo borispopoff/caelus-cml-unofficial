@@ -31,7 +31,7 @@ CML::tmp<CML::vectorField> CML::zip
 )
 {
     tmp<vectorField> txyz(new vectorField(x->size()));
-    vectorField& xyz = txyz();
+    vectorField& xyz = txyz.ref();
     xyz.replace(0, x);
     xyz.replace(1, y);
     xyz.replace(2, z);

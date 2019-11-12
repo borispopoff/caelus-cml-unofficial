@@ -300,7 +300,7 @@ CML::tmp<CML::tensorField> CML::localAxesRotation::transformTensor
     const tensorField& R = Rptr_();
     const tensorField Rtr(R.T());
     tmp<tensorField> tt(new tensorField(cellMap.size()));
-    tensorField& t = tt();
+    tensorField& t = tt.ref();
     forAll(cellMap, i)
     {
         const label celli = cellMap[i];
@@ -324,7 +324,7 @@ CML::tmp<CML::symmTensorField> CML::localAxesRotation::transformVector
     }
 
     tmp<symmTensorField> tfld(new symmTensorField(Rptr_->size()));
-    symmTensorField& fld = tfld();
+    symmTensorField& fld = tfld.ref();
 
     const tensorField& R = Rptr_();
     forAll(fld, i)

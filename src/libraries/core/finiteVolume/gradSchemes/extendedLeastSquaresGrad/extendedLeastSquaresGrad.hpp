@@ -167,7 +167,7 @@ CML::fv::extendedLeastSquaresGrad<Type>::calcGrad
             zeroGradientFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad.ref();
 
     // Get reference to least square vectors
     const extendedLeastSquaresVectors& lsv = extendedLeastSquaresVectors::New

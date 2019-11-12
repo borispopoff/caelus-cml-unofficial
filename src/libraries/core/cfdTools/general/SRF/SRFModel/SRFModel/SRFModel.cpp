@@ -221,8 +221,10 @@ CML::tmp<CML::volVectorField> CML::SRF::SRFModel::Uabs() const
         )
     );
 
+    volVectorField& Uabs = tUabs.ref();
+
     // Add SRF contribution to internal field
-    tUabs().internalField() += Urel_.internalField();
+    Uabs.internalField() += Urel_.internalField();
 
     // Add Urel boundary contributions
     const volVectorField::GeometricBoundaryField& bvf = Urel_.boundaryField();
@@ -237,12 +239,12 @@ CML::tmp<CML::volVectorField> CML::SRF::SRFModel::Uabs() const
                 refCast<const SRFVelocityFvPatchVectorField>(bvf[i]);
             if (UrelPatch.relative())
             {
-                tUabs().boundaryField()[i] += Urel_.boundaryField()[i];
+                Uabs.boundaryField()[i] += Urel_.boundaryField()[i];
             }
         }
         else
         {
-            tUabs().boundaryField()[i] += Urel_.boundaryField()[i];
+            Uabs.boundaryField()[i] += Urel_.boundaryField()[i];
         }
     }
 

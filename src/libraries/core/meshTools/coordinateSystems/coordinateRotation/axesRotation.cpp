@@ -227,7 +227,7 @@ CML::tmp<CML::symmTensorField> CML::axesRotation::transformVector
 ) const
 {
     tmp<symmTensorField> tfld(new symmTensorField(st.size()));
-    symmTensorField& fld = tfld();
+    symmTensorField& fld = tfld.ref();
 
     forAll(fld, i)
     {

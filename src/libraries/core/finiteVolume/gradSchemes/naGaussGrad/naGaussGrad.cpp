@@ -57,7 +57,7 @@ CML::fv::naGaussGrad<Type>::calcGrad
       pInterp.interpolate(vsf)
     );
 
-    GeometricField<Type, pointPatchField, pointMesh>& pf = tpf();
+    GeometricField<Type, pointPatchField, pointMesh>& pf = tpf.ref();
 
     // Construct tmp<surfaceField> to be used in Gauss grad
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf
@@ -77,7 +77,7 @@ CML::fv::naGaussGrad<Type>::calcGrad
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
 
     const labelUList& owner = mesh.owner();
 
@@ -131,7 +131,7 @@ CML::fv::naGaussGrad<Type>::calcGrad
         gaussGrad<Type>::gradf(ssf, name)
     );
 
-    GeometricField<GradType, fvPatchField, volMesh>& nagGrad = tnagGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& nagGrad = tnagGrad.ref();
 
     gaussGrad<Type>::correctBoundaryConditions(vsf, nagGrad);
 

@@ -27,29 +27,34 @@ License
 template<class T>
 inline CML::tmp<T>::tmp(T* tPtr)
 :
-    isTmp_(true),
-    ptr_(tPtr),
-    ref_(*tPtr)
+    type_(TMP),
+    ptr_(tPtr)
+{}
+
+
+template<class T>
+inline CML::tmp<T>::tmp(T&& tRef)
+:
+    type_(REF),
+    ptr_(&tRef)
 {}
 
 
 template<class T>
 inline CML::tmp<T>::tmp(const T& tRef)
 :
-    isTmp_(false),
-    ptr_(0),
-    ref_(tRef)
+    type_(CONST_REF),
+    ptr_(const_cast<T*>(&tRef))
 {}
 
 
 template<class T>
-inline CML::tmp<T>::tmp(const tmp<T>& t)
+inline CML::tmp<T>::tmp(tmp<T>&& t)
 :
-    isTmp_(t.isTmp_),
-    ptr_(t.ptr_),
-    ref_(t.ref_)
+    type_(t.type_),
+    ptr_(t.ptr_)
 {
-    if (isTmp_)
+    if (isTmp())
     {
         if (ptr_)
         {
@@ -58,7 +63,7 @@ inline CML::tmp<T>::tmp(const tmp<T>& t)
         else
         {
             FatalErrorInFunction
-                << "attempted copy of a deallocated temporary"
+                << "Attempted copy of a deallocated temporary"
                 << " of type " << typeid(T).name()
                 << abort(FatalError);
         }
@@ -67,13 +72,39 @@ inline CML::tmp<T>::tmp(const tmp<T>& t)
 
 
 template<class T>
+inline CML::tmp<T>::tmp(const tmp<T>& t)
+:
+    type_(t.type_),
+    ptr_(t.ptr_)
+{
+    if (isTmp())
+    {
+        if (ptr_)
+        {
+            ptr_->operator++();
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Attempted copy of a deallocated temporary"
+                << " of type " << typeid(T).name()
+                << abort(FatalError);
+        }
+    }
+    else if (type_ == REF)
+    {
+        type_ = CONST_REF;
+    }
+}
+
+
+template<class T>
 inline CML::tmp<T>::tmp(const tmp<T>& t, bool allowTransfer)
 :
-    isTmp_(t.isTmp_),
-    ptr_(t.ptr_),
-    ref_(t.ref_)
+    type_(t.type_),
+    ptr_(t.ptr_)
 {
-    if (isTmp_)
+    if (isTmp())
     {
         if (allowTransfer)
         {
@@ -88,7 +119,7 @@ inline CML::tmp<T>::tmp(const tmp<T>& t, bool allowTransfer)
             else
             {
                 FatalErrorInFunction
-                    << "attempted copy of a deallocated temporary"
+                    << "Attempted copy of a deallocated temporary"
                     << " of type " << typeid(T).name()
                     << abort(FatalError);
             }
@@ -100,7 +131,7 @@ inline CML::tmp<T>::tmp(const tmp<T>& t, bool allowTransfer)
 template<class T>
 inline CML::tmp<T>::~tmp()
 {
-    if (isTmp_ && ptr_)
+    if (isTmp() && ptr_)
     {
         if (ptr_->okToDelete())
         {
@@ -120,33 +151,60 @@ inline CML::tmp<T>::~tmp()
 template<class T>
 inline bool CML::tmp<T>::isTmp() const
 {
-    return isTmp_;
+    return type_ == TMP;
 }
 
 
 template<class T>
 inline bool CML::tmp<T>::empty() const
 {
-    return (isTmp_ && !ptr_);
+    return (isTmp() && !ptr_);
 }
 
 
 template<class T>
 inline bool CML::tmp<T>::valid() const
 {
-    return (!isTmp_ || (isTmp_ && ptr_));
+    return (!isTmp() || (isTmp() && ptr_));
+}
+
+
+template<class T>
+inline T& CML::tmp<T>::ref()
+{
+    if (type_ == TMP)
+    {
+        if (!ptr_)
+        {
+            FatalErrorInFunction
+                << "Temporary of type " << typeid(T).name() << " deallocated"
+                << abort(FatalError);
+        }
+
+        return *ptr_;
+    }
+    else if (type_ == REF)
+    {
+        return *ptr_;
+    }
+    else
+    {
+        FatalErrorInFunction << "Const object cast to non-const"
+            << abort(FatalError);
+        return *ptr_;
+    }
 }
 
 
 template<class T>
 inline T* CML::tmp<T>::ptr() const
 {
-    if (isTmp_)
+    if (isTmp())
     {
          if (!ptr_)
          {
              FatalErrorInFunction
-                 << "temporary of type " << typeid(T).name() << " deallocated"
+                 << "Temporary of type " << typeid(T).name() << " deallocated"
                  << abort(FatalError);
          }
 
@@ -167,7 +225,7 @@ inline T* CML::tmp<T>::ptr() const
 template<class T>
 inline void CML::tmp<T>::clear() const
 {
-    if (isTmp_ && ptr_)  // skip this bit:  && ptr_->okToDelete())
+    if (isTmp() && ptr_)  // Skip this bit:  && ptr_->okToDelete())
     {
         delete ptr_;
         ptr_ = 0;
@@ -177,15 +235,16 @@ inline void CML::tmp<T>::clear() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
+#ifndef CONST_TMP
 template<class T>
 inline T& CML::tmp<T>::operator()()
 {
-    if (isTmp_)
+    if (type_ == TMP)
     {
         if (!ptr_)
         {
             FatalErrorInFunction
-                << "temporary of type " << typeid(T).name() << " deallocated"
+                << "Temporary of type " << typeid(T).name() << " deallocated"
                 << abort(FatalError);
         }
 
@@ -193,28 +252,23 @@ inline T& CML::tmp<T>::operator()()
     }
     else
     {
-        // Note: const is cast away!
-        // Perhaps there should be two refs, one for const and one for non const
-        // and if the ref is actually const then you cannot return it here.
-        //
-        // Another possibility would be to store a const ref and a flag to say
-        // whether the tmp was constructed with a const or a non-const argument.
-        //
-        // eg, enum refType { POINTER = 0, REF = 1, CONSTREF = 2 };
-        return const_cast<T&>(ref_);
+        // Const-ness is automatically cast-away which is why this operator is
+        // deprecated.  Use ref() where non-const access is required.
+        return *ptr_;
     }
 }
+#endif
 
 
 template<class T>
 inline const T& CML::tmp<T>::operator()() const
 {
-    if (isTmp_)
+    if (type_ == TMP)
     {
         if (!ptr_)
         {
             FatalErrorInFunction
-                << "temporary of type " << typeid(T).name() << " deallocated"
+                << "Temporary of type " << typeid(T).name() << " deallocated"
                 << abort(FatalError);
         }
 
@@ -222,7 +276,8 @@ inline const T& CML::tmp<T>::operator()() const
     }
     else
     {
-        return ref_;
+        // Return const reference
+        return *ptr_;
     }
 }
 
@@ -237,20 +292,26 @@ inline CML::tmp<T>::operator const T&() const
 template<class T>
 inline T* CML::tmp<T>::operator->()
 {
-    if (isTmp_)
+    if (isTmp())
     {
          if (!ptr_)
          {
              FatalErrorInFunction
-                 << "temporary of type " << typeid(T).name() << " deallocated"
+                 << "Temporary of type " << typeid(T).name() << " deallocated"
                  << abort(FatalError);
          }
 
          return ptr_;
     }
+    else if (type_ == REF)
+    {
+        return ptr_;
+    }
     else
     {
-        return &const_cast<T&>(ref_);
+        FatalErrorInFunction << "Const object cast to non-const"
+            << abort(FatalError);
+        return ptr_;
     }
 }
 
@@ -258,14 +319,28 @@ inline T* CML::tmp<T>::operator->()
 template<class T>
 inline const T* CML::tmp<T>::operator->() const
 {
-    return const_cast<tmp<T>&>(*this).operator->();
+    if (isTmp())
+    {
+         if (!ptr_)
+         {
+             FatalErrorInFunction
+                 << "Temporary of type " << typeid(T).name() << " deallocated"
+                 << abort(FatalError);
+         }
+
+         return ptr_;
+    }
+    else
+    {
+        return ptr_;
+    }
 }
 
 
 template<class T>
 inline void CML::tmp<T>::operator=(T* tPtr)
 {
-    if (isTmp_ && ptr_)
+    if (isTmp() && ptr_)
     {
         if (ptr_->okToDelete())
         {
@@ -278,12 +353,12 @@ inline void CML::tmp<T>::operator=(T* tPtr)
         }
     }
 
-    isTmp_ = true;
+    type_ = TMP;
 
     if (!tPtr)
     {
         FatalErrorInFunction
-            << "attempted copy of a deallocated temporary"
+            << "Attempted copy of a deallocated temporary"
             << " of type " << typeid(T).name()
             << abort(FatalError);
     }
@@ -296,7 +371,7 @@ inline void CML::tmp<T>::operator=(T* tPtr)
 template<class T>
 inline void CML::tmp<T>::operator=(const tmp<T>& t)
 {
-    if (isTmp_ && ptr_)
+    if (isTmp() && ptr_)
     {
         if (ptr_->okToDelete())
         {
@@ -309,29 +384,45 @@ inline void CML::tmp<T>::operator=(const tmp<T>& t)
         }
     }
 
-    if (t.isTmp_)
+    if (t.isTmp())
     {
-        isTmp_ = true;
+        type_ = TMP;
 
         if (!t.ptr_)
         {
             FatalErrorInFunction
-                << "attempted assignment to a deallocated temporary"
+                << "Attempted assignment to a deallocated temporary"
                 << " of type " << typeid(T).name()
                 << abort(FatalError);
         }
 
         ptr_ = t.ptr_;
-        t.ptr_ = 0;
+        const_cast<tmp<T>&>(t).ptr_ = 0;
         ptr_->resetRefCount();
     }
     else
     {
         FatalErrorInFunction
-            << "attempted assignment to a const reference to constant object"
+            << "Attempted assignment to a const reference to constant object"
             << " of type " << typeid(T).name()
             << abort(FatalError);
     }
+}
+
+
+//- Return the const reference of the non-const reference argument
+template<typename T>
+inline const T& Const(T& t)
+{
+    return t;
+}
+
+
+//- Return the const reference of the non-const rvalue reference argument
+template<typename T>
+inline const T& Const(T&& t)
+{
+    return t;
 }
 
 

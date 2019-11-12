@@ -108,7 +108,7 @@ CML::solverPerformance CML::fvMatrix<CML::scalar>::fvSolver::solve
     scalarField totalSource(fvMat_.source());
     fvMat_.addBoundarySource(totalSource, false);
 
-    // assign new solver controls
+    // Assign new solver controls
     solver_->read(solverControls);
 
     solverPerformance solverPerf = solver_->solve
@@ -192,7 +192,7 @@ CML::tmp<CML::scalarField> CML::fvMatrix<CML::scalar>::residual() const
         )
     );
 
-    addBoundarySource(tres());
+    addBoundarySource(tres.ref());
 
     return tres;
 }
@@ -218,7 +218,7 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<CML::scalar>::H() const
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-    volScalarField& Hphi = tHphi();
+    volScalarField& Hphi = tHphi.ref();
 
     Hphi.internalField() = (lduMatrix::H(psi_.internalField()) + source_);
     addBoundarySource(Hphi.internalField());
@@ -250,7 +250,7 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<CML::scalar>::H1() const
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-    volScalarField& H1_ = tH1();
+    volScalarField& H1_ = tH1.ref();
 
     H1_.internalField() = lduMatrix::H1();
     //addBoundarySource(Hphi.internalField());

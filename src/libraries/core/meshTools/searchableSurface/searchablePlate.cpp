@@ -296,7 +296,7 @@ void CML::searchablePlate::boundingSpheres
 CML::tmp<CML::pointField> CML::searchablePlate::points() const
 {
     tmp<pointField> tPts(new pointField(4));
-    pointField& pts = tPts();
+    pointField& pts = tPts.ref();
 
     pts[0] = origin_;
     pts[2] = origin_ + span_;

@@ -490,7 +490,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
             scalar(1)
         );
 
-    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff();
+    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff.ref();
 
     forAll(U.boundaryField(), patchi)
     {

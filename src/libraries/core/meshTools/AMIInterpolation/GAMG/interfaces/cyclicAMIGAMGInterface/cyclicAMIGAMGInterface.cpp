@@ -192,7 +192,7 @@ CML::tmp<CML::labelField> CML::cyclicAMIGAMGInterface::internalFieldTransfer
     const labelUList& nbrFaceCells = nbr.faceCells();
 
     tmp<labelField> tpnf(new labelField(nbrFaceCells.size()));
-    labelField& pnf = tpnf();
+    labelField& pnf = tpnf.ref();
 
     forAll(pnf, facei)
     {

@@ -252,7 +252,7 @@ void CML::DispersionRASModel<CloudType>::cacheFields(const bool store)
         }
         else
         {
-            kPtr_ = tk.operator->();
+            kPtr_ = &tk();
             ownK_ = false;
         }
 
@@ -264,7 +264,7 @@ void CML::DispersionRASModel<CloudType>::cacheFields(const bool store)
         }
         else
         {
-            epsilonPtr_ = tepsilon.operator->();
+            epsilonPtr_ = &tepsilon();
             ownEpsilon_ = false;
         }
     }

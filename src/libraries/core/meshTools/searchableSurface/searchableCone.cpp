@@ -69,7 +69,7 @@ void CML::searchableCone::boundingSpheres
 CML::tmp<CML::pointField> CML::searchableCone::points() const
 {
     tmp<pointField> tPts(new pointField(2));
-    pointField& pts = tPts();
+    pointField& pts = tPts.ref();
 
     pts[0] = point1_;
     pts[1] = point2_;

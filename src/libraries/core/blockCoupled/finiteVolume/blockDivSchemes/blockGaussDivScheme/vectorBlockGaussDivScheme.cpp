@@ -58,7 +58,7 @@ tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
     (
         new BlockLduSystem<vector, scalar>(mesh)
     );
-    BlockLduSystem<vector, scalar>& bs = tbs();
+    BlockLduSystem<vector, scalar>& bs = tbs.ref();
     scalarField& source = bs.source();
 
     // Grab ldu parts of block matrix as linear always
@@ -147,7 +147,7 @@ tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
     (
         new BlockLduSystem<vector, scalar>(mesh)
     );
-    BlockLduSystem<vector, scalar>& bs = tbs();
+    BlockLduSystem<vector, scalar>& bs = tbs.ref();
     scalarField& source = bs.source();
 
     // Grab ldu parts of block matrix as linear always

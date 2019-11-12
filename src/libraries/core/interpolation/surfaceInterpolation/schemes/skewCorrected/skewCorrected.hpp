@@ -94,7 +94,7 @@ public:
             )
         {}
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         skewCorrected(const skewCorrected&) = delete;
 
 
@@ -149,7 +149,7 @@ public:
 
             for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
             {
-                tsfCorr().replace
+                tsfCorr.ref().replace
                 (
                     cmpt,
                     scv() & linear

@@ -217,7 +217,7 @@ CML::tmp<CML::Field<Type>> CML::GAMGInterface::interfaceInternalField
 ) const
 {
     tmp<Field<Type>> tresult(new Field<Type>(size()));
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     forAll(result, elemI)
     {

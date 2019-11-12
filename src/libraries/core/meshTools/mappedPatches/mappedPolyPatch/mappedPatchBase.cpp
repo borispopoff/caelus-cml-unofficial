@@ -95,7 +95,7 @@ CML::tmp<CML::pointField> CML::mappedPatchBase::facePoints
 
     // Initialise to face-centre
     tmp<pointField> tfacePoints(new pointField(patch_.size()));
-    pointField& facePoints = tfacePoints();
+    pointField& facePoints = tfacePoints.ref();
 
     forAll(pp, facei)
     {
@@ -865,7 +865,7 @@ CML::tmp<CML::pointField> CML::mappedPatchBase::readListOrField
 )
 {
     tmp<pointField> tfld(new pointField());
-    pointField& fld = tfld();
+    pointField& fld = tfld.ref();
 
     if (size)
     {
@@ -1265,7 +1265,7 @@ CML::tmp<CML::pointField> CML::mappedPatchBase::samplePoints
 ) const
 {
     tmp<pointField> tfld(new pointField(fc));
-    pointField& fld = tfld();
+    pointField& fld = tfld.ref();
 
     switch (offsetMode_)
     {

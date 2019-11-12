@@ -43,7 +43,7 @@ correction
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr =
         linearInterpolate(vf);
 
-    Field<Type>& sfCorr = tsfCorr().internalField();
+    Field<Type>& sfCorr = tsfCorr.ref().internalField();
 
     const pointField& points = mesh.points();
     const pointField& C = mesh.C().internalField();
@@ -99,7 +99,7 @@ correction
 
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& bSfCorr = tsfCorr().boundaryField();
+        GeometricBoundaryField& bSfCorr = tsfCorr.ref().boundaryField();
 
     forAll(bSfCorr, patchi)
     {

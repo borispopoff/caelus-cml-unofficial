@@ -1175,7 +1175,7 @@ CML::tmp<CML::fvPatchField<Type>> CML::fvPatchField<Type>::New
         // Check if constraint type override and store patchType if so
         if ((patchTypeCstrIter != patchConstructorTablePtr_->end()))
         {
-            tfvp().patchType() = actualPatchType;
+            tfvp.ref().patchType() = actualPatchType;
         }
         return tfvp;
     }
