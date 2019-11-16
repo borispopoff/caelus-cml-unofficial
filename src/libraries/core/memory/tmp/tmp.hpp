@@ -32,7 +32,7 @@ SourceFiles
 #define tmp_H
 
 #include "refCount.hpp"
-#include <cstddef>
+#include "word.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -98,6 +98,11 @@ public:
             //  ie, it is a reference or a temporary that has been allocated
             inline bool valid() const;
 
+            //- Return the type name of the tmp
+            //  constructed from the type name of T
+            inline word typeName() const;
+
+
         // Edit
 
             //- Return non-const reference or generate a fatal error
@@ -136,7 +141,7 @@ public:
         //- Assignment to pointer changing this tmp to a temporary T
         inline void operator=(T*);
 
-        //- Assignment transferring the temporary T to this tmp
+        //- Assignment transfering the temporary T to this tmp
         inline void operator=(const tmp<T>&);
 };
 
