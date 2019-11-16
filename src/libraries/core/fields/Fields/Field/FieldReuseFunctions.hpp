@@ -63,11 +63,6 @@ public:
     {
         return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
     }
-
-    static void clear(const tmp<Field<Type1>>& tf1)
-    {
-        tf1.clear();
-    }
 };
 
 
@@ -103,16 +98,6 @@ public:
     {
         return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
     }
-
-    static void clear
-    (
-        const tmp<Field<Type1>>& tf1,
-        const tmp<Field<Type2>>& tf2
-    )
-    {
-        tf1.clear();
-        tf2.clear();
-    }
 };
 
 
@@ -136,16 +121,6 @@ public:
             return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
         }
     }
-
-    static void clear
-    (
-        const tmp<Field<Type1>>& tf1,
-        const tmp<Field<TypeR>>& tf2
-    )
-    {
-        tf1.clear();
-        tf2.clear();
-    }
 };
 
 
@@ -168,16 +143,6 @@ public:
         {
             return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
         }
-    }
-
-    static void clear
-    (
-        const tmp<Field<TypeR>>& tf1,
-        const tmp<Field<Type2>>& tf2
-    )
-    {
-        tf1.clear();
-        tf2.clear();
     }
 };
 
@@ -205,16 +170,6 @@ public:
         {
             return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
         }
-    }
-
-    static void clear
-    (
-        const tmp<Field<TypeR>>& tf1,
-        const tmp<Field<TypeR>>& tf2
-    )
-    {
-        tf1.clear();
-        tf2.clear();
     }
 };
 
