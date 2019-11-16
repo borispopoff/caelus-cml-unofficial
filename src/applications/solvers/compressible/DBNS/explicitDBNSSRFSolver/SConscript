@@ -42,7 +42,7 @@ if ostype == 'windows':
 else:
     append_args = dict(CPPPATH = ["../explicitDBNSSolver"])
 
-prepend_args = {}
+prepend_args = {'CXXFLAGS' : ['-DCONST_TMP']}
 if ostype == 'windows':
    prepend_args = {'LINKFLAGS' :
             '-u compressibleRASModelsLoad -u compressibleLESModelsLoad -u compressibleVLESModelsLoad -u turbulenceDerivedFvPatchFieldsLoad'

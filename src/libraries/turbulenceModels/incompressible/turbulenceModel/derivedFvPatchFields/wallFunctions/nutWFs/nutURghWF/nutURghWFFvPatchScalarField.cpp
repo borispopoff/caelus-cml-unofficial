@@ -50,10 +50,10 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcNut() const
     const scalarField magUp(mag(Uw.patchInternalField() - Uw));
 
     tmp<scalarField> tyPlus = calcYPlus(magUp);
-    scalarField& yPlus = tyPlus();
+    scalarField& yPlus = tyPlus.ref();
 
     tmp<scalarField> tnutw(new scalarField(patch().size(), 0.0));
-    scalarField& nutw = tnutw();
+    scalarField& nutw = tnutw.ref();
 
     forAll(yPlus, facei)
     {
@@ -83,7 +83,7 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::calcYPlus
     const scalarField& nuw = nu.boundaryField()[patchi];
 
     tmp<scalarField> tyPlus(new scalarField(patch().size(), 0.0));
-    scalarField& yPlus = tyPlus();
+    scalarField& yPlus = tyPlus.ref();
 
     if (roughnessHeight_ > 0.0)
     {

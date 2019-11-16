@@ -108,10 +108,7 @@ public:
 
     static void clear(const tmp<DimensionedField<TypeR, GeoMesh>>& tdf1)
     {
-        if (tdf1.isTmp())
-        {
-            tdf1.ptr();
-        }
+        tdf1.clear();
     }
 };
 
@@ -208,10 +205,7 @@ public:
     )
     {
         tdf1.clear();
-        if (tdf2.isTmp())
-        {
-            tdf2.ptr();
-        }
+        tdf2.clear();
     }
 };
 
@@ -263,10 +257,7 @@ public:
         const tmp<DimensionedField<Type2, GeoMesh>>& tdf2
     )
     {
-        if (tdf1.isTmp())
-        {
-            tdf1.ptr();
-        }
+        tdf1.clear();
         tdf2.clear();
     }
 };
@@ -327,16 +318,8 @@ public:
         const tmp<DimensionedField<TypeR, GeoMesh>>& tdf2
     )
     {
-        if (tdf1.isTmp())
-        {
-            tdf1.ptr();
-            tdf2.clear();
-        }
-        else if (tdf2.isTmp())
-        {
-            tdf1.clear();
-            tdf2.ptr();
-        }
+        tdf1.clear();
+        tdf2.clear();
     }
 };
 

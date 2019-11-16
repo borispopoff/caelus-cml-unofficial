@@ -531,11 +531,11 @@ void kOmegaSST::correct()
     + fvOptions(omega_)
     );
 
-    omegaEqn().relax();
-    fvOptions.constrain(omegaEqn());
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().relax();
+    fvOptions.constrain(omegaEqn.ref());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
 
-    mesh_.updateFvMatrix(omegaEqn());
+    mesh_.updateFvMatrix(omegaEqn.ref());
 
     solve(omegaEqn);
     fvOptions.correct(omega_);
@@ -553,9 +553,9 @@ void kOmegaSST::correct()
       + fvOptions(k_)
     );
 
-    kEqn().relax();
-    fvOptions.constrain(kEqn());
-    mesh_.updateFvMatrix(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
+    mesh_.updateFvMatrix(kEqn.ref());
 
     solve(kEqn);
     fvOptions.correct(k_);

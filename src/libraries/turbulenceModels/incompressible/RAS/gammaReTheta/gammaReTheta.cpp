@@ -732,9 +732,9 @@ void gammaReTheta::correct()
       + fvOptions(omega_)
     );
 
-    omegaEqn().relax();
-    fvOptions.constrain(omegaEqn());
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().relax();
+    fvOptions.constrain(omegaEqn.ref());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
 
     solve(omegaEqn);
     fvOptions.correct(omega_);
@@ -772,8 +772,8 @@ void gammaReTheta::correct()
       + fvOptions(k_)
     );
     
-    kEqn().relax();
-    fvOptions.constrain(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
     solve(kEqn);
     fvOptions.correct(k_);
     bound(k_, kMin_);
@@ -822,8 +822,8 @@ void gammaReTheta::correct()
       + fvOptions(ReThetaTilda_)
     );
 
-    ReThetaTildaEqn().relax();
-    fvOptions.constrain(ReThetaTildaEqn());
+    ReThetaTildaEqn.ref().relax();
+    fvOptions.constrain(ReThetaTildaEqn.ref());
     fvOptions.correct(ReThetaTilda_);
     solve(ReThetaTildaEqn);
 
@@ -854,8 +854,8 @@ void gammaReTheta::correct()
       + fvOptions(intermittency_)
     );
 
-    intermittencyEqn().relax();
-    fvOptions.constrain(intermittencyEqn());
+    intermittencyEqn.ref().relax();
+    fvOptions.constrain(intermittencyEqn.ref());
     solve(intermittencyEqn);
     fvOptions.correct(intermittency_);
     bound(intermittency_,scalar(0));

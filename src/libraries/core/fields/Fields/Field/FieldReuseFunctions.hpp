@@ -144,10 +144,7 @@ public:
     )
     {
         tf1.clear();
-        if (tf2.isTmp())
-        {
-            tf2.ptr();
-        }
+        tf2.clear();
     }
 };
 
@@ -179,10 +176,7 @@ public:
         const tmp<Field<Type2>>& tf2
     )
     {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
-        }
+        tf1.clear();
         tf2.clear();
     }
 };
@@ -219,16 +213,8 @@ public:
         const tmp<Field<TypeR>>& tf2
     )
     {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
-            tf2.clear();
-        }
-        else if (tf2.isTmp())
-        {
-            tf1.clear();
-            tf2.ptr();
-        }
+        tf1.clear();
+        tf2.clear();
     }
 };
 

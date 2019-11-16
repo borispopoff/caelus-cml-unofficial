@@ -33,42 +33,11 @@ inline CML::tmp<T>::tmp(T* tPtr)
 
 
 template<class T>
-inline CML::tmp<T>::tmp(T&& tRef)
-:
-    type_(REF),
-    ptr_(&tRef)
-{}
-
-
-template<class T>
 inline CML::tmp<T>::tmp(const T& tRef)
 :
     type_(CONST_REF),
     ptr_(const_cast<T*>(&tRef))
 {}
-
-
-template<class T>
-inline CML::tmp<T>::tmp(tmp<T>&& t)
-:
-    type_(t.type_),
-    ptr_(t.ptr_)
-{
-    if (isTmp())
-    {
-        if (ptr_)
-        {
-            ptr_->operator++();
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Attempted copy of a deallocated temporary"
-                << " of type " << typeid(T).name()
-                << abort(FatalError);
-        }
-    }
-}
 
 
 template<class T>
@@ -90,10 +59,6 @@ inline CML::tmp<T>::tmp(const tmp<T>& t)
                 << " of type " << typeid(T).name()
                 << abort(FatalError);
         }
-    }
-    else if (type_ == REF)
-    {
-        type_ = CONST_REF;
     }
 }
 
@@ -133,7 +98,7 @@ inline CML::tmp<T>::~tmp()
 {
     if (isTmp() && ptr_)
     {
-        if (ptr_->okToDelete())
+        if (ptr_->unique())
         {
             delete ptr_;
             ptr_ = 0;
@@ -183,13 +148,10 @@ inline T& CML::tmp<T>::ref()
 
         return *ptr_;
     }
-    else if (type_ == REF)
-    {
-        return *ptr_;
-    }
     else
     {
-        FatalErrorInFunction << "Const object cast to non-const"
+        FatalErrorInFunction
+            << "Attempt to acquire non-const reference to const object"
             << abort(FatalError);
         return *ptr_;
     }
@@ -201,19 +163,25 @@ inline T* CML::tmp<T>::ptr() const
 {
     if (isTmp())
     {
-         if (!ptr_)
-         {
-             FatalErrorInFunction
-                 << "Temporary of type " << typeid(T).name() << " deallocated"
-                 << abort(FatalError);
-         }
+        if (!ptr_)
+        {
+            FatalErrorInFunction
+                << "Temporary of type " << typeid(T).name() << " deallocated"
+                << abort(FatalError);
+        }
 
-         T* ptr = ptr_;
-         ptr_ = 0;
+        if (!ptr_->unique())
+        {
+            FatalErrorInFunction
+                << "Attempt to acquire pointer to object referred to"
+                   " by multiple 'tmp's"
+                << abort(FatalError);
+        }
 
-         ptr->resetRefCount();
+        T* ptr = ptr_;
+        ptr_ = 0;
 
-         return ptr;
+        return ptr;
     }
     else
     {
@@ -225,10 +193,18 @@ inline T* CML::tmp<T>::ptr() const
 template<class T>
 inline void CML::tmp<T>::clear() const
 {
-    if (isTmp() && ptr_)  // Skip this bit:  && ptr_->okToDelete())
+    if (isTmp() && ptr_)
     {
-        delete ptr_;
-        ptr_ = 0;
+        if (ptr_->unique())
+        {
+            delete ptr_;
+            ptr_ = 0;
+        }
+        else
+        {
+            ptr_->operator--();
+            ptr_ = 0;
+        }
     }
 }
 
@@ -303,10 +279,6 @@ inline T* CML::tmp<T>::operator->()
 
          return ptr_;
     }
-    else if (type_ == REF)
-    {
-        return ptr_;
-    }
     else
     {
         FatalErrorInFunction << "Const object cast to non-const"
@@ -342,7 +314,7 @@ inline void CML::tmp<T>::operator=(T* tPtr)
 {
     if (isTmp() && ptr_)
     {
-        if (ptr_->okToDelete())
+        if (ptr_->unique())
         {
             delete ptr_;
             ptr_ = 0;
@@ -373,7 +345,7 @@ inline void CML::tmp<T>::operator=(const tmp<T>& t)
 {
     if (isTmp() && ptr_)
     {
-        if (ptr_->okToDelete())
+        if (ptr_->unique())
         {
             delete ptr_;
             ptr_ = 0;
@@ -397,8 +369,8 @@ inline void CML::tmp<T>::operator=(const tmp<T>& t)
         }
 
         ptr_ = t.ptr_;
-        const_cast<tmp<T>&>(t).ptr_ = 0;
-        ptr_->resetRefCount();
+
+        ptr_->operator++();
     }
     else
     {

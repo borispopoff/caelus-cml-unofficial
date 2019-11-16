@@ -445,7 +445,7 @@ void kOmegaSSTSAS::correct()
         )
     );
 
-    volScalarField& LvK = tmpLvK();
+    volScalarField& LvK = tmpLvK.ref();
     
     tmp<volScalarField> tmpDelta 
     ( 
@@ -470,7 +470,7 @@ void kOmegaSSTSAS::correct()
     );
 
     // Cell size
-    volScalarField& delta = tmpDelta(); 
+    volScalarField& delta = tmpDelta.ref(); 
     scalarField& iDelta = delta.internalField();
     iDelta = pow(this->mesh_.V(), 1/3);
 
@@ -519,11 +519,11 @@ void kOmegaSSTSAS::correct()
       + fvOptions(omega_)
     );
 
-    omegaEqn().relax();
-    fvOptions.constrain(omegaEqn());
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().relax();
+    fvOptions.constrain(omegaEqn.ref());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
 
-    mesh_.updateFvMatrix(omegaEqn());
+    mesh_.updateFvMatrix(omegaEqn.ref());
     solve(omegaEqn);
     fvOptions.correct(omega_);
     bound(omega_, omegaMin_);
@@ -540,9 +540,9 @@ void kOmegaSSTSAS::correct()
       + fvOptions(k_)
     );
 
-    kEqn().relax();
-    fvOptions.constrain(kEqn());
-    mesh_.updateFvMatrix(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
+    mesh_.updateFvMatrix(kEqn.ref());
     solve(kEqn);
     fvOptions.correct(k_);
     bound(k_, kMin_);

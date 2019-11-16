@@ -587,9 +587,9 @@ void SpalartAllmarasVLES::correct()
       + fvOptions(nuTilda_)
     );
 
-    nuTildaEqn().relax();
-    fvOptions.constrain(nuTildaEqn());
-    mesh_.updateFvMatrix(nuTildaEqn());
+    nuTildaEqn.ref().relax();
+    fvOptions.constrain(nuTildaEqn.ref());
+    mesh_.updateFvMatrix(nuTildaEqn.ref());
     solve(nuTildaEqn);
     fvOptions.correct(nuTilda_);
     bound(nuTilda_, dimensionedScalar("0", nuTilda_.dimensions(), 0.0));

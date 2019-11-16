@@ -274,7 +274,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::source
     checkApplied();
 
     tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(field, ds));
-    fvMatrix<Type>& mtx = tmtx();
+    fvMatrix<Type>& mtx = tmtx.ref();
 
     forAll(*this, i)
     {
@@ -353,7 +353,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
     );
 
     tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(field, ds));
-    fvMatrix<Type>& mtx = tmtx();
+    fvMatrix<Type>& mtx = tmtx.ref();
 
     forAll(*this, i)
     {
@@ -414,7 +414,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::fv::optionList::operator()
     );
 
     tmp<fvMatrix<Type>> tmtx(new fvMatrix<Type>(field, ds));
-    fvMatrix<Type>& mtx = tmtx();
+    fvMatrix<Type>& mtx = tmtx.ref();
 
     forAll(*this, i)
     {

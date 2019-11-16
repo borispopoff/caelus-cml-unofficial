@@ -118,9 +118,9 @@ void oneEqEddy::correct(const tmp<volTensorField>& tgradU)
       + fvOptions(rho_, k_)
     );
 
-    kEqn().relax();
-    fvOptions.constrain(kEqn());
-    kEqn().solve();
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
+    kEqn.ref().solve();
     fvOptions.correct(k_);
 
     bound(k_, kMin_);

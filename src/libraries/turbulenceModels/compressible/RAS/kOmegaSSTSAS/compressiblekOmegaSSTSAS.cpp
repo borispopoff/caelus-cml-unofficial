@@ -467,7 +467,7 @@ void kOmegaSSTSAS::correct()
         )
     );
 
-    volScalarField& LvK = tmpLvK();
+    volScalarField& LvK = tmpLvK.ref();
     
     tmp<volScalarField> tmpDelta 
     ( 
@@ -492,7 +492,7 @@ void kOmegaSSTSAS::correct()
     );
 
     // Cell size
-    volScalarField& delta = tmpDelta(); 
+    volScalarField& delta = tmpDelta.ref(); 
     scalarField& iDelta = delta.internalField();
     iDelta = pow(this->mesh_.V(), 1/3);
 
@@ -545,12 +545,12 @@ void kOmegaSSTSAS::correct()
       + fvOptions(rho_, omega_)
     );
 
-    omegaEqn().relax();
-    fvOptions.constrain(omegaEqn());
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().relax();
+    fvOptions.constrain(omegaEqn.ref());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
 
     solve(omegaEqn);
-    fvOptions.constrain(omegaEqn());
+    fvOptions.constrain(omegaEqn.ref());
     bound(omega_, omegaMin_);
 
     // Turbulent kinetic energy equation
@@ -566,8 +566,8 @@ void kOmegaSSTSAS::correct()
       + fvOptions(rho_, k_)
     );
 
-    kEqn().relax();
-    fvOptions.constrain(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
     solve(kEqn);
     fvOptions.correct(k_);
     bound(k_, kMin_);

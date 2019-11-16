@@ -405,7 +405,7 @@ FieldField<Field, Type>::component
             NewCalculatedType(*this)
     );
 
-    ::CML::component(Component(), *this, d);
+    ::CML::component(Component.ref(), *this, d);
 
     return Component;
 }
@@ -447,7 +447,7 @@ tmp<FieldField<Field, Type>> FieldField<Field, Type>::T() const
         FieldField<Field, Type>::NewCalculatedType(*this)
     );
 
-    ::CML::T(transpose(), *this);
+    ::CML::T(transpose.ref(), *this);
     return transpose;
 }
 

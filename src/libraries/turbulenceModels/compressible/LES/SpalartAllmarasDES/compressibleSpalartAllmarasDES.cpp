@@ -366,9 +366,9 @@ void SpalartAllmarasDES::correct(const tmp<volTensorField>& gradU)
       + fvOptions(rho(), nuTilda_)
     );
 
-    nuTildaEqn().relax();
-    fvOptions.constrain(nuTildaEqn());
-    nuTildaEqn().solve();
+    nuTildaEqn.ref().relax();
+    fvOptions.constrain(nuTildaEqn.ref());
+    nuTildaEqn.ref().solve();
     fvOptions.correct(nuTilda_);
 
     bound(nuTilda_, dimensionedScalar("zero", nuTilda_.dimensions(), 0.0));

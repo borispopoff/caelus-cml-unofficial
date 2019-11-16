@@ -440,11 +440,11 @@ void realizableVLESKE::correct()
       + fvOptions(epsilon_)
     );
 
-    epsEqn().relax();
-    fvOptions.constrain(epsEqn());
-    epsEqn().boundaryManipulate(epsilon_.boundaryField());
+    epsEqn.ref().relax();
+    fvOptions.constrain(epsEqn.ref());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryField());
 
-    mesh_.updateFvMatrix(epsEqn());
+    mesh_.updateFvMatrix(epsEqn.ref());
     solve(epsEqn);
     fvOptions.correct(epsilon_);
     bound(epsilon_, epsilonMin_);
@@ -462,9 +462,9 @@ void realizableVLESKE::correct()
       + fvOptions(k_)
     );
 
-    kEqn().relax();
-    fvOptions.constrain(kEqn());
-    mesh_.updateFvMatrix(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
+    mesh_.updateFvMatrix(kEqn.ref());
     solve(kEqn);
     fvOptions.correct(k_);
     bound(k_, kMin_);

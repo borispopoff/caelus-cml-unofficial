@@ -83,7 +83,7 @@
         if (alphaApplyPrevCorr && talphaPhiCorr0.valid())
         {
             Info<< "Applying the previous iteration compression flux" << endl;
-            MULES::correct(alpha1, alphaPhi, talphaPhiCorr0(), 1, 0);
+            MULES::correct(alpha1, alphaPhi, talphaPhiCorr0.ref(), 1, 0);
 
             alphaPhi += talphaPhiCorr0();
         }
@@ -128,7 +128,7 @@
             tmp<surfaceScalarField> talphaPhiCorr(talphaPhiUn() - alphaPhi);
             volScalarField alpha10("alpha10", alpha1);
 
-            MULES::correct(alpha1, talphaPhiUn(), talphaPhiCorr(), 1, 0);
+            MULES::correct(alpha1, talphaPhiUn.ref(), talphaPhiCorr.ref(), 1, 0);
 
             // Under-relax the correction for all but the 1st corrector
             if (aCorr == 0)

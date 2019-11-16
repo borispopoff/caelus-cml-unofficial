@@ -163,10 +163,10 @@ void dynOneEqEddy::correct(const tmp<volTensorField>& gradU)
      + fvOptions(k_)
     );
 
-    kEqn().relax();
-    fvOptions.constrain(kEqn());
-    mesh_.updateFvMatrix(kEqn());
-    kEqn().solve();
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
+    mesh_.updateFvMatrix(kEqn.ref());
+    kEqn.ref().solve();
     fvOptions.correct(k_);
     bound(k_, kMin_);
 

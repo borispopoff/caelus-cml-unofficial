@@ -223,10 +223,7 @@ public:
         const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf1
     )
     {
-        if (reusable(tgf1))
-        {
-            tgf1.ptr();
-        }
+        tgf1.clear();
     }
 };
 
@@ -339,10 +336,7 @@ public:
     )
     {
         tgf1.clear();
-        if (tgf2.isTmp())
-        {
-            tgf2.ptr();
-        }
+        tgf2.clear();
     }
 };
 
@@ -400,10 +394,7 @@ public:
         const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2
     )
     {
-        if (tgf1.isTmp())
-        {
-            tgf1.ptr();
-        }
+        tgf1.clear();
         tgf2.clear();
     }
 };
@@ -464,16 +455,8 @@ public:
         const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf2
     )
     {
-        if (tgf1.isTmp())
-        {
-            tgf1.ptr();
-            tgf2.clear();
-        }
-        else if (tgf2.isTmp())
-        {
-            tgf1.clear();
-            tgf2.ptr();
-        }
+        tgf1.clear();
+        tgf2.clear();
     }
 };
 

@@ -469,7 +469,7 @@ baffleThickness() const
         (
             new scalarField(nbrField.baffleThickness())
         );
-        scalarField& thickness = tthickness();
+        scalarField& thickness = tthickness.ref();
         mapDist.distribute(thickness);
         return tthickness;
     }
@@ -497,7 +497,7 @@ tmp<scalarField> thermalBaffle1DFvPatchScalarField<solidType>::Qs() const
         );
 
         tmp<scalarField> tQs(new scalarField(nbrField.Qs()));
-        scalarField& Qs = tQs();
+        scalarField& Qs = tQs.ref();
         mapDist.distribute(Qs);
         return tQs;
     }

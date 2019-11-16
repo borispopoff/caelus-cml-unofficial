@@ -50,7 +50,7 @@ tmp<scalarField> nutkAtmRoughWallFunctionFvPatchScalarField::calcNut() const
     const scalar Cmu25 = pow025(Cmu_);
 
     tmp<scalarField> tnutw(new scalarField(*this));
-    scalarField& nutw = tnutw();
+    scalarField& nutw = tnutw.ref();
 
     forAll(nutw, facei)
     {

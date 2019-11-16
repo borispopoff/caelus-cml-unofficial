@@ -2069,7 +2069,7 @@ CML::fvMatrix<Type>::R() const
         )
     );
 
-    GeometricField<Type, fvPatchField, volMesh>& Rphi = tRphi();
+    GeometricField<Type, fvPatchField, volMesh>& Rphi = tRphi.ref();
 
     Rphi.internalField() = this->residual();
     Rphi.correctBoundaryConditions();

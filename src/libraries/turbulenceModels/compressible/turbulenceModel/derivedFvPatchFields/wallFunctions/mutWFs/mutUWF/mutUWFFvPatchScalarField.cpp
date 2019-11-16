@@ -49,7 +49,7 @@ tmp<scalarField> mutUWallFunctionFvPatchScalarField::calcYPlus
     const fvPatchScalarField& muw = turbModel.mu().boundaryField()[patchi];
 
     tmp<scalarField> tyPlus(new scalarField(patch().size(), 0.0));
-    scalarField& yPlus = tyPlus();
+    scalarField& yPlus = tyPlus.ref();
 
     forAll(yPlus, facei)
     {
@@ -87,10 +87,10 @@ tmp<scalarField> mutUWallFunctionFvPatchScalarField::calcMut() const
     const fvPatchScalarField& muw = turbModel.mu().boundaryField()[patchi];
 
     tmp<scalarField> tyPlus = calcYPlus(magUp);
-    scalarField& yPlus = tyPlus();
+    scalarField& yPlus = tyPlus.ref();
 
     tmp<scalarField> tmutw(new scalarField(patch().size(), 0.0));
-    scalarField& mutw = tmutw();
+    scalarField& mutw = tmutw.ref();
 
     forAll(yPlus, facei)
     {

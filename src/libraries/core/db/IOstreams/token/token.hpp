@@ -150,7 +150,7 @@ public:
                 empty_(false)
             {}
 
-            //- Disallow default bitwise copy construct
+            //- Disallow default bitwise copy construction
             compound(const compound&) = delete;
 
 
@@ -231,7 +231,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- The token type
         tokenType type_;
@@ -263,7 +263,7 @@ private:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -302,7 +302,7 @@ public:
     inline ~token();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -363,7 +363,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         // Assignment
 
@@ -406,7 +406,7 @@ public:
             inline bool operator!=(const doubleScalar) const;
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, token&);
         friend Ostream& operator<<(Ostream&, const token&);
@@ -461,7 +461,7 @@ inline void token::clear()
     }
     else if (type_ == COMPOUND)
     {
-        if (compoundTokenPtr_->okToDelete())
+        if (compoundTokenPtr_->unique())
         {
             delete compoundTokenPtr_;
         }

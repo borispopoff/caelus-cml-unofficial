@@ -172,7 +172,7 @@ tmp<scalarField> RASModel::yPlus(const label patchNo, const scalar Cmu) const
     const fvPatch& curPatch = mesh_.boundary()[patchNo];
 
     tmp<scalarField> tYp(new scalarField(curPatch.size()));
-    scalarField& Yp = tYp();
+    scalarField& Yp = tYp.ref();
 
     if (isA<wallFvPatch>(curPatch))
     {

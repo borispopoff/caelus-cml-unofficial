@@ -284,9 +284,9 @@ void kEpsilon::correct()
       + fvOptions(rho_, epsilon_)
     );
 
-    epsEqn().relax();
-    fvOptions.constrain(epsEqn());
-    epsEqn().boundaryManipulate(epsilon_.boundaryField());
+    epsEqn.ref().relax();
+    fvOptions.constrain(epsEqn.ref());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryField());
 
     solve(epsEqn);
     fvOptions.correct(epsilon_);
@@ -307,8 +307,8 @@ void kEpsilon::correct()
       + fvOptions(rho_, k_)
     );
 
-    kEqn().relax();
-    fvOptions.constrain(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
     solve(kEqn);
     fvOptions.correct(k_);
     bound(k_, kMin_);

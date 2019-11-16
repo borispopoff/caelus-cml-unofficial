@@ -673,9 +673,9 @@ void kOmegaSSTCSModelVLES::correct()
       + fvOptions(rho_, omega_)
     );
 
-    omegaEqn().relax();
-    fvOptions.constrain(omegaEqn());
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().relax();
+    fvOptions.constrain(omegaEqn.ref());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
 
     solve(omegaEqn);
     fvOptions.correct(omega_);
@@ -694,8 +694,8 @@ void kOmegaSSTCSModelVLES::correct()
       + fvOptions(rho_, k_)
     );
 
-    kEqn().relax();
-    fvOptions.constrain(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
     solve(kEqn);
     fvOptions.correct(k_);
     bound(k_, kMin_);

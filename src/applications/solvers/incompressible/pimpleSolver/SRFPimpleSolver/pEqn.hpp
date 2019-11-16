@@ -1,9 +1,9 @@
-volScalarField rAUrel(1.0/UrelEqn().A());
-Urel = rAUrel*UrelEqn().H();
+volScalarField rAUrel(1.0/UrelEqn.A());
+Urel = rAUrel*UrelEqn.H();
 
 if (pimple.nCorrPISO() <= 1)
 {
-    UrelEqn.clear();
+    tUrelEqn.clear();
 }
 
 phi = (fvc::interpolate(Urel) & mesh.Sf())

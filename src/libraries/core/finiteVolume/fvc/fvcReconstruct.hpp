@@ -142,8 +142,8 @@ reconstruct
         return treconField;
     }
 
-    treconField() = inv(surfaceSum(mesh.Sf()*faceVols))&surfaceSum(faceVols*ssf);
-    treconField().correctBoundaryConditions();
+    treconField.ref() = inv(surfaceSum(mesh.Sf()*faceVols))&surfaceSum(faceVols*ssf);
+    treconField.ref().correctBoundaryConditions();
 
     return treconField;
 }

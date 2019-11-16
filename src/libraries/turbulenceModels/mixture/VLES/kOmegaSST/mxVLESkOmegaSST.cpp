@@ -600,11 +600,11 @@ void VLESKOmegaSST::correct()
       + 2*(1-F1)*rho_*alphaOmega2_*(fvc::grad(k_)&fvc::grad(omega_))/omega_
     );
 
-    omegaEqn().relax();
+    omegaEqn.ref().relax();
 
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
     
-    mesh_.updateFvMatrix(omegaEqn());
+    mesh_.updateFvMatrix(omegaEqn.ref());
     solve(omegaEqn);
     bound(omega_, omegaMin_);
 
@@ -620,8 +620,8 @@ void VLESKOmegaSST::correct()
       - fvm::Sp(betaStar_*rho_*omega_, k_)
     );
 
-    kEqn().relax();
-    mesh_.updateFvMatrix(kEqn());
+    kEqn.ref().relax();
+    mesh_.updateFvMatrix(kEqn.ref());
     solve(kEqn);
     bound(k_, kMin_);
 

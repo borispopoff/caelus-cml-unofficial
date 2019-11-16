@@ -523,11 +523,11 @@ void kOmegaSST::correct()
       + (1-F1)*CDkOmega
     );
 
-    omegaEqn().relax();
+    omegaEqn.ref().relax();
 
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
 
-    mesh_.updateFvMatrix(omegaEqn());
+    mesh_.updateFvMatrix(omegaEqn.ref());
 
     solve(omegaEqn);
     bound(omega_, omegaMin_);
@@ -544,9 +544,9 @@ void kOmegaSST::correct()
       - fvm::Sp(betaStar_*rho_*omega_, k_)
     );
 
-    kEqn().relax();
+    kEqn.ref().relax();
 
-    mesh_.updateFvMatrix(kEqn());
+    mesh_.updateFvMatrix(kEqn.ref());
 
     solve(kEqn);
     bound(k_, kMin_);
