@@ -190,17 +190,16 @@ tmp<DimensionedField<scalar, GeoMesh>> stabilise
 {
     const DimensionedField<scalar, GeoMesh>& dsf = tdsf();
 
-    tmp<DimensionedField<scalar, GeoMesh>> tRes =
-        reuseTmpDimensionedField<scalar, scalar, GeoMesh>::New
-        (
-            tdsf,
-            "stabilise(" + dsf.name() + ',' + ds.name() + ')',
-            dsf.dimensions() + ds.dimensions()
-        );
+    tmp<DimensionedField<scalar, GeoMesh>> tRes = New
+    (
+        tdsf,
+        "stabilise(" + dsf.name() + ',' + ds.name() + ')',
+        dsf.dimensions() + ds.dimensions()
+    );
 
     stabilise(tRes.ref().field(), dsf.field(), ds.value());
 
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf);
+    tdsf.clear();
 
     return tRes;
 }
@@ -283,17 +282,16 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             << exit(FatalError);
     }
 
-    tmp<DimensionedField<scalar, GeoMesh>> tPow =
-        reuseTmpDimensionedField<scalar, scalar, GeoMesh>::New
-        (
-            tdsf1,
-            "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
-            dimless
-        );
+    tmp<DimensionedField<scalar, GeoMesh>> tPow = New
+    (
+        tdsf1,
+        "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
+        dimless
+    );
 
     pow(tPow.ref().field(), dsf1.field(), dsf2.field());
 
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf1);
+    tdsf1.clear();
 
     return tPow;
 }
@@ -322,17 +320,16 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             << exit(FatalError);
     }
 
-    tmp<DimensionedField<scalar, GeoMesh>> tPow =
-        reuseTmpDimensionedField<scalar, scalar, GeoMesh>::New
-        (
-            tdsf2,
-            "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
-            dimless
-        );
+    tmp<DimensionedField<scalar, GeoMesh>> tPow = New
+    (
+        tdsf2,
+        "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
+        dimless
+    );
 
     pow(tPow.ref().field(), dsf1.field(), dsf2.field());
 
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf2);
+    tdsf2.clear();
 
     return tPow;
 }
@@ -373,11 +370,8 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 
     pow(tPow.ref().field(), dsf1.field(), dsf2.field());
 
-    reuseTmpTmpDimensionedField<scalar, scalar, scalar, scalar, GeoMesh>::clear
-    (
-        tdsf1,
-        tdsf2
-    );
+    tdsf1.clear();
+    tdsf2.clear();
 
     return tPow;
 }
@@ -434,17 +428,16 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 
     const DimensionedField<scalar, GeoMesh>& dsf = tdsf();
 
-    tmp<DimensionedField<scalar, GeoMesh>> tPow =
-        reuseTmpDimensionedField<scalar, scalar, GeoMesh>::New
-        (
-            tdsf,
-            "pow(" + dsf.name() + ',' + ds.name() + ')',
-            pow(dsf.dimensions(), ds)
-        );
+    tmp<DimensionedField<scalar, GeoMesh>> tPow = New
+    (
+        tdsf,
+        "pow(" + dsf.name() + ',' + ds.name() + ')',
+        pow(dsf.dimensions(), ds)
+    );
 
     pow(tPow.ref().field(), dsf.field(), ds.value());
 
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf);
+    tdsf.clear();
 
     return tPow;
 }
@@ -537,17 +530,16 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             << exit(FatalError);
     }
 
-    tmp<DimensionedField<scalar, GeoMesh>> tPow =
-        reuseTmpDimensionedField<scalar, scalar, GeoMesh>::New
-        (
-            tdsf,
-            "pow(" + ds.name() + ',' + dsf.name() + ')',
-            dimless
-        );
+    tmp<DimensionedField<scalar, GeoMesh>> tPow = New
+    (
+        tdsf,
+        "pow(" + ds.name() + ',' + dsf.name() + ')',
+        dimless
+    );
 
     pow(tPow.ref().field(), ds.value(), dsf.field());
 
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf);
+    tdsf.clear();
 
     return tPow;
 }
@@ -864,7 +856,7 @@ UNARY_FUNCTION(scalar, scalar, y1, trans)
 #define BesselFunc(func)                                                       \
                                                                                \
 template<class GeoMesh>                                                        \
-tmp<DimensionedField<scalar, GeoMesh>> func                                   \
+tmp<DimensionedField<scalar, GeoMesh>> func                                    \
 (                                                                              \
     const int n,                                                               \
     const DimensionedField<scalar, GeoMesh>& dsf                               \
@@ -877,7 +869,7 @@ tmp<DimensionedField<scalar, GeoMesh>> func                                   \
             << abort(FatalError);                                              \
     }                                                                          \
                                                                                \
-    tmp<DimensionedField<scalar, GeoMesh>> tFunc                              \
+    tmp<DimensionedField<scalar, GeoMesh>> tFunc                               \
     (                                                                          \
         new DimensionedField<scalar, GeoMesh>                                  \
         (                                                                      \
@@ -892,16 +884,16 @@ tmp<DimensionedField<scalar, GeoMesh>> func                                   \
         )                                                                      \
     );                                                                         \
                                                                                \
-    func(tFunc().field(), n, dsf.field());                                 \
+    func(tFunc.ref().field(), n, dsf.field());                                 \
                                                                                \
     return tFunc;                                                              \
 }                                                                              \
                                                                                \
 template<class GeoMesh>                                                        \
-tmp<DimensionedField<scalar, GeoMesh>> func                                   \
+tmp<DimensionedField<scalar, GeoMesh>> func                                    \
 (                                                                              \
     const int n,                                                               \
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf                        \
+    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf                         \
 )                                                                              \
 {                                                                              \
     const DimensionedField<scalar, GeoMesh>& dsf = tdsf();                     \
@@ -913,9 +905,9 @@ tmp<DimensionedField<scalar, GeoMesh>> func                                   \
             << abort(FatalError);                                              \
     }                                                                          \
                                                                                \
-    tmp<DimensionedField<scalar, GeoMesh>> tFunc                              \
+    tmp<DimensionedField<scalar, GeoMesh>> tFunc                               \
     (                                                                          \
-        reuseTmpDimensionedField<scalar, scalar, GeoMesh>::New                 \
+        New                                                                    \
         (                                                                      \
             tdsf,                                                              \
             #func "(" + name(n) + ',' + dsf.name() + ')',                      \
@@ -925,7 +917,7 @@ tmp<DimensionedField<scalar, GeoMesh>> func                                   \
                                                                                \
     func(tFunc.ref().field(), n, dsf.field());                                 \
                                                                                \
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf);            \
+    tdsf.clear();                                                              \
                                                                                \
     return tFunc;                                                              \
 }

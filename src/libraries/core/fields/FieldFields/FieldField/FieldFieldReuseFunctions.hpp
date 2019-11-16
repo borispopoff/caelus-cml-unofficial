@@ -72,11 +72,6 @@ public:
             FieldField<Field, TypeR>::NewCalculatedType(tf1())
         );
     }
-
-    static void clear(const tmp<FieldField<Field, Type1>>& tf1)
-    {
-        tf1.clear();
-    }
 };
 
 
@@ -101,11 +96,6 @@ public:
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
         }
-    }
-
-    static void clear(const tmp<FieldField<Field, TypeR>>& tf1)
-    {
-        tf1.clear();
     }
 };
 
@@ -133,16 +123,6 @@ public:
             FieldField<Field, TypeR>::NewCalculatedType(tf1())
         );
     }
-
-    static void clear
-    (
-        const tmp<FieldField<Field, Type1>>& tf1,
-        const tmp<FieldField<Field, Type2>>& tf2
-    )
-    {
-        tf1.clear();
-        tf2.clear();
-    }
 };
 
 
@@ -169,16 +149,6 @@ public:
             );
         }
     }
-
-    static void clear
-    (
-        const tmp<FieldField<Field, Type1>>& tf1,
-        const tmp<FieldField<Field, TypeR>>& tf2
-    )
-    {
-        tf1.clear();
-        tf2.clear();
-    }
 };
 
 
@@ -204,16 +174,6 @@ public:
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
         }
-    }
-
-    static void clear
-    (
-        const tmp<FieldField<Field, TypeR>>& tf1,
-        const tmp<FieldField<Field, Type2>>& tf2
-    )
-    {
-        tf1.clear();
-        tf2.clear();
     }
 };
 
@@ -244,16 +204,6 @@ public:
                 FieldField<Field, TypeR>::NewCalculatedType(tf1())
             );
         }
-    }
-
-    static void clear
-    (
-        const tmp<FieldField<Field, TypeR>>& tf1,
-        const tmp<FieldField<Field, TypeR>>& tf2
-    )
-    {
-        tf1.clear();
-        tf2.clear();
     }
 };
 

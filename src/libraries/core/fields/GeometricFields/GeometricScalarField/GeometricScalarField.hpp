@@ -502,7 +502,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
-        reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
+        New
         (
             tgsf,
             "pow(" + gsf.name() + ',' + ds.name() + ')',
@@ -512,7 +512,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 
     pow(tPow.ref(), gsf, ds);
 
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf);
+    tgsf.clear();
 
     return tPow;
 }
@@ -620,7 +620,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
-        reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New
+        New
         (
             tgsf,
             "pow(" + ds.name() + ',' + gsf.name() + ')',
@@ -630,7 +630,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
 
     pow(tPow.ref(), ds, gsf);
 
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf);
+    tgsf.clear();
 
     return tPow;
 }
@@ -1081,7 +1081,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> func                          \
                                                                                \
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tFunc                     \
     (                                                                          \
-        reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::New       \
+        New                                                                    \
         (                                                                      \
             tgsf,                                                              \
             #func "(" + gsf.name() + ')',                                      \
@@ -1091,8 +1091,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> func                          \
                                                                                \
     func(tFunc.ref(), n, gsf);                                                 \
                                                                                \
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>                \
-    ::clear(tgsf);                                                             \
+    tgsf.clear();                                                              \
                                                                                \
     return tFunc;                                                              \
 }

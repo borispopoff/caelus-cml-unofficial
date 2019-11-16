@@ -78,22 +78,22 @@ inline CML::tmp<T>::tmp(const tmp<T>& t, bool allowTransfer)
 {
     if (isTmp())
     {
-        if (allowTransfer)
+        if (ptr_)
         {
-            const_cast<tmp<T>&>(t).ptr_ = 0;
-        }
-        else
-        {
-            if (ptr_)
+            if (allowTransfer)
             {
-                ptr_->operator++();
+                t.ptr_ = 0;
             }
             else
             {
-                FatalErrorInFunction
-                    << "Attempted copy of a deallocated " << typeName()
-                    << abort(FatalError);
+                ptr_->operator++();
             }
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Attempted copy of a deallocated " << typeName()
+                << abort(FatalError);
         }
     }
 }

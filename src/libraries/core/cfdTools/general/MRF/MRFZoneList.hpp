@@ -219,8 +219,7 @@ CML::MRFZoneList::zeroFilter
     {
         tmp<surfaceScalarField> zphi
         (
-             reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
-            ::New
+            New
             (
                 tphi,
                 "zeroFilter(" + tphi().name() + ')',

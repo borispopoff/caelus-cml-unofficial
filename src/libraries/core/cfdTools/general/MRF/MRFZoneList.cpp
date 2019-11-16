@@ -218,19 +218,18 @@ CML::tmp<CML::surfaceScalarField> CML::MRFZoneList::relative
     {
         tmp<surfaceScalarField> rphi
         (
-            reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
-            ::New
+            New
             (
                 tphi,
                 "relative(" + tphi().name() + ')',
-                tphi().dimensions()
+                tphi().dimensions(),
+                true
             )
         );
 
         makeRelative(rphi.ref());
 
-        reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
-        ::clear(tphi);
+        tphi.clear();
 
         return rphi;
     }
@@ -249,10 +248,7 @@ CML::MRFZoneList::relative
 {
     if (size())
     {
-        tmp<FieldField<fvsPatchField, scalar>> rphi
-        (
-            reuseTmpFieldField<fvsPatchField, scalar, scalar>::New(tphi)
-        );
+        tmp<FieldField<fvsPatchField, scalar>> rphi(New(tphi, true));
 
         forAll(*this, i)
         {
@@ -279,7 +275,7 @@ CML::MRFZoneList::relative
 {
     if (size())
     {
-        tmp<Field<scalar>> rphi(New(tphi));
+        tmp<Field<scalar>> rphi(New(tphi, true));
 
         forAll(*this, i)
         {
@@ -335,13 +331,14 @@ CML::tmp<CML::surfaceScalarField> CML::MRFZoneList::absolute
 {
     if (size())
     {
-        tmp<surfaceScalarField> rphi      (
-            reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
-            ::New
+        tmp<surfaceScalarField> rphi
+        (
+            New
             (
                 tphi,
                 "absolute(" + tphi().name() + ')',
-                tphi().dimensions()
+                tphi().dimensions(),
+                true
             )
         );
 

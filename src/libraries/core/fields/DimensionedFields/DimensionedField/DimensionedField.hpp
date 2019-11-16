@@ -1104,7 +1104,7 @@ pow
 
     pow<Type, r, GeoMesh>(tPow.ref().field(), df.field());
 
-    reuseTmpDimensionedField<powProductType, Type, GeoMesh>::clear(tdf);
+    tdf.clear();
 
     return tPow;
 }
@@ -1153,7 +1153,7 @@ sqr(const tmp<DimensionedField<Type, GeoMesh>>& tdf)
 
     sqr(tSqr.ref().field(), df.field());
 
-    reuseTmpDimensionedField<outerProductType, Type, GeoMesh>::clear(tdf);
+    tdf.clear();
 
     return tSqr;
 }
@@ -1203,7 +1203,7 @@ tmp<DimensionedField<scalar, GeoMesh>> magSqr
 
     magSqr(tMagSqr().field(), df.field());
 
-    reuseTmpDimensionedField<scalar, Type, GeoMesh>::clear(tdf);
+    tdf.clear();
 
     return tMagSqr;
 }
@@ -1253,7 +1253,7 @@ tmp<DimensionedField<scalar, GeoMesh>> mag
 
     mag(tMag.ref().field(), df.field());
 
-    reuseTmpDimensionedField<scalar, Type, GeoMesh>::clear(tdf);
+    tdf.clear();
 
     return tMag;
 }
@@ -1312,7 +1312,7 @@ cmptAv(const tmp<DimensionedField<Type, GeoMesh>>& tdf)
 
     cmptAv(CmptAv.ref().field(), df.field());
 
-    reuseTmpDimensionedField<cmptType, Type, GeoMesh>::clear(tdf);
+    tdf.clear();
 
     return CmptAv;
 }
@@ -1442,7 +1442,7 @@ template<class Type1, class Type2, class GeoMesh>                              \
 tmp<DimensionedField<typename product<Type1, Type2>::type, GeoMesh>>           \
 operator op                                                                    \
 (                                                                              \
-    const tmp<DimensionedField<Type1, GeoMesh>>& tdf1,                        \
+    const tmp<DimensionedField<Type1, GeoMesh>>& tdf1,                         \
     const DimensionedField<Type2, GeoMesh>& df2                                \
 )                                                                              \
 {                                                                              \
@@ -1490,8 +1490,8 @@ operator op                                                                    \
                                                                                \
     CML::opFunc(tRes.ref().field(), df1.field(), df2.field());                 \
                                                                                \
-    reuseTmpTmpDimensionedField                                                \
-        <productType, Type1, Type1, Type2, GeoMesh>::clear(tdf1, tdf2);        \
+    tdf1.clear();                                                              \
+    tdf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -1560,7 +1560,7 @@ operator op                                                                    \
                                                                                \
     CML::opFunc(tRes.ref().field(), df1.field(), dvs.value());                 \
                                                                                \
-    reuseTmpDimensionedField<productType, Type, GeoMesh>::clear(tdf1);         \
+    tdf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -1639,7 +1639,7 @@ operator op                                                                    \
                                                                                \
     CML::opFunc(tRes.ref().field(), dvs.value(), df1.field());                 \
                                                                                \
-    reuseTmpDimensionedField<productType, Type, GeoMesh>::clear(tdf1);         \
+    tdf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \

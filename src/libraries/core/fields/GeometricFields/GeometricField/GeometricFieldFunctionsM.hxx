@@ -49,7 +49,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 {                                                                              \
     tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
     (                                                                          \
-        new GeometricField<ReturnType, PatchField, GeoMesh>                     \
+        new GeometricField<ReturnType, PatchField, GeoMesh>                    \
         (                                                                      \
             IOobject                                                           \
             (                                                                  \
@@ -89,8 +89,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
                                                                                \
     CML::Func(tRes.ref(), gf1);                                                \
                                                                                \
-    reuseTmpGeometricField                                                     \
-        <ReturnType, Type1, PatchField, GeoMesh>::clear(tgf1);                 \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }
@@ -159,8 +158,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
                                                                                \
     CML::OpFunc(tRes.ref(), gf1);                                              \
                                                                                \
-    reuseTmpGeometricField                                                     \
-        <ReturnType, Type1, PatchField, GeoMesh>::clear(tgf1);                 \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }
@@ -232,8 +230,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
                                                                                \
     CML::Func(tRes.ref(), gf1, gf2);                                           \
                                                                                \
-    reuseTmpGeometricField                                                     \
-        <ReturnType, Type2, PatchField, GeoMesh>::clear(tgf2);                 \
+    tgf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -259,8 +256,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
                                                                                \
     CML::Func(tRes.ref(), gf1, gf2);                                           \
                                                                                \
-    reuseTmpGeometricField                                                     \
-        <ReturnType, Type1, PatchField, GeoMesh>::clear(tgf1);                 \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -290,9 +286,8 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
                                                                                \
     CML::Func(tRes.ref(), gf1, gf2);                                           \
                                                                                \
-    reuseTmpTmpGeometricField                                                  \
-        <ReturnType, Type1, Type1, Type2, PatchField, GeoMesh>                 \
-        ::clear(tgf1, tgf2);                                                   \
+    tgf1.clear();                                                              \
+    tgf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }
@@ -374,8 +369,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
                                                                                \
     CML::Func(tRes.ref(), dt1, gf2);                                           \
                                                                                \
-    reuseTmpGeometricField                                                     \
-        <ReturnType, Type2, PatchField, GeoMesh>::clear(tgf2);                 \
+    tgf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -466,8 +460,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
                                                                                \
     CML::Func(tRes.ref(), gf1, dt2);                                           \
                                                                                \
-    reuseTmpGeometricField                                                     \
-        <ReturnType, Type1, PatchField, GeoMesh>::clear(tgf1);                 \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -556,8 +549,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
                                                                                \
     CML::OpFunc(tRes.ref(), gf1, gf2);                                         \
                                                                                \
-    reuseTmpGeometricField                                                     \
-        <ReturnType, Type2, PatchField, GeoMesh>::clear(tgf2);                 \
+    tgf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -583,8 +575,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
                                                                                \
     CML::OpFunc(tRes.ref(), gf1, gf2);                                         \
                                                                                \
-    reuseTmpGeometricField                                                     \
-        <ReturnType, Type1, PatchField, GeoMesh>::clear(tgf1);                 \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -613,9 +604,8 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
                                                                                \
     CML::OpFunc(tRes.ref(), gf1, gf2);                                           \
                                                                                \
-    reuseTmpTmpGeometricField                                                  \
-        <ReturnType, Type1, Type1, Type2, PatchField, GeoMesh>                 \
-        ::clear(tgf1, tgf2);                                                   \
+    tgf1.clear();                                                              \
+    tgf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }
@@ -698,8 +688,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
                                                                                \
     CML::OpFunc(tRes.ref(), dt1, gf2);                                         \
                                                                                \
-    reuseTmpGeometricField<ReturnType, Type2, PatchField, GeoMesh>             \
-        ::clear(tgf2);                                                         \
+    tgf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -790,8 +779,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
                                                                                \
     CML::OpFunc(tRes.ref(), gf1, dt2);                                         \
                                                                                \
-    reuseTmpGeometricField<ReturnType, Type1, PatchField, GeoMesh>             \
-        ::clear(tgf1);                                                         \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \

@@ -3105,7 +3105,7 @@ dimensioned<returnType> func                                                   \
     (                                                                          \
         #func "(" + gf.name() + ')',                                           \
         gf.dimensions(),                                                       \
-        gFunc(gf.internalField())                                             \
+        gFunc(gf.internalField())                                              \
     );                                                                         \
 }                                                                              \
                                                                                \
@@ -3200,7 +3200,7 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    CML::opFunc(tRes.ref(), gf1, gf2);                                             \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                         \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -3229,10 +3229,9 @@ operator op                                                                    \
             gf1.dimensions() op gf2.dimensions()                               \
         );                                                                     \
                                                                                \
-    CML::opFunc(tRes.ref(), gf1, gf2);                                             \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                         \
                                                                                \
-    reuseTmpGeometricField<productType, Type2, PatchField, GeoMesh>            \
-    ::clear(tgf2);                                                             \
+    tgf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -3261,10 +3260,9 @@ operator op                                                                    \
             gf1.dimensions() op gf2.dimensions()                               \
         );                                                                     \
                                                                                \
-    CML::opFunc(tRes.ref(), gf1, gf2);                                             \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                         \
                                                                                \
-    reuseTmpGeometricField<productType, Type1, PatchField, GeoMesh>            \
-    ::clear(tgf1);                                                             \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -3296,11 +3294,10 @@ operator op                                                                    \
             gf1.dimensions() op gf2.dimensions()                               \
         );                                                                     \
                                                                                \
-    CML::opFunc(tRes.ref(), gf1, gf2);                                             \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                         \
                                                                                \
-    reuseTmpTmpGeometricField                                                  \
-        <productType, Type1, Type1, Type2, PatchField, GeoMesh>                \
-    ::clear(tgf1, tgf2);                                                       \
+    tgf1.clear();                                                              \
+    tgf2.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -3347,7 +3344,7 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    CML::opFunc(tRes.ref(), gf1, dvs);                                             \
+    CML::opFunc(tRes.ref(), gf1, dvs);                                         \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -3392,10 +3389,9 @@ operator op                                                                    \
             gf1.dimensions() op dvs.dimensions()                               \
         );                                                                     \
                                                                                \
-    CML::opFunc(tRes.ref(), gf1, dvs);                                             \
+    CML::opFunc(tRes.ref(), gf1, dvs);                                         \
                                                                                \
-    reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>             \
-    ::clear(tgf1);                                                             \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -3460,7 +3456,7 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    CML::opFunc(tRes.ref(), dvs, gf1);                                             \
+    CML::opFunc(tRes.ref(), dvs, gf1);                                         \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -3504,10 +3500,9 @@ operator op                                                                    \
             dvs.dimensions() op gf1.dimensions()                               \
         );                                                                     \
                                                                                \
-    CML::opFunc(tRes.ref(), dvs, gf1);                                             \
+    CML::opFunc(tRes.ref(), dvs, gf1);                                         \
                                                                                \
-    reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>             \
-    ::clear(tgf1);                                                             \
+    tgf1.clear();                                                              \
                                                                                \
     return tRes;                                                               \
 }                                                                              \

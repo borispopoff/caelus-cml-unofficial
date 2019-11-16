@@ -72,11 +72,7 @@ template
     class GeoMesh,
     direction r
 >
-tmp
-<
-    GeometricField
-    <typename powProduct<Type, r>::type, PatchField, GeoMesh>
->
+tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh>>
 pow
 (
     const GeometricField<Type, PatchField, GeoMesh>& gf,
@@ -90,11 +86,7 @@ template
     class GeoMesh,
     direction r
 >
-tmp
-<
-    GeometricField
-    <typename powProduct<Type, r>::type, PatchField, GeoMesh>
->
+tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh>>
 pow
 (
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf,
@@ -292,8 +284,7 @@ template                                                                       \
 <class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
 tmp                                                                            \
 <                                                                              \
-    GeometricField                                                             \
-        <typename product<Type1, Type2>::type, PatchField, GeoMesh>            \
+    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh>  \
 >                                                                              \
 operator op                                                                    \
 (                                                                              \
@@ -305,8 +296,7 @@ template                                                                       \
 <class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
 tmp                                                                            \
 <                                                                              \
-    GeometricField                                                             \
-    <typename product<Type1, Type2>::type, PatchField, GeoMesh>                \
+    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh>  \
 >                                                                              \
 operator op                                                                    \
 (                                                                              \
@@ -318,8 +308,7 @@ template                                                                       \
 <class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
 tmp                                                                            \
 <                                                                              \
-    GeometricField                                                             \
-    <typename product<Type1, Type2>::type, PatchField, GeoMesh>                \
+    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh>  \
 >                                                                              \
 operator op                                                                    \
 (                                                                              \
@@ -331,8 +320,7 @@ template                                                                       \
 <class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
 tmp                                                                            \
 <                                                                              \
-    GeometricField                                                             \
-    <typename product<Type1, Type2>::type, PatchField, GeoMesh>                \
+    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh>  \
 >                                                                              \
 operator op                                                                    \
 (                                                                              \
@@ -352,11 +340,7 @@ void opFunc                                                                    \
                                                                                \
 template                                                                       \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>      \
-tmp                                                                            \
-<                                                                              \
-    GeometricField                                                             \
-    <typename product<Type, Form>::type, PatchField, GeoMesh>                  \
->                                                                              \
+tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const GeometricField<Type, PatchField, GeoMesh>& gf1,                      \
@@ -371,11 +355,7 @@ template                                                                       \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \
-tmp                                                                            \
-<                                                                              \
-    GeometricField                                                             \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
->                                                                              \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const GeometricField<Type, PatchField, GeoMesh>& gf1,                      \
@@ -384,11 +364,7 @@ operator op                                                                    \
                                                                                \
 template                                                                       \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>      \
-tmp                                                                            \
-<                                                                              \
-    GeometricField                                                             \
-    <typename product<Type, Form>::type, PatchField, GeoMesh>                  \
->                                                                              \
+tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,                \
@@ -403,11 +379,7 @@ template                                                                       \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \
-tmp                                                                            \
-<                                                                              \
-    GeometricField                                                             \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
->                                                                              \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,                \
@@ -426,11 +398,7 @@ void opFunc                                                                    \
                                                                                \
 template                                                                       \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>      \
-tmp                                                                            \
-<                                                                              \
-    GeometricField                                                             \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
->                                                                              \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const dimensioned<Form>& dvs,                                              \
@@ -445,11 +413,7 @@ template                                                                       \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \
-tmp                                                                            \
-<                                                                              \
-    GeometricField                                                             \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
->                                                                              \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
@@ -458,11 +422,7 @@ operator op                                                                    \
                                                                                \
 template                                                                       \
 <class Form, class Type, template<class> class PatchField, class GeoMesh>      \
-tmp                                                                            \
-<                                                                              \
-    GeometricField                                                             \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
->                                                                              \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const dimensioned<Form>& dvs,                                              \
@@ -477,11 +437,7 @@ template                                                                       \
     class Type, template<class> class PatchField,                              \
     class GeoMesh                                                              \
 >                                                                              \
-tmp                                                                            \
-<                                                                              \
-    GeometricField                                                             \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>                  \
->                                                                              \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
 operator op                                                                    \
 (                                                                              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
