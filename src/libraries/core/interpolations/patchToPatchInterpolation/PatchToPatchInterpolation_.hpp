@@ -743,7 +743,7 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::pointInterpolate
         new Field<Type>(toPatch_.nPoints(), Zero)
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     const List<typename FromPatch::FaceType>& fromPatchLocalFaces =
         fromPatch_.localFaces();
@@ -808,7 +808,7 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::faceInterpolate
         new Field<Type>(toPatch_.size(), Zero)
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     const labelListList& fromPatchFaceFaces = fromPatch_.faceFaces();
 
