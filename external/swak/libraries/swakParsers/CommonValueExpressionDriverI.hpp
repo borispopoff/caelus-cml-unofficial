@@ -1079,7 +1079,7 @@ namespace CML {
         );
 
         forAll(res(),i) {
-            res()[i]=op(a[i],b[i]);
+            res.ref()[i]=op(a[i],b[i]);
         }
 
         return res;
@@ -1099,7 +1099,7 @@ namespace CML {
         );
 
         forAll(res(),i) {
-            res()[i]=op(a[i],b[i]);
+            res.ref()[i]=op(a[i],b[i]);
         }
 
         return res;
@@ -1119,7 +1119,7 @@ namespace CML {
         );
 
         forAll(res(),i) {
-            res()[i] = d[i] ? yes[i] : no[i];
+            res.ref()[i] = d[i] ? yes[i] : no[i];
         }
 
         return res;
@@ -1134,7 +1134,7 @@ namespace CML {
         );;
 
         forAll(res(),i) {
-            res()[i] = a[i];
+            res.ref()[i] = a[i];
         }
 
         return res;

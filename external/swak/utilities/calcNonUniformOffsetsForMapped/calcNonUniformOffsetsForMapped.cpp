@@ -64,7 +64,7 @@ tmp<vectorField> transformPoints(
     tmp<vectorField> result(
         new vectorField(original)
     );
-    vectorField &tr=result();
+    vectorField &tr=result.ref();
 
     tr+=transposeFirst;
     forAll(tr,i) {

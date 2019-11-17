@@ -575,7 +575,7 @@ namespace CML {
         }
 
         tmp<Field<T>> result(new Field<T>(this->size(),pTraits<T>::zero));
-        Field<T> &newValues=result();
+        Field<T> &newValues=result.ref();
 
         if(
             isSurfaceField
@@ -798,7 +798,7 @@ namespace CML {
             new Field<T>(orig)
         );
 
-        Field<T> &result=pResult();
+        Field<T> &result=pResult.ref();
 
         const label nbrPatchID =
             nbrMesh.boundaryMesh().findPatchID(mpp.samplePatch());

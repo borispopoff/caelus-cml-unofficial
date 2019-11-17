@@ -58,7 +58,7 @@ CML::tmp<CML::scalarField> CML::movingConeTopoFvMesh::vertexMarkup
         << curLeft << " curRight: " << curRight << endl;
 
     tmp<scalarField> tvertexMarkup(new scalarField(p.size()));
-    scalarField& vertexMarkup = tvertexMarkup();
+    scalarField& vertexMarkup = tvertexMarkup.ref();
 
     forAll(p, pI)
     {

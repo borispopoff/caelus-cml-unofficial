@@ -32,7 +32,7 @@ caelus_libs = [
 ]
 
 ostype = utils.ostype()
-prepend_args = {'CXXFLAGS' : ['-DCONST_TMP']}
+prepend_args = {}
 if ostype == 'windows':
    prepend_args = {'LINKFLAGS' :
             '-u turbulenceDerivedFvPatchFieldsLoad -u incompressibleRASModelsLoad -u turbulenceDerivedFvPatchFieldsLoad'

@@ -122,7 +122,7 @@ CML::tmp<Field<Type>> CML::surfaceMeshWriter::getFaceField
     const polyBoundaryMesh& patches = sfld.mesh().boundaryMesh();
 
     tmp<Field<Type>> tfld(new Field<Type>(pp_.size()));
-    Field<Type>& fld = tfld();
+    Field<Type>& fld = tfld.ref();
 
     forAll(pp_.addressing(), i)
     {

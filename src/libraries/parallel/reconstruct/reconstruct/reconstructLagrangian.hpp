@@ -131,7 +131,7 @@ CML::tmp<CML::IOField<Type>> CML::reconstructLagrangianField
             Field<Type>(0)
         )
     );
-    Field<Type>& field = tfield();
+    Field<Type>& field = tfield.ref();
 
     forAll(meshes, i)
     {
@@ -191,7 +191,7 @@ CML::reconstructLagrangianFieldField
             Field<Field<Type>>(0)
         )
     );
-    Field<Field<Type>>& field = tfield();
+    Field<Field<Type>>& field = tfield.ref();
 
     forAll(meshes, i)
     {

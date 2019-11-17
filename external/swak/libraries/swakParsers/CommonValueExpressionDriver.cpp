@@ -892,7 +892,7 @@ tmp<vectorField> CommonValueExpressionDriver::composeVectorField(
     );
 
     forAll(result(),facei) {
-        result()[facei]=CML::vector(x[facei],y[facei],z[facei]);
+        result.ref()[facei]=CML::vector(x[facei],y[facei],z[facei]);
     }
 
     return result;
@@ -933,7 +933,7 @@ tmp<tensorField> CommonValueExpressionDriver::composeTensorField(
     );
 
     forAll(result(),facei) {
-        result()[facei]=CML::tensor(
+        result.ref()[facei]=CML::tensor(
             xx[facei],xy[facei],xz[facei],
             yx[facei],yy[facei],yz[facei],
             zx[facei],zy[facei],zz[facei]
@@ -973,7 +973,7 @@ tmp<symmTensorField> CommonValueExpressionDriver::composeSymmTensorField(
     );
 
     forAll(result(),facei) {
-        result()[facei]=CML::symmTensor(
+        result.ref()[facei]=CML::symmTensor(
             xx[facei],xy[facei],xz[facei],
             yy[facei],yz[facei],
             zz[facei]
@@ -993,7 +993,7 @@ tmp<sphericalTensorField> CommonValueExpressionDriver::composeSphericalTensorFie
     );
 
     forAll(result(),facei) {
-        result()[facei]=CML::sphericalTensor(
+        result.ref()[facei]=CML::sphericalTensor(
             ii[facei]
         );
 
@@ -1053,7 +1053,7 @@ tmp<scalarField> CommonValueExpressionDriver::makeModuloField(
                 val += b[i];
             }
         }
-        result()[i]=val;
+        result.ref()[i]=val;
     }
 
     return result;
@@ -1098,7 +1098,7 @@ tmp<scalarField> CommonValueExpressionDriver::getLookup(
     const interpolationTable<scalar> &table=lookup_[name];
 
     forAll(val,i) {
-        result()[i]=table(val[i]);
+        result.ref()[i]=table(val[i]);
     }
 
     return tmp<scalarField>(result);

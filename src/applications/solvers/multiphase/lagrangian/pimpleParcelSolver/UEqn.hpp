@@ -1,7 +1,7 @@
 // Solve the Momentum equation
 MRF.correctBoundaryVelocity(U);
 
-tmp<fvVectorMatrix> UEqn
+tmp<fvVectorMatrix> tUEqn
 (
     fvm::ddt(U) + fvm::div(phi, U)
   + MRF.DDt(U)
@@ -10,20 +10,22 @@ tmp<fvVectorMatrix> UEqn
     fvOptions(U)
 );
 
+fvVectorMatrix& UEqn = tUEqn.ref();
+
 for (label i = 0; i < nClouds; ++i)
 {
-    UEqn() == 1/rhoInf*kinematicClouds[i].SU(U);
+    UEqn == 1/rhoInf*kinematicClouds[i].SU(U);
 }
 
-UEqn().relax();
+UEqn.relax();
 
-fvOptions.constrain(UEqn());
+fvOptions.constrain(UEqn);
 
-volScalarField rAU(1.0/UEqn().A());
+volScalarField rAU(1.0/UEqn.A());
 
 if (pimple.momentumPredictor())
 {
-    solve(UEqn() == -fvc::grad(p));
+    solve(UEqn == -fvc::grad(p));
 
     fvOptions.correct(U);
 }

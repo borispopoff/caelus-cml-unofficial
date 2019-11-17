@@ -119,7 +119,7 @@ CML::tmp<CML::pointField>
 CML::transformationSearchableSurface::coordinates() const
 {
     tmp<pointField> tResult(new pointField(delegate().coordinates()));
-    pointField &result=tResult();
+    pointField &result=tResult.ref();
 
     forAll(result,i) {
         result[i]=transform(result[i]);

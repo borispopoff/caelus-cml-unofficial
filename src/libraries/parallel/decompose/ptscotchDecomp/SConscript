@@ -31,12 +31,9 @@ append_args = dict(
     ]
 )
 
-prepend_args = { 'CXXFLAGS' : ['-DCONST_TMP'] }
-
 build_lib(env,
           target=target,
           sources=sources,
           caelus_inc=caelus_inc,
           caelus_libs=caelus_libs,
-          append_args=append_args,
-          prepend_args=prepend_args)
+          append_args=append_args)

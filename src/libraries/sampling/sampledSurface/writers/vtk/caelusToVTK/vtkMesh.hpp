@@ -154,7 +154,7 @@ public:
                 if (useSubMesh())
                 {
                     tmp<GeoField> subFld = subsetter_.interpolate(fld);
-                    subFld().rename(fld.name());
+                    subFld.ref().rename(fld.name());
                     return subFld;
                 }
                 else

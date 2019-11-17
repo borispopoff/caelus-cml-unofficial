@@ -77,7 +77,7 @@ tmp<Field<T>> filterValues(
             pTraits<T>::zero
         )
     );
-    Field<T> &result=pResult();
+    Field<T> &result=pResult.ref();
     label cnt=0;
     forAll(orig,i)
     {

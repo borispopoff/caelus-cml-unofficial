@@ -32,11 +32,8 @@ caelus_libs = [
 'LESdeltas'
 ]
 
-prepend_args = { 'CXXFLAGS' : ['-DCONST_TMP'] }
-
 build_lib(env,
           target=target,
           sources=sources,
           caelus_inc=caelus_inc,
-          caelus_libs=caelus_libs,
-          prepend_args=prepend_args)
+          caelus_libs=caelus_libs)

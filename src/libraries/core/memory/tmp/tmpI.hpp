@@ -213,7 +213,7 @@ inline void CML::tmp<T>::clear() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-#ifndef CONST_TMP
+#ifdef NON_CONST_TMP
 template<class T>
 inline T& CML::tmp<T>::operator()()
 {

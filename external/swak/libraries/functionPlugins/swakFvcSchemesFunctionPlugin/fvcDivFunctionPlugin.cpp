@@ -91,7 +91,7 @@ void fvcDivFunctionPlugin<T>::doEvaluation()
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            scheme().fvcDiv(original_())
+            scheme.ref().fvcDiv(original_())
         )
     );
 

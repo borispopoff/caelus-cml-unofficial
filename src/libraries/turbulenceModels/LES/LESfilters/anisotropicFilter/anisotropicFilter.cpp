@@ -192,7 +192,7 @@ CML::tmp<CML::volSymmTensorField> CML::anisotropicFilter::operator()
 
     for (direction d=0; d<symmTensor::nComponents; d++)
     {
-        tmpFilteredField().replace
+        tmpFilteredField.ref().replace
         (
             d, anisotropicFilter::operator()(unFilteredField().component(d))
         );
@@ -228,7 +228,7 @@ CML::tmp<CML::volTensorField> CML::anisotropicFilter::operator()
 
     for (direction d=0; d<tensor::nComponents; d++)
     {
-        tmpFilteredField().replace
+        tmpFilteredField.ref().replace
         (
             d, anisotropicFilter::operator()(unFilteredField().component(d))
         );

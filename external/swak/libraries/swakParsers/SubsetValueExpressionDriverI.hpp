@@ -90,14 +90,14 @@ namespace CML {
                 const FieldType &f=this->mesh().lookupObject<FieldType>(name);
 
                 forAllConstIter(typename Subset,sub,iter) {
-                    result()[cnt]=f[getIndexFromIterator(iter)];
+                    result.ref()[cnt]=f[getIndexFromIterator(iter)];
                     cnt++;
                 }
             } else {
                 const FieldType &f=this->mesh().lookupObject<FieldType>(name).oldTime();
 
                 forAllConstIter(typename Subset,sub,iter) {
-                    result()[cnt]=f[getIndexFromIterator(iter)];
+                    result.ref()[cnt]=f[getIndexFromIterator(iter)];
                     cnt++;
                 }
             }
@@ -114,12 +114,12 @@ namespace CML {
 
             if(!oldTime) {
                 forAllConstIter(typename Subset,sub,iter) {
-                    result()[cnt]=f()[getIndexFromIterator(iter)];
+                    result.ref()[cnt]=f()[getIndexFromIterator(iter)];
                     cnt++;
                 }
             } else {
                 forAllConstIter(typename Subset,sub,iter) {
-                    result()[cnt]=f->oldTime()[getIndexFromIterator(iter)];
+                    result.ref()[cnt]=f->oldTime()[getIndexFromIterator(iter)];
                     cnt++;
                 }
             }
@@ -170,9 +170,9 @@ namespace CML {
                 const label index=getIndexFromIterator(iter);
                 if(index<this->mesh().nInternalFaces()) {
                     if(!oldTime) {
-                        result()[cnt]=f[index];
+                        result.ref()[cnt]=f[index];
                     } else {
-                        result()[cnt]=f.oldTime()[index];
+                        result.ref()[cnt]=f.oldTime()[index];
                     }
                     cnt++;
                 } else {
@@ -184,7 +184,7 @@ namespace CML {
                         use=getBoundaryFaceValue(f.oldTime(),index,value);
                     }
                     if(use) {
-                        result()[cnt]=value;
+                        result.ref()[cnt]=value;
                         cnt++;
                     }
                 }
@@ -205,9 +205,9 @@ namespace CML {
                     const label index=getIndexFromIterator(iter);
                     if(index<this->mesh().nInternalFaces()) {
                         if(!oldTime) {
-                            result()[cnt]=f()[index];
+                            result.ref()[cnt]=f()[index];
                         } else {
-                            result()[cnt]=f->oldTime()[index];
+                            result.ref()[cnt]=f->oldTime()[index];
                         }
                         cnt++;
                     } else {
@@ -219,7 +219,7 @@ namespace CML {
                             use=getBoundaryFaceValue(f->oldTime(),index,value);
                         }
                         if(use) {
-                            result()[cnt]=value;
+                            result.ref()[cnt]=value;
                             cnt++;
                         }
                     }
@@ -259,12 +259,12 @@ namespace CML {
                     label facei=getIndexFromIterator(iter);
                     if(facei<this->mesh().nInternalFaces()) {
                         if(!oldTime) {
-                            result()[cnt]=
+                            result.ref()[cnt]=
                                 weights[facei]*f[own[facei]]
                                 +
                                 (1-weights[facei])*f[nei[facei]];
                         } else {
-                            result()[cnt]=
+                            result.ref()[cnt]=
                                 weights[facei]*f.oldTime()[own[facei]]
                                 +
                                 (1-weights[facei])*f.oldTime()[nei[facei]];
@@ -279,7 +279,7 @@ namespace CML {
                             use=getBoundaryFaceValue(f.oldTime(),facei,value);
                         }
                         if(use) {
-                            result()[cnt]=value;
+                            result.ref()[cnt]=value;
                             cnt++;
                         }
                     }
@@ -302,12 +302,12 @@ namespace CML {
                         label facei=getIndexFromIterator(iter);
                         if(facei<this->mesh().nInternalFaces()) {
                             if(!oldTime) {
-                                result()[cnt]=
+                                result.ref()[cnt]=
                                     weights[facei]*f()[own[facei]]
                                     +
                                     (1-weights[facei])*f()[nei[facei]];
                             } else {
-                                result()[cnt]=
+                                result.ref()[cnt]=
                                     weights[facei]*f->oldTime()[own[facei]]
                                     +
                                     (1-weights[facei])*f->oldTime()[nei[facei]];
@@ -322,7 +322,7 @@ namespace CML {
                                 use=getBoundaryFaceValue(f->oldTime(),facei,value);
                             }
                             if(use) {
-                                result()[cnt]=value;
+                                result.ref()[cnt]=value;
                                 cnt++;
                             }
                         }
@@ -360,7 +360,7 @@ namespace CML {
         label cnt=0;
 
         forAllConstIter(typename Subset,sub,iter) {
-            result()[cnt]=original[getIndexFromIterator(iter)];
+            result.ref()[cnt]=original[getIndexFromIterator(iter)];
             cnt++;
         }
 
@@ -381,14 +381,14 @@ namespace CML {
         forAllConstIter(typename Subset,sub,iter) {
             label facei=getIndexFromIterator(iter);
             if(facei<this->mesh().nInternalFaces()) {
-                result()[cnt]=original[facei];
+                result.ref()[cnt]=original[facei];
                 cnt++;
             } else {
                 T value;
                 bool use;
                 use=getBoundaryFaceValue(original,facei,value);
                 if(use) {
-                    result()[cnt]=value;
+                    result.ref()[cnt]=value;
                     cnt++;
                 }
             }

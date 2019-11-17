@@ -41,7 +41,7 @@ if ostype == 'windows':
 else:
     append_args = dict(CPPPATH = ["../vofSolver"])
 
-prepend_args = {'CXXFLAGS' : ['-DCONST_TMP']}
+prepend_args = {}
 if ostype == 'windows':
    prepend_args = {'LINKFLAGS' :
             '-u incompressibleRASModelsLoad -u incompressibleLESModelsLoad -u incompressibleVLESModelsLoad -u interfacePropertiesLoad -u turbulenceDerivedFvPatchFieldsLoad'

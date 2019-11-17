@@ -51,7 +51,7 @@ namespace CML {
                 pTraits<Type>::zero
             )
         );
-        Field<Type> &result=pResult();
+        Field<Type> &result=pResult.ref();
 
         typedef GeometricField< Type, fvPatchField, volMesh > volField;
 

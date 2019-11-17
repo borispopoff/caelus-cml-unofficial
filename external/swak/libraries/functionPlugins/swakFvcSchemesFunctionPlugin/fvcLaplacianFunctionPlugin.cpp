@@ -94,7 +94,7 @@ void fvcLaplacianFunctionPlugin<T>::doEvaluation()
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            scheme().fvcLaplacian(original_())
+            scheme.ref().fvcLaplacian(original_())
         )
     );
 

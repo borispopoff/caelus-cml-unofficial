@@ -80,7 +80,7 @@ void CML::IDDESDelta::calcDelta()
                 }
             }
         }
-        faceToFacenMax()[celli] = deltaMaxTmp;
+        faceToFacenMax.ref()[celli] = deltaMaxTmp;
     }
 
     if (nD == 3)

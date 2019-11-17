@@ -200,7 +200,7 @@ void fvcCoeffLaplacianFunctionPlugin<T,GT>::doEvaluation()
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            scheme().fvcLaplacian(coeff_(),original_())
+            scheme.ref().fvcLaplacian(coeff_(),original_())
         )
     );
 

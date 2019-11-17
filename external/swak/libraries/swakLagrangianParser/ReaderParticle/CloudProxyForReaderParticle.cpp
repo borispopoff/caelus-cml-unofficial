@@ -81,7 +81,7 @@ tmp<Field<scalar>> CloudProxyForReaderParticle::getScalarField(
         tmp<Field<scalar>> result(new Field<scalar>(orig.size()));
         forAll(orig,i)
         {
-            result()[i]=orig[i];
+            result.ref()[i]=orig[i];
         }
         return result;
     }
