@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -332,7 +332,7 @@ CML::patchProbes::sample
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
@@ -383,7 +383,7 @@ CML::patchProbes::sample
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 

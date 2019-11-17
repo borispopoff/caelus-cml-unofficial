@@ -45,7 +45,7 @@ tmp<scalarField> mutkFilmWallFunctionFvPatchScalarField::calcUTau
 ) const
 {
     tmp<scalarField> tuTau(new scalarField(patch().size(), 0.0));
-    scalarField& uTau = tuTau();
+    scalarField& uTau = tuTau.ref();
 
     typedef regionModels::surfaceFilmModels::surfaceFilmRegionModel modelType;
 

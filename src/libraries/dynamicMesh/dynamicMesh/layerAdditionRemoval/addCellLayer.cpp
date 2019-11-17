@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,7 +42,7 @@ CML::tmp<CML::vectorField> CML::layerAdditionRemoval::extrusionDir() const
     const labelList& mp = masterFaceLayer.meshPoints();
 
     tmp<vectorField> textrusionDir(new vectorField(mp.size()));
-    vectorField& extrusionDir = textrusionDir();
+    vectorField& extrusionDir = textrusionDir.ref();
 
     if (setLayerPairing())
     {
@@ -75,6 +75,7 @@ CML::tmp<CML::vectorField> CML::layerAdditionRemoval::extrusionDir() const
 
         extrusionDir = minLayerThickness_*masterFaceLayer.pointNormals();
     }
+
     return textrusionDir;
 }
 

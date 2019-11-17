@@ -173,7 +173,7 @@ CML::laminarFlameSpeedModels::RaviPetersen::operator()() const
         )
     );
 
-    volScalarField& Su0 = tSu0();
+    volScalarField& Su0 = tSu0.ref();
 
     forAll(Su0, celli)
     {

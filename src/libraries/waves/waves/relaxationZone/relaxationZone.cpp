@@ -146,7 +146,7 @@ tmp<volScalarField> relaxationZone::numericalBeach()
         )
     );
 
-    volScalarField& artificialViscosity(tartificialViscotity());
+    volScalarField& artificialViscosity(tartificialViscotity.ref());
 
     forAll (relaxSchemePtr_, relaxi)
     {

@@ -496,7 +496,7 @@ CML::probes::sample
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     if (fixedLocations_)
     {
@@ -566,7 +566,7 @@ CML::probes::sample
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     forAll(*this, probei)
     {

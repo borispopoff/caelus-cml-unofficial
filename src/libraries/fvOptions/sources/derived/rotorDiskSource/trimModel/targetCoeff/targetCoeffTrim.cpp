@@ -258,7 +258,7 @@ CML::tmp<CML::scalarField> CML::targetCoeffTrim::thetag() const
     const List<vector>& x = rotor_.x();
 
     tmp<scalarField> ttheta(new scalarField(x.size()));
-    scalarField& t = ttheta();
+    scalarField& t = ttheta.ref();
 
     forAll(t, i)
     {

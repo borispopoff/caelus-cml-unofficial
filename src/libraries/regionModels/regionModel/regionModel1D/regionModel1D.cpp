@@ -180,7 +180,7 @@ CML::tmp<CML::labelField> CML::regionModels::regionModel1D::moveMesh
 )
 {
     tmp<labelField> tcellMoveMap(new labelField(regionMesh().nCells(), 0));
-    labelField& cellMoveMap = tcellMoveMap();
+    labelField& cellMoveMap = tcellMoveMap.ref();
 
     if (!moveMesh_)
     {

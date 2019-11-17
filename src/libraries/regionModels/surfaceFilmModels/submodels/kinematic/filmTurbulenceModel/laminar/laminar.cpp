@@ -85,8 +85,8 @@ tmp<volVectorField> laminar::Us() const
     );
 
     // apply quadratic profile
-    tUs() = CML::sqrt(2.0)*filmModel_.U();
-    tUs().correctBoundaryConditions();
+    tUs.ref() = CML::sqrt(2.0)*filmModel_.U();
+    tUs.ref().correctBoundaryConditions();
 
     return tUs;
 }

@@ -218,7 +218,7 @@ public:
     
         if (this->chemistry_)
         {
-            DimensionedField<scalar, volMesh>& RRg = tRRg();
+            DimensionedField<scalar, volMesh>& RRg = tRRg.ref();
             for (label i=0; i < nGases_; i++)
             {
                 RRg += RRg_[i];
@@ -889,7 +889,7 @@ CML::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::gasHs
         )
     );
 
-    DimensionedField<scalar, volMesh>& gasHs = tHs();
+    DimensionedField<scalar, volMesh>& gasHs = tHs.ref();
 
     const GasThermo& mixture = gasThermo_[index];
 

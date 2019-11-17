@@ -458,7 +458,7 @@ CML::tmp<CML::volScalarField> CML::radiation::fvDOM::Rp() const
         )
     );
 
-    volScalarField& Rp=tRp();
+    volScalarField& Rp=tRp.ref();
 
     // Add contributions over remaining frequency bands
     for (label j=1; j < nLambda_; j++)
@@ -497,7 +497,7 @@ CML::radiation::fvDOM::Ru() const
         )
     );
 
-    DimensionedField<scalar, volMesh>& Ru=tRu();
+    DimensionedField<scalar, volMesh>& Ru=tRu.ref();
 
     // Sum contributions over all frequency bands
     for (label j=0; j < nLambda_; j++)
@@ -510,7 +510,7 @@ CML::radiation::fvDOM::Ru() const
 
         for (label rayI=1; rayI < nRay_; rayI++)
         {
-            Gj() += IRay_[rayI].ILambda(j).dimensionedInternalField()*IRay_[rayI].omega();
+            Gj.ref() += IRay_[rayI].ILambda(j).dimensionedInternalField()*IRay_[rayI].omega();
         }
 
         Ru += (aLambda_[j].dimensionedInternalField() - absorptionEmission_->aDisp(j)().dimensionedInternalField())*Gj()

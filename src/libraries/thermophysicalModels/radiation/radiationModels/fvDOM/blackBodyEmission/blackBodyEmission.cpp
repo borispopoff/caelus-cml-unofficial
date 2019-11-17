@@ -213,7 +213,7 @@ CML::radiation::blackBodyEmission::deltaLambdaT
 
     if (band != Vector2D<scalar>::one)
     {
-        scalarField& deltaLambdaTf = deltaLambdaT();
+        scalarField& deltaLambdaTf = deltaLambdaT.ref();
 
         forAll(T, i)
         {
@@ -250,14 +250,14 @@ CML::radiation::blackBodyEmission::EbDeltaLambdaT
 
     if (band != Vector2D<scalar>::one)
     {
-        scalarField& Ebif = Eb();
+        scalarField& Ebif = Eb.ref();
 
         forAll(T, i)
         {
             Ebif[i] *= fLambdaT(band[1]*T[i]) - fLambdaT(band[0]*T[i]);
         }
 
-        volScalarField::GeometricBoundaryField& EbBf = Eb().boundaryField();
+        volScalarField::GeometricBoundaryField& EbBf = Eb.ref().boundaryField();
 
         forAll(EbBf, patchi)
         {

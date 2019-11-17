@@ -654,7 +654,7 @@ CML::motionSmoother::avg
             dimensioned<Type>("zero", fld.dimensions(), Zero)
         )
     );
-    GeometricField<Type, pointPatchField, pointMesh>& res = tres();
+    GeometricField<Type, pointPatchField, pointMesh>& res = tres.ref();
 
     const polyMesh& mesh = fld.mesh()();
 

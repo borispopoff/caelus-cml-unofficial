@@ -80,7 +80,7 @@ tmp<volScalarField> temperatureDependentContactAngleForce::theta() const
         )
     );
 
-    volScalarField& theta = ttheta();
+    volScalarField& theta = ttheta.ref();
 
     const volScalarField& T = filmModel_.T();
 

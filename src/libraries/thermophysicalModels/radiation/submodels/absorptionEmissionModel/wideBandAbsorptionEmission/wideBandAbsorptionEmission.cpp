@@ -207,7 +207,7 @@ CML::radiation::wideBandAbsorptionEmission::aCont(const label bandi) const
         )
     );
 
-    scalarField& a = ta().internalField();
+    scalarField& a = ta.ref().internalField();
 
     forAll(a, celli)
     {
@@ -298,7 +298,7 @@ CML::radiation::wideBandAbsorptionEmission::ECont(const label bandi) const
 
         if (Qdot.dimensions() == dimEnergy/dimTime)
         {
-            E().internalField() =
+            E.ref().internalField() =
                 iEhrrCoeffs_[bandi]
                *Qdot.internalField()
                *(iBands_[bandi][1] - iBands_[bandi][0])
@@ -307,7 +307,7 @@ CML::radiation::wideBandAbsorptionEmission::ECont(const label bandi) const
         }
         else if (Qdot.dimensions() == dimEnergy/dimTime/dimVolume)
         {
-            E().internalField() =
+            E.ref().internalField() =
                 iEhrrCoeffs_[bandi]
                *Qdot.internalField()
                *(iBands_[bandi][1] - iBands_[bandi][0])

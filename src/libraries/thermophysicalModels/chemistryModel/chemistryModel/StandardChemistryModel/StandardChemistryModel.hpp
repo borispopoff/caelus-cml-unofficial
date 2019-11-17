@@ -594,7 +594,7 @@ CML::StandardChemistryModel<ReactionThermo, ThermoType>::tc() const
         )
     );
 
-    scalarField& tc = ttc();
+    scalarField& tc = ttc.ref();
 
     tmp<volScalarField> trho(this->thermo().rho());
     const scalarField& rho = trho();
@@ -639,7 +639,7 @@ CML::StandardChemistryModel<ReactionThermo, ThermoType>::tc() const
         }
     }
 
-    ttc().correctBoundaryConditions();
+    ttc.ref().correctBoundaryConditions();
 
     return ttc;
 }
@@ -669,7 +669,7 @@ CML::StandardChemistryModel<ReactionThermo, ThermoType>::Qdot() const
 
     if (this->chemistry_)
     {
-        scalarField& Qdot = tQdot();
+        scalarField& Qdot = tQdot.ref();
 
         forAll(Y_, i)
         {
@@ -710,7 +710,7 @@ CML::StandardChemistryModel<ReactionThermo, ThermoType>::calculateRR
         )
     );
 
-    DimensionedField<scalar, volMesh>& RR = tRR();
+    DimensionedField<scalar, volMesh>& RR = tRR.ref();
 
     tmp<volScalarField> trho(this->thermo().rho());
     const scalarField& rho = trho();

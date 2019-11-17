@@ -103,7 +103,7 @@ tmp<volScalarField> primaryRadiation::Shs()
         )
     );
 
-    scalarField& Shs = tShs();
+    scalarField& Shs = tShs.ref();
     const scalarField& qinP = qinPrimary_;
     const scalarField& alpha = filmModel_.alpha();
 

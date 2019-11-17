@@ -188,7 +188,7 @@ CML::tmp<CML::Field<Type>> CML::RBFInterpolation::interpolate
         new Field<Type>(allPoints_.size(), Zero)
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     // FB 21-12-2008
     // 1) Calculate alpha and beta coefficients using the Inverse

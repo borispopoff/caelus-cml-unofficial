@@ -219,7 +219,7 @@ CML::displacementLayeredMotionMotionSolver::faceZoneEvaluate
 ) const
 {
     tmp<vectorField> tfld(new vectorField(meshPoints.size()));
-    vectorField& fld = tfld();
+    vectorField& fld = tfld.ref();
 
     const word type(dict.lookup("type"));
 

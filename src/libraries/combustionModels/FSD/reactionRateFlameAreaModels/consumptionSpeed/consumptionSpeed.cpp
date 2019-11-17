@@ -93,7 +93,7 @@ CML::tmp<CML::volScalarField> CML::consumptionSpeed::omega0Sigma
         )
     );
 
-    volScalarField& omega0 = tomega0();
+    volScalarField& omega0 = tomega0.ref();
 
     volScalarField::InternalField& iomega0 = omega0.internalField();
 

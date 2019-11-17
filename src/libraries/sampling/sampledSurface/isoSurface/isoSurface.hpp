@@ -435,7 +435,7 @@ CML::isoSurface::adaptPatchFields
             true        // preserveCouples
         )
     );
-    FieldType& sliceFld = tsliceFld();
+    FieldType& sliceFld = tsliceFld.ref();
 
     const fvMesh& mesh = fld.mesh();
 
@@ -1105,7 +1105,7 @@ CML::isoSurface::interpolate
 {
     // One value per point
     tmp<Field<Type> > tvalues(new Field<Type>(nPoints, Zero));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
     labelList nValues(values.size(), 0);
 
     forAll(unmergedValues, i)

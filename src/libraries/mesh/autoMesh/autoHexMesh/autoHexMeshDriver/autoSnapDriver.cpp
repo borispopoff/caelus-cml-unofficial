@@ -447,7 +447,7 @@ CML::tmp<CML::scalarField> CML::autoSnapDriver::edgePatchDist
 
     // Copy edge values into scalarField
     tmp<scalarField> tedgeDist(new scalarField(mesh.nEdges()));
-    scalarField& edgeDist = tedgeDist();
+    scalarField& edgeDist = tedgeDist.ref();
 
     forAll(allEdgeInfo, edgeI)
     {

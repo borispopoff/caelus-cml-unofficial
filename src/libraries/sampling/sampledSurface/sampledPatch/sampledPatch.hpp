@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -294,7 +294,7 @@ CML::sampledPatch::sampleField
 {
     // One value per face
     tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
     forAll(patchFaceLabels_, i)
     {
         label patchi = patchIDs_[patchIndex_[i]];
@@ -315,7 +315,7 @@ CML::sampledPatch::sampleField
 {
     // One value per face
     tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(patchFaceLabels_, i)
     {
@@ -336,7 +336,7 @@ CML::sampledPatch::interpolateField
 {
     // One value per vertex
     tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     const labelList& own = mesh().faceOwner();
 

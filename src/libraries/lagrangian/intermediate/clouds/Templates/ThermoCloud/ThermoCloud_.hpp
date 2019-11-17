@@ -597,7 +597,7 @@ CML::ThermoCloud<CloudType>::Sh(volScalarField& hs) const
         else
         {
             tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(hs, dimEnergy/dimTime));
-            fvScalarMatrix& fvm = tfvm();
+            fvScalarMatrix& fvm = tfvm.ref();
 
             fvm.source() = -hsTrans()/(this->db().time().deltaT());
 
@@ -632,7 +632,7 @@ inline CML::tmp<CML::volScalarField> CML::ThermoCloud<CloudType>::Ep() const
 
     if (radiation_)
     {
-        scalarField& Ep = tEp().internalField();
+        scalarField& Ep = tEp.ref().internalField();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
@@ -668,7 +668,7 @@ inline CML::tmp<CML::volScalarField> CML::ThermoCloud<CloudType>::ap() const
 
     if (radiation_)
     {
-        scalarField& ap = tap().internalField();
+        scalarField& ap = tap.ref().internalField();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
@@ -705,7 +705,7 @@ CML::ThermoCloud<CloudType>::sigmap() const
 
     if (radiation_)
     {
-        scalarField& sigmap = tsigmap().internalField();
+        scalarField& sigmap = tsigmap.ref().internalField();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();

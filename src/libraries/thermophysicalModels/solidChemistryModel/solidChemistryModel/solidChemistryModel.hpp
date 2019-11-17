@@ -210,7 +210,7 @@ public:
 
         if (this->chemistry_)
         {
-            DimensionedField<scalar, volMesh>& RRs = tRRs();
+            DimensionedField<scalar, volMesh>& RRs = tRRs.ref();
             for (label i=0; i < nSolids_; i++)
             {
                 RRs += RRs_[i];
@@ -370,7 +370,7 @@ CML::solidChemistryModel<CompType, SolidThermo>::Qdot() const
 
     if (this->chemistry_)
     {
-        scalarField& Qdot = tQdot();
+        scalarField& Qdot = tQdot.ref();
 
         forAll(Ys_, i)
         {

@@ -1341,7 +1341,7 @@ void CML::autoLayerDriver::shrinkMeshMedialDistance
             minMagSqrEqOp<point>(),
             vector(GREAT, GREAT, GREAT)
         );
-        meshMover.movePoints((mesh.points()+totalDisp)());
+        meshMover.movePoints((mesh.points()+totalDisp).ref());
 
         // Above move will have changed the instance only on the points (which
         // is correct).

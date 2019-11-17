@@ -87,7 +87,7 @@ CML::tmp<CML::volScalarField> CML::laminarFlameSpeedModels::Gulders::Su0pTphi
         )
     );
 
-    volScalarField& Su0 = tSu0();
+    volScalarField& Su0 = tSu0.ref();
 
     forAll(Su0, celli)
     {
@@ -138,7 +138,7 @@ CML::tmp<CML::volScalarField> CML::laminarFlameSpeedModels::Gulders::Su0pTphi
         )
     );
 
-    volScalarField& Su0 = tSu0();
+    volScalarField& Su0 = tSu0.ref();
 
     forAll(Su0, celli)
     {

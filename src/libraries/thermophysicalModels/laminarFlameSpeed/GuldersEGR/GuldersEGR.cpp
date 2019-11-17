@@ -88,7 +88,7 @@ CML::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
         )
     );
 
-    volScalarField& Su0 = tSu0();
+    volScalarField& Su0 = tSu0.ref();
 
     forAll(Su0, celli)
     {
@@ -141,7 +141,7 @@ CML::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
         )
     );
 
-    volScalarField& Su0 = tSu0();
+    volScalarField& Su0 = tSu0.ref();
 
     forAll(Su0, celli)
     {

@@ -99,7 +99,7 @@ CML::velocityLaplacianFvMotionSolver::curPoints() const
       + fvMesh_.time().deltaTValue()*pointMotionU_.internalField()
     );
 
-    twoDCorrectPoints(tcurPoints());
+    twoDCorrectPoints(tcurPoints.ref());
 
     return tcurPoints;
 }

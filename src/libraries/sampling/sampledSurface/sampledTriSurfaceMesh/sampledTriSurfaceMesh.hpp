@@ -297,7 +297,7 @@ CML::sampledTriSurfaceMesh::sampleField
 {
     // One value per face
     tmp<Field<Type>> tvalues(new Field<Type>(sampleElements_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     if (sampleSource_ == cells || sampleSource_ == insideCells)
     {
@@ -353,7 +353,7 @@ CML::sampledTriSurfaceMesh::interpolateField
 {
     // One value per vertex
     tmp<Field<Type>> tvalues(new Field<Type>(sampleElements_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     if (sampleSource_ == cells || sampleSource_ == insideCells)
     {

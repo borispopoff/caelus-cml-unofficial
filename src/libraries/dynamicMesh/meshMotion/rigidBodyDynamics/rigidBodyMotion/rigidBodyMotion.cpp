@@ -212,7 +212,7 @@ CML::tmp<CML::pointField> CML::RBD::rigidBodyMotion::transformPoints
     spatialTransform X(X0(bodyID).inv() & X00(bodyID));
 
     tmp<pointField> tpoints(new pointField(initialPoints.size()));
-    pointField& points = tpoints();
+    pointField& points = tpoints.ref();
 
     forAll(points, i)
     {
@@ -239,7 +239,7 @@ CML::tmp<CML::pointField> CML::RBD::rigidBodyMotion::transformPoints
     septernion s(X);
 
     tmp<pointField> tpoints(new pointField(initialPoints));
-    pointField& points = tpoints();
+    pointField& points = tpoints.ref();
 
     forAll(points, i)
     {
@@ -288,7 +288,7 @@ CML::tmp<CML::pointField> CML::RBD::rigidBodyMotion::transformPoints
     }
 
     tmp<pointField> tpoints(new pointField(initialPoints));
-    pointField& points = tpoints();
+    pointField& points = tpoints.ref();
 
     List<scalar> w(ss.size());
 

@@ -193,7 +193,7 @@ CML::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
         )
     );
 
-    scalarField& a = ta().internalField();
+    scalarField& a = ta.ref().internalField();
 
     forAll(a, celli)
     {
@@ -241,7 +241,7 @@ CML::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
                 );
         }
     }
-    ta().correctBoundaryConditions();
+    ta.ref().correctBoundaryConditions();
     return ta;
 }
 
@@ -280,11 +280,11 @@ CML::radiation::greyMeanAbsorptionEmission::ECont(const label bandI) const
 
         if (Qdot.dimensions() == dimEnergy/dimTime)
         {
-            E().internalField() = EhrrCoeff_*Qdot/mesh_.V();
+            E.ref().internalField() = EhrrCoeff_*Qdot/mesh_.V();
         }
         else if (Qdot.dimensions() == dimEnergy/dimTime/dimVolume)
         {
-            E().internalField() = EhrrCoeff_*Qdot;
+            E.ref().internalField() = EhrrCoeff_*Qdot;
         }
         else
         {

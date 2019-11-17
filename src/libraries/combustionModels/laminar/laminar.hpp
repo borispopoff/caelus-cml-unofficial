@@ -200,7 +200,7 @@ CML::tmp<CML::fvScalarMatrix>
 CML::combustionModels::laminar<ReactionThermo>::R(volScalarField& Y) const
 {
     tmp<fvScalarMatrix> tSu(new fvScalarMatrix(Y, dimMass/dimTime));
-    fvScalarMatrix& Su = tSu();
+    fvScalarMatrix& Su = tSu.ref();
 
     const label specieI = this->thermo().composition().species()[Y.member()];
     Su += this->chemistryPtr_->RR(specieI);

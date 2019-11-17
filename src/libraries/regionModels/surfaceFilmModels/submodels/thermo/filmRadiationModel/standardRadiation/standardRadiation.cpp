@@ -119,7 +119,7 @@ tmp<volScalarField> standardRadiation::Shs()
         )
     );
 
-    scalarField& Shs = tShs();
+    scalarField& Shs = tShs.ref();
     const scalarField& qinP = qinPrimary_;
     const scalarField& delta = filmModel_.delta();
     const scalarField& alpha = filmModel_.alpha();

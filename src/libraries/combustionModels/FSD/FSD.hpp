@@ -282,7 +282,7 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
         )
     );
 
-    volScalarField& pc = tPc();
+    volScalarField& pc = tPc.ref();
 
     tmp<volScalarField> tomegaFuel
     (
@@ -306,7 +306,7 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
         )
     );
 
-    volScalarField& omegaFuelBar = tomegaFuel();
+    volScalarField& omegaFuelBar = tomegaFuel.ref();
 
     // Calculation of the mixture fraction variance (ftVar)
     const compressible::LESModel& lesModel =
@@ -429,7 +429,7 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
         )
     );
 
-    volScalarField& products = tproducts();
+    volScalarField& products = tproducts.ref();
 
     forAll(productsIndex, j)
     {

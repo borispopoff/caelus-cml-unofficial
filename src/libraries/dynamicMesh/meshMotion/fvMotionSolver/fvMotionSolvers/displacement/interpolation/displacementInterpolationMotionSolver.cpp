@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -309,7 +309,7 @@ CML::displacementInterpolationMotionSolver::curPoints() const
     }
 
     tmp<pointField> tcurPoints(new pointField(points0()));
-    pointField& curPoints = tcurPoints();
+    pointField& curPoints = tcurPoints.ref();
 
     // Interpolate the displacement of the face zones.
     vectorField zoneDisp(displacements_.size(), Zero);

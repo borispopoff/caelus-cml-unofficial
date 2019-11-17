@@ -212,7 +212,7 @@ CML::tmp<CML::scalarField> CML::regionSizeDistribution::divide
 )
 {
     tmp<scalarField> tresult(new scalarField(num.size()));
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     forAll(denom, i)
     {

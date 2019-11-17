@@ -239,7 +239,7 @@ CML::sampledThresholdCellFaces::interpolateField
 
     // One value per point
     tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     boolList pointDone(points().size(), false);
 

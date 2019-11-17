@@ -143,7 +143,7 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
         )
     );
 
-    vectorField& force = tForce().internalField();
+    vectorField& force = tForce.ref().internalField();
 
     const labelUList& own = filmModel_.regionMesh().owner();
     const labelUList& nbr = filmModel_.regionMesh().neighbour();
@@ -221,12 +221,10 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
         tForce().write();
     }
 
-    tmp<fvVectorMatrix> tfvm
-    (
-        new fvVectorMatrix(U, dimForce/dimArea*dimVolume)
-    );
+    tmp<fvVectorMatrix>
+        tfvm(new fvVectorMatrix(U, dimForce/dimArea*dimVolume));
 
-    tfvm() += tForce;
+    tfvm.ref() += tForce;
 
     return tfvm;
 }

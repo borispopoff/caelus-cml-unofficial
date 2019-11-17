@@ -196,7 +196,7 @@ CML::displacementLaplacianFvMotionSolver::curPoints() const
         (
             points0() + pointDisplacement_.internalField()
         );
-        pointField& curPoints = tcurPoints();
+        pointField& curPoints = tcurPoints.ref();
 
         // Implement frozen points
         if (frozenPointsZone_ != -1)

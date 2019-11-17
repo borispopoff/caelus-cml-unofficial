@@ -509,7 +509,7 @@ CML::tmp<CML::pointField> CML::RBFMotionSolver::curPoints() const
     (
         new vectorField(mesh().nPoints(), Zero)
     );
-    pointField& curPoints = tcurPoints();
+    pointField& curPoints = tcurPoints.ref();
 
     // Add motion to existing points
 
@@ -634,7 +634,7 @@ CML::tmp<CML::pointField> CML::RBFMotionSolver::curPoints() const
     // 5. Add old point positions
     curPoints += mesh().points();
 
-    twoDCorrectPoints(tcurPoints());
+    twoDCorrectPoints(tcurPoints.ref());
 
     return tcurPoints;
 }

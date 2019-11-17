@@ -501,7 +501,7 @@ CML::fieldValues::faceSource::getFieldValues
                 (
                     new Field<Type>(faces.size(), Zero)
                 );
-                Field<Type>& avg = tavg();
+                Field<Type>& avg = tavg.ref();
 
                 forAll(faces, facei)
                 {
@@ -775,7 +775,7 @@ CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
 ) const
 {
     tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(values, i)
     {
@@ -816,7 +816,7 @@ CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
 ) const
 {
     tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(values, i)
     {

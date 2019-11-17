@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -104,7 +104,7 @@ CML::displacementSBRStressFvMotionSolver::curPoints() const
         points0() + pointDisplacement().internalField()
     );
 
-    twoDCorrectPoints(tcurPoints());
+    twoDCorrectPoints(tcurPoints.ref());
 
     return tcurPoints;
 }
@@ -141,6 +141,7 @@ void CML::displacementSBRStressFvMotionSolver::solve()
                    cellDisplacement_.mesh().Sf(),
                    gradCd.T() - gradCd
                )
+
                // Solid-body rotation "lambda" term
              - cellDisplacement_.mesh().Sf()*fvc::interpolate(tr(gradCd))
             )

@@ -91,7 +91,7 @@ CML::radiation::cloudAbsorptionEmission::aDisp(const label) const
             mesh_.objectRegistry::lookupObject<thermoCloud>(cloudNames_[i])
         );
 
-        ta() += tc.ap();
+        ta.ref() += tc.ap();
     }
 
     return ta;
@@ -151,7 +151,7 @@ CML::radiation::cloudAbsorptionEmission::EDisp(const label bandI) const
             mesh_.objectRegistry::lookupObject<thermoCloud>(cloudNames_[i])
         );
 
-        tE() += tc.Ep();
+        tE.ref() += tc.Ep();
     }
 
     // Total emission is 4 times the projected emission

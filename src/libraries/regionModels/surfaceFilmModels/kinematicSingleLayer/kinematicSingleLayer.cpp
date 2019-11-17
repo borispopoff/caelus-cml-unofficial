@@ -307,7 +307,7 @@ tmp<CML::fvVectorMatrix> kinematicSingleLayer::solveMomentum
       + turbulence_->Su(U_)
     );
 
-    fvVectorMatrix& UEqn = tUEqn();
+    fvVectorMatrix& UEqn = tUEqn.ref();
 
     UEqn.relax();
 

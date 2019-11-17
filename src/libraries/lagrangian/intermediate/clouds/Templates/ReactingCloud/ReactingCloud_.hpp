@@ -415,7 +415,7 @@ inline CML::tmp<CML::fvScalarMatrix> CML::ReactingCloud<CloudType>::SYi
                 )
             );
 
-            volScalarField& sourceField = trhoTrans();
+            volScalarField& sourceField = trhoTrans.ref();
 
             sourceField.internalField() =
                 rhoTrans_[i]/(this->db().time().deltaTValue()*this->mesh().V());
@@ -429,7 +429,7 @@ inline CML::tmp<CML::fvScalarMatrix> CML::ReactingCloud<CloudType>::SYi
         else
         {
             tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(Yi, dimMass/dimTime));
-            fvScalarMatrix& fvm = tfvm();
+            fvScalarMatrix& fvm = tfvm.ref();
 
             fvm.source() = -rhoTrans_[i]/this->db().time().deltaTValue();
 
@@ -470,7 +470,7 @@ CML::ReactingCloud<CloudType>::Srho(const label i) const
 
     if (this->solution().coupled())
     {
-        scalarField& rhoi = tRhoi();
+        scalarField& rhoi = tRhoi.ref();
         rhoi = rhoTrans_[i]/(this->db().time().deltaTValue()*this->mesh().V());
     }
 
@@ -507,7 +507,7 @@ CML::ReactingCloud<CloudType>::Srho() const
 
     if (this->solution().coupled())
     {
-        scalarField& sourceField = trhoTrans();
+        scalarField& sourceField = trhoTrans.ref();
         forAll(rhoTrans_, i)
         {
             sourceField += rhoTrans_[i];
@@ -544,7 +544,7 @@ CML::ReactingCloud<CloudType>::Srho(volScalarField& rho) const
             )
         );
 
-        scalarField& sourceField = trhoTrans();
+        scalarField& sourceField = trhoTrans.ref();
 
         if (this->solution().semiImplicit("rho"))
         {
@@ -560,7 +560,7 @@ CML::ReactingCloud<CloudType>::Srho(volScalarField& rho) const
         else
         {
             tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(rho, dimMass/dimTime));
-            fvScalarMatrix& fvm = tfvm();
+            fvScalarMatrix& fvm = tfvm.ref();
 
             forAll(rhoTrans_, i)
             {

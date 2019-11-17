@@ -184,7 +184,7 @@ CML::displacementComponentLaplacianFvMotionSolver::curPoints() const
     else
     {
         tmp<pointField> tcurPoints(new pointField(fvMesh_.points()));
-        pointField& curPoints = tcurPoints();
+        pointField& curPoints = tcurPoints.ref();
 
         curPoints.replace
         (

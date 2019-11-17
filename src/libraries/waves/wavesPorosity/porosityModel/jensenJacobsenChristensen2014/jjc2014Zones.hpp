@@ -169,7 +169,7 @@ CML::jjc2014Zones::ddt
 )
 {
     tmp<fvMatrix<Type>> tres = fvm::ddt(vf);
-    modifyDdt(tres());
+    modifyDdt(tres.ref());
     
     return tres;
 }
@@ -184,7 +184,7 @@ CML::jjc2014Zones::ddt
 )
 {
     tmp<fvMatrix<Type>> tres = fvm::ddt(vf);
-    modifyDdt(tres());
+    modifyDdt(tres.ref());
 
     return tres;
 }
@@ -199,7 +199,7 @@ CML::jjc2014Zones::ddt
 )
 {
     tmp<fvMatrix<Type>> tres = fvm::ddt(rho,vf);
-    modifyDdt(tres());
+    modifyDdt(tres.ref());
 
     return tres;
 }
@@ -214,7 +214,7 @@ CML::jjc2014Zones::ddt
 )
 {
     tmp<fvMatrix<Type>> tres = fvm::ddt(rho,vf);
-    modifyDdt(tres());
+    modifyDdt(tres.ref());
 
     return tres;
 }

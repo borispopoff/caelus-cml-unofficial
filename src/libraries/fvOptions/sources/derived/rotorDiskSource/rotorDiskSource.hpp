@@ -634,7 +634,7 @@ void CML::fv::rotorDiskSource::writeField
             )
         );
 
-        Field<Type>& field = tfield().internalField();
+        Field<Type>& field = tfield.ref().internalField();
 
         if (cells_.size() != values.size())
         {
