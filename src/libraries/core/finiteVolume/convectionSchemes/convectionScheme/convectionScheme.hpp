@@ -59,7 +59,7 @@ namespace fv
 template<class Type>
 class convectionScheme
 :
-    public refCount
+    public tmp<convectionScheme<Type>>::refCount
 {
     // Private data
 
@@ -275,7 +275,7 @@ namespace fv
 template<class Type>
 convectionScheme<Type>::convectionScheme(const convectionScheme& cs)
 :
-    refCount(),
+    tmp<convectionScheme<Type>>::refCount(),
     mesh_(cs.mesh_)
 {}
 
@@ -292,16 +292,15 @@ tmp<convectionScheme<Type>> convectionScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "convectionScheme<Type>::New"
-               "(const fvMesh&, const surfaceScalarField&, Istream&) : "
-               "constructing convectionScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing convectionScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Convection scheme not specified" << endl << endl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Convection scheme not specified" << endl << endl
             << "Valid convection schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -314,8 +313,10 @@ tmp<convectionScheme<Type>> convectionScheme<Type>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown convection scheme " << schemeName << nl << nl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown convection scheme " << schemeName << nl << nl
             << "Valid convection schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -337,18 +338,15 @@ tmp<convectionScheme<Type>> convectionScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "convectionScheme<Type>::New"
-               "(const fvMesh&, "
-               "const typename multivariateSurfaceInterpolationScheme<Type>"
-               "::fieldTable&, const surfaceScalarField&, Istream&) : "
-               "constructing convectionScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing convectionScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Convection scheme not specified" << endl << endl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Convection scheme not specified" << endl << endl
             << "Valid convection schemes are :" << endl
             << MultivariateConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -361,8 +359,10 @@ tmp<convectionScheme<Type>> convectionScheme<Type>::New
 
     if (cstrIter == MultivariateConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown convection scheme " << schemeName << nl << nl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown convection scheme " << schemeName << nl << nl
             << "Valid convection schemes are :" << endl
             << MultivariateConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);

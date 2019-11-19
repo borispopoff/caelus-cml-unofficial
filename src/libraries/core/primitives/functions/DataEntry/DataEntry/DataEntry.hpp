@@ -55,7 +55,7 @@ template<class Type> Ostream& operator<<(Ostream&, const DataEntry<Type>&);
 template<class Type>
 class DataEntry
 :
-    public refCount
+    public tmp<DataEntry<Type>>::refCount
 {
 
 protected:
@@ -261,7 +261,7 @@ CML::DataEntry<Type>::DataEntry(const word& entryName)
 template<class Type>
 CML::DataEntry<Type>::DataEntry(const DataEntry<Type>& de)
 :
-    refCount(),
+    tmp<DataEntry<Type>>::refCount(),
     name_(de.name_)
 {}
 

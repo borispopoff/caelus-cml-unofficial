@@ -54,7 +54,7 @@ namespace fv
 template<class Type>
 class gradScheme
 :
-    public refCount
+    public tmp<gradScheme<Type>>::refCount
 {
     // Private data
 

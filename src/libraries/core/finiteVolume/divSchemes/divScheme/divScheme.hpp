@@ -58,7 +58,7 @@ namespace fv
 template<class Type>
 class divScheme
 :
-    public refCount
+    public tmp<divScheme<Type>>::refCount
 {
 
 protected:

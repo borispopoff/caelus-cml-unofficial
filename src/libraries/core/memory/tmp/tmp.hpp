@@ -69,6 +69,9 @@ class tmp
 
 public:
 
+    typedef CML::refCount refCount;
+
+
     // Constructors
 
         //- Store object pointer

@@ -55,7 +55,7 @@ template<class Type> class SubField;
 template<class Type>
 class SubField
 :
-    public refCount,
+    public tmp<SubField<Type>>::refCount,
     public SubList<Type>
 {
 

@@ -69,7 +69,7 @@ Ostream& operator<<
 template<template<class> class Field, class Type>
 class FieldField
 :
-    public refCount,
+    public tmp<FieldField<Field, Type>>::refCount,
     public PtrList<Field<Type>>
 {
 
@@ -303,7 +303,7 @@ FieldField<Field, Type>::FieldField
 template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField(const FieldField<Field, Type>& f)
 :
-    refCount(),
+    tmp<FieldField<Field, Type>>::refCount(),
     PtrList<Field<Type>>(f)
 {}
 

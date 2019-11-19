@@ -74,7 +74,7 @@ class dictionary;
 template<class Type>
 class Field
 :
-    public refCount,
+    public tmp<Field<Type>>::refCount,
     public List<Type>
 {
 
@@ -465,7 +465,7 @@ CML::Field<Type>::Field(const UIndirectList<Type>& list)
 template<class Type>
 CML::Field<Type>::Field(const Field<Type>& f)
 :
-    refCount(),
+    tmp<Field<Type>>::refCount(),
     List<Type>(f)
 {}
 
@@ -480,7 +480,7 @@ CML::Field<Type>::Field(Field<Type>& f, bool reuse)
 template<class Type>
 CML::Field<Type>::Field(Field<Type>&& f)
 :
-    refCount(),
+    tmp<Field<Type>>::refCount(),
     List<Type>(move(f))
 {}
 

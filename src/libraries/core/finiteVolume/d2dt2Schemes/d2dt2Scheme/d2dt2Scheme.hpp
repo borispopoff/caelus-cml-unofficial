@@ -58,7 +58,7 @@ namespace fv
 template<class Type>
 class d2dt2Scheme
 :
-    public refCount
+    public tmp<d2dt2Scheme<Type>>::refCount
 {
 
 protected:
@@ -220,15 +220,15 @@ tmp<d2dt2Scheme<Type>> d2dt2Scheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "d2dt2Scheme<Type>::New(const fvMesh&, Istream&) : "
-               "constructing d2dt2Scheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing d2dt2Scheme<Type>" << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "D2dt2 scheme not specified" << endl << endl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "D2dt2 scheme not specified" << endl << endl
             << "Valid d2dt2 schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -241,8 +241,10 @@ tmp<d2dt2Scheme<Type>> d2dt2Scheme<Type>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown d2dt2 scheme " << schemeName << nl << nl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown d2dt2 scheme " << schemeName << nl << nl
             << "Valid d2dt2 schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);

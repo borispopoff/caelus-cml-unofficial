@@ -54,7 +54,7 @@ namespace fv
 template<class Type>
 class snGradScheme
 :
-    public refCount
+    public tmp<snGradScheme<Type>>::refCount
 {
     // Private data
 

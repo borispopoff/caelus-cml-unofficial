@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 Copyright (C) 2014 Applied CCM
 Copyright (C) 2016 OpenCFD Ltd
 -------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ template<class T> class UIndirectList;
 template<class Type>
 class fvMatrix
 :
-    public refCount,
+    public tmp<fvMatrix<Type>>::refCount,
     public lduMatrix
 {
     // Private Data
@@ -1365,7 +1365,7 @@ CML::fvMatrix<Type>::fvMatrix
 template<class Type>
 CML::fvMatrix<Type>::fvMatrix(const fvMatrix<Type>& fvm)
 :
-    refCount(),
+    tmp<fvMatrix<Type>>::refCount(),
     lduMatrix(fvm),
     psi_(fvm.psi_),
     dimensions_(fvm.dimensions_),
@@ -1394,7 +1394,6 @@ CML::fvMatrix<Type>::fvMatrix(const fvMatrix<Type>& fvm)
 template<class Type>
 CML::fvMatrix<Type>::fvMatrix(const tmp<fvMatrix<Type>>& tfvm)
 :
-    refCount(),
     lduMatrix
     (
         const_cast<fvMatrix<Type>&>(tfvm()),
