@@ -69,6 +69,7 @@ class tmp
 
 public:
 
+    typedef T Type;
     typedef CML::refCount refCount;
 
 
@@ -82,6 +83,9 @@ public:
 
         //- Construct copy and increment reference count
         inline tmp(const tmp<T>&);
+
+        //- Construct copy moving content, does not increment reference count
+        inline tmp(const tmp<T>&&);
 
         //- Construct copy transferring content of temporary if required
         inline tmp(const tmp<T>&, bool allowTransfer);
@@ -115,7 +119,7 @@ public:
 
             //- Return non-const reference or generate a fatal error
             //  if the object is const.
-            inline T& ref();
+            inline T& ref() const;
 
             //- Return tmp pointer for reuse.
             //  Returns a clone if the object is not a temporary

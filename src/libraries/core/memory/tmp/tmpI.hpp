@@ -75,7 +75,7 @@ inline CML::tmp<T>::tmp(const tmp<T>& t)
     {
         if (ptr_)
         {
-            ptr_->operator++();
+            operator++();
         }
         else
         {
@@ -83,6 +83,19 @@ inline CML::tmp<T>::tmp(const tmp<T>& t)
                 << "Attempted copy of a deallocated " << typeName()
                 << abort(FatalError);
         }
+    }
+}
+
+
+template<class T>
+inline CML::tmp<T>::tmp(const tmp<T>&& t)
+:
+    type_(t.type_),
+    ptr_(t.ptr_)
+{
+    if (isTmp())
+    {
+        t.ptr_ = 0;
     }
 }
 
@@ -154,7 +167,7 @@ inline CML::word CML::tmp<T>::typeName() const
 
 
 template<class T>
-inline T& CML::tmp<T>::ref()
+inline T& CML::tmp<T>::ref() const
 {
     if (isTmp())
     {
@@ -368,7 +381,7 @@ inline void CML::tmp<T>::operator=(const tmp<T>& t)
 
 
 //- Return the const reference of the non-const reference argument
-template<typename T>
+template<class T>
 inline const T& Const(T& t)
 {
     return t;
@@ -376,7 +389,7 @@ inline const T& Const(T& t)
 
 
 //- Return the const reference of the non-const rvalue reference argument
-template<typename T>
+template<class T>
 inline const T& Const(T&& t)
 {
     return t;
