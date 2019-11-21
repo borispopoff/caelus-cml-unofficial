@@ -1880,11 +1880,18 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
 
     this->dimensions() = gf.dimensions();
 
-    // This is dodgy stuff, don't try it at home.
-    internalField().transfer
-    (
-        const_cast<Field<Type>&>(gf.internalField())
-    );
+    if (tgf.isTmp())
+    {
+        // Transfer the storage from the tmp
+        internalField().transfer
+        (
+            const_cast<Field<Type>&>(gf.internalField())
+        );
+    }
+    else
+    {
+        internalField() = gf.internalField();
+    }
 
     boundaryField() = gf.boundaryField();
 
