@@ -60,7 +60,7 @@ void CML::wallShearStress::calcShearStress
         label patchi = iter.key();
         const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
-        vectorField& ssp = shearStress.boundaryField()[patchi];
+        vectorField& ssp = shearStress.boundaryFieldRef()[patchi];
         const vectorField& Sfp = mesh.Sf().boundaryField()[patchi];
         const scalarField& magSfp = mesh.magSf().boundaryField()[patchi];
         const symmTensorField& Reffp = Reff.boundaryField()[patchi];

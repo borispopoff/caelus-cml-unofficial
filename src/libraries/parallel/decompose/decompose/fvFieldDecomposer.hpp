@@ -335,7 +335,7 @@ CML::fvFieldDecomposer::decomposeField
     //  constructor (with reference to the now correct internal field)
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-        GeometricBoundaryField& bf = resF.boundaryField();
+        GeometricBoundaryField& bf = resF.boundaryFieldRef();
 
     forAll(bf, patchi)
     {
@@ -505,7 +505,7 @@ CML::fvFieldDecomposer::decomposeField
     //  constructor (with reference to the now correct internal field)
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& bf = resF.boundaryField();
+        GeometricBoundaryField& bf = resF.boundaryFieldRef();
 
     forAll(boundaryAddressing_, patchi)
     {

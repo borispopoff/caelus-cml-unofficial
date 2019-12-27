@@ -125,7 +125,7 @@ void CML::inverseFaceDistanceDiffusivity::correct()
 
     forAll(faceDiffusivity_.boundaryField(), patchi)
     {
-        fvsPatchScalarField& bfld = faceDiffusivity_.boundaryField()[patchi];
+        fvsPatchScalarField& bfld = faceDiffusivity_.boundaryFieldRef()[patchi];
 
         const labelUList& faceCells = bfld.patch().faceCells();
 

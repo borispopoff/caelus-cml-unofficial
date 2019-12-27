@@ -457,7 +457,7 @@ int main(int argc, char *argv[])
 
             // Normalise the stream-function by the 2D mesh thickness
             streamFunction /= thickness;
-            streamFunction.boundaryField() = 0.0;
+            streamFunction.boundaryFieldRef() = 0.0;
             streamFunction.write();
         }
         else

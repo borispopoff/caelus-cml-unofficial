@@ -444,7 +444,7 @@ void CML::isoAdvection::setFaceValue
 
         const label patchFacei = pp.whichFace(facei);
 
-        f.boundaryField()[patchi][patchFacei] = value;
+        f.boundaryFieldRef()[patchi][patchFacei] = value;
     }
 }
 

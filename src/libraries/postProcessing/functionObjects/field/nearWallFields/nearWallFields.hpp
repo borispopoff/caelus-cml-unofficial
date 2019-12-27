@@ -319,7 +319,7 @@ void CML::nearWallFields::sampleBoundaryField
     {
         label patchi = iter.key();
 
-        fvPatchField<Type>& pfld = fld.boundaryField()[patchi];
+        fvPatchField<Type>& pfld = fld.boundaryFieldRef()[patchi];
 
         Field<Type> newFld(pfld.size());
         forAll(pfld, i)

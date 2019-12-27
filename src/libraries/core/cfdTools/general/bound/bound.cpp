@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,7 +49,7 @@ CML::bound(volScalarField& vsf, const dimensionedScalar& lowerBound)
             lowerBound.value()
         );
 
-        vsf.boundaryField() = max(vsf.boundaryField(), lowerBound.value());
+        vsf.boundaryFieldRef() = max(vsf.boundaryField(), lowerBound.value());
     }
 
     return vsf;
@@ -89,7 +89,7 @@ void CML::boundMinMax
         );
 
         vsf.correctBoundaryConditions();
-        vsf.boundaryField() = max(vsf.boundaryField(), vsf0.value());
+        vsf.boundaryFieldRef() = max(vsf.boundaryField(), vsf0.value());
     }
 
     if (maxVsf > vsf1.value())
@@ -108,7 +108,7 @@ void CML::boundMinMax
         );
 
         vsf.correctBoundaryConditions();
-        vsf.boundaryField() = min(vsf.boundaryField(), vsf1.value());
+        vsf.boundaryFieldRef() = min(vsf.boundaryField(), vsf1.value());
     }
 }
 

@@ -77,7 +77,7 @@ SpalartAllmaras::fw(const volScalarField& Stilda) const
             scalar(10.0)
         )
     );
-    r.boundaryField() == 0.0;
+    r.boundaryFieldRef() == 0.0;
 
     const volScalarField g(r + Cw2_*(pow6(r) - r));
 

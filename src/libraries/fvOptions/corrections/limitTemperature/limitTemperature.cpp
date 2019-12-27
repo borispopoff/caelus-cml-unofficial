@@ -110,7 +110,7 @@ void CML::fv::limitTemperature::correct(volScalarField& he)
 
         forAll(he.boundaryField(), patchi)
         {
-            fvPatchScalarField& hep = he.boundaryField()[patchi];
+            fvPatchScalarField& hep = he.boundaryFieldRef()[patchi];
 
             if (!hep.fixesValue())
             {

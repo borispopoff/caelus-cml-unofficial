@@ -86,7 +86,7 @@ void recalcThermoHeFunctionObject::recalc()
     );
     forAll(h.boundaryField(), patchi)
     {
-        h.boundaryField()[patchi] ==
+        h.boundaryFieldRef()[patchi] ==
             thermo.he(
                 p.boundaryField()[patchi],
                 T.boundaryField()[patchi],
@@ -95,7 +95,7 @@ void recalcThermoHeFunctionObject::recalc()
     }
 
     // hBoundaryCorrection
-    volScalarField::GeometricBoundaryField& hbf = h.boundaryField();
+    volScalarField::GeometricBoundaryField& hbf = h.boundaryFieldRef();
 
     forAll(hbf, patchi)
     {

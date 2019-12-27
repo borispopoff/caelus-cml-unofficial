@@ -108,7 +108,7 @@ CML::linearUpwind##limiterType<Type>::correction                               \
     }                                                                          \
                                                                                \
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::                \
-        GeometricBoundaryField& bSfCorr = sfCorr.boundaryField();              \
+        GeometricBoundaryField& bSfCorr = sfCorr.boundaryFieldRef();           \
                                                                                \
     forAll(bSfCorr, patchi)                                                    \
     {                                                                          \

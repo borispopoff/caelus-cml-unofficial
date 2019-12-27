@@ -98,7 +98,7 @@ CML::tmp<CML::volScalarField> CML::laminarFlameSpeedModels::Gulders::Su0pTphi
     {
         forAll(Su0.boundaryField()[patchi], facei)
         {
-            Su0.boundaryField()[patchi][facei] =
+            Su0.boundaryFieldRef()[patchi][facei] =
                 Su0pTphi
                 (
                     p.boundaryField()[patchi][facei],
@@ -149,7 +149,7 @@ CML::tmp<CML::volScalarField> CML::laminarFlameSpeedModels::Gulders::Su0pTphi
     {
         forAll(Su0.boundaryField()[patchi], facei)
         {
-            Su0.boundaryField()[patchi][facei] =
+            Su0.boundaryFieldRef()[patchi][facei] =
                 Su0pTphi
                 (
                     p.boundaryField()[patchi][facei],

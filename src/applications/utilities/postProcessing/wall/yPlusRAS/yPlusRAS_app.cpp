@@ -77,7 +77,7 @@ void calcIncompressibleYPlus
                 dynamic_cast<const wallFunctionPatchField&>
                     (nutPatches[patchi]);
 
-            yPlus.boundaryField()[patchi] = nutPw.yPlus();
+            yPlus.boundaryFieldRef()[patchi] = nutPw.yPlus();
             const scalarField& Yp = yPlus.boundaryField()[patchi];
 
             Info<< "Patch " << patchi
@@ -157,7 +157,7 @@ void calcCompressibleYPlus
                 dynamic_cast<const wallFunctionPatchField&>
                     (mutPatches[patchi]);
 
-            yPlus.boundaryField()[patchi] = mutPw.yPlus();
+            yPlus.boundaryFieldRef()[patchi] = mutPw.yPlus();
             const scalarField& Yp = yPlus.boundaryField()[patchi];
 
             Info<< "Patch " << patchi

@@ -150,7 +150,7 @@ void CML::inversePointDistanceDiffusivity::correct()
 
     forAll(faceDiffusivity_.boundaryField(), patchi)
     {
-        fvsPatchScalarField& bfld = faceDiffusivity_.boundaryField()[patchi];
+        fvsPatchScalarField& bfld = faceDiffusivity_.boundaryFieldRef()[patchi];
 
         if (patchSet.found(patchi))
         {

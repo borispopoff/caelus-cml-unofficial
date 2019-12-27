@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -226,7 +226,7 @@ CML::extendedCellToFaceStencil::weightedSum
     // Boundaries. Either constrained or calculated so assign value
     // directly (instead of nicely using operator==)
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& bSfCorr = sf.boundaryField();
+        GeometricBoundaryField& bSfCorr = sf.boundaryFieldRef();
 
     forAll(bSfCorr, patchi)
     {

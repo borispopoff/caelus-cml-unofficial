@@ -231,7 +231,7 @@ void CML::radiation::P1::calculate()
       - 4.0*(e_*physicoChemical::sigma*pow4(T_) ) - E_
     );
 
-    volScalarField::GeometricBoundaryField& qrBf = qr_.boundaryField();
+    volScalarField::GeometricBoundaryField& qrBf = qr_.boundaryFieldRef();
 
     // Calculate radiative heat flux on boundaries.
     forAll(mesh_.boundaryMesh(), patchi)

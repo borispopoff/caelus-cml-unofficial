@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
 
             forAll(sigmaUn.boundaryField(), patchi)
             {
-                sigmaUn.boundaryField()[patchi] =
+                sigmaUn.boundaryFieldRef()[patchi] =
                 (
                     mesh.boundary()[patchi].nf()
                   & sigma.boundaryField()[patchi]

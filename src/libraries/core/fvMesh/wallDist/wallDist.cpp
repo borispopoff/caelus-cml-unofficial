@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -78,7 +78,7 @@ void CML::wallDist::correct()
         {
             scalarField& waveFld = wave.patchDistance()[patchi];
 
-            boundaryField()[patchi].transfer(waveFld);
+            boundaryFieldRef()[patchi].transfer(waveFld);
         }
     }
 

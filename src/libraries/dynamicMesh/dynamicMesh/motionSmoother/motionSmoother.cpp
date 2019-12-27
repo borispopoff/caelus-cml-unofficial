@@ -642,8 +642,8 @@ void CML::motionSmoother::setDisplacement(pointField& patchDisp)
     {
         label patchi = adaptPatchIDs_[i];
 
-        displacement_.boundaryField()[patchi] ==
-            displacement_.boundaryField()[patchi].patchInternalField();
+        displacement_.boundaryFieldRef()[patchi] ==
+            displacement_.boundaryFieldRef()[patchi].patchInternalField();
     }
 
     // Make consistent with non-adapted bc's by evaluating those now and
@@ -662,12 +662,12 @@ void CML::motionSmoother::setDisplacement(pointField& patchDisp)
         {
             if (patchSchedule[patchEvalI].init)
             {
-                displacement_.boundaryField()[patchi]
+                displacement_.boundaryFieldRef()[patchi]
                     .initEvaluate(Pstream::commsTypes::scheduled);
             }
             else
             {
-                displacement_.boundaryField()[patchi]
+                displacement_.boundaryFieldRef()[patchi]
                     .evaluate(Pstream::commsTypes::scheduled);
             }
         }
@@ -692,8 +692,8 @@ void CML::motionSmoother::setDisplacement(pointField& patchDisp)
     {
         label patchi = adaptPatchIDs_[i];
 
-        displacement_.boundaryField()[patchi] ==
-            displacement_.boundaryField()[patchi].patchInternalField();
+        displacement_.boundaryFieldRef()[patchi] ==
+            displacement_.boundaryFieldRef()[patchi].patchInternalField();
     }
 
     if (debug)
@@ -746,12 +746,12 @@ void CML::motionSmoother::correctBoundaryConditions
         {
             if (patchSchedule[patchEvalI].init)
             {
-                displacement.boundaryField()[patchi]
+                displacement.boundaryFieldRef()[patchi]
                     .initEvaluate(Pstream::commsTypes::blocking);
             }
             else
             {
-                displacement.boundaryField()[patchi]
+                displacement.boundaryFieldRef()[patchi]
                     .evaluate(Pstream::commsTypes::blocking);
             }
         }
@@ -767,12 +767,12 @@ void CML::motionSmoother::correctBoundaryConditions
         {
             if (patchSchedule[patchEvalI].init)
             {
-                displacement.boundaryField()[patchi]
+                displacement.boundaryFieldRef()[patchi]
                     .initEvaluate(Pstream::commsTypes::blocking);
             }
             else
             {
-                displacement.boundaryField()[patchi]
+                displacement.boundaryFieldRef()[patchi]
                     .evaluate(Pstream::commsTypes::blocking);
             }
         }

@@ -228,7 +228,7 @@ CML::PhiScheme<Type, PhiLimiter>::limiter
 
 
     surfaceScalarField::GeometricBoundaryField& bLimiter =
-        Limiter.boundaryField();
+        Limiter.boundaryFieldRef();
 
     forAll(bLimiter, patchi)
     {

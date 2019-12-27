@@ -117,7 +117,7 @@ void CML::displacementSBRStressFvMotionSolver::solve()
     movePoints(fvMesh_.points());
 
     diffusivityPtr_->correct();
-    pointDisplacement_.boundaryField().updateCoeffs();
+    pointDisplacement_.boundaryFieldRef().updateCoeffs();
 
     surfaceScalarField Df(diffusivityPtr_->operator()());
 

@@ -102,7 +102,7 @@ CML::fv::naGaussGrad<Type>::calcGrad
 
     forAll(mesh.boundary(), patchi)
     {
-        fvsPatchField<Type>& pssf = ssf.boundaryField()[patchi];
+        fvsPatchField<Type>& pssf = ssf.boundaryFieldRef()[patchi];
 
         forAll(mesh.boundary()[patchi], facei)
         {

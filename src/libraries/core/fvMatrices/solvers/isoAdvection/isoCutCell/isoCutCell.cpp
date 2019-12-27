@@ -688,7 +688,7 @@ void CML::isoCutCell::volumeOfFluid
         if (mesh_.boundary()[patchi].size() > 0)
         {
             const label start = mesh_.boundary()[patchi].patch().start();
-            scalarField& alphap = alpha1.boundaryField()[patchi];
+            scalarField& alphap = alpha1.boundaryFieldRef()[patchi];
             const scalarField& magSfp = mesh_.magSf().boundaryField()[patchi];
 
             forAll(alphap, patchFacei)

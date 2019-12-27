@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 
         forAll(wallHeatFlux.boundaryField(), patchi)
         {
-            wallHeatFlux.boundaryField()[patchi] = patchHeatFlux[patchi];
+            wallHeatFlux.boundaryFieldRef()[patchi] = patchHeatFlux[patchi];
         }
 
         wallHeatFlux.write();

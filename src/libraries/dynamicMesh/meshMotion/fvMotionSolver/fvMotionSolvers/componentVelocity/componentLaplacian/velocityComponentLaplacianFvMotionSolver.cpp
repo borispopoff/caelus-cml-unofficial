@@ -117,7 +117,7 @@ void CML::velocityComponentLaplacianFvMotionSolver::solve()
     movePoints(fvMesh_.points());
 
     diffusivityPtr_->correct();
-    pointMotionU_.boundaryField().updateCoeffs();
+    pointMotionU_.boundaryFieldRef().updateCoeffs();
 
     CML::solve
     (

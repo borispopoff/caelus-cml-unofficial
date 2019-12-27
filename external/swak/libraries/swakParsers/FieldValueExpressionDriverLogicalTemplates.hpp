@@ -61,18 +61,18 @@ tmp<Field> FieldValueExpressionDriver::doCompare(const Field &a,Op op,const Fiel
 
     forAll(res(),celli) {
         if( op(a[celli],b[celli]) ) {
-            res.ref()[celli]=1;
+            const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res.ref()[celli]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 
     forAll(res->boundaryField(),pI) {
         forAll(res->boundaryField()[pI],fI) {
             if( op(getFaceValue(a),getFaceValue(b)) ) {
-                getFaceValue(res.ref())=1;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=1;
             } else {
-                getFaceValue(res.ref())=0;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=0;
             }
         }
     }
@@ -87,9 +87,9 @@ tmp<Field> FieldValueExpressionDriver::doPointCompare(const Field &a,Op op,const
 
     forAll(res(),celli) {
         if( op(a[celli],b[celli]) ) {
-            res.ref()[celli]=1;
+           const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res.ref()[celli]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 
@@ -106,9 +106,9 @@ tmp<Field> FieldValueExpressionDriver::doLogicalOp(const Field &a,Op op,const Fi
         bool bv= b[celli] ? true : false;
 
         if( op(av,bv) ) {
-            res.ref()[celli]=1;
+            const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res.ref()[celli]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 
@@ -117,9 +117,9 @@ tmp<Field> FieldValueExpressionDriver::doLogicalOp(const Field &a,Op op,const Fi
             bool av= getFaceValue(a) ? true : false;
             bool bv= getFaceValue(b) ? true : false;
             if( op(av,bv) ) {
-                getFaceValue(res.ref())=1;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=1;
             } else {
-                getFaceValue(res.ref())=0;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=0;
             }
         }
     }
@@ -141,9 +141,9 @@ tmp<Field> FieldValueExpressionDriver::doPointLogicalOp(
         bool bv= b[celli] ? true : false;
 
         if( op(av,bv) ) {
-            res.ref()[celli]=1;
+            const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res.ref()[celli]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 
@@ -164,9 +164,9 @@ tmp<T>  FieldValueExpressionDriver::doConditional(
     forAll(result(),celli) {
         bool c=cond[celli] ? true : false;
         if(c) {
-            result.ref()[celli]=yes[celli];
+            const_cast<typename T::value_type&>(result()[celli])=yes[celli];
         } else {
-            result.ref()[celli]=no[celli];
+            const_cast<typename T::value_type&>(result()[celli])=no[celli];
         }
     }
 
@@ -174,9 +174,9 @@ tmp<T>  FieldValueExpressionDriver::doConditional(
         forAll(result().boundaryField()[pI],fI) {
             bool c= getFaceValue(cond) ? true : false;
             if(c) {
-                getFaceValue(result.ref())=getFaceValue(yes);
+                const_cast<typename T::value_type&>(getFaceValue(result()))=getFaceValue(yes);
             } else {
-                getFaceValue(result.ref())=getFaceValue(no);
+               const_cast<typename T::value_type&>(getFaceValue(result()))=getFaceValue(no);
             }
         }
     }
@@ -198,9 +198,9 @@ tmp<T>  FieldValueExpressionDriver::doConditional(
     forAll(result(),celli) {
         bool c=cond[celli] ? true : false;
         if(c) {
-            result.ref()[celli]=yes[celli];
+            const_cast<typename T::value_type&>(result()[celli])=yes[celli];
         } else {
-            result.ref()[celli]=no[celli];
+            const_cast<typename T::value_type&>(result()[celli])=no[celli];
         }
     }
 
@@ -216,9 +216,9 @@ tmp<Field> FieldValueExpressionDriver::doLogicalNot(const Field &a)
         bool av= a[celli] ? true : false;
 
         if( !av ) {
-            res.ref()[celli]=1;
+            const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res.ref()[celli]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 
@@ -226,9 +226,9 @@ tmp<Field> FieldValueExpressionDriver::doLogicalNot(const Field &a)
         forAll(res->boundaryField()[pI],fI) {
             bool av= getFaceValue(a) ? true : false;
             if( !av ) {
-                getFaceValue(res.ref())=1;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=1;
             } else {
-                getFaceValue(res.ref())=0;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=0;
             }
         }
     }
@@ -245,9 +245,9 @@ tmp<Field> FieldValueExpressionDriver::doPointLogicalNot(const Field &a)
         bool av= a[celli] ? true : false;
 
         if( !av ) {
-            res.ref()[celli]=1;
+            const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res.ref()[celli]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 

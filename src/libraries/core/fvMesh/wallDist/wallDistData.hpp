@@ -194,7 +194,7 @@ void CML::wallDistData<TransferType>::correct()
 
     forAll(field_.boundaryField(), patchi)
     {
-        patchData.set(patchi, &field_.boundaryField()[patchi]);
+        patchData.set(patchi, &field_.boundaryFieldRef()[patchi]);
     }
 
     // Do mesh wave
@@ -218,11 +218,11 @@ void CML::wallDistData<TransferType>::correct()
 
         if (!isA<emptyFvPatchScalarField>(boundaryField()[patchi]))
         {
-            boundaryField()[patchi].transfer(waveFld);
+            boundaryFieldRef()[patchi].transfer(waveFld);
 
             Field<Type>& wavePatchData = wave.patchData()[patchi];
 
-            field_.boundaryField()[patchi].transfer(wavePatchData);
+            field_.boundaryFieldRef()[patchi].transfer(wavePatchData);
         }
     }
 

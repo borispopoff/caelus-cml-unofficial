@@ -136,10 +136,13 @@ public:
                 vff[facei] = max(vf[own[facei]], vf[nei[facei]]);
             }
 
-            forAll(vff.boundaryField(), patchi)
+            typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+                GeometricBoundaryField& bff = vff.boundaryFieldRef();
+
+            forAll(bff, patchi)
             {
                 const fvPatchField<Type>& pf = vf.boundaryField()[patchi];
-                Field<Type>& pff = vff.boundaryField()[patchi];
+                Field<Type>& pff = bff[patchi];
 
                 if (pf.coupled())
                 {

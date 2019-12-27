@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,7 +50,7 @@ CML::PhiScheme<Type, PhiLimiter>::limiter
             dimless
         )
     );
-    surfaceScalarField& Limiter = tLimiter();
+    surfaceScalarField& Limiter = tLimiter.ref();
 
     const surfaceScalarField& CDweights = mesh.surfaceInterpolation::weights();
 
@@ -96,7 +96,7 @@ CML::PhiScheme<Type, PhiLimiter>::limiter
 
 
     surfaceScalarField::GeometricBoundaryField& bLimiter =
-        Limiter.boundaryField();
+        Limiter.boundaryFieldRef();
 
     forAll(bLimiter, patchi)
     {

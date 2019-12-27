@@ -158,7 +158,7 @@ void CML::dynamicRefineBalancedFvMesh::correctBoundaries()
             {
                 if (fld.boundaryField()[patchi].coupled())
                 {
-                    fld.boundaryField()[patchi].initEvaluate
+                    fld.boundaryFieldRef()[patchi].initEvaluate
                     (
                         Pstream::defaultCommsType
                     );
@@ -179,7 +179,7 @@ void CML::dynamicRefineBalancedFvMesh::correctBoundaries()
             {
                 if (fld.boundaryField()[patchi].coupled())
                 {
-                    fld.boundaryField()[patchi].evaluate
+                    fld.boundaryFieldRef()[patchi].evaluate
                     (
                         Pstream::defaultCommsType
                     );

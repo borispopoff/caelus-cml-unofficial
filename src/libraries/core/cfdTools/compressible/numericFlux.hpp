@@ -273,9 +273,9 @@ void CML::numericFlux<Flux,Limiter>::update()
 
     forAll(T_.boundaryField(), patchi)
     {
-        fvsPatchScalarField& pRhoFlux = this->rhoFlux_.boundaryField()[patchi];
-        fvsPatchVectorField& pRhoUFlux = this->rhoUFlux_.boundaryField()[patchi];
-        fvsPatchScalarField& pRhoEFlux = this->rhoEFlux_.boundaryField()[patchi];
+        fvsPatchScalarField& pRhoFlux = this->rhoFlux_.boundaryFieldRef()[patchi];
+        fvsPatchVectorField& pRhoUFlux = this->rhoUFlux_.boundaryFieldRef()[patchi];
+        fvsPatchScalarField& pRhoEFlux = this->rhoEFlux_.boundaryFieldRef()[patchi];
 
         fvPatchScalarField const& pp = this->p_.boundaryField()[patchi];
         fvPatchVectorField const& pU = this->U_.boundaryField()[patchi];

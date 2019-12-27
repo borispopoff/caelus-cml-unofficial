@@ -91,11 +91,12 @@ void CML::skewCorrectionVectors::makeSkewCorrectionVectors() const
         SkewCorrVecs[facei] = Cpf - ((Sf[facei] & Cpf)/(Sf[facei] & d))*d;
     }
 
+    surfaceVectorField::GeometricBoundaryField& skewCorrVecsBf =
+        SkewCorrVecs.boundaryFieldRef();
 
-    forAll(SkewCorrVecs.boundaryField(), patchi)
+    forAll(skewCorrVecsBf, patchi)
     {
-        fvsPatchVectorField& patchSkewCorrVecs =
-            SkewCorrVecs.boundaryField()[patchi];
+        fvsPatchVectorField& patchSkewCorrVecs = skewCorrVecsBf[patchi];
 
         if (!patchSkewCorrVecs.coupled())
         {

@@ -521,7 +521,7 @@ void CML::displacementLayeredMotionMotionSolver::solve()
     movePoints(mesh().points());
 
     // Apply boundary conditions
-    pointDisplacement_.boundaryField().updateCoeffs();
+    pointDisplacement_.boundaryFieldRef().updateCoeffs();
 
     // Solve motion on all regions (=cellZones)
     const dictionary& regionDicts = coeffDict().subDict("regions");

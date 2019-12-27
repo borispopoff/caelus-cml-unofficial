@@ -830,7 +830,7 @@ void CML::meshToMesh::mapSrcToTgt
         label tgtPatchi = tgtPatchID_[i];
 
         const Field<Type>& srcField = field.boundaryField()[srcPatchi];
-        Field<Type>& tgtField = result.boundaryField()[tgtPatchi];
+        Field<Type>& tgtField = result.boundaryFieldRef()[tgtPatchi];
 
         tgtField = Type(Zero);
 
@@ -846,7 +846,7 @@ void CML::meshToMesh::mapSrcToTgt
     forAll(cuttingPatches_, i)
     {
         label patchi = cuttingPatches_[i];
-        fvPatchField<Type>& pf = result.boundaryField()[patchi];
+        fvPatchField<Type>& pf = result.boundaryFieldRef()[patchi];
         pf == pf.patchInternalField();
     }
 }
@@ -1009,7 +1009,7 @@ void CML::meshToMesh::mapTgtToSrc
     forAll(cuttingPatches_, i)
     {
         label patchi = cuttingPatches_[i];
-        fvPatchField<Type>& pf = result.boundaryField()[patchi];
+        fvPatchField<Type>& pf = result.boundaryFieldRef()[patchi];
         pf == pf.patchInternalField();
     }
 }

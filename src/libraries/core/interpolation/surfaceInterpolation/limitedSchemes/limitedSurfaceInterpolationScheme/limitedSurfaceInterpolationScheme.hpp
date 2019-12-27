@@ -361,7 +361,7 @@ tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
     }
 
     surfaceScalarField::GeometricBoundaryField& bWeights =
-        Weights.boundaryField();
+        Weights.boundaryFieldRef();
 
     forAll(bWeights, patchi)
     {

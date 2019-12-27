@@ -354,7 +354,7 @@ tmp<surfaceVectorField> FieldValueExpressionDriver::makeFaceProjectionField()
     forAll(mesh_.boundaryMesh(),patchI)
     {
         labelList cNumbers = mesh_.boundaryMesh()[patchI].faceCells();
-        fvsPatchVectorField & fFace = f->boundaryField()[patchI];
+        fvsPatchVectorField & fFace = f->boundaryFieldRef()[patchI];
 
         forAll(fFace,facei)
         {
@@ -518,7 +518,7 @@ tmp<volScalarField> FieldValueExpressionDriver::makeDistanceToPatchField(
         {
             scalarField& waveFld = wave.patchDistance()[patchI];
 
-            f->boundaryField()[patchI].transfer(waveFld);
+            f->boundaryFieldRef()[patchI].transfer(waveFld);
         }
     }
 
@@ -574,7 +574,7 @@ tmp<volScalarField> FieldValueExpressionDriver::makeNearDistanceField()
 
     f->dimensions().reset(mesh_.C().dimensions());
     nearWallDist dist(mesh_);
-    f->boundaryField()==dist;
+    f->boundaryFieldRef()==dist;
     f->dimensions().reset(dimless);
 
     f->correctBoundaryConditions();
@@ -655,7 +655,7 @@ tmp<surfaceScalarField> FieldValueExpressionDriver::makeInternalFaceField()
 
     forAll(f->boundaryField(),patchI) {
         forAll(f().boundaryField()[patchI],facei) {
-            f->boundaryField()[patchI][facei]=0;
+            f->boundaryFieldRef()[patchI][facei]=0;
         }
     }
 
@@ -675,7 +675,7 @@ tmp<surfaceScalarField> FieldValueExpressionDriver::makeOnPatchField(const word 
             << exit(FatalError);
     } else {
         forAll(f().boundaryField()[patchI],facei) {
-            f.ref().boundaryField()[patchI][facei]=1;
+            f.ref().boundaryFieldRef()[patchI][facei]=1;
         }
     }
 
@@ -724,7 +724,7 @@ tmp<surfaceScalarField> FieldValueExpressionDriver::makeFaceSetField(const word 
                   << endl
                   << exit(FatalError);
           } else {
-              f.ref().boundaryField()[patchI][
+              f.ref().boundaryFieldRef()[patchI][
                   faces[facei]
                   -
                   mesh().boundaryMesh()[patchI].start()] = 1.;
@@ -826,7 +826,7 @@ tmp<surfaceScalarField> FieldValueExpressionDriver::makeFaceZoneField(const word
                   << endl
                   << exit(FatalError);
           } else {
-              f.ref().boundaryField()[patchI][
+              f.ref().boundaryFieldRef()[patchI][
                   facei
                   -
                   mesh().boundaryMesh()[patchI].start()] = 1.;

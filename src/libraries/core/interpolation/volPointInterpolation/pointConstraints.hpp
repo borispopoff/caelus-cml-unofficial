@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2016 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -266,7 +266,7 @@ void CML::pointConstraints::setPatchFields
 )
 {
     typename GeometricField<Type, pointPatchField, pointMesh>::
-        GeometricBoundaryField& pfbf = pf.boundaryField();
+        GeometricBoundaryField& pfbf = pf.boundaryFieldRef();
 
     forAll(pfbf, patchi)
     {

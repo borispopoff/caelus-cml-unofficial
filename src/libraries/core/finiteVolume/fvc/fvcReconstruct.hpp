@@ -114,7 +114,7 @@ reconstruct
     {
         if (faceVols.boundaryField()[patchi].coupled())
         {
-            faceVols.boundaryField()[patchi] *=
+            faceVols.boundaryFieldRef()[patchi] *=
                 (1.0 -  mesh.weights().boundaryField()[patchi]);
         }
     }

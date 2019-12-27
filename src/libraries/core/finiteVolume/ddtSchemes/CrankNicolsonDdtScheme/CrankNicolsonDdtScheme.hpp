@@ -775,7 +775,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 ) - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0.boundaryFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -865,7 +865,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 ) - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0.boundaryFieldRef() =
             (
                 rDtCoef0*rho.value()*
                 (
@@ -957,7 +957,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 ) - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0.boundaryFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -1063,7 +1063,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
                 ) - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0.boundaryFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -1192,7 +1192,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
               - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0.boundaryFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -1274,7 +1274,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
               - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0.boundaryFieldRef() =
             (
                 rDtCoef0*rho.value()*
                 (
@@ -1359,7 +1359,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
               - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0.boundaryFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -1456,7 +1456,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
               - mesh().V00()*offCentre_(ddt0.internalField())
             )/mesh().V0();
 
-            ddt0.boundaryField() =
+            ddt0.boundaryFieldRef() =
             (
                 rDtCoef0*
                 (

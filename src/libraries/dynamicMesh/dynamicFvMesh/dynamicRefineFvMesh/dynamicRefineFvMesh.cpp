@@ -390,7 +390,7 @@ CML::dynamicRefineFvMesh::refine
 
             // Recalculate new boundary faces.
             surfaceScalarField::GeometricBoundaryField& phiBf =
-                phi.boundaryField();
+                phi.boundaryFieldRef();
             forAll(phiBf, patchi)
             {
                 fvsPatchScalarField& patchPhi = phiBf[patchi];
@@ -580,7 +580,7 @@ CML::dynamicRefineFvMesh::unrefine
 
             surfaceScalarField& phi = *iter();
             surfaceScalarField::GeometricBoundaryField& phiBf =
-                phi.boundaryField();
+                phi.boundaryFieldRef();
 
             const surfaceScalarField phiU
             (

@@ -105,7 +105,7 @@ SpalartAllmarasVLES::fw(volScalarField const& Stilda) const
             scalar(10.0)
         )
     );
-    r.boundaryField() == 0.0;
+    r.boundaryFieldRef() == 0.0;
 
     volScalarField const g(r + Cw2_*(pow6(r) - r));
 

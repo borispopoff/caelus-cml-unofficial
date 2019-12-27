@@ -43,7 +43,7 @@ forAll(pCorr.boundaryField(), patchi)
         fixedValueFvPatchScalarField& pCorrB =
             refCast<fixedValueFvPatchScalarField>
             (
-                pCorr.boundaryField()[patchi]
+                pCorr.boundaryFieldRef()[patchi]
             );
         
         pCorrB == scalarField(pCorrB.size(),scalar(0));

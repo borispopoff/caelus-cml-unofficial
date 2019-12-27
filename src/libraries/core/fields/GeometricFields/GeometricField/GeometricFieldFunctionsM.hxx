@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------* \
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -38,7 +38,7 @@ void Func                                                                      \
 )                                                                              \
 {                                                                              \
     CML::Func(res.internalField(), gf1.internalField());                       \
-    CML::Func(res.boundaryField(), gf1.boundaryField());                       \
+    CML::Func(res.boundaryFieldRef(), gf1.boundaryField());                    \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -107,7 +107,7 @@ void OpFunc                                                                    \
 )                                                                              \
 {                                                                              \
     CML::OpFunc(res.internalField(), gf1.internalField());                     \
-    CML::OpFunc(res.boundaryField(), gf1.boundaryField());                     \
+    CML::OpFunc(res.boundaryFieldRef(), gf1.boundaryField());                  \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -176,8 +176,18 @@ void Func                                                                      \
     const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
 )                                                                              \
 {                                                                              \
-    CML::Func(res.internalField(), gf1.internalField(), gf2.internalField());  \
-    CML::Func(res.boundaryField(), gf1.boundaryField(), gf2.boundaryField());  \
+    CML::Func                                                                  \
+    (                                                                          \
+        res.internalField(),                                                   \
+        gf1.internalField(),                                                   \
+        gf2.internalField()                                                    \
+    );                                                                         \
+    CML::Func                                                                  \
+    (                                                                          \
+        res.boundaryFieldRef(),                                                \
+        gf1.boundaryField(),                                                   \
+        gf2.boundaryField()                                                    \
+    );                                                                         \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -305,7 +315,7 @@ void Func                                                                      \
 )                                                                              \
 {                                                                              \
     CML::Func(res.internalField(), dt1.value(), gf2.internalField());          \
-    CML::Func(res.boundaryField(), dt1.value(), gf2.boundaryField());          \
+    CML::Func(res.boundaryFieldRef(), dt1.value(), gf2.boundaryField());       \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -396,7 +406,7 @@ void Func                                                                      \
 )                                                                              \
 {                                                                              \
     CML::Func(res.internalField(), gf1.internalField(), dt2.value());          \
-    CML::Func(res.boundaryField(), gf1.boundaryField(), dt2.value());          \
+    CML::Func(res.boundaryFieldRef(), gf1.boundaryField(), dt2.value());       \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -494,9 +504,9 @@ void OpFunc                                                                    \
 )                                                                              \
 {                                                                              \
     CML::OpFunc                                                                \
-        (res.internalField(), gf1.internalField(), gf2.internalField());       \
+    (res.internalField(), gf1.internalField(), gf2.internalField());           \
     CML::OpFunc                                                                \
-        (res.boundaryField(), gf1.boundaryField(), gf2.boundaryField());       \
+    (res.boundaryFieldRef(), gf1.boundaryField(), gf2.boundaryField());        \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -624,7 +634,7 @@ void OpFunc                                                                    \
 )                                                                              \
 {                                                                              \
     CML::OpFunc(res.internalField(), dt1.value(), gf2.internalField());        \
-    CML::OpFunc(res.boundaryField(), dt1.value(), gf2.boundaryField());        \
+    CML::OpFunc(res.boundaryFieldRef(), dt1.value(), gf2.boundaryField());     \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
@@ -715,7 +725,7 @@ void OpFunc                                                                    \
 )                                                                              \
 {                                                                              \
     CML::OpFunc(res.internalField(), gf1.internalField(), dt2.value());        \
-    CML::OpFunc(res.boundaryField(), gf1.boundaryField(), dt2.value());        \
+    CML::OpFunc(res.boundaryFieldRef(), gf1.boundaryField(), dt2.value());     \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \

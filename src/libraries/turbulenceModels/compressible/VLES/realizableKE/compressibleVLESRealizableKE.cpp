@@ -426,7 +426,7 @@ void realizableVLESKE::correct()
     volScalarField G(GName(), mut_*S2);
 
     // Update epsilon and G at the wall
-    epsilon_.boundaryField().updateCoeffs();
+    epsilon_.boundaryFieldRef().updateCoeffs();
 
     if (delayed_)
     {
@@ -486,7 +486,7 @@ void realizableVLESKE::correct()
 
     epsEqn.ref().relax();
     fvOptions.constrain(epsEqn.ref());
-    epsEqn.ref().boundaryManipulate(epsilon_.boundaryField());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
 
     solve(epsEqn);
     fvOptions.correct(epsilon_);

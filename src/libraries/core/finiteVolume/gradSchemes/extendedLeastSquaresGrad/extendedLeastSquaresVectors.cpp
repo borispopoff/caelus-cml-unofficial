@@ -160,7 +160,7 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
 
     // Visit the boundaries. Coupled boundaries are taken into account
     // in the construction of d vectors.
-    surfaceVectorField::GeometricBoundaryField& blsP = lsP.boundaryField();
+    surfaceVectorField::GeometricBoundaryField& blsP = lsP.boundaryFieldRef();
 
     forAll(blsP, patchi)
     {

@@ -167,7 +167,7 @@ void CML::fvMeshTools::addPatchFields
         GeoField& fld = *iter();
 
         typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+            fld.boundaryFieldRef();
 
         label sz = bfld.size();
         bfld.setSize(sz+1);
@@ -221,7 +221,7 @@ void CML::fvMeshTools::setPatchFields
         GeoField& fld = *iter();
 
         typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+            fld.boundaryFieldRef();
 
         if (patchFieldDict.found(fld.name()))
         {
@@ -260,7 +260,7 @@ void CML::fvMeshTools::setPatchFields
         GeoField& fld = *iter();
 
         typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+            fld.boundaryFieldRef();
 
         bfld[patchi] == value;
     }
@@ -279,7 +279,7 @@ void CML::fvMeshTools::trimPatchFields(fvMesh& mesh, const label nPatches)
     forAllIter(typename HashTable<GeoField*>, flds, iter)
     {
         GeoField& fld = *iter();
-        fld.boundaryField().setSize(nPatches);
+        fld.boundaryFieldRef().setSize(nPatches);
     }
 }
 
@@ -302,7 +302,7 @@ void CML::fvMeshTools::reorderPatchFields
         GeoField& fld = *iter();
 
         typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+            fld.boundaryFieldRef();
 
         bfld.reorder(oldToNew);
     }

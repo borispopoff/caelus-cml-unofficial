@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 
             if (isA<wallFvPatch>(currPatch))
             {
-                yPlus.boundaryField()[patchi] =
+                yPlus.boundaryFieldRef()[patchi] =
                     d[patchi]
                    *sqrt
                     (

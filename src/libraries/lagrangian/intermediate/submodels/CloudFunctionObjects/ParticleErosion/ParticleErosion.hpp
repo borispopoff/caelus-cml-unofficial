@@ -345,7 +345,7 @@ void CML::ParticleErosion<CloudType>::postPatch
 
         // Get the face value to accumulate into
         const label patchFacei = pp.whichFace(p.face());
-        scalar& Q = QPtr_->boundaryField()[patchi][patchFacei];
+        scalar& Q = QPtr_->boundaryFieldRef()[patchi][patchFacei];
 
         // Finnie's model
         const scalar coeff = p.nParticle()*p.mass()*sqr(magU)/(p_*psi_*K_);

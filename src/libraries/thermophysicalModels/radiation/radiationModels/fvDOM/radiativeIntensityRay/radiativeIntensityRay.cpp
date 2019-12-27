@@ -232,7 +232,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
 CML::scalar CML::radiation::radiativeIntensityRay::correct()
 {
     // Reset boundary heat flux to zero
-    qr_.boundaryField() = 0.0;
+    qr_.boundaryFieldRef() = 0.0;
 
     scalar maxResidual = -GREAT;
 

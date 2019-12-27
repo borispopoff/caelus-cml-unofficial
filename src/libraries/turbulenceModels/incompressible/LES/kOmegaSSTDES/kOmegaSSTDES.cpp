@@ -409,7 +409,7 @@ void kOmegaSSTDES::correct(tmp<volTensorField> const& gradU)
     if (mesh_.changing())
     {
         y_.correct();
-        y_.boundaryField() = max(y_.boundaryField(), VSMALL);
+        y_.boundaryFieldRef() = max(y_.boundaryField(), VSMALL);
     }
 
     volScalarField const S2(2*magSqr(symm(fvc::grad(U_))));
@@ -417,7 +417,7 @@ void kOmegaSSTDES::correct(tmp<volTensorField> const& gradU)
     volScalarField G(GName(), nuSgs_*S2);
 
     // Update omega and G at the wall
-    omega_.boundaryField().updateCoeffs();
+    omega_.boundaryFieldRef().updateCoeffs();
 
     volScalarField const CDkOmega
     (
@@ -478,7 +478,7 @@ void kOmegaSSTDES::correct(tmp<volTensorField> const& gradU)
 
     omegaEqn.ref().relax();
     fvOptions.constrain(omegaEqn.ref());
-    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
     mesh_.updateFvMatrix(omegaEqn.ref());
     omegaEqn.ref().solve();
     fvOptions.correct(omega_);

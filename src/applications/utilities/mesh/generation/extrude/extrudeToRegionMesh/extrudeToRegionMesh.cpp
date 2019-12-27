@@ -148,7 +148,7 @@ void trimPatchFields(fvMesh& mesh, const label nPatches)
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryField();
+        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryFieldRef();
 
         bfld.setSize(nPatches);
     }
@@ -168,7 +168,7 @@ void reorderPatchFields(fvMesh& mesh, const labelList& oldToNew)
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryField();
+        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryFieldRef();
 
         bfld.reorder(oldToNew);
     }

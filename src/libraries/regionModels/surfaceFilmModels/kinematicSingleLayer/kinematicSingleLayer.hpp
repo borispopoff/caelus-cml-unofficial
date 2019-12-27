@@ -548,7 +548,7 @@ void kinematicSingleLayer::constrainFilmField
     forAll(intCoupledPatchIDs_, i)
     {
         label patchi = intCoupledPatchIDs_[i];
-        field.boundaryField()[patchi] = value;
+        field.boundaryFieldRef()[patchi] = value;
         if (debug)
         {
             Info<< "Constraining " << field.name()
@@ -560,7 +560,7 @@ void kinematicSingleLayer::constrainFilmField
     forAll(passivePatchIDs_, i)
     {
         label patchi = passivePatchIDs_[i];
-        field.boundaryField()[patchi] = value;
+        field.boundaryFieldRef()[patchi] = value;
         if (debug)
         {
             Info<< "Constraining " << field.name()

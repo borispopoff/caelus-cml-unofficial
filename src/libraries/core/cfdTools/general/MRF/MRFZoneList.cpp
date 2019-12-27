@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -389,7 +389,7 @@ void CML::MRFZoneList::correctBoundaryFlux
     );
 
 
-    surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryField();
+    surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryFieldRef();
 
     forAll(mesh_.boundary(), patchi)
     {

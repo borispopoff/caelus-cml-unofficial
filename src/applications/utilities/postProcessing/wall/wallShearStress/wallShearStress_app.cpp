@@ -60,7 +60,7 @@ void calcIncompressible
 
     forAll(wallShearStress.boundaryField(), patchi)
     {
-        wallShearStress.boundaryField()[patchi] =
+        wallShearStress.boundaryFieldRef()[patchi] =
         (
            -mesh.Sf().boundaryField()[patchi]
            /mesh.magSf().boundaryField()[patchi]
@@ -115,7 +115,7 @@ void calcCompressible
 
     forAll(wallShearStress.boundaryField(), patchi)
     {
-        wallShearStress.boundaryField()[patchi] =
+        wallShearStress.boundaryFieldRef()[patchi] =
         (
            -mesh.Sf().boundaryField()[patchi]
            /mesh.magSf().boundaryField()[patchi]

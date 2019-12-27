@@ -62,7 +62,7 @@ void CML::SetPatchFields
     forAll(fields, i)
     {
         typename GeoField::PatchFieldType& pfld =
-            fields[i].boundaryField()[patchi];
+            fields[i].boundaryFieldRef()[patchi];
         pfld == initVal;
     }
 }

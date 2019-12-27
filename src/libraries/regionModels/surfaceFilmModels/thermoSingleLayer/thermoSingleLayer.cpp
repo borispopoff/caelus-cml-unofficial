@@ -114,7 +114,7 @@ void thermoSingleLayer::correctHsForMappedT()
         const fvPatchField<scalar>& Tp = T_.boundaryField()[patchi];
         if (isA<mappedFieldFvPatchField<scalar>>(Tp))
         {
-            hs_.boundaryField()[patchi] == hs(Tp, patchi);
+            hs_.boundaryFieldRef()[patchi] == hs(Tp, patchi);
         }
     }
 }
@@ -177,7 +177,7 @@ void thermoSingleLayer::transferPrimaryRegionSourceFields()
             (1.0/deltaT)/primaryMesh().magSf().boundaryField()[patchi]
         );
 
-        hsSpPrimary_.boundaryField()[patchi] *= rpriMagSfdeltaT;
+        hsSpPrimary_.boundaryFieldRef()[patchi] *= rpriMagSfdeltaT;
     }
 
     // Retrieve the source fields from the primary region via direct mapped
@@ -592,7 +592,7 @@ void thermoSingleLayer::addSources
         Info<< "    energy   = " << energySource << nl << endl;
     }
 
-    hsSpPrimary_.boundaryField()[patchi][facei] -= energySource;
+    hsSpPrimary_.boundaryFieldRef()[patchi][facei] -= energySource;
 }
 
 

@@ -122,9 +122,9 @@ void kinematicSingleLayer::transferPrimaryRegionSourceFields()
            /primaryMesh().magSf().boundaryField()[patchi]
         );
 
-        rhoSpPrimary_.boundaryField()[patchi] *= rpriMagSfdeltaT;
-        USpPrimary_.boundaryField()[patchi] *= rpriMagSfdeltaT;
-        pSpPrimary_.boundaryField()[patchi] *= rpriMagSfdeltaT;
+        rhoSpPrimary_.boundaryFieldRef()[patchi] *= rpriMagSfdeltaT;
+        USpPrimary_.boundaryFieldRef()[patchi] *= rpriMagSfdeltaT;
+        pSpPrimary_.boundaryFieldRef()[patchi] *= rpriMagSfdeltaT;
     }
 
     // Retrieve the source fields from the primary region via direct mapped
@@ -845,9 +845,9 @@ void kinematicSingleLayer::addSources
             << "    pressure = " << pressureSource << endl;
     }
 
-    rhoSpPrimary_.boundaryField()[patchi][facei] -= massSource;
-    USpPrimary_.boundaryField()[patchi][facei] -= momentumSource;
-    pSpPrimary_.boundaryField()[patchi][facei] -= pressureSource;
+    rhoSpPrimary_.boundaryFieldRef()[patchi][facei] -= massSource;
+    USpPrimary_.boundaryFieldRef()[patchi][facei] -= momentumSource;
+    pSpPrimary_.boundaryFieldRef()[patchi][facei] -= pressureSource;
 
     addedMassTotal_ += massSource;
 }

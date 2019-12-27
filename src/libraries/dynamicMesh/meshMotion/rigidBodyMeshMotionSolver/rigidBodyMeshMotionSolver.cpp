@@ -325,7 +325,7 @@ void CML::rigidBodyMeshMotionSolver::solve()
                .patchInternalField(meshSolver_.points0())
             );
 
-            meshSolver_.pointDisplacement().boundaryField()[patchi] ==
+            meshSolver_.pointDisplacement().boundaryFieldRef()[patchi] ==
             (
                 model_.transformPoints
                 (

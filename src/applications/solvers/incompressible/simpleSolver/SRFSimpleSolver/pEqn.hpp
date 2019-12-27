@@ -1,5 +1,5 @@
 {
-    p.boundaryField().updateCoeffs();
+    p.boundaryFieldRef().updateCoeffs();
 
     volScalarField rAUrel(1.0/UrelEqn.A());
     Urel = rAUrel*UrelEqn.H();

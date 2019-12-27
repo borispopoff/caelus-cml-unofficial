@@ -351,7 +351,7 @@ void CML::MULES::limiter
 
     scalarField& lambdaIf = lambda;
     surfaceScalarField::GeometricBoundaryField& lambdaBf =
-        lambda.boundaryField();
+        lambda.boundaryFieldRef();
 
     scalarField psiMaxn(psiIf.size(), psiMin);
     scalarField psiMinn(psiIf.size(), psiMax);

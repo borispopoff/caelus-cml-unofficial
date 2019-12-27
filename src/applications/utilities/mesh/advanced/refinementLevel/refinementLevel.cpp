@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
     {
         const polyPatch& pp = patches[patchi];
 
-        fvPatchScalarField& bField = postRefLevel.boundaryField()[patchi];
+        fvPatchScalarField& bField = postRefLevel.boundaryFieldRef()[patchi];
 
         Info<< "Setting field for patch "<< endl;
 

@@ -170,7 +170,7 @@ CML::fv::secondOrderCorrectedSnGrad<Type>::fullGradCorrection
 
     forAll(vf.boundaryField(), patchi)
     {
-        fvsPatchVectorField& patchCorrVecs = nonOrthCorrectionVectorsCP.ref().boundaryField()[patchi];
+        fvsPatchVectorField& patchCorrVecs = nonOrthCorrectionVectorsCP.ref().boundaryFieldRef()[patchi];
 
         if (vf.boundaryField()[patchi].fixesValue())
         {

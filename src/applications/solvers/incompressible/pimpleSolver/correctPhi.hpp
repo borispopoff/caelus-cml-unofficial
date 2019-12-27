@@ -4,7 +4,7 @@ if (mesh.changing())
     {
         if (U.boundaryField()[patchi].fixesValue())
         {
-            U.boundaryField()[patchi].initEvaluate();
+            U.boundaryFieldRef()[patchi].initEvaluate();
         }
     }
 
@@ -12,9 +12,9 @@ if (mesh.changing())
     {
         if (U.boundaryField()[patchi].fixesValue())
         {
-            U.boundaryField()[patchi].evaluate();
+            U.boundaryFieldRef()[patchi].evaluate();
 
-            phi.boundaryField()[patchi] =
+            phi.boundaryFieldRef()[patchi] =
                 U.boundaryField()[patchi]
               & mesh.Sf().boundaryField()[patchi];
         }

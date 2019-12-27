@@ -257,7 +257,7 @@ CML::radiation::blackBodyEmission::EbDeltaLambdaT
             Ebif[i] *= fLambdaT(band[1]*T[i]) - fLambdaT(band[0]*T[i]);
         }
 
-        volScalarField::GeometricBoundaryField& EbBf = Eb.ref().boundaryField();
+        volScalarField::GeometricBoundaryField& EbBf = Eb.ref().boundaryFieldRef();
 
         forAll(EbBf, patchi)
         {

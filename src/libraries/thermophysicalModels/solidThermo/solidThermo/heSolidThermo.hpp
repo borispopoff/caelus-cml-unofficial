@@ -149,19 +149,19 @@ void CML::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
     }
 
     volScalarField::GeometricBoundaryField& pBf =
-        this->p_.boundaryField();
+        this->p_.boundaryFieldRef();
 
     volScalarField::GeometricBoundaryField& TBf =
-        this->T_.boundaryField();
+        this->T_.boundaryFieldRef();
 
     volScalarField::GeometricBoundaryField& rhoBf =
-        this->rho_.boundaryField();
+        this->rho_.boundaryFieldRef();
 
     volScalarField::GeometricBoundaryField& heBf =
-        this->he().boundaryField();
+        this->he().boundaryFieldRef();
 
     volScalarField::GeometricBoundaryField& alphaBf =
-        this->alpha_.boundaryField();
+        this->alpha_.boundaryFieldRef();
 
     forAll(this->T_.boundaryField(), patchi)
     {
@@ -315,7 +315,7 @@ CML::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
             ).Kappa(pCells[celli], TCells[celli]);
     }
 
-    volVectorField::GeometricBoundaryField& KappaBf = Kappa.boundaryField();
+    volVectorField::GeometricBoundaryField& KappaBf = Kappa.boundaryFieldRef();
 
     forAll(KappaBf, patchi)
     {

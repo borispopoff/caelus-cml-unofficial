@@ -452,10 +452,10 @@ CML::isoSurface::adaptPatchFields
         )
         {
             // Clear old value. Cannot resize it since is a slice.
-            sliceFld.boundaryField().set(patchi, nullptr);
+            sliceFld.boundaryFieldRef().set(patchi, nullptr);
 
             // Set new value we can change
-            sliceFld.boundaryField().set
+            sliceFld.boundaryFieldRef().set
             (
                 patchi,
                 new calculatedFvPatchField<Type>
@@ -470,7 +470,7 @@ CML::isoSurface::adaptPatchFields
             const labelUList& faceCells =
                 mesh.boundary()[patchi].patch().faceCells();
 
-            Field<Type>& pfld = sliceFld.boundaryField()[patchi];
+            Field<Type>& pfld = sliceFld.boundaryFieldRef()[patchi];
             pfld.setSize(faceCells.size());
             forAll(faceCells, i)
             {

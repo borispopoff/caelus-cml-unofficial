@@ -449,7 +449,7 @@ public:
         inline const InternalField& internalField() const;
 
         //- Return reference to GeometricBoundaryField
-        GeometricBoundaryField& boundaryField();
+        GeometricBoundaryField& boundaryFieldRef();
 
         //- Return reference to GeometricBoundaryField for const field
         inline const GeometricBoundaryField& boundaryField() const;
@@ -1437,7 +1437,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::internalField()
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
 CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField&
-CML::GeometricField<Type, PatchField, GeoMesh>::boundaryField()
+CML::GeometricField<Type, PatchField, GeoMesh>::boundaryFieldRef()
 {
     this->setUpToDate();
     storeOldTimes();
@@ -1711,7 +1711,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::T() const
     );
 
     CML::T(result.ref().internalField(), internalField());
-    CML::T(result.ref().boundaryField(), boundaryField());
+    CML::T(result.ref().boundaryFieldRef(), boundaryField());
 
     return result;
 }
@@ -1748,7 +1748,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::component
     );
 
     CML::component(Component.ref().internalField(), internalField(), d);
-    CML::component(Component.ref().boundaryField(), boundaryField(), d);
+    CML::component(Component.ref().boundaryFieldRef(), boundaryField(), d);
 
     return Component;
 }
@@ -1767,7 +1767,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::replace
 )
 {
     internalField().replace(d, gcf.internalField());
-    boundaryField().replace(d, gcf.boundaryField());
+    boundaryFieldRef().replace(d, gcf.boundaryField());
 }
 
 
@@ -1779,7 +1779,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::replace
 )
 {
     internalField().replace(d, ds.value());
-    boundaryField().replace(d, ds.value());
+    boundaryFieldRef().replace(d, ds.value());
 }
 
 
@@ -1790,7 +1790,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::max
 )
 {
     CML::max(internalField(), internalField(), dt.value());
-    CML::max(boundaryField(), boundaryField(), dt.value());
+    CML::max(boundaryFieldRef(), boundaryField(), dt.value());
 }
 
 
@@ -1801,7 +1801,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::min
 )
 {
     CML::min(internalField(), internalField(), dt.value());
-    CML::min(boundaryField(), boundaryField(), dt.value());
+    CML::min(boundaryFieldRef(), boundaryField(), dt.value());
 }
 
 
@@ -1809,7 +1809,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 void CML::GeometricField<Type, PatchField, GeoMesh>::negate()
 {
     internalField().negate();
-    boundaryField().negate();
+    boundaryFieldRef().negate();
 }
 
 
@@ -1833,7 +1833,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
     // Only assign field contents not ID
 
     dimensionedInternalField() = gf.dimensionedInternalField();
-    boundaryField() = gf.boundaryField();
+    boundaryFieldRef() = gf.boundaryField();
 }
 
 
@@ -1855,7 +1855,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
     // Only assign field contents not ID
 
     dimensionedInternalField() = move(gf.dimensionedInternalField());
-    boundaryField() = move(gf.boundaryField());
+    boundaryFieldRef() = move(gf.boundaryField());
 }
 
 
@@ -1893,7 +1893,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
         internalField() = gf.internalField();
     }
 
-    boundaryField() = gf.boundaryField();
+    boundaryFieldRef() = gf.boundaryField();
 
     tgf.clear();
 }
@@ -1906,7 +1906,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
 )
 {
     dimensionedInternalField() = dt;
-    boundaryField() = dt.value();
+    boundaryFieldRef() = dt.value();
 }
 
 
@@ -1917,7 +1917,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
 )
 {
     dimensionedInternalField() = Zero;
-    boundaryField() = Zero;
+    boundaryFieldRef() = Zero;
 }
 
 
@@ -1934,7 +1934,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
     // Only assign field contents not ID
 
     dimensionedInternalField() = gf.dimensionedInternalField();
-    boundaryField() == gf.boundaryField();
+    boundaryFieldRef() == gf.boundaryField();
 
     tgf.clear();
 }
@@ -1947,7 +1947,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
 )
 {
     dimensionedInternalField() = dt;
-    boundaryField() == dt.value();
+    boundaryFieldRef() == dt.value();
 }
 
 
@@ -1958,22 +1958,22 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
 )
 {
     dimensionedInternalField() = Zero;
-    boundaryField() == Zero;
+    boundaryFieldRef() == Zero;
 }
 
 
 #define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
                                                                                \
 template<class Type, template<class> class PatchField, class GeoMesh>          \
-void CML::GeometricField<Type, PatchField, GeoMesh>::operator op               \
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator op              \
 (                                                                              \
     const GeometricField<TYPE, PatchField, GeoMesh>& gf                        \
 )                                                                              \
 {                                                                              \
     checkField(*this, gf, #op);                                                \
                                                                                \
-    dimensionedInternalField() op gf.dimensionedInternalField();               \
-    boundaryField() op gf.boundaryField();                                     \
+    dimensionedInternalField() op gf.dimensionedInternalField();            \
+    boundaryFieldRef() op gf.boundaryField();                                  \
 }                                                                              \
                                                                                \
 template<class Type, template<class> class PatchField, class GeoMesh>          \
@@ -1992,8 +1992,8 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator op               \
     const dimensioned<TYPE>& dt                                                \
 )                                                                              \
 {                                                                              \
-    dimensionedInternalField() op dt;                                          \
-    boundaryField() op dt.value();                                             \
+    dimensionedInternalField() op dt;                                       \
+    boundaryFieldRef() op dt.value();                                          \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)
@@ -2642,7 +2642,7 @@ void component
 )
 {
     component(gcf.internalField(), gf.internalField(), d);
-    component(gcf.boundaryField(), gf.boundaryField(), d);
+    component(gcf.boundaryFieldRef(), gf.boundaryField(), d);
 }
 
 
@@ -2654,11 +2654,17 @@ void T
 )
 {
     T(gf.internalField(), gf1.internalField());
-    T(gf.boundaryField(), gf1.boundaryField());
+    T(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh, direction r>
+template
+<
+    class Type,
+    template<class> class PatchField,
+    class GeoMesh,
+    direction r
+>
 void pow
 (
     GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh>& gf,
@@ -2666,10 +2672,16 @@ void pow
 )
 {
     pow(gf.internalField(), gf1.internalField(), r);
-    pow(gf.boundaryField(), gf1.boundaryField(), r);
+    pow(gf.boundaryFieldRef(), gf1.boundaryField(), r);
 }
 
-template<class Type, template<class> class PatchField, class GeoMesh, direction r>
+template
+<
+    class Type,
+    template<class> class PatchField,
+    class GeoMesh,
+    direction r
+>
 tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh>>
 pow
 (
@@ -2702,7 +2714,13 @@ pow
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh, direction r>
+template
+<
+    class Type,
+    template<class> class PatchField,
+    class GeoMesh,
+    direction r
+>
 tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh>>
 pow
 (
@@ -2748,7 +2766,7 @@ void sqr
 )
 {
     sqr(gf.internalField(), gf1.internalField());
-    sqr(gf.boundaryField(), gf1.boundaryField());
+    sqr(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -2836,7 +2854,7 @@ void magSqr
 )
 {
     magSqr(gsf.internalField(), gf.internalField());
-    magSqr(gsf.boundaryField(), gf.boundaryField());
+    magSqr(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -2908,7 +2926,7 @@ void mag
 )
 {
     mag(gsf.internalField(), gf.internalField());
-    mag(gsf.boundaryField(), gf.boundaryField());
+    mag(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -2985,7 +3003,7 @@ void cmptAv
 )
 {
     cmptAv(gcf.internalField(), gf.internalField());
-    cmptAv(gcf.boundaryField(), gf.boundaryField());
+    cmptAv(gcf.boundaryFieldRef(), gf.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -3173,8 +3191,18 @@ void opFunc                                                                    \
     const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
 )                                                                              \
 {                                                                              \
-    CML::opFunc(gf.internalField(), gf1.internalField(), gf2.internalField()); \
-    CML::opFunc(gf.boundaryField(), gf1.boundaryField(), gf2.boundaryField()); \
+    CML::opFunc                                                                \
+    (                                                                          \
+        gf.internalField(),                                                    \
+        gf1.internalField(),                                                   \
+        gf2.internalField()                                                    \
+    );                                                                         \
+    CML::opFunc                                                                \
+    (                                                                          \
+        gf.boundaryFieldRef(),                                                 \
+        gf1.boundaryField(),                                                   \
+        gf2.boundaryField()                                                    \
+    );                                                                         \
 }                                                                              \
                                                                                \
 template                                                                       \
@@ -3320,7 +3348,7 @@ void opFunc                                                                    \
 )                                                                              \
 {                                                                              \
     CML::opFunc(gf.internalField(), gf1.internalField(), dvs.value());         \
-    CML::opFunc(gf.boundaryField(), gf1.boundaryField(), dvs.value());         \
+    CML::opFunc(gf.boundaryFieldRef(), gf1.boundaryField(), dvs.value());      \
 }                                                                              \
                                                                                \
 template                                                                       \
@@ -3433,7 +3461,7 @@ void opFunc                                                                    \
 )                                                                              \
 {                                                                              \
     CML::opFunc(gf.internalField(), dvs.value(), gf1.internalField());         \
-    CML::opFunc(gf.boundaryField(), dvs.value(), gf1.boundaryField());         \
+    CML::opFunc(gf.boundaryFieldRef(), dvs.value(), gf1.boundaryField());      \
 }                                                                              \
                                                                                \
 template                                                                       \

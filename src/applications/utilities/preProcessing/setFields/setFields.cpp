@@ -84,7 +84,7 @@ bool setCellFieldType
 
         forAll(field.boundaryField(), patchi)
         {
-            field.boundaryField()[patchi] =
+            field.boundaryFieldRef()[patchi] =
                 field.boundaryField()[patchi].patchInternalField();
         }
 
@@ -237,7 +237,7 @@ bool setFaceFieldType
                 Info<< "    On patch "
                     << field.boundaryField()[patchi].patch().name()
                     << " set " << nChanged[patchi] << " values" << endl;
-                field.boundaryField()[patchi] == SubField<Type>
+                field.boundaryFieldRef()[patchi] == SubField<Type>
                 (
                     allBoundaryValues,
                     field.boundaryField()[patchi].size(),

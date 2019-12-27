@@ -316,7 +316,7 @@ void CML::fv::CorrGaussGrad<Type>::correctBoundaryConditions
               / vsf.mesh().magSf().boundaryField()[patchi]
             );
 
-            gGrad.boundaryField()[patchi] += n *
+            gGrad.boundaryFieldRef()[patchi] += n *
             (
                 vsf.boundaryField()[patchi].snGrad()
               - (n & gGrad.boundaryField()[patchi])

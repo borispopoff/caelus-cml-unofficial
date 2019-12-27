@@ -72,7 +72,7 @@ void vanDriestDelta::calcDelta()
             const scalarField& nuw = nu.boundaryField()[patchi];
             const scalarField& nuSgsw = nuSgs().boundaryField()[patchi];
 
-            ystar.boundaryField()[patchi] =
+            ystar.boundaryFieldRef()[patchi] =
                 nuw/sqrt((nuw + nuSgsw)*mag(Uw.snGrad()) + VSMALL);
         }
     }

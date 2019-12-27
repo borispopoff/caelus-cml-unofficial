@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -132,17 +132,17 @@ void func                                                                      \
 );                                                                             \
                                                                                \
 template<template<class> class PatchField, class GeoMesh>                      \
-tmp<GeometricField<scalar, PatchField, GeoMesh>> func                         \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                          \
 (                                                                              \
     const int n,                                                               \
     const GeometricField<scalar, PatchField, GeoMesh>&                         \
 );                                                                             \
                                                                                \
 template<template<class> class PatchField, class GeoMesh>                      \
-tmp<GeometricField<scalar, PatchField, GeoMesh>> func                         \
+tmp<GeometricField<scalar, PatchField, GeoMesh>> func                          \
 (                                                                              \
     const int n,                                                               \
-    const tmp<GeometricField<scalar, PatchField, GeoMesh>>&                   \
+    const tmp<GeometricField<scalar, PatchField, GeoMesh>>&                    \
 );
 
 BesselFunc(jn)
@@ -178,7 +178,7 @@ void stabilise
 )
 {
     stabilise(result.internalField(), gsf.internalField(), ds.value());
-    stabilise(result.boundaryField(), gsf.boundaryField(), ds.value());
+    stabilise(result.boundaryFieldRef(), gsf.boundaryField(), ds.value());
 }
 
 
@@ -261,7 +261,7 @@ void pow
 )
 {
     pow(Pow.internalField(), gsf1.internalField(), gsf2.internalField());
-    pow(Pow.boundaryField(), gsf1.boundaryField(), gsf2.boundaryField());
+    pow(Pow.boundaryFieldRef(), gsf1.boundaryField(), gsf2.boundaryField());
 }
 
 
@@ -444,7 +444,7 @@ void pow
 )
 {
     pow(tPow.internalField(), gsf.internalField(), ds.value());
-    pow(tPow.boundaryField(), gsf.boundaryField(), ds.value());
+    pow(tPow.boundaryFieldRef(), gsf.boundaryField(), ds.value());
 }
 
 
@@ -547,7 +547,7 @@ void pow
 )
 {
     pow(tPow.internalField(), ds.value(), gsf.internalField());
-    pow(tPow.boundaryField(), ds.value(), gsf.boundaryField());
+    pow(tPow.boundaryFieldRef(), ds.value(), gsf.boundaryField());
 }
 
 
@@ -1024,7 +1024,7 @@ void func                                                                      \
 )                                                                              \
 {                                                                              \
     func(gsf.internalField(), n, gsf1.internalField());                        \
-    func(gsf.boundaryField(), n, gsf1.boundaryField());                        \
+    func(gsf.boundaryFieldRef(), n, gsf1.boundaryField());                        \
 }                                                                              \
                                                                                \
 template<template<class> class PatchField, class GeoMesh>                      \

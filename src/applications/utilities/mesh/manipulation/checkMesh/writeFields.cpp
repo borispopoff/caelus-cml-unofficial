@@ -29,7 +29,7 @@ void maxFaceToCell
 
     forAll(cellData.boundaryField(), patchi)
     {
-        fvPatchScalarField& fvp = cellData.boundaryField()[patchi];
+        fvPatchScalarField& fvp = cellData.boundaryFieldRef()[patchi];
 
         fvp = fvp.patch().patchSlice(faceData);
     }
@@ -59,7 +59,7 @@ void minFaceToCell
 
     forAll(cellData.boundaryField(), patchi)
     {
-        fvPatchScalarField& fvp = cellData.boundaryField()[patchi];
+        fvPatchScalarField& fvp = cellData.boundaryFieldRef()[patchi];
 
         fvp = fvp.patch().patchSlice(faceData);
     }

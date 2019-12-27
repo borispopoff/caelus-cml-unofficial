@@ -334,7 +334,7 @@ typename GeometricField::PatchFieldType& CML::fvPatch::patchField
     GeometricField& gf
 ) const
 {
-    return gf.boundaryField()[index()];
+    return gf.boundaryFieldRef()[index()];
 }
 
 #endif

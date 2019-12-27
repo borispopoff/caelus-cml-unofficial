@@ -211,7 +211,7 @@ void CML::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
     }
 
     operator==(newUValues);
-    phiField.boundaryField()[patch().index()] == newPhiValues;
+    phiField.boundaryFieldRef()[patch().index()] == newPhiValues;
 
     // Restore tag
     UPstream::msgType() = oldTag;

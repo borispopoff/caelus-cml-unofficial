@@ -75,7 +75,7 @@ void CML::yPlusLES::calcIncompressibleYPlus
         if (isA<wallFvPatch>(currPatch))
         {
             foundPatch = true;
-            yPlus.boundaryField()[patchi] =
+            yPlus.boundaryFieldRef()[patchi] =
                 d[patchi]
                *sqrt
                 (
@@ -141,7 +141,7 @@ void CML::yPlusLES::calcCompressibleYPlus
         if (isA<wallFvPatch>(currPatch))
         {
             foundPatch = true;
-            yPlus.boundaryField()[patchi] =
+            yPlus.boundaryFieldRef()[patchi] =
                 d[patchi]
                *sqrt
                 (

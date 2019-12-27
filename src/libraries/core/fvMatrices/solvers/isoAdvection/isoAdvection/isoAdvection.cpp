@@ -367,7 +367,7 @@ void CML::isoAdvection::timeIntegratedFlux()
     const polyBoundaryMesh& boundaryMesh = mesh_.boundaryMesh();
     const surfaceScalarField::GeometricBoundaryField& phib = phi_.boundaryField();
     const surfaceScalarField::GeometricBoundaryField& magSfb = mesh_.magSf().boundaryField();
-    surfaceScalarField::GeometricBoundaryField& dVfb = dVf_.boundaryField();
+    surfaceScalarField::GeometricBoundaryField& dVfb = dVf_.boundaryFieldRef();
     const label nInternalFaces = mesh_.nInternalFaces();
 
     // Loop through boundary surface faces
@@ -923,7 +923,7 @@ void CML::isoAdvection::syncProcPatches
             }
 
             // Combine fluxes
-            scalarField& localFlux = dVf.boundaryField()[patchi];
+            scalarField& localFlux = dVf.boundaryFieldRef()[patchi];
 
             forAll(faceIDs, i)
             {

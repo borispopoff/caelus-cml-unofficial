@@ -495,7 +495,7 @@ void kOmegaSSTDES::correct()
     volScalarField G(GName(), muSgs_*(gradU && dev(twoSymm(gradU))));
 
     // Update omega and G at the wall
-    omega_.boundaryField().updateCoeffs();
+    omega_.boundaryFieldRef().updateCoeffs();
 
     volScalarField const CDkOmega
     (
@@ -560,7 +560,7 @@ void kOmegaSSTDES::correct()
 
     omegaEqn.ref().relax();
     fvOptions.constrain(omegaEqn.ref());
-    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
 
     solve(omegaEqn);
     fvOptions.correct(omega_);

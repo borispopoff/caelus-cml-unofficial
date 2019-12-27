@@ -698,7 +698,7 @@ void gammaReTheta::correct()
     volScalarField G(GName(), nut_*S2);
 
     // Update omega and G at the wall
-    omega_.boundaryField().updateCoeffs();
+    omega_.boundaryFieldRef().updateCoeffs();
 
     volScalarField CDkOmega
     (
@@ -734,7 +734,7 @@ void gammaReTheta::correct()
 
     omegaEqn.ref().relax();
     fvOptions.constrain(omegaEqn.ref());
-    omegaEqn.ref().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
 
     solve(omegaEqn);
     fvOptions.correct(omega_);

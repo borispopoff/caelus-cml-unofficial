@@ -70,7 +70,7 @@ wordList psiuReactionThermo::heuBoundaryTypes()
 
 void psiuReactionThermo::heuBoundaryCorrection(volScalarField& heu)
 {
-    volScalarField::GeometricBoundaryField& hbf = heu.boundaryField();
+    volScalarField::GeometricBoundaryField& hbf = heu.boundaryFieldRef();
 
     forAll(hbf, patchi)
     {

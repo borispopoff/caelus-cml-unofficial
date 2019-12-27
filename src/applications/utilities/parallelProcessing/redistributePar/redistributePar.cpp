@@ -741,7 +741,7 @@ void correctCoupledBoundaryConditions(fvMesh& mesh)
         GeoField& fld = *iter();
 
         typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+            fld.boundaryFieldRef();
         if
         (
             Pstream::defaultCommsType == Pstream::commsTypes::blocking

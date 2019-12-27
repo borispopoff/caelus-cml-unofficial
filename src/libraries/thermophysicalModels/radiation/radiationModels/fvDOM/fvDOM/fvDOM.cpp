@@ -541,9 +541,9 @@ void CML::radiation::fvDOM::updateG()
     {
         IRay_[rayI].addIntensity();
         G_ += IRay_[rayI].I()*IRay_[rayI].omega();
-        qr_.boundaryField() += IRay_[rayI].qr().boundaryField();
-        qem_.boundaryField() += IRay_[rayI].qem().boundaryField();
-        qin_.boundaryField() += IRay_[rayI].qin().boundaryField();
+        qr_.boundaryFieldRef() += IRay_[rayI].qr().boundaryField();
+        qem_.boundaryFieldRef() += IRay_[rayI].qem().boundaryField();
+        qin_.boundaryFieldRef() += IRay_[rayI].qin().boundaryField();
     }
 }
 

@@ -721,10 +721,12 @@ CML::tmp<CML::scalarField> CML::fvMesh::movePoints(const pointField& p)
 
     const fvPatchList& patches = boundary();
 
+    surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryFieldRef();
+
     forAll(patches, patchi)
     {
-        phi.boundaryField()[patchi] = patches[patchi].patchSlice(sweptVols);
-        phi.boundaryField()[patchi] *= rDeltaT;
+        phibf[patchi] = patches[patchi].patchSlice(sweptVols);
+        phibf[patchi] *= rDeltaT;
     }
 
     // Update or delete the local geometric properties as early as possible so

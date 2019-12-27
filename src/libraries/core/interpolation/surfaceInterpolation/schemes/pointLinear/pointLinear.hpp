@@ -87,7 +87,7 @@ public:
             linear<Type>(mesh)
         {}
 
-        //- Disallow default bitwise copy construct
+        //- Disallow default bitwise copy construction
         pointLinear(const pointLinear&) = delete;
 
 

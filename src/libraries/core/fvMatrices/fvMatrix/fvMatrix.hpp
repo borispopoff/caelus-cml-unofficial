@@ -1357,7 +1357,7 @@ CML::fvMatrix<Type>::fvMatrix
        const_cast<GeometricField<Type, fvPatchField, volMesh>&>(psi_);
 
     label currentStatePsi = psiRef.eventNo();
-    psiRef.boundaryField().updateCoeffs();
+    psiRef.boundaryFieldRef().updateCoeffs();
     psiRef.eventNo() = currentStatePsi;
 }
 
@@ -1972,10 +1972,12 @@ flux() const
         }
     }
 
-    forAll(fieldFlux.boundaryField(), patchi)
+    typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+        GeometricBoundaryField& ffbf = fieldFlux.boundaryFieldRef();
+
+    forAll(ffbf, patchi)
     {
-        fieldFlux.boundaryField()[patchi] =
-            InternalContrib[patchi] - NeighbourContrib[patchi];
+        ffbf[patchi] = InternalContrib[patchi] - NeighbourContrib[patchi];
     }
 
     if (faceFluxCorrectionPtr_)

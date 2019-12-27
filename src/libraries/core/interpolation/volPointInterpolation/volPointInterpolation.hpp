@@ -317,7 +317,7 @@ void CML::volPointInterpolation::addSeparated
     }
 
     typename GeometricField<Type, pointPatchField, pointMesh>::
-        GeometricBoundaryField& pfbf = pf.boundaryField();
+        GeometricBoundaryField& pfbf = pf.boundaryFieldRef();
 
     forAll(pfbf, patchi)
     {

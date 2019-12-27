@@ -94,7 +94,7 @@ void CML::fv::limitVelocity::correct(volVectorField& U)
     {
         forAll(U.boundaryField(), patchi)
         {
-            fvPatchVectorField& Up = U.boundaryField()[patchi];
+            fvPatchVectorField& Up = U.boundaryFieldRef()[patchi];
 
             if (!Up.fixesValue())
             {

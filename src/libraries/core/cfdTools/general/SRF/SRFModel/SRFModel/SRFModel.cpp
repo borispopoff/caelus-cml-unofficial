@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------* \
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -227,6 +227,7 @@ CML::tmp<CML::volVectorField> CML::SRF::SRFModel::Uabs() const
     Uabs.internalField() += Urel_.internalField();
 
     // Add Urel boundary contributions
+    volVectorField::GeometricBoundaryField& Uabsbf = Uabs.boundaryFieldRef();
     const volVectorField::GeometricBoundaryField& bvf = Urel_.boundaryField();
 
     forAll(bvf, i)
@@ -239,12 +240,12 @@ CML::tmp<CML::volVectorField> CML::SRF::SRFModel::Uabs() const
                 refCast<const SRFVelocityFvPatchVectorField>(bvf[i]);
             if (UrelPatch.relative())
             {
-                Uabs.boundaryField()[i] += Urel_.boundaryField()[i];
+                Uabsbf[i] += Urel_.boundaryField()[i];
             }
         }
         else
         {
-            Uabs.boundaryField()[i] += Urel_.boundaryField()[i];
+            Uabsbf[i] += Urel_.boundaryField()[i];
         }
     }
 

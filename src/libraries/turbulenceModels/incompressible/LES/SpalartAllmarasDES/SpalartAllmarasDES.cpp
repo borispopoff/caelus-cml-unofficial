@@ -258,7 +258,7 @@ void SpalartAllmarasDES::correct(const tmp<volTensorField>& gradU)
     if (mesh_.changing())
     {
         y_.correct();
-        y_.boundaryField() = max(y_.boundaryField(), VSMALL);
+        y_.boundaryFieldRef() = max(y_.boundaryField(), VSMALL);
     }
 
     const volScalarField S(this->S(gradU));

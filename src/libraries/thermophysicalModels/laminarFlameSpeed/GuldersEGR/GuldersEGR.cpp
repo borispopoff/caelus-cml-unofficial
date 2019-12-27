@@ -99,7 +99,7 @@ CML::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
     {
         forAll(Su0.boundaryField()[patchi], facei)
         {
-            Su0.boundaryField()[patchi][facei] =
+            Su0.boundaryFieldRef()[patchi][facei] =
                 Su0pTphi
                 (
                     p.boundaryField()[patchi][facei],
@@ -152,7 +152,7 @@ CML::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
     {
         forAll(Su0.boundaryField()[patchi], facei)
         {
-            Su0.boundaryField()[patchi][facei] =
+            Su0.boundaryFieldRef()[patchi][facei] =
                 Su0pTphi
                 (
                     p.boundaryField()[patchi][facei],

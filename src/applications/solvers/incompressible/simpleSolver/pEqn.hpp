@@ -1,5 +1,5 @@
 {
-    p.boundaryField().updateCoeffs();
+    p.boundaryFieldRef().updateCoeffs();
     volScalarField pHat = p;
 
     scalarField& VolI = Vol.internalField();

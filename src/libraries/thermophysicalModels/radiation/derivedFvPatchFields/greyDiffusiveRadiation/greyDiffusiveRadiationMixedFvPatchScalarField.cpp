@@ -178,12 +178,12 @@ updateCoeffs()
 
     const scalarField nAve(n & ray.dAve());
 
-    ray.qr().boundaryField()[patchi] += Iw*nAve;
+    ray.qr().boundaryFieldRef()[patchi] += Iw*nAve;
 
     const scalarField temissivity = emissivity();
 
-    scalarField& qem = ray.qem().boundaryField()[patchi];
-    scalarField& qin = ray.qin().boundaryField()[patchi];
+    scalarField& qem = ray.qem().boundaryFieldRef()[patchi];
+    scalarField& qin = ray.qin().boundaryFieldRef()[patchi];
 
     const vector& myRayId = dom.IRay(rayId).dAve();
 

@@ -102,7 +102,7 @@ CML::tmp<CML::volScalarField> CML::consumptionSpeed::omega0Sigma
         iomega0[celli] = omega0Sigma(sigma[celli], 1.0);
     }
 
-    volScalarField::GeometricBoundaryField& bomega0 = omega0.boundaryField();
+    volScalarField::GeometricBoundaryField& bomega0 = omega0.boundaryFieldRef();
 
     forAll(bomega0, patchi)
     {
