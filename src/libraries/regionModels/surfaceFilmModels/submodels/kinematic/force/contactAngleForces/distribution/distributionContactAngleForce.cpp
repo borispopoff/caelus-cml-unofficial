@@ -84,7 +84,7 @@ tmp<volScalarField> distributionContactAngleForce::theta() const
     );
 
     volScalarField& theta = ttheta.ref();
-    DimensionedField<scalar, volMesh>& thetai = theta.dimensionedInternalField();
+    DimensionedField<scalar, volMesh>& thetai = theta.dimensionedInternalFieldRef();
 
     forAll(thetai, celli)
     {

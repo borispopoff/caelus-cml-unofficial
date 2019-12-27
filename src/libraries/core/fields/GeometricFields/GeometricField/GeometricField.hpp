@@ -437,7 +437,7 @@ public:
     // Member Functions
 
         //- Return dimensioned internal field
-        DimensionedInternalField& dimensionedInternalField();
+        DimensionedInternalField& dimensionedInternalFieldRef();
 
         //- Return dimensioned internal field
         inline const DimensionedInternalField& dimensionedInternalField() const;
@@ -1414,7 +1414,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::~GeometricField()
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
 CML::GeometricField<Type, PatchField, GeoMesh>::DimensionedInternalField&
-CML::GeometricField<Type, PatchField, GeoMesh>::dimensionedInternalField()
+CML::GeometricField<Type, PatchField, GeoMesh>::dimensionedInternalFieldRef()
 {
     this->setUpToDate();
     storeOldTimes();
@@ -1832,7 +1832,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
 
     // Only assign field contents not ID
 
-    dimensionedInternalField() = gf.dimensionedInternalField();
+    dimensionedInternalFieldRef() = gf.dimensionedInternalField();
     boundaryFieldRef() = gf.boundaryField();
 }
 
@@ -1854,7 +1854,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
 
     // Only assign field contents not ID
 
-    dimensionedInternalField() = move(gf.dimensionedInternalField());
+    dimensionedInternalFieldRef() = move(gf.dimensionedInternalField());
     boundaryFieldRef() = move(gf.boundaryField());
 }
 
@@ -1905,7 +1905,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
     const dimensioned<Type>& dt
 )
 {
-    dimensionedInternalField() = dt;
+    dimensionedInternalFieldRef() = dt;
     boundaryFieldRef() = dt.value();
 }
 
@@ -1916,7 +1916,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
     const zero&
 )
 {
-    dimensionedInternalField() = Zero;
+    dimensionedInternalFieldRef() = Zero;
     boundaryFieldRef() = Zero;
 }
 
@@ -1933,7 +1933,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
 
     // Only assign field contents not ID
 
-    dimensionedInternalField() = gf.dimensionedInternalField();
+    dimensionedInternalFieldRef() = gf.dimensionedInternalField();
     boundaryFieldRef() == gf.boundaryField();
 
     tgf.clear();
@@ -1946,7 +1946,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
     const dimensioned<Type>& dt
 )
 {
-    dimensionedInternalField() = dt;
+    dimensionedInternalFieldRef() = dt;
     boundaryFieldRef() == dt.value();
 }
 
@@ -1957,7 +1957,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
     const zero&
 )
 {
-    dimensionedInternalField() = Zero;
+    dimensionedInternalFieldRef() = Zero;
     boundaryFieldRef() == Zero;
 }
 
@@ -1972,7 +1972,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator op              \
 {                                                                              \
     checkField(*this, gf, #op);                                                \
                                                                                \
-    dimensionedInternalField() op gf.dimensionedInternalField();            \
+    dimensionedInternalFieldRef() op gf.dimensionedInternalField();            \
     boundaryFieldRef() op gf.boundaryField();                                  \
 }                                                                              \
                                                                                \
@@ -1992,7 +1992,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator op               \
     const dimensioned<TYPE>& dt                                                \
 )                                                                              \
 {                                                                              \
-    dimensionedInternalField() op dt;                                       \
+    dimensionedInternalFieldRef() op dt;                                       \
     boundaryFieldRef() op dt.value();                                          \
 }
 

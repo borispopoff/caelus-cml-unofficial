@@ -93,7 +93,7 @@ perturbedTemperatureDependentContactAngleForce::theta() const
     );
 
     volScalarField& theta = ttheta.ref();
-    DimensionedField<scalar, volMesh>& thetai = theta.dimensionedInternalField();
+    DimensionedField<scalar, volMesh>& thetai = theta.dimensionedInternalFieldRef();
 
     const volScalarField& T = filmModel_.T();
 

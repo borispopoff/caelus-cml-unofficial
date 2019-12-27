@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
                 fvm::ddt(1.0/beta[i], rhoU) == -rhoUResidual
             );
 
-            U.dimensionedInternalField() = rhoU.dimensionedInternalField()
+            U.dimensionedInternalFieldRef() = rhoU.dimensionedInternalField()
               / rho.dimensionedInternalField();
             U.correctBoundaryConditions();
 

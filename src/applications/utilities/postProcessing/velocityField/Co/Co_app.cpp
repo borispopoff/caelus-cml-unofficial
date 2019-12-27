@@ -83,7 +83,7 @@ void CML::calc(const argList& args, const Time& runTime, const fvMesh& mesh)
                 mesh
             );
 
-            Co.dimensionedInternalField() =
+            Co.dimensionedInternalFieldRef() =
                 (0.5*runTime.deltaT())
                *fvc::surfaceSum(mag(phi))().dimensionedInternalField()
                /(rho*mesh.V());
@@ -93,7 +93,7 @@ void CML::calc(const argList& args, const Time& runTime, const fvMesh& mesh)
         {
             Info<< "    Calculating incompressible Co" << endl;
 
-            Co.dimensionedInternalField() =
+            Co.dimensionedInternalFieldRef() =
                 (0.5*runTime.deltaT())
                *fvc::surfaceSum(mag(phi))().dimensionedInternalField()
                /mesh.V();
