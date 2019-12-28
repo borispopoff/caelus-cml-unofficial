@@ -41,7 +41,7 @@ void writeFluentField
     Ostream& stream
 )
 {
-    const scalarField& phiInternal = phi.internalField();
+    const scalarField& phiInternal = phi;
 
     // Writing cells
     stream
@@ -71,7 +71,7 @@ void writeFluentField
         {
             // Form empty patch field repeat the internal field to
             // allow for the node interpolation in Fluent
-            const scalarField& phiInternal = phi.internalField();
+            const scalarField& phiInternal = phi;
 
             // Get reference to internal cells
             const labelList emptyFaceCells =

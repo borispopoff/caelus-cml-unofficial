@@ -157,7 +157,7 @@ CML::scalar CML::fv::meanVelocityForce::magUbarAve
 
 void CML::fv::meanVelocityForce::correct(volVectorField& U)
 {
-    const scalarField& rAU = rAPtr_().internalField();
+    const scalarField& rAU = rAPtr_();
 
     // Integrate flow variables over cell set
     scalar rAUave = 0.0;

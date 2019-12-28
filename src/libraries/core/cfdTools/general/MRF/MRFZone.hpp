@@ -295,8 +295,8 @@ void CML::MRFZone::makeRelativeRhoFlux
 
     const vector Omega = omega_->value(mesh_.time().timeOutputValue())*axis_;
 
-    const vectorField& Cfi = Cf.internalField();
-    const vectorField& Sfi = Sf.internalField();
+    const vectorField& Cfi = Cf;
+    const vectorField& Sfi = Sf;
     scalarField& phii = phi.internalField();
 
     // Internal faces
@@ -410,8 +410,8 @@ void CML::MRFZone::makeAbsoluteRhoFlux
 
     const vector Omega = omega_->value(mesh_.time().timeOutputValue())*axis_;
 
-    const vectorField& Cfi = Cf.internalField();
-    const vectorField& Sfi = Sf.internalField();
+    const vectorField& Cfi = Cf;
+    const vectorField& Sfi = Sf;
     scalarField& phii = phi.internalField();
 
     // Internal faces

@@ -328,8 +328,8 @@ template<class BasicThermo, class MixtureType>
 void CML::heThermo<BasicThermo, MixtureType>::init()
 {
     scalarField& heCells = he_.internalField();
-    const scalarField& pCells = this->p_.internalField();
-    const scalarField& TCells = this->T_.internalField();
+    const scalarField& pCells = this->p_;
+    const scalarField& TCells = this->T_;
 
     forAll(heCells, celli)
     {
@@ -461,8 +461,8 @@ CML::tmp<CML::volScalarField> CML::heThermo<BasicThermo, MixtureType>::he
 
     volScalarField& he = the.ref();
     scalarField& heCells = he.internalField();
-    const scalarField& pCells = p.internalField();
-    const scalarField& TCells = T.internalField();
+    const scalarField& pCells = p;
+    const scalarField& TCells = T;
 
     forAll(heCells, celli)
     {

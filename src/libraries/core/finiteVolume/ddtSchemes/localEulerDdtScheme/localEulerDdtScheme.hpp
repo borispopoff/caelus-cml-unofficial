@@ -518,7 +518,7 @@ localEulerDdtScheme<Type>::fvmDdt
 
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    const scalarField& rDeltaT = localRDeltaT().internalField();
+    const scalarField& rDeltaT = localRDeltaT();
 
     fvm.diag() = rDeltaT*mesh().Vsc();
     fvm.source() = rDeltaT*vf.oldTime().internalField()*mesh().Vsc();
@@ -545,7 +545,7 @@ localEulerDdtScheme<Type>::fvmDdt
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    const scalarField& rDeltaT = localRDeltaT().internalField();
+    const scalarField& rDeltaT = localRDeltaT();
 
     fvm.diag() = rDeltaT*rho.value()*mesh().Vsc();
 
@@ -574,7 +574,7 @@ localEulerDdtScheme<Type>::fvmDdt
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    const scalarField& rDeltaT = localRDeltaT().internalField();
+    const scalarField& rDeltaT = localRDeltaT();
 
     fvm.diag() = rDeltaT*rho.internalField()*mesh().Vsc();
 
@@ -605,7 +605,7 @@ localEulerDdtScheme<Type>::fvmDdt
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    const scalarField& rDeltaT = localRDeltaT().internalField();
+    const scalarField& rDeltaT = localRDeltaT();
 
     fvm.diag() = rDeltaT*alpha.internalField()*rho.internalField()*mesh().Vsc();
 

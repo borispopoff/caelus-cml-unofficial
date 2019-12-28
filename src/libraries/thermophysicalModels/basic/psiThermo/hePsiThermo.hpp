@@ -90,8 +90,8 @@ public:
 template<class BasicPsiThermo, class MixtureType>
 void CML::hePsiThermo<BasicPsiThermo, MixtureType>::calculate()
 {
-    const scalarField& hCells = this->he_.internalField();
-    const scalarField& pCells = this->p_.internalField();
+    const scalarField& hCells = this->he_;
+    const scalarField& pCells = this->p_;
 
     scalarField& TCells = this->T_.internalField();
     scalarField& psiCells = this->psi_.internalField();

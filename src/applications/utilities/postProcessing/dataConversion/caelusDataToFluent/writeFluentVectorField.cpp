@@ -40,7 +40,7 @@ void writeFluentField
     Ostream& stream
 )
 {
-    const vectorField& phiInternal = phi.internalField();
+    const vectorField& phiInternal = phi;
 
     // Writing cells
     stream
