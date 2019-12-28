@@ -283,7 +283,7 @@ CML::parFvFieldReconstructor::reconstructFvVolumeField
         Type,
         fvPatchField,
         volMesh
-    >::GeometricBoundaryField& bfld = fld.boundaryField();
+    >::Boundary& bfld = fld.boundaryField();
 
     forAll(bfld, patchi)
     {
@@ -450,7 +450,7 @@ CML::parFvFieldReconstructor::reconstructFvSurfaceField
         Type,
         fvsPatchField,
         surfaceMesh
-    >::GeometricBoundaryField& bfld = fld.boundaryField();
+    >::Boundary& bfld = fld.boundaryField();
 
     forAll(bfld, patchi)
     {

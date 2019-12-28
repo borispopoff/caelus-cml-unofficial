@@ -48,7 +48,7 @@ class fvMesh;
 
 class nearWallDist
 :
-    public volScalarField::GeometricBoundaryField
+    public volScalarField::Boundary
 {
     // Private data
 
@@ -78,7 +78,7 @@ public:
 
     // Member Functions
 
-        const volScalarField::GeometricBoundaryField& y() const
+        const volScalarField::Boundary& y() const
         {
             return *this;
         }

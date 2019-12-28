@@ -45,7 +45,7 @@ namespace CML
 void CML::radiation::viewFactor::initialise()
 {
     const polyBoundaryMesh& coarsePatches = coarseMesh_.boundaryMesh();
-    const volScalarField::GeometricBoundaryField& qrp = qr_.boundaryFieldRef();
+    const volScalarField::Boundary& qrp = qr_.boundaryFieldRef();
 
     label count = 0;
     forAll(qrp, patchi)
@@ -398,7 +398,7 @@ void CML::radiation::viewFactor::calculate()
     DynamicList<scalar> localCoarseEave(nLocalCoarseFaces_);
     DynamicList<scalar> localCoarseHoave(nLocalCoarseFaces_);
 
-    volScalarField::GeometricBoundaryField& qrBf = qr_.boundaryFieldRef();
+    volScalarField::Boundary& qrBf = qr_.boundaryFieldRef();
 
     forAll(selectedPatches_, i)
     {

@@ -45,7 +45,7 @@ const CML::word CML::basicThermo::dictName("thermophysicalProperties");
 
 CML::wordList CML::basicThermo::heBoundaryBaseTypes()
 {
-    const volScalarField::GeometricBoundaryField& tbf =
+    const volScalarField::Boundary& tbf =
         this->T_.boundaryField();
 
     wordList hbt(tbf.size(), word::null);
@@ -77,7 +77,7 @@ CML::wordList CML::basicThermo::heBoundaryBaseTypes()
 
 CML::wordList CML::basicThermo::heBoundaryTypes()
 {
-    const volScalarField::GeometricBoundaryField& tbf =
+    const volScalarField::Boundary& tbf =
         this->T_.boundaryField();
 
     wordList hbt = tbf.types();

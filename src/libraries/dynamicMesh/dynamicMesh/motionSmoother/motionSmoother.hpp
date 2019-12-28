@@ -535,7 +535,7 @@ void CML::motionSmoother::checkConstraints
     }
 
 
-    typename FldType::GeometricBoundaryField& bFld = pf.boundaryField();
+    typename FldType::Boundary& bFld = pf.boundaryField();
 
 
     // Evaluate in reverse order

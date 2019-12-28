@@ -721,7 +721,7 @@ CML::tmp<CML::scalarField> CML::fvMesh::movePoints(const pointField& p)
 
     const fvPatchList& patches = boundary();
 
-    surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryFieldRef();
+    surfaceScalarField::Boundary& phibf = phi.boundaryFieldRef();
 
     forAll(patches, patchi)
     {

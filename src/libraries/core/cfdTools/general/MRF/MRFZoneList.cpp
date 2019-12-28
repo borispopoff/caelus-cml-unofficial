@@ -389,7 +389,7 @@ void CML::MRFZoneList::correctBoundaryFlux
     );
 
 
-    surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryFieldRef();
+    surfaceScalarField::Boundary& phibf = phi.boundaryFieldRef();
 
     forAll(mesh_.boundary(), patchi)
     {

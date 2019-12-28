@@ -296,7 +296,7 @@ void CML::MULES::limiter
 )
 {
     const scalarField& psiIf = psi;
-    const volScalarField::GeometricBoundaryField& psiBf = psi.boundaryField();
+    const volScalarField::Boundary& psiBf = psi.boundaryField();
 
     const fvMesh& mesh = psi.mesh();
 
@@ -325,11 +325,11 @@ void CML::MULES::limiter
     const scalarField& V = tVsc();
 
     const scalarField& phiBDIf = phiBD;
-    const surfaceScalarField::GeometricBoundaryField& phiBDBf =
+    const surfaceScalarField::Boundary& phiBDBf =
         phiBD.boundaryField();
 
     const scalarField& phiCorrIf = phiCorr;
-    const surfaceScalarField::GeometricBoundaryField& phiCorrBf =
+    const surfaceScalarField::Boundary& phiCorrBf =
         phiCorr.boundaryField();
 
     slicedSurfaceScalarField lambda
@@ -350,7 +350,7 @@ void CML::MULES::limiter
     );
 
     scalarField& lambdaIf = lambda;
-    surfaceScalarField::GeometricBoundaryField& lambdaBf =
+    surfaceScalarField::Boundary& lambdaBf =
         lambda.boundaryFieldRef();
 
     scalarField psiMaxn(psiIf.size(), psiMin);
@@ -740,7 +740,7 @@ void CML::MULES::limitSum(SurfaceScalarFieldList& phiPsiCorrs)
         limitSum(phiPsiCorrsInternal);
     }
 
-    const surfaceScalarField::GeometricBoundaryField& bfld =
+    const surfaceScalarField::Boundary& bfld =
         phiPsiCorrs[0].boundaryField();
 
     forAll(bfld, patchi)

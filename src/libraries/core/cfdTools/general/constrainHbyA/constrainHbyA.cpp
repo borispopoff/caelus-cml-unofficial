@@ -45,7 +45,7 @@ CML::tmp<CML::volVectorField> CML::constrainHbyA
     }
 
     volVectorField& HbyA = tHbyANew.ref();
-//    volVectorField::boundaryField& HbyAbf = HbyA.boundaryFieldRef();
+    volVectorField::Boundary& HbyAbf = HbyA.boundaryFieldRef();
 
     forAll(U.boundaryField(), patchi)
     {
@@ -58,7 +58,7 @@ CML::tmp<CML::volVectorField> CML::constrainHbyA
             )
         )
         {
-            HbyA.boundaryFieldRef()[patchi] = U.boundaryField()[patchi];
+            HbyAbf[patchi] = U.boundaryField()[patchi];
         }
     }
 

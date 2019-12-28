@@ -360,7 +360,7 @@ tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
             + pWeights[face]*(CDweights[face]-pos(faceFlux_[face]));
     }
 
-    surfaceScalarField::GeometricBoundaryField& bWeights =
+    surfaceScalarField::Boundary& bWeights =
         Weights.boundaryFieldRef();
 
     forAll(bWeights, patchi)

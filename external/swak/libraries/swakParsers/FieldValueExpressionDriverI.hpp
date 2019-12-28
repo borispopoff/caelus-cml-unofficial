@@ -122,7 +122,7 @@ void FieldValueExpressionDriver::makePatches
     bool keepPatches,
     const wordList &fixedPatches
 ) {
-  typename GeometricField<T,fvPatchField,volMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
+  typename GeometricField<T,fvPatchField,volMesh>::Boundary &bf=field.boundaryFieldRef();
   List<fvPatchField<T> *>bfNew(bf.size());
 
   forAll(bf,patchI) {
@@ -171,7 +171,7 @@ void FieldValueExpressionDriver::makePatches
     bool keepPatches,
     const wordList &fixedPatches
 ) {
-  typename GeometricField<T,fvsPatchField,surfaceMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
+  typename GeometricField<T,fvsPatchField,surfaceMesh>::Boundary &bf=field.boundaryFieldRef();
   List<fvsPatchField<T> *>bfNew(bf.size());
 
   forAll(bf,patchI) {
@@ -222,7 +222,7 @@ void FieldValueExpressionDriver::makePatches
     bool keepPatches,
     const wordList &fixedPatches
 ) {
-  typename GeometricField<T,pointPatchField,pointMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
+  typename GeometricField<T,pointPatchField,pointMesh>::Boundary &bf=field.boundaryFieldRef();
   List<pointPatchField<T> *>bfNew(bf.size());
 
   forAll(bf,patchI) {
@@ -269,7 +269,7 @@ void FieldValueExpressionDriver::setCalculatedPatches
     GeometricField<T,fvPatchField,volMesh> &field,
     T unusedValue
 ) {
-    typename GeometricField<T,fvPatchField,volMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
+    typename GeometricField<T,fvPatchField,volMesh>::Boundary &bf=field.boundaryFieldRef();
 
     forAll(bf,patchI) {
         fvPatchField<T> &pf=bf[patchI];
@@ -289,7 +289,7 @@ void FieldValueExpressionDriver::setCalculatedPatches
     GeometricField<T,fvsPatchField,surfaceMesh> &field,
     T value
 ) {
-    typename GeometricField<T,fvsPatchField,surfaceMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
+    typename GeometricField<T,fvsPatchField,surfaceMesh>::Boundary &bf=field.boundaryFieldRef();
 
     forAll(bf,patchI) {
         fvsPatchField<T> &pf=bf[patchI];
@@ -310,7 +310,7 @@ void FieldValueExpressionDriver::setCalculatedPatches
     GeometricField<T,pointPatchField,pointMesh> &field,
     T unusedValue
 ) {
-    typename GeometricField<T,pointPatchField,pointMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
+    typename GeometricField<T,pointPatchField,pointMesh>::Boundary &bf=field.boundaryFieldRef();
     forAll(bf,patchI) {
         pointPatchField<T> &pf=bf[patchI];
 
@@ -329,7 +329,7 @@ void FieldValueExpressionDriver::copyCalculatedPatches
     GeometricField<T,fvPatchField,volMesh> &field,
     const GeometricField<T,fvPatchField,volMesh> &orig
 ) {
-    typename GeometricField<T,fvPatchField,volMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
+    typename GeometricField<T,fvPatchField,volMesh>::Boundary &bf=field.boundaryFieldRef();
     List<fvPatchField<T> *>bfNew(bf.size());
 
     forAll(bf,patchI) {
@@ -350,8 +350,8 @@ void FieldValueExpressionDriver::copyCalculatedPatches
     GeometricField<T,fvsPatchField,surfaceMesh> &field,
     const GeometricField<T,fvsPatchField,surfaceMesh> &orig
 ) {
-    typename GeometricField<T,fvsPatchField,surfaceMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
-    const typename GeometricField<T,fvsPatchField,surfaceMesh>::GeometricBoundaryField &bfOrig=orig.boundaryField();
+    typename GeometricField<T,fvsPatchField,surfaceMesh>::Boundary &bf=field.boundaryFieldRef();
+    const typename GeometricField<T,fvsPatchField,surfaceMesh>::Boundary &bfOrig=orig.boundaryField();
 
     forAll(bf,patchI) {
         fvsPatchField<T> &pf=bf[patchI];
@@ -373,7 +373,7 @@ void FieldValueExpressionDriver::copyCalculatedPatches
     GeometricField<T,pointPatchField,pointMesh> &field,
     const GeometricField<T,pointPatchField,pointMesh> &orig
 ) {
-    typename GeometricField<T,pointPatchField,pointMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
+    typename GeometricField<T,pointPatchField,pointMesh>::Boundary &bf=field.boundaryFieldRef();
     List<pointPatchField<T> *>bfNew(bf.size());
 
     forAll(bf,patchI) {
@@ -395,7 +395,7 @@ void FieldValueExpressionDriver::setValuePatches
     bool keepPatches,
     const wordList &fixedPatches
 ) {
-  typename GeometricField<T,fvPatchField,volMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
+  typename GeometricField<T,fvPatchField,volMesh>::Boundary &bf=field.boundaryFieldRef();
   List<fvPatchField<T> *>bfNew(bf.size());
 
   forAll(bf,patchI) {
@@ -436,7 +436,7 @@ void FieldValueExpressionDriver::setValuePatches
     bool keepPatches,
     const wordList &fixedPatches
 ) {
-  typename GeometricField<T,fvsPatchField,surfaceMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
+  typename GeometricField<T,fvsPatchField,surfaceMesh>::Boundary &bf=field.boundaryFieldRef();
   List<fvsPatchField<T> *>bfNew(bf.size());
 
   forAll(bf,patchI) {
@@ -480,7 +480,7 @@ void FieldValueExpressionDriver::setValuePatches
     bool keepPatches,
     const wordList &fixedPatches
 ) {
-  typename GeometricField<T,pointPatchField,pointMesh>::GeometricBoundaryField &bf=field.boundaryFieldRef();
+  typename GeometricField<T,pointPatchField,pointMesh>::Boundary &bf=field.boundaryFieldRef();
   List<pointPatchField<T> *>bfNew(bf.size());
 
   forAll(bf,patchI) {

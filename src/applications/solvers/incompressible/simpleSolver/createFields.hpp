@@ -12,7 +12,7 @@ volScalarField p
     mesh
 );
 
-volScalarField::GeometricBoundaryField const& pGBF = p.boundaryField();
+volScalarField::Boundary const& pGBF = p.boundaryField();
 wordList const pBT = pGBF.types();
         
 volScalarField pCorr

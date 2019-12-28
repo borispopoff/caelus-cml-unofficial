@@ -89,7 +89,7 @@ void CML::nearWallDist::calculate()
 
 CML::nearWallDist::nearWallDist(const CML::fvMesh& mesh)
 :
-    volScalarField::GeometricBoundaryField
+    volScalarField::Boundary
     (
         mesh.boundary(),
         mesh.V(),           // Dummy internal field,

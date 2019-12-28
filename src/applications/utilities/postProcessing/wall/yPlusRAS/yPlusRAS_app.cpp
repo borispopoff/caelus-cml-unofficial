@@ -63,7 +63,7 @@ void calcIncompressibleYPlus
         incompressible::RASModel::New(U, phi, laminarTransport)
     );
 
-    const volScalarField::GeometricBoundaryField nutPatches =
+    const volScalarField::Boundary nutPatches =
         RASModel->nut()().boundaryField();
 
     bool foundNutPatch = false;
@@ -143,7 +143,7 @@ void calcCompressibleYPlus
         )
     );
 
-    const volScalarField::GeometricBoundaryField mutPatches =
+    const volScalarField::Boundary mutPatches =
         RASModel->mut()().boundaryField();
 
     bool foundMutPatch = false;

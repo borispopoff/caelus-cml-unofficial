@@ -57,7 +57,7 @@ public:
 
     typedef Field<Type> FieldType;
     typedef GeometricField<Type, fvPatchField, volMesh> GeoFieldType;
-    typedef typename GeoFieldType::GeometricBoundaryField GeoBoundaryFieldType;
+    typedef typename GeoFieldType::Boundary GeoBoundaryFieldType;
 
     typedef Field<typename outerProduct<vector, Type>::type> GradFieldType;
     typedef GeometricField

@@ -48,7 +48,7 @@ class fvMesh;
 
 class nearWallDistNoSearch
 :
-    public volScalarField::GeometricBoundaryField
+    public volScalarField::Boundary
 {
     // Private data
 

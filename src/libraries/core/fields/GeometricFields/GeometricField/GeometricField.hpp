@@ -26,7 +26,7 @@ Description
 
 SourceFiles
     GeometricField.cpp
-    GeometricBoundaryField.cpp
+    Boundary.cpp
     GeometricFieldFunctions.hpp
 
 \*---------------------------------------------------------------------------*/
@@ -105,7 +105,7 @@ public:
         typedef PatchField<Type> Patch;
 
 
-    class GeometricBoundaryField
+    class Boundary
     :
         public FieldField<PatchField, Type>
     {
@@ -122,7 +122,7 @@ public:
             //- Construct from a BoundaryMesh,
             //  reference to the internal field
             //  and a patch type
-            GeometricBoundaryField
+            Boundary
             (
                 const BoundaryMesh&,
                 const Internal&,
@@ -133,7 +133,7 @@ public:
             //  reference to the internal field
             //  and a wordList of patch types and optional the actual patch
             //  types (to override constraint patches)
-            GeometricBoundaryField
+            Boundary
             (
                 const BoundaryMesh&,
                 const Internal&,
@@ -144,7 +144,7 @@ public:
             //- Construct from a BoundaryMesh,
             //  reference to the internal field
             //  and a PtrList<PatchField<Type>>
-            GeometricBoundaryField
+            Boundary
             (
                 const BoundaryMesh&,
                 const Internal&,
@@ -152,10 +152,10 @@ public:
             );
 
             //- Construct as copy setting the reference to the internal field
-            GeometricBoundaryField
+            Boundary
             (
                 const Internal&,
-                const GeometricBoundaryField&
+                const Boundary&
             );
 
             //- Copy constructor
@@ -163,9 +163,9 @@ public:
             //  Need new type of BoundaryField, one which is part of a geometric
             //  field for which snGrad etc. may be called and a free standing
             //  BoundaryField for which such operations are unavailable.
-            GeometricBoundaryField
+            Boundary
             (
-                const GeometricBoundaryField&
+                const Boundary&
             );
 
             //- Move constructor
@@ -173,13 +173,13 @@ public:
             //  Need new type of BoundaryField, one which is part of a geometric
             //  field for which snGrad etc. may be called and a free standing
             //  BoundaryField for which such operations are unavailable.
-            GeometricBoundaryField
+            Boundary
             (
-                GeometricBoundaryField&&
+                Boundary&&
             );
 
             //- Construct from dictionary
-            GeometricBoundaryField
+            Boundary
             (
                 const BoundaryMesh&,
                 const Internal&,
@@ -200,7 +200,7 @@ public:
 
             //- Return BoundaryField of the cell values neighbouring
             //  the boundary
-            GeometricBoundaryField boundaryInternalField() const;
+            Boundary boundaryInternalField() const;
 
             //- Return a list of pointers for each patch field with only those
             //  pointing to interfaces being set
@@ -218,10 +218,10 @@ public:
         // Member Operators
 
             //- Assignment operator
-            void operator=(const GeometricBoundaryField&);
+            void operator=(const Boundary&);
 
             //- Move assignment operator
-            void operator=(GeometricBoundaryField&&);
+            void operator=(Boundary&&);
 
             //- Assignment to FieldField<PatchField, Type>
             void operator=(const FieldField<PatchField, Type>&);
@@ -232,7 +232,7 @@ public:
 
             //- Forced assignment to
             //  BoundaryField<Type, PatchField, BoundaryMesh>
-            void operator==(const GeometricBoundaryField&);
+            void operator==(const Boundary&);
 
             //- Forced assignment to FieldField<PatchField, Type>
             void operator==(const FieldField<PatchField, Type>&);
@@ -257,16 +257,16 @@ private:
         mutable GeometricField<Type, PatchField, GeoMesh>* fieldPrevIterPtr_;
 
         //- Boundary Type field containing boundary field values
-        GeometricBoundaryField boundaryField_;
+        Boundary boundaryField_;
 
 
     // Private Member Functions
 
         //- Read the field from the dictionary
-        tmp<GeometricBoundaryField> readField(const dictionary&);
+        tmp<Boundary> readField(const dictionary&);
 
         //- Read the field from the given stream
-        tmp<GeometricBoundaryField> readField(Istream& is);
+        tmp<Boundary> readField(Istream& is);
 
 
 public:
@@ -453,11 +453,11 @@ public:
         //- Return internal field
         inline const typename Internal::FieldType& internalField() const;
 
-        //- Return reference to GeometricBoundaryField
-        GeometricBoundaryField& boundaryFieldRef();
+        //- Return reference to Boundary
+        Boundary& boundaryFieldRef();
 
-        //- Return reference to GeometricBoundaryField for const field
-        inline const GeometricBoundaryField& boundaryField() const;
+        //- Return reference to Boundary for const field
+        inline const Boundary& boundaryField() const;
 
         //- Return the time index of the field
         inline label timeIndex() const;
@@ -620,7 +620,7 @@ Ostream& operator<<
 (
     Ostream&,
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField&
+    Boundary&
 );
 
 
@@ -672,7 +672,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::internalField() const
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 inline const typename CML::GeometricField<Type, PatchField, GeoMesh>::
-GeometricBoundaryField&
+Boundary&
 CML::GeometricField<Type, PatchField, GeoMesh>::boundaryField() const
 {
     return boundaryField_;
@@ -721,7 +721,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 CML::tmp
 <
     typename CML::GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField
+    Boundary
 >
 CML::GeometricField<Type, PatchField, GeoMesh>::readField
 (
@@ -730,9 +730,9 @@ CML::GeometricField<Type, PatchField, GeoMesh>::readField
 {
     DimensionedField<Type, GeoMesh>::readField(fieldDict, "internalField");
 
-    tmp<GeometricBoundaryField> tboundaryField
+    tmp<Boundary> tboundaryField
     (
-        new GeometricBoundaryField
+        new Boundary
         (
             this->mesh().boundary(),
             *this,
@@ -746,7 +746,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::readField
 
         Field<Type>::operator+=(fieldAverage);
 
-        GeometricBoundaryField& boundaryField = tboundaryField.ref();
+        Boundary& boundaryField = tboundaryField.ref();
 
         forAll(boundaryField, patchi)
         {
@@ -762,7 +762,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 CML::tmp
 <
     typename CML::GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField
+    Boundary
 >
 CML::GeometricField<Type, PatchField, GeoMesh>::readField(Istream& is)
 {
@@ -1451,10 +1451,10 @@ CML::GeometricField<Type, PatchField, GeoMesh>::internalField()
 }
 
 
-// Return reference to GeometricBoundaryField
+// Return reference to Boundary
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField&
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary&
 CML::GeometricField<Type, PatchField, GeoMesh>::boundaryFieldRef()
 {
     this->setUpToDate();
@@ -2073,8 +2073,8 @@ CML::Ostream& CML::operator<<
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh>& field,
@@ -2106,8 +2106,8 @@ GeometricBoundaryField
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh>& field,
@@ -2174,8 +2174,8 @@ GeometricBoundaryField
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh>& field,
@@ -2198,12 +2198,12 @@ GeometricBoundaryField
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const DimensionedField<Type, GeoMesh>& field,
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField& btf
+    Boundary& btf
 )
 :
     FieldField<PatchField, Type>(btf.size()),
@@ -2223,15 +2223,15 @@ GeometricBoundaryField
 
 // Construct as copy
 // Dangerous because Field may be set to a field which gets deleted.
-// Need new type of GeometricBoundaryField, one which IS part of a geometric
+// Need new type of Boundary, one which IS part of a geometric
 // field for which snGrad etc. may be called and a free standing
-// GeometricBoundaryField for which such operations are unavailable.
+// Boundary for which such operations are unavailable.
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField& btf
+    Boundary& btf
 )
 :
     FieldField<PatchField, Type>(btf),
@@ -2245,11 +2245,11 @@ GeometricBoundaryField
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField&& btf
+    Boundary&& btf
 )
 :
     FieldField<PatchField, Type>(move(btf)),
@@ -2263,8 +2263,8 @@ GeometricBoundaryField
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh>& field,
@@ -2277,8 +2277,8 @@ GeometricBoundaryField
     if (debug)
     {
         Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField"
+               "Boundary::"
+               "Boundary"
                "(const BoundaryMesh&, const Field<Type>&, const dictionary&)"
             << endl;
     }
@@ -2332,7 +2332,7 @@ GeometricBoundaryField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 updateCoeffs()
 {
     if (debug)
@@ -2348,7 +2348,7 @@ updateCoeffs()
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 evaluate()
 {
     if (debug)
@@ -2415,7 +2415,7 @@ evaluate()
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 CML::wordList
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 types() const
 {
     const FieldField<PatchField, Type>& pff = *this;
@@ -2432,11 +2432,11 @@ types() const
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-typename CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+typename CML::GeometricField<Type, PatchField, GeoMesh>::Boundary
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 boundaryInternalField() const
 {
-    typename GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField
+    typename GeometricField<Type, PatchField, GeoMesh>::Boundary
         BoundaryInternalField(*this);
 
     forAll(BoundaryInternalField, patchi)
@@ -2451,7 +2451,7 @@ boundaryInternalField() const
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 CML::lduInterfaceFieldPtrsList
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 interfaces() const
 {
     lduInterfaceFieldPtrsList interfaces(this->size());
@@ -2474,7 +2474,7 @@ interfaces() const
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename CML::BlockLduInterfaceFieldPtrsList<Type>::Type
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 blockInterfaces() const
 {
     typename BlockLduInterfaceFieldPtrsList<Type>::Type interfaces
@@ -2502,7 +2502,7 @@ blockInterfaces() const
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 writeEntry(const word& keyword, Ostream& os) const
 {
     os  << keyword << nl << token::BEGIN_BLOCK << incrIndent << nl;
@@ -2520,7 +2520,7 @@ writeEntry(const word& keyword, Ostream& os) const
     // Check state of IOstream
     os.check
     (
-        "GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::"
+        "GeometricField<Type, PatchField, GeoMesh>::Boundary::"
         "writeEntry(const word& keyword, Ostream& os) const"
     );
 }
@@ -2529,11 +2529,11 @@ writeEntry(const word& keyword, Ostream& os) const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator=
 (
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField& bf
+    Boundary& bf
 )
 {
     FieldField<PatchField, Type>::operator=(bf);
@@ -2541,11 +2541,11 @@ operator=
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator=
 (
     typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField&& bf
+    Boundary&& bf
 )
 {
     FieldField<PatchField, Type>::operator=(move(bf));
@@ -2553,7 +2553,7 @@ operator=
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator=
 (
     const FieldField<PatchField, Type>& ptff
@@ -2564,7 +2564,7 @@ operator=
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator=
 (
     const Type& t
@@ -2576,11 +2576,11 @@ operator=
 
 // Forced assignments
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator==
 (
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField& bf
+    Boundary& bf
 )
 {
     forAll((*this), patchi)
@@ -2591,7 +2591,7 @@ operator==
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator==
 (
     const FieldField<PatchField, Type>& ptff
@@ -2605,7 +2605,7 @@ operator==
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator==
 (
     const Type& t
@@ -2625,7 +2625,7 @@ CML::Ostream& CML::operator<<
 (
     Ostream& os,
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField& bf
+    Boundary& bf
 )
 {
     os << static_cast<const FieldField<PatchField, Type>&>(bf);

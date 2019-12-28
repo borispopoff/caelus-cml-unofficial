@@ -60,7 +60,7 @@ void CML::yPlusLES::calcIncompressibleYPlus
     const incompressible::LESModel& model =
         mesh.lookupObject<incompressible::LESModel>("LESProperties");
 
-    volScalarField::GeometricBoundaryField d = nearWallDist(mesh).y();
+    volScalarField::Boundary d = nearWallDist(mesh).y();
     volScalarField nuEff(model.nuEff());
 
     const fvPatchList& patches = mesh.boundary();
@@ -123,7 +123,7 @@ void CML::yPlusLES::calcCompressibleYPlus
     const compressible::LESModel& model =
         mesh.lookupObject<compressible::LESModel>("LESProperties");
 
-    volScalarField::GeometricBoundaryField d = nearWallDist(mesh).y();
+    volScalarField::Boundary d = nearWallDist(mesh).y();
     volScalarField muEff(model.muEff());
     const volScalarField& rho(model.rho());
 

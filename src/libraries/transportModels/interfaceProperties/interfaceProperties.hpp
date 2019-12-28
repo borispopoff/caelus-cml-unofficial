@@ -95,8 +95,8 @@ class interfaceProperties
         //  calculated from the component of U parallel to the wall
         void correctContactAngle
         (
-            surfaceVectorField::GeometricBoundaryField& nHat,
-            surfaceVectorField::GeometricBoundaryField& gradAlphaf
+            surfaceVectorField::Boundary& nHat,
+            surfaceVectorField::Boundary& gradAlphaf
         ) const;
 
         //- Re-calculate the interface curvature

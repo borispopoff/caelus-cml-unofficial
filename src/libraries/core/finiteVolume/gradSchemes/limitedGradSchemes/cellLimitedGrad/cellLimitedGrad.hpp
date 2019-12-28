@@ -303,7 +303,7 @@ CML::fv::cellLimitedGrad<Type, Limiter>::calcGrad
     }
 
 
-    const typename GeometricField<Type, fvPatchField, volMesh>::GeometricBoundaryField& bsf =
+    const typename GeometricField<Type, fvPatchField, volMesh>::Boundary& bsf =
         vsf.boundaryField();
 
     forAll(bsf, patchi)

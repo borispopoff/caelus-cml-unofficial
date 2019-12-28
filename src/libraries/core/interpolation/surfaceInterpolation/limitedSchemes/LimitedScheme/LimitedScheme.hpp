@@ -288,7 +288,7 @@ CML::LimitedScheme<Type, Limiter, LimitFunc>::limiter
         );
     }
 
-    surfaceScalarField::GeometricBoundaryField& bLim =
+    surfaceScalarField::Boundary& bLim =
         lim.boundaryFieldRef();
 
     forAll(bLim, patchi)

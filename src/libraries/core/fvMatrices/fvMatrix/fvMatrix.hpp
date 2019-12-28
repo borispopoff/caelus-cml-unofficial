@@ -392,7 +392,7 @@ public:
             void boundaryManipulate
             (
                 typename GeometricField<Type, fvPatchField, volMesh>::
-                    GeometricBoundaryField& values
+                    Boundary& values
             );
 
             //- Construct and return the solver
@@ -1718,7 +1718,7 @@ template<class Type>
 void CML::fvMatrix<Type>::boundaryManipulate
 (
     typename GeometricField<Type, fvPatchField, volMesh>::
-        GeometricBoundaryField& bFields
+        Boundary& bFields
 )
 {
     forAll(bFields, patchi)
@@ -1973,7 +1973,7 @@ flux() const
     }
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& ffbf = fieldFlux.boundaryFieldRef();
+        Boundary& ffbf = fieldFlux.boundaryFieldRef();
 
     forAll(ffbf, patchi)
     {

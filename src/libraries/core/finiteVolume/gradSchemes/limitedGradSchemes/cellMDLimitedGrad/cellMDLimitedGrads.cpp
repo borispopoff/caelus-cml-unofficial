@@ -77,7 +77,7 @@ CML::fv::cellMDLimitedGrad<CML::scalar>::calcGrad
     }
 
 
-    const volScalarField::GeometricBoundaryField& bsf = vsf.boundaryField();
+    const volScalarField::Boundary& bsf = vsf.boundaryField();
 
     forAll(bsf, patchi)
     {
@@ -220,7 +220,7 @@ CML::fv::cellMDLimitedGrad<CML::vector>::calcGrad
     }
 
 
-    const volVectorField::GeometricBoundaryField& bsf = vsf.boundaryField();
+    const volVectorField::Boundary& bsf = vsf.boundaryField();
 
     forAll(bsf, patchi)
     {

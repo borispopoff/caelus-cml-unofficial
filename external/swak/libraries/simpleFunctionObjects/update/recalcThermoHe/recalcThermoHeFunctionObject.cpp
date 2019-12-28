@@ -95,7 +95,7 @@ void recalcThermoHeFunctionObject::recalc()
     }
 
     // hBoundaryCorrection
-    volScalarField::GeometricBoundaryField& hbf = h.boundaryFieldRef();
+    volScalarField::Boundary& hbf = h.boundaryFieldRef();
 
     forAll(hbf, patchi)
     {

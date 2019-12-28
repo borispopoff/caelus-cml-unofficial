@@ -39,7 +39,7 @@ bool CML::adjustPhi
         scalar fixedMassOut = 0.0;
         scalar adjustableMassOut = 0.0;
 
-        surfaceScalarField::GeometricBoundaryField& bphi =
+        surfaceScalarField::Boundary& bphi =
             phi.boundaryFieldRef();
 
         forAll(bphi, patchi)

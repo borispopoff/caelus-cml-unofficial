@@ -740,7 +740,7 @@ void correctCoupledBoundaryConditions(fvMesh& mesh)
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld =
+        typename GeoField::Boundary& bfld =
             fld.boundaryFieldRef();
         if
         (

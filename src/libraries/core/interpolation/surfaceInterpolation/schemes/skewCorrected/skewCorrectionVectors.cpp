@@ -91,7 +91,7 @@ void CML::skewCorrectionVectors::makeSkewCorrectionVectors() const
         SkewCorrVecs[facei] = Cpf - ((Sf[facei] & Cpf)/(Sf[facei] & d))*d;
     }
 
-    surfaceVectorField::GeometricBoundaryField& skewCorrVecsBf =
+    surfaceVectorField::Boundary& skewCorrVecsBf =
         SkewCorrVecs.boundaryFieldRef();
 
     forAll(skewCorrVecsBf, patchi)

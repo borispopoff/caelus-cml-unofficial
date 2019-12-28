@@ -209,7 +209,7 @@ void CML::surfaceInterpolation::makeWeights() const
         }
     }
 
-    surfaceScalarField::GeometricBoundaryField& wBf =
+    surfaceScalarField::Boundary& wBf =
         weights.boundaryFieldRef();
 
     forAll(mesh_.boundary(), patchi)
@@ -263,7 +263,7 @@ void CML::surfaceInterpolation::makeDeltaCoeffs() const
         DeltaCoeffs[facei] = 1.0/mag(C[neighbour[facei]] - C[owner[facei]]);
     }
 
-    surfaceScalarField::GeometricBoundaryField& deltaCoeffsBf =
+    surfaceScalarField::Boundary& deltaCoeffsBf =
         DeltaCoeffs.boundaryFieldRef();
 
     forAll(deltaCoeffsBf, patchi)
@@ -325,7 +325,7 @@ void CML::surfaceInterpolation::makeNonOrthDeltaCoeffs() const
         nonOrthDeltaCoeffs[facei] = 1.0/max(unitArea & delta, 0.05*mag(delta));
     }
 
-    surfaceScalarField::GeometricBoundaryField& nonOrthDeltaCoeffsBf =
+    surfaceScalarField::Boundary& nonOrthDeltaCoeffsBf =
         nonOrthDeltaCoeffs.boundaryFieldRef();
 
     forAll(nonOrthDeltaCoeffsBf, patchi)
@@ -386,7 +386,7 @@ void CML::surfaceInterpolation::makeNonOrthCorrectionVectors() const
     // and calculated consistently with internal corrections for
     // coupled patches
 
-    surfaceVectorField::GeometricBoundaryField& corrVecsBf =
+    surfaceVectorField::Boundary& corrVecsBf =
         corrVecs.boundaryFieldRef();
 
     forAll(corrVecsBf, patchi)

@@ -421,7 +421,7 @@ void CML::MRFZone::makeAbsoluteRhoFlux
         phii[facei] += rho[facei]*(Omega ^ (Cfi[facei] - origin_)) & Sfi[facei];
     }
 
-    surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryFieldRef();
+    surfaceScalarField::Boundary& phibf = phi.boundaryFieldRef();
 
 
     // Included patches
@@ -473,7 +473,7 @@ void CML::MRFZone::zero
     }
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& phibf = phi.boundaryFieldRef();
+        Boundary& phibf = phi.boundaryFieldRef();
 
     forAll(includedFaces_, patchi)
     {

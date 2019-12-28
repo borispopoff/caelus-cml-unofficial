@@ -61,7 +61,7 @@ protected:
         wordList cellMotionBoundaryTypes
         (
             const typename GeometricField<Type, pointPatchField, pointMesh>::
-            GeometricBoundaryField& pmUbf
+            Boundary& pmUbf
         ) const;
 
 public:
@@ -98,7 +98,7 @@ template<class Type>
 CML::wordList CML::fvMotionSolverCore::cellMotionBoundaryTypes
 (
     const typename GeometricField<Type, pointPatchField, pointMesh>::
-    GeometricBoundaryField& pmUbf
+    Boundary& pmUbf
 ) const
 {
     wordList cmUbf = pmUbf.types();

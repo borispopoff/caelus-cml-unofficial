@@ -260,7 +260,7 @@ CML::extendedUpwindCellToFaceStencil::weightedSum
     // Boundaries. Either constrained or calculated so assign value
     // directly (instead of nicely using operator==)
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& bSfCorr = sf.boundaryField();
+        Boundary& bSfCorr = sf.boundaryField();
 
     forAll(bSfCorr, patchi)
     {

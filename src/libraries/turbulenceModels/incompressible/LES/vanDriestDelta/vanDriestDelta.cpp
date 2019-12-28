@@ -64,6 +64,8 @@ void vanDriestDelta::calcDelta()
     );
 
     const fvPatchList& patches = mesh_.boundary();
+    volScalarField::Boundary& ystarBf = ystar.boundaryFieldRef();
+
     forAll(patches, patchi)
     {
         if (isA<wallFvPatch>(patches[patchi]))
@@ -72,7 +74,7 @@ void vanDriestDelta::calcDelta()
             const scalarField& nuw = nu.boundaryField()[patchi];
             const scalarField& nuSgsw = nuSgs().boundaryField()[patchi];
 
-            ystar.boundaryFieldRef()[patchi] =
+            ystarBf[patchi] =
                 nuw/sqrt((nuw + nuSgsw)*mag(Uw.snGrad()) + VSMALL);
         }
     }

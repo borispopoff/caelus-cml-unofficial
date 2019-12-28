@@ -137,7 +137,7 @@ public:
             }
 
             typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-                GeometricBoundaryField& bff = vff.boundaryFieldRef();
+                Boundary& bff = vff.boundaryFieldRef();
 
             forAll(bff, patchi)
             {

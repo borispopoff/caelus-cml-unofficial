@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
             fvc::interpolate(RASModel->alphaEff())*fvc::snGrad(h)
         );
 
-        const surfaceScalarField::GeometricBoundaryField& patchHeatFlux =
+        const surfaceScalarField::Boundary& patchHeatFlux =
             heatFlux.boundaryField();
 
         Info<< "\nWall heat fluxes [W]" << endl;

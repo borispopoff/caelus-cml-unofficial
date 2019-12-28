@@ -136,7 +136,7 @@ average
     )().internalField();
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-    GeometricBoundaryField& bav = av.boundaryFieldRef();
+    Boundary& bav = av.boundaryFieldRef();
 
     forAll(bav, patchi)
     {

@@ -117,7 +117,7 @@ void CML::regionModels::regionModel1D::initialise()
     boundaryFaceCells_.setSize(localPyrolysisFacei);
 
     surfaceScalarField& nMagSf = nMagSfPtr_();
-    surfaceScalarField::GeometricBoundaryField nMagSfBf =  nMagSf.boundaryField();   
+    surfaceScalarField::Boundary nMagSfBf =  nMagSf.boundaryField();   
 
     localPyrolysisFacei = 0;
 

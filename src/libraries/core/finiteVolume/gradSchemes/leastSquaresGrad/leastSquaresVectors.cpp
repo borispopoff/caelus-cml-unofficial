@@ -121,7 +121,7 @@ void CML::leastSquaresVectors::makeLeastSquaresVectors() const
     }
 
 
-    surfaceVectorField::GeometricBoundaryField& blsP = lsP.boundaryFieldRef();
+    surfaceVectorField::Boundary& blsP = lsP.boundaryFieldRef();
 
     forAll(blsP, patchi)
     {

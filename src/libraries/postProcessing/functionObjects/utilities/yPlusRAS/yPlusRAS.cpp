@@ -64,7 +64,7 @@ void CML::yPlusRAS::calcIncompressibleYPlus
         mesh.lookupObject<incompressible::RASModel>("RASProperties");
 
     const volScalarField nut(model.nut());
-    const volScalarField::GeometricBoundaryField& nutPatches =
+    const volScalarField::Boundary& nutPatches =
         nut.boundaryField();
 
     bool foundPatch = false;
@@ -121,7 +121,7 @@ void CML::yPlusRAS::calcCompressibleYPlus
         mesh.lookupObject<compressible::RASModel>("RASProperties");
 
     const volScalarField mut(model.mut());
-    const volScalarField::GeometricBoundaryField& mutPatches =
+    const volScalarField::Boundary& mutPatches =
         mut.boundaryField();
 
     bool foundPatch = false;

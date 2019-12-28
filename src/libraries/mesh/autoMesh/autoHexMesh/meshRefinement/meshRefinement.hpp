@@ -948,7 +948,7 @@ void meshRefinement::addPatchFields(fvMesh& mesh, const word& patchFieldType)
     forAllIter(typename HashTable<GeoField*>, flds, iter)
     {
         GeoField& fld = *iter();
-        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryFieldRef();
+        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
 
         label sz = bfld.size();
         bfld.setSize(sz+1);
@@ -978,7 +978,7 @@ void meshRefinement::reorderPatchFields(fvMesh& mesh, const labelList& oldToNew)
     forAllIter(typename HashTable<GeoField*>, flds, iter)
     {
         GeoField& fld = *iter();
-        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryFieldRef();
+        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
 
         bfld.reorder(oldToNew);
     }

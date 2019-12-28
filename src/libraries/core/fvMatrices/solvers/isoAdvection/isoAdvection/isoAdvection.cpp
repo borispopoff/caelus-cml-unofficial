@@ -365,9 +365,9 @@ void CML::isoAdvection::timeIntegratedFlux()
 
     // Get references to boundary fields
     const polyBoundaryMesh& boundaryMesh = mesh_.boundaryMesh();
-    const surfaceScalarField::GeometricBoundaryField& phib = phi_.boundaryField();
-    const surfaceScalarField::GeometricBoundaryField& magSfb = mesh_.magSf().boundaryField();
-    surfaceScalarField::GeometricBoundaryField& dVfb = dVf_.boundaryFieldRef();
+    const surfaceScalarField::Boundary& phib = phi_.boundaryField();
+    const surfaceScalarField::Boundary& magSfb = mesh_.magSf().boundaryField();
+    surfaceScalarField::Boundary& dVfb = dVf_.boundaryFieldRef();
     const label nInternalFaces = mesh_.nInternalFaces();
 
     // Loop through boundary surface faces

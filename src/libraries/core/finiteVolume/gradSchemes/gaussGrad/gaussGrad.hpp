@@ -284,7 +284,7 @@ void CML::fv::gaussGrad<Type>::correctBoundaryConditions
     typename GeometricField
     <
         typename outerProduct<vector, Type>::type, fvPatchField, volMesh
-    >::GeometricBoundaryField& gGradbf = gGrad.boundaryFieldRef();
+    >::Boundary& gGradbf = gGrad.boundaryFieldRef();
 
     forAll(vsf.boundaryField(), patchi)
     {

@@ -466,7 +466,7 @@ void CML::fvMeshDistribute::mapBoundaryFields
     forAllIter(typename HashTable<fldType*>, flds, iter)
     {
         fldType& fld = *iter();
-        typename fldType::GeometricBoundaryField& bfld = fld.boundaryFieldRef();
+        typename fldType::Boundary& bfld = fld.boundaryFieldRef();
 
         const FieldField<fvsPatchField, T>& oldBfld = oldBflds[fieldi++];
 
@@ -555,7 +555,7 @@ void CML::fvMeshDistribute::mapExposedFaces
     forAllIter(typename HashTable<fldType*>, flds, iter)
     {
         fldType& fld = *iter();
-        typename fldType::GeometricBoundaryField& bfld = fld.boundaryFieldRef();
+        typename fldType::Boundary& bfld = fld.boundaryFieldRef();
 
         const Field<T>& oldInternal = oldFlds[fieldi++];
 
@@ -603,7 +603,7 @@ void CML::fvMeshDistribute::initPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld =
+        typename GeoField::Boundary& bfld =
             fld.boundaryFieldRef();
 
         forAll(bfld, patchi)

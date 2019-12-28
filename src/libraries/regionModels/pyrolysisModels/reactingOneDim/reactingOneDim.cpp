@@ -97,7 +97,7 @@ void reactingOneDim::updateqr()
     // Retrieve field from coupled region using mapped boundary conditions
     qr_.correctBoundaryConditions();
 
-    volScalarField::GeometricBoundaryField& qrBf = qr_.boundaryFieldRef();
+    volScalarField::Boundary& qrBf = qr_.boundaryFieldRef();
 
     forAll(intCoupledPatchIDs_, i)
     {
@@ -158,7 +158,7 @@ void reactingOneDim::updatePhiGas()
         const DimensionedField<scalar, volMesh>& RRiGas =
             solidChemistry_->RRg(gasI);
 
-        surfaceScalarField::GeometricBoundaryField& phiGasBf =
+        surfaceScalarField::Boundary& phiGasBf =
             phiGas_.boundaryFieldRef();
 
         label totalFaceId = 0;

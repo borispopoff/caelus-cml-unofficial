@@ -40,7 +40,7 @@ defineRunTimeSelectionTable(psiuReactionThermo, fvMesh);
 
 wordList psiuReactionThermo::heuBoundaryTypes()
 {
-    const volScalarField::GeometricBoundaryField& tbf =
+    const volScalarField::Boundary& tbf =
         this->Tu().boundaryField();
 
     wordList hbt = tbf.types();
@@ -70,7 +70,7 @@ wordList psiuReactionThermo::heuBoundaryTypes()
 
 void psiuReactionThermo::heuBoundaryCorrection(volScalarField& heu)
 {
-    volScalarField::GeometricBoundaryField& hbf = heu.boundaryFieldRef();
+    volScalarField::Boundary& hbf = heu.boundaryFieldRef();
 
     forAll(hbf, patchi)
     {

@@ -96,7 +96,7 @@ cellLimitedBlockGrad<scalar>::fvmGrad
     }
 
 
-    const volScalarField::GeometricBoundaryField& bsf = vsf.boundaryField();
+    const volScalarField::Boundary& bsf = vsf.boundaryField();
 
     forAll(bsf, patchi)
     {

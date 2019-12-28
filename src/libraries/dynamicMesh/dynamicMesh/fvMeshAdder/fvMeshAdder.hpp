@@ -195,7 +195,7 @@ void CML::fvMeshAdder::MapVolField
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-    GeometricBoundaryField& bfld = fld.boundaryFieldRef();
+    Boundary& bfld = fld.boundaryFieldRef();
 
     {
         const labelList& oldPatchMap = meshMap.oldPatchMap();
@@ -475,7 +475,7 @@ void CML::fvMeshAdder::MapSurfaceField
     const labelList& oldPatchStarts = meshMap.oldPatchStarts();
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-    GeometricBoundaryField& bfld = fld.boundaryFieldRef();
+    Boundary& bfld = fld.boundaryFieldRef();
 
     // Internal field
     // ~~~~~~~~~~~~~~

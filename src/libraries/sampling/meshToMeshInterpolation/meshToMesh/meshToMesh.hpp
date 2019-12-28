@@ -865,7 +865,7 @@ CML::meshToMesh::mapSrcToTgt
     const fvMesh& tgtMesh = static_cast<const fvMesh&>(tgtRegion_);
 
     const fvBoundaryMesh& tgtBm = tgtMesh.boundary();
-    const typename fieldType::GeometricBoundaryField& srcBfld =
+    const typename fieldType::Boundary& srcBfld =
         field.boundaryField();
 
     PtrList<fvPatchField<Type>> tgtPatchFields(tgtBm.size());
@@ -1028,7 +1028,7 @@ CML::meshToMesh::mapTgtToSrc
     const fvMesh& srcMesh = static_cast<const fvMesh&>(srcRegion_);
 
     const fvBoundaryMesh& srcBm = srcMesh.boundary();
-    const typename fieldType::GeometricBoundaryField& tgtBfld =
+    const typename fieldType::Boundary& tgtBfld =
         field.boundaryField();
 
     PtrList<fvPatchField<Type>> srcPatchFields(srcBm.size());

@@ -72,7 +72,7 @@ void CML::nearWallDistNoSearch::doAll()
 
 CML::nearWallDistNoSearch::nearWallDistNoSearch(const CML::fvMesh& mesh)
 :
-    volScalarField::GeometricBoundaryField
+    volScalarField::Boundary
     (
         mesh.boundary(),
         mesh.V(),           // Dummy internal field
@@ -96,7 +96,7 @@ void CML::nearWallDistNoSearch::correct()
 {
     if (mesh_.changing())
     {
-        // Update size of GeometricBoundaryField
+        // Update size of Boundary
         forAll(mesh_.boundary(), patchi)
         {
             operator[](patchi).setSize(mesh_.boundary()[patchi].size());
