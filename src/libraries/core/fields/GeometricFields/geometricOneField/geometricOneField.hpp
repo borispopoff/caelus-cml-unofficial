@@ -55,9 +55,8 @@ public:
 
     // Public typedefs
 
-        typedef oneField DimesionedInternalField;
-        typedef oneField InternalField;
-        typedef oneField PatchFieldType;
+        typedef oneField Internal;
+        typedef oneField Patch;
         typedef oneFieldField GeometricBoundaryField;
         typedef one cmptType;
 
@@ -78,9 +77,11 @@ public:
 
         inline oneField oldTime() const;
 
-        inline InternalField internalField() const;
+        inline Internal operator()() const;
 
-        inline DimesionedInternalField v() const;
+        inline Internal v() const;
+
+        inline typename Internal::FieldType internalField() const;
 
         inline GeometricBoundaryField boundaryField() const;
 };
@@ -92,16 +93,16 @@ inline const geometricOneField& operator*
     const geometricOneField&
 );
 
-inline const geometricOneField::DimesionedInternalField& operator*
+inline const geometricOneField::Internal& operator*
 (
-    const geometricOneField::DimesionedInternalField&,
+    const geometricOneField::Internal&,
     const geometricOneField&
 );
 
-inline const geometricOneField::DimesionedInternalField& operator*
+inline const geometricOneField::Internal& operator*
 (
     const geometricOneField&,
-    const geometricOneField::DimesionedInternalField&
+    const geometricOneField::Internal&
 );
 
 inline const geometricOneField& operator/
@@ -110,16 +111,16 @@ inline const geometricOneField& operator/
     const geometricOneField&
 );
 
-inline const geometricOneField::DimesionedInternalField& operator/
+inline const geometricOneField::Internal& operator/
 (
-    const geometricOneField::DimesionedInternalField&,
+    const geometricOneField::Internal&,
     const geometricOneField&
 );
 
-inline const geometricOneField::DimesionedInternalField& operator/
+inline const geometricOneField::Internal& operator/
 (
     const geometricOneField&,
-    const geometricOneField::DimesionedInternalField&
+    const geometricOneField::Internal&
 );
 
 
@@ -150,19 +151,25 @@ inline CML::oneField CML::geometricOneField::oldTime() const
 }
 
 
-inline CML::geometricOneField::InternalField
-CML::geometricOneField::internalField() const
+inline CML::geometricOneField::Internal
+CML::geometricOneField::operator()() const
 {
-    return InternalField();
+    return Internal();
 }
 
 
-inline CML::geometricOneField::DimesionedInternalField
+inline CML::geometricOneField::Internal
 CML::geometricOneField::v() const
 {
-    return DimesionedInternalField();
+    return Internal();
 }
 
+
+inline typename CML::geometricOneField::Internal::FieldType
+CML::geometricOneField::internalField() const
+{
+    return typename Internal::FieldType();
+}
 
 inline CML::geometricOneField::GeometricBoundaryField
 CML::geometricOneField::boundaryField() const
@@ -181,9 +188,9 @@ inline const CML::geometricOneField& CML::operator*
 }
 
 
-inline const CML::geometricOneField::DimesionedInternalField& CML::operator*
+inline const CML::geometricOneField::Internal& CML::operator*
 (
-    const geometricOneField::DimesionedInternalField
+    const geometricOneField::Internal
 & of,
     const geometricOneField&
 )
@@ -192,10 +199,10 @@ inline const CML::geometricOneField::DimesionedInternalField& CML::operator*
 }
 
 
-inline const CML::geometricOneField::DimesionedInternalField& CML::operator*
+inline const CML::geometricOneField::Internal& CML::operator*
 (
     const geometricOneField&,
-    const geometricOneField::DimesionedInternalField& of
+    const geometricOneField::Internal& of
 )
 {
     return of;
@@ -212,9 +219,9 @@ inline const CML::geometricOneField& CML::operator/
 }
 
 
-inline const CML::geometricOneField::DimesionedInternalField& CML::operator/
+inline const CML::geometricOneField::Internal& CML::operator/
 (
-    const geometricOneField::DimesionedInternalField& of,
+    const geometricOneField::Internal& of,
     const geometricOneField&
 )
 {
@@ -222,10 +229,10 @@ inline const CML::geometricOneField::DimesionedInternalField& CML::operator/
 }
 
 
-inline const CML::geometricOneField::DimesionedInternalField& CML::operator/
+inline const CML::geometricOneField::Internal& CML::operator/
 (
     const geometricOneField&,
-    const geometricOneField::DimesionedInternalField& of
+    const geometricOneField::Internal& of
 )
 {
     return of;

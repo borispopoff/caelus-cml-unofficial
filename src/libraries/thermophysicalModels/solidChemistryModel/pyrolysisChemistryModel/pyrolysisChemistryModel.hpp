@@ -889,7 +889,7 @@ CML::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::gasHs
         )
     );
 
-    DimensionedField<scalar, volMesh>& gasHs = tHs.ref();
+    volScalarField::Internal& gasHs = tHs.ref();
 
     const GasThermo& mixture = gasThermo_[index];
 

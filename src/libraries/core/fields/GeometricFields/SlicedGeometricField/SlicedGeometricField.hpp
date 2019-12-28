@@ -64,7 +64,7 @@ public:
     typedef typename GeoMesh::Mesh Mesh;
     typedef typename GeoMesh::BoundaryMesh BoundaryMesh;
 
-    class DimensionedInternalField;
+    class Internal;
 
 
 private:
@@ -176,7 +176,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-       Class SlicedGeometricField::DimensionedInternalField Declaration
+       Class SlicedGeometricField::Internal Declaration
 \*---------------------------------------------------------------------------*/
 
 //- The internalField of a SlicedGeometricField
@@ -188,9 +188,9 @@ template
     class GeoMesh
 >
 class SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-DimensionedInternalField
+Internal
 :
-    public GeometricField<Type, PatchField, GeoMesh>::DimensionedInternalField
+    public GeometricField<Type, PatchField, GeoMesh>::Internal
 {
 
 public:
@@ -198,7 +198,7 @@ public:
     // Constructors
 
         //- Construct from components and field to slice
-        DimensionedInternalField
+        Internal
         (
             const IOobject&,
             const Mesh&,
@@ -208,7 +208,7 @@ public:
 
 
     //- Destructor
-    ~DimensionedInternalField();
+    ~Internal();
 };
 
 
@@ -368,7 +368,7 @@ template
     class GeoMesh
 >
 CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-DimensionedInternalField::DimensionedInternalField
+Internal::Internal
 (
     const IOobject& io,
     const Mesh& mesh,
@@ -583,7 +583,7 @@ template
     class GeoMesh
 >
 CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-DimensionedInternalField::~DimensionedInternalField()
+Internal::~Internal()
 {
     // Set the internalField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.

@@ -752,7 +752,7 @@ void correctCoupledBoundaryConditions(fvMesh& mesh)
 
             forAll(bfld, patchi)
             {
-                typename GeoField::PatchFieldType& pfld = bfld[patchi];
+                typename GeoField::Patch& pfld = bfld[patchi];
 
                 if (pfld.patch().coupled())
                 {
@@ -772,7 +772,7 @@ void correctCoupledBoundaryConditions(fvMesh& mesh)
 
             forAll(bfld, patchi)
             {
-                typename GeoField::PatchFieldType& pfld = bfld[patchi];
+                typename GeoField::Patch& pfld = bfld[patchi];
 
                 if (pfld.patch().coupled())
                 {
@@ -788,7 +788,7 @@ void correctCoupledBoundaryConditions(fvMesh& mesh)
             forAll(patchSchedule, patchEvali)
             {
                 const label patchi = patchSchedule[patchEvali].patch;
-                typename GeoField::PatchFieldType& pfld = bfld[patchi];
+                typename GeoField::Patch& pfld = bfld[patchi];
 
                 if (pfld.patch().coupled())
                 {

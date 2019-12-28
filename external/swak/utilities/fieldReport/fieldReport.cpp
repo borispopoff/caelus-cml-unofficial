@@ -440,7 +440,7 @@ bool reportAField(
 
     if(doZones) {
         if(
-            Type::PatchFieldType::typeName
+            Type::Patch::typeName
             ==
             "fvPatchField"
         ) {
@@ -466,7 +466,7 @@ bool reportAField(
         wordList cellSets=findSets<cellSet>(mesh);
 
         if(
-            Type::PatchFieldType::typeName
+            Type::Patch::typeName
             ==
             "fvPatchField"
         ) {

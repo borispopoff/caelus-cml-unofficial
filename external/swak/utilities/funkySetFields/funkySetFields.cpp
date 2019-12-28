@@ -103,11 +103,11 @@ void setField
     FieldValueExpressionDriver::setValuePatches(*pTemp,keepPatches,valuePatches);
 
     forAll(result.boundaryField(),patchI) {
-        typename T::PatchFieldType &pf=
-            const_cast<typename T::PatchFieldType&>(
+        typename T::Patch &pf=
+            const_cast<typename T::Patch&>(
                 pTemp->boundaryField()[patchI]
             );
-        const typename T::PatchFieldType &pfOrig=result.boundaryField()[patchI];
+        const typename T::Patch &pfOrig=result.boundaryField()[patchI];
 
         if(pf.patch().coupled()) {
             pf==pfOrig;

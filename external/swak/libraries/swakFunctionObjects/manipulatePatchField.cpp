@@ -65,7 +65,7 @@ void CML::manipulatePatchField::manipulate(
     const Field<bool> &mask
 )
 {
-    const typename TField::PatchFieldType &pField=field.boundaryField()[
+    const typename TField::Patch &pField=field.boundaryField()[
         field.mesh().boundaryMesh().findPatchID(this->patchName_)
     ];
     Field<typename TField::value_type> value(pField);
@@ -111,7 +111,7 @@ void CML::manipulatePatchField::manipulate(
     }
 
     reduce(cnt,plusOp<label>());
-    const_cast<typename TField::PatchFieldType &>(pField)==value;
+    const_cast<typename TField::Patch &>(pField)==value;
 
     Info << "Manipulated field " << name_ << " on patch " << patchName_ << " on " << cnt
         << " faces with the expression " << expression_ << endl;
@@ -138,7 +138,7 @@ void CML::manipulatePatchField::manipulatePoint(
     const Field<bool> &mask
 )
 {
-    const typename TField::PatchFieldType &pField=field.boundaryField()[
+    const typename TField::Patch &pField=field.boundaryField()[
         //        dynamicCast<const fvMesh &>(
         dynamic_cast<const fvMesh &>(
             this->obr_
@@ -188,7 +188,7 @@ void CML::manipulatePatchField::manipulatePoint(
     }
 
     reduce(cnt,plusOp<label>());
-    const_cast<typename TField::PatchFieldType &>(pField)==value;
+    const_cast<typename TField::Patch &>(pField)==value;
 
     Info << "Manipulated field " << name_ << " on patch " << patchName_ << " on " << cnt
         << " points with the expression " << expression_ << endl;

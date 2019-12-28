@@ -585,13 +585,13 @@ namespace CML {
             }
 
             word patchType("calculated");
-            if(T::PatchFieldType::typeName=="fvPatchField") {
+            if(T::Patch::typeName=="fvPatchField") {
                 patchType="zeroGradient";
             }
             if(debug) {
                 Info << "Creating field " << name << " of type "
                     << T::typeName << " with patch type " << patchType
-                    << "(" << T::PatchFieldType::typeName << ")" << endl;
+                    << "(" << T::Patch::typeName << ")" << endl;
             }
             f.set(
                 new T(

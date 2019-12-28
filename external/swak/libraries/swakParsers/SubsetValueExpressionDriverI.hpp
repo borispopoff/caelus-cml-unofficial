@@ -449,7 +449,7 @@ namespace CML {
 
         if(useFaceValue(index)) {
             const polyPatch &patch=this->mesh().boundaryMesh()[patchI];
-            const typename FieldType::PatchFieldType &bf=
+            const typename FieldType::Patch &bf=
                 field.boundaryField()[patchI];
             value=bf[patch.whichFace(index)];
             return true;

@@ -955,7 +955,7 @@ void meshRefinement::addPatchFields(fvMesh& mesh, const word& patchFieldType)
         bfld.set
         (
             sz,
-            GeoField::PatchFieldType::New
+            GeoField::Patch::New
             (
                 patchFieldType,
                 mesh.boundary()[sz],

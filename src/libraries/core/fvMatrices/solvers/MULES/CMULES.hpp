@@ -269,7 +269,7 @@ void CML::MULES::limiterCorr
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighb = mesh.neighbour();
-    tmp<volScalarField::DimensionedInternalField> tVsc = mesh.Vsc();
+    tmp<volScalarField::Internal> tVsc = mesh.Vsc();
     const scalarField& V = tVsc();
 
     const surfaceScalarField::GeometricBoundaryField& phiBf =

@@ -112,7 +112,7 @@ void CML::expressionToFace::combine(topoSet& set, const bool add) const
             }
         }
         forAll(condition.boundaryField(),patchI) {
-            const surfaceScalarField::PatchFieldType &patch=
+            const surfaceScalarField::Patch &patch=
                 condition.boundaryField()[patchI];
             label start=condition.mesh().boundaryMesh()[patchI].start();
 

@@ -177,7 +177,7 @@ void CML::fvMeshTools::addPatchFields
             bfld.set
             (
                 sz,
-                GeoField::PatchFieldType::New
+                GeoField::Patch::New
                 (
                     mesh.boundary()[sz],
                     fld.dimensionedInternalField(),
@@ -190,7 +190,7 @@ void CML::fvMeshTools::addPatchFields
             bfld.set
             (
                 sz,
-                GeoField::PatchFieldType::New
+                GeoField::Patch::New
                 (
                     defaultPatchFieldType,
                     mesh.boundary()[sz],
@@ -228,7 +228,7 @@ void CML::fvMeshTools::setPatchFields
             bfld.set
             (
                 patchi,
-                GeoField::PatchFieldType::New
+                GeoField::Patch::New
                 (
                     mesh.boundary()[patchi],
                     fld.dimensionedInternalField(),

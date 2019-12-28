@@ -66,8 +66,8 @@ namespace CML
 
 void CML::fvMesh::clearGeomNotOldVol()
 {
-    slicedVolScalarField::DimensionedInternalField* VPtr =
-        static_cast<slicedVolScalarField::DimensionedInternalField*>(VPtr_);
+    slicedVolScalarField::Internal* VPtr =
+        static_cast<slicedVolScalarField::Internal*>(VPtr_);
     deleteDemandDrivenData(VPtr);
     VPtr_ = nullptr;
 

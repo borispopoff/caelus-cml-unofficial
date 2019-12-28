@@ -408,7 +408,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class GeometricField, class Type>
-const typename GeometricField::PatchFieldType& CML::fvPatch::lookupPatchField
+const typename GeometricField::Patch& CML::fvPatch::lookupPatchField
 (
     const word& name,
     const GeometricField*,

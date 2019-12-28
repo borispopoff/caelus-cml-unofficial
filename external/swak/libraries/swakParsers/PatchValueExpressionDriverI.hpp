@@ -160,7 +160,7 @@ namespace CML {
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localVolField>(name)
         ) {
-            const typename localVolField::PatchFieldType &pField=
+            const typename localVolField::Patch &pField=
                 patch_.lookupPatchField<localVolField,Type>(name);
 
             return tmp<Field<Type>>(
@@ -170,7 +170,7 @@ namespace CML {
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localSurfaceField>(name)
         ) {
-            const typename localSurfaceField::PatchFieldType &pField=
+            const typename localSurfaceField::Patch &pField=
                 patch_.lookupPatchField<localSurfaceField,Type>(name);
 
             return tmp<Field<Type>>(
@@ -180,7 +180,7 @@ namespace CML {
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localPointField>(name)
         ) {
-            const typename localPointField::PatchFieldType &pField=
+            const typename localPointField::Patch &pField=
                 patch_.lookupPatchField<localPointField,Type>(name);
 
             return pField.patchInternalField();
@@ -260,7 +260,7 @@ namespace CML {
         if(
             mesh.objectRegistry::foundObject<localVolField>(name)
         ) {
-            const typename localVolField::PatchFieldType &pField=
+            const typename localVolField::Patch &pField=
                 mesh.lookupObject<localVolField>(name).
                 oldTime().boundaryField()[patchI];
             return tmp<Field<Type>>(
@@ -269,7 +269,7 @@ namespace CML {
         } else if(
             mesh.objectRegistry::foundObject<localSurfaceField>(name)
         ) {
-            const typename localSurfaceField::PatchFieldType &pField=
+            const typename localSurfaceField::Patch &pField=
                 mesh.lookupObject<localSurfaceField>(name).
                 oldTime().boundaryField()[patchI];
             return tmp<Field<Type>>(
@@ -278,7 +278,7 @@ namespace CML {
         } else if(
             mesh.objectRegistry::foundObject<localPointField>(name)
         ) {
-            const typename localPointField::PatchFieldType &pField=
+            const typename localPointField::Patch &pField=
                 mesh.lookupObject<localPointField>(name).
                 oldTime().boundaryField()[patchI];
             return tmp<Field<Type>>(
@@ -334,14 +334,14 @@ namespace CML {
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localVolField>(name)
         ) {
-            const typename localVolField::PatchFieldType &pField=
+            const typename localVolField::Patch &pField=
                 patch_.lookupPatchField<localVolField,Type>(name);
             return pField.patchInternalField();
         } else if(
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localPointField>(name)
         ) {
-            const typename localPointField::PatchFieldType &pField=
+            const typename localPointField::Patch &pField=
                 patch_.lookupPatchField<localPointField,Type>(name);
             return pField.patchInternalField();
         } else{
@@ -395,7 +395,7 @@ namespace CML {
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localVolField>(name)
         ) {
-            const typename localVolField::PatchFieldType &pField=
+            const typename localVolField::Patch &pField=
                 patch_.lookupPatchField<localVolField,Type>(name);
             return pField.patchNeighbourField();
         } else{
@@ -442,7 +442,7 @@ namespace CML {
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localVolField>(name)
         ) {
-            const typename localVolField::PatchFieldType &pField=
+            const typename localVolField::Patch &pField=
                 patch_.lookupPatchField<localVolField,Type>(name);
             return pField.snGrad();
         } else{

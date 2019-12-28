@@ -1777,33 +1777,33 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     const wordList surfTensors(mesh_.names(surfaceTensorField::typeName));
     checkEqualWordList("surfaceTensorFields", surfTensors);
 
-    typedef volScalarField::DimensionedInternalField dimScalType;
+    typedef volScalarField::Internal dimScalType;
     const wordList dimScalars(mesh_.names(dimScalType::typeName));
-    checkEqualWordList("volScalarField::DimensionedInternalField", dimScalars);
+    checkEqualWordList("volScalarField::Internal", dimScalars);
 
-    typedef volVectorField::DimensionedInternalField dimVecType;
+    typedef volVectorField::Internal dimVecType;
     const wordList dimVectors(mesh_.names(dimVecType::typeName));
-    checkEqualWordList("volVectorField::DimensionedInternalField", dimVectors);
+    checkEqualWordList("volVectorField::Internal", dimVectors);
 
-    typedef volSphericalTensorField::DimensionedInternalField dimSphereType;
+    typedef volSphericalTensorField::Internal dimSphereType;
     const wordList dimSphereTensors(mesh_.names(dimSphereType::typeName));
     checkEqualWordList
     (
-        "volSphericalTensorField::DimensionedInternalField",
+        "volSphericalTensorField::Internal",
         dimSphereTensors
     );
 
-    typedef volSymmTensorField::DimensionedInternalField dimSymmTensorType;
+    typedef volSymmTensorField::Internal dimSymmTensorType;
     const wordList dimSymmTensors(mesh_.names(dimSymmTensorType::typeName));
     checkEqualWordList
     (
-        "volSymmTensorField::DimensionedInternalField",
+        "volSymmTensorField::Internal",
         dimSymmTensors
     );
 
-    typedef volTensorField::DimensionedInternalField dimTensorType;
+    typedef volTensorField::Internal dimTensorType;
     const wordList dimTensors(mesh_.names(dimTensorType::typeName));
-    checkEqualWordList("volTensorField::DimensionedInternalField", dimTensors);
+    checkEqualWordList("volTensorField::Internal", dimTensors);
 
 
     // Find patch to temporarily put exposed and processor faces into.
@@ -2050,35 +2050,35 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             );
 
             // dimensionedFields
-            sendFields<volScalarField::DimensionedInternalField>
+            sendFields<volScalarField::Internal>
             (
                 recvProc,
                 dimScalars,
                 subsetter,
                 str
             );
-            sendFields<volVectorField::DimensionedInternalField>
+            sendFields<volVectorField::Internal>
             (
                 recvProc,
                 dimVectors,
                 subsetter,
                 str
             );
-            sendFields<volSphericalTensorField::DimensionedInternalField>
+            sendFields<volSphericalTensorField::Internal>
             (
                 recvProc,
                 dimSphereTensors,
                 subsetter,
                 str
             );
-            sendFields<volSymmTensorField::DimensionedInternalField>
+            sendFields<volSymmTensorField::Internal>
             (
                 recvProc,
                 dimSymmTensors,
                 subsetter,
                 str
             );
-            sendFields<volTensorField::DimensionedInternalField>
+            sendFields<volTensorField::Internal>
             (
                 recvProc,
                 dimTensors,
@@ -2254,11 +2254,11 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             PtrList<surfaceSymmTensorField> ssytf;
             PtrList<surfaceTensorField> stf;
 
-            PtrList<volScalarField::DimensionedInternalField> dsf;
-            PtrList<volVectorField::DimensionedInternalField> dvf;
-            PtrList<volSphericalTensorField::DimensionedInternalField> dstf;
-            PtrList<volSymmTensorField::DimensionedInternalField> dsytf;
-            PtrList<volTensorField::DimensionedInternalField> dtf;
+            PtrList<volScalarField::Internal> dsf;
+            PtrList<volVectorField::Internal> dvf;
+            PtrList<volSphericalTensorField::Internal> dstf;
+            PtrList<volSymmTensorField::Internal> dsytf;
+            PtrList<volTensorField::Internal> dtf;
 
 
             // Opposite of sendMesh
@@ -2372,7 +2372,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                 );
 
                 // Dimensioned fields
-                receiveFields<volScalarField::DimensionedInternalField>
+                receiveFields<volScalarField::Internal>
                 (
                     sendProc,
                     dimScalars,
@@ -2380,10 +2380,10 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     dsf,
                     fieldDicts.subDict
                     (
-                        volScalarField::DimensionedInternalField::typeName
+                        volScalarField::Internal::typeName
                     )
                 );
-                receiveFields<volVectorField::DimensionedInternalField>
+                receiveFields<volVectorField::Internal>
                 (
                     sendProc,
                     dimVectors,
@@ -2391,10 +2391,10 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     dvf,
                     fieldDicts.subDict
                     (
-                        volVectorField::DimensionedInternalField::typeName
+                        volVectorField::Internal::typeName
                     )
                 );
-                receiveFields<volSphericalTensorField::DimensionedInternalField>
+                receiveFields<volSphericalTensorField::Internal>
                 (
                     sendProc,
                     dimSphereTensors,
@@ -2402,11 +2402,11 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     dstf,
                     fieldDicts.subDict
                     (
-                        volSphericalTensorField::DimensionedInternalField::
+                        volSphericalTensorField::Internal::
                         typeName
                     )
                 );
-                receiveFields<volSymmTensorField::DimensionedInternalField>
+                receiveFields<volSymmTensorField::Internal>
                 (
                     sendProc,
                     dimSymmTensors,
@@ -2414,10 +2414,10 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     dsytf,
                     fieldDicts.subDict
                     (
-                        volSymmTensorField::DimensionedInternalField::typeName
+                        volSymmTensorField::Internal::typeName
                     )
                 );
-                receiveFields<volTensorField::DimensionedInternalField>
+                receiveFields<volTensorField::Internal>
                 (
                     sendProc,
                     dimTensors,
@@ -2425,7 +2425,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     dtf,
                     fieldDicts.subDict
                     (
-                        volTensorField::DimensionedInternalField::typeName
+                        volTensorField::Internal::typeName
                     )
                 );
             }

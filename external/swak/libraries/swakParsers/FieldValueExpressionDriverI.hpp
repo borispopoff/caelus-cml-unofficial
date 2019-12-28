@@ -618,7 +618,7 @@ inline tmp<FType> FieldValueExpressionDriver::makeConstantFieldInternal(
     buff << "constant" << pTraits<typename FType::value_type>::typeName;
 
     word defaultBC="calculated";
-    if(pTraits<typename FType::PatchFieldType>::typeName=="fvPatchField") {
+    if(pTraits<typename FType::Patch>::typeName=="fvPatchField") {
         defaultBC="zeroGradient";
     }
     if(makeValuePatches) {
@@ -641,7 +641,7 @@ inline tmp<FType> FieldValueExpressionDriver::makeConstantFieldInternal(
             defaultBC
         )
     );
-    if(pTraits<typename FType::PatchFieldType>::typeName=="fvsPatchField") {
+    if(pTraits<typename FType::Patch>::typeName=="fvsPatchField") {
         setCalculatedPatches(f.ref(),val);
     }
 

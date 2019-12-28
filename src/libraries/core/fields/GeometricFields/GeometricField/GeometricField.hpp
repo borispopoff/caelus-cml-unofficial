@@ -98,12 +98,11 @@ public:
         typedef typename GeoMesh::BoundaryMesh BoundaryMesh;
 
         //- Type of the internal field from which this GeometricField is derived
-        typedef DimensionedField<Type, GeoMesh> DimensionedInternalField;
-        typedef Field<Type> InternalField;
+        typedef DimensionedField<Type, GeoMesh> Internal;
 
         //- Type of the patch field of which the
         //  GeometricField::Boundary is composed
-        typedef PatchField<Type> PatchFieldType;
+        typedef PatchField<Type> Patch;
 
 
     class GeometricBoundaryField
@@ -126,7 +125,7 @@ public:
             GeometricBoundaryField
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
+                const Internal&,
                 const word&
             );
 
@@ -137,7 +136,7 @@ public:
             GeometricBoundaryField
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
+                const Internal&,
                 const wordList& wantedPatchTypes,
                 const wordList& actualPatchTypes = wordList()
             );
@@ -148,14 +147,14 @@ public:
             GeometricBoundaryField
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
+                const Internal&,
                 const PtrList<PatchField<Type>>&
             );
 
             //- Construct as copy setting the reference to the internal field
             GeometricBoundaryField
             (
-                const DimensionedInternalField&,
+                const Internal&,
                 const GeometricBoundaryField&
             );
 
@@ -183,7 +182,7 @@ public:
             GeometricBoundaryField
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
+                const Internal&,
                 const dictionary&
             );
 
@@ -220,6 +219,7 @@ public:
 
             //- Assignment operator
             void operator=(const GeometricBoundaryField&);
+
             //- Move assignment operator
             void operator=(GeometricBoundaryField&&);
 
@@ -437,16 +437,21 @@ public:
     // Member Functions
 
         //- Return dimensioned internal field
-        DimensionedInternalField& dimensionedInternalFieldRef();
+        Internal& dimensionedInternalFieldRef();
 
         //- Return dimensioned internal field
-        inline const DimensionedInternalField& dimensionedInternalField() const;
+        inline const Internal& dimensionedInternalField() const;
+
+        //- Return a const-reference to the dimensioned internal field
+        //  of a "vol" field.  Useful in the formulation of source-terms
+        //  for FV equations
+        inline const Internal& v() const;
 
         //- Return internal field
-        InternalField& internalField();
+        typename Internal::FieldType& internalField();
 
         //- Return internal field
-        inline const InternalField& internalField() const;
+        inline const typename Internal::FieldType& internalField() const;
 
         //- Return reference to GeometricBoundaryField
         GeometricBoundaryField& boundaryFieldRef();
@@ -562,6 +567,8 @@ public:
 
 
     // Member Operators
+        //  Useful in the formulation of source-terms for FV equations
+        inline const Internal& operator()() const;
 
         void operator=(const GeometricField<Type, PatchField, GeoMesh>&);
         void operator=(GeometricField<Type, PatchField, GeoMesh>&&);
@@ -627,14 +634,25 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 inline const CML::GeometricField<Type, PatchField, GeoMesh>&
 CML::GeometricField<Type, PatchField, GeoMesh>::null()
 {
-    return NullSingletonRef< GeometricField<Type, PatchField, GeoMesh>>();
+    return NullSingletonRef<GeometricField<Type, PatchField, GeoMesh>>();
 }
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 inline
 const typename
-CML::GeometricField<Type, PatchField, GeoMesh>::DimensionedInternalField&
+CML::GeometricField<Type, PatchField, GeoMesh>::Internal&
+CML::GeometricField<Type, PatchField, GeoMesh>::
+operator()() const
+{
+    return *this;
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+inline
+const typename
+CML::GeometricField<Type, PatchField, GeoMesh>::Internal&
 CML::GeometricField<Type, PatchField, GeoMesh>::
 dimensionedInternalField() const
 {
@@ -645,7 +663,7 @@ dimensionedInternalField() const
 template<class Type, template<class> class PatchField, class GeoMesh>
 inline
 const typename
-CML::GeometricField<Type, PatchField, GeoMesh>::InternalField&
+CML::GeometricField<Type, PatchField, GeoMesh>::Internal::FieldType&
 CML::GeometricField<Type, PatchField, GeoMesh>::internalField() const
 {
     return *this;
@@ -1413,7 +1431,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::~GeometricField()
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
-CML::GeometricField<Type, PatchField, GeoMesh>::DimensionedInternalField&
+CML::GeometricField<Type, PatchField, GeoMesh>::Internal&
 CML::GeometricField<Type, PatchField, GeoMesh>::dimensionedInternalFieldRef()
 {
     this->setUpToDate();
@@ -1424,7 +1442,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::dimensionedInternalFieldRef()
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
-CML::GeometricField<Type, PatchField, GeoMesh>::InternalField&
+CML::GeometricField<Type, PatchField, GeoMesh>::Internal::FieldType&
 CML::GeometricField<Type, PatchField, GeoMesh>::internalField()
 {
     this->setUpToDate();

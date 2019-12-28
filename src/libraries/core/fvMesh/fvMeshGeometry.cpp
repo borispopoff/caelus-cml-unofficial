@@ -274,7 +274,7 @@ void fvMesh::makeCf() const
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const volScalarField::DimensionedInternalField& fvMesh::V() const
+const volScalarField::Internal& fvMesh::V() const
 {
     if (!VPtr_)
     {
@@ -284,7 +284,7 @@ const volScalarField::DimensionedInternalField& fvMesh::V() const
                 << "Constructing from primitiveMesh::cellVolumes()" << endl;
         }
 
-        VPtr_ = new slicedVolScalarField::DimensionedInternalField
+        VPtr_ = new slicedVolScalarField::Internal
         (
             IOobject
             (
@@ -301,11 +301,11 @@ const volScalarField::DimensionedInternalField& fvMesh::V() const
         );
     }
 
-    return *static_cast<slicedVolScalarField::DimensionedInternalField*>(VPtr_);
+    return *static_cast<slicedVolScalarField::Internal*>(VPtr_);
 }
 
 
-const volScalarField::DimensionedInternalField& fvMesh::V0() const
+const volScalarField::Internal& fvMesh::V0() const
 {
     if (!V0Ptr_)
     {
@@ -318,7 +318,7 @@ const volScalarField::DimensionedInternalField& fvMesh::V0() const
 }
 
 
-volScalarField::DimensionedInternalField& fvMesh::setV0()
+volScalarField::Internal& fvMesh::setV0()
 {
     if (!V0Ptr_)
     {
@@ -331,7 +331,7 @@ volScalarField::DimensionedInternalField& fvMesh::setV0()
 }
 
 
-const volScalarField::DimensionedInternalField& fvMesh::V00() const
+const volScalarField::Internal& fvMesh::V00() const
 {
     if (!V00Ptr_)
     {
@@ -359,7 +359,7 @@ const volScalarField::DimensionedInternalField& fvMesh::V00() const
 }
 
 
-tmp<volScalarField::DimensionedInternalField> fvMesh::Vsc() const
+tmp<volScalarField::Internal> fvMesh::Vsc() const
 {
     if (moving() && time().subCycling())
     {
@@ -387,7 +387,7 @@ tmp<volScalarField::DimensionedInternalField> fvMesh::Vsc() const
 }
 
 
-tmp<volScalarField::DimensionedInternalField> fvMesh::Vsc0() const
+tmp<volScalarField::Internal> fvMesh::Vsc0() const
 {
     if (moving() && time().subCycling())
     {
