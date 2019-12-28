@@ -38,7 +38,7 @@ CML::bound(volScalarField& vsf, const dimensionedScalar& lowerBound)
             << " average: " << gAverage(vsf.internalField())
             << endl;
 
-        vsf.internalField() = max
+        vsf.internalFieldRef() = max
         (
             max
             (
@@ -77,7 +77,7 @@ void CML::boundMinMax
 
     if (minVsf < vsf0.value())
     {
-        vsf.internalField() = max
+        vsf.internalFieldRef() = max
         (
             max
             (
@@ -94,7 +94,7 @@ void CML::boundMinMax
 
     if (maxVsf > vsf1.value())
     {
-        vsf.internalField() = min
+        vsf.internalFieldRef() = min
         (
             min
             (

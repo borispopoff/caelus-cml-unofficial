@@ -381,7 +381,7 @@ void realizableVLESKE::correct()
 
     if (nD == 3)
     {
-        Lc.internalField() = Cx*pow(mesh_.V(), 1.0/3.0);
+        Lc.internalFieldRef() = Cx*pow(mesh_.V(), 1.0/3.0);
     }
     else if (nD == 2)
     {
@@ -397,7 +397,7 @@ void realizableVLESKE::correct()
             }
         }
 
-        Lc.internalField() = Cx*sqrt(mesh_.V()/thickness);
+        Lc.internalFieldRef() = Cx*sqrt(mesh_.V()/thickness);
     }
     else
     {

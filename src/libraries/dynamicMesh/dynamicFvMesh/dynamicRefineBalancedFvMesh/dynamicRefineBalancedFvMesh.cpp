@@ -130,7 +130,7 @@ void CML::dynamicRefineBalancedFvMesh::updateRefinementField()
             }
         }
 
-        intRefFld.internalField() = max
+        intRefFld.internalFieldRef() = max
         (
             intRefFld.internalField(),
             refFld
@@ -181,7 +181,7 @@ void CML::dynamicRefineBalancedFvMesh::updateRefinementField()
             // else do nothing
         }
         
-        intRefFld.internalField() = max
+        intRefFld.internalFieldRef() = max
         (
             intRefFld.internalField(),
             refFld

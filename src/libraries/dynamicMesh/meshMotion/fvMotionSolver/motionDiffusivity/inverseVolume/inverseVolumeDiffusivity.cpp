@@ -81,7 +81,7 @@ void CML::inverseVolumeDiffusivity::correct()
         zeroGradientFvPatchScalarField::typeName
     );
 
-    V.internalField() = mesh().V();
+    V.internalFieldRef() = mesh().V();
     V.correctBoundaryConditions();
 
     faceDiffusivity_ = 1.0/fvc::interpolate(V);

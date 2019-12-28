@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -127,7 +127,7 @@ void transform
 {
     transform
     (
-        rtf.internalField(),
+        rtf.internalFieldRef(),
         trf.internalField(),
         tf.internalField()
     );
@@ -221,7 +221,7 @@ void transform
     const GeometricField<Type, PatchField, GeoMesh>& tf
 )
 {
-    transform(rtf.internalField(), t.value(), tf.internalField());
+    transform(rtf.internalFieldRef(), t.value(), tf.internalField());
     transform(rtf.boundaryFieldRef(), t.value(), tf.boundaryField());
 }
 

@@ -115,7 +115,7 @@ public:
             surfaceScalarField& reverseLinearWeights =
                 treverseLinearWeights.ref();
 
-            reverseLinearWeights.internalField() =
+            reverseLinearWeights.internalFieldRef() =
                 1.0 - cdWeights.internalField();
 
             surfaceScalarField::Boundary& rlwbf =

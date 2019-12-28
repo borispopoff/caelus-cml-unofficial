@@ -327,7 +327,7 @@ void CML::volPointInterpolation::addSeparated
                 (pfbf[patchi]).initSwapAddSeparated
                 (
                     Pstream::commsTypes::nonBlocking,
-                    pf.internalField()
+                    pf.internalFieldRef()
                 );
         }
     }
@@ -343,7 +343,7 @@ void CML::volPointInterpolation::addSeparated
                 (pfbf[patchi]).swapAddSeparated
                 (
                     Pstream::commsTypes::nonBlocking,
-                    pf.internalField()
+                    pf.internalFieldRef()
                 );
         }
     }
@@ -443,7 +443,7 @@ void CML::volPointInterpolation::interpolateBoundaryField
 {
     const primitivePatch& boundary = boundaryPtr_();
 
-    Field<Type>& pfi = pf.internalField();
+    Field<Type>& pfi = pf.internalFieldRef();
 
     // Get face data in flat list
     tmp<Field<Type>> tboundaryVals(flatBoundaryField(vf));
@@ -522,7 +522,7 @@ void CML::volPointInterpolation::interpolateBoundaryField
         patchTypes
     );
 
-    scalarField& pswi = psw.internalField();
+    scalarField& pswi = psw.internalFieldRef();
 
     forAll(boundary.meshPoints(), i)
     {
@@ -661,7 +661,7 @@ CML::volPointInterpolation::interpolate
 
     if (!cache || vf.mesh().changing())
     {
-        // Delete any old occurences to avoid double registration
+        // Delete any old occurrences to avoid double registration
         if (db.objectRegistry::template foundObject<PointFieldType>(name))
         {
             PointFieldType& pf =

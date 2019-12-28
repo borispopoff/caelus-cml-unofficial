@@ -285,7 +285,7 @@ void CML::ParticleErosion<CloudType>::preEvolve()
 {
     if (QPtr_.valid())
     {
-        QPtr_->internalField() = 0.0;
+        QPtr_->internalFieldRef() = 0.0;
     }
     else
     {

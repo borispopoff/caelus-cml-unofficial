@@ -4164,7 +4164,7 @@ namespace parserField {
     {
             sameSize((yysemantic_stack_[(3) - (1)].fsfield),(yysemantic_stack_[(3) - (3)].fsfield));
             (yyval.fsfield) = new CML::surfaceScalarField(*(yysemantic_stack_[(3) - (1)].fsfield));
-	    (*(yyval.fsfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
+	    (*(yyval.fsfield)).internalFieldRef()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
             delete (yysemantic_stack_[(3) - (1)].fsfield); delete (yysemantic_stack_[(3) - (3)].fsfield);
           }
     break;
@@ -5159,7 +5159,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].fvfield),(yysemantic_stack_[(3) - (3)].fsfield));
             //$$ = new CML::surfaceVectorField(*$1 / *$3);
 	    (yyval.fvfield) = new CML::surfaceVectorField(*(yysemantic_stack_[(3) - (1)].fvfield));
-	    (*(yyval.fvfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
+	    (*(yyval.fvfield)).internalFieldRef()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
             delete (yysemantic_stack_[(3) - (1)].fvfield); delete (yysemantic_stack_[(3) - (3)].fsfield);
           }
     break;
@@ -9266,7 +9266,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].ftfield),(yysemantic_stack_[(3) - (3)].fsfield));
             //$$ = new CML::surfaceTensorField(*$1 / *$3);
 	    (yyval.ftfield) = new CML::surfaceTensorField(*(yysemantic_stack_[(3) - (1)].ftfield));
-	    (*(yyval.ftfield)).internalField()/(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
+	    (*(yyval.ftfield)).internalFieldRef()/(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
 	    delete (yysemantic_stack_[(3) - (1)].ftfield); delete (yysemantic_stack_[(3) - (3)].fsfield);
             driver.setCalculatedPatches(*(yyval.ftfield));
           }
@@ -9705,7 +9705,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].fyfield),(yysemantic_stack_[(3) - (3)].fsfield));
             //$$ = new CML::surfaceSymmTensorField(*$1 / *$3);
 	    (yyval.fyfield) = new CML::surfaceSymmTensorField(*(yysemantic_stack_[(3) - (1)].fyfield));
-	    (*(yyval.fyfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
+	    (*(yyval.fyfield)).internalFieldRef()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
             delete (yysemantic_stack_[(3) - (1)].fyfield); delete (yysemantic_stack_[(3) - (3)].fsfield);
             driver.setCalculatedPatches(*(yyval.fyfield));
           }
@@ -10088,7 +10088,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].fhfield),(yysemantic_stack_[(3) - (3)].fsfield));
             //$$ = new CML::surfaceSphericalTensorField(*$1 / *$3);
 	    (yyval.fhfield) = new CML::surfaceSphericalTensorField(*(yysemantic_stack_[(3) - (1)].fhfield));
-	    (*(yyval.fhfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
+	    (*(yyval.fhfield)).internalFieldRef()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
             delete (yysemantic_stack_[(3) - (1)].fhfield); delete (yysemantic_stack_[(3) - (3)].fsfield);
             driver.setCalculatedPatches(*(yyval.fhfield));
           }
@@ -10490,7 +10490,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].psfield),(yysemantic_stack_[(3) - (3)].psfield));
             //$$ = new CML::pointScalarField(*$1 / *$3);
 	    (yyval.psfield) = new CML::pointScalarField(*(yysemantic_stack_[(3) - (1)].psfield));
-	    (*(yyval.psfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
+	    (*(yyval.psfield)).internalFieldRef()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
             delete (yysemantic_stack_[(3) - (1)].psfield); delete (yysemantic_stack_[(3) - (3)].psfield);
           }
     break;
@@ -11504,7 +11504,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].pvfield),(yysemantic_stack_[(3) - (3)].psfield));
             //$$ = new CML::pointVectorField(*$1 / *$3);
 	    (yyval.pvfield) = new CML::pointVectorField(*(yysemantic_stack_[(3) - (1)].pvfield));
-	    (*(yyval.pvfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
+	    (*(yyval.pvfield)).internalFieldRef()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
             delete (yysemantic_stack_[(3) - (1)].pvfield); delete (yysemantic_stack_[(3) - (3)].psfield);
           }
     break;
@@ -12008,7 +12008,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].ptfield),(yysemantic_stack_[(3) - (3)].psfield));
 	    // $$ = new CML::pointTensorField(*$1 / *$3);
 	    (yyval.ptfield) = new CML::pointTensorField(*(yysemantic_stack_[(3) - (1)].ptfield));
-	    (*(yyval.ptfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
+	    (*(yyval.ptfield)).internalFieldRef()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
             delete (yysemantic_stack_[(3) - (1)].ptfield); delete (yysemantic_stack_[(3) - (3)].psfield);
             driver.setCalculatedPatches(*(yyval.ptfield));
           }
@@ -12421,7 +12421,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].pyfield),(yysemantic_stack_[(3) - (3)].psfield));
             //$$ = new CML::pointSymmTensorField(*$1 / *$3);
 	    (yyval.pyfield) = new CML::pointSymmTensorField(*(yysemantic_stack_[(3) - (1)].pyfield));
-	    (*(yyval.pyfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
+	    (*(yyval.pyfield)).internalFieldRef()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
             delete (yysemantic_stack_[(3) - (1)].pyfield); delete (yysemantic_stack_[(3) - (3)].psfield);
             driver.setCalculatedPatches(*(yyval.pyfield));
           }
@@ -12798,7 +12798,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].phfield),(yysemantic_stack_[(3) - (3)].psfield));
 	    // $$ = new CML::pointSphericalTensorField(*$1 / *$3);
 	    (yyval.phfield) = new CML::pointSphericalTensorField(*(yysemantic_stack_[(3) - (1)].phfield));
-	    (*(yyval.phfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
+	    (*(yyval.phfield)).internalFieldRef()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
             delete (yysemantic_stack_[(3) - (1)].phfield); delete (yysemantic_stack_[(3) - (3)].psfield);
             driver.setCalculatedPatches(*(yyval.phfield));
           }

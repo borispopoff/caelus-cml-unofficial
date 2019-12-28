@@ -270,7 +270,7 @@ EulerDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt.ref().internalField() =
+        tdtdt.ref().internalFieldRef() =
             rDeltaT.value()*dt.value()*(1.0 - mesh().V0()/mesh().V());
 
         return tdtdt;

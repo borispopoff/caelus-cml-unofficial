@@ -273,7 +273,7 @@ tmp<volScalarField> constantFilmThermo::rho() const
         )
     );
 
-    trho.ref().internalField() = this->rho(0, 0);
+    trho.ref().internalFieldRef() = this->rho(0, 0);
     trho.ref().correctBoundaryConditions();
 
     return trho;
@@ -300,7 +300,7 @@ tmp<volScalarField> constantFilmThermo::mu() const
         )
     );
 
-    tmu.ref().internalField() = this->mu(0, 0);
+    tmu.ref().internalFieldRef() = this->mu(0, 0);
     tmu.ref().correctBoundaryConditions();
 
     return tmu;
@@ -327,7 +327,7 @@ tmp<volScalarField> constantFilmThermo::sigma() const
         )
     );
 
-    tsigma.ref().internalField() = this->sigma(0, 0);
+    tsigma.ref().internalFieldRef() = this->sigma(0, 0);
     tsigma.ref().correctBoundaryConditions();
 
     return tsigma;
@@ -354,7 +354,7 @@ tmp<volScalarField> constantFilmThermo::Cp() const
         )
     );
 
-    tCp.ref().internalField() = this->Cp(0, 0);
+    tCp.ref().internalFieldRef() = this->Cp(0, 0);
     tCp.ref().correctBoundaryConditions();
 
     return tCp;
@@ -381,7 +381,7 @@ tmp<volScalarField> constantFilmThermo::kappa() const
         )
     );
 
-    tkappa.ref().internalField() = this->kappa(0, 0);
+    tkappa.ref().internalFieldRef() = this->kappa(0, 0);
     tkappa.ref().correctBoundaryConditions();
 
     return tkappa;

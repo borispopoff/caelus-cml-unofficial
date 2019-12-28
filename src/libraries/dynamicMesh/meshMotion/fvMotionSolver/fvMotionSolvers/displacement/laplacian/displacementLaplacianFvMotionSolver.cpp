@@ -169,7 +169,7 @@ CML::displacementLaplacianFvMotionSolver::curPoints() const
                 << endl;
         }
 
-        pointLocation_().internalField() =
+        pointLocation_().internalFieldRef() =
             points0()
           + pointDisplacement_.internalField();
 
@@ -186,7 +186,7 @@ CML::displacementLaplacianFvMotionSolver::curPoints() const
             }
         }
 
-        twoDCorrectPoints(pointLocation_().internalField());
+        twoDCorrectPoints(pointLocation_().internalFieldRef());
 
         return tmp<pointField>(pointLocation_().internalField());
     }

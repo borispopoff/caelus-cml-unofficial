@@ -104,7 +104,7 @@ void jensenJacobsenChristensen2014::updatePorosity()
 	const volScalarField& poro = tporosity();
 
     // Set the internal field values
-	porosity_.internalField() = poro.internalField();
+	porosity_.internalFieldRef() = poro.internalField();
 
 	// Update boundary conditions
 	porosity_.correctBoundaryConditions();

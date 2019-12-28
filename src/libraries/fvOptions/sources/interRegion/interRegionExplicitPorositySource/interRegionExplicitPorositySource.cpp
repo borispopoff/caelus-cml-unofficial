@@ -158,7 +158,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         U.internalField(),
         plusEqOp<vector>(),
-        UNbr.internalField()
+        UNbr.internalFieldRef()
     );
 
     fvMatrix<vector> nbrEqn(UNbr, eqn.dimensions());
@@ -212,7 +212,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         U.internalField(),
         plusEqOp<vector>(),
-        UNbr.internalField()
+        UNbr.internalFieldRef()
     );
 
     fvMatrix<vector> nbrEqn(UNbr, eqn.dimensions());
@@ -253,7 +253,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         rho.internalField(),
         plusEqOp<scalar>(),
-        rhoNbr.internalField()
+        rhoNbr.internalFieldRef()
     );
 
     // map local mu onto neighbour region
@@ -261,7 +261,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         mu.internalField(),
         plusEqOp<scalar>(),
-        muNbr.internalField()
+        muNbr.internalFieldRef()
     );
 
     porosityPtr_->addResistance(nbrEqn, rhoNbr, muNbr);
@@ -288,7 +288,7 @@ bool CML::fv::interRegionExplicitPorositySource::read(const dictionary& dict)
         coeffs_.readIfPresent("U", UName_);
         coeffs_.readIfPresent("mu", muName_);
 
-        // reset the porosity model?
+        // Reset the porosity model?
 
         return true;
     }

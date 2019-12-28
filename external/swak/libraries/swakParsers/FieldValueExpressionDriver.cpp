@@ -196,7 +196,7 @@ tmp<volScalarField> FieldValueExpressionDriver::makeRandomField(label seed)
 {
     tmp<volScalarField> f=makeConstantField<volScalarField>(0.);
 
-    f->internalField()=CommonValueExpressionDriver::makeRandomField(seed);
+    f->internalFieldRef()=CommonValueExpressionDriver::makeRandomField(seed);
 
     f->correctBoundaryConditions();
 
@@ -220,7 +220,7 @@ tmp<volScalarField> FieldValueExpressionDriver::makeGaussRandomField(label seed)
 {
     tmp<volScalarField> f=makeConstantField<volScalarField>(0.);
 
-    f->internalField()=CommonValueExpressionDriver::makeGaussRandomField(seed);
+    f->internalFieldRef()=CommonValueExpressionDriver::makeGaussRandomField(seed);
 
     f->correctBoundaryConditions();
 
@@ -272,7 +272,7 @@ tmp<pointVectorField> FieldValueExpressionDriver::makePointPositionField()
             "zeroGradient"
         )
     );
-    f->internalField()=mesh_.points();
+    f->internalFieldRef()=mesh_.points();
     f->correctBoundaryConditions();
 
     return f;
@@ -511,7 +511,7 @@ tmp<volScalarField> FieldValueExpressionDriver::makeDistanceToPatchField(
             "fixedValue"
         )
     );
-    f->internalField()=wave.distance();
+    f->internalFieldRef()=wave.distance();
     forAll(f->boundaryField(), patchI)
     {
         if (!isA<emptyFvPatchScalarField>(f->boundaryField()[patchI]))

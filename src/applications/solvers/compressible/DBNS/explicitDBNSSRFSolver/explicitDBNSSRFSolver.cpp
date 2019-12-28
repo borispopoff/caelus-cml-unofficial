@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
             rhoUResidual -= fvc::laplacian(turbulence->muEff(),U);
             scalar const c = scalar(2.0/3.0);
             rhoUResidual -= fvc::div(c*I*rho*turbulence->k());
-            rhoUResidual.internalField() -= rho.internalField()*SRF->Su()();
+            rhoUResidual.internalFieldRef() -= rho.internalField()*SRF->Su()();
 
             solve
             (
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
             volScalarField muk = (turbulence->mu()+sigmaK*turbulence->mut())();
             rhoEResidual -= fvc::laplacian(muk,turbulence->k());
             rhoEResidual -= fvc::div((c*I*rho*turbulence->k())&U);
-            rhoEResidual.internalField() -=
+            rhoEResidual.internalFieldRef() -=
                 rho.internalField()*(SRF->Fcentrifugal()() & U.internalField());
 
             solve

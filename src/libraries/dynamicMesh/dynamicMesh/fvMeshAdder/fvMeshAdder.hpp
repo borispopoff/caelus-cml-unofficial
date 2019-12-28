@@ -182,7 +182,7 @@ void CML::fvMeshAdder::MapVolField
         Field<Type> oldInternalField(fld.internalField());
 
         // Modify internal field
-        Field<Type>& intFld = fld.internalField();
+        Field<Type>& intFld = fld.internalFieldRef();
 
         intFld.setSize(mesh.nCells());
 
@@ -290,7 +290,7 @@ void CML::fvMeshAdder::MapVolField
                     (
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new fvPatch
-                        fld.dimensionedInternalField(), // new internal field
+                        fld(), // new internal field
                         patchMapper                     // mapper (new to old)
                     )
                 );
@@ -344,7 +344,7 @@ void CML::fvMeshAdder::MapVolField
                         (
                             fldToAdd.boundaryField()[patchi], // added field
                             mesh.boundary()[newPatchi],       // new fvPatch
-                            fld.dimensionedInternalField(),   // new int. field
+                            fld(),   // new int. field
                             patchMapper                       // mapper
                         )
                     );
@@ -485,7 +485,7 @@ void CML::fvMeshAdder::MapSurfaceField
         Field<Type> oldField(fld);
 
         // Modify internal field
-        Field<Type>& intFld = fld.internalField();
+        Field<Type>& intFld = fld.internalFieldRef();
 
         intFld.setSize(mesh.nInternalFaces());
 
@@ -609,7 +609,7 @@ void CML::fvMeshAdder::MapSurfaceField
                     (
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new fvPatch
-                        fld.dimensionedInternalField(), // new internal field
+                        fld(), // new internal field
                         patchMapper                     // mapper (new to old)
                     )
                 );
@@ -663,7 +663,7 @@ void CML::fvMeshAdder::MapSurfaceField
                         (
                             fldToAdd.boundaryField()[patchi],// added field
                             mesh.boundary()[newPatchi],      // new fvPatch
-                            fld.dimensionedInternalField(),  // new int. field
+                            fld(),  // new int. field
                             patchMapper                      // mapper
                         )
                     );

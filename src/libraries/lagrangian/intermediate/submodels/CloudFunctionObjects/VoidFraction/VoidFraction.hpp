@@ -184,7 +184,7 @@ void CML::VoidFraction<CloudType>::preEvolve()
 {
     if (thetaPtr_.valid())
     {
-        thetaPtr_->internalField() = 0.0;
+        thetaPtr_->internalFieldRef() = 0.0;
     }
     else
     {
@@ -217,7 +217,7 @@ void CML::VoidFraction<CloudType>::postEvolve()
 
     const fvMesh& mesh = this->owner().mesh();
 
-    theta.internalField() /= mesh.time().deltaTValue()*mesh.V();
+    theta.internalFieldRef() /= mesh.time().deltaTValue()*mesh.V();
 
     CloudFunctionObject<CloudType>::postEvolve();
 }

@@ -2,7 +2,7 @@
     p.boundaryFieldRef().updateCoeffs();
     volScalarField pHat = p;
 
-    scalarField& VolI = Vol.internalField();
+    scalarField& VolI = Vol.internalFieldRef();
     VolI = mesh.V();
     Vol.correctBoundaryConditions();
 

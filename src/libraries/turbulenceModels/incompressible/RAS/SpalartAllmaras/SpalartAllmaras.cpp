@@ -460,7 +460,7 @@ void SpalartAllmaras::correct()
     nuTilda_.correctBoundaryConditions();
 
     // Re-calculate viscosity
-    nut_.internalField() = fv1*nuTilda_.internalField();
+    nut_.internalFieldRef() = fv1*nuTilda_.internalField();
     nut_.correctBoundaryConditions();
 }
 

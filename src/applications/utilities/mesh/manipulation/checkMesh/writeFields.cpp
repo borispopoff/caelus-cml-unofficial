@@ -15,7 +15,7 @@ void maxFaceToCell
 {
     const cellList& cells = cellData.mesh().cells();
 
-    scalarField& cellFld = cellData.internalField();
+    scalarField& cellFld = cellData.internalFieldRef();
 
     cellFld = -GREAT;
     forAll(cells, celli)
@@ -45,7 +45,7 @@ void minFaceToCell
 {
     const cellList& cells = cellData.mesh().cells();
 
-    scalarField& cellFld = cellData.internalField();
+    scalarField& cellFld = cellData.internalFieldRef();
 
     cellFld = GREAT;
     forAll(cells, celli)
@@ -219,7 +219,7 @@ void CML::writeFields
             dimensionedScalar("cellDeterminant", dimless, 0),
             zeroGradientFvPatchScalarField::typeName
         );
-        cellDeterminant.internalField() =
+        cellDeterminant.internalFieldRef() =
             primitiveMeshTools::cellDeterminant
             (
                 mesh,
@@ -263,7 +263,7 @@ void CML::writeFields
             mesh.faceAreas(),
             mesh.cellVolumes(),
             cellOpenness,
-            aspectRatio.internalField()
+            aspectRatio.internalFieldRef()
         );
 
         aspectRatio.correctBoundaryConditions();
@@ -320,7 +320,7 @@ void CML::writeFields
             dimensionedScalar("cellVolume", dimVolume, 0),
             calculatedFvPatchScalarField::typeName
         );
-        V.internalField() = mesh.V();
+        V.internalFieldRef() = mesh.V();
         Info<< "    Writing cell volume to " << V.name() << endl;
         V.write();
     }

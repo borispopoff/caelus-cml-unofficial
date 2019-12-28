@@ -574,7 +574,7 @@ inline tmp<FType> FieldValueExpressionDriver::makeFieldInternal(
             << exit(FatalError);
     }
 
-    f->internalField()=val;
+    f->internalFieldRef()=val;
 
     correctField(f);
 

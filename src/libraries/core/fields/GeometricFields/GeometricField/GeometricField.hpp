@@ -119,6 +119,9 @@ public:
 
         // Constructors
 
+            //- Construct from a BoundaryMesh
+            Boundary(const BoundaryMesh&);
+
             //- Construct from a BoundaryMesh,
             //  reference to the internal field
             //  and a patch type
@@ -333,6 +336,14 @@ public:
         GeometricField
         (
             const IOobject&,
+            const Internal&,
+            const PtrList<PatchField<Type>>&
+        );
+
+        //- Constructor from components
+        GeometricField
+        (
+            const IOobject&,
             const Mesh&,
             const dimensionSet&,
             const Field<Type>&,
@@ -447,8 +458,10 @@ public:
         //  for FV equations
         inline const Internal& v() const;
 
-        //- Return internal field
-        typename Internal::FieldType& internalField();
+        //- Return a reference to the internal field
+        //  Note: this increments the event counter and checks the
+        //  old-time fields; avoid in loops.
+        typename Internal::FieldType& internalFieldRef();
 
         //- Return internal field
         inline const typename Internal::FieldType& internalField() const;
@@ -567,6 +580,8 @@ public:
 
 
     // Member Operators
+
+        //- Return a const-reference to the dimensioned internal field
         //  Useful in the formulation of source-terms for FV equations
         inline const Internal& operator()() const;
 
@@ -728,7 +743,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::readField
     const dictionary& fieldDict
 )
 {
-    DimensionedField<Type, GeoMesh>::readField(fieldDict, "internalField");
+    Internal::readField(fieldDict, "internalField");
 
     tmp<Boundary> tboundaryField
     (
@@ -880,7 +895,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const word& patchFieldType
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, ds, false),
+    Internal(io, mesh, ds, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -909,7 +924,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const wordList& actualPatchTypes
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, ds, false),
+    Internal(io, mesh, ds, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -934,7 +949,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const word& patchFieldType
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, dt, false),
+    Internal(io, mesh, dt, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -962,7 +977,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const wordList& actualPatchTypes
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, dt, false),
+    Internal(io, mesh, dt, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -984,13 +999,37 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 (
     const IOobject& io,
+    const Internal& diField,
+    const PtrList<PatchField<Type>>& ptfl
+)
+:
+    Internal(io, diField),
+    timeIndex_(this->time().timeIndex()),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
+    boundaryField_(this->mesh().boundary(), *this, ptfl)
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing from components" << endl << this->info() << endl;
+    }
+
+    readIfPresent();
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
+(
+    const IOobject& io,
     const Mesh& mesh,
     const dimensionSet& ds,
     const Field<Type>& iField,
     const PtrList<PatchField<Type>>& ptfl
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, ds, iField),
+    Internal(io, mesh, ds, iField),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1014,7 +1053,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const bool readOldTime
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, dimless, false),
+    Internal(io, mesh, dimless, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1053,7 +1092,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const dictionary& dict
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, dimless, false),
+    Internal(io, mesh, dimless, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1085,7 +1124,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 :
-    DimensionedField<Type, GeoMesh>(gf),
+    Internal(gf),
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1115,7 +1154,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     GeometricField<Type, PatchField, GeoMesh>&& gf
 )
 :
-     DimensionedField<Type, GeoMesh>(move(gf)),
+    Internal(move(gf)),
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1144,7 +1183,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 :
-    DimensionedField<Type, GeoMesh>
+    Internal
     (
         const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
         tgf.isTmp()
@@ -1174,7 +1213,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 :
-    DimensionedField<Type, GeoMesh>(io, gf),
+    Internal(io, gf),
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1205,7 +1244,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 :
-    DimensionedField<Type, GeoMesh>
+    Internal
     (
         io,
         const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
@@ -1237,7 +1276,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 :
-    DimensionedField<Type, GeoMesh>(newName, gf),
+    Internal(newName, gf),
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1269,7 +1308,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 :
-    DimensionedField<Type, GeoMesh>
+    Internal
     (
         newName,
         const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
@@ -1299,7 +1338,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const word& patchFieldType
 )
 :
-    DimensionedField<Type, GeoMesh>(io, gf),
+    Internal(io, gf),
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1336,7 +1375,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
 )
 :
-    DimensionedField<Type, GeoMesh>(io, gf),
+    Internal(io, gf),
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1377,7 +1416,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const wordList& actualPatchTypes
 )
 :
-    DimensionedField<Type, GeoMesh>
+    Internal
     (
         io,
         const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
@@ -1443,7 +1482,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::dimensionedInternalFieldRef()
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
 CML::GeometricField<Type, PatchField, GeoMesh>::Internal::FieldType&
-CML::GeometricField<Type, PatchField, GeoMesh>::internalField()
+CML::GeometricField<Type, PatchField, GeoMesh>::internalFieldRef()
 {
     this->setUpToDate();
     storeOldTimes();
@@ -1728,7 +1767,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::T() const
         )
     );
 
-    CML::T(result.ref().internalField(), internalField());
+    CML::T(result.ref().internalFieldRef(), internalField());
     CML::T(result.ref().boundaryFieldRef(), boundaryField());
 
     return result;
@@ -1765,7 +1804,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::component
         )
     );
 
-    CML::component(Component.ref().internalField(), internalField(), d);
+    CML::component(Component.ref().internalFieldRef(), internalField(), d);
     CML::component(Component.ref().boundaryFieldRef(), boundaryField(), d);
 
     return Component;
@@ -1784,7 +1823,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::replace
      >& gcf
 )
 {
-    internalField().replace(d, gcf.internalField());
+    internalFieldRef().replace(d, gcf.internalField());
     boundaryFieldRef().replace(d, gcf.boundaryField());
 }
 
@@ -1796,7 +1835,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::replace
     const dimensioned<cmptType>& ds
 )
 {
-    internalField().replace(d, ds.value());
+    internalFieldRef().replace(d, ds.value());
     boundaryFieldRef().replace(d, ds.value());
 }
 
@@ -1807,7 +1846,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::max
     const dimensioned<Type>& dt
 )
 {
-    CML::max(internalField(), internalField(), dt.value());
+    CML::max(internalFieldRef(), internalField(), dt.value());
     CML::max(boundaryFieldRef(), boundaryField(), dt.value());
 }
 
@@ -1818,7 +1857,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::min
     const dimensioned<Type>& dt
 )
 {
-    CML::min(internalField(), internalField(), dt.value());
+    CML::min(internalFieldRef(), internalField(), dt.value());
     CML::min(boundaryFieldRef(), boundaryField(), dt.value());
 }
 
@@ -1826,7 +1865,7 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::min
 template<class Type, template<class> class PatchField, class GeoMesh>
 void CML::GeometricField<Type, PatchField, GeoMesh>::negate()
 {
-    internalField().negate();
+    internalFieldRef().negate();
     boundaryFieldRef().negate();
 }
 
@@ -1901,14 +1940,14 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
     if (tgf.isTmp())
     {
         // Transfer the storage from the tmp
-        internalField().transfer
+        internalFieldRef().transfer
         (
             const_cast<Field<Type>&>(gf.internalField())
         );
     }
     else
     {
-        internalField() = gf.internalField();
+        internalFieldRef() = gf.internalField();
     }
 
     boundaryFieldRef() = gf.boundaryField();
@@ -2031,7 +2070,7 @@ CML::Ostream& CML::operator<<
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    gf.dimensionedInternalField().writeData(os, "internalField");
+    gf().writeData(os, "internalField");
     os  << nl;
     gf.boundaryField().writeEntry("boundaryField", os);
 
@@ -2071,6 +2110,18 @@ CML::Ostream& CML::operator<<
 #include "cyclicPolyPatch.hpp"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
+(
+    const BoundaryMesh& bmesh
+)
+:
+    FieldField<PatchField, Type>(bmesh.size()),
+    bmesh_(bmesh)
+{}
+
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
@@ -2659,7 +2710,7 @@ void component
     const direction d
 )
 {
-    component(gcf.internalField(), gf.internalField(), d);
+    component(gcf.internalFieldRef(), gf.internalField(), d);
     component(gcf.boundaryFieldRef(), gf.boundaryField(), d);
 }
 
@@ -2671,7 +2722,7 @@ void T
      const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    T(gf.internalField(), gf1.internalField());
+    T(gf.internalFieldRef(), gf1.internalField());
     T(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
@@ -2689,7 +2740,7 @@ void pow
     const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    pow(gf.internalField(), gf1.internalField(), r);
+    pow(gf.internalFieldRef(), gf1.internalField(), r);
     pow(gf.boundaryFieldRef(), gf1.boundaryField(), r);
 }
 
@@ -2783,7 +2834,7 @@ void sqr
     const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    sqr(gf.internalField(), gf1.internalField());
+    sqr(gf.internalFieldRef(), gf1.internalField());
     sqr(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
@@ -2871,7 +2922,7 @@ void magSqr
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    magSqr(gsf.internalField(), gf.internalField());
+    magSqr(gsf.internalFieldRef(), gf.internalField());
     magSqr(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
@@ -2943,7 +2994,7 @@ void mag
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    mag(gsf.internalField(), gf.internalField());
+    mag(gsf.internalFieldRef(), gf.internalField());
     mag(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
@@ -3020,7 +3071,7 @@ void cmptAv
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    cmptAv(gcf.internalField(), gf.internalField());
+    cmptAv(gcf.internalFieldRef(), gf.internalField());
     cmptAv(gcf.boundaryFieldRef(), gf.boundaryField());
 }
 
@@ -3148,7 +3199,7 @@ dimensioned<returnType> func                                                   \
     (                                                                          \
         #func "(" + gf.name() + ')',                                           \
         gf.dimensions(),                                                       \
-        gFunc(gf.internalField())                                              \
+        gFunc(gf.internalField())                                             \
     );                                                                         \
 }                                                                              \
                                                                                \
@@ -3211,7 +3262,7 @@ void opFunc                                                                    \
 {                                                                              \
     CML::opFunc                                                                \
     (                                                                          \
-        gf.internalField(),                                                    \
+        gf.internalFieldRef(),                                                 \
         gf1.internalField(),                                                   \
         gf2.internalField()                                                    \
     );                                                                         \
@@ -3365,7 +3416,7 @@ void opFunc                                                                    \
     const dimensioned<Form>& dvs                                               \
 )                                                                              \
 {                                                                              \
-    CML::opFunc(gf.internalField(), gf1.internalField(), dvs.value());         \
+    CML::opFunc(gf.internalFieldRef(), gf1.internalField(), dvs.value());      \
     CML::opFunc(gf.boundaryFieldRef(), gf1.boundaryField(), dvs.value());      \
 }                                                                              \
                                                                                \
@@ -3478,7 +3529,7 @@ void opFunc                                                                    \
     const GeometricField<Type, PatchField, GeoMesh>& gf1                       \
 )                                                                              \
 {                                                                              \
-    CML::opFunc(gf.internalField(), dvs.value(), gf1.internalField());         \
+    CML::opFunc(gf.internalFieldRef(), dvs.value(), gf1.internalField());      \
     CML::opFunc(gf.boundaryFieldRef(), dvs.value(), gf1.boundaryField());      \
 }                                                                              \
                                                                                \

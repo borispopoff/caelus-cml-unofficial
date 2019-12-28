@@ -417,7 +417,7 @@ inline CML::tmp<CML::fvScalarMatrix> CML::ReactingCloud<CloudType>::SYi
 
             volScalarField& sourceField = trhoTrans.ref();
 
-            sourceField.internalField() =
+            sourceField.internalFieldRef() =
                 rhoTrans_[i]/(this->db().time().deltaTValue()*this->mesh().V());
 
             const dimensionedScalar YiSMALL("YiSMALL", dimless, SMALL);

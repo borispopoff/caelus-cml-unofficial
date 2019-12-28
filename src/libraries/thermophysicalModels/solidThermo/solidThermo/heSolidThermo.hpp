@@ -118,12 +118,12 @@ public:
 template<class BasicSolidThermo, class MixtureType>
 void CML::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
 {
-    scalarField& TCells = this->T_.internalField();
+    scalarField& TCells = this->T_.internalFieldRef();
 
     const scalarField& hCells = this->he_;
     const scalarField& pCells = this->p_;
-    scalarField& rhoCells = this->rho_.internalField();
-    scalarField& alphaCells = this->alpha_.internalField();
+    scalarField& rhoCells = this->rho_.internalFieldRef();
+    scalarField& alphaCells = this->alpha_.internalFieldRef();
 
     forAll(TCells, celli)
     {
@@ -300,7 +300,7 @@ CML::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
     );
 
     volVectorField& Kappa = tKappa.ref();
-    vectorField& KappaCells = Kappa.internalField();
+    vectorField& KappaCells = Kappa.internalFieldRef();
     const scalarField& TCells = this->T_;
     const scalarField& pCells = this->p_;
 

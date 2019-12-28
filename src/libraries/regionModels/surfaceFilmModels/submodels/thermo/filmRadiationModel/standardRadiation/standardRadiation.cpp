@@ -127,7 +127,7 @@ tmp<volScalarField> standardRadiation::Shs()
     Shs = beta_*qinP*alpha*(1.0 - exp(-kappaBar_*delta));
 
     // Update net qr on local region
-    qrNet_.internalField() = qinP - Shs;
+    qrNet_.internalFieldRef() = qinP - Shs;
     qrNet_.correctBoundaryConditions();
 
     return tShs;

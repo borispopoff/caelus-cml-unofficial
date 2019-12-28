@@ -96,7 +96,7 @@ void CML::inverseDistanceDiffusivity::correct()
         dimless,
         zeroGradientFvPatchScalarField::typeName
     );
-    y_.internalField() = y();
+    y_.internalFieldRef() = y();
     y_.correctBoundaryConditions();
 
     faceDiffusivity_ = 1.0/fvc::interpolate(y_);

@@ -110,7 +110,7 @@ tmp<BlockLduSystem<vector, vector>> faceLimitedBlockGrad<scalar>::fvmGrad
         dimensionedScalar("one", dimless, 1),
         "zeroGradient"
     );
-    scalarField& lfIn = limitField.internalField();
+    scalarField& lfIn = limitField.internalFieldRef();
 
     scalar rk = (1.0/k_ - 1.0);
 

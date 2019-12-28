@@ -173,7 +173,7 @@ surfaceIntegrate
     );
     GeometricField<Type, fvPatchField, volMesh>& vf = tvf.ref();
 
-    surfaceIntegrate(vf.internalField(), ssf);
+    surfaceIntegrate(vf.internalFieldRef(), ssf);
     vf.correctBoundaryConditions();
 
     return tvf;

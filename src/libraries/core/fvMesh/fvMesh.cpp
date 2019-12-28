@@ -716,8 +716,9 @@ CML::tmp<CML::scalarField> CML::fvMesh::movePoints(const pointField& p)
     tmp<scalarField> tsweptVols = polyMesh::movePoints(p);
     scalarField& sweptVols = tsweptVols.ref();
 
-    phi.internalField() = scalarField::subField(sweptVols, nInternalFaces());
-    phi.internalField() *= rDeltaT;
+    phi.internalFieldRef() =
+        scalarField::subField(sweptVols, nInternalFaces());
+    phi.internalFieldRef() *= rDeltaT;
 
     const fvPatchList& patches = boundary();
 

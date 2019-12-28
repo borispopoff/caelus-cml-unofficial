@@ -211,7 +211,7 @@ CML::PhiScheme<Type, PhiLimiter>::limiter
 
     const surfaceScalarField& Uflux = tUflux();
 
-    scalarField& pLimiter = Limiter.internalField();
+    scalarField& pLimiter = Limiter.internalFieldRef();
 
     forAll(pLimiter, face)
     {

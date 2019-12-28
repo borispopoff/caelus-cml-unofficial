@@ -66,7 +66,7 @@ tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
         dimensionedScalar("zero", dimVolume, 0),
         zeroGradientFvPatchScalarField::typeName
     );
-    cellV.internalField() = mesh.V();
+    cellV.internalFieldRef() = mesh.V();
     cellV.correctBoundaryConditions();
     const scalarField& cellVIn = cellV.internalField();
 

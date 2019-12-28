@@ -1235,7 +1235,7 @@ void CML::fvMatrix<Type>::setValuesFromList
         const_cast
         <
             GeometricField<Type, fvPatchField, volMesh>&
-        >(psi_).internalField();
+        >(psi_).internalFieldRef();
 
     forAll(cellLabels, i)
     {
@@ -1782,7 +1782,7 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<Type>::A() const
         )
     );
 
-    tAphi.ref().internalField() = D()/psi_.mesh().V();
+    tAphi.ref().internalFieldRef() = D()/psi_.mesh().V();
     tAphi.ref().correctBoundaryConditions();
 
     return tAphi;
@@ -1822,13 +1822,13 @@ CML::fvMatrix<Type>::H() const
         boundaryDiagCmpt.negate();
         addCmptAvBoundaryDiag(boundaryDiagCmpt);
 
-        Hphi.internalField().replace(cmpt, boundaryDiagCmpt*psiCmpt);
+        Hphi.internalFieldRef().replace(cmpt, boundaryDiagCmpt*psiCmpt);
     }
 
-    Hphi.internalField() += lduMatrix::H(psi_.internalField()) + source_;
-    addBoundarySource(Hphi.internalField());
+    Hphi.internalFieldRef() += lduMatrix::H(psi_.internalField()) + source_;
+    addBoundarySource(Hphi.internalFieldRef());
 
-    Hphi.internalField() /= psi_.mesh().V();
+    Hphi.internalFieldRef() /= psi_.mesh().V();
     Hphi.correctBoundaryConditions();
 
     typename Type::labelType validComponents
@@ -1878,7 +1878,7 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<Type>::H1() const
     );
     volScalarField& H1_ = tH1.ref();
 
-    H1_.internalField() = lduMatrix::H1();
+    H1_.internalFieldRef() = lduMatrix::H1();
 
     forAll(psi_.boundaryField(), patchi)
     {
@@ -1895,7 +1895,7 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<Type>::H1() const
         }
     }
 
-    H1_.internalField() /= psi_.mesh().V();
+    H1_.internalFieldRef() /= psi_.mesh().V();
     H1_.correctBoundaryConditions();
 
     return tH1;
@@ -1938,7 +1938,7 @@ flux() const
 
     for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
     {
-        fieldFlux.internalField().replace
+        fieldFlux.internalFieldRef().replace
         (
             cmpt,
             lduMatrix::faceH(psi_.internalField().component(cmpt))
@@ -2012,7 +2012,7 @@ CML::fvMatrix<Type>::Ac() const
     const label nCells = psi_.mesh().V().size();
     scalarField s(nCells);
     lduMatrix::rowSum(s);
-    tAphi.ref().internalField() = s/psi_.mesh().V();
+    tAphi.ref().internalFieldRef() = s/psi_.mesh().V();
     tAphi.ref().correctBoundaryConditions();
 
     return tAphi;
@@ -2042,7 +2042,7 @@ CML::fvMatrix<Type>::spai0() const
     const label nCells = psi_.mesh().V().size();
     scalarField s(nCells);
     lduMatrix::spai0(s);
-    tAphi.ref().internalField() = s/psi_.mesh().V();
+    tAphi.ref().internalFieldRef() = s/psi_.mesh().V();
     tAphi.ref().correctBoundaryConditions();
 
     return tAphi;
@@ -2072,7 +2072,7 @@ CML::fvMatrix<Type>::R() const
 
     GeometricField<Type, fvPatchField, volMesh>& Rphi = tRphi.ref();
 
-    Rphi.internalField() = this->residual();
+    Rphi.internalFieldRef() = this->residual();
     Rphi.correctBoundaryConditions();
 
     return tRphi;
@@ -3424,18 +3424,18 @@ CML::operator&
             scalarField psiCmpt(psi.field().component(cmpt));
             scalarField boundaryDiagCmpt(M.diag());
             M.addBoundaryDiag(boundaryDiagCmpt, cmpt);
-            Mphi.internalField().replace(cmpt, -boundaryDiagCmpt*psiCmpt);
+            Mphi.internalFieldRef().replace(cmpt, -boundaryDiagCmpt*psiCmpt);
         }
     }
     else
     {
-        Mphi.internalField() = Zero;
+        Mphi.internalFieldRef() = Zero;
     }
 
-    Mphi.internalField() += M.lduMatrix::H(psi.field()) + M.source();
-    M.addBoundarySource(Mphi.internalField());
+    Mphi.internalFieldRef() += M.lduMatrix::H(psi.field()) + M.source();
+    M.addBoundarySource(Mphi.internalFieldRef());
 
-    Mphi.internalField() /= -psi.mesh().V();
+    Mphi.internalFieldRef() /= -psi.mesh().V();
     Mphi.correctBoundaryConditions();
 
     return tMphi;
@@ -3671,7 +3671,7 @@ CML::solverPerformance CML::fvMatrix<Type>::solve
         solverPerfVec = max(solverPerfVec, solverPerf);
         solverPerfVec.solverName() = solverPerf.solverName();
 
-        psi.internalField().replace(cmpt, psiCmpt);
+        psi.internalFieldRef().replace(cmpt, psiCmpt);
         diag() = saveDiag;
     }
 

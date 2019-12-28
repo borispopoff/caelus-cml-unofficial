@@ -297,7 +297,7 @@ void CML::MRFZone::makeRelativeRhoFlux
 
     const vectorField& Cfi = Cf;
     const vectorField& Sfi = Sf;
-    scalarField& phii = phi.internalField();
+    scalarField& phii = phi.internalFieldRef();
 
     // Internal faces
     forAll(internalFaces_, i)
@@ -412,7 +412,7 @@ void CML::MRFZone::makeAbsoluteRhoFlux
 
     const vectorField& Cfi = Cf;
     const vectorField& Sfi = Sf;
-    scalarField& phii = phi.internalField();
+    scalarField& phii = phi.internalFieldRef();
 
     // Internal faces
     forAll(internalFaces_, i)
@@ -465,7 +465,7 @@ void CML::MRFZone::zero
         return;
     }
 
-    Field<Type>& phii = phi.internalField();
+    Field<Type>& phii = phi.internalFieldRef();
 
     forAll(internalFaces_, i)
     {

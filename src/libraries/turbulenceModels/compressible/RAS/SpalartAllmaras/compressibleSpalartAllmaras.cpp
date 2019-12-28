@@ -470,7 +470,7 @@ void SpalartAllmaras::correct()
     nuTilda_.correctBoundaryConditions();
 
     // Re-calculate viscosity
-    mut_.internalField() = rho_*fv1*nuTilda_.internalField();
+    mut_.internalFieldRef() = rho_*fv1*nuTilda_.internalField();
     mut_.correctBoundaryConditions();
 
     // Re-calculate thermal diffusivity

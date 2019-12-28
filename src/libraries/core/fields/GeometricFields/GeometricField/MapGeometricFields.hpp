@@ -122,7 +122,7 @@ void MapGeometricFields
             // Map the internal field
             MapInternalField<Type, MeshMapper, GeoMesh>()
             (
-                field.internalField(),
+                field.internalFieldRef(),
                 mapper
             );
 

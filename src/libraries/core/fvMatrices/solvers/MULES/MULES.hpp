@@ -753,7 +753,7 @@ void CML::MULES::limitSum(SurfaceScalarFieldList& phiPsiCorrs)
                 phiPsiCorrsPatch.set
                 (
                     phasei,
-                    &phiPsiCorrs[phasei].boundaryField()[patchi]
+                    &phiPsiCorrs[phasei].boundaryFieldRef()[patchi]
                 );
             }
 

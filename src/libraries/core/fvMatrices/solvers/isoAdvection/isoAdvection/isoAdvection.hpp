@@ -419,7 +419,7 @@ void CML::isoAdvection::setFaceValue
 {
     if (mesh_.isInternalFace(facei))
     {
-        f.internalField()[facei] = value;
+        f.internalFieldRef()[facei] = value;
     }
     else
     {

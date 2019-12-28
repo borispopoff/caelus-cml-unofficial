@@ -101,7 +101,7 @@ void setValueAveragePluginFunction<Type>::doEvaluation()
 
     forAll(nr,celli) {
         if(nr[celli]>SMALL) {
-            pValueAverage->internalField()[celli]/=nr[celli];
+            pValueAverage->internalFieldRef()[celli]/=nr[celli];
         }
     }
 

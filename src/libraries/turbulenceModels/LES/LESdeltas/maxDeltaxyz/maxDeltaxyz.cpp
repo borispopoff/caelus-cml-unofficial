@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,7 +63,7 @@ void maxDeltaxyz::calcDelta()
 
     if (nD == 3)
     {
-        delta_.internalField() = hmax;
+        delta_.internalFieldRef() = hmax;
     }
     else if (nD == 2)
     {
@@ -71,7 +71,7 @@ void maxDeltaxyz::calcDelta()
             << "Case is 2D, LES is not strictly applicable\n"
             << endl;
 
-        delta_.internalField() = hmax;
+        delta_.internalFieldRef() = hmax;
     }
     else
     {

@@ -149,7 +149,7 @@ tmp<volScalarField> swakPsiChemistryModelPluginFunction::wrapDimField(
                 "zeroGradient"
             )
     );
-    result->internalField() = dimField;
+    result->internalFieldRef() = dimField;
 
     return result;
 }
@@ -391,7 +391,7 @@ public:
                 "zeroGradient"
             )
         );
-        val->internalField()=dtChem;
+        val->internalFieldRef()=dtChem;
 
         result().setObjectResult(
             val

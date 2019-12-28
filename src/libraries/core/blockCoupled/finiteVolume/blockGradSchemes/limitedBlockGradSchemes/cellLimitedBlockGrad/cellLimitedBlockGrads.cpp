@@ -156,7 +156,7 @@ cellLimitedBlockGrad<scalar>::fvmGrad
         dimensionedScalar("one", dimless, 1),
         "zeroGradient"
     );
-    scalarField& lfIn = limitField.internalField();
+    scalarField& lfIn = limitField.internalFieldRef();
 
     forAll(owner, facei)
     {

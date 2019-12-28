@@ -766,7 +766,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
         {
             const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -856,7 +856,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
         {
             const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*rho.value()*
                 (
@@ -946,7 +946,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
         {
             const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -1047,7 +1047,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
         {
             const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -1182,7 +1182,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         {
             const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -1264,7 +1264,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         {
             const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*rho.value()*
                 (
@@ -1347,7 +1347,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         {
             const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -1439,7 +1439,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         {
             const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (

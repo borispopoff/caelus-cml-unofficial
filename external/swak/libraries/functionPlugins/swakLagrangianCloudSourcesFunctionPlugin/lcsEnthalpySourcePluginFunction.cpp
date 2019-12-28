@@ -90,7 +90,7 @@ void lcsEnthalpySourcePluginFunction::doEvaluation()
         )
     );
 
-    pSource->internalField()=Sh.field()/(mesh().V()*mesh().time().deltaT().value());
+    pSource->internalFieldRef()=Sh.field()/(mesh().V()*mesh().time().deltaT().value());
 
     result().setObjectResult(pSource);
 }

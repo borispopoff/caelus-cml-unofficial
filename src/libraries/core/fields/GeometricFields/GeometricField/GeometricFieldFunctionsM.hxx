@@ -37,7 +37,7 @@ void Func                                                                      \
     const GeometricField<Type1, PatchField, GeoMesh>& gf1                      \
 )                                                                              \
 {                                                                              \
-    CML::Func(res.internalField(), gf1.internalField());                       \
+    CML::Func(res.internalFieldRef(), gf1.internalField());                    \
     CML::Func(res.boundaryFieldRef(), gf1.boundaryField());                    \
 }                                                                              \
                                                                                \
@@ -106,7 +106,7 @@ void OpFunc                                                                    \
     const GeometricField<Type1, PatchField, GeoMesh>& gf1                      \
 )                                                                              \
 {                                                                              \
-    CML::OpFunc(res.internalField(), gf1.internalField());                     \
+    CML::OpFunc(res.internalFieldRef(), gf1.internalField());                  \
     CML::OpFunc(res.boundaryFieldRef(), gf1.boundaryField());                  \
 }                                                                              \
                                                                                \
@@ -178,7 +178,7 @@ void Func                                                                      \
 {                                                                              \
     CML::Func                                                                  \
     (                                                                          \
-        res.internalField(),                                                   \
+        res.internalFieldRef(),                                                \
         gf1.internalField(),                                                   \
         gf2.internalField()                                                    \
     );                                                                         \
@@ -314,7 +314,7 @@ void Func                                                                      \
     const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
 )                                                                              \
 {                                                                              \
-    CML::Func(res.internalField(), dt1.value(), gf2.internalField());          \
+    CML::Func(res.internalFieldRef(), dt1.value(), gf2.internalField());       \
     CML::Func(res.boundaryFieldRef(), dt1.value(), gf2.boundaryField());       \
 }                                                                              \
                                                                                \
@@ -405,7 +405,7 @@ void Func                                                                      \
     const dimensioned<Type2>& dt2                                              \
 )                                                                              \
 {                                                                              \
-    CML::Func(res.internalField(), gf1.internalField(), dt2.value());          \
+    CML::Func(res.internalFieldRef(), gf1.internalField(), dt2.value());       \
     CML::Func(res.boundaryFieldRef(), gf1.boundaryField(), dt2.value());       \
 }                                                                              \
                                                                                \
@@ -504,7 +504,7 @@ void OpFunc                                                                    \
 )                                                                              \
 {                                                                              \
     CML::OpFunc                                                                \
-    (res.internalField(), gf1.internalField(), gf2.internalField());           \
+    (res.internalFieldRef(), gf1.internalField(), gf2.internalField());        \
     CML::OpFunc                                                                \
     (res.boundaryFieldRef(), gf1.boundaryField(), gf2.boundaryField());        \
 }                                                                              \
@@ -633,7 +633,7 @@ void OpFunc                                                                    \
     const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
 )                                                                              \
 {                                                                              \
-    CML::OpFunc(res.internalField(), dt1.value(), gf2.internalField());        \
+    CML::OpFunc(res.internalFieldRef(), dt1.value(), gf2.internalField());     \
     CML::OpFunc(res.boundaryFieldRef(), dt1.value(), gf2.boundaryField());     \
 }                                                                              \
                                                                                \
@@ -724,7 +724,7 @@ void OpFunc                                                                    \
     const dimensioned<Type2>& dt2                                              \
 )                                                                              \
 {                                                                              \
-    CML::OpFunc(res.internalField(), gf1.internalField(), dt2.value());        \
+    CML::OpFunc(res.internalFieldRef(), gf1.internalField(), dt2.value());     \
     CML::OpFunc(res.boundaryFieldRef(), gf1.boundaryField(), dt2.value());     \
 }                                                                              \
                                                                                \

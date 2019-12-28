@@ -465,7 +465,7 @@ surfaceInterpolationScheme<Type>::interpolate
     );
     GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
-    Field<Type>& sfi = sf.internalField();
+    Field<Type>& sfi = sf.internalFieldRef();
 
     for (label fi=0; fi<P.size(); fi++)
     {
@@ -560,7 +560,7 @@ surfaceInterpolationScheme<Type>::dotInterpolate
     );
     GeometricField<RetType, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
-    Field<RetType>& sfi = sf.internalField();
+    Field<RetType>& sfi = sf.internalFieldRef();
 
     const typename SFType::Internal& Sfi = Sf();
 

@@ -314,7 +314,7 @@ void CML::pointConstraints::constrain
     syncUntransformedData
     (
         mesh()(),
-        pf.internalField(),
+        pf.internalFieldRef(),
         maxMagSqrEqOp<Type>()
     );
 

@@ -96,7 +96,7 @@ void CML::fv::limitTemperature::correct(volScalarField& he)
     scalarField heMin(thermo.he(thermo.p(), Tmin, cells_));
     scalarField heMax(thermo.he(thermo.p(), Tmax, cells_));
 
-    scalarField& heif = he.internalField();
+    scalarField& heif = he.internalFieldRef();
 
     forAll(cells_, i)
     {
@@ -107,10 +107,11 @@ void CML::fv::limitTemperature::correct(volScalarField& he)
     // handle boundaries in the case of 'all'
     if (selectionMode_ == smAll)
     {
+        volScalarField::Boundary& bf = he.boundaryFieldRef();
 
-        forAll(he.boundaryField(), patchi)
+        forAll(bf, patchi)
         {
-            fvPatchScalarField& hep = he.boundaryFieldRef()[patchi];
+            fvPatchScalarField& hep = bf[patchi];
 
             if (!hep.fixesValue())
             {

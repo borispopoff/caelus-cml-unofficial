@@ -634,7 +634,7 @@ namespace CML {
             bool sameSize=vals.size()==f->size();
             reduce(sameSize,andOp<bool>());
             if(sameSize) {
-                f->internalField()=vals;
+                f->internalFieldRef()=vals;
             } else {
                 Type avg=gAverage(vals);
 
@@ -652,7 +652,7 @@ namespace CML {
                     }
                 }
 
-                f->internalField()=avg;
+                f->internalFieldRef()=avg;
             }
 
             correctField(f());

@@ -161,7 +161,7 @@ CML::fv::faceLimitedGrad<CML::scalar>::calcGrad
             << " average: " << gAverage(limiter) << endl;
     }
 
-    g.internalField() *= limiter;
+    g.internalFieldRef() *= limiter;
     g.correctBoundaryConditions();
     gaussGrad<scalar>::correctBoundaryConditions(vsf, g);
 
@@ -322,7 +322,7 @@ CML::fv::faceLimitedGrad<CML::vector>::calcGrad
             << " average: " << gAverage(limiter) << endl;
     }
 
-    g.internalField() *= limiter;
+    g.internalFieldRef() *= limiter;
     g.correctBoundaryConditions();
     gaussGrad<vector>::correctBoundaryConditions(vvf, g);
 

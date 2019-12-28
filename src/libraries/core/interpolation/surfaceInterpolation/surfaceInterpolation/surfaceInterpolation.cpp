@@ -182,7 +182,7 @@ void CML::surfaceInterpolation::makeWeights() const
     const vectorField& Sf = mesh_.faceAreas();
 
     // ... and reference to the internal field of the weighting factors
-    scalarField& w = weights.internalField();
+    scalarField& w = weights.internalFieldRef();
 
     forAll(owner, facei)
     {

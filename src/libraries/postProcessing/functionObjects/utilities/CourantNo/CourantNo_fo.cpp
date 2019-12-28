@@ -153,7 +153,7 @@ void CML::CourantNo::execute()
         volScalarField& CourantNo =
             mesh.lookupObjectRef<volScalarField>(type());
 
-        scalarField& iField = CourantNo.internalField();
+        scalarField& iField = CourantNo.internalFieldRef();
 
         const scalarField sumPhi
         (
