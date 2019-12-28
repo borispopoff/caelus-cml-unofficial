@@ -959,7 +959,7 @@ void meshRefinement::addPatchFields(fvMesh& mesh, const word& patchFieldType)
             (
                 patchFieldType,
                 mesh.boundary()[sz],
-                fld.dimensionedInternalField()
+                fld()
             )
         );
     }

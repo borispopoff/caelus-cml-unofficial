@@ -348,7 +348,7 @@ CML::fvFieldDecomposer::decomposeField
                 (
                     field.boundaryField()[boundaryAddressing_[patchi]],
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     *patchFieldDecomposerPtrs_[patchi]
                 )
             );
@@ -361,7 +361,7 @@ CML::fvFieldDecomposer::decomposeField
                 new processorCyclicFvPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
                         field.internalField(),
@@ -378,7 +378,7 @@ CML::fvFieldDecomposer::decomposeField
                 new processorFvPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
                         field.internalField(),
@@ -395,7 +395,7 @@ CML::fvFieldDecomposer::decomposeField
                 new emptyFvPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField()
+                    resF()
                 )
             );
         }
@@ -518,7 +518,7 @@ CML::fvFieldDecomposer::decomposeField
                 (
                     field.boundaryField()[boundaryAddressing_[patchi]],
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     *patchFieldDecomposerPtrs_[patchi]
                 )
             );
@@ -531,7 +531,7 @@ CML::fvFieldDecomposer::decomposeField
                 new processorCyclicFvsPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
                         allFaceField,
@@ -548,7 +548,7 @@ CML::fvFieldDecomposer::decomposeField
                 new processorFvsPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
                         allFaceField,

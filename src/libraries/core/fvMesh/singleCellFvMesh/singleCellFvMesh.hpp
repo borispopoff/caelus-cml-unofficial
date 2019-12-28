@@ -307,7 +307,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> singleCellFvMesh::interpolate
                 (
                     vf.boundaryField()[patchi],
                     boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     agglomPatchFieldMapper(coarseToFine, coarseWeights)
                 )
             );
@@ -326,7 +326,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> singleCellFvMesh::interpolate
                 (
                     vf.boundaryField()[patchi],
                     boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     directFvPatchFieldMapper(map)
                 )
             );

@@ -271,11 +271,11 @@ CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::radiation::P1::Ru() const
 {
     const DimensionedField<scalar, volMesh>& G =
-        G_.dimensionedInternalField();
+        G_();
     const DimensionedField<scalar, volMesh> E =
-        absorptionEmission_->ECont()().dimensionedInternalField();
+        absorptionEmission_->ECont()()();
     const DimensionedField<scalar, volMesh> a =
-        absorptionEmission_->aCont()().dimensionedInternalField();
+        absorptionEmission_->aCont()()();
 
     return a*G - E;
 }

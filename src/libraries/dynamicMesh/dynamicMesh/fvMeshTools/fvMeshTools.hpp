@@ -180,7 +180,7 @@ void CML::fvMeshTools::addPatchFields
                 GeoField::Patch::New
                 (
                     mesh.boundary()[sz],
-                    fld.dimensionedInternalField(),
+                    fld(),
                     patchFieldDict.subDict(fld.name())
                 )
             );
@@ -194,7 +194,7 @@ void CML::fvMeshTools::addPatchFields
                 (
                     defaultPatchFieldType,
                     mesh.boundary()[sz],
-                    fld.dimensionedInternalField()
+                    fld()
                 )
             );
             bfld[sz] == defaultPatchValue;
@@ -231,7 +231,7 @@ void CML::fvMeshTools::setPatchFields
                 GeoField::Patch::New
                 (
                     mesh.boundary()[patchi],
-                    fld.dimensionedInternalField(),
+                    fld(),
                     patchFieldDict.subDict(fld.name())
                 )
             );

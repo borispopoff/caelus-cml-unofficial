@@ -165,7 +165,7 @@ public:
                 "zeroGradient"
             )
         );
-        val->dimensionedInternalFieldRef()=ruRad;
+        val->ref()=ruRad;
 
         result().setObjectResult(
             val
