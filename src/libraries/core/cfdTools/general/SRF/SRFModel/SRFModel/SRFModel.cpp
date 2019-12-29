@@ -117,9 +117,9 @@ const CML::dimensionedVector& CML::SRF::SRFModel::omega() const
 CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh>>
 CML::SRF::SRFModel::Fcoriolis() const
 {
-    return tmp<DimensionedField<vector, volMesh>>
+    return tmp<volVectorField::Internal>
     (
-        new DimensionedField<vector, volMesh>
+        new volVectorField::Internal
         (
             IOobject
             (
@@ -138,9 +138,9 @@ CML::SRF::SRFModel::Fcoriolis() const
 CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh>>
 CML::SRF::SRFModel::Fcentrifugal() const
 {
-    return tmp<DimensionedField<vector, volMesh>>
+    return tmp<volVectorField::Internal>
     (
-        new DimensionedField<vector, volMesh>
+        new volVectorField::Internal
         (
             IOobject
             (

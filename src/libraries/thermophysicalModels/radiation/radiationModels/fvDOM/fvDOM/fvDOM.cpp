@@ -479,9 +479,9 @@ CML::tmp<CML::volScalarField> CML::radiation::fvDOM::Rp() const
 CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::radiation::fvDOM::Ru() const
 {
-    tmp<DimensionedField<scalar, volMesh>> tRu
+    tmp<volScalarField::Internal> tRu
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -497,13 +497,13 @@ CML::radiation::fvDOM::Ru() const
         )
     );
 
-    DimensionedField<scalar, volMesh>& Ru=tRu.ref();
+    volScalarField::Internal& Ru=tRu.ref();
 
     // Sum contributions over all frequency bands
     for (label j=0; j < nLambda_; j++)
     {
         // Compute total incident radiation within frequency band
-        tmp<DimensionedField<scalar, volMesh>> Gj
+        tmp<volScalarField::Internal> Gj
         (
             IRay_[0].ILambda(j).internalField()*IRay_[0].omega()
         );

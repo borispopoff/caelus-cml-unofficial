@@ -116,7 +116,7 @@ public:
     virtual tmp<volScalarField> Rp() const;
 
     //- Source term component (constant)
-    virtual tmp<DimensionedField<scalar, volMesh>> Ru() const;
+    virtual tmp<volScalarField::Internal> Ru() const;
 
 };
 

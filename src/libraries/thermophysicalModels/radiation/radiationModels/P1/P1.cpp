@@ -270,11 +270,11 @@ CML::tmp<CML::volScalarField> CML::radiation::P1::Rp() const
 CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::radiation::P1::Ru() const
 {
-    const DimensionedField<scalar, volMesh>& G =
+    const volScalarField::Internal& G =
         G_();
-    const DimensionedField<scalar, volMesh> E =
+    const volScalarField::Internal E =
         absorptionEmission_->ECont()()();
-    const DimensionedField<scalar, volMesh> a =
+    const volScalarField::Internal a =
         absorptionEmission_->aCont()()();
 
     return a*G - E;

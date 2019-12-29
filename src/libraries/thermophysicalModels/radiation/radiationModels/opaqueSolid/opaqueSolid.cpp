@@ -99,7 +99,7 @@ CML::radiation::opaqueSolid::Ru() const
 {
     return tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (

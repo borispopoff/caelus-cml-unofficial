@@ -1086,11 +1086,11 @@ void kinematicSingleLayer::info()
 }
 
 
-tmp<DimensionedField<scalar, volMesh>> kinematicSingleLayer::Srho() const
+tmp<volScalarField::Internal> kinematicSingleLayer::Srho() const
 {
-    return tmp<DimensionedField<scalar, volMesh>>
+    return tmp<volScalarField::Internal>
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -1108,14 +1108,14 @@ tmp<DimensionedField<scalar, volMesh>> kinematicSingleLayer::Srho() const
 }
 
 
-tmp<DimensionedField<scalar, volMesh>> kinematicSingleLayer::Srho
+tmp<volScalarField::Internal> kinematicSingleLayer::Srho
 (
     const label i
 ) const
 {
-    return tmp<DimensionedField<scalar, volMesh>>
+    return tmp<volScalarField::Internal>
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -1133,11 +1133,11 @@ tmp<DimensionedField<scalar, volMesh>> kinematicSingleLayer::Srho
 }
 
 
-tmp<DimensionedField<scalar, volMesh>> kinematicSingleLayer::Sh() const
+tmp<volScalarField::Internal> kinematicSingleLayer::Sh() const
 {
-    return tmp<DimensionedField<scalar, volMesh>>
+    return tmp<volScalarField::Internal>
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (

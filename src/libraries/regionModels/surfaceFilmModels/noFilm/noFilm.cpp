@@ -66,11 +66,11 @@ CML::scalar noFilm::CourantNumber() const
 }
 
 
-tmp<DimensionedField<scalar, volMesh>> noFilm::Srho() const
+tmp<volScalarField::Internal> noFilm::Srho() const
 {
-    return tmp<DimensionedField<scalar, volMesh>>
+    return tmp<volScalarField::Internal>
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -88,11 +88,11 @@ tmp<DimensionedField<scalar, volMesh>> noFilm::Srho() const
 }
 
 
-tmp<DimensionedField<scalar, volMesh>> noFilm::Srho(const label i) const
+tmp<volScalarField::Internal> noFilm::Srho(const label i) const
 {
-    return tmp<DimensionedField<scalar, volMesh>>
+    return tmp<volScalarField::Internal>
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -110,11 +110,11 @@ tmp<DimensionedField<scalar, volMesh>> noFilm::Srho(const label i) const
 }
 
 
-tmp<DimensionedField<scalar, volMesh>> noFilm::Sh() const
+tmp<volScalarField::Internal> noFilm::Sh() const
 {
-    return tmp<DimensionedField<scalar, volMesh>>
+    return tmp<volScalarField::Internal>
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (

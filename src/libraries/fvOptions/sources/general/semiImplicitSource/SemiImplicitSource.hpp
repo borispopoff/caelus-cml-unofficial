@@ -209,7 +209,6 @@ public:
 
 #include "fvMesh.hpp"
 #include "fvMatrices.hpp"
-#include "DimensionedField.hpp"
 #include "fvmSup.hpp"
 
 // * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
@@ -325,7 +324,7 @@ void CML::fv::SemiImplicitSource<Type>::addSup
 
     const GeometricField<Type, fvPatchField, volMesh>& psi = eqn.psi();
 
-    DimensionedField<Type, volMesh> Su
+    typename GeometricField<Type, fvPatchField, volMesh>::Internal Su
     (
         IOobject
         (
@@ -347,7 +346,7 @@ void CML::fv::SemiImplicitSource<Type>::addSup
 
     UIndirectList<Type>(Su, cells_) = injectionRate_[fieldi].first()/VDash_;
 
-    DimensionedField<scalar, volMesh> Sp
+    volScalarField::Internal Sp
     (
         IOobject
         (

@@ -112,7 +112,7 @@ protected:
         // Sources
 
             //- Mass transfer fields - one per carrier phase specie
-            PtrList<DimensionedField<scalar, volMesh>> rhoTrans_;
+            PtrList<volScalarField::Internal> rhoTrans_;
 
 
     // Protected Member Functions
@@ -224,15 +224,15 @@ public:
                 //- Mass
 
                     //- Return reference to mass source for field i
-                    inline DimensionedField<scalar, volMesh>&
+                    inline volScalarField::Internal&
                         rhoTrans(const label i);
 
                     //- Return const access to mass source fields
-                    inline const PtrList<DimensionedField<scalar, volMesh>>&
+                    inline const PtrList<volScalarField::Internal>&
                         rhoTrans() const;
 
                     //- Return reference to mass source fields
-                    inline PtrList<DimensionedField<scalar, volMesh>>&
+                    inline PtrList<volScalarField::Internal>&
                         rhoTrans();
 
                     //- Return mass source term for specie i - specie eqn
@@ -243,12 +243,12 @@ public:
                     ) const;
 
                     //- Return tmp mass source for field i - fully explicit
-                    inline tmp<DimensionedField<scalar, volMesh>>
+                    inline tmp<volScalarField::Internal>
                         Srho(const label i) const;
 
                     //- Return tmp total mass source for carrier phase
                     //  - fully explicit
-                    inline tmp<DimensionedField<scalar, volMesh>> Srho() const;
+                    inline tmp<volScalarField::Internal> Srho() const;
 
                     //- Return total mass source term [kg/m3/s]
                     inline tmp<fvScalarMatrix> Srho(volScalarField& rho) const;
@@ -445,9 +445,9 @@ template<class CloudType>
 inline CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::ReactingCloud<CloudType>::Srho(const label i) const
 {
-    tmp<DimensionedField<scalar, volMesh>> tRhoi
+    tmp<volScalarField::Internal> tRhoi
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -482,9 +482,9 @@ template<class CloudType>
 inline CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::ReactingCloud<CloudType>::Srho() const
 {
-    tmp<DimensionedField<scalar, volMesh>> trhoTrans
+    tmp<volScalarField::Internal> trhoTrans
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -671,7 +671,7 @@ CML::ReactingCloud<CloudType>::ReactingCloud
         rhoTrans_.set
         (
             i,
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -715,7 +715,7 @@ CML::ReactingCloud<CloudType>::ReactingCloud
         rhoTrans_.set
         (
             i,
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -839,7 +839,7 @@ void CML::ReactingCloud<CloudType>::relaxSources
 {
     CloudType::relaxSources(cloudOldTime);
 
-    typedef DimensionedField<scalar, volMesh> dsfType;
+    typedef volScalarField::Internal dsfType;
 
     forAll(rhoTrans_, fieldi)
     {
@@ -855,7 +855,7 @@ void CML::ReactingCloud<CloudType>::scaleSources()
 {
     CloudType::scaleSources();
 
-    typedef DimensionedField<scalar, volMesh> dsfType;
+    typedef volScalarField::Internal dsfType;
 
     forAll(rhoTrans_, fieldi)
     {

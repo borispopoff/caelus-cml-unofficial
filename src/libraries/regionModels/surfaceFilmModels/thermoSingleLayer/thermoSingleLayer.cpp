@@ -717,11 +717,11 @@ void thermoSingleLayer::info()
 }
 
 
-tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho() const
+tmp<volScalarField::Internal> thermoSingleLayer::Srho() const
 {
-    tmp<DimensionedField<scalar, volMesh>> tSrho
+    tmp<volScalarField::Internal> tSrho
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -764,16 +764,16 @@ tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho() const
 }
 
 
-tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho
+tmp<volScalarField::Internal> thermoSingleLayer::Srho
 (
     const label i
 ) const
 {
     const label vapId = thermo_.carrierId(filmThermo_->name());
 
-    tmp<DimensionedField<scalar, volMesh>> tSrho
+    tmp<volScalarField::Internal> tSrho
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -819,11 +819,11 @@ tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho
 }
 
 
-tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Sh() const
+tmp<volScalarField::Internal> thermoSingleLayer::Sh() const
 {
-    tmp<DimensionedField<scalar, volMesh>> tSh
+    tmp<volScalarField::Internal> tSh
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (

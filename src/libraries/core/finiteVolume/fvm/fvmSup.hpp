@@ -85,14 +85,14 @@ namespace fvm
         template<class Type>
         tmp<fvMatrix<Type>> Sp
         (
-            const DimensionedField<scalar, volMesh>&,
+            const volScalarField::Internal&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
         tmp<fvMatrix<Type>> Sp
         (
-            const tmp<DimensionedField<scalar, volMesh>>&,
+            const tmp<volScalarField::Internal>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
@@ -125,14 +125,14 @@ namespace fvm
         template<class Type>
         tmp<fvMatrix<Type>> SuSp
         (
-            const DimensionedField<scalar, volMesh>&,
+            const volScalarField::Internal&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
         tmp<fvMatrix<Type>> SuSp
         (
-            const tmp<DimensionedField<scalar, volMesh>>&,
+            const tmp<volScalarField::Internal>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
@@ -229,7 +229,7 @@ template<class Type>
 CML::tmp<CML::fvMatrix<Type>>
 CML::fvm::Sp
 (
-    const DimensionedField<scalar, volMesh>& sp,
+    const volScalarField::Internal& sp,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
@@ -255,7 +255,7 @@ template<class Type>
 CML::tmp<CML::fvMatrix<Type>>
 CML::fvm::Sp
 (
-    const tmp<DimensionedField<scalar, volMesh>>& tsp,
+    const tmp<volScalarField::Internal>& tsp,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
@@ -321,7 +321,7 @@ template<class Type>
 CML::tmp<CML::fvMatrix<Type>>
 CML::fvm::SuSp
 (
-    const DimensionedField<scalar, volMesh>& susp,
+    const volScalarField::Internal& susp,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
@@ -350,7 +350,7 @@ template<class Type>
 CML::tmp<CML::fvMatrix<Type>>
 CML::fvm::SuSp
 (
-    const tmp<DimensionedField<scalar, volMesh>>& tsusp,
+    const tmp<volScalarField::Internal>& tsusp,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
