@@ -319,12 +319,10 @@ EulerDdtScheme<Type>::fvcDdt
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
-                rDeltaT.dimensions()*vf.dimensions(),
-                rDeltaT.value()*
+                rDeltaT*
                 (
-                    vf.primitiveField()
-                  - vf.oldTime().primitiveField()*mesh().Vsc0()/mesh().Vsc()
+                    vf()
+                  - vf.oldTime()()*mesh().Vsc0()/mesh().Vsc()
                 ),
                 rDeltaT.value()*
                 (
@@ -371,12 +369,10 @@ EulerDdtScheme<Type>::fvcDdt
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
-                rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
-                rDeltaT.value()*rho.value()*
+                rDeltaT*rho*
                 (
-                    vf.primitiveField()
-                  - vf.oldTime().primitiveField()*mesh().Vsc0()/mesh().Vsc()
+                    vf()
+                  - vf.oldTime()()*mesh().Vsc0()/mesh().Vsc()
                 ),
                 rDeltaT.value()*rho.value()*
                 (
@@ -423,13 +419,11 @@ EulerDdtScheme<Type>::fvcDdt
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
-                rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
-                rDeltaT.value()*
+                rDeltaT*
                 (
-                    rho.primitiveField()*vf.primitiveField()
-                  - rho.oldTime().primitiveField()
-                   *vf.oldTime().primitiveField()*mesh().Vsc0()/mesh().Vsc()
+                    rho()*vf()
+                  - rho.oldTime()()
+                   *vf.oldTime()()*mesh().Vsc0()/mesh().Vsc()
                 ),
                 rDeltaT.value()*
                 (
@@ -479,17 +473,15 @@ EulerDdtScheme<Type>::fvcDdt
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
-                rDeltaT.dimensions()
-               *alpha.dimensions()*rho.dimensions()*vf.dimensions(),
+                rDeltaT.value()*
                 (
-                    alpha.primitiveField()
-                   *rho.primitiveField()
-                   *vf.primitiveField()
+                    alpha()
+                   *rho()
+                   *vf()
 
-                  - alpha.oldTime().primitiveField()
-                   *rho.oldTime().primitiveField()
-                   *vf.oldTime().primitiveField()*mesh().Vsc0()/mesh().Vsc()
+                  - alpha.oldTime()()
+                   *rho.oldTime()()
+                   *vf.oldTime()()*mesh().Vsc0()/mesh().Vsc()
                 ),
                 rDeltaT.value()*
                 (
