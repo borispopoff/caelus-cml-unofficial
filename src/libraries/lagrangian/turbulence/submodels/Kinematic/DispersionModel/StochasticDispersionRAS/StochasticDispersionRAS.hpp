@@ -141,9 +141,9 @@ CML::vector CML::StochasticDispersionRAS<CloudType>::update
 
     const scalar cps = 0.16432;
 
-    const scalar k = this->kPtr_->internalField()[celli];
+    const scalar k = this->kPtr_->primitiveField()[celli];
     const scalar epsilon =
-        this->epsilonPtr_->internalField()[celli] + ROOTVSMALL;
+        this->epsilonPtr_->primitiveField()[celli] + ROOTVSMALL;
 
     const scalar UrelMag = mag(U - Uc - UTurb);
 

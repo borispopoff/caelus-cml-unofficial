@@ -81,7 +81,7 @@ public:
 
         inline Internal v() const;
 
-        inline typename Internal::FieldType internalField() const;
+        inline typename Internal::FieldType primitiveField() const;
 
         inline Boundary boundaryField() const;
 };
@@ -166,7 +166,7 @@ CML::geometricOneField::v() const
 
 
 inline typename CML::geometricOneField::Internal::FieldType
-CML::geometricOneField::internalField() const
+CML::geometricOneField::primitiveField() const
 {
     return typename Internal::FieldType();
 }

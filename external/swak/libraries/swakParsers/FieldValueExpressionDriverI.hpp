@@ -574,7 +574,7 @@ inline tmp<FType> FieldValueExpressionDriver::makeFieldInternal(
             << exit(FatalError);
     }
 
-    f->internalFieldRef()=val;
+    f->primitiveFieldRef()=val;
 
     correctField(f);
 
@@ -666,7 +666,7 @@ void FieldValueExpressionDriver::setResult(
 
     typ_=pTraits<T>::typeName;
 
-    this->result().setResult(result.internalField(),isPointField);
+    this->result().setResult(result.primitiveField(),isPointField);
 
     isLogical_=false;
     isSurfaceField_=isSurfaceField;
@@ -692,9 +692,9 @@ void FieldValueExpressionDriver::setLogicalResult(
 
     typ_=pTraits<bool>::typeName;
 
-    Field<bool> yesOrNo(result.internalField().size());
+    Field<bool> yesOrNo(result.primitiveField().size());
     forAll(yesOrNo,i) {
-        yesOrNo[i]=mag(result.internalField()[i])>SMALL;
+        yesOrNo[i]=mag(result.primitiveField()[i])>SMALL;
     }
 
     this->result().setResult(yesOrNo,isPointField);

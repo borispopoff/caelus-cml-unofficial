@@ -222,7 +222,7 @@ void CML::ParticleTrap<CloudType>::postMove
     bool&
 )
 {
-    if (alphaPtr_->internalField()[p.cell()] < threshold_)
+    if (alphaPtr_->primitiveField()[p.cell()] < threshold_)
     {
         const vector& gradAlpha = gradAlphaPtr_()[p.cell()];
         vector nHat = gradAlpha/mag(gradAlpha);

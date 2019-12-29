@@ -229,8 +229,8 @@ CML::emptyFvPatchField<Type>::emptyFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -252,8 +252,8 @@ CML::emptyFvPatchField<Type>::emptyFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -268,7 +268,7 @@ CML::emptyFvPatchField<Type>::emptyFvPatchField
     fvPatchField<Type>
     (
         ptf.patch(),
-        ptf.dimensionedInternalField(),
+        ptf.internalField(),
         Field<Type>(0)
     )
 {}
@@ -295,7 +295,7 @@ void CML::emptyFvPatchField<Type>::updateCoeffs()
     //if
     //(
     //    this->patch().patch().size()
-    //  % this->dimensionedInternalField().mesh().nCells()
+    //  % this->internalField().mesh().nCells()
     //)
     //{
     //    FatalErrorInFunction

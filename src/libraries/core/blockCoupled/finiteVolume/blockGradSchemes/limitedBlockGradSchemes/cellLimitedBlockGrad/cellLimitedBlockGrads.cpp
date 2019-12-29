@@ -77,8 +77,8 @@ cellLimitedBlockGrad<scalar>::fvmGrad
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    scalarField maxVsf(vsf.internalField());
-    scalarField minVsf(vsf.internalField());
+    scalarField maxVsf(vsf.primitiveField());
+    scalarField minVsf(vsf.primitiveField());
 
     forAll(owner, facei)
     {
@@ -156,7 +156,7 @@ cellLimitedBlockGrad<scalar>::fvmGrad
         dimensionedScalar("one", dimless, 1),
         "zeroGradient"
     );
-    scalarField& lfIn = limitField.internalFieldRef();
+    scalarField& lfIn = limitField.primitiveFieldRef();
 
     forAll(owner, facei)
     {

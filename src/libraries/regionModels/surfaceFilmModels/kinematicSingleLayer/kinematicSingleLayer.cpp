@@ -930,8 +930,8 @@ scalar kinematicSingleLayer::CourantNumber() const
     {
         const scalarField sumPhi
         (
-            fvc::surfaceSum(mag(phi_))().internalField()
-          / (deltaRho_.internalField() + ROOTVSMALL)
+            fvc::surfaceSum(mag(phi_))().primitiveField()
+          / (deltaRho_.primitiveField() + ROOTVSMALL)
         );
 
         forAll(delta_, i)
@@ -1079,7 +1079,7 @@ void kinematicSingleLayer::info()
         << indent << "min/max(delta)     = " << gMin(deltaInternal) << ", "
         << gMax(deltaInternal) << nl
         << indent << "coverage           = "
-        << gSum(alpha_.internalField()*magSf())/gSum(magSf()) <<  nl;
+        << gSum(alpha_.primitiveField()*magSf())/gSum(magSf()) <<  nl;
 
     injection_.info(Info);
     transfer_.info(Info);

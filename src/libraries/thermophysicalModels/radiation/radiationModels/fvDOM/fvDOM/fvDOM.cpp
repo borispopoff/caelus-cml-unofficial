@@ -505,16 +505,16 @@ CML::radiation::fvDOM::Ru() const
         // Compute total incident radiation within frequency band
         tmp<DimensionedField<scalar, volMesh>> Gj
         (
-            IRay_[0].ILambda(j).dimensionedInternalField()*IRay_[0].omega()
+            IRay_[0].ILambda(j).internalField()*IRay_[0].omega()
         );
 
         for (label rayI=1; rayI < nRay_; rayI++)
         {
-            Gj.ref() += IRay_[rayI].ILambda(j).dimensionedInternalField()*IRay_[rayI].omega();
+            Gj.ref() += IRay_[rayI].ILambda(j).internalField()*IRay_[rayI].omega();
         }
 
-        Ru += (aLambda_[j].dimensionedInternalField() - absorptionEmission_->aDisp(j)().dimensionedInternalField())*Gj()
-             - absorptionEmission_->ECont(j)().dimensionedInternalField();
+        Ru += (aLambda_[j].internalField() - absorptionEmission_->aDisp(j)().internalField())*Gj()
+             - absorptionEmission_->ECont(j)().internalField();
     }
 
     return tRu;

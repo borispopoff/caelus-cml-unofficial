@@ -65,7 +65,7 @@ CML::fv::gaussLaplacianScheme<CML::Type, CML::scalar>::fvmLaplacian            \
                 fvc::div                                                       \
                 (                                                              \
                     *fvm.faceFluxCorrectionPtr()                               \
-                )().internalField();                                           \
+                )().primitiveField();                                          \
         }                                                                      \
         else                                                                   \
         {                                                                      \
@@ -74,7 +74,7 @@ CML::fv::gaussLaplacianScheme<CML::Type, CML::scalar>::fvmLaplacian            \
                 fvc::div                                                       \
                 (                                                              \
                     gammaMagSf*this->tsnGradScheme_().correction(vf)           \
-                )().internalField();                                           \
+                )().primitiveField();                                          \
         }                                                                      \
     }                                                                          \
                                                                                \

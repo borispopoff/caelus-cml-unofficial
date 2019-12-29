@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
             );
 
             scalar const  rhoL2 =
-                CML::sqrt(gSum(sqr(rhoResidual.internalField())))
+                CML::sqrt(gSum(sqr(rhoResidual.primitiveField())))
                 /mesh.nCells();
 
             Info << "rho residual: "<< rhoL2 << "    ";
@@ -115,19 +115,19 @@ int main(int argc, char *argv[])
             rhoUResidual -= fvc::laplacian(turbulence->muEff(),U);
             scalar const c = scalar(2.0/3.0);
             rhoUResidual -= fvc::div(c*I*rho*turbulence->k());
-            rhoUResidual.internalFieldRef() -= rho.internalField()*SRF->Su()();
+            rhoUResidual.primitiveFieldRef() -= rho.primitiveField()*SRF->Su()();
 
             solve
             (
                 fvm::ddt(1.0/beta[i], rhoU) == -rhoUResidual
             );
 
-            U.ref() = rhoU.dimensionedInternalField()
-              / rho.dimensionedInternalField();
+            U.ref() = rhoU.internalField()
+              / rho.internalField();
             U.correctBoundaryConditions();
 
             scalar const rhoUL2 =
-                CML::sqrt(gSum(magSqr(rhoUResidual.internalField())))
+                CML::sqrt(gSum(magSqr(rhoUResidual.primitiveField())))
                 /mesh.nCells();
 
             Info << "rhoU residual: "<< rhoUL2 << "    ";
@@ -143,8 +143,8 @@ int main(int argc, char *argv[])
             volScalarField muk = (turbulence->mu()+sigmaK*turbulence->mut())();
             rhoEResidual -= fvc::laplacian(muk,turbulence->k());
             rhoEResidual -= fvc::div((c*I*rho*turbulence->k())&U);
-            rhoEResidual.internalFieldRef() -=
-                rho.internalField()*(SRF->Fcentrifugal()() & U.internalField());
+            rhoEResidual.primitiveFieldRef() -=
+                rho.primitiveField()*(SRF->Fcentrifugal()() & U.primitiveField());
 
             solve
             (
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
             );
 
             scalar const rhoEL2 =
-                CML::sqrt(gSum(sqr(rhoEResidual.internalField())))
+                CML::sqrt(gSum(sqr(rhoEResidual.primitiveField())))
                 /mesh.nCells();
 
             Info << "rhoE residual: "<< rhoEL2 << endl;            

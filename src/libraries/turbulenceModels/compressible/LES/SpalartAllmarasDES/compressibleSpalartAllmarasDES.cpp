@@ -35,10 +35,10 @@ addToRunTimeSelectionTable(LESModel, SpalartAllmarasDES, dictionary);
 
 void SpalartAllmarasDES::updateSubGridScaleFields()
 {
-    muSgs_.internalFieldRef() = rho()*fv1()*nuTilda_.internalField();
+    muSgs_.primitiveFieldRef() = rho()*fv1()*nuTilda_.primitiveField();
     muSgs_.correctBoundaryConditions();
 
-    alphaSgs_.internalFieldRef() = muSgs_/Prt_;
+    alphaSgs_.primitiveFieldRef() = muSgs_/Prt_;
     alphaSgs_.correctBoundaryConditions();
 }
 

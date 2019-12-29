@@ -209,7 +209,7 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacianUncorrected
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    fvm.upper() = deltaCoeffs.internalField()*gammaMagSf.internalField();
+    fvm.upper() = deltaCoeffs.primitiveField()*gammaMagSf.primitiveField();
     fvm.negSumDiag();
 
     forAll(vf.boundaryField(), patchi)
@@ -335,7 +335,7 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacian
             SfGammaSn*this->tsnGradScheme_().correction(vf);
     }
 
-    fvm.source() -= mesh.V()*fvc::div(tfaceFluxCorrection())().internalField();
+    fvm.source() -= mesh.V()*fvc::div(tfaceFluxCorrection())().primitiveField();
 
     if (mesh.fluxRequired(vf.name()))
     {

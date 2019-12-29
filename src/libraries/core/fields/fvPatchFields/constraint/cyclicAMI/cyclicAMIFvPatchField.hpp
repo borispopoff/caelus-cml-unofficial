@@ -248,8 +248,8 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
         )   << "    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 
@@ -285,8 +285,8 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
         FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -330,7 +330,7 @@ template<class Type>
 CML::tmp<CML::Field<Type>>
 CML::cyclicAMIFvPatchField<Type>::patchNeighbourField() const
 {
-    const Field<Type>& iField = this->internalField();
+    const Field<Type>& iField = this->primitiveField();
     const labelUList& nbrFaceCells =
         cyclicAMIPatch_.cyclicAMIPatch().neighbPatch().faceCells();
 
@@ -362,7 +362,7 @@ CML::cyclicAMIFvPatchField<Type>::neighbourPatchField() const
     const GeometricField<Type, fvPatchField, volMesh>& fld =
         static_cast<const GeometricField<Type, fvPatchField, volMesh>&>
         (
-            this->internalField()
+            this->primitiveField()
         );
 
     return refCast<const cyclicAMIFvPatchField<Type>>

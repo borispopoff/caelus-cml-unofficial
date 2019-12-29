@@ -35,16 +35,16 @@ CML::bound(volScalarField& vsf, const dimensionedScalar& lowerBound)
         Info<< "bounding " << vsf.name()
             << ", min: " << minVsf
             << " max: " << max(vsf).value()
-            << " average: " << gAverage(vsf.internalField())
+            << " average: " << gAverage(vsf.primitiveField())
             << endl;
 
-        vsf.internalFieldRef() = max
+        vsf.primitiveFieldRef() = max
         (
             max
             (
-                vsf.internalField(),
-                fvc::average(max(vsf, lowerBound))().internalField()
-              * pos(-vsf.internalField())
+                vsf.primitiveField(),
+                fvc::average(max(vsf, lowerBound))().primitiveField()
+              * pos(-vsf.primitiveField())
             ),
             lowerBound.value()
         );
@@ -69,21 +69,21 @@ void CML::boundMinMax
     if (minVsf < vsf0.value() || maxVsf > vsf1.value())
     {
         Info<< "bounding " << vsf.name()
-            << ", min: " << gMin(vsf.internalField())
-            << " max: " << gMax(vsf.internalField())
-            << " average: " << gAverage(vsf.internalField())
+            << ", min: " << gMin(vsf.primitiveField())
+            << " max: " << gMax(vsf.primitiveField())
+            << " average: " << gAverage(vsf.primitiveField())
             << endl;
     }
 
     if (minVsf < vsf0.value())
     {
-        vsf.internalFieldRef() = max
+        vsf.primitiveFieldRef() = max
         (
             max
             (
-                vsf.internalField(),
-                fvc::average(max(vsf, vsf0))().internalField()
-                *pos(vsf0.value() - vsf.internalField())
+                vsf.primitiveField(),
+                fvc::average(max(vsf, vsf0))().primitiveField()
+                *pos(vsf0.value() - vsf.primitiveField())
             ),
             vsf0.value()
         );
@@ -94,15 +94,15 @@ void CML::boundMinMax
 
     if (maxVsf > vsf1.value())
     {
-        vsf.internalFieldRef() = min
+        vsf.primitiveFieldRef() = min
         (
             min
             (
-                vsf.internalField(),
-                fvc::average(min(vsf, vsf1))().internalField()
-                *neg(vsf1.value() - vsf.internalField())
+                vsf.primitiveField(),
+                fvc::average(min(vsf, vsf1))().primitiveField()
+                *neg(vsf1.value() - vsf.primitiveField())
                 // This is needed when all values are above max
-              + pos(vsf1.value() - vsf.internalField())*vsf1.value()
+              + pos(vsf1.value() - vsf.primitiveField())*vsf1.value()
             ),
             vsf1.value()
         );

@@ -340,7 +340,7 @@ CML::fvm::SuSp
     fvm.diag() += mesh.V()*max(susp.field(), scalar(0));
 
     fvm.source() -= mesh.V()*min(susp.field(), scalar(0))
-        *vf.internalField();
+        *vf.primitiveField();
 
     return tfvm;
 }

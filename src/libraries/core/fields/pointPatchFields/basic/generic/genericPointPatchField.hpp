@@ -227,9 +227,9 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                                   "is not a compound"
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                             << exit(FatalIOError);
                         }
                     }
@@ -259,9 +259,9 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -293,9 +293,9 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -330,9 +330,9 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -367,9 +367,9 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -401,9 +401,9 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -418,9 +418,9 @@ CML::genericPointPatchField<Type>::genericPointPatchField
                             << " not supported"
                             << "\n    on patch " << this->patch().name()
                             << " of field "
-                            << this->dimensionedInternalField().name()
+                            << this->internalField().name()
                             << " in file "
-                            << this->dimensionedInternalField().objectPath()
+                            << this->internalField().objectPath()
                             << exit(FatalIOError);
                     }
                 }

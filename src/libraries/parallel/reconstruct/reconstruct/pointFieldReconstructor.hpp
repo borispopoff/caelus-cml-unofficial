@@ -211,7 +211,7 @@ CML::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
         // Set the cell values in the reconstructed field
         internalField.rmap
         (
-            procField.internalField(),
+            procField.primitiveField(),
             procToGlobalAddr
         );
 

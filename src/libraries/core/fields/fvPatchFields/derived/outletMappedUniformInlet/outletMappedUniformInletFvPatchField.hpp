@@ -277,7 +277,7 @@ void CML::outletMappedUniformInletFvPatchField<Type>::updateCoeffs()
     (
         dynamic_cast<const GeometricField<Type, fvPatchField, volMesh>&>
         (
-            this->dimensionedInternalField()
+            this->internalField()
         )
     );
 

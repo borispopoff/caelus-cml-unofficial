@@ -121,7 +121,7 @@ void CML::sampledCuttingPlane::createGeometry()
     // Internal field
     {
         const pointField& cc = fvm.cellCentres();
-        scalarField& fld = cellDistance.internalFieldRef();
+        scalarField& fld = cellDistance.primitiveFieldRef();
 
         forAll(cc, i)
         {
@@ -210,7 +210,7 @@ void CML::sampledCuttingPlane::createGeometry()
             pointMesh::New(fvm),
             dimensionedScalar("zero", dimLength, 0)
         );
-        pDist.internalFieldRef() = pointDistance_;
+        pDist.primitiveFieldRef() = pointDistance_;
 
         Pout<< "Writing point distance:" << pDist.objectPath() << endl;
         pDist.write();

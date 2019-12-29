@@ -158,7 +158,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         U.internalField(),
         plusEqOp<vector>(),
-        UNbr.internalFieldRef()
+        UNbr.primitiveFieldRef()
     );
 
     fvMatrix<vector> nbrEqn(UNbr, eqn.dimensions());
@@ -212,7 +212,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         U.internalField(),
         plusEqOp<vector>(),
-        UNbr.internalFieldRef()
+        UNbr.primitiveFieldRef()
     );
 
     fvMatrix<vector> nbrEqn(UNbr, eqn.dimensions());
@@ -253,7 +253,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         rho.internalField(),
         plusEqOp<scalar>(),
-        rhoNbr.internalFieldRef()
+        rhoNbr.primitiveFieldRef()
     );
 
     // map local mu onto neighbour region
@@ -261,7 +261,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         mu.internalField(),
         plusEqOp<scalar>(),
-        muNbr.internalFieldRef()
+        muNbr.primitiveFieldRef()
     );
 
     porosityPtr_->addResistance(nbrEqn, rhoNbr, muNbr);

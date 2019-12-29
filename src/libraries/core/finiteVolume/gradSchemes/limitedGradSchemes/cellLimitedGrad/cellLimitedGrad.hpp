@@ -284,8 +284,8 @@ CML::fv::cellLimitedGrad<Type, Limiter>::calcGrad
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    Field<Type> maxVsf(vsf.internalField());
-    Field<Type> minVsf(vsf.internalField());
+    Field<Type> maxVsf(vsf.primitiveField());
+    Field<Type> minVsf(vsf.primitiveField());
 
     forAll(owner, facei)
     {
@@ -350,7 +350,7 @@ CML::fv::cellLimitedGrad<Type, Limiter>::calcGrad
 
     // Create limiter initialized to 1
     // Note: the limiter is not permitted to be > 1
-    Field<Type> limiter(vsf.internalField().size(), pTraits<Type>::one);
+    Field<Type> limiter(vsf.primitiveField().size(), pTraits<Type>::one);
 
     forAll(owner, facei)
     {

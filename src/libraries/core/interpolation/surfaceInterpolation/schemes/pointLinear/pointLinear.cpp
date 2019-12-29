@@ -43,7 +43,7 @@ correction
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr =
         linearInterpolate(vf);
 
-    Field<Type>& sfCorr = tsfCorr.ref().internalFieldRef();
+    Field<Type>& sfCorr = tsfCorr.ref().primitiveFieldRef();
 
     const pointField& points = mesh.points();
     const pointField& C = mesh.C();

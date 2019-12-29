@@ -64,12 +64,12 @@ void relaxationZone::resetTargetFields()
 {
     if (targetAlpha_ != nullptr)
     {
-        (*targetAlpha_).internalFieldRef() = 0.0;
+        (*targetAlpha_).primitiveFieldRef() = 0.0;
     }
 
     if (targetVelocity_ != nullptr)
     {
-        (*targetVelocity_).internalFieldRef() = Zero;
+        (*targetVelocity_).primitiveFieldRef() = Zero;
     }
 }
 

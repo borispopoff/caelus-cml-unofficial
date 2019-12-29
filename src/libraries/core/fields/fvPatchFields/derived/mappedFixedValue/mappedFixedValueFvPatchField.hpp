@@ -242,8 +242,8 @@ CML::mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
             << "\n    patch type '" << p.type()
             << "' not type '" << mappedPatchBase::typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalError);
     }
 }
@@ -269,8 +269,8 @@ CML::mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
             << "\n    patch type '" << p.type()
             << "' not type '" << mappedPatchBase::typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalError);
     }
 
@@ -330,13 +330,13 @@ CML::mappedFixedValueFvPatchField<Type>::sampleField() const
 
     if (mpp.sameRegion())
     {
-        if (fieldName_ == this->dimensionedInternalField().name())
+        if (fieldName_ == this->internalField().name())
         {
             // Optimisation: bypass field lookup
             return
                 dynamic_cast<const fieldType&>
                 (
-                    this->dimensionedInternalField()
+                    this->internalField()
                 );
         }
         else
@@ -503,7 +503,7 @@ void CML::mappedFixedValueFvPatchField<Type>::updateCoeffs()
     if (debug)
     {
         Info<< "mapped on field:"
-            << this->dimensionedInternalField().name()
+            << this->internalField().name()
             << " patch:" << this->patch().name()
             << "  avg:" << gAverage(*this)
             << "  min:" << gMin(*this)

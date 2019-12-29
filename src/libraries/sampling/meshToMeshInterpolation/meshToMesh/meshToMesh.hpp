@@ -820,7 +820,7 @@ void CML::meshToMesh::mapSrcToTgt
     GeometricField<Type, fvPatchField, volMesh>& result
 ) const
 {
-    mapSrcToTgt(field, cop, result.internalFieldRef());
+    mapSrcToTgt(field, cop, result.primitiveFieldRef());
 
     const PtrList<AMIInterpolation>& AMIList = patchAMIs();
 
@@ -984,7 +984,7 @@ void CML::meshToMesh::mapTgtToSrc
     GeometricField<Type, fvPatchField, volMesh>& result
 ) const
 {
-    mapTgtToSrc(field, cop, result.internalFieldRef());
+    mapTgtToSrc(field, cop, result.primitiveFieldRef());
 
     const PtrList<AMIInterpolation>& AMIList = patchAMIs();
 

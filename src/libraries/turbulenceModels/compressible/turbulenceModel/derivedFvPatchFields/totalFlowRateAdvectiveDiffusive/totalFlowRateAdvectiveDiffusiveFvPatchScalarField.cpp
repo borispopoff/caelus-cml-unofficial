@@ -174,7 +174,7 @@ void CML::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
-            << this->dimensionedInternalField().name() << " :"
+            << this->internalField().name() << " :"
             << " mass flux[Kg/s]:" << phi
             << endl;
     }

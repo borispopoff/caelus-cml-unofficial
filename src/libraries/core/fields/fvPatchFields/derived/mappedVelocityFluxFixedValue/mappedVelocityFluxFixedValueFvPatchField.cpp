@@ -59,8 +59,8 @@ mappedVelocityFluxFixedValueFvPatchField
             << "Patch type '" << p.type()
             << "' not type '" << mappedPatchBase::typeName << "'"
             << " for patch " << p.name()
-            << " of field " << dimensionedInternalField().name()
-            << " in file " << dimensionedInternalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 }
@@ -83,8 +83,8 @@ mappedVelocityFluxFixedValueFvPatchField
             << "Patch type '" << p.type()
             << "' not type '" << mappedPatchBase::typeName << "'"
             << " for patch " << p.name()
-            << " of field " << dimensionedInternalField().name()
-            << " in file " << dimensionedInternalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 
@@ -98,8 +98,8 @@ mappedVelocityFluxFixedValueFvPatchField
             << "Patch " << p.name()
             << " of type '" << p.type()
             << "' can not be used in 'nearestCell' mode"
-            << " of field " << dimensionedInternalField().name()
-            << " in file " << dimensionedInternalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 }
@@ -148,7 +148,7 @@ void CML::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
         mappedVelocityFluxFixedValueFvPatchField::patch().patch()
     );
     const fvMesh& nbrMesh = refCast<const fvMesh>(mpp.sampleMesh());
-    const word& fieldName = dimensionedInternalField().name();
+    const word& fieldName = internalField().name();
     const volVectorField& UField =
         nbrMesh.lookupObject<volVectorField>(fieldName);
 

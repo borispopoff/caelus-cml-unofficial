@@ -518,7 +518,7 @@ void CML::fvMeshDistribute::saveInternalFields
     {
         const fldType& fld = *iter();
 
-        iflds.set(i, fld.internalField().clone());
+        iflds.set(i, fld.primitiveField().clone());
 
         i++;
     }

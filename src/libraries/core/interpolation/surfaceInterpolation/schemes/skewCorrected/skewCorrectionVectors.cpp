@@ -127,7 +127,7 @@ void CML::skewCorrectionVectors::makeSkewCorrectionVectors() const
 
     scalar skewCoeff = 0.0;
 
-    if (Sf.internalField().size())
+    if (Sf.primitiveField().size())
     {
         skewCoeff = max(mag(SkewCorrVecs)*mesh_.deltaCoeffs()).value();
     }

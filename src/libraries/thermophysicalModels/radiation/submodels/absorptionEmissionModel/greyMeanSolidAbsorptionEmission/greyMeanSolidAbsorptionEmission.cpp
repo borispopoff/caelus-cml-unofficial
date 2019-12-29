@@ -152,7 +152,7 @@ calc(const label propertyId) const
         )
     );
 
-    scalarField& a = ta.ref().internalFieldRef();
+    scalarField& a = ta.ref().primitiveFieldRef();
 
     forAllConstIter(HashTable<label>, speciesNames_, iter)
     {

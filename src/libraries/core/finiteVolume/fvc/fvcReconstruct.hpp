@@ -109,7 +109,7 @@ reconstruct
         mesh.Sf()/(mesh.magSf()*mesh.nonOrthDeltaCoeffs())
     );
 
-    faceVols.internalFieldRef() *= (1.0 -  mesh.weights().internalField());
+    faceVols.primitiveFieldRef() *= (1.0 -  mesh.weights().primitiveField());
     forAll(faceVols.boundaryField(), patchi)
     {
         if (faceVols.boundaryField()[patchi].coupled())

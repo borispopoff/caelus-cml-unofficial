@@ -39,13 +39,13 @@ wavePressureFvPatchScalarField::wavePressureFvPatchScalarField
 )
 :
     mixedFvPatchField<scalar>(p, iF),
-    convexPolyhedral(this->dimensionedInternalField().mesh(), true),
+    convexPolyhedral(this->internalField().mesh(), true),
     waveProps_
     (
         waveTheories::waveTheory::New
         (
             this->patch().name(),
-            this->dimensionedInternalField().mesh()
+            this->internalField().mesh()
         )
     )
 {
@@ -64,7 +64,7 @@ wavePressureFvPatchScalarField::wavePressureFvPatchScalarField
 )
 :
     mixedFvPatchField<scalar>(ptf, p, iF, mapper),
-    convexPolyhedral(this->dimensionedInternalField().mesh(), true),
+    convexPolyhedral(this->internalField().mesh(), true),
     waveProps_(ptf.waveProps_)
 {
 }
@@ -78,13 +78,13 @@ wavePressureFvPatchScalarField::wavePressureFvPatchScalarField
 )
 :
     mixedFvPatchField<scalar>(p, iF),
-    convexPolyhedral(this->dimensionedInternalField().mesh(), true),
+    convexPolyhedral(this->internalField().mesh(), true),
     waveProps_
     (
         waveTheories::waveTheory::New
         (
             this->patch().name(),
-            this->dimensionedInternalField().mesh()
+            this->internalField().mesh()
         )
     )
 {
@@ -99,13 +99,13 @@ wavePressureFvPatchScalarField::wavePressureFvPatchScalarField
 )
 :
     mixedFvPatchField<scalar>(ptf, iF),
-    convexPolyhedral(this->dimensionedInternalField().mesh(), true),
+    convexPolyhedral(this->internalField().mesh(), true),
     waveProps_
     (
         waveTheories::waveTheory::New
         (
             this->patch().name(),
-            this->dimensionedInternalField().mesh()
+            this->internalField().mesh()
         )
     )
 {
@@ -147,7 +147,7 @@ void wavePressureFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const fvMesh& mesh = this->dimensionedInternalField().mesh();
+    const fvMesh& mesh = this->internalField().mesh();
     const word patchName = this->patch().name();
     const label patchID = mesh.boundaryMesh().findPatchID(patchName);
     const scalarField& magSf(mesh.magSf().boundaryField()[patchID]);

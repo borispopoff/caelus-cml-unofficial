@@ -130,10 +130,10 @@ average
 
     GeometricField<Type, fvPatchField, volMesh>& av = taverage.ref();
 
-    av.internalFieldRef() =
+    av.primitiveFieldRef() =
     (
         surfaceSum(mesh.magSf()*ssf)/surfaceSum(mesh.magSf())
-    )().internalField();
+    )().primitiveField();
 
     typename GeometricField<Type, fvPatchField, volMesh>::
     Boundary& bav = av.boundaryFieldRef();

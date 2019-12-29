@@ -127,9 +127,9 @@ void transform
 {
     transform
     (
-        rtf.internalFieldRef(),
-        trf.internalField(),
-        tf.internalField()
+        rtf.primitiveFieldRef(),
+        trf.primitiveField(),
+        tf.primitiveField()
     );
     transform
     (
@@ -221,7 +221,7 @@ void transform
     const GeometricField<Type, PatchField, GeoMesh>& tf
 )
 {
-    transform(rtf.internalFieldRef(), t.value(), tf.internalField());
+    transform(rtf.primitiveFieldRef(), t.value(), tf.primitiveField());
     transform(rtf.boundaryFieldRef(), t.value(), tf.boundaryField());
 }
 

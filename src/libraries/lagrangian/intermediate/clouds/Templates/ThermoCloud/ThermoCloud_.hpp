@@ -632,7 +632,7 @@ inline CML::tmp<CML::volScalarField> CML::ThermoCloud<CloudType>::Ep() const
 
     if (radiation_)
     {
-        scalarField& Ep = tEp.ref().internalFieldRef();
+        scalarField& Ep = tEp.ref().primitiveFieldRef();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
@@ -668,7 +668,7 @@ inline CML::tmp<CML::volScalarField> CML::ThermoCloud<CloudType>::ap() const
 
     if (radiation_)
     {
-        scalarField& ap = tap.ref().internalFieldRef();
+        scalarField& ap = tap.ref().primitiveFieldRef();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
@@ -705,7 +705,7 @@ CML::ThermoCloud<CloudType>::sigmap() const
 
     if (radiation_)
     {
-        scalarField& sigmap = tsigmap.ref().internalFieldRef();
+        scalarField& sigmap = tsigmap.ref().primitiveFieldRef();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();

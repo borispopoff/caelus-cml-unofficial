@@ -497,7 +497,7 @@ SlicedGeometricField
     )
 {
     // Set the internalField to the supplied internal field
-    UList<Type>::shallowCopy(gf.internalField());
+    UList<Type>::shallowCopy(gf.primitiveField());
 
     correctBoundaryConditions();
 }
@@ -526,7 +526,7 @@ SlicedGeometricField
     )
 {
     // Set the internalField to the supplied internal field
-    UList<Type>::shallowCopy(gf.internalField());
+    UList<Type>::shallowCopy(gf.primitiveField());
 }
 
 

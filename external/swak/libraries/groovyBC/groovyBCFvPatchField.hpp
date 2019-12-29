@@ -230,7 +230,7 @@ groovyBCFvPatchField<Type>::groovyBCFvPatchField
     {
         fvPatchField<Type>::operator=(this->refValue());
         WarningInFunction
-            << "No value defined for " << this->dimensionedInternalField().name()
+            << "No value defined for " << this->internalField().name()
             << " on " << this->patch().name() << " therefore using "
             << this->refValue()
             << endl;

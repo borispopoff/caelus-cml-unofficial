@@ -104,7 +104,7 @@ void surfaceValueAveragePluginFunction<Type>::doEvaluation()
 
     forAll(areaSum,celli) {
         if(areaSum[celli]>SMALL) {
-            pValueAverage->internalFieldRef()[celli]/=areaSum[celli];
+            pValueAverage->primitiveFieldRef()[celli]/=areaSum[celli];
         }
     }
 

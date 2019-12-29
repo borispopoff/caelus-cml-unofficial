@@ -153,12 +153,12 @@ void CML::CourantNo::execute()
         volScalarField& CourantNo =
             mesh.lookupObjectRef<volScalarField>(type());
 
-        scalarField& iField = CourantNo.internalFieldRef();
+        scalarField& iField = CourantNo.primitiveFieldRef();
 
         const scalarField sumPhi
         (
-            fvc::surfaceSum(mag(phi))().internalField()
-           /rho(phi)().internalField()
+            fvc::surfaceSum(mag(phi))().primitiveField()
+           /rho(phi)().primitiveField()
         );
 
         iField = 0.5*sumPhi/mesh.V().field()*mesh.time().deltaTValue();

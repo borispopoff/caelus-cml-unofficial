@@ -304,8 +304,8 @@ CML::calculatedFvPatchField<Type>::valueInternalCoeffs
         << "\n    "
            "valueInternalCoeffs cannot be called for a calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
         << abort(FatalError);
@@ -325,8 +325,8 @@ CML::calculatedFvPatchField<Type>::valueBoundaryCoeffs
         << "\n    "
            "valueBoundaryCoeffs cannot be called for a calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
         << abort(FatalError);
@@ -344,8 +344,8 @@ CML::calculatedFvPatchField<Type>::gradientInternalCoeffs() const
            "gradientInternalCoeffs cannot be called for a "
            "calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
         << abort(FatalError);
@@ -363,8 +363,8 @@ CML::calculatedFvPatchField<Type>::gradientBoundaryCoeffs() const
            "gradientBoundaryCoeffs cannot be called for a "
            "calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
         << abort(FatalError);

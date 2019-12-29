@@ -75,7 +75,7 @@ void CML::fv::limitVelocity::correct(volVectorField& U)
 {
     const scalar maxSqrU = sqr(max_);
 
-    vectorField& Uif = U.internalFieldRef();
+    vectorField& Uif = U.primitiveFieldRef();
 
     forAll(cells_, i)
     {

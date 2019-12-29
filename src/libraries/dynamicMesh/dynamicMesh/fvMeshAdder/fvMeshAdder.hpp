@@ -179,15 +179,15 @@ void CML::fvMeshAdder::MapVolField
 
     {
         // Store old internal field
-        Field<Type> oldInternalField(fld.internalField());
+        Field<Type> oldInternalField(fld.primitiveField());
 
         // Modify internal field
-        Field<Type>& intFld = fld.internalFieldRef();
+        Field<Type>& intFld = fld.primitiveFieldRef();
 
         intFld.setSize(mesh.nCells());
 
         intFld.rmap(oldInternalField, meshMap.oldCellMap());
-        intFld.rmap(fldToAdd.internalField(), meshMap.addedCellMap());
+        intFld.rmap(fldToAdd.primitiveField(), meshMap.addedCellMap());
     }
 
 
@@ -485,7 +485,7 @@ void CML::fvMeshAdder::MapSurfaceField
         Field<Type> oldField(fld);
 
         // Modify internal field
-        Field<Type>& intFld = fld.internalFieldRef();
+        Field<Type>& intFld = fld.primitiveFieldRef();
 
         intFld.setSize(mesh.nInternalFaces());
 

@@ -334,7 +334,7 @@ CML::fvFieldReconstructor::reconstructFvVolumeField
         // Set the cell values in the reconstructed field
         internalField.rmap
         (
-            procField.internalField(),
+            procField.primitiveField(),
             cellProcAddressing_[proci]
         );
 
@@ -567,7 +567,7 @@ CML::fvFieldReconstructor::reconstructFvSurfaceField
             const labelList& faceMap = faceProcAddressing_[proci];
 
             // Correctly oriented copy of internal field
-            Field<Type> procInternalField(procField.internalField());
+            Field<Type> procInternalField(procField.primitiveField());
             // Addressing into original field
             labelList curAddr(procInternalField.size());
 

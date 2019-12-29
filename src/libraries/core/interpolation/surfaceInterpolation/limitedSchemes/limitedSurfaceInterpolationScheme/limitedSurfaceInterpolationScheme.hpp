@@ -352,7 +352,7 @@ tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
     // from which the weight is calculated using the limiter value
     surfaceScalarField& Weights = tLimiter.ref();
 
-    scalarField& pWeights = Weights.internalFieldRef();
+    scalarField& pWeights = Weights.primitiveFieldRef();
 
     forAll(pWeights, face)
     {

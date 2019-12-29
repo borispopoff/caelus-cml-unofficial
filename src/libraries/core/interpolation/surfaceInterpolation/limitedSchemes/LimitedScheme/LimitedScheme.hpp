@@ -269,7 +269,7 @@ CML::LimitedScheme<Type, Limiter, LimitFunc>::limiter
 
     const vectorField& C = mesh.C();
 
-    scalarField& pLim = lim.internalFieldRef();
+    scalarField& pLim = lim.primitiveFieldRef();
 
     forAll(pLim, face)
     {

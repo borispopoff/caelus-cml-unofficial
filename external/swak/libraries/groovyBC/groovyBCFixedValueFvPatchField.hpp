@@ -217,7 +217,7 @@ groovyBCFixedValueFvPatchField<Type>::groovyBCFixedValueFvPatchField
         (*this)==pTraits<Type>::zero;
 
         WarningInFunction
-            << "No value defined for " << this->dimensionedInternalField().name()
+            << "No value defined for " << this->internalField().name()
             << " on " << this->patch().name() << " therefore would be undefined "
             << pTraits<Type>::zero
             << endl;

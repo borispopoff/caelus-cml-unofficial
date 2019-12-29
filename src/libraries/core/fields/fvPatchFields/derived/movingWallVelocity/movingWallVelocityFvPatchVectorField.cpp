@@ -97,7 +97,7 @@ void CML::movingWallVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const fvMesh& mesh = dimensionedInternalField().mesh();
+    const fvMesh& mesh = internalField().mesh();
 
     if (mesh.moving())
     {

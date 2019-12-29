@@ -178,7 +178,7 @@ public:
             zeroGradientFvPatchScalarField::typeName
         );
 
-        cellVolume.internalFieldRef() = this->mesh_.V();
+        cellVolume.primitiveFieldRef() = this->mesh_.V();
         cellVolume.correctBoundaryConditions();
 
         volVectorField const& cellCenter = mesh_.C();
@@ -357,7 +357,7 @@ public:
             zeroGradientFvPatchScalarField::typeName
         );
 
-        cellVolume.internalFieldRef() = this->mesh_.V();
+        cellVolume.primitiveFieldRef() = this->mesh_.V();
         cellVolume.correctBoundaryConditions();
 
         volVectorField const& cellCenter = mesh_.C();

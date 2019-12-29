@@ -105,7 +105,7 @@ void waveDisplacementPointPatchVectorField::updateCoeffs()
         return;
     }
 
-    const polyMesh& mesh = this->dimensionedInternalField().mesh()();
+    const polyMesh& mesh = this->internalField().mesh()();
     const Time& t = mesh.time();
 
     const scalarField points(waveNumber_ & patch().localPoints());

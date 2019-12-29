@@ -158,11 +158,11 @@ void CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
     const scalarField& heuCells = this->heu_;
     const scalarField& pCells = this->p_;
 
-    scalarField& TCells = this->T_.internalFieldRef();
-    scalarField& TuCells = this->Tu_.internalFieldRef();
-    scalarField& psiCells = this->psi_.internalFieldRef();
-    scalarField& muCells = this->mu_.internalFieldRef();
-    scalarField& alphaCells = this->alpha_.internalFieldRef();
+    scalarField& TCells = this->T_.primitiveFieldRef();
+    scalarField& TuCells = this->Tu_.primitiveFieldRef();
+    scalarField& psiCells = this->psi_.primitiveFieldRef();
+    scalarField& muCells = this->mu_.primitiveFieldRef();
+    scalarField& alphaCells = this->alpha_.primitiveFieldRef();
 
     forAll(TCells, celli)
     {
@@ -297,7 +297,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
         this->heuBoundaryTypes()
     )
 {
-    scalarField& heuCells = this->heu_.internalFieldRef();
+    scalarField& heuCells = this->heu_.primitiveFieldRef();
     const scalarField& pCells = this->p_;
     const scalarField& TuCells = this->Tu_;
 
@@ -422,7 +422,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::Tb() const
     );
 
     volScalarField& Tb_ = tTb.ref();
-    scalarField& TbCells = Tb_.internalFieldRef();
+    scalarField& TbCells = Tb_.primitiveFieldRef();
     const scalarField& pCells = this->p_;
     const scalarField& TCells = this->T_;
     const scalarField& hCells = this->he_;
@@ -482,7 +482,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::psiu() const
     );
 
     volScalarField& psiu = tpsiu.ref();
-    scalarField& psiuCells = psiu.internalFieldRef();
+    scalarField& psiuCells = psiu.primitiveFieldRef();
     const scalarField& TuCells = this->Tu_;
     const scalarField& pCells = this->p_;
 
@@ -536,7 +536,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::psib() const
     );
 
     volScalarField& psib = tpsib.ref();
-    scalarField& psibCells = psib.internalFieldRef();
+    scalarField& psibCells = psib.primitiveFieldRef();
     const volScalarField Tb_(Tb());
     const scalarField& TbCells = Tb_;
     const scalarField& pCells = this->p_;
@@ -591,7 +591,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::muu() const
     );
 
     volScalarField& muu_ = tmuu.ref();
-    scalarField& muuCells = muu_.internalFieldRef();
+    scalarField& muuCells = muu_.primitiveFieldRef();
     const scalarField& pCells = this->p_;
     const scalarField& TuCells = this->Tu_;
 
@@ -649,7 +649,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::mub() const
     );
 
     volScalarField& mub_ = tmub.ref();
-    scalarField& mubCells = mub_.internalFieldRef();
+    scalarField& mubCells = mub_.primitiveFieldRef();
     const volScalarField Tb_(Tb());
     const scalarField& pCells = this->p_;
     const scalarField& TbCells = Tb_;

@@ -521,7 +521,7 @@ localEulerDdtScheme<Type>::fvmDdt
     const scalarField& rDeltaT = localRDeltaT();
 
     fvm.diag() = rDeltaT*mesh().Vsc();
-    fvm.source() = rDeltaT*vf.oldTime().internalField()*mesh().Vsc();
+    fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
@@ -550,7 +550,7 @@ localEulerDdtScheme<Type>::fvmDdt
     fvm.diag() = rDeltaT*rho.value()*mesh().Vsc();
 
     fvm.source() =
-        rDeltaT*rho.value()*vf.oldTime().internalField()*mesh().Vsc();
+        rDeltaT*rho.value()*vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
@@ -576,11 +576,11 @@ localEulerDdtScheme<Type>::fvmDdt
 
     const scalarField& rDeltaT = localRDeltaT();
 
-    fvm.diag() = rDeltaT*rho.internalField()*mesh().Vsc();
+    fvm.diag() = rDeltaT*rho.primitiveField()*mesh().Vsc();
 
     fvm.source() = rDeltaT
-       *rho.oldTime().internalField()
-       *vf.oldTime().internalField()*mesh().Vsc();
+       *rho.oldTime().primitiveField()
+       *vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
@@ -607,12 +607,12 @@ localEulerDdtScheme<Type>::fvmDdt
 
     const scalarField& rDeltaT = localRDeltaT();
 
-    fvm.diag() = rDeltaT*alpha.internalField()*rho.internalField()*mesh().Vsc();
+    fvm.diag() = rDeltaT*alpha.primitiveField()*rho.primitiveField()*mesh().Vsc();
 
     fvm.source() = rDeltaT
-       *alpha.oldTime().internalField()
-       *rho.oldTime().internalField()
-       *vf.oldTime().internalField()*mesh().Vsc();
+       *alpha.oldTime().primitiveField()
+       *rho.oldTime().primitiveField()
+       *vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
@@ -656,9 +656,9 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
     {
         InfoInFunction
             << "ddtCouplingCoeff mean max min = "
-            << gAverage(ddtCouplingCoeff.internalField())
-            << " " << gMax(ddtCouplingCoeff.internalField())
-            << " " << gMin(ddtCouplingCoeff.internalField())
+            << gAverage(ddtCouplingCoeff.primitiveField())
+            << " " << gMax(ddtCouplingCoeff.primitiveField())
+            << " " << gMin(ddtCouplingCoeff.primitiveField())
             << endl;
     }
 

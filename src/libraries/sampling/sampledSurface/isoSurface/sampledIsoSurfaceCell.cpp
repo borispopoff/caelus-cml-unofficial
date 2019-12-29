@@ -128,7 +128,7 @@ bool CML::sampledIsoSurfaceCell::updateGeometry() const
                 {
                     label celli = pCells[i];
 
-                    cellAvg[celli] += pointFld().internalField()[pointi];
+                    cellAvg[celli] += pointFld().primitiveField()[pointi];
                     nPointCells[celli]++;
                 }
             }
@@ -142,7 +142,7 @@ bool CML::sampledIsoSurfaceCell::updateGeometry() const
         (
             fvm,
             cellAvg,
-            pointFld().internalField(),
+            pointFld().primitiveField(),
             isoVal_,
             regularise_
         );
@@ -159,8 +159,8 @@ bool CML::sampledIsoSurfaceCell::updateGeometry() const
         const isoSurfaceCell iso
         (
             fvm,
-            cellFld.internalField(),
-            pointFld().internalField(),
+            cellFld.primitiveField(),
+            pointFld().primitiveField(),
             isoVal_,
             regularise_
         );

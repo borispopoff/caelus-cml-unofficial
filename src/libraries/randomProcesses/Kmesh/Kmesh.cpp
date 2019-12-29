@@ -48,7 +48,7 @@ CML::Kmesh::Kmesh(const fvMesh& mesh)
     boundBox box = mesh.bounds();
     l_ = box.span();
 
-    vector cornerCellCentre = ::CML::max(mesh.C().internalField());
+    vector cornerCellCentre = ::CML::max(mesh.C().primitiveField());
     vector cellL = 2*(box.max() - cornerCellCentre);
 
     vector rdeltaByL;

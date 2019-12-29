@@ -172,7 +172,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
     DimensionedField<scalar, volMesh>& omega =
         const_cast<DimensionedField<scalar, volMesh>&>
         (
-            dimensionedInternalField()
+            internalField()
         );
 
     const tmp<volScalarField> tk = turbulence.k();

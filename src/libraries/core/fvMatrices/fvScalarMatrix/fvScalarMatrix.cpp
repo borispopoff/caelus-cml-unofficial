@@ -113,7 +113,7 @@ CML::solverPerformance CML::fvMatrix<CML::scalar>::fvSolver::solve
 
     solverPerformance solverPerf = solver_->solve
     (
-        psi.internalFieldRef(),
+        psi.primitiveFieldRef(),
         totalSource
     );
 
@@ -160,7 +160,7 @@ CML::solverPerformance CML::fvMatrix<CML::scalar>::solve
         internalCoeffs_,
         psi_.boundaryField().interfaces(),
         solverControls
-    )->solve(psi.internalFieldRef(), totalSource);
+    )->solve(psi.primitiveFieldRef(), totalSource);
 
     solverPerf.print();
 
@@ -184,8 +184,8 @@ CML::tmp<CML::scalarField> CML::fvMatrix<CML::scalar>::residual() const
     (
         lduMatrix::residual
         (
-            psi_.internalField(),
-            source_ - boundaryDiag*psi_.internalField(),
+            psi_.primitiveField(),
+            source_ - boundaryDiag*psi_.primitiveField(),
             boundaryCoeffs_,
             psi_.boundaryField().interfaces(),
             0
@@ -220,10 +220,10 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<CML::scalar>::H() const
     );
     volScalarField& Hphi = tHphi.ref();
 
-    Hphi.internalFieldRef() = (lduMatrix::H(psi_.internalField()) + source_);
-    addBoundarySource(Hphi.internalFieldRef());
+    Hphi.primitiveFieldRef() = (lduMatrix::H(psi_.primitiveField()) + source_);
+    addBoundarySource(Hphi.primitiveFieldRef());
 
-    Hphi.internalFieldRef() /= psi_.mesh().V();
+    Hphi.primitiveFieldRef() /= psi_.mesh().V();
     Hphi.correctBoundaryConditions();
 
     return tHphi;
@@ -252,10 +252,10 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<CML::scalar>::H1() const
     );
     volScalarField& H1_ = tH1.ref();
 
-    H1_.internalFieldRef() = lduMatrix::H1();
-    // addBoundarySource(Hphi.internalField());
+    H1_.primitiveFieldRef() = lduMatrix::H1();
+    // addBoundarySource(Hphi.primitiveField());
 
-    H1_.internalFieldRef() /= psi_.mesh().V();
+    H1_.primitiveFieldRef() /= psi_.mesh().V();
     H1_.correctBoundaryConditions();
 
     return tH1;

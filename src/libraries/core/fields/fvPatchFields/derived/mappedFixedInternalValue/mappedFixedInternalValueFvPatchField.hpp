@@ -316,7 +316,7 @@ void CML::mappedFixedInternalValueFvPatchField<Type>::updateCoeffs()
     UPstream::msgType() = oldTag;
 
     // Assign to (this) patch internal field its neighbour values
-    Field<Type>& intFld = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& intFld = const_cast<Field<Type>&>(this->primitiveField());
     UIndirectList<Type>(intFld, this->patch().faceCells()) = nbrIntFld;
 }
 

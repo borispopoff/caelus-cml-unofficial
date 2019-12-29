@@ -159,8 +159,8 @@ void CML::pressureDirectedInletVelocityFvPatchVectorField::updateCoeffs()
         FatalErrorInFunction
             << "dimensions of phi are not correct"
             << "\n    on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalError);
     }
 

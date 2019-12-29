@@ -249,7 +249,7 @@ CML::slicedFvsPatchField<Type>::slicedFvsPatchField
     fvsPatchField<Type>
     (
         ptf.patch(),
-        ptf.dimensionedInternalField(),
+        ptf.internalField(),
         Field<Type>()
     )
 {

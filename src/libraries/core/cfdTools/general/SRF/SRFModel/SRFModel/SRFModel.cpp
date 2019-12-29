@@ -224,7 +224,7 @@ CML::tmp<CML::volVectorField> CML::SRF::SRFModel::Uabs() const
     volVectorField& Uabs = tUabs.ref();
 
     // Add SRF contribution to internal field
-    Uabs.internalFieldRef() += Urel_.internalField();
+    Uabs.primitiveFieldRef() += Urel_.primitiveField();
 
     // Add Urel boundary contributions
     volVectorField::Boundary& Uabsbf = Uabs.boundaryFieldRef();

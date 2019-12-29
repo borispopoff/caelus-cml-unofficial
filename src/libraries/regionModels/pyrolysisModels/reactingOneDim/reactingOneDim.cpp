@@ -619,7 +619,7 @@ scalar reactingOneDim::solidRegionDiffNo() const
            /fvc::interpolate(Cp()*rho_)
         );
 
-        DiNum = max(KrhoCpbyDelta.internalField())*time().deltaTValue();
+        DiNum = max(KrhoCpbyDelta.primitiveField())*time().deltaTValue();
     }
 
     return DiNum;
@@ -711,9 +711,9 @@ void reactingOneDim::evolveRegion()
     solidThermo_->correct();
 
     Info<< "pyrolysis min/max(T) = "
-        << gMin(solidThermo_->T().internalField())
+        << gMin(solidThermo_->T().primitiveField())
         << ", "
-        << gMax(solidThermo_->T().internalField())
+        << gMax(solidThermo_->T().primitiveField())
         << endl;
 }
 

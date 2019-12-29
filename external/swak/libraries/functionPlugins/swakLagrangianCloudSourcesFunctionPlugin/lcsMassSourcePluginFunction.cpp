@@ -89,7 +89,7 @@ void lcsMassSourcePluginFunction::doEvaluation()
         )
     );
 
-    pSource->internalFieldRef()=Srho.field();
+    pSource->primitiveFieldRef()=Srho.field();
 
     result().setObjectResult(pSource);
 }

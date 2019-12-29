@@ -327,7 +327,7 @@ heBoundaryCorrection(volScalarField& h)
 template<class BasicThermo, class MixtureType>
 void CML::heThermo<BasicThermo, MixtureType>::init()
 {
-    scalarField& heCells = he_.internalFieldRef();
+    scalarField& heCells = he_.primitiveFieldRef();
     const scalarField& pCells = this->p_;
     const scalarField& TCells = this->T_;
 
@@ -460,7 +460,7 @@ CML::tmp<CML::volScalarField> CML::heThermo<BasicThermo, MixtureType>::he
     );
 
     volScalarField& he = the.ref();
-    scalarField& heCells = he.internalFieldRef();
+    scalarField& heCells = he.primitiveFieldRef();
     const scalarField& pCells = p;
     const scalarField& TCells = T;
 
@@ -555,7 +555,7 @@ CML::heThermo<BasicThermo, MixtureType>::hc() const
     );
 
     volScalarField& hcf = thc.ref();
-    scalarField& hcCells = hcf.internalFieldRef();
+    scalarField& hcCells = hcf.primitiveFieldRef();
 
     forAll(hcCells, celli)
     {
@@ -1019,7 +1019,7 @@ CML::tmp<CML::volScalarField> CML::heThermo<BasicThermo, MixtureType>::W
     );
 
     volScalarField& W = tW.ref();
-    scalarField& WCells = W.internalFieldRef();
+    scalarField& WCells = W.primitiveFieldRef();
 
     forAll(WCells, celli)
     {

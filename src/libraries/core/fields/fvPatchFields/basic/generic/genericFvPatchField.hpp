@@ -193,7 +193,7 @@ CML::genericFvPatchField<Type>::genericFvPatchField
         << "Not Implemented\n    "
         << "Trying to construct an genericFvPatchField on patch "
         << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
+        << " of field " << this->internalField().name()
         << abort(FatalError);
 }
 
@@ -217,8 +217,8 @@ CML::genericFvPatchField<Type>::genericFvPatchField
             dict
         )   << "\n    Cannot find 'value' entry"
             << " on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << nl
             << "    which is required to set the"
                " values of the generic patch field." << nl
@@ -274,9 +274,9 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                                   "is not a compound"
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                             << exit(FatalIOError);
                         }
                     }
@@ -306,9 +306,9 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -340,9 +340,9 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -377,9 +377,9 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -414,9 +414,9 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -448,9 +448,9 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -465,9 +465,9 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                             << " not supported"
                             << "\n    on patch " << this->patch().name()
                             << " of field "
-                            << this->dimensionedInternalField().name()
+                            << this->internalField().name()
                             << " in file "
-                            << this->dimensionedInternalField().objectPath()
+                            << this->internalField().objectPath()
                             << exit(FatalIOError);
                     }
                 }
@@ -551,9 +551,9 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                             )   << "\n    unrecognised native type " << l
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
                     }
@@ -852,8 +852,8 @@ CML::genericFvPatchField<Type>::valueInternalCoeffs
            "valueInternalCoeffs cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
         << abort(FatalError);
@@ -874,8 +874,8 @@ CML::genericFvPatchField<Type>::valueBoundaryCoeffs
            "valueBoundaryCoeffs cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
         << abort(FatalError);
@@ -893,8 +893,8 @@ CML::genericFvPatchField<Type>::gradientInternalCoeffs() const
            "gradientInternalCoeffs cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
         << abort(FatalError);
@@ -911,8 +911,8 @@ CML::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
            "gradientBoundaryCoeffs cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
         << abort(FatalError);

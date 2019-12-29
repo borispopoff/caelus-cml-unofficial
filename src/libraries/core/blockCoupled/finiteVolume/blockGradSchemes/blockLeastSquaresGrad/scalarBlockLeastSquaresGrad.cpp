@@ -66,9 +66,9 @@ tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
         dimensionedScalar("zero", dimVolume, 0),
         zeroGradientFvPatchScalarField::typeName
     );
-    cellV.internalFieldRef() = mesh.V();
+    cellV.primitiveFieldRef() = mesh.V();
     cellV.correctBoundaryConditions();
-    const scalarField& cellVIn = cellV.internalField();
+    const scalarField& cellVIn = cellV.primitiveField();
 
     const surfaceScalarField& w = mesh.weights();
 
@@ -91,8 +91,8 @@ tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
     const surfaceVectorField& neiLs = lsv.nVectors();
 
     // Internal field
-    const vectorField& ownLsIn = ownLs.internalField();
-    const vectorField& neiLsIn = neiLs.internalField();
+    const vectorField& ownLsIn = ownLs.primitiveField();
+    const vectorField& neiLsIn = neiLs.primitiveField();
 
     label owner, neighbour;
 

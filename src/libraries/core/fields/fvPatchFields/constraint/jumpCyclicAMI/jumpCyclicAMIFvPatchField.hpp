@@ -214,7 +214,7 @@ template<class Type>
 CML::tmp<CML::Field<Type>>
 CML::jumpCyclicAMIFvPatchField<Type>::patchNeighbourField() const
 {
-    const Field<Type>& iField = this->internalField();
+    const Field<Type>& iField = this->primitiveField();
     const labelUList& nbrFaceCells =
         this->cyclicAMIPatch().cyclicAMIPatch().neighbPatch().faceCells();
 

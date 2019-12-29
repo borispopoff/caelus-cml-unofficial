@@ -216,8 +216,8 @@ void CML::sampledIsoSurface::getIsoFields() const
                 << " max:" << max(*volFieldPtr_).value() << endl;
             InfoInFunction
                 << "pointField " << pointFieldPtr_->name()
-                << " min:" << gMin(pointFieldPtr_->internalField())
-                << " max:" << gMax(pointFieldPtr_->internalField()) << endl;
+                << " min:" << gMin(pointFieldPtr_->primitiveField())
+                << " max:" << gMax(pointFieldPtr_->primitiveField()) << endl;
         }
     }
     else
@@ -320,8 +320,8 @@ void CML::sampledIsoSurface::getIsoFields() const
             InfoInFunction
                 << "pointSubField "
                 << pointSubFieldPtr_->name()
-                << " min:" << gMin(pointSubFieldPtr_->internalField())
-                << " max:" << gMax(pointSubFieldPtr_->internalField()) << endl;
+                << " min:" << gMin(pointSubFieldPtr_->primitiveField())
+                << " max:" << gMax(pointSubFieldPtr_->primitiveField()) << endl;
         }
     }
 }

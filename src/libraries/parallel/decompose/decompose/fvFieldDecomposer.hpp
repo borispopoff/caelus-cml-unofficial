@@ -324,7 +324,7 @@ CML::fvFieldDecomposer::decomposeField
             ),
             procMesh_,
             field.dimensions(),
-            Field<Type>(field.internalField(), cellAddressing_),
+            Field<Type>(field.primitiveField(), cellAddressing_),
             patchFields
         )
     );
@@ -364,7 +364,7 @@ CML::fvFieldDecomposer::decomposeField
                     resF(),
                     Field<Type>
                     (
-                        field.internalField(),
+                        field.primitiveField(),
                         *processorVolPatchFieldDecomposerPtrs_[patchi]
                     )
                 )
@@ -381,7 +381,7 @@ CML::fvFieldDecomposer::decomposeField
                     resF(),
                     Field<Type>
                     (
-                        field.internalField(),
+                        field.primitiveField(),
                         *processorVolPatchFieldDecomposerPtrs_[patchi]
                     )
                 )
@@ -434,7 +434,7 @@ CML::fvFieldDecomposer::decomposeField
     // Create and map the internal field values
     Field<Type> internalField
     (
-        field.internalField(),
+        field.primitiveField(),
         mapAddr
     );
 
@@ -445,9 +445,9 @@ CML::fvFieldDecomposer::decomposeField
     // (i.e. using slices)
     Field<Type> allFaceField(field.mesh().nFaces());
 
-    forAll(field.internalField(), i)
+    forAll(field.primitiveField(), i)
     {
-        allFaceField[i] = field.internalField()[i];
+        allFaceField[i] = field.primitiveField()[i];
     }
 
     forAll(field.boundaryField(), patchi)
@@ -494,7 +494,7 @@ CML::fvFieldDecomposer::decomposeField
             ),
             procMesh_,
             field.dimensions(),
-            Field<Type>(field.internalField(), mapAddr),
+            Field<Type>(field.primitiveField(), mapAddr),
             patchFields
         )
     );

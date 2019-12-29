@@ -805,7 +805,7 @@ void CML::timeVaryingMappedFixedValueFvPatchField<Type>::write
         writeEntry(os, "perturb", perturb_);
     }
 
-    if (fieldTableName_ != this->dimensionedInternalField().name())
+    if (fieldTableName_ != this->internalField().name())
     {
         writeEntry(os, "fieldTable", fieldTableName_);
     }

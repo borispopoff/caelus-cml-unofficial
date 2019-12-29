@@ -92,7 +92,7 @@ void lcsMomentumSourcePluginFunction::doEvaluation()
         )
     );
 
-    pSource->internalFieldRef()=SU.field()/(mesh().time().deltaT().value()*mesh().V());
+    pSource->primitiveFieldRef()=SU.field()/(mesh().time().deltaT().value()*mesh().V());
 
     result().setObjectResult(pSource);
 }

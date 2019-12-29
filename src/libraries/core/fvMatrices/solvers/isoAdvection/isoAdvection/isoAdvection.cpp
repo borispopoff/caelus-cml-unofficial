@@ -160,9 +160,9 @@ void CML::isoAdvection::timeIntegratedFlux()
     checkBounding_ = false;
 
     // Get necessary references
-    const scalarField& phiIn = phi_.internalField();
-    const scalarField& magSfIn = mesh_.magSf().internalField();
-    scalarField& dVfIn = dVf_.internalFieldRef();
+    const scalarField& phiIn = phi_.primitiveField();
+    const scalarField& magSfIn = mesh_.magSf().primitiveField();
+    scalarField& dVfIn = dVf_.primitiveFieldRef();
 
     // Get necessary mesh data
     const labelListList& cellPoints = mesh_.cellPoints();

@@ -91,7 +91,7 @@ void courantIncompressiblePluginFunction::doEvaluation()
     );
     volScalarField &Co=pCo();
 
-    Co.internalFieldRef() =
+    Co.primitiveFieldRef() =
         (0.5*mesh().time().deltaT().value())
         *fvc::surfaceSum(mag(phi_()))().internalField()
         /mesh().V();

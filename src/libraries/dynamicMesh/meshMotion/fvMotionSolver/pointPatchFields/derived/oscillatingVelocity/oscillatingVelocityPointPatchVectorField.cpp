@@ -139,7 +139,7 @@ void oscillatingVelocityPointPatchVectorField::updateCoeffs()
         return;
     }
 
-    const polyMesh& mesh = this->dimensionedInternalField().mesh()();
+    const polyMesh& mesh = this->internalField().mesh()();
     const Time& t = mesh.time();
     const pointPatch& p = this->patch();
 

@@ -271,7 +271,7 @@ void CML::cyclicPointPatchField<Type>::swapAddSeparated
 		const GeometricField<Type, pointPatchField, pointMesh>& fld =
             refCast<const GeometricField<Type, pointPatchField, pointMesh>>
             (
-                this->dimensionedInternalField()
+                this->internalField()
             );	
 		
         const cyclicPointPatchField<Type>& nbr =

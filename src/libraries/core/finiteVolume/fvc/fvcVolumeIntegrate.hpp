@@ -129,7 +129,7 @@ volumeIntegrate
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    return vf.mesh().V()*vf.internalField();
+    return vf.mesh().V()*vf.primitiveField();
 }
 
 
@@ -140,7 +140,7 @@ volumeIntegrate
     const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 )
 {
-    tmp<Field<Type>> tvivf = tvf().mesh().V()*tvf().internalField();
+    tmp<Field<Type>> tvivf = tvf().mesh().V()*tvf().primitiveField();
     tvf.clear();
     return tvivf;
 }

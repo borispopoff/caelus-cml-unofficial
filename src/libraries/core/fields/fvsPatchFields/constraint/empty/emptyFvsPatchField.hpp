@@ -208,7 +208,7 @@ CML::emptyFvsPatchField<Type>::emptyFvsPatchField
     fvsPatchField<Type>
     (
         ptf.patch(),
-        ptf.dimensionedInternalField(),
+        ptf.internalField(),
         Field<Type>(0)
     )
 {}

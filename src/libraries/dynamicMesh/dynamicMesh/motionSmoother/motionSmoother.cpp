@@ -993,12 +993,12 @@ bool CML::motionSmoother::scaleMesh
             );
         }
 
-        newPoints = oldPoints_ + totalDisplacement.internalField();
+        newPoints = oldPoints_ + totalDisplacement.primitiveField();
     }
 
     Info<< "Moving mesh using diplacement scaling :"
-        << " min:" << gMin(scale_.internalField())
-        << "  max:" << gMax(scale_.internalField())
+        << " min:" << gMin(scale_.primitiveField())
+        << "  max:" << gMax(scale_.primitiveField())
         << endl;
 
 

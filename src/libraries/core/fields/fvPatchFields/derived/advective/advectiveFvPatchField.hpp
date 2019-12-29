@@ -308,8 +308,8 @@ CML::advectiveFvPatchField<Type>::advectiveFvPatchField
             FatalIOErrorInFunction(dict)
                 << "unphysical lInf specified (lInf < 0)\n"
                 << "    on patch " << this->patch().name()
-                << " of field " << this->dimensionedInternalField().name()
-                << " in file " << this->dimensionedInternalField().objectPath()
+                << " of field " << this->internalField().name()
+                << " in file " << this->internalField().objectPath()
                 << exit(FatalIOError);
         }
     }
@@ -386,11 +386,11 @@ void CML::advectiveFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const fvMesh& mesh = this->dimensionedInternalField().mesh();
+    const fvMesh& mesh = this->internalField().mesh();
 
     word ddtScheme
     (
-        mesh.ddtScheme(this->dimensionedInternalField().name())
+        mesh.ddtScheme(this->internalField().name())
     );
     scalar deltaT = this->db().time().deltaTValue();
 
@@ -398,7 +398,7 @@ void CML::advectiveFvPatchField<Type>::updateCoeffs()
         this->db().objectRegistry::template
         lookupObject<GeometricField<Type, fvPatchField, volMesh>>
         (
-            this->dimensionedInternalField().name()
+            this->internalField().name()
         );
 
     // Calculate the advection speed of the field wave
@@ -471,8 +471,8 @@ void CML::advectiveFvPatchField<Type>::updateCoeffs()
                 << "    Unsupported temporal differencing scheme : "
                 << ddtScheme
                 << "\n    on patch " << this->patch().name()
-                << " of field " << this->dimensionedInternalField().name()
-                << " in file " << this->dimensionedInternalField().objectPath()
+                << " of field " << this->internalField().name()
+                << " in file " << this->internalField().objectPath()
                 << exit(FatalError);
         }
     }
@@ -522,8 +522,8 @@ void CML::advectiveFvPatchField<Type>::updateCoeffs()
                 << "    Unsupported temporal differencing scheme : "
                 << ddtScheme
                 << "\n    on patch " << this->patch().name()
-                << " of field " << this->dimensionedInternalField().name()
-                << " in file " << this->dimensionedInternalField().objectPath()
+                << " of field " << this->internalField().name()
+                << " in file " << this->internalField().objectPath()
                 << exit(FatalError);
         }
     }

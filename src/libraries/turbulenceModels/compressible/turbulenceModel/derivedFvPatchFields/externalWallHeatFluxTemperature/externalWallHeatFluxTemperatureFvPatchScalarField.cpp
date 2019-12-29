@@ -450,7 +450,7 @@ void CML::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
-            << this->dimensionedInternalField().name() << " :"
+            << this->internalField().name() << " :"
             << " heat transfer rate:" << Q
             << " walltemperature "
             << " min:" << gMin(*this)

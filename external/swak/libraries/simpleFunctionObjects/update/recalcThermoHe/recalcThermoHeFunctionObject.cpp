@@ -79,9 +79,9 @@ void recalcThermoHeFunctionObject::recalc()
     forAll(allCells,celli) {
         allCells[celli]=celli;
     }
-    h.internalFieldRef()=thermo.he(
-        p.internalField(),
-        T.internalField(),
+    h.primitiveFieldRef()=thermo.he(
+        p.primitiveField(),
+        T.primitiveField(),
         allCells
     );
     forAll(h.boundaryField(), patchi)

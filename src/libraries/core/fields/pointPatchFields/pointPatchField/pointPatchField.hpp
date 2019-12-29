@@ -276,13 +276,13 @@ public:
 
             //- Return dimensioned internal field reference
             const DimensionedField<Type, pointMesh>&
-            dimensionedInternalField() const
+            internalField() const
             {
                 return internalField_;
             }
 
             //- Return internal field reference
-            const Field<Type>& internalField() const
+            const Field<Type>& primitiveField() const
             {
                 return internalField_;
             }
@@ -604,7 +604,7 @@ template<class Type>
 tmp<Field<Type>>
 pointPatchField<Type>::patchInternalField() const
 {
-    return patchInternalField(internalField());
+    return patchInternalField(primitiveField());
 }
 
 
@@ -618,12 +618,12 @@ pointPatchField<Type>::patchInternalField
 ) const
 {
     // Check size
-    if (iF.size() != internalField().size())
+    if (iF.size() != primitiveField().size())
     {
         FatalErrorInFunction
             << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
-            << " mesh size: " << internalField().size()
+            << " mesh size: " << primitiveField().size()
             << abort(FatalError);
     }
 
@@ -652,12 +652,12 @@ void pointPatchField<Type>::addToInternalField
 ) const
 {
     // Check size
-    if (iF.size() != internalField().size())
+    if (iF.size() != primitiveField().size())
     {
         FatalErrorInFunction
             << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
-            << " mesh size: " << internalField().size()
+            << " mesh size: " << primitiveField().size()
             << abort(FatalError);
     }
 
@@ -690,12 +690,12 @@ void pointPatchField<Type>::addToInternalField
 ) const
 {
     // Check size
-    if (iF.size() != internalField().size())
+    if (iF.size() != primitiveField().size())
     {
         FatalErrorInFunction
             << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
-            << " mesh size: " << internalField().size()
+            << " mesh size: " << primitiveField().size()
             << abort(FatalError);
     }
 
@@ -729,12 +729,12 @@ void pointPatchField<Type>::setInInternalField
 ) const
 {
     // Check size
-    if (iF.size() != internalField().size())
+    if (iF.size() != primitiveField().size())
     {
         FatalErrorInFunction
             << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
-            << " mesh size: " << internalField().size()
+            << " mesh size: " << primitiveField().size()
             << abort(FatalError);
     }
 

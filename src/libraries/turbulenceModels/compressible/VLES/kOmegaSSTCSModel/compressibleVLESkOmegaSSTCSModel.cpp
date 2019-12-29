@@ -581,7 +581,7 @@ void kOmegaSSTCSModelVLES::correct()
 
     if (nD == 3)
     {
-        Lc.internalFieldRef() = Cx().internalField()*pow(mesh_.V(), 1.0/3.0);
+        Lc.primitiveFieldRef() = Cx().primitiveField()*pow(mesh_.V(), 1.0/3.0);
     }
     else if (nD == 2)
     {
@@ -597,7 +597,7 @@ void kOmegaSSTCSModelVLES::correct()
             }
         }
 
-        Lc.internalFieldRef() = Cx().internalField()*sqrt(mesh_.V()/thickness);
+        Lc.primitiveFieldRef() = Cx().primitiveField()*sqrt(mesh_.V()/thickness);
     }
     else
     {

@@ -374,7 +374,7 @@ void CML::pointConstraints::constrainDisplacement
     syncUntransformedData
     (
         pf.mesh()(),
-        pf.internalFieldRef(),
+        pf.primitiveFieldRef(),
         maxMagSqrEqOp<vector>()
     );
 
@@ -386,7 +386,7 @@ void CML::pointConstraints::constrainDisplacement
     twoDPointCorrector::New(mesh()()).correctDisplacement
     (
         mesh()().points(),
-        pf.internalFieldRef()
+        pf.primitiveFieldRef()
     );
 
     if (overrideFixedValue)

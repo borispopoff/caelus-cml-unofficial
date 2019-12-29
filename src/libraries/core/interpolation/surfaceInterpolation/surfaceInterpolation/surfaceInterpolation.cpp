@@ -182,7 +182,7 @@ void CML::surfaceInterpolation::makeWeights() const
     const vectorField& Sf = mesh_.faceAreas();
 
     // ... and reference to the internal field of the weighting factors
-    scalarField& w = weights.internalFieldRef();
+    scalarField& w = weights.primitiveFieldRef();
 
     forAll(owner, facei)
     {
@@ -392,7 +392,7 @@ void CML::surfaceInterpolation::makeNonOrthCorrectionVectors() const
     forAll(corrVecsBf, patchi)
     {
 	// Clone the nonOrthoCorrectionVectors boundaryField values
-	fvCorrVecs.set(patchi, corrVecs.boundaryField()[patchi].clone(corrVecs.dimensionedInternalField()));
+	fvCorrVecs.set(patchi, corrVecs.boundaryField()[patchi].clone(corrVecs.internalField()));
 		
         fvsPatchVectorField& patchCorrVecs = corrVecsBf[patchi];
 

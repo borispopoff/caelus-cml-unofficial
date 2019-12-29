@@ -76,7 +76,7 @@ void DataEntryViscosity::correct
 )
 {
     viscosity_->correct(p, T);
-    mu_.internalFieldRef() *= function_->value(T)();
+    mu_.primitiveFieldRef() *= function_->value(T)();
     mu_.correctBoundaryConditions();
 }
 

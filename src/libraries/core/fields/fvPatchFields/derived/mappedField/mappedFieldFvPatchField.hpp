@@ -400,13 +400,13 @@ mappedFieldFvPatchField<Type>::sampleField() const
 
     if (sameRegion())
     {
-        if (fieldName_ == this->dimensionedInternalField().name())
+        if (fieldName_ == this->internalField().name())
         {
             // Optimisation: bypass field lookup
             return
                 dynamic_cast<const fieldType&>
                 (
-                    this->dimensionedInternalField()
+                    this->internalField()
                 );
         }
         else
@@ -566,7 +566,7 @@ void mappedFieldFvPatchField<Type>::updateCoeffs()
 
     if (debug)
     {
-        Info<< "operating on field:" << this->dimensionedInternalField().name()
+        Info<< "operating on field:" << this->internalField().name()
             << " patch:" << this->patch().name()
             << "  avg:" << gAverage(*this)
             << "  min:" << gMin(*this)

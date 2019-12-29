@@ -58,8 +58,8 @@ CML::fv::cellMDLimitedGrad<CML::scalar>::calcGrad
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    scalarField maxVsf(vsf.internalField());
-    scalarField minVsf(vsf.internalField());
+    scalarField maxVsf(vsf.primitiveField());
+    scalarField minVsf(vsf.primitiveField());
 
     forAll(owner, facei)
     {
@@ -201,8 +201,8 @@ CML::fv::cellMDLimitedGrad<CML::vector>::calcGrad
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    vectorField maxVsf(vsf.internalField());
-    vectorField minVsf(vsf.internalField());
+    vectorField maxVsf(vsf.primitiveField());
+    vectorField minVsf(vsf.primitiveField());
 
     forAll(owner, facei)
     {

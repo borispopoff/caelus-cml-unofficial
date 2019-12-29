@@ -211,7 +211,7 @@ public:
             )
         );
 
-        val().internalFieldRef()+=radiation().Ru();
+        val().primitiveFieldRef()+=radiation().Ru();
         val().correctBoundaryConditions();
 
         result().setObjectResult(

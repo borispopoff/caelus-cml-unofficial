@@ -1235,7 +1235,7 @@ void CML::fvMatrix<Type>::setValuesFromList
         const_cast
         <
             GeometricField<Type, fvPatchField, volMesh>&
-        >(psi_).internalFieldRef();
+        >(psi_).primitiveFieldRef();
 
     forAll(cellLabels, i)
     {
@@ -1694,7 +1694,7 @@ void CML::fvMatrix<Type>::relax(const scalar alpha)
     }
 
     // Finally add the relaxation contribution to the source.
-    S += (D - D0)*psi_.internalField();
+    S += (D - D0)*psi_.primitiveField();
 }
 
 
@@ -1782,7 +1782,7 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<Type>::A() const
         )
     );
 
-    tAphi.ref().internalFieldRef() = D()/psi_.mesh().V();
+    tAphi.ref().primitiveFieldRef() = D()/psi_.mesh().V();
     tAphi.ref().correctBoundaryConditions();
 
     return tAphi;
@@ -1815,20 +1815,20 @@ CML::fvMatrix<Type>::H() const
     // Loop over field components
     for (direction cmpt=0; cmpt<Type::nComponents; cmpt++)
     {
-        scalarField psiCmpt(psi_.internalField().component(cmpt));
+        scalarField psiCmpt(psi_.primitiveField().component(cmpt));
 
         scalarField boundaryDiagCmpt(psi_.size(), 0.0);
         addBoundaryDiag(boundaryDiagCmpt, cmpt);
         boundaryDiagCmpt.negate();
         addCmptAvBoundaryDiag(boundaryDiagCmpt);
 
-        Hphi.internalFieldRef().replace(cmpt, boundaryDiagCmpt*psiCmpt);
+        Hphi.primitiveFieldRef().replace(cmpt, boundaryDiagCmpt*psiCmpt);
     }
 
-    Hphi.internalFieldRef() += lduMatrix::H(psi_.internalField()) + source_;
-    addBoundarySource(Hphi.internalFieldRef());
+    Hphi.primitiveFieldRef() += lduMatrix::H(psi_.primitiveField()) + source_;
+    addBoundarySource(Hphi.primitiveFieldRef());
 
-    Hphi.internalFieldRef() /= psi_.mesh().V();
+    Hphi.primitiveFieldRef() /= psi_.mesh().V();
     Hphi.correctBoundaryConditions();
 
     typename Type::labelType validComponents
@@ -1878,7 +1878,7 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<Type>::H1() const
     );
     volScalarField& H1_ = tH1.ref();
 
-    H1_.internalFieldRef() = lduMatrix::H1();
+    H1_.primitiveFieldRef() = lduMatrix::H1();
 
     forAll(psi_.boundaryField(), patchi)
     {
@@ -1895,7 +1895,7 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<Type>::H1() const
         }
     }
 
-    H1_.internalFieldRef() /= psi_.mesh().V();
+    H1_.primitiveFieldRef() /= psi_.mesh().V();
     H1_.correctBoundaryConditions();
 
     return tH1;
@@ -1938,10 +1938,10 @@ flux() const
 
     for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
     {
-        fieldFlux.internalFieldRef().replace
+        fieldFlux.primitiveFieldRef().replace
         (
             cmpt,
-            lduMatrix::faceH(psi_.internalField().component(cmpt))
+            lduMatrix::faceH(psi_.primitiveField().component(cmpt))
         );
     }
 
@@ -2012,7 +2012,7 @@ CML::fvMatrix<Type>::Ac() const
     const label nCells = psi_.mesh().V().size();
     scalarField s(nCells);
     lduMatrix::rowSum(s);
-    tAphi.ref().internalFieldRef() = s/psi_.mesh().V();
+    tAphi.ref().primitiveFieldRef() = s/psi_.mesh().V();
     tAphi.ref().correctBoundaryConditions();
 
     return tAphi;
@@ -2042,7 +2042,7 @@ CML::fvMatrix<Type>::spai0() const
     const label nCells = psi_.mesh().V().size();
     scalarField s(nCells);
     lduMatrix::spai0(s);
-    tAphi.ref().internalFieldRef() = s/psi_.mesh().V();
+    tAphi.ref().primitiveFieldRef() = s/psi_.mesh().V();
     tAphi.ref().correctBoundaryConditions();
 
     return tAphi;
@@ -2072,7 +2072,7 @@ CML::fvMatrix<Type>::R() const
 
     GeometricField<Type, fvPatchField, volMesh>& Rphi = tRphi.ref();
 
-    Rphi.internalFieldRef() = this->residual();
+    Rphi.primitiveFieldRef() = this->residual();
     Rphi.correctBoundaryConditions();
 
     return tRphi;
@@ -2626,7 +2626,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator==
 {
     checkMethod(A, tsu(), "==");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC.ref().source() += tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().V()*tsu().primitiveField();
     tsu.clear();
     return tC;
 }
@@ -2667,7 +2667,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator==
 {
     checkMethod(tA(), tsu(), "==");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC.ref().source() += tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().V()*tsu().primitiveField();
     tsu.clear();
     return tC;
 }
@@ -2832,7 +2832,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().V()*tsu().primitiveField();
     tsu.clear();
     return tC;
 }
@@ -2873,7 +2873,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().V()*tsu().primitiveField();
     tsu.clear();
     return tC;
 }
@@ -2914,7 +2914,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().V()*tsu().primitiveField();
     tsu.clear();
     return tC;
 }
@@ -2955,7 +2955,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().V()*tsu().primitiveField();
     tsu.clear();
     return tC;
 }
@@ -3051,7 +3051,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
-    tC.ref().source() += tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().V()*tsu().primitiveField();
     tsu.clear();
     return tC;
 }
@@ -3092,7 +3092,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
-    tC.ref().source() += tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().V()*tsu().primitiveField();
     tsu.clear();
     return tC;
 }
@@ -3136,7 +3136,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
     checkMethod(A, tsu(), "-");
     tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
     tC.ref().negate();
-    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().V()*tsu().primitiveField();
     tsu.clear();
     return tC;
 }
@@ -3180,7 +3180,7 @@ CML::tmp<CML::fvMatrix<Type>> CML::operator-
     checkMethod(tA(), tsu(), "-");
     tmp<fvMatrix<Type>> tC(tA.ptr());
     tC.ref().negate();
-    tC.ref().source() -= tsu().mesh().V()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().V()*tsu().primitiveField();
     tsu.clear();
     return tC;
 }
@@ -3424,18 +3424,18 @@ CML::operator&
             scalarField psiCmpt(psi.field().component(cmpt));
             scalarField boundaryDiagCmpt(M.diag());
             M.addBoundaryDiag(boundaryDiagCmpt, cmpt);
-            Mphi.internalFieldRef().replace(cmpt, -boundaryDiagCmpt*psiCmpt);
+            Mphi.primitiveFieldRef().replace(cmpt, -boundaryDiagCmpt*psiCmpt);
         }
     }
     else
     {
-        Mphi.internalFieldRef() = Zero;
+        Mphi.primitiveFieldRef() = Zero;
     }
 
-    Mphi.internalFieldRef() += M.lduMatrix::H(psi.field()) + M.source();
-    M.addBoundarySource(Mphi.internalFieldRef());
+    Mphi.primitiveFieldRef() += M.lduMatrix::H(psi.field()) + M.source();
+    M.addBoundarySource(Mphi.primitiveFieldRef());
 
-    Mphi.internalFieldRef() /= -psi.mesh().V();
+    Mphi.primitiveFieldRef() /= -psi.mesh().V();
     Mphi.correctBoundaryConditions();
 
     return tMphi;
@@ -3578,7 +3578,7 @@ CML::solverPerformance CML::fvMatrix<Type>::solve
 
         tmp<GeometricField<Type, fvPatchField, volMesh>> Correction = psi.mesh().defectCorrVecs() & fvc::grad(Residual());
 
-        source_ += psi.mesh().V()*Correction().internalField();
+        source_ += psi.mesh().V()*Correction().primitiveField();
 
         Residual.clear();
         Correction.clear();
@@ -3614,7 +3614,7 @@ CML::solverPerformance CML::fvMatrix<Type>::solve
 
         // copy field and source
 
-        scalarField psiCmpt(psi.internalField().component(cmpt));
+        scalarField psiCmpt(psi.primitiveField().component(cmpt));
         addBoundaryDiag(diag(), cmpt);
 
         scalarField sourceCmpt(source.component(cmpt));
@@ -3671,7 +3671,7 @@ CML::solverPerformance CML::fvMatrix<Type>::solve
         solverPerfVec = max(solverPerfVec, solverPerf);
         solverPerfVec.solverName() = solverPerf.solverName();
 
-        psi.internalFieldRef().replace(cmpt, psiCmpt);
+        psi.primitiveFieldRef().replace(cmpt, psiCmpt);
         diag() = saveDiag;
     }
 
@@ -3746,7 +3746,7 @@ CML::tmp<CML::Field<Type>> CML::fvMatrix<Type>::residual() const
     // Loop over field components
     for (direction cmpt=0; cmpt<Type::nComponents; cmpt++)
     {
-        scalarField psiCmpt(psi_.internalField().component(cmpt));
+        scalarField psiCmpt(psi_.primitiveField().component(cmpt));
 
         scalarField boundaryDiagCmpt(psi_.size(), 0.0);
         addBoundaryDiag(boundaryDiagCmpt, cmpt);

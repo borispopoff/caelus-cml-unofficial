@@ -186,7 +186,7 @@ void epsilonWallFunctionFvPatchScalarField::updateCoeffs()
     DimensionedField<scalar, volMesh>& epsilon =
         const_cast<DimensionedField<scalar, volMesh>&>
         (
-            dimensionedInternalField()
+            internalField()
         );
 
     const tmp<volScalarField> tk = turbulence.k();

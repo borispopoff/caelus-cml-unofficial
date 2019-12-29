@@ -471,7 +471,7 @@ void kOmegaSSTSAS::correct()
 
     // Cell size
     volScalarField& delta = tmpDelta.ref(); 
-    scalarField& iDelta = delta.internalFieldRef();
+    scalarField& iDelta = delta.primitiveFieldRef();
     iDelta = pow(this->mesh_.V(), 1/3);
 
     dimensionedScalar LapSmall

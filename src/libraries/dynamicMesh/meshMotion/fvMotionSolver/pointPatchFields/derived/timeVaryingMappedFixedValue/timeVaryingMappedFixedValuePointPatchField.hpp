@@ -779,7 +779,7 @@ void CML::timeVaryingMappedFixedValuePointPatchField<Type>::write
     (
         os,
         "fieldTable",
-        this->dimensionedInternalField().name(),
+        this->internalField().name(),
         fieldTableName_
     );
 

@@ -163,7 +163,7 @@ void CML::totalPressureFvPatchScalarField::updateCoeffs
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    if (dimensionedInternalField().dimensions() == dimPressure)
+    if (internalField().dimensions() == dimPressure)
     {
         if (psiName_ == "none")
         {
@@ -202,7 +202,7 @@ void CML::totalPressureFvPatchScalarField::updateCoeffs
         }
 
     }
-    else if (dimensionedInternalField().dimensions() == dimPressure/dimDensity)
+    else if (internalField().dimensions() == dimPressure/dimDensity)
     {
         // Incompressible flow
         operator==(p0p - 0.5*(1.0 - pos(phip))*magSqr(Up));
@@ -210,15 +210,15 @@ void CML::totalPressureFvPatchScalarField::updateCoeffs
     else
     {
         FatalErrorInFunction
-            << " Incorrect pressure dimensions " << dimensionedInternalField().dimensions()
+            << " Incorrect pressure dimensions " << internalField().dimensions()
             << nl
             << "    Should be " << dimPressure
             << " for compressible/variable density flow" << nl
             << "    or " << dimPressure/dimDensity
             << " for incompressible flow," << nl
             << "    on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalError);
     }
 

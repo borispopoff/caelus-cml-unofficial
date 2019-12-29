@@ -205,7 +205,7 @@ void CML::nonuniformTransformCyclicPointPatchField<Type>::evaluate
     );
 
     // Get internal field to insert values into
-    Field<Type>& iF = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& iF = const_cast<Field<Type>&>(this->primitiveField());
 
     this->setInInternalField(iF, tvalues());
 }
