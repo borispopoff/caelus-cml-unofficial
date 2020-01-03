@@ -47,7 +47,8 @@ caelus_inc = [
 caelus_libs = [
 'core',
 'sampling',
-'incompressibleTurbulenceModel'
+'incompressibleTurbulenceModel',
+'fluidThermophysicalModels'
 ]
 
 build_lib(env,
