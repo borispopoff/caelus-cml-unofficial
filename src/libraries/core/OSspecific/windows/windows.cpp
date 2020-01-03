@@ -744,20 +744,20 @@ mode_t mode(const fileName& name)
 }
 
 
-// Return the file type: FILE or DIRECTORY
-fileName::Type type(const fileName& name)
+// Return the file type: file or directory
+fileType type(const fileName& name)
 {
-    fileName::Type fileType = fileName::UNDEFINED;
+    fileType fileTypeToReturn = fileType::undefined;
     const DWORD attrs = ::GetFileAttributes(name.c_str());
 
     if (attrs != INVALID_FILE_ATTRIBUTES) 
     {
-        fileType = (attrs & FILE_ATTRIBUTE_DIRECTORY) ?
+        fileTypeToReturn = (attrs & FILE_ATTRIBUTE_DIRECTORY) ?
             fileType::directory :
             fileType::file;
     }
 
-    return fileType;
+    return fileTypeToReturn;
 }
 
 
@@ -848,7 +848,7 @@ time_t lastModified(const fileName& name)
 fileNameList readDir
 (
     const fileName& directory,
-    const fileName::Type type,
+    const fileType type,
     const bool filtergz
 )
 {
