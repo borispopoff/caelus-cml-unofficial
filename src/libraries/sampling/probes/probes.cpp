@@ -354,7 +354,10 @@ void CML::probes::read(const dictionary& dict)
 
 void CML::probes::updateMesh(const mapPolyMesh& mpm)
 {
-    DebugInfo<< "probes: updateMesh" << endl;
+    if (debug)
+    {
+        Info<< "probes: updateMesh" << endl;
+    }
 
     if (&mpm.mesh() != &mesh_)
     {

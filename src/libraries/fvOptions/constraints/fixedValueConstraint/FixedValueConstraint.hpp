@@ -172,11 +172,12 @@ void CML::fv::FixedValueConstraint<Type>::constrain
     const label fieldi
 )
 {
-    DebugInfo
-        << "FixedValueConstraint<"
-        << pTraits<Type>::typeName
-        << ">::constrain for source " << name_ << endl;
-
+    if (debug)
+    {
+        Info<< "FixedValueConstraint<"
+            << pTraits<Type>::typeName
+            << ">::constrain for source " << name_ << endl;
+    }
     eqn.setValues(cells_, List<Type>(cells_.size(), fieldValues_[fieldi]));
 }
 
