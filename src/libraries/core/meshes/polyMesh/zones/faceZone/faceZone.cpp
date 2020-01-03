@@ -190,8 +190,8 @@ CML::faceZone::faceZone
     const word& name,
     labelList&& addr,
     boolList&& fm,
-    const label index,
-    const faceZoneMesh& zm
+    const faceZoneMesh& zm,
+    const label index
 )
 :
     zone(name, move(addr), index),

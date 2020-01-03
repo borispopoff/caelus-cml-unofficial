@@ -158,8 +158,8 @@ public:
             const word& name,
             labelList&& addr,
             boolList&& fm,
-            const label index,
-            const faceZoneMesh&
+            const faceZoneMesh& zm,
+            const label index
         );
 
         //- Construct from dictionary
@@ -182,8 +182,7 @@ public:
             const faceZoneMesh&
         );
 
-        //- Construct given the original zone, resetting the
-        //  face list and zone mesh information
+        //- Construct from components, transferring addressing
         faceZone
         (
             const faceZone&,
