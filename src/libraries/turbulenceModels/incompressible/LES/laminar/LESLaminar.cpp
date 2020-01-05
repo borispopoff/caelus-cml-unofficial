@@ -143,7 +143,7 @@ tmp<fvVectorMatrix> laminar::divDevReff(volVectorField& U) const
     return
     (
       - fvm::laplacian(nu(), U)
-      - fvc::div(nu()*dev(T(fvc::grad(U))))
+      - fvc::div(nu()*dev2(T(fvc::grad(U))))
     );
 }
 
@@ -159,7 +159,7 @@ tmp<fvVectorMatrix> laminar::divDevRhoReff
     return
     (
       - fvm::laplacian(muEff, U)
-      - fvc::div(muEff*dev(T(fvc::grad(U))))
+      - fvc::div(muEff*dev2(T(fvc::grad(U))))
     );
 }
 

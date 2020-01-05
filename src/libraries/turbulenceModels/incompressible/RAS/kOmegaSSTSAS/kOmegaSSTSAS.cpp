@@ -336,7 +336,7 @@ tmp<fvVectorMatrix> kOmegaSSTSAS::divDevReff(volVectorField& U) const
     return
     (
       - fvm::laplacian(nuEff(), U)
-      - fvc::div(nuEff()*dev(T(fvc::grad(U))))
+      - fvc::div(nuEff()*dev2(T(fvc::grad(U))))
     );
 }
 
@@ -351,7 +351,7 @@ tmp<fvVectorMatrix> kOmegaSSTSAS::divDevRhoReff
     return
     (
       - fvm::laplacian(muEff, U)
-      - fvc::div(muEff*dev(T(fvc::grad(U))))
+      - fvc::div(muEff*dev2(T(fvc::grad(U))))
     );
 }
 
