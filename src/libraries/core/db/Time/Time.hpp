@@ -93,6 +93,7 @@ public:
             timeStep,
             runTime,
             adjustableRunTime,
+            adjustableRunTimeFixedSchedule,
             clockTime,
             cpuTime
         };
@@ -126,7 +127,7 @@ protected:
         static const NamedEnum<stopAtControl, 4> stopAtControlNames_;
         mutable stopAtControl stopAt_;
 
-        static const NamedEnum<writeControl, 5> writeControlNames_;
+        static const NamedEnum<writeControl, 6> writeControlNames_;
         writeControl writeControl_;
 
         scalar writeInterval_;
@@ -164,6 +165,10 @@ protected:
 
         //- Adjust the time step so that writing occurs at the specified time
         void adjustDeltaT();
+
+        //- Adjust the time step so that writing occurs at the specified time
+        // for fixed schedule
+        void adjustDeltaTFS();
 
         //- Set the controls from the current controlDict
         void setControls();
