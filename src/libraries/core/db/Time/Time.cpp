@@ -50,12 +50,13 @@ namespace CML
     const char* CML::NamedEnum
     <
         CML::Time::writeControl,
-        5
+        6
     >::names[] =
     {
         "timeStep",
         "runTime",
         "adjustableRunTime",
+        "adjustableRunTimeFixedSchedule",
         "clockTime",
         "cpuTime"
     };
@@ -64,7 +65,7 @@ namespace CML
 const CML::NamedEnum<CML::Time::stopAtControl, 4>
     CML::Time::stopAtControlNames_;
 
-const CML::NamedEnum<CML::Time::writeControl, 5>
+const CML::NamedEnum<CML::Time::writeControl, 6>
     CML::Time::writeControlNames_;
 
 CML::Time::format CML::Time::format_(CML::Time::format::general);
@@ -86,6 +87,33 @@ void CML::Time::adjustDeltaT()
         (
             0,
             (writeTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
+        ),
+        functionObjects_.timeToNextWrite()
+    );
+
+    const scalar nSteps = timeToNextWrite/deltaT_;
+
+    // Ensure nStepsToNextWrite does not overflow
+    if (nSteps < labelMax)
+    {
+        // Allow the time-step to increase by up to 1%
+        // to accommodate the next write time before splitting
+        const label nStepsToNextWrite = label(max(nSteps, 1) + 0.99);
+        deltaT_ = timeToNextWrite/nStepsToNextWrite;
+    }
+}
+
+
+void CML::Time::adjustDeltaTFS()
+{
+    label startIndex = label((startTime_ + 0.5*deltaT_)/ writeInterval_);
+
+    const scalar timeToNextWrite = min
+    (
+        max
+        (
+            0,
+            (writeTimeIndex_ + startIndex + 1)*writeInterval_ - value()
         ),
         functionObjects_.timeToNextWrite()
     );
@@ -1006,6 +1034,11 @@ void CML::Time::setDeltaT(const scalar deltaT)
     {
         adjustDeltaT();
     }
+
+    if (writeControl_ == writeControl::adjustableRunTimeFixedSchedule)
+    {
+        adjustDeltaTFS();
+    }
 }
 
 
@@ -1122,6 +1155,38 @@ CML::Time& CML::Time::operator++()
                     ((value() - startTime_) + 0.5*deltaT_)
                   / writeInterval_
                 );
+
+                if (writeIndex > writeTimeIndex_)
+                {
+                    writeTime_ = true;
+                    writeTimeIndex_ = writeIndex;
+                }
+            }
+            break;
+
+            case writeControl::adjustableRunTimeFixedSchedule:
+            {
+                // This option uses the startTime specified in the control dictionary
+                // to work out write time schedule. This allows intermediate time folders that are 
+                // not in the schedule of writing. This can happen when the solver is requested
+                // stop and write at a time that is not in the fixed write schedule.
+
+                // Start time from control dictionary
+                scalar cdStartTime;
+
+                label startIndex = label
+                (
+                    (startTime_ + 0.5*deltaT_)
+                  / writeInterval_
+                );
+
+                controlDict_.lookup("startTime") >> cdStartTime;
+
+                label writeIndex = label
+                (
+                    ((value() - cdStartTime) + 0.5*deltaT_)
+                  / writeInterval_
+                ) - startIndex;
 
                 if (writeIndex > writeTimeIndex_)
                 {
