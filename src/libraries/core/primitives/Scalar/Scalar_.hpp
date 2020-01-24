@@ -339,7 +339,29 @@ inline Scalar stabilise(const Scalar s, const Scalar small)
 
 // * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
 
-Scalar readScalar(Istream&);
+//- Parse entire buffer as a float/double, skipping leading/trailing whitespace.
+//  \return Parsed value or FatalIOError on any problem
+Scalar ScalarRead(const char* buf);
+
+//- Parse entire buffer as a float/double, skipping leading/trailing whitespace.
+//  \return True if successful.
+bool ScalarRead(const char* buf, Scalar& val);
+
+//- Parse entire string as a float/double, skipping leading/trailing whitespace.
+//  \return Parsed value or FatalIOError on any problem
+inline Scalar ScalarRead(const std::string& str)
+{
+    return ScalarRead(str.c_str());
+}
+
+//- Parse entire string as a float/double, skipping leading/trailing whitespace.
+//  \return True if successful.
+inline bool ScalarRead(const std::string& str, Scalar& val)
+{
+    return ScalarRead(str.c_str(), val);
+}
+
+Scalar ScalarRead(Istream&);
 
 void writeEntry(Ostream& os, const Scalar value);
 

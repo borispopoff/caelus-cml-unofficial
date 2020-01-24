@@ -1,0 +1,286 @@
+%include {
+/*--------------------------------*- C++ -*----------------------------------*\
+Copyright (C) 2019 OpenCFD Ltd.
+-------------------------------------------------------------------------------
+License
+    This file is part of Caelus.
+
+    Caelus is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Caelus is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Caelus.  If not, see <http://www.gnu.org/licenses/>.
+
+Description
+    Lemon grammar of a simple string to scalar evaluation.
+
+    The generated parser is localized in an anonymous namespace.
+    Interface code wrapping is near the bottom of the file.
+
+\*---------------------------------------------------------------------------*/
+
+#include "evalStringToScalarDriver.hpp"
+#include "evalStringToScalarParser.hpp"
+#include "unitConversion.hpp"
+#include "Random.hpp"
+#include "error.hpp"
+
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wunused-function"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wsign-compare"
+}
+
+%namespace      {}
+
+// Use extra argument for the return value
+%extra_context  { CML::parsing::evalStringToScalar::parseDriver* driver }
+%parse_failure  { driver->reportFatal("Parse failure, giving up..."); }
+%syntax_error   { driver->reportFatal("Syntax error"); }
+
+%token_prefix TOK_
+
+%token_type     { CML::scalar }
+
+%left PLUS MINUS.
+%left TIMES DIVIDE.
+%left NEGATE.
+
+
+eval(lhs) ::= exp(a).
+{
+    lhs = a;
+    driver->setValue(lhs);
+}
+
+exp(lhs) ::= NUMBER(a).
+{
+    lhs = a;
+}
+
+exp(lhs) ::= MINUS exp(a).
+{
+    lhs = -a;
+}
+
+exp(lhs) ::= exp(a) PLUS exp(b).
+{
+    lhs = a + b;
+}
+
+exp(lhs) ::= exp(a) MINUS exp(b).
+{
+    lhs = a - b;
+}
+
+exp(lhs) ::= exp(a) TIMES exp(b).
+{
+    lhs = a * b;
+}
+
+exp(lhs) ::= exp(a) DIVIDE exp(b).
+{
+    lhs = a / b;
+}
+
+exp(lhs) ::= LPAREN exp(a) RPAREN.
+{
+    lhs = a;
+}
+
+
+// Functions
+
+exp(lhs) ::= PI LPAREN RPAREN.
+{
+    lhs = CML::constant::mathematical::pi;
+}
+
+exp(lhs) ::= DEG_TO_RAD LPAREN RPAREN.
+{
+    lhs = CML::degToRad();
+}
+
+exp(lhs) ::= RAD_TO_DEG LPAREN RPAREN.
+{
+    lhs = CML::radToDeg();
+}
+
+exp(lhs) ::= DEG_TO_RAD LPAREN exp(a) RPAREN.
+{
+    lhs = CML::degToRad(a);
+}
+
+exp(lhs) ::= RAD_TO_DEG LPAREN exp(a) RPAREN.
+{
+    lhs = CML::radToDeg(a);
+}
+
+exp(lhs) ::= EXP LPAREN exp(a) RPAREN.
+{
+    lhs = CML::exp(a);
+}
+
+exp(lhs) ::= LOG LPAREN exp(a) RPAREN.
+{
+    lhs = CML::log(a);
+}
+
+exp(lhs) ::= LOG10 LPAREN exp(a) RPAREN.
+{
+    lhs = CML::log10(a);
+}
+
+exp(lhs) ::= POW LPAREN exp(a) COMMA exp(b) RPAREN.
+{
+    lhs = CML::pow(a, b);
+}
+
+exp(lhs) ::= SQR LPAREN exp(a) RPAREN.
+{
+    lhs = CML::sqr(a);
+}
+
+exp(lhs) ::= SQRT LPAREN exp(a) RPAREN.
+{
+    lhs = CML::sqrt(a);
+}
+
+exp(lhs) ::= CBRT LPAREN exp(a) RPAREN.
+{
+    lhs = CML::cbrt(a);
+}
+
+exp(lhs) ::= SIN LPAREN exp(a) RPAREN.
+{
+    lhs = CML::sin(a);
+}
+
+exp(lhs) ::= COS LPAREN exp(a) RPAREN.
+{
+    lhs = CML::cos(a);
+}
+
+exp(lhs) ::= TAN LPAREN exp(a) RPAREN.
+{
+    lhs = CML::tan(a);
+}
+
+exp(lhs) ::= ASIN LPAREN exp(a) RPAREN.
+{
+    lhs = CML::asin(a);
+}
+
+exp(lhs) ::= ACOS LPAREN exp(a) RPAREN.
+{
+    lhs = CML::acos(a);
+}
+
+exp(lhs) ::= ATAN LPAREN exp(a) RPAREN.
+{
+    lhs = CML::atan(a);
+}
+
+exp(lhs) ::= ATAN2 LPAREN exp(a) COMMA exp(b) RPAREN.
+{
+    lhs = CML::atan2(a, b);
+}
+
+exp(lhs) ::= HYPOT LPAREN exp(a) COMMA exp(b) RPAREN.
+{
+    lhs = CML::hypot(a, b);
+}
+
+exp(lhs) ::= SINH LPAREN exp(a) RPAREN.
+{
+    lhs = CML::sinh(a);
+}
+
+exp(lhs) ::= COSH LPAREN exp(a) RPAREN.
+{
+    lhs = CML::cosh(a);
+}
+
+exp(lhs) ::= TANH LPAREN exp(a) RPAREN.
+{
+    lhs = CML::tanh(a);
+}
+
+exp(lhs) ::= MIN LPAREN exp(a) COMMA exp(b) RPAREN.
+{
+    lhs = CML::min(a, b);
+}
+
+exp(lhs) ::= MAX LPAREN exp(a) COMMA exp(b) RPAREN.
+{
+    lhs = CML::max(a, b);
+}
+
+exp(lhs) ::= MAG LPAREN exp(a) RPAREN.
+{
+    lhs = CML::mag(a);
+}
+
+exp(lhs) ::= MAGSQR LPAREN exp(a) RPAREN.
+{
+    lhs = CML::magSqr(a);
+}
+
+exp(lhs) ::= RAND LPAREN RPAREN.
+{
+    lhs = CML::Random().sample01<CML::scalar>();
+}
+
+exp(lhs) ::= RAND LPAREN exp(seed) RPAREN.
+{
+    lhs = CML::Random(seed).sample01<CML::scalar>();
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+%code
+{
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void CML::parsing::evalStringToScalar::parser::stop()
+{
+    if (lemon_)
+    {
+        ParseFree(lemon_, ::operator delete);
+        lemon_ = nullptr;
+    }
+}
+
+
+void CML::parsing::evalStringToScalar::parser::start(parseDriver& driver)
+{
+    this->stop();
+    lemon_ = ParseAlloc(::operator new, &driver);
+}
+
+
+void CML::parsing::evalStringToScalar::parser::parse
+(
+    int tokenId,
+    CML::scalar val    /* The value for the token */
+)
+{
+    Parse(lemon_, tokenId, val);
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+}  // Code
+
+
+// ************************************************************************* //

@@ -49,6 +49,18 @@ inline scalar radToDeg(const scalar rad)
     return (rad*180.0/constant::mathematical::pi);
 }
 
+//- Multiplication factor for degrees to radians conversion
+inline scalar degToRad()
+{
+    return (M_PI/180.0);
+}
+
+//- Multiplication factor for radians to degrees conversion
+inline scalar radToDeg()
+{
+    return (180.0/M_PI);
+}
+
 //- Conversion from atm to Pa
 inline scalar atmToPa(const scalar atm)
 {

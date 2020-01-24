@@ -190,6 +190,7 @@ src_core = Split("""
     db/dictionary/functionEntries/includeIfPresentEntry/includeIfPresentEntry.cpp
     db/dictionary/functionEntries/inputModeEntry/inputModeEntry.cpp
     db/dictionary/functionEntries/removeEntry/removeEntry.cpp
+    db/dictionary/functionEntries/evalEntry/evalEntry.cpp
     db/IOobjects/IOdictionary/IOdictionary.cpp
     db/IOobjects/IOdictionary/IOdictionaryIO.cpp
     db/IOobjects/IOMap/IOMapName.cpp
@@ -1073,7 +1074,13 @@ src_core = Split("""
     blockCoupled/finiteVolume/blockGradSchemes/limitedBlockGradSchemes/cellLimitedBlockGrad/cellLimitedBlockGrads.cpp
     blockCoupled/finiteVolume/blockGradSchemes/blockLeastSquaresGrad/blockLeastSquaresGrads.cpp
     blockCoupled/finiteVolume/blockGradSchemes/blockLeastSquaresGrad/scalarBlockLeastSquaresGrad.cpp
+    primitives/strings/parsing/parsing.cpp
+    primitives/strings/parsing/genericRagelLemonDriver.cpp
+    primitives/strings/stringOps/toScalar/evalStringToScalarDriver.cpp
+    primitives/strings/stringOps/toScalar/evalStringToScalarScanner.cc
+    primitives/strings/stringOps/toScalar/evalStringToScalarLemonParser.cc
 """)
+
 
 target = 'core'
 

@@ -31,9 +31,12 @@ SourceFiles
 #ifndef stringOps_H
 #define stringOps_H
 
+#include "scalar.hpp"
 #include "string.hpp"
 #include "dictionary.hpp"
 #include "HashTable.hpp"
+
+#include "evalStringToScalar.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,7 +77,7 @@ namespace stringOps
     //  string expansions
     string expand
     (
-        const string&,
+        const std::string&,
         const HashTable<string, word, string::hash>& mapping,
         const char sigil = '$'
     );
@@ -106,9 +109,9 @@ namespace stringOps
     //
     //  \note the leading sigil can be changed to avoid conflicts with other
     //  string expansions
-    string& inplaceExpand
+    void inplaceExpand
     (
-        string&,
+        std::string&,
         const HashTable<string, word, string::hash>& mapping,
         const char sigil = '$'
     );
@@ -163,9 +166,9 @@ namespace stringOps
     //
     //  \note the leading sigil can be changed to avoid conflicts with other
     //  string expansions
-    string& inplaceExpand
+    void inplaceExpand
     (
-        string& s,
+        std::string& s,
         const dictionary& dict,
         const bool allowEnvVars,
         const bool allowEmpty,
@@ -273,20 +276,25 @@ namespace stringOps
     string trimLeft(const string&);
 
     //- Trim leading whitespace inplace
-    string& inplaceTrimLeft(string&);
+    void inplaceTrimLeft(string&);
 
     //- Return string trimmed of trailing whitespace
     string trimRight(const string&);
 
     //- Trim trailing whitespace inplace
-    string& inplaceTrimRight(string&);
+    void inplaceTrimRight(string&);
 
     //- Return string trimmed of leading and trailing whitespace
     string trim(const string&);
 
     //- Trim leading and trailing whitespace inplace
-    string& inplaceTrim(string&);
+    void inplaceTrim(string&);
 
+    //- Return string with C/C++ comments removed
+    string removeComments(const std::string& str);
+
+    //- Remove C/C++ comments inplace
+    void inplaceRemoveComments(std::string& s);
 
 } // End namespace stringOps
 

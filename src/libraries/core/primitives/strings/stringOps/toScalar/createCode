@@ -1,0 +1,15 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+#------------------------------------------------------------------------------
+# Manually create ragel scanner and lemon parser header
+
+prefix=evalStringToScalar
+
+"${PROJECT_DIR:?}/bin/makeParser" \
+    -prefix="$prefix" \
+    -scanner=Scanner.rl \
+    -parser=LemonParser.lyy \
+    -code \
+    "$@"
+
+#------------------------------------------------------------------------------

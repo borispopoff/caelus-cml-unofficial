@@ -55,21 +55,13 @@ static const doubleScalar doubleScalarROOTSMALL = 3.0e-8;
 static const doubleScalar doubleScalarVSMALL = 1.0e-300;
 static const doubleScalar doubleScalarROOTVSMALL = 1.0e-150;
 
-//- Read whole of buf as a scalar. Return true if successful.
-inline bool readScalar(const char* buf, doubleScalar& s)
-{
-    char* endPtr;
-    s = strtod(buf, &endPtr);
-
-    return (*endPtr == '\0');
-}
 
 #define Scalar doubleScalar
 #define ScalarVGREAT doubleScalarVGREAT
 #define ScalarVSMALL doubleScalarVSMALL
 #define ScalarROOTVGREAT doubleScalarROOTVGREAT
 #define ScalarROOTVSMALL doubleScalarROOTVSMALL
-#define readScalar readDoubleScalar
+#define ScalarRead readDouble
 
 inline Scalar mag(const Scalar s)
 {
@@ -109,7 +101,7 @@ inline Scalar yn(const int n, const Scalar s)
 #undef ScalarVSMALL
 #undef ScalarROOTVGREAT
 #undef ScalarROOTVSMALL
-#undef readScalar
+#undef ScalarRead
 #undef transFunc
 
 

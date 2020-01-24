@@ -1,0 +1,22 @@
+# -*- mode: python -*-
+
+from build import build_app
+Import('env')
+
+target = 'lemon'
+
+sources = Split("""
+lemon.c
+""")
+
+caelus_inc = [
+]
+
+caelus_libs = [
+]
+env.Replace(LIBS = [])
+build_app(env,
+          target=target,
+          sources=sources,
+          caelus_inc=caelus_inc,
+          caelus_libs=caelus_libs)
