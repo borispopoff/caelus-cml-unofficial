@@ -15,9 +15,7 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Test some parsing
 
-// #default
 internalField   uniform 10;
-// #default
 dimensions      [ 0 2 -2 0 0 0 0 ];
 
 active
@@ -27,7 +25,6 @@ active
     value           $internalField;
 }
 
-// #inputMode error
 active
 {
     type            turbulentIntensityKineticEnergyInlet;

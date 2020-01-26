@@ -44,17 +44,17 @@ int main(int argc, char *argv[])
 
     {
         dictionary dict;
-        dict.add("aaOPENMPIcc", 1);
+        dict.add("aampicc", 1);
 
-        string s("DDD${aa${WM_MPLIB}cc}EEE");
+        string s("DDD${aa${MPI_LIB_NAME}cc}EEE");
         stringOps::inplaceExpand(s, dict, true, false);
         Info<< "variable expansion:" << s << endl;
     }
 
 
     Info<< nl
-        << "FOAM_CASE=" << getEnv("FOAM_CASE") << nl
-        << "FOAM_CASENAME=" << getEnv("FOAM_CASENAME") << nl
+        << "CAELUS_CASE=" << getEnv("CAELUS_CASE") << nl
+        << "CAELUS_CASENAME=" << getEnv("CAELUS_CASENAME") << nl
         << endl;
 
     if (args.size() <= 1)
