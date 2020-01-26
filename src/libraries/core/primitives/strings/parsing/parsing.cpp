@@ -26,9 +26,9 @@ License
 const CML::Enum<CML::parsing::errorType>
 CML::parsing::errorNames
 ({
-    { errorType::GENERAL, "General error parsing" },
-    { errorType::RANGE, "Range error while parsing" },
-    { errorType::TRAILING, "Trailing content found parsing" },
+    { errorType::GENERAL, "General_error_parsing" },
+    { errorType::RANGE, "Range_error_while_parsing" },
+    { errorType::TRAILING, "Trailing_content_found_parsing" },
 });
 
 

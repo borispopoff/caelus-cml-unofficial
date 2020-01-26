@@ -24,6 +24,7 @@ License
 #include "dictionaryEntry.hpp"
 #include "regExp.hpp"
 #include "OSHA1stream.hpp"
+#include "DynamicList.hpp"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -34,6 +35,7 @@ namespace CML
 
     const dictionary dictionary::null;
 }
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -281,6 +283,25 @@ CML::SHA1Digest CML::dictionary::digest() const
 }
 
 
+CML::tokenList CML::dictionary::tokens() const
+{
+    // Serialize dictionary into a string
+    OStringStream os;
+    write(os, false);
+    IStringStream is(os.str());
+
+    // Parse string as tokens
+    DynamicList<token> tokens;
+    token t;
+    while (is.read(t))
+    {
+        tokens.append(t);
+    }
+
+    return tokenList(move(tokens));
+}
+
+
 bool CML::dictionary::found
 (
     const word& keyword,
@@ -456,7 +477,7 @@ const CML::entry* CML::dictionary::lookupScopedEntryPtr
         // At top. Recurse to find entries
         return dictPtr->lookupScopedEntryPtr
         (
-            keyword.substr(1, keyword.size()-1),
+            keyword.substr(1, keyword.size() - 1),
             false,
             patternMatch
         );
@@ -552,7 +573,7 @@ const CML::entry* CML::dictionary::lookupScopedEntryPtr
 
 bool CML::dictionary::substituteScopedKeyword(const word& keyword)
 {
-    word varName = keyword(1, keyword.size()-1);
+    word varName = keyword(1, keyword.size() - 1);
 
     // Lookup the variable name in the given dictionary
     const entry* ePtr = lookupScopedEntryPtr(varName, true, true);
@@ -611,8 +632,10 @@ const CML::dictionary& CML::dictionary::subDict(const word& keyword) const
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction(*this)
-            << "keyword " << keyword << " is undefined in dictionary "
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "keyword " << keyword << " is undefined in dictionary "
             << name()
             << exit(FatalIOError);
     }

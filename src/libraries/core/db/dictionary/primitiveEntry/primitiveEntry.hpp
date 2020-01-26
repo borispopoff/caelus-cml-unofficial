@@ -76,7 +76,7 @@ class primitiveEntry
         );
 
         //- Expand the given variable (keyword starts with $)
-        bool expandVariable(const word&, const dictionary&);
+        bool expandVariable(const string&, const dictionary&);
 
         //- Expand the given function (keyword starts with #)
         bool expandFunction

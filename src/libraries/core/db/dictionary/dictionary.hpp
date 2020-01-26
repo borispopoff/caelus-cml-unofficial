@@ -77,7 +77,7 @@ Ostream& operator<<(Ostream&, const dictionary&);
 
 class dictionaryName
 {
-    // Private data
+    // Private Data
 
         fileName name_;
 
@@ -103,7 +103,7 @@ public:
         {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the dictionary name
         const fileName& name() const
@@ -135,7 +135,7 @@ public:
         }
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const dictionaryName& name)
         {
@@ -158,7 +158,7 @@ class dictionary
     public dictionaryName,
     public IDLList<entry>
 {
-    // Private data
+    // Private Data
 
         //- HashTable of the entries held on the DL-list for quick lookup
         HashTable<entry*> hashedEntries_;
@@ -261,7 +261,7 @@ public:
     virtual ~dictionary();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the parent dictionary
         const dictionary& parent() const
@@ -287,6 +287,8 @@ public:
         //- Return the SHA1 digest of the dictionary contents
         SHA1Digest digest() const;
 
+        //- Return the dictionary as a list of tokens
+        tokenList tokens() const;
 
 
         // Search and lookup
@@ -561,7 +563,7 @@ public:
         void operator<<=(const dictionary&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read dictionary from Istream
         friend Istream& operator>>(Istream&, dictionary&);

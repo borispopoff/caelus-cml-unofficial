@@ -69,6 +69,9 @@ class ISstream
         //- Read a verbatim string (excluding block delimiters).
         Istream& readVerbatim(string&);
 
+        //- Read a variable name (includes '{')
+        Istream& readVariable(string&);
+
 
 
 public:
