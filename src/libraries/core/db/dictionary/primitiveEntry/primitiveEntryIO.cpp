@@ -51,7 +51,7 @@ void CML::primitiveEntry::append
             newElmt(tokenIndex()++) = currToken;
         }
     }
-    else if (currToken.isVariable())
+    else if (currToken.isString())
     {
         const string& w = currToken.stringToken();
 
