@@ -64,8 +64,7 @@ boundaryField
     inlet_4  { $inactive }
     inlet_5  "a primitiveEntry is squashed by a directory entry";
     inlet_5  { $inactive }
-    inlet_6a { $.inactive }   // Test scoping
-    inlet_6b { $^inactive }     // Absolute scoping
+    inlet_6 { $.inactive }   // Test scoping
     inlet_7  { ${inactive}}     // Test variable expansion
     inlet_8  { $inactive }
     ${key}   { $inactive }
@@ -88,7 +87,7 @@ boundaryField
     inlet_7  { ${${varType}}}   // Test indirection/recursive expansion
     inlet_8  { $active }
     #inputMode overwrite
-    inlet_8  { type none; }
+    inlet_8  { $active }
 }
 
 // NB: the inputMode has a global scope
