@@ -17,10 +17,6 @@ License
     You should have received a copy of the GNU General Public License
     along with Caelus.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Ragel lexer interface for lemon grammar of a simple string to
-    scalar evaluation
-
 \*---------------------------------------------------------------------------*/
 
 #include "evalStringToScalar.hpp"
@@ -41,12 +37,14 @@ CML::parsing::evalStringToScalar::parseDriver::parseDriver()
 
 CML::scalar CML::parsing::evalStringToScalar::parseDriver::execute
 (
-    const std::string& s
+    const std::string& s,
+    size_t pos,
+    size_t len
 )
 {
     // scanner::debug = 1;
 
-    scanner().process(s, *this);
+    scanner().process(s, pos, len, *this);
 
     return value_;
 }
@@ -54,11 +52,16 @@ CML::scalar CML::parsing::evalStringToScalar::parseDriver::execute
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-CML::scalar CML::stringOps::toScalar(const std::string& s)
+CML::scalar CML::stringOps::toScalar
+(
+    const std::string& s,
+    size_t pos,
+    size_t len
+)
 {
     CML::parsing::evalStringToScalar::parseDriver driver;
 
-    scalar val = driver.execute(s);
+    scalar val = driver.execute(s, pos, len);
     // val = driver.value();
 
     return val;

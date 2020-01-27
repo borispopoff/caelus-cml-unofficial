@@ -128,7 +128,7 @@ Description
 #endif
 /************* Begin control #defines *****************************************/
 #define YYCODETYPE unsigned char
-#define YYNOCODE 38
+#define YYNOCODE 41
 #define YYACTIONTYPE unsigned char
 #define ParseTOKENTYPE  CML::scalar 
 typedef union {
@@ -148,17 +148,17 @@ typedef union {
 #define ParseCTX_PARAM ,driver 
 #define ParseCTX_FETCH  CML::parsing::evalStringToScalar::parseDriver* driver =yypParser->driver ;
 #define ParseCTX_STORE yypParser->driver =driver ;
-#define YYNSTATE             99
-#define YYNRULE              37
-#define YYNTOKEN             36
-#define YY_MAX_SHIFT         98
-#define YY_MIN_SHIFTREDUCE   132
-#define YY_MAX_SHIFTREDUCE   168
-#define YY_ERROR_ACTION      169
-#define YY_ACCEPT_ACTION     170
-#define YY_NO_ACTION         171
-#define YY_MIN_REDUCE        172
-#define YY_MAX_REDUCE        208
+#define YYNSTATE             108
+#define YYNRULE              40
+#define YYNTOKEN             39
+#define YY_MAX_SHIFT         107
+#define YY_MIN_SHIFTREDUCE   144
+#define YY_MAX_SHIFTREDUCE   183
+#define YY_ERROR_ACTION      184
+#define YY_ACCEPT_ACTION     185
+#define YY_NO_ACTION         186
+#define YY_MIN_REDUCE        187
+#define YY_MAX_REDUCE        226
 /************* End control #defines *******************************************/
 #define YY_NLOOKAHEAD ((int)(sizeof(yy_lookahead)/sizeof(yy_lookahead[0])))
 
@@ -225,134 +225,144 @@ typedef union {
 **  yy_default[]       Default action for each state.
 **
 *********** Begin parsing tables **********************************************/
-#define YY_ACTTAB_COUNT (416)
+#define YY_ACTTAB_COUNT (455)
 static const YYACTIONTYPE yy_action[] = {
- /*     0 */   170,   68,   35,   37,   33,   32,  133,   31,  167,   98,
- /*    10 */    96,   95,   94,   93,   92,   91,   65,   90,   89,   88,
- /*    20 */    87,   86,   85,   84,   83,   82,   81,   80,   79,   78,
- /*    30 */    77,   76,   75,   74,   73,   72,   35,    1,    4,   66,
- /*    40 */   133,   31,  142,   98,   96,   95,   94,   93,   92,   91,
- /*    50 */    38,   90,   89,   88,   87,   86,   85,   84,   83,   82,
- /*    60 */    81,   80,   79,   78,   77,   76,   75,   74,   73,   72,
- /*    70 */    35,    5,   39,   40,  133,   31,  141,   98,   96,   95,
- /*    80 */    94,   93,   92,   91,   41,   90,   89,   88,   87,   86,
- /*    90 */    85,   84,   83,   82,   81,   80,   79,   78,   77,   76,
- /*   100 */    75,   74,   73,   72,   35,    7,   42,   43,  133,   31,
- /*   110 */    44,   98,   96,   95,   94,   93,   92,   91,   45,   90,
- /*   120 */    89,   88,   87,   86,   85,   84,   83,   82,   81,   80,
- /*   130 */    79,   78,   77,   76,   75,   74,   73,   72,   36,   34,
- /*   140 */    33,   32,   46,  140,   47,  168,   48,   36,   34,   33,
- /*   150 */    32,   49,   50,   51,  166,   52,   36,   34,   33,   32,
- /*   160 */    53,   54,   55,  165,   56,   36,   34,   33,   32,   57,
- /*   170 */    58,   59,  164,   60,   36,   34,   33,   32,   36,   34,
- /*   180 */    33,   32,   61,    9,   62,  163,   63,   64,   67,    6,
- /*   190 */   178,   36,   34,   33,   32,   36,   34,   33,   32,  177,
- /*   200 */    70,  171,  162,   71,   69,   10,    8,   11,   36,   34,
- /*   210 */    33,   32,   12,   14,  171,  161,   16,   36,   34,   33,
- /*   220 */    32,   17,  171,  171,  160,   18,   36,   34,   33,   32,
- /*   230 */   171,  171,  171,  159,   19,   36,   34,   33,   32,   36,
- /*   240 */    34,   33,   32,   20,   21,  171,  158,   22,   23,   24,
- /*   250 */    13,   25,   36,   34,   33,   32,   36,   34,   33,   32,
- /*   260 */    27,   28,  171,  157,   29,   30,    2,   15,    3,   36,
- /*   270 */    34,   33,   32,   97,  171,  171,  156,  171,   36,   34,
- /*   280 */    33,   32,  171,  171,  171,  155,  171,   36,   34,   33,
- /*   290 */    32,  171,  171,  171,  154,  171,   36,   34,   33,   32,
- /*   300 */   171,  171,  171,  153,  171,   36,   34,   33,   32,  171,
- /*   310 */   171,  171,  152,  171,   36,   34,   33,   32,  171,  171,
- /*   320 */   171,  151,  171,   36,   34,   33,   32,  171,  171,  171,
- /*   330 */   150,  171,   36,   34,   33,   32,  171,  171,  171,  149,
- /*   340 */   171,   36,   34,   33,   32,  171,  171,  171,  148,  171,
- /*   350 */    36,   34,   33,   32,   36,   34,   33,   32,  171,  171,
- /*   360 */   171,  147,  171,  171,  171,   26,  171,   36,   34,   33,
- /*   370 */    32,  171,  171,  171,  146,  171,   36,   34,   33,   32,
- /*   380 */   171,  171,  171,  145,  171,   36,   34,   33,   32,  171,
- /*   390 */   171,  171,  144,  171,   36,   34,   33,   32,  171,  171,
- /*   400 */   171,  143,  171,   36,   34,   33,   32,  171,  171,  171,
- /*   410 */   139,  172,   36,   34,   33,   32,
+ /*     0 */   185,   74,   38,   40,   36,   35,  145,   34,  182,  107,
+ /*    10 */   105,  104,  103,  102,  101,  100,   71,   99,   98,   97,
+ /*    20 */    96,   95,   94,   93,   92,   91,   90,   89,   88,   87,
+ /*    30 */    86,   85,   84,   83,   82,   81,   80,   79,   78,   38,
+ /*    40 */     1,    4,   72,  145,   34,  154,  107,  105,  104,  103,
+ /*    50 */   102,  101,  100,   41,   99,   98,   97,   96,   95,   94,
+ /*    60 */    93,   92,   91,   90,   89,   88,   87,   86,   85,   84,
+ /*    70 */    83,   82,   81,   80,   79,   78,   38,    5,   42,   43,
+ /*    80 */   145,   34,  153,  107,  105,  104,  103,  102,  101,  100,
+ /*    90 */    44,   99,   98,   97,   96,   95,   94,   93,   92,   91,
+ /*   100 */    90,   89,   88,   87,   86,   85,   84,   83,   82,   81,
+ /*   110 */    80,   79,   78,   38,    6,   45,   46,  145,   34,   47,
+ /*   120 */   107,  105,  104,  103,  102,  101,  100,   48,   99,   98,
+ /*   130 */    97,   96,   95,   94,   93,   92,   91,   90,   89,   88,
+ /*   140 */    87,   86,   85,   84,   83,   82,   81,   80,   79,   78,
+ /*   150 */    39,   37,   36,   35,   49,    7,   50,  183,   51,   39,
+ /*   160 */    37,   36,   35,   52,   53,   54,  181,   55,   39,   37,
+ /*   170 */    36,   35,   56,   57,   58,  180,   59,   39,   37,   36,
+ /*   180 */    35,   60,   61,   62,  179,   63,   39,   37,   36,   35,
+ /*   190 */    64,   65,   66,  178,   67,   39,   37,   36,   35,   68,
+ /*   200 */    69,   70,  177,   73,   39,   37,   36,   35,  193,  192,
+ /*   210 */    76,  176,   77,   39,   37,   36,   35,   39,   37,   36,
+ /*   220 */    35,   75,    8,  186,  175,   10,   12,   13,    9,   14,
+ /*   230 */    39,   37,   36,   35,   39,   37,   36,   35,   15,   17,
+ /*   240 */   186,  174,   19,   20,   21,   11,   22,   39,   37,   36,
+ /*   250 */    35,   23,   24,  186,  173,   25,   39,   37,   36,   35,
+ /*   260 */    26,  186,  186,  172,   27,   39,   37,   36,   35,  152,
+ /*   270 */   186,  186,  171,   28,   39,   37,   36,   35,   39,   37,
+ /*   280 */    36,   35,   30,   31,  186,  170,   32,   33,    2,   16,
+ /*   290 */     3,   39,   37,   36,   35,   39,   37,   36,   35,  106,
+ /*   300 */   186,  186,  169,  186,  186,  186,   18,  186,   39,   37,
+ /*   310 */    36,   35,  186,  186,  186,  168,  186,   39,   37,   36,
+ /*   320 */    35,  186,  186,  186,  167,  186,   39,   37,   36,   35,
+ /*   330 */   186,  186,  186,  166,  186,   39,   37,   36,   35,  186,
+ /*   340 */   186,  186,  165,  186,   39,   37,   36,   35,  186,  186,
+ /*   350 */   186,  164,  186,   39,   37,   36,   35,  186,  186,  186,
+ /*   360 */   163,  186,   39,   37,   36,   35,  186,  186,  186,  162,
+ /*   370 */   186,   39,   37,   36,   35,  186,  186,  186,  161,  186,
+ /*   380 */    39,   37,   36,   35,  186,  186,  186,  160,  186,   39,
+ /*   390 */    37,   36,   35,   39,   37,   36,   35,  186,  186,  186,
+ /*   400 */   159,  186,  186,  186,   29,  186,   39,   37,   36,   35,
+ /*   410 */   186,  186,  186,  158,  186,   39,   37,   36,   35,  186,
+ /*   420 */   186,  186,  157,  186,   39,   37,   36,   35,  186,  186,
+ /*   430 */   186,  156,  186,   39,   37,   36,   35,  186,  186,  186,
+ /*   440 */   155,  186,   39,   37,   36,   35,  186,  186,  186,  151,
+ /*   450 */   187,   39,   37,   36,   35,
 };
 static const YYCODETYPE yy_lookahead[] = {
- /*     0 */    36,   37,    2,   37,    3,    4,    6,    7,    8,    9,
- /*    10 */    10,   11,   12,   13,   14,   15,   37,   17,   18,   19,
+ /*     0 */    39,   40,    2,   40,    3,    4,    6,    7,    8,    9,
+ /*    10 */    10,   11,   12,   13,   14,   15,   40,   17,   18,   19,
  /*    20 */    20,   21,   22,   23,   24,   25,   26,   27,   28,   29,
- /*    30 */    30,   31,   32,   33,   34,   35,    2,    7,    7,   37,
- /*    40 */     6,    7,    8,    9,   10,   11,   12,   13,   14,   15,
- /*    50 */    37,   17,   18,   19,   20,   21,   22,   23,   24,   25,
- /*    60 */    26,   27,   28,   29,   30,   31,   32,   33,   34,   35,
- /*    70 */     2,    7,   37,   37,    6,    7,    8,    9,   10,   11,
- /*    80 */    12,   13,   14,   15,   37,   17,   18,   19,   20,   21,
- /*    90 */    22,   23,   24,   25,   26,   27,   28,   29,   30,   31,
- /*   100 */    32,   33,   34,   35,    2,    7,   37,   37,    6,    7,
- /*   110 */    37,    9,   10,   11,   12,   13,   14,   15,   37,   17,
- /*   120 */    18,   19,   20,   21,   22,   23,   24,   25,   26,   27,
- /*   130 */    28,   29,   30,   31,   32,   33,   34,   35,    1,    2,
- /*   140 */     3,    4,   37,    8,   37,    8,   37,    1,    2,    3,
- /*   150 */     4,   37,   37,   37,    8,   37,    1,    2,    3,    4,
- /*   160 */    37,   37,   37,    8,   37,    1,    2,    3,    4,   37,
- /*   170 */    37,   37,    8,   37,    1,    2,    3,    4,    1,    2,
- /*   180 */     3,    4,   37,    7,   37,    8,   37,   37,   37,   16,
- /*   190 */    37,    1,    2,    3,    4,    1,    2,    3,    4,   37,
- /*   200 */    37,   38,    8,   37,   37,    7,   16,    7,    1,    2,
- /*   210 */     3,    4,    7,    7,   38,    8,    7,    1,    2,    3,
- /*   220 */     4,    7,   38,   38,    8,    7,    1,    2,    3,    4,
- /*   230 */    38,   38,   38,    8,    7,    1,    2,    3,    4,    1,
- /*   240 */     2,    3,    4,    7,    7,   38,    8,    7,    7,    7,
- /*   250 */    16,    7,    1,    2,    3,    4,    1,    2,    3,    4,
- /*   260 */     7,    7,   38,    8,    7,    7,    7,   16,    7,    1,
- /*   270 */     2,    3,    4,    7,   38,   38,    8,   38,    1,    2,
- /*   280 */     3,    4,   38,   38,   38,    8,   38,    1,    2,    3,
- /*   290 */     4,   38,   38,   38,    8,   38,    1,    2,    3,    4,
- /*   300 */    38,   38,   38,    8,   38,    1,    2,    3,    4,   38,
- /*   310 */    38,   38,    8,   38,    1,    2,    3,    4,   38,   38,
- /*   320 */    38,    8,   38,    1,    2,    3,    4,   38,   38,   38,
- /*   330 */     8,   38,    1,    2,    3,    4,   38,   38,   38,    8,
- /*   340 */    38,    1,    2,    3,    4,   38,   38,   38,    8,   38,
- /*   350 */     1,    2,    3,    4,    1,    2,    3,    4,   38,   38,
- /*   360 */    38,    8,   38,   38,   38,   16,   38,    1,    2,    3,
- /*   370 */     4,   38,   38,   38,    8,   38,    1,    2,    3,    4,
- /*   380 */    38,   38,   38,    8,   38,    1,    2,    3,    4,   38,
- /*   390 */    38,   38,    8,   38,    1,    2,    3,    4,   38,   38,
- /*   400 */    38,    8,   38,    1,    2,    3,    4,   38,   38,   38,
- /*   410 */     8,    0,    1,    2,    3,    4,   38,   38,   38,   38,
- /*   420 */    38,   38,   38,   38,   38,   38,   38,   38,   38,   38,
- /*   430 */    38,   38,   38,   38,   38,   38,   38,   38,   38,   38,
- /*   440 */    38,   38,   38,   38,   38,   38,   38,   38,   36,   36,
- /*   450 */    36,   36,
+ /*    30 */    30,   31,   32,   33,   34,   35,   36,   37,   38,    2,
+ /*    40 */     7,    7,   40,    6,    7,    8,    9,   10,   11,   12,
+ /*    50 */    13,   14,   15,   40,   17,   18,   19,   20,   21,   22,
+ /*    60 */    23,   24,   25,   26,   27,   28,   29,   30,   31,   32,
+ /*    70 */    33,   34,   35,   36,   37,   38,    2,    7,   40,   40,
+ /*    80 */     6,    7,    8,    9,   10,   11,   12,   13,   14,   15,
+ /*    90 */    40,   17,   18,   19,   20,   21,   22,   23,   24,   25,
+ /*   100 */    26,   27,   28,   29,   30,   31,   32,   33,   34,   35,
+ /*   110 */    36,   37,   38,    2,    7,   40,   40,    6,    7,   40,
+ /*   120 */     9,   10,   11,   12,   13,   14,   15,   40,   17,   18,
+ /*   130 */    19,   20,   21,   22,   23,   24,   25,   26,   27,   28,
+ /*   140 */    29,   30,   31,   32,   33,   34,   35,   36,   37,   38,
+ /*   150 */     1,    2,    3,    4,   40,    7,   40,    8,   40,    1,
+ /*   160 */     2,    3,    4,   40,   40,   40,    8,   40,    1,    2,
+ /*   170 */     3,    4,   40,   40,   40,    8,   40,    1,    2,    3,
+ /*   180 */     4,   40,   40,   40,    8,   40,    1,    2,    3,    4,
+ /*   190 */    40,   40,   40,    8,   40,    1,    2,    3,    4,   40,
+ /*   200 */    40,   40,    8,   40,    1,    2,    3,    4,   40,   40,
+ /*   210 */    40,    8,   40,    1,    2,    3,    4,    1,    2,    3,
+ /*   220 */     4,   40,    7,   41,    8,    7,    7,    7,   16,    7,
+ /*   230 */     1,    2,    3,    4,    1,    2,    3,    4,    7,    7,
+ /*   240 */    41,    8,    7,    7,    7,   16,    7,    1,    2,    3,
+ /*   250 */     4,    7,    7,   41,    8,    7,    1,    2,    3,    4,
+ /*   260 */     7,   41,   41,    8,    7,    1,    2,    3,    4,    8,
+ /*   270 */    41,   41,    8,    7,    1,    2,    3,    4,    1,    2,
+ /*   280 */     3,    4,    7,    7,   41,    8,    7,    7,    7,   16,
+ /*   290 */     7,    1,    2,    3,    4,    1,    2,    3,    4,    7,
+ /*   300 */    41,   41,    8,   41,   41,   41,   16,   41,    1,    2,
+ /*   310 */     3,    4,   41,   41,   41,    8,   41,    1,    2,    3,
+ /*   320 */     4,   41,   41,   41,    8,   41,    1,    2,    3,    4,
+ /*   330 */    41,   41,   41,    8,   41,    1,    2,    3,    4,   41,
+ /*   340 */    41,   41,    8,   41,    1,    2,    3,    4,   41,   41,
+ /*   350 */    41,    8,   41,    1,    2,    3,    4,   41,   41,   41,
+ /*   360 */     8,   41,    1,    2,    3,    4,   41,   41,   41,    8,
+ /*   370 */    41,    1,    2,    3,    4,   41,   41,   41,    8,   41,
+ /*   380 */     1,    2,    3,    4,   41,   41,   41,    8,   41,    1,
+ /*   390 */     2,    3,    4,    1,    2,    3,    4,   41,   41,   41,
+ /*   400 */     8,   41,   41,   41,   16,   41,    1,    2,    3,    4,
+ /*   410 */    41,   41,   41,    8,   41,    1,    2,    3,    4,   41,
+ /*   420 */    41,   41,    8,   41,    1,    2,    3,    4,   41,   41,
+ /*   430 */    41,    8,   41,    1,    2,    3,    4,   41,   41,   41,
+ /*   440 */     8,   41,    1,    2,    3,    4,   41,   41,   41,    8,
+ /*   450 */     0,    1,    2,    3,    4,   41,   41,   41,   41,   41,
+ /*   460 */    41,   41,   41,   41,   41,   41,   41,   41,   41,   41,
+ /*   470 */    41,   41,   41,   41,   41,   41,   41,   41,   41,   41,
+ /*   480 */    41,   41,   41,   41,   41,   41,   41,   41,   41,   41,
+ /*   490 */    39,   39,   39,   39,
 };
-#define YY_SHIFT_COUNT    (98)
+#define YY_SHIFT_COUNT    (107)
 #define YY_SHIFT_MIN      (0)
-#define YY_SHIFT_MAX      (411)
+#define YY_SHIFT_MAX      (450)
 static const unsigned short int yy_shift_ofst[] = {
- /*     0 */   102,    0,   34,   68,  102,  102,  102,  102,  102,  102,
- /*    10 */   102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
- /*    20 */   102,  102,  102,  102,  102,  102,  102,  102,  102,  102,
- /*    30 */   102,  102,  102,  102,  102,  102,  102,  137,  146,  155,
- /*    40 */   164,  173,  177,  190,  194,  207,  216,  225,  234,  238,
- /*    50 */   251,  255,  268,  277,  286,  295,  304,  313,  322,  331,
- /*    60 */   340,  349,  353,  366,  375,  384,  393,  402,  411,    1,
- /*    70 */     1,    1,   30,   31,   64,   98,  176,  198,  200,  205,
- /*    80 */   206,  209,  214,  218,  227,  236,  237,  240,  241,  242,
- /*    90 */   244,  253,  254,  257,  258,  259,  261,  135,  266,
+ /*     0 */   111,    0,   37,   74,  111,  111,  111,  111,  111,  111,
+ /*    10 */   111,  111,  111,  111,  111,  111,  111,  111,  111,  111,
+ /*    20 */   111,  111,  111,  111,  111,  111,  111,  111,  111,  111,
+ /*    30 */   111,  111,  111,  111,  111,  111,  111,  111,  111,  111,
+ /*    40 */   149,  158,  167,  176,  185,  194,  203,  212,  216,  229,
+ /*    50 */   233,  246,  255,  264,  273,  277,  290,  294,  307,  316,
+ /*    60 */   325,  334,  343,  352,  361,  370,  379,  388,  392,  405,
+ /*    70 */   414,  423,  432,  441,  450,    1,    1,    1,   33,   34,
+ /*    80 */    70,  107,  148,  215,  218,  219,  220,  222,  231,  232,
+ /*    90 */   235,  236,  237,  239,  244,  245,  248,  253,  257,  266,
+ /*   100 */   275,  276,  279,  280,  281,  283,  261,  292,
 };
-#define YY_REDUCE_COUNT (36)
-#define YY_REDUCE_MIN   (-36)
-#define YY_REDUCE_MAX   (167)
+#define YY_REDUCE_COUNT (39)
+#define YY_REDUCE_MIN   (-39)
+#define YY_REDUCE_MAX   (181)
 static const short yy_reduce_ofst[] = {
- /*     0 */   -36,  -34,  -21,    2,   13,   35,   36,   47,   69,   70,
- /*    10 */    73,   81,  105,  107,  109,  114,  115,  116,  118,  123,
- /*    20 */   124,  125,  127,  132,  133,  134,  136,  145,  147,  149,
- /*    30 */   150,  151,  153,  162,  163,  166,  167,
+ /*     0 */   -39,  -37,  -24,    2,   13,   38,   39,   50,   75,   76,
+ /*    10 */    79,   87,  114,  116,  118,  123,  124,  125,  127,  132,
+ /*    20 */   133,  134,  136,  141,  142,  143,  145,  150,  151,  152,
+ /*    30 */   154,  159,  160,  161,  163,  168,  169,  170,  172,  181,
 };
 static const YYACTIONTYPE yy_default[] = {
- /*     0 */   169,  169,  169,  169,  169,  169,  169,  169,  169,  169,
- /*    10 */   169,  169,  169,  169,  169,  169,  169,  169,  169,  169,
- /*    20 */   169,  169,  169,  169,  169,  169,  169,  169,  169,  169,
- /*    30 */   169,  169,  169,  169,  169,  169,  169,  169,  169,  169,
- /*    40 */   169,  169,  169,  169,  169,  169,  169,  169,  169,  169,
- /*    50 */   169,  169,  169,  169,  169,  169,  169,  169,  169,  169,
- /*    60 */   169,  169,  169,  169,  169,  169,  169,  169,  169,  175,
- /*    70 */   176,  174,  169,  169,  169,  169,  169,  169,  169,  169,
- /*    80 */   169,  169,  169,  169,  169,  169,  169,  169,  169,  169,
- /*    90 */   169,  169,  169,  169,  169,  169,  169,  169,  169,
+ /*     0 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
+ /*    10 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
+ /*    20 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
+ /*    30 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
+ /*    40 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
+ /*    50 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
+ /*    60 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
+ /*    70 */   184,  184,  184,  184,  184,  190,  191,  189,  184,  184,
+ /*    80 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
+ /*    90 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
+ /*   100 */   184,  184,  184,  184,  184,  184,  184,  184,
 };
 /********** End of lemon-generated parsing tables *****************************/
 
@@ -496,9 +506,12 @@ static const char *const yyTokenName[] = {
   /*   32 */ "MAX",
   /*   33 */ "MAG",
   /*   34 */ "MAGSQR",
-  /*   35 */ "RAND",
-  /*   36 */ "eval",
-  /*   37 */ "exp",
+  /*   35 */ "FLOOR",
+  /*   36 */ "CEIL",
+  /*   37 */ "ROUND",
+  /*   38 */ "RAND",
+  /*   39 */ "eval",
+  /*   40 */ "exp",
 };
 #endif /* defined(YYCOVERAGE) || !defined(NDEBUG) */
 
@@ -541,8 +554,11 @@ static const char *const yyRuleName[] = {
  /*  32 */ "exp ::= MAX LPAREN exp COMMA exp RPAREN",
  /*  33 */ "exp ::= MAG LPAREN exp RPAREN",
  /*  34 */ "exp ::= MAGSQR LPAREN exp RPAREN",
- /*  35 */ "exp ::= RAND LPAREN RPAREN",
- /*  36 */ "exp ::= RAND LPAREN exp RPAREN",
+ /*  35 */ "exp ::= FLOOR LPAREN exp RPAREN",
+ /*  36 */ "exp ::= CEIL LPAREN exp RPAREN",
+ /*  37 */ "exp ::= ROUND LPAREN exp RPAREN",
+ /*  38 */ "exp ::= RAND LPAREN RPAREN",
+ /*  39 */ "exp ::= RAND LPAREN exp RPAREN",
 };
 #endif /* NDEBUG */
 
@@ -966,43 +982,46 @@ static void yy_shift(
 /* For rule J, yyRuleInfoLhs[J] contains the symbol on the left-hand side
 ** of that rule */
 static const YYCODETYPE yyRuleInfoLhs[] = {
-    36,  /* (0) eval ::= exp */
-    37,  /* (1) exp ::= NUMBER */
-    37,  /* (2) exp ::= MINUS exp */
-    37,  /* (3) exp ::= exp PLUS exp */
-    37,  /* (4) exp ::= exp MINUS exp */
-    37,  /* (5) exp ::= exp TIMES exp */
-    37,  /* (6) exp ::= exp DIVIDE exp */
-    37,  /* (7) exp ::= LPAREN exp RPAREN */
-    37,  /* (8) exp ::= PI LPAREN RPAREN */
-    37,  /* (9) exp ::= DEG_TO_RAD LPAREN RPAREN */
-    37,  /* (10) exp ::= RAD_TO_DEG LPAREN RPAREN */
-    37,  /* (11) exp ::= DEG_TO_RAD LPAREN exp RPAREN */
-    37,  /* (12) exp ::= RAD_TO_DEG LPAREN exp RPAREN */
-    37,  /* (13) exp ::= EXP LPAREN exp RPAREN */
-    37,  /* (14) exp ::= LOG LPAREN exp RPAREN */
-    37,  /* (15) exp ::= LOG10 LPAREN exp RPAREN */
-    37,  /* (16) exp ::= POW LPAREN exp COMMA exp RPAREN */
-    37,  /* (17) exp ::= SQR LPAREN exp RPAREN */
-    37,  /* (18) exp ::= SQRT LPAREN exp RPAREN */
-    37,  /* (19) exp ::= CBRT LPAREN exp RPAREN */
-    37,  /* (20) exp ::= SIN LPAREN exp RPAREN */
-    37,  /* (21) exp ::= COS LPAREN exp RPAREN */
-    37,  /* (22) exp ::= TAN LPAREN exp RPAREN */
-    37,  /* (23) exp ::= ASIN LPAREN exp RPAREN */
-    37,  /* (24) exp ::= ACOS LPAREN exp RPAREN */
-    37,  /* (25) exp ::= ATAN LPAREN exp RPAREN */
-    37,  /* (26) exp ::= ATAN2 LPAREN exp COMMA exp RPAREN */
-    37,  /* (27) exp ::= HYPOT LPAREN exp COMMA exp RPAREN */
-    37,  /* (28) exp ::= SINH LPAREN exp RPAREN */
-    37,  /* (29) exp ::= COSH LPAREN exp RPAREN */
-    37,  /* (30) exp ::= TANH LPAREN exp RPAREN */
-    37,  /* (31) exp ::= MIN LPAREN exp COMMA exp RPAREN */
-    37,  /* (32) exp ::= MAX LPAREN exp COMMA exp RPAREN */
-    37,  /* (33) exp ::= MAG LPAREN exp RPAREN */
-    37,  /* (34) exp ::= MAGSQR LPAREN exp RPAREN */
-    37,  /* (35) exp ::= RAND LPAREN RPAREN */
-    37,  /* (36) exp ::= RAND LPAREN exp RPAREN */
+    39,  /* (0) eval ::= exp */
+    40,  /* (1) exp ::= NUMBER */
+    40,  /* (2) exp ::= MINUS exp */
+    40,  /* (3) exp ::= exp PLUS exp */
+    40,  /* (4) exp ::= exp MINUS exp */
+    40,  /* (5) exp ::= exp TIMES exp */
+    40,  /* (6) exp ::= exp DIVIDE exp */
+    40,  /* (7) exp ::= LPAREN exp RPAREN */
+    40,  /* (8) exp ::= PI LPAREN RPAREN */
+    40,  /* (9) exp ::= DEG_TO_RAD LPAREN RPAREN */
+    40,  /* (10) exp ::= RAD_TO_DEG LPAREN RPAREN */
+    40,  /* (11) exp ::= DEG_TO_RAD LPAREN exp RPAREN */
+    40,  /* (12) exp ::= RAD_TO_DEG LPAREN exp RPAREN */
+    40,  /* (13) exp ::= EXP LPAREN exp RPAREN */
+    40,  /* (14) exp ::= LOG LPAREN exp RPAREN */
+    40,  /* (15) exp ::= LOG10 LPAREN exp RPAREN */
+    40,  /* (16) exp ::= POW LPAREN exp COMMA exp RPAREN */
+    40,  /* (17) exp ::= SQR LPAREN exp RPAREN */
+    40,  /* (18) exp ::= SQRT LPAREN exp RPAREN */
+    40,  /* (19) exp ::= CBRT LPAREN exp RPAREN */
+    40,  /* (20) exp ::= SIN LPAREN exp RPAREN */
+    40,  /* (21) exp ::= COS LPAREN exp RPAREN */
+    40,  /* (22) exp ::= TAN LPAREN exp RPAREN */
+    40,  /* (23) exp ::= ASIN LPAREN exp RPAREN */
+    40,  /* (24) exp ::= ACOS LPAREN exp RPAREN */
+    40,  /* (25) exp ::= ATAN LPAREN exp RPAREN */
+    40,  /* (26) exp ::= ATAN2 LPAREN exp COMMA exp RPAREN */
+    40,  /* (27) exp ::= HYPOT LPAREN exp COMMA exp RPAREN */
+    40,  /* (28) exp ::= SINH LPAREN exp RPAREN */
+    40,  /* (29) exp ::= COSH LPAREN exp RPAREN */
+    40,  /* (30) exp ::= TANH LPAREN exp RPAREN */
+    40,  /* (31) exp ::= MIN LPAREN exp COMMA exp RPAREN */
+    40,  /* (32) exp ::= MAX LPAREN exp COMMA exp RPAREN */
+    40,  /* (33) exp ::= MAG LPAREN exp RPAREN */
+    40,  /* (34) exp ::= MAGSQR LPAREN exp RPAREN */
+    40,  /* (35) exp ::= FLOOR LPAREN exp RPAREN */
+    40,  /* (36) exp ::= CEIL LPAREN exp RPAREN */
+    40,  /* (37) exp ::= ROUND LPAREN exp RPAREN */
+    40,  /* (38) exp ::= RAND LPAREN RPAREN */
+    40,  /* (39) exp ::= RAND LPAREN exp RPAREN */
 };
 
 /* For rule J, yyRuleInfoNRhs[J] contains the negative of the number
@@ -1043,8 +1062,11 @@ static const signed char yyRuleInfoNRhs[] = {
    -6,  /* (32) exp ::= MAX LPAREN exp COMMA exp RPAREN */
    -4,  /* (33) exp ::= MAG LPAREN exp RPAREN */
    -4,  /* (34) exp ::= MAGSQR LPAREN exp RPAREN */
-   -3,  /* (35) exp ::= RAND LPAREN RPAREN */
-   -4,  /* (36) exp ::= RAND LPAREN exp RPAREN */
+   -4,  /* (35) exp ::= FLOOR LPAREN exp RPAREN */
+   -4,  /* (36) exp ::= CEIL LPAREN exp RPAREN */
+   -4,  /* (37) exp ::= ROUND LPAREN exp RPAREN */
+   -3,  /* (38) exp ::= RAND LPAREN RPAREN */
+   -4,  /* (39) exp ::= RAND LPAREN exp RPAREN */
 };
 
 static void yy_accept(yyParser*);  /* Forward Declaration */
@@ -1137,7 +1159,7 @@ static YYACTIONTYPE yy_reduce(
     yylhsminor.yy0 = yymsp[0].minor.yy0;
     driver->setValue(yylhsminor.yy0);
 }
-#line 1141 "evalStringToScalarLemonParser.cc"
+#line 1163 "evalStringToScalarLemonParser.cc"
   yymsp[0].minor.yy0 = yylhsminor.yy0;
         break;
       case 1: /* exp ::= NUMBER */
@@ -1145,7 +1167,7 @@ static YYACTIONTYPE yy_reduce(
 {
     yylhsminor.yy0 = yymsp[0].minor.yy0;
 }
-#line 1149 "evalStringToScalarLemonParser.cc"
+#line 1171 "evalStringToScalarLemonParser.cc"
   yymsp[0].minor.yy0 = yylhsminor.yy0;
         break;
       case 2: /* exp ::= MINUS exp */
@@ -1153,14 +1175,14 @@ static YYACTIONTYPE yy_reduce(
 {
     yymsp[-1].minor.yy0 = -yymsp[0].minor.yy0;
 }
-#line 1157 "evalStringToScalarLemonParser.cc"
+#line 1179 "evalStringToScalarLemonParser.cc"
         break;
       case 3: /* exp ::= exp PLUS exp */
 #line 74 "evalStringToScalarLemonParser.lyy"
 {
     yylhsminor.yy0 = yymsp[-2].minor.yy0 + yymsp[0].minor.yy0;
 }
-#line 1164 "evalStringToScalarLemonParser.cc"
+#line 1186 "evalStringToScalarLemonParser.cc"
   yymsp[-2].minor.yy0 = yylhsminor.yy0;
         break;
       case 4: /* exp ::= exp MINUS exp */
@@ -1168,7 +1190,7 @@ static YYACTIONTYPE yy_reduce(
 {
     yylhsminor.yy0 = yymsp[-2].minor.yy0 - yymsp[0].minor.yy0;
 }
-#line 1172 "evalStringToScalarLemonParser.cc"
+#line 1194 "evalStringToScalarLemonParser.cc"
   yymsp[-2].minor.yy0 = yylhsminor.yy0;
         break;
       case 5: /* exp ::= exp TIMES exp */
@@ -1176,7 +1198,7 @@ static YYACTIONTYPE yy_reduce(
 {
     yylhsminor.yy0 = yymsp[-2].minor.yy0 * yymsp[0].minor.yy0;
 }
-#line 1180 "evalStringToScalarLemonParser.cc"
+#line 1202 "evalStringToScalarLemonParser.cc"
   yymsp[-2].minor.yy0 = yylhsminor.yy0;
         break;
       case 6: /* exp ::= exp DIVIDE exp */
@@ -1184,7 +1206,7 @@ static YYACTIONTYPE yy_reduce(
 {
     yylhsminor.yy0 = yymsp[-2].minor.yy0 / yymsp[0].minor.yy0;
 }
-#line 1188 "evalStringToScalarLemonParser.cc"
+#line 1210 "evalStringToScalarLemonParser.cc"
   yymsp[-2].minor.yy0 = yylhsminor.yy0;
         break;
       case 7: /* exp ::= LPAREN exp RPAREN */
@@ -1192,210 +1214,231 @@ static YYACTIONTYPE yy_reduce(
 {
     yymsp[-2].minor.yy0 = yymsp[-1].minor.yy0;
 }
-#line 1196 "evalStringToScalarLemonParser.cc"
+#line 1218 "evalStringToScalarLemonParser.cc"
         break;
       case 8: /* exp ::= PI LPAREN RPAREN */
 #line 102 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-2].minor.yy0 = CML::constant::mathematical::pi;
 }
-#line 1203 "evalStringToScalarLemonParser.cc"
+#line 1225 "evalStringToScalarLemonParser.cc"
         break;
       case 9: /* exp ::= DEG_TO_RAD LPAREN RPAREN */
 #line 107 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-2].minor.yy0 = CML::degToRad();
 }
-#line 1210 "evalStringToScalarLemonParser.cc"
+#line 1232 "evalStringToScalarLemonParser.cc"
         break;
       case 10: /* exp ::= RAD_TO_DEG LPAREN RPAREN */
 #line 112 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-2].minor.yy0 = CML::radToDeg();
 }
-#line 1217 "evalStringToScalarLemonParser.cc"
+#line 1239 "evalStringToScalarLemonParser.cc"
         break;
       case 11: /* exp ::= DEG_TO_RAD LPAREN exp RPAREN */
 #line 117 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::degToRad(yymsp[-1].minor.yy0);
 }
-#line 1224 "evalStringToScalarLemonParser.cc"
+#line 1246 "evalStringToScalarLemonParser.cc"
         break;
       case 12: /* exp ::= RAD_TO_DEG LPAREN exp RPAREN */
 #line 122 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::radToDeg(yymsp[-1].minor.yy0);
 }
-#line 1231 "evalStringToScalarLemonParser.cc"
+#line 1253 "evalStringToScalarLemonParser.cc"
         break;
       case 13: /* exp ::= EXP LPAREN exp RPAREN */
 #line 127 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::exp(yymsp[-1].minor.yy0);
 }
-#line 1238 "evalStringToScalarLemonParser.cc"
+#line 1260 "evalStringToScalarLemonParser.cc"
         break;
       case 14: /* exp ::= LOG LPAREN exp RPAREN */
 #line 132 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::log(yymsp[-1].minor.yy0);
 }
-#line 1245 "evalStringToScalarLemonParser.cc"
+#line 1267 "evalStringToScalarLemonParser.cc"
         break;
       case 15: /* exp ::= LOG10 LPAREN exp RPAREN */
 #line 137 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::log10(yymsp[-1].minor.yy0);
 }
-#line 1252 "evalStringToScalarLemonParser.cc"
+#line 1274 "evalStringToScalarLemonParser.cc"
         break;
       case 16: /* exp ::= POW LPAREN exp COMMA exp RPAREN */
 #line 142 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-5].minor.yy0 = CML::pow(yymsp[-3].minor.yy0, yymsp[-1].minor.yy0);
 }
-#line 1259 "evalStringToScalarLemonParser.cc"
+#line 1281 "evalStringToScalarLemonParser.cc"
         break;
       case 17: /* exp ::= SQR LPAREN exp RPAREN */
 #line 147 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::sqr(yymsp[-1].minor.yy0);
 }
-#line 1266 "evalStringToScalarLemonParser.cc"
+#line 1288 "evalStringToScalarLemonParser.cc"
         break;
       case 18: /* exp ::= SQRT LPAREN exp RPAREN */
 #line 152 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::sqrt(yymsp[-1].minor.yy0);
 }
-#line 1273 "evalStringToScalarLemonParser.cc"
+#line 1295 "evalStringToScalarLemonParser.cc"
         break;
       case 19: /* exp ::= CBRT LPAREN exp RPAREN */
 #line 157 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::cbrt(yymsp[-1].minor.yy0);
 }
-#line 1280 "evalStringToScalarLemonParser.cc"
+#line 1302 "evalStringToScalarLemonParser.cc"
         break;
       case 20: /* exp ::= SIN LPAREN exp RPAREN */
 #line 162 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::sin(yymsp[-1].minor.yy0);
 }
-#line 1287 "evalStringToScalarLemonParser.cc"
+#line 1309 "evalStringToScalarLemonParser.cc"
         break;
       case 21: /* exp ::= COS LPAREN exp RPAREN */
 #line 167 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::cos(yymsp[-1].minor.yy0);
 }
-#line 1294 "evalStringToScalarLemonParser.cc"
+#line 1316 "evalStringToScalarLemonParser.cc"
         break;
       case 22: /* exp ::= TAN LPAREN exp RPAREN */
 #line 172 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::tan(yymsp[-1].minor.yy0);
 }
-#line 1301 "evalStringToScalarLemonParser.cc"
+#line 1323 "evalStringToScalarLemonParser.cc"
         break;
       case 23: /* exp ::= ASIN LPAREN exp RPAREN */
 #line 177 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::asin(yymsp[-1].minor.yy0);
 }
-#line 1308 "evalStringToScalarLemonParser.cc"
+#line 1330 "evalStringToScalarLemonParser.cc"
         break;
       case 24: /* exp ::= ACOS LPAREN exp RPAREN */
 #line 182 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::acos(yymsp[-1].minor.yy0);
 }
-#line 1315 "evalStringToScalarLemonParser.cc"
+#line 1337 "evalStringToScalarLemonParser.cc"
         break;
       case 25: /* exp ::= ATAN LPAREN exp RPAREN */
 #line 187 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::atan(yymsp[-1].minor.yy0);
 }
-#line 1322 "evalStringToScalarLemonParser.cc"
+#line 1344 "evalStringToScalarLemonParser.cc"
         break;
       case 26: /* exp ::= ATAN2 LPAREN exp COMMA exp RPAREN */
 #line 192 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-5].minor.yy0 = CML::atan2(yymsp[-3].minor.yy0, yymsp[-1].minor.yy0);
 }
-#line 1329 "evalStringToScalarLemonParser.cc"
+#line 1351 "evalStringToScalarLemonParser.cc"
         break;
       case 27: /* exp ::= HYPOT LPAREN exp COMMA exp RPAREN */
 #line 197 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-5].minor.yy0 = CML::hypot(yymsp[-3].minor.yy0, yymsp[-1].minor.yy0);
 }
-#line 1336 "evalStringToScalarLemonParser.cc"
+#line 1358 "evalStringToScalarLemonParser.cc"
         break;
       case 28: /* exp ::= SINH LPAREN exp RPAREN */
 #line 202 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::sinh(yymsp[-1].minor.yy0);
 }
-#line 1343 "evalStringToScalarLemonParser.cc"
+#line 1365 "evalStringToScalarLemonParser.cc"
         break;
       case 29: /* exp ::= COSH LPAREN exp RPAREN */
 #line 207 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::cosh(yymsp[-1].minor.yy0);
 }
-#line 1350 "evalStringToScalarLemonParser.cc"
+#line 1372 "evalStringToScalarLemonParser.cc"
         break;
       case 30: /* exp ::= TANH LPAREN exp RPAREN */
 #line 212 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::tanh(yymsp[-1].minor.yy0);
 }
-#line 1357 "evalStringToScalarLemonParser.cc"
+#line 1379 "evalStringToScalarLemonParser.cc"
         break;
       case 31: /* exp ::= MIN LPAREN exp COMMA exp RPAREN */
 #line 217 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-5].minor.yy0 = CML::min(yymsp[-3].minor.yy0, yymsp[-1].minor.yy0);
 }
-#line 1364 "evalStringToScalarLemonParser.cc"
+#line 1386 "evalStringToScalarLemonParser.cc"
         break;
       case 32: /* exp ::= MAX LPAREN exp COMMA exp RPAREN */
 #line 222 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-5].minor.yy0 = CML::max(yymsp[-3].minor.yy0, yymsp[-1].minor.yy0);
 }
-#line 1371 "evalStringToScalarLemonParser.cc"
+#line 1393 "evalStringToScalarLemonParser.cc"
         break;
       case 33: /* exp ::= MAG LPAREN exp RPAREN */
 #line 227 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::mag(yymsp[-1].minor.yy0);
 }
-#line 1378 "evalStringToScalarLemonParser.cc"
+#line 1400 "evalStringToScalarLemonParser.cc"
         break;
       case 34: /* exp ::= MAGSQR LPAREN exp RPAREN */
 #line 232 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::magSqr(yymsp[-1].minor.yy0);
 }
-#line 1385 "evalStringToScalarLemonParser.cc"
+#line 1407 "evalStringToScalarLemonParser.cc"
         break;
-      case 35: /* exp ::= RAND LPAREN RPAREN */
+      case 35: /* exp ::= FLOOR LPAREN exp RPAREN */
 #line 237 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy0 = std::floor(yymsp[-1].minor.yy0);
+}
+#line 1414 "evalStringToScalarLemonParser.cc"
+        break;
+      case 36: /* exp ::= CEIL LPAREN exp RPAREN */
+#line 242 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy0 = std::ceil(yymsp[-1].minor.yy0);
+}
+#line 1421 "evalStringToScalarLemonParser.cc"
+        break;
+      case 37: /* exp ::= ROUND LPAREN exp RPAREN */
+#line 247 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy0 = std::round(yymsp[-1].minor.yy0);
+}
+#line 1428 "evalStringToScalarLemonParser.cc"
+        break;
+      case 38: /* exp ::= RAND LPAREN RPAREN */
+#line 252 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-2].minor.yy0 = CML::Random().sample01<CML::scalar>();
 }
-#line 1392 "evalStringToScalarLemonParser.cc"
+#line 1435 "evalStringToScalarLemonParser.cc"
         break;
-      case 36: /* exp ::= RAND LPAREN exp RPAREN */
-#line 242 "evalStringToScalarLemonParser.lyy"
+      case 39: /* exp ::= RAND LPAREN exp RPAREN */
+#line 257 "evalStringToScalarLemonParser.lyy"
 {
     yymsp[-3].minor.yy0 = CML::Random(yymsp[-1].minor.yy0).sample01<CML::scalar>();
 }
-#line 1399 "evalStringToScalarLemonParser.cc"
+#line 1442 "evalStringToScalarLemonParser.cc"
         break;
       default:
         break;
@@ -1441,7 +1484,7 @@ static void yy_parse_failed(
 /************ Begin %parse_failure code ***************************************/
 #line 45 "evalStringToScalarLemonParser.lyy"
  driver->reportFatal("Parse failure, giving up..."); 
-#line 1445 "evalStringToScalarLemonParser.cc"
+#line 1488 "evalStringToScalarLemonParser.cc"
 /************ End %parse_failure code *****************************************/
   ParseARG_STORE /* Suppress warning about unused %extra_argument variable */
   ParseCTX_STORE
@@ -1462,7 +1505,7 @@ static void yy_syntax_error(
 /************ Begin %syntax_error code ****************************************/
 #line 46 "evalStringToScalarLemonParser.lyy"
  driver->reportFatal("Syntax error"); 
-#line 1466 "evalStringToScalarLemonParser.cc"
+#line 1509 "evalStringToScalarLemonParser.cc"
 /************ End %syntax_error code ******************************************/
   ParseARG_STORE /* Suppress warning about unused %extra_argument variable */
   ParseCTX_STORE
@@ -1699,7 +1742,7 @@ int ParseFallback(int iToken){
   return 0;
 }
 } // End namespace 
-#line 250 "evalStringToScalarLemonParser.lyy"
+#line 265 "evalStringToScalarLemonParser.lyy"
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -1733,4 +1776,4 @@ void CML::parsing::evalStringToScalar::parser::parse
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#line 1737 "evalStringToScalarLemonParser.cc"
+#line 1780 "evalStringToScalarLemonParser.cc"

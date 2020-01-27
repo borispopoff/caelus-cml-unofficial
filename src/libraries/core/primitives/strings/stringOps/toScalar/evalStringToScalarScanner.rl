@@ -25,7 +25,7 @@ Description
 
 #include "evalStringToScalarScanner.hpp"
 #include "evalStringToScalarDriver.hpp"
-#include "evalStringToScalarLemonParser.hpp"
+#include "evalStringToScalarLemonParser.h"
 #include "evalStringToScalarParser.hpp"
 #include "error.hpp"
 
@@ -57,37 +57,23 @@ int CML::parsing::evalStringToScalar::scanner::debug = 0;
 
 #define TOKEN_OF(T)         TOK_##T
 #define EMIT_TOKEN(T)                                                         \
-    /* Inform driver of last position */                                      \
-    driver.parsePosition() = (p-buf);                                         \
+    driver.parsePosition() = (ts-buf);                                        \
     DebugInfo<< "TOKEN_" #T << " at " << label(driver.parsePosition()) << nl; \
-    parser_->parse(TOKEN_OF(T), 0)
+    parser_->parse(TOKEN_OF(T), 0);                                           \
+    driver.parsePosition() = (p-buf);
 
 
 %%{
     machine evalScanner;
 
-    action setPosition
-    {
-        // Inform driver of last position
-        driver.parsePosition() = (p-buf);
-    }
-
-    action truncated
-    {
-        // Inform driver of last position
-        driver.parsePosition() = 0;
-        driver.reportFatal("Truncated input");
-    }
-
     action emit_number {
-        // Inform driver of last position
-        driver.parsePosition() = (p-buf);
+        driver.parsePosition() = (ts-buf);
 
         DebugInfo
-            << "NUMBER:" << std::string(ts, te-ts).c_str()
+            << "Number:" << std::string(ts, te-ts).c_str()
             << " at " << label(driver.parsePosition()) << nl;
 
-        scalar val;
+        scalar val(0);
 
         if (readScalar(std::string(ts, te-ts), val))
         {
@@ -96,14 +82,26 @@ int CML::parsing::evalStringToScalar::scanner::debug = 0;
         }
         else
         {
-            driver.reportFatal("Error reading scalar value");
+            // Catch range errors
+            driver.reportFatal("Error parsing number");
         }
+
+        driver.parsePosition() = (p-buf);
     }
 
     decimal = ((digit* '.' digit+) | (digit+ '.'?)) ;
     number  = (digit+ | decimal) ([Ee][\-+]? digit+)? ;
-    dnl     = (any* -- '\n') '\n';  # Discard up to and including newline
     lfunc   = space* '(';           # Require functions to have '('
+
+    operators = (
+        '('  @{ EMIT_TOKEN(LPAREN); }
+      | ')'  @{ EMIT_TOKEN(RPAREN); }
+      | '+'  @{ EMIT_TOKEN(PLUS); }
+      | '-'  @{ EMIT_TOKEN(MINUS); }
+      | '*'  @{ EMIT_TOKEN(TIMES); }
+      | '/'  @{ EMIT_TOKEN(DIVIDE); }
+      | ','  @{ EMIT_TOKEN(COMMA); }
+    );
 
     functions = (
         'pi'         lfunc  @{ fhold; EMIT_TOKEN(PI); }
@@ -131,29 +129,17 @@ int CML::parsing::evalStringToScalar::scanner::debug = 0;
       | 'max'        lfunc  @{ fhold; EMIT_TOKEN(MAX); }
       | 'mag'        lfunc  @{ fhold; EMIT_TOKEN(MAG); }
       | 'magSqr'     lfunc  @{ fhold; EMIT_TOKEN(MAGSQR); }
+      | 'floor'      lfunc  @{ fhold; EMIT_TOKEN(FLOOR); }
+      | 'ceil'       lfunc  @{ fhold; EMIT_TOKEN(CEIL); }
+      | 'round'      lfunc  @{ fhold; EMIT_TOKEN(ROUND); }
       | 'rand'       lfunc  @{ fhold; EMIT_TOKEN(RAND); }
     );
 
-    operators = (
-        '('  @{ EMIT_TOKEN(LPAREN); }
-      | ')'  @{ EMIT_TOKEN(RPAREN); }
-      | '+'  @{ EMIT_TOKEN(PLUS); }
-      | '-'  @{ EMIT_TOKEN(MINUS); }
-      | '*'  @{ EMIT_TOKEN(TIMES); }
-      | '/'  @{ EMIT_TOKEN(DIVIDE); }
-      | ','  @{ EMIT_TOKEN(COMMA); }
-    );
-
-
     main := |*
         space*;
-
         number => emit_number;
-        functions;
         operators;
-
-        '/*' any* :>> '*/' @setPosition;        # Multi-line comment
-        '//' (any* -- '\n') '\n'* @setPosition; # (sloppy) 1-line comment
+        functions;
         space*;
     *|;
 }%%
@@ -170,11 +156,13 @@ CML::parsing::evalStringToScalar::scanner::~scanner()
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool CML::parsing::evalStringToScalar::scanner::process
 (
     const std::string& str,
+    size_t strBeg,
+    size_t strLen,
     parseDriver& driver
 )
 {
@@ -183,7 +171,25 @@ bool CML::parsing::evalStringToScalar::scanner::process
         parser_ = new parser();
     }
 
-    driver.content(str);
+    driver.content(str, strBeg, strLen);
+
+    size_t strEnd = str.length();
+
+    if (strBeg > str.length())
+    {
+        strBeg = str.length();
+    }
+    else if (strLen != std::string::npos)
+    {
+        strLen += strBeg;
+
+        if (strLen < str.length())
+        {
+            strEnd = strLen;
+        }
+    }
+
+
     parser_->start(driver);
 
     // Ragel token start/end (required naming)
@@ -194,8 +200,8 @@ bool CML::parsing::evalStringToScalar::scanner::process
     // - p, pe, eof are required Ragel naming
     // - buf is our own naming
 
-    const char* buf = &(str[0]);
-    const char* eof = &(str[str.length()]);
+    const char* buf = &(str[strBeg]);
+    const char* eof = &(str[strEnd]);
     const char* p = buf;
     const char* pe = eof;
 

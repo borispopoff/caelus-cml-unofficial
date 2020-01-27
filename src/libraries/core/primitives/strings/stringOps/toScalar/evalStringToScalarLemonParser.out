@@ -34,40 +34,46 @@ State 0:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
                           eval accept
-                           exp shift        68     
+                           exp shift        74     
 
 State 1:
           exp ::= * NUMBER
@@ -104,42 +110,48 @@ State 1:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= RAND LPAREN * RPAREN
           exp ::= * RAND LPAREN exp RPAREN
           exp ::= RAND LPAREN * exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                        RPAREN shift-reduce 35     exp ::= RAND LPAREN RPAREN
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        37     
+                        LPAREN shift        34     
+                        RPAREN shift-reduce 38     exp ::= RAND LPAREN RPAREN
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        40     
 
 State 2:
           exp ::= * NUMBER
@@ -178,40 +190,46 @@ State 2:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
+                        LPAREN shift        34     
                         RPAREN shift-reduce 10     exp ::= RAD_TO_DEG LPAREN RPAREN
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        65     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        71     
 
 State 3:
           exp ::= * NUMBER
@@ -250,40 +268,46 @@ State 3:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
+                        LPAREN shift        34     
                         RPAREN shift-reduce 9      exp ::= DEG_TO_RAD LPAREN RPAREN
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        66     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        72     
 
 State 4:
           exp ::= * NUMBER
@@ -320,40 +344,46 @@ State 4:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
-          exp ::= MAGSQR LPAREN * exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
+          exp ::= ROUND LPAREN * exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        38     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        41     
 
 State 5:
           exp ::= * NUMBER
@@ -389,43 +419,277 @@ State 5:
           exp ::= * MIN LPAREN exp COMMA exp RPAREN
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
-          exp ::= MAG LPAREN * exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= CEIL LPAREN * exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        39     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        42     
 
 State 6:
+          exp ::= * NUMBER
+          exp ::= * MINUS exp
+          exp ::= * exp PLUS exp
+          exp ::= * exp MINUS exp
+          exp ::= * exp TIMES exp
+          exp ::= * exp DIVIDE exp
+          exp ::= * LPAREN exp RPAREN
+          exp ::= * PI LPAREN RPAREN
+          exp ::= * DEG_TO_RAD LPAREN RPAREN
+          exp ::= * RAD_TO_DEG LPAREN RPAREN
+          exp ::= * DEG_TO_RAD LPAREN exp RPAREN
+          exp ::= * RAD_TO_DEG LPAREN exp RPAREN
+          exp ::= * EXP LPAREN exp RPAREN
+          exp ::= * LOG LPAREN exp RPAREN
+          exp ::= * LOG10 LPAREN exp RPAREN
+          exp ::= * POW LPAREN exp COMMA exp RPAREN
+          exp ::= * SQR LPAREN exp RPAREN
+          exp ::= * SQRT LPAREN exp RPAREN
+          exp ::= * CBRT LPAREN exp RPAREN
+          exp ::= * SIN LPAREN exp RPAREN
+          exp ::= * COS LPAREN exp RPAREN
+          exp ::= * TAN LPAREN exp RPAREN
+          exp ::= * ASIN LPAREN exp RPAREN
+          exp ::= * ACOS LPAREN exp RPAREN
+          exp ::= * ATAN LPAREN exp RPAREN
+          exp ::= * ATAN2 LPAREN exp COMMA exp RPAREN
+          exp ::= * HYPOT LPAREN exp COMMA exp RPAREN
+          exp ::= * SINH LPAREN exp RPAREN
+          exp ::= * COSH LPAREN exp RPAREN
+          exp ::= * TANH LPAREN exp RPAREN
+          exp ::= * MIN LPAREN exp COMMA exp RPAREN
+          exp ::= * MAX LPAREN exp COMMA exp RPAREN
+          exp ::= * MAG LPAREN exp RPAREN
+          exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= FLOOR LPAREN * exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
+          exp ::= * RAND LPAREN RPAREN
+          exp ::= * RAND LPAREN exp RPAREN
+
+                         MINUS shift        38     
+                        NUMBER shift-reduce 1      exp ::= NUMBER
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        43     
+
+State 7:
+          exp ::= * NUMBER
+          exp ::= * MINUS exp
+          exp ::= * exp PLUS exp
+          exp ::= * exp MINUS exp
+          exp ::= * exp TIMES exp
+          exp ::= * exp DIVIDE exp
+          exp ::= * LPAREN exp RPAREN
+          exp ::= * PI LPAREN RPAREN
+          exp ::= * DEG_TO_RAD LPAREN RPAREN
+          exp ::= * RAD_TO_DEG LPAREN RPAREN
+          exp ::= * DEG_TO_RAD LPAREN exp RPAREN
+          exp ::= * RAD_TO_DEG LPAREN exp RPAREN
+          exp ::= * EXP LPAREN exp RPAREN
+          exp ::= * LOG LPAREN exp RPAREN
+          exp ::= * LOG10 LPAREN exp RPAREN
+          exp ::= * POW LPAREN exp COMMA exp RPAREN
+          exp ::= * SQR LPAREN exp RPAREN
+          exp ::= * SQRT LPAREN exp RPAREN
+          exp ::= * CBRT LPAREN exp RPAREN
+          exp ::= * SIN LPAREN exp RPAREN
+          exp ::= * COS LPAREN exp RPAREN
+          exp ::= * TAN LPAREN exp RPAREN
+          exp ::= * ASIN LPAREN exp RPAREN
+          exp ::= * ACOS LPAREN exp RPAREN
+          exp ::= * ATAN LPAREN exp RPAREN
+          exp ::= * ATAN2 LPAREN exp COMMA exp RPAREN
+          exp ::= * HYPOT LPAREN exp COMMA exp RPAREN
+          exp ::= * SINH LPAREN exp RPAREN
+          exp ::= * COSH LPAREN exp RPAREN
+          exp ::= * TANH LPAREN exp RPAREN
+          exp ::= * MIN LPAREN exp COMMA exp RPAREN
+          exp ::= * MAX LPAREN exp COMMA exp RPAREN
+          exp ::= * MAG LPAREN exp RPAREN
+          exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= MAGSQR LPAREN * exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
+          exp ::= * RAND LPAREN RPAREN
+          exp ::= * RAND LPAREN exp RPAREN
+
+                         MINUS shift        38     
+                        NUMBER shift-reduce 1      exp ::= NUMBER
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        44     
+
+State 8:
+          exp ::= * NUMBER
+          exp ::= * MINUS exp
+          exp ::= * exp PLUS exp
+          exp ::= * exp MINUS exp
+          exp ::= * exp TIMES exp
+          exp ::= * exp DIVIDE exp
+          exp ::= * LPAREN exp RPAREN
+          exp ::= * PI LPAREN RPAREN
+          exp ::= * DEG_TO_RAD LPAREN RPAREN
+          exp ::= * RAD_TO_DEG LPAREN RPAREN
+          exp ::= * DEG_TO_RAD LPAREN exp RPAREN
+          exp ::= * RAD_TO_DEG LPAREN exp RPAREN
+          exp ::= * EXP LPAREN exp RPAREN
+          exp ::= * LOG LPAREN exp RPAREN
+          exp ::= * LOG10 LPAREN exp RPAREN
+          exp ::= * POW LPAREN exp COMMA exp RPAREN
+          exp ::= * SQR LPAREN exp RPAREN
+          exp ::= * SQRT LPAREN exp RPAREN
+          exp ::= * CBRT LPAREN exp RPAREN
+          exp ::= * SIN LPAREN exp RPAREN
+          exp ::= * COS LPAREN exp RPAREN
+          exp ::= * TAN LPAREN exp RPAREN
+          exp ::= * ASIN LPAREN exp RPAREN
+          exp ::= * ACOS LPAREN exp RPAREN
+          exp ::= * ATAN LPAREN exp RPAREN
+          exp ::= * ATAN2 LPAREN exp COMMA exp RPAREN
+          exp ::= * HYPOT LPAREN exp COMMA exp RPAREN
+          exp ::= * SINH LPAREN exp RPAREN
+          exp ::= * COSH LPAREN exp RPAREN
+          exp ::= * TANH LPAREN exp RPAREN
+          exp ::= * MIN LPAREN exp COMMA exp RPAREN
+          exp ::= * MAX LPAREN exp COMMA exp RPAREN
+          exp ::= * MAG LPAREN exp RPAREN
+          exp ::= MAG LPAREN * exp RPAREN
+          exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
+          exp ::= * RAND LPAREN RPAREN
+          exp ::= * RAND LPAREN exp RPAREN
+
+                         MINUS shift        38     
+                        NUMBER shift-reduce 1      exp ::= NUMBER
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        45     
+
+State 9:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -461,41 +725,47 @@ State 6:
           exp ::= MAX LPAREN exp COMMA * exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        40     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        46     
 
-State 7:
+State 10:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -531,41 +801,47 @@ State 7:
           exp ::= MAX LPAREN * exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        41     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        47     
 
-State 8:
+State 11:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -601,41 +877,47 @@ State 8:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        42     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        48     
 
-State 9:
+State 12:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -671,41 +953,47 @@ State 9:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        43     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        49     
 
-State 10:
+State 13:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -741,41 +1029,47 @@ State 10:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        44     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        50     
 
-State 11:
+State 14:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -811,41 +1105,47 @@ State 11:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        45     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        51     
 
-State 12:
+State 15:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -881,41 +1181,47 @@ State 12:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        46     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        52     
 
-State 13:
+State 16:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -951,41 +1257,47 @@ State 13:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        47     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        53     
 
-State 14:
+State 17:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1021,41 +1333,47 @@ State 14:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        48     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        54     
 
-State 15:
+State 18:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1091,41 +1409,47 @@ State 15:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        49     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        55     
 
-State 16:
+State 19:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1161,41 +1485,47 @@ State 16:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        50     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        56     
 
-State 17:
+State 20:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1231,41 +1561,47 @@ State 17:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        51     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        57     
 
-State 18:
+State 21:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1301,41 +1637,47 @@ State 18:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        52     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        58     
 
-State 19:
+State 22:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1371,41 +1713,47 @@ State 19:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        53     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        59     
 
-State 20:
+State 23:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1441,41 +1789,47 @@ State 20:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        54     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        60     
 
-State 21:
+State 24:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1511,41 +1865,47 @@ State 21:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        55     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        61     
 
-State 22:
+State 25:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1581,41 +1941,47 @@ State 22:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        56     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        62     
 
-State 23:
+State 26:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1651,41 +2017,47 @@ State 23:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        57     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        63     
 
-State 24:
+State 27:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1721,41 +2093,47 @@ State 24:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        58     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        64     
 
-State 25:
+State 28:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1791,41 +2169,47 @@ State 25:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        59     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        65     
 
-State 26:
+State 29:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1861,41 +2245,47 @@ State 26:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        60     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        66     
 
-State 27:
+State 30:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -1931,41 +2321,47 @@ State 27:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        61     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        67     
 
-State 28:
+State 31:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -2001,41 +2397,47 @@ State 28:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        62     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        68     
 
-State 29:
+State 32:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -2071,41 +2473,47 @@ State 29:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        63     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        69     
 
-State 30:
+State 33:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -2141,41 +2549,47 @@ State 30:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        64     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        70     
 
-State 31:
+State 34:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -2211,41 +2625,47 @@ State 31:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        67     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        73     
 
-State 32:
+State 35:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -2281,41 +2701,47 @@ State 32:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
                            exp shift-reduce 6      exp ::= exp DIVIDE exp
 
-State 33:
+State 36:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -2351,41 +2777,47 @@ State 33:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
                            exp shift-reduce 5      exp ::= exp TIMES exp
 
-State 34:
+State 37:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -2421,41 +2853,47 @@ State 34:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        70     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        76     
 
-State 35:
+State 38:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= MINUS * exp
@@ -2491,41 +2929,47 @@ State 35:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        71     
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        77     
 
-State 36:
+State 39:
           exp ::= * NUMBER
           exp ::= * MINUS exp
           exp ::= * exp PLUS exp
@@ -2561,444 +3005,489 @@ State 36:
           exp ::= * MAX LPAREN exp COMMA exp RPAREN
           exp ::= * MAG LPAREN exp RPAREN
           exp ::= * MAGSQR LPAREN exp RPAREN
+          exp ::= * FLOOR LPAREN exp RPAREN
+          exp ::= * CEIL LPAREN exp RPAREN
+          exp ::= * ROUND LPAREN exp RPAREN
           exp ::= * RAND LPAREN RPAREN
           exp ::= * RAND LPAREN exp RPAREN
 
-                         MINUS shift        35     
+                         MINUS shift        38     
                         NUMBER shift-reduce 1      exp ::= NUMBER
-                        LPAREN shift        31     
-                            PI shift        98     
-                    DEG_TO_RAD shift        96     
-                    RAD_TO_DEG shift        95     
-                           EXP shift        94     
-                           LOG shift        93     
-                         LOG10 shift        92     
-                           POW shift        91     
-                           SQR shift        90     
-                          SQRT shift        89     
-                          CBRT shift        88     
-                           SIN shift        87     
-                           COS shift        86     
-                           TAN shift        85     
-                          ASIN shift        84     
-                          ACOS shift        83     
-                          ATAN shift        82     
-                         ATAN2 shift        81     
-                         HYPOT shift        80     
-                          SINH shift        79     
-                          COSH shift        78     
-                          TANH shift        77     
-                           MIN shift        76     
-                           MAX shift        75     
-                           MAG shift        74     
-                        MAGSQR shift        73     
-                          RAND shift        72     
-                           exp shift        69     
-
-State 37:
-          exp ::= exp * PLUS exp
-          exp ::= exp * MINUS exp
-          exp ::= exp * TIMES exp
-          exp ::= exp * DIVIDE exp
-          exp ::= RAND LPAREN exp * RPAREN
-
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 36     exp ::= RAND LPAREN exp RPAREN
-
-State 38:
-          exp ::= exp * PLUS exp
-          exp ::= exp * MINUS exp
-          exp ::= exp * TIMES exp
-          exp ::= exp * DIVIDE exp
-          exp ::= MAGSQR LPAREN exp * RPAREN
-
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 34     exp ::= MAGSQR LPAREN exp RPAREN
-
-State 39:
-          exp ::= exp * PLUS exp
-          exp ::= exp * MINUS exp
-          exp ::= exp * TIMES exp
-          exp ::= exp * DIVIDE exp
-          exp ::= MAG LPAREN exp * RPAREN
-
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 33     exp ::= MAG LPAREN exp RPAREN
+                        LPAREN shift        34     
+                            PI shift        107    
+                    DEG_TO_RAD shift        105    
+                    RAD_TO_DEG shift        104    
+                           EXP shift        103    
+                           LOG shift        102    
+                         LOG10 shift        101    
+                           POW shift        100    
+                           SQR shift        99     
+                          SQRT shift        98     
+                          CBRT shift        97     
+                           SIN shift        96     
+                           COS shift        95     
+                           TAN shift        94     
+                          ASIN shift        93     
+                          ACOS shift        92     
+                          ATAN shift        91     
+                         ATAN2 shift        90     
+                         HYPOT shift        89     
+                          SINH shift        88     
+                          COSH shift        87     
+                          TANH shift        86     
+                           MIN shift        85     
+                           MAX shift        84     
+                           MAG shift        83     
+                        MAGSQR shift        82     
+                         FLOOR shift        81     
+                          CEIL shift        80     
+                         ROUND shift        79     
+                          RAND shift        78     
+                           exp shift        75     
 
 State 40:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= MAX LPAREN exp COMMA exp * RPAREN
+          exp ::= RAND LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 32     exp ::= MAX LPAREN exp COMMA exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 39     exp ::= RAND LPAREN exp RPAREN
 
 State 41:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= MAX LPAREN exp * COMMA exp RPAREN
+          exp ::= ROUND LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                         COMMA shift        6      
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 37     exp ::= ROUND LPAREN exp RPAREN
 
 State 42:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= MIN LPAREN exp COMMA exp * RPAREN
+          exp ::= CEIL LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 31     exp ::= MIN LPAREN exp COMMA exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 36     exp ::= CEIL LPAREN exp RPAREN
 
 State 43:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= MIN LPAREN exp * COMMA exp RPAREN
+          exp ::= FLOOR LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                         COMMA shift        8      
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 35     exp ::= FLOOR LPAREN exp RPAREN
 
 State 44:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= TANH LPAREN exp * RPAREN
+          exp ::= MAGSQR LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 30     exp ::= TANH LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 34     exp ::= MAGSQR LPAREN exp RPAREN
 
 State 45:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= COSH LPAREN exp * RPAREN
+          exp ::= MAG LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 29     exp ::= COSH LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 33     exp ::= MAG LPAREN exp RPAREN
 
 State 46:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= SINH LPAREN exp * RPAREN
+          exp ::= MAX LPAREN exp COMMA exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 28     exp ::= SINH LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 32     exp ::= MAX LPAREN exp COMMA exp RPAREN
 
 State 47:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= HYPOT LPAREN exp COMMA exp * RPAREN
+          exp ::= MAX LPAREN exp * COMMA exp RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 27     exp ::= HYPOT LPAREN exp COMMA exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                         COMMA shift        9      
 
 State 48:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= HYPOT LPAREN exp * COMMA exp RPAREN
+          exp ::= MIN LPAREN exp COMMA exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                         COMMA shift        13     
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 31     exp ::= MIN LPAREN exp COMMA exp RPAREN
 
 State 49:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= ATAN2 LPAREN exp COMMA exp * RPAREN
+          exp ::= MIN LPAREN exp * COMMA exp RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 26     exp ::= ATAN2 LPAREN exp COMMA exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                         COMMA shift        11     
 
 State 50:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= ATAN2 LPAREN exp * COMMA exp RPAREN
+          exp ::= TANH LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                         COMMA shift        15     
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 30     exp ::= TANH LPAREN exp RPAREN
 
 State 51:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= ATAN LPAREN exp * RPAREN
+          exp ::= COSH LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 25     exp ::= ATAN LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 29     exp ::= COSH LPAREN exp RPAREN
 
 State 52:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= ACOS LPAREN exp * RPAREN
+          exp ::= SINH LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 24     exp ::= ACOS LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 28     exp ::= SINH LPAREN exp RPAREN
 
 State 53:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= ASIN LPAREN exp * RPAREN
+          exp ::= HYPOT LPAREN exp COMMA exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 23     exp ::= ASIN LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 27     exp ::= HYPOT LPAREN exp COMMA exp RPAREN
 
 State 54:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= TAN LPAREN exp * RPAREN
+          exp ::= HYPOT LPAREN exp * COMMA exp RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 22     exp ::= TAN LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                         COMMA shift        16     
 
 State 55:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= COS LPAREN exp * RPAREN
+          exp ::= ATAN2 LPAREN exp COMMA exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 21     exp ::= COS LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 26     exp ::= ATAN2 LPAREN exp COMMA exp RPAREN
 
 State 56:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= SIN LPAREN exp * RPAREN
+          exp ::= ATAN2 LPAREN exp * COMMA exp RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 20     exp ::= SIN LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                         COMMA shift        18     
 
 State 57:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= CBRT LPAREN exp * RPAREN
+          exp ::= ATAN LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 19     exp ::= CBRT LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 25     exp ::= ATAN LPAREN exp RPAREN
 
 State 58:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= SQRT LPAREN exp * RPAREN
+          exp ::= ACOS LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 18     exp ::= SQRT LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 24     exp ::= ACOS LPAREN exp RPAREN
 
 State 59:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= SQR LPAREN exp * RPAREN
+          exp ::= ASIN LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 17     exp ::= SQR LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 23     exp ::= ASIN LPAREN exp RPAREN
 
 State 60:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= POW LPAREN exp COMMA exp * RPAREN
+          exp ::= TAN LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 16     exp ::= POW LPAREN exp COMMA exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 22     exp ::= TAN LPAREN exp RPAREN
 
 State 61:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= POW LPAREN exp * COMMA exp RPAREN
+          exp ::= COS LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                         COMMA shift        26     
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 21     exp ::= COS LPAREN exp RPAREN
 
 State 62:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= LOG10 LPAREN exp * RPAREN
+          exp ::= SIN LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 15     exp ::= LOG10 LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 20     exp ::= SIN LPAREN exp RPAREN
 
 State 63:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= LOG LPAREN exp * RPAREN
+          exp ::= CBRT LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 14     exp ::= LOG LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 19     exp ::= CBRT LPAREN exp RPAREN
 
 State 64:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= EXP LPAREN exp * RPAREN
+          exp ::= SQRT LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 13     exp ::= EXP LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 18     exp ::= SQRT LPAREN exp RPAREN
 
 State 65:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= RAD_TO_DEG LPAREN exp * RPAREN
+          exp ::= SQR LPAREN exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 12     exp ::= RAD_TO_DEG LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 17     exp ::= SQR LPAREN exp RPAREN
 
 State 66:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= DEG_TO_RAD LPAREN exp * RPAREN
+          exp ::= POW LPAREN exp COMMA exp * RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 11     exp ::= DEG_TO_RAD LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 16     exp ::= POW LPAREN exp COMMA exp RPAREN
 
 State 67:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
-          exp ::= LPAREN exp * RPAREN
+          exp ::= POW LPAREN exp * COMMA exp RPAREN
 
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
-                        RPAREN shift-reduce 7      exp ::= LPAREN exp RPAREN
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                         COMMA shift        29     
 
 State 68:
+          exp ::= exp * PLUS exp
+          exp ::= exp * MINUS exp
+          exp ::= exp * TIMES exp
+          exp ::= exp * DIVIDE exp
+          exp ::= LOG10 LPAREN exp * RPAREN
+
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 15     exp ::= LOG10 LPAREN exp RPAREN
+
+State 69:
+          exp ::= exp * PLUS exp
+          exp ::= exp * MINUS exp
+          exp ::= exp * TIMES exp
+          exp ::= exp * DIVIDE exp
+          exp ::= LOG LPAREN exp * RPAREN
+
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 14     exp ::= LOG LPAREN exp RPAREN
+
+State 70:
+          exp ::= exp * PLUS exp
+          exp ::= exp * MINUS exp
+          exp ::= exp * TIMES exp
+          exp ::= exp * DIVIDE exp
+          exp ::= EXP LPAREN exp * RPAREN
+
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 13     exp ::= EXP LPAREN exp RPAREN
+
+State 71:
+          exp ::= exp * PLUS exp
+          exp ::= exp * MINUS exp
+          exp ::= exp * TIMES exp
+          exp ::= exp * DIVIDE exp
+          exp ::= RAD_TO_DEG LPAREN exp * RPAREN
+
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 12     exp ::= RAD_TO_DEG LPAREN exp RPAREN
+
+State 72:
+          exp ::= exp * PLUS exp
+          exp ::= exp * MINUS exp
+          exp ::= exp * TIMES exp
+          exp ::= exp * DIVIDE exp
+          exp ::= DEG_TO_RAD LPAREN exp * RPAREN
+
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 11     exp ::= DEG_TO_RAD LPAREN exp RPAREN
+
+State 73:
+          exp ::= exp * PLUS exp
+          exp ::= exp * MINUS exp
+          exp ::= exp * TIMES exp
+          exp ::= exp * DIVIDE exp
+          exp ::= LPAREN exp * RPAREN
+
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
+                        RPAREN shift-reduce 7      exp ::= LPAREN exp RPAREN
+
+State 74:
       (0) eval ::= exp *
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
@@ -3006,193 +3495,208 @@ State 68:
           exp ::= exp * DIVIDE exp
 
                              $ reduce       0      eval ::= exp
-                          PLUS shift        36     
-                         MINUS shift        34     
-                         TIMES shift        33     
-                        DIVIDE shift        32     
+                          PLUS shift        39     
+                         MINUS shift        37     
+                         TIMES shift        36     
+                        DIVIDE shift        35     
 
-State 69:
+State 75:
           exp ::= exp * PLUS exp
       (3) exp ::= exp PLUS exp *
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
 
-                          PLUS shift        36      -- dropped by precedence
-                         MINUS shift        34      -- dropped by precedence
-                         TIMES shift        33     
+                          PLUS shift        39      -- dropped by precedence
+                         MINUS shift        37      -- dropped by precedence
+                         TIMES shift        36     
                          TIMES reduce 3       -- dropped by precedence
-                        DIVIDE shift        32     
+                        DIVIDE shift        35     
                         DIVIDE reduce 3       -- dropped by precedence
                      {default} reduce       3      exp ::= exp PLUS exp
 
-State 70:
+State 76:
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
       (4) exp ::= exp MINUS exp *
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
 
-                          PLUS shift        36      -- dropped by precedence
-                         MINUS shift        34      -- dropped by precedence
-                         TIMES shift        33     
+                          PLUS shift        39      -- dropped by precedence
+                         MINUS shift        37      -- dropped by precedence
+                         TIMES shift        36     
                          TIMES reduce 4       -- dropped by precedence
-                        DIVIDE shift        32     
+                        DIVIDE shift        35     
                         DIVIDE reduce 4       -- dropped by precedence
                      {default} reduce       4      exp ::= exp MINUS exp
 
-State 71:
+State 77:
       (2) exp ::= MINUS exp *
           exp ::= exp * PLUS exp
           exp ::= exp * MINUS exp
           exp ::= exp * TIMES exp
           exp ::= exp * DIVIDE exp
 
-                          PLUS shift        36      -- dropped by precedence
-                         MINUS shift        34      -- dropped by precedence
-                         TIMES shift        33     
+                          PLUS shift        39      -- dropped by precedence
+                         MINUS shift        37      -- dropped by precedence
+                         TIMES shift        36     
                          TIMES reduce 2       -- dropped by precedence
-                        DIVIDE shift        32     
+                        DIVIDE shift        35     
                         DIVIDE reduce 2       -- dropped by precedence
                      {default} reduce       2      exp ::= MINUS exp
 
-State 72:
+State 78:
           exp ::= RAND * LPAREN RPAREN
           exp ::= RAND * LPAREN exp RPAREN
 
                         LPAREN shift        1      
 
-State 73:
-          exp ::= MAGSQR * LPAREN exp RPAREN
+State 79:
+          exp ::= ROUND * LPAREN exp RPAREN
 
                         LPAREN shift        4      
 
-State 74:
-          exp ::= MAG * LPAREN exp RPAREN
+State 80:
+          exp ::= CEIL * LPAREN exp RPAREN
 
                         LPAREN shift        5      
 
-State 75:
-          exp ::= MAX * LPAREN exp COMMA exp RPAREN
+State 81:
+          exp ::= FLOOR * LPAREN exp RPAREN
+
+                        LPAREN shift        6      
+
+State 82:
+          exp ::= MAGSQR * LPAREN exp RPAREN
 
                         LPAREN shift        7      
 
-State 76:
-          exp ::= MIN * LPAREN exp COMMA exp RPAREN
+State 83:
+          exp ::= MAG * LPAREN exp RPAREN
 
-                        LPAREN shift        9      
+                        LPAREN shift        8      
 
-State 77:
-          exp ::= TANH * LPAREN exp RPAREN
+State 84:
+          exp ::= MAX * LPAREN exp COMMA exp RPAREN
 
                         LPAREN shift        10     
 
-State 78:
-          exp ::= COSH * LPAREN exp RPAREN
-
-                        LPAREN shift        11     
-
-State 79:
-          exp ::= SINH * LPAREN exp RPAREN
+State 85:
+          exp ::= MIN * LPAREN exp COMMA exp RPAREN
 
                         LPAREN shift        12     
 
-State 80:
-          exp ::= HYPOT * LPAREN exp COMMA exp RPAREN
+State 86:
+          exp ::= TANH * LPAREN exp RPAREN
+
+                        LPAREN shift        13     
+
+State 87:
+          exp ::= COSH * LPAREN exp RPAREN
 
                         LPAREN shift        14     
 
-State 81:
-          exp ::= ATAN2 * LPAREN exp COMMA exp RPAREN
+State 88:
+          exp ::= SINH * LPAREN exp RPAREN
 
-                        LPAREN shift        16     
+                        LPAREN shift        15     
 
-State 82:
-          exp ::= ATAN * LPAREN exp RPAREN
+State 89:
+          exp ::= HYPOT * LPAREN exp COMMA exp RPAREN
 
                         LPAREN shift        17     
 
-State 83:
-          exp ::= ACOS * LPAREN exp RPAREN
-
-                        LPAREN shift        18     
-
-State 84:
-          exp ::= ASIN * LPAREN exp RPAREN
+State 90:
+          exp ::= ATAN2 * LPAREN exp COMMA exp RPAREN
 
                         LPAREN shift        19     
 
-State 85:
-          exp ::= TAN * LPAREN exp RPAREN
+State 91:
+          exp ::= ATAN * LPAREN exp RPAREN
 
                         LPAREN shift        20     
 
-State 86:
-          exp ::= COS * LPAREN exp RPAREN
+State 92:
+          exp ::= ACOS * LPAREN exp RPAREN
 
                         LPAREN shift        21     
 
-State 87:
-          exp ::= SIN * LPAREN exp RPAREN
+State 93:
+          exp ::= ASIN * LPAREN exp RPAREN
 
                         LPAREN shift        22     
 
-State 88:
-          exp ::= CBRT * LPAREN exp RPAREN
+State 94:
+          exp ::= TAN * LPAREN exp RPAREN
 
                         LPAREN shift        23     
 
-State 89:
-          exp ::= SQRT * LPAREN exp RPAREN
+State 95:
+          exp ::= COS * LPAREN exp RPAREN
 
                         LPAREN shift        24     
 
-State 90:
-          exp ::= SQR * LPAREN exp RPAREN
+State 96:
+          exp ::= SIN * LPAREN exp RPAREN
 
                         LPAREN shift        25     
 
-State 91:
-          exp ::= POW * LPAREN exp COMMA exp RPAREN
+State 97:
+          exp ::= CBRT * LPAREN exp RPAREN
+
+                        LPAREN shift        26     
+
+State 98:
+          exp ::= SQRT * LPAREN exp RPAREN
 
                         LPAREN shift        27     
 
-State 92:
-          exp ::= LOG10 * LPAREN exp RPAREN
+State 99:
+          exp ::= SQR * LPAREN exp RPAREN
 
                         LPAREN shift        28     
 
-State 93:
-          exp ::= LOG * LPAREN exp RPAREN
-
-                        LPAREN shift        29     
-
-State 94:
-          exp ::= EXP * LPAREN exp RPAREN
+State 100:
+          exp ::= POW * LPAREN exp COMMA exp RPAREN
 
                         LPAREN shift        30     
 
-State 95:
+State 101:
+          exp ::= LOG10 * LPAREN exp RPAREN
+
+                        LPAREN shift        31     
+
+State 102:
+          exp ::= LOG * LPAREN exp RPAREN
+
+                        LPAREN shift        32     
+
+State 103:
+          exp ::= EXP * LPAREN exp RPAREN
+
+                        LPAREN shift        33     
+
+State 104:
           exp ::= RAD_TO_DEG * LPAREN RPAREN
           exp ::= RAD_TO_DEG * LPAREN exp RPAREN
 
                         LPAREN shift        2      
 
-State 96:
+State 105:
           exp ::= DEG_TO_RAD * LPAREN RPAREN
           exp ::= DEG_TO_RAD * LPAREN exp RPAREN
 
                         LPAREN shift        3      
 
-State 97:
+State 106:
           exp ::= PI LPAREN * RPAREN
 
                         RPAREN shift-reduce 8      exp ::= PI LPAREN RPAREN
 
-State 98:
+State 107:
           exp ::= PI * LPAREN RPAREN
 
-                        LPAREN shift        97     
+                        LPAREN shift        106    
 
 ----------------------------------------------------
 Symbols:
@@ -3233,16 +3737,19 @@ The first-set of non-terminals is shown after the name.
    32: MAX
    33: MAG
    34: MAGSQR
-   35: RAND
-   36: eval: MINUS NUMBER LPAREN PI DEG_TO_RAD RAD_TO_DEG EXP LOG LOG10 POW SQR SQRT CBRT SIN COS TAN ASIN ACOS ATAN ATAN2 HYPOT SINH COSH TANH MIN MAX MAG MAGSQR RAND
-   37: exp: MINUS NUMBER LPAREN PI DEG_TO_RAD RAD_TO_DEG EXP LOG LOG10 POW SQR SQRT CBRT SIN COS TAN ASIN ACOS ATAN ATAN2 HYPOT SINH COSH TANH MIN MAX MAG MAGSQR RAND
+   35: FLOOR
+   36: CEIL
+   37: ROUND
+   38: RAND
+   39: eval: MINUS NUMBER LPAREN PI DEG_TO_RAD RAD_TO_DEG EXP LOG LOG10 POW SQR SQRT CBRT SIN COS TAN ASIN ACOS ATAN ATAN2 HYPOT SINH COSH TANH MIN MAX MAG MAGSQR FLOOR CEIL ROUND RAND
+   40: exp: MINUS NUMBER LPAREN PI DEG_TO_RAD RAD_TO_DEG EXP LOG LOG10 POW SQR SQRT CBRT SIN COS TAN ASIN ACOS ATAN ATAN2 HYPOT SINH COSH TANH MIN MAX MAG MAGSQR FLOOR CEIL ROUND RAND
 ----------------------------------------------------
 Syntax-only Symbols:
 The following symbols never carry semantic content.
 
 $ PLUS MINUS TIMES DIVIDE NEGATE LPAREN RPAREN PI DEG_TO_RAD RAD_TO_DEG EXP
 LOG LOG10 POW COMMA SQR SQRT CBRT SIN COS TAN ASIN ACOS ATAN ATAN2 HYPOT
-SINH COSH TANH MIN MAX MAG MAGSQR RAND eval
+SINH COSH TANH MIN MAX MAG MAGSQR FLOOR CEIL ROUND RAND eval
 ----------------------------------------------------
 Rules:
    0: eval ::= exp.
@@ -3280,5 +3787,8 @@ Rules:
   32: exp ::= MAX LPAREN exp COMMA exp RPAREN.
   33: exp ::= MAG LPAREN exp RPAREN.
   34: exp ::= MAGSQR LPAREN exp RPAREN.
-  35: exp ::= RAND LPAREN RPAREN.
-  36: exp ::= RAND LPAREN exp RPAREN.
+  35: exp ::= FLOOR LPAREN exp RPAREN.
+  36: exp ::= CEIL LPAREN exp RPAREN.
+  37: exp ::= ROUND LPAREN exp RPAREN.
+  38: exp ::= RAND LPAREN RPAREN.
+  39: exp ::= RAND LPAREN exp RPAREN.

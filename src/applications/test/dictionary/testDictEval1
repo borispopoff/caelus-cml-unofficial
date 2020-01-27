@@ -41,4 +41,8 @@ cosh(0.1)  #eval{cosh(0.1)};
 
 sqrt100    #eval{((sqrt(100)))};
 
+float       12.345;
+ceil        #eval{ ceil($float) };
+floor       #eval{ floor($float) };
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

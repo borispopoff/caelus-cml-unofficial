@@ -32,15 +32,75 @@ CML::parsing::genericRagelLemonDriver::genericRagelLemonDriver()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+void CML::parsing::genericRagelLemonDriver::clear()
+{
+    content_ = std::cref<std::string>(CML::string::null);
+    start_ = 0;
+    length_ = 0;
+    position_ = 0;
+}
+
+
+void CML::parsing::genericRagelLemonDriver::content
+(
+    const std::string& s,
+    size_t pos,
+    size_t len
+)
+{
+    content_ = std::cref<std::string>(s);
+    start_ = pos;
+    length_ = len;
+    position_ = 0;
+}
+
+
+std::string::const_iterator
+CML::parsing::genericRagelLemonDriver::cbegin() const
+{
+    const std::string& s = content_.get();
+
+    if (start_ >= s.length())
+    {
+        return s.cend();
+    }
+
+    return s.cbegin() + start_;
+}
+
+
+std::string::const_iterator
+CML::parsing::genericRagelLemonDriver::cend() const
+{
+    const std::string& s = content_.get();
+
+    if (length_ == std::string::npos || start_ >= s.length())
+    {
+        return s.cend();
+    }
+
+    const size_t strEnd = start_ + length_;
+
+    if (strEnd >= s.length())
+    {
+        return s.cend();
+    }
+
+    return s.cbegin() + strEnd;
+}
+
+
 CML::Ostream& CML::parsing::genericRagelLemonDriver::printBuffer
 (
     Ostream& os
 ) const
 {
-    const std::string& s = content_.get();
+    const auto endIter = cend();
 
-    for (char c : s)
+    for (auto iter = cbegin(); iter != endIter; ++iter)
     {
+        char c(*iter);
+
         // if (!c) break;
 
         if (c == '\t')
@@ -105,9 +165,10 @@ void CML::parsing::genericRagelLemonDriver::reportFatal
         << " in expression at position:" << label(pos) << nl
         << "<<<<\n";
 
-    const auto begIter = content().cbegin();
-    const auto endIter = content().cend();
+    const auto begIter = cbegin();
+    const auto endIter = cend();
 
+    // Position of newline(s)
     size_t newline0 = 0, newline1 = 0;
 
     auto iter = begIter;
@@ -151,6 +212,7 @@ void CML::parsing::genericRagelLemonDriver::reportFatal
     size_t col = std::min(newline0, newline1);
     if (col < pos)
     {
+        // This still isn't quite right
         col = pos - col;
         if (col) --col;
 
