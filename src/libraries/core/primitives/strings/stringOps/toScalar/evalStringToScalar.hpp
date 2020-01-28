@@ -50,6 +50,7 @@ namespace stringOps
     //  - misc: floor, ceil, round, rand, rand(seed)
     //
     //  \note The rand() function returns a uniform scalar on [0-1] interval
+    //  and uses a constant seed
     scalar toScalar
     (
         const std::string& s,

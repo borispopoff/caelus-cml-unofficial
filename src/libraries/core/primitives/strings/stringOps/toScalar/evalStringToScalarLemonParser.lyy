@@ -36,7 +36,7 @@ Description
 #pragma GCC diagnostic ignored "-Wunused-function"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wsign-compare"
-}
+}  // End of %include
 
 %namespace      {}
 
@@ -47,71 +47,42 @@ Description
 
 %token_prefix TOK_
 
-%token_type     { CML::scalar }
+// Terminals
+%token_type     { CML::scalar}
+// Non-terminals
+%type exp       {CML::scalar}
 
 %left PLUS MINUS.
 %left TIMES DIVIDE.
 %left NEGATE.
 
+%start_symbol evaluate
 
-eval(lhs) ::= exp(a).
+evaluate ::= exp(a).
 {
-    lhs = a;
-    driver->setValue(lhs);
+    driver->setValue(a);
 }
 
-exp(lhs) ::= NUMBER(a).
-{
-    lhs = a;
-}
+exp(lhs) ::= NUMBER(a).             { lhs = a; }
+exp(lhs) ::= MINUS exp(a). [NEGATE] { lhs = -a; }
 
-exp(lhs) ::= MINUS exp(a).
-{
-    lhs = -a;
-}
+// Operations
 
-exp(lhs) ::= exp(a) PLUS exp(b).
-{
-    lhs = a + b;
-}
+exp(lhs) ::= exp(a) PLUS exp(b).    { lhs = a + b; }
+exp(lhs) ::= exp(a) MINUS exp(b).   { lhs = a - b; }
+exp(lhs) ::= exp(a) TIMES exp(b).   { lhs = a * b; }
+exp(lhs) ::= exp(a) DIVIDE exp(b).  { lhs = a / b; }
+exp(lhs) ::= LPAREN exp(a) RPAREN.  { lhs = a; }
 
-exp(lhs) ::= exp(a) MINUS exp(b).
-{
-    lhs = a - b;
-}
 
-exp(lhs) ::= exp(a) TIMES exp(b).
-{
-    lhs = a * b;
-}
+// Constants
 
-exp(lhs) ::= exp(a) DIVIDE exp(b).
-{
-    lhs = a / b;
-}
-
-exp(lhs) ::= LPAREN exp(a) RPAREN.
-{
-    lhs = a;
-}
+exp(lhs) ::= PI LPAREN RPAREN.  { lhs = CML::constant::mathematical::pi; }
+exp(lhs) ::= DEG_TO_RAD LPAREN RPAREN.  { lhs = CML::degToRad(); }
+exp(lhs) ::= RAD_TO_DEG LPAREN RPAREN.  { lhs = CML::radToDeg(); }
 
 
 // Functions
-
-exp(lhs) ::= PI LPAREN RPAREN.
-{
-    lhs = CML::constant::mathematical::pi;
-}
-
-exp(lhs) ::= DEG_TO_RAD LPAREN RPAREN.
-{
-    lhs = CML::degToRad();
-}
-
-exp(lhs) ::= RAD_TO_DEG LPAREN RPAREN.
-{
-    lhs = CML::radToDeg();
-}
 
 exp(lhs) ::= DEG_TO_RAD LPAREN exp(a) RPAREN.
 {
@@ -293,9 +264,30 @@ void CML::parsing::evalStringToScalar::parser::parse
 }
 
 
+CML::word CML::parsing::evalStringToScalar::parser::nameOfToken
+(
+    int tokenId
+) const
+{
+    #ifndef NDEBUG
+    if
+    (
+        tokenId > 0
+     && unsigned(tokenId) < (sizeof(yyTokenName) / sizeof(char*))
+    )
+    {
+        return yyTokenName[tokenId];
+    }
+    return "<invalid>";
+    #else
+    return word();
+    #endif
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-}  // Code
+}  // End of %code
 
 
 // ************************************************************************* //

@@ -52,22 +52,10 @@ class parseDriver
 :
     public genericRagelLemonDriver
 {
-protected:
-
-    // Protected Data
+    // Private Data
 
         //- The result
         scalar value_;
-
-
-    // Protected Member Functions
-
-        // No copy copy construct
-        parseDriver(const parseDriver&) = delete;
-
-        // No copy assignment
-        void operator=(const parseDriver&) = delete;
-
 
 public:
 

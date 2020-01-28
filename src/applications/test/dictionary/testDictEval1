@@ -34,7 +34,6 @@ eval4   #eval{$eval1 * 10};
 
 pi()    #eval{pi()};
 
-rand()  #eval{100*rand(123456)};
 
 sinh(0.1)  #eval{sinh(0.1)};
 cosh(0.1)  #eval{cosh(0.1)};

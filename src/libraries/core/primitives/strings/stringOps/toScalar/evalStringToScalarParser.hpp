@@ -76,6 +76,9 @@ public:
 
         //- Push token/value to parser
         void parse(int tokenId, CML::scalar val);
+
+        //- The text name corresponding to the tokenId
+        word nameOfToken(int tokenId) const;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

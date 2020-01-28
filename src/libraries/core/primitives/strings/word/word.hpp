@@ -108,6 +108,16 @@ public:
         //- Is this character valid for a word
         inline static bool valid(char);
 
+        //- Construct validated word (no invalid characters) from a sequence
+        //- of characters in the range [first,last),
+        //  Optionally prefix any leading digit with '_'.
+        static word validate
+        (
+            const char* first,
+            const char* last,
+            const bool prefix=false
+        );
+
 
     // Member operators
 
