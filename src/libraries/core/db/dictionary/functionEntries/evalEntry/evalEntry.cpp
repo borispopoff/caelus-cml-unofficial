@@ -100,7 +100,7 @@ CML::scalar CML::functionEntries::evalEntry::evaluate
     #endif
 
     stringOps::inplaceRemoveComments(s);
-    stringOps::inplaceExpand(s, parentDict);
+    stringOps::inplaceExpand(s, parentDict, false, true);
 
     #ifdef FULLDEBUG
     Info

@@ -83,8 +83,11 @@ namespace stringOps
     );
 
 
-    //- Inplace expand occurrences of variables according to the mapping
+    //- Inplace expand occurrences of variables according to the dictionary
+    //- and (optionally) environment variables.
+    //
     //  Expansion includes:
+    //
     //  -# variables
     //    - "$VAR", "${VAR}"
     //

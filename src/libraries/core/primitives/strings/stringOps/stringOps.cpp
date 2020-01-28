@@ -267,13 +267,20 @@ CML::string CML::stringOps::getVariable
         buf << scientific;
         buf.precision(IOstream::defaultPrecision());
 
-        // fail for non-primitiveEntry
-        dynamicCast<const primitiveEntry>
-        (
-            *ePtr
-        ).write(buf, true);
+        // Fail for non-primitiveEntry
+        const primitiveEntry& pe =
+            dynamicCast<const primitiveEntry>(*ePtr);
 
-        value = buf.str();
+        if (pe.size() == 1 && pe[0].isAnyString())
+        {
+            // Already a string-type (WORD, STRING, ...). Just copy.
+            value = pe[0].anyStringToken();
+        }
+        else
+        {
+            pe.write(buf, true);
+            value = buf.str();
+        }
     }
     else if (allowEnvVars)
     {
