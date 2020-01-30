@@ -36,6 +36,7 @@ SourceFiles
 
 #include "bool.hpp"
 #include "word.hpp"
+#include "scalar.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,7 +44,6 @@ namespace CML
 {
 
 // Forward declaration of friend functions and operators
-
 class Switch;
 class dictionary;
 
@@ -144,6 +144,20 @@ public:
         Switch(const int i)
         :
             switch_(i ? switchType::True : switchType::False)
+        {}
+
+        //- Construct from float with rounding to zero given by
+        //- the tolerance (default: 0.5)
+        Switch(const float val, const float tol=0.5)
+        :
+            switch_((mag(val) > tol) ? switchType::True : switchType::False)
+        {}
+
+        //- Construct from double with rounding to zero given by
+        //- the tolerance (default: 0.5)
+        Switch(const double val, const double tol=0.5)
+        :
+            switch_((mag(val) > tol) ? switchType::True : switchType::False)
         {}
 
         //- Construct from std::string, string, word

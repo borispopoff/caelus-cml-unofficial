@@ -59,10 +59,9 @@ CML::scalar CML::stringOps::toScalar
     size_t len
 )
 {
-    CML::parsing::evalStringToScalar::parseDriver driver;
+    parsing::evalStringToScalar::parseDriver driver;
 
-    scalar val = driver.execute(s, pos, len);
-    // val = driver.value();
+    driver.execute(s, pos, len);
 
-    return val;
+    return driver.value();
 }

@@ -190,7 +190,6 @@ src_core = Split("""
     db/dictionary/functionEntries/includeIfPresentEntry/includeIfPresentEntry.cpp
     db/dictionary/functionEntries/inputModeEntry/inputModeEntry.cpp
     db/dictionary/functionEntries/removeEntry/removeEntry.cpp
-    db/dictionary/functionEntries/evalEntry/evalEntry.cpp
     db/IOobjects/IOdictionary/IOdictionary.cpp
     db/IOobjects/IOdictionary/IOdictionaryIO.cpp
     db/IOobjects/IOMap/IOMapName.cpp
@@ -1079,8 +1078,8 @@ src_core = Split("""
     primitives/strings/stringOps/toScalar/evalStringToScalarDriver.cpp
     primitives/strings/stringOps/toScalar/evalStringToScalarScanner.cc
     primitives/strings/stringOps/toScalar/evalStringToScalarLemonParser.cc
+    db/dictionary/functionEntries/evalEntry/evalEntry.cpp
 """)
-
 
 target = 'core'
 

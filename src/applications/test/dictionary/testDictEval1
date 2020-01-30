@@ -1,9 +1,6 @@
-/*--------------------------------*- C++ -*----------------------------------*\
-| =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  Any                                   |
-|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
-|    \\/     M anipulation  |                                                 |
+/*---------------------------------------------------------------------------*
+Caelus 9.04
+Web:   www.caelus-cml.com
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -43,5 +40,3 @@ sqrt100    #eval{((sqrt(100)))};
 float       12.345;
 ceil        #eval{ ceil($float) };
 floor       #eval{ floor($float) };
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

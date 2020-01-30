@@ -8,7 +8,7 @@ prefix=evalStringToScalar
 "${PROJECT_DIR:?}/bin/makeParser" \
     -prefix="$prefix" \
     -scanner=Scanner.rl \
-    -parser=LemonParser.lyy \
+    -parser=LemonParser.lyy-m4 \
     -code \
     "$@"
 

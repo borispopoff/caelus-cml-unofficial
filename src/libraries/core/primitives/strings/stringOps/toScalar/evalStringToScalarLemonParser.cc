@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <assert.h>
 /************ Begin %include sections from the grammar ************************/
-#line 1 "evalStringToScalarLemonParser.lyy"
+#line 2 "evalStringToScalarLemonParser.lyy"
 
 /*--------------------------------*- C++ -*----------------------------------*\
 Copyright (C) 2019 OpenCFD Ltd.
@@ -53,18 +53,35 @@ Description
     Interface code wrapping is near the bottom of the file.
 
 \*---------------------------------------------------------------------------*/
+#line 35 "evalStringToScalarLemonParser.lyy"
 
 #include "evalStringToScalarDriver.hpp"
 #include "evalStringToScalarParser.hpp"
 #include "unitConversion.hpp"
 #include "Random.hpp"
+#include "Switch.hpp"
 #include "error.hpp"
+#include "ops.hpp"
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #pragma GCC diagnostic ignored "-Wunused-function"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wsign-compare"
-#line 68 "evalStringToScalarLemonParser.cc"
+
+// Enable ParseTrace
+#undef NDEBUG
+
+// Local Functions
+
+//- Test for value close to zero
+template<class T>
+bool equalZero(const T& val)
+{
+    return (CML::mag(val) < CML::ROOTVSMALL);
+}
+
+
+#line 85 "evalStringToScalarLemonParser.cc"
 /**************** End of %include directives **********************************/
 /* These constants specify the various numeric values for terminal symbols
 ** in a format understandable to "makeheaders".  This section is blank unless
@@ -128,13 +145,14 @@ Description
 #endif
 /************* Begin control #defines *****************************************/
 #define YYCODETYPE unsigned char
-#define YYNOCODE 41
-#define YYACTIONTYPE unsigned char
+#define YYNOCODE 57
+#define YYACTIONTYPE unsigned short int
 #define ParseTOKENTYPE  CML::scalar
 typedef union {
   int yyinit;
   ParseTOKENTYPE yy0;
-  CML::scalar yy11;
+  bool yy71;
+  CML::scalar yy101;
 } YYMINORTYPE;
 #ifndef YYSTACKDEPTH
 #define YYSTACKDEPTH 100
@@ -149,17 +167,17 @@ typedef union {
 #define ParseCTX_PARAM ,driver 
 #define ParseCTX_FETCH  CML::parsing::evalStringToScalar::parseDriver* driver =yypParser->driver ;
 #define ParseCTX_STORE yypParser->driver =driver ;
-#define YYNSTATE             107
-#define YYNRULE              40
-#define YYNTOKEN             39
-#define YY_MAX_SHIFT         106
-#define YY_MIN_SHIFTREDUCE   144
-#define YY_MAX_SHIFTREDUCE   183
-#define YY_ERROR_ACTION      184
-#define YY_ACCEPT_ACTION     185
-#define YY_NO_ACTION         186
-#define YY_MIN_REDUCE        187
-#define YY_MAX_REDUCE        226
+#define YYNSTATE             140
+#define YYNRULE              59
+#define YYNTOKEN             54
+#define YY_MAX_SHIFT         139
+#define YY_MIN_SHIFTREDUCE   186
+#define YY_MAX_SHIFTREDUCE   244
+#define YY_ERROR_ACTION      245
+#define YY_ACCEPT_ACTION     246
+#define YY_NO_ACTION         247
+#define YY_MIN_REDUCE        248
+#define YY_MAX_REDUCE        306
 /************* End control #defines *******************************************/
 #define YY_NLOOKAHEAD ((int)(sizeof(yy_lookahead)/sizeof(yy_lookahead[0])))
 
@@ -226,144 +244,219 @@ typedef union {
 **  yy_default[]       Default action for each state.
 **
 *********** Begin parsing tables **********************************************/
-#define YY_ACTTAB_COUNT (455)
+#define YY_ACTTAB_COUNT (786)
 static const YYACTIONTYPE yy_action[] = {
- /*     0 */    74,  185,   38,   40,   36,   35,  145,   34,  182,  106,
- /*    10 */   104,  103,  102,  101,  100,   99,   71,   98,   97,   96,
- /*    20 */    95,   94,   93,   92,   91,   90,   89,   88,   87,   86,
- /*    30 */    85,   84,   83,   82,   81,   80,   79,   78,   77,   38,
- /*    40 */     1,   72,   41,  145,   34,  154,  106,  104,  103,  102,
- /*    50 */   101,  100,   99,   42,   98,   97,   96,   95,   94,   93,
- /*    60 */    92,   91,   90,   89,   88,   87,   86,   85,   84,   83,
- /*    70 */    82,   81,   80,   79,   78,   77,   38,   43,   44,   45,
- /*    80 */   145,   34,  153,  106,  104,  103,  102,  101,  100,   99,
- /*    90 */    46,   98,   97,   96,   95,   94,   93,   92,   91,   90,
- /*   100 */    89,   88,   87,   86,   85,   84,   83,   82,   81,   80,
- /*   110 */    79,   78,   77,   38,   47,   48,   49,  145,   34,   50,
- /*   120 */   106,  104,  103,  102,  101,  100,   99,   51,   98,   97,
- /*   130 */    96,   95,   94,   93,   92,   91,   90,   89,   88,   87,
- /*   140 */    86,   85,   84,   83,   82,   81,   80,   79,   78,   77,
- /*   150 */    39,   37,   36,   35,   52,   53,   54,  183,   55,   39,
- /*   160 */    37,   36,   35,   56,   57,   58,  181,   59,   39,   37,
- /*   170 */    36,   35,   60,   61,   62,  180,   63,   39,   37,   36,
- /*   180 */    35,   64,   65,   66,  179,   67,   39,   37,   36,   35,
- /*   190 */    68,   69,   70,  178,   73,   39,   37,   36,   35,  193,
- /*   200 */   192,   76,  177,  189,   39,   37,   36,   35,   75,    4,
- /*   210 */   186,  176,    5,   39,   37,   36,   35,   39,   37,   36,
- /*   220 */    35,    6,    7,  186,  175,    8,   10,   12,    9,   13,
- /*   230 */    39,   37,   36,   35,   39,   37,   36,   35,   14,   15,
- /*   240 */   186,  174,   17,   19,   20,   11,   21,   39,   37,   36,
- /*   250 */    35,   22,   23,  186,  173,   24,   39,   37,   36,   35,
- /*   260 */    25,  186,  186,  172,   26,   39,   37,   36,   35,  152,
- /*   270 */   186,  186,  171,   27,   39,   37,   36,   35,   39,   37,
- /*   280 */    36,   35,   28,   30,  186,  170,   31,   32,   33,   16,
- /*   290 */     2,   39,   37,   36,   35,   39,   37,   36,   35,    3,
- /*   300 */   105,  186,  169,  186,  186,  186,   18,  186,   39,   37,
- /*   310 */    36,   35,  186,  186,  186,  168,  186,   39,   37,   36,
- /*   320 */    35,  186,  186,  186,  167,  186,   39,   37,   36,   35,
- /*   330 */   186,  186,  186,  166,  186,   39,   37,   36,   35,  186,
- /*   340 */   186,  186,  165,  186,   39,   37,   36,   35,  186,  186,
- /*   350 */   186,  164,  186,   39,   37,   36,   35,  186,  186,  186,
- /*   360 */   163,  186,   39,   37,   36,   35,  186,  186,  186,  162,
- /*   370 */   186,   39,   37,   36,   35,  186,  186,  186,  161,  186,
- /*   380 */    39,   37,   36,   35,  186,  186,  186,  160,  186,   39,
- /*   390 */    37,   36,   35,   39,   37,   36,   35,  186,  186,  186,
- /*   400 */   159,  186,  186,  186,   29,  186,   39,   37,   36,   35,
- /*   410 */   186,  186,  186,  158,  186,   39,   37,   36,   35,  186,
- /*   420 */   186,  186,  157,  186,   39,   37,   36,   35,  186,  186,
- /*   430 */   186,  156,  186,   39,   37,   36,   35,  186,  186,  186,
- /*   440 */   155,  186,   39,   37,   36,   35,  186,  186,  186,  151,
- /*   450 */   187,   39,   37,   36,   35,
+ /*     0 */    99,   90,  246,   47,  247,   45,   46,  107,   59,  107,
+ /*    10 */    57,   46,   50,  247,   49,   44,   43,    7,  187,   52,
+ /*    20 */   227,  139,  138,  136,  135,  133,  132,  131,  130,  129,
+ /*    30 */   128,  127,  126,  125,  124,  123,  122,  121,  120,  119,
+ /*    40 */   118,  117,  116,  115,  114,    6,  113,  112,  111,  110,
+ /*    50 */   109,  230,  231,  108,   50,   47,    5,   45,   46,    7,
+ /*    60 */   187,   52,  193,  139,  138,  136,  135,  133,  132,  131,
+ /*    70 */   130,  129,  128,  127,  126,  125,  124,  123,  122,  121,
+ /*    80 */   120,  119,  118,  117,  116,  115,  114,    1,  113,  112,
+ /*    90 */   111,  110,  109,  230,  231,  108,   50,  107,   56,  107,
+ /*   100 */    91,    7,  187,   52,  192,  139,  138,  136,  135,  133,
+ /*   110 */   132,  131,  130,  129,  128,  127,  126,  125,  124,  123,
+ /*   120 */   122,  121,  120,  119,  118,  117,  116,  115,  114,    9,
+ /*   130 */   113,  112,  111,  110,  109,  230,  231,  108,   50,  106,
+ /*   140 */    98,  102,   58,    7,  187,   52,   11,  139,  138,  136,
+ /*   150 */   135,  133,  132,  131,  130,  129,  128,  127,  126,  125,
+ /*   160 */   124,  123,  122,  121,  120,  119,  118,  117,  116,  115,
+ /*   170 */   114,   13,  113,  112,  111,  110,  109,  230,  231,  108,
+ /*   180 */    42,   41,   39,   37,   40,   38,   53,   51,   49,   44,
+ /*   190 */    43,  295,   98,    4,  191,  217,   42,   41,   39,   37,
+ /*   200 */    40,   38,   53,   51,   49,   44,   43,   42,   41,   39,
+ /*   210 */    37,   40,   38,   53,   51,   49,   44,   43,   47,   15,
+ /*   220 */    45,   46,  200,   42,   41,   39,   37,   40,   38,   53,
+ /*   230 */    51,   49,   44,   43,  107,   60,  247,  232,  201,   42,
+ /*   240 */    41,   39,   37,   40,   38,   53,   51,   49,   44,   43,
+ /*   250 */    47,   17,   45,   46,  235,   42,   41,   39,   37,   40,
+ /*   260 */    38,   53,   51,   49,   44,   43,  107,   61,  247,  234,
+ /*   270 */   228,   42,   41,   39,   37,   40,   38,   53,   51,   49,
+ /*   280 */    44,   43,  107,   62,  107,   63,  226,   42,   41,   39,
+ /*   290 */    37,   40,   38,   53,   51,   49,   44,   43,   42,   41,
+ /*   300 */    39,   37,   40,   38,   53,   51,   49,   44,   43,  107,
+ /*   310 */    64,  107,   65,  225,   42,   41,   39,   37,   40,   38,
+ /*   320 */    53,   51,   49,   44,   43,  107,   66,    8,   42,   41,
+ /*   330 */    39,   37,   40,   38,   53,   51,   49,   44,   43,   47,
+ /*   340 */    18,   45,   46,  224,  291,   47,   19,   45,   46,  107,
+ /*   350 */    67,  107,   68,   20,   10,  107,   69,  247,  190,   21,
+ /*   360 */    42,   41,   39,   37,   40,   38,   53,   51,   49,   44,
+ /*   370 */    43,   42,   41,   39,   37,   40,   38,   53,   51,   49,
+ /*   380 */    44,   43,  107,   70,  107,   71,  223,   42,   41,   39,
+ /*   390 */    37,   40,   38,   53,   51,   49,   44,   43,   22,   23,
+ /*   400 */    12,   42,   41,   39,   37,   40,   38,   53,   51,   49,
+ /*   410 */    44,   43,   24,  107,   72,  247,  222,  107,   73,  107,
+ /*   420 */    74,  107,   75,  107,   76,  107,   77,   14,  107,   78,
+ /*   430 */   107,   79,   25,   42,   41,   39,   37,   40,   38,   53,
+ /*   440 */    51,   49,   44,   43,   42,   41,   39,   37,   40,   38,
+ /*   450 */    53,   51,   49,   44,   43,  107,   80,  107,   81,  221,
+ /*   460 */    42,   41,   39,   37,   40,   38,   53,   51,   49,   44,
+ /*   470 */    43,  107,   82,   16,  247,  220,   42,   41,   39,   37,
+ /*   480 */    40,   38,   53,   51,   49,   44,   43,   26,  107,   83,
+ /*   490 */   247,  219,   42,   41,   39,   37,   40,   38,   53,   51,
+ /*   500 */    49,   44,   43,  107,   84,  107,   85,  218,   42,   41,
+ /*   510 */    39,   37,   40,   38,   53,   51,   49,   44,   43,  107,
+ /*   520 */    86,  107,   87,  216,   42,   41,   39,   37,   40,   38,
+ /*   530 */    53,   51,   49,   44,   43,  107,   88,  107,   92,  215,
+ /*   540 */    42,   41,   39,   37,   40,   38,   53,   51,   49,   44,
+ /*   550 */    43,  107,   93,  107,   94,  214,   42,   41,   39,   37,
+ /*   560 */    40,   38,   53,   51,   49,   44,   43,  107,   95,  107,
+ /*   570 */    96,  213,   42,   41,   39,   37,   40,   38,   53,   51,
+ /*   580 */    49,   44,   43,  107,   97,  107,  261,  212,   42,   41,
+ /*   590 */    39,   37,   40,   38,   53,   51,   49,   44,   43,  107,
+ /*   600 */   260,  134,   98,  211,   42,   41,   39,   37,   40,   38,
+ /*   610 */    53,   51,   49,   44,   43,  299,   98,  101,   55,  210,
+ /*   620 */    42,   41,   39,   37,   40,   38,   53,   51,   49,   44,
+ /*   630 */    43,  103,   54,  107,  259,  209,   42,   41,   39,   37,
+ /*   640 */    40,   38,   53,   51,   49,   44,   43,  107,  251,  107,
+ /*   650 */   105,  208,   42,   41,   39,   37,   40,   38,   53,   51,
+ /*   660 */    49,   44,   43,  100,   89,  107,  104,  207,   42,   41,
+ /*   670 */    39,   37,   40,   38,   53,   51,   49,   44,   43,   27,
+ /*   680 */    28,   29,  247,  206,   42,   41,   39,   37,   40,   38,
+ /*   690 */    53,   51,   49,   44,   43,   30,   31,   32,  247,  205,
+ /*   700 */    42,   41,   39,   37,   40,   38,   53,   51,   49,   44,
+ /*   710 */    43,   33,   34,   35,  247,  204,   42,   41,   39,   37,
+ /*   720 */    40,   38,   53,   51,   49,   44,   43,   36,    2,    3,
+ /*   730 */   247,  203,   42,   41,   39,   37,   40,   38,   53,   51,
+ /*   740 */    49,   44,   43,  137,   48,  247,  247,  202,   42,   41,
+ /*   750 */    39,   37,   40,   38,   53,   51,   49,   44,   43,  248,
+ /*   760 */   247,  247,  247,  188,   42,   41,   39,   37,   40,   38,
+ /*   770 */    53,   51,   49,   44,   43,   42,   41,   39,   37,   40,
+ /*   780 */    38,   53,   51,   49,   44,   43,
 };
 static const YYCODETYPE yy_lookahead[] = {
- /*     0 */    39,   40,    2,   39,    3,    4,    6,    7,    8,    9,
- /*    10 */    10,   11,   12,   13,   14,   15,   39,   17,   18,   19,
+ /*     0 */    54,   55,   56,    1,   57,    3,    4,   54,   55,   54,
+ /*    10 */    55,    4,   12,   57,   13,   14,   15,   17,   18,   19,
  /*    20 */    20,   21,   22,   23,   24,   25,   26,   27,   28,   29,
- /*    30 */    30,   31,   32,   33,   34,   35,   36,   37,   38,    2,
- /*    40 */     7,   39,   39,    6,    7,    8,    9,   10,   11,   12,
- /*    50 */    13,   14,   15,   39,   17,   18,   19,   20,   21,   22,
- /*    60 */    23,   24,   25,   26,   27,   28,   29,   30,   31,   32,
- /*    70 */    33,   34,   35,   36,   37,   38,    2,   39,   39,   39,
- /*    80 */     6,    7,    8,    9,   10,   11,   12,   13,   14,   15,
- /*    90 */    39,   17,   18,   19,   20,   21,   22,   23,   24,   25,
- /*   100 */    26,   27,   28,   29,   30,   31,   32,   33,   34,   35,
- /*   110 */    36,   37,   38,    2,   39,   39,   39,    6,    7,   39,
- /*   120 */     9,   10,   11,   12,   13,   14,   15,   39,   17,   18,
- /*   130 */    19,   20,   21,   22,   23,   24,   25,   26,   27,   28,
- /*   140 */    29,   30,   31,   32,   33,   34,   35,   36,   37,   38,
- /*   150 */     1,    2,    3,    4,   39,   39,   39,    8,   39,    1,
- /*   160 */     2,    3,    4,   39,   39,   39,    8,   39,    1,    2,
- /*   170 */     3,    4,   39,   39,   39,    8,   39,    1,    2,    3,
- /*   180 */     4,   39,   39,   39,    8,   39,    1,    2,    3,    4,
- /*   190 */    39,   39,   39,    8,   39,    1,    2,    3,    4,   39,
- /*   200 */    39,   39,    8,   39,    1,    2,    3,    4,   39,    7,
- /*   210 */    41,    8,    7,    1,    2,    3,    4,    1,    2,    3,
- /*   220 */     4,    7,    7,   41,    8,    7,    7,    7,   16,    7,
- /*   230 */     1,    2,    3,    4,    1,    2,    3,    4,    7,    7,
- /*   240 */    41,    8,    7,    7,    7,   16,    7,    1,    2,    3,
- /*   250 */     4,    7,    7,   41,    8,    7,    1,    2,    3,    4,
- /*   260 */     7,   41,   41,    8,    7,    1,    2,    3,    4,    8,
- /*   270 */    41,   41,    8,    7,    1,    2,    3,    4,    1,    2,
- /*   280 */     3,    4,    7,    7,   41,    8,    7,    7,    7,   16,
- /*   290 */     7,    1,    2,    3,    4,    1,    2,    3,    4,    7,
- /*   300 */     7,   41,    8,   41,   41,   41,   16,   41,    1,    2,
- /*   310 */     3,    4,   41,   41,   41,    8,   41,    1,    2,    3,
- /*   320 */     4,   41,   41,   41,    8,   41,    1,    2,    3,    4,
- /*   330 */    41,   41,   41,    8,   41,    1,    2,    3,    4,   41,
- /*   340 */    41,   41,    8,   41,    1,    2,    3,    4,   41,   41,
- /*   350 */    41,    8,   41,    1,    2,    3,    4,   41,   41,   41,
- /*   360 */     8,   41,    1,    2,    3,    4,   41,   41,   41,    8,
- /*   370 */    41,    1,    2,    3,    4,   41,   41,   41,    8,   41,
- /*   380 */     1,    2,    3,    4,   41,   41,   41,    8,   41,    1,
- /*   390 */     2,    3,    4,    1,    2,    3,    4,   41,   41,   41,
- /*   400 */     8,   41,   41,   41,   16,   41,    1,    2,    3,    4,
- /*   410 */    41,   41,   41,    8,   41,    1,    2,    3,    4,   41,
- /*   420 */    41,   41,    8,   41,    1,    2,    3,    4,   41,   41,
- /*   430 */    41,    8,   41,    1,    2,    3,    4,   41,   41,   41,
- /*   440 */     8,   41,    1,    2,    3,    4,   41,   41,   41,    8,
- /*   450 */     0,    1,    2,    3,    4,   41,   41,   41,   41,   41,
- /*   460 */    41,   41,   41,   41,   41,   41,   41,   41,   41,   41,
- /*   470 */    41,   41,   41,   41,   41,   41,   41,   41,   41,   41,
- /*   480 */    41,   41,   41,   41,   41,   41,   41,   41,   41,   41,
- /*   490 */    39,   39,   39,   39,
+ /*    30 */    30,   31,   32,   33,   34,   35,   36,   37,   38,   39,
+ /*    40 */    40,   41,   42,   43,   44,   19,   46,   47,   48,   49,
+ /*    50 */    50,   51,   52,   53,   12,    1,    2,    3,    4,   17,
+ /*    60 */    18,   19,   20,   21,   22,   23,   24,   25,   26,   27,
+ /*    70 */    28,   29,   30,   31,   32,   33,   34,   35,   36,   37,
+ /*    80 */    38,   39,   40,   41,   42,   43,   44,   19,   46,   47,
+ /*    90 */    48,   49,   50,   51,   52,   53,   12,   54,   55,   54,
+ /*   100 */    55,   17,   18,   19,   20,   21,   22,   23,   24,   25,
+ /*   110 */    26,   27,   28,   29,   30,   31,   32,   33,   34,   35,
+ /*   120 */    36,   37,   38,   39,   40,   41,   42,   43,   44,   19,
+ /*   130 */    46,   47,   48,   49,   50,   51,   52,   53,   12,   54,
+ /*   140 */    55,   54,   55,   17,   18,   19,   19,   21,   22,   23,
+ /*   150 */    24,   25,   26,   27,   28,   29,   30,   31,   32,   33,
+ /*   160 */    34,   35,   36,   37,   38,   39,   40,   41,   42,   43,
+ /*   170 */    44,   19,   46,   47,   48,   49,   50,   51,   52,   53,
+ /*   180 */     5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
+ /*   190 */    15,   54,   55,    2,   20,   20,    5,    6,    7,    8,
+ /*   200 */     9,   10,   11,   12,   13,   14,   15,    5,    6,    7,
+ /*   210 */     8,    9,   10,   11,   12,   13,   14,   15,    1,   19,
+ /*   220 */     3,    4,   20,    5,    6,    7,    8,    9,   10,   11,
+ /*   230 */    12,   13,   14,   15,   54,   55,   57,   20,   20,    5,
+ /*   240 */     6,    7,    8,    9,   10,   11,   12,   13,   14,   15,
+ /*   250 */     1,   19,    3,    4,   20,    5,    6,    7,    8,    9,
+ /*   260 */    10,   11,   12,   13,   14,   15,   54,   55,   57,   20,
+ /*   270 */    20,    5,    6,    7,    8,    9,   10,   11,   12,   13,
+ /*   280 */    14,   15,   54,   55,   54,   55,   20,    5,    6,    7,
+ /*   290 */     8,    9,   10,   11,   12,   13,   14,   15,    5,    6,
+ /*   300 */     7,    8,    9,   10,   11,   12,   13,   14,   15,   54,
+ /*   310 */    55,   54,   55,   20,    5,    6,    7,    8,    9,   10,
+ /*   320 */    11,   12,   13,   14,   15,   54,   55,   45,    5,    6,
+ /*   330 */     7,    8,    9,   10,   11,   12,   13,   14,   15,    1,
+ /*   340 */    19,    3,    4,   20,    0,    1,   19,    3,    4,   54,
+ /*   350 */    55,   54,   55,   19,   45,   54,   55,   57,   20,   19,
+ /*   360 */     5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
+ /*   370 */    15,    5,    6,    7,    8,    9,   10,   11,   12,   13,
+ /*   380 */    14,   15,   54,   55,   54,   55,   20,    5,    6,    7,
+ /*   390 */     8,    9,   10,   11,   12,   13,   14,   15,   19,   19,
+ /*   400 */    45,    5,    6,    7,    8,    9,   10,   11,   12,   13,
+ /*   410 */    14,   15,   19,   54,   55,   57,   20,   54,   55,   54,
+ /*   420 */    55,   54,   55,   54,   55,   54,   55,   45,   54,   55,
+ /*   430 */    54,   55,   19,    5,    6,    7,    8,    9,   10,   11,
+ /*   440 */    12,   13,   14,   15,    5,    6,    7,    8,    9,   10,
+ /*   450 */    11,   12,   13,   14,   15,   54,   55,   54,   55,   20,
+ /*   460 */     5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
+ /*   470 */    15,   54,   55,   45,   57,   20,    5,    6,    7,    8,
+ /*   480 */     9,   10,   11,   12,   13,   14,   15,   19,   54,   55,
+ /*   490 */    57,   20,    5,    6,    7,    8,    9,   10,   11,   12,
+ /*   500 */    13,   14,   15,   54,   55,   54,   55,   20,    5,    6,
+ /*   510 */     7,    8,    9,   10,   11,   12,   13,   14,   15,   54,
+ /*   520 */    55,   54,   55,   20,    5,    6,    7,    8,    9,   10,
+ /*   530 */    11,   12,   13,   14,   15,   54,   55,   54,   55,   20,
+ /*   540 */     5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
+ /*   550 */    15,   54,   55,   54,   55,   20,    5,    6,    7,    8,
+ /*   560 */     9,   10,   11,   12,   13,   14,   15,   54,   55,   54,
+ /*   570 */    55,   20,    5,    6,    7,    8,    9,   10,   11,   12,
+ /*   580 */    13,   14,   15,   54,   55,   54,   55,   20,    5,    6,
+ /*   590 */     7,    8,    9,   10,   11,   12,   13,   14,   15,   54,
+ /*   600 */    55,   54,   55,   20,    5,    6,    7,    8,    9,   10,
+ /*   610 */    11,   12,   13,   14,   15,   54,   55,   54,   55,   20,
+ /*   620 */     5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
+ /*   630 */    15,   54,   55,   54,   55,   20,    5,    6,    7,    8,
+ /*   640 */     9,   10,   11,   12,   13,   14,   15,   54,   55,   54,
+ /*   650 */    55,   20,    5,    6,    7,    8,    9,   10,   11,   12,
+ /*   660 */    13,   14,   15,   54,   55,   54,   55,   20,    5,    6,
+ /*   670 */     7,    8,    9,   10,   11,   12,   13,   14,   15,   19,
+ /*   680 */    19,   19,   57,   20,    5,    6,    7,    8,    9,   10,
+ /*   690 */    11,   12,   13,   14,   15,   19,   19,   19,   57,   20,
+ /*   700 */     5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
+ /*   710 */    15,   19,   19,   19,   57,   20,    5,    6,    7,    8,
+ /*   720 */     9,   10,   11,   12,   13,   14,   15,   19,   19,   19,
+ /*   730 */    57,   20,    5,    6,    7,    8,    9,   10,   11,   12,
+ /*   740 */    13,   14,   15,   19,   19,   57,   57,   20,    5,    6,
+ /*   750 */     7,    8,    9,   10,   11,   12,   13,   14,   15,    0,
+ /*   760 */    57,   57,   57,   20,    5,    6,    7,    8,    9,   10,
+ /*   770 */    11,   12,   13,   14,   15,    5,    6,    7,    8,    9,
+ /*   780 */    10,   11,   12,   13,   14,   15,   57,   57,   57,   57,
+ /*   790 */    57,   57,   57,   57,   57,   57,   57,   57,   57,   57,
+ /*   800 */    57,   57,   57,   57,   57,   57,   57,   57,   57,   57,
+ /*   810 */    57,   57,   57,   57,   57,   57,   57,   57,   57,   57,
+ /*   820 */    57,   57,   57,   57,   57,   57,   57,   57,   57,   57,
+ /*   830 */    54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
 };
-#define YY_SHIFT_COUNT    (106)
+#define YY_SHIFT_COUNT    (139)
 #define YY_SHIFT_MIN      (0)
-#define YY_SHIFT_MAX      (450)
+#define YY_SHIFT_MAX      (770)
 static const unsigned short int yy_shift_ofst[] = {
- /*     0 */   111,    0,   37,   74,  111,  111,  111,  111,  111,  111,
- /*    10 */   111,  111,  111,  111,  111,  111,  111,  111,  111,  111,
- /*    20 */   111,  111,  111,  111,  111,  111,  111,  111,  111,  111,
- /*    30 */   111,  111,  111,  111,  111,  111,  111,  111,  111,  111,
- /*    40 */   149,  158,  167,  176,  185,  194,  203,  212,  216,  229,
- /*    50 */   233,  246,  255,  264,  273,  277,  290,  294,  307,  316,
- /*    60 */   325,  334,  343,  352,  361,  370,  379,  388,  392,  405,
- /*    70 */   414,  423,  432,  441,  450,    1,    1,   33,  202,  205,
- /*    80 */   214,  215,  218,  219,  220,  222,  231,  232,  235,  236,
- /*    90 */   237,  239,  244,  245,  248,  253,  257,  266,  275,  276,
- /*   100 */   279,  280,  281,  283,  292,  261,  293,
+ /*     0 */   126,    0,   42,   84,  126,  126,  126,  126,  126,  126,
+ /*    10 */   126,  126,  126,  126,  126,  126,  126,  126,  126,  126,
+ /*    20 */   126,  126,  126,  126,  126,  126,  126,  126,  126,  126,
+ /*    30 */   126,  126,  126,  126,  126,  126,  126,  126,  126,  126,
+ /*    40 */   126,  126,  126,  126,  126,  126,  126,  126,  126,  126,
+ /*    50 */   126,  126,  126,  126,  175,  191,  202,  218,  234,  250,
+ /*    60 */   266,  282,  293,  309,  323,  355,  366,  382,  396,  428,
+ /*    70 */   439,  455,  471,  487,  503,  519,  535,  551,  567,  583,
+ /*    80 */   599,  615,  631,  647,  663,  679,  695,  711,  727,  743,
+ /*    90 */   759,  770,  770,  770,  770,  770,  770,  770,  770,  344,
+ /*   100 */   217,   54,  249,  338,    1,    1,    2,    2,   26,   68,
+ /*   110 */   110,  127,  152,  200,  232,  321,  327,  334,  340,  379,
+ /*   120 */   380,  393,  413,  468,  660,  661,  662,  676,  677,  678,
+ /*   130 */   692,  693,  694,  708,    7,  709,  710,  174,  724,  725,
 };
-#define YY_REDUCE_COUNT (39)
-#define YY_REDUCE_MIN   (-39)
-#define YY_REDUCE_MAX   (169)
+#define YY_REDUCE_COUNT (53)
+#define YY_REDUCE_MIN   (-54)
+#define YY_REDUCE_MAX   (611)
 static const short yy_reduce_ofst[] = {
- /*     0 */   -39,  -36,  -23,    2,    3,   14,   38,   39,   40,   51,
- /*    10 */    75,   76,   77,   80,   88,  115,  116,  117,  119,  124,
- /*    20 */   125,  126,  128,  133,  134,  135,  137,  142,  143,  144,
- /*    30 */   146,  151,  152,  153,  155,  160,  161,  162,  164,  169,
+ /*     0 */   -54,  -47,  -45,   43,   45,   85,   87,  137,  180,  212,
+ /*    10 */   228,  230,  255,  257,  271,  295,  297,  301,  328,  330,
+ /*    20 */   359,  363,  365,  367,  369,  371,  374,  376,  401,  403,
+ /*    30 */   417,  434,  449,  451,  465,  467,  481,  483,  497,  499,
+ /*    40 */   513,  515,  529,  531,  545,  547,  561,  563,  577,  579,
+ /*    50 */   593,  595,  609,  611,
 };
 static const YYACTIONTYPE yy_default[] = {
- /*     0 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
- /*    10 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
- /*    20 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
- /*    30 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
- /*    40 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
- /*    50 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
- /*    60 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
- /*    70 */   184,  184,  184,  184,  184,  190,  191,  184,  184,  184,
- /*    80 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
- /*    90 */   184,  184,  184,  184,  184,  184,  184,  184,  184,  184,
- /*   100 */   184,  184,  184,  184,  184,  184,  184,
+ /*     0 */   245,  245,  245,  245,  245,  245,  245,  245,  245,  245,
+ /*    10 */   245,  245,  245,  245,  245,  245,  245,  245,  245,  245,
+ /*    20 */   245,  245,  245,  245,  245,  245,  245,  245,  245,  245,
+ /*    30 */   245,  245,  245,  245,  245,  245,  245,  245,  245,  245,
+ /*    40 */   245,  245,  245,  245,  245,  245,  245,  245,  245,  245,
+ /*    50 */   245,  245,  245,  245,  245,  245,  245,  245,  245,  245,
+ /*    60 */   245,  245,  245,  245,  245,  245,  245,  245,  245,  245,
+ /*    70 */   245,  245,  245,  245,  245,  245,  245,  245,  245,  245,
+ /*    80 */   245,  245,  245,  245,  245,  245,  245,  245,  245,  245,
+ /*    90 */   245,  256,  306,  305,  304,  303,  302,  301,  245,  245,
+ /*   100 */   245,  245,  245,  245,  257,  258,  298,  245,  245,  245,
+ /*   110 */   245,  245,  245,  245,  245,  245,  245,  245,  245,  245,
+ /*   120 */   245,  245,  245,  245,  245,  245,  245,  245,  245,  245,
+ /*   130 */   245,  245,  245,  245,  300,  245,  245,  245,  245,  245,
 };
 /********** End of lemon-generated parsing tables *****************************/
 
@@ -473,46 +566,62 @@ void ParseTrace(FILE *TraceFILE, char *zTracePrompt){
 ** are required.  The following table supplies these names */
 static const char *const yyTokenName[] = {
   /*    0 */ "$",
-  /*    1 */ "PLUS",
-  /*    2 */ "MINUS",
-  /*    3 */ "TIMES",
-  /*    4 */ "DIVIDE",
-  /*    5 */ "NEGATE",
-  /*    6 */ "NUMBER",
-  /*    7 */ "LPAREN",
-  /*    8 */ "RPAREN",
-  /*    9 */ "PI",
-  /*   10 */ "DEG_TO_RAD",
-  /*   11 */ "RAD_TO_DEG",
-  /*   12 */ "EXP",
-  /*   13 */ "LOG",
-  /*   14 */ "LOG10",
-  /*   15 */ "POW",
-  /*   16 */ "COMMA",
-  /*   17 */ "SQR",
-  /*   18 */ "SQRT",
-  /*   19 */ "CBRT",
-  /*   20 */ "SIN",
-  /*   21 */ "COS",
-  /*   22 */ "TAN",
-  /*   23 */ "ASIN",
-  /*   24 */ "ACOS",
-  /*   25 */ "ATAN",
-  /*   26 */ "ATAN2",
-  /*   27 */ "HYPOT",
-  /*   28 */ "SINH",
-  /*   29 */ "COSH",
-  /*   30 */ "TANH",
-  /*   31 */ "MIN",
-  /*   32 */ "MAX",
-  /*   33 */ "MAG",
-  /*   34 */ "MAGSQR",
-  /*   35 */ "FLOOR",
-  /*   36 */ "CEIL",
-  /*   37 */ "ROUND",
-  /*   38 */ "RAND",
-  /*   39 */ "exp",
-  /*   40 */ "evaluate",
+  /*    1 */ "QUESTION",
+  /*    2 */ "COLON",
+  /*    3 */ "LOR",
+  /*    4 */ "LAND",
+  /*    5 */ "EQUAL",
+  /*    6 */ "NOT_EQUAL",
+  /*    7 */ "LESS_EQ",
+  /*    8 */ "GREATER_EQ",
+  /*    9 */ "LESS",
+  /*   10 */ "GREATER",
+  /*   11 */ "PLUS",
+  /*   12 */ "MINUS",
+  /*   13 */ "TIMES",
+  /*   14 */ "DIVIDE",
+  /*   15 */ "PERCENT",
+  /*   16 */ "NEGATE",
+  /*   17 */ "NOT",
+  /*   18 */ "NUMBER",
+  /*   19 */ "LPAREN",
+  /*   20 */ "RPAREN",
+  /*   21 */ "MAG",
+  /*   22 */ "PI",
+  /*   23 */ "DEG_TO_RAD",
+  /*   24 */ "RAD_TO_DEG",
+  /*   25 */ "EXP",
+  /*   26 */ "LOG",
+  /*   27 */ "LOG10",
+  /*   28 */ "SQR",
+  /*   29 */ "SQRT",
+  /*   30 */ "CBRT",
+  /*   31 */ "SIN",
+  /*   32 */ "COS",
+  /*   33 */ "TAN",
+  /*   34 */ "ASIN",
+  /*   35 */ "ACOS",
+  /*   36 */ "ATAN",
+  /*   37 */ "SINH",
+  /*   38 */ "COSH",
+  /*   39 */ "TANH",
+  /*   40 */ "MAGSQR",
+  /*   41 */ "FLOOR",
+  /*   42 */ "CEIL",
+  /*   43 */ "ROUND",
+  /*   44 */ "POW",
+  /*   45 */ "COMMA",
+  /*   46 */ "ATAN2",
+  /*   47 */ "HYPOT",
+  /*   48 */ "MIN",
+  /*   49 */ "MAX",
+  /*   50 */ "RAND",
+  /*   51 */ "BOOL_FALSE",
+  /*   52 */ "BOOL_TRUE",
+  /*   53 */ "BOOL",
+  /*   54 */ "lfield",
+  /*   55 */ "sfield",
+  /*   56 */ "evaluate",
 };
 #endif /* defined(YYCOVERAGE) || !defined(NDEBUG) */
 
@@ -520,46 +629,65 @@ static const char *const yyTokenName[] = {
 /* For tracing reduce actions, the names of all rules are required.
 */
 static const char *const yyRuleName[] = {
- /*   0 */ "evaluate ::= exp",
- /*   1 */ "exp ::= NUMBER",
- /*   2 */ "exp ::= MINUS exp",
- /*   3 */ "exp ::= exp PLUS exp",
- /*   4 */ "exp ::= exp MINUS exp",
- /*   5 */ "exp ::= exp TIMES exp",
- /*   6 */ "exp ::= exp DIVIDE exp",
- /*   7 */ "exp ::= LPAREN exp RPAREN",
- /*   8 */ "exp ::= PI LPAREN RPAREN",
- /*   9 */ "exp ::= DEG_TO_RAD LPAREN RPAREN",
- /*  10 */ "exp ::= RAD_TO_DEG LPAREN RPAREN",
- /*  11 */ "exp ::= DEG_TO_RAD LPAREN exp RPAREN",
- /*  12 */ "exp ::= RAD_TO_DEG LPAREN exp RPAREN",
- /*  13 */ "exp ::= EXP LPAREN exp RPAREN",
- /*  14 */ "exp ::= LOG LPAREN exp RPAREN",
- /*  15 */ "exp ::= LOG10 LPAREN exp RPAREN",
- /*  16 */ "exp ::= POW LPAREN exp COMMA exp RPAREN",
- /*  17 */ "exp ::= SQR LPAREN exp RPAREN",
- /*  18 */ "exp ::= SQRT LPAREN exp RPAREN",
- /*  19 */ "exp ::= CBRT LPAREN exp RPAREN",
- /*  20 */ "exp ::= SIN LPAREN exp RPAREN",
- /*  21 */ "exp ::= COS LPAREN exp RPAREN",
- /*  22 */ "exp ::= TAN LPAREN exp RPAREN",
- /*  23 */ "exp ::= ASIN LPAREN exp RPAREN",
- /*  24 */ "exp ::= ACOS LPAREN exp RPAREN",
- /*  25 */ "exp ::= ATAN LPAREN exp RPAREN",
- /*  26 */ "exp ::= ATAN2 LPAREN exp COMMA exp RPAREN",
- /*  27 */ "exp ::= HYPOT LPAREN exp COMMA exp RPAREN",
- /*  28 */ "exp ::= SINH LPAREN exp RPAREN",
- /*  29 */ "exp ::= COSH LPAREN exp RPAREN",
- /*  30 */ "exp ::= TANH LPAREN exp RPAREN",
- /*  31 */ "exp ::= MIN LPAREN exp COMMA exp RPAREN",
- /*  32 */ "exp ::= MAX LPAREN exp COMMA exp RPAREN",
- /*  33 */ "exp ::= MAG LPAREN exp RPAREN",
- /*  34 */ "exp ::= MAGSQR LPAREN exp RPAREN",
- /*  35 */ "exp ::= FLOOR LPAREN exp RPAREN",
- /*  36 */ "exp ::= CEIL LPAREN exp RPAREN",
- /*  37 */ "exp ::= ROUND LPAREN exp RPAREN",
- /*  38 */ "exp ::= RAND LPAREN RPAREN",
- /*  39 */ "exp ::= RAND LPAREN exp RPAREN",
+ /*   0 */ "evaluate ::= sfield",
+ /*   1 */ "sfield ::= NUMBER",
+ /*   2 */ "sfield ::= LPAREN sfield RPAREN",
+ /*   3 */ "sfield ::= MINUS sfield",
+ /*   4 */ "sfield ::= MAG LPAREN lfield RPAREN",
+ /*   5 */ "sfield ::= PI LPAREN RPAREN",
+ /*   6 */ "sfield ::= DEG_TO_RAD LPAREN RPAREN",
+ /*   7 */ "sfield ::= RAD_TO_DEG LPAREN RPAREN",
+ /*   8 */ "sfield ::= lfield QUESTION sfield COLON sfield",
+ /*   9 */ "sfield ::= sfield PLUS sfield",
+ /*  10 */ "sfield ::= sfield MINUS sfield",
+ /*  11 */ "sfield ::= sfield TIMES sfield",
+ /*  12 */ "sfield ::= sfield DIVIDE sfield",
+ /*  13 */ "sfield ::= sfield PERCENT sfield",
+ /*  14 */ "sfield ::= DEG_TO_RAD LPAREN sfield RPAREN",
+ /*  15 */ "sfield ::= RAD_TO_DEG LPAREN sfield RPAREN",
+ /*  16 */ "sfield ::= EXP LPAREN sfield RPAREN",
+ /*  17 */ "sfield ::= LOG LPAREN sfield RPAREN",
+ /*  18 */ "sfield ::= LOG10 LPAREN sfield RPAREN",
+ /*  19 */ "sfield ::= SQR LPAREN sfield RPAREN",
+ /*  20 */ "sfield ::= SQRT LPAREN sfield RPAREN",
+ /*  21 */ "sfield ::= CBRT LPAREN sfield RPAREN",
+ /*  22 */ "sfield ::= SIN LPAREN sfield RPAREN",
+ /*  23 */ "sfield ::= COS LPAREN sfield RPAREN",
+ /*  24 */ "sfield ::= TAN LPAREN sfield RPAREN",
+ /*  25 */ "sfield ::= ASIN LPAREN sfield RPAREN",
+ /*  26 */ "sfield ::= ACOS LPAREN sfield RPAREN",
+ /*  27 */ "sfield ::= ATAN LPAREN sfield RPAREN",
+ /*  28 */ "sfield ::= SINH LPAREN sfield RPAREN",
+ /*  29 */ "sfield ::= COSH LPAREN sfield RPAREN",
+ /*  30 */ "sfield ::= TANH LPAREN sfield RPAREN",
+ /*  31 */ "sfield ::= MAG LPAREN sfield RPAREN",
+ /*  32 */ "sfield ::= MAGSQR LPAREN sfield RPAREN",
+ /*  33 */ "sfield ::= FLOOR LPAREN sfield RPAREN",
+ /*  34 */ "sfield ::= CEIL LPAREN sfield RPAREN",
+ /*  35 */ "sfield ::= ROUND LPAREN sfield RPAREN",
+ /*  36 */ "sfield ::= POW LPAREN sfield COMMA sfield RPAREN",
+ /*  37 */ "sfield ::= ATAN2 LPAREN sfield COMMA sfield RPAREN",
+ /*  38 */ "sfield ::= HYPOT LPAREN sfield COMMA sfield RPAREN",
+ /*  39 */ "sfield ::= MIN LPAREN sfield COMMA sfield RPAREN",
+ /*  40 */ "sfield ::= MAX LPAREN sfield COMMA sfield RPAREN",
+ /*  41 */ "sfield ::= RAND LPAREN RPAREN",
+ /*  42 */ "sfield ::= RAND LPAREN sfield RPAREN",
+ /*  43 */ "evaluate ::= lfield",
+ /*  44 */ "lfield ::= BOOL_FALSE",
+ /*  45 */ "lfield ::= BOOL_TRUE",
+ /*  46 */ "lfield ::= LPAREN lfield RPAREN",
+ /*  47 */ "lfield ::= NOT lfield",
+ /*  48 */ "lfield ::= BOOL LPAREN lfield RPAREN",
+ /*  49 */ "lfield ::= BOOL LPAREN sfield RPAREN",
+ /*  50 */ "lfield ::= lfield QUESTION lfield COLON lfield",
+ /*  51 */ "lfield ::= lfield LAND lfield",
+ /*  52 */ "lfield ::= lfield LOR lfield",
+ /*  53 */ "lfield ::= sfield EQUAL sfield",
+ /*  54 */ "lfield ::= sfield NOT_EQUAL sfield",
+ /*  55 */ "lfield ::= sfield LESS sfield",
+ /*  56 */ "lfield ::= sfield LESS_EQ sfield",
+ /*  57 */ "lfield ::= sfield GREATER sfield",
+ /*  58 */ "lfield ::= sfield GREATER_EQ sfield",
 };
 #endif /* NDEBUG */
 
@@ -983,91 +1111,129 @@ static void yy_shift(
 /* For rule J, yyRuleInfoLhs[J] contains the symbol on the left-hand side
 ** of that rule */
 static const YYCODETYPE yyRuleInfoLhs[] = {
-    40,  /* (0) evaluate ::= exp */
-    39,  /* (1) exp ::= NUMBER */
-    39,  /* (2) exp ::= MINUS exp */
-    39,  /* (3) exp ::= exp PLUS exp */
-    39,  /* (4) exp ::= exp MINUS exp */
-    39,  /* (5) exp ::= exp TIMES exp */
-    39,  /* (6) exp ::= exp DIVIDE exp */
-    39,  /* (7) exp ::= LPAREN exp RPAREN */
-    39,  /* (8) exp ::= PI LPAREN RPAREN */
-    39,  /* (9) exp ::= DEG_TO_RAD LPAREN RPAREN */
-    39,  /* (10) exp ::= RAD_TO_DEG LPAREN RPAREN */
-    39,  /* (11) exp ::= DEG_TO_RAD LPAREN exp RPAREN */
-    39,  /* (12) exp ::= RAD_TO_DEG LPAREN exp RPAREN */
-    39,  /* (13) exp ::= EXP LPAREN exp RPAREN */
-    39,  /* (14) exp ::= LOG LPAREN exp RPAREN */
-    39,  /* (15) exp ::= LOG10 LPAREN exp RPAREN */
-    39,  /* (16) exp ::= POW LPAREN exp COMMA exp RPAREN */
-    39,  /* (17) exp ::= SQR LPAREN exp RPAREN */
-    39,  /* (18) exp ::= SQRT LPAREN exp RPAREN */
-    39,  /* (19) exp ::= CBRT LPAREN exp RPAREN */
-    39,  /* (20) exp ::= SIN LPAREN exp RPAREN */
-    39,  /* (21) exp ::= COS LPAREN exp RPAREN */
-    39,  /* (22) exp ::= TAN LPAREN exp RPAREN */
-    39,  /* (23) exp ::= ASIN LPAREN exp RPAREN */
-    39,  /* (24) exp ::= ACOS LPAREN exp RPAREN */
-    39,  /* (25) exp ::= ATAN LPAREN exp RPAREN */
-    39,  /* (26) exp ::= ATAN2 LPAREN exp COMMA exp RPAREN */
-    39,  /* (27) exp ::= HYPOT LPAREN exp COMMA exp RPAREN */
-    39,  /* (28) exp ::= SINH LPAREN exp RPAREN */
-    39,  /* (29) exp ::= COSH LPAREN exp RPAREN */
-    39,  /* (30) exp ::= TANH LPAREN exp RPAREN */
-    39,  /* (31) exp ::= MIN LPAREN exp COMMA exp RPAREN */
-    39,  /* (32) exp ::= MAX LPAREN exp COMMA exp RPAREN */
-    39,  /* (33) exp ::= MAG LPAREN exp RPAREN */
-    39,  /* (34) exp ::= MAGSQR LPAREN exp RPAREN */
-    39,  /* (35) exp ::= FLOOR LPAREN exp RPAREN */
-    39,  /* (36) exp ::= CEIL LPAREN exp RPAREN */
-    39,  /* (37) exp ::= ROUND LPAREN exp RPAREN */
-    39,  /* (38) exp ::= RAND LPAREN RPAREN */
-    39,  /* (39) exp ::= RAND LPAREN exp RPAREN */
+    56,  /* (0) evaluate ::= sfield */
+    55,  /* (1) sfield ::= NUMBER */
+    55,  /* (2) sfield ::= LPAREN sfield RPAREN */
+    55,  /* (3) sfield ::= MINUS sfield */
+    55,  /* (4) sfield ::= MAG LPAREN lfield RPAREN */
+    55,  /* (5) sfield ::= PI LPAREN RPAREN */
+    55,  /* (6) sfield ::= DEG_TO_RAD LPAREN RPAREN */
+    55,  /* (7) sfield ::= RAD_TO_DEG LPAREN RPAREN */
+    55,  /* (8) sfield ::= lfield QUESTION sfield COLON sfield */
+    55,  /* (9) sfield ::= sfield PLUS sfield */
+    55,  /* (10) sfield ::= sfield MINUS sfield */
+    55,  /* (11) sfield ::= sfield TIMES sfield */
+    55,  /* (12) sfield ::= sfield DIVIDE sfield */
+    55,  /* (13) sfield ::= sfield PERCENT sfield */
+    55,  /* (14) sfield ::= DEG_TO_RAD LPAREN sfield RPAREN */
+    55,  /* (15) sfield ::= RAD_TO_DEG LPAREN sfield RPAREN */
+    55,  /* (16) sfield ::= EXP LPAREN sfield RPAREN */
+    55,  /* (17) sfield ::= LOG LPAREN sfield RPAREN */
+    55,  /* (18) sfield ::= LOG10 LPAREN sfield RPAREN */
+    55,  /* (19) sfield ::= SQR LPAREN sfield RPAREN */
+    55,  /* (20) sfield ::= SQRT LPAREN sfield RPAREN */
+    55,  /* (21) sfield ::= CBRT LPAREN sfield RPAREN */
+    55,  /* (22) sfield ::= SIN LPAREN sfield RPAREN */
+    55,  /* (23) sfield ::= COS LPAREN sfield RPAREN */
+    55,  /* (24) sfield ::= TAN LPAREN sfield RPAREN */
+    55,  /* (25) sfield ::= ASIN LPAREN sfield RPAREN */
+    55,  /* (26) sfield ::= ACOS LPAREN sfield RPAREN */
+    55,  /* (27) sfield ::= ATAN LPAREN sfield RPAREN */
+    55,  /* (28) sfield ::= SINH LPAREN sfield RPAREN */
+    55,  /* (29) sfield ::= COSH LPAREN sfield RPAREN */
+    55,  /* (30) sfield ::= TANH LPAREN sfield RPAREN */
+    55,  /* (31) sfield ::= MAG LPAREN sfield RPAREN */
+    55,  /* (32) sfield ::= MAGSQR LPAREN sfield RPAREN */
+    55,  /* (33) sfield ::= FLOOR LPAREN sfield RPAREN */
+    55,  /* (34) sfield ::= CEIL LPAREN sfield RPAREN */
+    55,  /* (35) sfield ::= ROUND LPAREN sfield RPAREN */
+    55,  /* (36) sfield ::= POW LPAREN sfield COMMA sfield RPAREN */
+    55,  /* (37) sfield ::= ATAN2 LPAREN sfield COMMA sfield RPAREN */
+    55,  /* (38) sfield ::= HYPOT LPAREN sfield COMMA sfield RPAREN */
+    55,  /* (39) sfield ::= MIN LPAREN sfield COMMA sfield RPAREN */
+    55,  /* (40) sfield ::= MAX LPAREN sfield COMMA sfield RPAREN */
+    55,  /* (41) sfield ::= RAND LPAREN RPAREN */
+    55,  /* (42) sfield ::= RAND LPAREN sfield RPAREN */
+    56,  /* (43) evaluate ::= lfield */
+    54,  /* (44) lfield ::= BOOL_FALSE */
+    54,  /* (45) lfield ::= BOOL_TRUE */
+    54,  /* (46) lfield ::= LPAREN lfield RPAREN */
+    54,  /* (47) lfield ::= NOT lfield */
+    54,  /* (48) lfield ::= BOOL LPAREN lfield RPAREN */
+    54,  /* (49) lfield ::= BOOL LPAREN sfield RPAREN */
+    54,  /* (50) lfield ::= lfield QUESTION lfield COLON lfield */
+    54,  /* (51) lfield ::= lfield LAND lfield */
+    54,  /* (52) lfield ::= lfield LOR lfield */
+    54,  /* (53) lfield ::= sfield EQUAL sfield */
+    54,  /* (54) lfield ::= sfield NOT_EQUAL sfield */
+    54,  /* (55) lfield ::= sfield LESS sfield */
+    54,  /* (56) lfield ::= sfield LESS_EQ sfield */
+    54,  /* (57) lfield ::= sfield GREATER sfield */
+    54,  /* (58) lfield ::= sfield GREATER_EQ sfield */
 };
 
 /* For rule J, yyRuleInfoNRhs[J] contains the negative of the number
 ** of symbols on the right-hand side of that rule. */
 static const signed char yyRuleInfoNRhs[] = {
-   -1,  /* (0) evaluate ::= exp */
-   -1,  /* (1) exp ::= NUMBER */
-   -2,  /* (2) exp ::= MINUS exp */
-   -3,  /* (3) exp ::= exp PLUS exp */
-   -3,  /* (4) exp ::= exp MINUS exp */
-   -3,  /* (5) exp ::= exp TIMES exp */
-   -3,  /* (6) exp ::= exp DIVIDE exp */
-   -3,  /* (7) exp ::= LPAREN exp RPAREN */
-   -3,  /* (8) exp ::= PI LPAREN RPAREN */
-   -3,  /* (9) exp ::= DEG_TO_RAD LPAREN RPAREN */
-   -3,  /* (10) exp ::= RAD_TO_DEG LPAREN RPAREN */
-   -4,  /* (11) exp ::= DEG_TO_RAD LPAREN exp RPAREN */
-   -4,  /* (12) exp ::= RAD_TO_DEG LPAREN exp RPAREN */
-   -4,  /* (13) exp ::= EXP LPAREN exp RPAREN */
-   -4,  /* (14) exp ::= LOG LPAREN exp RPAREN */
-   -4,  /* (15) exp ::= LOG10 LPAREN exp RPAREN */
-   -6,  /* (16) exp ::= POW LPAREN exp COMMA exp RPAREN */
-   -4,  /* (17) exp ::= SQR LPAREN exp RPAREN */
-   -4,  /* (18) exp ::= SQRT LPAREN exp RPAREN */
-   -4,  /* (19) exp ::= CBRT LPAREN exp RPAREN */
-   -4,  /* (20) exp ::= SIN LPAREN exp RPAREN */
-   -4,  /* (21) exp ::= COS LPAREN exp RPAREN */
-   -4,  /* (22) exp ::= TAN LPAREN exp RPAREN */
-   -4,  /* (23) exp ::= ASIN LPAREN exp RPAREN */
-   -4,  /* (24) exp ::= ACOS LPAREN exp RPAREN */
-   -4,  /* (25) exp ::= ATAN LPAREN exp RPAREN */
-   -6,  /* (26) exp ::= ATAN2 LPAREN exp COMMA exp RPAREN */
-   -6,  /* (27) exp ::= HYPOT LPAREN exp COMMA exp RPAREN */
-   -4,  /* (28) exp ::= SINH LPAREN exp RPAREN */
-   -4,  /* (29) exp ::= COSH LPAREN exp RPAREN */
-   -4,  /* (30) exp ::= TANH LPAREN exp RPAREN */
-   -6,  /* (31) exp ::= MIN LPAREN exp COMMA exp RPAREN */
-   -6,  /* (32) exp ::= MAX LPAREN exp COMMA exp RPAREN */
-   -4,  /* (33) exp ::= MAG LPAREN exp RPAREN */
-   -4,  /* (34) exp ::= MAGSQR LPAREN exp RPAREN */
-   -4,  /* (35) exp ::= FLOOR LPAREN exp RPAREN */
-   -4,  /* (36) exp ::= CEIL LPAREN exp RPAREN */
-   -4,  /* (37) exp ::= ROUND LPAREN exp RPAREN */
-   -3,  /* (38) exp ::= RAND LPAREN RPAREN */
-   -4,  /* (39) exp ::= RAND LPAREN exp RPAREN */
+   -1,  /* (0) evaluate ::= sfield */
+   -1,  /* (1) sfield ::= NUMBER */
+   -3,  /* (2) sfield ::= LPAREN sfield RPAREN */
+   -2,  /* (3) sfield ::= MINUS sfield */
+   -4,  /* (4) sfield ::= MAG LPAREN lfield RPAREN */
+   -3,  /* (5) sfield ::= PI LPAREN RPAREN */
+   -3,  /* (6) sfield ::= DEG_TO_RAD LPAREN RPAREN */
+   -3,  /* (7) sfield ::= RAD_TO_DEG LPAREN RPAREN */
+   -5,  /* (8) sfield ::= lfield QUESTION sfield COLON sfield */
+   -3,  /* (9) sfield ::= sfield PLUS sfield */
+   -3,  /* (10) sfield ::= sfield MINUS sfield */
+   -3,  /* (11) sfield ::= sfield TIMES sfield */
+   -3,  /* (12) sfield ::= sfield DIVIDE sfield */
+   -3,  /* (13) sfield ::= sfield PERCENT sfield */
+   -4,  /* (14) sfield ::= DEG_TO_RAD LPAREN sfield RPAREN */
+   -4,  /* (15) sfield ::= RAD_TO_DEG LPAREN sfield RPAREN */
+   -4,  /* (16) sfield ::= EXP LPAREN sfield RPAREN */
+   -4,  /* (17) sfield ::= LOG LPAREN sfield RPAREN */
+   -4,  /* (18) sfield ::= LOG10 LPAREN sfield RPAREN */
+   -4,  /* (19) sfield ::= SQR LPAREN sfield RPAREN */
+   -4,  /* (20) sfield ::= SQRT LPAREN sfield RPAREN */
+   -4,  /* (21) sfield ::= CBRT LPAREN sfield RPAREN */
+   -4,  /* (22) sfield ::= SIN LPAREN sfield RPAREN */
+   -4,  /* (23) sfield ::= COS LPAREN sfield RPAREN */
+   -4,  /* (24) sfield ::= TAN LPAREN sfield RPAREN */
+   -4,  /* (25) sfield ::= ASIN LPAREN sfield RPAREN */
+   -4,  /* (26) sfield ::= ACOS LPAREN sfield RPAREN */
+   -4,  /* (27) sfield ::= ATAN LPAREN sfield RPAREN */
+   -4,  /* (28) sfield ::= SINH LPAREN sfield RPAREN */
+   -4,  /* (29) sfield ::= COSH LPAREN sfield RPAREN */
+   -4,  /* (30) sfield ::= TANH LPAREN sfield RPAREN */
+   -4,  /* (31) sfield ::= MAG LPAREN sfield RPAREN */
+   -4,  /* (32) sfield ::= MAGSQR LPAREN sfield RPAREN */
+   -4,  /* (33) sfield ::= FLOOR LPAREN sfield RPAREN */
+   -4,  /* (34) sfield ::= CEIL LPAREN sfield RPAREN */
+   -4,  /* (35) sfield ::= ROUND LPAREN sfield RPAREN */
+   -6,  /* (36) sfield ::= POW LPAREN sfield COMMA sfield RPAREN */
+   -6,  /* (37) sfield ::= ATAN2 LPAREN sfield COMMA sfield RPAREN */
+   -6,  /* (38) sfield ::= HYPOT LPAREN sfield COMMA sfield RPAREN */
+   -6,  /* (39) sfield ::= MIN LPAREN sfield COMMA sfield RPAREN */
+   -6,  /* (40) sfield ::= MAX LPAREN sfield COMMA sfield RPAREN */
+   -3,  /* (41) sfield ::= RAND LPAREN RPAREN */
+   -4,  /* (42) sfield ::= RAND LPAREN sfield RPAREN */
+   -1,  /* (43) evaluate ::= lfield */
+   -1,  /* (44) lfield ::= BOOL_FALSE */
+   -1,  /* (45) lfield ::= BOOL_TRUE */
+   -3,  /* (46) lfield ::= LPAREN lfield RPAREN */
+   -2,  /* (47) lfield ::= NOT lfield */
+   -4,  /* (48) lfield ::= BOOL LPAREN lfield RPAREN */
+   -4,  /* (49) lfield ::= BOOL LPAREN sfield RPAREN */
+   -5,  /* (50) lfield ::= lfield QUESTION lfield COLON lfield */
+   -3,  /* (51) lfield ::= lfield LAND lfield */
+   -3,  /* (52) lfield ::= lfield LOR lfield */
+   -3,  /* (53) lfield ::= sfield EQUAL sfield */
+   -3,  /* (54) lfield ::= sfield NOT_EQUAL sfield */
+   -3,  /* (55) lfield ::= sfield LESS sfield */
+   -3,  /* (56) lfield ::= sfield LESS_EQ sfield */
+   -3,  /* (57) lfield ::= sfield GREATER sfield */
+   -3,  /* (58) lfield ::= sfield GREATER_EQ sfield */
 };
 
 static void yy_accept(yyParser*);  /* Forward Declaration */
@@ -1154,270 +1320,408 @@ static YYACTIONTYPE yy_reduce(
   */
 /********** Begin reduce actions **********************************************/
         YYMINORTYPE yylhsminor;
-      case 0: /* evaluate ::= exp */
-#line 62 "evalStringToScalarLemonParser.lyy"
+      case 0: /* evaluate ::= sfield */
+#line 106 "evalStringToScalarLemonParser.lyy"
 {
-    driver->setValue(yymsp[0].minor.yy11);
+    driver->setValue(yymsp[0].minor.yy101);
 }
-#line 1163 "evalStringToScalarLemonParser.cc"
+#line 1329 "evalStringToScalarLemonParser.cc"
         break;
-      case 1: /* exp ::= NUMBER */
-#line 66 "evalStringToScalarLemonParser.lyy"
-{ yylhsminor.yy11 = yymsp[0].minor.yy0; }
-#line 1168 "evalStringToScalarLemonParser.cc"
-  yymsp[0].minor.yy11 = yylhsminor.yy11;
-        break;
-      case 2: /* exp ::= MINUS exp */
-#line 67 "evalStringToScalarLemonParser.lyy"
-{ yymsp[-1].minor.yy11 = -yymsp[0].minor.yy11; }
-#line 1174 "evalStringToScalarLemonParser.cc"
-        break;
-      case 3: /* exp ::= exp PLUS exp */
-#line 71 "evalStringToScalarLemonParser.lyy"
-{ yylhsminor.yy11 = yymsp[-2].minor.yy11 + yymsp[0].minor.yy11; }
-#line 1179 "evalStringToScalarLemonParser.cc"
-  yymsp[-2].minor.yy11 = yylhsminor.yy11;
-        break;
-      case 4: /* exp ::= exp MINUS exp */
-#line 72 "evalStringToScalarLemonParser.lyy"
-{ yylhsminor.yy11 = yymsp[-2].minor.yy11 - yymsp[0].minor.yy11; }
-#line 1185 "evalStringToScalarLemonParser.cc"
-  yymsp[-2].minor.yy11 = yylhsminor.yy11;
-        break;
-      case 5: /* exp ::= exp TIMES exp */
-#line 73 "evalStringToScalarLemonParser.lyy"
-{ yylhsminor.yy11 = yymsp[-2].minor.yy11 * yymsp[0].minor.yy11; }
-#line 1191 "evalStringToScalarLemonParser.cc"
-  yymsp[-2].minor.yy11 = yylhsminor.yy11;
-        break;
-      case 6: /* exp ::= exp DIVIDE exp */
-#line 74 "evalStringToScalarLemonParser.lyy"
-{ yylhsminor.yy11 = yymsp[-2].minor.yy11 / yymsp[0].minor.yy11; }
-#line 1197 "evalStringToScalarLemonParser.cc"
-  yymsp[-2].minor.yy11 = yylhsminor.yy11;
-        break;
-      case 7: /* exp ::= LPAREN exp RPAREN */
-#line 75 "evalStringToScalarLemonParser.lyy"
-{ yymsp[-2].minor.yy11 = yymsp[-1].minor.yy11; }
-#line 1203 "evalStringToScalarLemonParser.cc"
-        break;
-      case 8: /* exp ::= PI LPAREN RPAREN */
-#line 80 "evalStringToScalarLemonParser.lyy"
-{ yymsp[-2].minor.yy11 = CML::constant::mathematical::pi; }
-#line 1208 "evalStringToScalarLemonParser.cc"
-        break;
-      case 9: /* exp ::= DEG_TO_RAD LPAREN RPAREN */
-#line 81 "evalStringToScalarLemonParser.lyy"
-{ yymsp[-2].minor.yy11 = CML::degToRad(); }
-#line 1213 "evalStringToScalarLemonParser.cc"
-        break;
-      case 10: /* exp ::= RAD_TO_DEG LPAREN RPAREN */
-#line 82 "evalStringToScalarLemonParser.lyy"
-{ yymsp[-2].minor.yy11 = CML::radToDeg(); }
-#line 1218 "evalStringToScalarLemonParser.cc"
-        break;
-      case 11: /* exp ::= DEG_TO_RAD LPAREN exp RPAREN */
-#line 88 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::degToRad(yymsp[-1].minor.yy11);
-}
-#line 1225 "evalStringToScalarLemonParser.cc"
-        break;
-      case 12: /* exp ::= RAD_TO_DEG LPAREN exp RPAREN */
-#line 93 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::radToDeg(yymsp[-1].minor.yy11);
-}
-#line 1232 "evalStringToScalarLemonParser.cc"
-        break;
-      case 13: /* exp ::= EXP LPAREN exp RPAREN */
-#line 98 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::exp(yymsp[-1].minor.yy11);
-}
-#line 1239 "evalStringToScalarLemonParser.cc"
-        break;
-      case 14: /* exp ::= LOG LPAREN exp RPAREN */
-#line 103 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::log(yymsp[-1].minor.yy11);
-}
-#line 1246 "evalStringToScalarLemonParser.cc"
-        break;
-      case 15: /* exp ::= LOG10 LPAREN exp RPAREN */
-#line 108 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::log10(yymsp[-1].minor.yy11);
-}
-#line 1253 "evalStringToScalarLemonParser.cc"
-        break;
-      case 16: /* exp ::= POW LPAREN exp COMMA exp RPAREN */
+      case 1: /* sfield ::= NUMBER */
 #line 113 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-5].minor.yy11 = CML::pow(yymsp[-3].minor.yy11, yymsp[-1].minor.yy11);
-}
-#line 1260 "evalStringToScalarLemonParser.cc"
+{ yylhsminor.yy101 = yymsp[0].minor.yy0; }
+#line 1334 "evalStringToScalarLemonParser.cc"
+  yymsp[0].minor.yy101 = yylhsminor.yy101;
         break;
-      case 17: /* exp ::= SQR LPAREN exp RPAREN */
+      case 2: /* sfield ::= LPAREN sfield RPAREN */
+#line 114 "evalStringToScalarLemonParser.lyy"
+{ yymsp[-2].minor.yy101 = yymsp[-1].minor.yy101; }
+#line 1340 "evalStringToScalarLemonParser.cc"
+        break;
+      case 3: /* sfield ::= MINUS sfield */
+#line 115 "evalStringToScalarLemonParser.lyy"
+{ yymsp[-1].minor.yy101 = -yymsp[0].minor.yy101; }
+#line 1345 "evalStringToScalarLemonParser.cc"
+        break;
+      case 4: /* sfield ::= MAG LPAREN lfield RPAREN */
 #line 118 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::sqr(yymsp[-1].minor.yy11);
-}
-#line 1267 "evalStringToScalarLemonParser.cc"
+{ yymsp[-3].minor.yy101 = CML::scalar(yymsp[-1].minor.yy71); }
+#line 1350 "evalStringToScalarLemonParser.cc"
         break;
-      case 18: /* exp ::= SQRT LPAREN exp RPAREN */
+      case 5: /* sfield ::= PI LPAREN RPAREN */
+#line 122 "evalStringToScalarLemonParser.lyy"
+{ yymsp[-2].minor.yy101 = CML::constant::mathematical::pi; }
+#line 1355 "evalStringToScalarLemonParser.cc"
+        break;
+      case 6: /* sfield ::= DEG_TO_RAD LPAREN RPAREN */
 #line 123 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::sqrt(yymsp[-1].minor.yy11);
-}
-#line 1274 "evalStringToScalarLemonParser.cc"
+{ yymsp[-2].minor.yy101 = CML::degToRad(); }
+#line 1360 "evalStringToScalarLemonParser.cc"
         break;
-      case 19: /* exp ::= CBRT LPAREN exp RPAREN */
-#line 128 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::cbrt(yymsp[-1].minor.yy11);
-}
-#line 1281 "evalStringToScalarLemonParser.cc"
-        break;
-      case 20: /* exp ::= SIN LPAREN exp RPAREN */
-#line 133 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::sin(yymsp[-1].minor.yy11);
-}
-#line 1288 "evalStringToScalarLemonParser.cc"
-        break;
-      case 21: /* exp ::= COS LPAREN exp RPAREN */
-#line 138 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::cos(yymsp[-1].minor.yy11);
-}
-#line 1295 "evalStringToScalarLemonParser.cc"
-        break;
-      case 22: /* exp ::= TAN LPAREN exp RPAREN */
-#line 143 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::tan(yymsp[-1].minor.yy11);
-}
-#line 1302 "evalStringToScalarLemonParser.cc"
-        break;
-      case 23: /* exp ::= ASIN LPAREN exp RPAREN */
-#line 148 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::asin(yymsp[-1].minor.yy11);
-}
-#line 1309 "evalStringToScalarLemonParser.cc"
-        break;
-      case 24: /* exp ::= ACOS LPAREN exp RPAREN */
-#line 153 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::acos(yymsp[-1].minor.yy11);
-}
-#line 1316 "evalStringToScalarLemonParser.cc"
-        break;
-      case 25: /* exp ::= ATAN LPAREN exp RPAREN */
-#line 158 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::atan(yymsp[-1].minor.yy11);
-}
-#line 1323 "evalStringToScalarLemonParser.cc"
-        break;
-      case 26: /* exp ::= ATAN2 LPAREN exp COMMA exp RPAREN */
-#line 163 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-5].minor.yy11 = CML::atan2(yymsp[-3].minor.yy11, yymsp[-1].minor.yy11);
-}
-#line 1330 "evalStringToScalarLemonParser.cc"
-        break;
-      case 27: /* exp ::= HYPOT LPAREN exp COMMA exp RPAREN */
-#line 168 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-5].minor.yy11 = CML::hypot(yymsp[-3].minor.yy11, yymsp[-1].minor.yy11);
-}
-#line 1337 "evalStringToScalarLemonParser.cc"
-        break;
-      case 28: /* exp ::= SINH LPAREN exp RPAREN */
-#line 173 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::sinh(yymsp[-1].minor.yy11);
-}
-#line 1344 "evalStringToScalarLemonParser.cc"
-        break;
-      case 29: /* exp ::= COSH LPAREN exp RPAREN */
-#line 178 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::cosh(yymsp[-1].minor.yy11);
-}
-#line 1351 "evalStringToScalarLemonParser.cc"
-        break;
-      case 30: /* exp ::= TANH LPAREN exp RPAREN */
-#line 183 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-3].minor.yy11 = CML::tanh(yymsp[-1].minor.yy11);
-}
-#line 1358 "evalStringToScalarLemonParser.cc"
-        break;
-      case 31: /* exp ::= MIN LPAREN exp COMMA exp RPAREN */
-#line 188 "evalStringToScalarLemonParser.lyy"
-{
-    yymsp[-5].minor.yy11 = CML::min(yymsp[-3].minor.yy11, yymsp[-1].minor.yy11);
-}
+      case 7: /* sfield ::= RAD_TO_DEG LPAREN RPAREN */
+#line 124 "evalStringToScalarLemonParser.lyy"
+{ yymsp[-2].minor.yy101 = CML::radToDeg(); }
 #line 1365 "evalStringToScalarLemonParser.cc"
         break;
-      case 32: /* exp ::= MAX LPAREN exp COMMA exp RPAREN */
-#line 193 "evalStringToScalarLemonParser.lyy"
+      case 8: /* sfield ::= lfield QUESTION sfield COLON sfield */
+#line 129 "evalStringToScalarLemonParser.lyy"
 {
-    yymsp[-5].minor.yy11 = CML::max(yymsp[-3].minor.yy11, yymsp[-1].minor.yy11);
+    yylhsminor.yy101 = (yymsp[-4].minor.yy71 ? yymsp[-2].minor.yy101 : yymsp[0].minor.yy101);
 }
 #line 1372 "evalStringToScalarLemonParser.cc"
+  yymsp[-4].minor.yy101 = yylhsminor.yy101;
         break;
-      case 33: /* exp ::= MAG LPAREN exp RPAREN */
+      case 9: /* sfield ::= sfield PLUS sfield */
+#line 135 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy101 = (yymsp[-2].minor.yy101) + (yymsp[0].minor.yy101);
+}
+#line 1380 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy101 = yylhsminor.yy101;
+        break;
+      case 10: /* sfield ::= sfield MINUS sfield */
+#line 140 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy101 = (yymsp[-2].minor.yy101) - (yymsp[0].minor.yy101);
+}
+#line 1388 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy101 = yylhsminor.yy101;
+        break;
+      case 11: /* sfield ::= sfield TIMES sfield */
+#line 145 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy101 = (yymsp[-2].minor.yy101) * (yymsp[0].minor.yy101);
+}
+#line 1396 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy101 = yylhsminor.yy101;
+        break;
+      case 12: /* sfield ::= sfield DIVIDE sfield */
+#line 151 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy101 = equalZero(yymsp[0].minor.yy101) ? CML::scalar(0) : (yymsp[-2].minor.yy101 / yymsp[0].minor.yy101);
+}
+#line 1404 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy101 = yylhsminor.yy101;
+        break;
+      case 13: /* sfield ::= sfield PERCENT sfield */
+#line 155 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy101 = equalZero(yymsp[0].minor.yy101) ? CML::scalar(0) : std::fmod(yymsp[-2].minor.yy101, yymsp[0].minor.yy101);
+}
+#line 1412 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy101 = yylhsminor.yy101;
+        break;
+      case 14: /* sfield ::= DEG_TO_RAD LPAREN sfield RPAREN */
+#line 162 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::degToRad (yymsp[-1].minor.yy101);
+}
+#line 1420 "evalStringToScalarLemonParser.cc"
+        break;
+      case 15: /* sfield ::= RAD_TO_DEG LPAREN sfield RPAREN */
+#line 167 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::radToDeg (yymsp[-1].minor.yy101);
+}
+#line 1427 "evalStringToScalarLemonParser.cc"
+        break;
+      case 16: /* sfield ::= EXP LPAREN sfield RPAREN */
+#line 173 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::exp (yymsp[-1].minor.yy101);
+}
+#line 1434 "evalStringToScalarLemonParser.cc"
+        break;
+      case 17: /* sfield ::= LOG LPAREN sfield RPAREN */
+#line 178 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::log (yymsp[-1].minor.yy101);
+}
+#line 1441 "evalStringToScalarLemonParser.cc"
+        break;
+      case 18: /* sfield ::= LOG10 LPAREN sfield RPAREN */
+#line 183 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::log10 (yymsp[-1].minor.yy101);
+}
+#line 1448 "evalStringToScalarLemonParser.cc"
+        break;
+      case 19: /* sfield ::= SQR LPAREN sfield RPAREN */
+#line 188 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::sqr (yymsp[-1].minor.yy101);
+}
+#line 1455 "evalStringToScalarLemonParser.cc"
+        break;
+      case 20: /* sfield ::= SQRT LPAREN sfield RPAREN */
+#line 193 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::sqrt (yymsp[-1].minor.yy101);
+}
+#line 1462 "evalStringToScalarLemonParser.cc"
+        break;
+      case 21: /* sfield ::= CBRT LPAREN sfield RPAREN */
 #line 198 "evalStringToScalarLemonParser.lyy"
 {
-    yymsp[-3].minor.yy11 = CML::mag(yymsp[-1].minor.yy11);
+    yymsp[-3].minor.yy101 = CML::cbrt (yymsp[-1].minor.yy101);
 }
-#line 1379 "evalStringToScalarLemonParser.cc"
+#line 1469 "evalStringToScalarLemonParser.cc"
         break;
-      case 34: /* exp ::= MAGSQR LPAREN exp RPAREN */
+      case 22: /* sfield ::= SIN LPAREN sfield RPAREN */
 #line 203 "evalStringToScalarLemonParser.lyy"
 {
-    yymsp[-3].minor.yy11 = CML::magSqr(yymsp[-1].minor.yy11);
+    yymsp[-3].minor.yy101 = CML::sin (yymsp[-1].minor.yy101);
 }
-#line 1386 "evalStringToScalarLemonParser.cc"
+#line 1476 "evalStringToScalarLemonParser.cc"
         break;
-      case 35: /* exp ::= FLOOR LPAREN exp RPAREN */
+      case 23: /* sfield ::= COS LPAREN sfield RPAREN */
 #line 208 "evalStringToScalarLemonParser.lyy"
 {
-    yymsp[-3].minor.yy11 = std::floor(yymsp[-1].minor.yy11);
+    yymsp[-3].minor.yy101 = CML::cos (yymsp[-1].minor.yy101);
 }
-#line 1393 "evalStringToScalarLemonParser.cc"
+#line 1483 "evalStringToScalarLemonParser.cc"
         break;
-      case 36: /* exp ::= CEIL LPAREN exp RPAREN */
+      case 24: /* sfield ::= TAN LPAREN sfield RPAREN */
 #line 213 "evalStringToScalarLemonParser.lyy"
 {
-    yymsp[-3].minor.yy11 = std::ceil(yymsp[-1].minor.yy11);
+    yymsp[-3].minor.yy101 = CML::tan (yymsp[-1].minor.yy101);
 }
-#line 1400 "evalStringToScalarLemonParser.cc"
+#line 1490 "evalStringToScalarLemonParser.cc"
         break;
-      case 37: /* exp ::= ROUND LPAREN exp RPAREN */
+      case 25: /* sfield ::= ASIN LPAREN sfield RPAREN */
 #line 218 "evalStringToScalarLemonParser.lyy"
 {
-    yymsp[-3].minor.yy11 = std::round(yymsp[-1].minor.yy11);
+    yymsp[-3].minor.yy101 = CML::asin (yymsp[-1].minor.yy101);
 }
-#line 1407 "evalStringToScalarLemonParser.cc"
+#line 1497 "evalStringToScalarLemonParser.cc"
         break;
-      case 38: /* exp ::= RAND LPAREN RPAREN */
+      case 26: /* sfield ::= ACOS LPAREN sfield RPAREN */
 #line 223 "evalStringToScalarLemonParser.lyy"
 {
-    yymsp[-2].minor.yy11 = CML::Random().sample01<CML::scalar>();
+    yymsp[-3].minor.yy101 = CML::acos (yymsp[-1].minor.yy101);
 }
-#line 1414 "evalStringToScalarLemonParser.cc"
+#line 1504 "evalStringToScalarLemonParser.cc"
         break;
-      case 39: /* exp ::= RAND LPAREN exp RPAREN */
+      case 27: /* sfield ::= ATAN LPAREN sfield RPAREN */
 #line 228 "evalStringToScalarLemonParser.lyy"
 {
-    yymsp[-3].minor.yy11 = CML::Random(yymsp[-1].minor.yy11).sample01<CML::scalar>();
+    yymsp[-3].minor.yy101 = CML::atan (yymsp[-1].minor.yy101);
 }
-#line 1421 "evalStringToScalarLemonParser.cc"
+#line 1511 "evalStringToScalarLemonParser.cc"
+        break;
+      case 28: /* sfield ::= SINH LPAREN sfield RPAREN */
+#line 233 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::sinh (yymsp[-1].minor.yy101);
+}
+#line 1518 "evalStringToScalarLemonParser.cc"
+        break;
+      case 29: /* sfield ::= COSH LPAREN sfield RPAREN */
+#line 238 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::cosh (yymsp[-1].minor.yy101);
+}
+#line 1525 "evalStringToScalarLemonParser.cc"
+        break;
+      case 30: /* sfield ::= TANH LPAREN sfield RPAREN */
+#line 243 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::tanh (yymsp[-1].minor.yy101);
+}
+#line 1532 "evalStringToScalarLemonParser.cc"
+        break;
+      case 31: /* sfield ::= MAG LPAREN sfield RPAREN */
+#line 248 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::mag (yymsp[-1].minor.yy101);
+}
+#line 1539 "evalStringToScalarLemonParser.cc"
+        break;
+      case 32: /* sfield ::= MAGSQR LPAREN sfield RPAREN */
+#line 253 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::magSqr (yymsp[-1].minor.yy101);
+}
+#line 1546 "evalStringToScalarLemonParser.cc"
+        break;
+      case 33: /* sfield ::= FLOOR LPAREN sfield RPAREN */
+#line 258 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = std::floor (yymsp[-1].minor.yy101);
+}
+#line 1553 "evalStringToScalarLemonParser.cc"
+        break;
+      case 34: /* sfield ::= CEIL LPAREN sfield RPAREN */
+#line 263 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = std::ceil (yymsp[-1].minor.yy101);
+}
+#line 1560 "evalStringToScalarLemonParser.cc"
+        break;
+      case 35: /* sfield ::= ROUND LPAREN sfield RPAREN */
+#line 268 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = std::round (yymsp[-1].minor.yy101);
+}
+#line 1567 "evalStringToScalarLemonParser.cc"
+        break;
+      case 36: /* sfield ::= POW LPAREN sfield COMMA sfield RPAREN */
+#line 274 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-5].minor.yy101 = CML::pow((yymsp[-3].minor.yy101), (yymsp[-1].minor.yy101));
+}
+#line 1574 "evalStringToScalarLemonParser.cc"
+        break;
+      case 37: /* sfield ::= ATAN2 LPAREN sfield COMMA sfield RPAREN */
+#line 279 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-5].minor.yy101 = CML::atan2((yymsp[-3].minor.yy101), (yymsp[-1].minor.yy101));
+}
+#line 1581 "evalStringToScalarLemonParser.cc"
+        break;
+      case 38: /* sfield ::= HYPOT LPAREN sfield COMMA sfield RPAREN */
+#line 284 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-5].minor.yy101 = CML::hypot((yymsp[-3].minor.yy101), (yymsp[-1].minor.yy101));
+}
+#line 1588 "evalStringToScalarLemonParser.cc"
+        break;
+      case 39: /* sfield ::= MIN LPAREN sfield COMMA sfield RPAREN */
+#line 289 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-5].minor.yy101 = CML::min((yymsp[-3].minor.yy101), (yymsp[-1].minor.yy101));
+}
+#line 1595 "evalStringToScalarLemonParser.cc"
+        break;
+      case 40: /* sfield ::= MAX LPAREN sfield COMMA sfield RPAREN */
+#line 294 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-5].minor.yy101 = CML::max((yymsp[-3].minor.yy101), (yymsp[-1].minor.yy101));
+}
+#line 1602 "evalStringToScalarLemonParser.cc"
+        break;
+      case 41: /* sfield ::= RAND LPAREN RPAREN */
+#line 300 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-2].minor.yy101 = CML::Random().sample01<CML::scalar>();
+}
+#line 1609 "evalStringToScalarLemonParser.cc"
+        break;
+      case 42: /* sfield ::= RAND LPAREN sfield RPAREN */
+#line 305 "evalStringToScalarLemonParser.lyy"
+{
+    yymsp[-3].minor.yy101 = CML::Random(yymsp[-1].minor.yy101).sample01<CML::scalar>();
+}
+#line 1616 "evalStringToScalarLemonParser.cc"
+        break;
+      case 43: /* evaluate ::= lfield */
+#line 315 "evalStringToScalarLemonParser.lyy"
+{
+    driver->setValue(CML::scalar(yymsp[0].minor.yy71));
+}
+#line 1623 "evalStringToScalarLemonParser.cc"
+        break;
+      case 44: /* lfield ::= BOOL_FALSE */
+#line 321 "evalStringToScalarLemonParser.lyy"
+{ yymsp[0].minor.yy71 = false; }
+#line 1628 "evalStringToScalarLemonParser.cc"
+        break;
+      case 45: /* lfield ::= BOOL_TRUE */
+#line 322 "evalStringToScalarLemonParser.lyy"
+{ yymsp[0].minor.yy71 = true; }
+#line 1633 "evalStringToScalarLemonParser.cc"
+        break;
+      case 46: /* lfield ::= LPAREN lfield RPAREN */
+#line 323 "evalStringToScalarLemonParser.lyy"
+{ yymsp[-2].minor.yy71 = yymsp[-1].minor.yy71; }
+#line 1638 "evalStringToScalarLemonParser.cc"
+        break;
+      case 47: /* lfield ::= NOT lfield */
+#line 324 "evalStringToScalarLemonParser.lyy"
+{ yymsp[-1].minor.yy71 = !yymsp[0].minor.yy71; }
+#line 1643 "evalStringToScalarLemonParser.cc"
+        break;
+      case 48: /* lfield ::= BOOL LPAREN lfield RPAREN */
+#line 327 "evalStringToScalarLemonParser.lyy"
+{ yymsp[-3].minor.yy71 = yymsp[-1].minor.yy71; }
+#line 1648 "evalStringToScalarLemonParser.cc"
+        break;
+      case 49: /* lfield ::= BOOL LPAREN sfield RPAREN */
+#line 328 "evalStringToScalarLemonParser.lyy"
+{ yymsp[-3].minor.yy71 = CML::Switch(yymsp[-1].minor.yy101); }
+#line 1653 "evalStringToScalarLemonParser.cc"
+        break;
+      case 50: /* lfield ::= lfield QUESTION lfield COLON lfield */
+#line 333 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy71 = (yymsp[-4].minor.yy71 ? yymsp[-2].minor.yy71 : yymsp[0].minor.yy71);
+}
+#line 1660 "evalStringToScalarLemonParser.cc"
+  yymsp[-4].minor.yy71 = yylhsminor.yy71;
+        break;
+      case 51: /* lfield ::= lfield LAND lfield */
+#line 339 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy71 = CML::andOp<bool>()(yymsp[-2].minor.yy71, yymsp[0].minor.yy71);
+}
+#line 1668 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy71 = yylhsminor.yy71;
+        break;
+      case 52: /* lfield ::= lfield LOR lfield */
+#line 344 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy71 = CML::orOp<bool>()(yymsp[-2].minor.yy71, yymsp[0].minor.yy71);
+}
+#line 1676 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy71 = yylhsminor.yy71;
+        break;
+      case 53: /* lfield ::= sfield EQUAL sfield */
+#line 350 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy71 = CML::equalOp<CML::scalar>()(yymsp[-2].minor.yy101, yymsp[0].minor.yy101);
+}
+#line 1684 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy71 = yylhsminor.yy71;
+        break;
+      case 54: /* lfield ::= sfield NOT_EQUAL sfield */
+#line 355 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy71 = CML::notEqualOp<CML::scalar>()(yymsp[-2].minor.yy101, yymsp[0].minor.yy101);
+}
+#line 1692 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy71 = yylhsminor.yy71;
+        break;
+      case 55: /* lfield ::= sfield LESS sfield */
+#line 360 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy71 = CML::lessOp<CML::scalar>()(yymsp[-2].minor.yy101, yymsp[0].minor.yy101);
+}
+#line 1700 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy71 = yylhsminor.yy71;
+        break;
+      case 56: /* lfield ::= sfield LESS_EQ sfield */
+#line 365 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy71 = CML::lessEqOp<CML::scalar>()(yymsp[-2].minor.yy101, yymsp[0].minor.yy101);
+}
+#line 1708 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy71 = yylhsminor.yy71;
+        break;
+      case 57: /* lfield ::= sfield GREATER sfield */
+#line 370 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy71 = CML::greaterOp<CML::scalar>()(yymsp[-2].minor.yy101, yymsp[0].minor.yy101);
+}
+#line 1716 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy71 = yylhsminor.yy71;
+        break;
+      case 58: /* lfield ::= sfield GREATER_EQ sfield */
+#line 375 "evalStringToScalarLemonParser.lyy"
+{
+    yylhsminor.yy71 = CML::greaterEqOp<CML::scalar>()(yymsp[-2].minor.yy101, yymsp[0].minor.yy101);
+}
+#line 1724 "evalStringToScalarLemonParser.cc"
+  yymsp[-2].minor.yy71 = yylhsminor.yy71;
         break;
       default:
         break;
@@ -1461,9 +1765,9 @@ static void yy_parse_failed(
   /* Here code is inserted which will be executed whenever the
   ** parser fails */
 /************ Begin %parse_failure code ***************************************/
-#line 45 "evalStringToScalarLemonParser.lyy"
+#line 70 "evalStringToScalarLemonParser.lyy"
  driver->reportFatal("Parse failure, giving up..."); 
-#line 1467 "evalStringToScalarLemonParser.cc"
+#line 1771 "evalStringToScalarLemonParser.cc"
 /************ End %parse_failure code *****************************************/
   ParseARG_STORE /* Suppress warning about unused %extra_argument variable */
   ParseCTX_STORE
@@ -1482,9 +1786,9 @@ static void yy_syntax_error(
   ParseCTX_FETCH
 #define TOKEN yyminor
 /************ Begin %syntax_error code ****************************************/
-#line 46 "evalStringToScalarLemonParser.lyy"
+#line 71 "evalStringToScalarLemonParser.lyy"
  driver->reportFatal("Syntax error"); 
-#line 1488 "evalStringToScalarLemonParser.cc"
+#line 1792 "evalStringToScalarLemonParser.cc"
 /************ End %syntax_error code ******************************************/
   ParseARG_STORE /* Suppress warning about unused %extra_argument variable */
   ParseCTX_STORE
@@ -1721,7 +2025,7 @@ int ParseFallback(int iToken){
   return 0;
 }
 } // End namespace 
-#line 236 "evalStringToScalarLemonParser.lyy"
+#line 384 "evalStringToScalarLemonParser.lyy"
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -1776,4 +2080,4 @@ CML::word CML::parsing::evalStringToScalar::parser::nameOfToken
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#line 1780 "evalStringToScalarLemonParser.cc"
+#line 2084 "evalStringToScalarLemonParser.cc"

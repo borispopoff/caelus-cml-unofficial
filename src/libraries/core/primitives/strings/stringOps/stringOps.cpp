@@ -939,7 +939,6 @@ CML::string CML::stringOps::removeComments(const std::string& str)
 void CML::stringOps::inplaceRemoveComments(std::string& s)
 {
     const string::size_type len = s.length();
-//DWSFIX    const auto len = s.length();
 
     if (len < 2)
     {
