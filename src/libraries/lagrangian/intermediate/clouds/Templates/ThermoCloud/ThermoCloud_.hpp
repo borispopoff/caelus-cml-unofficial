@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -79,16 +79,16 @@ private:
     // Private data
 
         //- Cloud copy pointer
-        autoPtr<ThermoCloud<CloudType> > cloudCopyPtr_;
+        autoPtr<ThermoCloud<CloudType>> cloudCopyPtr_;
 
 
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        ThermoCloud(const ThermoCloud&);
+        ThermoCloud(const ThermoCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const ThermoCloud&);
+        void operator=(const ThermoCloud&) = delete;
 
 
 protected:
@@ -114,7 +114,7 @@ protected:
         // References to the cloud sub-models
 
             //- Heat transfer model
-            autoPtr<HeatTransferModel<ThermoCloud<CloudType> > >
+            autoPtr<HeatTransferModel<ThermoCloud<CloudType>>>
                 heatTransferModel_;
 
 
@@ -130,22 +130,22 @@ protected:
             Switch radiation_;
 
             //- Radiation sum of parcel projected areas
-            autoPtr<DimensionedField<scalar, volMesh> > radAreaP_;
+            autoPtr<volScalarField::Internal> radAreaP_;
 
             //- Radiation sum of parcel temperature^4
-            autoPtr<DimensionedField<scalar, volMesh> > radT4_;
+            autoPtr<volScalarField::Internal> radT4_;
 
             //- Radiation sum of parcel projected areas * temperature^4
-            autoPtr<DimensionedField<scalar, volMesh> > radAreaPT4_;
+            autoPtr<volScalarField::Internal> radAreaPT4_;
 
 
         // Sources
 
             //- Sensible enthalpy transfer [J/kg]
-            autoPtr<DimensionedField<scalar, volMesh> > hsTrans_;
+            autoPtr<volScalarField::Internal> hsTrans_;
 
             //- Coefficient for carrier phase hs equation [W/K]
-            autoPtr<DimensionedField<scalar, volMesh> > hsCoeff_;
+            autoPtr<volScalarField::Internal> hsCoeff_;
 
 
     // Protected Member Functions
@@ -189,18 +189,18 @@ public:
         );
 
         //- Construct and return clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > clone(const word& name)
+        virtual autoPtr<Cloud<parcelType>> clone(const word& name)
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new ThermoCloud(*this, name)
             );
         }
 
         //- Construct and return bare clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > cloneBare(const word& name) const
+        virtual autoPtr<Cloud<parcelType>> cloneBare(const word& name) const
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new ThermoCloud(this->mesh(), name, *this)
             );
@@ -238,7 +238,7 @@ public:
             // Sub-models
 
                 //- Return reference to heat transfer model
-                inline const HeatTransferModel<ThermoCloud<CloudType> >&
+                inline const HeatTransferModel<ThermoCloud<CloudType>>&
                     heatTransfer() const;
 
 
@@ -254,23 +254,23 @@ public:
                 inline bool radiation() const;
 
                 //- Radiation sum of parcel projected areas [m2]
-                inline DimensionedField<scalar, volMesh>& radAreaP();
+                inline volScalarField::Internal& radAreaP();
 
                 //- Radiation sum of parcel projected areas [m2]
-                inline const DimensionedField<scalar, volMesh>&
+                inline const volScalarField::Internal&
                     radAreaP() const;
 
                 //- Radiation sum of parcel temperature^4 [K4]
-                inline DimensionedField<scalar, volMesh>& radT4();
+                inline volScalarField::Internal& radT4();
 
                 //- Radiation sum of parcel temperature^4 [K4]
-                inline const DimensionedField<scalar, volMesh>& radT4() const;
+                inline const volScalarField::Internal& radT4() const;
 
                 //- Radiation sum of parcel projected area*temperature^4 [m2K4]
-                inline DimensionedField<scalar, volMesh>& radAreaPT4();
+                inline volScalarField::Internal& radAreaPT4();
 
                 //- Radiation sum of parcel temperature^4 [m2K4]
-                inline const DimensionedField<scalar, volMesh>&
+                inline const volScalarField::Internal&
                     radAreaPT4() const;
 
 
@@ -279,17 +279,17 @@ public:
                 // Enthalpy
 
                     //- Sensible enthalpy transfer [J/kg]
-                    inline DimensionedField<scalar, volMesh>& hsTrans();
+                    inline volScalarField::Internal& hsTrans();
 
                     //- Sensible enthalpy transfer [J/kg]
-                    inline const DimensionedField<scalar, volMesh>&
+                    inline const volScalarField::Internal&
                         hsTrans() const;
 
                     //- Return coefficient for carrier phase hs equation
-                    inline DimensionedField<scalar, volMesh>& hsCoeff();
+                    inline volScalarField::Internal& hsCoeff();
 
                     //- Return const coefficient for carrier phase hs equation
-                    inline const DimensionedField<scalar, volMesh>&
+                    inline const volScalarField::Internal&
                         hsCoeff() const;
 
                     //- Return sensible enthalpy source term [J/kg/m3/s]
@@ -425,7 +425,7 @@ inline const CML::volScalarField& CML::ThermoCloud<CloudType>::p() const
 
 
 template<class CloudType>
-inline const CML::HeatTransferModel<CML::ThermoCloud<CloudType> >&
+inline const CML::HeatTransferModel<CML::ThermoCloud<CloudType>>&
 CML::ThermoCloud<CloudType>::heatTransfer() const
 {
     return heatTransferModel_;
@@ -586,7 +586,7 @@ CML::ThermoCloud<CloudType>::Sh(volScalarField& hs) const
         if (this->solution().semiImplicit("h"))
         {
             const volScalarField Cp(thermo_.thermo().Cp());
-            const DimensionedField<scalar, volMesh>
+            const volScalarField::Internal
                 Vdt(this->mesh().V()*this->db().time().deltaT());
 
             return
@@ -597,7 +597,7 @@ CML::ThermoCloud<CloudType>::Sh(volScalarField& hs) const
         else
         {
             tmp<fvScalarMatrix> tfvm(new fvScalarMatrix(hs, dimEnergy/dimTime));
-            fvScalarMatrix& fvm = tfvm();
+            fvScalarMatrix& fvm = tfvm.ref();
 
             fvm.source() = -hsTrans()/(this->db().time().deltaT());
 
@@ -626,13 +626,13 @@ inline CML::tmp<CML::volScalarField> CML::ThermoCloud<CloudType>::Ep() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0.0)
+            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0)
         )
     );
 
     if (radiation_)
     {
-        scalarField& Ep = tEp().internalField();
+        scalarField& Ep = tEp.ref().primitiveFieldRef();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
@@ -662,13 +662,13 @@ inline CML::tmp<CML::volScalarField> CML::ThermoCloud<CloudType>::ap() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimless/dimLength, 0.0)
+            dimensionedScalar("zero", dimless/dimLength, 0)
         )
     );
 
     if (radiation_)
     {
-        scalarField& ap = tap().internalField();
+        scalarField& ap = tap.ref().primitiveFieldRef();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
@@ -699,20 +699,20 @@ CML::ThermoCloud<CloudType>::sigmap() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimless/dimLength, 0.0)
+            dimensionedScalar("zero", dimless/dimLength, 0)
         )
     );
 
     if (radiation_)
     {
-        scalarField& sigmap = tsigmap().internalField();
+        scalarField& sigmap = tsigmap.ref().primitiveFieldRef();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
         const scalar f = constProps_.f0();
         const scalarField& sumAreaP = radAreaP_->field();
 
-        sigmap *= sumAreaP*(1.0 - f)*(1.0 - epsilon)/V/dt;
+        sigmap = sumAreaP*(1.0 - f)*(1.0 - epsilon)/V/dt;
     }
 
     return tsigmap;
@@ -778,7 +778,7 @@ void CML::ThermoCloud<CloudType>::setModels()
 {
     heatTransferModel_.reset
     (
-        HeatTransferModel<ThermoCloud<CloudType> >::New
+        HeatTransferModel<ThermoCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -803,7 +803,7 @@ void CML::ThermoCloud<CloudType>::setModels()
     {
         radAreaP_.reset
         (
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -814,13 +814,13 @@ void CML::ThermoCloud<CloudType>::setModels()
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimArea, 0.0)
+                dimensionedScalar("zero", dimArea, 0)
             )
         );
 
         radT4_.reset
         (
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -831,13 +831,13 @@ void CML::ThermoCloud<CloudType>::setModels()
                     IOobject::AUTO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", pow4(dimTemperature), 0.0)
+                dimensionedScalar("zero", pow4(dimTemperature), 0)
             )
         );
 
         radAreaPT4_.reset
         (
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -908,7 +908,7 @@ CML::ThermoCloud<CloudType>::ThermoCloud
     radAreaPT4_(nullptr),
     hsTrans_
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -919,12 +919,12 @@ CML::ThermoCloud<CloudType>::ThermoCloud
                 IOobject::AUTO_WRITE
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimEnergy, 0.0)
+            dimensionedScalar("zero", dimEnergy, 0)
         )
     ),
     hsCoeff_
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -935,7 +935,7 @@ CML::ThermoCloud<CloudType>::ThermoCloud
                 IOobject::AUTO_WRITE
             ),
             this->mesh(),
-            dimensionedScalar("zero", dimEnergy/dimTemperature, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimTemperature, 0)
         )
     )
 {
@@ -979,7 +979,7 @@ CML::ThermoCloud<CloudType>::ThermoCloud
     radAreaPT4_(nullptr),
     hsTrans_
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -995,7 +995,7 @@ CML::ThermoCloud<CloudType>::ThermoCloud
     ),
     hsCoeff_
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -1014,7 +1014,7 @@ CML::ThermoCloud<CloudType>::ThermoCloud
     {
         radAreaP_.reset
         (
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -1031,7 +1031,7 @@ CML::ThermoCloud<CloudType>::ThermoCloud
 
         radT4_.reset
         (
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -1048,7 +1048,7 @@ CML::ThermoCloud<CloudType>::ThermoCloud
 
         radAreaPT4_.reset
         (
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (

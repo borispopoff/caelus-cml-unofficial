@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2015 Applied CCM
+Copyright (C) 2015-2019 Applied CCM
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -79,9 +79,9 @@ protected:
 
 private:
 
-    VLESModel(const VLESModel&);
+    VLESModel(const VLESModel&) = delete;
 
-    void operator=(const VLESModel&);
+    void operator=(const VLESModel&) = delete;
 
 public:
 

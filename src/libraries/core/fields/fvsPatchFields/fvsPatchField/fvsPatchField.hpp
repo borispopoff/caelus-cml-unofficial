@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -180,9 +180,9 @@ public:
         fvsPatchField(const fvsPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type> > clone() const
+        virtual tmp<fvsPatchField<Type>> clone() const
         {
-            return tmp<fvsPatchField<Type> >(new fvsPatchField<Type>(*this));
+            return tmp<fvsPatchField<Type>>(new fvsPatchField<Type>(*this));
         }
 
         //- Construct as copy setting internal field reference
@@ -193,12 +193,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type> > clone
+        virtual tmp<fvsPatchField<Type>> clone
         (
             const DimensionedField<Type, surfaceMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new fvsPatchField<Type>(*this, iF)
             );
@@ -210,7 +210,7 @@ public:
         //- Return a pointer to a new patchField created on freestore given
         //  patch and internal field
         //  (does not set the patch field values)
-        static tmp<fvsPatchField<Type> > New
+        static tmp<fvsPatchField<Type>> New
         (
             const word&,
             const fvPatch&,
@@ -221,7 +221,7 @@ public:
         //  patch and internal field
         //  (does not set the patch field values)
         //  Allows override of constraint type
-        static tmp<fvsPatchField<Type> > New
+        static tmp<fvsPatchField<Type>> New
         (
             const word&,
             const word& actualPatchType,
@@ -231,7 +231,7 @@ public:
 
         //- Return a pointer to a new patchField created on freestore from
         //  a given fvsPatchField mapped onto a new patch
-        static tmp<fvsPatchField<Type> > New
+        static tmp<fvsPatchField<Type>> New
         (
             const fvsPatchField<Type>&,
             const fvPatch&,
@@ -241,7 +241,7 @@ public:
 
         //- Return a pointer to a new patchField created on freestore
         //  from dictionary
-        static tmp<fvsPatchField<Type> > New
+        static tmp<fvsPatchField<Type>> New
         (
             const fvPatch&,
             const DimensionedField<Type, surfaceMesh>&,
@@ -250,7 +250,7 @@ public:
 
         //- Return a pointer to a new calculatedFvsPatchField created on
         //  freestore without setting patchField values
-        static tmp<fvsPatchField<Type> > NewCalculatedType
+        static tmp<fvsPatchField<Type>> NewCalculatedType
         (
             const fvPatch&
         );
@@ -258,7 +258,7 @@ public:
         //- Return a pointer to a new calculatedFvsPatchField created on
         //  freestore without setting patchField values
         template<class Type2>
-        static tmp<fvsPatchField<Type> > NewCalculatedType
+        static tmp<fvsPatchField<Type>> NewCalculatedType
         (
             const fvsPatchField<Type2>&
         );
@@ -284,13 +284,13 @@ public:
 
             //- Return dimensioned internal field reference
             const DimensionedField<Type, surfaceMesh>&
-            dimensionedInternalField() const
+            internalField() const
             {
                 return internalField_;
             }
 
             //- Return internal field reference
-            const Field<Type>& internalField() const
+            const Field<Type>& primitiveField() const
             {
                 return internalField_;
             }
@@ -536,8 +536,8 @@ void fvsPatchField<Type>::rmap
 template<class Type>
 void fvsPatchField<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "type", type());
+    writeEntry(os, "value", *this);
 }
 
 
@@ -754,19 +754,14 @@ Ostream& operator<<(Ostream& os, const fvsPatchField<Type>& ptf)
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+CML::tmp<CML::fvsPatchField<Type>>
+CML::fvsPatchField<Type>::New
 (
     const word& patchFieldType,
     const word& actualPatchType,
@@ -821,7 +816,8 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
 
 
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+CML::tmp<CML::fvsPatchField<Type>>
+CML::fvsPatchField<Type>::New
 (
     const word& patchFieldType,
     const fvPatch& p,
@@ -833,7 +829,8 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
 
 
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+CML::tmp<CML::fvsPatchField<Type>>
+CML::fvsPatchField<Type>::New
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -901,7 +898,8 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
 // Return a pointer to a new patch created on freestore from
 // a given fvsPatchField<Type> mapped onto a new patch
 template<class Type>
-tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
+CML::tmp<CML::fvsPatchField<Type>>
+CML::fvsPatchField<Type>::New
 (
     const fvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -943,10 +941,6 @@ tmp<fvsPatchField<Type> > fvsPatchField<Type>::New
     }
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
 
 #   include "calculatedFvsPatchField.hpp"
 
@@ -1011,5 +1005,3 @@ typedef type##FvsPatchField<tensor> type##FvsPatchTensorField;
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-// ************************************************************************* //

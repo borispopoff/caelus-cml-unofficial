@@ -102,9 +102,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new groovyFixedNormalSlipPointPatchField<Type>(*this)
             );
@@ -118,12 +118,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new groovyFixedNormalSlipPointPatchField<Type>(*this, iF)
             );
@@ -136,7 +136,7 @@ public:
              //- Update the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType=Pstream::commsTypes::blocking
             );
 
         //- Write
@@ -253,10 +253,10 @@ void CML::groovyFixedNormalSlipPointPatchField<Type>::evaluate
     n/=mag(n); // normalize
     Field<Type> val(driver_.evaluate<Type>(this->fixedValueExpression_,true));
 
-    tmp<Field<Type> > tvalues=transform(I - n*n, this->patchInternalField())+transform(n*n,val);
+    tmp<Field<Type>> tvalues=transform(I - n*n, this->patchInternalField())+transform(n*n,val);
 
     // Get internal field to insert values into
-    Field<Type>& iF = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& iF = const_cast<Field<Type>&>(this->primitiveField());
 
     this->setInInternalField(iF, tvalues());
 }
@@ -266,23 +266,16 @@ void CML::groovyFixedNormalSlipPointPatchField<Type>::write(Ostream& os) const
 {
     SlipPointPatchFieldType::write(os);
 
-    os.writeKeyword("fixedValueExpression")
-        << fixedValueExpression_ << token::END_STATEMENT << nl;
+    writeEntry(os, "fixedValueExpression", fixedValueExpression_);
 
-    os.writeKeyword("normalExpression")
-        << normalExpression_ << token::END_STATEMENT << nl;
+    writeEntry(os, "normalExpression", normalExpression_);
 
-    os.writeKeyword("value")
-        << this->patchInternalField() << token::END_STATEMENT << nl;
+    writeEntry(os, "value", this->patchInternalField()());
 
     if(this->fixedValueExpression_!="") {
-        os.writeKeyword("fixedValue")
-            << const_cast<PatchValueExpressionDriver&>(driver_).evaluate<Type>(this->fixedValueExpression_,true)
-                << token::END_STATEMENT << nl;
+        writeEntry(os, "fixedValue", const_cast<PatchValueExpressionDriver&>(driver_).evaluate<Type>(this->fixedValueExpression_,true)());
     }
-    os.writeKeyword("normal")
-        << const_cast<PatchValueExpressionDriver&>(driver_).evaluate<Type>(this->normalExpression_,true)
-            << token::END_STATEMENT << nl;
+    writeEntry(os, "normal", const_cast<PatchValueExpressionDriver&>(driver_).evaluate<Type>(this->normalExpression_,true)());
 
     driver_.writeCommon(os,debug);
 }

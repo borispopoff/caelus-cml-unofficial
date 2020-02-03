@@ -82,7 +82,7 @@ class isoCutCell
         DynamicList<label> isoCutFaces_;
 
         //- List of point lists each defining an isoCutFace
-        DynamicList<DynamicList<point> > isoCutFacePoints_;
+        DynamicList<DynamicList<point>> isoCutFacePoints_;
 
         //- List of face centres for isoCutFaces
         DynamicList<point> isoCutFaceCentres_;
@@ -91,7 +91,7 @@ class isoCutCell
         DynamicList<vector> isoCutFaceAreas_;
 
         //- Storage for subFace edges belonging to isoFace
-        DynamicList<DynamicList<point> > isoFaceEdges_;
+        DynamicList<DynamicList<point>> isoFaceEdges_;
 
         //- Points constituting the cell-isosurface intersection (isoface)
         DynamicList<point> isoFacePoints_;

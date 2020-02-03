@@ -77,7 +77,7 @@ tmp<fvVectorMatrix> forceList::correct(volVectorField& U)
     (
         new fvVectorMatrix(U, dimForce/dimArea*dimVolume)
     );
-    fvVectorMatrix& result = tResult();
+    fvVectorMatrix& result = tResult.ref();
 
     forAll(*this, i)
     {

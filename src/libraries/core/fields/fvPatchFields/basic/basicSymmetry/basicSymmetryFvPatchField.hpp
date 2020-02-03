@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -88,9 +88,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new basicSymmetryFvPatchField<Type>(*this)
             );
@@ -104,12 +104,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new basicSymmetryFvPatchField<Type>(*this, iF)
             );
@@ -118,19 +118,17 @@ public:
 
     // Member functions
 
-        // Evaluation functions
+        //- Return gradient at boundary
+        virtual tmp<Field<Type>> snGrad() const;
 
-            //- Return gradient at boundary
-            virtual tmp<Field<Type> > snGrad() const;
+        //- Evaluate the patch field
+        virtual void evaluate
+        (
+            const Pstream::commsTypes commsType=Pstream::commsTypes::blocking
+        );
 
-            //- Evaluate the patch field
-            virtual void evaluate
-            (
-                const Pstream::commsTypes commsType=Pstream::blocking
-            );
-
-            //- Return face-gradient transform diagonal
-            virtual tmp<Field<Type> > snGradTransformDiag() const;
+        //- Return face-gradient transform diagonal
+        virtual tmp<Field<Type>> snGradTransformDiag() const;
 };
 
 
@@ -146,11 +144,8 @@ void basicSymmetryFvPatchField<scalar>::evaluate
 );
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "symmTransformField.hpp"
 
@@ -171,19 +166,6 @@ CML::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
 template<class Type>
 CML::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
 (
-    const basicSymmetryFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    transformFvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-CML::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -193,6 +175,19 @@ CML::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
 {
     this->evaluate();
 }
+
+
+template<class Type>
+CML::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
+(
+    const basicSymmetryFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    transformFvPatchField<Type>(ptf, p, iF, mapper)
+{}
 
 
 template<class Type>
@@ -219,7 +214,7 @@ CML::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::basicSymmetryFvPatchField<Type>::snGrad() const
 {
     tmp<vectorField> nHat = this->patch().nf();
@@ -254,7 +249,7 @@ void CML::basicSymmetryFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 }
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::basicSymmetryFvPatchField<Type>::snGradTransformDiag() const
 {
     const vectorField nHat(this->patch().nf());
@@ -269,8 +264,4 @@ CML::basicSymmetryFvPatchField<Type>::snGradTransformDiag() const
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

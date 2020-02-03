@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -100,10 +100,10 @@ class yPlusLES
         );
 
         //- Disallow default bitwise copy construct
-        yPlusLES(const yPlusLES&);
+        yPlusLES(const yPlusLES&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const yPlusLES&);
+        void operator=(const yPlusLES&) = delete;
 
 
 public:

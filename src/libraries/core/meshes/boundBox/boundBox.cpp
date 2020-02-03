@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -145,7 +145,7 @@ CML::boundBox::boundBox
 CML::tmp<CML::pointField> CML::boundBox::points() const
 {
     tmp<pointField> tPts = tmp<pointField>(new pointField(8));
-    pointField& pt = tPts();
+    pointField& pt = tPts.ref();
 
     pt[0] = min_;                                   // min-x, min-y, min-z
     pt[1] = point(max_.x(), min_.y(), min_.z());    // max-x, min-y, min-z

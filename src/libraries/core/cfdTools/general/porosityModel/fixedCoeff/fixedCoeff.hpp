@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -60,10 +60,10 @@ private:
 
     // Private data
 
-        //- alpha coefficient XYZ components (user-supplied) [1/s]
+        //- Alpha coefficient XYZ components (user-supplied) [1/s]
         dimensionedVector alphaXYZ_;
 
-        //- beta coefficient XYZ components (user-supplied) [1/m]
+        //- Beta coefficient XYZ components (user-supplied) [1/m]
         dimensionedVector betaXYZ_;
 
         //- Model alpha coefficient - converted from alphaXYZ [1/s]
@@ -93,12 +93,6 @@ private:
             const scalar rho
         ) const;
 
-        //- Disallow default bitwise copy construct
-        fixedCoeff(const fixedCoeff&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fixedCoeff&);
-
 
 public:
 
@@ -115,6 +109,9 @@ public:
         const word& cellZoneName
     );
 
+    //- Disallow default bitwise copy construct
+    fixedCoeff(const fixedCoeff&) = delete;
+
     //- Destructor
     virtual ~fixedCoeff();
 
@@ -122,7 +119,7 @@ public:
     // Member Functions
 
         //- Transform the model data wrt mesh changes
-        virtual void calcTranformModelData();
+        virtual void calcTransformModelData();
 
         //- Calculate the porosity force
         virtual void calcForce
@@ -156,6 +153,13 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fixedCoeff&) = delete;
+
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -267,7 +267,7 @@ void partTriMesh::createBufferLayers()
     pAtBufferLayers.clear();
 
     //- create the map
-    std::map<label, LongList<parTriFace> > exchangeTrias;
+    std::map<label, LongList<parTriFace>> exchangeTrias;
     forAll(neiProcs, procI)
         exchangeTrias.insert
         (
@@ -325,7 +325,7 @@ void partTriMesh::createBufferLayers()
     }
 
     //- receive triangles sent to this processor
-    std::map<label, List<parTriFace> > receivedTriangles;
+    std::map<label, List<parTriFace>> receivedTriangles;
     help::exchangeMap(exchangeTrias, receivedTriangles);
     exchangeTrias.clear();
 
@@ -335,7 +335,7 @@ void partTriMesh::createBufferLayers()
     label nPoints = pts.size();
     for
     (
-        std::map<label, List<parTriFace> >::const_iterator it =
+        std::map<label, List<parTriFace>>::const_iterator it =
         receivedTriangles.begin();
         it!=receivedTriangles.end();
         ++it
@@ -444,7 +444,7 @@ void partTriMesh::updateBufferLayers()
     const DynList<label>& neiProcs = this->neiProcs();
 
     //- create the map
-    std::map<label, LongList<labelledPoint> > exchangeData;
+    std::map<label, LongList<labelledPoint>> exchangeData;
     forAll(neiProcs, i)
         exchangeData.insert
         (

@@ -47,7 +47,7 @@ namespace CML
     template<>
     volumeType treeDataPrimitivePatch<triSurface>::getVolumeType
     (
-        const indexedOctree<treeDataPrimitivePatch<triSurface> >& oc,
+        const indexedOctree<treeDataPrimitivePatch<triSurface>>& oc,
         const point& sample
     ) const;
 }

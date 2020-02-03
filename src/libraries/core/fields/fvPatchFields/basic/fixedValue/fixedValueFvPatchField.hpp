@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014 - 2016 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2014-2016 Applied CCM
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,7 +22,23 @@ Class
     CML::fixedValueFvPatchField
 
 Description
-    CML::fixedValueFvPatchField
+    This boundary condition supplies a fixed value constraint, and is the base
+    class for a number of other boundary conditions.
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        value        | Patch face values       | yes         |
+    \endtable
+
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            fixedValue;
+        value           uniform 0;  // Example for scalar field usage
+    }
+    \endverbatim
 
 
 \*---------------------------------------------------------------------------*/
@@ -38,7 +54,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class fixedValueFvPatch Declaration
+                   Class fixedValueFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -62,12 +78,12 @@ public:
             const DimensionedField<Type, volMesh>&
         );
 
-        //- Construct from patch, internal field, and value
+        //- Construct from patch, internal field and value
         fixedValueFvPatchField
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            Type const
+            const Type& value
         );
 
         //- Construct from patch, internal field and dictionary
@@ -75,7 +91,8 @@ public:
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const dictionary&
+            const dictionary&,
+            const bool valueRequired=true
         );
 
         //- Construct by mapping the given fixedValueFvPatchField<Type>
@@ -85,7 +102,8 @@ public:
             const fixedValueFvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const fvPatchFieldMapper&,
+            const bool mappingRequired=true
         );
 
         //- Construct as copy
@@ -95,9 +113,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedValueFvPatchField<Type>(*this)
             );
@@ -111,12 +129,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedValueFvPatchField<Type>(*this, iF)
             );
@@ -125,7 +143,7 @@ public:
 
     // Member functions
 
-        // Access
+        // Attributes
 
             //- Return true if this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving
@@ -146,25 +164,25 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const;
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
         //- Write
@@ -195,19 +213,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-fixedValueFvPatchField<Type>::fixedValueFvPatchField
+CML::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -216,44 +228,58 @@ fixedValueFvPatchField<Type>::fixedValueFvPatchField
     fvPatchField<Type>(p, iF)
 {}
 
-template<class Type>
-fixedValueFvPatchField<Type>::fixedValueFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    Type const val
-)
-:
-    fvPatchField<Type>(p, iF, val)
-{}
 
 template<class Type>
-fixedValueFvPatchField<Type>::fixedValueFvPatchField
+CML::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const Type& value
 )
 :
-    fvPatchField<Type>(p, iF, dict, true)
+    fvPatchField<Type>(p, iF, value)
 {}
 
 
 template<class Type>
-fixedValueFvPatchField<Type>::fixedValueFvPatchField
+CML::fixedValueFvPatchField<Type>::fixedValueFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict,
+    const bool valueRequired
+)
+:
+    fvPatchField<Type>(p, iF, dict, valueRequired)
+{}
+
+
+template<class Type>
+CML::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fixedValueFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
 )
 :
-    fvPatchField<Type>(ptf, p, iF, mapper)
-{}
+    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired)
+{
+    if (mappingRequired && notNull(iF) && mapper.hasUnmapped())
+    {
+        WarningInFunction
+            << "On field " << iF.name() << " patch " << p.name()
+            << " patchField " << this->type()
+            << " : mapper does not map all values." << nl
+            << "    To avoid this warning fully specify the mapping in derived"
+            << " patch fields." << endl;
+    }
+}
 
 
 template<class Type>
-fixedValueFvPatchField<Type>::fixedValueFvPatchField
+CML::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fixedValueFvPatchField<Type>& ptf
 )
@@ -263,7 +289,7 @@ fixedValueFvPatchField<Type>::fixedValueFvPatchField
 
 
 template<class Type>
-fixedValueFvPatchField<Type>::fixedValueFvPatchField
+CML::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fixedValueFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -276,20 +302,22 @@ fixedValueFvPatchField<Type>::fixedValueFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvPatchField<Type>::valueInternalCoeffs
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
 {
-    return tmp<Field<Type> >
+    return tmp<Field<Type>>
     (
-        new Field<Type>(this->size(), pTraits<Type>::zero)
+        new Field<Type>(this->size(), Zero)
     );
 }
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvPatchField<Type>::valueBoundaryCoeffs
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -299,33 +327,27 @@ tmp<Field<Type> > fixedValueFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return -pTraits<Type>::one*this->patch().deltaCoeffs();
 }
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return this->patch().deltaCoeffs()*(*this);
 }
 
 
 template<class Type>
-void fixedValueFvPatchField<Type>::write(Ostream& os) const
+void CML::fixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

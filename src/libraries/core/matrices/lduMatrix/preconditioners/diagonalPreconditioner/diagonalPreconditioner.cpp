@@ -52,10 +52,10 @@ void CML::diagonalPreconditioner::appInv()
     scalar* RESTRICT rDPtr = rD_.begin();
     const scalar* RESTRICT DPtr = solver_.matrix().diag().begin();
 
-    register label nCells = rD_.size();
+    label nCells = rD_.size();
 
     // Generate reciprocal diagonal
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         rDPtr[cell] = 1.0/DPtr[cell];
     }
@@ -72,9 +72,9 @@ void CML::diagonalPreconditioner::precondition
     const scalar* RESTRICT rPtr = r.begin();
     const scalar* RESTRICT rDPtr = rD_.begin();
 
-    register label nCells = w.size();
+    label nCells = w.size();
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         wPtr[cell] = rDPtr[cell]*rPtr[cell];
     }

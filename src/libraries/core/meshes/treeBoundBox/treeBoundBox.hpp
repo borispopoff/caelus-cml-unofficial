@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,6 +66,7 @@ namespace CML
 
 class Random;
 
+
 // Forward declaration of friend functions and operators
 
 class treeBoundBox;
@@ -109,54 +110,66 @@ public:
 
         //- Bits used for octant/point coding.
         //  Every octant/corner point is the combination of three faces.
-        enum octantBit
+        struct octantBit
         {
-            RIGHTHALF = 0x1 << 0,
-            TOPHALF   = 0x1 << 1,
-            FRONTHALF = 0x1 << 2
+            enum
+            {
+                rightHalf = 0x1 << 0,
+                topHalf   = 0x1 << 1,
+                frontHalf = 0x1 << 2
+            };
         };
 
         //- Face codes
-        enum faceId
+        struct faceId
         {
-            LEFT   = 0,
-            RIGHT  = 1,
-            BOTTOM = 2,
-            TOP    = 3,
-            BACK   = 4,
-            FRONT  = 5
+            enum
+            {
+                left   = 0,
+                right  = 1,
+                bottom = 2,
+                top    = 3,
+                back   = 4,
+                front  = 5
+            };
         };
 
         //- Bits used for face coding
-        enum faceBit
+        struct faceBit
         {
-            NOFACE    = 0,
-            LEFTBIT   = 0x1 << LEFT,    //1
-            RIGHTBIT  = 0x1 << RIGHT,   //2
-            BOTTOMBIT = 0x1 << BOTTOM,  //4
-            TOPBIT    = 0x1 << TOP,     //8
-            BACKBIT   = 0x1 << BACK,    //16
-            FRONTBIT  = 0x1 << FRONT,   //32
+            enum
+            {
+                noFace    = 0,
+                left      = 0x1 << faceId::left,    //1
+                right     = 0x1 << faceId::right,   //2
+                bottom    = 0x1 << faceId::bottom,  //4
+                top       = 0x1 << faceId::top,     //8
+                back      = 0x1 << faceId::back,    //16
+                front     = 0x1 << faceId::front,   //32
+            };
         };
 
         //- Edges codes.
-        //  E01 = edge between 0 and 1.
-        enum edgeId
+        //  e01 = edge between 0 and 1.
+        struct edgeId
         {
-            E01 = 0,
-            E13 = 1,
-            E23 = 2,
-            E02 = 3,
+            enum
+            {
+                e01 = 0,
+                e13 = 1,
+                e23 = 2,
+                e02 = 3,
 
-            E45 = 4,
-            E57 = 5,
-            E67 = 6,
-            E46 = 7,
+                e45 = 4,
+                e57 = 5,
+                e67 = 6,
+                e46 = 7,
 
-            E04 = 8,
-            E15 = 9,
-            E37 = 10,
-            E26 = 11
+                e04 = 8,
+                e15 = 9,
+                e37 = 10,
+                e26 = 11
+            };
         };
 
         //- Face to point addressing
@@ -414,9 +427,9 @@ inline CML::point CML::treeBoundBox::corner(const direction octant) const
 {
     return point
     (
-        (octant & RIGHTHALF) ? max().x() : min().x(),
-        (octant & TOPHALF)   ? max().y() : min().y(),
-        (octant & FRONTHALF) ? max().z() : min().z()
+        (octant & octantBit::rightHalf) ? max().x() : min().x(),
+        (octant & octantBit::topHalf)   ? max().y() : min().y(),
+        (octant & octantBit::frontHalf) ? max().z() : min().z()
     );
 }
 
@@ -440,17 +453,17 @@ inline CML::direction CML::treeBoundBox::subOctant
 
     if (pt.x() > mid.x())
     {
-        octant |= treeBoundBox::RIGHTHALF;
+        octant |= octantBit::rightHalf;
     }
 
     if (pt.y() > mid.y())
     {
-        octant |= treeBoundBox::TOPHALF;
+        octant |= octantBit::topHalf;
     }
 
     if (pt.z() > mid.z())
     {
-        octant |= treeBoundBox::FRONTHALF;
+        octant |= octantBit::frontHalf;
     }
 
     return octant;
@@ -483,7 +496,7 @@ inline CML::direction CML::treeBoundBox::subOctant
 
     if (pt.x() > mid.x())
     {
-        octant |= treeBoundBox::RIGHTHALF;
+        octant |= octantBit::rightHalf;
     }
     else if (pt.x() == mid.x())
     {
@@ -492,7 +505,7 @@ inline CML::direction CML::treeBoundBox::subOctant
 
     if (pt.y() > mid.y())
     {
-        octant |= treeBoundBox::TOPHALF;
+        octant |= octantBit::topHalf;
     }
     else if (pt.y() == mid.y())
     {
@@ -501,7 +514,7 @@ inline CML::direction CML::treeBoundBox::subOctant
 
     if (pt.z() > mid.z())
     {
-        octant |= treeBoundBox::FRONTHALF;
+        octant |= octantBit::frontHalf;
     }
     else if (pt.z() == mid.z())
     {
@@ -529,40 +542,40 @@ inline CML::direction CML::treeBoundBox::subOctant
 
     if (pt.x() > mid.x())
     {
-        octant |= treeBoundBox::RIGHTHALF;
+        octant |= octantBit::rightHalf;
     }
     else if (pt.x() == mid.x())
     {
         onEdge = true;
         if (dir.x() > 0)
         {
-            octant |= treeBoundBox::RIGHTHALF;
+            octant |= octantBit::rightHalf;
         }
     }
 
     if (pt.y() > mid.y())
     {
-        octant |= treeBoundBox::TOPHALF;
+        octant |= octantBit::topHalf;
     }
     else if (pt.y() == mid.y())
     {
         onEdge = true;
         if (dir.y() > 0)
         {
-            octant |= treeBoundBox::TOPHALF;
+            octant |= octantBit::topHalf;
         }
     }
 
     if (pt.z() > mid.z())
     {
-        octant |= treeBoundBox::FRONTHALF;
+        octant |= octantBit::frontHalf;
     }
     else if (pt.z() == mid.z())
     {
         onEdge = true;
         if (dir.z() > 0)
         {
-            octant |= treeBoundBox::FRONTHALF;
+            octant |= octantBit::frontHalf;
         }
     }
 
@@ -584,19 +597,19 @@ inline void CML::treeBoundBox::searchOrder
 
     if (dist.x() < 0)
     {
-        octant |= treeBoundBox::RIGHTHALF;
+        octant |= octantBit::rightHalf;
         dist.x() *= -1;
     }
 
     if (dist.y() < 0)
     {
-        octant |= treeBoundBox::TOPHALF;
+        octant |= octantBit::topHalf;
         dist.y() *= -1;
     }
 
     if (dist.z() < 0)
     {
-        octant |= treeBoundBox::FRONTHALF;
+        octant |= octantBit::frontHalf;
         dist.z() *= -1;
     }
 
@@ -608,42 +621,42 @@ inline void CML::treeBoundBox::searchOrder
     {
         if (dist.y() < dist.z())
         {
-            min = treeBoundBox::RIGHTHALF;
-            mid = treeBoundBox::TOPHALF;
-            max = treeBoundBox::FRONTHALF;
+            min = octantBit::rightHalf;
+            mid = octantBit::topHalf;
+            max = octantBit::frontHalf;
         }
         else if (dist.z() < dist.x())
         {
-            min = treeBoundBox::FRONTHALF;
-            mid = treeBoundBox::RIGHTHALF;
-            max = treeBoundBox::TOPHALF;
+            min = octantBit::frontHalf;
+            mid = octantBit::rightHalf;
+            max = octantBit::topHalf;
         }
         else
         {
-            min = treeBoundBox::RIGHTHALF;
-            mid = treeBoundBox::FRONTHALF;
-            max = treeBoundBox::TOPHALF;
+            min = octantBit::rightHalf;
+            mid = octantBit::frontHalf;
+            max = octantBit::topHalf;
         }
     }
     else
     {
         if (dist.z() < dist.y())
         {
-            min = treeBoundBox::FRONTHALF;
-            mid = treeBoundBox::TOPHALF;
-            max = treeBoundBox::RIGHTHALF;
+            min = octantBit::frontHalf;
+            mid = octantBit::topHalf;
+            max = octantBit::rightHalf;
         }
         else if (dist.x() < dist.z())
         {
-            min = treeBoundBox::TOPHALF;
-            mid = treeBoundBox::RIGHTHALF;
-            max = treeBoundBox::FRONTHALF;
+            min = octantBit::topHalf;
+            mid = octantBit::rightHalf;
+            max = octantBit::frontHalf;
         }
         else
         {
-            min = treeBoundBox::TOPHALF;
-            mid = treeBoundBox::FRONTHALF;
-            max = treeBoundBox::RIGHTHALF;
+            min = octantBit::topHalf;
+            mid = octantBit::frontHalf;
+            max = octantBit::rightHalf;
         }
     }
 
@@ -666,8 +679,8 @@ inline CML::treeBoundBox CML::treeBoundBox::extend(const scalar s) const
 {
     // Numbers that don't approximate rational fractions with which to make the
     // box asymmetric. These are between one and two.
-    static const vector a = vector::uniform(sqrt(1.25) + 0.5);
-    static const vector b = vector::uniform(sqrt(2.0));
+    static const vector a((sqrt(5.0) + 1)/2, sqrt(2.0), (sqrt(13.0) - 1)/2);
+    static const vector b(a.y(), a.z(), a.x());
 
     treeBoundBox bb(*this);
 

@@ -113,7 +113,7 @@ public:
         const dictionary& dict
     )
     {
-        return autoPtr<exponentialSolidTransport<Thermo> >
+        return autoPtr<exponentialSolidTransport<Thermo>>
         (
             new exponentialSolidTransport<Thermo>(dict)
         );

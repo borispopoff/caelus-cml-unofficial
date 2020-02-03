@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,7 +68,7 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    fixedValueFvPatchScalarField(p, iF, dict, false),
     radiationCoupledBase(p, dict),
     qro_("qro", dict, p.size())
 {
@@ -138,7 +138,7 @@ updateCoeffs()
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
-            << this->dimensionedInternalField().name() << " <- "
+            << this->internalField().name() << " <- "
             << " heat transfer rate:" << Q
             << " wall radiative heat flux "
             << " min:" << gMin(*this)
@@ -159,7 +159,7 @@ write
 {
     fixedValueFvPatchScalarField::write(os);
     radiationCoupledBase::write(os);
-    qro_.writeEntry("qro", os);
+    writeEntry(os, "qro", qro_);
 }
 
 

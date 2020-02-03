@@ -78,7 +78,7 @@ void fvcSnGradFunctionPlugin<T>::doEvaluation()
 {
     IStringStream spec(specString_);
 
-    tmp<fv::snGradScheme<T> > scheme(
+    tmp<fv::snGradScheme<T>> scheme(
         fv::snGradScheme<T>::New(
             mesh(),
             spec

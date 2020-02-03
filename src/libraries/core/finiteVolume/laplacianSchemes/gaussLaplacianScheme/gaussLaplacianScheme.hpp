@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,23 +52,17 @@ class gaussLaplacianScheme
 {
     // Private Member Functions
 
-        tmp<fvMatrix<Type> > fvmLaplacianUncorrected
+        tmp<fvMatrix<Type>> fvmLaplacianUncorrected
         (
             const surfaceScalarField& gammaMagSf,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > gammaSnGradCorr
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> gammaSnGradCorr
         (
             const surfaceVectorField& SfGammaCorr,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
-
-        //- Disallow default bitwise copy construct
-        gaussLaplacianScheme(const gaussLaplacianScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const gaussLaplacianScheme&);
 
 
 public:
@@ -95,12 +89,15 @@ public:
         gaussLaplacianScheme
         (
             const fvMesh& mesh,
-            const tmp<surfaceInterpolationScheme<GType> >& igs,
-            const tmp<snGradScheme<Type> >& sngs
+            const tmp<surfaceInterpolationScheme<GType>>& igs,
+            const tmp<snGradScheme<Type>>& sngs
         )
         :
             laplacianScheme<Type, GType>(mesh, igs, sngs)
         {}
+
+        //- Disallow default bitwise copy construct
+        gaussLaplacianScheme(const gaussLaplacianScheme&) = delete;
 
 
     //- Destructor
@@ -110,22 +107,28 @@ public:
 
     // Member Functions
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcLaplacian
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmLaplacian
+        tmp<fvMatrix<Type>> fvmLaplacian
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcLaplacian
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gaussLaplacianScheme&) = delete;
 };
 
 
@@ -135,14 +138,14 @@ public:
 #define defineFvmLaplacianScalarGamma(Type)                                    \
                                                                                \
 template<>                                                                     \
-tmp<fvMatrix<Type> > gaussLaplacianScheme<Type, scalar>::fvmLaplacian          \
+tmp<fvMatrix<Type>> gaussLaplacianScheme<Type, scalar>::fvmLaplacian          \
 (                                                                              \
     const GeometricField<scalar, fvsPatchField, surfaceMesh>&,                 \
     const GeometricField<Type, fvPatchField, volMesh>&                         \
 );                                                                             \
                                                                                \
 template<>                                                                     \
-tmp<GeometricField<Type, fvPatchField, volMesh> >                              \
+tmp<GeometricField<Type, fvPatchField, volMesh>>                              \
 gaussLaplacianScheme<Type, scalar>::fvcLaplacian                               \
 (                                                                              \
     const GeometricField<scalar, fvsPatchField, surfaceMesh>&,                 \
@@ -185,7 +188,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type, class GType>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 gaussLaplacianScheme<Type, GType>::fvmLaplacianUncorrected
 (
     const surfaceScalarField& gammaMagSf,
@@ -196,7 +199,7 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacianUncorrected
         this->tsnGradScheme_().deltaCoeffs(vf);
     const surfaceScalarField& deltaCoeffs = tdeltaCoeffs();
 
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -204,31 +207,30 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacianUncorrected
             deltaCoeffs.dimensions()*gammaMagSf.dimensions()*vf.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
-    fvm.upper() = deltaCoeffs.internalField()*gammaMagSf.internalField();
+    fvm.upper() = deltaCoeffs.primitiveField()*gammaMagSf.primitiveField();
     fvm.negSumDiag();
 
-    forAll(vf.boundaryField(), patchI)
+    forAll(vf.boundaryField(), patchi)
     {
-        const fvPatchField<Type>& pvf = vf.boundaryField()[patchI];
-        const fvsPatchScalarField& pGamma = gammaMagSf.boundaryField()[patchI];
+        const fvPatchField<Type>& pvf = vf.boundaryField()[patchi];
+        const fvsPatchScalarField& pGamma = gammaMagSf.boundaryField()[patchi];
         const fvsPatchScalarField& pDeltaCoeffs =
-            deltaCoeffs.boundaryField()[patchI];
+            deltaCoeffs.boundaryField()[patchi];
 
         if (pvf.coupled())
         {
-            fvm.internalCoeffs()[patchI] =
+            fvm.internalCoeffs()[patchi] =
                 pGamma*pvf.gradientInternalCoeffs(pDeltaCoeffs);
-            fvm.boundaryCoeffs()[patchI] =
+            fvm.boundaryCoeffs()[patchi] =
                -pGamma*pvf.gradientBoundaryCoeffs(pDeltaCoeffs);
         }
         else
         {
-            fvm.internalCoeffs()[patchI] = pGamma*pvf.gradientInternalCoeffs();
-            fvm.boundaryCoeffs()[patchI] = -pGamma*pvf.gradientBoundaryCoeffs();
+            fvm.internalCoeffs()[patchi] = pGamma*pvf.gradientInternalCoeffs();
+            fvm.boundaryCoeffs()[patchi] = -pGamma*pvf.gradientBoundaryCoeffs();
         }
-
     }
 
     return tfvm;
@@ -236,7 +238,7 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacianUncorrected
 
 
 template<class Type, class GType>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 gaussLaplacianScheme<Type, GType>::gammaSnGradCorr
 (
     const surfaceVectorField& SfGammaCorr,
@@ -245,7 +247,7 @@ gaussLaplacianScheme<Type, GType>::gammaSnGradCorr
 {
     const fvMesh& mesh = this->mesh();
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tgammaSnGradCorr
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tgammaSnGradCorr
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -265,7 +267,7 @@ gaussLaplacianScheme<Type, GType>::gammaSnGradCorr
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
-        tgammaSnGradCorr().replace
+        tgammaSnGradCorr.ref().replace
         (
             cmpt,
             fvc::dotInterpolate(SfGammaCorr, fvc::grad(vf.component(cmpt)))
@@ -279,7 +281,7 @@ gaussLaplacianScheme<Type, GType>::gammaSnGradCorr
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type, class GType>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 gaussLaplacianScheme<Type, GType>::fvcLaplacian
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -287,19 +289,19 @@ gaussLaplacianScheme<Type, GType>::fvcLaplacian
 {
     const fvMesh& mesh = this->mesh();
 
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tLaplacian
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tLaplacian
     (
         fvc::div(this->tsnGradScheme_().snGrad(vf)*mesh.magSf())
     );
 
-    tLaplacian().rename("laplacian(" + vf.name() + ')');
+    tLaplacian.ref().rename("laplacian(" + vf.name() + ')');
 
     return tLaplacian;
 }
 
 
 template<class Type, class GType>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 gaussLaplacianScheme<Type, GType>::fvmLaplacian
 (
     const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
@@ -317,19 +319,23 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacian
     );
     const surfaceVectorField SfGammaCorr(SfGamma - SfGammaSn*Sn);
 
-    tmp<fvMatrix<Type> > tfvm = fvmLaplacianUncorrected(SfGammaSn, vf);
-    fvMatrix<Type>& fvm = tfvm();
+    tmp<fvMatrix<Type>> tfvm = fvmLaplacianUncorrected
+    (
+        SfGammaSn,
+        vf
+    );
+    fvMatrix<Type>& fvm = tfvm.ref();
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tfaceFluxCorrection
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tfaceFluxCorrection
         = gammaSnGradCorr(SfGammaCorr, vf);
 
     if (this->tsnGradScheme_().corrected())
     {
-        tfaceFluxCorrection() +=
+        tfaceFluxCorrection.ref() +=
             SfGammaSn*this->tsnGradScheme_().correction(vf);
     }
 
-    fvm.source() -= mesh.V()*fvc::div(tfaceFluxCorrection())().internalField();
+    fvm.source() -= mesh.V()*fvc::div(tfaceFluxCorrection())().primitiveField();
 
     if (mesh.fluxRequired(vf.name()))
     {
@@ -341,7 +347,7 @@ gaussLaplacianScheme<Type, GType>::fvmLaplacian
 
 
 template<class Type, class GType>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 gaussLaplacianScheme<Type, GType>::fvcLaplacian
 (
     const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
@@ -358,7 +364,7 @@ gaussLaplacianScheme<Type, GType>::fvcLaplacian
     );
     const surfaceVectorField SfGammaCorr(SfGamma - SfGammaSn*Sn);
 
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tLaplacian
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tLaplacian
     (
         fvc::div
         (
@@ -367,7 +373,10 @@ gaussLaplacianScheme<Type, GType>::fvcLaplacian
         )
     );
 
-    tLaplacian().rename("laplacian(" + gamma.name() + ',' + vf.name() + ')');
+    tLaplacian.ref().rename
+    (
+        "laplacian(" + gamma.name() + ',' + vf.name() + ')'
+    );
 
     return tLaplacian;
 }

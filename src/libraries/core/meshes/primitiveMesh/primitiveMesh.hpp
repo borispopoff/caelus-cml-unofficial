@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2014-16 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -181,15 +181,6 @@ class primitiveMesh
             const scalar areaSwitch_;
 
 
-    // Private Member Functions
-
-        //- Disallow construct as copy
-        primitiveMesh(const primitiveMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const primitiveMesh&);
-
-
         // Topological calculations
 
             //- Calculate cell shapes
@@ -218,7 +209,7 @@ class primitiveMesh
             //- Helper: return (after optional creation) edge between two points
             static label getEdge
             (
-                List<DynamicList<label> >&,
+                List<DynamicList<label>>&,
                 DynamicList<edge>&,
                 const label,
                 const label
@@ -463,6 +454,9 @@ public:
             const scalar areaSwitch = 1e-8
         );
 
+        //- Disallow construct as copy
+        primitiveMesh(const primitiveMesh&);
+
 
     //- Destructor
     virtual ~primitiveMesh();
@@ -489,7 +483,6 @@ public:
             cellList& cells
         );
 
-
         //- Reset this primitiveMesh given the primitive array sizes and cells
         void reset
         (
@@ -497,7 +490,7 @@ public:
             const label nInternalFaces,
             const label nFaces,
             const label nCells,
-            const Xfer<cellList>& cells
+            cellList&& cells
         );
 
 
@@ -832,47 +825,47 @@ public:
             //- cellCells using cells.
             const labelList& cellCells
             (
-                const label cellI,
+                const label celli,
                 DynamicList<label>&
             ) const;
 
-            const labelList& cellCells(const label cellI) const;
+            const labelList& cellCells(const label celli) const;
 
             //- cellPoints using cells
             const labelList& cellPoints
             (
-                const label cellI,
+                const label celli,
                 DynamicList<label>&
             ) const;
 
-            const labelList& cellPoints(const label cellI) const;
+            const labelList& cellPoints(const label celli) const;
 
             //- pointCells using pointFaces
             const labelList& pointCells
             (
-                const label pointI,
+                const label pointi,
                 DynamicList<label>&
             ) const;
 
-            const labelList& pointCells(const label pointI) const;
+            const labelList& pointCells(const label pointi) const;
 
             //- pointPoints using edges, pointEdges
             const labelList& pointPoints
             (
-                const label pointI,
+                const label pointi,
                 DynamicList<label>&
             ) const;
 
-            const labelList& pointPoints(const label pointI) const;
+            const labelList& pointPoints(const label pointi) const;
 
             //- faceEdges using pointFaces, edges, pointEdges
             const labelList& faceEdges
             (
-                const label faceI,
+                const label facei,
                 DynamicList<label>&
             ) const;
 
-            const labelList& faceEdges(const label faceI) const;
+            const labelList& faceEdges(const label facei) const;
 
             //- edgeFaces using pointFaces, edges, pointEdges
             const labelList& edgeFaces
@@ -895,11 +888,11 @@ public:
             //- cellEdges using cells, pointFaces, edges, pointEdges
             const labelList& cellEdges
             (
-                const label cellI,
+                const label celli,
                 DynamicList<label>&
             ) const;
 
-            const labelList& cellEdges(const label cellI) const;
+            const labelList& cellEdges(const label celli) const;
 
 
             //- Clear geometry
@@ -910,6 +903,12 @@ public:
 
             //- Clear all geometry and addressing unnecessary for CFD
             void clearOut();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const primitiveMesh&) = delete;
 };
 
 

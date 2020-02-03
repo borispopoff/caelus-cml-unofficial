@@ -110,7 +110,7 @@ inline void CML::wallNormalInfo::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -134,7 +134,7 @@ inline void CML::wallNormalInfo::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -188,7 +188,7 @@ inline bool CML::wallNormalInfo::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::wallNormalInfo::equal
 (
     const wallNormalInfo& rhs,

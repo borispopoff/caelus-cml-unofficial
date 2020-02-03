@@ -21,6 +21,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "WALE.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -37,6 +38,7 @@ void WALE::updateSubGridScaleFields(volTensorField const& gradU)
 {
     nuSgs_ = ck_*delta()*sqrt(k(gradU));
     nuSgs_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nuSgs_);
 }
 
 WALE::WALE

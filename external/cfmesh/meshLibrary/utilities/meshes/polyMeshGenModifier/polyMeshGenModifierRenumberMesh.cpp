@@ -54,12 +54,12 @@ void polyMeshGenModifier::renumberMesh()
         label cellInOrder = 0;
 
         //- loop over the cells
-        forAll(visited, cellI)
+        forAll(visited, celli)
         {
             //- find the first cell that has not been visited yet
-            if( !visited[cellI] )
+            if( !visited[celli] )
             {
-                currentCell = cellI;
+                currentCell = celli;
 
                 //- use this cell as a start
                 nextCell.append(currentCell);
@@ -109,11 +109,11 @@ void polyMeshGenModifier::renumberMesh()
     //- The reverse order list gives the new cell label for every old cell
     labelLongList reverseOrder(newOrder.size());
 
-    forAll(newOrder, cellI)
+    forAll(newOrder, celli)
     {
-        newCells[cellI].transfer(oldCells[newOrder[cellI]]);
+        newCells[celli].transfer(oldCells[newOrder[celli]]);
 
-        reverseOrder[newOrder[cellI]] = cellI;
+        reverseOrder[newOrder[celli]] = celli;
     }
 
     //- Renumber the faces.
@@ -121,20 +121,20 @@ void polyMeshGenModifier::renumberMesh()
     labelLongList reverseFaceOrder(oldOwner.size(), 0);
 
     //- Mark the internal faces with -2 so that they are inserted first
-    forAll(newCells, cellI)
+    forAll(newCells, celli)
     {
-        const cell& c = newCells[cellI];
+        const cell& c = newCells[celli];
 
-        forAll(c, faceI)
+        forAll(c, facei)
         {
-            --reverseFaceOrder[c[faceI]];
+            --reverseFaceOrder[c[facei]];
         }
     }
 
     //- Order internal faces
     label nMarkedFaces = 0;
 
-    forAll(newCells, cellI)
+    forAll(newCells, celli)
     {
         //- Note:
         //- Insertion cannot be done in one go as the faces need to be
@@ -142,25 +142,25 @@ void polyMeshGenModifier::renumberMesh()
         //- cells.  Therefore, all neighbours will be detected first
         //- and then added in the correct order.
 
-        const cell& c = newCells[cellI];
+        const cell& c = newCells[celli];
 
         //- Record the neighbour cell
         DynList<label, 24> neiCells(c.size(), -1);
 
         label nNeighbours(0);
 
-        forAll(c, faceI)
+        forAll(c, facei)
         {
-            if( reverseFaceOrder[c[faceI]] == -2 )
+            if( reverseFaceOrder[c[facei]] == -2 )
             {
                 //- Face is internal and gets reordered
-                if( cellI == reverseOrder[oldOwner[c[faceI]]] )
+                if( celli == reverseOrder[oldOwner[c[facei]]] )
                 {
-                    neiCells[faceI] = reverseOrder[oldNeighbour[c[faceI]]];
+                    neiCells[facei] = reverseOrder[oldNeighbour[c[facei]]];
                 }
-                else if( cellI == reverseOrder[oldNeighbour[c[faceI]]] )
+                else if( celli == reverseOrder[oldNeighbour[c[facei]]] )
                 {
-                    neiCells[faceI] = reverseOrder[oldOwner[c[faceI]]];
+                    neiCells[facei] = reverseOrder[oldOwner[c[facei]]];
                 }
                 else
                 {
@@ -207,11 +207,11 @@ void polyMeshGenModifier::renumberMesh()
     }
 
     //- Insert the boundary faces into reordering list
-    forAll(reverseFaceOrder, faceI)
+    forAll(reverseFaceOrder, facei)
     {
-        if( reverseFaceOrder[faceI] < 0 )
+        if( reverseFaceOrder[facei] < 0 )
         {
-            reverseFaceOrder[faceI] = nMarkedFaces;
+            reverseFaceOrder[facei] = nMarkedFaces;
 
             ++nMarkedFaces;
         }
@@ -220,15 +220,15 @@ void polyMeshGenModifier::renumberMesh()
     //- Face order gives the old face label for every new face
     labelLongList faceOrder(reverseFaceOrder.size());
 
-    forAll(faceOrder, faceI)
+    forAll(faceOrder, facei)
     {
-        faceOrder[reverseFaceOrder[faceI]] = faceI;
+        faceOrder[reverseFaceOrder[facei]] = facei;
     }
 
     //- Renumber the cells
-    forAll(newCells, cellI)
+    forAll(newCells, celli)
     {
-        cell& c = newCells[cellI];
+        cell& c = newCells[celli];
 
         forAll(c, fI)
         {
@@ -239,16 +239,16 @@ void polyMeshGenModifier::renumberMesh()
     faceListPMG& oldFaces = this->facesAccess();
     faceList newFaces(oldFaces.size());
 
-    forAll(newFaces, faceI)
+    forAll(newFaces, facei)
     {
-        newFaces[faceI].transfer(oldFaces[faceOrder[faceI]]);
+        newFaces[facei].transfer(oldFaces[faceOrder[facei]]);
     }
 
     //- Turn the face that need to be turned
     //- Only loop through internal faces
-    forAll(oldNeighbour, faceI)
+    forAll(oldNeighbour, facei)
     {
-        const label oldFaceI = faceOrder[faceI];
+        const label oldFaceI = faceOrder[facei];
         if( oldNeighbour[oldFaceI] < 0 )
             continue;
 
@@ -258,15 +258,15 @@ void polyMeshGenModifier::renumberMesh()
           < reverseOrder[oldOwner[oldFaceI]]
         )
         {
-            newFaces[faceI] = newFaces[faceI].reverseFace();
+            newFaces[facei] = newFaces[facei].reverseFace();
         }
     }
 
     //- transfer faces and cells back to the original lists
-    forAll(newCells, cellI)
-        oldCells[cellI].transfer(newCells[cellI]);
-    forAll(newFaces, faceI)
-        oldFaces[faceI].transfer(newFaces[faceI]);
+    forAll(newCells, celli)
+        oldCells[celli].transfer(newCells[celli]);
+    forAll(newFaces, facei)
+        oldFaces[facei].transfer(newFaces[facei]);
 
     mesh_.updateFaceSubsets(reverseFaceOrder);
     mesh_.updateCellSubsets(reverseOrder);

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -151,10 +151,10 @@ void CML::mappedFlowRateFvPatchVectorField::updateCoeffs()
             scalar phi = gSum(rhop*(*this) & patch().Sf());
             Info<< patch().boundaryMesh().mesh().name() << ':'
                 << patch().name() << ':'
-                << this->dimensionedInternalField().name() << " <- "
+                << this->internalField().name() << " <- "
                 << nbrMesh.name() << ':'
                 << nbrPatch.name() << ':'
-                << this->dimensionedInternalField().name() << " :"
+                << this->internalField().name() << " :"
                 << " mass flux[Kg/s]:" << -phi
                 << endl;
         }
@@ -164,8 +164,8 @@ void CML::mappedFlowRateFvPatchVectorField::updateCoeffs()
         FatalErrorInFunction
             << "dimensions of " << phiName_ << " are incorrect" << nl
             << "    on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << nl << exit(FatalError);
     }
 
@@ -184,8 +184,8 @@ void CML::mappedFlowRateFvPatchVectorField::write
     fvPatchField<vector>::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    os.writeKeyword("nbrPhi") << nbrPhiName_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "nbrPhi", nbrPhiName_);
+    writeEntry(os, "value", *this);
 }
 
 

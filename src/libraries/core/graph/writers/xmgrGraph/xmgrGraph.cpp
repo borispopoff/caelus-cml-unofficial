@@ -43,20 +43,20 @@ void CML::xmgrGraph::write(const graph& g, Ostream& os) const
         << "@xaxis label " << g.xName() << nl
         << "@yaxis label " << g.yName() << endl;
 
-    label fieldI = 0;
+    label fieldi = 0;
 
     forAllConstIter(graph, g, iter)
     {
-        os  << "@s" << fieldI << " legend "
+        os  << "@s" << fieldi << " legend "
             << iter()->name() << nl
-            << "@target G0.S" << fieldI << nl
+            << "@target G0.S" << fieldi << nl
             << "@type xy" << endl;
 
         writeXY(g.x(), *iter(), os);
 
         os << endl;
 
-        fieldI++;
+        fieldi++;
     }
 }
 

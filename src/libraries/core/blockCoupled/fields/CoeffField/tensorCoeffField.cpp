@@ -56,7 +56,7 @@ CML::CoeffField<CML::tensor>::CoeffField
 
 CML::CoeffField<CML::tensor>::CoeffField
 (
-    const tmp<DecoupledCoeffField<tensor> >& tf
+    const tmp<DecoupledCoeffField<tensor>>& tf
 )
 :
     DecoupledCoeffField<tensor>(tf())
@@ -78,7 +78,7 @@ void CML::CoeffField<CML::tensor>::operator=(const CoeffField<tensor>& f)
 
 void CML::CoeffField<CML::tensor>::operator=
 (
-    const tmp<CoeffField<tensor> >& f
+    const tmp<CoeffField<tensor>>& f
 )
 {
     DecoupledCoeffField<tensor>::operator=(f);
@@ -132,7 +132,7 @@ CML::Ostream& CML::operator<<(Ostream& os, const CoeffField<tensor>& f)
 CML::Ostream& CML::operator<<
 (
     Ostream& os,
-    const tmp<CoeffField<tensor> >& tf
+    const tmp<CoeffField<tensor>>& tf
 )
 {
     const DecoupledCoeffField<tensor>& df = tf();
@@ -144,14 +144,14 @@ CML::Ostream& CML::operator<<
 /* * * * * * * * * * * * * * * * Global functions  * * * * * * * * * * * * * */
 
 template<>
-CML::tmp<CML::CoeffField<CML::tensor> > CML::inv
+CML::tmp<CML::CoeffField<CML::tensor>> CML::inv
 (
     const CoeffField<tensor>& f
 )
 {
     const DecoupledCoeffField<tensor>& df = f;
 
-    return tmp<CoeffField<tensor> >(new CoeffField<tensor>(inv(df)()));
+    return tmp<CoeffField<tensor>>(new CoeffField<tensor>(inv(df)()));
 }
 
 

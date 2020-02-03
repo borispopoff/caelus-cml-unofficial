@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -45,61 +45,89 @@ CML::label CML::sampledSet::getBoundaryCell(const label facei) const
 }
 
 
-CML::label CML::sampledSet::getCell
-(
-    const label facei,
-    const point& sample
-) const
+CML::label CML::sampledSet::getNeighbourCell(const label facei) const
 {
-    if (facei == -1)
-    {
-        FatalErrorInFunction
-            << "Illegal face label " << facei
-            << abort(FatalError);
-    }
-
     if (facei >= mesh().nInternalFaces())
     {
-        label celli = getBoundaryCell(facei);
-
-        if (!mesh().pointInCell(sample, celli, searchEngine_.decompMode()))
-        {
-            FatalErrorInFunction
-                << "Found cell " << celli << " using face " << facei
-                << ". But cell does not contain point " << sample
-                << abort(FatalError);
-        }
-        return celli;
+        return mesh().faceOwner()[facei];
     }
     else
     {
-        // Try owner and neighbour to see which one contains sample
+        return mesh().faceNeighbour()[facei];
+    }
+}
 
-        label celli = mesh().faceOwner()[facei];
 
-        if (mesh().pointInCell(sample, celli, searchEngine_.decompMode()))
+CML::label CML::sampledSet::pointInCell
+(
+    const point& p,
+    const label samplei
+) const
+{
+    // Collect the face owner and neighbour cells of the sample into an array
+    // for convenience
+    label cells[4] =
+    {
+        mesh().faceOwner()[faces_[samplei]],
+        getNeighbourCell(faces_[samplei]),
+        mesh().faceOwner()[faces_[samplei+1]],
+        getNeighbourCell(faces_[samplei+1])
+    };
+
+    // Find the sampled cell by checking the owners and neighbours of the
+    // sampled faces
+
+    label cellm =
+        (cells[0] == cells[2] || cells[0] == cells[3]) ? cells[0]
+      : (cells[1] == cells[2] || cells[1] == cells[3]) ? cells[1]
+      : -1;
+
+    if (cellm != -1)
+    {
+        // If found the sampled cell check the point is in the cell
+        // otherwise ignore
+        if (!mesh().pointInCell(p, cellm, searchEngine_.decompMode()))
         {
-            return celli;
-        }
-        else
-        {
-            celli = mesh().faceNeighbour()[facei];
+            cellm = -1;
 
-            if (mesh().pointInCell(sample, celli, searchEngine_.decompMode()))
+            if (debug)
             {
-                return celli;
-            }
-            else
-            {
-                FatalErrorInFunction
-                    << "None of the neighbours of face "
-                    << facei << " contains point " << sample
-                    << abort(FatalError);
-
-                return -1;
+                WarningInFunction
+                    << "Could not find mid-point " << p
+                    << " cell " << cellm << endl;
             }
         }
     }
+    else
+    {
+        // If the sample does not pass through a single cell check if the point
+        // is in any of the owners or neighbours otherwise ignore
+        for (label i=0; i<4; i++)
+        {
+            if (mesh().pointInCell(p, cells[i], searchEngine_.decompMode()))
+            {
+                return cells[i];
+            }
+        }
+
+        if (debug)
+        {
+            WarningInFunction
+                << "Could not find cell for mid-point" << nl
+                << "  samplei: " << samplei
+                << "  pts[samplei]: " << operator[](samplei)
+                << "  face[samplei]: " << faces_[samplei]
+                << "  pts[samplei+1]: " << operator[](samplei+1)
+                << "  face[samplei+1]: " << faces_[samplei+1]
+                << "  cellio: " << cells[0]
+                << "  cellin: " << cells[1]
+                << "  celljo: " << cells[2]
+                << "  celljn: " << cells[3]
+                << endl;
+        }
+    }
+
+    return cellm;
 }
 
 
@@ -180,8 +208,8 @@ CML::point CML::sampledSet::pushIn
 
     // Taken from particle::initCellFacePt()
     label tetFacei;
-    label tetPtI;
-    mesh().findTetFacePt(celli, facePt, tetFacei, tetPtI);
+    label tetPti;
+    mesh().findTetFacePt(celli, facePt, tetFacei, tetPti);
 
     // This is the tolerance that was defined as a static constant of the
     // particle class. It is no longer used by particle, following the switch to
@@ -191,7 +219,7 @@ CML::point CML::sampledSet::pushIn
     // should almost certainly be left to the particle class.
     const scalar trackingCorrectionTol = 1e-5;
 
-    if (tetFacei == -1 || tetPtI == -1)
+    if (tetFacei == -1 || tetPti == -1)
     {
         newPosition = facePt;
 
@@ -208,7 +236,7 @@ CML::point CML::sampledSet::pushIn
                 celli,
                 newPosition,
                 tetFacei,
-                tetPtI
+                tetPti
             );
 
             iterNo++;
@@ -233,7 +261,7 @@ CML::point CML::sampledSet::pushIn
 
 
 // Calculates start of tracking given samplePt and first boundary intersection
-// (bPoint, bFaceI). bFaceI == -1 if no boundary intersection.
+// (bPoint, bFacei). bFacei == -1 if no boundary intersection.
 // Returns true if trackPt is sampling point
 bool CML::sampledSet::getTrackingPoint
 (

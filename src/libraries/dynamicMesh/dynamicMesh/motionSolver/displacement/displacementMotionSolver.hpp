@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2014 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -75,10 +75,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        displacementMotionSolver(const displacementMotionSolver&);
+        displacementMotionSolver(const displacementMotionSolver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementMotionSolver&);
+        void operator=(const displacementMotionSolver&) = delete;
 
 public:
 

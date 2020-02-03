@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
- 
+
     Caelus is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -65,7 +65,7 @@ void CML::abortCalculation::removeFile() const
 
     if (hasAbort && Pstream::master())
     {
-        // cleanup ABORT file (on master only)
+        // Cleanup ABORT file (on master only)
         rm(abortFile_);
     }
 }
@@ -84,12 +84,12 @@ CML::abortCalculation::abortCalculation
     name_(name),
     obr_(obr),
     abortFile_("$CAELUS_CASE/" + name),
-    action_(nextWrite)
+    action_(actionType::nextWrite)
 {
     abortFile_.expand();
     read(dict);
 
-    // remove any old files from previous runs
+    // Remove any old files from previous runs
     removeFile();
 }
 
@@ -110,10 +110,10 @@ void CML::abortCalculation::read(const dictionary& dict)
     }
     else
     {
-        action_ = nextWrite;
+        action_ = actionType::nextWrite;
     }
 
-    if (dict.readIfPresent("fileName", abortFile_))
+    if (dict.readIfPresent("file", abortFile_))
     {
         abortFile_.expand();
     }
@@ -129,9 +129,9 @@ void CML::abortCalculation::execute()
     {
         switch (action_)
         {
-            case noWriteNow :
+            case actionType::noWriteNow :
             {
-                if (obr_.time().stopAt(Time::saNoWriteNow))
+                if (obr_.time().stopAt(Time::stopAtControl::noWriteNow))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
                         << obr_.time().timeIndex()
@@ -141,9 +141,9 @@ void CML::abortCalculation::execute()
                 break;
             }
 
-            case writeNow :
+            case actionType::writeNow :
             {
-                if (obr_.time().stopAt(Time::saWriteNow))
+                if (obr_.time().stopAt(Time::stopAtControl::writeNow))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
                         << obr_.time().timeIndex()
@@ -153,9 +153,9 @@ void CML::abortCalculation::execute()
                 break;
             }
 
-            case nextWrite :
+            case actionType::nextWrite :
             {
-                if (obr_.time().stopAt(Time::saNextWrite))
+                if (obr_.time().stopAt(Time::stopAtControl::nextWrite))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
                         << obr_.time().timeIndex()

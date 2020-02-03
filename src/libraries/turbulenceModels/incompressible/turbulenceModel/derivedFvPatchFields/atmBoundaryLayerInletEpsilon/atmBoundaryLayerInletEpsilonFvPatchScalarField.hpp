@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,38 +22,28 @@ Class
     atmBoundaryLayerInletEpsilonFvPatchScalarField
 
 Description
-    Boundary condition specifies a epsilon inlet for the atmospheric boundary
-    layer (ABL). This boundaty is to be used in conjunction with
-    ABLInletVelocity.
+    This boundary condition specifies an inlet value for the turbulence
+    dissipation, \f$\epsilon\f$, appropriate for atmospheric boundary layers.
 
+    See CML::atmBoundaryLayer for details.
+
+    Example of the boundary condition specification:
     \verbatim
-        epsilon = Ustar^3 / (K(z - zGround + z0))
-
-    where:
-
-        Ustar is the frictional velocity
-        K is karman's constant
-        z is the verical coordinate
-        z0 is the surface roughness length
-        zGround minimum vlaue in z direction
-
-
-    and:
-
-        Ustar = K Uref/ln((Zref + z0)/z0)
-
-    where:
-
-        Uref is the reference velocity at Zref
-        Zref is the reference height.
-
+    ground
+    {
+        type            atmBoundaryLayerInletEpsilon;
+        z               (0 0 1);
+        Uref            10.0;
+        Zref            20.0;
+        z0              uniform 0.1;
+        zGround         uniform 0.0;
+    }
     \endverbatim
 
-    Reference:
-    D.M. Hargreaves and N.G. Wright
-    "On the use of the k-epsilon model in commercial CFD software to model the
-     neutral atmospheric boundary layer"
-    Journal of Wind Engineering and Industrial Aerodynamics 95(2007) 355-369.
+See also
+    CML:atmBoundaryLayer,
+    CML::atmBoundaryLayerInletVelocityFvPatchVectorField,
+    CML::atmBoundaryLayerInletKFvPatchScalarField
 
 SourceFiles
     atmBoundaryLayerInletEpsilonFvPatchScalarField.cpp
@@ -65,6 +55,7 @@ SourceFiles
 
 #include "fvPatchFields.hpp"
 #include "fixedValueFvPatchFields.hpp"
+#include "atmBoundaryLayer.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,31 +70,9 @@ namespace incompressible
 
 class atmBoundaryLayerInletEpsilonFvPatchScalarField
 :
-    public fixedValueFvPatchScalarField
+    public fixedValueFvPatchScalarField,
+    public atmBoundaryLayer
 {
-    // Private data
-
-        //- Direction of the z-coordinate
-        vector z_;
-
-        //- Von Karman constant
-        const scalar kappa_;
-
-        //- Reference velocity
-        const scalar Uref_;
-
-        //- Reference height
-        const scalar Href_;
-
-        //- Surface roughness length
-        scalarField z0_;
-
-        //- Minimum coordinate value in z direction
-        scalarField zGround_;
-
-        //- Frictional velocity
-        scalarField Ustar_;
-
 
 public:
 
@@ -168,21 +137,6 @@ public:
 
 
     // Member functions
-
-        // Access
-
-            //- Return max value
-            const scalarField& Ustar() const
-            {
-                return Ustar_;
-            }
-
-            //- Return z direction
-            const vector& z() const
-            {
-                return z_;
-            }
-
 
         // Mapping functions
 

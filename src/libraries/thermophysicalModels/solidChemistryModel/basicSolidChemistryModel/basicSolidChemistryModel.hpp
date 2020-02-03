@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,8 +59,8 @@ class basicSolidChemistryModel
     //- Construct as copy (not implemented)
     basicSolidChemistryModel(const basicSolidChemistryModel&);
 
-    //- Disallow default bitwise assignment
-    void operator=(const basicSolidChemistryModel&);
+        //- Disallow default bitwise assignment
+        void operator=(const basicSolidChemistryModel&) = delete;
 
 
 protected:
@@ -120,25 +120,25 @@ public:
     }
 
     //- Return total gases mass source term [kg/m3/s]
-    virtual tmp<DimensionedField<scalar, volMesh> > RRg() const = 0;
+    virtual tmp<volScalarField::Internal> RRg() const = 0;
 
     //- Return total solids mass source term [kg/m3/s]
-    virtual tmp<DimensionedField<scalar, volMesh> > RRs() const = 0;
+    virtual tmp<volScalarField::Internal> RRs() const = 0;
 
     //- Return chemical source terms for solids [kg/m3/s]
-    virtual const DimensionedField<scalar, volMesh>& RRs
+    virtual const volScalarField::Internal& RRs
     (
         const label i
     ) const = 0;
 
     //- Return chemical source terms for gases [kg/m3/s]
-    virtual const DimensionedField<scalar, volMesh>& RRg
+    virtual const volScalarField::Internal& RRg
     (
         const label i
     ) const = 0;
 
     //- Returns the reaction rate of the speciei in reactionI
-    virtual tmp<DimensionedField<scalar, volMesh> > calculateRR
+    virtual tmp<volScalarField::Internal> calculateRR
     (
         const label reactionI,
         const label speciei
@@ -162,13 +162,13 @@ public:
     virtual void calculate() = 0;
 
     //- Return const access to the total source terms
-    virtual const DimensionedField<scalar, volMesh>& RR
+    virtual const volScalarField::Internal& RR
     (
         const label i
     ) const;
 
     //- Return non-const access to the total source terms
-    virtual DimensionedField<scalar, volMesh>& RR(const label i);
+    virtual volScalarField::Internal& RR(const label i);
 };
 
 

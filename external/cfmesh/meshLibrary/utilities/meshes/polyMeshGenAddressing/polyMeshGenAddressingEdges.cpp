@@ -68,9 +68,9 @@ void polyMeshGenAddressing::calcEdges() const
             # ifdef USE_OMP
             # pragma omp for schedule(static)
             # endif
-            forAll(faces, faceI)
+            forAll(faces, facei)
             {
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
 
                 forAll(f, pI)
                 {
@@ -83,7 +83,7 @@ void polyMeshGenAddressing::calcEdges() const
                     bool store(true);
 
                     //- find all faces attached to this edge
-                    //- store the edge in case the face faceI is the face
+                    //- store the edge in case the face facei is the face
                     //- with the smallest label
                     forAllRow(pointFaces, s, pfI)
                     {
@@ -92,7 +92,7 @@ void polyMeshGenAddressing::calcEdges() const
 
                         if( of.which(e) < 0 )
                             continue;
-                        if( ofI < faceI )
+                        if( ofI < facei )
                         {
                             store = false;
                             break;

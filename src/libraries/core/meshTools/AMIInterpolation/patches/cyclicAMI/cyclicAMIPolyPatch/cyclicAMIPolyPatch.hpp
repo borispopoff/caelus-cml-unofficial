@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -33,7 +33,7 @@ SourceFiles
 #define cyclicAMIPolyPatch_H
 
 #include "coupledPolyPatch.hpp"
-#include "AMIPatchToPatchInterpolation.hpp"
+#include "AMIInterpolation.hpp"
 #include "polyBoundaryMesh.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -101,17 +101,23 @@ protected:
                 vector separationVector_;
 
 
-        //- AMI interpolation class
-        mutable autoPtr<AMIPatchToPatchInterpolation> AMIPtr_;
+        //- AMI interpolation classes
+        mutable PtrList<AMIInterpolation> AMIs_;
+
+        //- AMI transforms (from source to target)
+        mutable List<vectorTensorTransform> AMITransforms_;
 
         //- Flag to indicate that slave patch should be reversed for AMI
         const bool AMIReverse_;
 
         //- Flag to indicate that patches should match/overlap
-        bool AMIRequireMatch_;
+        const bool AMIRequireMatch_;
 
         //- Low weight correction threshold for AMI
         const scalar AMILowWeightCorrection_;
+
+        //- AMI Method
+        const AMIInterpolation::interpolationMethod AMIMethod_;
 
         //- Projection surface
         mutable autoPtr<searchableSurface> surfPtr_;
@@ -123,11 +129,7 @@ protected:
     // Protected Member Functions
 
         //- Reset the AMI interpolator
-        virtual void resetAMI
-        (
-            const AMIPatchToPatchInterpolation::interpolationMethod& AMIMethod =
-                AMIPatchToPatchInterpolation::imFaceAreaWeight
-        ) const;
+        virtual void resetAMI() const;
 
         //- Recalculate the transformation tensors
         virtual void calcTransforms();
@@ -171,7 +173,10 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType,
-            const transformType transform = UNKNOWN
+            const transformType transform = UNKNOWN,
+            const bool AMIRequireMatch = true,
+            const AMIInterpolation::interpolationMethod AMIMethod =
+                AMIInterpolation::imFaceAreaWeight
         );
 
         //- Construct from dictionary
@@ -181,7 +186,10 @@ public:
             const dictionary& dict,
             const label index,
             const polyBoundaryMesh& bm,
-            const word& patchType
+            const word& patchType,
+            const bool AMIRequireMatch = true,
+            const AMIInterpolation::interpolationMethod AMIMethod =
+                AMIInterpolation::imFaceAreaWeight
         );
 
         //- Construct as copy, resetting the boundary mesh
@@ -294,11 +302,21 @@ public:
             //- Return a reference to the projection surface
             const autoPtr<searchableSurface>& surfPtr() const;
 
-            //- Return a reference to the AMI interpolator
-            const AMIPatchToPatchInterpolation& AMI() const;
+            //- Return a reference to the AMI interpolators
+            const PtrList<AMIInterpolation>& AMIs() const;
+
+            //- Return a reference to the AMI transforms
+            const List<vectorTensorTransform>& AMITransforms() const;
 
             //- Return true if applying the low weight correction
             bool applyLowWeightCorrection() const;
+
+            //- Return the weights sum for this patch
+            virtual const scalarField& weightsSum() const;
+
+            //- Return the weights sum for the neighbour patch
+            virtual const scalarField& neighbWeightsSum() const;
+
 
 
             // Transformations
@@ -341,7 +359,7 @@ public:
 
                 //- Interpolate field
                 template<class Type>
-                tmp<Field<Type> > interpolate
+                tmp<Field<Type>> interpolate
                 (
                     const Field<Type>& fld,
                     const UList<Type>& defaultValues = UList<Type>()
@@ -349,20 +367,19 @@ public:
 
                 //- Interpolate tmp field
                 template<class Type>
-                tmp<Field<Type> > interpolate
+                tmp<Field<Type>> interpolate
                 (
-                    const tmp<Field<Type> >& tFld,
+                    const tmp<Field<Type>>& tFld,
                     const UList<Type>& defaultValues = UList<Type>()
                 ) const;
 
-                //- Low-level interpolate List
-                template<class Type, class CombineOp>
-                void interpolate
+                //- Interpolate field component
+                tmp<scalarField> interpolate
                 (
-                    const UList<Type>& fld,
-                    const CombineOp& cop,
-                    List<Type>& result,
-                    const UList<Type>& defaultValues = UList<Type>()
+                    const scalarField& field,
+                    const direction cmpt,
+                    const direction rank,
+                    const scalarUList& defaultValues = scalarUList()
                 ) const;
 
 
@@ -399,14 +416,18 @@ public:
             labelList& rotation
         ) const;
 
-        //- Return face index on neighbour patch which shares point p
-        //  following trajectory vector n
-        label pointFace
+        //- Return the transform and face indices on neighbour patch which
+        //  shares point p following trajectory vector n
+        labelPair pointAMIAndFace
         (
-            const label faceI,
+            const label facei,
             const vector& n,
             point& p
         ) const;
+
+        //- Index of processor that holds all of both sides, or -1 if
+        //  distributed
+        label singlePatchProc() const;
 
         //- Write the polyPatch data as a dictionary
         virtual void write(Ostream&) const;
@@ -423,15 +444,6 @@ inline const CML::word& CML::cyclicAMIPolyPatch::neighbPatchName() const
 {
     return nbrPatchName_;
 }
-
-
-inline const CML::cyclicAMIPolyPatch&
-CML::cyclicAMIPolyPatch::neighbPatch() const
-{
-    const polyPatch& pp = this->boundaryMesh()[neighbPatchID()];
-    return refCast<const cyclicAMIPolyPatch>(pp);
-}
-
 
 
 inline const CML::vector& CML::cyclicAMIPolyPatch::rotationAxis() const
@@ -455,63 +467,53 @@ inline const CML::vector& CML::cyclicAMIPolyPatch::separationVector() const
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::cyclicAMIPolyPatch::interpolate
+CML::tmp<CML::Field<Type>> CML::cyclicAMIPolyPatch::interpolate
 (
     const Field<Type>& fld,
     const UList<Type>& defaultValues
 ) const
 {
+    const cyclicAMIPolyPatch& nei = neighbPatch();
+
+    tmp<Field<Type>> result(new Field<Type>(size(), Zero));
+
     if (owner())
     {
-        return AMI().interpolateToSource(fld, defaultValues);
+        forAll(AMIs(), i)
+        {
+            result.ref() +=
+                AMIs()[i].interpolateToSource
+                (
+                    AMITransforms()[i].invTransform(fld),
+                    defaultValues
+                );
+        }
     }
     else
     {
-        return neighbPatch().AMI().interpolateToTarget(fld, defaultValues);
+        forAll(nei.AMIs(), i)
+        {
+            result.ref() +=
+                nei.AMIs()[i].interpolateToTarget
+                (
+                    nei.AMITransforms()[i].transform(fld),
+                    defaultValues
+                );
+        }
     }
+
+    return result;
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::cyclicAMIPolyPatch::interpolate
+CML::tmp<CML::Field<Type>> CML::cyclicAMIPolyPatch::interpolate
 (
-    const tmp<Field<Type> >& tFld,
+    const tmp<Field<Type>>& tFld,
     const UList<Type>& defaultValues
 ) const
 {
     return interpolate(tFld(), defaultValues);
-}
-
-
-template<class Type, class CombineOp>
-void CML::cyclicAMIPolyPatch::interpolate
-(
-    const UList<Type>& fld,
-    const CombineOp& cop,
-    List<Type>& result,
-    const UList<Type>& defaultValues
-) const
-{
-    if (owner())
-    {
-        AMI().interpolateToSource
-        (
-            fld,
-            cop,
-            result,
-            defaultValues
-        );
-    }
-    else
-    {
-        neighbPatch().AMI().interpolateToTarget
-        (
-            fld,
-            cop,
-            result,
-            defaultValues
-        );
-    }
 }
 
 

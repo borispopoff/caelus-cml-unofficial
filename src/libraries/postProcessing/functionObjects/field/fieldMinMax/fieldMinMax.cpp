@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -33,11 +33,7 @@ namespace CML
     <
         fieldMinMax::modeType,
         2
-    >::names[] =
-    {
-        "magnitude",
-        "component"
-    };
+    >::names[] = {"magnitude", "component"};
 }
 
 
@@ -61,7 +57,7 @@ CML::fieldMinMax::fieldMinMax
     active_(true),
     log_(true),
     location_(true),
-    mode_(mdMag),
+    mode_(modeType::mag),
     fieldSet_()
 {
     // Check if the available mesh is an fvMesh otherise deactivate
@@ -127,10 +123,10 @@ void CML::fieldMinMax::writeFileHeader(const label i)
     }
     else
     {
-        forAll(fieldSet_, fieldI)
+        forAll(fieldSet_, fieldi)
         {
-            writeTabbed(file, "min(" + fieldSet_[fieldI] + ')');
-            writeTabbed(file, "max(" + fieldSet_[fieldI] + ')');
+            writeTabbed(file, "min(" + fieldSet_[fieldi] + ')');
+            writeTabbed(file, "max(" + fieldSet_[fieldi] + ')');
         }
     }
 
@@ -169,13 +165,13 @@ void CML::fieldMinMax::write()
 
        Info(log_)<< type() << " " << name_ <<  " output:" << nl;
 
-        forAll(fieldSet_, fieldI)
+        forAll(fieldSet_, fieldi)
         {
-            calcMinMaxFields<scalar>(fieldSet_[fieldI], mdCmpt);
-            calcMinMaxFields<vector>(fieldSet_[fieldI], mode_);
-            calcMinMaxFields<sphericalTensor>(fieldSet_[fieldI], mode_);
-            calcMinMaxFields<symmTensor>(fieldSet_[fieldI], mode_);
-            calcMinMaxFields<tensor>(fieldSet_[fieldI], mode_);
+            calcMinMaxFields<scalar>(fieldSet_[fieldi], modeType::cmpt);
+            calcMinMaxFields<vector>(fieldSet_[fieldi], mode_);
+            calcMinMaxFields<sphericalTensor>(fieldSet_[fieldi], mode_);
+            calcMinMaxFields<symmTensor>(fieldSet_[fieldi], mode_);
+            calcMinMaxFields<tensor>(fieldSet_[fieldi], mode_);
         }
 
         if (!location_)

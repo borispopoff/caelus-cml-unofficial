@@ -65,14 +65,14 @@ void CML::thresholdCellFaces::calculate
         0   // index
     );
 
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        surfZones[patchI+1] = surfZone
+        surfZones[patchi+1] = surfZone
         (
-            bMesh[patchI].name(),
+            bMesh[patchi].name(),
             0,        // size
             0,        // start
-            patchI+1  // index
+            patchi+1  // index
         );
     }
 
@@ -90,32 +90,32 @@ void CML::thresholdCellFaces::calculate
 
 
     // internal faces only
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); ++faceI)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); ++facei)
     {
         int side = 0;
 
         // check lowerThreshold
-        if (field[own[faceI]] > lowerThreshold)
+        if (field[own[facei]] > lowerThreshold)
         {
-            if (field[nei[faceI]] < lowerThreshold)
+            if (field[nei[facei]] < lowerThreshold)
             {
                 side = +1;
             }
         }
-        else if (field[nei[faceI]] > lowerThreshold)
+        else if (field[nei[facei]] > lowerThreshold)
         {
             side = -1;
         }
 
         // check upperThreshold
-        if (field[own[faceI]] < upperThreshold)
+        if (field[own[facei]] < upperThreshold)
         {
-            if (field[nei[faceI]] > upperThreshold)
+            if (field[nei[facei]] > upperThreshold)
             {
                 side = +1;
             }
         }
-        else if (field[nei[faceI]] < upperThreshold)
+        else if (field[nei[facei]] < upperThreshold)
         {
             side = -1;
         }
@@ -123,7 +123,7 @@ void CML::thresholdCellFaces::calculate
 
         if (side)
         {
-            const face& f = origFaces[faceI];
+            const face& f = origFaces[facei];
 
             forAll(f, fp)
             {
@@ -140,12 +140,12 @@ void CML::thresholdCellFaces::calculate
             if (side > 0)
             {
                 surfFace = f;
-                cellId = own[faceI];
+                cellId = own[facei];
             }
             else
             {
                 surfFace = f.reverseFace();
-                cellId = nei[faceI];
+                cellId = nei[facei];
             }
 
 
@@ -169,10 +169,10 @@ void CML::thresholdCellFaces::calculate
 
 
     // nothing special for processor patches?
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        const polyPatch& p = bMesh[patchI];
-        surfZone& zone = surfZones[patchI+1];
+        const polyPatch& p = bMesh[patchi];
+        surfZone& zone = surfZones[patchi+1];
 
         zone.start() = nFaces;
 
@@ -185,18 +185,18 @@ void CML::thresholdCellFaces::calculate
             continue;
         }
 
-        label faceI = p.start();
+        label facei = p.start();
 
         // patch faces
         forAll(p, localFaceI)
         {
             if
             (
-                field[own[faceI]] > lowerThreshold
-             && field[own[faceI]] < upperThreshold
+                field[own[facei]] > lowerThreshold
+             && field[own[facei]] < upperThreshold
             )
             {
-                const face& f = origFaces[faceI];
+                const face& f = origFaces[facei];
                 forAll(f, fp)
                 {
                     if (oldToNewPoints[f[fp]] == -1)
@@ -205,7 +205,7 @@ void CML::thresholdCellFaces::calculate
                     }
                 }
 
-                label cellId = own[faceI];
+                label cellId = own[facei];
 
                 if (triangulate)
                 {
@@ -222,7 +222,7 @@ void CML::thresholdCellFaces::calculate
                 }
             }
 
-            ++faceI;
+            ++facei;
         }
 
         zone.size() = surfFaces.size() - zone.start();
@@ -233,19 +233,19 @@ void CML::thresholdCellFaces::calculate
     surfCells.shrink();
 
     // renumber
-    forAll(surfFaces, faceI)
+    forAll(surfFaces, facei)
     {
-        inplaceRenumber(oldToNewPoints, surfFaces[faceI]);
+        inplaceRenumber(oldToNewPoints, surfFaces[facei]);
     }
 
 
     pointField surfPoints(nPoints);
     nPoints = 0;
-    forAll(oldToNewPoints, pointI)
+    forAll(oldToNewPoints, pointi)
     {
-        if (oldToNewPoints[pointI] >= 0)
+        if (oldToNewPoints[pointi] >= 0)
         {
-            surfPoints[oldToNewPoints[pointI]] = origPoints[pointI];
+            surfPoints[oldToNewPoints[pointi]] = origPoints[pointi];
             nPoints++;
         }
     }

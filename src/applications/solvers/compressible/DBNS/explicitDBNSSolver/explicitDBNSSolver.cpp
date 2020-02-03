@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
             );
 
             scalar const  rhoL2 =
-                CML::sqrt(gSum(sqr(rhoResidual.internalField())))
+                CML::sqrt(gSum(sqr(rhoResidual.primitiveField())))
                 /mesh.nCells();
 
             Info << "rho residual: "<< rhoL2 << "    ";
@@ -118,12 +118,12 @@ int main(int argc, char *argv[])
                 fvm::ddt(1.0/beta[i], rhoU) == -rhoUResidual
             );
 
-            U.dimensionedInternalField() = rhoU.dimensionedInternalField()
-              / rho.dimensionedInternalField();
+            U.ref() = rhoU.internalField()
+              / rho.internalField();
             U.correctBoundaryConditions();
 
             scalar const rhoUL2 =
-                CML::sqrt(gSum(magSqr(rhoUResidual.internalField())))
+                CML::sqrt(gSum(magSqr(rhoUResidual.primitiveField())))
                 /mesh.nCells();
 
             Info << "rhoU residual: "<< rhoUL2 << "    ";
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
             );
 
             scalar const rhoEL2 =
-                CML::sqrt(gSum(sqr(rhoEResidual.internalField())))
+                CML::sqrt(gSum(sqr(rhoEResidual.primitiveField())))
                 /mesh.nCells();
 
             Info << "rhoE residual: "<< rhoEL2 << endl;            

@@ -99,7 +99,7 @@ vector emptyExternal::U
     const scalar& time
 ) const
 {
-    return vector::zero;
+    return Zero;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

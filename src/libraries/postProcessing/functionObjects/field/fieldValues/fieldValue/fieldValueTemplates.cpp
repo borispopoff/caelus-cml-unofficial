@@ -28,7 +28,7 @@ License
 template<class Type>
 void CML::fieldValue::combineFields(Field<Type>& field)
 {
-    List<Field<Type> > allValues(Pstream::nProcs());
+    List<Field<Type>> allValues(Pstream::nProcs());
 
     allValues[Pstream::myProcNo()] = field;
 
@@ -37,17 +37,17 @@ void CML::fieldValue::combineFields(Field<Type>& field)
     if (Pstream::master())
     {
         field =
-            ListListOps::combine<Field<Type> >
+            ListListOps::combine<Field<Type>>
             (
                 allValues,
-                accessOp<Field<Type> >()
+                accessOp<Field<Type>>()
             );
     }
 }
 
 
 template<class Type>
-void CML::fieldValue::combineFields(tmp<Field<Type> >& field)
+void CML::fieldValue::combineFields(tmp<Field<Type>>& field)
 {
     combineFields(field());
 }

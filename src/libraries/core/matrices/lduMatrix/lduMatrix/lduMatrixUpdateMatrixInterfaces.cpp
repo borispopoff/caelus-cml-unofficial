@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -34,27 +34,27 @@ void CML::lduMatrix::initMatrixInterfaces
 {
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
-        forAll(interfaces, interfaceI)
+        forAll(interfaces, interfacei)
         {
-            if (interfaces.set(interfaceI))
+            if (interfaces.set(interfacei))
             {
-                interfaces[interfaceI].initInterfaceMatrixUpdate
+                interfaces[interfacei].initInterfaceMatrixUpdate
                 (
                     psiif,
                     result,
                     *this,
-                    coupleCoeffs[interfaceI],
+                    coupleCoeffs[interfacei],
                     cmpt,
                     Pstream::defaultCommsType
                 );
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
@@ -62,21 +62,21 @@ void CML::lduMatrix::initMatrixInterfaces
         // beyond the end of the schedule which only handles "normal" patches
         for
         (
-            label interfaceI=patchSchedule.size()/2;
-            interfaceI<interfaces.size();
-            interfaceI++
+            label interfacei=patchSchedule.size()/2;
+            interfacei<interfaces.size();
+            interfacei++
         )
         {
-            if (interfaces.set(interfaceI))
+            if (interfaces.set(interfacei))
             {
-                interfaces[interfaceI].initInterfaceMatrixUpdate
+                interfaces[interfacei].initInterfaceMatrixUpdate
                 (
                     psiif,
                     result,
                     *this,
-                    coupleCoeffs[interfaceI],
+                    coupleCoeffs[interfacei],
                     cmpt,
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }
@@ -102,69 +102,69 @@ void CML::lduMatrix::updateMatrixInterfaces
 {
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         // Block until all sends/receives have been finished
         if
         (
             Pstream::parRun()
-         && Pstream::defaultCommsType == Pstream::nonBlocking
+         && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
         )
         {
             UPstream::waitRequests();
         }
 
-        forAll(interfaces, interfaceI)
+        forAll(interfaces, interfacei)
         {
-            if (interfaces.set(interfaceI))
+            if (interfaces.set(interfacei))
             {
-                interfaces[interfaceI].updateInterfaceMatrix
+                interfaces[interfacei].updateInterfaceMatrix
                 (
                     psiif,
                     result,
                     *this,
-                    coupleCoeffs[interfaceI],
+                    coupleCoeffs[interfacei],
                     cmpt,
                     Pstream::defaultCommsType
                 );
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
         // Loop over all the "normal" interfaces relating to standard patches
         forAll(patchSchedule, i)
         {
-            label interfaceI = patchSchedule[i].patch;
+            label interfacei = patchSchedule[i].patch;
 
-            if (interfaces.set(interfaceI))
+            if (interfaces.set(interfacei))
             {
                 if (patchSchedule[i].init)
                 {
-                    interfaces[interfaceI].initInterfaceMatrixUpdate
+                    interfaces[interfacei].initInterfaceMatrixUpdate
                     (
                         psiif,
                         result,
                         *this,
-                        coupleCoeffs[interfaceI],
+                        coupleCoeffs[interfacei],
                         cmpt,
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
                 else
                 {
-                    interfaces[interfaceI].updateInterfaceMatrix
+                    interfaces[interfacei].updateInterfaceMatrix
                     (
                         psiif,
                         result,
                         *this,
-                        coupleCoeffs[interfaceI],
+                        coupleCoeffs[interfacei],
                         cmpt,
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
             }
@@ -174,21 +174,21 @@ void CML::lduMatrix::updateMatrixInterfaces
         // beyond the end of the schedule which only handles "normal" patches
         for
         (
-            label interfaceI=patchSchedule.size()/2;
-            interfaceI<interfaces.size();
-            interfaceI++
+            label interfacei=patchSchedule.size()/2;
+            interfacei<interfaces.size();
+            interfacei++
         )
         {
-            if (interfaces.set(interfaceI))
+            if (interfaces.set(interfacei))
             {
-                interfaces[interfaceI].updateInterfaceMatrix
+                interfaces[interfacei].updateInterfaceMatrix
                 (
                     psiif,
                     result,
                     *this,
-                    coupleCoeffs[interfaceI],
+                    coupleCoeffs[interfacei],
                     cmpt,
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }

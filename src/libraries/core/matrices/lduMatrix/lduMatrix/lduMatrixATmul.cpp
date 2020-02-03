@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -38,7 +38,7 @@ void CML::lduMatrix::Amul
 ) const
 {
     // Reset multiplication result to zero
-    Apsi = scalar(0.0);
+    Apsi = scalar(0);
 
     scalar* RESTRICT ApsiPtr = Apsi.begin();
 
@@ -60,8 +60,8 @@ void CML::lduMatrix::Amul
     {
         const scalar* const RESTRICT diagPtr = diag().begin();
 
-        register const label nCells = diag().size();
-        for (register label cell=0; cell<nCells; cell++)
+        const label nCells = diag().size();
+        for (label cell=0; cell<nCells; cell++)
         {
             ApsiPtr[cell] += diagPtr[cell]*psiPtr[cell];
         }
@@ -75,9 +75,9 @@ void CML::lduMatrix::Amul
         const scalar* const RESTRICT upperPtr = upper().begin();
         const scalar* const RESTRICT lowerPtr = lower().begin();
 
-        register const label nFaces = upper().size();
+        const label nFaces = upper().size();
 
-        for (register label face=0; face<nFaces; face++)
+        for (label face=0; face<nFaces; face++)
         {
             ApsiPtr[uPtr[face]] += lowerPtr[face]*psiPtr[lPtr[face]];
             ApsiPtr[lPtr[face]] += upperPtr[face]*psiPtr[uPtr[face]];
@@ -108,7 +108,7 @@ void CML::lduMatrix::Tmul
 ) const
 {
     // Reset multiplication result to zero  //NEW
-    Tpsi = scalar(0.0);
+    Tpsi = scalar(0);
 
     scalar* RESTRICT TpsiPtr = Tpsi.begin();
 
@@ -130,8 +130,8 @@ void CML::lduMatrix::Tmul
     {
         const scalar* const RESTRICT diagPtr = diag().begin();
 
-        register const label nCells = diag().size();
-        for (register label cell=0; cell<nCells; cell++)
+        const label nCells = diag().size();
+        for (label cell=0; cell<nCells; cell++)
         {
             TpsiPtr[cell] += diagPtr[cell]*psiPtr[cell];
         }
@@ -145,8 +145,8 @@ void CML::lduMatrix::Tmul
         const scalar* const RESTRICT lowerPtr = lower().begin();
         const scalar* const RESTRICT upperPtr = upper().begin();
 
-        register const label nFaces = upper().size();
-        for (register label face=0; face<nFaces; face++)
+        const label nFaces = upper().size();
+        for (label face=0; face<nFaces; face++)
         {
             TpsiPtr[uPtr[face]] += upperPtr[face]*psiPtr[lPtr[face]];
             TpsiPtr[lPtr[face]] += lowerPtr[face]*psiPtr[uPtr[face]];
@@ -184,15 +184,15 @@ void CML::lduMatrix::sumA
     const scalar* RESTRICT lowerPtr = lower().begin();
     const scalar* RESTRICT upperPtr = upper().begin();
 
-    register const label nCells = diag().size();
-    register const label nFaces = upper().size();
+    const label nCells = diag().size();
+    const label nFaces = upper().size();
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         sumAPtr[cell] = diagPtr[cell];
     }
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         sumAPtr[uPtr[face]] += lowerPtr[face];
         sumAPtr[lPtr[face]] += upperPtr[face];
@@ -200,12 +200,12 @@ void CML::lduMatrix::sumA
 
     // Add the interface internal coefficients to diagonal
     // and the interface boundary coefficients to the sum-off-diagonal
-    forAll(interfaces, patchI)
+    forAll(interfaces, patchi)
     {
-        if (interfaces.set(patchI))
+        if (interfaces.set(patchi))
         {
-            const labelUList& pa = lduAddr().patchAddr(patchI);
-            const scalarField& pCoeffs = interfaceBouCoeffs[patchI];
+            const labelUList& pa = lduAddr().patchAddr(patchi);
+            const scalarField& pCoeffs = interfaceBouCoeffs[patchi];
 
             forAll(pa, face)
             {
@@ -227,7 +227,7 @@ void CML::lduMatrix::residual
 ) const
 {
     // Reset multiplication result to zero
-    rA = scalar(0.0);
+    rA = scalar(0);
 
     scalar* RESTRICT rAPtr = rA.begin();
 
@@ -271,8 +271,8 @@ void CML::lduMatrix::residual
     {
         const scalar* const RESTRICT diagPtr = diag().begin();
 
-        register const label nCells = diag().size();
-        for (register label cell=0; cell<nCells; cell++)
+        const label nCells = diag().size();
+        for (label cell=0; cell<nCells; cell++)
         {
             rAPtr[cell] += diagPtr[cell]*psiPtr[cell]; // Aditive part from initMatrixInterfaces
             rAPtr[cell] = sourcePtr[cell] - rAPtr[cell];
@@ -287,9 +287,9 @@ void CML::lduMatrix::residual
         const scalar* const RESTRICT upperPtr = upper().begin();
         const scalar* const RESTRICT lowerPtr = lower().begin();
 
-        register const label nFaces = upper().size();
+        const label nFaces = upper().size();
 
-        for (register label face=0; face<nFaces; face++)
+        for (label face=0; face<nFaces; face++)
         {
             rAPtr[uPtr[face]] -= lowerPtr[face]*psiPtr[lPtr[face]];
             rAPtr[lPtr[face]] -= upperPtr[face]*psiPtr[uPtr[face]];
@@ -318,7 +318,7 @@ CML::tmp<CML::scalarField> CML::lduMatrix::residual
 ) const
 {
     tmp<scalarField> trA(new scalarField(psi.size()));
-    residual(trA(), psi, source, interfaceBouCoeffs, interfaces, cmpt);
+    residual(trA.ref(), psi, source, interfaceBouCoeffs, interfaces, cmpt);
     return trA;
 }
 

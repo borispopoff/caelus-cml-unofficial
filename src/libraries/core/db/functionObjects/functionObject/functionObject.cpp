@@ -43,20 +43,20 @@ CML::functionObject::functionObject(const word& name)
 CML::autoPtr<CML::functionObject> CML::functionObject::New
 (
     const word& name,
-    const Time& t,
-    const dictionary& functionDict
+    const Time& runTime,
+    const dictionary& dict
 )
 {
-    const word functionType(functionDict.lookup("type"));
+    const word functionType(dict.lookup("type"));
 
     if (debug)
     {
         Info<< "Selecting function " << functionType << endl;
     }
 
-    const_cast<Time&>(t).libs().open
+    const_cast<Time&>(runTime).libs().open
     (
-        functionDict,
+        dict,
         "functionObjectLibs",
         dictionaryConstructorTablePtr_
     );
@@ -83,7 +83,7 @@ CML::autoPtr<CML::functionObject> CML::functionObject::New
             << exit(FatalError);
     }
 
-    return autoPtr<functionObject>(cstrIter()(name, t, functionDict));
+    return autoPtr<functionObject>(cstrIter()(name, runTime, dict));
 }
 
 
@@ -107,15 +107,15 @@ bool CML::functionObject::end()
 }
 
 
-bool CML::functionObject::timeSet()
+bool CML::functionObject::setTimeStep()
 {
     return false;
 }
 
 
-bool CML::functionObject::adjustTimeStep()
+CML::scalar CML::functionObject::timeToNextWrite()
 {
-    return false;
+    return VGREAT;
 }
 
 

@@ -42,24 +42,24 @@ void CML::enrichedPatch::calcPointPoints() const
     // Go through all faces and add the previous and next point as the
     // neighbour for each point. While inserting points, reject the
     // duplicates (as every internal edge will be visited twice).
-    List<DynamicList<label, primitiveMesh::edgesPerPoint_> >
+    List<DynamicList<label, primitiveMesh::edgesPerPoint_>>
         pp(meshPoints().size());
 
     const faceList& lf = localFaces();
 
-    register bool found = false;
+    bool found = false;
 
-    forAll(lf, faceI)
+    forAll(lf, facei)
     {
-        const face& curFace = lf[faceI];
+        const face& curFace = lf[facei];
 
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
             DynamicList<label, primitiveMesh::edgesPerPoint_>&
-                curPp = pp[curFace[pointI]];
+                curPp = pp[curFace[pointi]];
 
             // Do next label
-            label next = curFace.nextLabel(pointI);
+            label next = curFace.nextLabel(pointi);
 
             found = false;
 
@@ -78,7 +78,7 @@ void CML::enrichedPatch::calcPointPoints() const
             }
 
             // Do previous label
-            label prev = curFace.prevLabel(pointI);
+            label prev = curFace.prevLabel(pointi);
             found = false;
 
             forAll(curPp, i)
@@ -101,9 +101,9 @@ void CML::enrichedPatch::calcPointPoints() const
     pointPointsPtr_ = new labelListList(pp.size());
     labelListList& ppAddr = *pointPointsPtr_;
 
-    forAll(pp, pointI)
+    forAll(pp, pointi)
     {
-        ppAddr[pointI].transfer(pp[pointI]);
+        ppAddr[pointi].transfer(pp[pointi]);
     }
 }
 

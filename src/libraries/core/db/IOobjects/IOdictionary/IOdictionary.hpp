@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,6 +80,12 @@ public:
         //- Construct given an IOobject and Istream
         IOdictionary(const IOobject&, Istream&);
 
+        //- Copy constructor
+        IOdictionary(const IOdictionary&);
+
+        //- Move constructor
+        IOdictionary(IOdictionary&&);
+
 
     //- Destructor
     virtual ~IOdictionary();
@@ -102,6 +108,9 @@ public:
 
         //- Assignment of other IOdictionary's entries to this IOdictionary
         void operator=(const IOdictionary&);
+
+        //- Move assignment
+        void operator=(IOdictionary&&);
 };
 
 

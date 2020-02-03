@@ -89,7 +89,7 @@ public:
 
             //- Gather data. Apply bop to combine Value
             //  from different processors
-            template <class T, class BinaryOp>
+            template<class T, class BinaryOp>
             static void gather
             (
                 const List<commsStruct>& comms,
@@ -335,7 +335,7 @@ namespace CML
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class T, class BinaryOp>
+template<class T, class BinaryOp>
 void Pstream::gather
 (
     const List<UPstream::commsStruct>& comms,
@@ -358,7 +358,7 @@ void Pstream::gather
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     reinterpret_cast<char*>(&value),
                     sizeof(T),
@@ -369,7 +369,7 @@ void Pstream::gather
             {
                 IPstream fromBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     0,
                     tag
@@ -387,7 +387,7 @@ void Pstream::gather
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -398,7 +398,7 @@ void Pstream::gather
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -410,7 +410,7 @@ void Pstream::gather
 }
 
 
-template <class T, class BinaryOp>
+template<class T, class BinaryOp>
 void Pstream::gather
 (
     T& Value,
@@ -429,7 +429,7 @@ void Pstream::gather
 }
 
 
-template <class T>
+template<class T>
 void Pstream::scatter
 (
     const List<UPstream::commsStruct>& comms,
@@ -449,7 +449,7 @@ void Pstream::scatter
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(&Value),
                     sizeof(T),
@@ -460,7 +460,7 @@ void Pstream::scatter
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -478,7 +478,7 @@ void Pstream::scatter
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -489,7 +489,7 @@ void Pstream::scatter
             {
                 OPstream toBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     0,
                     tag
@@ -501,7 +501,7 @@ void Pstream::scatter
 }
 
 
-template <class T>
+template<class T>
 void Pstream::scatter(T& Value, const int tag)
 {
     if (UPstream::nProcs() < UPstream::nProcsSimpleSum)
@@ -530,7 +530,7 @@ namespace CML
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class T, class CombineOp>
+template<class T, class CombineOp>
 void Pstream::combineGather
 (
     const List<UPstream::commsStruct>& comms,
@@ -554,7 +554,7 @@ void Pstream::combineGather
                 T value;
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<char*>(&value),
                     sizeof(T),
@@ -573,7 +573,7 @@ void Pstream::combineGather
             {
                 IPstream fromBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -603,7 +603,7 @@ void Pstream::combineGather
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -614,7 +614,7 @@ void Pstream::combineGather
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -626,7 +626,7 @@ void Pstream::combineGather
 }
 
 
-template <class T, class CombineOp>
+template<class T, class CombineOp>
 void Pstream::combineGather
 (
     T& Value,
@@ -657,7 +657,7 @@ void Pstream::combineGather
 }
 
 
-template <class T>
+template<class T>
 void Pstream::combineScatter
 (
     const List<UPstream::commsStruct>& comms,
@@ -677,7 +677,7 @@ void Pstream::combineScatter
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(&Value),
                     sizeof(T),
@@ -688,7 +688,7 @@ void Pstream::combineScatter
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -717,7 +717,7 @@ void Pstream::combineScatter
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -728,7 +728,7 @@ void Pstream::combineScatter
             {
                 OPstream toBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -740,7 +740,7 @@ void Pstream::combineScatter
 }
 
 
-template <class T>
+template<class T>
 void Pstream::combineScatter
 (
     T& Value,
@@ -758,7 +758,7 @@ void Pstream::combineScatter
 }
 
 
-template <class T, class CombineOp>
+template<class T, class CombineOp>
 void Pstream::listCombineGather
 (
     const List<UPstream::commsStruct>& comms,
@@ -783,7 +783,7 @@ void Pstream::listCombineGather
 
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<char*>(receivedValues.begin()),
                     receivedValues.byteSize(),
@@ -805,7 +805,7 @@ void Pstream::listCombineGather
             {
                 IPstream fromBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -838,7 +838,7 @@ void Pstream::listCombineGather
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(Values.begin()),
                     Values.byteSize(),
@@ -849,7 +849,7 @@ void Pstream::listCombineGather
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -861,7 +861,7 @@ void Pstream::listCombineGather
 }
 
 
-template <class T, class CombineOp>
+template<class T, class CombineOp>
 void Pstream::listCombineGather
 (
     List<T>& Values,
@@ -892,7 +892,7 @@ void Pstream::listCombineGather
 }
 
 
-template <class T>
+template<class T>
 void Pstream::listCombineScatter
 (
     const List<UPstream::commsStruct>& comms,
@@ -912,7 +912,7 @@ void Pstream::listCombineScatter
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(Values.begin()),
                     Values.byteSize(),
@@ -923,7 +923,7 @@ void Pstream::listCombineScatter
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -952,7 +952,7 @@ void Pstream::listCombineScatter
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<const char*>(Values.begin()),
                     Values.byteSize(),
@@ -963,7 +963,7 @@ void Pstream::listCombineScatter
             {
                 OPstream toBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -975,7 +975,7 @@ void Pstream::listCombineScatter
 }
 
 
-template <class T>
+template<class T>
 void Pstream::listCombineScatter
 (
     List<T>& Values,
@@ -1003,7 +1003,7 @@ void Pstream::listCombineScatter
 }
 
 
-template <class Container, class CombineOp>
+template<class Container, class CombineOp>
 void Pstream::mapCombineGather
 (
     const List<UPstream::commsStruct>& comms,
@@ -1024,7 +1024,7 @@ void Pstream::mapCombineGather
 
             IPstream fromBelow
             (
-                UPstream::scheduled,
+                UPstream::commsTypes::scheduled,
                 belowID,
                 0,
                 tag
@@ -1070,7 +1070,7 @@ void Pstream::mapCombineGather
 
             OPstream toAbove
             (
-                UPstream::scheduled,
+                UPstream::commsTypes::scheduled,
                 myComm.above(),
                 0,
                 tag
@@ -1081,7 +1081,7 @@ void Pstream::mapCombineGather
 }
 
 
-template <class Container, class CombineOp>
+template<class Container, class CombineOp>
 void Pstream::mapCombineGather
 (
     Container& Values,
@@ -1112,7 +1112,7 @@ void Pstream::mapCombineGather
 }
 
 
-template <class Container>
+template<class Container>
 void Pstream::mapCombineScatter
 (
     const List<UPstream::commsStruct>& comms,
@@ -1130,7 +1130,7 @@ void Pstream::mapCombineScatter
         {
             IPstream fromAbove
             (
-                UPstream::scheduled,
+                UPstream::commsTypes::scheduled,
                 myComm.above(),
                 0,
                 tag
@@ -1156,7 +1156,7 @@ void Pstream::mapCombineScatter
 
             OPstream toBelow
             (
-                UPstream::scheduled,
+                UPstream::commsTypes::scheduled,
                 belowID,
                 0,
                 tag
@@ -1167,7 +1167,7 @@ void Pstream::mapCombineScatter
 }
 
 
-template <class Container>
+template<class Container>
 void Pstream::mapCombineScatter
 (
     Container& Values,
@@ -1209,7 +1209,7 @@ namespace CML
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class T>
+template<class T>
 void Pstream::gatherList
 (
     const List<UPstream::commsStruct>& comms,
@@ -1243,7 +1243,7 @@ void Pstream::gatherList
 
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<char*>(receivedValues.begin()),
                     receivedValues.byteSize(),
@@ -1261,7 +1261,7 @@ void Pstream::gatherList
             {
                 IPstream fromBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -1317,7 +1317,7 @@ void Pstream::gatherList
 
                 OPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(sendingValues.begin()),
                     sendingValues.byteSize(),
@@ -1328,7 +1328,7 @@ void Pstream::gatherList
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -1353,7 +1353,7 @@ void Pstream::gatherList
 }
 
 
-template <class T>
+template<class T>
 void Pstream::gatherList(List<T>& Values, const int tag)
 {
     if (UPstream::nProcs() < UPstream::nProcsSimpleSum)
@@ -1367,7 +1367,7 @@ void Pstream::gatherList(List<T>& Values, const int tag)
 }
 
 
-template <class T>
+template<class T>
 void Pstream::scatterList
 (
     const List<UPstream::commsStruct>& comms,
@@ -1400,7 +1400,7 @@ void Pstream::scatterList
 
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(receivedValues.begin()),
                     receivedValues.byteSize(),
@@ -1416,7 +1416,7 @@ void Pstream::scatterList
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag
@@ -1454,7 +1454,7 @@ void Pstream::scatterList
 
                 OPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<const char*>(sendingValues.begin()),
                     sendingValues.byteSize(),
@@ -1465,7 +1465,7 @@ void Pstream::scatterList
             {
                 OPstream toBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     0,
                     tag
@@ -1490,7 +1490,7 @@ void Pstream::scatterList
 }
 
 
-template <class T>
+template<class T>
 void Pstream::scatterList(List<T>& Values, const int tag)
 {
     if (UPstream::nProcs() < UPstream::nProcsSimpleSum)
@@ -1519,7 +1519,7 @@ namespace CML
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class Container, class T>
+template<class Container, class T>
 void Pstream::exchange
 (
     const UList<Container>& sendBufs,
@@ -1564,7 +1564,7 @@ void Pstream::exchange
                 recvBufs[proci].setSize(nRecv);
                 UIPstream::read
                 (
-                    UPstream::nonBlocking,
+                    UPstream::commsTypes::nonBlocking,
                     proci,
                     reinterpret_cast<char*>(recvBufs[proci].begin()),
                     nRecv*sizeof(T),
@@ -1585,7 +1585,7 @@ void Pstream::exchange
                 (
                    !UOPstream::write
                     (
-                        UPstream::nonBlocking,
+                        UPstream::commsTypes::nonBlocking,
                         proci,
                         reinterpret_cast<const char*>(sendBufs[proci].begin()),
                         sendBufs[proci].size()*sizeof(T),

@@ -46,15 +46,15 @@ bool CML::simplecControl::criteriaSatisfied()
     forAllConstIter(dictionary, solverDict, iter)
     {
         const word& variableName = iter().keyword();
-        const label fieldI = applyToField(variableName);
-        if (fieldI != -1)
+        const label fieldi = applyToField(variableName);
+        if (fieldi != -1)
         {
             const List<solverPerformance> sp(iter().stream());
             const scalar residual = sp.first().initialResidual();
 
             checked = true;
 
-            bool absCheck = residual < residualControl_[fieldI].absTol;
+            bool absCheck = residual < residualControl_[fieldi].absTol;
             achieved = achieved && absCheck;
 
             if (debug)
@@ -62,7 +62,7 @@ bool CML::simplecControl::criteriaSatisfied()
                 Info<< algorithmName_ << " solution statistics:" << endl;
 
                 Info<< "    " << variableName << ": tolerance = " << residual
-                    << " (" << residualControl_[fieldI].absTol << ")"
+                    << " (" << residualControl_[fieldi].absTol << ")"
                     << endl;
             }
         }

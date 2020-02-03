@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2018 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -180,10 +180,10 @@ void CML::inclinedFilmNusseltInletVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchVectorField::write(os);
-    GammaMean_->writeData(os);
-    a_->writeData(os);
-    omega_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, GammaMean_());
+    writeEntry(os, a_());
+    writeEntry(os, omega_());
+    writeEntry(os, "value", *this);
 }
 
 

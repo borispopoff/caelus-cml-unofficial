@@ -55,7 +55,7 @@ class blackBodyEmission
 public:
 
     //- Static table of black body emissive power
-    static const List<Tuple2<scalar, scalar> > emissivePowerTable;
+    static const List<Tuple2<scalar, scalar>> emissivePowerTable;
 
 
 private:

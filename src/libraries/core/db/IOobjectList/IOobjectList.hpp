@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2016 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,18 +42,13 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class IOobjectList Declaration
+                        Class IOobjectList Declaration
 \*---------------------------------------------------------------------------*/
 
 class IOobjectList
 :
     public HashPtrTable<IOobject>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const IOobjectList&);
-
 
 public:
 
@@ -73,7 +68,7 @@ public:
             bool registerObject = true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         IOobjectList(const IOobjectList&);
 
 
@@ -112,6 +107,12 @@ public:
 
         //- Return the sorted list of names of the IOobjects of given class
         wordList sortedNames(const word& className) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const IOobjectList&) = delete;
 };
 
 

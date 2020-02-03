@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,10 +60,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        thermalBaffleModel(const thermalBaffleModel&);
+        thermalBaffleModel(const thermalBaffleModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const thermalBaffleModel&);
+        void operator=(const thermalBaffleModel&) = delete;
 
         //- Initialize thermal Baffle
         void init();

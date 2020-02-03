@@ -283,11 +283,11 @@ CML::tmp<CML::tensorField> CML::sampledSurface::sample
 }
 
 
-CML::tmp<CML::Field<CML::scalar> >
+CML::tmp<CML::Field<CML::scalar>>
 CML::sampledSurface::project(const Field<scalar>& field) const
 {
-    tmp<Field<scalar> > tRes(new Field<scalar>(faces().size()));
-    Field<scalar>& res = tRes();
+    tmp<Field<scalar>> tRes(new Field<scalar>(faces().size()));
+    Field<scalar>& res = tRes.ref();
 
     forAll(faces(), facei)
     {
@@ -298,38 +298,38 @@ CML::sampledSurface::project(const Field<scalar>& field) const
 }
 
 
-CML::tmp<CML::Field<CML::scalar> >
+CML::tmp<CML::Field<CML::scalar>>
 CML::sampledSurface::project(const Field<vector>& field) const
 {
-    tmp<Field<scalar> > tRes(new Field<scalar>(faces().size()));
-    project(tRes(), field);
+    tmp<Field<scalar>> tRes(new Field<scalar>(faces().size()));
+    project(tRes.ref(), field);
     return tRes;
 }
 
 
-CML::tmp<CML::Field<CML::vector> >
+CML::tmp<CML::Field<CML::vector>>
 CML::sampledSurface::project(const Field<sphericalTensor>& field) const
 {
-    tmp<Field<vector> > tRes(new Field<vector>(faces().size()));
-    project(tRes(), field);
+    tmp<Field<vector>> tRes(new Field<vector>(faces().size()));
+    project(tRes.ref(), field);
     return tRes;
 }
 
 
-CML::tmp<CML::Field<CML::vector> >
+CML::tmp<CML::Field<CML::vector>>
 CML::sampledSurface::project(const Field<symmTensor>& field) const
 {
-    tmp<Field<vector> > tRes(new Field<vector>(faces().size()));
-    project(tRes(), field);
+    tmp<Field<vector>> tRes(new Field<vector>(faces().size()));
+    project(tRes.ref(), field);
     return tRes;
 }
 
 
-CML::tmp<CML::Field<CML::vector> >
+CML::tmp<CML::Field<CML::vector>>
 CML::sampledSurface::project(const Field<tensor>& field) const
 {
-    tmp<Field<vector> > tRes(new Field<vector>(faces().size()));
-    project(tRes(), field);
+    tmp<Field<vector>> tRes(new Field<vector>(faces().size()));
+    project(tRes.ref(), field);
     return tRes;
 }
 

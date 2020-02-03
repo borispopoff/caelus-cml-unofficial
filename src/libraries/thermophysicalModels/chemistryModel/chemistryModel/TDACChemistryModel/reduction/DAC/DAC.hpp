@@ -251,7 +251,7 @@ CML::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
     {
         NOxThreshold_ = readScalar(this->coeffsDict_.lookup("NOxThreshold"));
     }
-    const List<List<specieElement> >& specieComposition =
+    const List<List<specieElement>>& specieComposition =
         chemistry.specieComp();
 
     for (label i=0; i<this->nSpecie_; i++)

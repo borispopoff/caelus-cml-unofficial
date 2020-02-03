@@ -189,7 +189,7 @@ inline bool CML::sweepData::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::sweepData::equal
 (
     const sweepData& rhs,

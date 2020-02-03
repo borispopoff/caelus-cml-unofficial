@@ -154,7 +154,7 @@ public:
             //  point and density specification
             inline tensor inertia
             (
-                PointRef refPt = vector::zero,
+                PointRef refPt = Zero,
                 scalar density = 1.0
             ) const;
 
@@ -186,14 +186,14 @@ public:
             (
                 const point& p,
                 const vector& q,
-                const intersection::algorithm = intersection::FULL_RAY,
-                const intersection::direction dir = intersection::VECTOR
+                const intersection::algorithm = intersection::algorithm::fullRay,
+                const intersection::direction dir = intersection::direction::vector
             ) const;
 
             //- Fast intersection with a ray.
             //  For a hit, the pointHit.distance() is the line parameter t :
-            //  intersection=p+t*q. Only defined for VISIBLE, FULL_RAY or
-            //  HALF_RAY. tol increases the virtual size of the triangle
+            //  intersection=p+t*q. Only defined for algorithm::visible, algorithm::fullRay or
+            //  algorithm::halfRay. tol increases the virtual size of the triangle
             // by a relative factor.
             inline pointHit intersection
             (

@@ -298,13 +298,13 @@ public:
     );
 
     template<class Type>
-    inline autoPtr<GeometricField<Type,pointPatchField,pointMesh> >
+    inline autoPtr<GeometricField<Type,pointPatchField,pointMesh>>
     cellToPointInterpolate(
         const GeometricField<Type,fvPatchField,volMesh> &field
     );
 
     template<class Type>
-    inline autoPtr<GeometricField<Type,fvPatchField,volMesh> >
+    inline autoPtr<GeometricField<Type,fvPatchField,volMesh>>
     pointToCellInterpolate(
         const GeometricField<Type,pointPatchField,pointMesh> &field
     );

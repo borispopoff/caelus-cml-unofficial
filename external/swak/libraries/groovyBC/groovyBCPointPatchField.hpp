@@ -101,9 +101,9 @@ public:
     );
 
     //- Construct and return a clone
-    virtual autoPtr<pointPatchField<Type> > clone() const
+    virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
                 (
                     new groovyBCPointPatchField<Type>
                     (
@@ -120,12 +120,12 @@ public:
     );
 
     //- Construct and return a clone setting internal field reference
-    virtual autoPtr<pointPatchField<Type> > clone
+    virtual autoPtr<pointPatchField<Type>> clone
     (
         const DimensionedField<Type, pointMesh>& iF
     ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
                 (
                     new groovyBCPointPatchField<Type>
                     (
@@ -212,7 +212,7 @@ groovyBCPointPatchField<Type>::groovyBCPointPatchField
         Field<Type>::operator=(this->refValue());
 
         WarningInFunction
-            << "No value defined for " << this->dimensionedInternalField().name()
+            << "No value defined for " << this->internalField().name()
             << " on " << this->patch().name() << " therefore using "
             << this->refValue()
             << endl;
@@ -309,7 +309,7 @@ void groovyBCPointPatchField<Type>::write(Ostream& os) const
     mixedPointPatchFieldType::write(os);
     groovyBCCommon<Type>::write(os);
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 
     driver_.writeCommon(os,this->debug_ || debug);
 }

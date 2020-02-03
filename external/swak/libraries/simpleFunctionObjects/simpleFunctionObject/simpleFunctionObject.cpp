@@ -41,7 +41,7 @@ const char* NamedEnum<CML::simpleFunctionObject::outputControlModeType,4>::names
 {
     "timeStep",
     "deltaT",
-    "outputTime",
+    "writeTime",
     "startup"
 };
 const NamedEnum<simpleFunctionObject::outputControlModeType,4> simpleFunctionObject::outputControlModeTypeNames_;
@@ -132,7 +132,7 @@ bool simpleFunctionObject::start()
     return true;
 }
 
-bool simpleFunctionObject::outputTime(const bool forceWrite)
+bool simpleFunctionObject::writeTime(const bool forceWrite)
 {
     if(time_.time().value()<after_) {
         return false;
@@ -162,8 +162,8 @@ bool simpleFunctionObject::outputTime(const bool forceWrite)
                 }
             }
             break;
-        case ocmOutputTime:
-            doOutput=time_.outputTime();
+        case ocmWriteTime:
+            doOutput=time_.writeTime();
             break;
         case ocmStartup:
             doOutput=false;
@@ -192,9 +192,9 @@ bool simpleFunctionObject::execute(const bool forceWrite)
 
     timeSteps_++;
 
-    if(this->outputTime(forceWrite)) {
+    if(this->writeTime(forceWrite)) {
         if(debug) {
-            Info << name() << "::execute() - outputTime" << endl;
+            Info << name() << "::execute() - writeTime" << endl;
         }
         timeSteps_=0;
         write();

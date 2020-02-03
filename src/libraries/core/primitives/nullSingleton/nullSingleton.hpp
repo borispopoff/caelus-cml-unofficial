@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014 OpenFOAM Foundation
+Copyright (C) 2014-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -46,16 +46,16 @@ class NullSingleton
     NullSingleton()
     {}
 
-    //- Prevent copy-construction
-    NullSingleton(const NullSingleton&);
-
-    //- Prevent assignment
-    NullSingleton& operator=(const NullSingleton&);
-
 public:
 
     //- The unique null singleton
     static const NullSingleton nullSingleton;
+
+    //- Prevent copy-construction
+    NullSingleton(const NullSingleton&) = delete;
+
+    //- Prevent assignment
+    void operator=(const NullSingleton&) = delete;
 };
 
 
@@ -64,29 +64,33 @@ extern const NullSingleton* nullSingletonPtr;
 
 
 //- Return reference to the nullSingleton of type T
-template <class T>
+template<class T>
 inline const T& NullSingletonRef();
 
 //- Return pointer to the nullSingleton of type T
-template <class T>
+template<class T>
 inline const T* NullSingletonPtr();
+
+//- Return reference to the nullObject of type T
+template<class T>
+inline T&& NullSingletonMove();
 
 
 //- Return true if t is a reference to the nullSingleton of type T
-template <class T>
+template<class T>
 inline bool isNull(const T& t);
 
 //- Return true if t is not a reference to the nullSingleton of type T
-template <class T>
+template<class T>
 inline bool notNull(const T& t);
 
 
 //- Return true if t is a pointer to the nullSingleton of type T
-template <class T>
+template<class T>
 inline bool isNull(const T* t);
 
 //- Return true if t is not a pointer to the nullSingleton of type T
-template <class T>
+template<class T>
 inline bool notNull(const T* t);
 
 
@@ -97,39 +101,45 @@ inline bool notNull(const T* t);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
-template <class T>
+template<class T>
 inline const T& CML::NullSingletonRef()
 {
     return *reinterpret_cast<const T*>(nullSingletonPtr);
 }
 
-template <class T>
+template<class T>
+inline T&& CML::NullSingletonMove()
+{
+    return move(const_cast<T&>(*reinterpret_cast<const T*>(nullSingletonPtr)));
+}
+
+template<class T>
 inline const T* CML::NullSingletonPtr()
 {
     return reinterpret_cast<const T*>(nullSingletonPtr);
 }
 
 
-template <class T>
+template<class T>
 inline bool CML::isNull(const T& t)
 {
     return &t == NullSingletonPtr<T>();
 }
 
-template <class T>
+template<class T>
 inline bool CML::notNull(const T& t)
 {
     return &t != NullSingletonPtr<T>();
 }
 
 
-template <class T>
+template<class T>
 inline bool CML::isNull(const T* t)
 {
     return t == NullSingletonPtr<T>();
 }
 
-template <class T>
+template<class T>
 inline bool CML::notNull(const T* t)
 {
     return t != NullSingletonPtr<T>();

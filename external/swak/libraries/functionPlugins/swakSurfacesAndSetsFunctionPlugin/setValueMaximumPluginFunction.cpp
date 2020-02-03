@@ -93,16 +93,16 @@ void setValueMaximumPluginFunction<Type>::doEvaluation()
     const Field<Type> vals=this->values();
 
     forAll(cells,i) {
-        const label cellI=cells[i];
+        const label celli=cells[i];
 
-        if(here[cellI]) {
-            pValueMaximum()[cellI]=max(
+        if(here[celli]) {
+            pValueMaximum()[celli]=max(
                 vals[i],
-                pValueMaximum()[cellI]
+                pValueMaximum()[celli]
             );
         } else {
-            here[cellI]=true;
-            pValueMaximum()[cellI]=vals[i];
+            here[celli]=true;
+            pValueMaximum()[celli]=vals[i];
         }
     }
 

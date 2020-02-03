@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -26,21 +26,13 @@ Description
     moving walls.  In addition, it should also be applied to 'moving' walls
     for moving reference frame (MRF) calculations.
 
-
-    \heading Patch usage
-
-    \table
-        Property     | Description             | Required    | Default value
-        U            | velociy field name      | no          | U
-    \endtable
-
+Usage
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            movingWallVelocity;
-        U               U;
-        value           uniform 0; // initial value
+        value           uniform (0 0 0);    // Initial value
     }
     \endverbatim
 
@@ -156,12 +148,7 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-// ************************************************************************* //

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -70,12 +70,6 @@ class cellDistFuncs
         static label findIndex(const label n, const labelList&, const label);
 
 
-        //- Disallow default bitwise copy construct
-        cellDistFuncs(const cellDistFuncs&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellDistFuncs&);
-
 public:
 
     ClassName("cellDistFuncs");
@@ -84,6 +78,9 @@ public:
 
         //- Construct from mesh
         cellDistFuncs(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construct
+        cellDistFuncs(const cellDistFuncs&) = delete;
 
 
     // Member Functions
@@ -112,14 +109,14 @@ public:
             const polyPatch& patch,
             const label nWallFaces,
             const labelList& wallFaces,
-            label& meshFaceI
+            label& meshFacei
         ) const;
 
         //- Get faces sharing point with face on patch
         label getPointNeighbours
         (
             const primitivePatch&,
-            const label patchFaceI,
+            const label patchFacei,
             labelList&
         ) const;
 
@@ -148,6 +145,12 @@ public:
             scalarField& wallDistCorrected,
             Map<label>& nearestFace
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellDistFuncs&) = delete;
 };
 
 
@@ -170,11 +173,11 @@ CML::labelHashSet CML::cellDistFuncs::getPatchIDs() const
 
     labelHashSet patchIDs(bMesh.size());
 
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        if (isA<Type>(bMesh[patchI]))
+        if (isA<Type>(bMesh[patchi]))
         {
-            patchIDs.insert(patchI);
+            patchIDs.insert(patchi);
         }
     }
     return patchIDs;

@@ -45,7 +45,7 @@ namespace CML
 
 #define doMakeSurfaceFields(type, Type, args...)                \
     defineTemplateTypeNameAndDebug(                             \
-        surface##Type##Field::DimensionedInternalField, 0);     \
+        surface##Type##Field::Internal, 0);                     \
                                                                 \
     defineTemplateTypeNameAndDebug(surface##Type##Field, 0);
 

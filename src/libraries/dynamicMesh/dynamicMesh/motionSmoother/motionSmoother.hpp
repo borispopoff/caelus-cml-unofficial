@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -31,7 +31,7 @@ Description
     E.g.
     \verbatim
         // Construct iterative mesh mover.
-        motionSmoother meshMover(mesh, labelList(1, patchI));
+        motionSmoother meshMover(mesh, labelList(1, patchi));
 
         // Set desired displacement:
         meshMover.displacement() = ..
@@ -178,16 +178,16 @@ class motionSmoother
     // Private Member Functions
 
         //- Average of connected points.
-        template <class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > avg
+        template<class Type>
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> avg
         (
             const GeometricField<Type, pointPatchField, pointMesh>& fld,
             const scalarField& edgeWeight
         ) const;
 
         //- Average position of connected points.
-        template <class Type>
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > avgPositions
+        template<class Type>
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> avgPositions
         (
             const GeometricField<Type, pointPatchField, pointMesh>& fld,
             const scalarField& edgeWeight
@@ -264,7 +264,7 @@ class motionSmoother
         ) const;
 
         //- Helper function. Is point internal?
-        bool isInternalPoint(const label pointI) const;
+        bool isInternalPoint(const label pointi) const;
 
         //- Given a set of faces that cause smoothing and a number of
         //  iterations determine the maximum set of points who are affected
@@ -279,10 +279,10 @@ class motionSmoother
         ) const;
 
         //- Disallow default bitwise copy construct
-        motionSmoother(const motionSmoother&);
+        motionSmoother(const motionSmoother&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const motionSmoother&);
+        void operator=(const motionSmoother&) = delete;
 
 
 public:
@@ -486,7 +486,7 @@ public:
 
                 //- Fully explicit smoothing of fields (not positions)
                 //  of internal points with varying diffusivity.
-                template <class Type>
+                template<class Type>
                 void smooth
                 (
                     const GeometricField<Type, pointPatchField, pointMesh>& fld,
@@ -535,19 +535,19 @@ void CML::motionSmoother::checkConstraints
     }
 
 
-    typename FldType::GeometricBoundaryField& bFld = pf.boundaryField();
+    typename FldType::Boundary& bFld = pf.boundaryField();
 
 
     // Evaluate in reverse order
 
     forAllReverse(bFld, patchi)
     {
-        bFld[patchi].initEvaluate(Pstream::blocking);   // buffered
+        bFld[patchi].initEvaluate(Pstream::commsTypes::blocking);   // buffered
     }
 
     forAllReverse(bFld, patchi)
     {
-        bFld[patchi].evaluate(Pstream::blocking);
+        bFld[patchi].evaluate(Pstream::commsTypes::blocking);
     }
 
 
@@ -629,15 +629,15 @@ void CML::motionSmoother::applyCornerConstraints
 
 
 // Average of connected points.
-template <class Type>
-CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh> >
+template<class Type>
+CML::tmp<CML::GeometricField<Type, CML::pointPatchField, CML::pointMesh>>
 CML::motionSmoother::avg
 (
     const GeometricField<Type, pointPatchField, pointMesh>& fld,
     const scalarField& edgeWeight
 ) const
 {
-    tmp<GeometricField<Type, pointPatchField, pointMesh> > tres
+    tmp<GeometricField<Type, pointPatchField, pointMesh>> tres
     (
         new GeometricField<Type, pointPatchField, pointMesh>
         (
@@ -651,10 +651,10 @@ CML::motionSmoother::avg
                 false
             ),
             fld.mesh(),
-            dimensioned<Type>("zero", fld.dimensions(), pTraits<Type>::zero)
+            dimensioned<Type>("zero", fld.dimensions(), Zero)
         )
     );
-    GeometricField<Type, pointPatchField, pointMesh>& res = tres();
+    GeometricField<Type, pointPatchField, pointMesh>& res = tres.ref();
 
     const polyMesh& mesh = fld.mesh()();
 
@@ -693,7 +693,7 @@ CML::motionSmoother::avg
         mesh,
         res,
         plusEqOp<Type>(),
-        pTraits<Type>::zero     // null value
+        Type(Zero)     // null value
     );
     syncTools::syncPointList
     (
@@ -707,16 +707,16 @@ CML::motionSmoother::avg
     // Average
     // ~~~~~~~
 
-    forAll(res, pointI)
+    forAll(res, pointi)
     {
-        if (mag(sumWeight[pointI]) < VSMALL)
+        if (mag(sumWeight[pointi]) < VSMALL)
         {
             // Unconnected point. Take over original value
-            res[pointI] = fld[pointI];
+            res[pointi] = fld[pointi];
         }
         else
         {
-            res[pointI] /= sumWeight[pointI];
+            res[pointi] /= sumWeight[pointi];
         }
     }
 
@@ -728,7 +728,7 @@ CML::motionSmoother::avg
 
 
 // smooth field (point-jacobi)
-template <class Type>
+template<class Type>
 void CML::motionSmoother::smooth
 (
     const GeometricField<Type, pointPatchField, pointMesh>& fld,
@@ -739,11 +739,11 @@ void CML::motionSmoother::smooth
     tmp<pointVectorField> tavgFld = avg(fld, edgeWeight);
     const pointVectorField& avgFld = tavgFld();
 
-    forAll(fld, pointI)
+    forAll(fld, pointi)
     {
-        if (isInternalPoint(pointI))
+        if (isInternalPoint(pointi))
         {
-            newFld[pointI] = 0.5*fld[pointI] + 0.5*avgFld[pointI];
+            newFld[pointi] = 0.5*fld[pointi] + 0.5*avgFld[pointi];
         }
     }
 

@@ -115,18 +115,21 @@ protected:
 
     // Protected Member Functions
 
-        //- Disallow default bitwise copy construct
-        fieldCoordinateSystemTransform(const fieldCoordinateSystemTransform&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fieldCoordinateSystemTransform&);
-
         template<class Type>
         void transform(const word& fieldName) const;
 
         template<class Type>
         void transformField(const Type& field) const;
 
+private:
+
+    // Private member functions
+
+        //- Disallow default bitwise copy construct
+        fieldCoordinateSystemTransform(const fieldCoordinateSystemTransform&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const fieldCoordinateSystemTransform&);
 
 public:
 

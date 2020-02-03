@@ -52,15 +52,15 @@ CML::fv::naGaussGrad<Type>::calcGrad
     const volPointInterpolation& pInterp = volPointInterpolation::New(mesh);
 
     // Do interpolation from volume to points
-    tmp<GeometricField<Type, pointPatchField, pointMesh> > tpf
+    tmp<GeometricField<Type, pointPatchField, pointMesh>> tpf
     (
       pInterp.interpolate(vsf)
     );
 
-    GeometricField<Type, pointPatchField, pointMesh>& pf = tpf();
+    GeometricField<Type, pointPatchField, pointMesh>& pf = tpf.ref();
 
     // Construct tmp<surfaceField> to be used in Gauss grad
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tssf
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -77,19 +77,19 @@ CML::fv::naGaussGrad<Type>::calcGrad
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
 
     const labelUList& owner = mesh.owner();
 
     const faceList& fcs = mesh.faces();
 
-    forAll(owner, faceI)
+    forAll(owner, facei)
     {
-        const labelList& f = fcs[faceI];
+        const labelList& f = fcs[facei];
         label nPoints = f.size();
 
         // Face centre value calculated as a simple nodal average
-        Type fCentre = pTraits<Type>::zero;
+        Type fCentre = Zero;
         for (label pi = 0; pi < nPoints; pi++)
         {
             fCentre += pf[f[pi]];
@@ -97,21 +97,21 @@ CML::fv::naGaussGrad<Type>::calcGrad
 
         fCentre /= nPoints;
 
-        ssf[faceI] = fCentre;
+        ssf[facei] = fCentre;
     }
 
     forAll(mesh.boundary(), patchi)
     {
-        fvsPatchField<Type>& pssf = ssf.boundaryField()[patchi];
+        fvsPatchField<Type>& pssf = ssf.boundaryFieldRef()[patchi];
 
-        forAll(mesh.boundary()[patchi], faceI)
+        forAll(mesh.boundary()[patchi], facei)
         {
-            label bFaceI = mesh.boundary()[patchi].patch().start() + faceI;
-            const labelList& f = fcs[bFaceI];
+            label bFacei = mesh.boundary()[patchi].patch().start() + facei;
+            const labelList& f = fcs[bFacei];
             label nPoints = f.size();
 
             // Face centre value calculated as a simple nodal average
-            Type fCentre = pTraits<Type>::zero;
+            Type fCentre = Zero;
             for (label pi = 0; pi < nPoints; pi++)
             {
                 fCentre += pf[f[pi]];
@@ -119,19 +119,19 @@ CML::fv::naGaussGrad<Type>::calcGrad
 
             fCentre /= nPoints;
 
-            pssf[faceI] = fCentre;
+            pssf[facei] = fCentre;
         }
     }
 
     // Use Gauss gradient with nodal averaged surfaceScalarField
     typedef typename outerProduct<vector, Type>::type GradType;
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tnagGrad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tnagGrad
     (
         gaussGrad<Type>::gradf(ssf, name)
     );
 
-    GeometricField<GradType, fvPatchField, volMesh>& nagGrad = tnagGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& nagGrad = tnagGrad.ref();
 
     gaussGrad<Type>::correctBoundaryConditions(vsf, nagGrad);
 

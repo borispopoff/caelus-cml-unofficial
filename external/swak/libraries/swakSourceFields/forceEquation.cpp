@@ -91,9 +91,9 @@ bool forceEquation<T>::getMask(DynamicList<label> &cellIDs,const word &psi)
 
     const volScalarField &cond=getResult<volScalarField>();
 
-    forAll(cond,cellI) {
-        if(cond[cellI]!=0) {
-            cellIDs.append(cellI);
+    forAll(cond,celli) {
+        if(cond[celli]!=0) {
+            cellIDs.append(celli);
         }
     }
 

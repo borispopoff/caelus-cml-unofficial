@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -39,21 +39,21 @@ tmp<scalarField> mutUWallFunctionFvPatchScalarField::calcYPlus
     const scalarField& magUp
 ) const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
 
-    const scalarField& y = turbModel.y()[patchI];
-    const fvPatchScalarField& rhow = turbModel.rho().boundaryField()[patchI];
-    const fvPatchScalarField& muw = turbModel.mu().boundaryField()[patchI];
+    const scalarField& y = turbModel.y()[patchi];
+    const fvPatchScalarField& rhow = turbModel.rho().boundaryField()[patchi];
+    const fvPatchScalarField& muw = turbModel.mu().boundaryField()[patchi];
 
     tmp<scalarField> tyPlus(new scalarField(patch().size(), 0.0));
-    scalarField& yPlus = tyPlus();
+    scalarField& yPlus = tyPlus.ref();
 
-    forAll(yPlus, faceI)
+    forAll(yPlus, facei)
     {
-        scalar kappaRe = kappa_*magUp[faceI]*y[faceI]/(muw[faceI]/rhow[faceI]);
+        scalar kappaRe = kappa_*magUp[facei]*y[facei]/(muw[facei]/rhow[facei]);
 
         scalar yp = yPlusLam_;
         scalar ryPlusLam = 1.0/yp;
@@ -68,7 +68,7 @@ tmp<scalarField> mutUWallFunctionFvPatchScalarField::calcYPlus
 
         } while (mag(ryPlusLam*(yp - yPlusLast)) > 0.01 && ++iter < 10);
 
-        yPlus[faceI] = max(0.0, yp);
+        yPlus[facei] = max(0.0, yp);
     }
 
     return tyPlus;
@@ -77,27 +77,27 @@ tmp<scalarField> mutUWallFunctionFvPatchScalarField::calcYPlus
 
 tmp<scalarField> mutUWallFunctionFvPatchScalarField::calcMut() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
 
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchI];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magUp(mag(Uw.patchInternalField() - Uw));
-    const fvPatchScalarField& muw = turbModel.mu().boundaryField()[patchI];
+    const fvPatchScalarField& muw = turbModel.mu().boundaryField()[patchi];
 
     tmp<scalarField> tyPlus = calcYPlus(magUp);
-    scalarField& yPlus = tyPlus();
+    scalarField& yPlus = tyPlus.ref();
 
     tmp<scalarField> tmutw(new scalarField(patch().size(), 0.0));
-    scalarField& mutw = tmutw();
+    scalarField& mutw = tmutw.ref();
 
-    forAll(yPlus, faceI)
+    forAll(yPlus, facei)
     {
-        if (yPlus[faceI] > yPlusLam_)
+        if (yPlus[facei] > yPlusLam_)
         {
-            mutw[faceI] =
-                muw[faceI]*(yPlus[faceI]*kappa_/log(E_*yPlus[faceI]) - 1.0);
+            mutw[facei] =
+                muw[facei]*(yPlus[facei]*kappa_/log(E_*yPlus[facei]) - 1.0);
         }
     }
 
@@ -163,10 +163,10 @@ mutUWallFunctionFvPatchScalarField::mutUWallFunctionFvPatchScalarField
 
 tmp<scalarField> mutUWallFunctionFvPatchScalarField::yPlus() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchI];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magUp(mag(Uw.patchInternalField() - Uw));
 
     return calcYPlus(magUp);
@@ -177,7 +177,7 @@ void mutUWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -89,10 +89,10 @@ void cartesianMeshExtractor::createPolyMesh()
     //- leaf boxes in the octree.
     std::map<label, labelLongList> procFaces;
 
-    forAll(octreeFaces, faceI)
+    forAll(octreeFaces, facei)
     {
-        const label own = owner[faceI];
-        const label nei = neighbour[faceI];
+        const label own = owner[facei];
+        const label nei = neighbour[facei];
 
         const label ownLabel = leafCellLabel[own];
         label neiLabel(-1);
@@ -114,7 +114,7 @@ void cartesianMeshExtractor::createPolyMesh()
             {
                 const label procNo = octree.returnLeaf(nei).procNo();
 
-                procFaces[procNo].append(faceI);
+                procFaces[procNo].append(facei);
             }
         }
         else if( neiLabel != -1 )
@@ -126,7 +126,7 @@ void cartesianMeshExtractor::createPolyMesh()
             {
                 const label procNo = octree.returnLeaf(own).procNo();
 
-                procFaces[procNo].append(faceI);
+                procFaces[procNo].append(facei);
             }
         }
     }
@@ -236,10 +236,10 @@ void cartesianMeshExtractor::createPolyMesh()
 
     nFaces = 0;
 
-    forAll(octreeFaces, faceI)
+    forAll(octreeFaces, facei)
     {
-        const label own = owner[faceI];
-        const label nei = neighbour[faceI];
+        const label own = owner[facei];
+        const label nei = neighbour[facei];
 
         const label ownLabel = leafCellLabel[own];
         label neiLabel(-1);
@@ -249,9 +249,9 @@ void cartesianMeshExtractor::createPolyMesh()
         if( (ownLabel != -1) && (neiLabel != -1) )
         {
             //- internal face
-            faces[nFaces].setSize(octreeFaces.sizeOfRow(faceI));
-            forAllRow(octreeFaces, faceI, pI)
-                faces[nFaces][pI] = octreeFaces(faceI, pI);
+            faces[nFaces].setSize(octreeFaces.sizeOfRow(facei));
+            forAllRow(octreeFaces, facei, pI)
+                faces[nFaces][pI] = octreeFaces(facei, pI);
 
             cells[ownLabel][nFacesInCell[ownLabel]++] = nFaces;
             cells[neiLabel][nFacesInCell[neiLabel]++] = nFaces;
@@ -266,9 +266,9 @@ void cartesianMeshExtractor::createPolyMesh()
             }
 
             //- boundary face
-            faces[nFaces].setSize(octreeFaces.sizeOfRow(faceI));
-            forAllRow(octreeFaces, faceI, pI)
-                faces[nFaces][pI] = octreeFaces(faceI, pI);
+            faces[nFaces].setSize(octreeFaces.sizeOfRow(facei));
+            forAllRow(octreeFaces, facei, pI)
+                faces[nFaces][pI] = octreeFaces(facei, pI);
 
             cells[ownLabel][nFacesInCell[ownLabel]++] = nFaces;
             ++nFaces;
@@ -282,11 +282,11 @@ void cartesianMeshExtractor::createPolyMesh()
             }
 
             //- boundary face
-            faces[nFaces].setSize(octreeFaces.sizeOfRow(faceI));
-            faces[nFaces][0] = octreeFaces(faceI, 0);
-            for(label pI=octreeFaces.sizeOfRow(faceI)-1;pI>0;--pI)
-                faces[nFaces][octreeFaces.sizeOfRow(faceI)-pI] =
-                    octreeFaces(faceI, pI);
+            faces[nFaces].setSize(octreeFaces.sizeOfRow(facei));
+            faces[nFaces][0] = octreeFaces(facei, 0);
+            for(label pI=octreeFaces.sizeOfRow(facei)-1;pI>0;--pI)
+                faces[nFaces][octreeFaces.sizeOfRow(facei)-pI] =
+                    octreeFaces(facei, pI);
 
             cells[neiLabel][nFacesInCell[neiLabel]++] = nFaces;
             ++nFaces;
@@ -311,27 +311,27 @@ void cartesianMeshExtractor::createPolyMesh()
     vectorField closedness(cells.size(), vector::zero);
     const labelList& owner = mesh_.owner();
     const labelList& neighbour = mesh_.neighbour();
-    forAll(owner, faceI)
-        if( owner[faceI] == -1 )
+    forAll(owner, facei)
+        if( owner[facei] == -1 )
         {
             Info << "faces " << faces << endl;
             FatalErrorInFunction
-                << "Face " << faceI
+                << "Face " << facei
                 << " has no owner and neighbour!!" << abort(FatalError);
         }
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const vector area = faces[faceI].normal(mesh_.points());
-        closedness[owner[faceI]] += area;
-        if( neighbour[faceI] != -1 )
-            closedness[neighbour[faceI]] -= area;
+        const vector area = faces[facei].normal(mesh_.points());
+        closedness[owner[facei]] += area;
+        if( neighbour[facei] != -1 )
+            closedness[neighbour[facei]] -= area;
     }
 
-    forAll(closedness, cellI)
-        if( mag(closedness[cellI]) > 1e-10 )
-            Info << "Cell " << cellI << " is not closed by "
-                << closedness[cellI] << endl;
+    forAll(closedness, celli)
+        if( mag(closedness[celli]) > 1e-10 )
+            Info << "Cell " << celli << " is not closed by "
+                << closedness[celli] << endl;
 
     # endif
 

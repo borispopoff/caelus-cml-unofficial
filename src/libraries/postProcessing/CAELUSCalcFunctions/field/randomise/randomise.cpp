@@ -54,7 +54,7 @@ void CML::calcTypes::randomise::init()
 {
     argList::validArgs.append("randomise");
     argList::validArgs.append("perturbation");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 

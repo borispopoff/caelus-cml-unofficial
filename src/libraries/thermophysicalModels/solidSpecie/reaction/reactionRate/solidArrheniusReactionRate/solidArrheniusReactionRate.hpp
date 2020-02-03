@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -138,9 +138,9 @@ public:
     //- Third-body efficiencies (beta = 1-alpha)
     //  non-empty only for third-body reactions
     //  with enhanced molecularity (alpha != 1)
-    inline const List<Tuple2<label, scalar> >& beta() const
+    inline const List<Tuple2<label, scalar>>& beta() const
     {
-        return NullSingletonRef<List<Tuple2<label, scalar> > >();
+        return NullSingletonRef<List<Tuple2<label, scalar>>>();
     }
 
     //- Species concentration derivative of the pressure dependent term
@@ -170,9 +170,9 @@ public:
     //- Write to stream
     inline void write(Ostream& os) const
     {
-        os.writeKeyword("A") << A_ << token::END_STATEMENT << nl;
-        os.writeKeyword("Ta") << Ta_ << token::END_STATEMENT << nl;
-        os.writeKeyword("Tcrit") << Tcrit_ << token::END_STATEMENT << nl;
+        writeEntry(os, "A", A_);
+        writeEntry(os, "Ta", Ta_);
+        writeEntry(os, "Tcrit", Tcrit_);
     }
 
 

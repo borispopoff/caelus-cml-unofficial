@@ -87,9 +87,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type> > clone() const
+        virtual tmp<fvsPatchField<Type>> clone() const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new emptyFvsPatchField<Type>(*this)
             );
@@ -103,12 +103,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type> > clone
+        virtual tmp<fvsPatchField<Type>> clone
         (
             const DimensionedField<Type, surfaceMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new emptyFvsPatchField<Type>(*this, iF)
             );
@@ -136,24 +136,17 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fvPatchFieldMapper.hpp"
 #include "surfaceMesh.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-emptyFvsPatchField<Type>::emptyFvsPatchField
+CML::emptyFvsPatchField<Type>::emptyFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -164,7 +157,7 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
 
 
 template<class Type>
-emptyFvsPatchField<Type>::emptyFvsPatchField
+CML::emptyFvsPatchField<Type>::emptyFvsPatchField
 (
     const emptyFvsPatchField<Type>&,
     const fvPatch& p,
@@ -187,7 +180,7 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
 
 
 template<class Type>
-emptyFvsPatchField<Type>::emptyFvsPatchField
+CML::emptyFvsPatchField<Type>::emptyFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -207,7 +200,7 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
 
 
 template<class Type>
-emptyFvsPatchField<Type>::emptyFvsPatchField
+CML::emptyFvsPatchField<Type>::emptyFvsPatchField
 (
     const emptyFvsPatchField<Type>& ptf
 )
@@ -215,14 +208,14 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
     fvsPatchField<Type>
     (
         ptf.patch(),
-        ptf.dimensionedInternalField(),
+        ptf.internalField(),
         Field<Type>(0)
     )
 {}
 
 
 template<class Type>
-emptyFvsPatchField<Type>::emptyFvsPatchField
+CML::emptyFvsPatchField<Type>::emptyFvsPatchField
 (
     const emptyFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -232,13 +225,4 @@ emptyFvsPatchField<Type>::emptyFvsPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

@@ -64,7 +64,7 @@ standardRadiation::standardRadiation
             IOobject::NO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
+        dimensionedScalar("zero", dimMass/pow3(dimTime), 0),
         film.mappedPushedFieldPatchTypes<scalar>()
     ),
     qrNet_
@@ -78,8 +78,7 @@ standardRadiation::standardRadiation
             IOobject::NO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
-        zeroGradientFvPatchScalarField::typeName
+        dimensionedScalar("zero", dimMass/pow3(dimTime), 0)
     ),
     beta_(readScalar(coeffDict_.lookup("beta"))),
     kappaBar_(readScalar(coeffDict_.lookup("kappaBar")))
@@ -116,11 +115,11 @@ tmp<volScalarField> standardRadiation::Shs()
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
+            dimensionedScalar("zero", dimMass/pow3(dimTime), 0)
         )
     );
 
-    scalarField& Shs = tShs();
+    scalarField& Shs = tShs.ref();
     const scalarField& qinP = qinPrimary_;
     const scalarField& delta = filmModel_.delta();
     const scalarField& alpha = filmModel_.alpha();
@@ -128,7 +127,7 @@ tmp<volScalarField> standardRadiation::Shs()
     Shs = beta_*qinP*alpha*(1.0 - exp(-kappaBar_*delta));
 
     // Update net qr on local region
-    qrNet_.internalField() = qinP - Shs;
+    qrNet_.primitiveFieldRef() = qinP - Shs;
     qrNet_.correctBoundaryConditions();
 
     return tShs;

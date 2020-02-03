@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -113,7 +113,7 @@ CML::CourantNo::CourantNo
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("0", dimless, 0.0),
+                dimensionedScalar("0", dimless, 0),
                 zeroGradientFvPatchScalarField::typeName
             )
         );
@@ -135,8 +135,8 @@ void CML::CourantNo::read(const dictionary& dict)
 {
     if (active_)
     {
-        phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
-        rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
+        phiName_ = dict.lookupOrDefault<word>("phi", "phi");
+        rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
     }
 }
 
@@ -151,17 +151,14 @@ void CML::CourantNo::execute()
             mesh.lookupObject<surfaceScalarField>(phiName_);
 
         volScalarField& CourantNo =
-            const_cast<volScalarField&>
-            (
-                mesh.lookupObject<volScalarField>(type())
-            );
+            mesh.lookupObjectRef<volScalarField>(type());
 
-        scalarField& iField = CourantNo.internalField();
+        scalarField& iField = CourantNo.primitiveFieldRef();
 
         const scalarField sumPhi
         (
-            fvc::surfaceSum(mag(phi))().internalField()
-           /rho(phi)().internalField()
+            fvc::surfaceSum(mag(phi))().primitiveField()
+           /rho(phi)().primitiveField()
         );
 
         iField = 0.5*sumPhi/mesh.V().field()*mesh.time().deltaTValue();

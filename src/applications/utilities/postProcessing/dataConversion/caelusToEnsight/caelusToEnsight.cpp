@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -301,7 +301,7 @@ int main(int argc, char *argv[])
         fileNameList cloudDirs = readDir
         (
             runTime.timePath()/regionPrefix/cloud::prefix,
-            fileName::DIRECTORY
+            fileType::directory
         );
 
         forAll(cloudDirs, cloudI)
@@ -322,7 +322,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    HashTable<HashTable<word> > allCloudFields;
+    HashTable<HashTable<word>> allCloudFields;
     forAllConstIter(wordHashSet, allCloudNames, cloudIter)
     {
         // Add the name of the cloud(s) to the case file header
@@ -342,7 +342,7 @@ int main(int argc, char *argv[])
         allCloudFields.insert(cloudIter.key(), HashTable<word>());
 
         // Identify the new cloud in the hash table
-        HashTable<HashTable<word> >::iterator newCloudIter =
+        HashTable<HashTable<word>>::iterator newCloudIter =
             allCloudFields.find(cloudIter.key());
 
         // Loop over all times to build list of fields and field types
@@ -544,14 +544,14 @@ int main(int argc, char *argv[])
         // Cloud field data output
         // ~~~~~~~~~~~~~~~~~~~~~~~
 
-        forAllConstIter(HashTable<HashTable<word> >, allCloudFields, cloudIter)
+        forAllConstIter(HashTable<HashTable<word>>, allCloudFields, cloudIter)
         {
             const word& cloudName = cloudIter.key();
 
             fileNameList currentCloudDirs = readDir
             (
                 runTime.timePath()/regionPrefix/cloud::prefix,
-                fileName::DIRECTORY
+                fileType::directory
             );
 
             bool cloudExists = inFileNameList(currentCloudDirs, cloudName);

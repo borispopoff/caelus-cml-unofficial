@@ -47,7 +47,7 @@ namespace CML
                     Class BlockIterativeSolver Declaration
 \*---------------------------------------------------------------------------*/
 
-template <typename Type>
+template<class Type>
 class BlockIterativeSolver : public BlockLduSolver<Type>
 {
     //- Solver tolerance

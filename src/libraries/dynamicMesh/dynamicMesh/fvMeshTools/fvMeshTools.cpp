@@ -38,28 +38,28 @@ CML::label CML::fvMeshTools::addPatch
     polyBoundaryMesh& polyPatches =
         const_cast<polyBoundaryMesh&>(mesh.boundaryMesh());
 
-    label patchI = polyPatches.findPatchID(patch.name());
-    if (patchI != -1)
+    label patchi = polyPatches.findPatchID(patch.name());
+    if (patchi != -1)
     {
         // Already there
-        return patchI;
+        return patchi;
     }
 
 
     // Append at end unless there are processor patches
     label insertPatchI = polyPatches.size();
-    label startFaceI = mesh.nFaces();
+    label startFacei = mesh.nFaces();
 
     if (!isA<processorPolyPatch>(patch))
     {
-        forAll(polyPatches, patchI)
+        forAll(polyPatches, patchi)
         {
-            const polyPatch& pp = polyPatches[patchI];
+            const polyPatch& pp = polyPatches[patchi];
 
             if (isA<processorPolyPatch>(pp))
             {
-                insertPatchI = patchI;
-                startFaceI = pp.start();
+                insertPatchI = patchi;
+                startFacei = pp.start();
                 break;
             }
         }
@@ -86,7 +86,7 @@ CML::label CML::fvMeshTools::addPatch
             polyPatches,
             insertPatchI,   //index
             0,              //size
-            startFaceI      //start
+            startFacei      //start
         )
     );
     fvPatches.setSize(sz+1);
@@ -211,60 +211,60 @@ CML::label CML::fvMeshTools::addPatch
 void CML::fvMeshTools::setPatchFields
 (
     fvMesh& mesh,
-    const label patchI,
+    const label patchi,
     const dictionary& patchFieldDict
 )
 {
-    setPatchFields<volScalarField>(mesh, patchI, patchFieldDict);
-    setPatchFields<volVectorField>(mesh, patchI, patchFieldDict);
-    setPatchFields<volSphericalTensorField>(mesh, patchI, patchFieldDict);
-    setPatchFields<volSymmTensorField>(mesh, patchI, patchFieldDict);
-    setPatchFields<volTensorField>(mesh, patchI, patchFieldDict);
-    setPatchFields<surfaceScalarField>(mesh, patchI, patchFieldDict);
-    setPatchFields<surfaceVectorField>(mesh, patchI, patchFieldDict);
+    setPatchFields<volScalarField>(mesh, patchi, patchFieldDict);
+    setPatchFields<volVectorField>(mesh, patchi, patchFieldDict);
+    setPatchFields<volSphericalTensorField>(mesh, patchi, patchFieldDict);
+    setPatchFields<volSymmTensorField>(mesh, patchi, patchFieldDict);
+    setPatchFields<volTensorField>(mesh, patchi, patchFieldDict);
+    setPatchFields<surfaceScalarField>(mesh, patchi, patchFieldDict);
+    setPatchFields<surfaceVectorField>(mesh, patchi, patchFieldDict);
     setPatchFields<surfaceSphericalTensorField>
     (
         mesh,
-        patchI,
+        patchi,
         patchFieldDict
     );
-    setPatchFields<surfaceSymmTensorField>(mesh, patchI, patchFieldDict);
-    setPatchFields<surfaceTensorField>(mesh, patchI, patchFieldDict);
+    setPatchFields<surfaceSymmTensorField>(mesh, patchi, patchFieldDict);
+    setPatchFields<surfaceTensorField>(mesh, patchi, patchFieldDict);
 }
 
 
-void CML::fvMeshTools::zeroPatchFields(fvMesh& mesh, const label patchI)
+void CML::fvMeshTools::zeroPatchFields(fvMesh& mesh, const label patchi)
 {
-    setPatchFields<volScalarField>(mesh, patchI, pTraits<scalar>::zero);
-    setPatchFields<volVectorField>(mesh, patchI, pTraits<vector>::zero);
+    setPatchFields<volScalarField>(mesh, patchi, pTraits<scalar>::zero);
+    setPatchFields<volVectorField>(mesh, patchi, pTraits<vector>::zero);
     setPatchFields<volSphericalTensorField>
     (
         mesh,
-        patchI,
+        patchi,
         pTraits<sphericalTensor>::zero
     );
     setPatchFields<volSymmTensorField>
     (
         mesh,
-        patchI,
+        patchi,
         pTraits<symmTensor>::zero
     );
-    setPatchFields<volTensorField>(mesh, patchI, pTraits<tensor>::zero);
-    setPatchFields<surfaceScalarField>(mesh, patchI, pTraits<scalar>::zero);
-    setPatchFields<surfaceVectorField>(mesh, patchI, pTraits<vector>::zero);
+    setPatchFields<volTensorField>(mesh, patchi, pTraits<tensor>::zero);
+    setPatchFields<surfaceScalarField>(mesh, patchi, pTraits<scalar>::zero);
+    setPatchFields<surfaceVectorField>(mesh, patchi, pTraits<vector>::zero);
     setPatchFields<surfaceSphericalTensorField>
     (
         mesh,
-        patchI,
+        patchi,
         pTraits<sphericalTensor>::zero
     );
     setPatchFields<surfaceSymmTensorField>
     (
         mesh,
-        patchI,
+        patchi,
         pTraits<symmTensor>::zero
     );
-    setPatchFields<surfaceTensorField>(mesh, patchI, pTraits<tensor>::zero);
+    setPatchFields<surfaceTensorField>(mesh, patchi, pTraits<tensor>::zero);
 }
 
 
@@ -286,9 +286,9 @@ void CML::fvMeshTools::trimPatches(fvMesh& mesh, const label nPatches)
     }
 
     label nFaces = 0;
-    for (label patchI = nPatches; patchI < polyPatches.size(); patchI++)
+    for (label patchi = nPatches; patchi < polyPatches.size(); patchi++)
     {
-        nFaces += polyPatches[patchI].size();
+        nFaces += polyPatches[patchi].size();
     }
     reduce(nFaces, sumOp<label>());
 
@@ -364,9 +364,9 @@ CML::labelList CML::fvMeshTools::removeEmptyPatches
 
 
     // Assumes all non-coupled boundaries are on all processors!
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        const polyPatch& pp = pbm[patchI];
+        const polyPatch& pp = pbm[patchi];
 
         if (!isA<processorPolyPatch>(pp))
         {
@@ -378,32 +378,32 @@ CML::labelList CML::fvMeshTools::removeEmptyPatches
 
             if (nFaces > 0)
             {
-                newToOld[newI] = patchI;
-                oldToNew[patchI] = newI++;
+                newToOld[newI] = patchi;
+                oldToNew[patchi] = newI++;
             }
         }
     }
 
     // Same for processor patches (but need no reduction)
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        const polyPatch& pp = pbm[patchI];
+        const polyPatch& pp = pbm[patchi];
 
         if (isA<processorPolyPatch>(pp) && pp.size())
         {
-            newToOld[newI] = patchI;
-            oldToNew[patchI] = newI++;
+            newToOld[newI] = patchi;
+            oldToNew[patchi] = newI++;
         }
     }
 
     newToOld.setSize(newI);
 
     // Move all deleteable patches to the end
-    forAll(oldToNew, patchI)
+    forAll(oldToNew, patchi)
     {
-        if (oldToNew[patchI] == -1)
+        if (oldToNew[patchi] == -1)
         {
-            oldToNew[patchI] = newI++;
+            oldToNew[patchi] = newI++;
         }
     }
 
@@ -472,14 +472,14 @@ CML::autoPtr<CML::fvMesh> CML::fvMeshTools::newMesh
             slave++
         )
         {
-            OPstream toSlave(Pstream::scheduled, slave);
+            OPstream toSlave(Pstream::commsTypes::scheduled, slave);
             toSlave << patchEntries;
         }
     }
     else
     {
         // Receive patches
-        IPstream fromMaster(Pstream::scheduled, Pstream::masterNo());
+        IPstream fromMaster(Pstream::commsTypes::scheduled, Pstream::masterNo());
         fromMaster >> patchEntries;
     }
 
@@ -529,10 +529,10 @@ CML::autoPtr<CML::fvMesh> CML::fvMeshTools::newMesh
         new fvMesh
         (
             meshIO,
-            xferCopy(pointField()),
-            xferCopy(faceList()),
-            xferCopy(labelList()),
-            xferCopy(labelList())
+            pointField(),
+            faceList(),
+            labelList(),
+            labelList()
         )
     );
     fvMesh& mesh = meshPtr();
@@ -557,19 +557,19 @@ CML::autoPtr<CML::fvMesh> CML::fvMeshTools::newMesh
 
         if (haveMesh)   //Pstream::master())
         {
-            forAll(mesh.boundary(), patchI)
+            forAll(mesh.boundary(), patchi)
             {
                 newPatches.append
                 (
-                    mesh.boundaryMesh()[patchI].clone(mesh.boundaryMesh()).ptr()
+                    mesh.boundaryMesh()[patchi].clone(mesh.boundaryMesh()).ptr()
                 );
             }
         }
         else
         {
-            forAll(patchEntries, patchI)
+            forAll(patchEntries, patchi)
             {
-                const entry& e = patchEntries[patchI];
+                const entry& e = patchEntries[patchi];
                 const word type(e.dict().lookup("type"));
 
                 if
@@ -588,7 +588,7 @@ CML::autoPtr<CML::fvMesh> CML::fvMeshTools::newMesh
                     (
                         polyPatch::New
                         (
-                            patchEntries[patchI].keyword(),
+                            patchEntries[patchi].keyword(),
                             patchDict,
                             newPatches.size(),
                             mesh.boundaryMesh()
@@ -602,11 +602,11 @@ CML::autoPtr<CML::fvMesh> CML::fvMeshTools::newMesh
     }
 
     //Pout<< "patches:" << endl;
-    //forAll(mesh.boundary(), patchI)
+    //forAll(mesh.boundary(), patchi)
     //{
-    //    Pout<< "    type" << mesh.boundary()[patchI].type()
-    //        << " size:" << mesh.boundary()[patchI].size()
-    //        << " start:" << mesh.boundary()[patchI].start() << endl;
+    //    Pout<< "    type" << mesh.boundary()[patchi].type()
+    //        << " size:" << mesh.boundary()[patchi].size()
+    //        << " start:" << mesh.boundary()[patchi].start() << endl;
     //}
     //Pout<< endl;
 

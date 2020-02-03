@@ -62,7 +62,7 @@ CML::porosityModels::powerLaw::~powerLaw()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void CML::porosityModels::powerLaw::calcTranformModelData()
+void CML::porosityModels::powerLaw::calcTransformModelData()
 {
     // nothing to be transformed
 }

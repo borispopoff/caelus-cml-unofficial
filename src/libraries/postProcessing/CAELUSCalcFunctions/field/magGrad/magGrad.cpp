@@ -53,7 +53,7 @@ CML::calcTypes::magGrad::~magGrad()
 void CML::calcTypes::magGrad::init()
 {
     argList::validArgs.append("magGrad");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 

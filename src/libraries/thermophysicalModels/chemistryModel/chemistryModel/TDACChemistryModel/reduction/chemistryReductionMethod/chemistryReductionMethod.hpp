@@ -106,7 +106,7 @@ public:
 
 
     // Selector
-    static autoPtr<chemistryReductionMethod<CompType, ThermoType> > New
+    static autoPtr<chemistryReductionMethod<CompType, ThermoType>> New
     (
         const IOdictionary& dict,
         TDACChemistryModel<CompType, ThermoType>& chemistry
@@ -195,7 +195,7 @@ CML::chemistryReductionMethod<CompType, ThermoType>::chemistryReductionMethod
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class CompType, class ThermoType>
-CML::autoPtr<CML::chemistryReductionMethod<CompType, ThermoType> >
+CML::autoPtr<CML::chemistryReductionMethod<CompType, ThermoType>>
 CML::chemistryReductionMethod<CompType, ThermoType>::New
 (
     const IOdictionary& dict,
@@ -274,7 +274,7 @@ CML::chemistryReductionMethod<CompType, ThermoType>::New
         FatalErrorInFunction << exit(FatalError);
     }
 
-    return autoPtr<chemistryReductionMethod<CompType, ThermoType> >
+    return autoPtr<chemistryReductionMethod<CompType, ThermoType>>
     (
         cstrIter()(dict, chemistry)
     );

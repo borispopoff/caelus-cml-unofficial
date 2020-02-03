@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -57,12 +57,12 @@ tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::calcUTau
     const scalarField& mutw = *this;
 
     tmp<scalarField> tuTau(new scalarField(patch().size(), 0.0));
-    scalarField& uTau = tuTau();
+    scalarField& uTau = tuTau.ref();
 
-    forAll(mutw, faceI)
+    forAll(mutw, facei)
     {
         scalar ut =
-            sqrt((mutw[faceI] + muw[faceI])*magGradU[faceI]/rhow[faceI]);
+            sqrt((mutw[facei] + muw[facei])*magGradU[facei]/rhow[facei]);
 
         if (ut > ROOTVSMALL)
         {
@@ -71,17 +71,17 @@ tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::calcUTau
 
             do
             {
-                scalar kUu = min(kappa_*magUp[faceI]/ut, 50);
+                scalar kUu = min(kappa_*magUp[facei]/ut, 50);
                 scalar fkUu = exp(kUu) - 1 - kUu*(1 + 0.5*kUu);
 
                 scalar f =
-                    - ut*y[faceI]/(muw[faceI]/rhow[faceI])
-                    + magUp[faceI]/ut
+                    - ut*y[facei]/(muw[facei]/rhow[facei])
+                    + magUp[facei]/ut
                     + 1/E_*(fkUu - 1.0/6.0*kUu*sqr(kUu));
 
                 scalar df =
-                    y[faceI]/(muw[faceI]/rhow[faceI])
-                  + magUp[faceI]/sqr(ut)
+                    y[facei]/(muw[facei]/rhow[facei])
+                  + magUp[facei]/sqr(ut)
                   + 1/E_*kUu*fkUu/ut;
 
                 scalar uTauNew = ut + f/df;
@@ -90,7 +90,7 @@ tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::calcUTau
 
             } while (ut > ROOTVSMALL && err > 0.01 && ++iter < 10);
 
-            uTau[faceI] = max(0.0, ut);
+            uTau[facei] = max(0.0, ut);
         }
     }
 
@@ -100,15 +100,15 @@ tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::calcUTau
 
 tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::calcMut() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
 
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchI];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magGradU(mag(Uw.snGrad()));
-    const scalarField& rhow = turbModel.rho().boundaryField()[patchI];
-    const scalarField& muw = turbModel.mu().boundaryField()[patchI];
+    const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
+    const scalarField& muw = turbModel.mu().boundaryField()[patchi];
 
     return max
     (
@@ -181,15 +181,15 @@ mutUSpaldingWallFunctionFvPatchScalarField
 
 tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::yPlus() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
 
-    const scalarField& y = turbModel.y()[patchI];
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchI];
-    const scalarField& rhow = turbModel.rho().boundaryField()[patchI];
-    const scalarField& muw = turbModel.mu().boundaryField()[patchI];
+    const scalarField& y = turbModel.y()[patchi];
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
+    const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
+    const scalarField& muw = turbModel.mu().boundaryField()[patchi];
 
     return y*calcUTau(mag(Uw.snGrad()))/(muw/rhow);
 }
@@ -199,7 +199,7 @@ void mutUSpaldingWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

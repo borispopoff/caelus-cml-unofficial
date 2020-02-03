@@ -137,7 +137,7 @@ inline label SubsetValueExpressionDriver::getIndexFromIterator(
     return *it;
 }
 
-tmp<Field<scalar> > CellZoneValueExpressionDriver::getScalarField(
+tmp<Field<scalar>> CellZoneValueExpressionDriver::getScalarField(
     const word &name,bool oldTime
 )
 {
@@ -146,7 +146,7 @@ tmp<Field<scalar> > CellZoneValueExpressionDriver::getScalarField(
     );
 }
 
-tmp<Field<vector> > CellZoneValueExpressionDriver::getVectorField(
+tmp<Field<vector>> CellZoneValueExpressionDriver::getVectorField(
     const word &name,bool oldTime
 )
 {
@@ -155,7 +155,7 @@ tmp<Field<vector> > CellZoneValueExpressionDriver::getVectorField(
     );
 }
 
-tmp<Field<tensor> > CellZoneValueExpressionDriver::getTensorField(
+tmp<Field<tensor>> CellZoneValueExpressionDriver::getTensorField(
     const word &name,bool oldTime
 )
 {
@@ -164,7 +164,7 @@ tmp<Field<tensor> > CellZoneValueExpressionDriver::getTensorField(
     );
 }
 
-tmp<Field<symmTensor> > CellZoneValueExpressionDriver::getSymmTensorField(
+tmp<Field<symmTensor>> CellZoneValueExpressionDriver::getSymmTensorField(
     const word &name,bool oldTime
 )
 {
@@ -173,7 +173,7 @@ tmp<Field<symmTensor> > CellZoneValueExpressionDriver::getSymmTensorField(
     );
 }
 
-tmp<Field<sphericalTensor> > CellZoneValueExpressionDriver::getSphericalTensorField(
+tmp<Field<sphericalTensor>> CellZoneValueExpressionDriver::getSphericalTensorField(
     const word &name,bool oldTime
 )
 {

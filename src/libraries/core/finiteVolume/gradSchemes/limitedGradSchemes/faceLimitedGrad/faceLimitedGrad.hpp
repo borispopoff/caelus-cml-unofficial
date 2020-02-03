@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,7 +59,7 @@ class faceLimitedGrad
 {
     // Private Data
 
-        tmp<fv::gradScheme<Type> > basicGradScheme_;
+        tmp<fv::gradScheme<Type>> basicGradScheme_;
 
         //- Limiter coefficient
         const scalar k_;
@@ -74,13 +74,6 @@ class faceLimitedGrad
             const scalar minDelta,
             const scalar extrapolate
         ) const;
-
-
-        //- Disallow default bitwise copy construct
-        faceLimitedGrad(const faceLimitedGrad&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceLimitedGrad&);
 
 
 public:
@@ -100,12 +93,17 @@ public:
         {
             if (k_ < 0 || k_ > 1)
             {
-                FatalIOErrorInFunction(schemeData)
-                    << "coefficient = " << k_
+                FatalIOErrorInFunction
+                (
+                    schemeData
+                )   << "coefficient = " << k_
                     << " should be >= 0 and <= 1"
                     << exit(FatalIOError);
             }
         }
+
+        //- Disallow default bitwise copy construction
+        faceLimitedGrad(const faceLimitedGrad&) = delete;
 
 
     // Member Functions
@@ -124,6 +122,12 @@ public:
         {
             return grad(vsf);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const faceLimitedGrad&) = delete;
 };
 
 

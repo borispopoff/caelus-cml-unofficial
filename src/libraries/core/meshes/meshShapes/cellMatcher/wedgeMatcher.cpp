@@ -57,7 +57,7 @@ bool CML::wedgeMatcher::matchShape
     const bool checkOnly,
     const faceList& faces,
     const labelList& owner,
-    const label cellI,
+    const label celli,
     const labelList& myFaces
 )
 {
@@ -90,11 +90,11 @@ bool CML::wedgeMatcher::matchShape
     //
 
     label face0I = -1;
-    forAll(faceSize_, faceI)
+    forAll(faceSize_, facei)
     {
-        if (faceSize_[faceI] == 3)
+        if (faceSize_[facei] == 3)
         {
-            face0I = faceI;
+            face0I = facei;
             break;
         }
     }
@@ -121,7 +121,7 @@ bool CML::wedgeMatcher::matchShape
             (
                 face0vert0,
                 faceSize_[face0I],
-                !(owner[faceMap_[face0I]] == cellI)
+                !(owner[faceMap_[face0I]] == celli)
             );
         vertLabels_[1] = pointMap_[face0[face0vert1]];
         //Info<< "Wedge vertex 1: vertex " <<  face0[face0vert1]
@@ -171,7 +171,7 @@ bool CML::wedgeMatcher::matchShape
             (
                 face4vert0,
                 faceSize_[face4I],
-                !(owner[faceMap_[face4I]] == cellI)
+                !(owner[faceMap_[face4I]] == celli)
             );
         vertLabels_[3] = pointMap_[face4[face4vert3]];
         //Info<< "Wedge vertex 3: vertex " <<  face4[face4vert3]
@@ -219,7 +219,7 @@ bool CML::wedgeMatcher::matchShape
             (
                 face2vert3,
                 faceSize_[face2I],
-                (owner[faceMap_[face2I]] == cellI)
+                (owner[faceMap_[face2I]] == celli)
             );
         vertLabels_[6] = pointMap_[face2[face2vert6]];
 
@@ -247,7 +247,7 @@ bool CML::wedgeMatcher::matchShape
             (
                 face1vert6,
                 faceSize_[face1I],
-                !(owner[faceMap_[face1I]] == cellI)
+                !(owner[faceMap_[face1I]] == celli)
             );
         vertLabels_[5] = pointMap_[face1[face1vert5]];
 
@@ -257,7 +257,7 @@ bool CML::wedgeMatcher::matchShape
             (
                 face1vert5,
                 faceSize_[face1I],
-                !(owner[faceMap_[face1I]] == cellI)
+                !(owner[faceMap_[face1I]] == celli)
             );
         vertLabels_[4] = pointMap_[face1[face1vert4]];
 
@@ -267,7 +267,7 @@ bool CML::wedgeMatcher::matchShape
             (
                 face0vert1,
                 faceSize_[face0I],
-                !(owner[faceMap_[face0I]] == cellI)
+                !(owner[faceMap_[face0I]] == celli)
             );
         vertLabels_[2] = pointMap_[face0[face0vert2]];
         //Info<< "Wedge vertex 2: vertex " <<  face0[face0vert2]
@@ -363,15 +363,15 @@ bool CML::wedgeMatcher::faceSizeMatch
 }
 
 
-bool CML::wedgeMatcher::isA(const primitiveMesh& mesh, const label cellI)
+bool CML::wedgeMatcher::isA(const primitiveMesh& mesh, const label celli)
 {
     return matchShape
     (
         true,
         mesh.faces(),
         mesh.faceOwner(),
-        cellI,
-        mesh.cells()[cellI]
+        celli,
+        mesh.cells()[celli]
     );
 }
 
@@ -393,7 +393,7 @@ bool CML::wedgeMatcher::isA(const faceList& faces)
 bool CML::wedgeMatcher::matches
 (
     const primitiveMesh& mesh,
-    const label cellI,
+    const label celli,
     cellShape& shape
 )
 {
@@ -404,8 +404,8 @@ bool CML::wedgeMatcher::matches
             false,
             mesh.faces(),
             mesh.faceOwner(),
-            cellI,
-            mesh.cells()[cellI]
+            celli,
+            mesh.cells()[celli]
         )
     )
     {

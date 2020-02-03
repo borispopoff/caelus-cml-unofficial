@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------* \
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,7 +58,7 @@ CML::SRF::SRFModel::SRFModel
     origin_("origin", dimLength, lookup("origin")),
     axis_(lookup("axis")),
     SRFModelCoeffs_(subDict(type + "Coeffs")),
-    omega_(dimensionedVector("omega", dimless/dimTime, vector::zero))
+    omega_(dimensionedVector("omega", dimless/dimTime, Zero))
 {
     // Normalise the axis
     axis_ /= mag(axis_);
@@ -114,12 +114,12 @@ const CML::dimensionedVector& CML::SRF::SRFModel::omega() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh>>
 CML::SRF::SRFModel::Fcoriolis() const
 {
-    return tmp<DimensionedField<vector, volMesh> >
+    return tmp<volVectorField::Internal>
     (
-        new DimensionedField<vector, volMesh>
+        new volVectorField::Internal
         (
             IOobject
             (
@@ -135,12 +135,12 @@ CML::SRF::SRFModel::Fcoriolis() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh>>
 CML::SRF::SRFModel::Fcentrifugal() const
 {
-    return tmp<DimensionedField<vector, volMesh> >
+    return tmp<volVectorField::Internal>
     (
-        new DimensionedField<vector, volMesh>
+        new volVectorField::Internal
         (
             IOobject
             (
@@ -156,7 +156,7 @@ CML::SRF::SRFModel::Fcentrifugal() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh>>
 CML::SRF::SRFModel::Su() const
 {
     return Fcoriolis() + Fcentrifugal();
@@ -221,11 +221,14 @@ CML::tmp<CML::volVectorField> CML::SRF::SRFModel::Uabs() const
         )
     );
 
+    volVectorField& Uabs = tUabs.ref();
+
     // Add SRF contribution to internal field
-    tUabs().internalField() += Urel_.internalField();
+    Uabs.primitiveFieldRef() += Urel_.primitiveField();
 
     // Add Urel boundary contributions
-    const volVectorField::GeometricBoundaryField& bvf = Urel_.boundaryField();
+    volVectorField::Boundary& Uabsbf = Uabs.boundaryFieldRef();
+    const volVectorField::Boundary& bvf = Urel_.boundaryField();
 
     forAll(bvf, i)
     {
@@ -237,12 +240,12 @@ CML::tmp<CML::volVectorField> CML::SRF::SRFModel::Uabs() const
                 refCast<const SRFVelocityFvPatchVectorField>(bvf[i]);
             if (UrelPatch.relative())
             {
-                tUabs().boundaryField()[i] += Urel_.boundaryField()[i];
+                Uabsbf[i] += Urel_.boundaryField()[i];
             }
         }
         else
         {
-            tUabs().boundaryField()[i] += Urel_.boundaryField()[i];
+            Uabsbf[i] += Urel_.boundaryField()[i];
         }
     }
 

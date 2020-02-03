@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,7 +42,7 @@ SourceFiles
 namespace CML
 {
 
-typedef HashTable<List<specieElement> > speciesCompositionTable;
+typedef HashTable<List<specieElement>> speciesCompositionTable;
 
 
 /*---------------------------------------------------------------------------*\
@@ -54,10 +54,10 @@ class chemistryReader
 {
 
     //- Disallow default bitwise copy construct
-    chemistryReader(const chemistryReader&);
+    chemistryReader(const chemistryReader&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const chemistryReader&);
+    void operator=(const chemistryReader&) = delete;
 
 
 public:
@@ -122,7 +122,7 @@ public:
 
 
 template<class ThermoType>
-CML::autoPtr<CML::chemistryReader<ThermoType> >
+CML::autoPtr<CML::chemistryReader<ThermoType>>
 CML::chemistryReader<ThermoType>::New
 (
     const dictionary& thermoDict,
@@ -151,7 +151,7 @@ CML::chemistryReader<ThermoType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<chemistryReader<ThermoType> >
+    return autoPtr<chemistryReader<ThermoType>>
     (
         cstrIter()(thermoDict, species)
     );
@@ -165,7 +165,7 @@ CML::chemistryReader<ThermoType>::New
 
 #define makeChemistryReaderType(Reader, Thermo)                                \
     defineNamedTemplateTypeNameAndDebug(Reader<Thermo>, 0);                    \
-    chemistryReader<Thermo>::adddictionaryConstructorToTable<Reader<Thermo> >  \
+    chemistryReader<Thermo>::adddictionaryConstructorToTable<Reader<Thermo>>   \
         add##Reader##Thermo##ConstructorToTable_
 
 

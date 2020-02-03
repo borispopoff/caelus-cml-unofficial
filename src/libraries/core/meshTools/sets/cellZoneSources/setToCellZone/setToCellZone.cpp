@@ -121,11 +121,11 @@ void CML::setToCellZone::applyToSet
 
             forAllConstIter(cellSet, fSet, iter)
             {
-                label cellI = iter.key();
+                label celli = iter.key();
 
-                if (!fzSet.found(cellI))
+                if (!fzSet.found(celli))
                 {
-                    newAddressing.append(cellI);
+                    newAddressing.append(celli);
                 }
             }
 

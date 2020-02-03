@@ -52,9 +52,9 @@ void CML::ensightPartFaces::classify(const faceList& faces)
     label nQuad = 0;
     label nPoly = 0;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         if (f.size() == 3)
         {
@@ -81,21 +81,21 @@ void CML::ensightPartFaces::classify(const faceList& faces)
     nPoly = 0;
 
     // classify the shapes
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         if (f.size() == 3)
         {
-            triCells[nTri++] = faceI;
+            triCells[nTri++] = facei;
         }
         else if (f.size() == 4)
         {
-            quadCells[nQuad++] = faceI;
+            quadCells[nQuad++] = facei;
         }
         else
         {
-            polygonCells[nPoly++] = faceI;
+            polygonCells[nPoly++] = facei;
         }
     }
 

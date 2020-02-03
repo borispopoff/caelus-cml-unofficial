@@ -62,7 +62,7 @@ const labelList& triSurfacePartitioner::corners() const
     return corners_;
 }
 
-const List<DynList<label> >& triSurfacePartitioner::cornerPatches() const
+const List<DynList<label>>& triSurfacePartitioner::cornerPatches() const
 {
     return cornerPatches_;
 }

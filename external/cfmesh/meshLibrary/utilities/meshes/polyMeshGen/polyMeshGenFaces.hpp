@@ -260,31 +260,31 @@ inline const PtrList<boundaryPatch>& polyMeshGenFaces::boundaries() const
 inline void polyMeshGenFaces::addFaceToSubset
 (
     const label setID,
-    const label faceI
+    const label facei
 )
 {
     std::map<label, meshSubset>::iterator it = faceSubsets_.find(setID);
     if( it == faceSubsets_.end() )
         return;
     
-    it->second.addElement(faceI);
+    it->second.addElement(facei);
 }
 
 inline void polyMeshGenFaces::removeFaceFromSubset
 (
     const label setI,
-    const label faceI)
+    const label facei)
 {
     std::map<label, meshSubset>::iterator it = faceSubsets_.find(setI);
     if( it == faceSubsets_.end() )
         return;
     
-    it->second.removeElement(faceI);
+    it->second.removeElement(facei);
 }
 
 inline void polyMeshGenFaces::faceInSubsets
 (
-    const label faceI,
+    const label facei,
     DynList<label>& faceSubsets
 ) const
 {
@@ -298,7 +298,7 @@ inline void polyMeshGenFaces::faceInSubsets
         ++it
     )
     {
-        if( it->second.contains(faceI) )
+        if( it->second.contains(facei) )
             faceSubsets.append(it->first);
     }
 }

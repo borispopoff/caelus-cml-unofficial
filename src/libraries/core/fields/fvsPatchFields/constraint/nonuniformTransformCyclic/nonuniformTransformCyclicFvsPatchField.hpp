@@ -88,9 +88,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type> > clone() const
+        virtual tmp<fvsPatchField<Type>> clone() const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new nonuniformTransformCyclicFvsPatchField<Type>(*this)
             );
@@ -104,12 +104,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type> > clone
+        virtual tmp<fvsPatchField<Type>> clone
         (
             const DimensionedField<Type, surfaceMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new nonuniformTransformCyclicFvsPatchField<Type>(*this, iF)
             );
@@ -117,19 +117,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-nonuniformTransformCyclicFvsPatchField<Type>::
+CML::nonuniformTransformCyclicFvsPatchField<Type>::
 nonuniformTransformCyclicFvsPatchField
 (
     const fvPatch& p,
@@ -141,7 +135,7 @@ nonuniformTransformCyclicFvsPatchField
 
 
 template<class Type>
-nonuniformTransformCyclicFvsPatchField<Type>::
+CML::nonuniformTransformCyclicFvsPatchField<Type>::
 nonuniformTransformCyclicFvsPatchField
 (
     const nonuniformTransformCyclicFvsPatchField<Type>& ptf,
@@ -155,7 +149,7 @@ nonuniformTransformCyclicFvsPatchField
 
 
 template<class Type>
-nonuniformTransformCyclicFvsPatchField<Type>::
+CML::nonuniformTransformCyclicFvsPatchField<Type>::
 nonuniformTransformCyclicFvsPatchField
 (
     const fvPatch& p,
@@ -168,7 +162,7 @@ nonuniformTransformCyclicFvsPatchField
 
 
 template<class Type>
-nonuniformTransformCyclicFvsPatchField<Type>::
+CML::nonuniformTransformCyclicFvsPatchField<Type>::
 nonuniformTransformCyclicFvsPatchField
 (
     const nonuniformTransformCyclicFvsPatchField<Type>& ptf
@@ -179,7 +173,7 @@ nonuniformTransformCyclicFvsPatchField
 
 
 template<class Type>
-nonuniformTransformCyclicFvsPatchField<Type>::
+CML::nonuniformTransformCyclicFvsPatchField<Type>::
 nonuniformTransformCyclicFvsPatchField
 (
     const nonuniformTransformCyclicFvsPatchField<Type>& ptf,
@@ -190,13 +184,4 @@ nonuniformTransformCyclicFvsPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

@@ -213,16 +213,14 @@ bool CML::CloudSubModelBase<CloudType>::writeTime() const
     return
         active()
      && owner_.solution().transient()
-     && owner_.db().time().outputTime();
+     && owner_.db().time().writeTime();
 }
 
 
 template<class CloudType>
 void CML::CloudSubModelBase<CloudType>::write(Ostream& os) const
 {
-    os.writeKeyword("owner") << owner_.name() << token::END_STATEMENT
-        << nl;
-
+    writeEntry(os, "owner", owner_.name());
     subModelBase::write(os);
 }
 

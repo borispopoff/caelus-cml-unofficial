@@ -15,21 +15,21 @@ void maxFaceToCell
 {
     const cellList& cells = cellData.mesh().cells();
 
-    scalarField& cellFld = cellData.internalField();
+    scalarField& cellFld = cellData.primitiveFieldRef();
 
     cellFld = -GREAT;
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const cell& cFaces = cells[cellI];
+        const cell& cFaces = cells[celli];
         forAll(cFaces, i)
         {
-            cellFld[cellI] = max(cellFld[cellI], faceData[cFaces[i]]);
+            cellFld[celli] = max(cellFld[celli], faceData[cFaces[i]]);
         }
     }
 
-    forAll(cellData.boundaryField(), patchI)
+    forAll(cellData.boundaryField(), patchi)
     {
-        fvPatchScalarField& fvp = cellData.boundaryField()[patchI];
+        fvPatchScalarField& fvp = cellData.boundaryFieldRef()[patchi];
 
         fvp = fvp.patch().patchSlice(faceData);
     }
@@ -45,21 +45,21 @@ void minFaceToCell
 {
     const cellList& cells = cellData.mesh().cells();
 
-    scalarField& cellFld = cellData.internalField();
+    scalarField& cellFld = cellData.primitiveFieldRef();
 
     cellFld = GREAT;
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const cell& cFaces = cells[cellI];
+        const cell& cFaces = cells[celli];
         forAll(cFaces, i)
         {
-            cellFld[cellI] = min(cellFld[cellI], faceData[cFaces[i]]);
+            cellFld[celli] = min(cellFld[celli], faceData[cFaces[i]]);
         }
     }
 
-    forAll(cellData.boundaryField(), patchI)
+    forAll(cellData.boundaryField(), patchi)
     {
-        fvPatchScalarField& fvp = cellData.boundaryField()[patchI];
+        fvPatchScalarField& fvp = cellData.boundaryFieldRef()[patchi];
 
         fvp = fvp.patch().patchSlice(faceData);
     }
@@ -98,7 +98,7 @@ void CML::writeFields
         (
             radToDeg
             (
-                CML::acos(min(scalar(1.0), faceOrthogonality))
+                CML::acos(min(scalar(1), faceOrthogonality))
             )
         );
 
@@ -219,7 +219,7 @@ void CML::writeFields
             dimensionedScalar("cellDeterminant", dimless, 0),
             zeroGradientFvPatchScalarField::typeName
         );
-        cellDeterminant.internalField() =
+        cellDeterminant.primitiveFieldRef() =
             primitiveMeshTools::cellDeterminant
             (
                 mesh,
@@ -263,7 +263,7 @@ void CML::writeFields
             mesh.faceAreas(),
             mesh.cellVolumes(),
             cellOpenness,
-            aspectRatio.internalField()
+            aspectRatio.primitiveFieldRef()
         );
 
         aspectRatio.correctBoundaryConditions();
@@ -292,10 +292,10 @@ void CML::writeFields
             zeroGradientFvPatchScalarField::typeName
         );
         const cellShapeList& cellShapes = mesh.cellShapes();
-        forAll(cellShapes, cellI)
+        forAll(cellShapes, celli)
         {
-            const cellModel& model = cellShapes[cellI].model();
-            shape[cellI] = model.index();
+            const cellModel& model = cellShapes[celli].model();
+            shape[celli] = model.index();
         }
         shape.correctBoundaryConditions();
         Info<< "    Writing cell shape (hex, tet etc.) to " << shape.name()
@@ -320,7 +320,7 @@ void CML::writeFields
             dimensionedScalar("cellVolume", dimVolume, 0),
             calculatedFvPatchScalarField::typeName
         );
-        V.internalField() = mesh.V();
+        V.primitiveFieldRef() = mesh.V();
         Info<< "    Writing cell volume to " << V.name() << endl;
         V.write();
     }

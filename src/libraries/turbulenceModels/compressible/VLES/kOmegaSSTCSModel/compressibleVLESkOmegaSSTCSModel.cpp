@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressibleVLESkOmegaSSTCSModel.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -516,6 +517,7 @@ bool kOmegaSSTCSModelVLES::read()
 
 void kOmegaSSTCSModelVLES::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     VLESModel::correct();
 
     if (!turbulence_)
@@ -579,7 +581,7 @@ void kOmegaSSTCSModelVLES::correct()
 
     if (nD == 3)
     {
-        Lc.internalField() = Cx().internalField()*pow(mesh_.V(), 1.0/3.0);
+        Lc.primitiveFieldRef() = Cx().primitiveField()*pow(mesh_.V(), 1.0/3.0);
     }
     else if (nD == 2)
     {
@@ -595,7 +597,7 @@ void kOmegaSSTCSModelVLES::correct()
             }
         }
 
-        Lc.internalField() = Cx().internalField()*sqrt(mesh_.V()/thickness);
+        Lc.primitiveFieldRef() = Cx().primitiveField()*sqrt(mesh_.V()/thickness);
     }
     else
     {
@@ -619,7 +621,7 @@ void kOmegaSSTCSModelVLES::correct()
     volScalarField G(GName(), mut_*(gradU && dev(twoSymm(gradU()))));
 
     // Update omega and G at the wall
-    omega_.boundaryField().updateCoeffs();
+    omega_.boundaryFieldRef().updateCoeffs();
 
     volScalarField const CDkOmega
     (
@@ -647,12 +649,12 @@ void kOmegaSSTCSModelVLES::correct()
         surfaceScalarField const u(this->phi_/fvc::interpolate(rho_));
         volSymmTensorField const DSijDt(fvc::DDt(u,Sij));
         volScalarField const rTilda(  
-            (scalar(2.0)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
-        volScalarField const frotation ((scalar(1.0) + Cr1_)
-            *scalar(2.0)*rStar/(scalar(1.0) + rStar)*
-            (scalar(1.0)-Cr3_*atan(Cr2_*rTilda)) - Cr1_);
+            (scalar(2)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
+        volScalarField const frotation ((scalar(1) + Cr1_)
+            *scalar(2)*rStar/(scalar(1) + rStar)*
+            (scalar(1)-Cr3_*atan(Cr2_*rTilda)) - Cr1_);
         volScalarField const frTilda(max(min(frotation, frMax_), scalar(0))); 
-        fr1_ = max(scalar(0.0), scalar(1.0) + Cscale_*(frTilda - scalar(1.0)));
+        fr1_ = max(scalar(0), scalar(1) + Cscale_*(frTilda - scalar(1)));
     }
 
     volScalarField rhoGammaF1(rho_*gamma(F1));
@@ -668,13 +670,15 @@ void kOmegaSSTCSModelVLES::correct()
       - fvm::SuSp((2.0/3.0)*rhoGammaF1*divU, omega_)
       - fvm::Sp(beta(F1)*rho_*omega_, omega_)
       + 2*(1-F1)*rho_*alphaOmega2_*(fvc::grad(k_)&fvc::grad(omega_))/omega_
+      + fvOptions(rho_, omega_)
     );
 
-    omegaEqn().relax();
-
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().relax();
+    fvOptions.constrain(omegaEqn.ref());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
 
     solve(omegaEqn);
+    fvOptions.correct(omega_);
     bound(omega_, omegaMin_);
 
     // Turbulent kinetic energy equation
@@ -687,10 +691,13 @@ void kOmegaSSTCSModelVLES::correct()
         min(fr1_*G, c1_*rho_*betaStar_*k_*omega_)
       - fvm::SuSp(2.0/3.0*rho_*divU, k_)
       - fvm::Sp(betaStar_*rho_*omega_, k_)
+      + fvOptions(rho_, k_)
     );
 
-    kEqn().relax();
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
 
@@ -702,16 +709,16 @@ void kOmegaSSTCSModelVLES::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-(1-F1)*exp(-betaPrime_*Lc/Lk()))
+                    (scalar(1)-(1-F1)*exp(-betaPrime_*Lc/Lk()))
                     /
-                    (scalar(1.0)-(1-F1)*exp(-betaPrime_*Li()/Lk())),
+                    (scalar(1)-(1-F1)*exp(-betaPrime_*Li()/Lk())),
                     nPrime_
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
     else
@@ -720,16 +727,16 @@ void kOmegaSSTCSModelVLES::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-exp(-betaPrime_*Lc/Lk()))
+                    (scalar(1)-exp(-betaPrime_*Lc/Lk()))
                     /
-                    (scalar(1.0)-exp(-betaPrime_*Li()/Lk())),
+                    (scalar(1)-exp(-betaPrime_*Li()/Lk())),
                     nPrime_
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
 

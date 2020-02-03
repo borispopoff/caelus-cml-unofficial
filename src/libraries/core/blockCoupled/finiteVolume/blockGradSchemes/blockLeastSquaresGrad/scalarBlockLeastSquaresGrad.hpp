@@ -47,7 +47,7 @@ namespace fv
 {
 
 template<>
-tmp<BlockLduSystem<vector, vector> > blockLeastSquaresGrad<scalar>::fvmGrad
+tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
 (
     const GeometricField<scalar, fvPatchField, volMesh>&
 ) const;

@@ -44,7 +44,7 @@ void subsetVolFields
 (
     const fvMeshSubset& subsetter,
     const wordList& fieldNames,
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& subFields
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();
@@ -78,7 +78,7 @@ void subsetSurfaceFields
 (
     const fvMeshSubset& subsetter,
     const wordList& fieldNames,
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& subFields
+    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();
@@ -113,7 +113,7 @@ void subsetPointFields
     const fvMeshSubset& subsetter,
     const pointMesh& pMesh,
     const wordList& fieldNames,
-    PtrList<GeometricField<Type, pointPatchField, pointMesh> >& subFields
+    PtrList<GeometricField<Type, pointPatchField, pointMesh>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();
@@ -147,7 +147,7 @@ void subsetDimensionedFields
 (
     const fvMeshSubset& subsetter,
     const wordList& fieldNames,
-    PtrList<DimensionedField<Type, volMesh> >& subFields
+    PtrList<DimensionedField<Type, volMesh>>& subFields
 )
 {
     const fvMesh& baseMesh = subsetter.baseMesh();
@@ -240,15 +240,15 @@ int main(int argc, char *argv[])
     // Create mesh subsetting engine
     fvMeshSubset subsetter(mesh);
 
-    label patchI = -1;
+    label patchi = -1;
 
     if (args.optionFound("patch"))
     {
         const word patchName = args["patch"];
 
-        patchI = mesh.boundaryMesh().findPatchID(patchName);
+        patchi = mesh.boundaryMesh().findPatchID(patchName);
 
-        if (patchI == -1)
+        if (patchi == -1)
         {
             FatalErrorInFunction << "Illegal patch " << patchName
                 << nl << "Valid patches are " << mesh.boundaryMesh().names()
@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
 
     cellSet currentSet(mesh, setName);
 
-    subsetter.setLargeCellSubset(currentSet, patchI, true);
+    subsetter.setLargeCellSubset(currentSet, patchi, true);
 
     IOobjectList objects(mesh, runTime.timeName());
 
@@ -397,17 +397,17 @@ int main(int argc, char *argv[])
     // Read dimensioned fields and subset
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    typedef volScalarField::DimensionedInternalField dimScalType;
+    typedef volScalarField::Internal dimScalType;
     wordList scalarDimNames(objects.names(dimScalType::typeName));
     PtrList<dimScalType> scalarDimFlds(scalarDimNames.size());
     subsetDimensionedFields(subsetter, scalarDimNames, scalarDimFlds);
 
-    typedef volVectorField::DimensionedInternalField dimVecType;
+    typedef volVectorField::Internal dimVecType;
     wordList vectorDimNames(objects.names(dimVecType::typeName));
     PtrList<dimVecType> vectorDimFlds(vectorDimNames.size());
     subsetDimensionedFields(subsetter, vectorDimNames, vectorDimFlds);
 
-    typedef volSphericalTensorField::DimensionedInternalField dimSphereType;
+    typedef volSphericalTensorField::Internal dimSphereType;
     wordList sphericalTensorDimNames(objects.names(dimSphereType::typeName));
     PtrList<dimSphereType> sphericalTensorDimFlds
     (
@@ -420,12 +420,12 @@ int main(int argc, char *argv[])
         sphericalTensorDimFlds
     );
 
-    typedef volSymmTensorField::DimensionedInternalField dimSymmTensorType;
+    typedef volSymmTensorField::Internal dimSymmTensorType;
     wordList symmTensorDimNames(objects.names(dimSymmTensorType::typeName));
     PtrList<dimSymmTensorType> symmTensorDimFlds(symmTensorDimNames.size());
     subsetDimensionedFields(subsetter, symmTensorDimNames, symmTensorDimFlds);
 
-    typedef volTensorField::DimensionedInternalField dimTensorType;
+    typedef volTensorField::Internal dimTensorType;
     wordList tensorDimNames(objects.names(dimTensorType::typeName));
     PtrList<dimTensorType> tensorDimFlds(tensorDimNames.size());
     subsetDimensionedFields(subsetter, tensorDimNames, tensorDimFlds);

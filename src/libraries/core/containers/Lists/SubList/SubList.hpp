@@ -77,10 +77,14 @@ public:
         );
 
 
-    // Member operators
+
+    // Member Operators
 
         //- Allow cast to a const List<T>&
         inline operator const CML::List<T>&() const;
+
+        //- Assignment of all entries to the given sub-list
+        inline void operator=(const SubList<T>&);
 
         //- Assignment of all entries to the given list
         inline void operator=(const UList<T>&);
@@ -100,30 +104,30 @@ public:
 template<class T>
 inline CML::SubList<T>::SubList
 (
- const UList<T>& list,
- const label subSize
- )
+    const UList<T>& list,
+    const label subSize
+)
 :
 UList<T>(list.v_, subSize)
 {
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     list.checkSize(subSize);
-#   endif
+    #endif
 }
 
 
 template<class T>
 inline CML::SubList<T>::SubList
 (
- const UList<T>& list,
- const label subSize,
- const label startIndex
- )
+    const UList<T>& list,
+    const label subSize,
+    const label startIndex
+)
 :
-UList<T>(&(list.v_[startIndex]), subSize)
+    UList<T>(&(list.v_[startIndex]), subSize)
 {
-#   ifdef FULLDEBUG
-    
+    #ifdef FULLDEBUG
+
     // Artificially allow the start of a zero-sized subList to be
     // one past the end of the original list.
     if (subSize)
@@ -137,7 +141,7 @@ UList<T>(&(list.v_[startIndex]), subSize)
         // behind the last element is allowed
         list.checkSize(startIndex);
     }
-#   endif
+    #endif
 }
 
 
@@ -146,7 +150,7 @@ UList<T>(&(list.v_[startIndex]), subSize)
 template<class T>
 inline const CML::SubList<T>& CML::SubList<T>::null()
 {
-    return NullSingletonRef< SubList<T> >();
+    return NullSingletonRef<SubList<T>>();
 }
 
 
@@ -155,14 +159,21 @@ inline const CML::SubList<T>& CML::SubList<T>::null()
 template<class T>
 inline CML::SubList<T>::operator const CML::List<T>&() const
 {
-    return *reinterpret_cast< const List<T>* >(this);
+    return *reinterpret_cast<const List<T>* >(this);
+}
+
+
+template<class T>
+inline void CML::SubList<T>::operator=(const SubList<T>& sl)
+{
+    UList<T>::deepCopy(sl);
 }
 
 
 template<class T>
 inline void CML::SubList<T>::operator=(const UList<T>& l)
 {
-    UList<T>::assign(l);
+    UList<T>::deepCopy(l);
 }
 
 
@@ -171,9 +182,6 @@ inline void CML::SubList<T>::operator=(const T& t)
 {
     UList<T>::operator=(t);
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

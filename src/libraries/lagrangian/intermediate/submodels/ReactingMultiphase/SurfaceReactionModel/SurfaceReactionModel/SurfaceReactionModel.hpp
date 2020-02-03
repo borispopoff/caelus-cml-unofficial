@@ -97,7 +97,7 @@ public:
         SurfaceReactionModel(const SurfaceReactionModel<CloudType>& srm);
 
         //- Construct and return a clone
-        virtual autoPtr<SurfaceReactionModel<CloudType> > clone() const = 0;
+        virtual autoPtr<SurfaceReactionModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -105,7 +105,7 @@ public:
 
 
     //- Selector
-    static autoPtr<SurfaceReactionModel<CloudType> > New
+    static autoPtr<SurfaceReactionModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& cloud
@@ -179,7 +179,7 @@ public:
                                                                                \
     SurfaceReactionModel<reactingMultiphaseCloudType>::                        \
         adddictionaryConstructorToTable                                        \
-        <SS<reactingMultiphaseCloudType> >                                     \
+        <SS<reactingMultiphaseCloudType>>                                      \
         add##SS##CloudType##reactingMultiphaseCloudType##ConstructorToTable_;
 
 
@@ -258,7 +258,7 @@ void CML::SurfaceReactionModel<CloudType>::info(Ostream& os)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::SurfaceReactionModel<CloudType> >
+CML::autoPtr<CML::SurfaceReactionModel<CloudType>>
 CML::SurfaceReactionModel<CloudType>::New
 (
     const dictionary& dict,
@@ -282,7 +282,7 @@ CML::SurfaceReactionModel<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<SurfaceReactionModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<SurfaceReactionModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

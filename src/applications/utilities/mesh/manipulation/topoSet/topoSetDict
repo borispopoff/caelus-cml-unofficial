@@ -82,7 +82,7 @@ FoamFile
 //    {
 //        set p0;
 //        option any;         // cell with any point in pointSet
-//        //option all;       // cell with all points in pointSet
+//        //option edge;      // cell with an edge with both points in pointSet
 //    }
 //
 //    // Select based on cellShape
@@ -92,11 +92,12 @@ FoamFile
 //        type hex;           // hex/wedge/prism/pyr/tet/tetWedge/splitHex
 //    }
 //
-//    // Cells with cell centre within box
+//    // Cells with cell centre within box ('box') or multiple boxes ('boxes')
 //    source boxToCell;
 //    sourceInfo
 //    {
 //       box   (0 0 0) (1 1 1);
+//       //boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
 //    }
 //
 //    // Cells with cell centre within box
@@ -139,6 +140,9 @@ FoamFile
 //    sourceInfo
 //    {
 //        file            "www.avl.com-geometry.stl";
+//        useSurfaceOrientation false;  // use closed surface inside/outside
+//                                      // test (ignores includeCut,
+//                                      // outsidePoints)
 //        outsidePoints   ((-99 -99 -59));    // definition of outside
 //        includeCut      false;              // cells cut by surface
 //        includeInside   false;              // cells not on outside of surf
@@ -163,18 +167,19 @@ FoamFile
 //    source regionToCell;
 //    sourceInfo
 //    {
-//        set         c0;         // name of cellSet giving mesh subset
-//        insidePoint (1 2 3);    // point inside region to select
+//        set         c0;         // optional name of cellSet giving mesh subset
+//        insidePoints ((1 2 3)); // points inside region to select
+//        nErode      0;          // optional number of layers to erode
+//                                // selection
 //    }
 //
-//    // Cells underneath plane such that volume is reached. Can be used
-//    // in setFields.
+//    // Cells underneath plane such that volume is reached. E.g. for use
+//    // in setFields to set the level given a wanted volume.
 //    source targetVolumeToCell;
 //    sourceInfo
 //    {
 //        volume  2e-05;
-//        normal  (1 1 1);
-//        //set     mask;       // optional cellSet to delimit search
+//        normal  (0 1 0);          // usually in direction of gravity
 //    }
 //
 //
@@ -205,6 +210,7 @@ FoamFile
 //        set p0;
 //        option any;         // Faces using any point in pointSet
 //        //option all        // Faces with all points in pointSet
+//        //option edge       // Faces with two consecutive points in pointSet
 //    }
 //
 //    //  Select by explicitly providing face labels
@@ -218,7 +224,14 @@ FoamFile
 //    source patchToFace;
 //    sourceInfo
 //    {
-//        name ".*Wall";      // Name of patch, regular expressions allowed
+//        name ".*Wall";      // Name of patch or patch group,
+//                            // (regular expressions allowed)
+//    }
+//
+//    // All boundary faces
+//    source boundaryToFace;
+//    sourceInfo
+//    {
 //    }
 //
 //    // All faces of faceZone
@@ -228,11 +241,12 @@ FoamFile
 //        name ".*Zone1";     // Name of faceZone, regular expressions allowed
 //    }
 //
-//    // Faces with face centre within box
+//    // Faces with face centre within box ('box') or multiple boxes ('boxes')
 //    source boxToFace;
 //    sourceInfo
 //    {
 //        box  (0 0 0) (1 1 1);
+//       //boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
 //    }
 //
 //    // Faces with normal to within certain angle aligned with vector.
@@ -300,11 +314,12 @@ FoamFile
 //       points ((0 0 0) (1 1 1));
 //    }
 //
-//    // Points with coordinate within box
+//    // Points with coordinate within box ('box') or multiple boxes ('boxes')
 //    source boxToPoint;
 //    sourceInfo
 //    {
 //       box   (0 0 0) (1 1 1);
+//       //boxes   ((0 0 0) (1 1 1) (10 10 10)(11 11 11));
 //    }
 //
 //    // Select based on surface
@@ -324,8 +339,12 @@ FoamFile
 //
 // cellZoneSet
 // ~~~~~~~~~~~
-// (mirrors operations on a cellSet into a cellZone)
+// Manipulates a cellZone (as well as a cellSet)
+// Takes any cellSet source. The difference with a cellSet is
+// - reads the cells from the cellZone, not the cellSet
+// - write to the cellZone as well as the cellSet
 //
+// For backwards compatibility:
 //    // Select based on cellSet
 //    source setToCellZone;
 //    sourceInfo
@@ -337,6 +356,9 @@ FoamFile
 //
 // faceZoneSet
 // ~~~~~~~~~~~
+// Manipulates a faceZone (as well as a faceSet). It can only be used
+// with two special sources:
+//
 //    // Select based on faceSet without orientation
 //    source setToFaceZone;
 //    sourceInfo
@@ -350,8 +372,42 @@ FoamFile
 //    {
 //        faceSet f0;       // name of faceSet
 //        cellSet c0;       // name of cellSet of slave side
+//        flip    false;    // optional: flip the faceZone (so now the cellSet
+//                          //           is the master side)
 //    }
 //
+//    // Select based on surface. Orientation from normals on surface
+//    {
+//        name    fz0;
+//        type    faceZoneSet;
+//        action  new;
+//        source  searchableSurfaceToFaceZone;
+//        sourceInfo
+//        {
+//            surface searchableSphere;
+//            centre  (0.05 0.05 0.005);
+//            radius  0.025;
+//            //name  sphere.stl; // Optional name if surface triSurfaceMesh
+//        }
+//    }
+//
+//
+//
+// pointZoneSet
+// ~~~~~~~~~~~~
+// Manipulates a pointZone (as well as a pointSet)
+// Takes any pointSet source. The difference with a pointSet is
+// - reads the cells from the pointZone, not the pointSet
+// - write to the pointZone as well as the pointSet
+//
+// For backwards compatibility:
+//    // Select based on pointSet
+//    source setToPointZone;
+//    sourceInfo
+//    {
+//        set p0;           // name of pointSet
+//    }
+
 
 actions
 (
@@ -363,7 +419,7 @@ actions
         name    c0;
         type    cellSet;
         action  new;
-        source labelToCell;
+        source  labelToCell;
         sourceInfo
         {
             value (12 13 56);
@@ -410,6 +466,19 @@ actions
         {
             set     c1;
             option  all;
+        }
+    }
+
+
+    // Example: create cellZone from geometric region
+    {
+        name    c0;
+        type    cellZoneSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box   (0.04 0 0)(0.06 100 100);
         }
     }
 );

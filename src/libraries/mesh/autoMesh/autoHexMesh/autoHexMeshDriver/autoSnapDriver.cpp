@@ -183,7 +183,7 @@ CML::pointField CML::autoSnapDriver::smoothPatchDisplacement
     // Get average position of boundary face centres
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    vectorField avgBoundary(pointFaces.size(), vector::zero);
+    vectorField avgBoundary(pointFaces.size(), Zero);
     labelList nBoundary(pointFaces.size(), 0);
 
     forAll(pointFaces, patchPointi)
@@ -231,7 +231,7 @@ CML::pointField CML::autoSnapDriver::smoothPatchDisplacement
     vectorField avgInternal;
     labelList nInternal;
     {
-        vectorField globalSum(mesh.nPoints(), vector::zero);
+        vectorField globalSum(mesh.nPoints(), Zero);
         labelList globalNum(mesh.nPoints(), 0);
 
         // Note: no use of pointFaces
@@ -345,7 +345,7 @@ CML::pointField CML::autoSnapDriver::smoothPatchDisplacement
 
 
     // Displacement to calculate.
-    pointField patchDisp(meshPoints.size(), vector::zero);
+    pointField patchDisp(meshPoints.size(), Zero);
 
     forAll(pointFaces, i)
     {
@@ -447,7 +447,7 @@ CML::tmp<CML::scalarField> CML::autoSnapDriver::edgePatchDist
 
     // Copy edge values into scalarField
     tmp<scalarField> tedgeDist(new scalarField(mesh.nEdges()));
-    scalarField& edgeDist = tedgeDist();
+    scalarField& edgeDist = tedgeDist.ref();
 
     forAll(allEdgeInfo, edgeI)
     {
@@ -468,7 +468,7 @@ CML::tmp<CML::scalarField> CML::autoSnapDriver::edgePatchDist
     //            IOobject::AUTO_WRITE
     //        ),
     //        pMesh,
-    //        dimensionedScalar("pointDist", dimless, 0.0)
+    //        dimensionedScalar("pointDist", dimless, 0)
     //    );
     //
     //    forAll(allEdgeInfo, edgeI)
@@ -797,7 +797,7 @@ CML::vectorField CML::autoSnapDriver::calcNearestSurface
     const fvMesh& mesh = meshRefiner_.mesh();
 
     // Displacement per patch point
-    vectorField patchDisp(localPoints.size(), vector::zero);
+    vectorField patchDisp(localPoints.size(), Zero);
 
     if (returnReduce(localPoints.size(), sumOp<label>()) > 0)
     {
@@ -826,15 +826,15 @@ CML::vectorField CML::autoSnapDriver::calcNearestSurface
                 hitInfo
             );
 
-            forAll(hitInfo, pointI)
+            forAll(hitInfo, pointi)
             {
-                if (hitInfo[pointI].hit())
+                if (hitInfo[pointi].hit())
                 {
-                    patchDisp[pointI] =
-                        hitInfo[pointI].hitPoint()
-                      - localPoints[pointI];
+                    patchDisp[pointi] =
+                        hitInfo[pointi].hitPoint()
+                      - localPoints[pointi];
 
-                    snapSurf[pointI] = hitSurface[pointI];
+                    snapSurf[pointi] = hitSurface[pointi];
                 }
             }
         }
@@ -1119,11 +1119,11 @@ CML::autoPtr<CML::mapPolyMesh> CML::autoSnapDriver::repatchToSurface
     PackedBoolList isZonedFace(mesh.nFaces());
     {
         // 1. Preserve faces in preserveFaces list
-        forAll(preserveFaces, faceI)
+        forAll(preserveFaces, facei)
         {
-            if (preserveFaces[faceI] != -1)
+            if (preserveFaces[facei] != -1)
             {
-                isZonedFace.set(faceI, 1);
+                isZonedFace.set(facei, 1);
             }
         }
 
@@ -1315,8 +1315,8 @@ void CML::autoSnapDriver::doSnap
                     const faceZone& fZone = fZones[zoneI];
                     forAll(fZone, i)
                     {
-                        label faceI = fZone[i];
-                        filterFace[faceI] = zoneI;
+                        label facei = fZone[i];
+                        filterFace[facei] = zoneI;
                         nFilterFaces++;
                     }
 
@@ -1324,8 +1324,8 @@ void CML::autoSnapDriver::doSnap
                     {
                         forAll(fZone, i)
                         {
-                            label faceI = fZone[i];
-                            const face& f = mesh.faces()[faceI];
+                            label facei = fZone[i];
+                            const face& f = mesh.faces()[facei];
                             forAll(f, fp)
                             {
                                 if (!duplicatePoint[f[fp]])
@@ -1354,11 +1354,11 @@ void CML::autoSnapDriver::doSnap
             // Collect all points
             labelList candidatePoints(nDuplicatePoints);
             nDuplicatePoints = 0;
-            forAll(duplicatePoint, pointI)
+            forAll(duplicatePoint, pointi)
             {
-                if (duplicatePoint[pointI])
+                if (duplicatePoint[pointi])
                 {
-                    candidatePoints[nDuplicatePoints++] = pointI;
+                    candidatePoints[nDuplicatePoints++] = pointi;
                 }
             }
 
@@ -1591,11 +1591,11 @@ void CML::autoSnapDriver::doSnap
 
         if (mapPtr.valid())
         {
-            forAll(origBaffles, faceI)
+            forAll(origBaffles, facei)
             {
-                if (origBaffles[faceI] != -1)
+                if (origBaffles[facei] != -1)
                 {
-                    origBaffles[faceI] = mapPtr->reverseFaceMap()[faceI];
+                    origBaffles[facei] = mapPtr->reverseFaceMap()[facei];
                 }
             }
         }

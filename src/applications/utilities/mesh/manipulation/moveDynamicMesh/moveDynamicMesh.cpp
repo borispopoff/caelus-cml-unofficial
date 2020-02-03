@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -30,79 +30,12 @@ Description
 #include "dynamicFvMesh.hpp"
 #include "vtkSurfaceWriter.hpp"
 #include "cyclicAMIPolyPatch.hpp"
+#include "PatchTools.hpp"
+#include "checkGeometry.hpp"
 
 using namespace CML;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-// Dump patch + weights to vtk file
-void writeWeights
-(
-    const scalarField& wghtSum,
-    const primitivePatch& patch,
-    const fileName& folder,
-    const fileName& prefix,
-    const word& timeName
-)
-{
-    vtkSurfaceWriter writer;
-
-    writer.write
-    (
-        folder,
-        prefix + "_proc" + CML::name(Pstream::myProcNo()) + "_" + timeName,
-        patch.localPoints(),
-        patch.localFaces(),
-        "weightsSum",
-        wghtSum,
-        false
-    );
-}
-
-
-void writeWeights(const polyMesh& mesh)
-{
-    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
-
-    const word tmName(mesh.time().timeName());
-
-    forAll(pbm, patchI)
-    {
-        if (isA<cyclicAMIPolyPatch>(pbm[patchI]))
-        {
-            const cyclicAMIPolyPatch& cpp =
-                refCast<const cyclicAMIPolyPatch>(pbm[patchI]);
-
-            if (cpp.owner())
-            {
-                Info<< "Calculating AMI weights between owner patch: "
-                    << cpp.name() << " and neighbour patch: "
-                    << cpp.neighbPatch().name() << endl;
-
-                const AMIPatchToPatchInterpolation& ami =
-                    cpp.AMI();
-                writeWeights
-                (
-                    ami.tgtWeightsSum(),
-                    cpp.neighbPatch(),
-                    "output",
-                    "tgt",
-                    tmName
-                );
-                writeWeights
-                (
-                    ami.srcWeightsSum(),
-                    cpp,
-                    "output",
-                    "src",
-                    tmName
-                );
-            }
-        }
-    }
-}
-
-
 
 int main(int argc, char *argv[])
 {
@@ -133,7 +66,7 @@ int main(int argc, char *argv[])
 
         if (checkAMI)
         {
-            writeWeights(mesh);
+            writeAMIWeightsSums(mesh);
         }
 
         runTime.write();

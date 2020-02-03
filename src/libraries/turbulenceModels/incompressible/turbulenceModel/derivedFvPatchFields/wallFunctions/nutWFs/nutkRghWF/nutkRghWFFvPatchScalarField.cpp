@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -73,32 +73,32 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
     const scalar Cmu25 = pow025(Cmu_);
 
     tmp<scalarField> tnutw(new scalarField(*this));
-    scalarField& nutw = tnutw();
+    scalarField& nutw = tnutw.ref();
 
-    forAll(nutw, faceI)
+    forAll(nutw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label celli = patch().faceCells()[facei];
 
-        scalar uStar = Cmu25*sqrt(k[faceCellI]);
-        scalar yPlus = uStar*y[faceI]/nuw[faceI];
-        scalar KsPlus = uStar*Ks_[faceI]/nuw[faceI];
+        scalar uStar = Cmu25*sqrt(k[celli]);
+        scalar yPlus = uStar*y[facei]/nuw[facei];
+        scalar KsPlus = uStar*Ks_[facei]/nuw[facei];
 
         scalar Edash = E_;
         if (KsPlus > 2.25)
         {
-            Edash /= fnRough(KsPlus, Cs_[faceI]);
+            Edash /= fnRough(KsPlus, Cs_[facei]);
         }
 
-        scalar limitingNutw = max(nutw[faceI], nuw[faceI]);
+        scalar limitingNutw = max(nutw[facei], nuw[facei]);
 
         // To avoid oscillations limit the change in the wall viscosity
         // which is particularly important if it temporarily becomes zero
-        nutw[faceI] =
+        nutw[facei] =
             max
             (
                 min
                 (
-                    nuw[faceI]
+                    nuw[facei]
                    *(yPlus*kappa_/log(max(Edash*yPlus, 1+1e-4)) - 1),
                     2*limitingNutw
                 ), 0.5*limitingNutw
@@ -109,7 +109,7 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
             Info<< "yPlus = " << yPlus
                 << ", KsPlus = " << KsPlus
                 << ", Edash = " << Edash
-                << ", nutw = " << nutw[faceI]
+                << ", nutw = " << nutw[facei]
                 << endl;
         }
     }
@@ -215,9 +215,9 @@ void nutkRoughWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    Cs_.writeEntry("Cs", os);
-    Ks_.writeEntry("Ks", os);
-    writeEntry("value", os);
+    writeEntry(os, "Cs", Cs_);
+    writeEntry(os, "Ks", Ks_);
+    writeEntry(os, "value", *this);
 }
 
 

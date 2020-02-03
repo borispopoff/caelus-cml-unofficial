@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,7 +68,7 @@ CML::cyclicGAMGInterface::cyclicGAMGInterface
     );
 
     // From coarse cell pair to coarse face
-    HashTable<label, labelPair, labelPair::Hash<> > cellsToCoarseFace
+    HashTable<label, labelPair, labelPair::Hash<>> cellsToCoarseFace
     (
         2*localRestrictAddressing.size()
     );
@@ -98,7 +98,7 @@ CML::cyclicGAMGInterface::cyclicGAMGInterface
             );
         }
 
-        HashTable<label, labelPair, labelPair::Hash<> >::const_iterator fnd =
+        HashTable<label, labelPair, labelPair::Hash<>>::const_iterator fnd =
             cellsToCoarseFace.find(cellPair);
 
         if (fnd == cellsToCoarseFace.end())
@@ -142,7 +142,7 @@ CML::tmp<CML::labelField> CML::cyclicGAMGInterface::internalFieldTransfer
     const labelUList& nbrFaceCells = nbr.faceCells();
 
     tmp<labelField> tpnf(new labelField(size()));
-    labelField& pnf = tpnf();
+    labelField& pnf = tpnf.ref();
 
     forAll(pnf, facei)
     {

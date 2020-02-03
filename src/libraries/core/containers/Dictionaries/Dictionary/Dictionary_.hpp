@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,8 +58,11 @@ public:
         //- Construct given initial table size
         Dictionary(const label size = 128);
 
-        //- Copy construct
+        //- Copy constructor
         Dictionary(const Dictionary&);
+
+        //- Move constructor
+        Dictionary(Dictionary&&);
 
 
     // Member functions
@@ -87,6 +90,13 @@ template<class T>
 CML::Dictionary<T>::Dictionary(const Dictionary& dict)
 :
     DictionaryBase<IDLList<T>, T>(dict)
+{}
+
+
+template<class T>
+CML::Dictionary<T>::Dictionary(Dictionary&& dict)
+:
+    DictionaryBase<IDLList<T>, T>(move(dict))
 {}
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,14 +47,6 @@ class processorCyclicGAMGInterface
 :
     public processorGAMGInterface
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        processorCyclicGAMGInterface(const processorCyclicGAMGInterface&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorCyclicGAMGInterface&);
-
 
 public:
 
@@ -74,11 +66,22 @@ public:
             const labelField& neighbourRestrictAddressing
         );
 
+        //- Disallow default bitwise copy construct
+        processorCyclicGAMGInterface
+        (
+            const processorCyclicGAMGInterface&
+        ) = delete;
+
 
     // Destructor
 
         virtual ~processorCyclicGAMGInterface();
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorCyclicGAMGInterface&) = delete;
 };
 
 

@@ -26,7 +26,7 @@ License
 #include "OSspecific.hpp"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
-
+/*
 // File-scope function
 template<class T>
 inline static void writeEntry
@@ -36,7 +36,7 @@ inline static void writeEntry
 {
     os.writeKeyword(key) << value << CML::token::END_STATEMENT << '\n';
 }
-
+*/
 
 // File-scope function
 inline static void printEnv
@@ -49,7 +49,7 @@ inline static void printEnv
     const std::string value = CML::getEnv(envName);
     if (!value.empty())
     {
-        writeEntry(os, key, value);
+        writeEntry(os, key, CML::string(value));
     }
 }
 
@@ -77,8 +77,8 @@ CML::Ostream& CML::profilingSysInfo::write
     writeEntry(os, "date", clock::dateTime());
 
     // Compile-time information
-    writeEntry(os, "version",    std::string(CAELUSversion));
-    writeEntry(os, "build",      std::string(CAELUSbuild));
+    writeEntry(os, "version",    CML::string(CAELUSversion));
+    writeEntry(os, "build",      CML::string(CAELUSbuild));
 
     printEnv(os, "arch",           "WHICH_OS");
     printEnv(os, "Compiler",       "COMPILER");

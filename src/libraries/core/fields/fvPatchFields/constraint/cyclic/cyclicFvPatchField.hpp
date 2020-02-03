@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,7 +22,22 @@ Class
     CML::cyclicFvPatchField
 
 Description
-    CML::cyclicFvPatchField
+    This boundary condition enforces a cyclic condition between a pair of
+    boundaries.
+
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            cyclic;
+    }
+    \endverbatim
+
+Note
+    The patches must be topologically similar, i.e. if the owner patch is
+    transformed to the neighbour patch, the patches should be identical (or
+    very similar).
 
 
 \*---------------------------------------------------------------------------*/
@@ -46,23 +61,13 @@ namespace CML
 template<class Type>
 class cyclicFvPatchField
 :
-    virtual public cyclicLduInterfaceField,
-    public coupledFvPatchField<Type>
+    public coupledFvPatchField<Type>,
+    public cyclicLduInterfaceField
 {
     // Private data
 
         //- Local reference cast into the cyclic patch
         const cyclicFvPatch& cyclicPatch_;
-
-
-    // Private Member Functions
-
-        //- Return neighbour side field given internal fields
-        template<class Type2>
-        tmp<Field<Type2> > neighbourSideField
-        (
-            const Field<Type2>&
-        ) const;
 
 
 public:
@@ -104,9 +109,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicFvPatchField<Type>(*this)
             );
@@ -120,12 +125,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicFvPatchField<Type>(*this, iF)
             );
@@ -146,7 +151,7 @@ public:
         // Evaluation functions
 
             //- Return neighbour coupled internal cell data
-            tmp<Field<Type> > patchNeighbourField() const;
+            tmp<Field<Type>> patchNeighbourField() const;
 
             //- Return reference to neighbour patchField
             const cyclicFvPatchField<Type>& neighbourPatchField() const;
@@ -212,23 +217,16 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "transformField.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-cyclicFvPatchField<Type>::cyclicFvPatchField
+CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -240,7 +238,35 @@ cyclicFvPatchField<Type>::cyclicFvPatchField
 
 
 template<class Type>
-cyclicFvPatchField<Type>::cyclicFvPatchField
+CML::cyclicFvPatchField<Type>::cyclicFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    coupledFvPatchField<Type>(p, iF, dict, false),
+    cyclicPatch_(refCast<const cyclicFvPatch>(p))
+{
+    if (!isA<cyclicFvPatch>(p))
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "    patch type '" << p.type()
+            << "' not constraint type '" << typeName << "'"
+            << "\n    for patch " << p.name()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
+            << exit(FatalIOError);
+    }
+
+    this->evaluate(Pstream::commsTypes::blocking);
+}
+
+
+template<class Type>
+CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 (
     const cyclicFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -249,6 +275,7 @@ cyclicFvPatchField<Type>::cyclicFvPatchField
 )
 :
     coupledFvPatchField<Type>(ptf, p, iF, mapper),
+    cyclicLduInterfaceField(),
     cyclicPatch_(refCast<const cyclicFvPatch>(p))
 {
     if (!isA<cyclicFvPatch>(this->patch()))
@@ -257,59 +284,34 @@ cyclicFvPatchField<Type>::cyclicFvPatchField
             << "    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
 
 
 template<class Type>
-cyclicFvPatchField<Type>::cyclicFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    coupledFvPatchField<Type>(p, iF, dict),
-    cyclicPatch_(refCast<const cyclicFvPatch>(p))
-{
-    if (!isA<cyclicFvPatch>(p))
-    {
-        FatalIOErrorInFunction(dict)
-            << "    patch type '" << p.type()
-            << "' not constraint type '" << typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
-            << exit(FatalIOError);
-    }
-
-    this->evaluate(Pstream::blocking);
-}
-
-
-template<class Type>
-cyclicFvPatchField<Type>::cyclicFvPatchField
+CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 (
     const cyclicFvPatchField<Type>& ptf
 )
 :
-    cyclicLduInterfaceField(),
     coupledFvPatchField<Type>(ptf),
+    cyclicLduInterfaceField(),
     cyclicPatch_(ptf.cyclicPatch_)
 {}
 
 
 template<class Type>
-cyclicFvPatchField<Type>::cyclicFvPatchField
+CML::cyclicFvPatchField<Type>::cyclicFvPatchField
 (
     const cyclicFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
 )
 :
     coupledFvPatchField<Type>(ptf, iF),
+    cyclicLduInterfaceField(),
     cyclicPatch_(ptf.cyclicPatch_)
 {}
 
@@ -317,14 +319,15 @@ cyclicFvPatchField<Type>::cyclicFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > cyclicFvPatchField<Type>::patchNeighbourField() const
+CML::tmp<CML::Field<Type>>
+CML::cyclicFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
     const labelUList& nbrFaceCells =
         cyclicPatch().cyclicPatch().neighbPatch().faceCells();
 
-    tmp<Field<Type> > tpnf(new Field<Type>(this->size()));
-    Field<Type>& pnf = tpnf();
+    tmp<Field<Type>> tpnf(new Field<Type>(this->size()));
+    Field<Type>& pnf = tpnf.ref();
 
 
     if (doTransform())
@@ -350,8 +353,8 @@ tmp<Field<Type> > cyclicFvPatchField<Type>::patchNeighbourField() const
 
 
 template<class Type>
-const cyclicFvPatchField<Type>& cyclicFvPatchField<Type>::neighbourPatchField()
-const
+const CML::cyclicFvPatchField<Type>& 
+CML::cyclicFvPatchField<Type>::neighbourPatchField() const
 {
     const GeometricField<Type, fvPatchField, volMesh>& fld =
     static_cast<const GeometricField<Type, fvPatchField, volMesh>&>
@@ -359,7 +362,7 @@ const
         this->internalField()
     );
 
-    return refCast<const cyclicFvPatchField<Type> >
+    return refCast<const cyclicFvPatchField<Type>>
     (
         fld.boundaryField()[this->cyclicPatch().neighbPatchID()]
     );
@@ -367,7 +370,7 @@ const
 
 
 template<class Type>
-void cyclicFvPatchField<Type>::updateInterfaceMatrix
+void CML::cyclicFvPatchField<Type>::updateInterfaceMatrix
 (
     const scalarField& psiInternal,
     scalarField& result,
@@ -401,18 +404,10 @@ void cyclicFvPatchField<Type>::updateInterfaceMatrix
 
 
 template<class Type>
-void cyclicFvPatchField<Type>::write(Ostream& os) const
+void CML::cyclicFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

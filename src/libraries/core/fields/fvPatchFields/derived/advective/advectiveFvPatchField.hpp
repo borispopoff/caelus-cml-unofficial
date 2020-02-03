@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -147,9 +147,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new advectiveFvPatchField<Type>(*this)
             );
@@ -163,12 +163,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new advectiveFvPatchField<Type>(*this, iF)
             );
@@ -219,11 +219,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "addToRunTimeSelectionTable.hpp"
 #include "fvPatchFieldMapper.hpp"
@@ -246,11 +243,11 @@ CML::advectiveFvPatchField<Type>::advectiveFvPatchField
     mixedFvPatchField<Type>(p, iF),
     phiName_("phi"),
     rhoName_("rho"),
-    fieldInf_(pTraits<Type>::zero),
+    fieldInf_(Zero),
     lInf_(-GREAT)
 {
-    this->refValue() = pTraits<Type>::zero;
-    this->refGrad() = pTraits<Type>::zero;
+    this->refValue() = Zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
 
@@ -283,7 +280,7 @@ CML::advectiveFvPatchField<Type>::advectiveFvPatchField
     mixedFvPatchField<Type>(p, iF),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    fieldInf_(pTraits<Type>::zero),
+    fieldInf_(Zero),
     lInf_(-GREAT)
 {
     if (dict.found("value"))
@@ -299,7 +296,7 @@ CML::advectiveFvPatchField<Type>::advectiveFvPatchField
     }
 
     this->refValue() = *this;
-    this->refGrad() = pTraits<Type>::zero;
+    this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 
     if (dict.readIfPresent("lInf", lInf_))
@@ -311,8 +308,8 @@ CML::advectiveFvPatchField<Type>::advectiveFvPatchField
             FatalIOErrorInFunction(dict)
                 << "unphysical lInf specified (lInf < 0)\n"
                 << "    on patch " << this->patch().name()
-                << " of field " << this->dimensionedInternalField().name()
-                << " in file " << this->dimensionedInternalField().objectPath()
+                << " of field " << this->internalField().name()
+                << " in file " << this->internalField().objectPath()
                 << exit(FatalIOError);
         }
     }
@@ -389,19 +386,19 @@ void CML::advectiveFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const fvMesh& mesh = this->dimensionedInternalField().mesh();
+    const fvMesh& mesh = this->internalField().mesh();
 
     word ddtScheme
     (
-        mesh.ddtScheme(this->dimensionedInternalField().name())
+        mesh.ddtScheme(this->internalField().name())
     );
     scalar deltaT = this->db().time().deltaTValue();
 
     const GeometricField<Type, fvPatchField, volMesh>& field =
         this->db().objectRegistry::template
-        lookupObject<GeometricField<Type, fvPatchField, volMesh> >
+        lookupObject<GeometricField<Type, fvPatchField, volMesh>>
         (
-            this->dimensionedInternalField().name()
+            this->internalField().name()
         );
 
     // Calculate the advection speed of the field wave
@@ -474,8 +471,8 @@ void CML::advectiveFvPatchField<Type>::updateCoeffs()
                 << "    Unsupported temporal differencing scheme : "
                 << ddtScheme
                 << "\n    on patch " << this->patch().name()
-                << " of field " << this->dimensionedInternalField().name()
-                << " in file " << this->dimensionedInternalField().objectPath()
+                << " of field " << this->internalField().name()
+                << " in file " << this->internalField().objectPath()
                 << exit(FatalError);
         }
     }
@@ -525,8 +522,8 @@ void CML::advectiveFvPatchField<Type>::updateCoeffs()
                 << "    Unsupported temporal differencing scheme : "
                 << ddtScheme
                 << "\n    on patch " << this->patch().name()
-                << " of field " << this->dimensionedInternalField().name()
-                << " in file " << this->dimensionedInternalField().objectPath()
+                << " of field " << this->internalField().name()
+                << " in file " << this->internalField().objectPath()
                 << exit(FatalError);
         }
     }
@@ -540,28 +537,17 @@ void CML::advectiveFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
 
-    if (phiName_ != "phi")
-    {
-        os.writeKeyword("phi") << phiName_ << token::END_STATEMENT << nl;
-    }
-    if (rhoName_ != "rho")
-    {
-        os.writeKeyword("rho") << rhoName_ << token::END_STATEMENT << nl;
-    }
+    writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
+    writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
 
     if (lInf_ > SMALL)
     {
-        os.writeKeyword("fieldInf") << fieldInf_ << token::END_STATEMENT << nl;
-        os.writeKeyword("lInf") << lInf_ << token::END_STATEMENT << nl;
+        writeEntry(os, "fieldInf", fieldInf_);
+        writeEntry(os, "lInf", lInf_);
     }
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

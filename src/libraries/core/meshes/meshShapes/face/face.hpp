@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -28,7 +28,7 @@ SeeAlso
     CML::triFace
 
 SourceFiles
-    faceI.hpp
+    facei.hpp
     face.cpp
     faceIntersection.cpp
     faceContactSphere.cpp
@@ -156,7 +156,7 @@ public:
         explicit inline face(const labelList&);
 
         //- Construct by transferring the parameter contents
-        explicit inline face(const Xfer<labelList>&);
+        explicit inline face(labelList&&);
 
         //- Copy construct from triFace
         face(const triFace&);
@@ -244,8 +244,10 @@ public:
             const point& p,
             const vector& n,
             const pointField&,
-            const intersection::algorithm alg = intersection::FULL_RAY,
-            const intersection::direction dir = intersection::VECTOR
+            const intersection::algorithm alg =
+                intersection::algorithm::fullRay,
+            const intersection::direction dir =
+                intersection::direction::vector
         ) const;
 
         //- Fast intersection with a ray.
@@ -375,6 +377,12 @@ public:
         static bool sameVertices(const face&, const face&);
 
 
+    // Member Operators
+
+        //- Move assignment labelList
+        inline void operator=(labelList&&);
+
+
     // Friend Operators
 
         friend bool operator==(const face& a, const face& b);
@@ -464,9 +472,9 @@ inline CML::face::face(const labelList& lst)
 {}
 
 
-inline CML::face::face(const Xfer<labelList>& lst)
+inline CML::face::face(labelList&& lst)
 :
-    labelList(lst)
+    labelList(move(lst))
 {}
 
 
@@ -532,6 +540,15 @@ inline CML::label CML::face::nTriangles() const
 {
     return size() - 2;
 }
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+inline void CML::face::operator=(labelList&& l)
+{
+    labelList::operator=(move(l));
+}
+
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
@@ -624,9 +641,9 @@ Type CML::face::average
     label nPoints = size();
 
     point centrePoint = point::zero;
-    Type cf = pTraits<Type>::zero;
+    Type cf = Zero;
 
-    for (register label pI=0; pI<nPoints; pI++)
+    for (label pI=0; pI<nPoints; pI++)
     {
         centrePoint += meshPoints[operator[](pI)];
         cf += fld[operator[](pI)];
@@ -636,9 +653,9 @@ Type CML::face::average
     cf /= nPoints;
 
     scalar sumA = 0;
-    Type sumAf = pTraits<Type>::zero;
+    Type sumAf = Zero;
 
-    for (register label pI=0; pI<nPoints; pI++)
+    for (label pI=0; pI<nPoints; pI++)
     {
         // Calculate 3*triangle centre field value
         Type ttcf  =

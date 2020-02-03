@@ -27,13 +27,13 @@ License
 CML::refineCell::refineCell()
 :
     cellNo_(-1),
-    direction_(vector::zero)
+    direction_(Zero)
 {}
 
 
-CML::refineCell::refineCell(const label cellI, const vector& direction)
+CML::refineCell::refineCell(const label celli, const vector& direction)
 :
-    cellNo_(cellI),
+    cellNo_(celli),
     direction_(direction)
 {
     scalar magDir = mag(direction_);

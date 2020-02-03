@@ -277,14 +277,14 @@ tmp<scalarField> CloudValueExpressionDriver::makeIdField()
         new scalarField(this->size())
     );
     forAll(ids(),i) {
-        ids()[i]=i;
+        ids.ref()[i]=i;
     }
     return ids;
 }
 
-tmp<Field<bool> > CloudValueExpressionDriver::makeCellSetField(const word &name)
+tmp<Field<bool>> CloudValueExpressionDriver::makeCellSetField(const word &name)
 {
-    tmp<Field<bool> > result(
+    tmp<Field<bool>> result(
         new Field<bool>(this->size(),false)
     );
 
@@ -316,18 +316,18 @@ tmp<Field<bool> > CloudValueExpressionDriver::makeCellSetField(const word &name)
 
     forAll(theCells,i)
     {
-        label cellI=theCells[i];
-        if(cs.found(cellI)) {
-            result()[i]=true;
+        label celli=theCells[i];
+        if(cs.found(celli)) {
+            result.ref()[i]=true;
         }
     }
 
     return result;
 }
 
-tmp<Field<bool> > CloudValueExpressionDriver::makeCellZoneField(const word &name)
+tmp<Field<bool>> CloudValueExpressionDriver::makeCellZoneField(const word &name)
 {
-    tmp<Field<bool> > result(
+    tmp<Field<bool>> result(
         new Field<bool>(this->size(),false)
     );
 
@@ -346,9 +346,9 @@ tmp<Field<bool> > CloudValueExpressionDriver::makeCellZoneField(const word &name
 
     forAll(theCells,i)
     {
-        label cellI=theCells[i];
-        if(zone.found(cellI)) {
-            result()[i]=true;
+        label celli=theCells[i];
+        if(zone.found(celli)) {
+            result.ref()[i]=true;
         }
     }
 
@@ -505,7 +505,7 @@ bool CloudValueExpressionDriver::isScalarField(
         isVariable<scalar>(resolveAlias(name));
 }
 
-tmp<Field<scalar> > CloudValueExpressionDriver::getScalarField(
+tmp<Field<scalar>> CloudValueExpressionDriver::getScalarField(
     const word &name
 ) {
     if(proxy_->isScalarField(resolveAlias(name))) {
@@ -524,7 +524,7 @@ bool CloudValueExpressionDriver::isVectorField(
         isVariable<vector>(resolveAlias(name));
 }
 
-tmp<Field<vector> > CloudValueExpressionDriver::getVectorField(
+tmp<Field<vector>> CloudValueExpressionDriver::getVectorField(
     const word &name
 ) {
     if(proxy_->isVectorField(resolveAlias(name))) {
@@ -543,7 +543,7 @@ bool CloudValueExpressionDriver::isTensorField(
         isVariable<tensor>(resolveAlias(name));
 }
 
-tmp<Field<tensor> > CloudValueExpressionDriver::getTensorField(
+tmp<Field<tensor>> CloudValueExpressionDriver::getTensorField(
     const word &name
 ) {
     if(proxy_->isTensorField(resolveAlias(name))) {
@@ -562,7 +562,7 @@ bool CloudValueExpressionDriver::isSymmTensorField(
         isVariable<symmTensor>(resolveAlias(name));
 }
 
-tmp<Field<symmTensor> > CloudValueExpressionDriver::getSymmTensorField(
+tmp<Field<symmTensor>> CloudValueExpressionDriver::getSymmTensorField(
     const word &name
 ) {
     if(proxy_->isSymmTensorField(resolveAlias(name))) {
@@ -581,7 +581,7 @@ bool CloudValueExpressionDriver::isSphericalTensorField(
         isVariable<sphericalTensor>(resolveAlias(name));
 }
 
-tmp<Field<sphericalTensor> > CloudValueExpressionDriver::getSphericalTensorField(
+tmp<Field<sphericalTensor>> CloudValueExpressionDriver::getSphericalTensorField(
     const word &name
 ) {
     if(proxy_->isSphericalTensorField(resolveAlias(name))) {
@@ -600,7 +600,7 @@ bool CloudValueExpressionDriver::isBoolField(
         isVariable<bool>(resolveAlias(name));
 }
 
-tmp<Field<bool> > CloudValueExpressionDriver::getBoolField(
+tmp<Field<bool>> CloudValueExpressionDriver::getBoolField(
     const word &name
 ) {
     if(proxy_->isBoolField(resolveAlias(name))) {

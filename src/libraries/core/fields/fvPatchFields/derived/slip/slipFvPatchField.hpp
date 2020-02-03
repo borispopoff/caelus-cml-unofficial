@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -89,22 +89,22 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         slipFvPatchField
         (
             const slipFvPatchField<Type>&
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new slipFvPatchField<Type>(*this)
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         slipFvPatchField
         (
             const slipFvPatchField<Type>&,
@@ -112,18 +112,19 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new slipFvPatchField<Type>(*this, iF)
             );
         }
 
-    // Member functions
+
+    // Member Functions
 
         // Attributes
 
@@ -135,19 +136,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+CML::slipFvPatchField<Type>::slipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -158,7 +153,7 @@ slipFvPatchField<Type>::slipFvPatchField
 
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+CML::slipFvPatchField<Type>::slipFvPatchField
 (
     const slipFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -171,7 +166,7 @@ slipFvPatchField<Type>::slipFvPatchField
 
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+CML::slipFvPatchField<Type>::slipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -183,7 +178,7 @@ slipFvPatchField<Type>::slipFvPatchField
 
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+CML::slipFvPatchField<Type>::slipFvPatchField
 (
     const slipFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -194,7 +189,7 @@ slipFvPatchField<Type>::slipFvPatchField
 
 
 template<class Type>
-slipFvPatchField<Type>::slipFvPatchField
+CML::slipFvPatchField<Type>::slipFvPatchField
 (
     const slipFvPatchField<Type>& ptf
 )
@@ -203,13 +198,4 @@ slipFvPatchField<Type>::slipFvPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

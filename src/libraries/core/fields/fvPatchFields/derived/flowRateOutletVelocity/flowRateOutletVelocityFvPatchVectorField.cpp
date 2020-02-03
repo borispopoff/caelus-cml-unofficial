@@ -51,7 +51,7 @@ flowRateOutletVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<vector>(p, iF),
+    fixedValueFvPatchField<vector>(p, iF, dict, false),
     rhoOutlet_(dict.lookupOrDefault<scalar>("rhoOutlet", -VGREAT))
 {
     if (dict.found("volumetricFlowRate"))
@@ -223,13 +223,13 @@ void CML::flowRateOutletVelocityFvPatchVectorField::updateCoeffs()
 void CML::flowRateOutletVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
-    flowRate_->writeData(os);
+    writeEntry(os, flowRate_());
     if (!volumetric_)
     {
         writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
         writeEntryIfDifferent<scalar>(os, "rhoOutlet", -VGREAT, rhoOutlet_);
     }
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

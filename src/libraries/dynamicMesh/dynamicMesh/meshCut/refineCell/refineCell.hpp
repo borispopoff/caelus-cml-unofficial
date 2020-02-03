@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -45,6 +45,7 @@ class refineCell;
 
 Ostream& operator<<(Ostream&, const refineCell&);
 
+
 /*---------------------------------------------------------------------------*\
                            Class refineCell Declaration
 \*---------------------------------------------------------------------------*/
@@ -66,10 +67,10 @@ public:
         //- Null
         refineCell();
 
-        //- from components. Vector will be normalized upon construction.
+        //- From components. Vector will be normalized upon construction.
         refineCell(const label, const vector&);
 
-        //- from Istream. Vector will be normalized upon construction.
+        //- From Istream. Vector will be normalized upon construction.
         refineCell(Istream& is);
 
 

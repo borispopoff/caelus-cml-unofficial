@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,7 +24,7 @@ License
 #include "triPointRef.hpp"
 #include "mathematicalConstants.hpp"
 #include "Swap.hpp"
-#include "const_circulator.hpp"
+#include "ConstCirculator.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -37,7 +37,7 @@ CML::tmp<CML::vectorField>
 CML::face::calcEdges(const pointField& points) const
 {
     tmp<vectorField> tedges(new vectorField(size()));
-    vectorField& edges = tedges();
+    vectorField& edges = tedges.ref();
 
     forAll(*this, i)
     {
@@ -321,8 +321,8 @@ int CML::face::compare(const face& a, const face& b)
         }
     }
 
-    const_circulator<face> aCirc(a);
-    const_circulator<face> bCirc(b);
+    ConstCirculator<face> aCirc(a);
+    ConstCirculator<face> bCirc(b);
 
     // Rotate face b until its element matches the starting element of face a.
     do
@@ -336,7 +336,7 @@ int CML::face::compare(const face& a, const face& b)
 
             break;
         }
-    } while (bCirc.circulate(CirculatorBase::CLOCKWISE));
+    } while (bCirc.circulate(CirculatorBase::direction::clockwise));
 
     // If the circulator has stopped then faces a and b do not share a matching
     // point. Doesn't work on matching, single element face.
@@ -355,8 +355,8 @@ int CML::face::compare(const face& a, const face& b)
     }
     while
     (
-        aCirc.circulate(CirculatorBase::CLOCKWISE),
-        bCirc.circulate(CirculatorBase::CLOCKWISE)
+        aCirc.circulate(CirculatorBase::direction::clockwise),
+        bCirc.circulate(CirculatorBase::direction::clockwise)
     );
 
     // If the circulator has stopped then faces a and b matched.
@@ -383,8 +383,8 @@ int CML::face::compare(const face& a, const face& b)
     }
     while
     (
-        aCirc.circulate(CirculatorBase::CLOCKWISE),
-        bCirc.circulate(CirculatorBase::ANTICLOCKWISE)
+        aCirc.circulate(CirculatorBase::direction::clockwise),
+        bCirc.circulate(CirculatorBase::direction::anticlockwise)
     );
 
     // If the circulator has stopped then faces a and b matched.
@@ -513,7 +513,7 @@ CML::point CML::face::centre(const pointField& points) const
     centrePoint /= nPoints;
 
     scalar sumA = 0;
-    vector sumAc = vector::zero;
+    vector sumAc = Zero;
 
     for (label pI=0; pI<nPoints; ++pI)
     {
@@ -572,14 +572,14 @@ CML::vector CML::face::area(const pointField& p) const
 
     label pI;
 
-    point centrePoint = vector::zero;
+    point centrePoint = Zero;
     for (pI = 0; pI < nPoints; ++pI)
     {
         centrePoint += p[operator[](pI)];
     }
     centrePoint /= nPoints;
 
-    vector a = vector::zero;
+    vector a = Zero;
 
     point nextPoint = centrePoint;
 
@@ -631,7 +631,7 @@ CML::face CML::face::reverseFace() const
         newList[pointi] = f[size() - pointi];
     }
 
-    return face(xferMove(newList));
+    return face(move(newList));
 }
 
 
@@ -750,7 +750,7 @@ CML::tensor CML::face::inertia
 
     const point ctr = centre(p);
 
-    tensor J = tensor::zero;
+    tensor J = Zero;
 
     forAll(*this, i)
     {

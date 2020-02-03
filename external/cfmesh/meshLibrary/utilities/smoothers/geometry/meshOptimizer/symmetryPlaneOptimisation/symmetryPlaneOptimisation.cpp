@@ -45,7 +45,7 @@ void symmetryPlaneOptimisation::detectSymmetryPlanes()
 
     symmetryPlanes_.clear();
 
-    typedef std::map<label, std::pair<vector, label> > mapType;
+    typedef std::map<label, std::pair<vector, label>> mapType;
     mapType centreSum, normalSum;
 
     forAll(boundaries, patchI)
@@ -60,10 +60,10 @@ void symmetryPlaneOptimisation::detectSymmetryPlanes()
 
             const label start = boundaries[patchI].patchStart();
             const label end = start + boundaries[patchI].patchSize();
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                cs.first += faces[faceI].centre(points);
-                ns.first += faces[faceI].normal(points);
+                cs.first += faces[facei].centre(points);
+                ns.first += faces[facei].normal(points);
             }
 
             cs.second = ns.second = boundaries[patchI].patchSize();
@@ -113,9 +113,9 @@ void symmetryPlaneOptimisation::pointInPlanes(VRWGraph& pointInPlanes) const
         {
             const label start = boundaries[patchI].patchStart();
             const label end = start + boundaries[patchI].patchSize();
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
 
                 forAll(f, pI)
                     pointInPlanes.appendIfNotIn(f[pI], patchI);

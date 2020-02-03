@@ -62,16 +62,16 @@ void polyMeshGenModifier::removeCells
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 40)
     # endif
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        if( neighbour[faceI] == -1 )
+        if( neighbour[facei] == -1 )
         {
-            faceI = faces.size();
+            facei = faces.size();
             continue;
         }
 
-        if( removeCell[owner[faceI]] && !removeCell[neighbour[faceI]] )
-            faces[faceI] = faces[faceI].reverseFace();
+        if( removeCell[owner[facei]] && !removeCell[neighbour[facei]] )
+            faces[facei] = faces[facei].reverseFace();
     }
 
     mesh_.clearOut();
@@ -79,14 +79,14 @@ void polyMeshGenModifier::removeCells
     //- remove unwanted cells
     label nCells(0);
     labelLongList newCellLabel(cells.size(), -1);
-    forAll(newCellLabel, cellI)
-        if( !removeCell[cellI] )
-            newCellLabel[cellI] = nCells++;
+    forAll(newCellLabel, celli)
+        if( !removeCell[celli] )
+            newCellLabel[celli] = nCells++;
 
-    forAll(cells, cellI)
-        if( (newCellLabel[cellI] != -1) && (newCellLabel[cellI] < cellI) )
+    forAll(cells, celli)
+        if( (newCellLabel[celli] != -1) && (newCellLabel[celli] < celli) )
         {
-            cells[newCellLabel[cellI]].transfer(cells[cellI]);
+            cells[newCellLabel[celli]].transfer(cells[celli]);
         }
 
     cells.setSize(nCells);
@@ -112,9 +112,9 @@ void polyMeshGenModifier::removeCells
         # ifdef USE_OMP
         # pragma omp for schedule(dynamic, 40)
         # endif
-        forAll(cells, cellI)
+        forAll(cells, celli)
         {
-            const cell& c = cells[cellI];
+            const cell& c = cells[celli];
 
             forAll(c, fI)
                 removeFace[c[fI]] = false;

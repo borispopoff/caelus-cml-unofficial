@@ -69,7 +69,7 @@ void CML::searchableCone::boundingSpheres
 CML::tmp<CML::pointField> CML::searchableCone::points() const
 {
     tmp<pointField> tPts(new pointField(2));
-    pointField& pts = tPts();
+    pointField& pts = tPts.ref();
 
     pts[0] = point1_;
     pts[1] = point2_;
@@ -1058,7 +1058,7 @@ void CML::searchableCone::getVolumeType
     {
         const point& pt = points[pointi];
 
-        volType[pointi] = volumeType::OUTSIDE;
+        volType[pointi] = volumeType::outside;
 
         vector v(pt - point1_);
 
@@ -1082,7 +1082,7 @@ void CML::searchableCone::getVolumeType
 
         if (mag(v) >= radius_sec_inner && mag(v) <= radius_sec)
         {
-            volType[pointi] = volumeType::INSIDE;
+            volType[pointi] = volumeType::inside;
         }
     }
 }

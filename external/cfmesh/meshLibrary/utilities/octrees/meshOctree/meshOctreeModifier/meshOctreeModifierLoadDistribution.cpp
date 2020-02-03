@@ -210,7 +210,7 @@ void meshOctreeModifier::loadDistribution(const direction usedType)
 
         List<meshOctreeCubeBasic> mc;
 
-        IPstream fromOtherProc(Pstream::blocking, iter.key());
+        IPstream fromOtherProc(Pstream::commsTypes::blocking, iter.key());
 
         fromOtherProc >> mc;
 
@@ -250,7 +250,7 @@ void meshOctreeModifier::loadDistribution(const direction usedType)
 
         OPstream toOtherProc
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             procI,
             sendCoordinates.byteSize()
         );
@@ -266,7 +266,7 @@ void meshOctreeModifier::loadDistribution(const direction usedType)
 
         List<meshOctreeCubeBasic> mc;
 
-        IPstream fromOtherProc(Pstream::blocking, iter.key());
+        IPstream fromOtherProc(Pstream::commsTypes::blocking, iter.key());
 
         fromOtherProc >> mc;
 
@@ -305,7 +305,7 @@ void meshOctreeModifier::loadDistribution(const direction usedType)
 
         OPstream toOtherProc
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             procI,
             sendCoordinates.byteSize()
         );

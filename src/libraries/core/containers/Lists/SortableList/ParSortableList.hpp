@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,7 +60,7 @@ TemplateName(ParSortableList);
                            Class ParSortableList Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Type>
+template<class Type>
 class ParSortableList
 :
     public ParSortableListName,
@@ -202,7 +202,7 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 void CML::ParSortableList<Type>::write
 (
     const List<Type>& elems,
@@ -219,8 +219,7 @@ void CML::ParSortableList<Type>::write
 }
 
 
-// Copy src, starting at destI into dest.
-template <class Type>
+template<class Type>
 void CML::ParSortableList<Type>::copyInto
 (
     const List<Type>& values,
@@ -243,7 +242,7 @@ void CML::ParSortableList<Type>::copyInto
 }
 
 
-template <class Type>
+template<class Type>
 void CML::ParSortableList<Type>::getPivots
 (
     const List<Type>& elems,
@@ -263,28 +262,28 @@ void CML::ParSortableList<Type>::getPivots
 }
 
 
-template <class Type>
+template<class Type>
 void CML::ParSortableList<Type>::checkAndSend
 (
     List<Type>& values,
     labelList& indices,
     const label bufSize,
-    const label destProcI
+    const label destProci
 ) const
 {
-    if (destProcI != Pstream::myProcNo())
+    if (destProci != Pstream::myProcNo())
     {
         values.setSize(bufSize);
         indices.setSize(bufSize);
 
         if (debug)
         {
-            Pout<<  "Sending to " << destProcI << " elements:" << values
+            Pout<<  "Sending to " << destProci << " elements:" << values
                 << endl;
         }
 
         {
-            OPstream toSlave(Pstream::blocking, destProcI);
+            OPstream toSlave(Pstream::commsTypes::blocking, destProci);
             toSlave << values << indices;
         }
     }
@@ -293,8 +292,7 @@ void CML::ParSortableList<Type>::checkAndSend
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from List, sorting the elements
-template <class Type>
+template<class Type>
 CML::ParSortableList<Type>::ParSortableList(const UList<Type>& values)
 :
     List<Type>(values),
@@ -305,8 +303,7 @@ CML::ParSortableList<Type>::ParSortableList(const UList<Type>& values)
 }
 
 
-// Construct given size. Sort later on.
-template <class Type>
+template<class Type>
 CML::ParSortableList<Type>::ParSortableList(const label size)
 :
     List<Type>(size),
@@ -317,8 +314,7 @@ CML::ParSortableList<Type>::ParSortableList(const label size)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Sort
-template <class Type>
+template<class Type>
 void CML::ParSortableList<Type>::sort()
 {
     //
@@ -389,7 +385,7 @@ void CML::ParSortableList<Type>::sort()
     //
 
     label pivotI = 1;
-    label destProcI = 0;
+    label destProci = 0;
 
     // Buffer for my own data. Keep original index together with value.
     labelList ownValues(sorted.size());
@@ -405,7 +401,7 @@ void CML::ParSortableList<Type>::sort()
     {
         if ((pivotI < Pstream::nProcs()) && (sorted[sortedI] > pivots[pivotI]))
         {
-            checkAndSend(sendValues, sendIndices, sendI, destProcI);
+            checkAndSend(sendValues, sendIndices, sendI, destProci);
 
             // Reset buffer.
             sendValues.setSize(sorted.size());
@@ -413,10 +409,10 @@ void CML::ParSortableList<Type>::sort()
             sendI = 0;
 
             pivotI++;
-            destProcI++;
+            destProci++;
         }
 
-        if (destProcI != Pstream::myProcNo())
+        if (destProci != Pstream::myProcNo())
         {
             sendValues[sendI] = sorted[sortedI];
             sendIndices[sendI] = sorted.indices()[sortedI];
@@ -434,7 +430,7 @@ void CML::ParSortableList<Type>::sort()
     // Handle trailing send buffer
     if (sendI != 0)
     {
-        checkAndSend(sendValues, sendIndices, sendI, destProcI);
+        checkAndSend(sendValues, sendIndices, sendI, destProci);
     }
 
     // Print ownValues
@@ -458,9 +454,9 @@ void CML::ParSortableList<Type>::sort()
 
     label combinedI = 0;
 
-    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
-        if (procI == Pstream::myProcNo())
+        if (proci == Pstream::myProcNo())
         {
             if (debug & 2)
             {
@@ -468,7 +464,7 @@ void CML::ParSortableList<Type>::sort()
             }
 
             // Copy ownValues,ownIndices into combined buffer
-            copyInto(ownValues, ownIndices, procI, combinedI, combinedValues);
+            copyInto(ownValues, ownIndices, proci, combinedI, combinedValues);
         }
         else
         {
@@ -478,16 +474,16 @@ void CML::ParSortableList<Type>::sort()
             {
                 if (debug)
                 {
-                    Pout<< "Receiving from " << procI << endl;
+                    Pout<< "Receiving from " << proci << endl;
                 }
 
-                IPstream fromSlave(Pstream::blocking, procI);
+                IPstream fromSlave(Pstream::commsTypes::blocking, proci);
 
                 fromSlave >> recValues >> recIndices;
 
                 if (debug & 2)
                 {
-                    Pout<< "Received from " << procI
+                    Pout<< "Received from " << proci
                         << " elements:" << recValues << endl;
                 }
             }
@@ -496,7 +492,7 @@ void CML::ParSortableList<Type>::sort()
             {
                 Pout<< "Copying starting at:" << combinedI << endl;
             }
-            copyInto(recValues, recIndices, procI, combinedI, combinedValues);
+            copyInto(recValues, recIndices, proci, combinedI, combinedValues);
         }
     }
     combinedValues.setSize(combinedI);

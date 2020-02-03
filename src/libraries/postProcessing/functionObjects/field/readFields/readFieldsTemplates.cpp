@@ -30,8 +30,8 @@ template<class Type>
 void CML::readFields::loadField
 (
     const word& fieldName,
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& vflds,
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& sflds
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& vflds,
+    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;

@@ -179,7 +179,7 @@ void meshUntangler::cutRegion::findNewFaces()
         }
 
         //- test if the region is closed
-        List<DynList<label, 4> > eFaces(cEdges.size());
+        List<DynList<label, 4>> eFaces(cEdges.size());
         forAll(cFaces, fI)
         {
             const DynList<label, 8>& f = cFaces[fI];

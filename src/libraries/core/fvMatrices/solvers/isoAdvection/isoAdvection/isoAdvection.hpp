@@ -254,7 +254,7 @@ class isoAdvection
         // can be either internal or boundary face
 
             //- Return face value for a given Geometric surface field
-            template<typename Type>
+            template<class Type>
             Type faceValue
             (
                 const GeometricField<Type, fvsPatchField, surfaceMesh>& f,
@@ -262,7 +262,7 @@ class isoAdvection
             ) const;
 
             //- Set face value for a given Geometric surface field
-            template<typename Type>
+            template<class Type>
             void setFaceValue
             (
                 GeometricField<Type, fvsPatchField, surfaceMesh>& f,
@@ -361,7 +361,7 @@ public:
             //- Write isoface points to .obj file
             void writeIsoFaces
             (
-                const DynamicList<List<point> >& isoFacePts
+                const DynamicList<List<point>>& isoFacePts
             ) const;
 };
 
@@ -371,7 +371,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<typename Type>
+template<class Type>
 Type CML::isoAdvection::faceValue
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& f,
@@ -409,7 +409,7 @@ Type CML::isoAdvection::faceValue
 }
 
 
-template<typename Type>
+template<class Type>
 void CML::isoAdvection::setFaceValue
 (
     GeometricField<Type, fvsPatchField, surfaceMesh>& f,
@@ -419,7 +419,7 @@ void CML::isoAdvection::setFaceValue
 {
     if (mesh_.isInternalFace(facei))
     {
-        f.internalField()[facei] = value;
+        f.primitiveFieldRef()[facei] = value;
     }
     else
     {
@@ -444,7 +444,7 @@ void CML::isoAdvection::setFaceValue
 
         const label patchFacei = pp.whichFace(facei);
 
-        f.boundaryField()[patchi][patchFacei] = value;
+        f.boundaryFieldRef()[patchi][patchFacei] = value;
     }
 }
 

@@ -60,7 +60,7 @@ bool CML::pyrMatcher::matchShape
     const bool checkOnly,
     const faceList& faces,
     const labelList& owner,
-    const label cellI,
+    const label celli,
     const labelList& myFaces
 )
 {
@@ -98,11 +98,11 @@ bool CML::pyrMatcher::matchShape
     //
 
     label face0I = -1;
-    forAll(faceSize_, faceI)
+    forAll(faceSize_, facei)
     {
-        if (faceSize_[faceI] == 4)
+        if (faceSize_[facei] == 4)
         {
-            face0I = faceI;
+            face0I = facei;
             break;
         }
     }
@@ -124,7 +124,7 @@ bool CML::pyrMatcher::matchShape
         (
             face0vert0,
             faceSize_[face0I],
-            !(owner[faceMap_[face0I]] == cellI)
+            !(owner[faceMap_[face0I]] == celli)
         );
     vertLabels_[1] = pointMap_[face0[face0vert1]];
 
@@ -134,7 +134,7 @@ bool CML::pyrMatcher::matchShape
         (
             face0vert1,
             faceSize_[face0I],
-            !(owner[faceMap_[face0I]] == cellI)
+            !(owner[faceMap_[face0I]] == celli)
         );
     vertLabels_[2] = pointMap_[face0[face0vert2]];
 
@@ -144,7 +144,7 @@ bool CML::pyrMatcher::matchShape
         (
             face0vert2,
             faceSize_[face0I],
-            !(owner[faceMap_[face0I]] == cellI)
+            !(owner[faceMap_[face0I]] == celli)
         );
     vertLabels_[3] = pointMap_[face0[face0vert3]];
 
@@ -203,7 +203,7 @@ bool CML::pyrMatcher::matchShape
         (
             face4vert0,
             faceSize_[face4I],
-            !(owner[faceMap_[face4I]] == cellI)
+            !(owner[faceMap_[face4I]] == celli)
         );
     vertLabels_[4] = pointMap_[face4[face4vert4]];
 
@@ -260,15 +260,15 @@ bool CML::pyrMatcher::faceSizeMatch
 }
 
 
-bool CML::pyrMatcher::isA(const primitiveMesh& mesh, const label cellI)
+bool CML::pyrMatcher::isA(const primitiveMesh& mesh, const label celli)
 {
     return matchShape
     (
         true,
         mesh.faces(),
         mesh.faceOwner(),
-        cellI,
-        mesh.cells()[cellI]
+        celli,
+        mesh.cells()[celli]
     );
 }
 
@@ -290,7 +290,7 @@ bool CML::pyrMatcher::isA(const faceList& faces)
 bool CML::pyrMatcher::matches
 (
     const primitiveMesh& mesh,
-    const label cellI,
+    const label celli,
     cellShape& shape
 )
 {
@@ -301,8 +301,8 @@ bool CML::pyrMatcher::matches
             false,
             mesh.faces(),
             mesh.faceOwner(),
-            cellI,
-            mesh.cells()[cellI]
+            celli,
+            mesh.cells()[celli]
         )
     )
     {

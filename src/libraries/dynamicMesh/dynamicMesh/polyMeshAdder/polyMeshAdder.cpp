@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -92,9 +92,9 @@ CML::label CML::polyMeshAdder::patchIndex
     const word& pType = p.type();
     const word& pName = p.name();
 
-    label patchI = findIndex(allPatchNames, pName);
+    label patchi = findIndex(allPatchNames, pName);
 
-    if (patchI == -1)
+    if (patchi == -1)
     {
         // Patch not found. Append to the list
         allPatchNames.append(pName);
@@ -102,10 +102,10 @@ CML::label CML::polyMeshAdder::patchIndex
 
         return allPatchNames.size() - 1;
     }
-    else if (allPatchTypes[patchI] == pType)
+    else if (allPatchTypes[patchi] == pType)
     {
         // Found name and types match
-        return patchI;
+        return patchi;
     }
     else
     {
@@ -179,11 +179,11 @@ void CML::polyMeshAdder::mergePatchNames
     // Add mesh1 patches and build map both ways.
     from1ToAllPatches.setSize(patches1.size());
 
-    forAll(patches1, patchI)
+    forAll(patches1, patchi)
     {
-        from1ToAllPatches[patchI] = patchIndex
+        from1ToAllPatches[patchi] = patchIndex
         (
-            patches1[patchI],
+            patches1[patchi],
             allPatchNames,
             allPatchTypes
         );
@@ -208,9 +208,9 @@ CML::labelList CML::polyMeshAdder::getPatchStarts
 )
 {
     labelList patchStarts(patches.size());
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        patchStarts[patchI] = patches[patchI].start();
+        patchStarts[patchi] = patches[patchi].start();
     }
     return patchStarts;
 }
@@ -222,9 +222,9 @@ CML::labelList CML::polyMeshAdder::getPatchSizes
 )
 {
     labelList patchSizes(patches.size());
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        patchSizes[patchI] = patches[patchI].size();
+        patchSizes[patchi] = patches[patchi].size();
     }
     return patchSizes;
 }
@@ -257,20 +257,20 @@ CML::List<CML::polyPatch*> CML::polyMeshAdder::combinePatches
     from0ToAllPatches.setSize(patches0.size());
     from0ToAllPatches = -1;
 
-    label startFaceI = nInternalFaces;
+    label startFacei = nInternalFaces;
 
     // Copy patches0 with new sizes. First patches always come from
     // mesh0 and will always be present.
-    forAll(patches0, patchI)
+    forAll(patches0, patchi)
     {
         // Originates from mesh0. Clone with new size & filter out empty
         // patch.
         label filteredPatchI;
 
-        if (nFaces[patchI] == 0 && isA<processorPolyPatch>(patches0[patchI]))
+        if (nFaces[patchi] == 0 && isA<processorPolyPatch>(patches0[patchi]))
         {
             //Pout<< "Removing zero sized mesh0 patch "
-            //    << patches0[patchI].name() << endl;
+            //    << patches0[patchi].name() << endl;
             filteredPatchI = -1;
         }
         else
@@ -279,31 +279,31 @@ CML::List<CML::polyPatch*> CML::polyMeshAdder::combinePatches
 
             allPatches.append
             (
-                patches0[patchI].clone
+                patches0[patchi].clone
                 (
                     allBoundaryMesh,
                     filteredPatchI,
-                    nFaces[patchI],
-                    startFaceI
+                    nFaces[patchi],
+                    startFacei
                 ).ptr()
             );
-            startFaceI += nFaces[patchI];
+            startFacei += nFaces[patchi];
         }
 
         // Record new index in allPatches
-        from0ToAllPatches[patchI] = filteredPatchI;
+        from0ToAllPatches[patchi] = filteredPatchI;
 
         // Check if patch was also in mesh1 and update its addressing if so.
-        if (fromAllTo1Patches[patchI] != -1)
+        if (fromAllTo1Patches[patchi] != -1)
         {
-            from1ToAllPatches[fromAllTo1Patches[patchI]] = filteredPatchI;
+            from1ToAllPatches[fromAllTo1Patches[patchi]] = filteredPatchI;
         }
     }
 
     // Copy unique patches of mesh1.
-    forAll(from1ToAllPatches, patchI)
+    forAll(from1ToAllPatches, patchi)
     {
-        label allPatchI = from1ToAllPatches[patchI];
+        label allPatchI = from1ToAllPatches[patchi];
 
         if (allPatchI >= patches0.size())
         {
@@ -314,11 +314,11 @@ CML::List<CML::polyPatch*> CML::polyMeshAdder::combinePatches
             if
             (
                 nFaces[allPatchI] == 0
-             && isA<processorPolyPatch>(patches1[patchI])
+             && isA<processorPolyPatch>(patches1[patchi])
             )
             {
                 //Pout<< "Removing zero sized mesh1 patch "
-                //    << patches1[patchI].name() << endl;
+                //    << patches1[patchi].name() << endl;
                 filteredPatchI = -1;
             }
             else
@@ -327,24 +327,24 @@ CML::List<CML::polyPatch*> CML::polyMeshAdder::combinePatches
 
                 allPatches.append
                 (
-                    patches1[patchI].clone
+                    patches1[patchi].clone
                     (
                         allBoundaryMesh,
                         filteredPatchI,
                         nFaces[allPatchI],
-                        startFaceI
+                        startFacei
                     ).ptr()
                 );
-                startFaceI += nFaces[allPatchI];
+                startFacei += nFaces[allPatchI];
             }
 
-            from1ToAllPatches[patchI] = filteredPatchI;
+            from1ToAllPatches[patchi] = filteredPatchI;
         }
     }
 
     allPatches.shrink();
 
-    return allPatches;
+    return move(allPatches);
 }
 
 
@@ -359,38 +359,38 @@ CML::labelList CML::polyMeshAdder::getFaceOrder
     labelList oldToNew(owner.size(), -1);
 
     // Leave boundary faces in order
-    for (label faceI = nInternalFaces; faceI < owner.size(); ++faceI)
+    for (label facei = nInternalFaces; facei < owner.size(); ++facei)
     {
-        oldToNew[faceI] = faceI;
+        oldToNew[facei] = facei;
     }
 
     // First unassigned face
-    label newFaceI = 0;
+    label newFacei = 0;
 
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const labelList& cFaces = cells[cellI];
+        const labelList& cFaces = cells[celli];
 
         SortableList<label> nbr(cFaces.size());
 
         forAll(cFaces, i)
         {
-            label faceI = cFaces[i];
+            label facei = cFaces[i];
 
-            label nbrCellI = neighbour[faceI];
+            label nbrCelli = neighbour[facei];
 
-            if (nbrCellI != -1)
+            if (nbrCelli != -1)
             {
                 // Internal face. Get cell on other side.
-                if (nbrCellI == cellI)
+                if (nbrCelli == celli)
                 {
-                    nbrCellI = owner[faceI];
+                    nbrCelli = owner[facei];
                 }
 
-                if (cellI < nbrCellI)
+                if (celli < nbrCelli)
                 {
                     // CellI is master
-                    nbr[i] = nbrCellI;
+                    nbr[i] = nbrCelli;
                 }
                 else
                 {
@@ -411,20 +411,20 @@ CML::labelList CML::polyMeshAdder::getFaceOrder
         {
             if (nbr[i] != -1)
             {
-                oldToNew[cFaces[nbr.indices()[i]]] = newFaceI++;
+                oldToNew[cFaces[nbr.indices()[i]]] = newFacei++;
             }
         }
     }
 
 
     // Check done all faces.
-    forAll(oldToNew, faceI)
+    forAll(oldToNew, facei)
     {
-        if (oldToNew[faceI] == -1)
+        if (oldToNew[facei] == -1)
         {
             FatalErrorInFunction
                 << "Did not determine new position"
-                << " for face " << faceI
+                << " for face " << facei
                 << abort(FatalError);
         }
     }
@@ -618,23 +618,23 @@ void CML::polyMeshAdder::mergePrimitives
     }
 
     // Add uncoupled mesh0 points
-    forAll(mesh0.points(), pointI)
+    forAll(mesh0.points(), pointi)
     {
-        if (from0ToAllPoints[pointI] == -1)
+        if (from0ToAllPoints[pointi] == -1)
         {
-            allPoints[allPointI] = mesh0.points()[pointI];
-            from0ToAllPoints[pointI] = allPointI;
+            allPoints[allPointI] = mesh0.points()[pointi];
+            from0ToAllPoints[pointi] = allPointI;
             allPointI++;
         }
     }
 
     // Add uncoupled mesh1 points
-    forAll(mesh1.points(), pointI)
+    forAll(mesh1.points(), pointi)
     {
-        if (from1ToAllPoints[pointI] == -1)
+        if (from1ToAllPoints[pointi] == -1)
         {
-            allPoints[allPointI] = mesh1.points()[pointI];
-            from1ToAllPoints[pointI] = allPointI;
+            allPoints[allPointI] = mesh1.points()[pointi];
+            from1ToAllPoints[pointi] = allPointI;
             allPointI++;
         }
     }
@@ -663,12 +663,12 @@ void CML::polyMeshAdder::mergePrimitives
     from1ToAllFaces = -1;
 
     // Copy mesh0 internal faces (always uncoupled)
-    for (label faceI = 0; faceI < mesh0.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh0.nInternalFaces(); facei++)
     {
-        allFaces[allFaceI] = renumber(from0ToAllPoints, mesh0.faces()[faceI]);
-        allOwner[allFaceI] = mesh0.faceOwner()[faceI];
-        allNeighbour[allFaceI] = mesh0.faceNeighbour()[faceI];
-        from0ToAllFaces[faceI] = allFaceI++;
+        allFaces[allFaceI] = renumber(from0ToAllPoints, mesh0.faces()[facei]);
+        allOwner[allFaceI] = mesh0.faceOwner()[facei];
+        allNeighbour[allFaceI] = mesh0.faceNeighbour()[facei];
+        from0ToAllFaces[facei] = allFaceI++;
     }
 
     // Copy coupled faces. Every coupled face has an equivalent master and
@@ -714,12 +714,12 @@ void CML::polyMeshAdder::mergePrimitives
     }
 
     // Copy mesh1 internal faces (always uncoupled)
-    for (label faceI = 0; faceI < mesh1.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh1.nInternalFaces(); facei++)
     {
-        allFaces[allFaceI] = renumber(from1ToAllPoints, mesh1.faces()[faceI]);
-        allOwner[allFaceI] = mesh1.faceOwner()[faceI] + mesh0.nCells();
-        allNeighbour[allFaceI] = mesh1.faceNeighbour()[faceI] + mesh0.nCells();
-        from1ToAllFaces[faceI] = allFaceI++;
+        allFaces[allFaceI] = renumber(from1ToAllPoints, mesh1.faces()[facei]);
+        allOwner[allFaceI] = mesh1.faceOwner()[facei] + mesh0.nCells();
+        allNeighbour[allFaceI] = mesh1.faceNeighbour()[facei] + mesh0.nCells();
+        from1ToAllFaces[facei] = allFaceI++;
     }
 
     nInternalFaces = allFaceI;
@@ -734,24 +734,24 @@ void CML::polyMeshAdder::mergePrimitives
 
             nFacesPerPatch[allPatchI] += pp.size();
 
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                if (from0ToAllFaces[faceI] == -1)
+                if (from0ToAllFaces[facei] == -1)
                 {
                     // Is uncoupled face since has not yet been dealt with
                     allFaces[allFaceI] = renumber
                     (
                         from0ToAllPoints,
-                        mesh0.faces()[faceI]
+                        mesh0.faces()[facei]
                     );
-                    allOwner[allFaceI] = mesh0.faceOwner()[faceI];
+                    allOwner[allFaceI] = mesh0.faceOwner()[facei];
                     allNeighbour[allFaceI] = -1;
 
-                    from0ToAllFaces[faceI] = allFaceI++;
+                    from0ToAllFaces[facei] = allFaceI++;
                 }
-                faceI++;
+                facei++;
             }
         }
         if (fromAllTo1Patches[allPatchI] != -1)
@@ -761,26 +761,26 @@ void CML::polyMeshAdder::mergePrimitives
 
             nFacesPerPatch[allPatchI] += pp.size();
 
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                if (from1ToAllFaces[faceI] == -1)
+                if (from1ToAllFaces[facei] == -1)
                 {
                     // Is uncoupled face
                     allFaces[allFaceI] = renumber
                     (
                         from1ToAllPoints,
-                        mesh1.faces()[faceI]
+                        mesh1.faces()[facei]
                     );
                     allOwner[allFaceI] =
-                        mesh1.faceOwner()[faceI]
+                        mesh1.faceOwner()[facei]
                       + mesh0.nCells();
                     allNeighbour[allFaceI] = -1;
 
-                    from1ToAllFaces[faceI] = allFaceI++;
+                    from1ToAllFaces[facei] = allFaceI++;
                 }
-                faceI++;
+                facei++;
             }
         }
     }
@@ -808,9 +808,9 @@ void CML::polyMeshAdder::mergePrimitives
         labelHashSet masterCutFaces(cutToMasterFaces.size());
         forAll(cutToMasterFaces, i)
         {
-            label meshFaceI = masterPatch.addressing()[cutToMasterFaces[i]];
+            label meshFacei = masterPatch.addressing()[cutToMasterFaces[i]];
 
-            masterCutFaces.insert(meshFaceI);
+            masterCutFaces.insert(meshFacei);
         }
 
         DynamicList<label> workFace(100);
@@ -839,9 +839,9 @@ void CML::polyMeshAdder::mergePrimitives
         labelHashSet slaveCutFaces(cutToSlaveFaces.size());
         forAll(cutToSlaveFaces, i)
         {
-            label meshFaceI = slavePatch.addressing()[cutToSlaveFaces[i]];
+            label meshFacei = slavePatch.addressing()[cutToSlaveFaces[i]];
 
-            slaveCutFaces.insert(meshFaceI);
+            slaveCutFaces.insert(meshFacei);
         }
 
         forAll(from1ToAllFaces, face1)
@@ -912,7 +912,7 @@ void CML::polyMeshAdder::mergePointZones
 
     DynamicList<word>& zoneNames,
     labelList& from1ToAll,
-    List<DynamicList<label> >& pzPoints
+    List<DynamicList<label>>& pzPoints
 )
 {
     zoneNames.setCapacity(pz0.size() + pz1.size());
@@ -935,7 +935,7 @@ void CML::polyMeshAdder::mergePointZones
     }
 
     // Get sorted zone contents for duplicate element recognition
-    PtrList<SortableList<label> > pzPointsSorted(pzPoints.size());
+    PtrList<SortableList<label>> pzPointsSorted(pzPoints.size());
     forAll(pzPoints, zoneI)
     {
         pzPointsSorted.set
@@ -976,8 +976,8 @@ void CML::polyMeshAdder::mergeFaceZones
 
     DynamicList<word>& zoneNames,
     labelList& from1ToAll,
-    List<DynamicList<label> >& fzFaces,
-    List<DynamicList<bool> >& fzFlips
+    List<DynamicList<label>>& fzFaces,
+    List<DynamicList<bool>>& fzFlips
 )
 {
     zoneNames.setCapacity(fz0.size() + fz1.size());
@@ -1008,18 +1008,18 @@ void CML::polyMeshAdder::mergeFaceZones
 
         forAll(addressing, i)
         {
-            label faceI = addressing[i];
+            label facei = addressing[i];
 
-            if (from0ToAllFaces[faceI] != -1)
+            if (from0ToAllFaces[facei] != -1)
             {
-                newZone.append(from0ToAllFaces[faceI]);
+                newZone.append(from0ToAllFaces[facei]);
                 newFlip.append(flipMap[i]);
             }
         }
     }
 
     // Get sorted zone contents for duplicate element recognition
-    PtrList<SortableList<label> > fzFacesSorted(fzFaces.size());
+    PtrList<SortableList<label>> fzFacesSorted(fzFaces.size());
     forAll(fzFaces, zoneI)
     {
         fzFacesSorted.set
@@ -1046,8 +1046,8 @@ void CML::polyMeshAdder::mergeFaceZones
 
         forAll(addressing, i)
         {
-            label faceI = addressing[i];
-            label allFaceI = from1ToAllFaces[faceI];
+            label facei = addressing[i];
+            label allFaceI = from1ToAllFaces[facei];
 
             if
             (
@@ -1077,7 +1077,7 @@ void CML::polyMeshAdder::mergeCellZones
 
     DynamicList<word>& zoneNames,
     labelList& from1ToAll,
-    List<DynamicList<label> >& czCells
+    List<DynamicList<label>>& czCells
 )
 {
     zoneNames.setCapacity(cz0.size() + cz1.size());
@@ -1127,14 +1127,14 @@ void CML::polyMeshAdder::mergeZones
     const labelList& from1ToAllCells,
 
     DynamicList<word>& pointZoneNames,
-    List<DynamicList<label> >& pzPoints,
+    List<DynamicList<label>>& pzPoints,
 
     DynamicList<word>& faceZoneNames,
-    List<DynamicList<label> >& fzFaces,
-    List<DynamicList<bool> >& fzFlips,
+    List<DynamicList<label>>& fzFaces,
+    List<DynamicList<bool>>& fzFlips,
 
     DynamicList<word>& cellZoneNames,
-    List<DynamicList<label> >& czCells
+    List<DynamicList<label>>& czCells
 )
 {
     labelList from1ToAllPZones;
@@ -1181,14 +1181,14 @@ void CML::polyMeshAdder::mergeZones
 void CML::polyMeshAdder::addZones
 (
     const DynamicList<word>& pointZoneNames,
-    const List<DynamicList<label> >& pzPoints,
+    const List<DynamicList<label>>& pzPoints,
 
     const DynamicList<word>& faceZoneNames,
-    const List<DynamicList<label> >& fzFaces,
-    const List<DynamicList<bool> >& fzFlips,
+    const List<DynamicList<label>>& fzFaces,
+    const List<DynamicList<bool>>& fzFlips,
 
     const DynamicList<word>& cellZoneNames,
-    const List<DynamicList<label> >& czCells,
+    const List<DynamicList<label>>& czCells,
 
     polyMesh& mesh
 )
@@ -1334,14 +1334,14 @@ CML::autoPtr<CML::polyMesh> CML::polyMeshAdder::add
     // ~~~~~
 
     DynamicList<word> pointZoneNames;
-    List<DynamicList<label> > pzPoints;
+    List<DynamicList<label>> pzPoints;
 
     DynamicList<word> faceZoneNames;
-    List<DynamicList<label> > fzFaces;
-    List<DynamicList<bool> > fzFlips;
+    List<DynamicList<label>> fzFaces;
+    List<DynamicList<bool>> fzFlips;
 
     DynamicList<word> cellZoneNames;
-    List<DynamicList<label> > czCells;
+    List<DynamicList<label>> czCells;
 
     mergeZones
     (
@@ -1434,10 +1434,10 @@ CML::autoPtr<CML::polyMesh> CML::polyMeshAdder::add
         new polyMesh
         (
             io,
-            xferMove(allPoints),
-            xferMove(allFaces),
-            xferMove(allOwner),
-            xferMove(allNeighbour)
+            move(allPoints),
+            move(allFaces),
+            move(allOwner),
+            move(allNeighbour)
         )
     );
     polyMesh& mesh = tmesh();
@@ -1547,14 +1547,14 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
     // ~~~~~
 
     DynamicList<word> pointZoneNames;
-    List<DynamicList<label> > pzPoints;
+    List<DynamicList<label>> pzPoints;
 
     DynamicList<word> faceZoneNames;
-    List<DynamicList<label> > fzFaces;
-    List<DynamicList<bool> > fzFlips;
+    List<DynamicList<label>> fzFaces;
+    List<DynamicList<bool>> fzFlips;
 
     DynamicList<word> cellZoneNames;
-    List<DynamicList<label> > czCells;
+    List<DynamicList<label>> czCells;
 
     mergeZones
     (
@@ -1599,7 +1599,7 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
     labelList patchSizes(allPatches.size());
     labelList patchStarts(allPatches.size());
 
-    label startFaceI = nInternalFaces;
+    label startFacei = nInternalFaces;
 
     // Copy patches0 with new sizes. First patches always come from
     // mesh0 and will always be present.
@@ -1638,7 +1638,7 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
                 )
             );
             patchSizes[allPatchI] = nFaces[patch0];
-            patchStarts[allPatchI] = startFaceI;
+            patchStarts[allPatchI] = startFacei;
 
             // Record new index in allPatches
             from0ToAllPatches[patch0] = allPatchI;
@@ -1649,7 +1649,7 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
                 from1ToAllPatches[fromAllTo1Patches[patch0]] = allPatchI;
             }
 
-            startFaceI += nFaces[patch0];
+            startFacei += nFaces[patch0];
 
             allPatchI++;
         }
@@ -1689,12 +1689,12 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
                     )
                 );
                 patchSizes[allPatchI] = nFaces[uncompactAllPatchI];
-                patchStarts[allPatchI] = startFaceI;
+                patchStarts[allPatchI] = startFacei;
 
                 // Record new index in allPatches
                 from1ToAllPatches[patch1] = allPatchI;
 
-                startFaceI += nFaces[uncompactAllPatchI];
+                startFacei += nFaces[uncompactAllPatchI];
 
                 allPatchI++;
             }
@@ -1745,10 +1745,10 @@ CML::autoPtr<CML::mapAddedPolyMesh> CML::polyMeshAdder::add
     mesh0.resetMotion();    // delete any oldPoints.
     mesh0.resetPrimitives
     (
-        xferMove(allPoints),
-        xferMove(allFaces),
-        xferMove(allOwner),
-        xferMove(allNeighbour),
+        move(allPoints),
+        move(allFaces),
+        move(allOwner),
+        move(allNeighbour),
         patchSizes,     // size
         patchStarts,    // patchstarts
         validBoundary   // boundary valid?
@@ -1798,7 +1798,7 @@ CML::Map<CML::label> CML::polyMeshAdder::findSharedPoints
 
     forAll(sharedPointLabels, i)
     {
-        label pointI = sharedPointLabels[i];
+        label pointi = sharedPointLabels[i];
 
         label sharedI = sharedPointAddr[i];
 
@@ -1815,22 +1815,22 @@ CML::Map<CML::label> CML::polyMeshAdder::findSharedPoints
             label sz = connectedPointLabels.size();
 
             // Check just to make sure.
-            if (findIndex(connectedPointLabels, pointI) != -1)
+            if (findIndex(connectedPointLabels, pointi) != -1)
             {
                 FatalErrorInFunction
                     << "Duplicate point in sharedPoint addressing." << endl
-                    << "When trying to add point " << pointI << " on shared "
+                    << "When trying to add point " << pointi << " on shared "
                     << sharedI  << " with connected points "
                     << connectedPointLabels
                     << abort(FatalError);
             }
 
             connectedPointLabels.setSize(sz+1);
-            connectedPointLabels[sz] = pointI;
+            connectedPointLabels[sz] = pointi;
         }
         else
         {
-            sharedToMesh.insert(sharedI, labelList(1, pointI));
+            sharedToMesh.insert(sharedI, labelList(1, pointi));
         }
     }
 
@@ -1888,27 +1888,27 @@ CML::Map<CML::label> CML::polyMeshAdder::findSharedPoints
                     if (mergeSet.size() > 1)
                     {
                         // Pick lowest numbered point
-                        label masterPointI = labelMax;
+                        label masterPointi = labelMax;
 
                         forAll(mergeSet, i)
                         {
-                            label pointI = connectedPointLabels[mergeSet[i]];
+                            label pointi = connectedPointLabels[mergeSet[i]];
 
-                            masterPointI = min(masterPointI, pointI);
+                            masterPointi = min(masterPointi, pointi);
                         }
 
                         forAll(mergeSet, i)
                         {
-                            label pointI = connectedPointLabels[mergeSet[i]];
+                            label pointi = connectedPointLabels[mergeSet[i]];
 
-                            //Pout<< "Merging point " << pointI
-                            //    << " at " << mesh.points()[pointI]
+                            //Pout<< "Merging point " << pointi
+                            //    << " at " << mesh.points()[pointi]
                             //    << " into master point "
-                            //    << masterPointI
-                            //    << " at " << mesh.points()[masterPointI]
+                            //    << masterPointi
+                            //    << " at " << mesh.points()[masterPointi]
                             //    << endl;
 
-                            pointToMaster.insert(pointI, masterPointI);
+                            pointToMaster.insert(pointi, masterPointi);
                         }
                     }
                 }
@@ -2000,15 +2000,15 @@ void CML::polyMeshAdder::mergePoints
 )
 {
     // Remove all non-master points.
-    forAll(mesh.points(), pointI)
+    forAll(mesh.points(), pointi)
     {
-        Map<label>::const_iterator iter = pointToMaster.find(pointI);
+        Map<label>::const_iterator iter = pointToMaster.find(pointi);
 
         if (iter != pointToMaster.end())
         {
-            if (iter() != pointI)
+            if (iter() != pointi)
             {
-                meshMod.removePoint(pointI, iter());
+                meshMod.removePoint(pointi, iter());
             }
         }
     }
@@ -2017,21 +2017,21 @@ void CML::polyMeshAdder::mergePoints
     // avoid addressing calculation.
     const faceList& faces = mesh.faces();
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         bool hasMerged = false;
 
         forAll(f, fp)
         {
-            label pointI = f[fp];
+            label pointi = f[fp];
 
-            Map<label>::const_iterator iter = pointToMaster.find(pointI);
+            Map<label>::const_iterator iter = pointToMaster.find(pointi);
 
             if (iter != pointToMaster.end())
             {
-                if (iter() != pointI)
+                if (iter() != pointi)
                 {
                     hasMerged = true;
                     break;
@@ -2045,9 +2045,9 @@ void CML::polyMeshAdder::mergePoints
 
             forAll(f, fp)
             {
-                label pointI = f[fp];
+                label pointi = f[fp];
 
-                Map<label>::const_iterator iter = pointToMaster.find(pointI);
+                Map<label>::const_iterator iter = pointToMaster.find(pointi);
 
                 if (iter != pointToMaster.end())
                 {
@@ -2055,15 +2055,15 @@ void CML::polyMeshAdder::mergePoints
                 }
             }
 
-            label patchID = mesh.boundaryMesh().whichPatch(faceI);
-            label nei = (patchID == -1 ? mesh.faceNeighbour()[faceI] : -1);
-            label zoneID = mesh.faceZones().whichZone(faceI);
+            label patchID = mesh.boundaryMesh().whichPatch(facei);
+            label nei = (patchID == -1 ? mesh.faceNeighbour()[facei] : -1);
+            label zoneID = mesh.faceZones().whichZone(facei);
             bool zoneFlip = false;
 
             if (zoneID >= 0)
             {
                 const faceZone& fZone = mesh.faceZones()[zoneID];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+                zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
             }
 
             meshMod.setAction
@@ -2071,8 +2071,8 @@ void CML::polyMeshAdder::mergePoints
                 polyModifyFace
                 (
                     newF,                       // modified face
-                    faceI,                      // label of face
-                    mesh.faceOwner()[faceI],    // owner
+                    facei,                      // label of face
+                    mesh.faceOwner()[facei],    // owner
                     nei,                        // neighbour
                     false,                      // face flip
                     patchID,                    // patch for face

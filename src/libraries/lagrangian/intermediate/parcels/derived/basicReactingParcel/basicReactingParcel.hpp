@@ -41,7 +41,7 @@ SourceFiles
 
 namespace CML
 {
-    typedef ReactingParcel<ThermoParcel<KinematicParcel<particle> > >
+    typedef ReactingParcel<ThermoParcel<KinematicParcel<particle>>>
         basicReactingParcel;
 
     template<>

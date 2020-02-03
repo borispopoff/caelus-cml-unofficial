@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -38,10 +38,10 @@ SourceFiles
 #ifndef STARCDMeshReader_H
 #define STARCDMeshReader_H
 
-# include "meshReader.hpp"
-# include "boundaryRegion.hpp"
-# include "cellShape.hpp"
-# include "IFstream.hpp"
+#include "meshReader.hpp"
+#include "boundaryRegion.hpp"
+#include "cellShape.hpp"
+#include "IFstream.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -85,12 +85,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Disallow default bitwise copy construct
-        STARCD(const STARCD&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const STARCD&);
-
         //- Read the mesh from the file(s)
         virtual bool readGeometry(const scalar scaleFactor = 1.0);
 
@@ -114,6 +108,17 @@ protected:
 
         //- Read header
         static bool readHeader(IFstream&, word fileSignature);
+
+
+private:
+
+    // Private member functions
+
+        //- Disallow default bitwise copy construct
+        STARCD(const STARCD&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const STARCD&) = delete;
 
 
 protected:

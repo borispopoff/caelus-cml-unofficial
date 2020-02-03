@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -48,7 +48,7 @@ class fvMesh;
 
 class nearWallDistNoSearch
 :
-    public volScalarField::GeometricBoundaryField
+    public volScalarField::Boundary
 {
     // Private data
 
@@ -61,12 +61,6 @@ class nearWallDistNoSearch
         //- Do all calculations.
         void doAll();
 
-        //- Disallow default bitwise copy construct
-        nearWallDistNoSearch(const nearWallDistNoSearch&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const nearWallDistNoSearch&);
-
 
 public:
 
@@ -75,6 +69,8 @@ public:
         //- Construct from components
         nearWallDistNoSearch(const fvMesh& mesh);
 
+        //- Disallow default bitwise copy construct
+        nearWallDistNoSearch(const nearWallDistNoSearch&) = delete;
 
     //- Destructor
     virtual ~nearWallDistNoSearch();
@@ -84,6 +80,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const nearWallDistNoSearch&) = delete;
 };
 
 

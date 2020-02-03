@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,10 +54,10 @@ class directionalDiffusivity
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        directionalDiffusivity(const directionalDiffusivity&);
+        directionalDiffusivity(const directionalDiffusivity&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const directionalDiffusivity&);
+        void operator=(const directionalDiffusivity&) = delete;
 
 
 public:

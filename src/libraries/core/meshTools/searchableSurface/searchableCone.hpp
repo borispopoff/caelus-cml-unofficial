@@ -132,12 +132,6 @@ class searchableCone
         //- Return the boundBox of the cylinder
         boundBox calcBounds() const;
 
-        //- No copy construct
-        searchableCone(const searchableCone&) = delete;
-
-        //- No copy assignment
-        void operator=(const searchableCone&) = delete;
-
 
 public:
 
@@ -166,6 +160,9 @@ public:
             const dictionary& dict
         );
 
+        //- No copy construct
+        searchableCone(const searchableCone&) = delete;
+
 
     //- Destructor
     virtual ~searchableCone() = default;
@@ -185,7 +182,7 @@ public:
         //- What is type of points outside bounds
         virtual volumeType outsideVolumeType() const
         {
-            return volumeType::OUTSIDE;
+            return volumeType::outside;
         }
 
         //- Range of local indices that can be returned.
@@ -281,6 +278,12 @@ public:
                 NotImplemented;
                 return false;
             }
+
+
+    // Member Operators
+
+        //- No copy assignment
+        void operator=(const searchableCone&) = delete;
 };
 
 

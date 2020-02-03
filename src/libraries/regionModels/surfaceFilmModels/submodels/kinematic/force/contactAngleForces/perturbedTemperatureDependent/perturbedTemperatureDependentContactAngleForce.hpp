@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017-2018 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -84,10 +84,13 @@ class perturbedTemperatureDependentContactAngleForce
         perturbedTemperatureDependentContactAngleForce
         (
             const perturbedTemperatureDependentContactAngleForce&
-        );
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const perturbedTemperatureDependentContactAngleForce&);
+        void operator=
+        (
+            const perturbedTemperatureDependentContactAngleForce&
+        ) = delete;
 
 
 protected:

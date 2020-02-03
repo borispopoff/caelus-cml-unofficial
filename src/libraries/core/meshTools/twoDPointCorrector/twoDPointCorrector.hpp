@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -82,12 +82,6 @@ class twoDPointCorrector
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        twoDPointCorrector(const twoDPointCorrector&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const twoDPointCorrector&);
-
 
         //- Calculate addressing
         void calcAddressing() const;
@@ -115,6 +109,9 @@ public:
 
         //- Construct from components
         twoDPointCorrector(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construct
+        twoDPointCorrector(const twoDPointCorrector&) = delete;
 
 
     //- Destructor
@@ -149,6 +146,12 @@ public:
 
         //- Correct weighting factors for moving mesh.
         bool movePoints();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const twoDPointCorrector&) = delete;
 };
 
 

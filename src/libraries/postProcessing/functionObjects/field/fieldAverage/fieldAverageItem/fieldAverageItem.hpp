@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -63,7 +63,6 @@ class fieldAverageItem;
 Istream& operator>>(Istream&, fieldAverageItem&);
 Ostream& operator<<(Ostream&, const fieldAverageItem&);
 
-
 /*---------------------------------------------------------------------------*\
                       Class fieldAverageItem Declaration
 \*---------------------------------------------------------------------------*/
@@ -83,10 +82,10 @@ public:
             static const word EXT_PRIME2MEAN;
 
         //- Enumeration defining the averaging base type
-        enum baseType
+        enum class baseType
         {
-            ITER,
-            TIME
+            iter,
+            time
         };
 
 
@@ -207,16 +206,16 @@ public:
                 return baseTypeNames_[base_];
             }
 
-            //- Return true if base is ITER
+            //- Return true if base is iter
             Switch iterBase() const
             {
-                return base_ == ITER;
+                return base_ == baseType::iter;
             }
 
             //- Return true if base is time
             Switch timeBase() const
             {
-                return base_ == TIME;
+                return base_ == baseType::time;
             }
 
             scalar window() const

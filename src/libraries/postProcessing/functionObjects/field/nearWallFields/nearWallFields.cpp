@@ -87,7 +87,7 @@ void CML::nearWallFields::calcAddressing()
                 (
                     mesh,
                     meshFacei,
-                    polyMesh::FACEDIAGTETS
+                    polyMesh::FACE_DIAG_TRIS
                 )
             );
 
@@ -172,7 +172,7 @@ void CML::nearWallFields::calcAddressing()
 
 
     // Rework cell-to-globalpatchface into a map
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
     getPatchDataMapPtr_.reset
     (
         new mapDistribute

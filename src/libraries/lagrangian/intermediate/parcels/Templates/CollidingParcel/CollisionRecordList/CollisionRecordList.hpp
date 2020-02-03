@@ -73,10 +73,10 @@ class CollisionRecordList
     // Private data
 
         //- List of active pair collisions
-        DynamicList<PairCollisionRecord<PairType> > pairRecords_;
+        DynamicList<PairCollisionRecord<PairType>> pairRecords_;
 
         //- List of active wall collisions
-        DynamicList<WallCollisionRecord<WallType> > wallRecords_;
+        DynamicList<WallCollisionRecord<WallType>> wallRecords_;
 
 
 public:
@@ -108,11 +108,11 @@ public:
     // Member Functions
 
         //- Return the active pair collisions
-        inline const DynamicList<PairCollisionRecord<PairType> >&
+        inline const DynamicList<PairCollisionRecord<PairType>>&
             pairRecords() const;
 
         //- Return the active wall collisions
-        inline const DynamicList<WallCollisionRecord<WallType> >&
+        inline const DynamicList<WallCollisionRecord<WallType>>&
             wallRecords() const;
 
         // Fields representing the data from each record, i.e if the
@@ -231,7 +231,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class PairType, class WallType>
-const CML::DynamicList<CML::PairCollisionRecord<PairType> >&
+const CML::DynamicList<CML::PairCollisionRecord<PairType>>&
 CML::CollisionRecordList<PairType, WallType>::pairRecords() const
 {
     return pairRecords_;
@@ -239,7 +239,7 @@ CML::CollisionRecordList<PairType, WallType>::pairRecords() const
 
 
 template<class PairType, class WallType>
-const CML::DynamicList<CML::WallCollisionRecord<WallType> >&
+const CML::DynamicList<CML::WallCollisionRecord<WallType>>&
 CML::CollisionRecordList<PairType, WallType>::wallRecords() const
 {
     return wallRecords_;
@@ -575,7 +575,7 @@ template<class PairType, class WallType>
 void CML::CollisionRecordList<PairType, WallType>::update()
 {
     {
-        DynamicList<PairCollisionRecord<PairType> > updatedRecords;
+        DynamicList<PairCollisionRecord<PairType>> updatedRecords;
 
         forAll(pairRecords_, i)
         {
@@ -591,7 +591,7 @@ void CML::CollisionRecordList<PairType, WallType>::update()
     }
 
     {
-        DynamicList<WallCollisionRecord<WallType> > updatedRecords;
+        DynamicList<WallCollisionRecord<WallType>> updatedRecords;
 
         forAll(wallRecords_, i)
         {

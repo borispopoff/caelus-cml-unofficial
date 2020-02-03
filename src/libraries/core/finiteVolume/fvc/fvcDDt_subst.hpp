@@ -45,14 +45,14 @@ namespace CML
 namespace fvc
 {
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > DDt
+    tmp<GeometricField<Type, fvPatchField, volMesh>> DDt
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > DDt
+    tmp<GeometricField<Type, fvPatchField, volMesh>> DDt
     (
         const tmp<surfaceScalarField>&,
         const GeometricField<Type, fvPatchField, volMesh>&
@@ -82,14 +82,14 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 DDt
 (
     const surfaceScalarField& phi,
     const GeometricField<Type, fvPatchField, volMesh>& psi
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh> > ddtDivPhiPsi
+    tmp<GeometricField<Type, fvPatchField, volMesh>> ddtDivPhiPsi
         = fvc::ddt(psi) + fvc::div(phi, psi);
 
     if (phi.mesh().moving())
@@ -104,14 +104,14 @@ DDt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 DDt
 (
     const tmp<surfaceScalarField>& tphi,
     const GeometricField<Type, fvPatchField, volMesh>& psi
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh> > DDtPsi
+    tmp<GeometricField<Type, fvPatchField, volMesh>> DDtPsi
     (
         fvc::DDt(tphi(), psi)
     );

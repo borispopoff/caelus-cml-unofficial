@@ -42,7 +42,7 @@ addToRunTimeSelectionTable
 
 void rawVelocityProbes::resizeFields
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     List<vectorField>& Us,
     label N
 )
@@ -60,7 +60,7 @@ void rawVelocityProbes::resizeFields
 
 void rawVelocityProbes::writeRawData
 (
-    const List<std::pair<scalar, label> >& timeLabel,
+    const List<std::pair<scalar, label>>& timeLabel,
     const scalarField& x,
     const scalarField& y,
     const scalarField& z,
@@ -69,7 +69,7 @@ void rawVelocityProbes::writeRawData
 {
     // Write the time vector
     scalarField output0(timeLabel.size(), 0.0);
-    vectorField output1(timeLabel.size(), vector::zero);
+    vectorField output1(timeLabel.size(), Zero);
 
     {
         forAll (timeLabel, labeli)
@@ -151,7 +151,7 @@ rawVelocityProbes::~rawVelocityProbes()
 
 void rawVelocityProbes::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     scalarField x, y, z;
     List<vectorField> Us;
 
@@ -163,7 +163,7 @@ void rawVelocityProbes::evaluate()
 
 void rawVelocityProbes::readVelocityProbeData
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     scalarField& x,
     scalarField& y,
     scalarField& z,
@@ -280,7 +280,7 @@ void rawVelocityProbes::readVelocityProbeData
 
             forAll (Us, UI)
             {
-                vector temp(vector::zero);
+                vector temp(Zero);
 
                 // Reading the first vector component with starting parenteres
                 iss >> dummy;

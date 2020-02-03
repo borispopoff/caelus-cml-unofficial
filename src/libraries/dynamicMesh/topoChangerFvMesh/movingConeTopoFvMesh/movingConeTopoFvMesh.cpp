@@ -58,7 +58,7 @@ CML::tmp<CML::scalarField> CML::movingConeTopoFvMesh::vertexMarkup
         << curLeft << " curRight: " << curRight << endl;
 
     tmp<scalarField> tvertexMarkup(new scalarField(p.size()));
-    scalarField& vertexMarkup = tvertexMarkup();
+    scalarField& vertexMarkup = tvertexMarkup.ref();
 
     forAll(p, pI)
     {
@@ -113,38 +113,38 @@ void CML::movingConeTopoFvMesh::addZonesAndModifiers()
     boolList flipZone2(fc.size(), false);
     label nZoneFaces2 = 0;
 
-    forAll(fc, faceI)
+    forAll(fc, facei)
     {
         if
         (
-            fc[faceI].x() > -0.003501
-         && fc[faceI].x() < -0.003499
+            fc[facei].x() > -0.003501
+         && fc[facei].x() < -0.003499
         )
         {
-            if ((fa[faceI] & vector(1, 0, 0)) < 0)
+            if ((fa[facei] & vector(1, 0, 0)) < 0)
             {
                 flipZone1[nZoneFaces1] = true;
             }
 
-            zone1[nZoneFaces1] = faceI;
-            Info<< "face " << faceI << " for zone 1.  Flip: "
+            zone1[nZoneFaces1] = facei;
+            Info<< "face " << facei << " for zone 1.  Flip: "
                 << flipZone1[nZoneFaces1] << endl;
             nZoneFaces1++;
         }
         else if
         (
-            fc[faceI].x() > -0.00701
-         && fc[faceI].x() < -0.00699
+            fc[facei].x() > -0.00701
+         && fc[facei].x() < -0.00699
         )
         {
-            zone2[nZoneFaces2] = faceI;
+            zone2[nZoneFaces2] = facei;
 
-            if ((fa[faceI] & vector(1, 0, 0)) > 0)
+            if ((fa[facei] & vector(1, 0, 0)) > 0)
             {
                 flipZone2[nZoneFaces2] = true;
             }
 
-            Info<< "face " << faceI << " for zone 2.  Flip: "
+            Info<< "face " << facei << " for zone 2.  Flip: "
                 << flipZone2[nZoneFaces2] << endl;
             nZoneFaces2++;
         }
@@ -347,9 +347,9 @@ bool CML::movingConeTopoFvMesh::update()
             //
             //    const pointField& currentPoints = points();
             //    label vertI = 0;
-            //    forAll(currentPoints, pointI)
+            //    forAll(currentPoints, pointi)
             //    {
-            //        meshTools::writeOBJ(str, currentPoints[pointI]);
+            //        meshTools::writeOBJ(str, currentPoints[pointi]);
             //        vertI++;
             //    }
             //    forAll(edges(), edgeI)
@@ -366,9 +366,9 @@ bool CML::movingConeTopoFvMesh::update()
             //    const pointField& newPoints =
             //        topoChangeMap().preMotionPoints();
             //    label vertI = 0;
-            //    forAll(newPoints, pointI)
+            //    forAll(newPoints, pointi)
             //    {
-            //        meshTools::writeOBJ(str, newPoints[pointI]);
+            //        meshTools::writeOBJ(str, newPoints[pointi]);
             //        vertI++;
             //    }
             //    forAll(edges(), edgeI)

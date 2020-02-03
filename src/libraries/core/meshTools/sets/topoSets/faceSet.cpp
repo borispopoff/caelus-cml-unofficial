@@ -118,16 +118,16 @@ void faceSet::sync(const polyMesh& mesh)
 
     label nAdded = 0;
 
-    forAll(set, faceI)
+    forAll(set, facei)
     {
-        if (set[faceI])
+        if (set[facei])
         {
-            if (insert(faceI))
+            if (insert(facei))
             {
                 nAdded++;
             }
         }
-        else if (found(faceI))
+        else if (found(facei))
         {
             FatalErrorInFunction
                 << "Problem : syncing removed faces from set."

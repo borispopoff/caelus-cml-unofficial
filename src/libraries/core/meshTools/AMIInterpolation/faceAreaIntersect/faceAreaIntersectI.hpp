@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,29 +60,6 @@ inline CML::faceAreaIntersect::triPoints CML::faceAreaIntersect::getTriPoints
     }
 
     return result;
-}
-
-
-inline void CML::faceAreaIntersect::triangleFan
-(
-    const face& f,
-    DynamicList<face>& faces
-) const
-{
-    if (f.size() > 2)
-    {
-        const label v0 = 0;
-
-        labelList indices(3);
-
-        for (label i = 1; i < f.size() - 1; i++)
-        {
-            indices[0] = f[v0];
-            indices[1] = f[i];
-            indices[2] = f[i + 1];
-            faces.append(face(indices));
-        }
-    }
 }
 
 

@@ -36,33 +36,33 @@ CML::cellShape CML::degenerateMatcher::match
 (
     const faceList& faces,
     const labelList& owner,
-    const label cellI,
+    const label celli,
     const labelList& cellFaces
 )
 {
     // Recognize in order of assumed occurrence.
 
-    if (hex.matchShape(false, faces, owner, cellI, cellFaces))
+    if (hex.matchShape(false, faces, owner, celli, cellFaces))
     {
         return cellShape(hex.model(), hex.vertLabels());
     }
-    else if (tet.matchShape(false, faces, owner, cellI, cellFaces))
+    else if (tet.matchShape(false, faces, owner, celli, cellFaces))
     {
         return cellShape(tet.model(), tet.vertLabels());
     }
-    else if (prism.matchShape(false, faces, owner, cellI, cellFaces))
+    else if (prism.matchShape(false, faces, owner, celli, cellFaces))
     {
         return cellShape(prism.model(), prism.vertLabels());
     }
-    else if (pyr.matchShape(false, faces, owner, cellI, cellFaces))
+    else if (pyr.matchShape(false, faces, owner, celli, cellFaces))
     {
         return cellShape(pyr.model(), pyr.vertLabels());
     }
-    else if (wedge.matchShape(false, faces, owner, cellI, cellFaces))
+    else if (wedge.matchShape(false, faces, owner, celli, cellFaces))
     {
         return cellShape(wedge.model(), wedge.vertLabels());
     }
-    else if (tetWedge.matchShape(false, faces, owner, cellI, cellFaces))
+    else if (tetWedge.matchShape(false, faces, owner, celli, cellFaces))
     {
         return cellShape(tetWedge.model(), tetWedge.vertLabels());
     }
@@ -96,15 +96,15 @@ CML::cellShape CML::degenerateMatcher::match(const cellShape& shape)
 CML::cellShape CML::degenerateMatcher::match
 (
     const primitiveMesh& mesh,
-    const label cellI
+    const label celli
 )
 {
     return match
     (
         mesh.faces(),
         mesh.faceOwner(),
-        cellI,
-        mesh.cells()[cellI]
+        celli,
+        mesh.cells()[celli]
     );
 }
 

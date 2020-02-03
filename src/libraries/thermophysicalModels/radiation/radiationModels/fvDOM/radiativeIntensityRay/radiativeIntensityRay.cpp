@@ -63,7 +63,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("I", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("I", dimMass/pow3(dimTime), 0)
     ),
     qr_
     (
@@ -76,7 +76,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qr", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qr", dimMass/pow3(dimTime), 0)
     ),
     qin_
     (
@@ -89,7 +89,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qin", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qin", dimMass/pow3(dimTime), 0)
     ),
     qem_
     (
@@ -102,10 +102,10 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qem", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qem", dimMass/pow3(dimTime), 0)
     ),
-    d_(vector::zero),
-    dAve_(vector::zero),
+    d_(Zero),
+    dAve_(Zero),
     theta_(theta),
     phi_(phi),
     omega_(0.0),
@@ -137,7 +137,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
     // dimension cases
     if (mesh_.nSolutionD() == 2)
     {
-        vector meshDir(vector::zero);
+        vector meshDir(Zero);
         for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
         {
             if (mesh_.geometricD()[cmpt] == -1)
@@ -154,7 +154,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
     }
     else if (mesh_.nSolutionD() == 1)
     {
-        vector meshDir(vector::zero);
+        vector meshDir(Zero);
         for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
         {
             if (mesh_.geometricD()[cmpt] == 1)
@@ -232,7 +232,7 @@ CML::radiation::radiativeIntensityRay::radiativeIntensityRay
 CML::scalar CML::radiation::radiativeIntensityRay::correct()
 {
     // Reset boundary heat flux to zero
-    qr_.boundaryField() = 0.0;
+    qr_.boundaryFieldRef() = 0.0;
 
     scalar maxResidual = -GREAT;
 
@@ -276,7 +276,7 @@ CML::scalar CML::radiation::radiativeIntensityRay::correct()
 
 void CML::radiation::radiativeIntensityRay::addIntensity()
 {
-    I_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0);
+    I_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0);
 
     forAll(ILambda_, lambdaI)
     {

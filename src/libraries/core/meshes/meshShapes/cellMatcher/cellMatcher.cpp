@@ -50,9 +50,9 @@ CML::cellMatcher::cellMatcher
     cellModelName_(cellModelName),
     cellModelPtr_(nullptr)
 {
-    forAll(localFaces_, faceI)
+    forAll(localFaces_, facei)
     {
-        face& f = localFaces_[faceI];
+        face& f = localFaces_[facei];
 
         f.setSize(maxVertPerFace);
     }
@@ -80,9 +80,9 @@ CML::label CML::cellMatcher::calcLocalFaces
     label newVertI = 0;
     forAll(myFaces, myFaceI)
     {
-        label faceI = myFaces[myFaceI];
+        label facei = myFaces[myFaceI];
 
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
         face& localFace = localFaces_[myFaceI];
 
         // Size of localFace
@@ -115,7 +115,7 @@ CML::label CML::cellMatcher::calcLocalFaces
         }
 
         // Create face from localvertex labels
-        faceMap_[myFaceI] = faceI;
+        faceMap_[myFaceI] = facei;
     }
 
     // Create local to global vertex mapping
@@ -182,7 +182,7 @@ void CML::cellMatcher::calcEdgeAddressing(const label numVert)
 }
 
 
-// Create pointFaceIndex_ : map from vertI, faceI to index of vertI on faceI.
+// Create pointFaceIndex_ : map from vertI, facei to index of vertI on facei.
 void CML::cellMatcher::calcPointFaceIndex()
 {
     // Fill pointFaceIndex_ with -1
@@ -211,7 +211,7 @@ void CML::cellMatcher::calcPointFaceIndex()
 }
 
 
-// Given edge(v0,v1) and (local)faceI return the other face
+// Given edge(v0,v1) and (local)facei return the other face
 CML::label CML::cellMatcher::otherFace
 (
     const label numVert,
@@ -248,13 +248,13 @@ void CML::cellMatcher::write(CML::Ostream& os) const
 {
     os  << "Faces:" << endl;
 
-    forAll(localFaces_, faceI)
+    forAll(localFaces_, facei)
     {
         os  << "    ";
 
-        for (label fp = 0; fp < faceSize_[faceI]; fp++)
+        for (label fp = 0; fp < faceSize_[facei]; fp++)
         {
-            os  << ' ' << localFaces_[faceI][fp];
+            os  << ' ' << localFaces_[facei][fp];
         }
         os  << endl;
     }

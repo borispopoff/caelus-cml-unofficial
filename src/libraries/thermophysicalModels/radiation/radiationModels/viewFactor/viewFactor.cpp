@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -45,7 +45,7 @@ namespace CML
 void CML::radiation::viewFactor::initialise()
 {
     const polyBoundaryMesh& coarsePatches = coarseMesh_.boundaryMesh();
-    const volScalarField::GeometricBoundaryField& qrp = qr_.boundaryField();
+    const volScalarField::Boundary& qrp = qr_.boundaryFieldRef();
 
     label count = 0;
     forAll(qrp, patchi)
@@ -124,8 +124,8 @@ void CML::radiation::viewFactor::initialise()
         new mapDistribute
         (
             consMapDim[0],
-            Xfer<labelListList>(subMap),
-            Xfer<labelListList>(constructMap)
+            move(subMap),
+            move(constructMap)
         )
     );
 
@@ -398,7 +398,7 @@ void CML::radiation::viewFactor::calculate()
     DynamicList<scalar> localCoarseEave(nLocalCoarseFaces_);
     DynamicList<scalar> localCoarseHoave(nLocalCoarseFaces_);
 
-    volScalarField::GeometricBoundaryField& qrBf = qr_.boundaryField();
+    volScalarField::Boundary& qrBf = qr_.boundaryFieldRef();
 
     forAll(selectedPatches_, i)
     {
@@ -462,9 +462,9 @@ void CML::radiation::viewFactor::calculate()
     }
 
     // Fill the local values to distribute
-    SubList<scalar>(compactCoarseT4, nLocalCoarseFaces_).assign(localCoarseT4ave);
-    SubList<scalar>(compactCoarseE, nLocalCoarseFaces_).assign(localCoarseEave);
-    SubList<scalar>(compactCoarseHo, nLocalCoarseFaces_).assign(localCoarseHoave);
+    SubList<scalar>(compactCoarseT4, nLocalCoarseFaces_) = localCoarseT4ave;
+    SubList<scalar>(compactCoarseE, nLocalCoarseFaces_) = localCoarseEave;
+    SubList<scalar>(compactCoarseHo, nLocalCoarseFaces_) = localCoarseHoave;
 
     // Distribute data
     map_->distribute(compactCoarseT4);
@@ -485,7 +485,7 @@ void CML::radiation::viewFactor::calculate()
     (
         compactGlobalIds,
         nLocalCoarseFaces_
-    ).assign(localGlobalIds);
+    ) = localGlobalIds;
 
     map_->distribute(compactGlobalIds);
 
@@ -692,12 +692,12 @@ CML::tmp<CML::volScalarField> CML::radiation::viewFactor::Rp() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::radiation::viewFactor::Ru() const
 {
-    return tmp<DimensionedField<scalar, volMesh> >
+    return tmp<volScalarField::Internal>
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -709,7 +709,7 @@ CML::radiation::viewFactor::Ru() const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0.0)
+            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0)
         )
     );
 }

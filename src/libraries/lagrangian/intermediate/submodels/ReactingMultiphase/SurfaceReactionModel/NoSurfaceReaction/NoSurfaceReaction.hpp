@@ -58,9 +58,9 @@ public:
         NoSurfaceReaction(const NoSurfaceReaction<CloudType>& srm);
 
         //- Construct and return a clone
-        virtual autoPtr<SurfaceReactionModel<CloudType> > clone() const
+        virtual autoPtr<SurfaceReactionModel<CloudType>> clone() const
         {
-            return autoPtr<SurfaceReactionModel<CloudType> >
+            return autoPtr<SurfaceReactionModel<CloudType>>
             (
                 new NoSurfaceReaction<CloudType>(*this)
             );

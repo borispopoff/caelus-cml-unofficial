@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,10 +47,10 @@ class ensightFile
 {
     // Private data
 
-        //- allow undef in results
+        //- Allow undef in results
         static bool allowUndef_;
 
-        //- value to represent undef in results
+        //- Value to represent undef in results
         static scalar undefValue_;
 
         //- The '*' mask appropriate for subDir
@@ -63,7 +63,7 @@ class ensightFile
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const ensightFile&);
+        void operator=(const ensightFile&) = delete;
 
         //- Disallow default copy constructor
         ensightFile(const ensightFile&);

@@ -357,12 +357,12 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<ReactingMultiphaseParcel<ParcelType> > operator()
+            autoPtr<ReactingMultiphaseParcel<ParcelType>> operator()
             (
                 Istream& is
             ) const
             {
-                return autoPtr<ReactingMultiphaseParcel<ParcelType> >
+                return autoPtr<ReactingMultiphaseParcel<ParcelType>>
                 (
                     new ReactingMultiphaseParcel<ParcelType>(mesh_, is, true)
                 );
@@ -1466,7 +1466,7 @@ void CML::ReactingMultiphaseParcel<ParcelType>::readFields
     const wordList& stateLabels = compModel.stateLabels();
 
     // Set storage for each Y... for each parcel
-    forAllIter(typename Cloud<ReactingMultiphaseParcel<ParcelType> >, c, iter)
+    forAllIter(typename Cloud<ReactingMultiphaseParcel<ParcelType>>, c, iter)
     {
         ReactingMultiphaseParcel<ParcelType>& p = iter();
         p.YGas_.setSize(gasNames.size(), 0.0);
@@ -1489,7 +1489,7 @@ void CML::ReactingMultiphaseParcel<ParcelType>::readFields
         label i = 0;
         forAllIter
         (
-            typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+            typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
             c,
             iter
         )
@@ -1513,7 +1513,7 @@ void CML::ReactingMultiphaseParcel<ParcelType>::readFields
         label i = 0;
         forAllIter
         (
-            typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+            typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
             c,
             iter
         )
@@ -1537,7 +1537,7 @@ void CML::ReactingMultiphaseParcel<ParcelType>::readFields
         label i = 0;
         forAllIter
         (
-            typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+            typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
             c,
             iter
         )
@@ -1591,7 +1591,7 @@ void CML::ReactingMultiphaseParcel<ParcelType>::writeFields
             label i = 0;
             forAllConstIter
             (
-                typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+                typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
                 c,
                 iter
             )
@@ -1620,7 +1620,7 @@ void CML::ReactingMultiphaseParcel<ParcelType>::writeFields
             label i = 0;
             forAllConstIter
             (
-                typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+                typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
                 c,
                 iter
             )
@@ -1649,7 +1649,7 @@ void CML::ReactingMultiphaseParcel<ParcelType>::writeFields
             label i = 0;
             forAllConstIter
             (
-                typename Cloud<ReactingMultiphaseParcel<ParcelType> >,
+                typename Cloud<ReactingMultiphaseParcel<ParcelType>>,
                 c,
                 iter
             )

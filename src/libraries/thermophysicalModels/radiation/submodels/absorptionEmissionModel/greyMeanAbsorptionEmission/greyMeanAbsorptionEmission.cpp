@@ -129,12 +129,7 @@ CML::radiation::greyMeanAbsorptionEmission::greyMeanAbsorptionEmission
             }
             else if (mesh.foundObject<volScalarField>(iter.key()))
             {
-                volScalarField& Y =
-                    const_cast<volScalarField&>
-                    (
-                        mesh.lookupObject<volScalarField>(iter.key())
-                    );
-                Yj_.set(j, &Y);
+                Yj_.set(j, &mesh.lookupObjectRef<volScalarField>(iter.key()));
                 specieIndex_[iter()] = 0;
                 j++;
                 Info<< "specie: " << iter.key() << " is being solved" << endl;
@@ -151,13 +146,7 @@ CML::radiation::greyMeanAbsorptionEmission::greyMeanAbsorptionEmission
         }
         else if (mesh.foundObject<volScalarField>(iter.key()))
         {
-            volScalarField& Y =
-                const_cast<volScalarField&>
-                (
-                    mesh.lookupObject<volScalarField>(iter.key())
-                );
-
-            Yj_.set(j, &Y);
+            Yj_.set(j, &mesh.lookupObjectRef<volScalarField>(iter.key()));
             specieIndex_[iter()] = 0;
             j++;
         }
@@ -199,12 +188,12 @@ CML::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
                 IOobject::NO_WRITE
             ),
             mesh(),
-            dimensionedScalar("a", dimless/dimLength, 0.0),
+            dimensionedScalar("a", dimless/dimLength, 0),
             extrapolatedCalculatedFvPatchVectorField::typeName
         )
     );
 
-    scalarField& a = ta().internalField();
+    scalarField& a = ta.ref().primitiveFieldRef();
 
     forAll(a, celli)
     {
@@ -252,7 +241,7 @@ CML::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
                 );
         }
     }
-    ta().correctBoundaryConditions();
+    ta.ref().correctBoundaryConditions();
     return ta;
 }
 
@@ -280,7 +269,7 @@ CML::radiation::greyMeanAbsorptionEmission::ECont(const label bandI) const
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0.0)
+            dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0)
         )
     );
 
@@ -291,11 +280,11 @@ CML::radiation::greyMeanAbsorptionEmission::ECont(const label bandI) const
 
         if (Qdot.dimensions() == dimEnergy/dimTime)
         {
-            E().internalField() = EhrrCoeff_*Qdot/mesh_.V();
+            E.ref().primitiveFieldRef() = EhrrCoeff_*Qdot/mesh_.V();
         }
         else if (Qdot.dimensions() == dimEnergy/dimTime/dimVolume)
         {
-            E().internalField() = EhrrCoeff_*Qdot;
+            E.ref().primitiveFieldRef() = EhrrCoeff_*Qdot;
         }
         else
         {

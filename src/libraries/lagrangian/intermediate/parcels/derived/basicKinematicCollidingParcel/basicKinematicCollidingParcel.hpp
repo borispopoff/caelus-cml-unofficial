@@ -40,7 +40,7 @@ SourceFiles
 
 namespace CML
 {
-    typedef CollidingParcel<KinematicParcel<particle> >
+    typedef CollidingParcel<KinematicParcel<particle>>
         basicKinematicCollidingParcel;
 
     template<>

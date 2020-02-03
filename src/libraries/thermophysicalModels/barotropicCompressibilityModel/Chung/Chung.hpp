@@ -50,10 +50,9 @@ class Chung
     public barotropicCompressibilityModel
 {
 
+    dimensionedScalar pSat_;
     dimensionedScalar psiv_;
     dimensionedScalar psil_;
-
-    dimensionedScalar rhovSat_;
     dimensionedScalar rholSat_;
 
 

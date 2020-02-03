@@ -41,7 +41,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class processorCyclicFvPatch Declaration
+                 Class processorCyclicFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -49,7 +49,7 @@ class processorCyclicFvPatchField
 :
     public processorFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the processor patch
         const processorCyclicFvPatch& procPatch_;
@@ -95,19 +95,19 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         processorCyclicFvPatchField(const processorCyclicFvPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new processorCyclicFvPatchField<Type>(*this)
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         processorCyclicFvPatchField
         (
             const processorCyclicFvPatchField<Type>&,
@@ -115,12 +115,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new processorCyclicFvPatchField<Type>(*this, iF)
             );
@@ -128,15 +128,14 @@ public:
 
 
     // Destructor
+    virtual ~processorCyclicFvPatchField();
 
-        ~processorCyclicFvPatchField();
 
-
-    // Member functions
+    // Member Functions
 
         // Access
 
-            //- Does the patch field perform the transfromation
+            //- Does the patch field perform the transformation
             virtual bool doTransform() const
             {
                 return !(procPatch_.parallel() || pTraits<Type>::rank == 0);
@@ -147,16 +146,11 @@ public:
             {
                 return procPatch_.forwardT();
             }
-
-
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "processorCyclicFvPatch.hpp"
 #include "demandDrivenData.hpp"
@@ -210,8 +204,8 @@ CML::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -235,12 +229,12 @@ CML::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 
-    if (Pstream::defaultCommsType == Pstream::scheduled)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         WarningInFunction
             << "Scheduled communication with split cyclics not supported."
@@ -282,8 +276,4 @@ CML::processorCyclicFvPatchField<Type>::~processorCyclicFvPatchField()
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

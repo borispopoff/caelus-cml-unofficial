@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 Copyright (C) 2014 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -254,7 +254,7 @@ void CML::GAMGSolver::Vcycle
         // Only store the preSmoothedCoarseCorrField is pre-smoothing is used
         if (nPreSweeps_)
         {
-            preSmoothedCoarseCorrField.assign(coarseCorrFields[leveli]);
+            preSmoothedCoarseCorrField = coarseCorrFields[leveli];
         }
 
         agglomeration_.prolongField

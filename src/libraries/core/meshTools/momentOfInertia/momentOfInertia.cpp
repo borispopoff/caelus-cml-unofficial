@@ -194,8 +194,8 @@ void CML::momentOfInertia::massPropertiesShell
     // Reset properties for accumulation
 
     mass = 0.0;
-    cM = vector::zero;
-    J = tensor::zero;
+    cM = Zero;
+    J = Zero;
 
     // Find centre of mass
 
@@ -302,7 +302,7 @@ CML::tmp<CML::tensorField> CML::momentOfInertia::meshInertia
 {
     tmp<tensorField> tTf = tmp<tensorField>(new tensorField(mesh.nCells()));
 
-    tensorField& tf = tTf();
+    tensorField& tf = tTf.ref();
 
     forAll(tf, cI)
     {
@@ -316,13 +316,13 @@ CML::tmp<CML::tensorField> CML::momentOfInertia::meshInertia
 CML::tensor CML::momentOfInertia::meshInertia
 (
     const polyMesh& mesh,
-    label cellI
+    label celli
 )
 {
     List<tetIndices> cellTets = polyMeshTetDecomposition::cellTetIndices
     (
         mesh,
-        cellI
+        celli
     );
 
     triFaceList faces(cellTets.size());
@@ -333,8 +333,8 @@ CML::tensor CML::momentOfInertia::meshInertia
     }
 
     scalar m = 0.0;
-    vector cM = vector::zero;
-    tensor J = tensor::zero;
+    vector cM = Zero;
+    tensor J = Zero;
 
     massPropertiesSolid(mesh.points(), faces, 1.0, m, cM, J);
 

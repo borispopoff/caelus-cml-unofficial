@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -30,15 +30,14 @@ Description
 #define bMesh_H
 
 #include "PrimitivePatch_.hpp"
-#include "face.hpp"
-#include "List.hpp"
+#include "faceList.hpp"
 #include "pointField.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace CML
 {
-    typedef PrimitivePatch<face, List, const pointField> bMesh;
+    typedef PrimitivePatch<faceList, const pointField> bMesh;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

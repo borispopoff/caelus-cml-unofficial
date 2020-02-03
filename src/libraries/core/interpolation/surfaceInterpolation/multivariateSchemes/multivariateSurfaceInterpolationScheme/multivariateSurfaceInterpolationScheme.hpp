@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -38,13 +38,13 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class multivariateSurfaceInterpolationScheme Declaration
+           Class multivariateSurfaceInterpolationScheme Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
 class multivariateSurfaceInterpolationScheme
 :
-    public refCount
+    public tmp<multivariateSurfaceInterpolationScheme<Type>>::refCount
 {
 
 public:
@@ -75,18 +75,6 @@ private:
 
         //- HashTable of pointers to the field set
         const fieldTable& fields_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multivariateSurfaceInterpolationScheme
-        (
-            const multivariateSurfaceInterpolationScheme&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateSurfaceInterpolationScheme&);
 
 
 public:
@@ -123,11 +111,17 @@ public:
             Istream& schemeData
         );
 
+        //- Disallow default bitwise copy construct
+        multivariateSurfaceInterpolationScheme
+        (
+            const multivariateSurfaceInterpolationScheme&
+        ) = delete;
+
 
     // Selectors
 
         //- Return a pointer to a new gradScheme created on freestore
-        static tmp<multivariateSurfaceInterpolationScheme<Type> > New
+        static tmp<multivariateSurfaceInterpolationScheme<Type>> New
         (
             const fvMesh& mesh,
             const fieldTable& fields,
@@ -186,10 +180,16 @@ public:
                 ) const = 0;
         };
 
-        virtual tmp<surfaceInterpolationScheme<Type> > operator()
+        virtual tmp<surfaceInterpolationScheme<Type>> operator()
         (
             const GeometricField<Type, fvPatchField, volMesh>& field
         ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateSurfaceInterpolationScheme&) = delete;
 };
 
 
@@ -206,7 +206,7 @@ public:
 defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                              \
                                                                                \
 multivariateSurfaceInterpolationScheme<Type>::                                 \
-addIstreamConstructorToTable<SS<Type> >                                        \
+addIstreamConstructorToTable<SS<Type>>                                        \
     add##SS##Type##ConstructorToTable_;
 
 
@@ -254,7 +254,7 @@ multivariateSurfaceInterpolationScheme
 
 // Return weighting factors for scheme given by name in dictionary
 template<class Type>
-tmp<multivariateSurfaceInterpolationScheme<Type> >
+tmp<multivariateSurfaceInterpolationScheme<Type>>
 multivariateSurfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,

@@ -118,12 +118,12 @@ public:
 template<class BasicSolidThermo, class MixtureType>
 void CML::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
 {
-    scalarField& TCells = this->T_.internalField();
+    scalarField& TCells = this->T_.primitiveFieldRef();
 
-    const scalarField& hCells = this->he_.internalField();
-    const scalarField& pCells = this->p_.internalField();
-    scalarField& rhoCells = this->rho_.internalField();
-    scalarField& alphaCells = this->alpha_.internalField();
+    const scalarField& hCells = this->he_;
+    const scalarField& pCells = this->p_;
+    scalarField& rhoCells = this->rho_.primitiveFieldRef();
+    scalarField& alphaCells = this->alpha_.primitiveFieldRef();
 
     forAll(TCells, celli)
     {
@@ -148,20 +148,20 @@ void CML::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
             mixture_.Cpv(pCells[celli], TCells[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& pBf =
-        this->p_.boundaryField();
+    volScalarField::Boundary& pBf =
+        this->p_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& TBf =
-        this->T_.boundaryField();
+    volScalarField::Boundary& TBf =
+        this->T_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& rhoBf =
-        this->rho_.boundaryField();
+    volScalarField::Boundary& rhoBf =
+        this->rho_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& heBf =
-        this->he().boundaryField();
+    volScalarField::Boundary& heBf =
+        this->he().boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& alphaBf =
-        this->alpha_.boundaryField();
+    volScalarField::Boundary& alphaBf =
+        this->alpha_.boundaryFieldRef();
 
     forAll(this->T_.boundaryField(), patchi)
     {
@@ -299,10 +299,10 @@ CML::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
         )
     );
 
-    volVectorField& Kappa = tKappa();
-    vectorField& KappaCells = Kappa.internalField();
-    const scalarField& TCells = this->T_.internalField();
-    const scalarField& pCells = this->p_.internalField();
+    volVectorField& Kappa = tKappa.ref();
+    vectorField& KappaCells = Kappa.primitiveFieldRef();
+    const scalarField& TCells = this->T_;
+    const scalarField& pCells = this->p_;
 
     forAll(KappaCells, celli)
     {
@@ -315,7 +315,7 @@ CML::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
             ).Kappa(pCells[celli], TCells[celli]);
     }
 
-    volVectorField::GeometricBoundaryField& KappaBf = Kappa.boundaryField();
+    volVectorField::Boundary& KappaBf = Kappa.boundaryFieldRef();
 
     forAll(KappaBf, patchi)
     {
@@ -351,7 +351,7 @@ CML::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa
     const scalarField& Tp = this->T_.boundaryField()[patchi];
     tmp<vectorField> tKappa(new vectorField(pp.size()));
 
-    vectorField& Kappap = tKappa();
+    vectorField& Kappap = tKappa.ref();
 
     forAll(Tp, facei)
     {

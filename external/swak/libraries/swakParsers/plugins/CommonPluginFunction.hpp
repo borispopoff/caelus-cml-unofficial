@@ -216,7 +216,7 @@ public:
     );
 
     template <typename T>
-    tmp<Field<T> > evaluate(
+    tmp<Field<T>> evaluate(
         const string &content,
         int &consumed,
         bool isPoint

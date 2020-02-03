@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -33,6 +33,7 @@ Description
 #include "HashTable.hpp"
 #include "stringList.hpp"
 #include "wordList.hpp"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,13 +49,16 @@ class NamedEnum
 :
     public HashTable<unsigned int>
 {
+    //- nEnum must be positive (non-zero)
+    static_assert(nEnum > 0, "nEnum must be positive (non-zero)");
+
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        NamedEnum(const NamedEnum&);
+        NamedEnum(const NamedEnum&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const NamedEnum&);
+        void operator=(const NamedEnum&) = delete;
 
 
 public:
@@ -224,6 +228,7 @@ const char* CML::NamedEnum<Enum, nEnum>::operator[](const Enum e) const
         return names[0];
     }
 }
+
 #endif
 
 // ************************************************************************* //

@@ -56,7 +56,7 @@ class edge;
 
 class edgeIntersections
 :
-    public List<List<pointIndexHit> >
+    public List<List<pointIndexHit>>
 {
     // Private data
 
@@ -161,7 +161,7 @@ public:
         //- Construct from components
         edgeIntersections
         (
-            const List<List<pointIndexHit> >&,
+            const List<List<pointIndexHit>>&,
             const labelListList&
         );
 

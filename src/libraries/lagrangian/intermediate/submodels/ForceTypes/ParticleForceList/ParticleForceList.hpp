@@ -45,7 +45,7 @@ namespace CML
 template<class CloudType>
 class ParticleForceList
 :
-    public PtrList<ParticleForce<CloudType> >
+    public PtrList<ParticleForce<CloudType>>
 {
     // Private data
 
@@ -205,7 +205,7 @@ CML::ParticleForceList<CloudType>::ParticleForceList
     const fvMesh& mesh
 )
 :
-    PtrList<ParticleForce<CloudType> >(),
+    PtrList<ParticleForce<CloudType>>(),
     owner_(owner),
     mesh_(mesh),
     dict_(dictionary::null),
@@ -223,7 +223,7 @@ CML::ParticleForceList<CloudType>::ParticleForceList
     const bool readFields
 )
 :
-    PtrList<ParticleForce<CloudType> >(),
+    PtrList<ParticleForce<CloudType>>(),
     owner_(owner),
     mesh_(mesh),
     dict_(dict),
@@ -288,7 +288,7 @@ CML::ParticleForceList<CloudType>::ParticleForceList
     const ParticleForceList& pf
 )
 :
-    PtrList<ParticleForce<CloudType> >(pf),
+    PtrList<ParticleForce<CloudType>>(pf),
     owner_(pf.owner_),
     mesh_(pf.mesh_),
     dict_(pf.dict_)

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -33,16 +33,15 @@ namespace CML
     <
         CML::fieldAverageItem::baseType,
         2
-    >::names[] =
-    {
-        "iteration",
-        "time"
-    };
+    >::names[] = {"iteration", "time"};
 }
 
 
-const CML::NamedEnum<CML::fieldAverageItem::baseType, 2>
-    CML::fieldAverageItem::baseTypeNames_;
+const CML::NamedEnum
+<
+    CML::fieldAverageItem::baseType,
+    2
+> CML::fieldAverageItem::baseTypeNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -55,13 +54,16 @@ CML::fieldAverageItem::fieldAverageItem()
     meanFieldName_("unknown"),
     prime2Mean_(0),
     prime2MeanFieldName_("unknown"),
-    base_(ITER),
+    base_(baseType::iter),
     window_(-1.0),
     windowName_("")
 {}
 
 
-CML::fieldAverageItem::fieldAverageItem(const fieldAverageItem& faItem)
+CML::fieldAverageItem::fieldAverageItem
+(
+    const fieldAverageItem& faItem
+)
 :
     active_(faItem.active_),
     fieldName_(faItem.fieldName_),
@@ -83,7 +85,10 @@ CML::fieldAverageItem::~fieldAverageItem()
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-void CML::fieldAverageItem::operator=(const fieldAverageItem& rhs)
+void CML::fieldAverageItem::operator=
+(
+    const fieldAverageItem& rhs
+)
 {
     // Check for assignment to self
     if (this == &rhs)

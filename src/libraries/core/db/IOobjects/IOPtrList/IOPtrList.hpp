@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -69,8 +69,11 @@ public:
         //- Construct from IOobject and a PtrList
         IOPtrList(const IOobject&, const PtrList<T>&);
 
-        //- Construct by transferring the PtrList contents
-        IOPtrList(const IOobject&, const Xfer<PtrList<T> >&);
+        //- Move construct by transferring the PtrList contents
+        IOPtrList(const IOobject&, PtrList<T>&&);
+
+        //- Move constructor
+        IOPtrList(IOPtrList<T>&&);
 
 
     //- Destructor
@@ -85,6 +88,7 @@ public:
     // Member operators
 
         void operator=(const IOPtrList<T>&);
+        void operator=(IOPtrList<T>&&);
 };
 
 
@@ -177,12 +181,11 @@ CML::IOPtrList<T>::IOPtrList(const IOobject& io, const PtrList<T>& list)
 
 
 template<class T>
-CML::IOPtrList<T>::IOPtrList(const IOobject& io, const Xfer<PtrList<T> >& list)
+CML::IOPtrList<T>::IOPtrList(const IOobject& io, PtrList<T>&& list)
 :
-    regIOobject(io)
+    regIOobject(io),
+    PtrList<T>(move(list))
 {
-    PtrList<T>::transfer(list());
-
     if
     (
         (
@@ -196,6 +199,14 @@ CML::IOPtrList<T>::IOPtrList(const IOobject& io, const Xfer<PtrList<T> >& list)
         close();
     }
 }
+
+
+template<class T>
+CML::IOPtrList<T>::IOPtrList(IOPtrList<T>&& list)
+:
+    regIOobject(move(list)),
+    PtrList<T>(move(list))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -223,7 +234,11 @@ void CML::IOPtrList<T>::operator=(const IOPtrList<T>& rhs)
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class T>
+void CML::IOPtrList<T>::operator=(IOPtrList<T>&& rhs)
+{
+    PtrList<T>::operator=(move(rhs));
+}
 
 #endif
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -326,7 +326,7 @@ void CML::searchableSurfaces::findAllIntersections
     const pointField& start,
     const pointField& end,
     labelListList& hitSurfaces,
-    List<List<pointIndexHit> >& hitInfo
+    List<List<pointIndexHit>>& hitInfo
 ) const
 {
     searchableSurfacesQueries::findAllIntersections
@@ -603,7 +603,7 @@ bool CML::searchableSurfaces::checkSizes
 bool CML::searchableSurfaces::checkIntersection
 (
     const scalar tolerance,
-    const autoPtr<writer<scalar> >& setWriter,
+    const autoPtr<writer<scalar>>& setWriter,
     const bool report
 ) const
 {
@@ -687,7 +687,7 @@ bool CML::searchableSurfaces::checkIntersection
                             << " locations."
                             << endl;
 
-                        //vtkSetWriter<scalar> setWriter;
+                        // vtkSetWriter<scalar> setWriter;
                         if (setWriter.valid())
                         {
                             scalarField dist(mag(intersections));
@@ -695,7 +695,7 @@ bool CML::searchableSurfaces::checkIntersection
                             (
                                 names()[i] + '_' + names()[j],
                                 "xyz",
-                                intersections.xfer(),
+                                move(intersections),
                                 dist
                             );
                             wordList valueSetNames(1, "edgeIndex");
@@ -765,9 +765,9 @@ bool CML::searchableSurfaces::checkQuality
             );
 
             label nBadTris = 0;
-            forAll(s, faceI)
+            forAll(s, facei)
             {
-                const labelledTri& f = s[faceI];
+                const labelledTri& f = s[facei];
 
                 scalar q = triPointRef
                 (
@@ -831,7 +831,7 @@ CML::label CML::searchableSurfaces::checkGeometry
 (
     const scalar maxRatio,
     const scalar tol,
-    const autoPtr<writer<scalar> >& setWriter,
+    const autoPtr<writer<scalar>>& setWriter,
     const scalar minQuality,
     const bool report
 ) const

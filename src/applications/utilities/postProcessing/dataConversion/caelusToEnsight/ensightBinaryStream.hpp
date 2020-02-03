@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,10 +54,10 @@ class ensightBinaryStream
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        ensightBinaryStream(const ensightBinaryStream&);
+        ensightBinaryStream(const ensightBinaryStream&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const ensightBinaryStream&);
+        void operator=(const ensightBinaryStream&) = delete;
 
 
 public:

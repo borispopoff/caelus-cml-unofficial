@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressibleSmagorinsky.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -51,6 +52,7 @@ void Smagorinsky::updateSubGridScaleFields(const volTensorField& gradU)
 
     muSgs_ = ck_*rho()*delta()*sqrt(k);
     muSgs_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->muSgs_);
 
     alphaSgs_ = muSgs_/Prt_;
     alphaSgs_.correctBoundaryConditions();

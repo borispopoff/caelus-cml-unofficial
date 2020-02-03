@@ -66,18 +66,18 @@ void ReaderParticleCloud::clearData()
 }
 
 template <typename T>
-tmp<Field<T> > filterValues(
+tmp<Field<T>> filterValues(
     const Field<T> &orig,
     const boolList &mask,
     label size
 ) {
-    tmp<Field<T> > pResult(
+    tmp<Field<T>> pResult(
         new Field<T>(
             size,
             pTraits<T>::zero
         )
     );
-    Field<T> &result=pResult();
+    Field<T> &result=pResult.ref();
     label cnt=0;
     forAll(orig,i)
     {
@@ -177,14 +177,14 @@ autoPtr<ReaderParticleCloud> ReaderParticleCloud::makeCloudFromVariables(
     forAll(positions,i)
     {
 	const vector &pos=positions[i];
-        const label cellI=mesh.findCell(pos);
-        usePos[i]=(cellI>=0);
+        const label celli=mesh.findCell(pos);
+        usePos[i]=(celli>=0);
         if(usePos[i]) {
             cloud.append(
                 new ReaderParticle(
                     mesh,
                     pos,
-                    cellI
+                    celli
                 )
             );
             swakIDs.append(i);

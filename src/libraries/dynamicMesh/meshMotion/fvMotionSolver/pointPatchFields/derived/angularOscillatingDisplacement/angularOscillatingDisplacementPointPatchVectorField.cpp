@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -40,8 +40,8 @@ angularOscillatingDisplacementPointPatchVectorField
 )
 :
     fixedValuePointPatchField<vector>(p, iF),
-    axis_(vector::zero),
-    origin_(vector::zero),
+    axis_(Zero),
+    origin_(Zero),
     angle0_(0.0),
     amplitude_(0.0),
     omega_(0.0),
@@ -151,7 +151,7 @@ void angularOscillatingDisplacementPointPatchVectorField::updateCoeffs()
         return;
     }
 
-    const polyMesh& mesh = this->dimensionedInternalField().mesh()();
+    const polyMesh& mesh = this->internalField().mesh()();
     const Time& t = mesh.time();
 
     scalar angle = angle0_ + amplitude_*sin(omega_*t.value());
@@ -175,18 +175,13 @@ void angularOscillatingDisplacementPointPatchVectorField::write
 ) const
 {
     pointPatchField<vector>::write(os);
-    os.writeKeyword("axis")
-        << axis_ << token::END_STATEMENT << nl;
-    os.writeKeyword("origin")
-        << origin_ << token::END_STATEMENT << nl;
-    os.writeKeyword("angle0")
-        << angle0_ << token::END_STATEMENT << nl;
-    os.writeKeyword("amplitude")
-        << amplitude_ << token::END_STATEMENT << nl;
-    os.writeKeyword("omega")
-        << omega_ << token::END_STATEMENT << nl;
-    p0_.writeEntry("p0", os);
-    writeEntry("value", os);
+    writeEntry(os, "axis", axis_);
+    writeEntry(os, "origin", origin_);
+    writeEntry(os, "angle0", angle0_);
+    writeEntry(os, "amplitude", amplitude_);
+    writeEntry(os, "omega", omega_);
+    writeEntry(os, "p0", p0_);
+    writeEntry(os, "value", *this);
 }
 
 

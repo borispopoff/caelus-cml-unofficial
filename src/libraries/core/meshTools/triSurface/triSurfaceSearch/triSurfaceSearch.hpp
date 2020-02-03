@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,7 +63,7 @@ class triSurfaceSearch
         label maxTreeDepth_;
 
         //- Octree for searches
-        mutable autoPtr<indexedOctree<treeDataTriSurface> > treePtr_;
+        mutable autoPtr<indexedOctree<treeDataTriSurface>> treePtr_;
 
 
     // Private Member Functions
@@ -79,12 +79,6 @@ class triSurfaceSearch
             const DynamicList<pointIndexHit, 1, 1>& hits,
             const vector& lineVec
         ) const;
-
-        //- Disallow default bitwise copy construct
-        triSurfaceSearch(const triSurfaceSearch&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceSearch&);
 
 
 public:
@@ -104,6 +98,9 @@ public:
             const scalar tolerance,
             const label maxTreeDepth
         );
+
+        //- Disallow default bitwise copy construct
+        triSurfaceSearch(const triSurfaceSearch&) = delete;
 
 
     //- Destructor
@@ -172,8 +169,14 @@ public:
         (
             const pointField& start,
             const pointField& end,
-            List<List<pointIndexHit> >& info
+            List<List<pointIndexHit>>& info
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceSearch&) = delete;
 };
 
 

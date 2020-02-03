@@ -142,7 +142,7 @@ public:
     (
         std::ostream&,
         const bool binary,
-        const PtrList<GeometricField<Type, PatchField, GeoMesh> >&,
+        const PtrList<GeometricField<Type, PatchField, GeoMesh>>&,
         const vtkMesh&
     );
 
@@ -153,7 +153,7 @@ public:
         std::ostream&,
         const bool binary,
         const volPointInterpolation&,
-        const PtrList<GeometricField<Type, fvPatchField, volMesh> >&,
+        const PtrList<GeometricField<Type, fvPatchField, volMesh>>&,
         const vtkMesh&
     );
 };
@@ -220,7 +220,7 @@ void CML::writeFuns::write
 
     DynamicList<floatScalar> fField(pTraits<Type>::nComponents*nValues);
 
-    insert(vvf.internalField(), fField);
+    insert(vvf.primitiveField(), fField);
 
     forAll(superCells, superCelli)
     {
@@ -302,7 +302,7 @@ void CML::writeFuns::write
 (
     std::ostream& os,
     const bool binary,
-    const PtrList<GeometricField<Type, PatchField, GeoMesh> >& flds,
+    const PtrList<GeometricField<Type, PatchField, GeoMesh>>& flds,
     const vtkMesh& vMesh
 )
 {
@@ -319,7 +319,7 @@ void CML::writeFuns::write
     std::ostream& os,
     const bool binary,
     const volPointInterpolation& pInterp,
-    const PtrList<GeometricField<Type, fvPatchField, volMesh> >& flds,
+    const PtrList<GeometricField<Type, fvPatchField, volMesh>>& flds,
     const vtkMesh& vMesh
 )
 {

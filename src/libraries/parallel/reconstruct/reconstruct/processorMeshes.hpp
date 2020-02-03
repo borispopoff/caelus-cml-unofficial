@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -77,10 +77,10 @@ class processorMeshes
         void read();
 
         //- Disallow default bitwise copy construct
-        processorMeshes(const processorMeshes&);
+        processorMeshes(const processorMeshes&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const processorMeshes&);
+        void operator=(const processorMeshes&) = delete;
 
 
 public:

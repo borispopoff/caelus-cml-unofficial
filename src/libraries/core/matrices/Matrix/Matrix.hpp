@@ -378,10 +378,10 @@ inline CML::Matrix<Form, Type>::Matrix()
 
 
 template<class Form, class Type>
-inline CML::autoPtr<CML::Matrix<Form, Type> > CML::Matrix<Form, Type>::
+inline CML::autoPtr<CML::Matrix<Form, Type>> CML::Matrix<Form, Type>::
 clone() const
 {
-    return autoPtr<Matrix<Form, Type> >(new Matrix<Form, Type>(*this));
+    return autoPtr<Matrix<Form, Type>>(new Matrix<Form, Type>(*this));
 }
 
 template<class Form, class Type>
@@ -433,7 +433,7 @@ inline CML::Matrix<Form, Type>::Matrix
 template<class Form, class Type>
 inline const CML::Matrix<Form, Type>& CML::Matrix<Form, Type>::null()
 {
-    return NullSingletonRef<Matrix<Form, Type> >();
+    return NullSingletonRef<Matrix<Form, Type>>();
 }
 
 
@@ -513,7 +513,7 @@ inline Type* CML::Matrix<Form, Type>::v()
 
 
 template<class Form, class Type>
-inline CML::ConstMatrixBlock<CML::Matrix<Form, Type> >
+inline CML::ConstMatrixBlock<CML::Matrix<Form, Type>>
 CML::Matrix<Form, Type>::block
 (
     const label m,
@@ -535,7 +535,7 @@ CML::Matrix<Form, Type>::block
 
 template<class Form, class Type>
 template<class VectorSpace>
-inline CML::ConstMatrixBlock<CML::Matrix<Form, Type> >
+inline CML::ConstMatrixBlock<CML::Matrix<Form, Type>>
 CML::Matrix<Form, Type>::block
 (
     const label mStart,
@@ -554,7 +554,7 @@ CML::Matrix<Form, Type>::block
 
 
 template<class Form, class Type>
-inline CML::ConstMatrixBlock<CML::Matrix<Form, Type> >
+inline CML::ConstMatrixBlock<CML::Matrix<Form, Type>>
 CML::Matrix<Form, Type>::col
 (
     const label m,
@@ -573,7 +573,7 @@ CML::Matrix<Form, Type>::col
 
 
 template<class Form, class Type>
-inline CML::ConstMatrixBlock<CML::Matrix<Form, Type> >
+inline CML::ConstMatrixBlock<CML::Matrix<Form, Type>>
 CML::Matrix<Form, Type>::col
 (
     const label m,
@@ -593,7 +593,7 @@ CML::Matrix<Form, Type>::col
 
 
 template<class Form, class Type>
-inline CML::MatrixBlock<CML::Matrix<Form, Type> >
+inline CML::MatrixBlock<CML::Matrix<Form, Type>>
 CML::Matrix<Form, Type>::block
 (
     const label m,
@@ -615,7 +615,7 @@ CML::Matrix<Form, Type>::block
 
 template<class Form, class Type>
 template<class VectorSpace>
-inline CML::MatrixBlock<CML::Matrix<Form, Type> >
+inline CML::MatrixBlock<CML::Matrix<Form, Type>>
 CML::Matrix<Form, Type>::block(const label mStart, const label nStart)
 {
     return MatrixBlock<mType>
@@ -630,7 +630,7 @@ CML::Matrix<Form, Type>::block(const label mStart, const label nStart)
 
 
 template<class Form, class Type>
-inline CML::MatrixBlock<CML::Matrix<Form, Type> >
+inline CML::MatrixBlock<CML::Matrix<Form, Type>>
 CML::Matrix<Form, Type>::col(const label m, const label mStart)
 {
     return MatrixBlock<mType>
@@ -645,7 +645,7 @@ CML::Matrix<Form, Type>::col(const label m, const label mStart)
 
 
 template<class Form, class Type>
-inline CML::MatrixBlock<CML::Matrix<Form, Type> >
+inline CML::MatrixBlock<CML::Matrix<Form, Type>>
 CML::Matrix<Form, Type>::col
 (
     const label m,
@@ -1282,7 +1282,7 @@ CML::operator*
 
 
 template<class Form, class Type>
-inline CML::tmp<CML::Field<Type> > CML::operator*
+inline CML::tmp<CML::Field<Type>> CML::operator*
 (
     const Matrix<Form, Type>& M,
     const Field<Type>& f
@@ -1299,7 +1299,7 @@ inline CML::tmp<CML::Field<Type> > CML::operator*
             << abort(FatalError);
     }
 
-    tmp<Field<Type> > tMf(new Field<Type>(M.m(), Zero));
+    tmp<Field<Type>> tMf(new Field<Type>(M.m(), Zero));
     Field<Type>& Mf = tMf.ref();
 
     for (label i=0; i<M.m(); i++)

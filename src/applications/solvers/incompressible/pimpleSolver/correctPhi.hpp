@@ -1,22 +1,22 @@
 if (mesh.changing())
 {
-    forAll(U.boundaryField(), patchI)
+    forAll(U.boundaryField(), patchi)
     {
-        if (U.boundaryField()[patchI].fixesValue())
+        if (U.boundaryField()[patchi].fixesValue())
         {
-            U.boundaryField()[patchI].initEvaluate();
+            U.boundaryFieldRef()[patchi].initEvaluate();
         }
     }
 
-    forAll(U.boundaryField(), patchI)
+    forAll(U.boundaryField(), patchi)
     {
-        if (U.boundaryField()[patchI].fixesValue())
+        if (U.boundaryField()[patchi].fixesValue())
         {
-            U.boundaryField()[patchI].evaluate();
+            U.boundaryFieldRef()[patchi].evaluate();
 
-            phi.boundaryField()[patchI] =
-                U.boundaryField()[patchI]
-              & mesh.Sf().boundaryField()[patchI];
+            phi.boundaryFieldRef()[patchi] =
+                U.boundaryField()[patchi]
+              & mesh.Sf().boundaryField()[patchi];
         }
     }
 }
@@ -33,7 +33,7 @@ if (mesh.changing())
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar("pcorr", p.dimensions(), 0.0),
+        dimensionedScalar("pcorr", p.dimensions(), 0),
         pcorrTypes
     );
 

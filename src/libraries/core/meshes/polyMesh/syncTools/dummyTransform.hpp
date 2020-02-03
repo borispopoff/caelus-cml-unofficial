@@ -58,7 +58,7 @@ public:
 
 
 template<class T>
-class pTraits<List<T> >
+class pTraits<List<T>>
 :
     public List<T>
 {
@@ -72,7 +72,7 @@ public:
 };
 
 template<class T>
-class pTraits<UList<T> >
+class pTraits<UList<T>>
 :
     public UList<T>
 {
@@ -86,7 +86,7 @@ public:
 };
 
 template<class T>
-class pTraits<Field<T> >
+class pTraits<Field<T>>
 :
     public Field<T>
 {

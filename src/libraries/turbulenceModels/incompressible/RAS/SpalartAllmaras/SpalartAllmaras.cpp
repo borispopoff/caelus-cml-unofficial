@@ -21,6 +21,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SpalartAllmaras.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -53,7 +54,7 @@ tmp<volScalarField> SpalartAllmaras::fv2
     const volScalarField& fv1
 ) const
 {
-    return (scalar(1.0) - chi/(scalar(1.0)+chi*fv1));
+    return (scalar(1) - chi/(scalar(1)+chi*fv1));
 }
 
 
@@ -76,7 +77,7 @@ SpalartAllmaras::fw(const volScalarField& Stilda) const
             scalar(10.0)
         )
     );
-    r.boundaryField() == 0.0;
+    r.boundaryFieldRef() == 0.0;
 
     const volScalarField g(r + Cw2_*(pow6(r) - r));
 
@@ -292,7 +293,7 @@ tmp<volScalarField> SpalartAllmaras::epsilon() const
                 runTime_.timeName(),
                 mesh_
             ),
-            scalar(2.0)*nuEff()*magSqr(symm(fvc::grad(U())))
+            scalar(2)*nuEff()*magSqr(symm(fvc::grad(U())))
         )
     );
 }
@@ -346,7 +347,7 @@ SpalartAllmaras::divDevReff(volVectorField& U) const
     return
     (
       - fvm::laplacian(nuEff_, U)
-      - fvc::div(nuEff_*dev(T(fvc::grad(U))))
+      - fvc::div(nuEff_*dev2(T(fvc::grad(U))))
     );
 }
 
@@ -362,7 +363,7 @@ tmp<fvVectorMatrix> SpalartAllmaras::divDevRhoReff
     return
     (
       - fvm::laplacian(muEff, U)
-      - fvc::div(muEff*dev(T(fvc::grad(U))))
+      - fvc::div(muEff*dev2(T(fvc::grad(U))))
     );
 }
 
@@ -395,6 +396,7 @@ bool SpalartAllmaras::read()
 
 void SpalartAllmaras::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     RASModel::correct();
 
     if (!turbulence_)
@@ -426,10 +428,10 @@ void SpalartAllmaras::correct()
        const volScalarField rStar(sqrt(sqrS)/sqrt(sqrOmega+smallOmega));
        const volSymmTensorField DSijDt(fvc::DDt(this->phi_,Sij));
        const volScalarField rTilda(  
-           (scalar(2.0)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
+           (scalar(2)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
        fr1_ = 
-           (scalar(1.0) + Cr1_)*scalar(2.0)*rStar/(scalar(1.0) + rStar)
-            *(scalar(1.0)-Cr3_*atan(Cr2_*rTilda)) - Cr1_;
+           (scalar(1) + Cr1_)*scalar(2)*rStar/(scalar(1) + rStar)
+            *(scalar(1)-Cr3_*atan(Cr2_*rTilda)) - Cr1_;
     }
 
     const volScalarField Stilda
@@ -446,16 +448,19 @@ void SpalartAllmaras::correct()
      ==
         fr1_*Cb1_*Stilda*nuTilda_
       - fvm::Sp(Cw1_*fw(Stilda)*nuTilda_/sqr(d_), nuTilda_)
+      + fvOptions(nuTilda_)
     );
 
-    nuTildaEqn().relax();
-    mesh_.updateFvMatrix(nuTildaEqn());
+    nuTildaEqn.ref().relax();
+    fvOptions.constrain(nuTildaEqn.ref());
+    mesh_.updateFvMatrix(nuTildaEqn.ref());
     solve(nuTildaEqn);
+    fvOptions.correct(nuTilda_);
     bound(nuTilda_, dimensionedScalar("0", nuTilda_.dimensions(), 0.0));
     nuTilda_.correctBoundaryConditions();
 
     // Re-calculate viscosity
-    nut_.internalField() = fv1*nuTilda_.internalField();
+    nut_.primitiveFieldRef() = fv1*nuTilda_.primitiveField();
     nut_.correctBoundaryConditions();
 }
 

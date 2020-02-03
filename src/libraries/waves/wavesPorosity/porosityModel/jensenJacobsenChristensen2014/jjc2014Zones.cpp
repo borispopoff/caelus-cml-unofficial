@@ -77,7 +77,7 @@ tmp<volScalarField> CML::jjc2014Zones::porosity() const
     );
 
     // Make reference to the return field (stripping tmp-nature)
-    volScalarField& poro(tporosity());
+    volScalarField& poro(tporosity.ref());
 
 
     // Loop over all zones

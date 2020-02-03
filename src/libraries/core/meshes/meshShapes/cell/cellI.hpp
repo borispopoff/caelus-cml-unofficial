@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,9 +42,9 @@ inline CML::cell::cell(const labelUList& lst)
 {}
 
 
-inline CML::cell::cell(const Xfer<labelList>& lst)
+inline CML::cell::cell(labelList&& lst)
 :
-    labelList(lst)
+    labelList(move(lst))
 {}
 
 
@@ -68,5 +68,14 @@ inline bool CML::operator!=(const cell& a, const cell& b)
 {
     return (!(a == b));
 }
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+inline void CML::cell::operator=(labelList&& l)
+{
+    labelList::operator=(move(l));
+}
+
 
 // ************************************************************************* //

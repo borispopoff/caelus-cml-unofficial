@@ -96,7 +96,7 @@ Contributors/Copyright:
 
 namespace CML {
     template<class T>
-    autoPtr<Field<T> > SubsetValueExpressionDriver::evaluatePluginFunction(
+    autoPtr<Field<T>> SubsetValueExpressionDriver::evaluatePluginFunction(
         const word &name,
         const parserSubset::location &loc,
         int &scanned,
@@ -117,7 +117,7 @@ namespace CML {
 
         //    scanned+=1;
 
-        autoPtr<Field<T> > result(
+        autoPtr<Field<T>> result(
             theFunction->evaluate<T>(
                 this->content().substr(
                     loc.end.column-1

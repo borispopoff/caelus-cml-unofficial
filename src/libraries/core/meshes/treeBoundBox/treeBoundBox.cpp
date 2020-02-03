@@ -109,12 +109,12 @@ CML::edgeList CML::treeBoundBox::calcEdges(const label edgesArray[12][2])
 CML::FixedList<CML::vector, 6> CML::treeBoundBox::calcFaceNormals()
 {
     FixedList<vector, 6> normals;
-    normals[LEFT]   = vector(-1,  0,  0);
-    normals[RIGHT]  = vector( 1,  0,  0);
-    normals[BOTTOM] = vector( 0, -1,  0);
-    normals[TOP]    = vector( 0,  1,  0);
-    normals[BACK]   = vector( 0,  0, -1);
-    normals[FRONT]  = vector( 0,  0,  1);
+    normals[faceId::left]   = vector(-1,  0,  0);
+    normals[faceId::right]  = vector( 1,  0,  0);
+    normals[faceId::bottom] = vector( 0, -1,  0);
+    normals[faceId::top]    = vector( 0,  1,  0);
+    normals[faceId::back]   = vector( 0,  0, -1);
+    normals[faceId::front]  = vector( 0,  0,  1);
     return normals;
 }
 
@@ -160,7 +160,7 @@ CML::treeBoundBox::treeBoundBox
 CML::tmp<CML::pointField> CML::treeBoundBox::points() const
 {
     tmp<pointField> tPts = tmp<pointField>(new pointField(8));
-    pointField& points = tPts();
+    pointField& points = tPts.ref();
 
     forAll(points, octant)
     {
@@ -196,7 +196,7 @@ CML::treeBoundBox CML::treeBoundBox::subBbox
     point& bbMin = subBb.min();
     point& bbMax = subBb.max();
 
-    if (octant & treeBoundBox::RIGHTHALF)
+    if (octant & octantBit::rightHalf)
     {
         bbMin.x() = mid.x();    // mid -> max
     }
@@ -205,7 +205,7 @@ CML::treeBoundBox CML::treeBoundBox::subBbox
         bbMax.x() = mid.x();    // min -> mid
     }
 
-    if (octant & treeBoundBox::TOPHALF)
+    if (octant & octantBit::topHalf)
     {
         bbMin.y() = mid.y();    // mid -> max
     }
@@ -214,7 +214,7 @@ CML::treeBoundBox CML::treeBoundBox::subBbox
         bbMax.y() = mid.y();    // min -> mid
     }
 
-    if (octant & treeBoundBox::FRONTHALF)
+    if (octant & octantBit::frontHalf)
     {
         bbMin.z() = mid.z();    // mid -> max
     }
@@ -332,7 +332,7 @@ bool CML::treeBoundBox::intersects
             return false;
         }
 
-        if (ptBits & LEFTBIT)
+        if (ptBits & faceBit::left)
         {
             // Intersect with plane V=min, n=-1,0,0
             if (CML::mag(overallVec.x()) > VSMALL)
@@ -349,7 +349,7 @@ bool CML::treeBoundBox::intersects
                 pt.x() = min().x();
             }
         }
-        else if (ptBits & RIGHTBIT)
+        else if (ptBits & faceBit::right)
         {
             // Intersect with plane V=max, n=1,0,0
             if (CML::mag(overallVec.x()) > VSMALL)
@@ -364,7 +364,7 @@ bool CML::treeBoundBox::intersects
                 pt.x() = max().x();
             }
         }
-        else if (ptBits & BOTTOMBIT)
+        else if (ptBits & faceBit::bottom)
         {
             // Intersect with plane V=min, n=0,-1,0
             if (CML::mag(overallVec.y()) > VSMALL)
@@ -379,7 +379,7 @@ bool CML::treeBoundBox::intersects
                 pt.x() = min().y();
             }
         }
-        else if (ptBits & TOPBIT)
+        else if (ptBits & faceBit::top)
         {
             // Intersect with plane V=max, n=0,1,0
             if (CML::mag(overallVec.y()) > VSMALL)
@@ -394,7 +394,7 @@ bool CML::treeBoundBox::intersects
                 pt.y() = max().y();
             }
         }
-        else if (ptBits & BACKBIT)
+        else if (ptBits & faceBit::back)
         {
             // Intersect with plane V=min, n=0,0,-1
             if (CML::mag(overallVec.z()) > VSMALL)
@@ -409,7 +409,7 @@ bool CML::treeBoundBox::intersects
                 pt.z() = min().z();
             }
         }
-        else if (ptBits & FRONTBIT)
+        else if (ptBits & faceBit::front)
         {
             // Intersect with plane V=max, n=0,0,1
             if (CML::mag(overallVec.z()) > VSMALL)
@@ -487,29 +487,29 @@ CML::direction CML::treeBoundBox::faceBits(const point& pt) const
     direction faceBits = 0;
     if (pt.x() == min().x())
     {
-        faceBits |= LEFTBIT;
+        faceBits |= faceBit::left;
     }
     else if (pt.x() == max().x())
     {
-        faceBits |= RIGHTBIT;
+        faceBits |= faceBit::right;
     }
 
     if (pt.y() == min().y())
     {
-        faceBits |= BOTTOMBIT;
+        faceBits |= faceBit::bottom;
     }
     else if (pt.y() == max().y())
     {
-        faceBits |= TOPBIT;
+        faceBits |= faceBit::top;
     }
 
     if (pt.z() == min().z())
     {
-        faceBits |= BACKBIT;
+        faceBits |= faceBit::back;
     }
     else if (pt.z() == max().z())
     {
-        faceBits |= FRONTBIT;
+        faceBits |= faceBit::front;
     }
     return faceBits;
 }
@@ -522,29 +522,29 @@ CML::direction CML::treeBoundBox::posBits(const point& pt) const
 
     if (pt.x() < min().x())
     {
-        posBits |= LEFTBIT;
+        posBits |= faceBit::left;
     }
     else if (pt.x() > max().x())
     {
-        posBits |= RIGHTBIT;
+        posBits |= faceBit::right;
     }
 
     if (pt.y() < min().y())
     {
-        posBits |= BOTTOMBIT;
+        posBits |= faceBit::bottom;
     }
     else if (pt.y() > max().y())
     {
-        posBits |= TOPBIT;
+        posBits |= faceBit::top;
     }
 
     if (pt.z() < min().z())
     {
-        posBits |= BACKBIT;
+        posBits |= faceBit::back;
     }
     else if (pt.z() > max().z())
     {
-        posBits |= FRONTBIT;
+        posBits |= faceBit::front;
     }
     return posBits;
 }

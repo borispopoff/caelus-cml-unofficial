@@ -80,7 +80,7 @@ class domainDecomposition
         // indices will be incremented by 1 and the decremented as
         // necessary to avoid the problem of face number zero having no
         // sign.
-        List<DynamicList<label> > procFaceAddressing_;
+        List<DynamicList<label>> procFaceAddressing_;
 
         //- Labels of cells for each processor
         labelListList procCellAddressing_;
@@ -133,17 +133,17 @@ class domainDecomposition
             const label ownerProc,
             const label nbrProc,
 
-            List<Map<label> >&,
-            List<DynamicList<DynamicList<label> > >&
+            List<Map<label>>&,
+            List<DynamicList<DynamicList<label>>>&
         ) const;
 
         //- Generate sub patch info for processor cyclics
-        template <class BinaryOp>
+        template<class BinaryOp>
         void processInterCyclics
         (
             const polyBoundaryMesh& patches,
-            List<DynamicList<DynamicList<label> > >& interPatchFaces,
-            List<Map<label> >& procNbrToInterPatch,
+            List<DynamicList<DynamicList<label>>>& interPatchFaces,
+            List<Map<label>>& procNbrToInterPatch,
             List<labelListList>& subPatchIDs,
             List<labelListList>& subPatchStarts,
             bool owner,
@@ -207,12 +207,12 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template <class BinaryOp>
+template<class BinaryOp>
 void CML::domainDecomposition::processInterCyclics
 (
     const polyBoundaryMesh& patches,
-    List<DynamicList<DynamicList<label> > >& interPatchFaces,
-    List<Map<label> >& procNbrToInterPatch,
+    List<DynamicList<DynamicList<label>>>& interPatchFaces,
+    List<Map<label>>& procNbrToInterPatch,
     List<labelListList>& subPatchIDs,
     List<labelListList>& subPatchStarts,
     bool owner,
@@ -242,15 +242,15 @@ void CML::domainDecomposition::processInterCyclics
             // Store old sizes. Used to detect which inter-proc patches
             // have been added to.
             labelListList oldInterfaceSizes(nProcs_);
-            forAll(oldInterfaceSizes, procI)
+            forAll(oldInterfaceSizes, proci)
             {
-                labelList& curOldSizes = oldInterfaceSizes[procI];
+                labelList& curOldSizes = oldInterfaceSizes[proci];
 
-                curOldSizes.setSize(interPatchFaces[procI].size());
+                curOldSizes.setSize(interPatchFaces[proci].size());
                 forAll(curOldSizes, interI)
                 {
                     curOldSizes[interI] =
-                        interPatchFaces[procI][interI].size();
+                        interPatchFaces[proci][interI].size();
                 }
             }
 
@@ -274,28 +274,28 @@ void CML::domainDecomposition::processInterCyclics
             }
 
             // 1. Check if any faces added to existing interfaces
-            forAll(oldInterfaceSizes, procI)
+            forAll(oldInterfaceSizes, proci)
             {
-                const labelList& curOldSizes = oldInterfaceSizes[procI];
+                const labelList& curOldSizes = oldInterfaceSizes[proci];
 
                 forAll(curOldSizes, interI)
                 {
                     label oldSz = curOldSizes[interI];
-                    if (interPatchFaces[procI][interI].size() > oldSz)
+                    if (interPatchFaces[proci][interI].size() > oldSz)
                     {
                         // Added faces to this interface. Add an entry
-                        append(subPatchIDs[procI][interI], patchi);
-                        append(subPatchStarts[procI][interI], oldSz);
+                        append(subPatchIDs[proci][interI], patchi);
+                        append(subPatchStarts[proci][interI], oldSz);
                     }
                 }
             }
 
             // 2. Any new interfaces
-            forAll(subPatchIDs, procI)
+            forAll(subPatchIDs, proci)
             {
-                label nIntfcs = interPatchFaces[procI].size();
-                subPatchIDs[procI].setSize(nIntfcs, labelList(1, patchi));
-                subPatchStarts[procI].setSize(nIntfcs, labelList(1, label(0)));
+                label nIntfcs = interPatchFaces[proci].size();
+                subPatchIDs[proci].setSize(nIntfcs, labelList(1, patchi));
+                subPatchStarts[proci].setSize(nIntfcs, labelList(1, label(0)));
             }
         }
     }

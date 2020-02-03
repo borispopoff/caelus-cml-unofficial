@@ -68,7 +68,7 @@ class detectBoundaryLayers
         labelList layerAtBndFace_;
 
         //- layer at a boundary patch
-        List<DynList<label> > layerAtPatch_;
+        List<DynList<label>> layerAtPatch_;
 
         //- hair edges found in the mesh
         edgeLongList hairEdges_;

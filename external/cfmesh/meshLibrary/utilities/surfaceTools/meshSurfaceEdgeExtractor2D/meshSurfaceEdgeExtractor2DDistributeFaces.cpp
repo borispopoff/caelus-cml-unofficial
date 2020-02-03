@@ -69,11 +69,11 @@ void meshSurfaceEdgeExtractor2D::distributeBoundaryFaces()
 
         for(label fI=0;fI<size;++fI)
         {
-            const label faceI = start + fI;
-            const face& bf = faces[faceI];
+            const label facei = start + fI;
+            const face& bf = faces[facei];
 
             bndFaces.appendList(bf);
-            origFaceLabel.append(faceI);
+            origFaceLabel.append(facei);
         }
     }
 
@@ -102,12 +102,12 @@ void meshSurfaceEdgeExtractor2D::distributeBoundaryFaces()
     # endif
     forAll(bndFaces, bfI)
     {
-        const label faceI = origFaceLabel[bfI];
-        const face& f = faces[faceI];
+        const label facei = origFaceLabel[bfI];
+        const face& f = faces[facei];
 
-        bndFaceOwner[bfI] = owner[faceI];
+        bndFaceOwner[bfI] = owner[facei];
 
-        if( !activeFace[faceI] )
+        if( !activeFace[facei] )
         {
             if( zMinPoint[f[0]] )
             {

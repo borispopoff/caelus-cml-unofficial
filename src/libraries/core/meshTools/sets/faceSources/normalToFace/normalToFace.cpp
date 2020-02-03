@@ -124,14 +124,14 @@ void CML::normalToFace::applyToSet
         Info<< "    Adding faces according to normal being aligned with "
             << normal_ << " (to within " << tol_ << ") ..." << endl;
 
-        forAll(mesh_.faceAreas(), faceI)
+        forAll(mesh_.faceAreas(), facei)
         {
-            vector n = mesh_.faceAreas()[faceI];
+            vector n = mesh_.faceAreas()[facei];
             n /= mag(n) + VSMALL;
 
             if (mag(1 - (n & normal_)) < tol_)
             {
-                set.insert(faceI);
+                set.insert(facei);
             }
         }
     }
@@ -145,14 +145,14 @@ void CML::normalToFace::applyToSet
 
         forAllConstIter(topoSet, set, iter)
         {
-            const label faceI = iter.key();
+            const label facei = iter.key();
 
-            vector n = mesh_.faceAreas()[faceI];
+            vector n = mesh_.faceAreas()[facei];
             n /= mag(n) + VSMALL;
 
             if (mag(1 - (n & normal_)) < tol_)
             {
-                toBeRemoved.append(faceI);
+                toBeRemoved.append(facei);
             }
         }
 

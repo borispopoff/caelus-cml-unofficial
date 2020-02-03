@@ -55,7 +55,7 @@ protected:
         const word UName_;
 
         //- Curk of carrier phase velocity interpolator
-        autoPtr<interpolation<vector> > curlUcInterpPtr_;
+        autoPtr<interpolation<vector>> curlUcInterpPtr_;
 
 
     // Potected Member Functions
@@ -88,9 +88,9 @@ public:
         LiftForce(const LiftForce& lf);
 
         //- Construct and return a clone
-        virtual autoPtr<ParticleForce<CloudType> > clone() const
+        virtual autoPtr<ParticleForce<CloudType>> clone() const
         {
-            return autoPtr<ParticleForce<CloudType> >
+            return autoPtr<ParticleForce<CloudType>>
             (
                 new LiftForce<CloudType>(*this)
             );

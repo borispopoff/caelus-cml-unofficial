@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -32,6 +32,8 @@ namespace CML
 {
     defineTypeNameAndDebug(uniformSet, 0);
     addToRunTimeSelectionTable(sampledSet, uniformSet, word);
+
+    const scalar uniformSet::tol = 1e-3;
 }
 
 
@@ -247,6 +249,7 @@ void CML::uniformSet::calcSamples
         // (or is along edge)
         // Set points and cell/face labels to empty lists
 
+        const_cast<polyMesh&>(mesh()).moving(oldMoving);
         return;
     }
 

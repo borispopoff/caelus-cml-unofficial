@@ -37,17 +37,17 @@ namespace CML
 
 void refineBoundaryLayers::generateNewCellsPrism
 (
-    const label cellI,
+    const label celli,
     DynList<DynList<DynList<label, 8>, 10>, 64>& cellsFromCell
 ) const
 {
     cellsFromCell.clear();
 
-    const cell& c = mesh_.cells()[cellI];
+    const cell& c = mesh_.cells()[celli];
     const labelList& owner = mesh_.owner();
 
     # ifdef DEBUGLayer
-    Pout << "New cells from cell " << cellI << endl;
+    Pout << "New cells from cell " << celli << endl;
     # endif
 
     const label startBoundary = mesh_.boundaries()[0].patchStart();
@@ -96,17 +96,17 @@ void refineBoundaryLayers::generateNewCellsPrism
     {
         if( fI == baseFace )
         {
-            const label faceI = facesFromFace_(c[fI], 0);
+            const label facei = facesFromFace_(c[fI], 0);
             DynList<label, 8> f;
-            f = newFaces_[faceI];
+            f = newFaces_[facei];
             cellsFromCell[nLayers-1].append(f);
         }
         else if( facesFromFace_.sizeOfRow(c[fI]) == 1 )
         {
-            const label faceI = facesFromFace_(c[fI], 0);
+            const label facei = facesFromFace_(c[fI], 0);
             otherBaseFace = fI;
             DynList<label, 8> f;
-            f = newFaces_[faceI];
+            f = newFaces_[facei];
             cellsFromCell[0].append(f);
         }
         else
@@ -118,7 +118,7 @@ void refineBoundaryLayers::generateNewCellsPrism
                 DynList<label, 8> cf;
                 cf = newFaces_[nfI];
 
-                if( owner[c[fI]] != cellI )
+                if( owner[c[fI]] != celli )
                     cf = help::reverseFace(cf);
 
                 cellsFromCell[CML::max(nLayers-1-cfI, 0)].append(cf);
@@ -172,7 +172,7 @@ void refineBoundaryLayers::generateNewCellsPrism
     }
 
     # ifdef DEBUGLayer
-    Pout << "New cells from cell " << cellI << " are " << cellsFromCell << endl;
+    Pout << "New cells from cell " << celli << " are " << cellsFromCell << endl;
     //::exit(1);
 
     Pout << "1. Newly generated cells " << cellsFromCell << endl;
@@ -220,7 +220,7 @@ void refineBoundaryLayers::generateNewCellsPrism
 
 void refineBoundaryLayers::storeFacesIntoCells
 (
-    const label faceI,
+    const label facei,
     const bool reverseOrientation,
     const label normalDirection,
     const bool maxCoordinate,
@@ -230,15 +230,15 @@ void refineBoundaryLayers::storeFacesIntoCells
     DynList<DynList<DynList<label, 4>, 6>, 256>& cellsFromCell
 ) const
 {
-    DynList<DynList<label> > faceFaces;
-    sortFaceFaces(faceI, faceFaces, reverseOrientation);
+    DynList<DynList<label>> faceFaces;
+    sortFaceFaces(facei, faceFaces, reverseOrientation);
 
     const label maxI = nLayersI - 1;
     const label maxJ = nLayersJ - 1;
     const label maxK = nLayersK - 1;
 
     # ifdef DEBUGLayer
-    Pout << "Storing new faces from face " << faceI
+    Pout << "Storing new faces from face " << facei
          << " reverseOrientation = " << reverseOrientation
          << " normal direction " << normalDirection
          << " maxCoordinate " << maxCoordinate << endl;
@@ -468,31 +468,31 @@ void refineBoundaryLayers::refineEdgeHexCell::populateExistingFaces()
     //- store new faces at j = 0
     forAllRow(facesFromFace, c[faceInDirection_[2]], i)
     {
-        const label faceI = facesFromFace(c[faceInDirection_[2]], i);
-        cellsFromCell_[i].append(newFaces[faceI]);
+        const label facei = facesFromFace(c[faceInDirection_[2]], i);
+        cellsFromCell_[i].append(newFaces[facei]);
     }
 
     //- store faces at j = nLayersJ
     const label maxJ = nLayersJ_ - 1;
     forAllRow(facesFromFace, c[faceInDirection_[3]], i)
     {
-        const label faceI = facesFromFace(c[faceInDirection_[3]], i);
-        cellsFromCell_[i + maxJ * nLayersI_].append(newFaces[faceI]);
+        const label facei = facesFromFace(c[faceInDirection_[3]], i);
+        cellsFromCell_[i + maxJ * nLayersI_].append(newFaces[facei]);
     }
 
     //- store new faces at i = 0
     forAllRow(facesFromFace, c[faceInDirection_[4]], j)
     {
-        const label faceI = facesFromFace(c[faceInDirection_[4]], j);
-        cellsFromCell_[j * nLayersI_].append(newFaces[faceI]);
+        const label facei = facesFromFace(c[faceInDirection_[4]], j);
+        cellsFromCell_[j * nLayersI_].append(newFaces[facei]);
     }
 
     //- store new faces at i = nLayersI
     const label maxI = nLayersI_ - 1;
     forAllRow(facesFromFace, c[faceInDirection_[5]], j)
     {
-        const label faceI = facesFromFace(c[faceInDirection_[5]], j);
-        cellsFromCell_[j * nLayersI_ + maxI].append(newFaces[faceI]);
+        const label facei = facesFromFace(c[faceInDirection_[5]], j);
+        cellsFromCell_[j * nLayersI_ + maxI].append(newFaces[facei]);
     }
 
     # ifdef DEBUGLayer
@@ -507,7 +507,7 @@ void refineBoundaryLayers::refineEdgeHexCell::generateMissingFaces()
 
     //- fill up the matrix of points for this cell
     //- the matrix is used for generation of new cells
-    FixedList<DynList<DynList<label> >, 2> cellPoints;
+    FixedList<DynList<DynList<label>>, 2> cellPoints;
 
     //- fill in the data for a cross-split faces
     bndLayers_.sortFacePoints
@@ -627,11 +627,11 @@ void refineBoundaryLayers::refineEdgeHexCell::generateMissingFaces()
 
 refineBoundaryLayers::refineEdgeHexCell::refineEdgeHexCell
 (
-    const label cellI,
+    const label celli,
     const refineBoundaryLayers& ref
 )
 :
-    cellI_(cellI),
+    cellI_(celli),
     nLayersI_(),
     nLayersJ_(),
     cellsFromCell_(),
@@ -1055,12 +1055,12 @@ void refineBoundaryLayers::refineCornerHexCell::generateMissingFaces()
 
         //- this face might not be a quad
         //- add points fom the last face in direction j
-        const DynList<DynList<label> >& f3 = facePoints_[3];
+        const DynList<DynList<label>>& f3 = facePoints_[3];
         for(label index=nLayersK_-1;index<f3.size()-1;++index)
             mf.append(f3[index][i]);
 
         //- add points from the last face in direction k
-        const DynList<DynList<label> >& f1 = facePoints_[1];
+        const DynList<DynList<label>>& f1 = facePoints_[1];
         for(label index=f1[i].size()-1;index>=nLayersJ_-1;--index)
             mf.append(f1[i][index]);
 
@@ -1128,12 +1128,12 @@ void refineBoundaryLayers::refineCornerHexCell::generateMissingFaces()
         mf.append(cellPoints_[nLayersI_-1][j][nLayersK_-1]);
 
         //- add points from the last face in direction k
-        const DynList<DynList<label> >& fp1 = facePoints_[1];
+        const DynList<DynList<label>>& fp1 = facePoints_[1];
         for(label index=nLayersI_-1;index<fp1.size()-1;++index)
             mf.append(fp1[index][j]);
 
         //- add points from the last face in direction i
-        const DynList<DynList<label> >& fp5 = facePoints_[5];
+        const DynList<DynList<label>>& fp5 = facePoints_[5];
         for(label index=fp5[j].size()-1;index>=nLayersK_-1;--index)
             mf.append(fp5[j][index]);
 
@@ -1207,12 +1207,12 @@ void refineBoundaryLayers::refineCornerHexCell::generateMissingFaces()
 
         //- this face might not be a quad
         //- add points from the last face in direction i
-        const DynList<DynList<label> >& fp5 = facePoints_[5];
+        const DynList<DynList<label>>& fp5 = facePoints_[5];
         for(label index=nLayersJ_-1;index<fp5.size()-1;++index)
             mf.append(fp5[index][k]);
 
         //- add points from the last face in direction j
-        const DynList<DynList<label> >& fp3 = facePoints_[3];
+        const DynList<DynList<label>>& fp3 = facePoints_[3];
         for(label index=fp3[k].size()-1;index>=nLayersI_-1;--index)
             mf.append(fp3[k][index]);
 
@@ -1288,11 +1288,11 @@ void refineBoundaryLayers::refineCornerHexCell::generateMissingFaces()
 
 refineBoundaryLayers::refineCornerHexCell::refineCornerHexCell
 (
-    const label cellI,
+    const label celli,
     const refineBoundaryLayers& ref
 )
 :
-    cellI_(cellI),
+    cellI_(celli),
     nLayersI_(),
     nLayersJ_(),
     nLayersK_(),
@@ -1326,12 +1326,12 @@ void refineBoundaryLayers::generateNewCells()
     //- calculate the number new cells generated from a cell
     forAll(faceOwners, bfI)
     {
-        const label cellI = faceOwners[bfI];
+        const label celli = faceOwners[bfI];
 
-        nCellsFromCell[cellI] *= nLayersAtBndFace_[bfI];
+        nCellsFromCell[celli] *= nLayersAtBndFace_[bfI];
 
         if( nLayersAtBndFace_[bfI] > 1 )
-            ++refType[cellI];
+            ++refType[celli];
     }
 
     //- add cells which shall be refined in a subset
@@ -1352,15 +1352,15 @@ void refineBoundaryLayers::generateNewCells()
 
     //- check the number of cells which will be generated
     label nNewCells(0);
-    forAll(nCellsFromCell, cellI)
-        nNewCells += (nCellsFromCell[cellI] - 1);
+    forAll(nCellsFromCell, celli)
+        nNewCells += (nCellsFromCell[celli] - 1);
 
     # ifdef DEBUGLayer
-    forAll(nCellsFromCell, cellI)
+    forAll(nCellsFromCell, celli)
     {
-        Pout << "\nCell " << cellI << endl;
-        Pout << "nCellsFromCell " << nCellsFromCell[cellI] << endl;
-        Pout << "Ref type " << refType[cellI] << endl;
+        Pout << "\nCell " << celli << endl;
+        Pout << "nCellsFromCell " << nCellsFromCell[celli] << endl;
+        Pout << "Ref type " << refType[celli] << endl;
     }
     #  endif
 
@@ -1386,15 +1386,15 @@ void refineBoundaryLayers::generateNewCells()
     VRWGraph pointNewFaces;
     pointNewFaces.reverseAddressing(newFaces_);
 
-    forAll(nCellsFromCell, cellI)
+    forAll(nCellsFromCell, celli)
     {
-        if( refType[cellI] == 0 )
+        if( refType[celli] == 0 )
         {
             //- this cell is not refined
             //- update face labels
-            newCellsFromCell.append(cellI, cellI);
+            newCellsFromCell.append(celli, celli);
 
-            cell& c = cells[cellI];
+            cell& c = cells[celli];
 
             //- copy the new faces of this cell
             DynList<label, 64> newC;
@@ -1409,19 +1409,19 @@ void refineBoundaryLayers::generateNewCells()
             forAll(c, fI)
                 c[fI] = newC[fI];
         }
-        else if( refType[cellI] == 1 )
+        else if( refType[celli] == 1 )
         {
             //- generate new cells from this prism refined in one direction
             DynList<DynList<DynList<label, 8>, 10>, 64> cellsFromCell;
-            generateNewCellsPrism(cellI, cellsFromCell);
+            generateNewCellsPrism(celli, cellsFromCell);
 
             forAll(cellsFromCell, cI)
             {
                 const DynList<DynList<label, 8>, 10>& nc = cellsFromCell[cI];
 
-                const label newCellI = cI==0?cellI:nCells++;
+                const label newCellI = cI==0?celli:nCells++;
 
-                newCellsFromCell.append(cellI, newCellI);
+                newCellsFromCell.append(celli, newCellI);
 
                 cell& c = cells[newCellI];
                 c.setSize(nc.size());
@@ -1454,11 +1454,11 @@ void refineBoundaryLayers::generateNewCells()
                 }
             }
         }
-        else if( refType[cellI] == 2 )
+        else if( refType[celli] == 2 )
         {
             //- generate new cell from a hex cell where two layers intersect
             //- generate mostly hex cells;
-            refineEdgeHexCell refEdgeHex(cellI, *this);
+            refineEdgeHexCell refEdgeHex(celli, *this);
             const DynList<DynList<DynList<label, 4>, 6>, 256>& cellsFromCell =
                 refEdgeHex.newCells();
 
@@ -1467,13 +1467,13 @@ void refineBoundaryLayers::generateNewCells()
                 const DynList<DynList<label, 4>, 6>& nc = cellsFromCell[cI];
 
                 # ifdef DEBUGLayer
-                Pout << "Adding cell " << (cI==0?cellI:nCells)
-                     << " originating from cell " << cellI << endl;
+                Pout << "Adding cell " << (cI==0?celli:nCells)
+                     << " originating from cell " << celli << endl;
                 # endif
 
-                const label newCellI = cI==0?cellI:nCells++;
+                const label newCellI = cI==0?celli:nCells++;
 
-                newCellsFromCell.append(cellI, newCellI);
+                newCellsFromCell.append(celli, newCellI);
 
                 cell& c = cells[newCellI];
                 c.setSize(nc.size());
@@ -1506,12 +1506,12 @@ void refineBoundaryLayers::generateNewCells()
                 }
             }
         }
-        else if( refType[cellI] == 3 )
+        else if( refType[celli] == 3 )
         {
             //- generate new cells from a hex at a corner where three
             //- layers intersect
             //- generate mostly hex cells
-            refineCornerHexCell refCell(cellI, *this);
+            refineCornerHexCell refCell(celli, *this);
             const DynList<DynList<DynList<label, 4>, 6>, 256>& cellsFromCell =
                 refCell.newCells();
 
@@ -1523,9 +1523,9 @@ void refineBoundaryLayers::generateNewCells()
             {
                 const DynList<DynList<label, 4>, 6>& nc = cellsFromCell[cI];
 
-                const label newCellI = cI==0?cellI:nCells++;
+                const label newCellI = cI==0?celli:nCells++;
 
-                newCellsFromCell.append(cellI, newCellI);
+                newCellsFromCell.append(celli, newCellI);
 
                 cell& c = cells[newCellI];
                 c.setSize(nc.size());
@@ -1562,7 +1562,7 @@ void refineBoundaryLayers::generateNewCells()
         {
             FatalErrorInFunction
               << "Cannot refine boundary layer for cell "
-              << cellI << abort(FatalError);
+              << celli << abort(FatalError);
         }
     }
 
@@ -1654,15 +1654,15 @@ void refineBoundaryLayers::generateNewCells()
     faces.setSize(newFaces_.size());
 
     label currFace = 0;
-    for(label faceI=0;faceI<nOrigInternalFaces;++faceI)
+    for(label facei=0;facei<nOrigInternalFaces;++facei)
     {
-        forAllRow(facesFromFace_, faceI, ffI)
+        forAllRow(facesFromFace_, facei, ffI)
         {
             face& f = faces[currFace];
             newFaceLabel[currFace] = currFace;
             ++currFace;
 
-            const label newFaceI = facesFromFace_(faceI, ffI);
+            const label newFaceI = facesFromFace_(facei, ffI);
 
             f.setSize(newFaces_.sizeOfRow(newFaceI));
 
@@ -1679,16 +1679,16 @@ void refineBoundaryLayers::generateNewCells()
     Pout << "Total number of faces " << newFaces_.size() << endl;
     # endif
 
-    for(label faceI=numFacesBefore;faceI<newFaces_.size();++faceI)
+    for(label facei=numFacesBefore;facei<newFaces_.size();++facei)
     {
-        newFaceLabel[faceI] = currFace;
+        newFaceLabel[facei] = currFace;
         face& f = faces[currFace];
         ++currFace;
 
-        f.setSize(newFaces_.sizeOfRow(faceI));
+        f.setSize(newFaces_.sizeOfRow(facei));
 
         forAll(f, pI)
-            f[pI] = newFaces_(faceI, pI);
+            f[pI] = newFaces_(facei, pI);
     }
 
     //- store new boundary faces
@@ -1709,16 +1709,16 @@ void refineBoundaryLayers::generateNewCells()
         label nNewFacesInPatch(0);
         for(label fI=0;fI<size;++fI)
         {
-            const label faceI = start + fI;
+            const label facei = start + fI;
 
-            forAllRow(facesFromFace_, faceI, nfI)
+            forAllRow(facesFromFace_, facei, nfI)
             {
                 face& f = faces[currFace];
 
                 //- update the new label
-                const label origFaceI = facesFromFace_(faceI, nfI);
+                const label origFaceI = facesFromFace_(facei, nfI);
                 newFaceLabel[origFaceI] = currFace;
-                facesFromFace_(faceI, nfI) = currFace;
+                facesFromFace_(facei, nfI) = currFace;
                 ++currFace;
 
                 //- copy the face into the mesh
@@ -1754,15 +1754,15 @@ void refineBoundaryLayers::generateNewCells()
             label nNewFacesInPatch(0);
             for(label fI=0;fI<size;++fI)
             {
-                const label faceI = start + fI;
-                forAllRow(facesFromFace_, faceI, nfI)
+                const label facei = start + fI;
+                forAllRow(facesFromFace_, facei, nfI)
                 {
                     face& f = faces[currFace];
 
                     //- update the new label
-                    const label origFaceI = facesFromFace_(faceI, nfI);
+                    const label origFaceI = facesFromFace_(facei, nfI);
                     newFaceLabel[origFaceI] = currFace;
-                    facesFromFace_(faceI, nfI) = currFace;
+                    facesFromFace_(facei, nfI) = currFace;
                     ++currFace;
 
                     //- copy the face into the mesh
@@ -1795,9 +1795,9 @@ void refineBoundaryLayers::generateNewCells()
     Pout << "Updating cells to match new faces" << endl;
     # endif
 
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        cell& c = cells[cellI];
+        cell& c = cells[celli];
 
         forAll(c, fI)
             c[fI] = newFaceLabel[c[fI]];
@@ -1816,9 +1816,9 @@ void refineBoundaryLayers::generateNewCells()
     {
         if( procI == Pstream::myProcNo() )
         {
-            forAll(cells, cellI)
+            forAll(cells, celli)
             {
-                const cell& c = cells[cellI];
+                const cell& c = cells[celli];
 
                 DynList<edge> edges;
                 DynList<label> nAppearances;
@@ -1855,7 +1855,7 @@ void refineBoundaryLayers::generateNewCells()
 
                 if( badCell )
                 {
-                    Pout << "Cell " << cellI
+                    Pout << "Cell " << celli
                          << " is not topologically closed" << endl;
 
                     forAll(c, fI)
@@ -1879,23 +1879,23 @@ void refineBoundaryLayers::generateNewCells()
     {
         if( procI == Pstream::myProcNo() )
         {
-            forAll(faces, faceI)
+            forAll(faces, facei)
             {
-                if( faceI < nInternalFaces && neighbour[faceI] < 0 )
+                if( facei < nInternalFaces && neighbour[facei] < 0 )
                 {
                     Pout << "Num interface faces " << nInternalFaces
-                         << " current face " << faceI
-                         << " face points " << faces[faceI] << endl;
+                         << " current face " << facei
+                         << " face points " << faces[facei] << endl;
                     ::exit(1);
                 }
-                Pout << "Face " << faceI << " owner " << owner[faceI]
-                     << " neighbour " << neighbour[faceI]
-                     << " face points " << faces[faceI] << endl;
+                Pout << "Face " << facei << " owner " << owner[facei]
+                     << " neighbour " << neighbour[facei]
+                     << " face points " << faces[facei] << endl;
             }
 
-            forAll(cells, cellI)
-                Pout << "Cell " << cellI << " has faces "
-                     << cells[cellI] << endl;
+            forAll(cells, celli)
+                Pout << "Cell " << celli << " has faces "
+                     << cells[celli] << endl;
         }
 
         returnReduce(procI, maxOp<label>());

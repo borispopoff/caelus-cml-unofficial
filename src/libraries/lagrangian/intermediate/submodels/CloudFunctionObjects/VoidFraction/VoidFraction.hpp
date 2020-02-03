@@ -87,9 +87,9 @@ public:
         VoidFraction(const VoidFraction<CloudType>& vf);
 
         //- Construct and return a clone
-        virtual autoPtr<CloudFunctionObject<CloudType> > clone() const
+        virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
-            return autoPtr<CloudFunctionObject<CloudType> >
+            return autoPtr<CloudFunctionObject<CloudType>>
             (
                 new VoidFraction<CloudType>(*this)
             );
@@ -184,7 +184,7 @@ void CML::VoidFraction<CloudType>::preEvolve()
 {
     if (thetaPtr_.valid())
     {
-        thetaPtr_->internalField() = 0.0;
+        thetaPtr_->primitiveFieldRef() = 0.0;
     }
     else
     {
@@ -203,7 +203,7 @@ void CML::VoidFraction<CloudType>::preEvolve()
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimless, 0.0)
+                dimensionedScalar("zero", dimless, 0)
             )
         );
     }
@@ -217,7 +217,7 @@ void CML::VoidFraction<CloudType>::postEvolve()
 
     const fvMesh& mesh = this->owner().mesh();
 
-    theta.internalField() /= mesh.time().deltaTValue()*mesh.V();
+    theta.primitiveFieldRef() /= mesh.time().deltaTValue()*mesh.V();
 
     CloudFunctionObject<CloudType>::postEvolve();
 }

@@ -177,13 +177,13 @@ bool CML::fv::SwakSetValue<T>::getMask(DynamicList<label> &cellIDs,const word &p
         FieldValueExpressionDriver::template getResult<volScalarField>();
     volScalarField usedCond(0*cond);
     forAll(this->cells_,i) {
-        label cellI=this->cells_[i];
-        usedCond[cellI]=cond[cellI];
+        label celli=this->cells_[i];
+        usedCond[celli]=cond[celli];
     }
 
-    forAll(usedCond,cellI) {
-        if(usedCond[cellI]!=0) {
-            cellIDs.append(cellI);
+    forAll(usedCond,celli) {
+        if(usedCond[celli]!=0) {
+            cellIDs.append(celli);
         }
     }
 
@@ -254,9 +254,9 @@ void CML::fv::SwakSetValue<T>::setValue
     //    UIndirectList<Type>(values, cells_) = injectionRate_[fieldI];
     forAll(cellIDs,i)
     {
-	label cellI=cellIDs[i];
+	label celli=cellIDs[i];
 
-        values[i]=result[cellI];
+        values[i]=result[celli];
     }
 
     eqn.setValues(cellIDs, values);

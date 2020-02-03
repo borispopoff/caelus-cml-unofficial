@@ -71,9 +71,9 @@ public:
         VirtualMassForce(const VirtualMassForce& pgf);
 
         //- Construct and return a clone
-        virtual autoPtr<ParticleForce<CloudType> > clone() const
+        virtual autoPtr<ParticleForce<CloudType>> clone() const
         {
-            return autoPtr<ParticleForce<CloudType> >
+            return autoPtr<ParticleForce<CloudType>>
             (
                 new VirtualMassForce<CloudType>(*this)
             );

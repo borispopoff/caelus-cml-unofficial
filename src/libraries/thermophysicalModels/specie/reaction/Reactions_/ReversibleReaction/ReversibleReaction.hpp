@@ -103,9 +103,9 @@ public:
     );
 
     //- Construct and return a clone
-    virtual autoPtr<ReactionType<ReactionThermo> > clone() const
+    virtual autoPtr<ReactionType<ReactionThermo>> clone() const
     {
-        return autoPtr<ReactionType<ReactionThermo> >
+        return autoPtr<ReactionType<ReactionThermo>>
         (
             new ReversibleReaction
             <
@@ -117,12 +117,12 @@ public:
     }
 
     //- Construct and return a clone with new speciesTable
-    virtual autoPtr<ReactionType<ReactionThermo> > clone
+    virtual autoPtr<ReactionType<ReactionThermo>> clone
     (
         const speciesTable& species
     ) const
     {
-        return autoPtr<ReactionType<ReactionThermo> >
+        return autoPtr<ReactionType<ReactionThermo>>
         (
             new ReversibleReaction
             <ReactionType, ReactionThermo, ReactionRate>
@@ -194,7 +194,7 @@ public:
     //- Third-body efficiencies (beta = 1-alpha)
     //  non-empty only for third-body reactions
     //  with enhanced molecularity (alpha != 1)
-    virtual const List<Tuple2<label, scalar> >& beta() const;
+    virtual const List<Tuple2<label, scalar>>& beta() const;
 
     //- Species concentration derivative of the pressure dependent term
     //  By default this value is 1 as it multiplies the third-body term
@@ -403,7 +403,7 @@ template
     class ReactionThermo,
     class ReactionRate
 >
-const CML::List<CML::Tuple2<CML::label, CML::scalar> >&
+const CML::List<CML::Tuple2<CML::label, CML::scalar>>&
 CML::ReversibleReaction
 <
     ReactionType,

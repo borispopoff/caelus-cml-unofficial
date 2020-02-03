@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,6 +24,15 @@ Class
 Description
     CML::processorFvPatchField
 
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            processor;
+    }
+    \endverbatim
+
 
 \*---------------------------------------------------------------------------*/
 
@@ -40,7 +49,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class processorFvPatch Declaration
+                    Class processorFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -99,9 +108,9 @@ public:
         processorFvPatchField(const processorFvPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new processorFvPatchField<Type>(*this)
             );
@@ -115,12 +124,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new processorFvPatchField<Type>(*this, iF)
             );
@@ -149,7 +158,7 @@ public:
             }
 
             //- Return neighbour field given internal field
-            virtual tmp<Field<Type> > patchNeighbourField() const;
+            virtual tmp<Field<Type>> patchNeighbourField() const;
 
 
         // Evaluation functions
@@ -161,7 +170,7 @@ public:
             virtual void evaluate(const Pstream::commsTypes commsType);
 
             //- Return patch-normal gradient
-            virtual tmp<Field<Type> > snGrad
+            virtual tmp<Field<Type>> snGrad
             (
                 const scalarField& deltaCoeffs
             ) const;
@@ -210,6 +219,7 @@ public:
                 const Pstream::commsTypes commsType
             ) const;
 
+
         //- Processor coupled interface functions
 
             //- Return processor number
@@ -241,6 +251,7 @@ public:
             {
                 return pTraits<Type>::rank;
             }
+
 };
 
 
@@ -282,7 +293,38 @@ CML::processorFvPatchField<Type>::processorFvPatchField
 {}
 
 
-// Construct by mapping given processorFvPatchField<Type>
+template<class Type>
+CML::processorFvPatchField<Type>::processorFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    coupledFvPatchField<Type>(p, iF, dict, dict.found("value")),
+    procPatch_(refCast<const processorFvPatch>(p))
+{
+    if (!isA<processorFvPatch>(p))
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "\n    patch type '" << p.type()
+            << "' not constraint type '" << typeName << "'"
+            << "\n    for patch " << p.name()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
+            << exit(FatalIOError);
+    }
+
+    // If the value is not supplied set to the internal field
+    if (!dict.found("value"))
+    {
+        fvPatchField<Type>::operator=(this->patchInternalField());
+    }
+}
+
+
 template<class Type>
 CML::processorFvPatchField<Type>::processorFvPatchField
 (
@@ -301,32 +343,8 @@ CML::processorFvPatchField<Type>::processorFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class Type>
-CML::processorFvPatchField<Type>::processorFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    coupledFvPatchField<Type>(p, iF, dict),
-    procPatch_(refCast<const processorFvPatch>(p))
-{
-    if (!isA<processorFvPatch>(p))
-    {
-        FatalIOErrorInFunction(dict)
-            << "\n    patch type '" << p.type()
-            << "' not constraint type '" << typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -366,7 +384,7 @@ CML::processorFvPatchField<Type>::~processorFvPatchField()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::processorFvPatchField<Type>::patchNeighbourField() const
 {
     return *this;
@@ -405,7 +423,7 @@ void CML::processorFvPatchField<Type>::evaluate
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::processorFvPatchField<Type>::snGrad
 (
     const scalarField& deltaCoeffs
@@ -509,8 +527,5 @@ void CML::processorFvPatchField<Type>::updateInterfaceMatrix
     }
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-// ************************************************************************* //

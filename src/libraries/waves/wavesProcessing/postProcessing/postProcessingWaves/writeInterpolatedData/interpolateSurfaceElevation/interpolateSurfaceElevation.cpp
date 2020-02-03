@@ -61,7 +61,7 @@ interpolateSurfaceElevation::~interpolateSurfaceElevation()
 
 void interpolateSurfaceElevation::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     scalarField x, y, z;
     List<scalarField> etas;
 

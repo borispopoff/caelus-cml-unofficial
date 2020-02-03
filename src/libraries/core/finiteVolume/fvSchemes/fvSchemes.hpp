@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -88,12 +88,6 @@ class fvSchemes
         //- Read settings from the dictionary
         void read(const dictionary&);
 
-        //- Disallow default bitwise copy construct
-        fvSchemes(const fvSchemes&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvSchemes&);
-
 
 public:
 
@@ -105,6 +99,9 @@ public:
 
         //- Construct for objectRegistry
         fvSchemes(const objectRegistry& obr);
+
+        //- Disallow default bitwise copy construct
+        fvSchemes(const fvSchemes&) = delete;
 
 
     // Member Functions
@@ -148,6 +145,12 @@ public:
 
             //- Read the fvSchemes
             bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvSchemes&) = delete;
 };
 
 

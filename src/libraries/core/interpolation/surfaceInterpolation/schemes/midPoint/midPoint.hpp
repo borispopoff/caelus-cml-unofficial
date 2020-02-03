@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -48,11 +48,6 @@ class midPoint
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const midPoint&);
-
 
 public:
 
@@ -109,8 +104,8 @@ public:
                 )
             );
 
-            surfaceScalarField::GeometricBoundaryField& awbf =
-                taw().boundaryField();
+            surfaceScalarField::Boundary& awbf =
+                taw.ref().boundaryFieldRef();
 
             forAll(awbf, patchi)
             {
@@ -122,6 +117,12 @@ public:
 
             return taw;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const midPoint&) = delete;
 };
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -253,7 +253,7 @@ private:
                 const label nAllowRefine,
                 const label surfaceLevel,
                 const vector& surfaceNormal,
-                const label cellI,
+                const label celli,
                 label& cellMaxLevel,
                 vector& cellMaxNormal,
                 labelList& refineCell,
@@ -283,7 +283,7 @@ private:
                 const labelList& globalToPatch
             ) const;
 
-            //- Determine patches for baffles
+            //- Determine patches for baffles on all intersected unnamed faces
             void getBafflePatches
             (
                 const labelList& globalToPatch,
@@ -298,7 +298,7 @@ private:
             label getBafflePatch
             (
                 const labelList& facePatch,
-                const label faceI
+                const label facei
             ) const;
 
             //- Repatches external face or creates baffle for internal face
@@ -418,6 +418,8 @@ private:
                 labelList& cellToZone
             ) const;
 
+            //- Make namedSurfaceIndex consistent with cellToZone
+            //  - clear out any blocked faces in between same cell zone.
             void makeConsistentFaceIndex
             (
                 const labelList& cellToZone,
@@ -426,10 +428,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        meshRefinement(const meshRefinement&);
+        meshRefinement(const meshRefinement&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const meshRefinement&);
+        void operator=(const meshRefinement&) = delete;
 
 public:
 
@@ -521,12 +523,12 @@ public:
             //  topo changes. Every entry is a list over all faces.
             //  Bit of a hack. Additional flag to say whether to maintain master
             //  only (false) or increase set to account for face-from-face.
-            const List<Tuple2<mapType, labelList> >& userFaceData() const
+            const List<Tuple2<mapType, labelList>>& userFaceData() const
             {
                 return userFaceData_;
             }
 
-            List<Tuple2<mapType, labelList> >& userFaceData()
+            List<Tuple2<mapType, labelList>>& userFaceData()
             {
                 return userFaceData_;
             }
@@ -934,7 +936,7 @@ void meshRefinement::testSyncBoundaryFaceList
 }
 
 
-//template <class T, class Mesh>
+//template<class T, class Mesh>
 template<class GeoField>
 void meshRefinement::addPatchFields(fvMesh& mesh, const word& patchFieldType)
 {
@@ -946,18 +948,18 @@ void meshRefinement::addPatchFields(fvMesh& mesh, const word& patchFieldType)
     forAllIter(typename HashTable<GeoField*>, flds, iter)
     {
         GeoField& fld = *iter();
-        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryField();
+        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
 
         label sz = bfld.size();
         bfld.setSize(sz+1);
         bfld.set
         (
             sz,
-            GeoField::PatchFieldType::New
+            GeoField::Patch::New
             (
                 patchFieldType,
                 mesh.boundary()[sz],
-                fld.dimensionedInternalField()
+                fld()
             )
         );
     }
@@ -976,7 +978,7 @@ void meshRefinement::reorderPatchFields(fvMesh& mesh, const labelList& oldToNew)
     forAllIter(typename HashTable<GeoField*>, flds, iter)
     {
         GeoField& fld = *iter();
-        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryField();
+        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
 
         bfld.reorder(oldToNew);
     }

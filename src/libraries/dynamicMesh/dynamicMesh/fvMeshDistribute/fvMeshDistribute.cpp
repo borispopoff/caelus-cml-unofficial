@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -37,6 +37,7 @@ License
 #include "CompactListList.hpp"
 #include "fvMeshTools.hpp"
 #include "ListOps.hpp"
+#include "globalIndex.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -501,15 +502,15 @@ CML::autoPtr<CML::mapPolyMesh> CML::fvMeshDistribute::repatch
     // is currently not supported by updateMesh.
 
     // Store boundary fields (we only do this for surfaceFields)
-    PtrList<FieldField<fvsPatchField, scalar> > sFlds;
+    PtrList<FieldField<fvsPatchField, scalar>> sFlds;
     saveBoundaryFields<scalar, surfaceMesh>(sFlds);
-    PtrList<FieldField<fvsPatchField, vector> > vFlds;
+    PtrList<FieldField<fvsPatchField, vector>> vFlds;
     saveBoundaryFields<vector, surfaceMesh>(vFlds);
-    PtrList<FieldField<fvsPatchField, sphericalTensor> > sptFlds;
+    PtrList<FieldField<fvsPatchField, sphericalTensor>> sptFlds;
     saveBoundaryFields<sphericalTensor, surfaceMesh>(sptFlds);
-    PtrList<FieldField<fvsPatchField, symmTensor> > sytFlds;
+    PtrList<FieldField<fvsPatchField, symmTensor>> sytFlds;
     saveBoundaryFields<symmTensor, surfaceMesh>(sytFlds);
-    PtrList<FieldField<fvsPatchField, tensor> > tFlds;
+    PtrList<FieldField<fvsPatchField, tensor>> tFlds;
     saveBoundaryFields<tensor, surfaceMesh>(tFlds);
 
     // Change the mesh (no inflation). Note: parallel comms allowed.
@@ -578,24 +579,53 @@ CML::autoPtr<CML::mapPolyMesh> CML::fvMeshDistribute::repatch
 // merge those points.
 CML::autoPtr<CML::mapPolyMesh> CML::fvMeshDistribute::mergeSharedPoints
 (
+    const labelList& pointToGlobalMaster,
     labelListList& constructPointMap
 )
 {
     // Find out which sets of points get merged and create a map from
     // mesh point to unique point.
-    Map<label> pointToMaster
-    (
-        fvMeshAdder::findSharedPoints
-        (
-            mesh_,
-            mergeTol_
-        )
-    );
+
+    label nShared = 0;
+    forAll(pointToGlobalMaster, pointi)
+    {
+        if (pointToGlobalMaster[pointi] != -1)
+        {
+            nShared++;
+        }
+    }
+
+    Map<label> globalMasterToLocalMaster(2*nShared);
+    Map<label> pointToMaster(2*nShared);
+
+    forAll(pointToGlobalMaster, pointi)
+    {
+        label globali = pointToGlobalMaster[pointi];
+        if (globali != -1)
+        {
+            Map<label>::const_iterator iter = globalMasterToLocalMaster.find
+            (
+                globali
+            );
+
+            if (iter == globalMasterToLocalMaster.end())
+            {
+                // Found first point. Designate as master
+                globalMasterToLocalMaster.insert(globali, pointi);
+                pointToMaster.insert(pointi, pointi);
+            }
+            else
+            {
+                pointToMaster.insert(pointi, iter());
+            }
+        }
+    }
 
     if (returnReduce(pointToMaster.size(), sumOp<label>()) == 0)
     {
         return autoPtr<mapPolyMesh>(nullptr);
     }
+
 
     polyTopoChange meshMod(mesh_);
 
@@ -638,16 +668,19 @@ CML::autoPtr<CML::mapPolyMesh> CML::fvMeshDistribute::mergeSharedPoints
 }
 
 
-// Construct the local environment of all boundary faces.
-void CML::fvMeshDistribute::getNeighbourData
+void CML::fvMeshDistribute::getCouplingData
 (
     const labelList& distribution,
     labelList& sourceFace,
     labelList& sourceProc,
     labelList& sourcePatch,
-    labelList& sourceNewNbrProc
+    labelList& sourceNewNbrProc,
+    labelList& sourcePointMaster
 ) const
 {
+    // Construct the coupling information for all (boundary) faces and
+    // points
+
     label nBnd = mesh_.nFaces() - mesh_.nInternalFaces();
     sourceFace.setSize(nBnd);
     sourceProc.setSize(nBnd);
@@ -676,10 +709,8 @@ void CML::fvMeshDistribute::getNeighbourData
             }
 
             // Which processor they will end up on
-            SubList<label>(nbrNewNbrProc, pp.size(), offset).assign
-            (
-                UIndirectList<label>(distribution, pp.faceCells())()
-            );
+            SubList<label>(nbrNewNbrProc, pp.size(), offset) =
+                UIndirectList<label>(distribution, pp.faceCells())();
         }
     }
 
@@ -780,13 +811,62 @@ void CML::fvMeshDistribute::getNeighbourData
             }
         }
     }
+
+
+    // Collect coupled (collocated) points
+    sourcePointMaster.setSize(mesh_.nPoints());
+    sourcePointMaster = -1;
+    {
+        // Assign global master point
+        const globalIndex globalPoints(mesh_.nPoints());
+
+        const globalMeshData& gmd = mesh_.globalData();
+        const indirectPrimitivePatch& cpp = gmd.coupledPatch();
+        const labelList& meshPoints = cpp.meshPoints();
+        const mapDistribute& slavesMap = gmd.globalCoPointSlavesMap();
+        const labelListList& slaves = gmd.globalCoPointSlaves();
+
+        labelList elems(slavesMap.constructSize(), -1);
+        forAll(meshPoints, pointi)
+        {
+            const labelList& slots = slaves[pointi];
+
+            if (slots.size())
+            {
+                // pointi is a master. Assign a unique label.
+
+                label globalPointi = globalPoints.toGlobal(meshPoints[pointi]);
+                elems[pointi] = globalPointi;
+                forAll(slots, i)
+                {
+                    label sloti = slots[i];
+                    if (sloti >= meshPoints.size())
+                    {
+                        // Filter out local collocated points. We don't want
+                        // to merge these
+                        elems[slots[i]] = globalPointi;
+                    }
+                }
+            }
+        }
+
+        // Push slave-slot data back to slaves
+        slavesMap.reverseDistribute(elems.size(), elems, false);
+
+        // Extract back onto mesh
+        forAll(meshPoints, pointi)
+        {
+            sourcePointMaster[meshPoints[pointi]] = elems[pointi];
+        }
+    }
 }
 
 
 // Subset the neighbourCell/neighbourProc fields
-void CML::fvMeshDistribute::subsetBoundaryData
+void CML::fvMeshDistribute::subsetCouplingData
 (
     const fvMesh& mesh,
+    const labelList& pointMap,
     const labelList& faceMap,
     const labelList& cellMap,
 
@@ -799,11 +879,13 @@ void CML::fvMeshDistribute::subsetBoundaryData
     const labelList& sourceProc,
     const labelList& sourcePatch,
     const labelList& sourceNewNbrProc,
+    const labelList& sourcePointMaster,
 
     labelList& subFace,
     labelList& subProc,
     labelList& subPatch,
-    labelList& subNewNbrProc
+    labelList& subNewNbrProc,
+    labelList& subPointMaster
 )
 {
     subFace.setSize(mesh.nFaces() - mesh.nInternalFaces());
@@ -849,6 +931,9 @@ void CML::fvMeshDistribute::subsetBoundaryData
             subNewNbrProc[newBFacei] = sourceNewNbrProc[oldBFacei];
         }
     }
+
+
+    subPointMaster = UIndirectList<label>(sourcePointMaster, pointMap);
 }
 
 
@@ -873,7 +958,7 @@ void CML::fvMeshDistribute::findCouples
 {
     // Store domain neighbour as map so we can easily look for pair
     // with same face+proc.
-    HashTable<label, labelPair, labelPair::Hash<> > map(domainFace.size());
+    HashTable<label, labelPair, labelPair::Hash<>> map(domainFace.size());
 
     forAll(domainProc, bFacei)
     {
@@ -900,7 +985,7 @@ void CML::fvMeshDistribute::findCouples
         {
             labelPair myData(sourceFace[bFacei], sourceProc[bFacei]);
 
-            HashTable<label, labelPair, labelPair::Hash<> >::const_iterator
+            HashTable<label, labelPair, labelPair::Hash<>>::const_iterator
                 iter = map.find(myData);
 
             if (iter != map.end())
@@ -933,9 +1018,9 @@ CML::labelList CML::fvMeshDistribute::mapBoundaryData
 (
     const primitiveMesh& mesh,      // mesh after adding
     const mapAddedPolyMesh& map,
-    const labelList& boundaryData0, // mesh before adding
+    const labelList& boundaryData0, // on mesh before adding
     const label nInternalFaces1,
-    const labelList& boundaryData1  // added mesh
+    const labelList& boundaryData1  // on added mesh
 )
 {
     labelList newBoundaryData(mesh.nFaces() - mesh.nInternalFaces());
@@ -960,6 +1045,41 @@ CML::labelList CML::fvMeshDistribute::mapBoundaryData
         {
             newBoundaryData[newFacei - mesh.nInternalFaces()] =
                 boundaryData1[addedBFacei];
+        }
+    }
+
+    return newBoundaryData;
+}
+
+
+CML::labelList CML::fvMeshDistribute::mapPointData
+(
+    const primitiveMesh& mesh,      // mesh after adding
+    const mapAddedPolyMesh& map,
+    const labelList& boundaryData0, // on mesh before adding
+    const labelList& boundaryData1  // on added mesh
+)
+{
+    labelList newBoundaryData(mesh.nPoints());
+
+    forAll(boundaryData0, oldPointi)
+    {
+        label newPointi = map.oldPointMap()[oldPointi];
+
+        // Point still exists (is necessary?)
+        if (newPointi >= 0)
+        {
+            newBoundaryData[newPointi] = boundaryData0[oldPointi];
+        }
+    }
+
+    forAll(boundaryData1, addedPointi)
+    {
+        label newPointi = map.addedPointMap()[addedPointi];
+
+        if (newPointi >= 0)
+        {
+            newBoundaryData[newPointi] = boundaryData1[addedPointi];
         }
     }
 
@@ -1000,15 +1120,15 @@ CML::autoPtr<CML::mapPolyMesh> CML::fvMeshDistribute::doRemoveCells
 
     // Save internal fields (note: not as DimensionedFields since would
     // get mapped)
-    PtrList<Field<scalar> > sFlds;
+    PtrList<Field<scalar>> sFlds;
     saveInternalFields(sFlds);
-    PtrList<Field<vector> > vFlds;
+    PtrList<Field<vector>> vFlds;
     saveInternalFields(vFlds);
-    PtrList<Field<sphericalTensor> > sptFlds;
+    PtrList<Field<sphericalTensor>> sptFlds;
     saveInternalFields(sptFlds);
-    PtrList<Field<symmTensor> > sytFlds;
+    PtrList<Field<symmTensor>> sytFlds;
     saveInternalFields(sytFlds);
-    PtrList<Field<tensor> > tFlds;
+    PtrList<Field<tensor>> tFlds;
     saveInternalFields(tFlds);
 
     // Change the mesh. No inflation. Note: no parallel comms allowed.
@@ -1049,7 +1169,7 @@ void CML::fvMeshDistribute::addProcPatches
 (
     const labelList& nbrProc,       // processor that neighbour is now on
     const labelList& referPatchID,  // patchID (or -1) I originated from
-    List<Map<label> >& procPatchID
+    List<Map<label>>& procPatchID
 )
 {
     // Now use the neighbourFace/Proc to repatch the mesh. These lists
@@ -1081,15 +1201,8 @@ void CML::fvMeshDistribute::addProcPatches
                 {
                     // Ordinary processor boundary
 
-                    const word patchName =
-                        "procBoundary"
-                      + name(Pstream::myProcNo())
-                      + "to"
-                      + name(proci);
-
                     processorPolyPatch pp
                     (
-                        patchName,
                         0,              // size
                         mesh_.nFaces(),
                         mesh_.boundaryMesh().size(),
@@ -1118,28 +1231,15 @@ void CML::fvMeshDistribute::addProcPatches
                           (
                               mesh_.boundaryMesh()[referPatchID[bFacei]]
                           );
-
-                    // Processor boundary originating from cyclic
-                    const word& cycName = pcPatch.name();
-
-                    const word patchName =
-                        "procBoundary"
-                      + name(Pstream::myProcNo())
-                      + "to"
-                      + name(proci)
-                      + "through"
-                      + cycName;
-
                     processorCyclicPolyPatch pp
                     (
-                        patchName,
                         0,              // size
                         mesh_.nFaces(),
                         mesh_.boundaryMesh().size(),
                         mesh_.boundaryMesh(),
                         Pstream::myProcNo(),
                         proci,
-                        cycName,
+                        pcPatch.name(),
                         pcPatch.transform()
                     );
 
@@ -1167,7 +1267,7 @@ CML::labelList CML::fvMeshDistribute::getBoundaryPatch
 (
     const labelList& nbrProc,               // new processor per boundary face
     const labelList& referPatchID,          // patchID (or -1) I originated from
-    const List<Map<label> >& procPatchID    // per proc the new procPatches
+    const List<Map<label>>& procPatchID    // per proc the new procPatches
 )
 {
     labelList patchIDs(nbrProc);
@@ -1207,7 +1307,8 @@ void CML::fvMeshDistribute::sendMesh
     const labelList& sourceProc,
     const labelList& sourcePatch,
     const labelList& sourceNewNbrProc,
-    UOPstream& toDomain
+    const labelList& sourcePointMaster,
+    Ostream& toDomain
 )
 {
     if (debug)
@@ -1245,7 +1346,7 @@ void CML::fvMeshDistribute::sendMesh
 
             if (myZoneID != -1)
             {
-                zonePoints[nameI].assign(pointZones[myZoneID]);
+                zonePoints[nameI].deepCopy(pointZones[myZoneID]);
             }
         }
     }
@@ -1277,8 +1378,8 @@ void CML::fvMeshDistribute::sendMesh
 
             if (myZoneID != -1)
             {
-                zoneFaces[nameI].assign(faceZones[myZoneID]);
-                zoneFaceFlip[nameI].assign(faceZones[myZoneID].flipMap());
+                zoneFaces[nameI].deepCopy(faceZones[myZoneID]);
+                zoneFaceFlip[nameI].deepCopy(faceZones[myZoneID].flipMap());
             }
         }
     }
@@ -1308,7 +1409,7 @@ void CML::fvMeshDistribute::sendMesh
 
             if (myZoneID != -1)
             {
-                zoneCells[nameI].assign(cellZones[myZoneID]);
+                zoneCells[nameI].deepCopy(cellZones[myZoneID]);
             }
         }
     }
@@ -1343,7 +1444,8 @@ void CML::fvMeshDistribute::sendMesh
         << sourceFace
         << sourceProc
         << sourcePatch
-        << sourceNewNbrProc;
+        << sourceNewNbrProc
+        << sourcePointMaster;
 
 
     if (debug)
@@ -1366,7 +1468,8 @@ CML::autoPtr<CML::fvMesh> CML::fvMeshDistribute::receiveMesh
     labelList& domainSourceProc,
     labelList& domainSourcePatch,
     labelList& domainSourceNewNbrProc,
-    UIPstream& fromNbr
+    labelList& domainSourcePointMaster,
+    Istream& fromNbr
 )
 {
     pointField domainPoints(fromNbr);
@@ -1384,7 +1487,8 @@ CML::autoPtr<CML::fvMesh> CML::fvMeshDistribute::receiveMesh
         >> domainSourceFace
         >> domainSourceProc
         >> domainSourcePatch
-        >> domainSourceNewNbrProc;
+        >> domainSourceNewNbrProc
+        >> domainSourcePointMaster;
 
     // Construct fvMesh
     autoPtr<fvMesh> domainMeshPtr
@@ -1398,10 +1502,10 @@ CML::autoPtr<CML::fvMesh> CML::fvMeshDistribute::receiveMesh
                 runTime,
                 IOobject::NO_READ
             ),
-            xferMove(domainPoints),
-            xferMove(domainFaces),
-            xferMove(domainAllOwner),
-            xferMove(domainAllNeighbour),
+            move(domainPoints),
+            move(domainFaces),
+            move(domainAllOwner),
+            move(domainAllNeighbour),
             false                   // no parallel comms
         )
     );
@@ -1543,7 +1647,6 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     }
 
 
-
     // Short circuit trivial case.
     if (!Pstream::parRun())
     {
@@ -1557,18 +1660,18 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                 nOldPoints,
                 nOldFaces,
                 nOldCells,
-                oldPatchStarts.xfer(),
-                oldPatchNMeshPoints.xfer(),
+                move(oldPatchStarts),
+                move(oldPatchNMeshPoints),
 
-                labelListList(1, identity(mesh_.nPoints())).xfer(),//subPointMap
-                labelListList(1, identity(mesh_.nFaces())).xfer(), //subFaceMap
-                labelListList(1, identity(mesh_.nCells())).xfer(), //subCellMap
-                labelListList(1, identity(patches.size())).xfer(), //subPatchMap
+                labelListList(1, identity(mesh_.nPoints())),
+                labelListList(1, identity(mesh_.nFaces())),
+                labelListList(1, identity(mesh_.nCells())),
+                labelListList(1, identity(patches.size())),
 
-                labelListList(1, identity(mesh_.nPoints())).xfer(),//pointMap
-                labelListList(1, identity(mesh_.nFaces())).xfer(), //faceMap
-                labelListList(1, identity(mesh_.nCells())).xfer(), //cellMap
-                labelListList(1, identity(patches.size())).xfer()  //patchMap
+                labelListList(1, identity(mesh_.nPoints())),
+                labelListList(1, identity(mesh_.nFaces())),
+                labelListList(1, identity(mesh_.nCells())),
+                labelListList(1, identity(patches.size()))
             )
         );
     }
@@ -1578,7 +1681,6 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     const wordList pointZoneNames(mergeWordList(mesh_.pointZones().names()));
     const wordList faceZoneNames(mergeWordList(mesh_.faceZones().names()));
     const wordList cellZoneNames(mergeWordList(mesh_.cellZones().names()));
-
 
 
     // Local environment of all boundary faces
@@ -1625,13 +1727,15 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     labelList sourceFace;
     labelList sourceProc;
     labelList sourceNewNbrProc;
-    getNeighbourData
+    labelList sourcePointMaster;
+    getCouplingData
     (
         distribution,
         sourceFace,
         sourceProc,
         sourcePatch,
-        sourceNewNbrProc
+        sourceNewNbrProc,
+        sourcePointMaster
     );
 
 
@@ -1673,33 +1777,33 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     const wordList surfTensors(mesh_.names(surfaceTensorField::typeName));
     checkEqualWordList("surfaceTensorFields", surfTensors);
 
-    typedef volScalarField::DimensionedInternalField dimScalType;
+    typedef volScalarField::Internal dimScalType;
     const wordList dimScalars(mesh_.names(dimScalType::typeName));
-    checkEqualWordList("volScalarField::DimensionedInternalField", dimScalars);
+    checkEqualWordList("volScalarField::Internal", dimScalars);
 
-    typedef volVectorField::DimensionedInternalField dimVecType;
+    typedef volVectorField::Internal dimVecType;
     const wordList dimVectors(mesh_.names(dimVecType::typeName));
-    checkEqualWordList("volVectorField::DimensionedInternalField", dimVectors);
+    checkEqualWordList("volVectorField::Internal", dimVectors);
 
-    typedef volSphericalTensorField::DimensionedInternalField dimSphereType;
+    typedef volSphericalTensorField::Internal dimSphereType;
     const wordList dimSphereTensors(mesh_.names(dimSphereType::typeName));
     checkEqualWordList
     (
-        "volSphericalTensorField::DimensionedInternalField",
+        "volSphericalTensorField::Internal",
         dimSphereTensors
     );
 
-    typedef volSymmTensorField::DimensionedInternalField dimSymmTensorType;
+    typedef volSymmTensorField::Internal dimSymmTensorType;
     const wordList dimSymmTensors(mesh_.names(dimSymmTensorType::typeName));
     checkEqualWordList
     (
-        "volSymmTensorField::DimensionedInternalField",
+        "volSymmTensorField::Internal",
         dimSymmTensors
     );
 
-    typedef volTensorField::DimensionedInternalField dimTensorType;
+    typedef volTensorField::Internal dimTensorType;
     const wordList dimTensors(mesh_.names(dimTensorType::typeName));
-    checkEqualWordList("volTensorField::DimensionedInternalField", dimTensors);
+    checkEqualWordList("volTensorField::Internal", dimTensors);
 
 
     // Find patch to temporarily put exposed and processor faces into.
@@ -1780,7 +1884,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
 
 
     // Allocate buffers
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
 
     // What to send to neighbouring domains
@@ -1809,7 +1913,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             }
 
             // Pstream for sending mesh and fields
-            //OPstream str(Pstream::blocking, recvProc);
+            // OPstream str(Pstream::commsTypes::blocking, recvProc);
             UOPstream str(recvProc, pBufs);
 
             // Mesh subsetting engine
@@ -1842,11 +1946,13 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             labelList procSourceProc;
             labelList procSourcePatch;
             labelList procSourceNewNbrProc;
+            labelList procSourcePointMaster;
 
-            subsetBoundaryData
+            subsetCouplingData
             (
                 subsetter.subMesh(),
-                subsetter.faceMap(),        // from subMesh to mesh
+                subsetter.pointMap(),       // from subMesh to mesh
+                subsetter.faceMap(),        //      ,,      ,,
                 subsetter.cellMap(),        //      ,,      ,,
 
                 distribution,               // old mesh distribution
@@ -1858,13 +1964,14 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                 sourceProc,
                 sourcePatch,
                 sourceNewNbrProc,
+                sourcePointMaster,
 
                 procSourceFace,
                 procSourceProc,
                 procSourcePatch,
-                procSourceNewNbrProc
+                procSourceNewNbrProc,
+                procSourcePointMaster
             );
-
 
 
             // Send to neighbour
@@ -1881,6 +1988,8 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                 procSourceProc,
                 procSourcePatch,
                 procSourceNewNbrProc,
+                procSourcePointMaster,
+
                 str
             );
 
@@ -1941,35 +2050,35 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             );
 
             // dimensionedFields
-            sendFields<volScalarField::DimensionedInternalField>
+            sendFields<volScalarField::Internal>
             (
                 recvProc,
                 dimScalars,
                 subsetter,
                 str
             );
-            sendFields<volVectorField::DimensionedInternalField>
+            sendFields<volVectorField::Internal>
             (
                 recvProc,
                 dimVectors,
                 subsetter,
                 str
             );
-            sendFields<volSphericalTensorField::DimensionedInternalField>
+            sendFields<volSphericalTensorField::Internal>
             (
                 recvProc,
                 dimSphereTensors,
                 subsetter,
                 str
             );
-            sendFields<volSymmTensorField::DimensionedInternalField>
+            sendFields<volSymmTensorField::Internal>
             (
                 recvProc,
                 dimSymmTensors,
                 subsetter,
                 str
             );
-            sendFields<volTensorField::DimensionedInternalField>
+            sendFields<volTensorField::Internal>
             (
                 recvProc,
                 dimTensors,
@@ -2015,15 +2124,15 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
         );
         // Insert the sign bit from face flipping
         labelList& faceMap = subFaceMap[Pstream::myProcNo()];
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
-            faceMap[faceI] += 1;
+            faceMap[facei] += 1;
         }
         const labelHashSet& flip = subMap().flipFaceFlux();
         forAllConstIter(labelHashSet, flip, iter)
         {
-            label faceI = iter.key();
-            faceMap[faceI] = -faceMap[faceI];
+            label facei = iter.key();
+            faceMap[facei] = -faceMap[facei];
         }
         subPointMap[Pstream::myProcNo()] = subMap().pointMap();
         subPatchMap[Pstream::myProcNo()] = identity(patches.size());
@@ -2040,10 +2149,12 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
         labelList domainSourceProc;
         labelList domainSourcePatch;
         labelList domainSourceNewNbrProc;
+        labelList domainSourcePointMaster;
 
-        subsetBoundaryData
+        subsetCouplingData
         (
             mesh_,                          // new mesh
+            subMap().pointMap(),            // from new to original mesh
             subMap().faceMap(),             // from new to original mesh
             subMap().cellMap(),
 
@@ -2056,17 +2167,20 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             sourceProc,
             sourcePatch,
             sourceNewNbrProc,
+            sourcePointMaster,
 
             domainSourceFace,
             domainSourceProc,
             domainSourcePatch,
-            domainSourceNewNbrProc
+            domainSourceNewNbrProc,
+            domainSourcePointMaster
         );
 
         sourceFace.transfer(domainSourceFace);
         sourceProc.transfer(domainSourceProc);
         sourcePatch.transfer(domainSourcePatch);
         sourceNewNbrProc.transfer(domainSourceNewNbrProc);
+        sourcePointMaster.transfer(domainSourcePointMaster);
     }
 
 
@@ -2124,6 +2238,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             labelList domainSourceProc;
             labelList domainSourcePatch;
             labelList domainSourceNewNbrProc;
+            labelList domainSourcePointMaster;
 
             autoPtr<fvMesh> domainMeshPtr;
 
@@ -2139,11 +2254,11 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             PtrList<surfaceSymmTensorField> ssytf;
             PtrList<surfaceTensorField> stf;
 
-            PtrList<volScalarField::DimensionedInternalField> dsf;
-            PtrList<volVectorField::DimensionedInternalField> dvf;
-            PtrList<volSphericalTensorField::DimensionedInternalField> dstf;
-            PtrList<volSymmTensorField::DimensionedInternalField> dsytf;
-            PtrList<volTensorField::DimensionedInternalField> dtf;
+            PtrList<volScalarField::Internal> dsf;
+            PtrList<volVectorField::Internal> dvf;
+            PtrList<volSphericalTensorField::Internal> dstf;
+            PtrList<volSymmTensorField::Internal> dsytf;
+            PtrList<volTensorField::Internal> dtf;
 
 
             // Opposite of sendMesh
@@ -2160,6 +2275,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     domainSourceProc,
                     domainSourcePatch,
                     domainSourceNewNbrProc,
+                    domainSourcePointMaster,
                     str
                 );
                 fvMesh& domainMesh = domainMeshPtr();
@@ -2256,7 +2372,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                 );
 
                 // Dimensioned fields
-                receiveFields<volScalarField::DimensionedInternalField>
+                receiveFields<volScalarField::Internal>
                 (
                     sendProc,
                     dimScalars,
@@ -2264,10 +2380,10 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     dsf,
                     fieldDicts.subDict
                     (
-                        volScalarField::DimensionedInternalField::typeName
+                        volScalarField::Internal::typeName
                     )
                 );
-                receiveFields<volVectorField::DimensionedInternalField>
+                receiveFields<volVectorField::Internal>
                 (
                     sendProc,
                     dimVectors,
@@ -2275,10 +2391,10 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     dvf,
                     fieldDicts.subDict
                     (
-                        volVectorField::DimensionedInternalField::typeName
+                        volVectorField::Internal::typeName
                     )
                 );
-                receiveFields<volSphericalTensorField::DimensionedInternalField>
+                receiveFields<volSphericalTensorField::Internal>
                 (
                     sendProc,
                     dimSphereTensors,
@@ -2286,11 +2402,11 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     dstf,
                     fieldDicts.subDict
                     (
-                        volSphericalTensorField::DimensionedInternalField::
+                        volSphericalTensorField::Internal::
                         typeName
                     )
                 );
-                receiveFields<volSymmTensorField::DimensionedInternalField>
+                receiveFields<volSymmTensorField::Internal>
                 (
                     sendProc,
                     dimSymmTensors,
@@ -2298,10 +2414,10 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     dsytf,
                     fieldDicts.subDict
                     (
-                        volSymmTensorField::DimensionedInternalField::typeName
+                        volSymmTensorField::Internal::typeName
                     )
                 );
-                receiveFields<volTensorField::DimensionedInternalField>
+                receiveFields<volTensorField::Internal>
                 (
                     sendProc,
                     dimTensors,
@@ -2309,7 +2425,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     dtf,
                     fieldDicts.subDict
                     (
-                        volTensorField::DimensionedInternalField::typeName
+                        volTensorField::Internal::typeName
                     )
                 );
             }
@@ -2427,6 +2543,15 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                 domainMesh.nInternalFaces(),
                 domainSourceNewNbrProc
             );
+            // Update pointMaster data
+            sourcePointMaster = mapPointData
+            (
+                mesh_,
+                map(),
+                sourcePointMaster,
+                domainSourcePointMaster
+            );
+
 
             // Update all addressing so xxProcAddressing points to correct
             // item in masterMesh.
@@ -2469,12 +2594,12 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
                     domainFaceI++
                 )
                 {
-                    label newFaceI = map().addedFaceMap()[domainFaceI];
-                    label newCellI = mesh_.faceOwner()[newFaceI];
+                    label newFacei = map().addedFaceMap()[domainFaceI];
+                    label newCelli = mesh_.faceOwner()[newFacei];
 
                     label domainCellI = domainMesh.faceOwner()[domainFaceI];
 
-                    if (newCellI != map().addedCellMap()[domainCellI])
+                    if (newCelli != map().addedCellMap()[domainCellI])
                     {
                         flippedAddedFaces.insert(domainFaceI);
                     }
@@ -2541,6 +2666,10 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     }
 
 
+    // See if any originally shared points need to be merged. Note: does
+    // parallel comms. After this points and edges should again be consistent.
+    mergeSharedPoints(sourcePointMaster, constructPointMap);
+
 
     // Add processorPatches
     // ~~~~~~~~~~~~~~~~~~~~
@@ -2548,7 +2677,7 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     // Per neighbour processor, per originating patch, the patchID
     // For faces resulting from internal faces or normal processor patches
     // the originating patch is -1. For cyclics this is the cyclic patchID.
-    List<Map<label> > procPatchID;
+    List<Map<label>> procPatchID;
 
     // Add processor and processorCyclic patches.
     addProcPatches(sourceNewNbrProc, sourcePatch, procPatchID);
@@ -2570,23 +2699,15 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
 
     // Change patches. Since this might change ordering of coupled faces
     // we also need to adapt our constructMaps.
-    // NOTE: there is one very particular problem with this structure.
-    // We first create the processor patches and use these to merge out
-    // shared points (see mergeSharedPoints below). So temporarily points
-    // and edges do not match!
     repatch(newPatchID, constructFaceMap);
-
-    // See if any geometrically shared points need to be merged. Note: does
-    // parallel comms. After this points and edges should again be consistent.
-    mergeSharedPoints(constructPointMap);
 
     // Bit of hack: processorFvPatchField does not get reset since created
     // from nothing so explicitly reset.
-    initPatchFields<volScalarField, processorFvPatchField<scalar> >
+    initPatchFields<volScalarField, processorFvPatchField<scalar>>
     (
         Zero
     );
-    initPatchFields<volVectorField, processorFvPatchField<vector> >
+    initPatchFields<volVectorField, processorFvPatchField<vector>>
     (
         Zero
     );
@@ -2598,11 +2719,11 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
     (
         Zero
     );
-    initPatchFields<volSymmTensorField, processorFvPatchField<symmTensor> >
+    initPatchFields<volSymmTensorField, processorFvPatchField<symmTensor>>
     (
         Zero
     );
-    initPatchFields<volTensorField, processorFvPatchField<tensor> >
+    initPatchFields<volTensorField, processorFvPatchField<tensor>>
     (
         Zero
     );
@@ -2639,18 +2760,18 @@ CML::autoPtr<CML::mapDistributePolyMesh> CML::fvMeshDistribute::distribute
             nOldPoints,
             nOldFaces,
             nOldCells,
-            oldPatchStarts.xfer(),
-            oldPatchNMeshPoints.xfer(),
+            move(oldPatchStarts),
+            move(oldPatchNMeshPoints),
 
-            subPointMap.xfer(),
-            subFaceMap.xfer(),
-            subCellMap.xfer(),
-            subPatchMap.xfer(),
+            move(subPointMap),
+            move(subFaceMap),
+            move(subCellMap),
+            move(subPatchMap),
 
-            constructPointMap.xfer(),
-            constructFaceMap.xfer(),
-            constructCellMap.xfer(),
-            constructPatchMap.xfer(),
+            move(constructPointMap),
+            move(constructFaceMap),
+            move(constructCellMap),
+            move(constructPatchMap),
 
             true,           // subFaceMap has flip
             true            // constructFaceMap has flip

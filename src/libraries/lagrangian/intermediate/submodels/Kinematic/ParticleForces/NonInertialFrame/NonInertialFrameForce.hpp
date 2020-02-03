@@ -97,9 +97,9 @@ public:
         NonInertialFrameForce(const NonInertialFrameForce& niff);
 
         //- Construct and return a clone
-        virtual autoPtr<ParticleForce<CloudType> > clone() const
+        virtual autoPtr<ParticleForce<CloudType>> clone() const
         {
-            return autoPtr<ParticleForce<CloudType> >
+            return autoPtr<ParticleForce<CloudType>>
             (
                 new ParticleForce<CloudType>(*this)
             );

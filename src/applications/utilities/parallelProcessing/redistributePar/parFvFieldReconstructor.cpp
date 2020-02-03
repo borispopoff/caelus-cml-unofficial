@@ -29,15 +29,15 @@ void CML::parFvFieldReconstructor::createPatchFaceMaps()
     const fvBoundaryMesh& fvb = procMesh_.boundary();
 
     patchFaceMaps_.setSize(fvb.size());
-    forAll(fvb, patchI)
+    forAll(fvb, patchi)
     {
-        if (!isA<processorFvPatch>(fvb[patchI]))
+        if (!isA<processorFvPatch>(fvb[patchi]))
         {
             // Create map for patch faces only
 
             // Mark all used elements (i.e. destination patch faces)
             boolList faceIsUsed(distMap_.faceMap().constructSize(), false);
-            const polyPatch& basePatch = baseMesh_.boundaryMesh()[patchI];
+            const polyPatch& basePatch = baseMesh_.boundaryMesh()[patchi];
             forAll(basePatch, i)
             {
                 faceIsUsed[basePatch.start()+i] = true;
@@ -46,14 +46,14 @@ void CML::parFvFieldReconstructor::createPatchFaceMaps()
             // Copy face map
             patchFaceMaps_.set
             (
-                patchI,
+                patchi,
                 new mapDistributeBase(distMap_.faceMap())
             );
 
             // Compact out unused elements
             labelList oldToNewSub;
             labelList oldToNewConstruct;
-            patchFaceMaps_[patchI].compact
+            patchFaceMaps_[patchi].compact
             (
                 faceIsUsed,
                 procMesh_.nFaces(),      // maximum index of subMap
@@ -61,7 +61,7 @@ void CML::parFvFieldReconstructor::createPatchFaceMaps()
                 oldToNewConstruct,
                 UPstream::msgType()
             );
-            //Pout<< "patchMap:" << patchFaceMaps_[patchI] << endl;
+            //Pout<< "patchMap:" << patchFaceMaps_[patchi] << endl;
         }
     }
 }

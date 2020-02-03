@@ -51,13 +51,13 @@ void meshSurfaceEdgeExtractor::createEdgeVertices()
 
     nPoints_ = points.size();
 
-    for(label faceI=nIntFaces;faceI<nFaces;++faceI)
+    for(label facei=nIntFaces;facei<nFaces;++facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         forAll(f, pI)
         {
-            const label edgeI = faceEdges(faceI, pI);
+            const label edgeI = faceEdges(facei, pI);
 
             if( newEdgePoint.found(edgeI) ) continue;
 
@@ -104,7 +104,7 @@ void meshSurfaceEdgeExtractor::createEdgeVertices()
                 {
                     points.append
                     (
-                        edges[faceEdges(faceI, pI)].centre(points)
+                        edges[faceEdges(facei, pI)].centre(points)
                     );
                 }
 
@@ -120,17 +120,17 @@ void meshSurfaceEdgeExtractor::createEdgeVertices()
 
     //- create new faces
     DynList<label> newF;
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         newF.clear();
 
         forAll(f, eI)
         {
             newF.append(f[eI]);
-            if( newEdgePoint.found(faceEdges(faceI, eI)) )
-                newF.append(newEdgePoint[faceEdges(faceI, eI)]);
+            if( newEdgePoint.found(faceEdges(facei, eI)) )
+                newF.append(newEdgePoint[faceEdges(facei, eI)]);
         }
 
         if( newF.size() > f.size() )

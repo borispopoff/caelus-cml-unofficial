@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,16 +53,7 @@ class skewCorrected
 {
     // Private member data
 
-        tmp<surfaceInterpolationScheme<Type> > tScheme_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        skewCorrected(const skewCorrected&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const skewCorrected&);
+        tmp<surfaceInterpolationScheme<Type>> tScheme_;
 
 
 public:
@@ -103,6 +94,9 @@ public:
             )
         {}
 
+        //- Disallow default bitwise copy construction
+        skewCorrected(const skewCorrected&) = delete;
+
 
     // Member Functions
 
@@ -123,7 +117,7 @@ public:
              || skewCorrectionVectors::New(this->mesh()).skew();
         }
 
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         skewCorrection
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -133,7 +127,7 @@ public:
 
             const skewCorrectionVectors& scv = skewCorrectionVectors::New(mesh);
 
-            tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsfCorr
+            tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
             (
                 new GeometricField<Type, fvsPatchField, surfaceMesh>
                 (
@@ -148,14 +142,14 @@ public:
                     (
                         vf.name(),
                         vf.dimensions(),
-                        pTraits<Type>::zero
+                        Zero
                     )
                 )
             );
 
             for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
             {
-                tsfCorr().replace
+                tsfCorr.ref().replace
                 (
                     cmpt,
                     scv() & linear
@@ -178,7 +172,7 @@ public:
 
 
         //- Return the explicit correction to the face-interpolate
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -203,12 +197,18 @@ public:
             else
             {
                 return
-                    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+                    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
                     (
                         nullptr
                     );
             }
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const skewCorrected&) = delete;
 };
 
 

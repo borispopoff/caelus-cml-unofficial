@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -64,7 +64,7 @@ public:
     typedef typename GeoMesh::Mesh Mesh;
     typedef typename GeoMesh::BoundaryMesh BoundaryMesh;
 
-    class DimensionedInternalField;
+    class Internal;
 
 
 private:
@@ -73,7 +73,7 @@ private:
 
         //- Slice the given field and a create a PtrList of SlicedPatchField
         //  from which the boundary field is built
-        tmp<FieldField<PatchField, Type> >  slicedBoundaryField
+        tmp<FieldField<PatchField, Type>>  slicedBoundaryField
         (
             const Mesh& mesh,
             const Field<Type>& completeField,
@@ -83,26 +83,12 @@ private:
 
         //- Slice the given field and a create a PtrList of SlicedPatchField
         //  from which the boundary field is built
-        tmp<FieldField<PatchField, Type> >  slicedBoundaryField
+        tmp<FieldField<PatchField, Type>>  slicedBoundaryField
         (
             const Mesh& mesh,
             const FieldField<PatchField, Type>& bField,
             const bool preserveCouples
         );
-
-        ////- Disallow default bitwise copy construct
-        //SlicedGeometricField(const SlicedGeometricField&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const SlicedGeometricField&);
-
-        //- Disallow standard assignment to GeometricField,
-        //  == assignment is allowed.
-        void operator=(const GeometricField<Type, PatchField, GeoMesh>&);
-
-        //- Disallow standard assignment to tmp<GeometricField>,
-        //  == assignment is allowed.
-        void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh> >&);
 
 
 public:
@@ -141,7 +127,7 @@ public:
             const bool preserveCouples=true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         SlicedGeometricField
         (
             const SlicedGeometricField
@@ -153,6 +139,10 @@ public:
             >&
         );
 
+        //- Clone
+        tmp<SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>>
+            clone() const;
+
 
     //- Destructor
     ~SlicedGeometricField();
@@ -162,11 +152,31 @@ public:
 
         //- Correct boundary field
         void correctBoundaryConditions();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SlicedGeometricField&) = delete;
+
+        //- Disallow standard assignment to GeometricField,
+        //  == assignment is allowed.
+        void operator=
+        (
+            const GeometricField<Type, PatchField, GeoMesh>&
+        ) = delete;
+
+        //- Disallow standard assignment to tmp<GeometricField>,
+        //  == assignment is allowed.
+        void operator=
+        (
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+        ) = delete;
 };
 
 
 /*---------------------------------------------------------------------------*\
-       Class SlicedGeometricField::DimensionedInternalField Declaration
+       Class SlicedGeometricField::Internal Declaration
 \*---------------------------------------------------------------------------*/
 
 //- The internalField of a SlicedGeometricField
@@ -178,9 +188,9 @@ template
     class GeoMesh
 >
 class SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-DimensionedInternalField
+Internal
 :
-    public GeometricField<Type, PatchField, GeoMesh>::DimensionedInternalField
+    public GeometricField<Type, PatchField, GeoMesh>::Internal
 {
 
 public:
@@ -188,7 +198,7 @@ public:
     // Constructors
 
         //- Construct from components and field to slice
-        DimensionedInternalField
+        Internal
         (
             const IOobject&,
             const Mesh&,
@@ -198,7 +208,7 @@ public:
 
 
     //- Destructor
-    ~DimensionedInternalField();
+    ~Internal();
 };
 
 
@@ -217,7 +227,7 @@ template
     template<class> class SlicedPatchField,
     class GeoMesh
 >
-CML::tmp<CML::FieldField<PatchField, Type> >
+CML::tmp<CML::FieldField<PatchField, Type>>
 CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 slicedBoundaryField
 (
@@ -227,12 +237,11 @@ slicedBoundaryField
     const bool preserveProcessorOnly
 )
 {
-    tmp<FieldField<PatchField, Type> > tbf
+    tmp<FieldField<PatchField, Type>> tbf
     (
         new FieldField<PatchField, Type>(mesh.boundary().size())
     );
-
-    FieldField<PatchField, Type>& bf = tbf();
+    FieldField<PatchField, Type>& bf = tbf.ref();
 
     forAll(mesh.boundary(), patchi)
     {
@@ -295,7 +304,7 @@ template
     template<class> class SlicedPatchField,
     class GeoMesh
 >
-CML::tmp<CML::FieldField<PatchField, Type> >
+CML::tmp<CML::FieldField<PatchField, Type>>
 CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 slicedBoundaryField
 (
@@ -304,12 +313,11 @@ slicedBoundaryField
     const bool preserveCouples
 )
 {
-    tmp<FieldField<PatchField, Type> > tbf
+    tmp<FieldField<PatchField, Type>> tbf
     (
         new FieldField<PatchField, Type>(mesh.boundary().size())
     );
-
-    FieldField<PatchField, Type>& bf = tbf();
+    FieldField<PatchField, Type>& bf = tbf.ref();
 
     forAll(mesh.boundary(), patchi)
     {
@@ -342,7 +350,7 @@ slicedBoundaryField
                     DimensionedField<Type, GeoMesh>::null()
                 )
             );
-            bf[patchi].UList<Type>::operator=(bField[patchi]);
+            bf[patchi].UList<Type>::shallowCopy(bField[patchi]);
         }
     }
 
@@ -360,7 +368,7 @@ template
     class GeoMesh
 >
 CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-DimensionedInternalField::DimensionedInternalField
+Internal::Internal
 (
     const IOobject& io,
     const Mesh& mesh,
@@ -377,7 +385,7 @@ DimensionedInternalField::DimensionedInternalField
     )
 {
     // Set the internalField to the slice of the complete field
-    UList<Type>::operator=
+    UList<Type>::shallowCopy
     (
         typename Field<Type>::subField(iField, GeoMesh::size(mesh))
     );
@@ -411,7 +419,7 @@ SlicedGeometricField
     )
 {
     // Set the internalField to the slice of the complete field
-    UList<Type>::operator=
+    UList<Type>::shallowCopy
     (
         typename Field<Type>::subField(completeField, GeoMesh::size(mesh))
     );
@@ -455,7 +463,7 @@ SlicedGeometricField
     )
 {
     // Set the internalField to the slice of the complete field
-    UList<Type>::operator=
+    UList<Type>::shallowCopy
     (
         typename Field<Type>::subField(completeIField, GeoMesh::size(mesh))
     );
@@ -489,7 +497,7 @@ SlicedGeometricField
     )
 {
     // Set the internalField to the supplied internal field
-    UList<Type>::operator=(gf.internalField());
+    UList<Type>::shallowCopy(gf.primitiveField());
 
     correctBoundaryConditions();
 }
@@ -518,7 +526,34 @@ SlicedGeometricField
     )
 {
     // Set the internalField to the supplied internal field
-    UList<Type>::operator=(gf.internalField());
+    UList<Type>::shallowCopy(gf.primitiveField());
+}
+
+
+template
+<
+    class Type,
+    template<class> class PatchField,
+    template<class> class SlicedPatchField,
+    class GeoMesh
+>
+CML::tmp
+<
+    CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
+>
+CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
+clone() const
+{
+    return tmp
+    <
+        SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
+    >
+    (
+        new SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
+        (
+            *this
+        )
+    );
 }
 
 
@@ -536,7 +571,7 @@ CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 {
     // Set the internalField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
-    UList<Type>::operator=(UList<Type>(nullptr, 0));
+    UList<Type>::shallowCopy(UList<Type>(nullptr, 0));
 }
 
 
@@ -548,11 +583,11 @@ template
     class GeoMesh
 >
 CML::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-DimensionedInternalField::~DimensionedInternalField()
+Internal::~Internal()
 {
     // Set the internalField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
-    UList<Type>::operator=(UList<Type>(nullptr, 0));
+    UList<Type>::shallowCopy(UList<Type>(nullptr, 0));
 }
 
 
@@ -570,9 +605,6 @@ correctBoundaryConditions()
 {
     GeometricField<Type, PatchField, GeoMesh>::correctBoundaryConditions();
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

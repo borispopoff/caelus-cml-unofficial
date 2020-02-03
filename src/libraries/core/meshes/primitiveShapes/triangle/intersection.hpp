@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,17 +58,17 @@ private:
 
 public:
 
-    enum direction
+    enum class direction
     {
-        VECTOR,
-        CONTACT_SPHERE
+        vector,
+        contactSphere
     };
 
-    enum algorithm
+    enum class algorithm
     {
-        FULL_RAY,        // Intersecting with full ray
-        HALF_RAY,        // Intersecting with half ray
-        VISIBLE          // Intersecting with the visible side
+        fullRay,        // Intersecting with full ray
+        halfRay,        // Intersecting with half ray
+        visible         // Intersecting with the visible side
     };
 
     // Static Member Functions

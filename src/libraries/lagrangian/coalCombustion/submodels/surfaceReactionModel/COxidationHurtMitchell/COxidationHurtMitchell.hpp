@@ -124,9 +124,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<SurfaceReactionModel<CloudType> > clone() const
+        virtual autoPtr<SurfaceReactionModel<CloudType>> clone() const
         {
-            return autoPtr<SurfaceReactionModel<CloudType> >
+            return autoPtr<SurfaceReactionModel<CloudType>>
             (
                 new COxidationHurtMitchell<CloudType>(*this)
             );

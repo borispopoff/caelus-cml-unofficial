@@ -66,14 +66,14 @@ class sampledPlane
 
         //- sample field on faces
         template<class Type>
-        tmp<Field<Type> > sampleField
+        tmp<Field<Type>> sampleField
         (
             const GeometricField<Type, fvPatchField, volMesh>& vField
         ) const;
 
 
         template<class Type>
-        tmp<Field<Type> >
+        tmp<Field<Type>>
         interpolateField(const interpolation<Type>&) const;
 
 
@@ -219,26 +219,26 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledPlane::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
 {
-    return tmp<Field<Type> >(new Field<Type>(vField, meshCells()));
+    return tmp<Field<Type>>(new Field<Type>(vField, meshCells()));
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledPlane::interpolateField
 (
     const interpolation<Type>& interpolator
 ) const
 {
     // One value per point
-    tmp<Field<Type> > tvalues(new Field<Type>(points().size()));
-    Field<Type>& values = tvalues();
+    tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
+    Field<Type>& values = tvalues.ref();
 
     boolList pointDone(points().size(), false);
 
@@ -248,16 +248,16 @@ CML::sampledPlane::interpolateField
 
         forAll(f, faceVertI)
         {
-            label pointI = f[faceVertI];
+            label pointi = f[faceVertI];
 
-            if (!pointDone[pointI])
+            if (!pointDone[pointi])
             {
-                values[pointI] = interpolator.interpolate
+                values[pointi] = interpolator.interpolate
                 (
-                    points()[pointI],
+                    points()[pointi],
                     meshCells()[cutFaceI]
                 );
-                pointDone[pointI] = true;
+                pointDone[pointi] = true;
             }
         }
     }

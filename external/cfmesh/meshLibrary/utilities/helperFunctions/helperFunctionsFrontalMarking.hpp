@@ -244,7 +244,7 @@ label groupMarking
         const label threadI(0);
         # endif
 
-        LongList<std::pair<label, label> > threadCommPairs;
+        LongList<std::pair<label, label>> threadCommPairs;
 
         const label minEl = threadI * chunkSize;
 
@@ -322,7 +322,7 @@ label groupMarking
         # endif
 
         //- find group to neighbouring groups addressing
-        List<DynList<label> > localNeiGroups(nGroups);
+        List<DynList<label>> localNeiGroups(nGroups);
         forAll(threadCommPairs, cfI)
         {
             const std::pair<label, label>& lp = threadCommPairs[cfI];
@@ -440,7 +440,7 @@ label groupMarking
         //- this operator implements the algorithm for exchanging data
         //- over processors and collects information which groups
         //- are connected over inter-processor boundaries
-        std::map<label, DynList<label> > neiGroups;
+        std::map<label, DynList<label>> neiGroups;
 
         neighbourCalculator.collectGroups
         (
@@ -450,12 +450,12 @@ label groupMarking
         );
 
         //- create a graph of connections
-        List<List<labelPair> > globalNeiGroups(Pstream::nProcs());
+        List<List<labelPair>> globalNeiGroups(Pstream::nProcs());
 
         DynList<labelPair> connsAtProc;
         for
         (
-            std::map<label, DynList<label> >::const_iterator it =
+            std::map<label, DynList<label>>::const_iterator it =
             neiGroups.begin();
             it!=neiGroups.end();
             ++it

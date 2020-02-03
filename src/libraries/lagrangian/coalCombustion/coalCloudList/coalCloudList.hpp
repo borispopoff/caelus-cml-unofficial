@@ -114,7 +114,7 @@ public:
 #include "volFields.hpp"
 #include "DimensionedField.hpp"
 
-CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::vector, CML::volMesh>>
 CML::coalCloudList::UTrans() const
 {
     tmp<volVectorField::Internal> tfld
@@ -162,7 +162,7 @@ CML::tmp<CML::fvVectorMatrix> CML::coalCloudList::SU
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::coalCloudList::hsTrans() const
 {
     tmp<volScalarField::Internal> tfld
@@ -178,7 +178,7 @@ CML::coalCloudList::hsTrans() const
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero", dimEnergy, 0.0)
+            dimensionedScalar("zero", dimEnergy, 0)
         )
     );
 
@@ -228,7 +228,7 @@ CML::tmp<CML::fvScalarMatrix> CML::coalCloudList::SYi
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::coalCloudList::rhoTrans() const
 {
     tmp<volScalarField::Internal> tfld
@@ -244,7 +244,7 @@ CML::coalCloudList::rhoTrans() const
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero", dimMass, 0.0)
+            dimensionedScalar("zero", dimMass, 0)
         )
     );
 
@@ -263,7 +263,7 @@ CML::coalCloudList::rhoTrans() const
 
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::coalCloudList::Srho() const
 {
     tmp<volScalarField::Internal> tfld
@@ -279,7 +279,7 @@ CML::coalCloudList::Srho() const
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0.0)
+            dimensionedScalar("zero", dimDensity/dimTime, 0)
         )
     );
 
@@ -294,7 +294,7 @@ CML::coalCloudList::Srho() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::coalCloudList::Srho
 (
     const label i
@@ -313,7 +313,7 @@ CML::coalCloudList::Srho
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("zero", dimDensity/dimTime, 0.0)
+            dimensionedScalar("zero", dimDensity/dimTime, 0)
         )
     );
 

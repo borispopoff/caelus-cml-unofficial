@@ -59,10 +59,10 @@ void CML::primitiveMesh::calcCellCells() const
         const labelList& own = faceOwner();
         const labelList& nei = faceNeighbour();
 
-        forAll(nei, faceI)
+        forAll(nei, facei)
         {
-            ncc[own[faceI]]++;
-            ncc[nei[faceI]]++;
+            ncc[own[facei]]++;
+            ncc[nei[facei]]++;
         }
 
         // Create the storage
@@ -73,16 +73,16 @@ void CML::primitiveMesh::calcCellCells() const
 
         // 2. Size and fill cellFaceAddr
 
-        forAll(cellCellAddr, cellI)
+        forAll(cellCellAddr, celli)
         {
-            cellCellAddr[cellI].setSize(ncc[cellI]);
+            cellCellAddr[celli].setSize(ncc[celli]);
         }
         ncc = 0;
 
-        forAll(nei, faceI)
+        forAll(nei, facei)
         {
-            label ownCellI = own[faceI];
-            label neiCellI = nei[faceI];
+            label ownCellI = own[facei];
+            label neiCellI = nei[facei];
 
             cellCellAddr[ownCellI][ncc[ownCellI]++] = neiCellI;
             cellCellAddr[neiCellI][ncc[neiCellI]++] = ownCellI;
@@ -106,35 +106,35 @@ const CML::labelListList& CML::primitiveMesh::cellCells() const
 
 const CML::labelList& CML::primitiveMesh::cellCells
 (
-    const label cellI,
+    const label celli,
     DynamicList<label>& storage
 ) const
 {
     if (hasCellCells())
     {
-        return cellCells()[cellI];
+        return cellCells()[celli];
     }
     else
     {
         const labelList& own = faceOwner();
         const labelList& nei = faceNeighbour();
-        const cell& cFaces = cells()[cellI];
+        const cell& cFaces = cells()[celli];
 
         storage.clear();
 
         forAll(cFaces, i)
         {
-            label faceI = cFaces[i];
+            label facei = cFaces[i];
 
-            if (faceI < nInternalFaces())
+            if (facei < nInternalFaces())
             {
-                if (own[faceI] == cellI)
+                if (own[facei] == celli)
                 {
-                    storage.append(nei[faceI]);
+                    storage.append(nei[facei]);
                 }
                 else
                 {
-                    storage.append(own[faceI]);
+                    storage.append(own[facei]);
                 }
             }
         }
@@ -144,9 +144,9 @@ const CML::labelList& CML::primitiveMesh::cellCells
 }
 
 
-const CML::labelList& CML::primitiveMesh::cellCells(const label cellI) const
+const CML::labelList& CML::primitiveMesh::cellCells(const label celli) const
 {
-    return cellCells(cellI, labels_);
+    return cellCells(celli, labels_);
 }
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -90,15 +90,6 @@ private:
         label nUnset_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        wallDist(const wallDist&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const wallDist&);
-
-
 public:
 
     // Constructors
@@ -108,6 +99,8 @@ public:
         //  cells for correct distance, searching neighbours.
         wallDist(const fvMesh& mesh, bool correctWalls = true);
 
+        //- Disallow default bitwise copy construct
+        wallDist(const wallDist&) = delete;
 
     //- Destructor
     virtual ~wallDist();
@@ -127,6 +120,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const wallDist&) = delete;
 };
 
 

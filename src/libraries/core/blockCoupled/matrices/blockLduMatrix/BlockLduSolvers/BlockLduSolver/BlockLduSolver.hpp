@@ -158,7 +158,7 @@ public:
 
     // Selectors
     //- Return a new solver from a dictionary
-    static autoPtr<BlockLduSolver<Type> > New
+    static autoPtr<BlockLduSolver<Type>> New
     (
         const word& fieldName,
         BlockLduMatrix<Type>& matrix,
@@ -166,7 +166,7 @@ public:
     );
 
     //- Return a new solver given type
-    static autoPtr<BlockLduSolver<Type> > New
+    static autoPtr<BlockLduSolver<Type>> New
     (
         const word& solverName,
         const word& fieldName,
@@ -254,7 +254,7 @@ BlockLduSolver<Type>::BlockLduSolver
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-autoPtr<typename CML::BlockLduSolver<Type> >
+autoPtr<typename CML::BlockLduSolver<Type>>
 BlockLduSolver<Type>::New
 (
     const word& fieldName,
@@ -266,7 +266,7 @@ BlockLduSolver<Type>::New
 
     if (matrix.diagonal())
     {
-        return autoPtr<BlockLduSolver<Type> >
+        return autoPtr<BlockLduSolver<Type>>
         (
             new BlockDiagonalSolver<Type>(fieldName, matrix, dict)
         );
@@ -288,13 +288,13 @@ BlockLduSolver<Type>::New
                "no diagonal or off-diagonal coefficient"
             << exit(FatalError);
 
-        return autoPtr<BlockLduSolver<Type> >(nullptr);
+        return autoPtr<BlockLduSolver<Type>>(nullptr);
     }
 }
 
 
 template<class Type>
-autoPtr<typename CML::BlockLduSolver<Type> >
+autoPtr<typename CML::BlockLduSolver<Type>>
 BlockLduSolver<Type>::New
 (
     const word& solverName,
@@ -305,7 +305,7 @@ BlockLduSolver<Type>::New
 {
     if (matrix.diagonal())
     {
-        return autoPtr<BlockLduSolver<Type> >
+        return autoPtr<BlockLduSolver<Type>>
         (
             new BlockDiagonalSolver<Type>(fieldName, matrix, dict)
         );
@@ -331,7 +331,7 @@ BlockLduSolver<Type>::New
                 << exit(FatalIOError);
         }
 
-        return autoPtr<BlockLduSolver<Type> >
+        return autoPtr<BlockLduSolver<Type>>
         (
             constructorIter()
             (
@@ -362,7 +362,7 @@ BlockLduSolver<Type>::New
                 << exit(FatalIOError);
         }
 
-        return autoPtr<BlockLduSolver<Type> >
+        return autoPtr<BlockLduSolver<Type>>
         (
             constructorIter()
             (
@@ -379,7 +379,7 @@ BlockLduSolver<Type>::New
                "no diagonal or off-diagonal coefficient"
             << exit(FatalError);
 
-        return autoPtr<BlockLduSolver<Type> >(nullptr);
+        return autoPtr<BlockLduSolver<Type>>(nullptr);
     }
 }
 

@@ -102,7 +102,7 @@ public:
 
     // Selectors
     //- Select given matrix and dictionary
-    static autoPtr<BlockLduSmoother<Type> > New
+    static autoPtr<BlockLduSmoother<Type>> New
     (
         const BlockLduMatrix<Type>& matrix,
         const dictionary& dict,
@@ -132,7 +132,7 @@ class BlockNoSmoother;
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::autoPtr<CML::BlockLduSmoother<Type> > CML::BlockLduSmoother<Type>::New
+CML::autoPtr<CML::BlockLduSmoother<Type>> CML::BlockLduSmoother<Type>::New
 (
     const BlockLduMatrix<Type>& matrix,
     const dictionary& dict,
@@ -167,7 +167,7 @@ CML::autoPtr<CML::BlockLduSmoother<Type> > CML::BlockLduSmoother<Type>::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<BlockLduSmoother<Type> >
+    return autoPtr<BlockLduSmoother<Type>>
     (
         constructorIter()
         (

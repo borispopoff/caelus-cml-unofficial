@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,7 +47,7 @@ namespace CML
 class cyclicGAMGInterfaceField
 :
     public GAMGInterfaceField,
-    virtual public cyclicLduInterfaceField
+    public cyclicLduInterfaceField
 {
     // Private data
 
@@ -59,15 +59,6 @@ class cyclicGAMGInterfaceField
 
         //- Rank of component for transformation
         int rank_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cyclicGAMGInterfaceField(const cyclicGAMGInterfaceField&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cyclicGAMGInterfaceField&);
 
 
 public:
@@ -93,6 +84,9 @@ public:
             const int rank
         );
 
+        //- Disallow default bitwise copy construct
+        cyclicGAMGInterfaceField(const cyclicGAMGInterfaceField&) = delete;
+
 
     //- Destructor
     virtual ~cyclicGAMGInterfaceField();
@@ -111,7 +105,7 @@ public:
 
         //- Cyclic interface functions
 
-            //- Does the interface field perform the transfromation
+            //- Does the interface field perform the transformation
             virtual bool doTransform() const
             {
                 return doTransform_;
@@ -148,6 +142,12 @@ public:
                 const direction cmpt,
                 const Pstream::commsTypes commsType
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cyclicGAMGInterfaceField&) = delete;
 };
 
 

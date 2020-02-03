@@ -71,24 +71,24 @@ void CML::forceCoeffs::writeFileHeader(const label i)
 
         vectorField binPoints(nBin_);
         writeCommented(file(i), "x co-ords  :");
-        forAll(binPoints, pointI)
+        forAll(binPoints, pointi)
         {
-            binPoints[pointI] = (binMin_ + (pointI + 1)*binDx_)*binDir_;
-            file(i) << tab << binPoints[pointI].x();
+            binPoints[pointi] = (binMin_ + (pointi + 1)*binDx_)*binDir_;
+            file(i) << tab << binPoints[pointi].x();
         }
         file(i) << nl;
 
         writeCommented(file(i), "y co-ords  :");
-        forAll(binPoints, pointI)
+        forAll(binPoints, pointi)
         {
-            file(i) << tab << binPoints[pointI].y();
+            file(i) << tab << binPoints[pointi].y();
         }
         file(i) << nl;
 
         writeCommented(file(i), "z co-ords  :");
-        forAll(binPoints, pointI)
+        forAll(binPoints, pointi)
         {
-            file(i) << tab << binPoints[pointI].z();
+            file(i) << tab << binPoints[pointi].z();
         }
         file(i) << nl;
 
@@ -124,9 +124,9 @@ CML::forceCoeffs::forceCoeffs
 )
 :
     forces(name, obr, dict, loadFromFiles, false),
-    liftDir_(vector::zero),
-    dragDir_(vector::zero),
-    pitchAxis_(vector::zero),
+    liftDir_(Zero),
+    dragDir_(Zero),
+    pitchAxis_(Zero),
     magUInf_(0.0),
     lRef_(0.0),
     Aref_(0.0)
@@ -202,7 +202,7 @@ void CML::forceCoeffs::write()
         Field<vector> totForce(force_[0] + force_[1] + force_[2]);
         Field<vector> totMoment(moment_[0] + moment_[1] + moment_[2]);
 
-        List<Field<scalar> > coeffs(3);
+        List<Field<scalar>> coeffs(3);
         coeffs[0].setSize(nBin_);
         coeffs[1].setSize(nBin_);
         coeffs[2].setSize(nBin_);

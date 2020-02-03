@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -40,12 +40,9 @@ void CML::RBD::rigidBodyMotion::write(Ostream& os) const
 {
     rigidBodyModel::write(os);
 
-    os.writeKeyword("accelerationRelaxation")
-        << aRelax_ << token::END_STATEMENT << nl;
-    os.writeKeyword("accelerationDamping")
-        << aDamp_ << token::END_STATEMENT << nl;
-    os.writeKeyword("report")
-        << report_ << token::END_STATEMENT << nl;
+    writeEntry(os, "accelerationRelaxation", aRelax_);
+    writeEntry(os, "accelerationDamping", aDamp_);
+    writeEntry(os, "report", report_);
 }
 
 

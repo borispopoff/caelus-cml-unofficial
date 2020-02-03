@@ -67,7 +67,6 @@ SourceFiles
 #ifndef refinementHistory_H
 #define refinementHistory_H
 
-#include "UPtrList.hpp"
 #include "DynamicList.hpp"
 #include "labelList.hpp"
 #include "FixedList.hpp"
@@ -114,7 +113,7 @@ public:
         label parent_;
 
         //- Cells this cell was refined into
-        autoPtr<FixedList<label, 8> > addedCellsPtr_;
+        autoPtr<FixedList<label, 8>> addedCellsPtr_;
 
         //- Construct null (parent = -1)
         splitCell8();
@@ -165,6 +164,7 @@ private:
             const List<splitCell8>&,
             const splitCell8&
         );
+
         //- Debug write
         static void writeDebug
         (
@@ -241,7 +241,7 @@ public:
             const bool active
         );
 
-        //- Construct as copy
+        //- Copy constructor
         refinementHistory(const IOobject&, const refinementHistory&);
 
         //- Construct from multiple refinement histories. If global number of
@@ -327,7 +327,7 @@ public:
             const labelList& decomposition,
             const labelList& splitCellProc,
             const labelList& splitCellNum,
-            const label procI,
+            const label proci,
             labelList& oldToNewSplit
         ) const;
 

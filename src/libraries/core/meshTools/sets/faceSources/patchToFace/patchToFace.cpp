@@ -52,9 +52,9 @@ void CML::patchToFace::combine(topoSet& set, const bool add) const
 {
     bool hasMatched = false;
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        const polyPatch& pp = mesh_.boundaryMesh()[patchI];
+        const polyPatch& pp = mesh_.boundaryMesh()[patchi];
 
         if (patchName_.match(pp.name()))
         {
@@ -66,12 +66,12 @@ void CML::patchToFace::combine(topoSet& set, const bool add) const
 
             for
             (
-                label faceI = pp.start();
-                faceI < pp.start() + pp.size();
-                faceI++
+                label facei = pp.start();
+                facei < pp.start() + pp.size();
+                facei++
             )
             {
-                addOrDelete(set, faceI, add);
+                addOrDelete(set, facei, add);
             }
         }
     }

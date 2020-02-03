@@ -146,7 +146,7 @@ public:
             //- Evaluate the patchField
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType=Pstream::commsTypes::blocking
             );
 
         // I-O

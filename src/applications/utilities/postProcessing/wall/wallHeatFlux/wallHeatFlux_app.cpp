@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
             fvc::interpolate(RASModel->alphaEff())*fvc::snGrad(h)
         );
 
-        const surfaceScalarField::GeometricBoundaryField& patchHeatFlux =
+        const surfaceScalarField::Boundary& patchHeatFlux =
             heatFlux.boundaryField();
 
         Info<< "\nWall heat fluxes [W]" << endl;
@@ -85,12 +85,12 @@ int main(int argc, char *argv[])
                 mesh
             ),
             mesh,
-            dimensionedScalar("wallHeatFlux", heatFlux.dimensions(), 0.0)
+            dimensionedScalar("wallHeatFlux", heatFlux.dimensions(), 0)
         );
 
         forAll(wallHeatFlux.boundaryField(), patchi)
         {
-            wallHeatFlux.boundaryField()[patchi] = patchHeatFlux[patchi];
+            wallHeatFlux.boundaryFieldRef()[patchi] = patchHeatFlux[patchi];
         }
 
         wallHeatFlux.write();

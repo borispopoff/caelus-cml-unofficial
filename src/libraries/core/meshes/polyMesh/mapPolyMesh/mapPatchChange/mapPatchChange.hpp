@@ -93,11 +93,11 @@ public:
 
                 label addedI = 0;
 
-                forAll(patchMap_, patchI)
+                forAll(patchMap_, patchi)
                 {
-                    if (patchMap_[patchI] == -1)
+                    if (patchMap_[patchi] == -1)
                     {
-                        added[addedI++] = patchI;
+                        added[addedI++] = patchi;
                     }
                 }
                 added.setSize(addedI);
@@ -110,11 +110,11 @@ public:
                 labelList oldToNew(nOldPatches_, -1);
 
                 // Mark all preserved patches
-                forAll(patchMap_, patchI)
+                forAll(patchMap_, patchi)
                 {
-                    if (patchMap_[patchI] != -1)
+                    if (patchMap_[patchi] != -1)
                     {
-                        oldToNew[patchMap_[patchI]] = patchI;
+                        oldToNew[patchMap_[patchi]] = patchi;
                     }
                 }
 
@@ -122,11 +122,11 @@ public:
                 // patches.
                 label deletedI = 0;
 
-                forAll(oldToNew, oldPatchI)
+                forAll(oldToNew, oldPatchi)
                 {
-                    if (oldToNew[oldPatchI] == -1)
+                    if (oldToNew[oldPatchi] == -1)
                     {
-                        oldToNew[deletedI++] = oldPatchI;
+                        oldToNew[deletedI++] = oldPatchi;
                     }
                 }
 

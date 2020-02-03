@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -32,9 +32,8 @@ CML::TimeState::TimeState()
     deltaTSave_(0),
     deltaT0_(0),
     deltaTchanged_(false),
-    outputTimeIndex_(0),
-    secondaryOutputTimeIndex_(0),
-    outputTime_(false)
+    writeTimeIndex_(0),
+    writeTime_(false)
 {}
 
 
@@ -55,36 +54,6 @@ CML::scalar CML::TimeState::userTimeToTime(const scalar theta) const
 CML::scalar CML::TimeState::timeToUserTime(const scalar t) const
 {
     return t;
-}
-
-
-CML::scalar CML::TimeState::timeOutputValue() const
-{
-    return timeToUserTime(value());
-}
-
-
-CML::label CML::TimeState::timeIndex() const
-{
-    return timeIndex_;
-}
-
-
-CML::dimensionedScalar CML::TimeState::deltaT() const
-{
-    return dimensionedScalar("deltaT", dimTime, deltaT_);
-}
-
-
-CML::dimensionedScalar CML::TimeState::deltaT0() const
-{
-    return dimensionedScalar("deltaT0", dimTime, deltaT0_);
-}
-
-
-bool CML::TimeState::outputTime() const
-{
-    return outputTime_;
 }
 
 

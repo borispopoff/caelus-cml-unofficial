@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -40,8 +40,9 @@ namespace CML
 {
     typedef PrimitivePatchInterpolation
     <
-        PrimitivePatch<face, SubList, const pointField&>
-    >   primitivePatchInterpolation;
+        PrimitivePatch<SubList<face>, const pointField&>
+    >
+    primitivePatchInterpolation;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

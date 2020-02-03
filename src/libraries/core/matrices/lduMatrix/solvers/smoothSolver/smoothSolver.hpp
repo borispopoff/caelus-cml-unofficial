@@ -42,6 +42,10 @@ SourceFiles
 namespace CML
 {
 
+/*---------------------------------------------------------------------------*\
+                           Class smoothSolver Declaration
+\*---------------------------------------------------------------------------*/
+
 class smoothSolver
 :
     public lduMatrix::solver

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2015-2017 OpenFOAM Foundation
+Copyright (C) 2015-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -117,7 +117,7 @@ protected:
 
 
         //- Schedule
-        mutable autoPtr<List<labelPair> > schedulePtr_;
+        mutable autoPtr<List<labelPair>> schedulePtr_;
 
 
     // Private Member Functions
@@ -136,14 +136,14 @@ protected:
         (
             const globalIndex& globalNumbering,
             const labelList& elements,
-            List<Map<label> >& compactMap
+            List<Map<label>>& compactMap
         ) const;
 
         void calcCompactAddressing
         (
             const globalIndex& globalNumbering,
             const labelListList& elements,
-            List<Map<label> >& compactMap
+            List<Map<label>>& compactMap
         ) const;
 
         void exchangeAddressing
@@ -151,7 +151,7 @@ protected:
             const int tag,
             const globalIndex& globalNumbering,
             labelList& elements,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             labelList& compactStart
         );
         void exchangeAddressing
@@ -159,7 +159,7 @@ protected:
             const int tag,
             const globalIndex& globalNumbering,
             labelListList& elements,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             labelList& compactStart
         );
 
@@ -194,12 +194,12 @@ public:
         //- Construct null
         mapDistributeBase();
 
-        //- Construct from components
+        //- Move construct from components
         mapDistributeBase
         (
             const label constructSize,
-            const Xfer<labelListList>& subMap,
-            const Xfer<labelListList>& constructMap,
+            const labelListList&& subMap,
+            const labelListList&& constructMap,
             const bool subHasFlip = false,
             const bool constructHasFlip = false
         );
@@ -221,26 +221,26 @@ public:
         (
             const globalIndex&,
             labelList& elements,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
         //- Special variant that works with the info sorted into bins
         //  according to local indices. E.g. think cellCells where
-        //  cellCells[localCellI] is a list of global cells
+        //  cellCells[localCelli] is a list of global cells
         mapDistributeBase
         (
             const globalIndex&,
             labelListList& cellCells,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
-        //- Construct by transferring parameter content
-        mapDistributeBase(const Xfer<mapDistributeBase>&);
-
         //- Construct copy
         mapDistributeBase(const mapDistributeBase&);
+
+        //- Move constructor
+        mapDistributeBase(mapDistributeBase&&);
 
         //- Construct from Istream
         mapDistributeBase(Istream&);
@@ -327,15 +327,12 @@ public:
             //- Transfer the contents of the argument and annul the argument.
             void transfer(mapDistributeBase&);
 
-            //- Transfer contents to the Xfer container
-            Xfer<mapDistributeBase> xfer();
-
             //- Helper for construct from globalIndex. Renumbers element
             //  (in globalIndex numbering) into compact indices.
             static label renumber
             (
                 const globalIndex&,
-                const List<Map<label> >& compactMap,
+                const List<Map<label>>& compactMap,
                 const label globalElement
             );
 
@@ -361,7 +358,7 @@ public:
             );
 
             //- Distribute data. Note:schedule only used for
-            //  Pstream::scheduled for now, all others just use
+            //  Pstream::commsTypes::scheduled for now, all others just use
             //  send-to-all, receive-from-all.
             template<class T, class negateOp>
             static void distribute
@@ -460,9 +457,12 @@ public:
                 NotImplemented;
             }
 
+
     // Member Operators
 
         void operator=(const mapDistributeBase&);
+        void operator=(mapDistributeBase&&);
+
 
     // IOstream operators
 
@@ -471,7 +471,6 @@ public:
 
         //- Write dictionary to Ostream
         friend Ostream& operator<<(Ostream&, const mapDistributeBase&);
-
 };
 
 
@@ -618,7 +617,7 @@ void CML::mapDistributeBase::distribute
         return;
     }
 
-    if (commsType == Pstream::blocking)
+    if (commsType == Pstream::commsTypes::blocking)
     {
         // Since buffered sending can reuse the field to collect the
         // received data.
@@ -630,7 +629,7 @@ void CML::mapDistributeBase::distribute
 
             if (domain != Pstream::myProcNo() && map.size())
             {
-                OPstream toNbr(Pstream::blocking, domain, 0, tag);
+                OPstream toNbr(Pstream::commsTypes::blocking, domain, 0, tag);
 
                 List<T> subField(map.size());
                 forAll(subField, i)
@@ -678,7 +677,7 @@ void CML::mapDistributeBase::distribute
 
             if (domain != Pstream::myProcNo() && map.size())
             {
-                IPstream fromNbr(Pstream::blocking, domain, 0, tag);
+                IPstream fromNbr(Pstream::commsTypes::blocking, domain, 0, tag);
                 List<T> subField(fromNbr);
 
                 checkReceivedSize(domain, map.size(), subField.size());
@@ -695,7 +694,7 @@ void CML::mapDistributeBase::distribute
             }
         }
     }
-    else if (commsType == Pstream::scheduled)
+    else if (commsType == Pstream::commsTypes::scheduled)
     {
         // Need to make sure I don't overwrite field with received data
         // since the data might need to be sent to another processor. So
@@ -746,7 +745,7 @@ void CML::mapDistributeBase::distribute
                 {
                     OPstream toNbr
                     (
-                        Pstream::scheduled,
+                        Pstream::commsTypes::scheduled,
                         recvProc,
                         0,
                         tag
@@ -769,7 +768,7 @@ void CML::mapDistributeBase::distribute
                 {
                     IPstream fromNbr
                     (
-                        Pstream::scheduled,
+                        Pstream::commsTypes::scheduled,
                         recvProc,
                         0,
                         tag
@@ -797,7 +796,7 @@ void CML::mapDistributeBase::distribute
                 {
                     IPstream fromNbr
                     (
-                        Pstream::scheduled,
+                        Pstream::commsTypes::scheduled,
                         sendProc,
                         0,
                         tag
@@ -821,7 +820,7 @@ void CML::mapDistributeBase::distribute
                 {
                     OPstream toNbr
                     (
-                        Pstream::scheduled,
+                        Pstream::commsTypes::scheduled,
                         sendProc,
                         0,
                         tag
@@ -845,13 +844,13 @@ void CML::mapDistributeBase::distribute
         }
         field.transfer(newField);
     }
-    else if (commsType == Pstream::nonBlocking)
+    else if (commsType == Pstream::commsTypes::nonBlocking)
     {
         label nOutstanding = Pstream::nRequests();
 
         if (!contiguous<T>())
         {
-            PstreamBuffers pBufs(Pstream::nonBlocking, tag);
+            PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking, tag);
 
             // Stream data into buffer
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
@@ -944,7 +943,7 @@ void CML::mapDistributeBase::distribute
         {
             // Set up sends to neighbours
 
-            List<List<T > > sendFields(Pstream::nProcs());
+            List<List<T>> sendFields(Pstream::nProcs());
 
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {
@@ -967,7 +966,7 @@ void CML::mapDistributeBase::distribute
 
                     OPstream::write
                     (
-                        Pstream::nonBlocking,
+                        Pstream::commsTypes::nonBlocking,
                         domain,
                         reinterpret_cast<const char*>(subField.begin()),
                         subField.byteSize(),
@@ -978,7 +977,7 @@ void CML::mapDistributeBase::distribute
 
             // Set up receives from neighbours
 
-            List<List<T > > recvFields(Pstream::nProcs());
+            List<List<T>> recvFields(Pstream::nProcs());
 
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {
@@ -989,7 +988,7 @@ void CML::mapDistributeBase::distribute
                     recvFields[domain].setSize(map.size());
                     IPstream::read
                     (
-                        Pstream::nonBlocking,
+                        Pstream::commsTypes::nonBlocking,
                         domain,
                         reinterpret_cast<char*>(recvFields[domain].begin()),
                         recvFields[domain].byteSize(),
@@ -1121,7 +1120,7 @@ void CML::mapDistributeBase::distribute
         return;
     }
 
-    if (commsType == Pstream::blocking)
+    if (commsType == Pstream::commsTypes::blocking)
     {
         // Since buffered sending can reuse the field to collect the
         // received data.
@@ -1133,7 +1132,7 @@ void CML::mapDistributeBase::distribute
 
             if (domain != Pstream::myProcNo() && map.size())
             {
-                OPstream toNbr(Pstream::blocking, domain, 0, tag);
+                OPstream toNbr(Pstream::commsTypes::blocking, domain, 0, tag);
                 List<T> subField(map.size());
                 forAll(subField, i)
                 {
@@ -1173,7 +1172,7 @@ void CML::mapDistributeBase::distribute
 
             if (domain != Pstream::myProcNo() && map.size())
             {
-                IPstream fromNbr(Pstream::blocking, domain, 0, tag);
+                IPstream fromNbr(Pstream::commsTypes::blocking, domain, 0, tag);
                 List<T> subField(fromNbr);
 
                 checkReceivedSize(domain, map.size(), subField.size());
@@ -1190,7 +1189,7 @@ void CML::mapDistributeBase::distribute
             }
         }
     }
-    else if (commsType == Pstream::scheduled)
+    else if (commsType == Pstream::commsTypes::scheduled)
     {
         // Need to make sure I don't overwrite field with received data
         // since the data might need to be sent to another processor. So
@@ -1244,7 +1243,7 @@ void CML::mapDistributeBase::distribute
                 {
                     OPstream toNbr
                     (
-                        Pstream::scheduled,
+                        Pstream::commsTypes::scheduled,
                         recvProc,
                         0,
                         tag
@@ -1268,7 +1267,7 @@ void CML::mapDistributeBase::distribute
                 {
                     IPstream fromNbr
                     (
-                        Pstream::scheduled,
+                        Pstream::commsTypes::scheduled,
                         recvProc,
                         0,
                         tag
@@ -1295,7 +1294,7 @@ void CML::mapDistributeBase::distribute
                 {
                     IPstream fromNbr
                     (
-                        Pstream::scheduled,
+                        Pstream::commsTypes::scheduled,
                         sendProc,
                         0,
                         tag
@@ -1318,7 +1317,7 @@ void CML::mapDistributeBase::distribute
                 {
                     OPstream toNbr
                     (
-                        Pstream::scheduled,
+                        Pstream::commsTypes::scheduled,
                         sendProc,
                         0,
                         tag
@@ -1343,13 +1342,13 @@ void CML::mapDistributeBase::distribute
         }
         field.transfer(newField);
     }
-    else if (commsType == Pstream::nonBlocking)
+    else if (commsType == Pstream::commsTypes::nonBlocking)
     {
         label nOutstanding = Pstream::nRequests();
 
         if (!contiguous<T>())
         {
-            PstreamBuffers pBufs(Pstream::nonBlocking, tag);
+            PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking, tag);
 
             // Stream data into buffer
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
@@ -1445,7 +1444,7 @@ void CML::mapDistributeBase::distribute
         {
             // Set up sends to neighbours
 
-            List<List<T > > sendFields(Pstream::nProcs());
+            List<List<T>> sendFields(Pstream::nProcs());
 
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {
@@ -1468,7 +1467,7 @@ void CML::mapDistributeBase::distribute
 
                     OPstream::write
                     (
-                        Pstream::nonBlocking,
+                        Pstream::commsTypes::nonBlocking,
                         domain,
                         reinterpret_cast<const char*>(subField.begin()),
                         subField.size()*sizeof(T),
@@ -1479,7 +1478,7 @@ void CML::mapDistributeBase::distribute
 
             // Set up receives from neighbours
 
-            List<List<T > > recvFields(Pstream::nProcs());
+            List<List<T>> recvFields(Pstream::nProcs());
 
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {
@@ -1490,7 +1489,7 @@ void CML::mapDistributeBase::distribute
                     recvFields[domain].setSize(map.size());
                     UIPstream::read
                     (
-                        Pstream::nonBlocking,
+                        Pstream::commsTypes::nonBlocking,
                         domain,
                         reinterpret_cast<char*>(recvFields[domain].begin()),
                         recvFields[domain].size()*sizeof(T),
@@ -1574,7 +1573,7 @@ void CML::mapDistributeBase::distribute
     else
     {
         FatalErrorInFunction
-            << "Unknown communication schedule " << commsType
+            << "Unknown communication schedule " << int(commsType)
             << abort(FatalError);
     }
 }
@@ -1662,11 +1661,11 @@ void CML::mapDistributeBase::distribute
     const int tag
 ) const
 {
-    if (Pstream::defaultCommsType == Pstream::nonBlocking)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking)
     {
         distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             constructSize_,
             subMap_,
@@ -1678,11 +1677,11 @@ void CML::mapDistributeBase::distribute
             tag
         );
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         distribute
         (
-            Pstream::scheduled,
+            Pstream::commsTypes::scheduled,
             schedule(),
             constructSize_,
             subMap_,
@@ -1698,7 +1697,7 @@ void CML::mapDistributeBase::distribute
     {
         distribute
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             List<labelPair>(),
             constructSize_,
             subMap_,
@@ -1752,11 +1751,11 @@ void CML::mapDistributeBase::reverseDistribute
     const int tag
 ) const
 {
-    if (Pstream::defaultCommsType == Pstream::nonBlocking)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking)
     {
         distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             constructSize,
             constructMap_,
@@ -1768,11 +1767,11 @@ void CML::mapDistributeBase::reverseDistribute
             tag
         );
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         distribute
         (
-            Pstream::scheduled,
+            Pstream::commsTypes::scheduled,
             schedule(),
             constructSize,
             constructMap_,
@@ -1788,7 +1787,7 @@ void CML::mapDistributeBase::reverseDistribute
     {
         distribute
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             List<labelPair>(),
             constructSize,
             constructMap_,
@@ -1815,11 +1814,11 @@ void CML::mapDistributeBase::reverseDistribute
     const int tag
 ) const
 {
-    if (Pstream::defaultCommsType == Pstream::nonBlocking)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking)
     {
         distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             constructSize,
             constructMap_,
@@ -1833,11 +1832,11 @@ void CML::mapDistributeBase::reverseDistribute
             tag
         );
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         distribute
         (
-            Pstream::scheduled,
+            Pstream::commsTypes::scheduled,
             schedule(),
             constructSize,
             constructMap_,
@@ -1855,7 +1854,7 @@ void CML::mapDistributeBase::reverseDistribute
     {
         distribute
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             List<labelPair>(),
             constructSize,
             constructMap_,

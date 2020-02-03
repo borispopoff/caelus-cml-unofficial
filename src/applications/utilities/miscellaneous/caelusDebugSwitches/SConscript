@@ -31,7 +31,6 @@ caelus_libs = [
 'distributionModels',
 'dynamicFvMesh',
 'dynamicMesh',
-'edgeMesh',
 'fieldFunctionObjects',
 'CAELUSCalcFunctions',
 'forces',

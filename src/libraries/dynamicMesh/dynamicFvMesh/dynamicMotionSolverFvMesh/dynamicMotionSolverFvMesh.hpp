@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,10 +56,10 @@ class dynamicMotionSolverFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        dynamicMotionSolverFvMesh(const dynamicMotionSolverFvMesh&);
+        dynamicMotionSolverFvMesh(const dynamicMotionSolverFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const dynamicMotionSolverFvMesh&);
+        void operator=(const dynamicMotionSolverFvMesh&) = delete;
 
 
 public:

@@ -57,7 +57,7 @@ CML::volScalarField& CML::calcFvcDiv::divField
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dims/dimLength, 0.0)
+                dimensionedScalar("zero", dims/dimLength, 0)
             )
         );
 
@@ -83,8 +83,8 @@ CML::calcFvcDiv::calcFvcDiv
     name_(name),
     obr_(obr),
     active_(true),
-    fieldName_("undefined-fieldName"),
-    resultName_("undefined-resultName")
+    fieldName_("undefined-field"),
+    resultName_("undefined-result")
 {
     // Check if the available mesh is an fvMesh, otherwise deactivate
     if (!isA<fvMesh>(obr_))
@@ -111,8 +111,8 @@ void CML::calcFvcDiv::read(const dictionary& dict)
 {
     if (active_)
     {
-        dict.lookup("fieldName") >> fieldName_;
-        dict.lookup("resultName") >> resultName_;
+        dict.lookup("field") >> fieldName_;
+        dict.lookup("result") >> resultName_;
 
         if (resultName_ == "none")
         {

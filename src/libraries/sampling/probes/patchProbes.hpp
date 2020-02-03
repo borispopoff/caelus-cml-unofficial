@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -88,7 +88,7 @@ class patchProbes
 
         //- Sample a volume field at all locations
         template<class Type>
-        tmp<Field<Type> > sample
+        tmp<Field<Type>> sample
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
@@ -96,7 +96,7 @@ class patchProbes
 
         //- Sample a surface field at all locations
         template<class Type>
-        tmp<Field<Type> > sample
+        tmp<Field<Type>> sample
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>&
         ) const;
@@ -104,7 +104,7 @@ class patchProbes
 
         //- Sample a single field on all sample locations
         template<class Type>
-        tmp<Field<Type> > sample(const word& fieldName) const;
+        tmp<Field<Type>> sample(const word& fieldName) const;
 
 
         //- Disallow default bitwise copy construct
@@ -177,9 +177,9 @@ void CML::patchProbes::sampleAndWrite
             << setw(w)
             << vField.time().timeToUserTime(vField.time().value());
 
-        forAll(values, probeI)
+        forAll(values, probei)
         {
-            probeStream << ' ' << setw(w) << values[probeI];
+            probeStream << ' ' << setw(w) << values[probei];
         }
         probeStream << endl;
     }
@@ -203,9 +203,9 @@ void CML::patchProbes::sampleAndWrite
             << setw(w)
             << sField.time().timeToUserTime(sField.time().value());
 
-        forAll(values, probeI)
+        forAll(values, probei)
         {
-            probeStream << ' ' << setw(w) << values[probeI];
+            probeStream << ' ' << setw(w) << values[probei];
         }
         probeStream << endl;
     }
@@ -218,7 +218,7 @@ void CML::patchProbes::sampleAndWrite
     const fieldGroup<Type>& fields
 )
 {
-    forAll(fields, fieldI)
+    forAll(fields, fieldi)
     {
         if (loadFromFiles_)
         {
@@ -228,7 +228,7 @@ void CML::patchProbes::sampleAndWrite
                 (
                     IOobject
                     (
-                        fields[fieldI],
+                        fields[fieldi],
                         mesh_.time().timeName(),
                         mesh_,
                         IOobject::MUST_READ,
@@ -241,7 +241,7 @@ void CML::patchProbes::sampleAndWrite
         }
         else
         {
-            objectRegistry::const_iterator iter = mesh_.find(fields[fieldI]);
+            objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
 
             if
             (
@@ -253,9 +253,9 @@ void CML::patchProbes::sampleAndWrite
                 sampleAndWrite
                 (
                     mesh_.lookupObject
-                    <GeometricField<Type, fvPatchField, volMesh> >
+                    <GeometricField<Type, fvPatchField, volMesh>>
                     (
-                        fields[fieldI]
+                        fields[fieldi]
                     )
                 );
             }
@@ -270,7 +270,7 @@ void CML::patchProbes::sampleAndWriteSurfaceFields
     const fieldGroup<Type>& fields
 )
 {
-    forAll(fields, fieldI)
+    forAll(fields, fieldi)
     {
         if (loadFromFiles_)
         {
@@ -280,7 +280,7 @@ void CML::patchProbes::sampleAndWriteSurfaceFields
                 (
                     IOobject
                     (
-                        fields[fieldI],
+                        fields[fieldi],
                         mesh_.time().timeName(),
                         mesh_,
                         IOobject::MUST_READ,
@@ -293,7 +293,7 @@ void CML::patchProbes::sampleAndWriteSurfaceFields
         }
         else
         {
-            objectRegistry::const_iterator iter = mesh_.find(fields[fieldI]);
+            objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
 
             if
             (
@@ -305,9 +305,9 @@ void CML::patchProbes::sampleAndWriteSurfaceFields
                 sampleAndWrite
                 (
                     mesh_.lookupObject
-                    <GeometricField<Type, fvsPatchField, surfaceMesh> >
+                    <GeometricField<Type, fvsPatchField, surfaceMesh>>
                     (
-                        fields[fieldI]
+                        fields[fieldi]
                     )
                 );
             }
@@ -319,7 +319,7 @@ void CML::patchProbes::sampleAndWriteSurfaceFields
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::patchProbes::sample
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
@@ -327,24 +327,24 @@ CML::patchProbes::sample
 {
     const Type unsetVal(-VGREAT*pTraits<Type>::one);
 
-    tmp<Field<Type> > tValues
+    tmp<Field<Type>> tValues
     (
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(*this, probeI)
+    forAll(*this, probei)
     {
-        label faceI = elementList_[probeI];
+        label facei = elementList_[probei];
 
-        if (faceI >= 0)
+        if (facei >= 0)
         {
-            label patchI = patches.whichPatch(faceI);
-            label localFaceI = patches[patchI].whichFace(faceI);
-            values[probeI] = vField.boundaryField()[patchI][localFaceI];
+            label patchi = patches.whichPatch(facei);
+            label localFaceI = patches[patchi].whichFace(facei);
+            values[probei] = vField.boundaryField()[patchi][localFaceI];
         }
     }
 
@@ -356,12 +356,12 @@ CML::patchProbes::sample
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::patchProbes::sample(const word& fieldName) const
 {
     return sample
     (
-        mesh_.lookupObject<GeometricField<Type, fvPatchField, volMesh> >
+        mesh_.lookupObject<GeometricField<Type, fvPatchField, volMesh>>
         (
             fieldName
         )
@@ -370,7 +370,7 @@ CML::patchProbes::sample(const word& fieldName) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::patchProbes::sample
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
@@ -378,24 +378,24 @@ CML::patchProbes::sample
 {
     const Type unsetVal(-VGREAT*pTraits<Type>::one);
 
-    tmp<Field<Type> > tValues
+    tmp<Field<Type>> tValues
     (
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(*this, probeI)
+    forAll(*this, probei)
     {
-        label faceI = elementList_[probeI];
+        label facei = elementList_[probei];
 
-        if (faceI >= 0)
+        if (facei >= 0)
         {
-            label patchI = patches.whichPatch(faceI);
-            label localFaceI = patches[patchI].whichFace(faceI);
-            values[probeI] = sField.boundaryField()[patchI][localFaceI];
+            label patchi = patches.whichPatch(facei);
+            label localFaceI = patches[patchi].whichFace(facei);
+            values[probei] = sField.boundaryField()[patchi][localFaceI];
         }
     }
 

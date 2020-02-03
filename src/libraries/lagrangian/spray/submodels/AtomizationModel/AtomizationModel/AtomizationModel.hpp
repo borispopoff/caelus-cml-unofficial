@@ -92,7 +92,7 @@ public:
 
 
     //- Selector
-    static autoPtr<AtomizationModel<CloudType> > New
+    static autoPtr<AtomizationModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -159,7 +159,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<sprayCloudType>, 0);                \
                                                                                \
     AtomizationModel<sprayCloudType>::                                         \
-        adddictionaryConstructorToTable<SS<sprayCloudType> >                   \
+        adddictionaryConstructorToTable<SS<sprayCloudType>>                    \
             add##SS##CloudType##sprayCloudType##ConstructorToTable_;
 
 
@@ -220,7 +220,7 @@ CML::scalar CML::AtomizationModel<CloudType>::Taverage
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::AtomizationModel<CloudType> >
+CML::autoPtr<CML::AtomizationModel<CloudType>>
 CML::AtomizationModel<CloudType>::New
 (
     const dictionary& dict,
@@ -244,7 +244,7 @@ CML::AtomizationModel<CloudType>::New
             << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);
     }
 
-    return autoPtr<AtomizationModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<AtomizationModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

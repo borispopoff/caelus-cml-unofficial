@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2014 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -61,7 +61,7 @@ class localAxesRotation
 :
     public coordinateRotation
 {
-    // Private data
+    // Private Data
 
         //- AutoPtr to transformation tensor
         autoPtr<tensorField> Rptr_;
@@ -150,21 +150,21 @@ public:
              return tensor::zero;
         }
 
-        //- Return local Cartesian x-axis
+        //- Return local Cartesian x-axis in global coordinates
         virtual const vector e1() const
         {
             NotImplemented;
-            return vector::zero;
+            return Zero;
         }
 
-        //- Return local Cartesian y-axis
+        //- Return local Cartesian y-axis in global coordinates
         virtual const vector e2() const
         {
             NotImplemented;
-            return vector::zero;
+            return Zero;
         }
 
-        //- Return local Cartesian z-axis
+        //- Return local Cartesian z-axis in global coordinates
         virtual const vector e3() const
         {
             return e3_;

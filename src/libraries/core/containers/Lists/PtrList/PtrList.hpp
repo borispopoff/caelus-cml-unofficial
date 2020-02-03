@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -36,7 +36,7 @@ SourceFiles
 #ifndef PtrList_H
 #define PtrList_H
 
-#include "List.hpp"
+#include "UPtrList.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,48 +45,19 @@ namespace CML
 
 // Forward declaration of classes
 
-template<class T> class SLPtrList;
 template<class T> class autoPtr;
 template<class T> class tmp;
+
+class SLListBase;
+template<class LListBase, class T> class LPtrList;
+template<class T>
+using SLPtrList = LPtrList<SLListBase, T>;
 
 // Forward declaration of friend functions and operators
 template<class T> class PtrList;
 
 template<class T>
-inline typename PtrList<T>::iterator operator+
-(
-    const typename PtrList<T>::iterator&,
-    label
-);
-
-template<class T>
-inline typename PtrList<T>::iterator operator+
-(
-    label,
-    const typename PtrList<T>::iterator&
-);
-
-template<class T>
-inline typename PtrList<T>::iterator operator-
-(
-    const typename PtrList<T>::iterator&,
-    label
-);
-
-template<class T>
-inline label operator-
-(
-    const typename PtrList<T>::iterator&,
-    const typename PtrList<T>::iterator&
-);
-
-template<class T>
 Istream& operator>>(Istream&, PtrList<T>&);
-
-template<class T>
-Ostream& operator<<(Ostream&, const PtrList<T>&);
-
-
 
 
 /*---------------------------------------------------------------------------*\
@@ -95,11 +66,9 @@ Ostream& operator<<(Ostream&, const PtrList<T>&);
 
 template<class T>
 class PtrList
+:
+    public UPtrList<T>
 {
-    // Private data
-
-        List<T*> ptrs_;
-
 
 protected:
 
@@ -127,11 +96,11 @@ public:
         template<class CloneArg>
         PtrList(const PtrList<T>&, const CloneArg&);
 
-        //- Construct by transferring the parameter contents
-        PtrList(const Xfer<PtrList<T> >&);
+        //- Move constructor
+        PtrList(PtrList<T>&&);
 
-        //- Construct as copy or re-use as specified.
-        PtrList(PtrList<T>&, bool reUse);
+        //- Construct as copy or re-use as specified
+        PtrList(PtrList<T>&, bool reuse);
 
         //- Construct as copy of SLPtrList<T>
         explicit PtrList(const SLPtrList<T>&);
@@ -150,42 +119,18 @@ public:
 
     // Member functions
 
-        // Access
-
-            //- Return the number of elements in the PtrList
-            inline label size() const;
-
-            //- Return true if the PtrList is empty (ie, size() is zero).
-            inline bool empty() const;
-
-            //- Return reference to the first element of the list.
-            inline T& first();
-
-            //- Return reference to first element of the list.
-            inline const T& first() const;
-
-            //- Return reference to the last element of the list.
-            inline T& last();
-
-            //- Return reference to the last element of the list.
-            inline const T& last() const;
-
         // Edit
 
-            //- Reset size of PtrList.  This can only be used to set the size
-            //  of an empty PtrList, extend a PtrList, remove entries from
-            //  the end of a PtrList. If the entries are non-empty they are
-            //  deleted.
+            //- Reset size of PtrList. If extending the PtrList, new entries are
+            //  set to nullptr. If truncating the PtrList, removed entries are
+            //  deleted
             void setSize(const label);
 
-            //- Reset size of PtrList.  This can only be used to set the size
-            //  of an empty PtrList, extend a PtrList, remove entries from
-            //  the end of a PtrList. If the entries are non-empty they are
-            //  deleted.
+            //- Alias for setSize(const label)
             inline void resize(const label);
 
             //- Clear the PtrList, i.e. set size to zero deleting all the
-            //  allocated entries.
+            //  allocated entries
             void clear();
 
             //- Append an element at the end of the list
@@ -194,17 +139,13 @@ public:
             inline void append(const tmp<T>&);
 
             //- Transfer the contents of the argument PtrList into this PtrList
-            //  and annul the argument list.
+            //  and annul the argument list
             void transfer(PtrList<T>&);
-
-            //- Transfer contents to the Xfer container
-            inline Xfer<PtrList<T> > xfer();
 
             //- Is element set
             inline bool set(const label) const;
 
-            //- Set element. Return old element (can be nullptr).
-            //  No checks on new element.
+            //- Set element to given T* and return old element (can be nullptr)
             inline autoPtr<T> set(const label, T*);
 
             //- Set element to given autoPtr<T> and return old element
@@ -221,102 +162,17 @@ public:
 
     // Member operators
 
-        //- Return element const reference.
-        inline const T& operator[](const label) const;
+        //- Assignment operator
+        void operator=(const PtrList<T>&);
 
-        //- Return element reference.
-        inline T& operator[](const label);
-
-        //- Return element const pointer.
-        inline const T* operator()(const label) const;
-
-
-        //- Assignment.
-        PtrList<T>& operator=(const PtrList<T>&);
-
-
-    // STL type definitions
-
-        //- Type of values the PtrList contains.
-        typedef T value_type;
-
-        //- Type that can be used for storing into PtrList::value_type objects.
-        typedef T& reference;
-
-        //- Type that can be used for storing into constant PtrList::value_type
-        //  objects.
-        typedef const T& const_reference;
-
-
-    // STL iterator
-    // Random access iterator for traversing PtrList.
-
-        class iterator;
-        friend class iterator;
-
-        //- An STL-conforming iterator
-        class iterator
-        {
-            T** ptr_;
-
-        public:
-
-            //- Construct for a given PtrList entry
-            inline iterator(T**);
-
-            // Member operators
-
-                inline bool operator==(const iterator&) const;
-                inline bool operator!=(const iterator&) const;
-
-                typedef T& Tref;
-                inline Tref operator*();
-                inline Tref operator()();
-
-                inline iterator operator++();
-                inline iterator operator++(int);
-
-                inline iterator operator--();
-                inline iterator operator--(int);
-
-                inline iterator operator+=(label);
-
-                friend iterator operator+ <T>(const iterator&, label);
-                friend iterator operator+ <T>(label, const iterator&);
-
-                inline iterator operator-=(label);
-
-                friend iterator operator- <T>(const iterator&, label);
-
-                friend label operator- <T>
-                (
-                    const iterator&,
-                    const iterator&
-                );
-
-                inline T& operator[](label);
-
-                inline bool operator<(const iterator&) const;
-                inline bool operator>(const iterator&) const;
-
-                inline bool operator<=(const iterator&) const;
-                inline bool operator>=(const iterator&) const;
-        };
-
-        //- Return an iterator to begin traversing the PtrList.
-        inline iterator begin();
-
-        //- Return an iterator to end traversing the PtrList.
-        inline iterator end();
+        //- Move assignment operator
+        void operator=(PtrList<T>&&);
 
 
     // IOstream operator
 
-        //- Read List from Istream, discarding contents of existing List.
+        //- Read PtrList from Istream, discarding contents of existing PtrList
         friend Istream& operator>> <T>(Istream&, PtrList<T>&);
-
-        // Write List to Ostream.
-        friend Ostream& operator<< <T>(Ostream&, const PtrList<T>&);
 };
 
 
@@ -326,61 +182,17 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "error.hpp"
-
 #include "autoPtr.hpp"
 #include "tmp.hpp"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-
-template<class T>
-inline CML::label CML::PtrList<T>::size() const
-{
-    return ptrs_.size();
-}
-
-
-template<class T>
-inline bool CML::PtrList<T>::empty() const
-{
-    return ptrs_.empty();
-}
-
-
-template<class T>
-inline T& CML::PtrList<T>::first()
-{
-    return this->operator[](0);
-}
-
-
-template<class T>
-inline const T& CML::PtrList<T>::first() const
-{
-    return this->operator[](0);
-}
-
-
-template<class T>
-inline T& CML::PtrList<T>::last()
-{
-    return this->operator[](this->size()-1);
-}
-
-
-template<class T>
-inline const T& CML::PtrList<T>::last() const
-{
-    return this->operator[](this->size()-1);
-}
-
 
 template<class T>
 inline void CML::PtrList<T>::resize(const label newSize)
 {
     this->setSize(newSize);
 }
+
 
 template<class T>
 inline void CML::PtrList<T>::append(T* ptr)
@@ -407,18 +219,19 @@ inline void CML::PtrList<T>::append
     return append(const_cast<tmp<T>&>(t).ptr());
 }
 
+
 template<class T>
 inline bool CML::PtrList<T>::set(const label i) const
 {
-    return ptrs_[i] != nullptr;
+    return this->ptrs_[i] != nullptr;
 }
 
 
 template<class T>
 inline CML::autoPtr<T> CML::PtrList<T>::set(const label i, T* ptr)
 {
-    autoPtr<T> old(ptrs_[i]);
-    ptrs_[i] = ptr;
+    autoPtr<T> old(this->ptrs_[i]);
+    this->ptrs_[i] = ptr;
     return old;
 }
 
@@ -445,236 +258,6 @@ inline CML::autoPtr<T> CML::PtrList<T>::set
 }
 
 
-template<class T>
-inline CML::Xfer<CML::PtrList<T> > CML::PtrList<T>::xfer()
-{
-    return xferMove(*this);
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class T>
-inline const T& CML::PtrList<T>::operator[](const label i) const
-{
-    if (!ptrs_[i])
-    {
-        FatalErrorInFunction
-            << "hanging pointer, cannot dereference"
-            << abort(FatalError);
-    }
-
-    return *(ptrs_[i]);
-}
-
-
-template<class T>
-inline T& CML::PtrList<T>::operator[](const label i)
-{
-    if (!ptrs_[i])
-    {
-        FatalErrorInFunction
-            << "hanging pointer, cannot dereference"
-            << abort(FatalError);
-    }
-
-    return *(ptrs_[i]);
-}
-
-
-template<class T>
-inline const T* CML::PtrList<T>::operator()(const label i) const
-{
-    return ptrs_[i];
-}
-
-
-// * * * * * * * * * * * * * * * * STL iterator  * * * * * * * * * * * * * * //
-
-template<class T>
-inline CML::PtrList<T>::iterator::iterator(T** ptr)
-:
-    ptr_(ptr)
-{}
-
-
-template<class T>
-inline bool CML::PtrList<T>::iterator::operator==(const iterator& iter) const
-{
-    return ptr_ == iter.ptr_;
-}
-
-
-template<class T>
-inline bool CML::PtrList<T>::iterator::operator!=(const iterator& iter) const
-{
-    return ptr_ != iter.ptr_;
-}
-
-
-template<class T>
-inline T& CML::PtrList<T>::iterator::operator*()
-{
-    return **ptr_;
-}
-
-
-template<class T>
-inline T& CML::PtrList<T>::iterator::operator()()
-{
-    return operator*();
-}
-
-
-template<class T>
-inline typename CML::PtrList<T>::iterator
-CML::PtrList<T>::iterator::operator++()
-{
-    ++ptr_;
-    return *this;
-}
-
-
-template<class T>
-inline typename CML::PtrList<T>::iterator
-CML::PtrList<T>::iterator::operator++(int)
-{
-    iterator tmp = *this;
-    ++ptr_;
-    return tmp;
-}
-
-
-template<class T>
-inline typename CML::PtrList<T>::iterator
-CML::PtrList<T>::iterator::operator--()
-{
-    --ptr_;
-    return *this;
-}
-
-
-template<class T>
-inline typename CML::PtrList<T>::iterator
-CML::PtrList<T>::iterator::operator--(int)
-{
-    iterator tmp = *this;
-    --ptr_;
-    return tmp;
-}
-
-
-template<class T>
-inline typename CML::PtrList<T>::iterator
-CML::PtrList<T>::iterator::operator+=(label n)
-{
-    ptr_ += n;
-    return *this;
-}
-
-
-template<class T>
-inline typename CML::PtrList<T>::iterator
-CML::operator+(const typename PtrList<T>::iterator& iter, label n)
-{
-    typename PtrList<T>::iterator tmp = iter;
-    return tmp += n;
-}
-
-
-template<class T>
-inline typename CML::PtrList<T>::iterator
-CML::operator+(label n, const typename PtrList<T>::iterator& iter)
-{
-    typename PtrList<T>::iterator tmp = iter;
-    return tmp += n;
-}
-
-
-template<class T>
-inline typename CML::PtrList<T>::iterator
-CML::PtrList<T>::iterator::operator-=(label n)
-{
-    ptr_ -= n;
-    return *this;
-}
-
-
-template<class T>
-inline typename CML::PtrList<T>::iterator
-CML::operator-(const typename PtrList<T>::iterator& iter, label n)
-{
-    typename PtrList<T>::iterator tmp = iter;
-    return tmp -= n;
-}
-
-
-template<class T>
-inline CML::label CML::operator-
-(
-    const typename PtrList<T>::iterator& iter1,
-    const typename PtrList<T>::iterator& iter2
-)
-{
-    return (iter1.ptr_ - iter2.ptr_)/sizeof(T*);
-}
-
-
-template<class T>
-inline T& CML::PtrList<T>::iterator::operator[](label n)
-{
-    return *(*this + n);
-}
-
-
-template<class T>
-inline bool CML::PtrList<T>::iterator::operator<(const iterator& iter) const
-{
-    return ptr_ < iter.ptr_;
-}
-
-
-template<class T>
-inline bool CML::PtrList<T>::iterator::operator>(const iterator& iter) const
-{
-    return ptr_ > iter.ptr_;
-}
-
-
-template<class T>
-inline bool CML::PtrList<T>::iterator::operator<=(const iterator& iter) const
-{
-    return ptr_ <= iter.ptr_;
-}
-
-
-template<class T>
-inline bool CML::PtrList<T>::iterator::operator>=(const iterator& iter) const
-{
-    return ptr_ >= iter.ptr_;
-}
-
-
-template<class T>
-inline typename CML::PtrList<T>::iterator CML::PtrList<T>::begin()
-{
-    return ptrs_.begin();
-}
-
-
-template<class T>
-inline typename CML::PtrList<T>::iterator CML::PtrList<T>::end()
-{
-    return ptrs_.end();
-}
-
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "error.hpp"
-
-#include "PtrList.hpp"
 #include "SLPtrList.hpp"
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
@@ -682,25 +265,25 @@ inline typename CML::PtrList<T>::iterator CML::PtrList<T>::end()
 template<class T>
 CML::PtrList<T>::PtrList()
 :
-    ptrs_()
+    UPtrList<T>()
 {}
 
 
 template<class T>
 CML::PtrList<T>::PtrList(const label s)
 :
-    ptrs_(s, reinterpret_cast<T*>(0))
+    UPtrList<T>(s)
 {}
 
 
 template<class T>
 CML::PtrList<T>::PtrList(const PtrList<T>& a)
 :
-    ptrs_(a.size())
+    UPtrList<T>(a.size())
 {
     forAll(*this, i)
     {
-        ptrs_[i] = (a[i]).clone().ptr();
+        this->ptrs_[i] = (a[i]).clone().ptr();
     }
 }
 
@@ -709,41 +292,32 @@ template<class T>
 template<class CloneArg>
 CML::PtrList<T>::PtrList(const PtrList<T>& a, const CloneArg& cloneArg)
 :
-    ptrs_(a.size())
+    UPtrList<T>(a.size())
 {
     forAll(*this, i)
     {
-        ptrs_[i] = (a[i]).clone(cloneArg).ptr();
+        this->ptrs_[i] = (a[i]).clone(cloneArg).ptr();
     }
 }
 
 
 template<class T>
-CML::PtrList<T>::PtrList(const Xfer<PtrList<T> >& lst)
+CML::PtrList<T>::PtrList(PtrList<T>&& lst)
 {
-    transfer(lst());
+    transfer(lst);
 }
 
 
 template<class T>
-CML::PtrList<T>::PtrList(PtrList<T>& a, bool reUse)
+CML::PtrList<T>::PtrList(PtrList<T>& a, bool reuse)
 :
-    ptrs_(a.size())
+    UPtrList<T>(a, reuse)
 {
-    if (reUse)
+    if (!reuse)
     {
         forAll(*this, i)
         {
-            ptrs_[i] = a.ptrs_[i];
-            a.ptrs_[i] = nullptr;
-        }
-        a.setSize(0);
-    }
-    else
-    {
-        forAll(*this, i)
-        {
-            ptrs_[i] = (a[i]).clone().ptr();
+            this->ptrs_[i] = (a[i]).clone().ptr();
         }
     }
 }
@@ -752,7 +326,7 @@ CML::PtrList<T>::PtrList(PtrList<T>& a, bool reUse)
 template<class T>
 CML::PtrList<T>::PtrList(const SLPtrList<T>& sll)
 :
-    ptrs_(sll.size())
+    UPtrList<T>(sll.size())
 {
     if (sll.size())
     {
@@ -764,7 +338,7 @@ CML::PtrList<T>::PtrList(const SLPtrList<T>& sll)
             ++iter
         )
         {
-            ptrs_[i++] = (iter()).clone().ptr();
+            this->ptrs_[i++] = (iter()).clone().ptr();
         }
     }
 }
@@ -777,9 +351,9 @@ CML::PtrList<T>::~PtrList()
 {
     forAll(*this, i)
     {
-        if (ptrs_[i])
+        if (this->ptrs_[i])
         {
-            delete ptrs_[i];
+            delete this->ptrs_[i];
         }
     }
 }
@@ -794,10 +368,11 @@ void CML::PtrList<T>::setSize(const label newSize)
     {
         FatalErrorInFunction
             << "bad set size " << newSize
+            << " for type " << typeid(T).name()
             << abort(FatalError);
     }
 
-    label oldSize = size();
+    label oldSize = this->size();
 
     if (newSize == 0)
     {
@@ -805,25 +380,25 @@ void CML::PtrList<T>::setSize(const label newSize)
     }
     else if (newSize < oldSize)
     {
-        register label i;
+        label i;
         for (i=newSize; i<oldSize; i++)
         {
-            if (ptrs_[i])
+            if (this->ptrs_[i])
             {
-                delete ptrs_[i];
+                delete this->ptrs_[i];
             }
         }
 
-        ptrs_.setSize(newSize);
+        this->ptrs_.setSize(newSize);
     }
     else // newSize > oldSize
     {
-        ptrs_.setSize(newSize);
+        this->ptrs_.setSize(newSize);
 
-        register label i;
+        label i;
         for (i=oldSize; i<newSize; i++)
         {
-            ptrs_[i] = nullptr;
+            this->ptrs_[i] = nullptr;
         }
     }
 }
@@ -834,13 +409,13 @@ void CML::PtrList<T>::clear()
 {
     forAll(*this, i)
     {
-        if (ptrs_[i])
+        if (this->ptrs_[i])
         {
-            delete ptrs_[i];
+            delete this->ptrs_[i];
         }
     }
 
-    ptrs_.clear();
+    this->ptrs_.clear();
 }
 
 
@@ -848,32 +423,34 @@ template<class T>
 void CML::PtrList<T>::transfer(PtrList<T>& a)
 {
     clear();
-    ptrs_.transfer(a.ptrs_);
+    this->ptrs_.transfer(a.ptrs_);
 }
 
 
 template<class T>
 void CML::PtrList<T>::reorder(const labelUList& oldToNew)
 {
-    if (oldToNew.size() != size())
+    if (oldToNew.size() != this->size())
     {
         FatalErrorInFunction
             << "Size of map (" << oldToNew.size()
-            << ") not equal to list size (" << size()
-            << ")." << abort(FatalError);
+            << ") not equal to list size (" << this->size()
+            << ") for type " << typeid(T).name()
+            << abort(FatalError);
     }
 
-    List<T*> newPtrs_(ptrs_.size(), reinterpret_cast<T*>(0));
+    List<T*> newPtrs_(this->ptrs_.size(), reinterpret_cast<T*>(0));
 
     forAll(*this, i)
     {
         label newI = oldToNew[i];
 
-        if (newI < 0 || newI >= size())
+        if (newI < 0 || newI >= this->size())
         {
             FatalErrorInFunction
                 << "Illegal index " << newI << nl
-                << "Valid indices are 0.." << size()-1
+                << "Valid indices are 0.." << this->size()-1
+                << " for type " << typeid(T).name()
                 << abort(FatalError);
         }
 
@@ -881,9 +458,10 @@ void CML::PtrList<T>::reorder(const labelUList& oldToNew)
         {
             FatalErrorInFunction
                 << "reorder map is not unique; element " << newI
-                << " already set." << abort(FatalError);
+                << " already set for type " << typeid(T).name()
+                << abort(FatalError);
         }
-        newPtrs_[newI] = ptrs_[i];
+        newPtrs_[newI] = this->ptrs_[i];
     }
 
     forAll(newPtrs_, i)
@@ -891,37 +469,37 @@ void CML::PtrList<T>::reorder(const labelUList& oldToNew)
         if (!newPtrs_[i])
         {
             FatalErrorInFunction
-                << "Element " << i << " not set after reordering." << nl
-                << abort(FatalError);
+                << "Element " << i << " not set after reordering with type "
+                << typeid(T).name() << nl << abort(FatalError);
         }
     }
 
-    ptrs_.transfer(newPtrs_);
+    this->ptrs_.transfer(newPtrs_);
 }
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class T>
-CML::PtrList<T>& CML::PtrList<T>::operator=(const PtrList<T>& a)
+void CML::PtrList<T>::operator=(const PtrList<T>& a)
 {
     if (this == &a)
     {
         FatalErrorInFunction
-            << "attempted assignment to self"
+            << "attempted assignment to self for type " << typeid(T).name()
             << abort(FatalError);
     }
 
-    if (size() == 0)
+    if (this->size() == 0)
     {
         setSize(a.size());
 
         forAll(*this, i)
         {
-            ptrs_[i] = (a[i]).clone().ptr();
+            this->ptrs_[i] = (a[i]).clone().ptr();
         }
     }
-    else if (a.size() == size())
+    else if (a.size() == this->size())
     {
         forAll(*this, i)
         {
@@ -932,15 +510,25 @@ CML::PtrList<T>& CML::PtrList<T>::operator=(const PtrList<T>& a)
     {
         FatalErrorInFunction
             << "bad size: " << a.size()
+            << " for type " << typeid(T).name()
             << abort(FatalError);
     }
-
-
-    return *this;
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class T>
+void CML::PtrList<T>::operator=(PtrList<T>&& a)
+{
+    if (this == &a)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self for type " << typeid(T).name()
+            << abort(FatalError);
+    }
+
+    transfer(a);
+}
+
 
 #include "SLList.hpp"
 #include "Istream.hpp"
@@ -1013,8 +601,10 @@ void CML::PtrList<T>::read(Istream& is, const INew& inewt)
     {
         if (firstToken.pToken() != token::BEGIN_LIST)
         {
-            FatalIOErrorInFunction(is)
-                << "incorrect first token, '(', found " << firstToken.info()
+            FatalIOErrorInFunction
+            (
+                is
+            )   << "incorrect first token, '(', found " << firstToken.info()
                 << exit(FatalIOError);
         }
 
@@ -1030,6 +620,16 @@ void CML::PtrList<T>::read(Istream& is, const INew& inewt)
         )
         {
             is.putBack(lastToken);
+
+            if (is.eof())
+            {
+                FatalIOErrorInFunction
+                (
+                    is
+                )   << "Premature EOF after reading " << lastToken.info()
+                    << exit(FatalIOError);
+            }
+
             sllPtrs.append(inewt(is).ptr());
             is >> lastToken;
         }
@@ -1049,8 +649,10 @@ void CML::PtrList<T>::read(Istream& is, const INew& inewt)
     }
     else
     {
-        FatalIOErrorInFunction(is)
-            << "incorrect first token, expected <int> or '(', found "
+        FatalIOErrorInFunction
+        (
+            is
+        )   << "incorrect first token, expected <int> or '(', found "
             << firstToken.info()
             << exit(FatalIOError);
     }
@@ -1085,33 +687,6 @@ CML::Istream& CML::operator>>(Istream& is, PtrList<T>& L)
     return is;
 }
 
-
-// * * * * * * * * * * * * * * * Ostream Operators * * * * * * * * * * * * * //
-
-template<class T>
-CML::Ostream& CML::operator<<(Ostream& os, const PtrList<T>& L)
-{
-    // Write size and start delimiter
-    os << nl << L.size() << nl << token::BEGIN_LIST;
-
-    // Write contents
-    forAll(L, i)
-    {
-        os << nl << L[i];
-    }
-
-    // Write end delimiter
-    os << nl << token::END_LIST << nl;
-
-    // Check state of IOstream
-    os.check("Ostream& operator<<(Ostream&, const PtrList&)");
-
-    return os;
-}
-
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

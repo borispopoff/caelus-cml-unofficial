@@ -458,7 +458,7 @@ CML::tmp<CML::volScalarField> CML::radiation::fvDOM::Rp() const
         )
     );
 
-    volScalarField& Rp=tRp();
+    volScalarField& Rp=tRp.ref();
 
     // Add contributions over remaining frequency bands
     for (label j=1; j < nLambda_; j++)
@@ -476,12 +476,12 @@ CML::tmp<CML::volScalarField> CML::radiation::fvDOM::Rp() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::radiation::fvDOM::Ru() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tRu
+    tmp<volScalarField::Internal> tRu
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -497,24 +497,24 @@ CML::radiation::fvDOM::Ru() const
         )
     );
 
-    DimensionedField<scalar, volMesh>& Ru=tRu();
+    volScalarField::Internal& Ru=tRu.ref();
 
     // Sum contributions over all frequency bands
     for (label j=0; j < nLambda_; j++)
     {
         // Compute total incident radiation within frequency band
-        tmp<DimensionedField<scalar, volMesh> > Gj
+        tmp<volScalarField::Internal> Gj
         (
-            IRay_[0].ILambda(j).dimensionedInternalField()*IRay_[0].omega()
+            IRay_[0].ILambda(j).internalField()*IRay_[0].omega()
         );
 
         for (label rayI=1; rayI < nRay_; rayI++)
         {
-            Gj() += IRay_[rayI].ILambda(j).dimensionedInternalField()*IRay_[rayI].omega();
+            Gj.ref() += IRay_[rayI].ILambda(j).internalField()*IRay_[rayI].omega();
         }
 
-        Ru += (aLambda_[j].dimensionedInternalField() - absorptionEmission_->aDisp(j)().dimensionedInternalField())*Gj()
-             - absorptionEmission_->ECont(j)().dimensionedInternalField();
+        Ru += (aLambda_[j].internalField() - absorptionEmission_->aDisp(j)().internalField())*Gj()
+             - absorptionEmission_->ECont(j)().internalField();
     }
 
     return tRu;
@@ -541,9 +541,9 @@ void CML::radiation::fvDOM::updateG()
     {
         IRay_[rayI].addIntensity();
         G_ += IRay_[rayI].I()*IRay_[rayI].omega();
-        qr_.boundaryField() += IRay_[rayI].qr().boundaryField();
-        qem_.boundaryField() += IRay_[rayI].qem().boundaryField();
-        qin_.boundaryField() += IRay_[rayI].qin().boundaryField();
+        qr_.boundaryFieldRef() += IRay_[rayI].qr().boundaryField();
+        qem_.boundaryFieldRef() += IRay_[rayI].qem().boundaryField();
+        qin_.boundaryFieldRef() += IRay_[rayI].qin().boundaryField();
     }
 }
 

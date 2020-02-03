@@ -186,25 +186,25 @@ void CML::displacementMotionSolver::updateMesh(const mapPolyMesh& mpm)
 
     pointField newPoints0(mpm.pointMap().size());
 
-    forAll(newPoints0, pointI)
+    forAll(newPoints0, pointi)
     {
-        label oldPointI = mpm.pointMap()[pointI];
+        label oldPointi = mpm.pointMap()[pointi];
 
-        if (oldPointI >= 0)
+        if (oldPointi >= 0)
         {
-            label masterPointI = mpm.reversePointMap()[oldPointI];
+            label masterPointi = mpm.reversePointMap()[oldPointi];
 
-            if (masterPointI == pointI)
+            if (masterPointi == pointi)
             {
-                newPoints0[pointI] = points0_[oldPointI];
+                newPoints0[pointi] = points0_[oldPointi];
             }
             else
             {
                 // New point. Assume motion is scaling.
-                newPoints0[pointI] = points0_[oldPointI] + cmptMultiply
+                newPoints0[pointi] = points0_[oldPointi] + cmptMultiply
                 (
                     scaleFactors,
-                    points[pointI]-points[masterPointI]
+                    points[pointi]-points[masterPointi]
                 );
             }
         }
@@ -212,8 +212,8 @@ void CML::displacementMotionSolver::updateMesh(const mapPolyMesh& mpm)
         {
             FatalErrorInFunction
                 << "Cannot work out coordinates of introduced vertices."
-                << " New vertex " << pointI << " at coordinate "
-                << points[pointI] << exit(FatalError);
+                << " New vertex " << pointi << " at coordinate "
+                << points[pointi] << exit(FatalError);
         }
     }
 

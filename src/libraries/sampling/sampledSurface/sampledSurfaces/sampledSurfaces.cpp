@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -26,6 +26,7 @@ License
 #include "IOmanip.hpp"
 #include "volPointInterpolation.hpp"
 #include "PatchTools.hpp"
+#include "mapPolyMesh.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -34,9 +35,7 @@ namespace CML
     defineTypeNameAndDebug(sampledSurfaces, 0);
 }
 
-
 bool CML::sampledSurfaces::verbose_ = false;
-
 CML::scalar CML::sampledSurfaces::mergeTol_ = 1e-10;
 
 
@@ -128,21 +127,15 @@ void CML::sampledSurfaces::verbose(const bool verbosity)
 
 
 void CML::sampledSurfaces::execute()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void CML::sampledSurfaces::end()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void CML::sampledSurfaces::timeSet()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void CML::sampledSurfaces::write()
@@ -249,9 +242,12 @@ void CML::sampledSurfaces::read(const dictionary& dict)
 }
 
 
-void CML::sampledSurfaces::updateMesh(const mapPolyMesh&)
+void CML::sampledSurfaces::updateMesh(const mapPolyMesh& mpm)
 {
-    expire();
+    if (&mpm.mesh() == &mesh_)
+    {
+        expire();
+    }
 
     // pointMesh and interpolation will have been reset in mesh.update
 }

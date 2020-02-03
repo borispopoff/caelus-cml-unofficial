@@ -59,7 +59,7 @@ namespace fv
 template<class Type>
 class convectionScheme
 :
-    public refCount
+    public tmp<convectionScheme<Type>>::refCount
 {
     // Private data
 
@@ -122,7 +122,7 @@ public:
     // Selectors
 
         //- Return a pointer to a new convectionScheme created on freestore
-        static tmp<convectionScheme<Type> > New
+        static tmp<convectionScheme<Type>> New
         (
             const fvMesh& mesh,
             const surfaceScalarField& faceFlux,
@@ -132,7 +132,7 @@ public:
 
         //- Return a pointer to a new multivariate convectionScheme
         //  created on freestore
-        static tmp<convectionScheme<Type> > New
+        static tmp<convectionScheme<Type>> New
         (
             const fvMesh& mesh,
             const typename multivariateSurfaceInterpolationScheme<Type>::
@@ -154,39 +154,39 @@ public:
             return mesh_;
         }
 
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         interpolate
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const = 0;
 
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > flux
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmDiv
+        virtual tmp<fvMatrix<Type>> fvmDiv
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const = 0;
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDiv
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDiv
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const = 0;
 
-        virtual tmp<surfaceInterpolationScheme<Type> > 
+        virtual tmp<surfaceInterpolationScheme<Type>> 
         interpScheme() const
         {
             FatalErrorInFunction
             << "Current scheme does not implement interpScheme() function" 
             << abort(FatalError);
             // Dummy return - the code should have failed before the return
-            tmp<surfaceInterpolationScheme<Type> > x;
+            tmp<surfaceInterpolationScheme<Type>> x;
             return x;
         }
 
@@ -216,7 +216,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            convectionScheme<Type>::addIstreamConstructorToTable<SS<Type> >    \
+            convectionScheme<Type>::addIstreamConstructorToTable<SS<Type>>    \
                 add##SS##Type##IstreamConstructorToTable_;                     \
         }                                                                      \
     }
@@ -238,7 +238,7 @@ makeFvConvectionTypeScheme(SS, tensor)
         namespace fv                                                           \
         {                                                                      \
             convectionScheme<Type>::                                           \
-                addMultivariateConstructorToTable<SS<Type> >                   \
+                addMultivariateConstructorToTable<SS<Type>>                   \
                 add##SS##Type##MultivariateConstructorToTable_;                \
         }                                                                      \
     }
@@ -275,7 +275,7 @@ namespace fv
 template<class Type>
 convectionScheme<Type>::convectionScheme(const convectionScheme& cs)
 :
-    refCount(),
+    tmp<convectionScheme<Type>>::refCount(),
     mesh_(cs.mesh_)
 {}
 
@@ -283,7 +283,7 @@ convectionScheme<Type>::convectionScheme(const convectionScheme& cs)
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<convectionScheme<Type> > convectionScheme<Type>::New
+tmp<convectionScheme<Type>> convectionScheme<Type>::New
 (
     const fvMesh& mesh,
     const surfaceScalarField& faceFlux,
@@ -292,16 +292,15 @@ tmp<convectionScheme<Type> > convectionScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "convectionScheme<Type>::New"
-               "(const fvMesh&, const surfaceScalarField&, Istream&) : "
-               "constructing convectionScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing convectionScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Convection scheme not specified" << endl << endl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Convection scheme not specified" << endl << endl
             << "Valid convection schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -314,8 +313,10 @@ tmp<convectionScheme<Type> > convectionScheme<Type>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown convection scheme " << schemeName << nl << nl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown convection scheme " << schemeName << nl << nl
             << "Valid convection schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -326,7 +327,7 @@ tmp<convectionScheme<Type> > convectionScheme<Type>::New
 
 
 template<class Type>
-tmp<convectionScheme<Type> > convectionScheme<Type>::New
+tmp<convectionScheme<Type>> convectionScheme<Type>::New
 (
     const fvMesh& mesh,
     const typename multivariateSurfaceInterpolationScheme<Type>::
@@ -337,18 +338,15 @@ tmp<convectionScheme<Type> > convectionScheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "convectionScheme<Type>::New"
-               "(const fvMesh&, "
-               "const typename multivariateSurfaceInterpolationScheme<Type>"
-               "::fieldTable&, const surfaceScalarField&, Istream&) : "
-               "constructing convectionScheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing convectionScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Convection scheme not specified" << endl << endl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Convection scheme not specified" << endl << endl
             << "Valid convection schemes are :" << endl
             << MultivariateConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -361,8 +359,10 @@ tmp<convectionScheme<Type> > convectionScheme<Type>::New
 
     if (cstrIter == MultivariateConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown convection scheme " << schemeName << nl << nl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown convection scheme " << schemeName << nl << nl
             << "Valid convection schemes are :" << endl
             << MultivariateConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);

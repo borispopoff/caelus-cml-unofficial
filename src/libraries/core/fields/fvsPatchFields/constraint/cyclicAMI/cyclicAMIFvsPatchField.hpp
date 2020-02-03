@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -92,9 +92,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type> > clone() const
+        virtual tmp<fvsPatchField<Type>> clone() const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new cyclicAMIFvsPatchField<Type>(*this)
             );
@@ -108,12 +108,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type> > clone
+        virtual tmp<fvsPatchField<Type>> clone
         (
             const DimensionedField<Type, surfaceMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new cyclicAMIFvsPatchField<Type>(*this, iF)
             );
@@ -129,11 +129,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -186,8 +183,10 @@ CML::cyclicAMIFvsPatchField<Type>::cyclicAMIFvsPatchField
 {
     if (!isA<cyclicAMIFvPatch>(p))
     {
-        FatalIOErrorInFunction(dict)
-            << "patch " << this->patch().index() << " not cyclicAMI type. "
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "patch " << this->patch().index() << " not cyclicAMI type. "
             << "Patch type = " << p.type()
             << exit(FatalIOError);
     }
@@ -222,26 +221,8 @@ CML::cyclicAMIFvsPatchField<Type>::cyclicAMIFvsPatchField
 template<class Type>
 bool CML::cyclicAMIFvsPatchField<Type>::coupled() const
 {
-    if
-    (
-        Pstream::parRun()
-     || (
-            this->cyclicAMIPatch_.size()
-         && this->cyclicAMIPatch_.cyclicAMIPatch().neighbPatch().size()
-        )
-    )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return cyclicAMIPatch_.coupled();
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

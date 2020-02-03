@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014 OpenFOAM Foundation
+Copyright (C) 2014-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -66,10 +66,10 @@ private:
 
 
     // Private Member Functions
-    
+
         //- Inherit findNearest from searchableSurface
         using searchableSurface::findNearest;
-    
+
         //- Find nearest point on disk
         pointIndexHit findNearest
         (
@@ -85,11 +85,6 @@ private:
             pointIndexHit&
         ) const;
 
-        //- Disallow default bitwise copy construct
-        searchableDisk(const searchableDisk&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableDisk&);
 
 public:
 
@@ -114,6 +109,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        searchableDisk(const searchableDisk&) = delete;
+
 
     //- Destructor
     virtual ~searchableDisk();
@@ -194,7 +193,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const;
 
             //- From a set of points and indices get the region
@@ -228,6 +227,11 @@ public:
                 return false;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableDisk&) = delete;
 };
 
 

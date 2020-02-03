@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,10 +60,10 @@ class inverseDistanceDiffusivity
         tmp<scalarField> y() const;
 
         //- Disallow default bitwise copy construct
-        inverseDistanceDiffusivity(const inverseDistanceDiffusivity&);
+        inverseDistanceDiffusivity(const inverseDistanceDiffusivity&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const inverseDistanceDiffusivity&);
+        void operator=(const inverseDistanceDiffusivity&) = delete;
 
 
 public:

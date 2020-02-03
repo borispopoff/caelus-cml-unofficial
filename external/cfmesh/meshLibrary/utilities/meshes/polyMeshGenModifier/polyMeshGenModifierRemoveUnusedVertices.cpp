@@ -36,9 +36,9 @@ void polyMeshGenModifier::removeUnusedVertices()
     pointFieldPMG& points = mesh_.points_;
 
     boolList usePoint(points.size(), false);
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         forAll(f, pI)
             usePoint[f[pI]] = true;
@@ -59,9 +59,9 @@ void polyMeshGenModifier::removeUnusedVertices()
 
     points.setSize(nPoints);
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        face& f = faces[faceI];
+        face& f = faces[facei];
 
         forAll(f, pI)
             f[pI] = newLabel[f[pI]];

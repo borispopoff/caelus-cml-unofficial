@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,10 +50,10 @@ class dynamicFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        dynamicFvMesh(const dynamicFvMesh&);
+        dynamicFvMesh(const dynamicFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const dynamicFvMesh&);
+        void operator=(const dynamicFvMesh&) = delete;
 
 
 public:
@@ -84,10 +84,10 @@ public:
         dynamicFvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<labelList>& allOwner,
-            const Xfer<labelList>& allNeighbour,
+            pointField&& points,
+            faceList&& faces,
+            labelList&& allOwner,
+            labelList&& allNeighbour,
             const bool syncPar = true
         );
 
@@ -96,9 +96,9 @@ public:
         dynamicFvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<cellList>& cells,
+            pointField&& points,
+            faceList&& faces,
+            cellList&& cells,
             const bool syncPar = true
         );
 

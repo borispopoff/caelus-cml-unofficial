@@ -150,32 +150,32 @@ inline const cellListPMG& polyMeshGenCells::cells() const
 inline void polyMeshGenCells::addCellToSubset
 (
     const label selID,
-    const label cellI
+    const label celli
 )
 {
     std::map<label, meshSubset>::iterator it = cellSubsets_.find(selID);
     if( it == cellSubsets_.end() )
         return;
 
-    it->second.addElement(cellI);
+    it->second.addElement(celli);
 }
 
 inline void polyMeshGenCells::removeCellFromSubset
 (
     const label selID,
-    const label cellI
+    const label celli
 )
 {
     std::map<label, meshSubset>::iterator it = cellSubsets_.find(selID);
     if( it == cellSubsets_.end() )
         return;
 
-    it->second.removeElement(cellI);
+    it->second.removeElement(celli);
 }
 
 inline void polyMeshGenCells::cellInSubsets
 (
-    const label cellI,
+    const label celli,
     DynList<label>& cellSubsets
 ) const
 {
@@ -189,7 +189,7 @@ inline void polyMeshGenCells::cellInSubsets
         ++it
     )
     {
-        if( it->second.contains(cellI) )
+        if( it->second.contains(celli) )
             cellSubsets.append(it->first);
     }
 }

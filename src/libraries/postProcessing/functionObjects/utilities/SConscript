@@ -37,7 +37,6 @@ setTimeStep/setTimeStepFunctionObject.cpp
 
 caelus_inc = [
 'sampling/lnInclude',
-'fvOptions/lnInclude',
 'lagrangian/basic/lnInclude',
 'lagrangian/dsmc/lnInclude',
 'transportModels/lnInclude',

@@ -123,7 +123,7 @@ private:
     FixedList<label, nSpecies_> specieIndex_;
 
     //- Look-up table of species related to ft
-    mutable autoPtr<interpolationLookUpTable<scalar> > lookUpTablePtr_;
+    mutable autoPtr<interpolationLookUpTable<scalar>> lookUpTablePtr_;
 
     //- SLG thermo package
     const fluidThermo& thermo_;

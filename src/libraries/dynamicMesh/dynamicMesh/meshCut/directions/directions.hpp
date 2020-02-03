@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -61,7 +61,9 @@ class directions
 :
     public List<vectorField>
 {
+
 public:
+
     // Data types
 
         //- Enumeration listing the possible coordinate directions.
@@ -72,13 +74,13 @@ public:
             NORMAL
         };
 
+
 private:
 
         static const NamedEnum<directionType, 3> directionTypeNames_;
 
 
     // Private Member Functions
-
 
         //- For debugging. Write point coordinate.
         static void writeOBJ(Ostream& os, const point& pt);
@@ -120,10 +122,10 @@ private:
         );
 
         //- Disallow default bitwise copy construct
-        directions(const directions&);
+        directions(const directions&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const directions&);
+        void operator=(const directions&) = delete;
 
 
 public:
@@ -137,7 +139,6 @@ public:
             const dictionary& dict,
             const twoDPointCorrector* correct2DPtr = nullptr
         );
-
 };
 
 

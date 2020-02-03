@@ -99,9 +99,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new groovyFixedNormalSlipFvPatchField<Type>(*this)
             );
@@ -115,12 +115,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new groovyFixedNormalSlipFvPatchField<Type>(*this, iF)
             );
@@ -248,10 +248,9 @@ void CML::groovyFixedNormalSlipFvPatchField<Type>::write(Ostream& os) const
 {
     fixedNormalSlipFvPatchField<Type>::write(os);
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 
-    os.writeKeyword("fixedValueExpression")
-        << fixedValueExpression_ << token::END_STATEMENT << nl;
+    writeEntry(os, "fixedValueExpression", fixedValueExpression_);
 
     driver_.writeCommon(os,debug);
 }

@@ -128,11 +128,11 @@ void checkSnapMesh
 
         const scalarField magFaceAreas(mag(mesh.faceAreas()));
 
-        forAll(magFaceAreas, faceI)
+        forAll(magFaceAreas, facei)
         {
-            if (magFaceAreas[faceI] < minArea)
+            if (magFaceAreas[facei] < minArea)
             {
-                wrongFaces.insert(faceI);
+                wrongFaces.insert(facei);
             }
         }
         Pout<< "Detected additional " << wrongFaces.size() - nOldSize

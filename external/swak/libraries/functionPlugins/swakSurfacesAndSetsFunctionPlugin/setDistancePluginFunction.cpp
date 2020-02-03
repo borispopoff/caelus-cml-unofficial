@@ -76,14 +76,14 @@ void setDistancePluginFunction::doEvaluation()
     faceCenters[Pstream::myProcNo()]=theSet();
     Pstream::scatterList(faceCenters);
 
-    forAll(cc,cellI) {
-        const vector &here=cc[cellI];
-        scalar &minDist=(pDistance)()[cellI];
+    forAll(cc,celli) {
+        const vector &here=cc[celli];
+        scalar &minDist=(pDistance)()[celli];
 
         forAll(faceCenters,i){
             const vectorField &fc=faceCenters[i];
-            forAll(fc,faceI){
-                const scalar dist=mag(here-fc[faceI]);
+            forAll(fc,facei){
+                const scalar dist=mag(here-fc[facei]);
                 if(dist<minDist) {
                     minDist=dist;
                 }

@@ -85,14 +85,14 @@ public:
 
         //- mirror fvm::ddt with porosity
         template<class Type>
-        tmp<fvMatrix<Type> > ddt
+        tmp<fvMatrix<Type>> ddt
         (
             GeometricField<Type, fvPatchField, volMesh>&
         );
 
         //- mirror fvm::ddt with porosity
         template<class Type>
-        tmp<fvMatrix<Type> > ddt
+        tmp<fvMatrix<Type>> ddt
         (
             const geometricOneField&,
             GeometricField<Type, fvPatchField, volMesh>&
@@ -100,7 +100,7 @@ public:
 
         //- mirror fvm::ddt with porosity
         template<class Type>
-        tmp<fvMatrix<Type> > ddt
+        tmp<fvMatrix<Type>> ddt
         (
             const dimensionedScalar&,
             GeometricField<Type, fvPatchField, volMesh>&
@@ -108,7 +108,7 @@ public:
 
         //- mirror fvm::ddt with porosity
         template<class Type>
-        tmp<fvMatrix<Type> > ddt
+        tmp<fvMatrix<Type>> ddt
         (
             const volScalarField&,
             GeometricField<Type, fvPatchField, volMesh>&
@@ -162,59 +162,59 @@ void CML::jjc2014Zones::modifyDdt(fvMatrix<Type>& m) const
 // * * * * * * * * * * * * * * *  Member Functions * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::fvMatrix<Type> >
+CML::tmp<CML::fvMatrix<Type>>
 CML::jjc2014Zones::ddt
 (
     GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tres = fvm::ddt(vf);
-    modifyDdt(tres());
+    tmp<fvMatrix<Type>> tres = fvm::ddt(vf);
+    modifyDdt(tres.ref());
     
     return tres;
 }
 
 
 template<class Type>
-CML::tmp<CML::fvMatrix<Type> >
+CML::tmp<CML::fvMatrix<Type>>
 CML::jjc2014Zones::ddt
 (
     const geometricOneField&,
     GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tres = fvm::ddt(vf);
-    modifyDdt(tres());
+    tmp<fvMatrix<Type>> tres = fvm::ddt(vf);
+    modifyDdt(tres.ref());
 
     return tres;
 }
 
 
 template<class Type>
-CML::tmp<CML::fvMatrix<Type> >
+CML::tmp<CML::fvMatrix<Type>>
 CML::jjc2014Zones::ddt
 (
     const dimensionedScalar& rho,
     GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tres = fvm::ddt(rho,vf);
-    modifyDdt(tres());
+    tmp<fvMatrix<Type>> tres = fvm::ddt(rho,vf);
+    modifyDdt(tres.ref());
 
     return tres;
 }
 
 
 template<class Type>
-CML::tmp<CML::fvMatrix<Type> >
+CML::tmp<CML::fvMatrix<Type>>
 CML::jjc2014Zones::ddt
 (
     const volScalarField& rho,
     GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tres = fvm::ddt(rho,vf);
-    modifyDdt(tres());
+    tmp<fvMatrix<Type>> tres = fvm::ddt(rho,vf);
+    modifyDdt(tres.ref());
 
     return tres;
 }

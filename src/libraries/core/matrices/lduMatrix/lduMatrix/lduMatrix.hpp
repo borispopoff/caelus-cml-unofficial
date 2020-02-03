@@ -532,7 +532,7 @@ public:
         lduMatrix(const lduMatrix&);
 
         //- Construct as copy or re-use as specified.
-        lduMatrix(lduMatrix&, bool reUse);
+        lduMatrix(lduMatrix&, bool reuse);
 
         //- Construct given an LDU addressed mesh and an Istream
         //  from which the coefficients are read
@@ -689,18 +689,18 @@ public:
 
 
             template<class Type>
-            tmp<Field<Type> > H(const Field<Type>&) const;
+            tmp<Field<Type>> H(const Field<Type>&) const;
 
             template<class Type>
-            tmp<Field<Type> > H(const tmp<Field<Type> >&) const;
+            tmp<Field<Type>> H(const tmp<Field<Type>>&) const;
 
             tmp<scalarField> H1() const;
 
             template<class Type>
-            tmp<Field<Type> > faceH(const Field<Type>&) const;
+            tmp<Field<Type>> faceH(const Field<Type>&) const;
 
             template<class Type>
-            tmp<Field<Type> > faceH(const tmp<Field<Type> >&) const;
+            tmp<Field<Type>> faceH(const tmp<Field<Type>>&) const;
 
 
     // Member operators
@@ -733,16 +733,16 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::lduMatrix::H(const Field<Type>& psi) const
+CML::tmp<CML::Field<Type>> CML::lduMatrix::H(const Field<Type>& psi) const
 {
-    tmp<Field<Type> > tHpsi
+    tmp<Field<Type>> tHpsi
     (
-        new Field<Type>(lduAddr().size(), pTraits<Type>::zero)
+        new Field<Type>(lduAddr().size(), Zero)
     );
 
     if (lowerPtr_ || upperPtr_)
     {
-        Field<Type> & Hpsi = tHpsi();
+        Field<Type> & Hpsi = tHpsi.ref();
 
         Type* RESTRICT HpsiPtr = Hpsi.begin();
 
@@ -754,9 +754,9 @@ CML::tmp<CML::Field<Type> > CML::lduMatrix::H(const Field<Type>& psi) const
         const scalar* RESTRICT lowerPtr = lower().begin();
         const scalar* RESTRICT upperPtr = upper().begin();
 
-        register const label nFaces = upper().size();
+        const label nFaces = upper().size();
 
-        for (register label face=0; face<nFaces; face++)
+        for (label face=0; face<nFaces; face++)
         {
             HpsiPtr[uPtr[face]] -= lowerPtr[face]*psiPtr[lPtr[face]];
             HpsiPtr[lPtr[face]] -= upperPtr[face]*psiPtr[uPtr[face]];
@@ -767,17 +767,17 @@ CML::tmp<CML::Field<Type> > CML::lduMatrix::H(const Field<Type>& psi) const
 }
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
-CML::lduMatrix::H(const tmp<Field<Type> >& tpsi) const
+CML::tmp<CML::Field<Type>>
+CML::lduMatrix::H(const tmp<Field<Type>>& tpsi) const
 {
-    tmp<Field<Type> > tHpsi(H(tpsi()));
+    tmp<Field<Type>> tHpsi(H(tpsi()));
     tpsi.clear();
     return tHpsi;
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::lduMatrix::faceH(const Field<Type>& psi) const
 {
     if (lowerPtr_ || upperPtr_)
@@ -788,10 +788,10 @@ CML::lduMatrix::faceH(const Field<Type>& psi) const
         const labelUList& l = lduAddr().lowerAddr();
         const labelUList& u = lduAddr().upperAddr();
 
-        tmp<Field<Type> > tfaceHpsi(new Field<Type> (Lower.size()));
-        Field<Type> & faceHpsi = tfaceHpsi();
+        tmp<Field<Type>> tfaceHpsi(new Field<Type> (Lower.size()));
+        Field<Type> & faceHpsi = tfaceHpsi.ref();
 
-        for (register label face=0; face<l.size(); face++)
+        for (label face=0; face<l.size(); face++)
         {
             faceHpsi[face] =
                 Upper[face]*psi[u[face]]
@@ -807,16 +807,16 @@ CML::lduMatrix::faceH(const Field<Type>& psi) const
                " the matrix does not have any off-diagonal coefficients."
             << exit(FatalError);
 
-        return tmp<Field<Type> >(nullptr);
+        return tmp<Field<Type>>(nullptr);
     }
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
-CML::lduMatrix::faceH(const tmp<Field<Type> >& tpsi) const
+CML::tmp<CML::Field<Type>>
+CML::lduMatrix::faceH(const tmp<Field<Type>>& tpsi) const
 {
-    tmp<Field<Type> > tfaceHpsi(faceH(tpsi()));
+    tmp<Field<Type>> tfaceHpsi(faceH(tpsi()));
     tpsi.clear();
     return tfaceHpsi;
 }

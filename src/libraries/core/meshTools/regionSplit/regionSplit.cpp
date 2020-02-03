@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
@@ -169,7 +169,7 @@ CML::autoPtr<CML::globalIndex> CML::regionSplit::calcRegionSplit
         {
             offsets[i] = mesh().nFaces();
         }
-        const globalIndex globalRegions(offsets.xfer());
+        const globalIndex globalRegions(move(offsets));
 
         // Minimise regions across connected cells
         // Note: still uses global decisions so all processors are running
@@ -212,7 +212,7 @@ CML::autoPtr<CML::globalIndex> CML::regionSplit::calcRegionSplit
             compactOffsets[i] = globalToCompact.size();
         }
 
-        return autoPtr<globalIndex>(new globalIndex(compactOffsets.xfer()));
+        return autoPtr<globalIndex>(new globalIndex(move(compactOffsets)));
     }
 
 

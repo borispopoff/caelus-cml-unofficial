@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,7 +63,7 @@ void CML::searchableCylinder::boundingSpheres
 CML::tmp<CML::pointField> CML::searchableCylinder::points() const
 {
     tmp<pointField> tPts(new pointField(2));
-    pointField& pts = tPts();
+    pointField& pts = tPts.ref();
 
     pts[0] = point1_;
     pts[1] = point2_;
@@ -91,7 +91,7 @@ CML::pointIndexHit CML::searchableCylinder::findNearest
 
     if (magV < ROOTVSMALL)
     {
-        v = vector::zero;
+        v = Zero;
     }
     else
     {
@@ -591,7 +591,7 @@ void CML::searchableCylinder::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     info.setSize(start.size());
@@ -649,7 +649,7 @@ void CML::searchableCylinder::getNormal
 ) const
 {
     normal.setSize(info.size());
-    normal = vector::zero;
+    normal = Zero;
 
     forAll(info, i)
     {
@@ -726,11 +726,11 @@ void CML::searchableCylinder::getVolumeType
 ) const
 {
     volType.setSize(points.size());
-    volType = volumeType::INSIDE;
+    volType = volumeType::inside;
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         vector v(pt - point1_);
 
@@ -740,12 +740,12 @@ void CML::searchableCylinder::getVolumeType
         if (parallel < 0)
         {
             // left of point1 endcap
-            volType[pointI] = volumeType::OUTSIDE;
+            volType[pointi] = volumeType::outside;
         }
         else if (parallel > magDir_)
         {
             // right of point2 endcap
-            volType[pointI] = volumeType::OUTSIDE;
+            volType[pointi] = volumeType::outside;
         }
         else
         {
@@ -754,11 +754,11 @@ void CML::searchableCylinder::getVolumeType
 
             if (mag(v) > radius_)
             {
-                volType[pointI] = volumeType::OUTSIDE;
+                volType[pointi] = volumeType::outside;
             }
             else
             {
-                volType[pointI] = volumeType::INSIDE;
+                volType[pointi] = volumeType::inside;
             }
         }
     }

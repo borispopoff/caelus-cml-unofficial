@@ -68,7 +68,7 @@ protected:
     // Protected data
     wordList combinedWavesNames_;
 
-    List<autoPtr<waveTheories::waveTheory> > combinedWavesPtr_;
+    List<autoPtr<waveTheories::waveTheory>> combinedWavesPtr_;
     // Protected member functions
 
         scalar factor(const scalar&) const;

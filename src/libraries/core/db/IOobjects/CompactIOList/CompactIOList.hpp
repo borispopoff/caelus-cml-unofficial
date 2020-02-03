@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -33,30 +33,13 @@ Description
 #ifndef CompactIOList_H
 #define CompactIOList_H
 
-#include "IOList.hpp"
+#include "ListCompactIO.hpp"
 #include "regIOobject.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace CML
 {
-
-class Istream;
-class Ostream;
-
-// Forward declaration of friend functions and operators
-template<class T, class BaseType> class CompactIOList;
-
-template<class T, class BaseType> Istream& operator>>
-(
-    Istream&,
-    CompactIOList<T, BaseType>&
-);
-template<class T, class BaseType> Ostream& operator<<
-(
-    Ostream&,
-    const CompactIOList<T, BaseType>&
-);
 
 /*---------------------------------------------------------------------------*\
                            Class CompactIOList Declaration
@@ -66,7 +49,7 @@ template<class T, class BaseType>
 class CompactIOList
 :
     public regIOobject,
-    public List<T>
+    public ListCompactIO<T, BaseType>
 {
     // Private Member Functions
 
@@ -90,8 +73,11 @@ public:
         //- Construct from IOobject and a List
         CompactIOList(const IOobject&, const List<T>&);
 
-        //- Construct by transferring the List contents
-        CompactIOList(const IOobject&, const Xfer<List<T> >&);
+        //- Move construct by transferring the List contents
+        CompactIOList(const IOobject&, List<T>&&);
+
+        //- Move constructor
+        CompactIOList(CompactIOList<T, BaseType>&&);
 
 
     // Destructor
@@ -114,25 +100,10 @@ public:
     // Member operators
 
         void operator=(const CompactIOList<T, BaseType>&);
+        void operator=(CompactIOList<T, BaseType>&&);
 
         void operator=(const List<T>&);
-
-
-    // IOstream operators
-
-        //- Read List from Istream, discarding contents of existing List.
-        friend Istream& operator>> <T, BaseType>
-        (
-            Istream&,
-            CompactIOList<T, BaseType>&
-        );
-
-        // Write List to Ostream.
-        friend Ostream& operator<< <T, BaseType>
-        (
-            Ostream&,
-            const CompactIOList<T, BaseType>&
-        );
+        void operator=(List<T>&&);
 };
 
 
@@ -142,7 +113,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "labelList.hpp"
+#include "IOList.hpp"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -153,7 +124,7 @@ void CML::CompactIOList<T, BaseType>::readFromStream()
 
     if (headerClassName() == IOList<T>::typeName)
     {
-        is >> static_cast<List<T>&>(*this);
+        is >> static_cast<ListCompactIO<T, BaseType>&>(*this);
         close();
     }
     else if (headerClassName() == typeName)
@@ -163,8 +134,10 @@ void CML::CompactIOList<T, BaseType>::readFromStream()
     }
     else
     {
-        FatalIOErrorInFunction(is)
-            << "unexpected class name " << headerClassName()
+        FatalIOErrorInFunction
+        (
+            is
+        )   << "unexpected class name " << headerClassName()
             << " expected " << typeName << " or " << IOList<T>::typeName
             << endl
             << "    while reading object " << name()
@@ -210,7 +183,7 @@ CML::CompactIOList<T, BaseType>::CompactIOList
     }
     else
     {
-        List<T>::setSize(size);
+        this->setSize(size);
     }
 }
 
@@ -234,7 +207,7 @@ CML::CompactIOList<T, BaseType>::CompactIOList
     }
     else
     {
-        List<T>::operator=(list);
+        ListCompactIO<T, BaseType>::operator=(list);
     }
 }
 
@@ -243,13 +216,12 @@ template<class T, class BaseType>
 CML::CompactIOList<T, BaseType>::CompactIOList
 (
     const IOobject& io,
-    const Xfer<List<T> >& list
+    List<T>&& list
 )
 :
-    regIOobject(io)
+    regIOobject(io),
+    ListCompactIO<T, BaseType>(move(list))
 {
-    List<T>::transfer(list());
-
     if
     (
         io.readOpt() == IOobject::MUST_READ
@@ -259,6 +231,17 @@ CML::CompactIOList<T, BaseType>::CompactIOList
         readFromStream();
     }
 }
+
+
+template<class T, class BaseType>
+CML::CompactIOList<T, BaseType>::CompactIOList
+(
+    CompactIOList<T, BaseType>&& list
+)
+:
+    regIOobject(move(list)),
+    List<T>(move(list))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -293,6 +276,25 @@ bool CML::CompactIOList<T, BaseType>::writeObject
 
         return good;
     }
+    else if (this->overflows())
+    {
+        WarningInFunction
+            << "Overall number of elements of CompactIOList of size "
+            << this->size() << " overflows the representation of a label"
+            << endl << "    Switching to ascii writing" << endl;
+
+        // Change type to be non-compact format type
+        const word oldTypeName = typeName;
+
+        const_cast<word&>(typeName) = IOList<T>::typeName;
+
+        bool good = regIOobject::writeObject(IOstream::ASCII, ver, cmp);
+
+        // Change type back
+        const_cast<word&>(typeName) = oldTypeName;
+
+        return good;
+    }
     else
     {
         return regIOobject::writeObject(fmt, ver, cmp);
@@ -315,94 +317,39 @@ void CML::CompactIOList<T, BaseType>::operator=
     const CompactIOList<T, BaseType>& rhs
 )
 {
-    List<T>::operator=(rhs);
+    ListCompactIO<T, BaseType>::operator=(rhs);
 }
 
 
 template<class T, class BaseType>
-void CML::CompactIOList<T, BaseType>::operator=(const List<T>& rhs)
-{
-    List<T>::operator=(rhs);
-}
-
-
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
-
-template<class T, class BaseType>
-CML::Istream& CML::operator>>
+void CML::CompactIOList<T, BaseType>::operator=
 (
-    CML::Istream& is,
-    CML::CompactIOList<T, BaseType>& L
+    CompactIOList<T, BaseType>&& rhs
 )
 {
-    // Read compact
-    const labelList start(is);
-    const List<BaseType> elems(is);
-
-    // Convert
-    L.setSize(start.size()-1);
-
-    forAll(L, i)
-    {
-        T& subList = L[i];
-
-        label index = start[i];
-        subList.setSize(start[i+1] - index);
-
-        forAll(subList, j)
-        {
-            subList[j] = elems[index++];
-        }
-    }
-
-    return is;
+    ListCompactIO<T, BaseType>::operator=(move(rhs));
 }
 
 
 template<class T, class BaseType>
-CML::Ostream& CML::operator<<
+void CML::CompactIOList<T, BaseType>::operator=
 (
-    CML::Ostream& os,
-    const CML::CompactIOList<T, BaseType>& L
+    const List<T>& rhs
 )
 {
-    // Keep ascii writing same.
-    if (os.format() == IOstream::ASCII)
-    {
-        os << static_cast<const List<T>&>(L);
-    }
-    else
-    {
-        // Convert to compact format
-        labelList start(L.size()+1);
-
-        start[0] = 0;
-        for (label i = 1; i < start.size(); i++)
-        {
-            start[i] = start[i-1]+L[i-1].size();
-        }
-
-        List<BaseType> elems(start[start.size()-1]);
-
-        label elemI = 0;
-        forAll(L, i)
-        {
-            const T& subList = L[i];
-
-            forAll(subList, j)
-            {
-                elems[elemI++] = subList[j];
-            }
-        }
-        os << start << elems;
-    }
-
-    return os;
+    ListCompactIO<T, BaseType>::operator=(rhs);
 }
 
 
+template<class T, class BaseType>
+void CML::CompactIOList<T, BaseType>::operator=
+(
+    List<T>&& rhs
+)
+{
+    ListCompactIO<T, BaseType>::operator=(move(rhs));
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

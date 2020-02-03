@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -40,12 +40,12 @@ inline CML::BiIndirectList<T>::BiIndirectList
 (
     const UList<T>& posList,
     const UList<T>& negList,
-    const Xfer<List<label> >& addr
+    List<label>&& addr
 )
 :
     posList_(const_cast<UList<T>&>(posList)),
     negList_(const_cast<UList<T>&>(negList)),
-    addressing_(addr)
+    addressing_(move(addr))
 {}
 
 
@@ -94,16 +94,6 @@ inline void CML::BiIndirectList<T>::resetAddressing
 )
 {
     addressing_ = addr;
-}
-
-
-template<class T>
-inline void CML::BiIndirectList<T>::resetAddressing
-(
-    const Xfer<List<label> >& addr
-)
-{
-    addressing_.transfer(addr());
 }
 
 
@@ -166,6 +156,22 @@ inline const T& CML::BiIndirectList<T>::operator[](const label i) const
     {
         return negList_[-index-1];
     }
+}
+
+
+template<class T>
+inline void CML::BiIndirectList<T>::operator=(List<T>&& ae)
+{
+    if (addressing_.size() != ae.size())
+    {
+        FatalErrorInFunction
+            << "Addressing and list of addressed elements "
+               "have different sizes: "
+            << addressing_.size() << " " << ae.size()
+            << abort(FatalError);
+    }
+
+    addressing_ = move(ae);
 }
 
 

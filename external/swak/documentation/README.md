@@ -2611,7 +2611,7 @@ These variables are added in the namespace to ease the writing of
 Python-code whose output is consistent with OF
 -   **timeName:** Name of the current time as a string. Allows the
     construction of directory names
--   **outputTime:** Boolean that indicates whether this is a timestep
+-   **writeTime:** Boolean that indicates whether this is a timestep
     where OpenFOAM will write output
 
 #### Additional operators from the `fvc`-namespace<a id="sec-9-8-1-9" name="sec-9-8-1-9"></a>
@@ -3326,7 +3326,7 @@ Fix provided by Bruno Santos
 
 `expressionFields` were calculated at every time-step, even if
 the computational cost was high. Now if `outputControl` is
-`outputTime` the field is only calculated if it is going to be
+`writeTime` the field is only calculated if it is going to be
 written
 
 #### Double `namespace Foam` makes compilation of `groovyJump` fail with `icc`<a id="sec-9-10-2-12" name="sec-9-10-2-12"></a>
@@ -3905,7 +3905,7 @@ when the function object will be executed. Possible values are:
     interval \(1\)
 -   **deltaT:** Approximately every `outputDeltaT` times it will be
     executed. The nearest possible timestep is used
--   **outputTime:** Executed whenever a regular output is scheduled
+-   **writeTime:** Executed whenever a regular output is scheduled
 
 #### `swakDataEntry` improved<a id="sec-9-12-6-6" name="sec-9-12-6-6"></a>
 
@@ -4113,7 +4113,7 @@ Passed a value where a reference would have been needed. Fixed
 
 #### `writeOften` writes all the time<a id="sec-9-13-6-13" name="sec-9-13-6-13"></a>
 
-Reason for this was a change of the interface of `outputTime` not
+Reason for this was a change of the interface of `writeTime` not
 being propagated to this function-object. Fixed
 
 #### Python-integration does not return single scalars as uniform<a id="sec-9-13-6-14" name="sec-9-13-6-14"></a>

@@ -10,13 +10,11 @@ potentialSolver.cpp
 """)
 
 caelus_inc = [
-'fvOptions/lnInclude',
 'sampling/lnInclude'
 ]
 
 caelus_libs = [
 'core',
-'fvOptions',
 'sampling'
 ]
 

@@ -133,9 +133,9 @@ void CML::streamLine::track()
 
     // Read or lookup fields
     PtrList<volScalarField> vsFlds;
-    PtrList<interpolation<scalar> > vsInterp;
+    PtrList<interpolation<scalar>> vsInterp;
     PtrList<volVectorField> vvFlds;
-    PtrList<interpolation<vector> > vvInterp;
+    PtrList<interpolation<vector>> vvInterp;
 
     label UIndex = -1;
 
@@ -303,7 +303,7 @@ void CML::streamLine::track()
         vvInterp,
         UIndex,         // index of U in vvInterp
 
-        trackDirection_ == trackDirection::FORWARD,
+        trackDirection_ == trackDirection::forward,
 
         nSubCycle_,     // automatic track control:step through cells in steps?
         trackLength_,   // fixed track length
@@ -319,14 +319,14 @@ void CML::streamLine::track()
     const scalar trackTime = CML::sqrt(GREAT);
 
     // Track
-    if (trackDirection_ == trackDirection::BOTH)
+    if (trackDirection_ == trackDirection::both)
     {
         initialParticles = particles;
     }
 
     particles.move(particles, td, trackTime);
 
-    if (trackDirection_ == trackDirection::BOTH)
+    if (trackDirection_ == trackDirection::both)
     {
         particles.IDLList<streamLineParticle>::operator=(initialParticles);
         td.trackForward_ = !td.trackForward_;
@@ -383,9 +383,9 @@ void CML::streamLine::read(const dictionary& dict)
 
         //dict_ = dict;
         dict.lookup("fields") >> fields_;
-        if (dict.found("UName"))
+        if (dict.found("U"))
         {
-            dict.lookup("UName") >> UName_;
+            dict.lookup("U") >> UName_;
         }
         else
         {
@@ -394,7 +394,7 @@ void CML::streamLine::read(const dictionary& dict)
             {
                 IOWarningInFunction(dict)
                     << "Using deprecated entry \"U\"."
-                    << " Please use \"UName\" instead."
+                    << " Please use \"U\" instead."
                     << endl;
                 dict.lookup("U") >> UName_;
             }
@@ -413,8 +413,8 @@ void CML::streamLine::read(const dictionary& dict)
         {
             trackDirection_ =
                 dict.lookupType<bool>("trackForward")
-              ? trackDirection::FORWARD
-              : trackDirection::BACKWARD;
+              ? trackDirection::forward
+              : trackDirection::backward;
         }
         else
         {
@@ -479,7 +479,7 @@ void CML::streamLine::read(const dictionary& dict)
         //Info<< "    using interpolation " << interpolationScheme_
         //    << endl;
 
-        cloudName_ = dict.lookupOrDefault<word>("cloudName", "streamLine");
+        cloudName_ = dict.lookupOrDefault<word>("cloud", "streamLine");
         dict.lookup("seedSampleSet") >> seedSet_;
 
         const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
@@ -577,10 +577,10 @@ void CML::streamLine::write()
                 // processors.
                 label trackI = 0;
 
-                forAll(recvMap, procI)
+                forAll(recvMap, proci)
                 {
-                    labelList& fromProc = recvMap[procI];
-                    fromProc.setSize(globalTrackIDs.localSize(procI));
+                    labelList& fromProc = recvMap[proci];
+                    fromProc.setSize(globalTrackIDs.localSize(proci));
                     forAll(fromProc, i)
                     {
                         fromProc[i] = trackI++;
@@ -598,8 +598,8 @@ void CML::streamLine::write()
             const mapDistribute distMap
             (
                 globalTrackIDs.size(),
-                sendMap.xfer(),
-                recvMap.xfer()
+                move(sendMap),
+                move(recvMap)
             );
 
 
@@ -608,7 +608,7 @@ void CML::streamLine::write()
             allTracks_.shrink();
             mapDistributeBase::distribute
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 distMap.schedule(),
                 distMap.constructSize(),
                 distMap.subMap(),
@@ -626,7 +626,7 @@ void CML::streamLine::write()
                 allScalars_[scalarI].shrink();
                 mapDistributeBase::distribute
                 (
-                    Pstream::scheduled,
+                    Pstream::commsTypes::scheduled,
                     distMap.schedule(),
                     distMap.constructSize(),
                     distMap.subMap(),
@@ -644,7 +644,7 @@ void CML::streamLine::write()
                 allVectors_[vectorI].shrink();
                 mapDistributeBase::distribute
                 (
-                    Pstream::scheduled,
+                    Pstream::commsTypes::scheduled,
                     distMap.schedule(),
                     distMap.constructSize(),
                     distMap.subMap(),
@@ -712,7 +712,7 @@ void CML::streamLine::write()
 
             if (allScalars_.size() > 0)
             {
-                List<List<scalarField> > scalarValues(allScalars_.size());
+                List<List<scalarField>> scalarValues(allScalars_.size());
 
                 forAll(allScalars_, scalarI)
                 {
@@ -753,7 +753,7 @@ void CML::streamLine::write()
 
             if (allVectors_.size() > 0)
             {
-                List<List<vectorField> > vectorValues(allVectors_.size());
+                List<List<vectorField>> vectorValues(allVectors_.size());
 
                 forAll(allVectors_, vectorI)
                 {

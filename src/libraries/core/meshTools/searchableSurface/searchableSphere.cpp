@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -264,7 +264,7 @@ void CML::searchableSphere::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     info.setSize(start.size());
@@ -322,7 +322,7 @@ void CML::searchableSphere::getNormal
 ) const
 {
     normal.setSize(info.size());
-    normal = vector::zero;
+    normal = Zero;
 
     forAll(info, i)
     {
@@ -347,19 +347,19 @@ void CML::searchableSphere::getVolumeType
 ) const
 {
     volType.setSize(points.size());
-    volType = volumeType::INSIDE;
+    volType = volumeType::inside;
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         if (magSqr(pt - centre_) <= sqr(radius_))
         {
-            volType[pointI] = volumeType::INSIDE;
+            volType[pointi] = volumeType::inside;
         }
         else
         {
-            volType[pointI] = volumeType::OUTSIDE;
+            volType[pointi] = volumeType::outside;
         }
     }
 }

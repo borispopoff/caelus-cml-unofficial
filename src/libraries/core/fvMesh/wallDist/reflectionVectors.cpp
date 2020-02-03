@@ -37,7 +37,7 @@ CML::reflectionVectors::reflectionVectors(const CML::fvMesh& mesh)
             mesh
         ),
         mesh,
-        dimensionedVector("n", dimless, vector::zero)
+        dimensionedVector("n", dimless, Zero)
     )
 {
     correct();
@@ -57,7 +57,7 @@ void CML::reflectionVectors::correct()
         // find the nearest face for every cell
         if (isA<wallFvPatch>(patches[patchi]))
         {
-            n_.boundaryField()[patchi] =
+            n_.boundaryFieldRef()[patchi] =
                 mesh.Sf().boundaryField()[patchi]
                /mesh.magSf().boundaryField()[patchi];
         }

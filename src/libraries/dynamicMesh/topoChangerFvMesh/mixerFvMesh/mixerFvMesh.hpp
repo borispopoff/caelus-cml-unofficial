@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -67,10 +67,10 @@ class mixerFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        mixerFvMesh(const mixerFvMesh&);
+        mixerFvMesh(const mixerFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const mixerFvMesh&);
+        void operator=(const mixerFvMesh&) = delete;
 
 
         //- Add mixer zones and modifiers

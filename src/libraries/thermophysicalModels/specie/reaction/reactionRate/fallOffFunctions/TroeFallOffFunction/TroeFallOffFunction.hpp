@@ -208,10 +208,10 @@ public:
     //- Write to stream
     inline void write(Ostream& os) const
     {
-        os.writeKeyword("alpha") << alpha_ << token::END_STATEMENT << nl;
-        os.writeKeyword("Tsss") << Tsss_ << token::END_STATEMENT << nl;
-        os.writeKeyword("Ts") << Ts_ << token::END_STATEMENT << nl;
-        os.writeKeyword("Tss") << Tss_ << token::END_STATEMENT << nl;
+        writeEntry(os, "alpha", alpha_);
+        writeEntry(os, "Tsss", Tsss_);
+        writeEntry(os, "Ts", Ts_);
+        writeEntry(os, "Tss", Tss_);
     }
 
 

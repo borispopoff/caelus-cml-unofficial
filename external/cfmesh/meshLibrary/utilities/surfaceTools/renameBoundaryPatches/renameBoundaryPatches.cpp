@@ -209,21 +209,21 @@ void renameBoundaryPatches::calculateNewBoundary()
         if( patchToNew[patchI] == -1 )
         {
             //- this patch is moved to the default patch
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                newBoundaryFaces.appendList(faces[faceI]);
+                newBoundaryFaces.appendList(faces[facei]);
                 newBoundaryPatches.append(newPatchI-1);
-                newBoundaryOwners.append(owner[faceI]);
+                newBoundaryOwners.append(owner[facei]);
             }
         }
         else
         {
             //- this patch is renamed
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                newBoundaryFaces.appendList(faces[faceI]);
+                newBoundaryFaces.appendList(faces[facei]);
                 newBoundaryPatches.append(patchToNew[patchI]);
-                newBoundaryOwners.append(owner[faceI]);
+                newBoundaryOwners.append(owner[facei]);
             }
         }
     }

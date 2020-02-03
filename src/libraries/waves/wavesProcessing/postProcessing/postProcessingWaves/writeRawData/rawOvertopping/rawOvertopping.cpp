@@ -42,7 +42,7 @@ addToRunTimeSelectionTable
 
 void rawOvertopping::resizeFields
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     List<vectorField>& Us,
     label N
 )
@@ -60,14 +60,14 @@ void rawOvertopping::resizeFields
 
 void rawOvertopping::writeRawData
 (
-    const List<std::pair<scalar, label> >& timeLabel,
+    const List<std::pair<scalar, label>>& timeLabel,
     const wordList& OTnames,
     const List<vectorField>& OTs
 )
 {
     // Write the time vector
     scalarField output0(timeLabel.size(), 0.0);
-    vectorField output1(timeLabel.size(), vector::zero);
+    vectorField output1(timeLabel.size(), Zero);
 
     {
         forAll (timeLabel, labeli)
@@ -140,7 +140,7 @@ rawOvertopping::~rawOvertopping()
 
 void rawOvertopping::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     wordList OTnames;
     List<vectorField> OTs;
 
@@ -152,7 +152,7 @@ void rawOvertopping::evaluate()
 
 void rawOvertopping::readOvertoppingData
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     wordList& OTnames,
     List<vectorField>& OTs
 )
@@ -226,7 +226,7 @@ void rawOvertopping::readOvertoppingData
 
             forAll (OTs, OTI)
             {
-                vector temp(vector::zero);
+                vector temp(Zero);
 
                 // Reading the first vector component with starting parenteres
                 iss >> dummy;

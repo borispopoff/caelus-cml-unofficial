@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2016 OpenCFD Ltd
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -95,11 +95,14 @@ void CML::Time::readDict()
     }
 
     scalar oldWriteInterval = writeInterval_;
-    scalar oldSecondaryWriteInterval = secondaryWriteInterval_;
 
     if (controlDict_.readIfPresent("writeInterval", writeInterval_))
     {
-        if (writeControl_ == wcTimeStep && label(writeInterval_) < 1)
+        if
+        (
+            writeControl_ == writeControl::timeStep
+         && label(writeInterval_) < 1
+        )
         {
             FatalIOErrorInFunction(controlDict_)
                 << "writeInterval < 1 for writeControl timeStep"
@@ -112,77 +115,19 @@ void CML::Time::readDict()
     }
 
 
-    // Additional writing
-    if (controlDict_.found("secondaryWriteControl"))
-    {
-        secondaryWriteControl_ = writeControlNames_.read
-        (
-            controlDict_.lookup("secondaryWriteControl")
-        );
-
-        if
-        (
-            controlDict_.readIfPresent
-            (
-                "secondaryWriteInterval",
-                secondaryWriteInterval_
-            )
-        )
-        {
-            if
-            (
-                secondaryWriteControl_ == wcTimeStep
-             && label(secondaryWriteInterval_) < 1
-            )
-            {
-                FatalIOErrorInFunction(controlDict_)
-                    << "secondaryWriteInterval < 1"
-                    << " for secondaryWriteControl timeStep"
-                    << exit(FatalIOError);
-            }
-        }
-        else
-        {
-            controlDict_.lookup("secondaryWriteFrequency")
-                >> secondaryWriteInterval_;
-        }
-    }
-
-
-
     if (oldWriteInterval != writeInterval_)
     {
         switch (writeControl_)
         {
-            case wcRunTime:
-            case wcAdjustableRunTime:
-                // Recalculate outputTimeIndex_ to be in units of current
+            case writeControl::runTime:
+            case writeControl::adjustableRunTime:
+                // Recalculate writeTimeIndex_ to be in units of current
                 // writeInterval.
-                outputTimeIndex_ = label
+                writeTimeIndex_ = label
                 (
-                    outputTimeIndex_
+                    writeTimeIndex_
                   * oldWriteInterval
                   / writeInterval_
-                );
-            break;
-
-            default:
-            break;
-        }
-    }
-    if (oldSecondaryWriteInterval != secondaryWriteInterval_)
-    {
-        switch (secondaryWriteControl_)
-        {
-            case wcRunTime:
-            case wcAdjustableRunTime:
-                // Recalculate secondaryOutputTimeIndex_ to be in units of
-                // current writeInterval.
-                secondaryOutputTimeIndex_ = label
-                (
-                    secondaryOutputTimeIndex_
-                  * oldSecondaryWriteInterval
-                  / secondaryWriteInterval_
                 );
             break;
 
@@ -210,15 +155,15 @@ void CML::Time::readDict()
 
         if (formatName == "general")
         {
-            format_ = general;
+            format_ = format::general;
         }
         else if (formatName == "fixed")
         {
-            format_ = fixed;
+            format_ = format::fixed;
         }
         else if (formatName == "scientific")
         {
-            format_ = scientific;
+            format_ = format::scientific;
         }
         else
         {
@@ -236,7 +181,7 @@ void CML::Time::readDict()
     {
         stopAt_ = stopAtControlNames_.read(controlDict_.lookup("stopAt"));
 
-        if (stopAt_ == saEndTime)
+        if (stopAt_ == stopAtControl::endTime)
         {
             controlDict_.lookup("endTime") >> endTime_;
         }
@@ -371,6 +316,39 @@ void CML::Time::readModifiedObjects()
 }
 
 
+bool CML::Time::writeTimeDict() const
+{
+    const word tmName(timeName());
+
+    IOdictionary timeDict
+    (
+        IOobject
+        (
+            "time",
+            tmName,
+            "uniform",
+            *this,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+    timeDict.add("value", timeName(timeToUserTime(value()), maxPrecision_));
+    timeDict.add("name", string(tmName));
+    timeDict.add("index", timeIndex_);
+    timeDict.add("deltaT", timeToUserTime(deltaT_));
+    timeDict.add("deltaT0", timeToUserTime(deltaT0_));
+
+    return timeDict.regIOobject::writeObject
+    (
+        IOstream::ASCII,
+        IOstream::currentVersion,
+        IOstream::UNCOMPRESSED
+    );
+}
+
+
 bool CML::Time::writeObject
 (
     IOstream::streamFormat fmt,
@@ -378,7 +356,7 @@ bool CML::Time::writeObject
     IOstream::compressionType cmp
 ) const
 {
-    if (outputTime())
+    if (writeTime())
     {
         addProfiling(writing, "objectRegistry::writeObject");
 
@@ -407,13 +385,17 @@ bool CML::Time::writeObject
         timeDict.regIOobject::writeObject(fmt, ver, cmp);
         bool writeOK = objectRegistry::writeObject(fmt, ver, cmp);
 
-        if (writeOK && purgeWrite_)
+        if (writeOK)
         {
-            previousOutputTimes_.push(tmName);
-
-            while (previousOutputTimes_.size() > purgeWrite_)
+            // Does the writeTime trigger purging?
+            if (writeTime_ && purgeWrite_)
             {
-                rmDir(objectRegistry::path(previousOutputTimes_.pop()));
+                previousWriteTimes_.push(tmName);
+
+                while (previousWriteTimes_.size() > purgeWrite_)
+                {
+                    rmDir(objectRegistry::path(previousWriteTimes_.pop()));
+                }
             }
         }
 
@@ -428,14 +410,14 @@ bool CML::Time::writeObject
 
 bool CML::Time::writeNow()
 {
-    outputTime_ = true;
+    writeTime_ = true;
     return write();
 }
 
 
 bool CML::Time::writeAndEnd()
 {
-    stopAt_  = saWriteNow;
+    stopAt_  = stopAtControl::writeNow;
     endTime_ = value();
 
     return writeNow();

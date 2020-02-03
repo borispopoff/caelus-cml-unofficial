@@ -71,7 +71,7 @@ inline const CML::vector& CML::pointData::v() const
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline void CML::pointData::transform
 (
     const tensor& rotTensor,
@@ -84,11 +84,11 @@ inline void CML::pointData::transform
 
 
 // Update this with information from connected edge
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::pointData::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const label edgeI,
     const pointData& edgeInfo,
     const scalar tol,
@@ -100,7 +100,7 @@ inline bool CML::pointData::updatePoint
         pointEdgePoint::updatePoint
         (
             mesh,
-            pointI,
+            pointi,
             edgeI,
             edgeInfo,
             tol,
@@ -119,11 +119,11 @@ inline bool CML::pointData::updatePoint
 }
 
 // Update this with new information on same point
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::pointData::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const pointData& newPointInfo,
     const scalar tol,
     TrackingData& td
@@ -134,7 +134,7 @@ inline bool CML::pointData::updatePoint
         pointEdgePoint::updatePoint
         (
             mesh,
-            pointI,
+            pointi,
             newPointInfo,
             tol,
             td
@@ -153,7 +153,7 @@ inline bool CML::pointData::updatePoint
 
 
 // Update this with new information on same point. No extra information.
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::pointData::updatePoint
 (
     const pointData& newPointInfo,
@@ -175,12 +175,12 @@ inline bool CML::pointData::updatePoint
 
 
 // Update this with information from connected point
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::pointData::updateEdge
 (
     const polyMesh& mesh,
     const label edgeI,
-    const label pointI,
+    const label pointi,
     const pointData& pointInfo,
     const scalar tol,
     TrackingData& td
@@ -193,7 +193,7 @@ inline bool CML::pointData::updateEdge
         (
             mesh,
             edgeI,
-            pointI,
+            pointi,
             pointInfo,
             tol,
             td

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -88,7 +88,7 @@ public:
 
 private:
 
-    // Private member data
+    // Private data
 
         //- Merging distance
         scalar mergeDist_;
@@ -99,8 +99,8 @@ private:
         //- Bounding box settings
         IOdictionary dict_;
 
-        //- bounding boxes of all processors
-        List<List<treeBoundBox> > procBb_;
+        //- Bounding boxes of all processors
+        List<List<treeBoundBox>> procBb_;
 
         //- Global triangle numbering
         mutable autoPtr<globalIndex> globalTris_;
@@ -150,7 +150,7 @@ private:
 
                 DynamicList<segment>&,
                 DynamicList<label>&,
-                List<DynamicList<label> >&
+                List<DynamicList<label>>&
             ) const;
 
             //- Divide edges into local and remote segments. Construct map to
@@ -208,8 +208,8 @@ private:
 
         // Surface redistribution
 
-            //- Finds new bounds based on an indepedent decomposition.
-            List<List<treeBoundBox> > independentlyDistributedBbs
+            //- Finds new bounds based on an independent decomposition.
+            List<List<treeBoundBox>> independentlyDistributedBbs
             (
                 const triSurface&
             );
@@ -288,10 +288,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        distributedTriSurfaceMesh(const distributedTriSurfaceMesh&);
+        distributedTriSurfaceMesh(const distributedTriSurfaceMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const distributedTriSurfaceMesh&);
+        void operator=(const distributedTriSurfaceMesh&) = delete;
 
 
 public:
@@ -376,7 +376,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const;
 
             //- From a set of points and indices get the region

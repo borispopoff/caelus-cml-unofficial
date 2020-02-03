@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,12 +56,12 @@ CML::pointZone::pointZone
 CML::pointZone::pointZone
 (
     const word& name,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index,
     const pointZoneMesh& zm
 )
 :
-    zone(name, addr, index),
+    zone(name, move(addr), index),
     zoneMesh_(zm)
 {}
 
@@ -95,12 +95,12 @@ CML::pointZone::pointZone
 CML::pointZone::pointZone
 (
     const pointZone& pz,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index,
     const pointZoneMesh& zm
 )
 :
-    zone(pz, addr, index),
+    zone(pz, move(addr), index),
     zoneMesh_(zm)
 {}
 
@@ -139,37 +139,37 @@ bool CML::pointZone::checkParallelSync(const bool report) const
     labelList minZone(mesh.nPoints(), labelMax);
     forAll(*this, i)
     {
-        label pointI = operator[](i);
-        maxZone[pointI] = index();
-        minZone[pointI] = index();
+        label pointi = operator[](i);
+        maxZone[pointi] = index();
+        minZone[pointi] = index();
     }
     syncTools::syncPointList(mesh, maxZone, maxEqOp<label>(), label(-1));
     syncTools::syncPointList(mesh, minZone, minEqOp<label>(), labelMax);
 
     bool error = false;
 
-    forAll(maxZone, pointI)
+    forAll(maxZone, pointi)
     {
         // Check point in same (or no) zone on all processors
         if
         (
             (
-                maxZone[pointI] != -1
-             || minZone[pointI] != labelMax
+                maxZone[pointi] != -1
+             || minZone[pointi] != labelMax
             )
-         && (maxZone[pointI] != minZone[pointI])
+         && (maxZone[pointi] != minZone[pointi])
         )
         {
             if (report && !error)
             {
                 Info<< " ***Problem with pointZone " << index()
                     << " named " << name()
-                    << ". Point " << pointI
-                    << " at " << mesh.points()[pointI]
+                    << ". Point " << pointi
+                    << " at " << mesh.points()[pointi]
                     << " is in zone "
-                    << (minZone[pointI] == labelMax ? -1 : minZone[pointI])
+                    << (minZone[pointi] == labelMax ? -1 : minZone[pointi])
                     << " on some processors and in zone "
-                    << maxZone[pointI]
+                    << maxZone[pointi]
                     << " on some other processors." << nl
                     << "(suppressing further warnings)"
                     << endl;
@@ -187,7 +187,7 @@ void CML::pointZone::writeDict(Ostream& os) const
     os  << nl << name_ << nl << token::BEGIN_BLOCK << nl
         << "    type " << type() << token::END_STATEMENT << nl;
 
-    writeEntry(this->labelsName, os);
+    writeEntry(os, this->labelsName, *this);
 
     os  << token::END_BLOCK << endl;
 }
@@ -198,21 +198,28 @@ void CML::pointZone::writeDict(Ostream& os) const
 void CML::pointZone::operator=(const pointZone& zn)
 {
     clearAddressing();
-    labelList::operator=(zn);
+    zone::operator=(zn);
+}
+
+
+void CML::pointZone::operator=(pointZone&& zn)
+{
+    clearAddressing();
+    zone::operator=(move(zn));
 }
 
 
 void CML::pointZone::operator=(const labelUList& addr)
 {
     clearAddressing();
-    labelList::operator=(addr);
+    zone::operator=(addr);
 }
 
 
-void CML::pointZone::operator=(const Xfer<labelList>& addr)
+void CML::pointZone::operator=(labelList&& addr)
 {
     clearAddressing();
-    labelList::operator=(addr);
+    zone::operator=(move(addr));
 }
 
 

@@ -99,14 +99,14 @@ class sampledCuttingPlane
 
         //- sample field on faces
         template<class Type>
-        tmp<Field<Type> > sampleField
+        tmp<Field<Type>> sampleField
         (
             const GeometricField<Type, fvPatchField, volMesh>& vField
         ) const;
 
 
         template<class Type>
-        tmp<Field<Type> >
+        tmp<Field<Type>>
         interpolateField(const interpolation<Type>&) const;
 
 
@@ -256,18 +256,18 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledCuttingPlane::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
 {
-    return tmp<Field<Type> >(new Field<Type>(vField, surface().meshCells()));
+    return tmp<Field<Type>>(new Field<Type>(vField, surface().meshCells()));
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledCuttingPlane::interpolateField
 (
     const interpolation<Type>& interpolator
@@ -279,13 +279,13 @@ CML::sampledCuttingPlane::interpolateField
 
     if (subMeshPtr_.valid())
     {
-        tmp<GeometricField<Type, fvPatchField, volMesh> > tvolSubFld =
+        tmp<GeometricField<Type, fvPatchField, volMesh>> tvolSubFld =
             subMeshPtr_().interpolate(volFld);
 
         const GeometricField<Type, fvPatchField, volMesh>& volSubFld =
             tvolSubFld();
 
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > tpointSubFld =
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> tpointSubFld =
             volPointInterpolation::New(volSubFld.mesh()).interpolate(volSubFld);
 
         // Sample.
@@ -301,7 +301,7 @@ CML::sampledCuttingPlane::interpolateField
     }
     else
     {
-        tmp<GeometricField<Type, pointPatchField, pointMesh> > tpointFld
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> tpointFld
         (
             volPointInterpolation::New(volFld.mesh()).interpolate(volFld)
         );

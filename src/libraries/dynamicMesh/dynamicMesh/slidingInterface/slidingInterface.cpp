@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -295,7 +295,7 @@ CML::slidingInterface::slidingInterface
 
         retiredPointMapPtr_ = new Map<label>(dict.lookup("retiredPointMap"));
         cutPointEdgePairMapPtr_ =
-            new Map<Pair<edge> >(dict.lookup("cutPointEdgePairMap"));
+            new Map<Pair<edge>>(dict.lookup("cutPointEdgePairMap"));
     }
     else
     {
@@ -431,7 +431,7 @@ void CML::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
 
         const Map<label>& rpm = retiredPointMap();
 
-        const Map<Pair<edge> >& cpepm = cutPointEdgePairMap();
+        const Map<Pair<edge>>& cpepm = cutPointEdgePairMap();
 
         const Map<label>& slaveZonePointMap =
             mesh.faceZones()[slaveFaceZoneID_.index()]().meshPointMap();
@@ -447,10 +447,10 @@ void CML::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
         const pointField& slaveLocalPoints = slavePatch.localPoints();
         const vectorField& slavePointNormals = slavePatch.pointNormals();
 
-        forAll(cutPoints, pointI)
+        forAll(cutPoints, pointi)
         {
             // Try to find the cut point in retired points
-            Map<label>::const_iterator rpmIter = rpm.find(cutPoints[pointI]);
+            Map<label>::const_iterator rpmIter = rpm.find(cutPoints[pointi]);
 
             if (rpmIter != rpm.end())
             {
@@ -460,7 +460,7 @@ void CML::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
                 }
 
                 // Cut point is a retired point
-                motionPoints[cutPoints[pointI]] =
+                motionPoints[cutPoints[pointi]] =
                     projectedSlavePoints[slaveZonePointMap.find(rpmIter())()];
             }
             else
@@ -468,13 +468,13 @@ void CML::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
                 // A cut point is not a projected slave point.  Therefore, it
                 // must be an edge-to-edge intersection.
 
-                Map<Pair<edge> >::const_iterator cpepmIter =
-                    cpepm.find(cutPoints[pointI]);
+                Map<Pair<edge>>::const_iterator cpepmIter =
+                    cpepm.find(cutPoints[pointi]);
 
                 if (cpepmIter != cpepm.end())
                 {
                     // Pout<< "Need to re-create hit for point "
-                    //     << cutPoints[pointI]
+                    //     << cutPoints[pointi]
                     //     << " lookup: " << cpepmIter()
                     //     << endl;
 
@@ -594,7 +594,7 @@ void CML::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
                             )
                             {
                                 // Cut both master and slave.
-                                motionPoints[cutPoints[pointI]] =
+                                motionPoints[cutPoints[pointi]] =
                                     masterCutPoint;
                             }
                         }
@@ -624,7 +624,7 @@ void CML::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
                 else
                 {
                     FatalErrorInFunction
-                        << "Cut point " << cutPoints[pointI]
+                        << "Cut point " << cutPoints[pointi]
                         << " not recognised as either the projected "
                         << "or as intersection point.  Error in point "
                         << "projection or data mapping"
@@ -793,10 +793,10 @@ void CML::slidingInterface::writeDict(Ostream& os) const
 
     if (attached_)
     {
-        masterFaceCellsPtr_->writeEntry("masterFaceCells", os);
-        slaveFaceCellsPtr_->writeEntry("slaveFaceCells", os);
-        masterStickOutFacesPtr_->writeEntry("masterStickOutFaces", os);
-        slaveStickOutFacesPtr_->writeEntry("slaveStickOutFaces", os);
+        writeEntry(os, "masterFaceCells", *masterFaceCellsPtr_);
+        writeEntry(os, "slaveFaceCells", *slaveFaceCellsPtr_);
+        writeEntry(os, "masterStickOutFaces", *masterStickOutFacesPtr_);
+        writeEntry(os, "slaveStickOutFaces", *slaveStickOutFacesPtr_);
 
          os << "    retiredPointMap " << retiredPointMap()
             << token::END_STATEMENT << nl

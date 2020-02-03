@@ -135,17 +135,17 @@ CML::Istream& CML::topoSetSource::checkIs(Istream& is)
 void CML::topoSetSource::addOrDelete
 (
     topoSet& set,
-    const label cellI,
+    const label celli,
     const bool add
 ) const
 {
     if (add)
     {
-        set.insert(cellI);
+        set.insert(celli);
     }
     else
     {
-        set.erase(cellI);
+        set.erase(celli);
     }
 }
 

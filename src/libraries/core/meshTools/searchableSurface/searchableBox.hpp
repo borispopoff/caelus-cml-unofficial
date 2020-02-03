@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -79,13 +79,6 @@ private:
         ) const;
 
 
-        //- Disallow default bitwise copy construct
-        searchableBox(const searchableBox&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableBox&);
-
-
 public:
 
     //- Runtime type information
@@ -103,6 +96,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        searchableBox(const searchableBox&) = delete;
+
 
     //- Destructor
     virtual ~searchableBox();
@@ -227,7 +224,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const;
 
             //- From a set of points and indices get the region
@@ -260,6 +257,12 @@ public:
                 NotImplemented;
                 return false;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableBox&) = delete;
 };
 
 

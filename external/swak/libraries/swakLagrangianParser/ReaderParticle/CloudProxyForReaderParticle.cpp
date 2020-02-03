@@ -67,21 +67,21 @@ CloudProxyForReaderParticle::~CloudProxyForReaderParticle()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-tmp<Field<scalar> > CloudProxyForReaderParticle::getScalarField(
+tmp<Field<scalar>> CloudProxyForReaderParticle::getScalarField(
     const word &name
 ) const
 {
     if(readerCloud_.hasScalar(name)) {
-        return tmp<Field<scalar> >(
+        return tmp<Field<scalar>>(
             new Field<scalar>(readerCloud_.getScalarField(name))
         );
     }
     if(readerCloud_.hasLabel(name)) {
         Field<label> orig(readerCloud_.getLabelField(name));
-        tmp<Field<scalar> > result(new Field<scalar>(orig.size()));
+        tmp<Field<scalar>> result(new Field<scalar>(orig.size()));
         forAll(orig,i)
         {
-            result()[i]=orig[i];
+            result.ref()[i]=orig[i];
         }
         return result;
     }
@@ -89,12 +89,12 @@ tmp<Field<scalar> > CloudProxyForReaderParticle::getScalarField(
     return CloudProxyForParticle<ReaderParticleCloud>::getScalarField(name);
 }
 
-tmp<Field<vector> > CloudProxyForReaderParticle::getVectorField(
+tmp<Field<vector>> CloudProxyForReaderParticle::getVectorField(
     const word &name
 ) const
 {
     if(readerCloud_.hasVector(name)) {
-        return tmp<Field<vector> >(
+        return tmp<Field<vector>>(
             new Field<vector>(readerCloud_.getVectorField(name))
         );
     }
@@ -102,12 +102,12 @@ tmp<Field<vector> > CloudProxyForReaderParticle::getVectorField(
     return CloudProxyForParticle<ReaderParticleCloud>::getVectorField(name);
 }
 
-tmp<Field<tensor> > CloudProxyForReaderParticle::getTensorField(
+tmp<Field<tensor>> CloudProxyForReaderParticle::getTensorField(
     const word &name
 ) const
 {
     if(readerCloud_.hasTensor(name)) {
-        return tmp<Field<tensor> >(
+        return tmp<Field<tensor>>(
             new Field<tensor>(readerCloud_.getTensorField(name))
         );
     }
@@ -115,12 +115,12 @@ tmp<Field<tensor> > CloudProxyForReaderParticle::getTensorField(
     return CloudProxyForParticle<ReaderParticleCloud>::getTensorField(name);
 }
 
-tmp<Field<symmTensor> > CloudProxyForReaderParticle::getSymmTensorField(
+tmp<Field<symmTensor>> CloudProxyForReaderParticle::getSymmTensorField(
     const word &name
 ) const
 {
     if(readerCloud_.hasSymmTensor(name)) {
-        return tmp<Field<symmTensor> >(
+        return tmp<Field<symmTensor>>(
             new Field<symmTensor>(readerCloud_.getSymmTensorField(name))
         );
     }
@@ -128,12 +128,12 @@ tmp<Field<symmTensor> > CloudProxyForReaderParticle::getSymmTensorField(
     return CloudProxyForParticle<ReaderParticleCloud>::getSymmTensorField(name);
 }
 
-tmp<Field<sphericalTensor> > CloudProxyForReaderParticle::getSphericalTensorField(
+tmp<Field<sphericalTensor>> CloudProxyForReaderParticle::getSphericalTensorField(
     const word &name
 ) const
 {
     if(readerCloud_.hasSphericalTensor(name)) {
-        return tmp<Field<sphericalTensor> >(
+        return tmp<Field<sphericalTensor>>(
             new Field<sphericalTensor>(readerCloud_.getSphericalTensorField(name))
         );
     }

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -32,11 +32,7 @@ SourceFiles
 #define tmp_H
 
 #include "refCount.hpp"
-#include <cstddef>
-
-#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
-#   define ConstructFromTmp
-#endif
+#include "word.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,19 +46,32 @@ namespace CML
 template<class T>
 class tmp
 {
-    // Private data
+    // Private Data
 
-        //- Flag for whether object is a temporary or a constant object
-        bool isTmp_;
+        //- Object types
+        enum type
+        {
+            TMP,
+            CONST_REF
+        };
 
-        //- Pointer to temporary object
+        //- Type of object
+        type type_;
+
+        //- Pointer to object
         mutable T* ptr_;
 
-        //- Const reference to constant object
-        const T& ref_;
+
+    // Private member operators
+
+        inline void operator++();
 
 
 public:
+
+    typedef T Type;
+    typedef CML::refCount refCount;
+
 
     // Constructors
 
@@ -75,11 +84,14 @@ public:
         //- Construct copy and increment reference count
         inline tmp(const tmp<T>&);
 
+        //- Construct copy moving content, does not increment reference count
+        inline tmp(const tmp<T>&&);
+
         //- Construct copy transferring content of temporary if required
         inline tmp(const tmp<T>&, bool allowTransfer);
 
 
-    //- Destructor, delete object when reference count == 0
+    //- Destructor: deletes temporary object when the reference count is 0
     inline ~tmp();
 
 
@@ -98,7 +110,16 @@ public:
             //  ie, it is a reference or a temporary that has been allocated
             inline bool valid() const;
 
+            //- Return the type name of the tmp
+            //  constructed from the type name of T
+            inline word typeName() const;
+
+
         // Edit
+
+            //- Return non-const reference or generate a fatal error
+            //  if the object is const.
+            inline T& ref() const;
 
             //- Return tmp pointer for reuse.
             //  Returns a clone if the object is not a temporary
@@ -109,10 +130,13 @@ public:
             inline void clear() const;
 
 
-    // Member operators
+    // Member Operators
 
-        //- Dereference operator
+        #ifdef NON_CONST_TMP
+        //- Deprecated non-const dereference operator.
+        //  Use ref() where non-const access is required
         inline T& operator()();
+        #endif
 
         //- Const dereference operator
         inline const T& operator()() const;
@@ -129,7 +153,7 @@ public:
         //- Assignment to pointer changing this tmp to a temporary T
         inline void operator=(T*);
 
-        //- Assignment operator
+        //- Assignment transfering the temporary T to this tmp
         inline void operator=(const tmp<T>&);
 };
 

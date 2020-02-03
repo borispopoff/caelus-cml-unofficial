@@ -35,12 +35,12 @@ CML::tetIndices::tetIndices
 (
     label celli,
     label facei,
-    label tetPtI
+    label tetPti
 )
 :
     celli_(celli),
     facei_(facei),
-    tetPti_(tetPtI)
+    tetPti_(tetPti)
 {}
 
 

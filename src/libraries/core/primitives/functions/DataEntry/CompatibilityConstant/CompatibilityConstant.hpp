@@ -69,12 +69,6 @@ class CompatibilityConstant
         dimensionSet dimensions_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const CompatibilityConstant<Type>&);
-
-
 public:
 
     // Runtime type information
@@ -90,9 +84,9 @@ public:
         CompatibilityConstant(const CompatibilityConstant<Type>& cnst);
 
         //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
+        virtual tmp<DataEntry<Type>> clone() const
         {
-            return tmp<DataEntry<Type> >
+            return tmp<DataEntry<Type>>
             (
                 new CompatibilityConstant<Type>(*this)
             );
@@ -133,6 +127,12 @@ public:
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CompatibilityConstant<Type>&) = delete;
 };
 
 

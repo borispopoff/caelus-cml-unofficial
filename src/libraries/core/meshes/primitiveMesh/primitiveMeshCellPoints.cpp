@@ -53,18 +53,18 @@ const CML::labelListList& CML::primitiveMesh::cellPoints() const
 
 const CML::labelList& CML::primitiveMesh::cellPoints
 (
-    const label cellI,
+    const label celli,
     DynamicList<label>& storage
 ) const
 {
     if (hasCellPoints())
     {
-        return cellPoints()[cellI];
+        return cellPoints()[celli];
     }
     else
     {
         const faceList& fcs = faces();
-        const labelList& cFaces = cells()[cellI];
+        const labelList& cFaces = cells()[celli];
 
         labelSet_.clear();
 
@@ -94,9 +94,9 @@ const CML::labelList& CML::primitiveMesh::cellPoints
 }
 
 
-const CML::labelList& CML::primitiveMesh::cellPoints(const label cellI) const
+const CML::labelList& CML::primitiveMesh::cellPoints(const label celli) const
 {
-    return cellPoints(cellI, labels_);
+    return cellPoints(celli, labels_);
 }
 
 

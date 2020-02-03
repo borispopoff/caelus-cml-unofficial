@@ -76,7 +76,7 @@ autoPtr<compressible::turbulenceModel> turbulence
 );
 
 Info<< "Creating reaction model\n" << endl;
-autoPtr<CombustionModel<psiReactionThermo> > reaction
+autoPtr<CombustionModel<psiReactionThermo>> reaction
 (
     CombustionModel<psiReactionThermo>::New(thermo, turbulence())
 );
@@ -117,5 +117,5 @@ volScalarField Qdot
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0.0)
+    dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0)
 );

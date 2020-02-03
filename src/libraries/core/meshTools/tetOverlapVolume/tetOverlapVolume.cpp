@@ -159,9 +159,9 @@ bool CML::tetOverlapVolume::cellCellOverlapMinDecomp
 
         const point& tetBasePtA = meshA.points()[fA[tetBasePtAI]];
 
-        for (label tetPtI = 1; tetPtI < fA.size() - 1; tetPtI++)
+        for (label tetPti = 1; tetPti < fA.size() - 1; tetPti++)
         {
-            label facePtAI = (tetPtI + tetBasePtAI) % fA.size();
+            label facePtAI = (tetPti + tetBasePtAI) % fA.size();
             label otherFacePtAI = fA.fcIndex(facePtAI);
 
             label pt0I = -1;
@@ -206,9 +206,9 @@ bool CML::tetOverlapVolume::cellCellOverlapMinDecomp
 
                 const point& tetBasePtB = meshB.points()[fB[tetBasePtBI]];
 
-                for (label tetPtI = 1; tetPtI < fB.size() - 1; tetPtI++)
+                for (label tetPti = 1; tetPti < fB.size() - 1; tetPti++)
                 {
-                    label facePtBI = (tetPtI + tetBasePtBI) % fB.size();
+                    label facePtBI = (tetPti + tetBasePtBI) % fB.size();
                     label otherFacePtBI = fB.fcIndex(facePtBI);
 
                     label pt0I = -1;
@@ -287,9 +287,9 @@ CML::scalar CML::tetOverlapVolume::cellCellOverlapVolumeMinDecomp
 
         const point& tetBasePtA = meshA.points()[fA[tetBasePtAI]];
 
-        for (label tetPtI = 1; tetPtI < fA.size() - 1; tetPtI++)
+        for (label tetPti = 1; tetPti < fA.size() - 1; tetPti++)
         {
-            label facePtAI = (tetPtI + tetBasePtAI) % fA.size();
+            label facePtAI = (tetPti + tetBasePtAI) % fA.size();
             label otherFacePtAI = fA.fcIndex(facePtAI);
 
             label pt0I = -1;
@@ -334,9 +334,9 @@ CML::scalar CML::tetOverlapVolume::cellCellOverlapVolumeMinDecomp
 
                 const point& tetBasePtB = meshB.points()[fB[tetBasePtBI]];
 
-                for (label tetPtI = 1; tetPtI < fB.size() - 1; tetPtI++)
+                for (label tetPti = 1; tetPti < fB.size() - 1; tetPti++)
                 {
-                    label facePtBI = (tetPtI + tetBasePtBI) % fB.size();
+                    label facePtBI = (tetPti + tetBasePtBI) % fB.size();
                     label otherFacePtBI = fB.fcIndex(facePtBI);
 
                     label pt0I = -1;

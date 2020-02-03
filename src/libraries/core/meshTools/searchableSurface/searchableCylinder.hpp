@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,10 +59,10 @@ private:
         //- 'right' point
         const point point2_;
 
-        //- length of vector point2-point1
+        //- Length of vector point2-point1
         const scalar magDir_;
 
-        //- normalised vector point2-point1
+        //- Normalised vector point2-point1
         const vector unitDir_;
 
         //- Radius squared
@@ -73,10 +73,10 @@ private:
 
 
     // Private Member Functions
-    
+
         //- Inherit findNearest from searchableSurface
         using searchableSurface::findNearest;
-    
+
         //- Find nearest point on cylinder.
         pointIndexHit findNearest
         (
@@ -99,10 +99,10 @@ private:
         boundBox calcBounds() const;
 
         //- Disallow default bitwise copy construct
-        searchableCylinder(const searchableCylinder&);
+        searchableCylinder(const searchableCylinder&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableCylinder&);
+        void operator=(const searchableCylinder&) = delete;
 
 
 public:
@@ -201,7 +201,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const;
 
             //- From a set of points and indices get the region

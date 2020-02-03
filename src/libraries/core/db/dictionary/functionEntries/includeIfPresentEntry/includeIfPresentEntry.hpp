@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,18 +54,17 @@ class includeIfPresentEntry
 :
     public includeEntry
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        includeIfPresentEntry(const includeIfPresentEntry&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const includeIfPresentEntry&);
 
 public:
 
     //- Runtime type information
     ClassName("includeIfPresent");
+
+
+    // Constructors
+
+        //- Disallow default bitwise copy construct
+        includeIfPresentEntry(const includeIfPresentEntry&) = delete;
 
 
     // Member Functions
@@ -81,6 +80,11 @@ public:
             Istream&
         );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const includeIfPresentEntry&) = delete;
 };
 
 

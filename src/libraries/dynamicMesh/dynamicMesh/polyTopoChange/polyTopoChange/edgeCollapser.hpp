@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,7 +49,7 @@ class face;
 class mapPolyMesh;
 
 /*---------------------------------------------------------------------------*\
-                           Class edgeCollapser Declaration
+                        Class edgeCollapser Declaration
 \*---------------------------------------------------------------------------*/
 
 class edgeCollapser
@@ -87,7 +87,7 @@ class edgeCollapser
         //  Note: Only routine that uses edgesToRemove!
         label changePointRegion
         (
-            const label pointI,
+            const label pointi,
             const label oldRegion,
             const label newRegion
         );
@@ -96,7 +96,7 @@ class edgeCollapser
         bool pointRemoved(const label) const;
 
         //- Renumber f with new vertices. Removes duplicates.
-        void filterFace(const label faceI, face&) const;
+        void filterFace(const label facei, face&) const;
 
         //- Some debugging printing
         void printRegions() const;
@@ -105,10 +105,10 @@ class edgeCollapser
         void collapseEdges(const labelList& edgeLabels);
 
         //- Disallow default bitwise copy construct
-        edgeCollapser(const edgeCollapser&);
+        edgeCollapser(const edgeCollapser&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const edgeCollapser&);
+        void operator=(const edgeCollapser&) = delete;
 
 
 public:

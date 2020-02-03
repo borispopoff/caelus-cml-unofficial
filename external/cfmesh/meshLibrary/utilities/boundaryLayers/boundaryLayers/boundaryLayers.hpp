@@ -90,14 +90,14 @@ class boundaryLayers
         boolList treatedPatch_;
 
         //- extrude patches with patch
-        List<DynList<label> > treatPatchesWithPatch_;
+        List<DynList<label>> treatPatchesWithPatch_;
 
         //- label of a new node (helper)
         labelLongList newLabelForVertex_;
 
         //- map storing labels of new vertices created at node
         //- and corner vertices
-        std::map<label, std::map<std::pair<label, label>, label> > otherVrts_;
+        std::map<label, std::map<std::pair<label, label>, label>> otherVrts_;
 
         //- a key assigned to each patch. It is needed to search in otherVrts_
         labelList patchKey_;
@@ -187,7 +187,7 @@ class boundaryLayers
         //- to create faces at parallel boundaries
         void createNewFacesFromPointsParallel
         (
-            const LongList<DynList<label, 4> >& faceCandidates,
+            const LongList<DynList<label, 4>>& faceCandidates,
             const LongList<labelPair>& candidatePatches
         );
 

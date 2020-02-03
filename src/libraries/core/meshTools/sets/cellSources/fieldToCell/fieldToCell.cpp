@@ -67,11 +67,11 @@ void CML::fieldToCell::applyToSet
         Info<< "    Adding all cells with value of field " << fieldName_
             << " within range " << min_ << ".." << max_ << endl;
 
-        forAll(field, cellI)
+        forAll(field, celli)
         {
-            if (field[cellI] >= min_ && field[cellI] <= max_)
+            if (field[celli] >= min_ && field[celli] <= max_)
             {
-                set.insert(cellI);
+                set.insert(celli);
             }
         }
     }
@@ -80,11 +80,11 @@ void CML::fieldToCell::applyToSet
         Info<< "    Removing all cells with value of field " << fieldName_
             << " within range " << min_ << ".." << max_ << endl;
 
-        forAll(field, cellI)
+        forAll(field, celli)
         {
-            if (field[cellI] >= min_ && field[cellI] <= max_)
+            if (field[celli] >= min_ && field[celli] <= max_)
             {
-                set.erase(cellI);
+                set.erase(celli);
             }
         }
     }
@@ -117,7 +117,7 @@ CML::fieldToCell::fieldToCell
 )
 :
     topoSetSource(mesh),
-    fieldName_(dict.lookup("fieldName")),
+    fieldName_(dict.lookup("field")),
     min_(readScalar(dict.lookup("min"))),
     max_(readScalar(dict.lookup("max")))
 {}
@@ -164,15 +164,15 @@ void CML::fieldToCell::applyToSet
 //    const polyBoundaryMesh& patches = mesh().boundaryMesh();
 //
 //    List<polyPatch*> newPatches(patches.size());
-//    forAll(patches, patchI)
+//    forAll(patches, patchi)
 //    {
-//        const polyPatch& pp = patches[patchI];
+//        const polyPatch& pp = patches[patchi];
 //
-//        newPatches[patchI] =
-//            patches[patchI].clone
+//        newPatches[patchi] =
+//            patches[patchi].clone
 //            (
 //                fMesh.boundaryMesh(),
-//                patchI,
+//                patchi,
 //                pp.size(),
 //                pp.start()
 //            ).ptr();

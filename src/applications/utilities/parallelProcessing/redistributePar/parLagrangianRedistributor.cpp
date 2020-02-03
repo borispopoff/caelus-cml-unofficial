@@ -67,7 +67,7 @@ void CML::parLagrangianRedistributor::findClouds
             mesh.time().timePath()
           / mesh.dbDir()
           / cloud::prefix,
-            fileName::DIRECTORY
+            fileType::directory
         )
     );
 
@@ -137,12 +137,12 @@ CML::parLagrangianRedistributor::redistributeLagrangianPositions
 
 
     // Allocate transfer buffers
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
     {
         // List of lists of particles to be transferred for all of the
         // neighbour processors
-        List<IDLList<passivePositionParticle> > particleTransferLists
+        List<IDLList<passivePositionParticle>> particleTransferLists
         (
             Pstream::nProcs()
         );
@@ -169,14 +169,14 @@ CML::parLagrangianRedistributor::redistributeLagrangianPositions
 
 
         // Stream into send buffers
-        forAll(particleTransferLists, procI)
+        forAll(particleTransferLists, proci)
         {
-            //Pout<< "To proc " << procI << " sending "
-            //    << particleTransferLists[procI] << endl;
-            if (particleTransferLists[procI].size())
+            //Pout<< "To proc " << proci << " sending "
+            //    << particleTransferLists[proci] << endl;
+            if (particleTransferLists[proci].size())
             {
-                UOPstream particleStream(procI, pBufs);
-                particleStream << particleTransferLists[procI];
+                UOPstream particleStream(proci, pBufs);
+                particleStream << particleTransferLists[proci];
             }
         }
     }
@@ -204,13 +204,13 @@ CML::parLagrangianRedistributor::redistributeLagrangianPositions
 
 
         // Retrieve from receive buffers
-        forAll(allNTrans, procI)
+        forAll(allNTrans, proci)
         {
-            label nRec = allNTrans[procI];
+            label nRec = allNTrans[proci];
 
             if (nRec)
             {
-                UIPstream particleStream(procI, pBufs);
+                UIPstream particleStream(proci, pBufs);
 
                 // Receive particles and locate them
                 IDLList<passivePositionParticle> newParticles
@@ -252,11 +252,11 @@ CML::parLagrangianRedistributor::redistributeLagrangianPositions
 
     labelListList constructMap(Pstream::nProcs());
     label constructSize = 0;
-    forAll(constructMap, procI)
+    forAll(constructMap, proci)
     {
-        const label nRecv = sizes[procI][UPstream::myProcNo()];
+        const label nRecv = sizes[proci][UPstream::myProcNo()];
 
-        labelList& map = constructMap[procI];
+        labelList& map = constructMap[proci];
 
         map.setSize(nRecv);
         forAll(map, i)
@@ -272,8 +272,8 @@ CML::parLagrangianRedistributor::redistributeLagrangianPositions
         new mapDistributeBase
         (
             constructSize,
-            subMap.xfer(),
-            constructMap.xfer()
+            std::move(subMap),
+            std::move(constructMap)
         )
     );
 }

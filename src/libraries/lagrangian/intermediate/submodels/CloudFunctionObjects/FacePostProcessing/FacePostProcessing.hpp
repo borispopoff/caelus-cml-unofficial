@@ -134,9 +134,9 @@ public:
         FacePostProcessing(const FacePostProcessing<CloudType>& ppm);
 
         //- Construct and return a clone
-        virtual autoPtr<CloudFunctionObject<CloudType> > clone() const
+        virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
-            return autoPtr<CloudFunctionObject<CloudType> >
+            return autoPtr<CloudFunctionObject<CloudType>>
             (
                 new FacePostProcessing<CloudType>(*this)
             );
@@ -198,7 +198,7 @@ void CML::FacePostProcessing<CloudType>::makeLogFile
         if (Pstream::master())
         {
             // Create directory if does not exist
-            mkDir(this->outputTimeDir());
+            mkDir(this->writeTimeDir());
 
             // Open new file at start up
             outputFilePtr_.set
@@ -206,7 +206,7 @@ void CML::FacePostProcessing<CloudType>::makeLogFile
                 zoneI,
                 new OFstream
                 (
-                    this->outputTimeDir()/(type() + '_' + zoneName + ".dat")
+                    this->writeTimeDir()/(type() + '_' + zoneName + ".dat")
                 )
             );
 
@@ -351,7 +351,7 @@ void CML::FacePostProcessing<CloudType>::write()
 
                 writer->write
                 (
-                    this->outputTimeDir(),
+                    this->writeTimeDir(),
                     fZone.name(),
                     allPoints,
                     allFaces,
@@ -362,7 +362,7 @@ void CML::FacePostProcessing<CloudType>::write()
 
                 writer->write
                 (
-                    this->outputTimeDir(),
+                    this->writeTimeDir(),
                     fZone.name(),
                     allPoints,
                     allFaces,

@@ -33,7 +33,7 @@ divSchemes
     div(phi,R)      Gauss liinearBJ;
     div(R)          Gauss linear;
     div(phi,nuTilda) Gauss linearBJ;
-    div((nuEff*dev(T(grad(U))))) Gauss linear;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes

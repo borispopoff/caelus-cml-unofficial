@@ -77,9 +77,9 @@ void polyMeshGenAddressing::makeCellCentresAndVols
     # ifdef USE_OMP
     # pragma omp parallel for if( nCells > 1000 )
     # endif
-    for(label cellI=0;cellI<nCells;++cellI)
+    for(label celli=0;celli<nCells;++celli)
     {
-        const cell& c = cells[cellI];
+        const cell& c = cells[celli];
 
         //- approximate the centre first
         vector cEst(vector::zero);
@@ -97,7 +97,7 @@ void polyMeshGenAddressing::makeCellCentresAndVols
             // Calculate 3*face-pyramid volume
             scalar pyr3Vol = (fAreas[c[fI]] & (fCtrs[c[fI]] - cEst));
 
-            if( own[c[fI]] != cellI )
+            if( own[c[fI]] != celli )
                 pyr3Vol *= -1.0;
 
             pyr3Vol = CML::max(pyr3Vol, VSMALL);
@@ -112,8 +112,8 @@ void polyMeshGenAddressing::makeCellCentresAndVols
             cellVol += pyr3Vol;
         }
 
-        cellCtrs[cellI] = cellCentre / cellVol;
-        cellVols[cellI] = cellVol / 3.0;
+        cellCtrs[celli] = cellCentre / cellVol;
+        cellVols[celli] = cellVol / 3.0;
     }
 }
 

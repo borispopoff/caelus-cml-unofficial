@@ -39,7 +39,7 @@ CML::label CML::checkTopology
     const bool allTopology,
     const bool allGeometry,
     const autoPtr<surfaceWriter>& surfWriter,
-    const autoPtr<writer<scalar> >& setWriter
+    const autoPtr<writer<scalar>>& setWriter
 )
 {
     label noFailedChecks = 0;

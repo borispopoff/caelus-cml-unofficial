@@ -12,7 +12,7 @@
         mesh
     );
 
-    p = dimensionedScalar("zero", p.dimensions(), 0.0);
+    p = dimensionedScalar("zero", p.dimensions(), 0);
 
 
     Info<< "Reading field U\n" << endl;

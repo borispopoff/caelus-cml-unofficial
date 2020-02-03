@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -44,7 +44,7 @@ CML::fileName::fileName(const wordList& lst)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-CML::fileName::Type CML::fileName::type() const
+CML::fileType CML::fileName::type() const
 {
     return ::CML::type(*this);
 }
@@ -79,7 +79,7 @@ CML::fileName& CML::fileName::toAbsolute()
 bool CML::fileName::clean()
 {
     // The top slash - we are never allowed to go above it
-    register string::size_type top = this->find('/');
+    string::size_type top = this->find('/');
 
     // No slashes - nothing to do
     if (top == string::npos)
@@ -88,17 +88,17 @@ bool CML::fileName::clean()
     }
 
     // Start with the '/' found:
-    register char prev = '/';
-    register string::size_type nChar  = top+1;
-    register string::size_type maxLen = this->size();
+    char prev = '/';
+    string::size_type nChar  = top+1;
+    string::size_type maxLen = this->size();
 
     for
     (
-        register string::size_type src = nChar;
+        string::size_type src = nChar;
         src < maxLen;
     )
     {
-        register char c = operator[](src++);
+        char c = operator[](src++);
 
         if (prev == '/')
         {
@@ -119,9 +119,9 @@ bool CML::fileName::clean()
 
 
                 // Peek at the next character
-                register char c1 = operator[](src);
+                char c1 = operator[](src);
 
-                // found '/./' - skip it
+                // Found '/./' - skip it
                 if (c1 == '/')
                 {
                     src++;
@@ -320,7 +320,7 @@ CML::wordList CML::fileName::components(const char delimiter) const
     }
 
     // Transfer to wordList
-    return wordList(wrdList.xfer());
+    return wordList(move(wrdList));
 }
 
 
@@ -339,6 +339,12 @@ CML::word CML::fileName::component
 void CML::fileName::operator=(const fileName& str)
 {
     string::operator=(str);
+}
+
+
+void CML::fileName::operator=(fileName&& str)
+{
+    string::operator=(move(str));
 }
 
 
@@ -413,7 +419,7 @@ CML::fileName CML::search(const word& file, const fileName& directory)
     }
 
     // If not found search each of the sub-directories
-    fileNameList dirs(readDir(directory, fileName::DIRECTORY));
+    fileNameList dirs(readDir(directory, fileType::directory));
     forAll(dirs, i)
     {
         fileName path = search(file, directory/dirs[i]);

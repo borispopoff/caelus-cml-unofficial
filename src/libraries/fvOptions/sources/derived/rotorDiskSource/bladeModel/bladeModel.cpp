@@ -86,7 +86,7 @@ CML::bladeModel::bladeModel(const dictionary& dict)
     chord_(),
     fName_(fileName::null)
 {
-    List<Tuple2<word, vector> > data;
+    List<Tuple2<word, vector>> data;
     if (readFromFile())
     {
         IFstream is(fName_);

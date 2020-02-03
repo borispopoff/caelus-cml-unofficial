@@ -142,7 +142,7 @@ void CML::CorrectPhi
             mesh
         ),
         mesh,
-        dimensionedScalar("pcorr", p.dimensions(), 0.0),
+        dimensionedScalar("pcorr", p.dimensions(), 0),
         pcorrTypes
     );
 
@@ -222,7 +222,7 @@ void CML::CorrectPhi
             mesh
         ),
         mesh,
-        dimensionedScalar("pcorr", p.dimensions(), 0.0),
+        dimensionedScalar("pcorr", p.dimensions(), 0),
         pcorrTypes
     );
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -115,9 +115,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new kqRWallFunctionFvPatchField(*this)
             );
@@ -131,12 +131,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new kqRWallFunctionFvPatchField(*this, iF)
             );
@@ -145,13 +145,11 @@ public:
 
     // Member functions
 
-        // Evaluation functions
-
-            //- Evaluate the patchField
-            virtual void evaluate
-            (
-				const Pstream::commsTypes commsType=Pstream::Pstream::blocking
-            );
+        //- Evaluate the patchField
+        virtual void evaluate
+        (
+            const Pstream::commsTypes commsType = Pstream::commsTypes::blocking
+        );
 
 
         // I-O
@@ -203,13 +201,12 @@ kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 template<class Type>
 kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 (
-    const kqRWallFunctionFvPatchField& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const dictionary& dict
 )
 :
-    zeroGradientFvPatchField<Type>(ptf, p, iF, mapper)
+    zeroGradientFvPatchField<Type>(p, iF, dict)
 {
     checkType();
 }
@@ -218,12 +215,13 @@ kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 template<class Type>
 kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 (
+    const kqRWallFunctionFvPatchField& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const fvPatchFieldMapper& mapper
 )
 :
-    zeroGradientFvPatchField<Type>(p, iF, dict)
+    zeroGradientFvPatchField<Type>(ptf, p, iF, mapper)
 {
     checkType();
 }
@@ -270,7 +268,7 @@ template<class Type>
 void kqRWallFunctionFvPatchField<Type>::write(Ostream& os) const
 {
     zeroGradientFvPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

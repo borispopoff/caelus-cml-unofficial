@@ -95,7 +95,7 @@ public:
             const bool writeTracks,
             const PtrList<coordSet>&,
             const wordList& valueSetNames,
-            const List<List<Field<Type> > >&,
+            const List<List<Field<Type>>>&,
             Ostream&
         ) const;
 };
@@ -169,7 +169,7 @@ void CML::csvSetWriter<Type>::write
     const bool writeTracks,
     const PtrList<coordSet>& points,
     const wordList& valueSetNames,
-    const List<List<Field<Type> > >& valueSets,
+    const List<List<Field<Type>>>& valueSets,
     Ostream& os
 ) const
 {
@@ -266,17 +266,24 @@ void CML::csvSetWriter<Type>::writeCoordHeader
     Ostream& os
 ) const
 {
+    const word axisName(points.axis());
+
     if (points.hasVectorAxis())
     {
-        forAll(points, i)
+        for
+        (
+            word::const_iterator iter = axisName.begin();
+            iter != axisName.end();
+            ++iter
+        )
         {
-            os << points.axis()[i];
+            os << *iter;
             writeSeparator(os);
         }
     }
     else
     {
-        os << points.axis();
+        os << axisName;
         writeSeparator(os);
     }
 }

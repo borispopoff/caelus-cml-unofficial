@@ -744,20 +744,20 @@ mode_t mode(const fileName& name)
 }
 
 
-// Return the file type: FILE or DIRECTORY
-fileName::Type type(const fileName& name)
+// Return the file type: file or directory
+fileType type(const fileName& name)
 {
-    fileName::Type fileType = fileName::UNDEFINED;
+    fileType fileTypeToReturn = fileType::undefined;
     const DWORD attrs = ::GetFileAttributes(name.c_str());
 
     if (attrs != INVALID_FILE_ATTRIBUTES) 
     {
-        fileType = (attrs & FILE_ATTRIBUTE_DIRECTORY) ?
-            fileName::DIRECTORY :
-            fileName::FILE;
+        fileTypeToReturn = (attrs & FILE_ATTRIBUTE_DIRECTORY) ?
+            fileType::directory :
+            fileType::file;
     }
 
-    return fileType;
+    return fileTypeToReturn;
 }
 
 
@@ -848,7 +848,7 @@ time_t lastModified(const fileName& name)
 fileNameList readDir
 (
     const fileName& directory,
-    const fileName::Type type,
+    const fileType type,
     const bool filtergz
 )
 {
@@ -883,10 +883,10 @@ fileNameList readDir
 
                 if
                 (
-                    (type == fileName::DIRECTORY)
+                    (type == fileType::directory)
                  ||
                     (
-                        type == fileName::FILE
+                        type == fileType::file
                         && fName[fName.size()-1] != '~'
                         && fileNameExt != "bak"
                         && fileNameExt != "BAK"
@@ -940,10 +940,10 @@ bool cp(const fileName& src, const fileName& dest)
     fileName destFile(dest);
 
     // Check type of source file.
-    if (src.type() == fileName::FILE)
+    if (src.type() == fileType::file)
     {
         // If dest is a directory, create the destination file name.
-        if (destFile.type() == fileName::DIRECTORY)
+        if (destFile.type() == fileType::directory)
         {
             destFile = destFile/src.name();
         }
@@ -986,10 +986,10 @@ bool cp(const fileName& src, const fileName& dest)
             return false;
         }
     }
-    else if (src.type() == fileName::DIRECTORY)
+    else if (src.type() == fileType::directory)
     {
         // If dest is a directory, create the destination file name.
-        if (destFile.type() == fileName::DIRECTORY)
+        if (destFile.type() == fileType::directory)
         {
             destFile = destFile/src.component(src.components().size() -1);
         }
@@ -1001,7 +1001,7 @@ bool cp(const fileName& src, const fileName& dest)
         }
 
         // Copy files
-        fileNameList contents = readDir(src, fileName::FILE, false);
+        fileNameList contents = readDir(src, fileType::file, false);
         forAll(contents, i)
         {
             if (Windows::debug)
@@ -1016,7 +1016,7 @@ bool cp(const fileName& src, const fileName& dest)
         }
 
         // Copy sub directories.
-        fileNameList subdirs = readDir(src, fileName::DIRECTORY);
+        fileNameList subdirs = readDir(src, fileType::directory);
         forAll(subdirs, i)
         {
             if (Windows::debug)
@@ -1061,8 +1061,8 @@ bool mv(const fileName& srcFile, const fileName& destFile)
     }
 
     const fileName destName = 
-      ((destFile.type() == fileName::DIRECTORY)
-       && (srcFile.type() != fileName::DIRECTORY)) ?
+      ((destFile.type() == fileType::directory)
+       && (srcFile.type() != fileType::directory)) ?
       destFile/srcFile.name() :
       destFile;
 
@@ -1159,7 +1159,7 @@ bool rmDir(const fileName& directory)
           {
               fileName path = directory/fName;
 
-              if (path.type() == fileName::DIRECTORY)
+              if (path.type() == fileType::directory)
               {
                   success = rmDir(path);
 
@@ -1408,7 +1408,7 @@ fileNameList dlLoaded()
         InfoInFunction
             << "determined loaded libraries :" << libs.size() << endl;
     }
-    return libs;
+    return move(libs);
 }
 
 

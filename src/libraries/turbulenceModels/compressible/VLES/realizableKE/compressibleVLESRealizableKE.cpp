@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressibleVLESRealizableKE.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -346,6 +347,7 @@ bool realizableVLESKE::read()
 
 void realizableVLESKE::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     VLESModel::correct();
 
     if (!turbulence_)
@@ -379,7 +381,7 @@ void realizableVLESKE::correct()
 
     if (nD == 3)
     {
-        Lc.internalField() = Cx*pow(mesh_.V(), 1.0/3.0);
+        Lc.primitiveFieldRef() = Cx*pow(mesh_.V(), 1.0/3.0);
     }
     else if (nD == 2)
     {
@@ -395,7 +397,7 @@ void realizableVLESKE::correct()
             }
         }
 
-        Lc.internalField() = Cx*sqrt(mesh_.V()/thickness);
+        Lc.primitiveFieldRef() = Cx*sqrt(mesh_.V()/thickness);
     }
     else
     {
@@ -424,7 +426,7 @@ void realizableVLESKE::correct()
     volScalarField G(GName(), mut_*S2);
 
     // Update epsilon and G at the wall
-    epsilon_.boundaryField().updateCoeffs();
+    epsilon_.boundaryFieldRef().updateCoeffs();
 
     if (delayed_)
     {
@@ -432,16 +434,16 @@ void realizableVLESKE::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-(1-this->F1())*exp(-0.002*Lc/Lk()))
+                    (scalar(1)-(1-this->F1())*exp(-0.002*Lc/Lk()))
                     /
-                    (scalar(1.0)-(1-this->F1())*exp(-0.002*Li()/Lk())),
+                    (scalar(1)-(1-this->F1())*exp(-0.002*Li()/Lk())),
                     2.0
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
     else
@@ -450,16 +452,16 @@ void realizableVLESKE::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-exp(-0.002*Lc/Lk()))
+                    (scalar(1)-exp(-0.002*Lc/Lk()))
                     /
-                    (scalar(1.0)-exp(-0.002*Li()/Lk())),
+                    (scalar(1)-exp(-0.002*Li()/Lk())),
                     2.0
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
 
@@ -479,13 +481,15 @@ void realizableVLESKE::correct()
             C2_*rho_*epsilon_/(k_ + sqrt((mu()/rho_)*epsilon_)),
             epsilon_
         )
+      + fvOptions(rho_, epsilon_)
     );
 
-    epsEqn().relax();
-
-    epsEqn().boundaryManipulate(epsilon_.boundaryField());
+    epsEqn.ref().relax();
+    fvOptions.constrain(epsEqn.ref());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
 
     solve(epsEqn);
+    fvOptions.correct(epsilon_);
     bound(epsilon_, epsilonMin_);
 
 
@@ -500,10 +504,13 @@ void realizableVLESKE::correct()
         G
       - fvm::SuSp(2.0/3.0*rho_*divU, k_)
       - fvm::Sp(rho_*epsilon_/k_, k_)
+      + fvOptions(rho_, k_)
     );
 
-    kEqn().relax();
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
     // Re-calculate viscosity

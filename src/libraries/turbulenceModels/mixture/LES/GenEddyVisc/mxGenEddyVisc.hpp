@@ -58,8 +58,8 @@ class GenEddyVisc
 private:
 
     // Disallow default bitwise copy construct and assignment
-    GenEddyVisc(const GenEddyVisc&);
-    GenEddyVisc& operator=(const GenEddyVisc&);
+    GenEddyVisc(const GenEddyVisc&) = delete;
+    GenEddyVisc& operator=(const GenEddyVisc&) = delete;
 
 
 protected:

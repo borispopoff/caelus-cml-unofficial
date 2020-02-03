@@ -45,7 +45,7 @@ CML::classType##OSPRE<Type>::slopeLimiter(CML::scalar const r) const           \
 {                                                                              \
     return CML::scalar                                                         \
     (                                                                          \
-        max(scalar(3.0)*r/(r*(r+scalar(1.0))+scalar(1.0)),0)                   \
+        max(scalar(3)*r/(r*(r+scalar(1))+scalar(1)),0)                         \
     );                                                                         \
 }                                                                              
 #endif

@@ -40,7 +40,7 @@ namespace parserSubset {
 
 /* Line 1149 of lalr1.cc  */
 #line 43 "stack.hh"
-  template <class T, class S = std::deque<T> >
+  template <class T, class S = std::deque<T>>
   class stack
   {
   public:
@@ -102,7 +102,7 @@ namespace parserSubset {
   };
 
   /// Present a slice of the top of a stack.
-  template <class T, class S = stack<T> >
+  template <class T, class S = stack<T>>
   class slice
   {
   public:

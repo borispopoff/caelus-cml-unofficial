@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -63,12 +63,6 @@ private:
         //- Create IO object if dictionary is present
         IOobject createIOobject(const fvMesh& mesh) const;
 
-        //- Disallow default bitwise copy construct
-        IOMRFZoneList(const IOMRFZoneList&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const IOMRFZoneList&);
-
 
 public:
 
@@ -77,6 +71,8 @@ public:
         //- Construct from mesh
         IOMRFZoneList(const fvMesh& mesh);
 
+        //- Disallow default bitwise copy construct
+        IOMRFZoneList(const IOMRFZoneList&) = delete;
 
         //- Destructor
         virtual ~IOMRFZoneList()
@@ -87,6 +83,12 @@ public:
 
         //- Read dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const IOMRFZoneList&) = delete;
 };
 
 

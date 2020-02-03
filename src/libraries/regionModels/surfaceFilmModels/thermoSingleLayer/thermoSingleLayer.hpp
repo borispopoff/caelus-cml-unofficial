@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,10 +66,10 @@ class thermoSingleLayer
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        thermoSingleLayer(const thermoSingleLayer&);
+        thermoSingleLayer(const thermoSingleLayer&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const thermoSingleLayer&);
+        void operator=(const thermoSingleLayer&) = delete;
 
         //- Return boundary types for sensible enthalpy field
         wordList hsBoundaryTypes();
@@ -375,16 +375,16 @@ public:
             // Mapped into primary region
 
                 //- Return total mass source - Eulerian phase only
-                virtual tmp<DimensionedField<scalar, volMesh> > Srho() const;
+                virtual tmp<volScalarField::Internal> Srho() const;
 
                 //- Return mass source for specie i - Eulerian phase only
-                virtual tmp<DimensionedField<scalar, volMesh> > Srho
+                virtual tmp<volScalarField::Internal> Srho
                 (
                     const label i
                 ) const;
 
                 //- Return enthalpy source - Eulerian phase only
-                virtual tmp<DimensionedField<scalar, volMesh> > Sh() const;
+                virtual tmp<volScalarField::Internal> Sh() const;
 
 
        // I-O

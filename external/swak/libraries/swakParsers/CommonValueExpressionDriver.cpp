@@ -891,8 +891,8 @@ tmp<vectorField> CommonValueExpressionDriver::composeVectorField(
         new vectorField(x.size())
     );
 
-    forAll(result(),faceI) {
-        result()[faceI]=CML::vector(x[faceI],y[faceI],z[faceI]);
+    forAll(result(),facei) {
+        result.ref()[facei]=CML::vector(x[facei],y[facei],z[facei]);
     }
 
     return result;
@@ -932,11 +932,11 @@ tmp<tensorField> CommonValueExpressionDriver::composeTensorField(
         new tensorField(xx.size())
     );
 
-    forAll(result(),faceI) {
-        result()[faceI]=CML::tensor(
-            xx[faceI],xy[faceI],xz[faceI],
-            yx[faceI],yy[faceI],yz[faceI],
-            zx[faceI],zy[faceI],zz[faceI]
+    forAll(result(),facei) {
+        result.ref()[facei]=CML::tensor(
+            xx[facei],xy[facei],xz[facei],
+            yx[facei],yy[facei],yz[facei],
+            zx[facei],zy[facei],zz[facei]
         );
 
     }
@@ -972,11 +972,11 @@ tmp<symmTensorField> CommonValueExpressionDriver::composeSymmTensorField(
         new symmTensorField(xx.size())
     );
 
-    forAll(result(),faceI) {
-        result()[faceI]=CML::symmTensor(
-            xx[faceI],xy[faceI],xz[faceI],
-            yy[faceI],yz[faceI],
-            zz[faceI]
+    forAll(result(),facei) {
+        result.ref()[facei]=CML::symmTensor(
+            xx[facei],xy[facei],xz[facei],
+            yy[facei],yz[facei],
+            zz[facei]
         );
 
     }
@@ -992,9 +992,9 @@ tmp<sphericalTensorField> CommonValueExpressionDriver::composeSphericalTensorFie
         new sphericalTensorField(ii.size())
     );
 
-    forAll(result(),faceI) {
-        result()[faceI]=CML::sphericalTensor(
-            ii[faceI]
+    forAll(result(),facei) {
+        result.ref()[facei]=CML::sphericalTensor(
+            ii[facei]
         );
 
     }
@@ -1053,7 +1053,7 @@ tmp<scalarField> CommonValueExpressionDriver::makeModuloField(
                 val += b[i];
             }
         }
-        result()[i]=val;
+        result.ref()[i]=val;
     }
 
     return result;
@@ -1098,7 +1098,7 @@ tmp<scalarField> CommonValueExpressionDriver::getLookup(
     const interpolationTable<scalar> &table=lookup_[name];
 
     forAll(val,i) {
-        result()[i]=table(val[i]);
+        result.ref()[i]=table(val[i]);
     }
 
     return tmp<scalarField>(result);
@@ -1478,7 +1478,7 @@ void CommonValueExpressionDriver::addVariables(
 
 void CommonValueExpressionDriver::readTables(
     Istream &is,
-    HashTable<interpolationTable<scalar> > &tables,
+    HashTable<interpolationTable<scalar>> &tables,
     bool clear
 )
 {
@@ -1495,11 +1495,11 @@ void CommonValueExpressionDriver::readTables(
 
 void CommonValueExpressionDriver::writeTables(
     Ostream &os,
-    const HashTable<interpolationTable<scalar> > &tables
+    const HashTable<interpolationTable<scalar>> &tables
 ) const
 {
     os << token::BEGIN_LIST << nl;
-    forAllConstIter(HashTable<interpolationTable<scalar> >,tables,it) {
+    forAllConstIter(HashTable<interpolationTable<scalar>>,tables,it) {
         os << token::BEGIN_BLOCK << nl;
         os.writeKeyword("name") << it.key() << token::END_STATEMENT << nl;
         (*it).write(os);
@@ -1723,45 +1723,45 @@ label CommonValueExpressionDriver::parse(
 }
 
 
-void CommonValueExpressionDriver::outputResult(Ostream &o)
+void CommonValueExpressionDriver::outputResult(Ostream &os)
 {
     word rType=getResultType();
 
     if(rType==pTraits<scalar>::typeName) {
-        o << getResult<scalar>();
+        os << getResult<scalar>();
     } else if(rType==pTraits<vector>::typeName) {
-        o << getResult<vector>();
+        os << getResult<vector>();
     } else if(rType==pTraits<tensor>::typeName) {
-        o << getResult<tensor>();
+        os << getResult<tensor>();
     } else if(rType==pTraits<symmTensor>::typeName) {
-        o << getResult<symmTensor>();
+        os << getResult<symmTensor>();
     } else if(rType==pTraits<sphericalTensor>::typeName) {
-        o << getResult<sphericalTensor>();
+        os << getResult<sphericalTensor>();
     } else {
-        o << "No implementation for " << rType;
+        os << "No implementation for " << rType;
     }
 }
 
 string CommonValueExpressionDriver::outputEntry()
 {
-    OStringStream o;
+    OStringStream os;
 
     word rType=getResultType();
     if(rType==pTraits<scalar>::typeName) {
-        result_.getResult<scalar>(true)().writeEntry("",o);
+        writeEntry(os, "", result_.getResult<scalar>(true)());
     } else if(rType==pTraits<vector>::typeName) {
-        result_.getResult<vector>(true)().writeEntry("",o);
+        writeEntry(os, "", result_.getResult<vector>(true)());
     } else if(rType==pTraits<tensor>::typeName) {
-        result_.getResult<tensor>(true)().writeEntry("",o);
+        writeEntry(os, "", result_.getResult<tensor>(true)());
     } else if(rType==pTraits<symmTensor>::typeName) {
-        result_.getResult<symmTensor>(true)().writeEntry("",o);
+        writeEntry(os, "", result_.getResult<symmTensor>(true)());
     } else if(rType==pTraits<sphericalTensor>::typeName) {
-        result_.getResult<sphericalTensor>(true)().writeEntry("",o);
+        writeEntry(os, "", result_.getResult<sphericalTensor>(true)());
     } else {
-        o << "No implementation for " << rType << ";";
+        os << "No implementation for " << rType << ";";
     }
 
-    return o.str();
+    return os.str();
 }
 
 const word CommonValueExpressionDriver::time() const
@@ -1814,7 +1814,7 @@ void CommonValueExpressionDriver::tryWrite() const
     if(
         writer_.valid()
         &&
-        mesh().time().outputTime()
+        mesh().time().writeTime()
     ) {
         writer_->write();
     }

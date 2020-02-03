@@ -60,11 +60,11 @@ void CML::fvSurfaceMapper::calcAddressing() const
         labelList& addr = *directAddrPtr_;
 
         // Adjust for creation of an internal face from a boundary face
-        forAll(addr, faceI)
+        forAll(addr, facei)
         {
-            if (addr[faceI] > oldNInternal)
+            if (addr[facei] > oldNInternal)
             {
-                addr[faceI] = 0;
+                addr[facei] = 0;
             }
         }
     }
@@ -86,12 +86,12 @@ void CML::fvSurfaceMapper::calcAddressing() const
         scalarListList& w = *weightsPtr_;
 
         // Adjust for creation of an internal face from a boundary face
-        forAll(addr, faceI)
+        forAll(addr, facei)
         {
-            if (max(addr[faceI]) >= oldNInternal)
+            if (max(addr[facei]) >= oldNInternal)
             {
-                addr[faceI] = labelList(1, label(0));
-                w[faceI] = scalarList(1, 1.0);
+                addr[facei] = labelList(1, label(0));
+                w[facei] = scalarList(1, 1.0);
             }
         }
     }
@@ -108,12 +108,12 @@ void CML::fvSurfaceMapper::calcAddressing() const
 
         label nIns = 0;
 
-        forAll(insFaces, faceI)
+        forAll(insFaces, facei)
         {
             // If the face is internal, keep it here
-            if (insFaces[faceI] < size())
+            if (insFaces[facei] < size())
             {
-                ins[nIns] = insFaces[faceI];
+                ins[nIns] = insFaces[facei];
                 nIns++;
             }
         }

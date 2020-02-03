@@ -102,9 +102,9 @@ public:
     );
 
     //- Construct and return a clone
-    virtual autoPtr<Reaction<ReactionThermo> > clone() const
+    virtual autoPtr<Reaction<ReactionThermo>> clone() const
     {
-        return autoPtr<Reaction<ReactionThermo> >
+        return autoPtr<Reaction<ReactionThermo>>
         (
             new IrreversibleReaction
             <
@@ -116,12 +116,12 @@ public:
     }
 
     //- Construct and return a clone with new speciesTable
-    virtual autoPtr<Reaction<ReactionThermo> > clone
+    virtual autoPtr<Reaction<ReactionThermo>> clone
     (
         const speciesTable& species
     ) const
     {
-        return autoPtr<Reaction<ReactionThermo> >
+        return autoPtr<Reaction<ReactionThermo>>
         (
             new IrreversibleReaction
             <

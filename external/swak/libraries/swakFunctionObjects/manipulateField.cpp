@@ -68,10 +68,10 @@ void CML::manipulateField::manipulate(
 {
     TData &original=const_cast<TData &>(obr_.lookupObject<TData>(name_));
     label cnt=0;
-    forAll(original,cellI) {
-        if(mask[cellI]>SMALL) {
+    forAll(original,celli) {
+        if(mask[celli]>SMALL) {
             cnt++;
-            original[cellI]=data[cellI];
+            original[celli]=data[celli];
         }
     }
 
@@ -81,7 +81,7 @@ void CML::manipulateField::manipulate(
     original.correctBoundaryConditions();
 
     if(
-        obr_.time().outputTime()
+        obr_.time().writeTime()
         &&
         original.writeOpt()==IOobject::AUTO_WRITE
     ) {
@@ -104,10 +104,10 @@ void CML::manipulateField::manipulateSurface(
 {
     TData &original=const_cast<TData &>(obr_.lookupObject<TData>(name_));
     label cnt=0;
-    forAll(original,cellI) {
-        if(mask[cellI]>SMALL) {
+    forAll(original,celli) {
+        if(mask[celli]>SMALL) {
             cnt++;
-            original[cellI]=data[cellI];
+            original[celli]=data[celli];
         }
     }
 
@@ -119,7 +119,7 @@ void CML::manipulateField::manipulateSurface(
     //    original.correctBoundaryConditions();
 
     if(
-        obr_.time().outputTime()
+        obr_.time().writeTime()
         &&
         original.writeOpt()==IOobject::AUTO_WRITE
     ) {

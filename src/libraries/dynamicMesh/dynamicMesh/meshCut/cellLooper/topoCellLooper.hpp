@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,7 +68,7 @@ class topoCellLooper
     // Private Member Functions
 
         //- In-memory truncate a list
-        template <class T>
+        template<class T>
         static void subsetList
         (
             const label startI,
@@ -76,11 +76,11 @@ class topoCellLooper
             DynamicList<T>& lst
         );
 
-        //- walk across superface discarding non-feature points.
+        //- Walk across superface discarding non-feature points.
         void walkFace
         (
             const cellFeatures& features,
-            const label faceI,
+            const label facei,
             const label startEdgeI,
             const label startVertI,
             const label nFeaturePts,
@@ -91,11 +91,11 @@ class topoCellLooper
 
         //- Returns list of vertices on 'superEdge' i.e. list of edges connected
         // by non-feature points. First and last are feature points, ones
-        // inbetween are not.
+        // in between are not.
         labelList getSuperEdge
         (
             const cellFeatures& features,
-            const label faceI,
+            const label facei,
             const label startEdgeI,
             const label startVertI
         ) const;
@@ -105,7 +105,7 @@ class topoCellLooper
         label getAlignedNonFeatureEdge
         (
             const vector& refDir,
-            const label cellI,
+            const label celli,
             const cellFeatures& features
         ) const;
 
@@ -116,7 +116,7 @@ class topoCellLooper
         void walkAcrossFace
         (
             const cellFeatures& features,
-            const label faceI,
+            const label facei,
             const label startEdgeI,
             const label startVertI,
             const label nFeats,
@@ -129,9 +129,9 @@ class topoCellLooper
         //  outside of cell.
         void walkSplitHex
         (
-            const label cellI,
+            const label celli,
             const cellFeatures& features,
-            const label fromFaceI,
+            const label fromFacei,
             const label fromEdgeI,
             const label fromVertI,
 
@@ -141,10 +141,10 @@ class topoCellLooper
 
 
         //- Disallow default bitwise copy construct
-        topoCellLooper(const topoCellLooper&);
+        topoCellLooper(const topoCellLooper&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const topoCellLooper&);
+        void operator=(const topoCellLooper&) = delete;
 
 
 public:
@@ -154,7 +154,7 @@ public:
 
     // Static data members
 
-        //- cos of angle for feature recognition (of splitHexes)
+        //- Cos of angle for feature recognition (of splitHexes)
         static const scalar featureCos;
 
 
@@ -170,14 +170,14 @@ public:
 
     // Member Functions
 
-        //- Create cut along circumference of cellI. Gets current mesh cuts.
+        //- Create cut along circumference of celli. Gets current mesh cuts.
         //  Cut along circumference is expressed as loop of cuts plus weights
         //  for cuts along edges (only valid for edge cuts).
         //  Return true if successful cut.
         virtual bool cut
         (
             const vector& refDir,
-            const label cellI,
+            const label celli,
             const boolList& vertIsCut,
             const boolList& edgeIsCut,
             const scalarField& edgeWeight,
@@ -191,7 +191,7 @@ public:
         virtual bool cut
         (
             const plane& cutPlane,
-            const label cellI,
+            const label celli,
             const boolList& vertIsCut,
             const boolList& edgeIsCut,
             const scalarField& edgeWeight,

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -147,8 +147,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Return a vector tangential to input vector, v
-        vector tangentVector(const vector& v) const;
 
         //- Return splashed parcel direction
         vector splashDirection
@@ -250,9 +248,9 @@ public:
         ThermoSurfaceFilm(const ThermoSurfaceFilm<CloudType>& sfm);
 
         //- Construct and return a clone using supplied owner cloud
-        virtual autoPtr<SurfaceFilmModel<CloudType> > clone() const
+        virtual autoPtr<SurfaceFilmModel<CloudType>> clone() const
         {
-            return autoPtr<SurfaceFilmModel<CloudType> >
+            return autoPtr<SurfaceFilmModel<CloudType>>
             (
                 new ThermoSurfaceFilm<CloudType>(*this)
             );
@@ -343,25 +341,6 @@ CML::word CML::ThermoSurfaceFilm<CloudType>::interactionTypeStr
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class CloudType>
-CML::vector CML::ThermoSurfaceFilm<CloudType>::tangentVector
-(
-    const vector& v
-) const
-{
-    vector tangent = Zero;
-    scalar magTangent = 0.0;
-
-    while (magTangent < SMALL)
-    {
-        vector vTest = rndGen_.sample01<vector>();
-        tangent = vTest - (vTest & v)*v;
-        magTangent = mag(tangent);
-    }
-
-    return tangent/magTangent;
-}
 
 
 template<class CloudType>
@@ -619,7 +598,7 @@ void CML::ThermoSurfaceFilm<CloudType>::splashInteraction
     const vector& nf = pp.faceNormals()[facei];
 
     // Determine direction vectors tangential to patch normal
-    const vector tanVec1 = tangentVector(nf);
+    const vector tanVec1 = normalised(perpendicular(nf));
     const vector tanVec2 = nf^tanVec1;
 
     // Retrieve parcel properties
@@ -932,7 +911,7 @@ void CML::ThermoSurfaceFilm<CloudType>::info(Ostream& os)
 
     os  << "    New film splash parcels         = " << nSplashTotal << endl;
 
-    if (this->outputTime())
+    if (this->writeTime())
     {
         this->setModelProperty("nParcelsSplashed", nSplashTotal);
         nParcelsSplashed_ = 0;

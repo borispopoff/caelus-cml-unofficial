@@ -98,9 +98,9 @@ public:
         TAB(const TAB<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<BreakupModel<CloudType> > clone() const
+        virtual autoPtr<BreakupModel<CloudType>> clone() const
         {
-            return autoPtr<BreakupModel<CloudType> >
+            return autoPtr<BreakupModel<CloudType>>
             (
                 new TAB<CloudType>(*this)
             );
@@ -147,7 +147,7 @@ public:
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template <class CloudType>
+template<class CloudType>
 CML::TAB<CloudType>::TAB
 (
     const dictionary& dict,

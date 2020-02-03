@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -64,12 +64,12 @@ public:
             const labelUList&
         );
 
-        //- Construct given the complete list and by transferring addressing
+        //- Move constructor given the complete list and by moving addressing
         inline BiIndirectList
         (
             const UList<T>& posList,
             const UList<T>& negList,
-            const Xfer<List<label> >&
+            List<label>&&
         );
 
 
@@ -93,11 +93,11 @@ public:
             inline static label posIndex(const label);
             inline static label negIndex(const label);
 
+
         // Edit
 
             //- Reset addressing
             inline void resetAddressing(const labelUList&);
-            inline void resetAddressing(const Xfer<List<label> >&);
 
 
         // Member Operators
@@ -111,7 +111,10 @@ public:
             //- Return const access to an element
             inline const T& operator[](const label) const;
 
-            //- Assignment from UList of addressed elements
+            //- Move assignment to List of addressed elements
+            inline void operator=(List<T>&&);
+
+            //- Assignment to UList of addressed elements
             inline void operator=(const UList<T>&);
 
             //- Assignment of all entries to the given value

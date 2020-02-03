@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -67,7 +67,7 @@ class cellSplitter
         //- Get patch and zone info for face
         void getFaceInfo
         (
-            const label faceI,
+            const label facei,
             label& patchID,
             label& zoneID,
             label& zoneFlip
@@ -76,22 +76,22 @@ class cellSplitter
         //- Find the new owner (if any) of the face.
         label newOwner
         (
-            const label faceI,
+            const label facei,
             const Map<labelList>& cellToCells
         ) const;
 
         //- Find the new neighbour (if any) of the face.
         label newNeighbour
         (
-            const label faceI,
+            const label facei,
             const Map<labelList>& cellToCells
         ) const;
 
         //- Disallow default bitwise copy construct
-        cellSplitter(const cellSplitter&);
+        cellSplitter(const cellSplitter&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cellSplitter&);
+        void operator=(const cellSplitter&) = delete;
 
 public:
 

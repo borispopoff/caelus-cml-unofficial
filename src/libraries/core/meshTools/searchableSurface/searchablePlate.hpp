@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,7 +50,7 @@ namespace CML
 // Forward declaration of classes
 
 /*---------------------------------------------------------------------------*\
-                           Class searchablePlate Declaration
+                       Class searchablePlate Declaration
 \*---------------------------------------------------------------------------*/
 
 class searchablePlate
@@ -78,7 +78,7 @@ private:
 
         //- Inherit findNearest from searchableSurface
         using searchableSurface::findNearest;
-    
+
         pointIndexHit findNearest
         (
             const point& sample,
@@ -90,12 +90,6 @@ private:
             const point& start,
             const point& end
         ) const;
-
-        //- Disallow default bitwise copy construct
-        searchablePlate(const searchablePlate&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchablePlate&);
 
 
 public:
@@ -120,6 +114,9 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        searchablePlate(const searchablePlate&) = delete;
 
 
     //- Destructor
@@ -189,7 +186,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const;
 
             //- From a set of points and indices get the region
@@ -222,6 +219,12 @@ public:
                 NotImplemented;
                 return false;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchablePlate&) = delete;
 };
 
 

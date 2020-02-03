@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -77,7 +77,7 @@ void CML::PstreamBuffers::finishedSends(const bool block)
 {
     finishedSendsCalled_ = true;
 
-    if (commsType_ == UPstream::nonBlocking)
+    if (commsType_ == UPstream::commsTypes::nonBlocking)
     {
         Pstream::exchange<DynamicList<char>, char>
         (
@@ -94,7 +94,7 @@ void CML::PstreamBuffers::finishedSends(labelList& recvSizes, const bool block)
 {
     finishedSendsCalled_ = true;
 
-    if (commsType_ == UPstream::nonBlocking)
+    if (commsType_ == UPstream::commsTypes::nonBlocking)
     {
         Pstream::exchangeSizes(sendBuf_, recvSizes);
 

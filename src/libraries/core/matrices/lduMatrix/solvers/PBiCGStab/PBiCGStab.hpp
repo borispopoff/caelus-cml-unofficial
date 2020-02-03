@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -45,33 +45,37 @@ References:
 namespace CML
 {
 
-class PBiCGStab : public lduMatrix::solver
+/*---------------------------------------------------------------------------*\
+                           Class PBiCGStab Declaration
+\*---------------------------------------------------------------------------*/
+
+class PBiCGStab
+:
+    public lduMatrix::solver
 {
-    // Private Member Functions
-
-    //- Disallow default bitwise copy construct
-    PBiCGStab(const PBiCGStab&);
-
-    //- Disallow default bitwise assignment
-    void operator=(const PBiCGStab&);
 
 public:
 
     //- Runtime type information
     TypeName("PBiCGStab");
 
+
     // Constructors
 
-    //- Construct from matrix components and solver data stream
-    PBiCGStab
-    (
-        word const& fieldName,
-        lduMatrix const& matrix,
-        FieldField<Field, scalar> const& interfaceBouCoeffs,
-        FieldField<Field, scalar> const& interfaceIntCoeffs,
-        lduInterfaceFieldPtrsList const& interfaces,
-        dictionary const& solverControls
-    );
+        //- Construct from matrix components and solver data stream
+        PBiCGStab
+        (
+            word const& fieldName,
+            lduMatrix const& matrix,
+            FieldField<Field, scalar> const& interfaceBouCoeffs,
+            FieldField<Field, scalar> const& interfaceIntCoeffs,
+            lduInterfaceFieldPtrsList const& interfaces,
+            dictionary const& solverControls
+        );
+
+        //- Disallow default bitwise copy construct
+        PBiCGStab(const PBiCGStab&) = delete;
+
 
     //- Destructor
     virtual ~PBiCGStab() {}
@@ -79,13 +83,19 @@ public:
 
     // Member Functions
 
-    //- Solve the matrix with this solver
-    virtual solverPerformance solve
-    (
-        scalarField& x,
-        const scalarField& b,
-        const direction cmpt=0
-    ) const;
+        //- Solve the matrix with this solver
+        virtual solverPerformance solve
+        (
+            scalarField& x,
+            const scalarField& b,
+            const direction cmpt=0
+        ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PBiCGStab&) = delete;
 };
 
 } // End namespace CML

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 Copyright (C) 2014 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -214,10 +214,10 @@ CML::label CML::scotchDecomp::decompose
 
             // Insert my own
             label nTotalCells = 0;
-            forAll(cWeights, cellI)
+            forAll(cWeights, celli)
             {
-                allXadj[nTotalCells] = xadj[cellI];
-                allWeights[nTotalCells++] = cWeights[cellI];
+                allXadj[nTotalCells] = xadj[celli];
+                allWeights[nTotalCells++] = cWeights[celli];
             }
             nTotalConnections = 0;
             forAll(adjncy, i)
@@ -227,17 +227,17 @@ CML::label CML::scotchDecomp::decompose
 
             for (label slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 Field<label> nbrAdjncy(fromSlave);
                 Field<label> nbrXadj(fromSlave);
                 scalarField nbrWeights(fromSlave);
 
                 // Append.
                 //label procStart = nTotalCells;
-                forAll(nbrXadj, cellI)
+                forAll(nbrXadj, celli)
                 {
-                    allXadj[nTotalCells] = nTotalConnections+nbrXadj[cellI];
-                    allWeights[nTotalCells++] = nbrWeights[cellI];
+                    allXadj[nTotalCells] = nTotalConnections+nbrXadj[celli];
+                    allWeights[nTotalCells++] = nbrWeights[celli];
                 }
                 // No need to renumber xadj since already global.
                 forAll(nbrAdjncy, i)
@@ -262,7 +262,7 @@ CML::label CML::scotchDecomp::decompose
             // Send allFinalDecomp back
             for (label slave=1; slave<Pstream::nProcs(); slave++)
             {
-                OPstream toSlave(Pstream::scheduled, slave);
+                OPstream toSlave(Pstream::commsTypes::scheduled, slave);
                 toSlave << SubField<label>
                 (
                     allFinalDecomp,
@@ -281,13 +281,21 @@ CML::label CML::scotchDecomp::decompose
         {
             // Send my part of the graph (already in global numbering)
             {
-                OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::scheduled,
+                    Pstream::masterNo()
+                );
                 toMaster<< adjncy << SubField<label>(xadj, xadj.size()-1)
                     << cWeights;
             }
 
             // Receive back decomposition
-            IPstream fromMaster(Pstream::scheduled, Pstream::masterNo());
+            IPstream fromMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             fromMaster >> finalDecomp;
         }
     }
@@ -330,10 +338,10 @@ CML::label CML::scotchDecomp::decomposeOneProc
             label hasVertexWeights = 0;
             label numericflag = 10*hasEdgeWeights+hasVertexWeights;
             str << baseval << ' ' << numericflag << nl;
-            for (label cellI = 0; cellI < xadj.size()-1; cellI++)
+            for (label celli = 0; celli < xadj.size()-1; celli++)
             {
-                label start = xadj[cellI];
-                label end = xadj[cellI+1];
+                label start = xadj[celli];
+                label end = xadj[celli+1];
                 str << end-start;
 
                 for (label i = start; i < end; i++)

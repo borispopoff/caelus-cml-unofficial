@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
 
@@ -45,30 +45,31 @@ namespace CML
 
 class consumptionSpeed
 {
+    // Private Data
 
-    //- Maximum consumption speed
-    scalar omega0_;
+        //- Maximum consumption speed
+        scalar omega0_;
 
-    //- Exponential factor
-    scalar eta_;
+        //- Exponential factor
+        scalar eta_;
 
-    //- Extinction strain
-    scalar sigmaExt_;
+        //- Extinction strain
+        scalar sigmaExt_;
 
-    //- Minimum consumption speed
-    scalar omegaMin_;
+        //- Minimum consumption speed
+        scalar omegaMin_;
 
 
     // Private member functions
 
-    //- Return consumption rate
-    scalar omega0Sigma(scalar sigma, scalar a) const;
+        //- Return consumption rate
+        scalar omega0Sigma(scalar sigma, scalar a) const;
 
-    //- Disallow copy construct
-    consumptionSpeed(const consumptionSpeed&);
+        //- Disallow copy construct
+        consumptionSpeed(const consumptionSpeed&);
 
-    //- Disallow default bitwise assignment
-    void operator=(const consumptionSpeed&);
+         //- Disallow default bitwise assignment
+        void operator=(const consumptionSpeed&) = delete;
 
 
 public:
@@ -77,42 +78,44 @@ public:
     TypeName("consumptionSpeed");
 
 
-    //- Construct from dictionary
-    consumptionSpeed(const dictionary& dict);
+    // Constructors
+
+        //- Construct from dictionary
+        consumptionSpeed(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~consumptionSpeed()
-    {}
+        virtual ~consumptionSpeed()
+        {}
 
 
     // Member functions
 
-    //- Return speed consumption rate temp
-    tmp<volScalarField> omega0Sigma(const volScalarField& sigma);
+        //- Return speed consumption rate temp
+        tmp<volScalarField> omega0Sigma(const volScalarField& sigma);
 
 
-    // Access functions
+        // Access functions
 
-    scalar omega0() const
-    {
-        return omega0_;
-    }
+            scalar omega0() const
+            {
+                return omega0_;
+            }
 
-    scalar eta() const
-    {
-        return eta_;
-    }
+            scalar eta() const
+            {
+                return eta_;
+            }
 
-    scalar sigmaExt() const
-    {
-        return sigmaExt_;
-    }
+            scalar sigmaExt() const
+            {
+                return sigmaExt_;
+            }
 
-    scalar omegaMin() const
-    {
-        return omegaMin_;
-    }
+            scalar omegaMin() const
+            {
+                return omegaMin_;
+            }
 
 
     // IO

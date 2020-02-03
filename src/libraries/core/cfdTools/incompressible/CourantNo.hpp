@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -28,11 +28,11 @@ Description
 scalar CoNum = 0.0;
 scalar meanCoNum = 0.0;
 
-if (mesh.nInternalFaces())
+
 {
     scalarField sumPhi
     (
-        fvc::surfaceSum(mag(phi))().internalField()
+        fvc::surfaceSum(mag(phi))().primitiveField()
     );
 
     CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();

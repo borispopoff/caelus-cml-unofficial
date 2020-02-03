@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -47,7 +47,7 @@ Description
         lifeTime        10000;
         trackLength     1e-3;
         nSubCycle       5;
-        cloudName       particleTracks;
+        cloud           particleTracks;
         seedSampleSet   uniform;
         uniformCoeffs
         {
@@ -70,7 +70,7 @@ Description
         lifetime     | Maximum number of particle tracking steps | yes |
         trackLength  | Tracking segment length | no          |
         nSubCycle    | Number of tracking steps per cell | no|
-        cloudName    | Cloud name to use       | yes         |
+        cloud        | Cloud name to use       | yes         |
         seedSampleSet| Seeding method (see below)| yes       |
     \endtable
 
@@ -134,11 +134,11 @@ public:
     // Public data types
 
         //- Track direction enumerations
-        enum trackDirection
+        enum class trackDirection
         {
-            FORWARD,
-            BACKWARD,
-            BOTH
+            forward,
+            backward,
+            both
         };
 
         //- Track direction enumeration names
@@ -210,22 +210,22 @@ private:
             word sampledSetAxis_;
 
             //- File writer for scalar data
-            autoPtr<writer<scalar> > scalarFormatterPtr_;
+            autoPtr<writer<scalar>> scalarFormatterPtr_;
 
             //- File writer for vector data
-            autoPtr<writer<vector> > vectorFormatterPtr_;
+            autoPtr<writer<vector>> vectorFormatterPtr_;
 
 
         // Generated data
 
             //- All tracks. Per particle the points it passed through
-            DynamicList<List<point> > allTracks_;
+            DynamicList<List<point>> allTracks_;
 
             //- Per scalarField, per particle, the sampled value.
-            List<DynamicList<scalarList> > allScalars_;
+            List<DynamicList<scalarList>> allScalars_;
 
             //- Per scalarField, per particle, the sampled value.
-            List<DynamicList<vectorList> > allVectors_;
+            List<DynamicList<vectorList>> allVectors_;
 
 
         //- Construct patch out of all wall patch faces
@@ -235,10 +235,10 @@ private:
         void track();
 
         //- Disallow default bitwise copy construct
-        streamLine(const streamLine&);
+        streamLine(const streamLine&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const streamLine&);
+        void operator=(const streamLine&) = delete;
 
 
 public:

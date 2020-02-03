@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -94,12 +94,6 @@ private:
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construct
-        powerLaw(const powerLaw&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const powerLaw&);
-
 
 public:
 
@@ -116,6 +110,10 @@ public:
         const word& cellZoneName
     );
 
+    //- Disallow default bitwise copy construct
+    powerLaw(const powerLaw&) = delete;
+
+
     //- Destructor
     virtual ~powerLaw();
 
@@ -123,7 +121,7 @@ public:
     // Member Functions
 
         //- Transform the model data wrt mesh changes
-        virtual void calcTranformModelData();
+        virtual void calcTransformModelData();
 
         //- Calculate the porosity force
         virtual void calcForce
@@ -149,7 +147,7 @@ public:
         virtual void correct
         (
             const fvVectorMatrix& UEqn,
-            volTensorField& AU            
+            volTensorField& AU
         ) const;
 
 
@@ -157,6 +155,12 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const powerLaw&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -186,10 +190,10 @@ void CML::porosityModels::powerLaw::apply
 
         forAll(cells, i)
         {
-            const label cellI = cells[i];
+            const label celli = cells[i];
 
-            Udiag[cellI] +=
-                V[cellI]*rho[cellI]*C0*pow(magSqr(U[cellI]), C1m1b2);
+            Udiag[celli] +=
+                V[celli]*rho[celli]*C0*pow(magSqr(U[celli]), C1m1b2);
         }
     }
 }
@@ -212,10 +216,10 @@ void CML::porosityModels::powerLaw::apply
 
         forAll(cells, i)
         {
-            const label cellI = cells[i];
+            const label celli = cells[i];
 
-            AU[cellI] =
-                AU[cellI] + I*(rho[cellI]*C0*pow(magSqr(U[cellI]), C1m1b2));
+            AU[celli] =
+                AU[celli] + I*(rho[celli]*C0*pow(magSqr(U[celli]), C1m1b2));
         }
     }
 }

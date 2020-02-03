@@ -460,9 +460,9 @@ faceList hexBlock::patchFaces(const label direc, const labelList& range) const
     else if (blockHandedness_ == left)
     {
         // turn all faces inside out
-        forAll(result, faceI)
+        forAll(result, facei)
         {
-            result[faceI].flip();
+            result[facei].flip();
         }
     }
 

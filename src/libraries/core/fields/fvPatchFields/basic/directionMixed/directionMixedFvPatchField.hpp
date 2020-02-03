@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -40,7 +40,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class directionMixedFvPatch Declaration
+                  Class directionMixedFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -94,9 +94,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new directionMixedFvPatchField<Type>(*this)
             );
@@ -110,12 +110,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new directionMixedFvPatchField<Type>(*this, iF)
             );
@@ -124,9 +124,9 @@ public:
 
     // Member functions
 
-        // Access
+        // Attributes
 
-            //- Return true if this patch field fixes a value.
+            //- Return true: this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving
             //  Poissons equations.
             virtual bool fixesValue() const
@@ -144,17 +144,12 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchField<Type>&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchField<Type>&, const labelList&);
 
 
         // Return defining fields
@@ -193,16 +188,17 @@ public:
         // Evaluation functions
 
             //- Return gradient at boundary
-            virtual tmp<Field<Type> > snGrad() const;
+            virtual tmp<Field<Type>> snGrad() const;
 
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             );
 
             //- Return face-gradient transform diagonal
-            virtual tmp<Field<Type> > snGradTransformDiag() const;
+            virtual tmp<Field<Type>> snGradTransformDiag() const;
 
 
         //- Write
@@ -231,11 +227,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "symmTransformField.hpp"
 
@@ -258,22 +251,6 @@ CML::directionMixedFvPatchField<Type>::directionMixedFvPatchField
 template<class Type>
 CML::directionMixedFvPatchField<Type>::directionMixedFvPatchField
 (
-    const directionMixedFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    transformFvPatchField<Type>(ptf, p, iF, mapper),
-    refValue_(ptf.refValue_, mapper),
-    refGrad_(ptf.refGrad_, mapper),
-    valueFraction_(ptf.valueFraction_, mapper)
-{}
-
-
-template<class Type>
-CML::directionMixedFvPatchField<Type>::directionMixedFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -286,6 +263,22 @@ CML::directionMixedFvPatchField<Type>::directionMixedFvPatchField
 {
     evaluate();
 }
+
+
+template<class Type>
+CML::directionMixedFvPatchField<Type>::directionMixedFvPatchField
+(
+    const directionMixedFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    transformFvPatchField<Type>(ptf, p, iF, mapper),
+    refValue_(ptf.refValue_, mapper),
+    refGrad_(ptf.refGrad_, mapper),
+    valueFraction_(ptf.valueFraction_, mapper)
+{}
 
 
 template<class Type>
@@ -327,7 +320,7 @@ void CML::directionMixedFvPatchField<Type>::rmap
     transformFvPatchField<Type>::rmap(ptf, addr);
 
     const directionMixedFvPatchField<Type>& dmptf =
-        refCast<const directionMixedFvPatchField<Type> >(ptf);
+        refCast<const directionMixedFvPatchField<Type>>(ptf);
 
     refValue_.rmap(dmptf.refValue_, addr);
     refGrad_.rmap(dmptf.refGrad_, addr);
@@ -336,16 +329,16 @@ void CML::directionMixedFvPatchField<Type>::rmap
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::directionMixedFvPatchField<Type>::snGrad() const
 {
     const Field<Type> pif(this->patchInternalField());
 
-    tmp<Field<Type> > normalValue = transform(valueFraction_, refValue_);
+    tmp<Field<Type>> normalValue = transform(valueFraction_, refValue_);
 
-    tmp<Field<Type> > gradValue = pif + refGrad_/this->patch().deltaCoeffs();
+    tmp<Field<Type>> gradValue = pif + refGrad_/this->patch().deltaCoeffs();
 
-    tmp<Field<Type> > transformGradValue =
+    tmp<Field<Type>> transformGradValue =
         transform(I - valueFraction_, gradValue);
 
     return
@@ -362,12 +355,12 @@ void CML::directionMixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
         this->updateCoeffs();
     }
 
-    tmp<Field<Type> > normalValue = transform(valueFraction_, refValue_);
+    tmp<Field<Type>> normalValue = transform(valueFraction_, refValue_);
 
-    tmp<Field<Type> > gradValue =
+    tmp<Field<Type>> gradValue =
         this->patchInternalField() + refGrad_/this->patch().deltaCoeffs();
 
-    tmp<Field<Type> > transformGradValue =
+    tmp<Field<Type>> transformGradValue =
         transform(I - valueFraction_, gradValue);
 
     Field<Type>::operator=(normalValue + transformGradValue);
@@ -377,7 +370,7 @@ void CML::directionMixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::directionMixedFvPatchField<Type>::snGradTransformDiag() const
 {
     vectorField diag(valueFraction_.size());
@@ -406,15 +399,11 @@ template<class Type>
 void CML::directionMixedFvPatchField<Type>::write(Ostream& os) const
 {
     transformFvPatchField<Type>::write(os);
-    refValue_.writeEntry("refValue", os);
-    refGrad_.writeEntry("refGradient", os);
-    valueFraction_.writeEntry("valueFraction", os);
-    this->writeEntry("value", os);
+    writeEntry(os, "refValue", refValue_);
+    writeEntry(os, "refGradient", refGrad_);
+    writeEntry(os, "valueFraction", valueFraction_);
+    writeEntry(os, "value", *this);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

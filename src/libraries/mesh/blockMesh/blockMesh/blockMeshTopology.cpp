@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -198,9 +198,9 @@ bool CML::blockMesh::readBoundary
     tmpBlocksPatches.setSize(patchesInfo.size());
     patchDicts.setSize(patchesInfo.size());
 
-    forAll(tmpBlocksPatches, patchI)
+    forAll(tmpBlocksPatches, patchi)
     {
-        const entry& patchInfo = patchesInfo[patchI];
+        const entry& patchInfo = patchesInfo[patchi];
 
         if (!patchInfo.isDict())
         {
@@ -209,17 +209,17 @@ bool CML::blockMesh::readBoundary
                 << " valid dictionary." << exit(FatalIOError);
         }
 
-        patchNames[patchI] = patchInfo.keyword();
+        patchNames[patchi] = patchInfo.keyword();
         // Construct dictionary
-        patchDicts.set(patchI, new dictionary(patchInfo.dict()));
+        patchDicts.set(patchi, new dictionary(patchInfo.dict()));
         // Read block faces
-        patchDicts[patchI].lookup("faces") >> tmpBlocksPatches[patchI];
+        patchDicts[patchi].lookup("faces") >> tmpBlocksPatches[patchi];
 
         topologyOK = topologyOK && patchLabelsOK
         (
-            patchI,
+            patchi,
             blockPointField_,
-            tmpBlocksPatches[patchI]
+            tmpBlocksPatches[patchi]
         );
     }
 
@@ -484,37 +484,36 @@ CML::polyMesh* CML::blockMesh::createTopology
 
 
         // Add cyclic info (might not be present from older file)
-        forAll(patchDicts, patchI)
+        forAll(patchDicts, patchi)
         {
-            if (!patchDicts.set(patchI))
+            if (!patchDicts.set(patchi))
             {
-                patchDicts.set(patchI, new dictionary());
+                patchDicts.set(patchi, new dictionary());
             }
 
-            dictionary& dict = patchDicts[patchI];
+            dictionary& dict = patchDicts[patchi];
 
             // Add but not override type
             if (!dict.found("type"))
             {
-                dict.add("type", patchTypes[patchI], false);
+                dict.add("type", patchTypes[patchi], false);
             }
-            else if (word(dict.lookup("type")) != patchTypes[patchI])
+            else if (word(dict.lookup("type")) != patchTypes[patchi])
             {
                 IOWarningInFunction(meshDescription)
-                    << "For patch " << patchNames[patchI]
-                    << " overriding type '" << patchTypes[patchI]
+                    << "For patch " << patchNames[patchi]
+                    << " overriding type '" << patchTypes[patchi]
                     << "' with '" << word(dict.lookup("type"))
                     << "' (read from boundary file)"
                     << endl;
             }
 
             // Override neighbourpatch name
-            if (nbrPatchNames[patchI] != word::null)
+            if (nbrPatchNames[patchi] != word::null)
             {
-                dict.set("neighbourPatch", nbrPatchNames[patchI]);
+                dict.set("neighbourPatch", nbrPatchNames[patchi]);
             }
         }
-
 
         blockMeshPtr = new polyMesh
         (
@@ -527,7 +526,7 @@ CML::polyMesh* CML::blockMesh::createTopology
                 IOobject::NO_WRITE,
                 false
             ),
-            xferCopy(blockPointField_),   // copy these points, do NOT move
+            clone(blockPointField_),   // Copy these points, do NOT move
             tmpBlockCells,
             tmpBlocksPatches,
             patchNames,
@@ -576,7 +575,7 @@ CML::polyMesh* CML::blockMesh::createTopology
                 IOobject::NO_WRITE,
                 false
             ),
-            xferCopy(blockPointField_),   // copy these points, do NOT move
+            clone(blockPointField_),   // Copy these points, do NOT move
             tmpBlockCells,
             tmpBlocksPatches,
             patchNames,

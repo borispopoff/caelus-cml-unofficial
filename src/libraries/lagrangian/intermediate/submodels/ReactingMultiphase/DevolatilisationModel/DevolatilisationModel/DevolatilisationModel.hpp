@@ -96,7 +96,7 @@ public:
         DevolatilisationModel(const DevolatilisationModel<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<DevolatilisationModel<CloudType> > clone() const = 0;
+        virtual autoPtr<DevolatilisationModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -104,7 +104,7 @@ public:
 
 
     //- Selector
-    static autoPtr<DevolatilisationModel<CloudType> > New
+    static autoPtr<DevolatilisationModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -170,7 +170,7 @@ public:
                                                                                \
     DevolatilisationModel<reactingMultiphaseCloudType>::                       \
         adddictionaryConstructorToTable                                        \
-        <SS<reactingMultiphaseCloudType> >      \
+        <SS<reactingMultiphaseCloudType>>                                      \
         add##SS##CloudType##reactingMultiphaseCloudType##ConstructorToTable_;
 
 
@@ -250,7 +250,7 @@ void CML::DevolatilisationModel<CloudType>::info(Ostream& os)
 
 
 template<class CloudType>
-CML::autoPtr<CML::DevolatilisationModel<CloudType> >
+CML::autoPtr<CML::DevolatilisationModel<CloudType>>
 CML::DevolatilisationModel<CloudType>::New
 (
     const dictionary& dict,
@@ -274,7 +274,7 @@ CML::DevolatilisationModel<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<DevolatilisationModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<DevolatilisationModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

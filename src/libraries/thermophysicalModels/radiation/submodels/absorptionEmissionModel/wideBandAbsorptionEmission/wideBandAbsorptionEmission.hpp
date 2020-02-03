@@ -146,7 +146,7 @@ private:
     FixedList<scalar, maxBands_> iEhrrCoeffs_;
 
     //- Look-up table of species related to ft
-    mutable autoPtr<interpolationLookUpTable<scalar> > lookUpTablePtr_;
+    mutable autoPtr<interpolationLookUpTable<scalar>> lookUpTablePtr_;
 
     //- Thermo package
     const fluidThermo& thermo_;

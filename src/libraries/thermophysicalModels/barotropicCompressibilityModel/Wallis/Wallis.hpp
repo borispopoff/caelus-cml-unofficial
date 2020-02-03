@@ -50,6 +50,7 @@ class Wallis
     public barotropicCompressibilityModel
 {
 
+    dimensionedScalar pSat_;
     dimensionedScalar psiv_;
     dimensionedScalar psil_;
 

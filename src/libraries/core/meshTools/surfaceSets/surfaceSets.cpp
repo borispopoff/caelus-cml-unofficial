@@ -41,14 +41,14 @@ License
 //CML::scalar CML::surfaceSets::minEdgeLen
 //(
 //    const primitiveMesh& mesh,
-//    const label pointI
+//    const label pointi
 //)
 //{
 //    const edgeList& edges = mesh.edges();
 //
 //    const pointField& points = mesh.points();
 //
-//    const labelList& pEdges = mesh.pointEdges()[pointI];
+//    const labelList& pEdges = mesh.pointEdges()[pointi];
 //
 //    scalar minLen = GREAT;
 //
@@ -65,16 +65,16 @@ License
 //(
 //    const primitiveMesh& mesh,
 //    const boolList& selectedPoint,
-//    const label cellI
+//    const label celli
 //)
 //{
-//    const labelList& cFaces = mesh.cells()[cellI];
+//    const labelList& cFaces = mesh.cells()[celli];
 //
-//    forAll(cFaces, cFaceI)
+//    forAll(cFaces, cFacei)
 //    {
-//        label faceI = cFaces[cFaceI];
+//        label facei = cFaces[cFacei];
 //
-//        const face& f = mesh.faces()[faceI];
+//        const face& f = mesh.faces()[facei];
 //
 //        forAll(f, fp)
 //        {
@@ -121,20 +121,20 @@ License
 //    {
 //        const cell& cFaces = cells[iter.key()];
 //
-//        forAll(cFaces, cFaceI)
+//        forAll(cFaces, cFacei)
 //        {
-//            const face& f = faces[cFaces[cFaceI]];
+//            const face& f = faces[cFaces[cFacei]];
 //
 //            forAll(f, fp)
 //            {
-//                label pointI = f[fp];
+//                label pointi = f[fp];
 //
-//                if (outsidePoints.insert(pointI))
+//                if (outsidePoints.insert(pointi))
 //                {
 //                    // Calculate new position for this outside point
 //                    tmp<pointField> tnearest =
-//                        querySurf.calcNearest(pointField(1, points[pointI]));
-//                    newPoints[pointI] = tnearest()[0];
+//                        querySurf.calcNearest(pointField(1, points[pointi]));
+//                    newPoints[pointi] = tnearest()[0];
 //                }
 //            }
 //        }
@@ -145,16 +145,16 @@ License
 //    label nRemoved = 0;
 //    forAllConstIter(labelHashSet, flatCandidates, iter)
 //    {
-//        label cellI = iter.key();
+//        label celli = iter.key();
 //
-//        const cell& cll = cells[cellI];
+//        const cell& cll = cells[celli];
 //
 //        scalar newVol = cll.mag(newPoints, faces);
-//        scalar oldVol = mesh.cellVolumes()[cellI];
+//        scalar oldVol = mesh.cellVolumes()[celli];
 //
 //        if (newVol < 0.1 * oldVol)
 //        {
-//            internalCells.erase(cellI);
+//            internalCells.erase(celli);
 //            nRemoved++;
 //        }
 //    }
@@ -196,15 +196,15 @@ License
 //
 //    forAll(candidates, i)
 //    {
-//        label pointI = candidates[i];
+//        label pointi = candidates[i];
 //
-//        scalar minLen = minEdgeLen(mesh, pointI);
+//        scalar minLen = minEdgeLen(mesh, pointi);
 //
-//        scalar dist = mag(nearest[i] - points[pointI]);
+//        scalar dist = mag(nearest[i] - points[pointi]);
 //
 //        if (dist < edgeFactor * minLen)
 //        {
-//            nearPointSet.insert(pointI);
+//            nearPointSet.insert(pointi);
 //        }
 //    }
 //}
@@ -254,21 +254,21 @@ void CML::surfaceSets::getSurfaceSets
         );
     }
 
-    forAll(cellType, cellI)
+    forAll(cellType, celli)
     {
-        label cType = cellType[cellI];
+        label cType = cellType[celli];
 
         if (cType == cellClassification::CUT)
         {
-            cut.insert(cellI);
+            cut.insert(celli);
         }
         else if (cType == cellClassification::INSIDE)
         {
-            inside.insert(cellI);
+            inside.insert(celli);
         }
         else if (cType == cellClassification::OUTSIDE)
         {
-            outside.insert(cellI);
+            outside.insert(celli);
         }
     }
 }
@@ -291,28 +291,28 @@ CML::labelHashSet CML::surfaceSets::getHangingCells
 
     List<pointStatus> pointSide(mesh.nPoints(), NOTSET);
 
-    for (label cellI = 0; cellI < mesh.nCells(); cellI++)
+    for (label celli = 0; celli < mesh.nCells(); celli++)
     {
-        if (internalCells.found(cellI))
+        if (internalCells.found(celli))
         {
             // Inside cell. Mark all vertices seen from this cell.
-            const labelList& cFaces = cells[cellI];
+            const labelList& cFaces = cells[celli];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = faces[cFaces[cFaceI]];
+                const face& f = faces[cFaces[cFacei]];
 
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
+                    label pointi = f[fp];
 
-                    if (pointSide[pointI] == NOTSET)
+                    if (pointSide[pointi] == NOTSET)
                     {
-                        pointSide[pointI] = INSIDE;
+                        pointSide[pointi] = INSIDE;
                     }
-                    else if (pointSide[pointI] == OUTSIDE)
+                    else if (pointSide[pointi] == OUTSIDE)
                     {
-                        pointSide[pointI] = MIXED;
+                        pointSide[pointi] = MIXED;
                     }
                     else
                     {
@@ -324,23 +324,23 @@ CML::labelHashSet CML::surfaceSets::getHangingCells
         else
         {
             // Outside cell
-            const labelList& cFaces = cells[cellI];
+            const labelList& cFaces = cells[celli];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = faces[cFaces[cFaceI]];
+                const face& f = faces[cFaces[cFacei]];
 
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
+                    label pointi = f[fp];
 
-                    if (pointSide[pointI] == NOTSET)
+                    if (pointSide[pointi] == NOTSET)
                     {
-                        pointSide[pointI] = OUTSIDE;
+                        pointSide[pointi] = OUTSIDE;
                     }
-                    else if (pointSide[pointI] == INSIDE)
+                    else if (pointSide[pointi] == INSIDE)
                     {
-                        pointSide[pointI] = MIXED;
+                        pointSide[pointi] = MIXED;
                     }
                     else
                     {
@@ -354,11 +354,11 @@ CML::labelHashSet CML::surfaceSets::getHangingCells
 
     //OFstream mixedStr("mixed.obj");
     //
-    //forAll(pointSide, pointI)
+    //forAll(pointSide, pointi)
     //{
-    //    if (pointSide[pointI] == MIXED)
+    //    if (pointSide[pointi] == MIXED)
     //    {
-    //        const point& pt = points[pointI];
+    //        const point& pt = points[pointi];
     //
     //        mixedStr << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z()
     //            << endl;
@@ -372,8 +372,8 @@ CML::labelHashSet CML::surfaceSets::getHangingCells
 
     forAllConstIter(labelHashSet, internalCells, iter)
     {
-        const label cellI = iter.key();
-        const cell& cFaces = cells[cellI];
+        const label celli = iter.key();
+        const cell& cFaces = cells[celli];
 
         label usesMixedOnly = true;
 
@@ -397,7 +397,7 @@ CML::labelHashSet CML::surfaceSets::getHangingCells
         }
         if (usesMixedOnly)
         {
-            mixedOnlyCells.insert(cellI);
+            mixedOnlyCells.insert(celli);
         }
     }
 

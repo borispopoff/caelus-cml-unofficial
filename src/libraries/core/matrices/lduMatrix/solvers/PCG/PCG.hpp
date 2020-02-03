@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2014 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -48,46 +48,56 @@ References
 namespace CML
 {
 
-class PCG : public lduMatrix::solver
+/*---------------------------------------------------------------------------*\
+                           Class PCG Declaration
+\*---------------------------------------------------------------------------*/
+
+class PCG
+:
+    public lduMatrix::solver
 {
-    // Private Member Functions
-
-    //- Disallow default bitwise copy construct
-    PCG(const PCG&);
-
-    //- Disallow default bitwise assignment
-    void operator=(const PCG&);
 
 public:
 
     //- Runtime type information
     TypeName("PCG");
 
+
     // Constructors
 
-    //- Construct from matrix components and solver controls
-    PCG
-    (
-        word const& fieldName,
-        lduMatrix const& matrix,
-        FieldField<Field, scalar> const& interfaceBouCoeffs,
-        FieldField<Field, scalar> const& interfaceIntCoeffs,
-        lduInterfaceFieldPtrsList const& interfaces,
-        dictionary const& solverControls
-    );
+        //- Construct from matrix components and solver controls
+        PCG
+        (
+            word const& fieldName,
+            lduMatrix const& matrix,
+            FieldField<Field, scalar> const& interfaceBouCoeffs,
+            FieldField<Field, scalar> const& interfaceIntCoeffs,
+            lduInterfaceFieldPtrsList const& interfaces,
+            dictionary const& solverControls
+        );
+
+        //- Disallow default bitwise copy construct
+        PCG(const PCG&) = delete;
+
 
     //- Destructor
     virtual ~PCG() {}
 
     // Member Functions
 
-    //- Solve the matrix with this solver
-    virtual solverPerformance solve
-    (
-        scalarField& x,
-        scalarField const& b,
-        direction const cmpt=0
-    ) const;
+        //- Solve the matrix with this solver
+        virtual solverPerformance solve
+        (
+            scalarField& x,
+            scalarField const& b,
+            direction const cmpt=0
+        ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PCG&) = delete;
 };
 
 

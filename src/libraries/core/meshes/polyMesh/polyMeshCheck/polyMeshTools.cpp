@@ -39,7 +39,7 @@ CML::tmp<CML::scalarField> CML::polyMeshTools::faceOrthogonality
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
     tmp<scalarField> tortho(new scalarField(mesh.nFaces(), 1.0));
-    scalarField& ortho = tortho();
+    scalarField& ortho = tortho.ref();
 
     // Internal faces
     forAll(nei, facei)
@@ -96,7 +96,7 @@ CML::tmp<CML::scalarField> CML::polyMeshTools::faceSkewness
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
     tmp<scalarField> tskew(new scalarField(mesh.nFaces()));
-    scalarField& skew = tskew();
+    scalarField& skew = tskew.ref();
 
     forAll(nei, facei)
     {
@@ -180,7 +180,7 @@ CML::tmp<CML::scalarField> CML::polyMeshTools::faceWeights
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
     tmp<scalarField> tweight(new scalarField(mesh.nFaces(), 1.0));
-    scalarField& weight = tweight();
+    scalarField& weight = tweight.ref();
 
     // Internal faces
     forAll(nei, facei)
@@ -236,7 +236,7 @@ CML::tmp<CML::scalarField> CML::polyMeshTools::volRatio
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
     tmp<scalarField> tratio(new scalarField(mesh.nFaces(), 1.0));
-    scalarField& ratio = tratio();
+    scalarField& ratio = tratio.ref();
 
     // Internal faces
     forAll(nei, facei)

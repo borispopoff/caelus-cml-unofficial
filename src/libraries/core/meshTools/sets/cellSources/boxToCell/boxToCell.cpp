@@ -52,11 +52,11 @@ void CML::boxToCell::combine(topoSet& set, const bool add) const
 {
     const pointField& ctrs = mesh_.cellCentres();
 
-    forAll(ctrs, cellI)
+    forAll(ctrs, celli)
     {
-        if (bb_.contains(ctrs[cellI]))
+        if (bb_.contains(ctrs[celli]))
         {
-            addOrDelete(set, cellI, add);
+            addOrDelete(set, celli, add);
         }
     }
 }

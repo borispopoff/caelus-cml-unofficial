@@ -154,12 +154,10 @@ bool CML::subModelBase::active() const
 
 
 void CML::subModelBase::cacheFields(const bool)
-{
-    // do nothing
-}
+{}
 
 
-bool CML::subModelBase::outputTime() const
+bool CML::subModelBase::writeTime() const
 {
     return active();
 }

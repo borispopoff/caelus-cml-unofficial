@@ -27,7 +27,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.hpp"
-#include "fvIOoptionList.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -44,7 +43,6 @@ int main(int argc, char *argv[])
     #include "readControls_potential.hpp"
     #include "createFields.hpp"
     #include "createMRF.hpp"
-    #include "createFvOptions.hpp"
 
     Info<< nl << "Calculating potential flow" << endl;
 

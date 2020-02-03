@@ -53,7 +53,7 @@ CML::calcTypes::interpolate::~interpolate()
 void CML::calcTypes::interpolate::init()
 {
     CML::argList::validArgs.append("interpolate");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 

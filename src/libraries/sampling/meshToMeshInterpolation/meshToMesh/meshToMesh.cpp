@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2015 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -82,7 +82,7 @@ CML::labelList CML::meshToMesh::maskCells
         Pout<< "participating source mesh cells: " << cells.size() << endl;
     }
 
-    return cells;
+    return move(cells);
 }
 
 
@@ -97,9 +97,9 @@ void CML::meshToMesh::normaliseWeights
 
     if (nCell > 0)
     {
-        forAll(wght, cellI)
+        forAll(wght, celli)
         {
-            scalarList& w = wght[cellI];
+            scalarList& w = wght[celli];
             scalar s = sum(w);
 
             forAll(w, i)
@@ -196,10 +196,10 @@ void CML::meshToMesh::calculate(const word& methodName)
                 tgtRegion_.time(),
                 IOobject::NO_READ
             ),
-            xferMove(newTgtPoints),
-            xferMove(newTgtFaces),
-            xferMove(newTgtFaceOwners),
-            xferMove(newTgtFaceNeighbours),
+            move(newTgtPoints),
+            move(newTgtFaces),
+            move(newTgtFaceOwners),
+            move(newTgtFaceNeighbours),
             false                                   // no parallel comms
         );
 
@@ -263,7 +263,7 @@ void CML::meshToMesh::calculate(const word& methodName)
         // set up as a reverse distribute
         mapDistributeBase::distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             tgtRegion_.nCells(),
             map.constructMap(),
@@ -279,7 +279,7 @@ void CML::meshToMesh::calculate(const word& methodName)
         // set up as a reverse distribute
         mapDistributeBase::distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             tgtRegion_.nCells(),
             map.constructMap(),
@@ -308,7 +308,7 @@ void CML::meshToMesh::calculate(const word& methodName)
         );
 
         // cache maps and reset addresses
-        List<Map<label> > cMap;
+        List<Map<label>> cMap;
         srcMapPtr_.reset
         (
             new mapDistribute(globalSrcCells, tgtToSrcCellAddr_, cMap)
@@ -344,24 +344,24 @@ void CML::meshToMesh::calculate(const word& methodName)
 }
 
 
-CML::AMIPatchToPatchInterpolation::interpolationMethod
+CML::AMIInterpolation::interpolationMethod
 CML::meshToMesh::interpolationMethodAMI(const interpolationMethod method)
 {
     switch (method)
     {
         case imDirect:
         {
-            return AMIPatchToPatchInterpolation::imDirect;
+            return AMIInterpolation::imDirect;
             break;
         }
         case imMapNearest:
         {
-            return AMIPatchToPatchInterpolation::imMapNearest;
+            return AMIInterpolation::imMapNearest;
             break;
         }
         case imCellVolumeWeight:
         {
-            return AMIPatchToPatchInterpolation::imFaceAreaWeight;
+            return AMIInterpolation::imFaceAreaWeight;
             break;
         }
         default:
@@ -372,7 +372,7 @@ CML::meshToMesh::interpolationMethodAMI(const interpolationMethod method)
         }
     }
 
-    return AMIPatchToPatchInterpolation::imDirect;
+    return AMIInterpolation::imDirect;
 }
 
 
@@ -389,11 +389,11 @@ void CML::meshToMesh::calculatePatchAMIs(const word& AMIMethodName)
 
     forAll(srcPatchID_, i)
     {
-        label srcPatchI = srcPatchID_[i];
-        label tgtPatchI = tgtPatchID_[i];
+        label srcPatchi = srcPatchID_[i];
+        label tgtPatchi = tgtPatchID_[i];
 
-        const polyPatch& srcPP = srcRegion_.boundaryMesh()[srcPatchI];
-        const polyPatch& tgtPP = tgtRegion_.boundaryMesh()[tgtPatchI];
+        const polyPatch& srcPP = srcRegion_.boundaryMesh()[srcPatchi];
+        const polyPatch& tgtPP = tgtRegion_.boundaryMesh()[tgtPatchi];
 
         Info<< "Creating AMI between source patch " << srcPP.name()
             << " and target patch " << tgtPP.name()
@@ -405,7 +405,7 @@ void CML::meshToMesh::calculatePatchAMIs(const word& AMIMethodName)
         patchAMIs_.set
         (
             i,
-            new AMIPatchToPatchInterpolation
+            new AMIInterpolation
             (
                 srcPP,
                 tgtPP,
@@ -436,18 +436,18 @@ void CML::meshToMesh::constructNoCuttingPatches
 
         DynamicList<label> srcPatchID(srcBM.size());
         DynamicList<label> tgtPatchID(tgtBM.size());
-        forAll(srcBM, patchI)
+        forAll(srcBM, patchi)
         {
-            const polyPatch& pp = srcBM[patchI];
+            const polyPatch& pp = srcBM[patchi];
             if (!polyPatch::constraintType(pp.type()))
             {
                 srcPatchID.append(pp.index());
 
-                label tgtPatchI = tgtBM.findPatchID(pp.name());
+                label tgtPatchi = tgtBM.findPatchID(pp.name());
 
-                if (tgtPatchI != -1)
+                if (tgtPatchi != -1)
                 {
-                    tgtPatchID.append(tgtPatchI);
+                    tgtPatchID.append(tgtPatchi);
                 }
                 else
                 {
@@ -541,7 +541,7 @@ CML::meshToMesh::meshToMesh
     constructNoCuttingPatches
     (
         interpolationMethodNames_[method],
-        AMIPatchToPatchInterpolation::interpolationMethodToWord
+        AMIInterpolation::interpolationMethodToWord
         (
             interpolationMethodAMI(method)
         ),
@@ -605,7 +605,7 @@ CML::meshToMesh::meshToMesh
     constructFromCuttingPatches
     (
         interpolationMethodNames_[method],
-        AMIPatchToPatchInterpolation::interpolationMethodToWord
+        AMIInterpolation::interpolationMethodToWord
         (
             interpolationMethodAMI(method)
         ),

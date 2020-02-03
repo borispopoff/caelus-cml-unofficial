@@ -53,7 +53,7 @@ CML::calcTypes::mag::~mag()
 void CML::calcTypes::mag::init()
 {
     argList::validArgs.append("mag");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 

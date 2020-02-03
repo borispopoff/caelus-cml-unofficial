@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -45,7 +45,7 @@ tmp<scalarField> mutkFilmWallFunctionFvPatchScalarField::calcUTau
 ) const
 {
     tmp<scalarField> tuTau(new scalarField(patch().size(), 0.0));
-    scalarField& uTau = tuTau();
+    scalarField& uTau = tuTau.ref();
 
     typedef regionModels::surfaceFilmModels::surfaceFilmRegionModel modelType;
 
@@ -212,9 +212,9 @@ void mutkFilmWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    os.writeKeyword("B") << B_ << token::END_STATEMENT << nl;
-    os.writeKeyword("yPlusCrit") << yPlusCrit_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "B", B_);
+    writeEntry(os, "yPlusCrit", yPlusCrit_);
+    writeEntry(os, "value", *this);
 }
 
 

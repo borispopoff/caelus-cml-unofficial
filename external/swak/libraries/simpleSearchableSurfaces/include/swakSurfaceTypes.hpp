@@ -37,10 +37,10 @@ Contributors/Copyright:
 #include "swakVersion.hpp"
 #include "DebugOStream.hpp"
 
-#define INSIDE volumeType::INSIDE
-#define OUTSIDE volumeType::OUTSIDE
-#define UNKNOWN volumeType::UNKNOWN
-#define MIXED volumeType::MIXED
+#define INSIDE volumeType::inside
+#define OUTSIDE volumeType::outside
+#define UNKNOWN volumeType::unknown
+#define MIXED volumeType::mixed
 
 #endif
 

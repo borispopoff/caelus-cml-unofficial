@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
- 
+
     Caelus is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -65,11 +65,11 @@ public:
     // Public data
 
         //- Enumeration defining the type of action
-        enum actionType
+        enum class actionType
         {
-            noWriteNow,    /*!< stop immediately without writing data */
-            writeNow,      /*!< write data and stop immediately */
-            nextWrite      /*!< stop the next time data are written */
+            noWriteNow,    //!< stop immediately without writing data
+            writeNow,      //!< write data and stop immediately
+            nextWrite      //!< stop the next time data are written
         };
 
 private:
@@ -97,10 +97,10 @@ private:
         void removeFile() const;
 
         //- Disallow default bitwise copy construct
-        abortCalculation(const abortCalculation&);
+        abortCalculation(const abortCalculation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const abortCalculation&);
+        void operator=(const abortCalculation&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,10 +50,10 @@ class passiveParticleCloud
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        passiveParticleCloud(const passiveParticleCloud&);
+        passiveParticleCloud(const passiveParticleCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const passiveParticleCloud&);
+        void operator=(const passiveParticleCloud&) = delete;
 
 
 public:

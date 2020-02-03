@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -61,7 +61,7 @@ namespace fvc
         <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
     > reconstruct
     (
-        const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+        const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>&
     );
 }
 
@@ -109,17 +109,17 @@ reconstruct
         mesh.Sf()/(mesh.magSf()*mesh.nonOrthDeltaCoeffs())
     );
 
-    faceVols.internalField() *= (1.0 -  mesh.weights().internalField());
+    faceVols.primitiveFieldRef() *= (1.0 -  mesh.weights().primitiveField());
     forAll(faceVols.boundaryField(), patchi)
     {
         if (faceVols.boundaryField()[patchi].coupled())
         {
-            faceVols.boundaryField()[patchi] *=
+            faceVols.boundaryFieldRef()[patchi] *=
                 (1.0 -  mesh.weights().boundaryField()[patchi]);
         }
     }
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > treconField
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> treconField
     (
         new GeometricField<GradType, fvPatchField, volMesh>
         (
@@ -131,12 +131,19 @@ reconstruct
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            inv(surfaceSum(mesh.Sf()*faceVols))&surfaceSum(faceVols*ssf),
+            mesh,
+            dimensioned<GradType>("0", ssf.dimensions()/dimArea, Zero),
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
 
-    treconField().correctBoundaryConditions();
+    if (!mesh.nGeometricD())
+    {
+        return treconField;
+    }
+
+    treconField.ref() = inv(surfaceSum(mesh.Sf()*faceVols))&surfaceSum(faceVols*ssf);
+    treconField.ref().correctBoundaryConditions();
 
     return treconField;
 }
@@ -152,11 +159,11 @@ tmp
 >
 reconstruct
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >& tssf
+    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tssf
 )
 {
     typedef typename outerProduct<vector, Type>::type GradType;
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tvf
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tvf
     (
         fvc::reconstruct(tssf())
     );

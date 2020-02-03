@@ -229,7 +229,7 @@ public:
             //  Only makes sense for closed surfaces.
             volumeType getVolumeType
             (
-                const indexedOctree<treeDataPrimitivePatch<PatchType> >&,
+                const indexedOctree<treeDataPrimitivePatch<PatchType>>&,
                 const point&
             ) const;
 
@@ -251,7 +251,7 @@ public:
             //- Helper: find intersection of line with shapes
             static bool findIntersection
             (
-                const indexedOctree<treeDataPrimitivePatch<PatchType> >& tree,
+                const indexedOctree<treeDataPrimitivePatch<PatchType>>& tree,
                 const label index,
                 const point& start,
                 const point& end,
@@ -330,7 +330,7 @@ CML::treeDataPrimitivePatch<PatchType>::treeDataPrimitivePatch
 template<class PatchType>
 CML::treeDataPrimitivePatch<PatchType>::findNearestOp::findNearestOp
 (
-    const indexedOctree<treeDataPrimitivePatch<PatchType> >& tree
+    const indexedOctree<treeDataPrimitivePatch<PatchType>>& tree
 )
 :
     tree_(tree)
@@ -340,7 +340,7 @@ CML::treeDataPrimitivePatch<PatchType>::findNearestOp::findNearestOp
 template<class PatchType>
 CML::treeDataPrimitivePatch<PatchType>::findIntersectOp::findIntersectOp
 (
-    const indexedOctree<treeDataPrimitivePatch<PatchType> >& tree
+    const indexedOctree<treeDataPrimitivePatch<PatchType>>& tree
 )
 :
     tree_(tree)
@@ -350,7 +350,7 @@ CML::treeDataPrimitivePatch<PatchType>::findIntersectOp::findIntersectOp
 template<class PatchType>
 CML::treeDataPrimitivePatch<PatchType>::findAllIntersectOp::findAllIntersectOp
 (
-    const indexedOctree<treeDataPrimitivePatch<PatchType> >& tree,
+    const indexedOctree<treeDataPrimitivePatch<PatchType>>& tree,
     DynamicList<label>& shapeMask
 )
 :
@@ -363,7 +363,7 @@ template<class PatchType>
 CML::treeDataPrimitivePatch<PatchType>::
 findSelfIntersectOp::findSelfIntersectOp
 (
-    const indexedOctree<treeDataPrimitivePatch<PatchType> >& tree,
+    const indexedOctree<treeDataPrimitivePatch<PatchType>>& tree,
     const label edgeID
 )
 :
@@ -393,7 +393,7 @@ CML::pointField CML::treeDataPrimitivePatch<PatchType>::shapePoints() const
 template<class PatchType>
 CML::volumeType CML::treeDataPrimitivePatch<PatchType>::getVolumeType
 (
-    const indexedOctree<treeDataPrimitivePatch<PatchType> >& oc,
+    const indexedOctree<treeDataPrimitivePatch<PatchType>>& oc,
     const point& sample
 ) const
 {
@@ -530,7 +530,7 @@ CML::volumeType CML::treeDataPrimitivePatch<PatchType>::getVolumeType
             // triangle normals)
             const labelList& eFaces = patch_.edgeFaces()[edgeI];
 
-            vector edgeNormal(vector::zero);
+            vector edgeNormal(Zero);
 
             forAll(eFaces, i)
             {
@@ -618,7 +618,7 @@ CML::volumeType CML::treeDataPrimitivePatch<PatchType>::getVolumeType
     // - tolerances are wrong. (if e.g. face has zero area)
     // - or (more likely) surface is not closed.
 
-    return volumeType::UNKNOWN;
+    return volumeType::unknown;
 }
 
 
@@ -853,7 +853,7 @@ bool CML::treeDataPrimitivePatch<PatchType>::findSelfIntersectOp::operator()
 template<class PatchType>
 bool CML::treeDataPrimitivePatch<PatchType>::findIntersection
 (
-    const indexedOctree<treeDataPrimitivePatch<PatchType> >& tree,
+    const indexedOctree<treeDataPrimitivePatch<PatchType>>& tree,
     const label index,
     const point& start,
     const point& end,
@@ -888,7 +888,7 @@ bool CML::treeDataPrimitivePatch<PatchType>::findIntersection
             points[f[0]],
             points[f[1]],
             points[f[2]]
-        ).intersection(start, dir, intersection::HALF_RAY, shape.planarTol_);
+        ).intersection(start, dir, intersection::algorithm::halfRay, shape.planarTol_);
     }
     else
     {
@@ -900,7 +900,7 @@ bool CML::treeDataPrimitivePatch<PatchType>::findIntersection
             dir,
             faceCentres[index],
             points,
-            intersection::HALF_RAY,
+            intersection::algorithm::halfRay,
             shape.planarTol_
         );
     }

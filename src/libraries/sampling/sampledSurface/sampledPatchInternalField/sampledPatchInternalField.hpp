@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -62,13 +62,13 @@ class sampledPatchInternalField
 
         //- sample field on faces
         template<class Type>
-        tmp<Field<Type> > sampleField
+        tmp<Field<Type>> sampleField
         (
             const GeometricField<Type, fvPatchField, volMesh>& vField
         ) const;
 
         template<class Type>
-        tmp<Field<Type> > interpolateField(const interpolation<Type>&) const;
+        tmp<Field<Type>> interpolateField(const interpolation<Type>&) const;
 
 
 public:
@@ -177,20 +177,20 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledPatchInternalField::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
 {
     // One value per face
-    tmp<Field<Type> > tvalues(new Field<Type>(patchFaceLabels().size()));
-    Field<Type>& values = tvalues();
+    tmp<Field<Type>> tvalues(new Field<Type>(patchFaceLabels().size()));
+    Field<Type>& values = tvalues.ref();
 
     forAll(patchStart(), i)
     {
         // Get patchface wise data by sampling internal field
-        Field<Type> interpVals = vField.internalField();
+        Field<Type> interpVals = vField.primitiveField();
         mappers_[i].map().distribute(interpVals);
 
         // Store at correct position in values
@@ -212,7 +212,7 @@ CML::sampledPatchInternalField::sampleField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledPatchInternalField::interpolateField
 (
     const interpolation<Type>& interpolator
@@ -240,14 +240,14 @@ CML::sampledPatchInternalField::interpolateField
 
         Field<Type> patchVals(mesh().nCells());
 
-        forAll(samples, cellI)
+        forAll(samples, celli)
         {
-            if (samples[cellI] != point::max)
+            if (samples[celli] != point::max)
             {
-                patchVals[cellI] = interpolator.interpolate
+                patchVals[celli] = interpolator.interpolate
                 (
-                    samples[cellI],
-                    cellI
+                    samples[celli],
+                    celli
                 );
             }
         }
@@ -256,7 +256,7 @@ CML::sampledPatchInternalField::interpolateField
 
         // Now patchVals holds the interpolated data in patch face order.
         // Collect.
-        SubList<Type>(allPatchVals, patchVals.size(), sz).assign(patchVals);
+        SubList<Type>(allPatchVals, patchVals.size(), sz) = patchVals;
         sz += patchVals.size();
     }
 
@@ -285,9 +285,6 @@ CML::sampledPatchInternalField::interpolateField
         allPatches
     ).faceToPointInterpolate(allPatchVals);
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,10 +54,13 @@ class autoPtr
 
 public:
 
+    typedef T Type;
+
+
     // Constructors
 
         //- Store object pointer
-        inline explicit autoPtr(T* = 0);
+        inline explicit autoPtr(T* = nullptr);
 
         //- Construct as copy by transferring pointer to this autoPtr and
         //  setting the arguments pointer to nullptr
@@ -67,6 +70,7 @@ public:
         //  Should only be called with type that supports cloning
         inline autoPtr(const autoPtr<T>&, const bool reuse);
 
+
     //- Destructor, delete object if pointer is not nullptr
     inline ~autoPtr();
 
@@ -75,10 +79,10 @@ public:
 
         // Check
 
-            //- Return true if the autoPtr is empty (ie, no pointer set).
+            //- Return true if the autoPtr is empty (ie, no pointer set)
             inline bool empty() const;
 
-            //- Return true if the autoPtr valid (ie, the pointer is set).
+            //- Return true if the autoPtr valid (ie, the pointer is set)
             inline bool valid() const;
 
 
@@ -88,24 +92,31 @@ public:
             inline T* ptr();
 
             //- Set pointer to that given.
-            //  If object pointer already set issue a FatalError.
+            //  If object pointer already set issue a FatalError
             inline void set(T*);
 
             //- If object pointer already set, delete object and set to given
             //  pointer
-            inline void reset(T* = 0);
+            inline void reset(T* = nullptr);
 
-            //- Delete object (if the pointer is valid) and set pointer to nullptr.
+            //- Delete object (if the pointer is valid) and set pointer to
+            //  nullptr
             inline void clear();
 
 
-        // Member operators
+        // Member Operators
 
             //- Return reference to the object data
             inline T& operator()();
 
             //- Return const reference to the object data
             inline const T& operator()() const;
+
+            //- Return reference to the object data
+            inline T& operator*();
+
+            //- Return const reference to the object data
+            inline const T& operator*() const;
 
             //- Const cast to the underlying type reference
             inline operator const T&() const;

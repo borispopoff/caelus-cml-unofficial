@@ -179,15 +179,15 @@ void CML::fvMeshAdder::MapVolField
 
     {
         // Store old internal field
-        Field<Type> oldInternalField(fld.internalField());
+        Field<Type> oldInternalField(fld.primitiveField());
 
         // Modify internal field
-        Field<Type>& intFld = fld.internalField();
+        Field<Type>& intFld = fld.primitiveFieldRef();
 
         intFld.setSize(mesh.nCells());
 
         intFld.rmap(oldInternalField, meshMap.oldCellMap());
-        intFld.rmap(fldToAdd.internalField(), meshMap.addedCellMap());
+        intFld.rmap(fldToAdd.primitiveField(), meshMap.addedCellMap());
     }
 
 
@@ -195,7 +195,7 @@ void CML::fvMeshAdder::MapVolField
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-    GeometricBoundaryField& bfld = fld.boundaryField();
+    Boundary& bfld = fld.boundaryFieldRef();
 
     {
         const labelList& oldPatchMap = meshMap.oldPatchMap();
@@ -290,7 +290,7 @@ void CML::fvMeshAdder::MapVolField
                     (
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new fvPatch
-                        fld.dimensionedInternalField(), // new internal field
+                        fld(), // new internal field
                         patchMapper                     // mapper (new to old)
                     )
                 );
@@ -344,7 +344,7 @@ void CML::fvMeshAdder::MapVolField
                         (
                             fldToAdd.boundaryField()[patchi], // added field
                             mesh.boundary()[newPatchi],       // new fvPatch
-                            fld.dimensionedInternalField(),   // new int. field
+                            fld(),   // new int. field
                             patchMapper                       // mapper
                         )
                     );
@@ -389,14 +389,14 @@ void CML::fvMeshAdder::MapVolFields
     HashTable<const GeometricField<Type, fvPatchField, volMesh>*> fields
     (
         mesh.objectRegistry::lookupClass
-        <GeometricField<Type, fvPatchField, volMesh> >
+        <GeometricField<Type, fvPatchField, volMesh>>
         ()
     );
 
     HashTable<const GeometricField<Type, fvPatchField, volMesh>*> fieldsToAdd
     (
         meshToAdd.objectRegistry::lookupClass
-        <GeometricField<Type, fvPatchField, volMesh> >
+        <GeometricField<Type, fvPatchField, volMesh>>
         ()
     );
 
@@ -475,7 +475,7 @@ void CML::fvMeshAdder::MapSurfaceField
     const labelList& oldPatchStarts = meshMap.oldPatchStarts();
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-    GeometricBoundaryField& bfld = fld.boundaryField();
+    Boundary& bfld = fld.boundaryFieldRef();
 
     // Internal field
     // ~~~~~~~~~~~~~~
@@ -485,7 +485,7 @@ void CML::fvMeshAdder::MapSurfaceField
         Field<Type> oldField(fld);
 
         // Modify internal field
-        Field<Type>& intFld = fld.internalField();
+        Field<Type>& intFld = fld.primitiveFieldRef();
 
         intFld.setSize(mesh.nInternalFaces());
 
@@ -609,7 +609,7 @@ void CML::fvMeshAdder::MapSurfaceField
                     (
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new fvPatch
-                        fld.dimensionedInternalField(), // new internal field
+                        fld(), // new internal field
                         patchMapper                     // mapper (new to old)
                     )
                 );
@@ -663,7 +663,7 @@ void CML::fvMeshAdder::MapSurfaceField
                         (
                             fldToAdd.boundaryField()[patchi],// added field
                             mesh.boundary()[newPatchi],      // new fvPatch
-                            fld.dimensionedInternalField(),  // new int. field
+                            fld(),  // new int. field
                             patchMapper                      // mapper
                         )
                     );

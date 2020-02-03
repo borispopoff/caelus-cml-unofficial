@@ -60,9 +60,9 @@ public:
         NoHeatTransfer(const NoHeatTransfer<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<HeatTransferModel<CloudType> > clone() const
+        virtual autoPtr<HeatTransferModel<CloudType>> clone() const
         {
-            return autoPtr<HeatTransferModel<CloudType> >
+            return autoPtr<HeatTransferModel<CloudType>>
             (
                 new NoHeatTransfer<CloudType>(*this)
             );

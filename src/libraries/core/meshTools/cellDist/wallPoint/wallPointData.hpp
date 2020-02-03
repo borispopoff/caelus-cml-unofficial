@@ -54,7 +54,7 @@ template<class Type> Ostream& operator<<(Ostream&, const wallPointData<Type>&);
                            Class wallPointData Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Type>
+template<class Type>
 class wallPointData
 :
     public wallPoint
@@ -109,7 +109,7 @@ public:
         // Needed by meshWave
 
             //- Influence of neighbouring face.
-            //  Calls update(...) with cellCentre of cellI
+            //  Calls update(...) with cellCentre of celli
             template<class TrackingData>
             inline bool updateCell
             (
@@ -122,7 +122,7 @@ public:
             );
 
             //- Influence of neighbouring cell.
-            //  Calls update(...) with faceCentre of faceI
+            //  Calls update(...) with faceCentre of facei
             template<class TrackingData>
             inline bool updateFace
             (
@@ -136,7 +136,7 @@ public:
 
             //- Influence of different value on same face.
             //  Merge new and old info.
-            //  Calls update(...) with faceCentre of faceI
+            //  Calls update(...) with faceCentre of facei
             template<class TrackingData>
             inline bool updateFace
             (
@@ -159,38 +159,38 @@ public:
 //- Data associated with wallPointData type are contiguous. List the usual
 //  ones.
 
-template <>
-inline bool contiguous<wallPointData<bool> >()
+template<>
+inline bool contiguous<wallPointData<bool>>()
 {
     return contiguous<wallPoint>();
 }
-template <>
-inline bool contiguous<wallPointData<label> >()
+template<>
+inline bool contiguous<wallPointData<label>>()
 {
     return contiguous<wallPoint>();
 }
-template <>
-inline bool contiguous<wallPointData<scalar> >()
+template<>
+inline bool contiguous<wallPointData<scalar>>()
 {
     return contiguous<wallPoint>();
 }
-template <>
-inline bool contiguous<wallPointData<vector> >()
+template<>
+inline bool contiguous<wallPointData<vector>>()
 {
     return contiguous<wallPoint>();
 }
-template <>
-inline bool contiguous<wallPointData<sphericalTensor> >()
+template<>
+inline bool contiguous<wallPointData<sphericalTensor>>()
 {
     return contiguous<wallPoint>();
 }
-template <>
-inline bool contiguous<wallPointData<symmTensor> >()
+template<>
+inline bool contiguous<wallPointData<symmTensor>>()
 {
     return contiguous<wallPoint>();
 }
-template <>
-inline bool contiguous<wallPointData<tensor> >()
+template<>
+inline bool contiguous<wallPointData<tensor>>()
 {
     return contiguous<wallPoint>();
 }
@@ -210,7 +210,7 @@ namespace CML
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 Ostream& operator<<
 (
     Ostream& os,
@@ -223,7 +223,7 @@ Ostream& operator<<
 }
 
 
-template <class Type>
+template<class Type>
 Istream& operator>>
 (
     Istream& is,
@@ -249,8 +249,8 @@ namespace CML
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 // Update this with w2 if w2 nearer to pt.
-template <class Type>
-template <class TrackingData>
+template<class Type>
+template<class TrackingData>
 inline bool wallPointData<Type>::update
 (
     const point& pt,
@@ -293,7 +293,7 @@ inline bool wallPointData<Type>::update
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Null constructor
-template <class Type>
+template<class Type>
 inline wallPointData<Type>::wallPointData()
 :
     wallPoint(),
@@ -302,7 +302,7 @@ inline wallPointData<Type>::wallPointData()
 
 
 // Construct from components
-template <class Type>
+template<class Type>
 inline wallPointData<Type>::wallPointData
 (
     const point& origin,
@@ -317,14 +317,14 @@ inline wallPointData<Type>::wallPointData
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 inline const Type& wallPointData<Type>::data() const
 {
     return data_;
 }
 
 
-template <class Type>
+template<class Type>
 inline Type& wallPointData<Type>::data()
 {
     return data_;
@@ -332,8 +332,8 @@ inline Type& wallPointData<Type>::data()
 
 
 // Update this with w2 if w2 nearer to pt.
-template <class Type>
-template <class TrackingData>
+template<class Type>
+template<class TrackingData>
 inline bool wallPointData<Type>::updateCell
 (
     const polyMesh& mesh,
@@ -357,8 +357,8 @@ inline bool wallPointData<Type>::updateCell
 
 
 // Update this with w2 if w2 nearer to pt.
-template <class Type>
-template <class TrackingData>
+template<class Type>
+template<class TrackingData>
 inline bool wallPointData<Type>::updateFace
 (
     const polyMesh& mesh,
@@ -382,8 +382,8 @@ inline bool wallPointData<Type>::updateFace
 
 
 // Update this with w2 if w2 nearer to pt.
-template <class Type>
-template <class TrackingData>
+template<class Type>
+template<class TrackingData>
 inline bool wallPointData<Type>::updateFace
 (
     const polyMesh& mesh,

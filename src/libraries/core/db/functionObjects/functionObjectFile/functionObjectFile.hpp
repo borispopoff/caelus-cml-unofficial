@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2014 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -102,10 +102,10 @@ protected:
         virtual Omanip<int> valueWidth(const label offset = 0) const;
 
         //- Disallow default bitwise copy construct
-        functionObjectFile(const functionObjectFile&);
+        functionObjectFile(const functionObjectFile&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const functionObjectFile&);
+        void operator=(const functionObjectFile&) = delete;
 
 
 public:

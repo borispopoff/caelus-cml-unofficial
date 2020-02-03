@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -43,7 +43,8 @@ namespace CML
 class IOobjectList;
 
 
-//- Get names of fields of type in parallel consistent order
+//- Get sorted names of fields of type. If syncPar and running in parallel
+//  check for identical names
 wordList fieldNames(const IOobjectList& objects, const bool syncPar);
 
 //- Helper routine to read Geometric fields
@@ -52,7 +53,7 @@ wordList ReadFields
 (
     const typename GeoMesh::Mesh& mesh,
     const IOobjectList& objects,
-    PtrList<GeometricField<Type, PatchField, GeoMesh> >& fields,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
     const bool syncPar = true,
     const bool readOldTime = false
 );
@@ -116,7 +117,7 @@ CML::wordList CML::ReadFields
 (
     const typename GeoMesh::Mesh& mesh,
     const IOobjectList& objects,
-    PtrList<GeometricField<Type, PatchField, GeoMesh> >& fields,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
     const bool syncPar,
     const bool readOldTime
 )

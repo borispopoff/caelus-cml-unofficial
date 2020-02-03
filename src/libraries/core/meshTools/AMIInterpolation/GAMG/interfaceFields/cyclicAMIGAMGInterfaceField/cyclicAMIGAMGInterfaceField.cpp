@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -96,29 +96,51 @@ void CML::cyclicAMIGAMGInterfaceField::updateInterfaceMatrix
     const Pstream::commsTypes
 ) const
 {
+    const cyclicAMIGAMGInterface& thisInterface = cyclicAMIInterface_;
+    const cyclicAMIGAMGInterface& neiInterface = thisInterface.neighbPatch();
+
     // Get neighbouring field
-    scalarField pnf
-    (
-        cyclicAMIInterface_.neighbPatch().interfaceInternalField(psiInternal)
-    );
+    scalarField pnf(neiInterface.interfaceInternalField(psiInternal));
 
     // Transform according to the transformation tensors
     transformCoupleField(pnf, cmpt);
 
-    if (cyclicAMIInterface_.owner())
+    // Transform and interpolate
+    scalarField pf(size(), Zero);
+    if (thisInterface.owner())
     {
-        pnf = cyclicAMIInterface_.AMI().interpolateToSource(pnf);
+        forAll(thisInterface.AMIs(), i)
+        {
+            const scalar r =
+                pow
+                (
+                    inv(thisInterface.AMITransforms()[i]).R()(cmpt, cmpt),
+                    rank()
+                );
+
+            pf += thisInterface.AMIs()[i].interpolateToSource(r*pnf);
+        }
     }
     else
     {
-        pnf = cyclicAMIInterface_.neighbPatch().AMI().interpolateToTarget(pnf);
+        forAll(neiInterface.AMIs(), i)
+        {
+            const scalar r =
+                pow
+                (
+                    neiInterface.AMITransforms()[i].R()(cmpt, cmpt),
+                    rank()
+                );
+
+            pf += neiInterface.AMIs()[i].interpolateToTarget(r*pnf);
+        }
     }
 
+    // Multiply the field by coefficients and add into the result
     const labelUList& faceCells = cyclicAMIInterface_.faceCells();
-
     forAll(faceCells, elemI)
     {
-        result[faceCells[elemI]] -= coeffs[elemI]*pnf[elemI];
+        result[faceCells[elemI]] -= coeffs[elemI]*pf[elemI];
     }
 }
 

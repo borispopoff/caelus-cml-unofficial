@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,17 +49,17 @@ maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
 
 maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
 (
-    const maxwellSlipUFvPatchVectorField& tdpvf,
+    const maxwellSlipUFvPatchVectorField& mspvf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
 :
-    mixedFixedValueSlipFvPatchVectorField(tdpvf, p, iF, mapper),
-    accommodationCoeff_(tdpvf.accommodationCoeff_),
-    Uwall_(tdpvf.Uwall_),
-    thermalCreep_(tdpvf.thermalCreep_),
-    curvature_(tdpvf.curvature_)
+    mixedFixedValueSlipFvPatchVectorField(mspvf, p, iF, mapper),
+    accommodationCoeff_(mspvf.accommodationCoeff_),
+    Uwall_(mspvf.Uwall_),
+    thermalCreep_(mspvf.thermalCreep_),
+    curvature_(mspvf.curvature_)
 {}
 
 
@@ -82,10 +82,12 @@ maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
      || mag(accommodationCoeff_) > 2.0
     )
     {
-        FatalIOErrorInFunction(dict)
-            << "unphysical accommodationCoeff_ specified"
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "unphysical accommodationCoeff_ specified"
             << "(0 < accommodationCoeff_ <= 1)" << endl
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     if (dict.found("value"))
@@ -104,7 +106,7 @@ maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
         else
         {
             this->refValue() = *this;
-            this->valueFraction() = scalar(1.0);
+            this->valueFraction() = scalar(1);
         }
     }
 }
@@ -112,15 +114,15 @@ maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
 
 maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
 (
-    const maxwellSlipUFvPatchVectorField& tdpvf,
+    const maxwellSlipUFvPatchVectorField& mspvf,
     const DimensionedField<vector, volMesh>& iF
 )
 :
-    mixedFixedValueSlipFvPatchVectorField(tdpvf, iF),
-    accommodationCoeff_(tdpvf.accommodationCoeff_),
-    Uwall_(tdpvf.Uwall_),
-    thermalCreep_(tdpvf.thermalCreep_),
-    curvature_(tdpvf.curvature_)
+    mixedFixedValueSlipFvPatchVectorField(mspvf, iF),
+    accommodationCoeff_(mspvf.accommodationCoeff_),
+    Uwall_(mspvf.Uwall_),
+    thermalCreep_(mspvf.thermalCreep_),
+    curvature_(mspvf.curvature_)
 {}
 
 
@@ -179,17 +181,15 @@ void maxwellSlipUFvPatchVectorField::updateCoeffs()
 void maxwellSlipUFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("accommodationCoeff")
-        << accommodationCoeff_ << token::END_STATEMENT << nl;
-    Uwall_.writeEntry("Uwall", os);
-    os.writeKeyword("thermalCreep")
-        << thermalCreep_ << token::END_STATEMENT << nl;
-    os.writeKeyword("curvature") << curvature_ << token::END_STATEMENT << nl;
+    writeEntry(os, "accommodationCoeff", accommodationCoeff_);
+    writeEntry(os, "Uwall", Uwall_);
+    writeEntry(os, "thermalCreep", thermalCreep_);
+    writeEntry(os, "curvature", curvature_);
 
-    refValue().writeEntry("refValue", os);
-    valueFraction().writeEntry("valueFraction", os);
+    writeEntry(os, "refValue", refValue());
+    writeEntry(os, "valueFraction", valueFraction());
 
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

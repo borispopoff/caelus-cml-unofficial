@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -114,7 +114,7 @@ private:
         mutable bool needsUpdate_;
 
         //- Search tree for all non-coupled boundary faces
-        mutable autoPtr<indexedOctree<treeDataFace> > boundaryTreePtr_;
+        mutable autoPtr<indexedOctree<treeDataFace>> boundaryTreePtr_;
 
         //- From local surface triangle to mesh cell/face.
         labelList sampleElements_;
@@ -130,14 +130,14 @@ private:
 
         //- sample field on faces
         template<class Type>
-        tmp<Field<Type> > sampleField
+        tmp<Field<Type>> sampleField
         (
             const GeometricField<Type, fvPatchField, volMesh>& vField
         ) const;
 
 
         template<class Type>
-        tmp<Field<Type> >
+        tmp<Field<Type>>
         interpolateField(const interpolation<Type>&) const;
 
         bool update(const meshSearch& meshSearcher);
@@ -289,15 +289,15 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledTriSurfaceMesh::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
 {
     // One value per face
-    tmp<Field<Type> > tvalues(new Field<Type>(sampleElements_.size()));
-    Field<Type>& values = tvalues();
+    tmp<Field<Type>> tvalues(new Field<Type>(sampleElements_.size()));
+    Field<Type>& values = tvalues.ref();
 
     if (sampleSource_ == cells || sampleSource_ == insideCells)
     {
@@ -317,26 +317,26 @@ CML::sampledTriSurfaceMesh::sampleField
 
         // Create flat boundary field
 
-        Field<Type> bVals(nBnd, pTraits<Type>::zero);
+        Field<Type> bVals(nBnd, Zero);
 
-        forAll(vField.boundaryField(), patchI)
+        forAll(vField.boundaryField(), patchi)
         {
-            label bFaceI = pbm[patchI].start() - mesh().nInternalFaces();
+            label bFacei = pbm[patchi].start() - mesh().nInternalFaces();
 
             SubList<Type>
             (
                 bVals,
-                vField.boundaryField()[patchI].size(),
-                bFaceI
-            ).assign(vField.boundaryField()[patchI]);
+                vField.boundaryField()[patchi].size(),
+                bFacei
+            ) = vField.boundaryField()[patchi];
         }
 
         // Sample in flat boundary field
 
         forAll(sampleElements_, triI)
         {
-            label faceI = sampleElements_[triI];
-            values[triI] = bVals[faceI-mesh().nInternalFaces()];
+            label facei = sampleElements_[triI];
+            values[triI] = bVals[facei-mesh().nInternalFaces()];
         }
     }
 
@@ -345,26 +345,26 @@ CML::sampledTriSurfaceMesh::sampleField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::sampledTriSurfaceMesh::interpolateField
 (
     const interpolation<Type>& interpolator
 ) const
 {
     // One value per vertex
-    tmp<Field<Type> > tvalues(new Field<Type>(sampleElements_.size()));
-    Field<Type>& values = tvalues();
+    tmp<Field<Type>> tvalues(new Field<Type>(sampleElements_.size()));
+    Field<Type>& values = tvalues.ref();
 
     if (sampleSource_ == cells || sampleSource_ == insideCells)
     {
         // Sample cells.
 
-        forAll(sampleElements_, pointI)
+        forAll(sampleElements_, pointi)
         {
-            values[pointI] = interpolator.interpolate
+            values[pointi] = interpolator.interpolate
             (
-                samplePoints_[pointI],
-                sampleElements_[pointI]
+                samplePoints_[pointi],
+                sampleElements_[pointi]
             );
         }
     }
@@ -372,24 +372,21 @@ CML::sampledTriSurfaceMesh::interpolateField
     {
         // Sample boundary faces.
 
-        forAll(samplePoints_, pointI)
+        forAll(samplePoints_, pointi)
         {
-            label faceI = sampleElements_[pointI];
+            label facei = sampleElements_[pointi];
 
-            values[pointI] = interpolator.interpolate
+            values[pointi] = interpolator.interpolate
             (
-                samplePoints_[pointI],
-                mesh().faceOwner()[faceI],
-                faceI
+                samplePoints_[pointi],
+                mesh().faceOwner()[facei],
+                facei
             );
         }
     }
 
     return tvalues;
 }
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

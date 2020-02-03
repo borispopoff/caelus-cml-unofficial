@@ -130,7 +130,7 @@ CML::pointIndexHit CML::searchablePlate::findLine
     pointIndexHit info
     (
         true,
-        vector::zero,
+        Zero,
         0
     );
 
@@ -296,7 +296,7 @@ void CML::searchablePlate::boundingSpheres
 CML::tmp<CML::pointField> CML::searchablePlate::points() const
 {
     tmp<pointField> tPts(new pointField(4));
-    pointField& pts = tPts();
+    pointField& pts = tPts.ref();
 
     pts[0] = origin_;
     pts[2] = origin_ + span_;
@@ -382,23 +382,23 @@ void CML::searchablePlate::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     List<pointIndexHit> nearestInfo;
     findLine(start, end, nearestInfo);
 
     info.setSize(start.size());
-    forAll(info, pointI)
+    forAll(info, pointi)
     {
-        if (nearestInfo[pointI].hit())
+        if (nearestInfo[pointi].hit())
         {
-            info[pointI].setSize(1);
-            info[pointI][0] = nearestInfo[pointI];
+            info[pointi].setSize(1);
+            info[pointi][0] = nearestInfo[pointi];
         }
         else
         {
-            info[pointI].clear();
+            info[pointi].clear();
         }
     }
 }
@@ -422,7 +422,7 @@ void CML::searchablePlate::getNormal
 ) const
 {
     normal.setSize(info.size());
-    normal = vector::zero;
+    normal = Zero;
     forAll(normal, i)
     {
         normal[i][normalDir_] = 1.0;

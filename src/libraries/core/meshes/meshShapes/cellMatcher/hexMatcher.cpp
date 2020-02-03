@@ -57,7 +57,7 @@ bool CML::hexMatcher::matchShape
     const bool checkOnly,
     const faceList& faces,
     const labelList& owner,
-    const label cellI,
+    const label celli,
     const labelList& myFaces
 )
 {
@@ -111,7 +111,7 @@ bool CML::hexMatcher::matchShape
         (
             face4vert0,
             faceSize_[face4I],
-            !(owner[faceMap_[face4I]] == cellI)
+            !(owner[faceMap_[face4I]] == celli)
         );
     vertLabels_[1] = pointMap_[face4[face4vert1]];
 
@@ -121,7 +121,7 @@ bool CML::hexMatcher::matchShape
         (
             face4vert1,
             faceSize_[face4I],
-            !(owner[faceMap_[face4I]] == cellI)
+            !(owner[faceMap_[face4I]] == celli)
         );
     vertLabels_[2] = pointMap_[face4[face4vert2]];
 
@@ -131,7 +131,7 @@ bool CML::hexMatcher::matchShape
         (
             face4vert2,
             faceSize_[face4I],
-            !(owner[faceMap_[face4I]] == cellI)
+            !(owner[faceMap_[face4I]] == celli)
         );
     vertLabels_[3] = pointMap_[face4[face4vert3]];
 
@@ -155,7 +155,7 @@ bool CML::hexMatcher::matchShape
         (
             face0vert0,
             faceSize_[face0I],
-            (owner[faceMap_[face0I]] == cellI)
+            (owner[faceMap_[face0I]] == celli)
         );
     vertLabels_[4] = pointMap_[face0[face0vert4]];
 
@@ -165,7 +165,7 @@ bool CML::hexMatcher::matchShape
         (
             face0vert4,
             faceSize_[face0I],
-            (owner[faceMap_[face0I]] == cellI)
+            (owner[faceMap_[face0I]] == celli)
         );
     vertLabels_[7] = pointMap_[face0[face0vert7]];
 
@@ -189,7 +189,7 @@ bool CML::hexMatcher::matchShape
         (
             face5vert4,
             faceSize_[face5I],
-            (owner[faceMap_[face5I]] == cellI)
+            (owner[faceMap_[face5I]] == celli)
         );
     vertLabels_[5] = pointMap_[face5[face5vert5]];
 
@@ -199,7 +199,7 @@ bool CML::hexMatcher::matchShape
         (
             face5vert5,
             faceSize_[face5I],
-            (owner[faceMap_[face5I]] == cellI)
+            (owner[faceMap_[face5I]] == celli)
         );
     vertLabels_[6] = pointMap_[face5[face5vert6]];
 
@@ -271,15 +271,15 @@ bool CML::hexMatcher::faceSizeMatch
 }
 
 
-bool CML::hexMatcher::isA(const primitiveMesh& mesh, const label cellI)
+bool CML::hexMatcher::isA(const primitiveMesh& mesh, const label celli)
 {
     return matchShape
     (
         true,
         mesh.faces(),
         mesh.faceOwner(),
-        cellI,
-        mesh.cells()[cellI]
+        celli,
+        mesh.cells()[celli]
     );
 }
 
@@ -301,7 +301,7 @@ bool CML::hexMatcher::isA(const faceList& faces)
 bool CML::hexMatcher::matches
 (
     const primitiveMesh& mesh,
-    const label cellI,
+    const label celli,
     cellShape& shape
 )
 {
@@ -312,8 +312,8 @@ bool CML::hexMatcher::matches
             false,
             mesh.faces(),
             mesh.faceOwner(),
-            cellI,
-            mesh.cells()[cellI]
+            celli,
+            mesh.cells()[celli]
         )
     )
     {

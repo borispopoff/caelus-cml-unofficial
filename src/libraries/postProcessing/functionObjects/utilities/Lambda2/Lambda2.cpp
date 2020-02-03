@@ -76,7 +76,7 @@ CML::Lambda2::Lambda2
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("0", dimless/sqr(dimTime), 0.0)
+                dimensionedScalar("0", dimless/sqr(dimTime), 0)
             )
         );
 
@@ -97,7 +97,7 @@ void CML::Lambda2::read(const dictionary& dict)
 {
     if (active_)
     {
-        UName_ = dict.lookupOrDefault<word>("UName", "U");
+        UName_ = dict.lookupOrDefault<word>("U", "U");
     }
 }
 

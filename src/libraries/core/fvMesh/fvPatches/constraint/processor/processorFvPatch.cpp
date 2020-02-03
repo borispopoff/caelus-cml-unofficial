@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -23,15 +23,12 @@ License
 #include "addToRunTimeSelectionTable.hpp"
 #include "transformField.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace CML
 {
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-defineTypeNameAndDebug(processorFvPatch, 0);
-addToRunTimeSelectionTable(fvPatch, processorFvPatch, polyPatch);
+    defineTypeNameAndDebug(processorFvPatch, 0);
+    addToRunTimeSelectionTable(fvPatch, processorFvPatch, polyPatch);
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
@@ -40,20 +37,44 @@ void processorFvPatch::makeWeights(scalarField& w) const
 {
     if (Pstream::parRun())
     {
+        const vectorField delta(coupledFvPatch::delta());
+
         // The face normals point in the opposite direction on the other side
-        scalarField neighbFaceCentresCn
+        const vectorField nbrDelta
+        (
+            procPolyPatch_.neighbFaceCentres()
+          - procPolyPatch_.neighbFaceCellCentres()
+        );
+
+        const scalarField nfDelta(nf() & delta);
+
+        const scalarField nbrNfDelta
         (
             (
                 procPolyPatch_.neighbFaceAreas()
                /(mag(procPolyPatch_.neighbFaceAreas()) + VSMALL)
-            )
-          & (
-              procPolyPatch_.neighbFaceCentres()
-            - procPolyPatch_.neighbFaceCellCentres())
+            ) & nbrDelta
         );
 
-        w = neighbFaceCentresCn
-           /((nf()&coupledFvPatch::delta()) + neighbFaceCentresCn);
+        forAll(delta, facei)
+        {
+            const scalar ndoi = nfDelta[facei];
+            const scalar ndni = nbrNfDelta[facei];
+            const scalar ndi = ndoi + ndni;
+
+            if (ndni/VGREAT < ndi)
+            {
+                w[facei] = ndni/ndi;
+            }
+            else
+            {
+                const scalar doi = mag(delta[facei]);
+                const scalar dni = mag(nbrDelta[facei]);
+                const scalar di = doi + dni;
+
+                w[facei] = dni/di;
+            }
+        }
     }
     else
     {

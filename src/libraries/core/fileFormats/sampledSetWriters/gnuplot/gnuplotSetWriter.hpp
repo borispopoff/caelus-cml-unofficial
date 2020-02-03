@@ -82,7 +82,7 @@ public:
             const bool writeTracks,
             const PtrList<coordSet>&,
             const wordList& valueSetNames,
-            const List<List<Field<Type> > >&,
+            const List<List<Field<Type>>>&,
             Ostream&
         ) const;
 };
@@ -167,7 +167,7 @@ void CML::gnuplotSetWriter<Type>::write
     const bool writeTracks,
     const PtrList<coordSet>& trackPoints,
     const wordList& valueSetNames,
-    const List<List<Field<Type> > >& valueSets,
+    const List<List<Field<Type>>>& valueSets,
     Ostream& os
 ) const
 {

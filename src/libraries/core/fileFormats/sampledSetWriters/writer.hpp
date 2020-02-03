@@ -31,7 +31,7 @@ Description
     Example:
     \verbatim
         // Construct writer of xmgr type
-        autoPtr<writer<scalar> > scalarFormatter(writer<scalar>::New("xmgr"));
+        autoPtr<writer<scalar>> scalarFormatter(writer<scalar>::New("xmgr"));
 
         // Output list of points and corresponding values
         scalarFormatter().write
@@ -159,7 +159,7 @@ public:
         (
             const coordSet&,
             const wordList&,
-            const List<Field<Type> >&,
+            const List<Field<Type>>&,
             Ostream&
         ) const;
 
@@ -172,7 +172,7 @@ public:
             const bool writeTracks,
             const PtrList<coordSet>&,
             const wordList& valueSetNames,
-            const List<List<Field<Type> > >&,
+            const List<List<Field<Type>>>&,
             Ostream&
         ) const = 0;
 
@@ -209,7 +209,7 @@ public:
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class Type>
-CML::autoPtr< CML::writer<Type> > CML::writer<Type>::New
+CML::autoPtr< CML::writer<Type>> CML::writer<Type>::New
 (
     const word& writeType
 )
@@ -227,7 +227,7 @@ CML::autoPtr< CML::writer<Type> > CML::writer<Type>::New
             << exit(FatalError);
     }
 
-    return autoPtr<writer<Type> >(cstrIter()());
+    return autoPtr<writer<Type>>(cstrIter()());
 }
 
 
@@ -255,17 +255,17 @@ template<class Type>
 void CML::writer<Type>::writeCoord
 (
     const coordSet& points,
-    const label pointI,
+    const label pointi,
     Ostream& os
 ) const
 {
     if (points.hasVectorAxis())
     {
-        write(points.vectorCoord(pointI), os);
+        write(points.vectorCoord(pointi), os);
     }
     else
     {
-        write(points.scalarCoord(pointI), os);
+        write(points.scalarCoord(pointi), os);
     }
 }
 
@@ -278,11 +278,11 @@ void CML::writer<Type>::writeTable
     Ostream& os
 ) const
 {
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        writeCoord(points, pointI, os);
+        writeCoord(points, pointi, os);
         writeSeparator(os);
-        write(values[pointI], os);
+        write(values[pointi], os);
         os << nl;
     }
 }
@@ -296,16 +296,16 @@ void CML::writer<Type>::writeTable
     Ostream& os
 ) const
 {
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        writeCoord(points, pointI, os);
+        writeCoord(points, pointi, os);
 
         forAll(valuesPtrList, i)
         {
             writeSeparator(os);
 
             const List<Type>& values = *valuesPtrList[i];
-            write(values[pointI], os);
+            write(values[pointi], os);
         }
         os << nl;
     }
@@ -333,7 +333,7 @@ void CML::writer<Type>::write
 (
     const coordSet& points,
     const wordList& valueSetNames,
-    const List<Field<Type> >& valueSets,
+    const List<Field<Type>>& valueSets,
     Ostream& os
 ) const
 {

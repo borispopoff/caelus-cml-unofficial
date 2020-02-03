@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,7 +63,7 @@ namespace CML
                  Class uniformInterpolationTable Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Type>
+template<class Type>
 class uniformInterpolationTable
 :
     public IOobject,
@@ -91,9 +91,6 @@ class uniformInterpolationTable
         //- Check that the table is valid
         void checkTable() const;
 
-        //- Disallow default bitwise assignment
-        void operator=(const uniformInterpolationTable&);
-
 
 public:
 
@@ -114,7 +111,7 @@ public:
             const bool initialiseOnly = false
         );
 
-        //- Construct as copy
+        //- Copy constructor
         uniformInterpolationTable(const uniformInterpolationTable&);
 
 
@@ -182,75 +179,81 @@ public:
 
             //- Write
             void write() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const uniformInterpolationTable&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::scalar CML::uniformInterpolationTable<Type>::x0() const
 {
     return x0_;
 }
 
 
-template <class Type>
+template<class Type>
 CML::scalar CML::uniformInterpolationTable<Type>::dx() const
 {
     return dx_;
 }
 
 
-template <class Type>
+template<class Type>
 const CML::Switch& CML::uniformInterpolationTable<Type>::log10() const
 {
     return log10_;
 }
 
 
-template <class Type>
+template<class Type>
 const CML::Switch& CML::uniformInterpolationTable<Type>::bound() const
 {
     return bound_;
 }
 
 
-template <class Type>
+template<class Type>
 CML::scalar& CML::uniformInterpolationTable<Type>::x0()
 {
     return x0_;
 }
 
 
-template <class Type>
+template<class Type>
 CML::scalar& CML::uniformInterpolationTable<Type>::dx()
 {
     return dx_;
 }
 
 
-template <class Type>
+template<class Type>
 CML::Switch& CML::uniformInterpolationTable<Type>::log10()
 {
     return log10_;
 }
 
 
-template <class Type>
+template<class Type>
 CML::Switch& CML::uniformInterpolationTable<Type>::bound()
 {
     return bound_;
 }
 
 
-template <class Type>
+template<class Type>
 CML::scalar CML::uniformInterpolationTable<Type>::xMin() const
 {
     return x0_;
 }
 
 
-template <class Type>
+template<class Type>
 CML::scalar CML::uniformInterpolationTable<Type>::xMax() const
 {
     return x0_ + dx_*(size() - 1);
@@ -267,7 +270,7 @@ CML::scalar CML::uniformInterpolationTable<Type>::xMax() const
 
 // * * * * * * * * * * * *  Private Member Functions * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 void CML::uniformInterpolationTable<Type>::checkTable() const
 {
     if (size() < 2)
@@ -283,7 +286,7 @@ void CML::uniformInterpolationTable<Type>::checkTable() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 (
     const IOobject& io,
@@ -312,7 +315,7 @@ CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 }
 
 
-template <class Type>
+template<class Type>
 CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 (
     const word& tableName,
@@ -351,7 +354,7 @@ CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 }
 
 
-template <class Type>
+template<class Type>
 CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 (
     const uniformInterpolationTable& uit
@@ -370,14 +373,14 @@ CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::uniformInterpolationTable<Type>::~uniformInterpolationTable()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 Type CML::uniformInterpolationTable<Type>::interpolate(scalar x) const
 {
     if (bound_)
@@ -421,7 +424,7 @@ Type CML::uniformInterpolationTable<Type>::interpolate(scalar x) const
 }
 
 
-template <class Type>
+template<class Type>
 Type CML::uniformInterpolationTable<Type>::interpolateLog10
 (
     scalar x
@@ -450,7 +453,7 @@ Type CML::uniformInterpolationTable<Type>::interpolateLog10
 }
 
 
-template <class Type>
+template<class Type>
 void CML::uniformInterpolationTable<Type>::write() const
 {
     IOdictionary dict(*this);

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -162,7 +162,7 @@ class regionSizeDistribution
         wordReList fields_;
 
         //- Output formatter to write
-        autoPtr<writer<scalar> > formatterPtr_;
+        autoPtr<writer<scalar>> formatterPtr_;
 
         //- Optional coordinate system
         autoPtr<coordinateSystem> coordSysPtr_;
@@ -227,10 +227,10 @@ class regionSizeDistribution
         ) const;
 
         //- Disallow default bitwise copy construct
-        regionSizeDistribution(const regionSizeDistribution&);
+        regionSizeDistribution(const regionSizeDistribution&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const regionSizeDistribution&);
+        void operator=(const regionSizeDistribution&) = delete;
 
 
 public:
@@ -312,18 +312,18 @@ CML::Map<Type> CML::regionSizeDistribution::regionSum
     // Per region the sum of fld
     Map<Type> regionToSum(regions.nRegions()/Pstream::nProcs());
 
-    forAll(fld, cellI)
+    forAll(fld, celli)
     {
-        label regionI = regions[cellI];
+        label regionI = regions[celli];
 
         typename Map<Type>::iterator fnd = regionToSum.find(regionI);
         if (fnd == regionToSum.end())
         {
-            regionToSum.insert(regionI, fld[cellI]);
+            regionToSum.insert(regionI, fld[celli]);
         }
         else
         {
-            fnd() += fld[cellI];
+            fnd() += fld[celli];
         }
     }
     Pstream::mapCombineGather(regionToSum, plusEqOp<Type>());

@@ -91,42 +91,43 @@ void CML::skewCorrectionVectors::makeSkewCorrectionVectors() const
         SkewCorrVecs[facei] = Cpf - ((Sf[facei] & Cpf)/(Sf[facei] & d))*d;
     }
 
+    surfaceVectorField::Boundary& skewCorrVecsBf =
+        SkewCorrVecs.boundaryFieldRef();
 
-    forAll(SkewCorrVecs.boundaryField(), patchI)
+    forAll(skewCorrVecsBf, patchi)
     {
-        fvsPatchVectorField& patchSkewCorrVecs =
-            SkewCorrVecs.boundaryField()[patchI];
+        fvsPatchVectorField& patchSkewCorrVecs = skewCorrVecsBf[patchi];
 
         if (!patchSkewCorrVecs.coupled())
         {
-            patchSkewCorrVecs = vector::zero;
+            patchSkewCorrVecs = Zero;
         }
         else
         {
             const fvPatch& p = patchSkewCorrVecs.patch();
             const labelUList& faceCells = p.faceCells();
-            const vectorField& patchFaceCentres = Cf.boundaryField()[patchI];
-            const vectorField& patchSf = Sf.boundaryField()[patchI];
+            const vectorField& patchFaceCentres = Cf.boundaryField()[patchi];
+            const vectorField& patchSf = Sf.boundaryField()[patchi];
             const vectorField patchD(p.delta());
 
-            forAll(p, patchFaceI)
+            forAll(p, patchFacei)
             {
                 vector Cpf =
-                    patchFaceCentres[patchFaceI] - C[faceCells[patchFaceI]];
+                    patchFaceCentres[patchFacei] - C[faceCells[patchFacei]];
 
-                patchSkewCorrVecs[patchFaceI] =
+                patchSkewCorrVecs[patchFacei] =
                     Cpf
                   - (
-                        (patchSf[patchFaceI] & Cpf)/
-                        (patchSf[patchFaceI] & patchD[patchFaceI])
-                    )*patchD[patchFaceI];
+                        (patchSf[patchFacei] & Cpf)/
+                        (patchSf[patchFacei] & patchD[patchFacei])
+                    )*patchD[patchFacei];
             }
         }
     }
 
     scalar skewCoeff = 0.0;
 
-    if (Sf.internalField().size())
+    if (Sf.primitiveField().size())
     {
         skewCoeff = max(mag(SkewCorrVecs)*mesh_.deltaCoeffs()).value();
     }

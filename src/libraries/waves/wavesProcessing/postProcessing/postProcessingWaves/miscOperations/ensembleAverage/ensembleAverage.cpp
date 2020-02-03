@@ -131,7 +131,7 @@ void ensembleAverage::evaluateVector()
         const vectorField& field(input[I]);
 
         vectorField& ensAv(ensAverage[I]);
-        ensAv.setSize(N_ + 1, vector::zero);
+        ensAv.setSize(N_ + 1, Zero);
 
         count *= 0.0;
 

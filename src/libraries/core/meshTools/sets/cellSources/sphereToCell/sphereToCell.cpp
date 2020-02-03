@@ -49,12 +49,12 @@ void CML::sphereToCell::combine(topoSet& set, const bool add) const
 
     const scalar radSquared = radius_*radius_;
 
-    forAll(ctrs, cellI)
+    forAll(ctrs, celli)
     {
-        scalar offset = magSqr(centre_ - ctrs[cellI]);
+        scalar offset = magSqr(centre_ - ctrs[celli]);
         if (offset <= radSquared)
         {
-            addOrDelete(set, cellI, add);
+            addOrDelete(set, celli, add);
         }
     }
 }

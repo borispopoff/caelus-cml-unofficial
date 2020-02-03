@@ -38,11 +38,11 @@ namespace CML
         // transcribe from face -> triFace
         List<face>&    origFaces = surf.storedFaces();
         List<triFace>  newFaces(origFaces.size());
-        forAll(origFaces, faceI)
+        forAll(origFaces, facei)
         {
-            newFaces[faceI] = triFace
+            newFaces[facei] = triFace
             (
-                static_cast<const labelUList&>(origFaces[faceI])
+                static_cast<const labelUList&>(origFaces[facei])
             );
         }
         surf.clear();

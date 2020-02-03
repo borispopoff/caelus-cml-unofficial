@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -23,8 +23,7 @@ Class
 Description
     Explicit porosity source
 
-    \heading Source usage
-
+Usage
     Example usage, here employing the Darcy-Forchheimer model:
     \verbatim
     explicitPorositySourceCoeffs
@@ -62,7 +61,7 @@ SourceFiles
 #ifndef explicitPorositySource_H
 #define explicitPorositySource_H
 
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,7 +80,7 @@ namespace fv
 
 class explicitPorositySource
 :
-    public option
+    public cellSetOption
 {
 
 protected:
@@ -97,10 +96,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        explicitPorositySource(const explicitPorositySource&);
+        explicitPorositySource(const explicitPorositySource&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const explicitPorositySource&);
+        void operator=(const explicitPorositySource&) = delete;
 
 
 public:
@@ -134,7 +133,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
             //- Add implicit contribution to compressible momentum equation
@@ -142,7 +141,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
             //- Add implicit contribution to phase momentum equation
@@ -151,14 +150,11 @@ public:
                 const volScalarField& alpha,
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
 
-        // I-O
-
-            //- Write data
-            virtual void writeData(Ostream&) const;
+        // IO
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);

@@ -63,7 +63,7 @@ void calcIncompressibleYPlus
         incompressible::RASModel::New(U, phi, laminarTransport)
     );
 
-    const volScalarField::GeometricBoundaryField nutPatches =
+    const volScalarField::Boundary nutPatches =
         RASModel->nut()().boundaryField();
 
     bool foundNutPatch = false;
@@ -77,7 +77,7 @@ void calcIncompressibleYPlus
                 dynamic_cast<const wallFunctionPatchField&>
                     (nutPatches[patchi]);
 
-            yPlus.boundaryField()[patchi] = nutPw.yPlus();
+            yPlus.boundaryFieldRef()[patchi] = nutPw.yPlus();
             const scalarField& Yp = yPlus.boundaryField()[patchi];
 
             Info<< "Patch " << patchi
@@ -143,7 +143,7 @@ void calcCompressibleYPlus
         )
     );
 
-    const volScalarField::GeometricBoundaryField mutPatches =
+    const volScalarField::Boundary mutPatches =
         RASModel->mut()().boundaryField();
 
     bool foundMutPatch = false;
@@ -157,7 +157,7 @@ void calcCompressibleYPlus
                 dynamic_cast<const wallFunctionPatchField&>
                     (mutPatches[patchi]);
 
-            yPlus.boundaryField()[patchi] = mutPw.yPlus();
+            yPlus.boundaryFieldRef()[patchi] = mutPw.yPlus();
             const scalarField& Yp = yPlus.boundaryField()[patchi];
 
             Info<< "Patch " << patchi
@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("yPlus", dimless, 0.0)
+            dimensionedScalar("yPlus", dimless, 0)
         );
 
         IOobject UHeader

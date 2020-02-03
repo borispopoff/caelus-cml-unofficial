@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -25,11 +25,9 @@ License
 
 void CML::RBD::subBody::write(Ostream& os) const
 {
-    os.writeKeyword("master")
-        << masterName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "master", masterName_);
 
-    os.writeKeyword("transform")
-        << masterXT_ << token::END_STATEMENT << nl;
+    writeEntry(os, "transform", masterXT_);
 }
 
 

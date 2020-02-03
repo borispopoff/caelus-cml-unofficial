@@ -91,10 +91,10 @@ void createFIRESelections(polyMeshGen& mesh)
         sName += help::scalarToText(procBoundaries[patchI].neiProcNo());
         const label sID = mesh.addFaceSubset(sName);
 
-        label faceI = procBoundaries[patchI].patchStart();
-        const label end = faceI + procBoundaries[patchI].patchSize();
-        for(;faceI<end;++faceI)
-            mesh.addFaceToSubset(sID, faceI);
+        label facei = procBoundaries[patchI].patchStart();
+        const label end = facei + procBoundaries[patchI].patchSize();
+        for(;facei<end;++facei)
+            mesh.addFaceToSubset(sID, facei);
     }
 
     //- create cell selections
@@ -120,11 +120,11 @@ void createFIRESelections(polyMeshGen& mesh)
     boolList bndVertex(mesh.points().size(), false);
     forAll(mesh.boundaries(), patchI)
     {
-        label faceI = mesh.boundaries()[patchI].patchStart();
-        const label end = faceI + mesh.boundaries()[patchI].patchSize();
-        for(;faceI<end;++faceI)
+        label facei = mesh.boundaries()[patchI].patchStart();
+        const label end = facei + mesh.boundaries()[patchI].patchSize();
+        for(;facei<end;++facei)
         {
-            const face& f = mesh.faces()[faceI];
+            const face& f = mesh.faces()[facei];
 
             forAll(f, pI)
                 bndVertex[f[pI]] = true;
@@ -137,11 +137,11 @@ void createFIRESelections(polyMeshGen& mesh)
         sName += help::scalarToText(procBoundaries[patchI].neiProcNo());
         const label subsetID = mesh.addPointSubset(sName);
 
-        label faceI = procBoundaries[patchI].patchStart();
-        const label end = faceI + procBoundaries[patchI].patchSize();
-        for(;faceI<end;++faceI)
+        label facei = procBoundaries[patchI].patchStart();
+        const label end = facei + procBoundaries[patchI].patchSize();
+        for(;facei<end;++facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             forAll(f, pI)
             {

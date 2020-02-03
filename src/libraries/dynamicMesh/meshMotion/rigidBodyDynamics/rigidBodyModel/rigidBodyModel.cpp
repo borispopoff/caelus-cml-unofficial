@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -397,14 +397,10 @@ void CML::RBD::rigidBodyModel::write(Ostream& os) const
 
             bodies_[i].write(os);
 
-            os.writeKeyword("parent")
-                << bodies_[lambda_[i]].name() << token::END_STATEMENT << nl;
-
-            os.writeKeyword("transform")
-                << XT_[i] << token::END_STATEMENT << nl;
+            writeEntry(os, "parent", bodies_[lambda_[i]].name());
+            writeEntry(os, "transform", XT_[i]);
 
             os  << indent << "joint" << nl << joints_[i] << endl;
-
             os  << decrIndent << indent << token::END_BLOCK << endl;
         }
     }
@@ -417,11 +413,9 @@ void CML::RBD::rigidBodyModel::write(Ostream& os) const
 
         mergedBodies_[i].body().write(os);
 
-        os.writeKeyword("transform")
-            << mergedBodies_[i].masterXT() << token::END_STATEMENT << nl;
+        writeEntry(os, "transform", mergedBodies_[i].masterXT());
 
-        os.writeKeyword("mergeWith")
-            << mergedBodies_[i].masterName() << token::END_STATEMENT << nl;
+        writeEntry(os, "mergeWith", mergedBodies_[i].masterName());
 
         os  << decrIndent << indent << token::END_BLOCK << endl;
     }

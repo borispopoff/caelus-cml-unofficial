@@ -80,9 +80,9 @@ public:
         SaffmanMeiLiftForce(const SaffmanMeiLiftForce& lf);
 
         //- Construct and return a clone
-        virtual autoPtr<ParticleForce<CloudType> > clone() const
+        virtual autoPtr<ParticleForce<CloudType>> clone() const
         {
-            return autoPtr<ParticleForce<CloudType> >
+            return autoPtr<ParticleForce<CloudType>>
             (
                 new SaffmanMeiLiftForce<CloudType>(*this)
             );

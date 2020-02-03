@@ -74,8 +74,8 @@ void createFundamentalSheetsFJ::createInitialSheet()
     # ifdef USE_OMP
     # pragma omp parallel for
     # endif
-    for(label faceI=start;faceI<end;++faceI)
-        extrudeFaces[faceI-start] = labelPair(faceI, owner[faceI]);
+    for(label facei=start;facei<end;++facei)
+        extrudeFaces[facei-start] = labelPair(facei, owner[facei]);
 
     extrudeLayer(mesh_, extrudeFaces);
 }
@@ -95,14 +95,14 @@ void createFundamentalSheetsFJ::createSheetsAtFeatureEdges()
         const label start = boundaries[patchI].patchStart();
         const label end = start + boundaries[patchI].patchSize();
 
-        for(label faceI=start;faceI<end;++faceI)
-            patchCell[owner[faceI]] = true;
+        for(label facei=start;facei<end;++facei)
+            patchCell[owner[facei]] = true;
 
         LongList<labelPair> front;
 
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            const cell& c = cells[owner[faceI]];
+            const cell& c = cells[owner[facei]];
 
             forAll(c, fI)
             {
@@ -110,7 +110,7 @@ void createFundamentalSheetsFJ::createSheetsAtFeatureEdges()
                     continue;
 
                 label nei = owner[c[fI]];
-                if( nei == owner[faceI] )
+                if( nei == owner[facei] )
                     nei = neighbour[c[fI]];
 
                 if( !patchCell[nei] )
@@ -141,23 +141,23 @@ void createFundamentalSheetsFJ::createSheetsAtFeatureEdges()
 //     # pragma omp parallel num_threads(nThreads)
 //     {
 //         # pragma omp for
-//         forAll(patchCell, cellI)
-//             patchCell[cellI] = -1;
+//         forAll(patchCell, celli)
+//             patchCell[celli] = -1;
 //
 //         # pragma omp barrier
 //
 //         # pragma omp for
-//         for(label faceI=start;faceI<end;++faceI)
-//             patchCell[owner[faceI]] = mesh_.faceIsInPatch(faceI);
+//         for(label facei=start;facei<end;++facei)
+//             patchCell[owner[facei]] = mesh_.faceIsInPatch(facei);
 //
 //         //- create the front faces
 //         LongList<labelPair> localFront;
 //
 //         # pragma omp for
-//         for(label faceI=start;faceI<end;++faceI)
+//         for(label facei=start;facei<end;++facei)
 //         {
-//             const cell& c = cells[owner[faceI]];
-//             const label patchI = mesh_.faceIsInPatch(faceI);
+//             const cell& c = cells[owner[facei]];
+//             const label patchI = mesh_.faceIsInPatch(facei);
 //
 //             forAll(c, fI)
 //             {
@@ -165,7 +165,7 @@ void createFundamentalSheetsFJ::createSheetsAtFeatureEdges()
 //                     continue;
 //
 //                 label nei = owner[c[fI]];
-//                 if( nei == owner[faceI] )
+//                 if( nei == owner[facei] )
 //                     nei = neighbour[c[fI]];
 //
 //                 if( patchCell[nei] != patchI )

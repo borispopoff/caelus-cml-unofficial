@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2014 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,7 +58,7 @@ class axesRotation
 :
     public coordinateRotation
 {
-    // Private data
+    // Private Data
 
         //- Local-to-Global transformation tensor
         tensor R_;
@@ -66,7 +66,7 @@ class axesRotation
         //- Global-to-Local transformation tensor
         tensor Rtr_;
 
-        //- the combination of local axes to be used
+        //- The combination of local axes to be used
         enum axisOrder
         {
             e1e2,
@@ -83,6 +83,7 @@ class axesRotation
             const vector& axis2,
             const axisOrder& order = e3e1
         );
+
 
 public:
 
@@ -145,22 +146,22 @@ public:
             return Rtr_;
         }
 
-        //- Return local Cartesian x-axis
+        //- Return local Cartesian x-axis in global coordinates
         virtual const vector e1() const
         {
-            return R_.x();
+            return Rtr_.x();
         }
 
-        //- Return local Cartesian y-axis
+        //- Return local Cartesian y-axis in global coordinates
         virtual const vector e2() const
         {
-            return R_.y();
+            return Rtr_.y();
         }
 
-        //- Return local Cartesian z-axis
+        //- Return local Cartesian z-axis in global coordinates
         virtual const vector e3() const
         {
-            return R_.z();
+            return Rtr_.z();
         }
 
         //- Return transformation tensor field
@@ -192,20 +193,20 @@ public:
         ) const;
 
         //- Transform vectorField using transformation tensorField and return
-        // symmetrical tensorField
+        //  symmetric tensorField
         virtual tmp<symmTensorField> transformVector
         (
             const vectorField& st
         ) const;
 
         //- Transform vector using transformation tensor and return
-        // symmetrical tensor
+        //  symmetric tensor
         virtual symmTensor transformVector(const vector& st) const;
 
 
     // Member Operators
 
-        //- assign from dictionary
+        //- Assign from dictionary
         void operator=(const dictionary&);
 
 

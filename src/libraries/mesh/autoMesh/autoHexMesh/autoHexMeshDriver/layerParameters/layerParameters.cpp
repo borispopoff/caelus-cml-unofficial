@@ -290,9 +290,9 @@ CML::layerParameters::layerParameters
 
                 forAllConstIter(labelHashSet, patchIDs, patchIter)
                 {
-                    label patchI = patchIter.key();
+                    label patchi = patchIter.key();
 
-                    numLayers_[patchI] =
+                    numLayers_[patchi] =
                         readLabel(layerDict.lookup("nSurfaceLayers"));
 
                     switch (layerSpec_)
@@ -301,12 +301,12 @@ CML::layerParameters::layerParameters
                             layerDict.readIfPresent
                             (
                                 "firstLayerThickness",
-                                firstLayerThickness_[patchI]
+                                firstLayerThickness_[patchi]
                             );
                             layerDict.readIfPresent
                             (
                                 "thickness",
-                                thickness_[patchI]
+                                thickness_[patchi]
                             );
                         break;
 
@@ -314,12 +314,12 @@ CML::layerParameters::layerParameters
                             layerDict.readIfPresent
                             (
                                 "firstLayerThickness",
-                                firstLayerThickness_[patchI]
+                                firstLayerThickness_[patchi]
                             );
                             layerDict.readIfPresent
                             (
                                 "expansionRatio",
-                                expansionRatio_[patchI]
+                                expansionRatio_[patchi]
                             );
                         break;
 
@@ -327,12 +327,12 @@ CML::layerParameters::layerParameters
                             layerDict.readIfPresent
                             (
                                 "finalLayerThickness",
-                                finalLayerThickness_[patchI]
+                                finalLayerThickness_[patchi]
                             );
                             layerDict.readIfPresent
                             (
                                 "thickness",
-                                thickness_[patchI]
+                                thickness_[patchi]
                             );
                         break;
 
@@ -340,12 +340,12 @@ CML::layerParameters::layerParameters
                             layerDict.readIfPresent
                             (
                                 "finalLayerThickness",
-                                finalLayerThickness_[patchI]
+                                finalLayerThickness_[patchi]
                             );
                             layerDict.readIfPresent
                             (
                                 "expansionRatio",
-                                expansionRatio_[patchI]
+                                expansionRatio_[patchi]
                             );
                         break;
 
@@ -361,7 +361,7 @@ CML::layerParameters::layerParameters
                     layerDict.readIfPresent
                     (
                         "minThickness",
-                        minThickness_[patchI]
+                        minThickness_[patchi]
                     );
                 }
             }

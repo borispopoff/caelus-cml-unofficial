@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -52,11 +52,6 @@ class halfCosineRamp
 :
     public ramp
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const halfCosineRamp&);
-
 
 public:
 
@@ -73,12 +68,6 @@ public:
             const dictionary& dict
         );
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<scalar> > clone() const
-        {
-            return tmp<DataEntry<scalar> >(new halfCosineRamp(*this));
-        }
-
 
     //- Destructor
     virtual ~halfCosineRamp();
@@ -87,7 +76,13 @@ public:
     // Member Functions
 
         //- Return value for time t
-        scalar value(const scalar t) const;
+        virtual inline scalar value(const scalar t) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const halfCosineRamp&) = delete;
 };
 
 
@@ -95,6 +90,16 @@ public:
 
 } // End namespace DataEntryTypes
 } // End namespace CML
+
+#include "mathematicalConstants.hpp"
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline CML::scalar CML::DataEntryTypes::halfCosineRamp::value(const scalar t) const
+{
+    return 0.5*(1 - cos(constant::mathematical::pi*linearRamp(t)));
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

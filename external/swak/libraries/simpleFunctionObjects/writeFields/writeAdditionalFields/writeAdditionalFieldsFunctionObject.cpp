@@ -69,10 +69,10 @@ bool writeAdditionalFieldsFunctionObject::start()
     return true;
 }
 
-// bool writeAdditionalFieldsFunctionObject::outputTime()
+// bool writeAdditionalFieldsFunctionObject::writeTime()
 // {
 //     return (
-//         time().outputTime()
+//         time().writeTime()
 //         &&
 //         time().time().value()>=after());
 // }

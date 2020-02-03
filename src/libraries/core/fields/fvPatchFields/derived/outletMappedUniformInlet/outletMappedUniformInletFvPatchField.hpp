@@ -26,7 +26,7 @@ Group
 
 Description
     This boundary conditon averages the field over the "outlet" patch specified
-    by name "outletPatchName" and applies this as the uniform value of the
+    by name "outletPatch" and applies this as the uniform value of the
     field over this patch. An optional fraction can be supplied to apply at
     fraction of the average outlet value to this patch
 
@@ -34,7 +34,7 @@ Description
 
     \table
         Property        | Description             | Required    | Default value
-        outletPatchName | name of outlet patch    | yes         |
+        outletPatch     | name of outlet patch    | yes         |
         phi             | flux field name         | no          | phi
         fraction        | fraction of outlet to   | no          | 1.0
                           apply
@@ -45,7 +45,7 @@ Description
     myPatch
     {
         type            outletMappedUniformInlet;
-        outletPatchName aPatch;
+        outletPatch     aPatch;
         phi             phi;
         fraction        0.5;
         value           uniform 0;
@@ -128,9 +128,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new outletMappedUniformInletFvPatchField<Type>(*this)
             );
@@ -144,12 +144,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new outletMappedUniformInletFvPatchField<Type>(*this, iF)
             );
@@ -205,6 +205,22 @@ template<class Type>
 CML::outletMappedUniformInletFvPatchField<Type>::
 outletMappedUniformInletFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<Type>(p, iF, dict),
+    outletPatchName_(dict.lookup("outletPatch")),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
+    fraction_(dict.lookupOrDefault<scalar>("fraction", 1.0))
+{}
+
+
+template<class Type>
+CML::outletMappedUniformInletFvPatchField<Type>::
+outletMappedUniformInletFvPatchField
+(
     const outletMappedUniformInletFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -222,22 +238,6 @@ template<class Type>
 CML::outletMappedUniformInletFvPatchField<Type>::
 outletMappedUniformInletFvPatchField
 (
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<Type>(p, iF, dict),
-    outletPatchName_(dict.lookup("outletPatchName")),
-    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    fraction_(dict.lookupOrDefault<scalar>("fraction", 1.0))
-{}
-
-
-template<class Type>
-CML::outletMappedUniformInletFvPatchField<Type>::
-outletMappedUniformInletFvPatchField
-(
     const outletMappedUniformInletFvPatchField<Type>& ptf
 )
 :
@@ -246,7 +246,6 @@ outletMappedUniformInletFvPatchField
     phiName_(ptf.phiName_),
     fraction_(ptf.fraction_)
 {}
-
 
 
 template<class Type>
@@ -278,7 +277,7 @@ void CML::outletMappedUniformInletFvPatchField<Type>::updateCoeffs()
     (
         dynamic_cast<const GeometricField<Type, fvPatchField, volMesh>&>
         (
-            this->dimensionedInternalField()
+            this->internalField()
         )
     );
 
@@ -332,14 +331,13 @@ template<class Type>
 void CML::outletMappedUniformInletFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("outletPatchName")
-        << outletPatchName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "outletPatch", outletPatchName_);
     if (phiName_ != "phi")
     {
-        os.writeKeyword("phi") << phiName_ << token::END_STATEMENT << nl;
+        writeEntry(os, "phi", phiName_);
     }
-    os.writeKeyword("fraction") << fraction_ << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "fraction", fraction_);
+    writeEntry(os, "value", *this);
 }
 
 

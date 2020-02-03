@@ -86,7 +86,7 @@ public:
     // Constructors
 
         //- Construct from a seed
-        inline Random(const label s);
+        inline Random(const label s = 123456);
 
 
     //- Destructor

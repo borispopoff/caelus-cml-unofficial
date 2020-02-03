@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,10 +47,10 @@ class thermoCloud
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        thermoCloud(const thermoCloud&);
+        thermoCloud(const thermoCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const thermoCloud&);
+        void operator=(const thermoCloud&) = delete;
 
 
 public:

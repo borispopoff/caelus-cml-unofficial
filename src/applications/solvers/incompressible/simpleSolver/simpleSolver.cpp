@@ -52,7 +52,7 @@ Author(s)
 #include "singlePhaseTransportModel.hpp"
 #include "RASModel.hpp"
 #include "simpleControl.hpp"
-#include "fvIOoptionList.hpp"
+#include "fvOptions.hpp"
 #include "orthogonalSnGrad.hpp"
 #include "profiling.hpp"
 

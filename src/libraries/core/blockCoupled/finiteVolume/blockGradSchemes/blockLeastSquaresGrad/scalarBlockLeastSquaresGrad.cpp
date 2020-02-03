@@ -42,7 +42,7 @@ namespace fv
 {
 
 template<>
-tmp<BlockLduSystem<vector, vector> > blockLeastSquaresGrad<scalar>::fvmGrad
+tmp<BlockLduSystem<vector, vector>> blockLeastSquaresGrad<scalar>::fvmGrad
 (
     const GeometricField<scalar, fvPatchField, volMesh>& vf
 ) const
@@ -66,17 +66,17 @@ tmp<BlockLduSystem<vector, vector> > blockLeastSquaresGrad<scalar>::fvmGrad
         dimensionedScalar("zero", dimVolume, 0),
         zeroGradientFvPatchScalarField::typeName
     );
-    cellV.internalField() = mesh.V();
+    cellV.primitiveFieldRef() = mesh.V();
     cellV.correctBoundaryConditions();
-    const scalarField& cellVIn = cellV.internalField();
+    const scalarField& cellVIn = cellV.primitiveField();
 
     const surfaceScalarField& w = mesh.weights();
 
-    tmp<BlockLduSystem<vector, vector> > tbs
+    tmp<BlockLduSystem<vector, vector>> tbs
     (
         new BlockLduSystem<vector, vector>(mesh)
     );
-    BlockLduSystem<vector, vector>& bs = tbs();
+    BlockLduSystem<vector, vector>& bs = tbs.ref();
     vectorField& source = bs.source();
 
     // Grab ldu parts of block matrix as linear always
@@ -91,56 +91,56 @@ tmp<BlockLduSystem<vector, vector> > blockLeastSquaresGrad<scalar>::fvmGrad
     const surfaceVectorField& neiLs = lsv.nVectors();
 
     // Internal field
-    const vectorField& ownLsIn = ownLs.internalField();
-    const vectorField& neiLsIn = neiLs.internalField();
+    const vectorField& ownLsIn = ownLs.primitiveField();
+    const vectorField& neiLsIn = neiLs.primitiveField();
 
-    register label owner, neighbour;
+    label owner, neighbour;
 
-    forAll (nei, faceI)
+    forAll (nei, facei)
     {
-        owner = own[faceI];
-        neighbour = nei[faceI];
+        owner = own[facei];
+        neighbour = nei[facei];
 
-        u[faceI] = cellVIn[owner]*ownLsIn[faceI];
-        l[faceI] = cellVIn[neighbour]*neiLsIn[faceI];
+        u[facei] = cellVIn[owner]*ownLsIn[facei];
+        l[facei] = cellVIn[neighbour]*neiLsIn[facei];
 
         // Caution - this is NOT negSumDiag(). VV, 17/July/2014.
-        d[owner] -= u[faceI];
-        d[neighbour] -= l[faceI];
+        d[owner] -= u[facei];
+        d[neighbour] -= l[facei];
     }
 
     // Boundary contributions
-    forAll (vf.boundaryField(), patchI)
+    forAll (vf.boundaryField(), patchi)
     {
-        const fvPatchScalarField& pf = vf.boundaryField()[patchI];
+        const fvPatchScalarField& pf = vf.boundaryField()[patchi];
         const fvPatch& patch = pf.patch();
-        const vectorField& pownLs = ownLs.boundaryField()[patchI];
-        const fvsPatchScalarField& pw = w.boundaryField()[patchI];
+        const vectorField& pownLs = ownLs.boundaryField()[patchi];
+        const fvsPatchScalarField& pw = w.boundaryField()[patchi];
         const labelList& fc = patch.faceCells();
 
         // Part of diagonal contribution irrespective of the patch type
-        forAll (pf, faceI)
+        forAll (pf, facei)
         {
-            const label cellI = fc[faceI];
-            d[cellI] -= cellVIn[cellI]*pownLs[faceI];
+            const label celli = fc[facei];
+            d[celli] -= cellVIn[celli]*pownLs[facei];
         }
 
         if (patch.coupled())
         {
-            const vectorField& pneiLs = neiLs.boundaryField()[patchI];
+            const vectorField& pneiLs = neiLs.boundaryField()[patchi];
             const scalarField cellVInNei(
-                cellV.boundaryField()[patchI].patchNeighbourField());
+                cellV.boundaryField()[patchi].patchNeighbourField());
 
             CoeffField<vector>::linearTypeField& pcoupleUpper =
-                bs.coupleUpper()[patchI].asLinear();
+                bs.coupleUpper()[patchi].asLinear();
             CoeffField<vector>::linearTypeField& pcoupleLower =
-                bs.coupleLower()[patchI].asLinear();
+                bs.coupleLower()[patchi].asLinear();
 
             // Coupling  and diagonal contributions
-            forAll (pf, faceI)
+            forAll (pf, facei)
             {
-                pcoupleUpper[faceI] -= cellVIn[fc[faceI]]*pownLs[faceI];
-                pcoupleLower[faceI] -= cellVInNei[faceI]*pneiLs[faceI];
+                pcoupleUpper[facei] -= cellVIn[fc[facei]]*pownLs[facei];
+                pcoupleLower[facei] -= cellVInNei[facei]*pneiLs[facei];
             }
         }
         else
@@ -149,14 +149,14 @@ tmp<BlockLduSystem<vector, vector> > blockLeastSquaresGrad<scalar>::fvmGrad
             const scalarField boundaryCoeffs(pf.valueBoundaryCoeffs(pw));
 
             // Diagonal and source contributions depending on the patch type
-            forAll (pf, faceI)
+            forAll (pf, facei)
             {
-                const label cellI = fc[faceI];
+                const label celli = fc[facei];
 
-                d[cellI] += cellVIn[cellI]*pownLs[faceI]*internalCoeffs[faceI];
+                d[celli] += cellVIn[celli]*pownLs[facei]*internalCoeffs[facei];
 
-                source[cellI] -= cellVIn[cellI]*pownLs[faceI]*
-                    boundaryCoeffs[faceI];
+                source[celli] -= cellVIn[celli]*pownLs[facei]*
+                    boundaryCoeffs[facei];
             }
         }
     }

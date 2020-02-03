@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -44,6 +44,7 @@ SourceFiles
 
 namespace CML
 {
+
 namespace fv
 {
 
@@ -58,30 +59,26 @@ class cellLimitedGrad
     public Limiter
 {
     // Private Data
-    tmp<fv::gradScheme<Type> > basicGradScheme_;
 
-    //- Limiter coefficient
-    const scalar k_;
+        tmp<fv::gradScheme<Type>> basicGradScheme_;
+
+        //- Limiter coefficient
+        const scalar k_;
 
 
     // Private Member Functions
-    void limitGradient
-    (
-        const Field<scalar>& limiter,
-        Field<vector>& gIf
-    ) const;
 
-    void limitGradient
-    (
-        const Field<vector>& limiter,
-        Field<tensor>& gIf
-    ) const;
+        void limitGradient
+        (
+            const Field<scalar>& limiter,
+            Field<vector>& gIf
+        ) const;
 
-    //- Disallow default bitwise copy construct
-    cellLimitedGrad(const cellLimitedGrad&);
-
-    //- Disallow default bitwise assignment
-    void operator=(const cellLimitedGrad&);
+        void limitGradient
+        (
+            const Field<vector>& limiter,
+            Field<tensor>& gIf
+        ) const;
 
 
 public:
@@ -90,52 +87,66 @@ public:
     TypeName("cellLimited");
 
 
-    //- Construct from mesh and schemeData
-    cellLimitedGrad(const fvMesh& mesh, Istream& schemeData)
-    :
-        gradScheme<Type>(mesh),
-        Limiter(schemeData),
-        basicGradScheme_(fv::gradScheme<Type>::New(mesh, schemeData)),
-        k_(readScalar(schemeData))
-    {
-        if (k_ < 0 || k_ > 1)
+    // Constructors
+
+        //- Construct from mesh and schemeData
+        cellLimitedGrad(const fvMesh& mesh, Istream& schemeData)
+        :
+            gradScheme<Type>(mesh),
+            Limiter(schemeData),
+            basicGradScheme_(fv::gradScheme<Type>::New(mesh, schemeData)),
+            k_(readScalar(schemeData))
         {
-            FatalIOErrorInFunction(schemeData)
-                << "coefficient = " << k_
-                << " should be >= 0 and <= 1"
-                << exit(FatalIOError);
+            if (k_ < 0 || k_ > 1)
+            {
+                FatalIOErrorInFunction
+                (
+                    schemeData
+                )   << "coefficient = " << k_
+                    << " should be >= 0 and <= 1"
+                    << exit(FatalIOError);
+            }
         }
-    }
+
+        //- Disallow default bitwise copy construction
+        cellLimitedGrad(const cellLimitedGrad&) = delete;
 
 
     // Member Functions
-    inline void limitFaceCmpt
-    (
-        scalar& limiter,
-        const scalar maxDelta,
-        const scalar minDelta,
-        const scalar extrapolate
-    ) const;
 
-    inline void limitFace
-    (
-        Type& limiter,
-        const Type& maxDelta,
-        const Type& minDelta,
-        const Type& extrapolate
-    ) const;
+        inline void limitFaceCmpt
+        (
+            scalar& limiter,
+            const scalar maxDelta,
+            const scalar minDelta,
+            const scalar extrapolate
+        ) const;
 
-    //- Return the gradient of the given field to the gradScheme::grad
-    //  for optional caching
-    virtual tmp
-    <
-        GeometricField
-        <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
-    > calcGrad
-    (
-        const GeometricField<Type, fvPatchField, volMesh>& vsf,
-        const word& name
-    ) const;
+        inline void limitFace
+        (
+            Type& limiter,
+            const Type& maxDelta,
+            const Type& minDelta,
+            const Type& extrapolate
+        ) const;
+
+        //- Return the gradient of the given field to the gradScheme::grad
+        //  for optional caching
+        virtual tmp
+        <
+            GeometricField
+            <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
+        > calcGrad
+        (
+            const GeometricField<Type, fvPatchField, volMesh>& vsf,
+            const word& name
+        ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellLimitedGrad&) = delete;
 };
 
 
@@ -265,7 +276,7 @@ CML::fv::cellLimitedGrad<Type, Limiter>::calcGrad
         typename outerProduct<vector, Type>::type,
         fvPatchField,
         volMesh
-    >& g = tGrad();
+    >& g = tGrad.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -273,8 +284,8 @@ CML::fv::cellLimitedGrad<Type, Limiter>::calcGrad
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    Field<Type> maxVsf(vsf.internalField());
-    Field<Type> minVsf(vsf.internalField());
+    Field<Type> maxVsf(vsf.primitiveField());
+    Field<Type> minVsf(vsf.primitiveField());
 
     forAll(owner, facei)
     {
@@ -292,7 +303,7 @@ CML::fv::cellLimitedGrad<Type, Limiter>::calcGrad
     }
 
 
-    const typename GeometricField<Type, fvPatchField, volMesh>::GeometricBoundaryField& bsf =
+    const typename GeometricField<Type, fvPatchField, volMesh>::Boundary& bsf =
         vsf.boundaryField();
 
     forAll(bsf, patchi)
@@ -339,7 +350,7 @@ CML::fv::cellLimitedGrad<Type, Limiter>::calcGrad
 
     // Create limiter initialized to 1
     // Note: the limiter is not permitted to be > 1
-    Field<Type> limiter(vsf.internalField().size(), pTraits<Type>::one);
+    Field<Type> limiter(vsf.primitiveField().size(), pTraits<Type>::one);
 
     forAll(owner, facei)
     {

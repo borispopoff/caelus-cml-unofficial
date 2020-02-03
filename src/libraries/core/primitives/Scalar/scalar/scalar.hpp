@@ -54,6 +54,26 @@ namespace CML
     static const scalar VSMALL = floatScalarVSMALL;
     static const scalar ROOTVSMALL = floatScalarROOTVSMALL;
 
+    inline scalar readScalar(const char* buf)
+    {
+        return readFloat(buf);
+    }
+
+    inline bool readScalar(const char* buf, scalar& val)
+    {
+        return readFloat(buf, val);
+    }
+
+    inline scalar readScalar(const std::string& str)
+    {
+        return readFloat(str);
+    }
+
+    inline bool readScalar(const std::string& str, scalar& val)
+    {
+        return readFloat(str, val);
+    }
+
     scalar readScalar(Istream& is);
 }
 
@@ -72,6 +92,26 @@ namespace CML
     static const scalar ROOTSMALL = doubleScalarROOTSMALL;
     static const scalar VSMALL = doubleScalarVSMALL;
     static const scalar ROOTVSMALL = doubleScalarROOTVSMALL;
+
+    inline scalar readScalar(const char* buf)
+    {
+        return readDouble(buf);
+    }
+
+    inline bool readScalar(const char* buf, scalar& val)
+    {
+        return readDouble(buf, val);
+    }
+
+    inline scalar readScalar(const std::string& str)
+    {
+        return readDouble(str);
+    }
+
+    inline bool readScalar(const std::string& str, scalar& val)
+    {
+        return readDouble(str, val);
+    }
 
     scalar readScalar(Istream& is);
 }

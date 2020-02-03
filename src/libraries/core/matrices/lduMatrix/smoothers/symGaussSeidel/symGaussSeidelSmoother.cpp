@@ -63,23 +63,23 @@ void CML::symGaussSeidelSmoother::smooth
     const label nSweeps
 )
 {
-    register scalar* __restrict__ xPtr = x.begin();
+    scalar* __restrict__ xPtr = x.begin();
 
-    register const label nCells = x.size();
+    const label nCells = x.size();
 
     scalarField bPrime(nCells);
-    register scalar* __restrict__ bPrimePtr = bPrime.begin();
+    scalar* __restrict__ bPrimePtr = bPrime.begin();
 
-    register const scalar* const __restrict__ diagPtr = matrix_.diag().begin();
-    register const scalar* const __restrict__ upperPtr =
+    const scalar* const __restrict__ diagPtr = matrix_.diag().begin();
+    const scalar* const __restrict__ upperPtr =
         matrix_.upper().begin();
-    register const scalar* const __restrict__ lowerPtr =
+    const scalar* const __restrict__ lowerPtr =
         matrix_.lower().begin();
 
-    register const label* const __restrict__ uPtr =
+    const label* const __restrict__ uPtr =
         matrix_.lduAddr().upperAddr().begin();
 
-    register const label* const __restrict__ ownStartPtr =
+    const label* const __restrict__ ownStartPtr =
         matrix_.lduAddr().ownerStartAddr().begin();
 
 
@@ -131,12 +131,12 @@ void CML::symGaussSeidelSmoother::smooth
             cmpt
         );
 
-        register scalar xi;
-        register label fStart;
-        register label fEnd = ownStartPtr[0];
+        scalar xi;
+        label fStart;
+        label fEnd = ownStartPtr[0];
 
         // Forward sweep
-        for (register label celli=0; celli<nCells; celli++)
+        for (label celli=0; celli<nCells; celli++)
         {
             // Go forward
             fStart = fEnd;
@@ -146,7 +146,7 @@ void CML::symGaussSeidelSmoother::smooth
             xi = bPrimePtr[celli];
 
             // Accumulate the owner product side
-            for (register label facei=fStart; facei<fEnd; facei++)
+            for (label facei=fStart; facei<fEnd; facei++)
             {
                 xi -= upperPtr[facei]*xPtr[uPtr[facei]];
             }
@@ -155,7 +155,7 @@ void CML::symGaussSeidelSmoother::smooth
             xi /= diagPtr[celli];
 
             // Distribute the neighbour side using current x
-            for (register label facei=fStart; facei<fEnd; facei++)
+            for (label facei=fStart; facei<fEnd; facei++)
             {
                 bPrimePtr[uPtr[facei]] -= lowerPtr[facei]*xi;
             }
@@ -166,7 +166,7 @@ void CML::symGaussSeidelSmoother::smooth
         fStart = ownStartPtr[nCells];
 
         // Backward sweep
-        for (register label celli=nCells-1; celli>=0; celli--)
+        for (label celli=nCells-1; celli>=0; celli--)
         {
             // Go backward
             fEnd = fStart;
@@ -176,7 +176,7 @@ void CML::symGaussSeidelSmoother::smooth
             xi = bPrimePtr[celli];
 
             // Accumulate the owner product side
-            for (register label facei=fStart; facei<fEnd; facei++)
+            for (label facei=fStart; facei<fEnd; facei++)
             {
                 xi -= upperPtr[facei]*xPtr[uPtr[facei]];
             }
@@ -185,7 +185,7 @@ void CML::symGaussSeidelSmoother::smooth
             xi /= diagPtr[celli];
 
             // Distribute the neighbour side using x for this cell
-            for (register label facei=fStart; facei<fEnd; facei++)
+            for (label facei=fStart; facei<fEnd; facei++)
             {
                 bPrimePtr[uPtr[facei]] -= lowerPtr[facei]*xi;
             }

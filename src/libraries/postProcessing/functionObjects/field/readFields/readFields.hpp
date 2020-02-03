@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2014 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -114,19 +114,23 @@ protected:
 
     // Protected Member Functions
 
-        //- Disallow default bitwise copy construct
-        readFields(const readFields&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const readFields&);
-
         template<class Type>
         void loadField
         (
             const word&,
-            PtrList<GeometricField<Type, fvPatchField, volMesh> >&,
-            PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+            PtrList<GeometricField<Type, fvPatchField, volMesh>>&,
+            PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
         ) const;
+
+private:
+
+    // Private member functions
+
+        //- Disallow default bitwise copy construct
+        readFields(const readFields&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const readFields&) = delete;
 
 
 public:
@@ -202,8 +206,8 @@ template<class Type>
 void CML::readFields::loadField
 (
     const word& fieldName,
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& vflds,
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& sflds
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& vflds,
+    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;

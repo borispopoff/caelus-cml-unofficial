@@ -182,6 +182,7 @@ inline Istream& operator>>(Istream& is, IOstreamManip f)
 
 #include "HashTable.hpp"
 #include "List.hpp"
+#include "Tuple2.hpp"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -208,31 +209,19 @@ CML::HashTable<T, Key, Hash>::HashTable(const label size)
 template<class T, class Key, class Hash>
 CML::HashTable<T, Key, Hash>::HashTable(const HashTable<T, Key, Hash>& ht)
 :
-    HashTableCore(),
-    nElmts_(0),
-    tableSize_(ht.tableSize_),
-    table_(nullptr)
+    HashTable<T, Key, Hash>(ht.tableSize_)
 {
-    if (tableSize_)
+    for (const_iterator iter = ht.cbegin(); iter != ht.cend(); ++iter)
     {
-        table_ = new hashedEntry*[tableSize_];
-
-        for (label hashIdx = 0; hashIdx < tableSize_; hashIdx++)
-        {
-            table_[hashIdx] = 0;
-        }
-
-        for (const_iterator iter = ht.cbegin(); iter != ht.cend(); ++iter)
-        {
-            insert(iter.key(), *iter);
-        }
+        insert(iter.key(), *iter);
     }
 }
+
 
 template<class T, class Key, class Hash>
 CML::HashTable<T, Key, Hash>::HashTable
 (
-    const Xfer<HashTable<T, Key, Hash> >& ht
+    HashTable<T, Key, Hash>&& ht
 )
 :
     HashTableCore(),
@@ -240,7 +229,22 @@ CML::HashTable<T, Key, Hash>::HashTable
     tableSize_(0),
     table_(nullptr)
 {
-    transfer(ht());
+    transfer(ht);
+}
+
+
+template<class T, class Key, class Hash>
+CML::HashTable<T, Key, Hash>::HashTable
+(
+    std::initializer_list<Tuple2<Key, T>> lst
+)
+:
+    HashTable<T, Key, Hash>(lst.size())
+{
+    for (const Tuple2<Key, T>& pair : lst)
+    {
+        insert(pair.first(), pair.second());
+    }
 }
 
 
@@ -275,13 +279,12 @@ bool CML::HashTable<T, Key, Hash>::found(const Key& key) const
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (debug)
     {
-        Info<< "HashTable<T, Key, Hash>::found(const Key& key) : "
-            << "Entry " << key << " not found in hash table\n";
+        InfoInFunction << "Entry " << key << " not found in hash table\n";
     }
-#   endif
+    #endif
 
     return false;
 }
@@ -307,13 +310,12 @@ CML::HashTable<T, Key, Hash>::find
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (debug)
     {
-        Info<< "HashTable<T, Key, Hash>::find(const Key& key) : "
-            << "Entry " << key << " not found in hash table\n";
+        InfoInFunction << "Entry " << key << " not found in hash table\n";
     }
-#   endif
+    #endif
 
     return iterator();
 }
@@ -339,13 +341,12 @@ CML::HashTable<T, Key, Hash>::find
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (debug)
     {
-        Info<< "HashTable<T, Key, Hash>::find(const Key& key) const : "
-            << "Entry " << key << " not found in hash table\n";
+        InfoInFunction << "Entry " << key << " not found in hash table\n";
     }
-#   endif
+    #endif
 
     return const_iterator();
 }
@@ -404,7 +405,7 @@ bool CML::HashTable<T, Key, Hash>::set
         prev = ep;
     }
 
-    // not found, insert it at the head
+    // Not found, insert it at the head
     if (!existing)
     {
         table_[hashIdx] = new hashedEntry(key, table_[hashIdx], newEntry);
@@ -412,39 +413,36 @@ bool CML::HashTable<T, Key, Hash>::set
 
         if (double(nElmts_)/tableSize_ > 0.8 && tableSize_ < maxTableSize)
         {
-#           ifdef FULLDEBUG
+            #ifdef FULLDEBUG
             if (debug)
             {
-                Info<< "HashTable<T, Key, Hash>::set"
-                    "(const Key& key, T newEntry) : "
-                    "Doubling table size\n";
+                InfoInFunction << "Doubling table size\n";
             }
-#           endif
+            #endif
 
             resize(2*tableSize_);
         }
     }
     else if (protect)
     {
-        // found - but protected from overwriting
+        // Found - but protected from overwriting
         // this corresponds to the STL 'insert' convention
-#       ifdef FULLDEBUG
+        #ifdef FULLDEBUG
         if (debug)
         {
-            Info<< "HashTable<T, Key, Hash>::set"
-                "(const Key& key, T newEntry, true) : "
-                "Cannot insert " << key << " already in hash table\n";
+            InfoInFunction
+                << "Cannot insert " << key << " already in hash table\n";
         }
-#       endif
+        #endif
         return false;
     }
     else
     {
-        // found - overwrite existing entry
+        // Found - overwrite existing entry
         // this corresponds to the Perl convention
         hashedEntry* ep = new hashedEntry(key, existing->next_, newEntry);
 
-        // replace existing element - within list or insert at the head
+        // Replace existing element - within list or insert at the head
         if (prev)
         {
             prev->next_ = ep;
@@ -464,7 +462,7 @@ bool CML::HashTable<T, Key, Hash>::set
 template<class T, class Key, class Hash>
 bool CML::HashTable<T, Key, Hash>::iteratorBase::erase()
 {
-    // note: entryPtr_ is nullptr for end(), so this catches that too
+    // Note: entryPtr_ is nullptr for end(), so this catches that too
     if (entryPtr_)
     {
         // Search element before entryPtr_
@@ -486,7 +484,7 @@ bool CML::HashTable<T, Key, Hash>::iteratorBase::erase()
 
         if (prev)
         {
-            // has an element before entryPtr - reposition to there
+            // Has an element before entryPtr - reposition to there
             prev->next_ = entryPtr_->next_;
             delete entryPtr_;
             entryPtr_ = prev;
@@ -497,7 +495,7 @@ bool CML::HashTable<T, Key, Hash>::iteratorBase::erase()
             hashTable_->table_[hashIndex_] = entryPtr_->next_;
             delete entryPtr_;
 
-            // assign any non-nullptr pointer value so it doesn't look
+            // Assign any non-nullptr value so it doesn't look
             // like end()/cend()
             entryPtr_ = reinterpret_cast<hashedEntry*>(this);
 
@@ -523,16 +521,14 @@ bool CML::HashTable<T, Key, Hash>::iteratorBase::erase()
 }
 
 
-
-// NOTE:
-// We use (const iterator&) here, but manipulate its contents anyhow.
-// The parameter should be (iterator&), but then the compiler doesn't find
-// it correctly and tries to call as (iterator) instead.
-//
 template<class T, class Key, class Hash>
 bool CML::HashTable<T, Key, Hash>::erase(const iterator& iter)
 {
-    // adjust iterator after erase
+    // NOTE: We use (const iterator&) here, but manipulate its contents anyhow.
+    // The parameter should be (iterator&), but then the compiler doesn't find
+    // it correctly and tries to call as (iterator) instead.
+    //
+    // Adjust iterator after erase
     return const_cast<iterator&>(iter).erase();
 }
 
@@ -593,13 +589,12 @@ void CML::HashTable<T, Key, Hash>::resize(const label sz)
 
     if (newSize == tableSize_)
     {
-#       ifdef FULLDEBUG
+        #ifdef FULLDEBUG
         if (debug)
         {
-            Info<< "HashTable<T, Key, Hash>::resize(const label) : "
-                << "new table size == old table size\n";
+            InfoInFunction << "New table size == old table size\n";
         }
-#       endif
+        #endif
 
         return;
     }
@@ -662,7 +657,7 @@ void CML::HashTable<T, Key, Hash>::shrink()
 
     if (newSize < tableSize_)
     {
-        // avoid having the table disappear on us
+        // Avoid having the table disappear on us
         resize(newSize ? newSize : 2);
     }
 }
@@ -671,7 +666,7 @@ void CML::HashTable<T, Key, Hash>::shrink()
 template<class T, class Key, class Hash>
 void CML::HashTable<T, Key, Hash>::transfer(HashTable<T, Key, Hash>& ht)
 {
-    // as per the Destructor
+    // As per the Destructor
     if (table_)
     {
         clear();
@@ -705,7 +700,7 @@ void CML::HashTable<T, Key, Hash>::operator=
             << abort(FatalError);
     }
 
-    // could be zero-sized from a previous transfer()
+    // Could be zero-sized from a previous transfer()
     if (!tableSize_)
     {
         resize(rhs.tableSize_);
@@ -723,12 +718,53 @@ void CML::HashTable<T, Key, Hash>::operator=
 
 
 template<class T, class Key, class Hash>
+void CML::HashTable<T, Key, Hash>::operator=
+(
+    HashTable<T, Key, Hash>&& rhs
+)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    transfer(rhs);
+}
+
+
+template<class T, class Key, class Hash>
+void CML::HashTable<T, Key, Hash>::operator=
+(
+    std::initializer_list<Tuple2<Key, T>> lst
+)
+{
+    // Could be zero-sized from a previous transfer()
+    if (!tableSize_)
+    {
+        resize(lst.size());
+    }
+    else
+    {
+        clear();
+    }
+
+    for (const Tuple2<Key, T>& pair : lst)
+    {
+        insert(pair.first(), pair.second());
+    }
+}
+
+
+template<class T, class Key, class Hash>
 bool CML::HashTable<T, Key, Hash>::operator==
 (
     const HashTable<T, Key, Hash>& rhs
 ) const
 {
-    // sizes (number of keys) must match
+    // Sizes (number of keys) must match
     if (size() != rhs.size())
     {
         return false;
@@ -825,6 +861,15 @@ CML::HashTable<T, Key, Hash>::printInfo(Ostream& os) const
 }
 
 
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class T, class Key, class Hash>
+void CML::writeEntry(Ostream& os, const HashTable<T, Key, Hash>& ht)
+{
+    os << ht;
+}
+
+
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 template<class T, class Key, class Hash>
@@ -880,8 +925,10 @@ CML::Istream& CML::operator>>
             }
             else
             {
-                FatalIOErrorInFunction(is)
-                    << "incorrect first token, '(', found " << firstToken.info()
+                FatalIOErrorInFunction
+                (
+                    is
+                )   << "incorrect first token, '(', found " << firstToken.info()
                     << exit(FatalIOError);
             }
         }
@@ -893,8 +940,10 @@ CML::Istream& CML::operator>>
     {
         if (firstToken.pToken() != token::BEGIN_LIST)
         {
-            FatalIOErrorInFunction(is)
-                << "incorrect first token, '(', found " << firstToken.info()
+            FatalIOErrorInFunction
+            (
+                is
+            )   << "incorrect first token, '(', found " << firstToken.info()
                 << exit(FatalIOError);
         }
 
@@ -928,8 +977,10 @@ CML::Istream& CML::operator>>
     }
     else
     {
-        FatalIOErrorInFunction(is)
-            << "incorrect first token, expected <int> or '(', found "
+        FatalIOErrorInFunction
+        (
+            is
+        )   << "incorrect first token, expected <int> or '(', found "
             << firstToken.info()
             << exit(FatalIOError);
     }
@@ -971,12 +1022,7 @@ CML::Ostream& CML::operator<<
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
 
 // ************************************************************************* //

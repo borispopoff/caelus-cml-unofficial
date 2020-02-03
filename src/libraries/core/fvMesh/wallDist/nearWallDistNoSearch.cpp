@@ -31,22 +31,22 @@ void CML::nearWallDistNoSearch::doAll()
     const volVectorField& cellCentres = mesh_.C();
     const fvPatchList& patches = mesh_.boundary();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        fvPatchScalarField& ypatch = operator[](patchI);
+        fvPatchScalarField& ypatch = operator[](patchi);
 
-        if (isA<wallFvPatch>(patches[patchI]))
+        if (isA<wallFvPatch>(patches[patchi]))
         {
-            const labelUList& faceCells = patches[patchI].faceCells();
+            const labelUList& faceCells = patches[patchi].faceCells();
 
             const fvPatchVectorField& patchCentres
-                = cellCentres.boundaryField()[patchI];
+                = cellCentres.boundaryField()[patchi];
 
             const fvsPatchVectorField& Apatch
-                = mesh_.Sf().boundaryField()[patchI];
+                = mesh_.Sf().boundaryField()[patchi];
 
             const fvsPatchScalarField& magApatch
-                = mesh_.magSf().boundaryField()[patchI];
+                = mesh_.magSf().boundaryField()[patchi];
 
             forAll(patchCentres, facei)
             {
@@ -72,7 +72,7 @@ void CML::nearWallDistNoSearch::doAll()
 
 CML::nearWallDistNoSearch::nearWallDistNoSearch(const CML::fvMesh& mesh)
 :
-    volScalarField::GeometricBoundaryField
+    volScalarField::Boundary
     (
         mesh.boundary(),
         mesh.V(),           // Dummy internal field
@@ -96,10 +96,10 @@ void CML::nearWallDistNoSearch::correct()
 {
     if (mesh_.changing())
     {
-        // Update size of GeometricBoundaryField
-        forAll(mesh_.boundary(), patchI)
+        // Update size of Boundary
+        forAll(mesh_.boundary(), patchi)
         {
-            operator[](patchI).setSize(mesh_.boundary()[patchI].size());
+            operator[](patchi).setSize(mesh_.boundary()[patchi].size());
         }
     }
 

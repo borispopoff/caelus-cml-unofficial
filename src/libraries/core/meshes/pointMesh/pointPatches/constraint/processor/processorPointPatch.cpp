@@ -55,9 +55,9 @@ void CML::processorPointPatch::initGeometry(PstreamBuffers& pBufs)
 
     faceList masterFaces(pp.size());
 
-    forAll(pp, faceI)
+    forAll(pp, facei)
     {
-        masterFaces[faceI] = pp[faceI].reverseFace();
+        masterFaces[facei] = pp[facei].reverseFace();
     }
 
     reverseMeshPoints_ = primitiveFacePatch

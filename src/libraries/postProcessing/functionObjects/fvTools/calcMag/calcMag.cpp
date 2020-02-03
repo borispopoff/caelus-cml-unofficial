@@ -45,8 +45,8 @@ CML::calcMag::calcMag
     name_(name),
     obr_(obr),
     active_(true),
-    fieldName_("undefined-fieldName"),
-    resultName_("undefined-resultName")
+    fieldName_("undefined-field"),
+    resultName_("undefined-result")
 {
     // Check if the available mesh is an fvMesh, otherwise deactivate
     if (!isA<fvMesh>(obr_))
@@ -73,8 +73,8 @@ void CML::calcMag::read(const dictionary& dict)
 {
     if (active_)
     {
-        dict.lookup("fieldName") >> fieldName_;
-        dict.lookup("resultName") >> resultName_;
+        dict.lookup("field") >> fieldName_;
+        dict.lookup("result") >> resultName_;
 
         if (resultName_ == "none")
         {

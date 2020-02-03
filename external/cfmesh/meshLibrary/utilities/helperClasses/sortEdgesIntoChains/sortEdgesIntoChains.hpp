@@ -55,7 +55,7 @@ class sortEdgesIntoChains
 
         Map<label> newNodeLabel_;
 
-        List<DynList<label> > edgesAtPoint_;
+        List<DynList<label>> edgesAtPoint_;
 
         DynList<labelList> createdChains_;
 

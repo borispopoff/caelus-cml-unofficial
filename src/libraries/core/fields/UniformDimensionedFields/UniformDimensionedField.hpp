@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -108,7 +108,24 @@ CML::UniformDimensionedField<Type>::UniformDimensionedField
 :
     regIOobject(io),
     dimensioned<Type>(dt)
-{}
+{
+    // Read value
+    if
+    (
+        (
+            io.readOpt() == IOobject::MUST_READ
+         || io.readOpt() == IOobject::MUST_READ_IF_MODIFIED
+        )
+     || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
+    )
+    {
+        dictionary dict(readStream(typeName));
+        scalar multiplier;
+        this->dimensions().read(dict.lookup("dimensions"), multiplier);
+        dict.lookup("value") >> this->value();
+        this->value() *= multiplier;
+    }
+}
 
 
 template<class Type>
@@ -129,11 +146,13 @@ CML::UniformDimensionedField<Type>::UniformDimensionedField
 )
 :
     regIOobject(io),
-    dimensioned<Type>(regIOobject::name(), dimless, pTraits<Type>::zero)
+    dimensioned<Type>(regIOobject::name(), dimless, Zero)
 {
     dictionary dict(readStream(typeName));
-    this->dimensions().reset(dict.lookup("dimensions"));
+    scalar multiplier;
+    this->dimensions().read(dict.lookup("dimensions"), multiplier);
     dict.lookup("value") >> this->value();
+    this->value() *= multiplier;
 }
 
 
@@ -149,10 +168,11 @@ CML::UniformDimensionedField<Type>::~UniformDimensionedField()
 template<class Type>
 bool CML::UniformDimensionedField<Type>::writeData(Ostream& os) const
 {
-    os.writeKeyword("dimensions") << this->dimensions() << token::END_STATEMENT
-        << nl;
-    os.writeKeyword("value") << this->value() << token::END_STATEMENT
-        << nl << nl;
+    scalar multiplier;
+    os.writeKeyword("dimensions");
+    this->dimensions().write(os, multiplier) << token::END_STATEMENT << nl;
+    writeEntry(os, "value", this->value()/multiplier);
+    os << nl;
 
     return (os.good());
 }

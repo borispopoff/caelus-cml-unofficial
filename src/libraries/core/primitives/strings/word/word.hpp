@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -108,6 +108,16 @@ public:
         //- Is this character valid for a word
         inline static bool valid(char);
 
+        //- Construct validated word (no invalid characters) from a sequence
+        //- of characters in the range [first,last),
+        //  Optionally prefix any leading digit with '_'.
+        static word validate
+        (
+            const char* first,
+            const char* last,
+            const bool prefix=false
+        );
+
 
     // Member operators
 
@@ -129,6 +139,9 @@ public:
         friend Istream& operator>>(Istream&, word&);
         friend Ostream& operator<<(Ostream&, const word&);
 };
+
+
+void writeEntry(Ostream& os, const word& value);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

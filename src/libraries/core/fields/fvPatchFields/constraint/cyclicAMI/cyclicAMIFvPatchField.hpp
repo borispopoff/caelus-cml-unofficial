@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -26,11 +26,10 @@ Description
     boundaries, whereby communication between the patches is performed using
     an arbitrary mesh interface (AMI) interpolation.
 
-    \heading Patch usage
-
+Usage
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            cyclicAMI;
     }
@@ -41,7 +40,7 @@ Note
     patch is transformed to the neighbour patch, the outer perimiter of each
     patch should be identical (or very similar).
 
-SeeAlso
+See also
     CML::AMIInterpolation
 
 
@@ -66,23 +65,13 @@ namespace CML
 template<class Type>
 class cyclicAMIFvPatchField
 :
-    virtual public cyclicAMILduInterfaceField,
-    public coupledFvPatchField<Type>
+    public coupledFvPatchField<Type>,
+    public cyclicAMILduInterfaceField
 {
     // Private data
 
         //- Local reference cast into the cyclic patch
         const cyclicAMIFvPatch& cyclicAMIPatch_;
-
-
-    // Private Member Functions
-
-        //- Return neighbour side field given internal fields
-        template<class Type2>
-        tmp<Field<Type2> > neighbourSideField
-        (
-            const Field<Type2>&
-        ) const;
 
 
 public:
@@ -121,9 +110,9 @@ public:
         cyclicAMIFvPatchField(const cyclicAMIFvPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicAMIFvPatchField<Type>(*this)
             );
@@ -137,12 +126,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicAMIFvPatchField<Type>(*this, iF)
             );
@@ -167,7 +156,7 @@ public:
             virtual bool coupled() const;
 
             //- Return neighbour coupled internal cell data
-            virtual tmp<Field<Type> > patchNeighbourField() const;
+            virtual tmp<Field<Type>> patchNeighbourField() const;
 
             //- Return reference to neighbour patchField
             const cyclicAMIFvPatchField<Type>& neighbourPatchField() const;
@@ -219,11 +208,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "transformField.hpp"
 
@@ -236,10 +222,49 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
     const DimensionedField<Type, volMesh>& iF
 )
 :
-    cyclicAMILduInterfaceField(),
     coupledFvPatchField<Type>(p, iF),
+    cyclicAMILduInterfaceField(),
     cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
 {}
+
+
+template<class Type>
+CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    coupledFvPatchField<Type>(p, iF, dict, dict.found("value")),
+    cyclicAMILduInterfaceField(),
+    cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
+{
+    if (!isA<cyclicAMIFvPatch>(p))
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "    patch type '" << p.type()
+            << "' not constraint type '" << typeName << "'"
+            << "\n    for patch " << p.name()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
+            << exit(FatalIOError);
+    }
+
+    if (!dict.found("value"))
+    {
+        if (this->coupled())
+        {
+            this->evaluate(Pstream::commsTypes::blocking);
+        }
+        else
+        {
+            fvPatchField<Type>::operator=(this->patchInternalField());
+        }
+    }
+}
 
 
 template<class Type>
@@ -251,49 +276,18 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
     const fvPatchFieldMapper& mapper
 )
 :
-    cyclicAMILduInterfaceField(),
     coupledFvPatchField<Type>(ptf, p, iF, mapper),
+    cyclicAMILduInterfaceField(),
     cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
 {
     if (!isA<cyclicAMIFvPatch>(this->patch()))
     {
         FatalErrorInFunction
-            << "    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
-    }
-}
-
-
-template<class Type>
-CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    cyclicAMILduInterfaceField(),
-    coupledFvPatchField<Type>(p, iF, dict),
-    cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
-{
-    if (!isA<cyclicAMIFvPatch>(p))
-    {
-        FatalIOErrorInFunction(dict)
-            << "    patch type '" << p.type()
-            << "' not constraint type '" << typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
-            << exit(FatalIOError);
-    }
-
-    if (!dict.found("value") && this->coupled())
-    {
-        this->evaluate(Pstream::blocking);
     }
 }
 
@@ -304,8 +298,8 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
     const cyclicAMIFvPatchField<Type>& ptf
 )
 :
-    cyclicAMILduInterfaceField(),
     coupledFvPatchField<Type>(ptf),
+    cyclicAMILduInterfaceField(),
     cyclicAMIPatch_(ptf.cyclicAMIPatch_)
 {}
 
@@ -317,8 +311,8 @@ CML::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
     const DimensionedField<Type, volMesh>& iF
 )
 :
-    cyclicAMILduInterfaceField(),
     coupledFvPatchField<Type>(ptf, iF),
+    cyclicAMILduInterfaceField(),
     cyclicAMIPatch_(ptf.cyclicAMIPatch_)
 {}
 
@@ -333,16 +327,16 @@ bool CML::cyclicAMIFvPatchField<Type>::coupled() const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::cyclicAMIFvPatchField<Type>::patchNeighbourField() const
 {
-    const Field<Type>& iField = this->internalField();
+    const Field<Type>& iField = this->primitiveField();
     const labelUList& nbrFaceCells =
         cyclicAMIPatch_.cyclicAMIPatch().neighbPatch().faceCells();
 
     Field<Type> pnf(iField, nbrFaceCells);
 
-    tmp<Field<Type> > tpnf;
+    tmp<Field<Type>> tpnf;
     if (cyclicAMIPatch_.applyLowWeightCorrection())
     {
         tpnf = cyclicAMIPatch_.interpolate(pnf, this->patchInternalField()());
@@ -354,7 +348,7 @@ CML::cyclicAMIFvPatchField<Type>::patchNeighbourField() const
 
     if (doTransform())
     {
-        tpnf() = transform(forwardT(), tpnf());
+        tpnf.ref() = transform(forwardT(), tpnf());
     }
 
     return tpnf;
@@ -368,10 +362,10 @@ CML::cyclicAMIFvPatchField<Type>::neighbourPatchField() const
     const GeometricField<Type, fvPatchField, volMesh>& fld =
         static_cast<const GeometricField<Type, fvPatchField, volMesh>&>
         (
-            this->internalField()
+            this->primitiveField()
         );
 
-    return refCast<const cyclicAMIFvPatchField<Type> >
+    return refCast<const cyclicAMIFvPatchField<Type>>
     (
         fld.boundaryField()[cyclicAMIPatch_.neighbPatchID()]
     );
@@ -421,12 +415,8 @@ template<class Type>
 void CML::cyclicAMIFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

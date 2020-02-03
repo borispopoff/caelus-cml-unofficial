@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -35,6 +35,85 @@ namespace CML
     defineTypeNameAndDebug(meshSearch, 0);
 
     scalar meshSearch::tol_ = 1e-3;
+
+    // Intersection operation that checks previous successful hits so that they
+    // are not duplicated
+    class findUniqueIntersectOp
+    :
+        public treeDataFace::findIntersectOp
+    {
+    public:
+
+        const indexedOctree<treeDataFace>& tree_;
+
+        const List<pointIndexHit>& hits_;
+
+    public:
+
+        //- Construct from components
+        findUniqueIntersectOp
+        (
+            const indexedOctree<treeDataFace>& tree,
+            const List<pointIndexHit>& hits
+        )
+        :
+            treeDataFace::findIntersectOp(tree),
+            tree_(tree),
+            hits_(hits)
+        {}
+
+        //- Calculate intersection of triangle with ray. Sets result
+        //  accordingly
+        bool operator()
+        (
+            const label index,
+            const point& start,
+            const point& end,
+            point& intersectionPoint
+        ) const
+        {
+            const primitiveMesh& mesh = tree_.shapes().mesh();
+
+            // Check whether this hit has already happened. If the new face
+            // index is the same as an existing hit then return no new hit. If
+            // the new face shares a point with an existing hit face and the
+            // line passes through both faces in the same direction, then this
+            // is also assumed to be a duplicate hit.
+            const label newFacei = tree_.shapes().faceLabels()[index];
+            const face& newFace = mesh.faces()[newFacei];
+            const scalar newDot = mesh.faceAreas()[newFacei] & (end - start);
+            forAll(hits_, hiti)
+            {
+                const label oldFacei = hits_[hiti].index();
+                const face& oldFace = mesh.faces()[oldFacei];
+                const scalar oldDot =
+                    mesh.faceAreas()[oldFacei] & (end - start);
+
+                if
+                (
+                    hits_[hiti].index() == newFacei
+                 || (
+                        newDot*oldDot > 0
+                     && (labelHashSet(newFace) & labelHashSet(oldFace)).size()
+                    )
+                )
+                {
+                    return false;
+                }
+            }
+
+            const bool hit =
+                treeDataFace::findIntersectOp::operator()
+                (
+                    index,
+                    start,
+                    end,
+                    intersectionPoint
+                );
+
+            return hit;
+        }
+    };
 }
 
 
@@ -114,7 +193,6 @@ CML::label CML::meshSearch::findNearestCellTree(const point& location) const
 }
 
 
-// linear searching
 CML::label CML::meshSearch::findNearestCellLinear(const point& location) const
 {
     const vectorField& centres = mesh_.cellCentres();
@@ -134,7 +212,6 @@ CML::label CML::meshSearch::findNearestCellLinear(const point& location) const
 }
 
 
-// walking from seed
 CML::label CML::meshSearch::findNearestCellWalk
 (
     const point& location,
@@ -171,7 +248,6 @@ CML::label CML::meshSearch::findNearestCellWalk
 }
 
 
-// tree based searching
 CML::label CML::meshSearch::findNearestFaceTree(const point& location) const
 {
     // Search nearest cell centre.
@@ -186,7 +262,7 @@ CML::label CML::meshSearch::findNearestFaceTree(const point& location) const
 
     if (!info.hit())
     {
-        // Search with disparate span
+        // Search with desperate span
         info = tree.findNearest(location, CML::sqr(GREAT));
     }
 
@@ -211,7 +287,6 @@ CML::label CML::meshSearch::findNearestFaceTree(const point& location) const
 }
 
 
-// linear searching
 CML::label CML::meshSearch::findNearestFaceLinear(const point& location) const
 {
     const vectorField& centres = mesh_.faceCentres();
@@ -231,7 +306,6 @@ CML::label CML::meshSearch::findNearestFaceLinear(const point& location) const
 }
 
 
-// walking from seed
 CML::label CML::meshSearch::findNearestFaceWalk
 (
     const point& location,
@@ -319,7 +393,6 @@ CML::label CML::meshSearch::findCellLinear(const point& location) const
 }
 
 
-// walking from seed
 CML::label CML::meshSearch::findCellWalk
 (
     const point& location,
@@ -469,38 +542,21 @@ CML::label CML::meshSearch::findNearestBoundaryFaceWalk
 }
 
 
-CML::vector CML::meshSearch::offset
-(
-    const point& bPoint,
-    const label bFacei,
-    const vector& dir
-) const
-{
-    // Get the neighbouring cell
-    label ownerCelli = mesh_.faceOwner()[bFacei];
-
-    const point& c = mesh_.cellCentres()[ownerCelli];
-
-    // Typical dimension: distance from point on face to cell centre
-    scalar typDim = mag(c - bPoint);
-
-    return tol_*typDim*dir;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 CML::meshSearch::meshSearch
 (
     const polyMesh& mesh,
-    const polyMesh::cellRepresentation cellDecompMode
+    const polyMesh::cellDecomposition cellDecompMode
 )
 :
     mesh_(mesh),
     cellDecompMode_(cellDecompMode)
 {
-    if (cellDecompMode_ == polyMesh::FACEDIAGTETS)
+    if
+    (
+        cellDecompMode_ == polyMesh::FACE_DIAG_TRIS
+     || cellDecompMode_ == polyMesh::CELL_TETS)
     {
         // Force construction of face diagonals
         (void)mesh.tetBasePtIs();
@@ -508,12 +564,11 @@ CML::meshSearch::meshSearch
 }
 
 
-// Construct with a custom bounding box
 CML::meshSearch::meshSearch
 (
     const polyMesh& mesh,
     const treeBoundBox& bb,
-    const polyMesh::cellRepresentation cellDecompMode
+    const polyMesh::cellDecomposition cellDecompMode
 )
 :
     mesh_(mesh),
@@ -521,7 +576,11 @@ CML::meshSearch::meshSearch
 {
     overallBbPtr_.reset(new treeBoundBox(bb));
 
-    if (cellDecompMode_ == polyMesh::FACEDIAGTETS)
+    if
+    (
+        cellDecompMode_ == polyMesh::FACE_DIAG_TRIS
+     || cellDecompMode_ == polyMesh::CELL_TETS
+    )
     {
         // Force construction of face diagonals
         (void)mesh.tetBasePtIs();
@@ -539,7 +598,8 @@ CML::meshSearch::~meshSearch()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const CML::indexedOctree<CML::treeDataFace>& CML::meshSearch::boundaryTree()
+const CML::indexedOctree<CML::treeDataFace>&
+CML::meshSearch::boundaryTree()
  const
 {
     if (!boundaryTreePtr_.valid())
@@ -590,8 +650,8 @@ const CML::indexedOctree<CML::treeDataFace>& CML::meshSearch::boundaryTree()
 }
 
 
-const CML::indexedOctree<CML::treeDataCell>& CML::meshSearch::cellTree()
-const
+const CML::indexedOctree<CML::treeDataCell>&
+CML::meshSearch::cellTree() const
 {
     if (!cellTreePtr_.valid())
     {
@@ -632,92 +692,6 @@ const
 
     return cellTreePtr_();
 }
-
-
-//// Is the point in the cell
-//// Works by checking if there is a face inbetween the point and the cell
-//// centre.
-//// Check for internal uses proper face decomposition or just average normal.
-//bool CML::meshSearch::pointInCell(const point& p, label cellI) const
-//{
-//    if (faceDecomp_)
-//    {
-//        const point& ctr = mesh_.cellCentres()[cellI];
-//
-//        vector dir(p - ctr);
-//        scalar magDir = mag(dir);
-//
-//        // Check if any faces are hit by ray from cell centre to p.
-//        // If none -> p is in cell.
-//        const labelList& cFaces = mesh_.cells()[cellI];
-//
-//        // Make sure half_ray does not pick up any faces on the wrong
-//        // side of the ray.
-//        scalar oldTol = intersection::setPlanarTol(0.0);
-//
-//        forAll(cFaces, i)
-//        {
-//            label faceI = cFaces[i];
-//
-//            pointHit inter = mesh_.faces()[faceI].ray
-//            (
-//                ctr,
-//                dir,
-//                mesh_.points(),
-//                intersection::HALF_RAY,
-//                intersection::VECTOR
-//            );
-//
-//            if (inter.hit())
-//            {
-//                scalar dist = inter.distance();
-//
-//                if (dist < magDir)
-//                {
-//                    // Valid hit. Hit face so point is not in cell.
-//                    intersection::setPlanarTol(oldTol);
-//
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        intersection::setPlanarTol(oldTol);
-//
-//        // No face inbetween point and cell centre so point is inside.
-//        return true;
-//    }
-//    else
-//    {
-//        const labelList& f = mesh_.cells()[cellI];
-//        const labelList& owner = mesh_.faceOwner();
-//        const vectorField& cf = mesh_.faceCentres();
-//        const vectorField& Sf = mesh_.faceAreas();
-//
-//        forAll(f, facei)
-//        {
-//            label nFace = f[facei];
-//            vector proj = p - cf[nFace];
-//            vector normal = Sf[nFace];
-//            if (owner[nFace] == cellI)
-//            {
-//                if ((normal & proj) > 0)
-//                {
-//                    return false;
-//                }
-//            }
-//            else
-//            {
-//                if ((normal & proj) < 0)
-//                {
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        return true;
-//    }
-//}
 
 
 CML::label CML::meshSearch::findNearestCell
@@ -888,54 +862,34 @@ CML::List<CML::pointIndexHit> CML::meshSearch::intersections
 ) const
 {
     DynamicList<pointIndexHit> hits;
+    pointIndexHit curHit;
 
-    vector edgeVec = pEnd - pStart;
-    edgeVec /= mag(edgeVec);
+    findUniqueIntersectOp iop(boundaryTree(), hits);
 
-    point pt = pStart;
-
-    pointIndexHit bHit;
-    do
+    while (true)
     {
-        bHit = intersection(pt, pEnd);
+        // Get the next hit, or quit
+        curHit = boundaryTree().findLine(pStart, pEnd, iop);
+        if (!curHit.hit()) break;
 
-        if (bHit.hit())
-        {
-            hits.append(bHit);
+        // Change index into octreeData into face label
+        curHit.setIndex(boundaryTree().shapes().faceLabels()[curHit.index()]);
 
-            const vector& area = mesh_.faceAreas()[bHit.index()];
-
-            scalar typDim = CML::sqrt(mag(area));
-
-            if ((mag(bHit.hitPoint() - pEnd)/typDim) < SMALL)
-            {
-                break;
-            }
-
-            // Restart from hitPoint shifted a little bit in the direction
-            // of the destination
-
-            pt =
-                bHit.hitPoint()
-              + offset(bHit.hitPoint(), bHit.index(), edgeVec);
-        }
-
-    } while (bHit.hit());
-
+        hits.append(curHit);
+    }
 
     hits.shrink();
 
-    return hits;
+    return move(hits);
 }
 
 
 bool CML::meshSearch::isInside(const point& p) const
 {
-    return (boundaryTree().getVolumeType(p) == volumeType::INSIDE);
+    return (boundaryTree().getVolumeType(p) == volumeType::inside);
 }
 
 
-// Delete all storage
 void CML::meshSearch::clearOut()
 {
     boundaryTreePtr_.clear();

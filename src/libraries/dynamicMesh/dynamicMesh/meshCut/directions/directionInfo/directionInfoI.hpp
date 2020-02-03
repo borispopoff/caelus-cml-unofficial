@@ -29,7 +29,7 @@ License
 inline CML::directionInfo::directionInfo()
 :
     index_(-3),
-    n_(vector::zero)
+    n_(Zero)
 {}
 
 
@@ -83,7 +83,7 @@ inline void CML::directionInfo::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -99,14 +99,14 @@ inline void CML::directionInfo::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
 {
     if (index_ >= 0)
     {
-        const face& f = patch[patchFaceI];
+        const face& f = patch[patchFacei];
 
         index_ = (f.size() - index_) % f.size();
     }
@@ -162,7 +162,7 @@ inline bool CML::directionInfo::updateCell
             const edge& e = mesh.edges()[edgeI];
 
             // Find face connected to face through edgeI and on same cell.
-            label faceI =
+            label facei =
                 meshTools::otherFace
                 (
                     mesh,
@@ -171,12 +171,12 @@ inline bool CML::directionInfo::updateCell
                     edgeI
                 );
 
-            // Find edge on faceI which is connected to e.start() but not edgeI.
+            // Find edge on facei which is connected to e.start() but not edgeI.
             index_ =
                 meshTools::otherEdge
                 (
                     mesh,
-                    mesh.faceEdges()[faceI],
+                    mesh.faceEdges()[facei],
                     edgeI,
                     e.start()
                 );
@@ -281,7 +281,7 @@ inline bool CML::directionInfo::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::directionInfo::equal
 (
     const directionInfo& rhs,

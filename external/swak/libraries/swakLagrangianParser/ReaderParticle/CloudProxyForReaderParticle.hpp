@@ -79,23 +79,23 @@ public:
 
     virtual ~CloudProxyForReaderParticle();
 
-    virtual tmp<Field<scalar> > getScalarField(
+    virtual tmp<Field<scalar>> getScalarField(
         const word &name
     ) const;
 
-    virtual tmp<Field<vector> > getVectorField(
+    virtual tmp<Field<vector>> getVectorField(
         const word &name
     ) const;
 
-    virtual tmp<Field<tensor> > getTensorField(
+    virtual tmp<Field<tensor>> getTensorField(
         const word &name
     ) const;
 
-    virtual tmp<Field<symmTensor> > getSymmTensorField(
+    virtual tmp<Field<symmTensor>> getSymmTensorField(
         const word &name
     ) const;
 
-    virtual tmp<Field<sphericalTensor> > getSphericalTensorField(
+    virtual tmp<Field<sphericalTensor>> getSphericalTensorField(
         const word &name
     ) const;
 

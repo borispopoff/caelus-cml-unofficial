@@ -159,7 +159,7 @@ public:
         //- Operate on nothing
         result operator()() const
         {
-            return vector::zero;
+            return Zero;
         }
 
         //- Operate on a triangle

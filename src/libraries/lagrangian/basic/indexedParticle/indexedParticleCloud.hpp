@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,10 +50,10 @@ class indexedParticleCloud
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        indexedParticleCloud(const indexedParticleCloud&);
+        indexedParticleCloud(const indexedParticleCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const indexedParticleCloud&);
+        void operator=(const indexedParticleCloud&) = delete;
 
 
 public:

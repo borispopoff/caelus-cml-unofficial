@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -207,7 +207,7 @@ void storeCellInZone
     Map<label>& physToZone,
 
     labelList& zoneToPhys,
-    List<DynamicList<label> >& zoneCells
+    List<DynamicList<label>>& zoneCells
 )
 {
     Map<label>::const_iterator zoneFnd = physToZone.find(regPhys);
@@ -411,10 +411,10 @@ void readCells
     cellShapeList& cells,
 
     labelList& patchToPhys,
-    List<DynamicList<face> >& patchFaces,
+    List<DynamicList<face>>& patchFaces,
 
     labelList& zoneToPhys,
-    List<DynamicList<label> >& zoneCells
+    List<DynamicList<label>>& zoneCells
 )
 {
     Info<< "Starting to read cells at line " << inFile.lineNumber() << endl;
@@ -787,12 +787,12 @@ int main(int argc, char *argv[])
     // Map from patch to gmsh physical region
     labelList patchToPhys;
     // Storage for patch faces.
-    List<DynamicList<face> > patchFaces(0);
+    List<DynamicList<face>> patchFaces(0);
 
     // Map from cellZone to gmsh physical region
     labelList zoneToPhys;
     // Storage for cell zones.
-    List<DynamicList<label> > zoneCells(0);
+    List<DynamicList<label>> zoneCells(0);
 
     // Name per physical region
     Map<word> physicalNames;
@@ -912,7 +912,7 @@ int main(int argc, char *argv[])
             runTime.constant(),
             runTime
         ),
-        xferMove(points),
+        move(points),
         cells,
         boundaryFaces,
         boundaryPatchNames,
@@ -930,7 +930,7 @@ int main(int argc, char *argv[])
     const polyPatch& pp = mesh.boundaryMesh().last();
 
     // Storage for faceZones.
-    List<DynamicList<label> > zoneFaces(patchFaces.size());
+    List<DynamicList<label>> zoneFaces(patchFaces.size());
 
 
     // Go through all the patchFaces and find corresponding face in pp.
@@ -997,7 +997,7 @@ int main(int argc, char *argv[])
     Info<< endl;
 
 
-    //Get polyMesh to write to constant
+    // Get polyMesh to write to constant
 
     runTime.setTime(instant(runTime.constant()), 0);
 

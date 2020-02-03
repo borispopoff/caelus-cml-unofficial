@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -40,19 +40,15 @@ Description
         U_1 | velocity at the disk
     \endvartable
 
-    \heading Source usage
-
+Usage
     Example usage:
     \verbatim
-    actuationDiskSourceCoeffs
-    {
-        fieldNames      (U);        // names of fields to apply source
-        diskDir         (-1 0 0);   // disk direction
-        Cp              0.1;        // power coefficient
-        Ct              0.5;        // thrust coefficient
-        diskArea        5.0;        // disk area
-        upstreamPoint   (0 0 0);    // upstream point
-    }
+    fields          (U);        // names of fields to apply source
+    diskDir         (-1 0 0);   // disk direction
+    Cp              0.1;        // power coefficient
+    Ct              0.5;        // thrust coefficient
+    diskArea        5.0;        // disk area
+    upstreamPoint   (0 0 0);    // upstream point
     \endverbatim
 
 
@@ -65,7 +61,7 @@ SourceFiles
 #ifndef actuationDiskSource_H
 #define actuationDiskSource_H
 
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -80,7 +76,7 @@ namespace fv
 
 class actuationDiskSource
 :
-    public option
+    public cellSetOption
 {
 
 protected:
@@ -125,10 +121,10 @@ private:
         ) const;
 
         //- Disallow default bitwise copy construct
-        actuationDiskSource(const actuationDiskSource&);
+        actuationDiskSource(const actuationDiskSource&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const actuationDiskSource&);
+        void operator=(const actuationDiskSource&) = delete;
 
 
 public:
@@ -189,7 +185,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
             //- Source term to compressible momentum equation
@@ -197,14 +193,11 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
 
-        // I-O
-
-            //- Write data
-            virtual void writeData(Ostream&) const;
+        // IO
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);
@@ -234,7 +227,7 @@ void CML::fv::actuationDiskSource::addActuationDiskAxialInertialResistance
 {
     scalar a = 1.0 - Cp_/Ct_;
     vector uniDiskDir = diskDir_/mag(diskDir_);
-    tensor E(tensor::zero);
+    tensor E(Zero);
     E.xx() = uniDiskDir.x();
     E.yy() = uniDiskDir.y();
     E.zz() = uniDiskDir.z();

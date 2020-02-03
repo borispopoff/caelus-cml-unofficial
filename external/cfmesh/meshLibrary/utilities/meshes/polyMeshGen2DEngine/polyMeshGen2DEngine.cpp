@@ -47,18 +47,18 @@ void polyMeshGen2DEngine::findActiveFaces() const
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 50)
     # endif
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
         bool hasZMin(false), hasZMax(false);
 
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
         forAll(f, pI)
         {
             hasZMin |= zMinPoints[f[pI]];
             hasZMax |= zMaxPoints[f[pI]];
         }
 
-        activeFacePtr_->operator[](faceI) = (hasZMin && hasZMax);
+        activeFacePtr_->operator[](facei) = (hasZMin && hasZMax);
     }
 }
 
@@ -68,16 +68,16 @@ void polyMeshGen2DEngine::findActiveFaceLabels() const
 
     label counter(0);
 
-    forAll(activeFace, faceI)
-        if( activeFace[faceI] )
+    forAll(activeFace, facei)
+        if( activeFace[facei] )
             ++counter;
 
     activeFaceLabelsPtr_ = new labelList(counter);
 
     counter = 0;
-    forAll(activeFace, faceI)
-        if( activeFace[faceI] )
-            activeFaceLabelsPtr_->operator[](counter++) = faceI;
+    forAll(activeFace, facei)
+        if( activeFace[facei] )
+            activeFaceLabelsPtr_->operator[](counter++) = facei;
 }
 
 void polyMeshGen2DEngine::findZMinPoints() const

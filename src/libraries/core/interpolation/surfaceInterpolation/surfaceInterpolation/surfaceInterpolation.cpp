@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,7 +47,7 @@ void CML::surfaceInterpolation::clearOut()
     deleteDemandDrivenData(deltaCoeffs_);
     deleteDemandDrivenData(nonOrthDeltaCoeffs_);
     deleteDemandDrivenData(nonOrthCorrectionVectors_);
-	deleteDemandDrivenData(fvNonOrthCorrectionVectors_);
+    deleteDemandDrivenData(fvNonOrthCorrectionVectors_);
 }
 
 
@@ -60,7 +60,7 @@ CML::surfaceInterpolation::surfaceInterpolation(const fvMesh& fvm)
     deltaCoeffs_(nullptr),
     nonOrthDeltaCoeffs_(nullptr),
     nonOrthCorrectionVectors_(nullptr),
-	fvNonOrthCorrectionVectors_(nullptr)
+    fvNonOrthCorrectionVectors_(nullptr)
 {}
 
 
@@ -142,7 +142,7 @@ bool CML::surfaceInterpolation::movePoints()
     deleteDemandDrivenData(deltaCoeffs_);
     deleteDemandDrivenData(nonOrthDeltaCoeffs_);
     deleteDemandDrivenData(nonOrthCorrectionVectors_);
-	deleteDemandDrivenData(fvNonOrthCorrectionVectors_);
+    deleteDemandDrivenData(fvNonOrthCorrectionVectors_);
 
     return true;
 }
@@ -182,7 +182,7 @@ void CML::surfaceInterpolation::makeWeights() const
     const vectorField& Sf = mesh_.faceAreas();
 
     // ... and reference to the internal field of the weighting factors
-    scalarField& w = weights.internalField();
+    scalarField& w = weights.primitiveFieldRef();
 
     forAll(owner, facei)
     {
@@ -191,17 +191,30 @@ void CML::surfaceInterpolation::makeWeights() const
         // 90 deg and the dot-product will be positive.  For invalid
         // meshes (d & s <= 0), this will stabilise the calculation
         // but the result will be poor.
-        scalar SfdOwn = mag(Sf[facei] & (Cf[facei] - C[owner[facei]]));
-        scalar SfdNei = mag(Sf[facei] & (C[neighbour[facei]] - Cf[facei]));
-        w[facei] = SfdNei/(SfdOwn + SfdNei);
+        const scalar SfdOwn = mag(Sf[facei]&(Cf[facei] - C[owner[facei]]));
+        const scalar SfdNei = mag(Sf[facei]&(C[neighbour[facei]] - Cf[facei]));
+        const scalar SfdOwnNei = SfdOwn + SfdNei;
+
+        if (SfdNei/VGREAT < SfdOwnNei)
+        {
+            w[facei] = SfdNei/SfdOwnNei;
+        }
+        else
+        {
+            const scalar dOwn = mag(Cf[facei] - C[owner[facei]]);
+            const scalar dNei = mag(C[neighbour[facei]] - Cf[facei]);
+            const scalar dOwnNei = dOwn + dNei;
+
+            w[facei] = dNei/dOwnNei;
+        }
     }
+
+    surfaceScalarField::Boundary& wBf =
+        weights.boundaryFieldRef();
 
     forAll(mesh_.boundary(), patchi)
     {
-        mesh_.boundary()[patchi].makeWeights
-        (
-            weights.boundaryField()[patchi]
-        );
+        mesh_.boundary()[patchi].makeWeights(wBf[patchi]);
     }
 
     if (debug)
@@ -250,10 +263,12 @@ void CML::surfaceInterpolation::makeDeltaCoeffs() const
         DeltaCoeffs[facei] = 1.0/mag(C[neighbour[facei]] - C[owner[facei]]);
     }
 
-    forAll(DeltaCoeffs.boundaryField(), patchi)
+    surfaceScalarField::Boundary& deltaCoeffsBf =
+        DeltaCoeffs.boundaryFieldRef();
+
+    forAll(deltaCoeffsBf, patchi)
     {
-        DeltaCoeffs.boundaryField()[patchi] =
-            1.0/mag(mesh_.boundary()[patchi].delta());
+        deltaCoeffsBf[patchi] = 1.0/mag(mesh_.boundary()[patchi].delta());
     }
 }
 
@@ -298,23 +313,26 @@ void CML::surfaceInterpolation::makeNonOrthDeltaCoeffs() const
         vector unitArea = Sf[facei]/magSf[facei];
 
         // Standard cell-centre distance form
-        //NonOrthDeltaCoeffs[facei] = (unitArea & delta)/magSqr(delta);
+        // NonOrthDeltaCoeffs[facei] = (unitArea & delta)/magSqr(delta);
 
         // Slightly under-relaxed form
-        //NonOrthDeltaCoeffs[facei] = 1.0/mag(delta);
+        // NonOrthDeltaCoeffs[facei] = 1.0/mag(delta);
 
         // More under-relaxed form
-        //NonOrthDeltaCoeffs[facei] = 1.0/(mag(unitArea & delta) + VSMALL);
+        // NonOrthDeltaCoeffs[facei] = 1.0/(mag(unitArea & delta) + VSMALL);
 
         // Stabilised form for bad meshes
         nonOrthDeltaCoeffs[facei] = 1.0/max(unitArea & delta, 0.05*mag(delta));
     }
 
-    forAll(nonOrthDeltaCoeffs.boundaryField(), patchi)
+    surfaceScalarField::Boundary& nonOrthDeltaCoeffsBf =
+        nonOrthDeltaCoeffs.boundaryFieldRef();
+
+    forAll(nonOrthDeltaCoeffsBf, patchi)
     {
         vectorField delta(mesh_.boundary()[patchi].delta());
 
-        nonOrthDeltaCoeffs.boundaryField()[patchi] =
+        nonOrthDeltaCoeffsBf[patchi] =
             1.0/max(mesh_.boundary()[patchi].nf() & delta, 0.05*mag(delta));
     }
 }
@@ -367,40 +385,43 @@ void CML::surfaceInterpolation::makeNonOrthCorrectionVectors() const
     // Boundary correction vectors set to zero for fixedGradient boundary patches
     // and calculated consistently with internal corrections for
     // coupled patches
-	
-    forAll(corrVecs.boundaryField(), patchi)
+
+    surfaceVectorField::Boundary& corrVecsBf =
+        corrVecs.boundaryFieldRef();
+
+    forAll(corrVecsBf, patchi)
     {
-	    // Clone the nonOrthoCorrectionVectors boundaryField values
-	    fvCorrVecs.set(patchi, corrVecs.boundaryField()[patchi].clone(corrVecs.dimensionedInternalField()));
+	// Clone the nonOrthoCorrectionVectors boundaryField values
+	fvCorrVecs.set(patchi, corrVecs.boundaryField()[patchi].clone(corrVecs.internalField()));
 		
-        fvsPatchVectorField& patchCorrVecs = corrVecs.boundaryField()[patchi];
+        fvsPatchVectorField& patchCorrVecs = corrVecsBf[patchi];
 
         if (!patchCorrVecs.coupled())
         {
-		    // Set the correction to zero. This is okay for fixedGradient conditions
-			patchCorrVecs = vector::zero;
-			
-			// Initialise correction to zero
-			fvCorrVecs[patchi] = vector::zero;
-			
-		    const fvsPatchScalarField& patchNonOrthDeltaCoeffs
+            // Set the correction to zero. This is okay for fixedGradient conditions
+            patchCorrVecs = Zero;
+
+            // Initialise correction to zero
+            fvCorrVecs[patchi] = Zero;
+
+            const fvsPatchScalarField& patchNonOrthDeltaCoeffs
                 = NonOrthDeltaCoeffs.boundaryField()[patchi];
 
             const fvPatch& p = patchCorrVecs.patch();
 			
-		    // For non-coupled boundaries the patch delta is already corrected for
- 			// non-orthogonality. We therefore need to calculate the uncorrected delta.
-			const vectorField Cf(mesh_.boundary()[patchi].Cf());
-			const vectorField Cn(mesh_.boundary()[patchi].Cn());
+            // For non-coupled boundaries the patch delta is already corrected for
+            // non-orthogonality. We therefore need to calculate the uncorrected delta.
+            const vectorField Cf(mesh_.boundary()[patchi].Cf());
+            const vectorField Cn(mesh_.boundary()[patchi].Cn());
 
             forAll(p, patchFacei)
             {
-			    vector delta = Cf[patchFacei] - Cn[patchFacei];
-				
+                vector delta = Cf[patchFacei] - Cn[patchFacei];
+		
                 vector unitArea =
                     Sf.boundaryField()[patchi][patchFacei]
                    /magSf.boundaryField()[patchi][patchFacei];
- 
+
                 fvCorrVecs[patchi][patchFacei] =
                     unitArea - delta*patchNonOrthDeltaCoeffs[patchFacei];
             }
@@ -411,7 +432,7 @@ void CML::surfaceInterpolation::makeNonOrthCorrectionVectors() const
                 = NonOrthDeltaCoeffs.boundaryField()[patchi];
 
             const fvPatch& p = patchCorrVecs.patch();
-			
+
             const vectorField patchDeltas(mesh_.boundary()[patchi].delta());
 
             forAll(p, patchFacei)
@@ -421,16 +442,15 @@ void CML::surfaceInterpolation::makeNonOrthCorrectionVectors() const
                    /magSf.boundaryField()[patchi][patchFacei];
 
                 const vector& delta = patchDeltas[patchFacei];
- 
+
                 patchCorrVecs[patchFacei] =
                     unitArea - delta*patchNonOrthDeltaCoeffs[patchFacei];
-				
             }
-			// Set the boundary values for coupled patches for safety
-			fvCorrVecs[patchi] =  patchCorrVecs;
+            // Set the boundary values for coupled patches for safety
+            fvCorrVecs[patchi] =  patchCorrVecs;
         }
     }
-	
+
     if (debug)
     {
         Pout<< "surfaceInterpolation::makeNonOrthCorrectionVectors() : "

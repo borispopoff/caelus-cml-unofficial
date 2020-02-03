@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -35,21 +35,21 @@ CML::bound(volScalarField& vsf, const dimensionedScalar& lowerBound)
         Info<< "bounding " << vsf.name()
             << ", min: " << minVsf
             << " max: " << max(vsf).value()
-            << " average: " << gAverage(vsf.internalField())
+            << " average: " << gAverage(vsf.primitiveField())
             << endl;
 
-        vsf.internalField() = max
+        vsf.primitiveFieldRef() = max
         (
             max
             (
-                vsf.internalField(),
-                fvc::average(max(vsf, lowerBound))().internalField()
-              * pos(-vsf.internalField())
+                vsf.primitiveField(),
+                fvc::average(max(vsf, lowerBound))().primitiveField()
+              * pos(-vsf.primitiveField())
             ),
             lowerBound.value()
         );
 
-        vsf.boundaryField() = max(vsf.boundaryField(), lowerBound.value());
+        vsf.boundaryFieldRef() = max(vsf.boundaryField(), lowerBound.value());
     }
 
     return vsf;
@@ -69,46 +69,46 @@ void CML::boundMinMax
     if (minVsf < vsf0.value() || maxVsf > vsf1.value())
     {
         Info<< "bounding " << vsf.name()
-            << ", min: " << gMin(vsf.internalField())
-            << " max: " << gMax(vsf.internalField())
-            << " average: " << gAverage(vsf.internalField())
+            << ", min: " << gMin(vsf.primitiveField())
+            << " max: " << gMax(vsf.primitiveField())
+            << " average: " << gAverage(vsf.primitiveField())
             << endl;
     }
 
     if (minVsf < vsf0.value())
     {
-        vsf.internalField() = max
+        vsf.primitiveFieldRef() = max
         (
             max
             (
-                vsf.internalField(),
-                fvc::average(max(vsf, vsf0))().internalField()
-                *pos(vsf0.value() - vsf.internalField())
+                vsf.primitiveField(),
+                fvc::average(max(vsf, vsf0))().primitiveField()
+                *pos(vsf0.value() - vsf.primitiveField())
             ),
             vsf0.value()
         );
 
         vsf.correctBoundaryConditions();
-        vsf.boundaryField() = max(vsf.boundaryField(), vsf0.value());
+        vsf.boundaryFieldRef() = max(vsf.boundaryField(), vsf0.value());
     }
 
     if (maxVsf > vsf1.value())
     {
-        vsf.internalField() = min
+        vsf.primitiveFieldRef() = min
         (
             min
             (
-                vsf.internalField(),
-                fvc::average(min(vsf, vsf1))().internalField()
-                *neg(vsf1.value() - vsf.internalField())
+                vsf.primitiveField(),
+                fvc::average(min(vsf, vsf1))().primitiveField()
+                *neg(vsf1.value() - vsf.primitiveField())
                 // This is needed when all values are above max
-              + pos(vsf1.value() - vsf.internalField())*vsf1.value()
+              + pos(vsf1.value() - vsf.primitiveField())*vsf1.value()
             ),
             vsf1.value()
         );
 
         vsf.correctBoundaryConditions();
-        vsf.boundaryField() = min(vsf.boundaryField(), vsf1.value());
+        vsf.boundaryFieldRef() = min(vsf.boundaryField(), vsf1.value());
     }
 }
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014 Applied CCM
+Copyright (C) 2014-2019 Applied CCM
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,9 +47,6 @@ protected:
 
     bool criteriaSatisfied();
 
-    simplecControl(const simplecControl&);
-
-    void operator=(const simplecControl&);
 
 public:
 
@@ -57,9 +54,13 @@ public:
 
     simplecControl(fvMesh& mesh);
 
+    simplecControl(const simplecControl&) = delete;
+
     virtual ~simplecControl();
 
     virtual bool loop();
+
+    void operator=(const simplecControl&) = delete;
 };
 
 }

@@ -87,14 +87,14 @@ public:
 template<class BasicPsiThermo, class MixtureType>
 void CML::heRhoThermo<BasicPsiThermo, MixtureType>::calculate()
 {
-    const scalarField& hCells = this->he().internalField();
-    const scalarField& pCells = this->p_.internalField();
+    const scalarField& hCells = this->he();
+    const scalarField& pCells = this->p_;
 
-    scalarField& TCells = this->T_.internalField();
-    scalarField& psiCells = this->psi_.internalField();
-    scalarField& rhoCells = this->rho_.internalField();
-    scalarField& muCells = this->mu_.internalField();
-    scalarField& alphaCells = this->alpha_.internalField();
+    scalarField& TCells = this->T_.primitiveFieldRef();
+    scalarField& psiCells = this->psi_.primitiveFieldRef();
+    scalarField& rhoCells = this->rho_.primitiveFieldRef();
+    scalarField& muCells = this->mu_.primitiveFieldRef();
+    scalarField& alphaCells = this->alpha_.primitiveFieldRef();
 
     forAll(TCells, celli)
     {
@@ -115,26 +115,26 @@ void CML::heRhoThermo<BasicPsiThermo, MixtureType>::calculate()
         alphaCells[celli] = mixture_.alphah(pCells[celli], TCells[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& pBf =
-        this->p_.boundaryField();
+    volScalarField::Boundary& pBf =
+        this->p_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& TBf =
-        this->T_.boundaryField();
+    volScalarField::Boundary& TBf =
+        this->T_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& psiBf =
-        this->psi_.boundaryField();
+    volScalarField::Boundary& psiBf =
+        this->psi_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& rhoBf =
-        this->rho_.boundaryField();
+    volScalarField::Boundary& rhoBf =
+        this->rho_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& heBf =
-        this->he().boundaryField();
+    volScalarField::Boundary& heBf =
+        this->he().boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& muBf =
-        this->mu_.boundaryField();
+    volScalarField::Boundary& muBf =
+        this->mu_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& alphaBf =
-        this->alpha_.boundaryField();
+    volScalarField::Boundary& alphaBf =
+        this->alpha_.boundaryFieldRef();
 
     forAll(this->T_.boundaryField(), patchi)
     {

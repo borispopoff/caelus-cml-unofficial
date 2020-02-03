@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,10 +66,10 @@ class TRIsurfaceFormat
         );
 
         //- Disallow default bitwise copy construct
-        TRIsurfaceFormat(const TRIsurfaceFormat<Face>&);
+        TRIsurfaceFormat(const TRIsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const TRIsurfaceFormat<Face>&);
+        void operator=(const TRIsurfaceFormat<Face>&) = delete;
 
 
 public:
@@ -83,9 +83,9 @@ public:
     // Selectors
 
         //- Read file and return surface
-        static autoPtr<MeshedSurface<Face> > New(const fileName& name)
+        static autoPtr<MeshedSurface<Face>> New(const fileName& name)
         {
-            return autoPtr<MeshedSurface<Face> >
+            return autoPtr<MeshedSurface<Face>>
             (
                 new TRIsurfaceFormat<Face>(name)
             );
@@ -182,8 +182,8 @@ bool CML::fileFormats::TRIsurfaceFormat<Face>::read
     this->storedPoints().transfer(reader.points());
 
     // retrieve the original zone information
-    List<label> sizes(reader.sizes().xfer());
-    List<label> zoneIds(reader.zoneIds().xfer());
+    List<label> sizes(move(reader.sizes()));
+    List<label> zoneIds(move(reader.zoneIds()));
 
     // generate the (sorted) faces
     List<Face> faceLst(zoneIds.size());
@@ -191,10 +191,10 @@ bool CML::fileFormats::TRIsurfaceFormat<Face>::read
     if (reader.sorted())
     {
         // already sorted - generate directly
-        forAll(faceLst, faceI)
+        forAll(faceLst, facei)
         {
-            const label startPt = 3*faceI;
-            faceLst[faceI] = triFace(startPt, startPt+1, startPt+2);
+            const label startPt = 3*facei;
+            faceLst[facei] = triFace(startPt, startPt+1, startPt+2);
         }
     }
     else
@@ -205,10 +205,10 @@ bool CML::fileFormats::TRIsurfaceFormat<Face>::read
         sortedOrder(zoneIds, faceMap);
 
         // generate sorted faces
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
-            const label startPt = 3*faceMap[faceI];
-            faceLst[faceI] = triFace(startPt, startPt+1, startPt+2);
+            const label startPt = 3*faceMap[facei];
+            faceLst[facei] = triFace(startPt, startPt+1, startPt+2);
         }
     }
     zoneIds.clear();
@@ -257,7 +257,7 @@ void CML::fileFormats::TRIsurfaceFormat<Face>::write
 
         if (useFaceMap)
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceMap[faceIndex++]];
                 writeShell(os, pointLst, f, zoneI);
@@ -265,7 +265,7 @@ void CML::fileFormats::TRIsurfaceFormat<Face>::write
         }
         else
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceIndex++];
                 writeShell(os, pointLst, f, zoneI);
@@ -299,9 +299,9 @@ void CML::fileFormats::TRIsurfaceFormat<Face>::write
     {
         const List<label>& zoneIds  = surf.zoneIds();
 
-        forAll(faceLst, faceI)
+        forAll(faceLst, facei)
         {
-            writeShell(os, pointLst, faceLst[faceI], zoneIds[faceI]);
+            writeShell(os, pointLst, faceLst[facei], zoneIds[facei]);
         }
     }
     else
@@ -312,7 +312,7 @@ void CML::fileFormats::TRIsurfaceFormat<Face>::write
         label faceIndex = 0;
         forAll(zoneLst, zoneI)
         {
-            forAll(zoneLst[zoneI], localFaceI)
+            forAll(zoneLst[zoneI], localFacei)
             {
                 const Face& f = faceLst[faceMap[faceIndex++]];
                 writeShell(os, pointLst, f, zoneI);

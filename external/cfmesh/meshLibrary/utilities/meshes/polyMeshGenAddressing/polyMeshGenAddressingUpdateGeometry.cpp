@@ -53,18 +53,18 @@ void polyMeshGenAddressing::updateGeometry
         # pragma omp parallel for if( faces.size() > 100 ) \
         schedule(dynamic, 10)
         # endif
-        forAll(faces, faceI)
-            if( changedFace[faceI] )
+        forAll(faces, facei)
+            if( changedFace[facei] )
             {
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
                 const label nPoints = f.size();
 
                 // If the face is a triangle, do a direct calculation for
                 // efficiency and to avoid round-off error-related problems
                 if (nPoints == 3)
                 {
-                    fCtrs[faceI] = (1.0/3.0)*(p[f[0]] + p[f[1]] + p[f[2]]);
-                    fAreas[faceI] =
+                    fCtrs[facei] = (1.0/3.0)*(p[f[0]] + p[f[1]] + p[f[2]]);
+                    fAreas[facei] =
                         0.5*((p[f[1]] - p[f[0]])^(p[f[2]] - p[f[0]]));
                 }
                 else
@@ -94,8 +94,8 @@ void polyMeshGenAddressing::updateGeometry
                         sumAc += a*c;
                     }
 
-                    fCtrs[faceI] = (1.0/3.0)*sumAc/(sumA + VSMALL);
-                    fAreas[faceI] = 0.5*sumN;
+                    fCtrs[facei] = (1.0/3.0)*sumAc/(sumA + VSMALL);
+                    fAreas[facei] = 0.5*sumN;
                 }
             }
     }
@@ -115,9 +115,9 @@ void polyMeshGenAddressing::updateGeometry
         # pragma omp parallel for if( cells.size() > 100 ) \
         schedule(dynamic, 10)
         # endif
-        forAll(cells, cellI)
+        forAll(cells, celli)
         {
-            const cell& c = cells[cellI];
+            const cell& c = cells[celli];
 
             bool update(false);
             forAll(c, fI)
@@ -129,8 +129,8 @@ void polyMeshGenAddressing::updateGeometry
 
             if( update )
             {
-                cellCtrs[cellI] = vector::zero;
-                cellVols[cellI] = 0.0;
+                cellCtrs[celli] = vector::zero;
+                cellVols[celli] = 0.0;
 
                 //- estimate position of cell centre
                 vector cEst(vector::zero);
@@ -139,7 +139,7 @@ void polyMeshGenAddressing::updateGeometry
                 cEst /= c.size();
 
                 forAll(c, fI)
-                    if( own[c[fI]] == cellI )
+                    if( own[c[fI]] == celli )
                     {
                         // Calculate 3*face-pyramid volume
                         const scalar pyr3Vol =
@@ -158,10 +158,10 @@ void polyMeshGenAddressing::updateGeometry
                             (3.0/4.0)*fCtrs[c[fI]] + (1.0/4.0)*cEst;
 
                         // Accumulate volume-weighted face-pyramid centre
-                        cellCtrs[cellI] += pyr3Vol*pc;
+                        cellCtrs[celli] += pyr3Vol*pc;
 
                         // Accumulate face-pyramid volume
-                        cellVols[cellI] += pyr3Vol;
+                        cellVols[celli] += pyr3Vol;
                     }
                     else
                     {
@@ -181,14 +181,14 @@ void polyMeshGenAddressing::updateGeometry
                             (3.0/4.0)*fCtrs[c[fI]] + (1.0/4.0)*cEst;
 
                         // Accumulate volume-weighted face-pyramid centre
-                        cellCtrs[cellI] += pyr3Vol*pc;
+                        cellCtrs[celli] += pyr3Vol*pc;
 
                         // Accumulate face-pyramid volume
-                        cellVols[cellI] += pyr3Vol;
+                        cellVols[celli] += pyr3Vol;
                     }
 
-                cellCtrs[cellI] /= cellVols[cellI];
-                cellVols[cellI] /= 3.0;
+                cellCtrs[celli] /= cellVols[celli];
+                cellVols[celli] /= 3.0;
             }
         }
     }

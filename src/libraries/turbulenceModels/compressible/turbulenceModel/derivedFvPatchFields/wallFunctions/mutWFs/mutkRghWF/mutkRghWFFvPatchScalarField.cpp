@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,46 +59,46 @@ scalar mutkRoughWallFunctionFvPatchScalarField::fnRough
 
 tmp<scalarField> mutkRoughWallFunctionFvPatchScalarField::calcMut() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
 
-    const scalarField& y = turbModel.y()[patchI];
-    const scalarField& rhow = turbModel.rho().boundaryField()[patchI];
+    const scalarField& y = turbModel.y()[patchi];
+    const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
     const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
-    const scalarField& muw = turbModel.mu().boundaryField()[patchI];
+    const scalarField& muw = turbModel.mu().boundaryField()[patchi];
 
     const scalar Cmu25 = pow025(Cmu_);
 
     tmp<scalarField> tmutw(new scalarField(*this));
-    scalarField& mutw = tmutw();
+    scalarField& mutw = tmutw.ref();
 
-    forAll(mutw, faceI)
+    forAll(mutw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
         scalar uStar = Cmu25*sqrt(k[faceCellI]);
-        scalar yPlus = uStar*y[faceI]/(muw[faceI]/rhow[faceI]);
-        scalar KsPlus = uStar*Ks_[faceI]/(muw[faceI]/rhow[faceI]);
+        scalar yPlus = uStar*y[facei]/(muw[facei]/rhow[facei]);
+        scalar KsPlus = uStar*Ks_[facei]/(muw[facei]/rhow[facei]);
 
         scalar Edash = E_;
         if (KsPlus > 2.25)
         {
-            Edash /= fnRough(KsPlus, Cs_[faceI]);
+            Edash /= fnRough(KsPlus, Cs_[facei]);
         }
 
-        scalar limitingMutw = max(mutw[faceI], muw[faceI]);
+        scalar limitingMutw = max(mutw[facei], muw[facei]);
 
         // To avoid oscillations limit the change in the wall viscosity
         // which is particularly important if it temporarily becomes zero
-        mutw[faceI] =
+        mutw[facei] =
             max
             (
                 min
                 (
-                    muw[faceI]
+                    muw[facei]
                    *(yPlus*kappa_/log(max(Edash*yPlus, 1+1e-4)) - 1),
                     2*limitingMutw
                 ), 0.5*limitingMutw
@@ -109,7 +109,7 @@ tmp<scalarField> mutkRoughWallFunctionFvPatchScalarField::calcMut() const
             Info<< "yPlus = " << yPlus
                 << ", KsPlus = " << KsPlus
                 << ", Edash = " << Edash
-                << ", mutw = " << mutw[faceI]
+                << ", mutw = " << mutw[facei]
                 << endl;
         }
     }
@@ -215,9 +215,9 @@ void mutkRoughWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    Cs_.writeEntry("Cs", os);
-    Ks_.writeEntry("Ks", os);
-    writeEntry("value", os);
+    writeEntry(os, "Cs", Cs_);
+    writeEntry(os, "Ks", Ks_);
+    writeEntry(os, "value", *this);
 }
 
 

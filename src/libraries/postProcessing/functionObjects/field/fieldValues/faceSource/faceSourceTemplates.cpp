@@ -47,7 +47,7 @@ bool CML::fieldValues::faceSource::validField(const word& fieldName) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::getFieldValues
+CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::getFieldValues
 (
     const word& fieldName,
     const bool mustGet,
@@ -70,25 +70,25 @@ CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::getFieldValues
             if (surfacePtr_().interpolate())
             {
                 const interpolationCellPoint<Type> interp(fld);
-                tmp<Field<Type> > tintFld(surfacePtr_().interpolate(interp));
+                tmp<Field<Type>> tintFld(surfacePtr_().interpolate(interp));
                 const Field<Type>& intFld = tintFld();
 
                 // Average
                 const faceList& faces = surfacePtr_().faces();
-                tmp<Field<Type> > tavg
+                tmp<Field<Type>> tavg
                 (
-                    new Field<Type>(faces.size(), pTraits<Type>::zero)
+                    new Field<Type>(faces.size(), Zero)
                 );
                 Field<Type>& avg = tavg();
 
-                forAll(faces, faceI)
+                forAll(faces, facei)
                 {
-                    const face& f = faces[faceI];
+                    const face& f = faces[facei];
                     forAll(f, fp)
                     {
-                        avg[faceI] += intFld[f[fp]];
+                        avg[facei] += intFld[f[fp]];
                     }
-                    avg[faceI] /= f.size();
+                    avg[facei] /= f.size();
                 }
 
                 return tavg;
@@ -111,7 +111,7 @@ CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::getFieldValues
             << abort(FatalError);
     }
 
-    return tmp<Field<Type> >(new Field<Type>(0));
+    return tmp<Field<Type>>(new Field<Type>(0));
 }
 
 
@@ -334,22 +334,22 @@ bool CML::fieldValues::faceSource::writeValues
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::filterField
+CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
 (
     const GeometricField<Type, fvPatchField, volMesh>& field,
     const bool applyOrientation
 ) const
 {
-    tmp<Field<Type> > tvalues(new Field<Type>(faceId_.size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));
     Field<Type>& values = tvalues();
 
     forAll(values, i)
     {
-        label faceI = faceId_[i];
-        label patchI = facePatchId_[i];
-        if (patchI >= 0)
+        label facei = faceId_[i];
+        label patchi = facePatchId_[i];
+        if (patchi >= 0)
         {
-            values[i] = field.boundaryField()[patchI][faceI];
+            values[i] = field.boundaryField()[patchi][facei];
         }
         else
         {
@@ -375,26 +375,26 @@ CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::filterField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::filterField
+CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field,
     const bool applyOrientation
 ) const
 {
-    tmp<Field<Type> > tvalues(new Field<Type>(faceId_.size()));
+    tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));
     Field<Type>& values = tvalues();
 
     forAll(values, i)
     {
-        label faceI = faceId_[i];
-        label patchI = facePatchId_[i];
-        if (patchI >= 0)
+        label facei = faceId_[i];
+        label patchi = facePatchId_[i];
+        if (patchi >= 0)
         {
-            values[i] = field.boundaryField()[patchI][faceI];
+            values[i] = field.boundaryField()[patchi][facei];
         }
         else
         {
-            values[i] = field[faceI];
+            values[i] = field[facei];
         }
     }
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -112,7 +112,7 @@ public:
 
             //- Raw field receive function returning field
             template<class Type>
-            tmp<Field<Type> > receive
+            tmp<Field<Type>> receive
             (
                 const Pstream::commsTypes commsType,
                 const label size
@@ -137,7 +137,7 @@ public:
 
             //- Raw field receive function with data compression returning field
             template<class Type>
-            tmp<Field<Type> > compressedReceive
+            tmp<Field<Type>> compressedReceive
             (
                 const Pstream::commsTypes commsType,
                 const label size
@@ -165,7 +165,11 @@ void CML::processorLduInterface::send
 {
     label nBytes = f.byteSize();
 
-    if (commsType == Pstream::blocking || commsType == Pstream::scheduled)
+    if
+    (
+        commsType == Pstream::commsTypes::blocking
+     || commsType == Pstream::commsTypes::scheduled
+    )
     {
         OPstream::write
         (
@@ -176,7 +180,7 @@ void CML::processorLduInterface::send
             tag()
         );
     }
-    else if (commsType == Pstream::nonBlocking)
+    else if (commsType == Pstream::commsTypes::nonBlocking)
     {
         resizeBuf(receiveBuf_, nBytes);
 
@@ -204,7 +208,7 @@ void CML::processorLduInterface::send
     else
     {
         FatalErrorInFunction
-            << "Unsupported communications type " << commsType
+            << "Unsupported communications type " << int(commsType)
             << exit(FatalError);
     }
 }
@@ -217,7 +221,11 @@ void CML::processorLduInterface::receive
     UList<Type>& f
 ) const
 {
-    if (commsType == Pstream::blocking || commsType == Pstream::scheduled)
+    if
+    (
+        commsType == Pstream::commsTypes::blocking
+     || commsType == Pstream::commsTypes::scheduled
+    )
     {
         IPstream::read
         (
@@ -228,28 +236,28 @@ void CML::processorLduInterface::receive
             tag()
         );
     }
-    else if (commsType == Pstream::nonBlocking)
+    else if (commsType == Pstream::commsTypes::nonBlocking)
     {
         memcpy(f.begin(), receiveBuf_.begin(), f.byteSize());
     }
     else
     {
         FatalErrorInFunction
-            << "Unsupported communications type " << commsType
+            << "Unsupported communications type " << int(commsType)
             << exit(FatalError);
     }
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::processorLduInterface::receive
+CML::tmp<CML::Field<Type>> CML::processorLduInterface::receive
 (
     const Pstream::commsTypes commsType,
     const label size
 ) const
 {
-    tmp<Field<Type> > tf(new Field<Type>(size));
-    receive(commsType, tf());
+    tmp<Field<Type>> tf(new Field<Type>(size));
+    receive(commsType, tf.ref());
     return tf;
 }
 
@@ -274,14 +282,18 @@ void CML::processorLduInterface::compressedSend
         resizeBuf(sendBuf_, nBytes);
         float *fArray = reinterpret_cast<float*>(sendBuf_.begin());
 
-        for (register label i=0; i<nm1; i++)
+        for (label i=0; i<nm1; i++)
         {
             fArray[i] = sArray[i] - slast[i%nCmpts];
         }
 
         reinterpret_cast<Type&>(fArray[nm1]) = f.last();
 
-        if (commsType == Pstream::blocking || commsType == Pstream::scheduled)
+        if
+        (
+            commsType == Pstream::commsTypes::blocking
+         || commsType == Pstream::commsTypes::scheduled
+        )
         {
             OPstream::write
             (
@@ -292,7 +304,7 @@ void CML::processorLduInterface::compressedSend
                 tag()
             );
         }
-        else if (commsType == Pstream::nonBlocking)
+        else if (commsType == Pstream::commsTypes::nonBlocking)
         {
             resizeBuf(receiveBuf_, nBytes);
 
@@ -317,7 +329,7 @@ void CML::processorLduInterface::compressedSend
         else
         {
             FatalErrorInFunction
-                << "Unsupported communications type " << commsType
+                << "Unsupported communications type " << int(commsType)
                 << exit(FatalError);
         }
     }
@@ -342,7 +354,11 @@ void CML::processorLduInterface::compressedReceive
         label nFloats = nm1 + nlast;
         label nBytes = nFloats*sizeof(float);
 
-        if (commsType == Pstream::blocking || commsType == Pstream::scheduled)
+        if
+        (
+            commsType == Pstream::commsTypes::blocking
+         || commsType == Pstream::commsTypes::scheduled
+        )
         {
             resizeBuf(receiveBuf_, nBytes);
 
@@ -355,10 +371,10 @@ void CML::processorLduInterface::compressedReceive
                 tag()
             );
         }
-        else if (commsType != Pstream::nonBlocking)
+        else if (commsType != Pstream::commsTypes::nonBlocking)
         {
             FatalErrorInFunction
-                << "Unsupported communications type " << commsType
+                << "Unsupported communications type " << int(commsType)
                 << exit(FatalError);
         }
 
@@ -368,7 +384,7 @@ void CML::processorLduInterface::compressedReceive
         scalar *sArray = reinterpret_cast<scalar*>(f.begin());
         const scalar *slast = &sArray[nm1];
 
-        for (register label i=0; i<nm1; i++)
+        for (label i=0; i<nm1; i++)
         {
             sArray[i] = fArray[i] + slast[i%nCmpts];
         }
@@ -380,14 +396,14 @@ void CML::processorLduInterface::compressedReceive
 }
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::processorLduInterface::compressedReceive
+CML::tmp<CML::Field<Type>> CML::processorLduInterface::compressedReceive
 (
     const Pstream::commsTypes commsType,
     const label size
 ) const
 {
-    tmp<Field<Type> > tf(new Field<Type>(size));
-    compressedReceive(commsType, tf());
+    tmp<Field<Type>> tf(new Field<Type>(size));
+    compressedReceive(commsType, tf.ref());
     return tf;
 }
 

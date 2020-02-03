@@ -68,7 +68,7 @@ class tetMeshOptimisation
         //- exchange data with other processors
         void exchangeData
         (
-            std::map<label, DynList<parPartTet> >& m,
+            std::map<label, DynList<parPartTet>>& m,
             boolList* negativeNodePtr = nullptr
         );
 

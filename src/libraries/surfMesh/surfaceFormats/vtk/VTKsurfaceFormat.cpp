@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -32,9 +32,9 @@ void CML::fileFormats::VTKsurfaceFormat<Face>::writeHeaderPolygons
 {
     label nNodes = 0;
 
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
-        nNodes += faceLst[faceI].size();
+        nNodes += faceLst[facei].size();
     }
 
     os  << nl
@@ -91,7 +91,7 @@ void CML::fileFormats::VTKsurfaceFormat<Face>::write
 
         if (useFaceMap)
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceMap[faceIndex++]];
 
@@ -105,7 +105,7 @@ void CML::fileFormats::VTKsurfaceFormat<Face>::write
         }
         else
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceIndex++];
 
@@ -144,9 +144,9 @@ void CML::fileFormats::VTKsurfaceFormat<Face>::write
     writeHeader(os, surf.points());
     writeHeaderPolygons(os, faceLst);
 
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
-        const Face& f = faceLst[faceI];
+        const Face& f = faceLst[facei];
 
         os << f.size();
         forAll(f, fp)

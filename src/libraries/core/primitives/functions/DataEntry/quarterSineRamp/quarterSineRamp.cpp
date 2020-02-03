@@ -20,7 +20,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "quarterSineRamp.hpp"
-#include "mathematicalConstants.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -49,14 +48,6 @@ CML::DataEntryTypes::quarterSineRamp::quarterSineRamp
 
 CML::DataEntryTypes::quarterSineRamp::~quarterSineRamp()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-CML::scalar CML::DataEntryTypes::quarterSineRamp::value(const scalar t) const
-{
-    return sin(0.5*constant::mathematical::pi*linearRamp(t));
-}
 
 
 // ************************************************************************* //

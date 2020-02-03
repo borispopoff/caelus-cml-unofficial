@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,7 +80,7 @@ class multiLevelDecomp
         );
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const multiLevelDecomp&);
+        void operator=(const multiLevelDecomp&) = delete;
         multiLevelDecomp(const multiLevelDecomp&);
 
 
@@ -106,7 +106,7 @@ public:
         //- Is method parallel aware (i.e. does it synchronize domains across
         //  proc boundaries)
         virtual bool parallelAware() const;
-    
+
         //- Inherit decompose from decompositionMethod
         using decompositionMethod::decompose;
 

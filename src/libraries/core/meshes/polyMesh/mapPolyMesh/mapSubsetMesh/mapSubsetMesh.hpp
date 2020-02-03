@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -30,7 +30,6 @@ SourceFiles
 #ifndef mapSubsetMesh_H
 #define mapSubsetMesh_H
 
-#include "refCount.hpp"
 #include "labelList.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -43,8 +42,6 @@ namespace CML
 \*---------------------------------------------------------------------------*/
 
 class mapSubsetMesh
-:
-    public refCount
 {
     // Private data
 
@@ -108,7 +105,7 @@ public:
             const label exposedPatchID,
             labelList& oldPatchStarts,
             labelList& oldPatchNMeshPoints,
-            const bool reUse
+            const bool reuse
         );
 
 

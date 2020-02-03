@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -55,13 +55,8 @@ template<class Type> Ostream& operator<<(Ostream&, const DataEntry<Type>&);
 template<class Type>
 class DataEntry
 :
-    public refCount
+    public tmp<DataEntry<Type>>::refCount
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const DataEntry<Type>&);
-
 
 protected:
 
@@ -72,6 +67,8 @@ protected:
 
 
 public:
+
+    typedef Type returnType;
 
     //- Runtime type information
     TypeName("DataEntry")
@@ -90,7 +87,7 @@ public:
     );
 
 
-    // Constructor
+    // Constructors
 
         //- Construct from entry name
         DataEntry(const word& entryName);
@@ -99,15 +96,11 @@ public:
         DataEntry(const DataEntry<Type>& de);
 
         //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new DataEntry<Type>(*this));
-        }
-//        virtual tmp<DataEntry<Type> > clone() const = 0;
+        virtual tmp<DataEntry<Type>> clone() const = 0;
 
 
     //- Selector
-    static autoPtr<DataEntry<Type> > New
+    static autoPtr<DataEntry<Type>> New
     (
         const word& entryName,
         const dictionary& dict
@@ -138,17 +131,17 @@ public:
             virtual Type value(const scalar x) const;
 
             //- Return value as a function of (scalar) independent variable
-            virtual tmp<Field<Type> > value(const scalarField& x) const;
+            virtual tmp<Field<Type>> value(const scalarField& x) const = 0;
 
             //- Integrate between two (scalar) values
             virtual Type integrate(const scalar x1, const scalar x2) const;
 
             //- Integrate between two (scalar) values
-            virtual tmp<Field<Type> > integrate
+            virtual tmp<Field<Type>> integrate
             (
                 const scalarField& x1,
                 const scalarField& x2
-            ) const;
+            ) const = 0;
 
 
         // I/O
@@ -162,6 +155,64 @@ public:
 
             //- Write in dictionary format
             virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DataEntry<Type>&) = delete;
+};
+
+
+template<class Type>
+void writeEntry(Ostream& os, const DataEntry<Type>& f1);
+
+
+/*---------------------------------------------------------------------------*\
+                        Class FieldDataEntry Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class DataEntryType>
+class FieldDataEntry
+:
+    public DataEntryType
+{
+
+public:
+
+    typedef typename DataEntryType::returnType Type;
+
+
+    // Constructors
+
+        //- Construct from entry name and dictionary
+        FieldDataEntry(const word& entryName, const dictionary& dict);
+
+        //- Construct and return a clone
+        virtual tmp<DataEntry<Type>> clone() const;
+
+
+    //- Destructor
+    virtual ~FieldDataEntry()
+    {}
+
+
+    // Member Functions
+
+        // Evaluation
+
+            using DataEntryType::value;
+            using DataEntryType::integrate;
+
+            //- Return value as a function of (scalar) independent variable
+            virtual tmp<Field<Type>> value(const scalarField& x) const;
+
+            //- Integrate between two (scalar) values
+            virtual tmp<Field<Type>> integrate
+            (
+                const scalarField& x1,
+                const scalarField& x2
+            ) const;
 };
 
 
@@ -186,7 +237,8 @@ public:
                                                                                \
     defineNamedTemplateTypeNameAndDebug(DataEntryTypes::SS<Type>, 0);          \
                                                                                \
-    DataEntry<Type>::adddictionaryConstructorToTable<DataEntryTypes::SS<Type> > \
+    DataEntry<Type>::adddictionaryConstructorToTable                           \
+        <FieldDataEntry<DataEntryTypes::SS<Type>>>                             \
         add##SS##Type##ConstructorToTable_;
 
 
@@ -194,7 +246,7 @@ public:
                                                                                \
     defineTypeNameAndDebug(SS, 0);                                             \
                                                                                \
-    DataEntry<scalar>::adddictionaryConstructorToTable<SS>                     \
+    DataEntry<scalar>::adddictionaryConstructorToTable<FieldDataEntry<SS>>    \
         add##SS##ConstructorToTable_;
 
 // * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
@@ -209,7 +261,7 @@ CML::DataEntry<Type>::DataEntry(const word& entryName)
 template<class Type>
 CML::DataEntry<Type>::DataEntry(const DataEntry<Type>& de)
 :
-    refCount(),
+    tmp<DataEntry<Type>>::refCount(),
     name_(de.name_)
 {}
 
@@ -238,7 +290,9 @@ void CML::DataEntry<Type>::convertTimeBase(const Time&)
 template<class Type>
 Type CML::DataEntry<Type>::value(const scalar x) const
 {
-    NotImplemented;
+    FatalErrorInFunction
+        << "Evaluation is not defined for " << type() << " functions"
+        << exit(FatalError);
 
     return Zero;
 }
@@ -247,43 +301,70 @@ Type CML::DataEntry<Type>::value(const scalar x) const
 template<class Type>
 Type CML::DataEntry<Type>::integrate(const scalar x1, const scalar x2) const
 {
-    NotImplemented;
+    FatalErrorInFunction
+        << "Integration is not defined for " << type() << " functions"
+        << exit(FatalError);
 
     return Zero;
 }
 
 
-template<class Type>
-CML::tmp<CML::Field<Type> > CML::DataEntry<Type>::value
+template<class DataEntryType>
+CML::tmp<CML::Field<typename DataEntryType::returnType>>
+CML::FieldDataEntry<DataEntryType>::value
 (
     const scalarField& x
 ) const
 {
-    tmp<Field<Type> > tfld(new Field<Type>(x.size()));
-    Field<Type>& fld = tfld();
+    tmp<Field<Type>> tfld(new Field<Type>(x.size()));
+    Field<Type>& fld = tfld.ref();
 
     forAll(x, i)
     {
-        fld[i] = this->value(x[i]);
+        fld[i] = DataEntryType::value(x[i]);
     }
     return tfld;
 }
 
 
-template<class Type>
-CML::tmp<CML::Field<Type> > CML::DataEntry<Type>::integrate
+template<class DataEntryType>
+CML::FieldDataEntry<DataEntryType>::FieldDataEntry
+(
+    const word& entryName,
+    const dictionary& dict
+)
+:
+    DataEntryType(entryName, dict)
+{}
+
+
+template<class DataEntryType>
+CML::tmp<CML::DataEntry<typename DataEntryType::returnType>>
+CML::FieldDataEntry<DataEntryType>::clone() const
+{
+    return tmp<DataEntry<Type>>
+    (
+        new FieldDataEntry<DataEntryType>(*this)
+    );
+}
+
+
+template<class DataEntryType>
+CML::tmp<CML::Field<typename DataEntryType::returnType>> 
+CML::FieldDataEntry<DataEntryType>::integrate
 (
     const scalarField& x1,
     const scalarField& x2
 ) const
 {
-    tmp<Field<Type> > tfld(new Field<Type>(x1.size()));
-    Field<Type>& fld = tfld();
+    tmp<Field<Type>> tfld(new Field<Type>(x1.size()));
+    Field<Type>& fld = tfld.ref();
 
     forAll(x1, i)
     {
-        fld[i] = this->integrate(x1[i], x2[i]);
+        fld[i] = DataEntryType::integrate(x1[i], x2[i]);
     }
+
     return tfld;
 }
 
@@ -292,6 +373,15 @@ template<class Type>
 void CML::DataEntry<Type>::writeData(Ostream& os) const
 {
     os.writeKeyword(name_) << type();
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class Type>
+void  CML::writeEntry(Ostream& os, const DataEntry<Type>& f1)
+{
+    f1.writeData(os);
 }
 
 
@@ -310,7 +400,6 @@ CML::Ostream& CML::operator<<
         "Ostream& operator<<(Ostream&, const DataEntry<Type>&)"
     );
 
-    os  << f1.name_;
     f1.writeData(os);
 
     return os;

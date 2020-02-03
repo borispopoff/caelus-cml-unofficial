@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,67 +58,72 @@ public:
 
 private:
 
-    //- Reference to the owner fvDOM object
-    const fvDOM& dom_;
+    // Private data
 
-    //- Reference to the mesh
-    const fvMesh& mesh_;
+        //- Reference to the owner fvDOM object
+        const fvDOM& dom_;
 
-    //- Absorption/emission model
-    const absorptionEmissionModel& absorptionEmission_;
+        //- Reference to the mesh
+        const fvMesh& mesh_;
 
-    //- Black body
-    const blackBodyEmission& blackBody_;
+        //- Absorption/emission model
+        const absorptionEmissionModel& absorptionEmission_;
 
-    //- Total radiative intensity / [W/m2]
-    volScalarField I_;
+        //- Black body
+        const blackBodyEmission& blackBody_;
 
-    //- Total radiative heat flux on boundary
-    volScalarField qr_;
+        //- Total radiative intensity / [W/m2]
+        volScalarField I_;
 
-    //- Incident radiative heat flux on boundary
-    volScalarField qin_;
+        //- Total radiative heat flux on boundary
+        volScalarField qr_;
 
-    //- Emitted radiative heat flux on boundary
-    volScalarField qem_;
+        //- Incident radiative heat flux on boundary
+        volScalarField qin_;
 
-    //- Direction
-    vector d_;
+        //- Emitted radiative heat flux on boundary
+        volScalarField qem_;
 
-    //- Average direction vector inside the solid angle
-    vector dAve_;
+        //- Direction
+        vector d_;
 
-    //- Theta angle
-    scalar theta_;
+        //- Average direction vector inside the solid angle
+        vector dAve_;
 
-    //- Phi angle
-    scalar phi_;
+        //- Theta angle
+        scalar theta_;
 
-    //- Solid angle
-    scalar omega_;
+        //- Phi angle
+        scalar phi_;
 
-    //- Number of wavelengths/bands
-    label nLambda_;
+        //- Solid angle
+        scalar omega_;
 
-    //- List of pointers to radiative intensity fields for given wavelengths
-    PtrList<volScalarField> ILambda_;
+        //- Number of wavelengths/bands
+        label nLambda_;
 
-    //- Global ray id - incremented in constructor
-    static label rayId;
+        //- List of pointers to radiative intensity fields for given wavelengths
+        PtrList<volScalarField> ILambda_;
 
-    //- My ray Id
-    label myRayId_;
+        //- Global ray id - incremented in constructor
+        static label rayId;
+
+        //- My ray Id
+        label myRayId_;
 
 
-    //- Disallow default bitwise copy construct
-    radiativeIntensityRay(const radiativeIntensityRay&);
+    // Private Member Functions
 
-    //- Disallow default bitwise assignment
-    void operator=(const radiativeIntensityRay&);
+        //- Disallow default bitwise copy construct
+        radiativeIntensityRay(const radiativeIntensityRay&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const radiativeIntensityRay&) = delete;
 
 
 public:
 
+    // Constructors
 
     //- Construct form components
     radiativeIntensityRay

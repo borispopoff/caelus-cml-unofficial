@@ -68,7 +68,7 @@ CML::radiation::P1::P1(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qr", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qr", dimMass/pow3(dimTime), 0)
     ),
     a_
     (
@@ -81,7 +81,7 @@ CML::radiation::P1::P1(const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("a", dimless/dimLength, 0.0)
+        dimensionedScalar("a", dimless/dimLength, 0)
     ),
     e_
     (
@@ -94,7 +94,7 @@ CML::radiation::P1::P1(const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("a", dimless/dimLength, 0.0)
+        dimensionedScalar("a", dimless/dimLength, 0)
     ),
     E_
     (
@@ -107,7 +107,7 @@ CML::radiation::P1::P1(const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0.0)
+        dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0)
     )
 {}
 
@@ -138,7 +138,7 @@ CML::radiation::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("qr", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qr", dimMass/pow3(dimTime), 0)
     ),
     a_
     (
@@ -151,7 +151,7 @@ CML::radiation::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("a", dimless/dimLength, 0.0)
+        dimensionedScalar("a", dimless/dimLength, 0)
     ),
     e_
     (
@@ -164,7 +164,7 @@ CML::radiation::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("a", dimless/dimLength, 0.0)
+        dimensionedScalar("a", dimless/dimLength, 0)
     ),
     E_
     (
@@ -177,7 +177,7 @@ CML::radiation::P1::P1(const dictionary& dict, const volScalarField& T)
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0.0)
+        dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0)
     )
 {}
 
@@ -231,7 +231,7 @@ void CML::radiation::P1::calculate()
       - 4.0*(e_*physicoChemical::sigma*pow4(T_) ) - E_
     );
 
-    volScalarField::GeometricBoundaryField& qrBf = qr_.boundaryField();
+    volScalarField::Boundary& qrBf = qr_.boundaryFieldRef();
 
     // Calculate radiative heat flux on boundaries.
     forAll(mesh_.boundaryMesh(), patchi)
@@ -267,15 +267,15 @@ CML::tmp<CML::volScalarField> CML::radiation::P1::Rp() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::radiation::P1::Ru() const
 {
-    const DimensionedField<scalar, volMesh>& G =
-        G_.dimensionedInternalField();
-    const DimensionedField<scalar, volMesh> E =
-        absorptionEmission_->ECont()().dimensionedInternalField();
-    const DimensionedField<scalar, volMesh> a =
-        absorptionEmission_->aCont()().dimensionedInternalField();
+    const volScalarField::Internal& G =
+        G_();
+    const volScalarField::Internal E =
+        absorptionEmission_->ECont()()();
+    const volScalarField::Internal a =
+        absorptionEmission_->aCont()()();
 
     return a*G - E;
 }

@@ -60,9 +60,9 @@ public:
         NoDevolatilisation(const NoDevolatilisation<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<DevolatilisationModel<CloudType> > clone() const
+        virtual autoPtr<DevolatilisationModel<CloudType>> clone() const
         {
-            return autoPtr<DevolatilisationModel<CloudType> >
+            return autoPtr<DevolatilisationModel<CloudType>>
             (
                 new NoDevolatilisation<CloudType>(*this)
             );

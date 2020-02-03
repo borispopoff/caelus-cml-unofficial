@@ -68,19 +68,19 @@ CML::vectorField CML::meshTools::calcBoxPointNormals(const primitivePatch& pp)
     const vectorField& pointNormals = pp.pointNormals();
     const labelListList& pointFaces = pp.pointFaces();
 
-    forAll(pointFaces, pointI)
+    forAll(pointFaces, pointi)
     {
-        const labelList& pFaces = pointFaces[pointI];
+        const labelList& pFaces = pointFaces[pointi];
 
-        if (visNormal(pointNormals[pointI], faceNormals, pFaces))
+        if (visNormal(pointNormals[pointi], faceNormals, pFaces))
         {
-            pn[pointI] = pointNormals[pointI];
+            pn[pointi] = pointNormals[pointi];
         }
         else
         {
             WarningInFunction
                 << "Average point normal not visible for point:"
-                << pp.meshPoints()[pointI] << endl;
+                << pp.meshPoints()[pointi] << endl;
 
             label visOctant =
                 mXmYmZMask
@@ -164,16 +164,16 @@ CML::vectorField CML::meshTools::calcBoxPointNormals(const primitivePatch& pp)
             if (visI != -1)
             {
                 // Take a vector in this octant.
-                pn[pointI] = octantNormal[visI];
+                pn[pointi] = octantNormal[visI];
             }
             else
             {
-                pn[pointI] = vector::zero;
+                pn[pointi] = Zero;
 
                 WarningInFunction
-                    << "No visible octant for point:" << pp.meshPoints()[pointI]
-                    << " cooord:" << pp.points()[pp.meshPoints()[pointI]] << nl
-                    << "Normal set to " << pn[pointI] << endl;
+                    << "No visible octant for point:" << pp.meshPoints()[pointi]
+                    << " cooord:" << pp.points()[pp.meshPoints()[pointi]] << nl
+                    << "Normal set to " << pn[pointi] << endl;
             }
         }
     }
@@ -285,39 +285,39 @@ void CML::meshTools::writeOBJ
 bool CML::meshTools::edgeOnCell
 (
     const primitiveMesh& mesh,
-    const label cellI,
+    const label celli,
     const label edgeI
 )
 {
-    return findIndex(mesh.edgeCells(edgeI), cellI) != -1;
+    return findIndex(mesh.edgeCells(edgeI), celli) != -1;
 }
 
 
 bool CML::meshTools::edgeOnFace
 (
     const primitiveMesh& mesh,
-    const label faceI,
+    const label facei,
     const label edgeI
 )
 {
-    return findIndex(mesh.faceEdges(faceI), edgeI) != -1;
+    return findIndex(mesh.faceEdges(facei), edgeI) != -1;
 }
 
 
-// Return true if faceI part of cellI
+// Return true if facei part of celli
 bool CML::meshTools::faceOnCell
 (
     const primitiveMesh& mesh,
-    const label cellI,
-    const label faceI
+    const label celli,
+    const label facei
 )
 {
-    if (mesh.isInternalFace(faceI))
+    if (mesh.isInternalFace(facei))
     {
         if
         (
-            (mesh.faceOwner()[faceI] == cellI)
-         || (mesh.faceNeighbour()[faceI] == cellI)
+            (mesh.faceOwner()[facei] == celli)
+         || (mesh.faceNeighbour()[facei] == celli)
         )
         {
             return true;
@@ -325,7 +325,7 @@ bool CML::meshTools::faceOnCell
     }
     else
     {
-        if (mesh.faceOwner()[faceI] == cellI)
+        if (mesh.faceOwner()[facei] == celli)
         {
             return true;
         }
@@ -425,20 +425,20 @@ CML::label CML::meshTools::getSharedFace
 {
     const cell& cFaces = mesh.cells()[cell0I];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label faceI = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         if
         (
-            mesh.isInternalFace(faceI)
+            mesh.isInternalFace(facei)
          && (
-                mesh.faceOwner()[faceI] == cell1I
-             || mesh.faceNeighbour()[faceI] == cell1I
+                mesh.faceOwner()[facei] == cell1I
+             || mesh.faceNeighbour()[facei] == cell1I
             )
         )
         {
-            return faceI;
+            return facei;
         }
     }
 
@@ -454,11 +454,11 @@ CML::label CML::meshTools::getSharedFace
 }
 
 
-// Get the two faces on cellI using edgeI.
+// Get the two faces on celli using edgeI.
 void CML::meshTools::getEdgeFaces
 (
     const primitiveMesh& mesh,
-    const label cellI,
+    const label celli,
     const label edgeI,
     label& face0,
     label& face1
@@ -471,17 +471,17 @@ void CML::meshTools::getEdgeFaces
 
     forAll(eFaces, eFaceI)
     {
-        label faceI = eFaces[eFaceI];
+        label facei = eFaces[eFaceI];
 
-        if (faceOnCell(mesh, cellI, faceI))
+        if (faceOnCell(mesh, celli, facei))
         {
             if (face0 == -1)
             {
-                face0 = faceI;
+                face0 = facei;
             }
             else
             {
-                face1 = faceI;
+                face1 = facei;
 
                 return;
             }
@@ -492,7 +492,7 @@ void CML::meshTools::getEdgeFaces
     {
         FatalErrorInFunction
             << "Can not find faces using edge " << mesh.edges()[edgeI]
-            << " on cell " << cellI << abort(FatalError);
+            << " on cell " << celli << abort(FatalError);
     }
 }
 
@@ -536,17 +536,17 @@ CML::label CML::meshTools::otherEdge
 CML::label CML::meshTools::otherFace
 (
     const primitiveMesh& mesh,
-    const label cellI,
-    const label faceI,
+    const label celli,
+    const label facei,
     const label edgeI
 )
 {
     label face0;
     label face1;
 
-    getEdgeFaces(mesh, cellI, edgeI, face0, face1);
+    getEdgeFaces(mesh, celli, edgeI, face0, face1);
 
-    if (face0 == faceI)
+    if (face0 == facei)
     {
         return face1;
     }
@@ -562,23 +562,23 @@ CML::label CML::meshTools::otherCell
 (
     const primitiveMesh& mesh,
     const label otherCellI,
-    const label faceI
+    const label facei
 )
 {
-    if (!mesh.isInternalFace(faceI))
+    if (!mesh.isInternalFace(facei))
     {
         FatalErrorInFunction
-            << "Face " << faceI << " is not internal"
+            << "Face " << facei << " is not internal"
             << abort(FatalError);
     }
 
-    label newCellI = mesh.faceOwner()[faceI];
+    label newCelli = mesh.faceOwner()[facei];
 
-    if (newCellI == otherCellI)
+    if (newCelli == otherCellI)
     {
-        newCellI = mesh.faceNeighbour()[faceI];
+        newCelli = mesh.faceNeighbour()[facei];
     }
-    return newCellI;
+    return newCelli;
 }
 
 
@@ -587,13 +587,13 @@ CML::label CML::meshTools::otherCell
 CML::label CML::meshTools::walkFace
 (
     const primitiveMesh& mesh,
-    const label faceI,
+    const label facei,
     const label startEdgeI,
     const label startVertI,
     const label nEdges
 )
 {
-    const labelList& fEdges = mesh.faceEdges(faceI);
+    const labelList& fEdges = mesh.faceEdges(facei);
 
     label edgeI = startEdgeI;
 
@@ -722,7 +722,7 @@ void CML::meshTools::constrainDirection
 void CML::meshTools::getParallelEdges
 (
     const primitiveMesh& mesh,
-    const label cellI,
+    const label celli,
     const label e0,
     label& e1,
     label& e2,
@@ -730,32 +730,32 @@ void CML::meshTools::getParallelEdges
 )
 {
     // Go to any face using e0
-    label faceI = meshTools::otherFace(mesh, cellI, -1, e0);
+    label facei = meshTools::otherFace(mesh, celli, -1, e0);
 
     // Opposite edge on face
-    e1 = meshTools::walkFace(mesh, faceI, e0, mesh.edges()[e0].end(), 2);
+    e1 = meshTools::walkFace(mesh, facei, e0, mesh.edges()[e0].end(), 2);
 
-    faceI = meshTools::otherFace(mesh, cellI, faceI, e1);
+    facei = meshTools::otherFace(mesh, celli, facei, e1);
 
-    e2 = meshTools::walkFace(mesh, faceI, e1, mesh.edges()[e1].end(), 2);
+    e2 = meshTools::walkFace(mesh, facei, e1, mesh.edges()[e1].end(), 2);
 
-    faceI = meshTools::otherFace(mesh, cellI, faceI, e2);
+    facei = meshTools::otherFace(mesh, celli, facei, e2);
 
-    e3 = meshTools::walkFace(mesh, faceI, e2, mesh.edges()[e2].end(), 2);
+    e3 = meshTools::walkFace(mesh, facei, e2, mesh.edges()[e2].end(), 2);
 }
 
 
 CML::vector CML::meshTools::edgeToCutDir
 (
     const primitiveMesh& mesh,
-    const label cellI,
+    const label celli,
     const label startEdgeI
 )
 {
-    if (!hexMatcher().isA(mesh, cellI))
+    if (!hexMatcher().isA(mesh, celli))
     {
         FatalErrorInFunction
-            << "Not a hex : cell:" << cellI << abort(FatalError);
+            << "Not a hex : cell:" << celli << abort(FatalError);
     }
 
 
@@ -763,12 +763,12 @@ CML::vector CML::meshTools::edgeToCutDir
 
     label edgeI = startEdgeI;
 
-    label faceI = -1;
+    label facei = -1;
 
     for (label i = 0; i < 3; i++)
     {
         // Step to next face, next edge
-        faceI = meshTools::otherFace(mesh, cellI, faceI, edgeI);
+        facei = meshTools::otherFace(mesh, celli, facei, edgeI);
 
         vector eVec(normEdgeVec(mesh, edgeI));
 
@@ -783,7 +783,7 @@ CML::vector CML::meshTools::edgeToCutDir
 
         label vertI = mesh.edges()[edgeI].end();
 
-        edgeI = meshTools::walkFace(mesh, faceI, edgeI, vertI, 2);
+        edgeI = meshTools::walkFace(mesh, facei, edgeI, vertI, 2);
     }
 
     avgVec /= mag(avgVec) + VSMALL;
@@ -796,17 +796,17 @@ CML::vector CML::meshTools::edgeToCutDir
 CML::label CML::meshTools::cutDirToEdge
 (
     const primitiveMesh& mesh,
-    const label cellI,
+    const label celli,
     const vector& cutDir
 )
 {
-    if (!hexMatcher().isA(mesh, cellI))
+    if (!hexMatcher().isA(mesh, celli))
     {
         FatalErrorInFunction
-            << "Not a hex : cell:" << cellI << abort(FatalError);
+            << "Not a hex : cell:" << celli << abort(FatalError);
     }
 
-    const labelList& cEdges = mesh.cellEdges()[cellI];
+    const labelList& cEdges = mesh.cellEdges()[celli];
 
     labelHashSet doneEdges(2*cEdges.size());
 
@@ -821,7 +821,7 @@ CML::label CML::meshTools::cutDirToEdge
 
             if (!doneEdges.found(e0))
             {
-                vector avgDir(edgeToCutDir(mesh, cellI, e0));
+                vector avgDir(edgeToCutDir(mesh, celli, e0));
 
                 scalar cosAngle = mag(avgDir & cutDir);
 
@@ -833,7 +833,7 @@ CML::label CML::meshTools::cutDirToEdge
 
                 // Mark off edges in cEdges.
                 label e1, e2, e3;
-                getParallelEdges(mesh, cellI, e0, e1, e2, e3);
+                getParallelEdges(mesh, celli, e0, e1, e2, e3);
 
                 doneEdges.insert(e0);
                 doneEdges.insert(e1);
@@ -848,7 +848,7 @@ CML::label CML::meshTools::cutDirToEdge
         if (!doneEdges.found(cEdges[cEdgeI]))
         {
             FatalErrorInFunction
-                << "Cell:" << cellI << " edges:" << cEdges << endl
+                << "Cell:" << celli << " edges:" << cEdges << endl
                 << "Edge:" << cEdges[cEdgeI] << " not yet handled"
                 << abort(FatalError);
         }
@@ -858,7 +858,7 @@ CML::label CML::meshTools::cutDirToEdge
     {
         FatalErrorInFunction
             << "Problem : did not find edge aligned with " << cutDir
-            << " on cell " << cellI << abort(FatalError);
+            << " on cell " << celli << abort(FatalError);
     }
 
     return maxEdgeI;

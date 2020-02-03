@@ -162,7 +162,7 @@ bool CML::solidBodyMotionFunctions::tabulated6DoFMotion::read
 
         if (dataStream.good())
         {
-            List<Tuple2<scalar, translationRotationVectors> > timeValues
+            List<Tuple2<scalar, translationRotationVectors>> timeValues
             (
                 dataStream
             );

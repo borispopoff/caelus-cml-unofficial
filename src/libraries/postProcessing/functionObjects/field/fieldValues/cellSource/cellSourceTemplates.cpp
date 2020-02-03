@@ -39,7 +39,7 @@ bool CML::fieldValues::cellSource::validField(const word& fieldName) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fieldValues::cellSource::setFieldValues
+CML::tmp<CML::Field<Type>> CML::fieldValues::cellSource::setFieldValues
 (
     const word& fieldName,
     const bool mustGet
@@ -59,7 +59,7 @@ CML::tmp<CML::Field<Type> > CML::fieldValues::cellSource::setFieldValues
             << abort(FatalError);
     }
 
-    return tmp<Field<Type> >(new Field<Type>(0.0));
+    return tmp<Field<Type>>(new Field<Type>(0.0));
 }
 
 
@@ -205,12 +205,12 @@ bool CML::fieldValues::cellSource::writeValues(const word& fieldName)
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fieldValues::cellSource::filterField
+CML::tmp<CML::Field<Type>> CML::fieldValues::cellSource::filterField
 (
     const Field<Type>& field
 ) const
 {
-    return tmp<Field<Type> >(new Field<Type>(field, cellId_));
+    return tmp<Field<Type>>(new Field<Type>(field, cellId_));
 }
 
 

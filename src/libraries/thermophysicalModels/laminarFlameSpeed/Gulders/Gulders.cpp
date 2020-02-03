@@ -83,11 +83,11 @@ CML::tmp<CML::volScalarField> CML::laminarFlameSpeedModels::Gulders::Su0pTphi
                 false
             ),
             p.mesh(),
-            dimensionedScalar("Su0", dimVelocity, 0.0)
+            dimensionedScalar("Su0", dimVelocity, 0)
         )
     );
 
-    volScalarField& Su0 = tSu0();
+    volScalarField& Su0 = tSu0.ref();
 
     forAll(Su0, celli)
     {
@@ -98,7 +98,7 @@ CML::tmp<CML::volScalarField> CML::laminarFlameSpeedModels::Gulders::Su0pTphi
     {
         forAll(Su0.boundaryField()[patchi], facei)
         {
-            Su0.boundaryField()[patchi][facei] =
+            Su0.boundaryFieldRef()[patchi][facei] =
                 Su0pTphi
                 (
                     p.boundaryField()[patchi][facei],
@@ -134,22 +134,24 @@ CML::tmp<CML::volScalarField> CML::laminarFlameSpeedModels::Gulders::Su0pTphi
                 false
             ),
             p.mesh(),
-            dimensionedScalar("Su0", dimVelocity, 0.0)
+            dimensionedScalar("Su0", dimVelocity, 0)
         )
     );
 
-    volScalarField& Su0 = tSu0();
+    volScalarField& Su0 = tSu0.ref();
 
     forAll(Su0, celli)
     {
         Su0[celli] = Su0pTphi(p[celli], Tu[celli], phi[celli], 0.0);
     }
 
-    forAll(Su0.boundaryField(), patchi)
+    volScalarField::Boundary& Su0Bf = Su0.boundaryFieldRef();
+
+    forAll(Su0Bf, patchi)
     {
-        forAll(Su0.boundaryField()[patchi], facei)
+        forAll(Su0Bf[patchi], facei)
         {
-            Su0.boundaryField()[patchi][facei] =
+            Su0Bf[patchi][facei] =
                 Su0pTphi
                 (
                     p.boundaryField()[patchi][facei],

@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
         Random rndGen(43544*Pstream::myProcNo());
 
         // Generate random data.
-        List<Tuple2<label, List<scalar> > > complexData(100);
+        List<Tuple2<label, List<scalar>>> complexData(100);
         forAll(complexData, i)
         {
             complexData[i].first() =
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 
 
         // Construct distribute map (destructively)
-        mapDistribute map(constructSize, sendMap.xfer(), recvMap.xfer());
+        mapDistribute map(constructSize, move(sendMap), move(recvMap));
 
         // Distribute complexData
         map.distribute(complexData);
@@ -145,13 +145,21 @@ int main(int argc, char *argv[])
             {
                 Perr<< "slave sending to master "
                     << Pstream::masterNo() << endl;
-                OPstream toMaster(Pstream::blocking, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::blocking,
+                    Pstream::masterNo()
+                );
                 toMaster << data;
             }
 
             Perr<< "slave receiving from master "
                 << Pstream::masterNo() << endl;
-            IPstream fromMaster(Pstream::blocking, Pstream::masterNo());
+            IPstream fromMaster
+            (
+                Pstream::commsTypes::blocking,
+                Pstream::masterNo()
+            );
             fromMaster >> data;
 
             Perr<< data << endl;
@@ -166,7 +174,7 @@ int main(int argc, char *argv[])
             )
             {
                 Perr << "master receiving from slave " << slave << endl;
-                IPstream fromSlave(Pstream::blocking, slave);
+                IPstream fromSlave(Pstream::commsTypes::blocking, slave);
                 fromSlave >> data;
 
                 Perr<< data << endl;
@@ -180,7 +188,7 @@ int main(int argc, char *argv[])
             )
             {
                 Perr << "master sending to slave " << slave << endl;
-                OPstream toSlave(Pstream::blocking, slave);
+                OPstream toSlave(Pstream::commsTypes::blocking, slave);
                 toSlave << data;
             }
         }

@@ -96,8 +96,8 @@ bool CML::solidBodyMotionFunctions::oscillatingLinearMotion::read
 
     SBMFCoeffs_.lookup("amplitude") >> amplitude_;
     SBMFCoeffs_.lookup("omega") >> omega_;
-    phase_ = SBMFCoeffs_.lookupOrDefault<scalar>("phase", scalar(0.0));
-    offset_ = SBMFCoeffs_.lookupOrDefault<vector>("offset", vector::zero);
+    phase_ = SBMFCoeffs_.lookupOrDefault<scalar>("phase", scalar(0));
+    offset_ = SBMFCoeffs_.lookupOrDefault<vector>("offset", Zero);
 
     return true;
 }

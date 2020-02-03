@@ -37,7 +37,7 @@ Description
 namespace CML
 {
 
-template <class Type>
+template<class Type>
 class simpleMatrix;
 
 /*---------------------------------------------------------------------------*\

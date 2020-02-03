@@ -261,7 +261,7 @@ public:
 
         //- move vertices to their new positions
         //- intended for SMP parallelisation
-        void updateVerticesSMP(const List<LongList<labelledPoint> >&);
+        void updateVerticesSMP(const List<LongList<labelledPoint>>&);
 
         //- updates the vertices of the original polyMeshGen
         void updateOrigMesh(boolList* changedFacePtr = nullptr);

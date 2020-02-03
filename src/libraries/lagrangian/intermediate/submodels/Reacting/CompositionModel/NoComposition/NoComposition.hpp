@@ -62,9 +62,9 @@ public:
         NoComposition(const NoComposition<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<CompositionModel<CloudType> > clone() const
+        virtual autoPtr<CompositionModel<CloudType>> clone() const
         {
-            return autoPtr<CompositionModel<CloudType> >
+            return autoPtr<CompositionModel<CloudType>>
             (
                 new NoComposition<CloudType>(*this)
             );

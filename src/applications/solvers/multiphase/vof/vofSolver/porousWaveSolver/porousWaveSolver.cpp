@@ -41,7 +41,7 @@ Description
 #include "turbulenceModel.hpp"
 #include "interpolationTable.hpp"
 #include "pimpleControl.hpp"
-#include "fvIOoptionList.hpp"
+#include "fvOptions.hpp"
 #include "fixedFluxPressureFvPatchScalarField.hpp"
 #include "CorrectPhi_.hpp"
 #include "fvcSmooth.hpp"

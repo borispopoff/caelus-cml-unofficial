@@ -38,20 +38,20 @@ Contributors/Copyright:
 namespace CML {
 
     template <typename Type>
-    tmp<Field<Type > > CloudValueExpressionDriver::getFluidField(
+    tmp<Field<Type>> CloudValueExpressionDriver::getFluidField(
         word const&name
     )
     {
         Field<vector> positions(proxy_->getPositions());
         Field<label> cells(proxy_->getCells());
 
-        tmp<Field<Type> > pResult(
+        tmp<Field<Type>> pResult(
             new Field<Type>(
                 cells.size(),
                 pTraits<Type>::zero
             )
         );
-        Field<Type> &result=pResult();
+        Field<Type> &result=pResult.ref();
 
         typedef GeometricField< Type, fvPatchField, volMesh > volField;
 
@@ -73,7 +73,7 @@ namespace CML {
         ) {
             const volField &f=this->mesh().lookupObject<volField>(name);
 
-            autoPtr<interpolation<Type> > inter;
+            autoPtr<interpolation<Type>> inter;
             inter=interpolation<Type>::New(
                 interpolationScheme,
                 f
@@ -90,7 +90,7 @@ namespace CML {
                 true // fail if not found
             );
 
-            autoPtr<interpolation<Type> > inter=interpolation<Type>::New(
+            autoPtr<interpolation<Type>> inter=interpolation<Type>::New(
                 interpolationScheme,
                 f
             );

@@ -62,7 +62,7 @@ class fieldDistributionFunctionObject
     word fieldName_;
 
     template <typename T>
-    void getDistributionInternal(autoPtr<SimpleDistribution<T> > &dist);
+    void getDistributionInternal(autoPtr<SimpleDistribution<T>> &dist);
 protected:
 
     word dirName();
@@ -111,7 +111,7 @@ namespace CML
 
 template <typename T>
 void fieldDistributionFunctionObject::getDistributionInternal(
-    autoPtr<SimpleDistribution<T> > &dist
+    autoPtr<SimpleDistribution<T>> &dist
 ) {
     const fvMesh &mesh=refCast<const fvMesh>(obr_);
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -108,7 +108,7 @@ bool CML::dictionary::read(Istream& is, const bool keepHeader)
 
     if (is.bad())
     {
-        Info<< "dictionary::read(Istream&, bool) : "
+        InfoInFunction
             << "Istream not OK after reading dictionary " << name()
             << endl;
 
@@ -146,6 +146,14 @@ bool CML::dictionary::substituteKeyword(const word& keyword)
     }
 
     return false;
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+void CML::writeEntry(Ostream& os, const dictionary& value)
+{
+    os << value;
 }
 
 

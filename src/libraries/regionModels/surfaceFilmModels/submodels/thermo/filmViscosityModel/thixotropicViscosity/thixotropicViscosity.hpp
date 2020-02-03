@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -88,10 +88,10 @@ class thixotropicViscosity
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        thixotropicViscosity(const thixotropicViscosity&);
+        thixotropicViscosity(const thixotropicViscosity&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const thixotropicViscosity&);
+        void operator=(const thixotropicViscosity&) = delete;
 
 
 protected:

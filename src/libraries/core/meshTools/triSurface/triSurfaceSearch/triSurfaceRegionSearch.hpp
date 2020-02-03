@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,12 +55,8 @@ class triSurfaceRegionSearch
 {
     // Private typedefs
 
-        typedef PrimitivePatch
-        <
-            labelledTri,
-            IndirectList,
-            const pointField&
-        > indirectTriSurface;
+        typedef PrimitivePatch<IndirectList<labelledTri>, const pointField&>
+            indirectTriSurface;
 
         typedef treeDataPrimitivePatch<indirectTriSurface>
             treeDataIndirectTriSurface;
@@ -77,15 +73,6 @@ class triSurfaceRegionSearch
         mutable PtrList<treeType> treeByRegion_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        triSurfaceRegionSearch(const triSurfaceRegionSearch&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceRegionSearch&);
-
-
 public:
 
     // Constructors
@@ -95,6 +82,9 @@ public:
 
         //- Construct from surface and dictionary. Holds reference to surface!
         triSurfaceRegionSearch(const triSurface&, const dictionary& dict);
+
+        //- Disallow default bitwise copy construct
+        triSurfaceRegionSearch(const triSurfaceRegionSearch&) = delete;
 
 
     //- Destructor
@@ -113,7 +103,6 @@ public:
             //        by only constructing trees when they are in regionIndices
             const PtrList<treeType>& treeByRegion() const;
 
-
         // Query
 
             //- Find the nearest point on the surface out of the regions
@@ -126,6 +115,12 @@ public:
                 const labelList& regionIndices,
                 List<pointIndexHit>& info
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceRegionSearch&) = delete;
 };
 
 

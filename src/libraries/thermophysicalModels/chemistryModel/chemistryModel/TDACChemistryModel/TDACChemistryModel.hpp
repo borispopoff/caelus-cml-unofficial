@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016-2018 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -86,14 +86,14 @@ class TDACChemistryModel
     scalarField completeC_;
     scalarField simplifiedC_;
     Field<bool> reactionsDisabled_;
-    List<List<specieElement> > specieComp_;
+    List<List<specieElement>> specieComp_;
     Field<label> completeToSimplifiedIndex_;
     DynamicList<label> simplifiedToCompleteIndex_;
-    autoPtr<chemistryReductionMethod<ReactionThermo, ThermoType> >
+    autoPtr<chemistryReductionMethod<ReactionThermo, ThermoType>>
         mechRed_;
 
     // Tabulation
-    autoPtr<chemistryTabulationMethod<ReactionThermo, ThermoType> >
+    autoPtr<chemistryTabulationMethod<ReactionThermo, ThermoType>>
         tabulation_;
 
     // Log file for the average time spent reducing the chemistry
@@ -127,7 +127,7 @@ class TDACChemistryModel
     TDACChemistryModel(const TDACChemistryModel&);
 
     //- Disallow default bitwise assignment
-    void operator=(const TDACChemistryModel&);
+    void operator=(const TDACChemistryModel&) = delete;
 
     //- Solve the reaction system for the given time step
     //  of given type and return the characteristic time
@@ -252,10 +252,10 @@ public:
 
     inline const Field<label>& completeToSimplifiedIndex() const;
 
-    inline List<List<specieElement> >& specieComp();
+    inline List<List<specieElement>>& specieComp();
 
     inline
-    autoPtr<chemistryReductionMethod<ReactionThermo, ThermoType> >&  mechRed();
+    autoPtr<chemistryReductionMethod<ReactionThermo, ThermoType>>&  mechRed();
 
     tmp<volScalarField> tabulationResults() const
     {
@@ -319,7 +319,7 @@ CML::TDACChemistryModel<ReactionThermo, ThermoType>::Y()
 
 template<class ReactionThermo, class ThermoType>
 inline
-CML::autoPtr<CML::chemistryReductionMethod<ReactionThermo, ThermoType> >&
+CML::autoPtr<CML::chemistryReductionMethod<ReactionThermo, ThermoType>>&
 CML::TDACChemistryModel<ReactionThermo, ThermoType>::mechRed()
 {
     return mechRed_;
@@ -414,7 +414,7 @@ CML::TDACChemistryModel<ReactionThermo, ThermoType>::simplifiedC()
 
 
 template<class ReactionThermo, class ThermoType>
-inline CML::List<CML::List<CML::specieElement> >&
+inline CML::List<CML::List<CML::specieElement>>&
 CML::TDACChemistryModel<ReactionThermo, ThermoType>::specieComp()
 {
     return specieComp_;
@@ -480,7 +480,7 @@ CML::TDACChemistryModel<ReactionThermo, ThermoType>::TDACChemistryModel
     // Store the species composition according to the species index
     speciesTable speciesTab = composition.species();
 
-    const HashTable<List<specieElement> >& specComp =
+    const HashTable<List<specieElement>>& specComp =
         dynamicCast<const reactingMixture<ThermoType>&>(this->thermo())
        .specieComposition();
 
@@ -1230,7 +1230,7 @@ CML::scalar CML::TDACChemistryModel<ReactionThermo, ThermoType>::solve
     // Don't allow the time-step to change more than a factor of 2
     return min
     (
-        this->solve<uniformField<scalar> >(uniformField<scalar>(deltaT)),
+        this->solve<uniformField<scalar>>(uniformField<scalar>(deltaT)),
         2*deltaT
     );
 }

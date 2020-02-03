@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -26,9 +26,6 @@ Description
 #include "Time.hpp"
 #include "polyMesh.hpp"
 #include "topoSetSource.hpp"
-#include "cellSet.hpp"
-#include "faceSet.hpp"
-#include "pointSet.hpp"
 #include "globalMeshData.hpp"
 #include "timeSelector.hpp"
 #include "IOobjectList.hpp"

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -94,10 +94,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        LESModel(const LESModel&);
+        LESModel(const LESModel&) = delete;
 
         //- Disallow default bitwise assignment
-        LESModel& operator=(const LESModel&);
+        LESModel& operator=(const LESModel&) = delete;
 
 
 public:

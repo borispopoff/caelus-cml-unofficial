@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -65,11 +65,11 @@ tmp<scalarField> nutUTabulatedWallFunctionFvPatchScalarField::calcUPlus
 ) const
 {
     tmp<scalarField> tuPlus(new scalarField(patch().size(), 0.0));
-    scalarField& uPlus = tuPlus();
+    scalarField& uPlus = tuPlus.ref();
 
-    forAll(uPlus, faceI)
+    forAll(uPlus, facei)
     {
-        uPlus[faceI] = uPlusTable_.interpolateLog10(Rey[faceI]);
+        uPlus[facei] = uPlusTable_.interpolateLog10(Rey[facei]);
     }
 
     return tuPlus;
@@ -192,9 +192,8 @@ tmp<scalarField> nutUTabulatedWallFunctionFvPatchScalarField::yPlus() const
 void nutUTabulatedWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    os.writeKeyword("uPlusTable") << uPlusTableName_
-        << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "uPlusTable", uPlusTableName_);
+    writeEntry(os, "value", *this);
 }
 
 

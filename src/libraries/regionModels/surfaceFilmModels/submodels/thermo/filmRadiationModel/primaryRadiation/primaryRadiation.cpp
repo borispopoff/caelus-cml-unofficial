@@ -63,7 +63,7 @@ primaryRadiation::primaryRadiation
             IOobject::NO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
+        dimensionedScalar("zero", dimMass/pow3(dimTime), 0),
         film.mappedPushedFieldPatchTypes<scalar>()
     )
 {}
@@ -99,11 +99,11 @@ tmp<volScalarField> primaryRadiation::Shs()
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
+            dimensionedScalar("zero", dimMass/pow3(dimTime), 0)
         )
     );
 
-    scalarField& Shs = tShs();
+    scalarField& Shs = tShs.ref();
     const scalarField& qinP = qinPrimary_;
     const scalarField& alpha = filmModel_.alpha();
 

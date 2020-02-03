@@ -85,7 +85,7 @@ public:
         // Access
 
             //- Return i-th face
-            inline triFace face(const label faceI) const;
+            inline triFace face(const label facei) const;
 
             //- Return first face adjacent to the given edge
             inline label edgeFace(const label edgeI) const;
@@ -94,7 +94,7 @@ public:
             inline label edgeAdjacentFace
             (
                 const label edgeI,
-                const label faceI
+                const label facei
             ) const;
 
             //- Return i-th edge

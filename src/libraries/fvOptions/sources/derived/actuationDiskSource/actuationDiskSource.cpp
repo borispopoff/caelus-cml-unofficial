@@ -83,7 +83,7 @@ CML::fv::actuationDiskSource::actuationDiskSource
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh),
+    cellSetOption(name, modelType, dict, mesh),
     diskDir_(coeffs_.lookup("diskDir")),
     Cp_(readScalar(coeffs_.lookup("Cp"))),
     Ct_(readScalar(coeffs_.lookup("Ct"))),
@@ -108,7 +108,7 @@ CML::fv::actuationDiskSource::actuationDiskSource
 void CML::fv::actuationDiskSource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     const scalarField& cellsV = mesh_.V();
@@ -133,7 +133,7 @@ void CML::fv::actuationDiskSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     const scalarField& cellsV = mesh_.V();
@@ -154,16 +154,9 @@ void CML::fv::actuationDiskSource::addSup
 }
 
 
-void CML::fv::actuationDiskSource::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-}
-
-
 bool CML::fv::actuationDiskSource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         coeffs_.readIfPresent("diskDir", diskDir_);
         coeffs_.readIfPresent("Cp", Cp_);

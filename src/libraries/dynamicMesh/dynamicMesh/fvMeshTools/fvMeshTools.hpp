@@ -58,7 +58,7 @@ class fvMeshTools
     static void setPatchFields
     (
         fvMesh& mesh,
-        const label patchI,
+        const label patchi,
         const dictionary& patchFieldDict
     );
 
@@ -67,7 +67,7 @@ class fvMeshTools
     static void setPatchFields
     (
         fvMesh& mesh,
-        const label patchI,
+        const label patchi,
         const typename GeoField::value_type& value
     );
 
@@ -101,12 +101,12 @@ public:
     static void setPatchFields
     (
         fvMesh& mesh,
-        const label patchI,
+        const label patchi,
         const dictionary& patchFieldDict
     );
 
     //- Change patchField to zero on registered fields
-    static void zeroPatchFields(fvMesh& mesh, const label patchI);
+    static void zeroPatchFields(fvMesh& mesh, const label patchi);
 
     //- Reorder and remove trailing patches. If validBoundary call is parallel
     //  synced
@@ -166,8 +166,8 @@ void CML::fvMeshTools::addPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+        typename GeoField::Boundary& bfld =
+            fld.boundaryFieldRef();
 
         label sz = bfld.size();
         bfld.setSize(sz+1);
@@ -177,10 +177,10 @@ void CML::fvMeshTools::addPatchFields
             bfld.set
             (
                 sz,
-                GeoField::PatchFieldType::New
+                GeoField::Patch::New
                 (
                     mesh.boundary()[sz],
-                    fld.dimensionedInternalField(),
+                    fld(),
                     patchFieldDict.subDict(fld.name())
                 )
             );
@@ -190,11 +190,11 @@ void CML::fvMeshTools::addPatchFields
             bfld.set
             (
                 sz,
-                GeoField::PatchFieldType::New
+                GeoField::Patch::New
                 (
                     defaultPatchFieldType,
                     mesh.boundary()[sz],
-                    fld.dimensionedInternalField()
+                    fld()
                 )
             );
             bfld[sz] == defaultPatchValue;
@@ -207,7 +207,7 @@ template<class GeoField>
 void CML::fvMeshTools::setPatchFields
 (
     fvMesh& mesh,
-    const label patchI,
+    const label patchi,
     const dictionary& patchFieldDict
 )
 {
@@ -220,18 +220,18 @@ void CML::fvMeshTools::setPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+        typename GeoField::Boundary& bfld =
+            fld.boundaryFieldRef();
 
         if (patchFieldDict.found(fld.name()))
         {
             bfld.set
             (
-                patchI,
-                GeoField::PatchFieldType::New
+                patchi,
+                GeoField::Patch::New
                 (
-                    mesh.boundary()[patchI],
-                    fld.dimensionedInternalField(),
+                    mesh.boundary()[patchi],
+                    fld(),
                     patchFieldDict.subDict(fld.name())
                 )
             );
@@ -246,7 +246,7 @@ template<class GeoField>
 void CML::fvMeshTools::setPatchFields
 (
     fvMesh& mesh,
-    const label patchI,
+    const label patchi,
     const typename GeoField::value_type& value
 )
 {
@@ -259,10 +259,10 @@ void CML::fvMeshTools::setPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+        typename GeoField::Boundary& bfld =
+            fld.boundaryFieldRef();
 
-        bfld[patchI] == value;
+        bfld[patchi] == value;
     }
 }
 
@@ -279,7 +279,7 @@ void CML::fvMeshTools::trimPatchFields(fvMesh& mesh, const label nPatches)
     forAllIter(typename HashTable<GeoField*>, flds, iter)
     {
         GeoField& fld = *iter();
-        fld.boundaryField().setSize(nPatches);
+        fld.boundaryFieldRef().setSize(nPatches);
     }
 }
 
@@ -301,8 +301,8 @@ void CML::fvMeshTools::reorderPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+        typename GeoField::Boundary& bfld =
+            fld.boundaryFieldRef();
 
         bfld.reorder(oldToNew);
     }

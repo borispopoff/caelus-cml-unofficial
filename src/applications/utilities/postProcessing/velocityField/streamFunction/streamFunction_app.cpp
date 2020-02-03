@@ -104,13 +104,13 @@ int main(int argc, char *argv[])
                     IOobject::NO_WRITE
                 ),
                 pMesh,
-                dimensionedScalar("zero", phi.dimensions(), 0.0)
+                dimensionedScalar("zero", phi.dimensions(), 0)
             );
 
             labelList visitedPoint(mesh.nPoints());
-            forAll(visitedPoint, pointI)
+            forAll(visitedPoint, pointi)
             {
-                visitedPoint[pointI] = 0;
+                visitedPoint[pointi] = 0;
             }
             label nVisited = 0;
             label nVisitedOld = 0;
@@ -135,28 +135,28 @@ int main(int argc, char *argv[])
             {
                 found = false;
 
-                forAll(patches, patchI)
+                forAll(patches, patchi)
                 {
-                    const primitivePatch& bouFaces = patches[patchI];
+                    const primitivePatch& bouFaces = patches[patchi];
 
-                    if (!isType<emptyPolyPatch>(patches[patchI]))
+                    if (!isType<emptyPolyPatch>(patches[patchi]))
                     {
-                        forAll(bouFaces, faceI)
+                        forAll(bouFaces, facei)
                         {
                             if
                             (
-                                magSqr(phi.boundaryField()[patchI][faceI])
+                                magSqr(phi.boundaryField()[patchi][facei])
                               < SMALL
                             )
                             {
-                                const labelList& zeroPoints = bouFaces[faceI];
+                                const labelList& zeroPoints = bouFaces[facei];
 
                                 // Zero flux face found
                                 found = true;
 
-                                forAll(zeroPoints, pointI)
+                                forAll(zeroPoints, pointi)
                                 {
-                                    if (visitedPoint[zeroPoints[pointI]] == 1)
+                                    if (visitedPoint[zeroPoints[pointi]] == 1)
                                     {
                                         found = false;
                                         break;
@@ -165,13 +165,13 @@ int main(int argc, char *argv[])
 
                                 if (found)
                                 {
-                                    Info<< "Zero face: patch: " << patchI
-                                        << "    face: " << faceI << endl;
+                                    Info<< "Zero face: patch: " << patchi
+                                        << "    face: " << facei << endl;
 
-                                    forAll(zeroPoints, pointI)
+                                    forAll(zeroPoints, pointi)
                                     {
-                                        streamFunction[zeroPoints[pointI]] = 0;
-                                        visitedPoint[zeroPoints[pointI]] = 1;
+                                        streamFunction[zeroPoints[pointi]] = 0;
+                                        visitedPoint[zeroPoints[pointi]] = 1;
                                         nVisited++;
                                     }
 
@@ -198,9 +198,9 @@ int main(int argc, char *argv[])
 
                         bool found = true;
 
-                        forAll(zeroPoints, pointI)
+                        forAll(zeroPoints, pointi)
                         {
-                            if (visitedPoint[zeroPoints[pointI]] == 1)
+                            if (visitedPoint[zeroPoints[pointi]] == 1)
                             {
                                 found = false;
                                 break;
@@ -209,10 +209,10 @@ int main(int argc, char *argv[])
 
                         if (found)
                         {
-                            forAll(zeroPoints, pointI)
+                            forAll(zeroPoints, pointi)
                             {
-                                streamFunction[zeroPoints[pointI]] = 0.0;
-                                visitedPoint[zeroPoints[pointI]] = 1;
+                                streamFunction[zeroPoints[pointi]] = 0.0;
+                                visitedPoint[zeroPoints[pointi]] = 1;
                                 nVisited++;
                             }
 
@@ -238,27 +238,27 @@ int main(int argc, char *argv[])
 
                      for
                      (
-                         label faceI = nInternalFaces;
-                         faceI<faces.size();
-                         faceI++
+                         label facei = nInternalFaces;
+                         facei<faces.size();
+                         facei++
                      )
                      {
-                         const labelList& curBPoints = faces[faceI];
+                         const labelList& curBPoints = faces[facei];
                          bool bPointFound = false;
 
                          scalar currentBStream = 0.0;
                          vector currentBStreamPoint(0, 0, 0);
 
-                         forAll(curBPoints, pointI)
+                         forAll(curBPoints, pointi)
                          {
                              // Check if the point has been visited
-                             if (visitedPoint[curBPoints[pointI]] == 1)
+                             if (visitedPoint[curBPoints[pointi]] == 1)
                              {
                                  // The point has been visited
                                  currentBStream =
-                                     streamFunction[curBPoints[pointI]];
+                                     streamFunction[curBPoints[pointi]];
                                  currentBStreamPoint =
-                                     points[curBPoints[pointI]];
+                                     points[curBPoints[pointi]];
 
                                  bPointFound = true;
 
@@ -269,13 +269,13 @@ int main(int argc, char *argv[])
                          if (bPointFound)
                          {
                              // Sort out other points on the face
-                             forAll(curBPoints, pointI)
+                             forAll(curBPoints, pointi)
                              {
                                  // Check if the point has been visited
-                                 if (visitedPoint[curBPoints[pointI]] == 0)
+                                 if (visitedPoint[curBPoints[pointi]] == 0)
                                  {
                                      label patchNo =
-                                         mesh.boundaryMesh().whichPatch(faceI);
+                                         mesh.boundaryMesh().whichPatch(facei);
 
                                      if
                                      (
@@ -289,23 +289,23 @@ int main(int argc, char *argv[])
                                      {
                                          label faceNo =
                                              mesh.boundaryMesh()[patchNo]
-                                             .whichFace(faceI);
+                                             .whichFace(facei);
 
                                          vector edgeHat =
-                                             points[curBPoints[pointI]]
+                                             points[curBPoints[pointi]]
                                              - currentBStreamPoint;
                                          edgeHat.replace(vector::Z, 0);
                                          edgeHat /= mag(edgeHat);
 
-                                         vector nHat = unitAreas[faceI];
+                                         vector nHat = unitAreas[facei];
 
                                          if (edgeHat.y() > VSMALL)
                                          {
-                                             visitedPoint[curBPoints[pointI]] =
+                                             visitedPoint[curBPoints[pointi]] =
                                                  1;
                                              nVisited++;
 
-                                             streamFunction[curBPoints[pointI]]
+                                             streamFunction[curBPoints[pointi]]
                                                  =
                                                  currentBStream
                                                + phi.boundaryField()
@@ -314,11 +314,11 @@ int main(int argc, char *argv[])
                                          }
                                          else if (edgeHat.y() < -VSMALL)
                                          {
-                                             visitedPoint[curBPoints[pointI]] =
+                                             visitedPoint[curBPoints[pointi]] =
                                                  1;
                                              nVisited++;
 
-                                             streamFunction[curBPoints[pointI]]
+                                             streamFunction[curBPoints[pointi]]
                                                  =
                                                  currentBStream
                                                - phi.boundaryField()
@@ -330,11 +330,11 @@ int main(int argc, char *argv[])
                                              if (edgeHat.x() > VSMALL)
                                              {
                                                  visitedPoint
-                                                     [curBPoints[pointI]] = 1;
+                                                     [curBPoints[pointi]] = 1;
                                                  nVisited++;
 
                                                  streamFunction
-                                                     [curBPoints[pointI]] =
+                                                     [curBPoints[pointi]] =
                                                      currentBStream
                                                    + phi.boundaryField()
                                                      [patchNo][faceNo]
@@ -343,11 +343,11 @@ int main(int argc, char *argv[])
                                              else if (edgeHat.x() < -VSMALL)
                                              {
                                                  visitedPoint
-                                                     [curBPoints[pointI]] = 1;
+                                                     [curBPoints[pointi]] = 1;
                                                  nVisited++;
 
                                                  streamFunction
-                                                     [curBPoints[pointI]] =
+                                                     [curBPoints[pointi]] =
                                                      currentBStream
                                                    - phi.boundaryField()
                                                      [patchNo][faceNo]
@@ -364,26 +364,26 @@ int main(int argc, char *argv[])
                          }
                      }
 
-                     for (label faceI=0; faceI<nInternalFaces; faceI++)
+                     for (label facei=0; facei<nInternalFaces; facei++)
                      {
                          // Get the list of point labels for the face
-                         const labelList& curPoints = faces[faceI];
+                         const labelList& curPoints = faces[facei];
 
                          bool pointFound = false;
 
                          scalar currentStream = 0.0;
                          point currentStreamPoint(0, 0, 0);
 
-                         forAll(curPoints, pointI)
+                         forAll(curPoints, pointi)
                          {
                              // Check if the point has been visited
-                             if (visitedPoint[curPoints[pointI]] == 1)
+                             if (visitedPoint[curPoints[pointi]] == 1)
                              {
                                  // The point has been visited
                                  currentStream =
-                                     streamFunction[curPoints[pointI]];
+                                     streamFunction[curPoints[pointi]];
                                  currentStreamPoint =
-                                     points[curPoints[pointI]];
+                                     points[curPoints[pointi]];
                                  pointFound = true;
 
                                  break;
@@ -393,37 +393,37 @@ int main(int argc, char *argv[])
                          if (pointFound)
                          {
                              // Sort out other points on the face
-                             forAll(curPoints, pointI)
+                             forAll(curPoints, pointi)
                              {
                                  // Check if the point has been visited
-                                 if (visitedPoint[curPoints[pointI]] == 0)
+                                 if (visitedPoint[curPoints[pointi]] == 0)
                                  {
                                      vector edgeHat =
-                                         points[curPoints[pointI]]
+                                         points[curPoints[pointi]]
                                        - currentStreamPoint;
 
                                      edgeHat.replace(vector::Z, 0);
                                      edgeHat /= mag(edgeHat);
 
-                                     vector nHat = unitAreas[faceI];
+                                     vector nHat = unitAreas[facei];
 
                                      if (edgeHat.y() > VSMALL)
                                      {
-                                         visitedPoint[curPoints[pointI]] = 1;
+                                         visitedPoint[curPoints[pointi]] = 1;
                                          nVisited++;
 
-                                         streamFunction[curPoints[pointI]] =
+                                         streamFunction[curPoints[pointi]] =
                                              currentStream
-                                           + phi[faceI]*sign(nHat.x());
+                                           + phi[facei]*sign(nHat.x());
                                      }
                                      else if (edgeHat.y() < -VSMALL)
                                      {
-                                         visitedPoint[curPoints[pointI]] = 1;
+                                         visitedPoint[curPoints[pointi]] = 1;
                                          nVisited++;
 
-                                         streamFunction[curPoints[pointI]] =
+                                         streamFunction[curPoints[pointi]] =
                                              currentStream
-                                           - phi[faceI]*sign(nHat.x());
+                                           - phi[facei]*sign(nHat.x());
                                      }
                                  }
                              }
@@ -457,7 +457,7 @@ int main(int argc, char *argv[])
 
             // Normalise the stream-function by the 2D mesh thickness
             streamFunction /= thickness;
-            streamFunction.boundaryField() = 0.0;
+            streamFunction.boundaryFieldRef() = 0.0;
             streamFunction.write();
         }
         else

@@ -30,7 +30,6 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-
 namespace CML
 {
     defineTypeNameAndDebug(faceCoupleInfo, 0);
@@ -373,7 +372,7 @@ bool CML::faceCoupleInfo::regionEdge
 }
 
 
-// Find edge using pointI that is most aligned with vector between
+// Find edge using pointi that is most aligned with vector between
 // master points. Patchdivision tells us whether or not to use
 // patch information to match edges.
 CML::label CML::faceCoupleInfo::mostAlignedCutEdge
@@ -525,7 +524,7 @@ void CML::faceCoupleInfo::setCutEdgeToPoints(const labelList& cutToMasterEdges)
     {
         const edge& masterE = masterPatch().edges()[masterEdgeI];
 
-        // Pout<< "Master:" << masterPatch().localPoints()[masterE[0]] << ' '
+        //Pout<< "Master:" << masterPatch().localPoints()[masterE[0]] << ' '
         //    << masterPatch().localPoints()[masterE[1]] << endl;
 
         const labelList& stringedEdges = masterToCutEdges[masterEdgeI];
@@ -578,7 +577,7 @@ void CML::faceCoupleInfo::setCutEdgeToPoints(const labelList& cutToMasterEdges)
                     {
                         const edge& e = cutEdges[edgeI];
 
-                        // Pout<< "    cut:" << e << " at:"
+                        //Pout<< "    cut:" << e << " at:"
                         //    << cutFaces().localPoints()[e[0]]
                         //    << ' ' << cutFaces().localPoints()[e[1]] << endl;
 
@@ -616,7 +615,7 @@ void CML::faceCoupleInfo::setCutEdgeToPoints(const labelList& cutToMasterEdges)
                 }
             }
 
-            // Pout<< "For master edge:"
+            //Pout<< "For master edge:"
             //    << unsplitEdge
             //    << " Found stringed points "
             //    <<  UIndirectList<point>
@@ -750,7 +749,7 @@ bool CML::faceCoupleInfo::matchPointsThroughFaces
     {
         const face& patchF = patchFaces[patchFacei];
 
-        // const face& cutF = cutFaces[patchToCutFaces[patchFacei]];
+        //const face& cutF = cutFaces[patchToCutFaces[patchFacei]];
         const face& cutF = cutFaces[patchFacei];
 
         // Do geometric matching to get position of cutF[0] in patchF
@@ -769,9 +768,9 @@ bool CML::faceCoupleInfo::matchPointsThroughFaces
             label cutPointi = cutF[cutFp];
             label patchPointi = patchF[patchFp];
 
-            // const point& cutPt = cutPoints[cutPointi];
-            // const point& patchPt = patchPoints[patchPointi];
-            // if (mag(cutPt - patchPt) > SMALL)
+            //const point& cutPt = cutPoints[cutPointi];
+            //const point& patchPt = patchPoints[patchPointi];
+            //if (mag(cutPt - patchPt) > SMALL)
             //{
             //    FatalErrorInFunction
             //    << "cutP:" << cutPt
@@ -789,7 +788,7 @@ bool CML::faceCoupleInfo::matchPointsThroughFaces
                 // Check if already have region & region master for this set
                 label otherCutPointi = patchToCutPoints[patchPointi];
 
-                // Pout<< "PatchPoint:" << patchPt
+                //Pout<< "PatchPoint:" << patchPt
                 //    << " matches to:" << cutPointi
                 //    << " coord:" << cutPoints[cutPointi]
                 //    << " and to:" << otherCutPointi
@@ -947,8 +946,7 @@ void CML::faceCoupleInfo::findPerfectMatchingFaces
 
     if (matchedAllFaces)
     {
-        Warning
-            << "faceCoupleInfo::faceCoupleInfo : "
+        WarningInFunction
             << "Matched ALL " << fc1.size()
             << " boundary faces of mesh0 to boundary faces of mesh1." << endl
             << "This is only valid if the mesh to add is fully"
@@ -1323,7 +1321,7 @@ CML::label CML::faceCoupleInfo::matchEdgeFaces
                         else
                         {
                             // Should not happen?
-                            // Pout<< "On edge:" << cutEdgeI
+                            //Pout<< "On edge:" << cutEdgeI
                             //    << " have connected masterFaces:"
                             //    << masterEFaces
                             //    << " and from previous edge we have"
@@ -1500,7 +1498,7 @@ void CML::faceCoupleInfo::perfectPointMatch
             calcFaceCentres<List>
             (
                 cutFaces(),
-                cutPoints_,
+                cutFaces().points(),
                 0,
                 cutFaces().size()
             ),
@@ -1512,9 +1510,43 @@ void CML::faceCoupleInfo::perfectPointMatch
                 slavePatch().size()
             ),
             scalarField(slavePatch().size(), absTol),
-            true,
+            false,
             cutToSlaveFaces_
         );
+
+        // If some of the face centres did not match, then try to match the
+        // point averages instead. There is no division by the face area in
+        // calculating the point average, so this is more stable when faces
+        // collapse onto a line or point.
+        if (!matchedAllFaces)
+        {
+            labelList cutToSlaveFacesTemp(cutToSlaveFaces_.size(), -1);
+
+            matchPoints
+            (
+                calcFacePointAverages<List>
+                (
+                    cutFaces(),
+                    cutFaces().points(),
+                    0,
+                    cutFaces().size()
+                ),
+                calcFacePointAverages<IndirectList>
+                (
+                    slavePatch(),
+                    slavePatch().points(),
+                    0,
+                    slavePatch().size()
+                ),
+                scalarField(slavePatch().size(), absTol),
+                true,
+                cutToSlaveFacesTemp
+            );
+
+            cutToSlaveFaces_ = max(cutToSlaveFaces_, cutToSlaveFacesTemp);
+
+            matchedAllFaces = min(cutToSlaveFaces_) != -1;
+        }
     }
 
 

@@ -48,9 +48,9 @@ void CML::lduAddressing::calcLosort() const
     // Create temporary neighbour addressing
     labelListList cellNbrFaces(size());
 
-    forAll(cellNbrFaces, cellI)
+    forAll(cellNbrFaces, celli)
     {
-        cellNbrFaces[cellI].setSize(nNbrOfFace[cellI]);
+        cellNbrFaces[celli].setSize(nNbrOfFace[celli]);
     }
 
     // Reset the list of number of neighbours to zero
@@ -72,9 +72,9 @@ void CML::lduAddressing::calcLosort() const
     // Set counter for losort
     label lstI = 0;
 
-    forAll(cellNbrFaces, cellI)
+    forAll(cellNbrFaces, celli)
     {
-        const labelList& curNbr = cellNbrFaces[cellI];
+        const labelList& curNbr = cellNbrFaces[celli];
 
         forAll(curNbr, curNbrI)
         {
@@ -105,15 +105,15 @@ void CML::lduAddressing::calcOwnerStart() const
     label nOwnStart = 0;
     label i = 1;
 
-    forAll(own, faceI)
+    forAll(own, facei)
     {
-        label curOwn = own[faceI];
+        label curOwn = own[facei];
 
         if (curOwn > nOwnStart)
         {
             while (i <= curOwn)
             {
-                ownStart[i++] = faceI;
+                ownStart[i++] = facei;
             }
 
             nOwnStart = curOwn;
@@ -144,16 +144,16 @@ void CML::lduAddressing::calcLosortStart() const
     label nLsrtStart = 0;
     label i = 0;
 
-    forAll(lsrt, faceI)
+    forAll(lsrt, facei)
     {
         // Get neighbour
-        const label curNbr = nbr[lsrt[faceI]];
+        const label curNbr = nbr[lsrt[facei]];
 
         if (curNbr > nLsrtStart)
         {
             while (i <= curNbr)
             {
-                lsrtStart[i++] = faceI;
+                lsrtStart[i++] = facei;
             }
 
             nLsrtStart = curNbr;

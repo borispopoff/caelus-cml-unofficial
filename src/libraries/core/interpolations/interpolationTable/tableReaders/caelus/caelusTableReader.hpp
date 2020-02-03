@@ -58,9 +58,9 @@ public:
         caelusTableReader(const dictionary &dict);
 
         //- Construct and return a copy
-        virtual autoPtr<tableReader<Type> > clone() const
+        virtual autoPtr<tableReader<Type>> clone() const
         {
-            return autoPtr<tableReader<Type> >
+            return autoPtr<tableReader<Type>>
             (
                 new caelusTableReader<Type>
                 (
@@ -77,7 +77,7 @@ public:
     // Member functions
 
         //- Read the table
-        virtual void operator()(const fileName&, List<Tuple2<scalar, Type> > &);
+        virtual void operator()(const fileName&, List<Tuple2<scalar, Type>> &);
 };
 
 
@@ -111,7 +111,7 @@ template<class Type>
 void CML::caelusTableReader<Type>::operator()
 (
     const fileName& fName,
-    List<Tuple2<scalar, Type> >& data
+    List<Tuple2<scalar, Type>>& data
 )
 {
     // Read data from file

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -79,16 +79,16 @@ private:
     // Private data
 
         //- Cloud copy pointer
-        autoPtr<ReactingMultiphaseCloud<CloudType> > cloudCopyPtr_;
+        autoPtr<ReactingMultiphaseCloud<CloudType>> cloudCopyPtr_;
 
 
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        ReactingMultiphaseCloud(const ReactingMultiphaseCloud&);
+        ReactingMultiphaseCloud(const ReactingMultiphaseCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const ReactingMultiphaseCloud&);
+        void operator=(const ReactingMultiphaseCloud&) = delete;
 
 
 protected:
@@ -104,14 +104,14 @@ protected:
             //- Devolatilisation model
             autoPtr
             <
-                DevolatilisationModel<ReactingMultiphaseCloud<CloudType> >
+                DevolatilisationModel<ReactingMultiphaseCloud<CloudType>>
             >
             devolatilisationModel_;
 
             //- Surface reaction model
             autoPtr
             <
-                SurfaceReactionModel<ReactingMultiphaseCloud<CloudType> >
+                SurfaceReactionModel<ReactingMultiphaseCloud<CloudType>>
             >
             surfaceReactionModel_;
 
@@ -172,18 +172,18 @@ public:
         );
 
         //- Construct and return clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > clone(const word& name)
+        virtual autoPtr<Cloud<parcelType>> clone(const word& name)
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new ReactingMultiphaseCloud(*this, name)
             );
         }
 
         //- Construct and return bare clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType> > cloneBare(const word& name) const
+        virtual autoPtr<Cloud<parcelType>> cloneBare(const word& name) const
         {
-            return autoPtr<Cloud<parcelType> >
+            return autoPtr<Cloud<parcelType>>
             (
                 new ReactingMultiphaseCloud(this->mesh(), name, *this)
             );
@@ -369,7 +369,7 @@ void CML::ReactingMultiphaseCloud<CloudType>::setModels()
 {
     devolatilisationModel_.reset
     (
-        DevolatilisationModel<ReactingMultiphaseCloud<CloudType> >::New
+        DevolatilisationModel<ReactingMultiphaseCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -378,7 +378,7 @@ void CML::ReactingMultiphaseCloud<CloudType>::setModels()
 
     surfaceReactionModel_.reset
     (
-        SurfaceReactionModel<ReactingMultiphaseCloud<CloudType> >::New
+        SurfaceReactionModel<ReactingMultiphaseCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this

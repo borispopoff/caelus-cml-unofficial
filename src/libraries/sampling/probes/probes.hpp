@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -179,10 +179,10 @@ private:
         void sampleAndWriteSurfaceFields(const fieldGroup<Type>&);
 
         //- Disallow default bitwise copy construct
-        probes(const probes&);
+        probes(const probes&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const probes&);
+        void operator=(const probes&) = delete;
 
 
 public:
@@ -267,22 +267,22 @@ public:
 
         //- Sample a volume field at all locations
         template<class Type>
-        tmp<Field<Type> > sample
+        tmp<Field<Type>> sample
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
         //- Sample a single vol field on all sample locations
         template<class Type>
-        tmp<Field<Type> > sample(const word& fieldName) const;
+        tmp<Field<Type>> sample(const word& fieldName) const;
 
         //- Sample a single scalar field on all sample locations
         template<class Type>
-        tmp<Field<Type> > sampleSurfaceFields(const word& fieldName) const;
+        tmp<Field<Type>> sampleSurfaceFields(const word& fieldName) const;
 
         //- Sample a surface field at all locations
         template<class Type>
-        tmp<Field<Type> > sample
+        tmp<Field<Type>> sample
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>&
         ) const;
@@ -350,9 +350,9 @@ void CML::probes::sampleAndWrite
 
         os  << setw(w) << vField.time().timeToUserTime(vField.time().value());
 
-        forAll(values, probeI)
+        forAll(values, probei)
         {
-            os  << ' ' << setw(w) << values[probeI];
+            os  << ' ' << setw(w) << values[probei];
         }
         os  << endl;
     }
@@ -374,9 +374,9 @@ void CML::probes::sampleAndWrite
 
         os  << setw(w) << sField.time().timeToUserTime(sField.time().value());
 
-        forAll(values, probeI)
+        forAll(values, probei)
         {
-            os  << ' ' << setw(w) << values[probeI];
+            os  << ' ' << setw(w) << values[probei];
         }
         os  << endl;
     }
@@ -386,7 +386,7 @@ void CML::probes::sampleAndWrite
 template<class Type>
 void CML::probes::sampleAndWrite(const fieldGroup<Type>& fields)
 {
-    forAll(fields, fieldI)
+    forAll(fields, fieldi)
     {
         if (loadFromFiles_)
         {
@@ -396,7 +396,7 @@ void CML::probes::sampleAndWrite(const fieldGroup<Type>& fields)
                 (
                     IOobject
                     (
-                        fields[fieldI],
+                        fields[fieldi],
                         mesh_.time().timeName(),
                         mesh_,
                         IOobject::MUST_READ,
@@ -409,7 +409,7 @@ void CML::probes::sampleAndWrite(const fieldGroup<Type>& fields)
         }
         else
         {
-            objectRegistry::const_iterator iter = mesh_.find(fields[fieldI]);
+            objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
 
             if
             (
@@ -421,9 +421,9 @@ void CML::probes::sampleAndWrite(const fieldGroup<Type>& fields)
                 sampleAndWrite
                 (
                     mesh_.lookupObject
-                    <GeometricField<Type, fvPatchField, volMesh> >
+                    <GeometricField<Type, fvPatchField, volMesh>>
                     (
-                        fields[fieldI]
+                        fields[fieldi]
                     )
                 );
             }
@@ -435,7 +435,7 @@ void CML::probes::sampleAndWrite(const fieldGroup<Type>& fields)
 template<class Type>
 void CML::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
 {
-    forAll(fields, fieldI)
+    forAll(fields, fieldi)
     {
         if (loadFromFiles_)
         {
@@ -445,7 +445,7 @@ void CML::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
                 (
                     IOobject
                     (
-                        fields[fieldI],
+                        fields[fieldi],
                         mesh_.time().timeName(),
                         mesh_,
                         IOobject::MUST_READ,
@@ -458,7 +458,7 @@ void CML::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
         }
         else
         {
-            objectRegistry::const_iterator iter = mesh_.find(fields[fieldI]);
+            objectRegistry::const_iterator iter = mesh_.find(fields[fieldi]);
 
             if
             (
@@ -470,9 +470,9 @@ void CML::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
                 sampleAndWrite
                 (
                     mesh_.lookupObject
-                    <GeometricField<Type, fvsPatchField, surfaceMesh> >
+                    <GeometricField<Type, fvsPatchField, surfaceMesh>>
                     (
-                        fields[fieldI]
+                        fields[fieldi]
                     )
                 );
             }
@@ -483,7 +483,7 @@ void CML::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::probes::sample
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
@@ -491,30 +491,30 @@ CML::probes::sample
 {
     const Type unsetVal(-VGREAT*pTraits<Type>::one);
 
-    tmp<Field<Type> > tValues
+    tmp<Field<Type>> tValues
     (
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     if (fixedLocations_)
     {
-        autoPtr<interpolation<Type> > interpolator
+        autoPtr<interpolation<Type>> interpolator
         (
             interpolation<Type>::New(interpolationScheme_, vField)
         );
 
-        forAll(*this, probeI)
+        forAll(*this, probei)
         {
-            if (elementList_[probeI] >= 0)
+            if (elementList_[probei] >= 0)
             {
-                const vector& position = operator[](probeI);
+                const vector& position = operator[](probei);
 
-                values[probeI] = interpolator().interpolate
+                values[probei] = interpolator().interpolate
                 (
                     position,
-                    elementList_[probeI],
+                    elementList_[probei],
                     -1
                 );
             }
@@ -522,11 +522,11 @@ CML::probes::sample
     }
     else
     {
-        forAll(*this, probeI)
+        forAll(*this, probei)
         {
-            if (elementList_[probeI] >= 0)
+            if (elementList_[probei] >= 0)
             {
-                values[probeI] = vField[elementList_[probeI]];
+                values[probei] = vField[elementList_[probei]];
             }
         }
     }
@@ -539,12 +539,12 @@ CML::probes::sample
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::probes::sample(const word& fieldName) const
 {
     return sample
     (
-        mesh_.lookupObject<GeometricField<Type, fvPatchField, volMesh> >
+        mesh_.lookupObject<GeometricField<Type, fvPatchField, volMesh>>
         (
             fieldName
         )
@@ -553,7 +553,7 @@ CML::probes::sample(const word& fieldName) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::probes::sample
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
@@ -561,18 +561,18 @@ CML::probes::sample
 {
     const Type unsetVal(-VGREAT*pTraits<Type>::one);
 
-    tmp<Field<Type> > tValues
+    tmp<Field<Type>> tValues
     (
         new Field<Type>(this->size(), unsetVal)
     );
 
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
-    forAll(*this, probeI)
+    forAll(*this, probei)
     {
-        if (faceList_[probeI] >= 0)
+        if (faceList_[probei] >= 0)
         {
-            values[probeI] = sField[faceList_[probeI]];
+            values[probei] = sField[faceList_[probei]];
         }
     }
 
@@ -584,12 +584,12 @@ CML::probes::sample
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::probes::sampleSurfaceFields(const word& fieldName) const
 {
     return sample
     (
-        mesh_.lookupObject<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        mesh_.lookupObject<GeometricField<Type, fvsPatchField, surfaceMesh>>
         (
             fieldName
         )

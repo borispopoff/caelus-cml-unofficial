@@ -37,9 +37,9 @@ void CML::primitiveMesh::calcCells
     {
         nCells = -1;
 
-        forAll(own, faceI)
+        forAll(own, facei)
         {
-            nCells = max(nCells, own[faceI]);
+            nCells = max(nCells, own[facei]);
         }
         nCells++;
     }
@@ -48,16 +48,16 @@ void CML::primitiveMesh::calcCells
 
     labelList ncf(nCells, 0);
 
-    forAll(own, faceI)
+    forAll(own, facei)
     {
-        ncf[own[faceI]]++;
+        ncf[own[facei]]++;
     }
 
-    forAll(nei, faceI)
+    forAll(nei, facei)
     {
-        if (nei[faceI] >= 0)
+        if (nei[facei] >= 0)
         {
-            ncf[nei[faceI]]++;
+            ncf[nei[facei]]++;
         }
     }
 
@@ -67,26 +67,26 @@ void CML::primitiveMesh::calcCells
 
     // 2. Size and fill cellFaceAddr
 
-    forAll(cellFaceAddr, cellI)
+    forAll(cellFaceAddr, celli)
     {
-        cellFaceAddr[cellI].setSize(ncf[cellI]);
+        cellFaceAddr[celli].setSize(ncf[celli]);
     }
     ncf = 0;
 
-    forAll(own, faceI)
+    forAll(own, facei)
     {
-        label cellI = own[faceI];
+        label celli = own[facei];
 
-        cellFaceAddr[cellI][ncf[cellI]++] = faceI;
+        cellFaceAddr[celli][ncf[celli]++] = facei;
     }
 
-    forAll(nei, faceI)
+    forAll(nei, facei)
     {
-        label cellI = nei[faceI];
+        label celli = nei[facei];
 
-        if (cellI >= 0)
+        if (celli >= 0)
         {
-            cellFaceAddr[cellI][ncf[cellI]++] = faceI;
+            cellFaceAddr[celli][ncf[celli]++] = facei;
         }
     }
 }

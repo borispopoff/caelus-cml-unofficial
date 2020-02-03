@@ -97,7 +97,7 @@ public:
 
 
     //- Selector
-    static autoPtr<WallModel<CloudType> > New
+    static autoPtr<WallModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -138,9 +138,9 @@ public:
         (
             typename CloudType::parcelType& p,
             const List<point>& flatSitePoints,
-            const List<WallSiteData<vector> >& flatSiteData,
+            const List<WallSiteData<vector>>& flatSiteData,
             const List<point>& sharpSitePoints,
-            const List<WallSiteData<vector> >& sharpSiteData
+            const List<WallSiteData<vector>>& sharpSiteData
         ) const = 0;
 };
 
@@ -167,7 +167,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<CloudType>, 0);                     \
                                                                                \
     WallModel<CloudType>::                                                     \
-        adddictionaryConstructorToTable<SS<CloudType> >                        \
+        adddictionaryConstructorToTable<SS<CloudType>>                         \
             add##SS##CloudType##ConstructorToTable_;
 
 
@@ -232,7 +232,7 @@ CML::WallModel<CloudType>::coeffDict() const
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::WallModel<CloudType> >
+CML::autoPtr<CML::WallModel<CloudType>>
 CML::WallModel<CloudType>::New
 (
     const dictionary& dict,
@@ -255,7 +255,7 @@ CML::WallModel<CloudType>::New
             << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);
     }
 
-    return autoPtr<WallModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<WallModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

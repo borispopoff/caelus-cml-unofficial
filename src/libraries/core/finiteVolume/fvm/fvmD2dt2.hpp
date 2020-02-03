@@ -47,20 +47,20 @@ namespace CML
 namespace fvm
 {
     template<class Type>
-    tmp<fvMatrix<Type> > d2dt2
+    tmp<fvMatrix<Type>> d2dt2
     (
         const dimensionedScalar&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > d2dt2
+    tmp<fvMatrix<Type>> d2dt2
     (
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > d2dt2
+    tmp<fvMatrix<Type>> d2dt2
     (
         const volScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
@@ -70,7 +70,7 @@ namespace fvm
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 d2dt2
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -85,7 +85,7 @@ d2dt2
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 d2dt2
 (
     const dimensionedScalar& rho,
@@ -101,7 +101,7 @@ d2dt2
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 d2dt2
 (
     const volScalarField& rho,

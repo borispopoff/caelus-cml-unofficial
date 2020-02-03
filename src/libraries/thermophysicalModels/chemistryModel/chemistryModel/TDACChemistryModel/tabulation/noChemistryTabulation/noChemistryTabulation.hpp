@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016-2018 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -46,8 +46,8 @@ class none
     public chemistryTabulationMethod<CompType, ThermoType>
 {
 
-    //- Disallow default bitwise copy construct
-    none(const none&);
+        //- Disallow default bitwise copy construct
+        none(const none&) = delete;
 
 
 public:

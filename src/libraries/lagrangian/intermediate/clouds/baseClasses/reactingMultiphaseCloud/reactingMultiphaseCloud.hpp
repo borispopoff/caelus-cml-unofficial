@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,10 +47,10 @@ class reactingMultiphaseCloud
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        reactingMultiphaseCloud(const reactingMultiphaseCloud&);
+        reactingMultiphaseCloud(const reactingMultiphaseCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const reactingMultiphaseCloud&);
+        void operator=(const reactingMultiphaseCloud&) = delete;
 
 
 public:

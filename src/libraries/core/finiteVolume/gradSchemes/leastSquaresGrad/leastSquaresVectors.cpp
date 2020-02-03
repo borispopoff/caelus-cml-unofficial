@@ -76,7 +76,7 @@ void CML::leastSquaresVectors::makeLeastSquaresVectors() const
             false
         ),
         mesh_,
-        dimensionedVector("zero", dimless/dimLength, vector::zero)
+        dimensionedVector("zero", dimless/dimLength, Zero)
     );
     surfaceVectorField& lsP = *pVectorsPtr_;
 
@@ -92,7 +92,7 @@ void CML::leastSquaresVectors::makeLeastSquaresVectors() const
             false
         ),
         mesh_,
-        dimensionedVector("zero", dimless/dimLength, vector::zero)
+        dimensionedVector("zero", dimless/dimLength, Zero)
     );
     surfaceVectorField& lsN = *nVectorsPtr_;
 
@@ -121,7 +121,7 @@ void CML::leastSquaresVectors::makeLeastSquaresVectors() const
     }
 
 
-    surfaceVectorField::GeometricBoundaryField& blsP = lsP.boundaryField();
+    surfaceVectorField::Boundary& blsP = lsP.boundaryFieldRef();
 
     forAll(blsP, patchi)
     {
@@ -270,14 +270,14 @@ void CML::leastSquaresVectors::makeLeastSquaresVectors() const
                                     0.2
                                 );
 
-                                lsP.boundaryField()[patchi][patchFacei] =
+                                lsP.boundaryFieldRef()[patchi][patchFacei] =
                                     (1 - wf)
                                    *Sf.boundaryField()[patchi][patchFacei]
                                    /V[celli];
                             }
                             else
                             {
-                                lsP.boundaryField()[patchi][patchFacei] =
+                                lsP.boundaryFieldRef()[patchi][patchFacei] =
                                     Sf.boundaryField()[patchi][patchFacei]
                                    /V[celli];
                             }

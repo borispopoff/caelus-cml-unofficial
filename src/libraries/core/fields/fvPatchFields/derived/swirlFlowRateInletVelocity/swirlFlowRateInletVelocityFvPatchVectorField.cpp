@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -28,8 +28,7 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-CML::
-swirlFlowRateInletVelocityFvPatchVectorField::
+CML::swirlFlowRateInletVelocityFvPatchVectorField::
 swirlFlowRateInletVelocityFvPatchVectorField
 (
     const fvPatch& p,
@@ -39,13 +38,50 @@ swirlFlowRateInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(p, iF),
     phiName_("phi"),
     rhoName_("rho"),
+    origin_(),
+    axis_(Zero),
     flowRate_(),
     rpm_()
 {}
 
 
-CML::
-swirlFlowRateInletVelocityFvPatchVectorField::
+CML::swirlFlowRateInletVelocityFvPatchVectorField::
+swirlFlowRateInletVelocityFvPatchVectorField
+(
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<vector>(p, iF, dict),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
+    origin_
+    (
+        dict.lookupOrDefault
+        (
+            "origin",
+            patch().size()
+          ? gSum(patch().Cf()*patch().magSf())/gSum(patch().magSf())
+          : Zero
+        )
+    ),
+    axis_
+    (
+        dict.lookupOrDefault
+        (
+            "axis",
+            patch().size()
+          ? -gSum(patch().Sf())/gSum(patch().magSf())
+          : Zero
+        )
+    ),
+    flowRate_(DataEntry<scalar>::New("flowRate", dict)),
+    rpm_(DataEntry<scalar>::New("rpm", dict))
+{}
+
+
+CML::swirlFlowRateInletVelocityFvPatchVectorField::
 swirlFlowRateInletVelocityFvPatchVectorField
 (
     const swirlFlowRateInletVelocityFvPatchVectorField& ptf,
@@ -57,30 +93,14 @@ swirlFlowRateInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
+    origin_(ptf.origin_),
+    axis_(ptf.axis_),
     flowRate_(ptf.flowRate_().clone().ptr()),
     rpm_(ptf.rpm_().clone().ptr())
 {}
 
 
-CML::
-swirlFlowRateInletVelocityFvPatchVectorField::
-swirlFlowRateInletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<vector>(p, iF, dict),
-    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    flowRate_(DataEntry<scalar>::New("flowRate", dict)),
-    rpm_(DataEntry<scalar>::New("rpm", dict))
-{}
-
-
-CML::
-swirlFlowRateInletVelocityFvPatchVectorField::
+CML::swirlFlowRateInletVelocityFvPatchVectorField::
 swirlFlowRateInletVelocityFvPatchVectorField
 (
     const swirlFlowRateInletVelocityFvPatchVectorField& ptf
@@ -89,13 +109,14 @@ swirlFlowRateInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
+    origin_(ptf.origin_),
+    axis_(ptf.axis_),
     flowRate_(ptf.flowRate_().clone().ptr()),
     rpm_(ptf.rpm_().clone().ptr())
 {}
 
 
-CML::
-swirlFlowRateInletVelocityFvPatchVectorField::
+CML::swirlFlowRateInletVelocityFvPatchVectorField::
 swirlFlowRateInletVelocityFvPatchVectorField
 (
     const swirlFlowRateInletVelocityFvPatchVectorField& ptf,
@@ -105,6 +126,8 @@ swirlFlowRateInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf, iF),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
+    origin_(ptf.origin_),
+    axis_(ptf.axis_),
     flowRate_(ptf.flowRate_().clone().ptr()),
     rpm_(ptf.rpm_().clone().ptr())
 {}
@@ -123,18 +146,16 @@ void CML::swirlFlowRateInletVelocityFvPatchVectorField::updateCoeffs()
     const scalar flowRate = flowRate_->value(t);
     const scalar rpm = rpm_->value(t);
 
-    const scalar totArea   = gSum(patch().magSf());
+    const scalar totArea = gSum(patch().magSf());
     const scalar avgU = -flowRate/totArea;
 
-    const vector avgCenter = gSum(patch().Cf()*patch().magSf())/totArea;
-    const vector avgNormal = gSum(patch().Sf())/totArea;
+    const vector axisHat = axis_/mag(axis_);
 
     // Update angular velocity - convert [rpm] to [rad/s]
     tmp<vectorField> tangentialVelocity
-        (
-            (rpm*constant::mathematical::pi/30.0)
-          * (patch().Cf() - avgCenter) ^ avgNormal
-        );
+    (
+        axisHat ^ (rpm*constant::mathematical::pi/30.0)*(patch().Cf() - origin_)
+    );
 
     tmp<vectorField> n = patch().nf();
 
@@ -159,8 +180,8 @@ void CML::swirlFlowRateInletVelocityFvPatchVectorField::updateCoeffs()
         FatalErrorInFunction
             << "dimensions of " << phiName_ << " are incorrect" << nl
             << "    on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << nl << exit(FatalError);
     }
 
@@ -176,9 +197,11 @@ void CML::swirlFlowRateInletVelocityFvPatchVectorField::write
     fvPatchField<vector>::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    flowRate_->writeData(os);
-    rpm_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, "origin", origin_);
+    writeEntry(os, "axis", axis_);
+    writeEntry(os, flowRate_());
+    writeEntry(os, rpm_());
+    writeEntry(os, "value", *this);
 }
 
 

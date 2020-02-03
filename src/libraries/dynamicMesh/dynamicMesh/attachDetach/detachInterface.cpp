@@ -120,9 +120,9 @@ void CML::attachDetach::detachInterface
 
         bool edgeIsInternal = true;
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            if (!mesh.isInternalFace(curFaces[faceI]))
+            if (!mesh.isInternalFace(curFaces[facei]))
             {
                 // The edge belongs to a boundary face
                 edgeIsInternal = false;
@@ -142,25 +142,25 @@ void CML::attachDetach::detachInterface
 // Pout<< "addedPoints before point creation: " << addedPoints << endl;
 
     // Create new points for face zone
-    forAll(addedPoints, pointI)
+    forAll(addedPoints, pointi)
     {
-        if (addedPoints[pointI] < 0)
+        if (addedPoints[pointi] < 0)
         {
-            addedPoints[pointI] =
+            addedPoints[pointi] =
                 ref.setAction
                 (
                     polyAddPoint
                     (
-                        points[mp[pointI]],        // point
-                        mp[pointI],                // master point
+                        points[mp[pointi]],        // point
+                        mp[pointi],                // master point
                         -1,                        // zone ID
                         true                       // supports a cell
                     )
                 );
-            //Pout<< "Adding point " << addedPoints[pointI]
-            //    << " coord1:" << points[mp[pointI]]
-            //    << " coord2:" << masterFaceLayer.localPoints()[pointI]
-            //    << " for original point " << mp[pointI] << endl;
+            //Pout<< "Adding point " << addedPoints[pointi]
+            //    << " coord1:" << points[mp[pointi]]
+            //    << " coord2:" << masterFaceLayer.localPoints()[pointi]
+            //    << " for original point " << mp[pointi] << endl;
         }
     }
 
@@ -174,21 +174,21 @@ void CML::attachDetach::detachInterface
     const labelList& own = mesh.faceOwner();
     const labelList& nei = mesh.faceNeighbour();
 
-    forAll(mf, faceI)
+    forAll(mf, facei)
     {
-        const label curFaceID = mf[faceI];
+        const label curFaceID = mf[facei];
 
         // Build the face for the slave patch by renumbering
-        const face oldFace = zoneFaces[faceI].reverseFace();
+        const face oldFace = zoneFaces[facei].reverseFace();
 
         face newFace(oldFace.size());
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
-            newFace[pointI] = addedPoints[oldFace[pointI]];
+            newFace[pointi] = addedPoints[oldFace[pointi]];
         }
 
-        if (mfFlip[faceI])
+        if (mfFlip[facei])
         {
             // Face needs to be flipped for the master patch
             ref.setAction
@@ -203,7 +203,7 @@ void CML::attachDetach::detachInterface
                     masterPatchID_.index(),         // patch for face
                     false,                          // remove from zone
                     faceZoneID_.index(),            // zone for face
-                    !mfFlip[faceI]                  // face flip in zone
+                    !mfFlip[facei]                  // face flip in zone
                 )
             );
 
@@ -250,7 +250,7 @@ void CML::attachDetach::detachInterface
                     masterPatchID_.index(),   // patch for face
                     false,                    // remove from zone
                     faceZoneID_.index(),      // zone for face
-                    mfFlip[faceI]             // face flip in zone
+                    mfFlip[facei]             // face flip in zone
                 )
             );
 
@@ -306,16 +306,16 @@ void CML::attachDetach::detachInterface
 
     const cellList& cells = mesh.cells();
 
-    forAll(mc, cellI)
+    forAll(mc, celli)
     {
-        const labelList& curFaces = cells[mc[cellI]];
+        const labelList& curFaces = cells[mc[celli]];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
             // Check if the face belongs to the master patch; if not add it
-            if (zoneMesh.whichZone(curFaces[faceI]) != faceZoneID_.index())
+            if (zoneMesh.whichZone(curFaces[facei]) != faceZoneID_.index())
             {
-                masterCellFaceMap.insert(curFaces[faceI]);
+                masterCellFaceMap.insert(curFaces[facei]);
             }
         }
     }
@@ -346,9 +346,9 @@ void CML::attachDetach::detachInterface
                 // Cell not found. Add its faces to the map
                 const cell& curFaces = cells[ownCell];
 
-                forAll(curFaces, faceI)
+                forAll(curFaces, facei)
                 {
-                    masterCellFaceMap.insert(curFaces[faceI]);
+                    masterCellFaceMap.insert(curFaces[facei]);
                 }
             }
 
@@ -362,9 +362,9 @@ void CML::attachDetach::detachInterface
                     // Cell not found. Add its faces to the map
                     const cell& curFaces = cells[neiCell];
 
-                    forAll(curFaces, faceI)
+                    forAll(curFaces, facei)
                     {
-                        masterCellFaceMap.insert(curFaces[faceI]);
+                        masterCellFaceMap.insert(curFaces[facei]);
                     }
                 }
             }
@@ -374,24 +374,24 @@ void CML::attachDetach::detachInterface
     // Create the master layer point map
     Map<label> masterLayerPointMap(2*mp.size());
 
-    forAll(mp, pointI)
+    forAll(mp, pointi)
     {
         masterLayerPointMap.insert
         (
-            mp[pointI],
-            addedPoints[pointI]
+            mp[pointi],
+            addedPoints[pointi]
         );
     }
 
     // Grab the list of faces of the master layer
     const labelList masterCellFaces = masterCellFaceMap.toc();
 
-    forAll(masterCellFaces, faceI)
+    forAll(masterCellFaces, facei)
     {
         // Attempt to renumber the face using the masterLayerPointMap.
         // Missing point remain the same
 
-        const label curFaceID = masterCellFaces[faceI];
+        const label curFaceID = masterCellFaces[facei];
 
         const face& oldFace = faces[curFaceID];
 
@@ -399,17 +399,17 @@ void CML::attachDetach::detachInterface
 
         bool changed = false;
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
-            if (masterLayerPointMap.found(oldFace[pointI]))
+            if (masterLayerPointMap.found(oldFace[pointi]))
             {
                 changed = true;
 
-                newFace[pointI] = masterLayerPointMap.find(oldFace[pointI])();
+                newFace[pointi] = masterLayerPointMap.find(oldFace[pointi])();
             }
             else
             {
-                newFace[pointI] = oldFace[pointI];
+                newFace[pointi] = oldFace[pointi];
             }
         }
 

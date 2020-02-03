@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -67,7 +67,7 @@ void surfaceSlipDisplacementPointPatchVectorField::calcProjection
     const scalar projectLen = mag(mesh.bounds().max()-mesh.bounds().min());
 
     // For case of fixed projection vector:
-    vector projectVec(vector::zero);
+    vector projectVec(Zero);
     if (projectMode_ == FIXEDNORMAL)
     {
         vector n = projectDir_/mag(projectDir_);
@@ -304,7 +304,7 @@ surfaceSlipDisplacementPointPatchVectorField
 :
     pointPatchVectorField(p, iF),
     projectMode_(NEAREST),
-    projectDir_(vector::zero),
+    projectDir_(Zero),
     wedgePlane_(-1)
 {}
 
@@ -415,9 +415,9 @@ void surfaceSlipDisplacementPointPatchVectorField::evaluate
     calcProjection(displacement);
 
     // Get internal field to insert values into
-    Field<vector>& iF = const_cast<Field<vector>&>(this->internalField());
+    Field<vector>& iF = const_cast<Field<vector>&>(this->primitiveField());
 
-    //setInInternalField(iF, motionU);
+    // setInInternalField(iF, motionU);
     setInInternalField(iF, displacement);
 
     pointPatchVectorField::evaluate(commsType);
@@ -427,18 +427,13 @@ void surfaceSlipDisplacementPointPatchVectorField::evaluate
 void surfaceSlipDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     pointPatchVectorField::write(os);
-    os.writeKeyword("geometry") << surfacesDict_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("projectMode") << projectModeNames_[projectMode_]
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("projectDirection") << projectDir_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("wedgePlane") << wedgePlane_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "geometry", surfacesDict_);
+    writeEntry(os, "projectMode", projectModeNames_[projectMode_]);
+    writeEntry(os, "projectDirection", projectDir_);
+    writeEntry(os, "wedgePlane", wedgePlane_);
     if (frozenPointsZone_ != word::null)
     {
-        os.writeKeyword("frozenPointsZone") << frozenPointsZone_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "frozenPointsZone", frozenPointsZone_);
     }
 }
 

@@ -55,10 +55,10 @@ void CML::spai0Preconditioner::approximateInverse
     scalar* RESTRICT rDPtr = rD.begin();
     const scalar* RESTRICT DPtr = matrix.diag().begin();
 
-    register label nCells = rD.size();
+    label nCells = rD.size();
 
     // Generate reciprocal spai0
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         rDPtr[cell] = DPtr[cell]*DPtr[cell];
     }
@@ -69,16 +69,16 @@ void CML::spai0Preconditioner::approximateInverse
     const scalar* const RESTRICT upperPtr = matrix.upper().begin();
     const scalar* const RESTRICT lowerPtr = matrix.lower().begin();
 
-    register label nFaces = matrix.upper().size();
+    label nFaces = matrix.upper().size();
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         rDPtr[uPtr[face]] += upperPtr[face]*upperPtr[face];
         rDPtr[lPtr[face]] += lowerPtr[face]*lowerPtr[face];
     }
 
     // Generate reciprocal diagonal
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         rDPtr[cell] = DPtr[cell]/rDPtr[cell];
     }
@@ -96,9 +96,9 @@ void CML::spai0Preconditioner::precondition
     const scalar* RESTRICT rPtr = r.begin();
     const scalar* RESTRICT rDPtr = rD_.begin();
 
-    register label nCells = w.size();
+    label nCells = w.size();
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         wPtr[cell] = rDPtr[cell]*rPtr[cell];
     }

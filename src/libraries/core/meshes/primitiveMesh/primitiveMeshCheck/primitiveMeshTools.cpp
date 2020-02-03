@@ -127,7 +127,7 @@ CML::tmp<CML::scalarField> CML::primitiveMeshTools::faceOrthogonality
     const labelList& nei = mesh.faceNeighbour();
 
     tmp<scalarField> tortho(new scalarField(mesh.nInternalFaces()));
-    scalarField& ortho = tortho();
+    scalarField& ortho = tortho.ref();
 
     // Internal faces
     forAll(nei, facei)
@@ -157,7 +157,7 @@ CML::tmp<CML::scalarField> CML::primitiveMeshTools::faceSkewness
     const labelList& nei = mesh.faceNeighbour();
 
     tmp<scalarField> tskew(new scalarField(mesh.nFaces()));
-    scalarField& skew = tskew();
+    scalarField& skew = tskew.ref();
 
     forAll(nei, facei)
     {
@@ -342,7 +342,7 @@ CML::tmp<CML::scalarField> CML::primitiveMeshTools::faceConcavity
     faceNormals /= mag(faceNormals) + ROOTVSMALL;
 
     tmp<scalarField> tfaceAngles(new scalarField(mesh.nFaces()));
-    scalarField& faceAngles = tfaceAngles();
+    scalarField& faceAngles = tfaceAngles.ref();
 
 
     forAll(fcs, facei)
@@ -413,7 +413,7 @@ CML::tmp<CML::scalarField> CML::primitiveMeshTools::faceFlatness
     scalarField magAreas(mag(faceAreas));
 
     tmp<scalarField> tfaceFlatness(new scalarField(mesh.nFaces(), 1.0));
-    scalarField& faceFlatness = tfaceFlatness();
+    scalarField& faceFlatness = tfaceFlatness.ref();
 
 
     forAll(fcs, facei)
@@ -471,7 +471,7 @@ CML::tmp<CML::scalarField> CML::primitiveMeshTools::cellDeterminant
     }
 
     tmp<scalarField> tcellDeterminant(new scalarField(mesh.nCells()));
-    scalarField& cellDeterminant = tcellDeterminant();
+    scalarField& cellDeterminant = tcellDeterminant.ref();
 
     const cellList& c = mesh.cells();
 

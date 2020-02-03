@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
- 
+
     Caelus is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -56,12 +56,12 @@ Description
         type         | type name: forces       | yes         |
         log          | write force data to standard output | no | no
         patches      | patches included in the forces calculation | yes |
-        pName        | pressure field name     | no          | p
-        UName        | velocity field name     | no          | U
-        rhoName      | density field name (see below) | no   | rho
+        p            | pressure field name     | no          | p
+        U            | velocity field name     | no          | U
+        rho          | density field name (see below) | no   | rho
         CofR         | centre of rotation (see below) | no   |
         directForceDensity | force density supplied directly (see below)|no|no
-        fDName       | name of force density field (see below) | no | fD
+        fD           | name of force density field (see below) | no | fD
     \endtable
 
     Bin data is optional, but if the dictionary is present, the entries must
@@ -73,12 +73,12 @@ Description
     \endtable
 
 Note
-  - For incompressible cases, set \c rhoName to \c rhoInf.  You will then be
+  - For incompressible cases, set \c rho to \c rhoInf.  You will then be
     required to provide a \c rhoInf value corresponding to the free-stream
     constant density.
   - If the force density is supplied directly, set the \c directForceDensity
     flag to 'yes', and supply the force density field using the \c
-    fDName entry
+    fD entry
   - The centre of rotation (CofR) for moment calculations can either be
     specified by an \c CofR entry, or be taken from origin of the local
     coordinate system.  For example,
@@ -139,6 +139,7 @@ class forces
 :
     public functionObjectFile
 {
+
 protected:
 
     // Protected data
@@ -156,10 +157,10 @@ protected:
         Switch log_;
 
         //- Pressure, viscous and porous force per bin
-        List<Field<vector> > force_;
+        List<Field<vector>> force_;
 
         //- Pressure, viscous and porous moment per bin
-        List<Field<vector> > moment_;
+        List<Field<vector>> moment_;
 
 
         // Read from dictionary
@@ -188,7 +189,7 @@ protected:
             //- Reference pressure
             scalar pRef_;
 
-            //- Coordinate system used when evaluting forces/moments
+            //- Coordinate system used when evaluating forces/moments
             coordinateSystem coordSys_;
 
             //- Flag to indicate whether we are using a local co-ordinate sys
@@ -264,10 +265,10 @@ protected:
         void writeBins();
 
         //- Disallow default bitwise copy construct
-        forces(const forces&);
+        forces(const forces&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const forces&);
+        void operator=(const forces&) = delete;
 
 
 public:

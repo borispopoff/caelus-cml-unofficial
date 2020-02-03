@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -275,6 +275,15 @@ inline spatialTransform Xr(const vector& a, const scalar omega)
 inline spatialTransform Xt(const vector& r)
 {
     return spatialTransform(tensor::I, r);
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+//- Write the spatial transformation as an entry
+inline void writeEntry(Ostream& os, const spatialTransform& st)
+{
+    os << st;
 }
 
 

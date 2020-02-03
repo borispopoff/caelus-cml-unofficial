@@ -120,7 +120,7 @@ public:
             // Interpolators for continuous phase fields
 
                 //- Interpolator for continuous phase pressure field
-                autoPtr<interpolation<scalar> > pInterp_;
+                autoPtr<interpolation<scalar>> pInterp_;
 
 
             // Cached continuous phase properties
@@ -310,9 +310,9 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<ReactingParcel<ParcelType> > operator()(Istream& is) const
+            autoPtr<ReactingParcel<ParcelType>> operator()(Istream& is) const
             {
-                return autoPtr<ReactingParcel<ParcelType> >
+                return autoPtr<ReactingParcel<ParcelType>>
                 (
                     new ReactingParcel<ParcelType>(mesh_, is, true)
                 );
@@ -1271,7 +1271,7 @@ void CML::ReactingParcel<ParcelType>::readFields
     c.checkFieldIOobject(c, mass0);
 
     label i = 0;
-    forAllIter(typename Cloud<ReactingParcel<ParcelType> >, c, iter)
+    forAllIter(typename Cloud<ReactingParcel<ParcelType>>, c, iter)
     {
         ReactingParcel<ParcelType>& p = iter();
         p.mass0_ = mass0[i++];
@@ -1288,7 +1288,7 @@ void CML::ReactingParcel<ParcelType>::readFields
 
 
     // Set storage for each Y... for each parcel
-    forAllIter(typename Cloud<ReactingParcel<ParcelType> >, c, iter)
+    forAllIter(typename Cloud<ReactingParcel<ParcelType>>, c, iter)
     {
         ReactingParcel<ParcelType>& p = iter();
         p.Y_.setSize(nPhases, 0.0);
@@ -1307,7 +1307,7 @@ void CML::ReactingParcel<ParcelType>::readFields
         );
 
         label i = 0;
-        forAllIter(typename Cloud<ReactingParcel<ParcelType> >, c, iter)
+        forAllIter(typename Cloud<ReactingParcel<ParcelType>>, c, iter)
         {
             ReactingParcel<ParcelType>& p = iter();
             p.Y_[j] = Y[i++];
@@ -1341,7 +1341,7 @@ void CML::ReactingParcel<ParcelType>::writeFields
         IOField<scalar> mass0(c.fieldIOobject("mass0", IOobject::NO_READ), np);
 
         label i = 0;
-        forAllConstIter(typename Cloud<ReactingParcel<ParcelType> >, c, iter)
+        forAllConstIter(typename Cloud<ReactingParcel<ParcelType>>, c, iter)
         {
             const ReactingParcel<ParcelType>& p = iter();
             mass0[i++] = p.mass0_;
@@ -1370,7 +1370,7 @@ void CML::ReactingParcel<ParcelType>::writeFields
             label i = 0;
             forAllConstIter
             (
-                typename Cloud<ReactingParcel<ParcelType> >,
+                typename Cloud<ReactingParcel<ParcelType>>,
                 c,
                 iter
             )

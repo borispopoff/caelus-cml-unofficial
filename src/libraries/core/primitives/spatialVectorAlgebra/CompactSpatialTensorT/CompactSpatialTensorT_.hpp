@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -92,7 +92,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfTranspose<Cmpt, CompactSpatialTensor<Cmpt> >
+class typeOfTranspose<Cmpt, CompactSpatialTensor<Cmpt>>
 {
 public:
 
@@ -101,7 +101,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfTranspose<Cmpt, CompactSpatialTensorT<Cmpt> >
+class typeOfTranspose<Cmpt, CompactSpatialTensorT<Cmpt>>
 {
 public:
 

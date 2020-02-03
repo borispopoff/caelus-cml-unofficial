@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -46,18 +46,6 @@ class limitedSurfaceInterpolationScheme
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow copy construct
-        limitedSurfaceInterpolationScheme
-        (
-            const limitedSurfaceInterpolationScheme&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const limitedSurfaceInterpolationScheme&);
-
-
 protected:
 
     // Protected data
@@ -132,18 +120,24 @@ public:
             )
         {}
 
+        //- Disallow copy construct
+        limitedSurfaceInterpolationScheme
+        (
+            const limitedSurfaceInterpolationScheme&
+        ) = delete;
+
 
     // Selectors
 
         //- Return new tmp interpolation scheme
-        static tmp<limitedSurfaceInterpolationScheme<Type> > New
+        static tmp<limitedSurfaceInterpolationScheme<Type>> New
         (
             const fvMesh& mesh,
             Istream& schemeData
         );
 
         //- Return new tmp interpolation scheme
-        static tmp<limitedSurfaceInterpolationScheme<Type> > New
+        static tmp<limitedSurfaceInterpolationScheme<Type>> New
         (
             const fvMesh& mesh,
             const surfaceScalarField& faceFlux,
@@ -179,11 +173,17 @@ public:
         ) const;
 
         //- Return the interpolation weighting factors
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         flux
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitedSurfaceInterpolationScheme&) = delete;
 };
 
 
@@ -199,17 +199,17 @@ public:
                                                                                \
 defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                              \
                                                                                \
-surfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type> >         \
+surfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type>>          \
     add##SS##Type##MeshConstructorToTable_;                                    \
                                                                                \
-surfaceInterpolationScheme<Type>::addMeshFluxConstructorToTable<SS<Type> >     \
+surfaceInterpolationScheme<Type>::addMeshFluxConstructorToTable<SS<Type>>      \
     add##SS##Type##MeshFluxConstructorToTable_;                                \
                                                                                \
-limitedSurfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type> >  \
+limitedSurfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type>>   \
     add##SS##Type##MeshConstructorToLimitedTable_;                             \
                                                                                \
 limitedSurfaceInterpolationScheme<Type>::                                      \
-    addMeshFluxConstructorToTable<SS<Type> >                                   \
+    addMeshFluxConstructorToTable<SS<Type>>                                    \
     add##SS##Type##MeshFluxConstructorToLimitedTable_;
 
 #define makelimitedSurfaceInterpolationScheme(SS)                              \
@@ -235,7 +235,7 @@ namespace CML
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<limitedSurfaceInterpolationScheme<Type> >
+tmp<limitedSurfaceInterpolationScheme<Type>>
 limitedSurfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,
@@ -244,16 +244,16 @@ limitedSurfaceInterpolationScheme<Type>::New
 {
     if (surfaceInterpolation::debug)
     {
-        Info<< "limitedSurfaceInterpolationScheme<Type>::"
-               "New(const fvMesh&, Istream&)"
-               " : constructing limitedSurfaceInterpolationScheme<Type>"
-            << endl;
+        InfoInFunction
+            << "Constructing limitedSurfaceInterpolationScheme<Type>" << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Discretisation scheme not specified"
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Discretisation scheme not specified"
             << endl << endl
             << "Valid schemes are :" << endl
             << MeshConstructorTablePtr_->sortedToc()
@@ -267,8 +267,10 @@ limitedSurfaceInterpolationScheme<Type>::New
 
     if (constructorIter == MeshConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown discretisation scheme "
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown discretisation scheme "
             << schemeName << nl << nl
             << "Valid schemes are :" << endl
             << MeshConstructorTablePtr_->sortedToc()
@@ -281,7 +283,7 @@ limitedSurfaceInterpolationScheme<Type>::New
 
 // Return weighting factors for scheme given by name in dictionary
 template<class Type>
-tmp<limitedSurfaceInterpolationScheme<Type> >
+tmp<limitedSurfaceInterpolationScheme<Type>>
 limitedSurfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,
@@ -291,16 +293,17 @@ limitedSurfaceInterpolationScheme<Type>::New
 {
     if (surfaceInterpolation::debug)
     {
-        Info<< "limitedSurfaceInterpolationScheme<Type>::New"
-               "(const fvMesh&, const surfaceScalarField&, Istream&) : "
-               "constructing limitedSurfaceInterpolationScheme<Type>"
+        InfoInFunction
+            << "Constructing limitedSurfaceInterpolationScheme<Type>"
             << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Discretisation scheme not specified"
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Discretisation scheme not specified"
             << endl << endl
             << "Valid schemes are :" << endl
             << MeshConstructorTablePtr_->sortedToc()
@@ -314,8 +317,10 @@ limitedSurfaceInterpolationScheme<Type>::New
 
     if (constructorIter == MeshFluxConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown discretisation scheme "
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown discretisation scheme "
             << schemeName << nl << nl
             << "Valid schemes are :" << endl
             << MeshFluxConstructorTablePtr_->sortedToc()
@@ -345,9 +350,9 @@ tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
 {
     // Note that here the weights field is initialised as the limiter
     // from which the weight is calculated using the limiter value
-    surfaceScalarField& Weights = tLimiter();
+    surfaceScalarField& Weights = tLimiter.ref();
 
-    scalarField& pWeights = Weights.internalField();
+    scalarField& pWeights = Weights.primitiveFieldRef();
 
     forAll(pWeights, face)
     {
@@ -355,15 +360,15 @@ tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
             + pWeights[face]*(CDweights[face]-pos(faceFlux_[face]));
     }
 
-    surfaceScalarField::GeometricBoundaryField& bWeights =
-        Weights.boundaryField();
+    surfaceScalarField::Boundary& bWeights =
+        Weights.boundaryFieldRef();
 
-    forAll(bWeights, patchI)
+    forAll(bWeights, patchi)
     {
-        scalarField& pWeights = bWeights[patchI];
+        scalarField& pWeights = bWeights[patchi];
 
-        const scalarField& pCDweights = CDweights.boundaryField()[patchI];
-        const scalarField& pFaceFlux = faceFlux_.boundaryField()[patchI];
+        const scalarField& pCDweights = CDweights.boundaryField()[patchi];
+        const scalarField& pFaceFlux = faceFlux_.boundaryField()[patchi];
 
         forAll(pWeights, face)
         {
@@ -390,7 +395,7 @@ tmp<surfaceScalarField> limitedSurfaceInterpolationScheme<Type>::weights
 }
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 limitedSurfaceInterpolationScheme<Type>::flux
 (
     const GeometricField<Type, fvPatchField, volMesh>& phi

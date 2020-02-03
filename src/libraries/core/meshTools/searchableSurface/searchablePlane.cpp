@@ -42,7 +42,7 @@ CML::pointIndexHit CML::searchablePlane::findLine
     const point& end
 ) const
 {
-    pointIndexHit info(true, vector::zero, 0);
+    pointIndexHit info(true, Zero, 0);
 
     linePointRef l(start, end);
 
@@ -202,23 +202,23 @@ void CML::searchablePlane::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     List<pointIndexHit> nearestInfo;
     findLine(start, end, nearestInfo);
 
     info.setSize(start.size());
-    forAll(info, pointI)
+    forAll(info, pointi)
     {
-        if (nearestInfo[pointI].hit())
+        if (nearestInfo[pointi].hit())
         {
-            info[pointI].setSize(1);
-            info[pointI][0] = nearestInfo[pointI];
+            info[pointi].setSize(1);
+            info[pointi][0] = nearestInfo[pointi];
         }
         else
         {
-            info[pointI].clear();
+            info[pointi].clear();
         }
     }
 }

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,15 +50,6 @@ class pointLinear
 :
     public linear<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointLinear(const pointLinear&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointLinear&);
-
-
 public:
 
     //- Runtime type information
@@ -96,6 +87,9 @@ public:
             linear<Type>(mesh)
         {}
 
+        //- Disallow default bitwise copy construction
+        pointLinear(const pointLinear&) = delete;
+
 
     // Member Functions
 
@@ -106,11 +100,17 @@ public:
         }
 
         //- Return the explicit correction to the face-interpolate
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointLinear&) = delete;
 };
 
 

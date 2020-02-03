@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,15 +58,6 @@ class multivariateIndependentScheme
         const surfaceScalarField& faceFlux_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multivariateIndependentScheme(const multivariateIndependentScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateIndependentScheme&);
-
-
 public:
 
     //- Runtime type information
@@ -85,10 +76,16 @@ public:
             Istream& schemeData
         );
 
+        //- Disallow default bitwise copy construct
+        multivariateIndependentScheme
+        (
+            const multivariateIndependentScheme&
+        ) = delete;
+
 
     // Member Operators
 
-        tmp<surfaceInterpolationScheme<Type> > operator()
+        tmp<surfaceInterpolationScheme<Type>> operator()
         (
             const GeometricField<Type, fvPatchField, volMesh>& field
         ) const
@@ -100,6 +97,12 @@ public:
                 schemes_.lookup(field.name())
             );
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateIndependentScheme&) = delete;
 };
 
 

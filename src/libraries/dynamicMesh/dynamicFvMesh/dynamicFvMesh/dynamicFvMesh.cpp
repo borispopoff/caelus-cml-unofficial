@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,20 +42,20 @@ CML::dynamicFvMesh::dynamicFvMesh(const IOobject& io)
 CML::dynamicFvMesh::dynamicFvMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<labelList>& allOwner,
-    const Xfer<labelList>& allNeighbour,
+    pointField&& points,
+    faceList&& faces,
+    labelList&& allOwner,
+    labelList&& allNeighbour,
     const bool syncPar
 )
 :
     fvMesh
     (
         io,
-        points,
-        faces,
-        allOwner,
-        allNeighbour,
+        move(points),
+        move(faces),
+        move(allOwner),
+        move(allNeighbour),
         syncPar
     )
 {}
@@ -64,18 +64,18 @@ CML::dynamicFvMesh::dynamicFvMesh
 CML::dynamicFvMesh::dynamicFvMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<cellList>& cells,
+    pointField&& points,
+    faceList&& faces,
+    cellList&& cells,
     const bool syncPar
 )
 :
     fvMesh
     (
         io,
-        points,
-        faces,
-        cells,
+        move(points),
+        move(faces),
+        move(cells),
         syncPar
     )
 {}

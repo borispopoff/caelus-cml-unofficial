@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -69,16 +69,6 @@ class coordinateSystems
 :
     public IOPtrList<coordinateSystem>
 {
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        coordinateSystems(const coordinateSystems&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const coordinateSystems&);
-
-
 public:
 
     //- Runtime type information
@@ -100,8 +90,11 @@ public:
         coordinateSystems
         (
             const IOobject&,
-            const Xfer<PtrList<coordinateSystem> >&
+            PtrList<coordinateSystem>&&
         );
+
+        //- Disallow default bitwise copy construct
+        coordinateSystems(const coordinateSystems&) = delete;
 
 
     // Selectors
@@ -128,9 +121,14 @@ public:
         //- Return the table of contents (list of all keywords)
         wordList toc() const;
 
-        //- write data    
+        //- Write data
         bool writeData(Ostream&) const;
-    
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const coordinateSystems&) = delete;
 };
 
 

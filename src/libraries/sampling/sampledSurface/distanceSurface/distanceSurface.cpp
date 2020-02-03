@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -79,7 +79,7 @@ void CML::distanceSurface::createGeometry()
     // Internal field
     {
         const pointField& cc = fvm.C();
-        scalarField& fld = cellDistance.internalField();
+        scalarField& fld = cellDistance.primitiveFieldRef();
 
         List<pointIndexHit> nearest;
         surfPtr_().findNearest
@@ -99,11 +99,11 @@ void CML::distanceSurface::createGeometry()
             {
                 volumeType vT = volType[i];
 
-                if (vT == volumeType::OUTSIDE)
+                if (vT == volumeType::outside)
                 {
                     fld[i] = CML::mag(cc[i] - nearest[i].hitPoint());
                 }
-                else if (vT == volumeType::INSIDE)
+                else if (vT == volumeType::inside)
                 {
                     fld[i] = -CML::mag(cc[i] - nearest[i].hitPoint());
                 }
@@ -126,10 +126,10 @@ void CML::distanceSurface::createGeometry()
 
     // Patch fields
     {
-        forAll(fvm.C().boundaryField(), patchI)
+        forAll(fvm.C().boundaryField(), patchi)
         {
-            const pointField& cc = fvm.C().boundaryField()[patchI];
-            fvPatchScalarField& fld = cellDistance.boundaryField()[patchI];
+            const pointField& cc = fvm.C().boundaryField()[patchi];
+            fvPatchScalarField& fld = cellDistance.boundaryFieldRef()[patchi];
 
             List<pointIndexHit> nearest;
             surfPtr_().findNearest
@@ -149,11 +149,11 @@ void CML::distanceSurface::createGeometry()
                 {
                     volumeType vT = volType[i];
 
-                    if (vT == volumeType::OUTSIDE)
+                    if (vT == volumeType::outside)
                     {
                         fld[i] = CML::mag(cc[i] - nearest[i].hitPoint());
                     }
-                    else if (vT == volumeType::INSIDE)
+                    else if (vT == volumeType::inside)
                     {
                         fld[i] = -CML::mag(cc[i] - nearest[i].hitPoint());
                     }
@@ -204,12 +204,12 @@ void CML::distanceSurface::createGeometry()
             {
                 volumeType vT = volType[i];
 
-                if (vT == volumeType::OUTSIDE)
+                if (vT == volumeType::outside)
                 {
                     pointDistance_[i] =
                         CML::mag(pts[i] - nearest[i].hitPoint());
                 }
-                else if (vT == volumeType::INSIDE)
+                else if (vT == volumeType::inside)
                 {
                     pointDistance_[i] =
                         -CML::mag(pts[i] - nearest[i].hitPoint());
@@ -250,7 +250,7 @@ void CML::distanceSurface::createGeometry()
             pointMesh::New(fvm),
             dimensionedScalar("zero", dimLength, 0)
         );
-        pDist.internalField() = pointDistance_;
+        pDist.primitiveFieldRef() = pointDistance_;
 
         Pout<< "Writing point distance:" << pDist.objectPath() << endl;
         pDist.write();

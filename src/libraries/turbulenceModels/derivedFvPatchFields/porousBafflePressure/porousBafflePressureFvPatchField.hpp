@@ -142,9 +142,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new porousBafflePressureFvPatchField<Type>(*this)
             );
@@ -158,12 +158,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new porousBafflePressureFvPatchField<Type>(*this, iF)
             );
@@ -252,7 +252,6 @@ CML::porousBafflePressureFvPatchField<Type>::porousBafflePressureFvPatchField
     const porousBafflePressureFvPatchField<Type>& ptf
 )
 :
-    cyclicLduInterfaceField(),
     fixedJumpFvPatchField<Type>(ptf),
     D_(ptf.D_),
     I_(ptf.I_),
@@ -282,12 +281,10 @@ void CML::porousBafflePressureFvPatchField<Type>::write(Ostream& os) const
 {
 
     fixedJumpFvPatchField<Type>::write(os);
-
-    os.writeKeyword("D") << D_ << token::END_STATEMENT << nl;
-    os.writeKeyword("I") << I_ << token::END_STATEMENT << nl;
-    os.writeKeyword("length") << length_ << token::END_STATEMENT << nl;
-
-    this->writeEntry("value", os);
+    writeEntry(os, "D", D_);
+    writeEntry(os, "I", I_);
+    writeEntry(os, "length", length_);
+    writeEntry(os, "value", *this);
 }
 
 

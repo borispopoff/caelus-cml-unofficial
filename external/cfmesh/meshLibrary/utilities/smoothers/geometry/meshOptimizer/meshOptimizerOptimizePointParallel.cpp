@@ -65,7 +65,7 @@ void meshOptimizer::laplaceSmoother::laplacianParallel
     std::map<label, labelledPoint> localData;
 
     //- create data which shall be exchanged with other processors
-    std::map<label, LongList<refLabelledPoint> > exchangeData;
+    std::map<label, LongList<refLabelledPoint>> exchangeData;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];
@@ -150,7 +150,7 @@ void meshOptimizer::laplaceSmoother::laplacianParallel
 
     # ifdef DEBUGSmooth
     //- check
-    std::map<label, LongList<labelledPoint> > check;
+    std::map<label, LongList<labelledPoint>> check;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];
@@ -209,7 +209,7 @@ void meshOptimizer::laplaceSmoother::laplacianPCParallel
     std::map<label, labelledPoint> localData;
 
     //- create data which shall be exchanged with other processors
-    std::map<label, LongList<refLabelledPoint> > exchangeData;
+    std::map<label, LongList<refLabelledPoint>> exchangeData;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];
@@ -222,10 +222,10 @@ void meshOptimizer::laplaceSmoother::laplacianPCParallel
 
         forAllRow(pCells, pointI, pcI)
         {
-            const label cellI = pCells(pointI, pcI);
+            const label celli = pCells(pointI, pcI);
 
             ++lpd.pointLabel();
-            lpd.coordinates() += centres[cellI];
+            lpd.coordinates() += centres[celli];
         }
 
         forAllRow(pointAtProcs, pointI, procI)
@@ -280,7 +280,7 @@ void meshOptimizer::laplaceSmoother::laplacianPCParallel
 
     # ifdef DEBUGSmooth
     //- check
-    std::map<label, LongList<labelledPoint> > check;
+    std::map<label, LongList<labelledPoint>> check;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];
@@ -340,7 +340,7 @@ void meshOptimizer::laplaceSmoother::laplacianWPCParallel
     std::map<label, labelledPointScalar> localData;
 
     //- create data which shall be exchanged with other processors
-    std::map<label, LongList<labelledPointScalar> > exchangeData;
+    std::map<label, LongList<labelledPointScalar>> exchangeData;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];
@@ -360,10 +360,10 @@ void meshOptimizer::laplaceSmoother::laplacianWPCParallel
 
         forAllRow(pCells, pointI, pcI)
         {
-            const label cellI = pCells(pointI, pcI);
+            const label celli = pCells(pointI, pcI);
 
-            const scalar w = CML::max(volumes[cellI], VSMALL);
-            lps.coordinates() += w * centres[cellI];
+            const scalar w = CML::max(volumes[celli], VSMALL);
+            lps.coordinates() += w * centres[celli];
             lps.scalarValue() += w;
         }
 
@@ -422,7 +422,7 @@ void meshOptimizer::laplaceSmoother::laplacianWPCParallel
 
     # ifdef DEBUGSmooth
     //- check
-    std::map<label, LongList<labelledPoint> > check;
+    std::map<label, LongList<labelledPoint>> check;
     forAll(procPoints, pI)
     {
         const label pointI = procPoints[pI];

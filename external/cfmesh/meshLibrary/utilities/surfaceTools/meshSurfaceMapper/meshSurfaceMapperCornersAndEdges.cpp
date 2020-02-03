@@ -87,7 +87,7 @@ void meshSurfaceMapper::findMappingDistance
             surfaceEngine_.globalBoundaryPointLabel();
 
         //- create the map for exchanging data
-        std::map<label, DynList<labelledScalar> > exchangeData;
+        std::map<label, DynList<labelledScalar>> exchangeData;
         const DynList<label>& neiProcs = surfaceEngine_.bpNeiProcs();
         forAll(neiProcs, i)
             exchangeData.insert
@@ -192,7 +192,7 @@ void meshSurfaceMapper::mapCorners(const labelLongList& nodesToMap)
 {
     const triSurfacePartitioner& sPartitioner = surfacePartitioner();
     const labelList& surfCorners = sPartitioner.corners();
-    const List<DynList<label> >& cornerPatches = sPartitioner.cornerPatches();
+    const List<DynList<label>>& cornerPatches = sPartitioner.cornerPatches();
 
     const meshSurfacePartitioner& mPart = meshPartitioner();
     const labelHashSet& corners = mPart.corners();

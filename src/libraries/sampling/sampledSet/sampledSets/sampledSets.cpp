@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -26,12 +26,14 @@ License
 #include "ListListOps.hpp"
 #include "SortableList.hpp"
 #include "volPointInterpolation.hpp"
+#include "mapPolyMesh.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace CML
 {
     defineTypeNameAndDebug(sampledSets, 0);
+
     bool sampledSets::verbose_ = false;
 }
 
@@ -59,7 +61,7 @@ void CML::sampledSets::combineSampledSets
         const sampledSet& samplePts = sampledSets[setI];
 
         // Collect data from all processors
-        List<List<point> > gatheredPts(Pstream::nProcs());
+        List<List<point>> gatheredPts(Pstream::nProcs());
         gatheredPts[Pstream::myProcNo()] = samplePts;
         Pstream::gatherList(gatheredPts);
 
@@ -75,9 +77,9 @@ void CML::sampledSets::combineSampledSets
         // Combine processor lists into one big list.
         List<point> allPts
         (
-            ListListOps::combine<List<point> >
+            ListListOps::combine<List<point>>
             (
-                gatheredPts, accessOp<List<point> >()
+                gatheredPts, accessOp<List<point>>()
             )
         );
         labelList allSegments
@@ -115,7 +117,7 @@ void CML::sampledSets::combineSampledSets
                 samplePts.name(),
                 samplePts.axis(),
                 List<point>(UIndirectList<point>(allPts, indexSets[setI])),
-                allCurveDist
+                scalarList(UIndirectList<scalar>(allCurveDist, indexSets[setI]))
             )
         );
     }
@@ -173,21 +175,15 @@ void CML::sampledSets::verbose(const bool verbosity)
 
 
 void CML::sampledSets::execute()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void CML::sampledSets::end()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void CML::sampledSets::timeSet()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void CML::sampledSets::write()
@@ -297,9 +293,12 @@ void CML::sampledSets::correct()
 }
 
 
-void CML::sampledSets::updateMesh(const mapPolyMesh&)
+void CML::sampledSets::updateMesh(const mapPolyMesh& mpm)
 {
-    correct();
+    if (&mpm.mesh() == &mesh_)
+    {
+        correct();
+    }
 }
 
 

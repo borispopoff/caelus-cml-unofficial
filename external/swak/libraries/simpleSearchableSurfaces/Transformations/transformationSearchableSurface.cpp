@@ -119,7 +119,7 @@ CML::tmp<CML::pointField>
 CML::transformationSearchableSurface::coordinates() const
 {
     tmp<pointField> tResult(new pointField(delegate().coordinates()));
-    pointField &result=tResult();
+    pointField &result=tResult.ref();
 
     forAll(result,i) {
         result[i]=transform(result[i]);
@@ -296,12 +296,12 @@ void CML::transformationSearchableSurface::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     pointField iStart(start.size());
     pointField iEnd(end.size());
-    List<List<pointIndexHit> > iInfo;
+    List<List<pointIndexHit>> iInfo;
 
     forAll(start,i) {
         iStart[i]=inverseTransform(start[i]);

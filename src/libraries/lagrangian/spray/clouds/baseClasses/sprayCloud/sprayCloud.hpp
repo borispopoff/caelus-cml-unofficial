@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,10 +47,10 @@ class sprayCloud
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        sprayCloud(const sprayCloud&);
+        sprayCloud(const sprayCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const sprayCloud&);
+        void operator=(const sprayCloud&) = delete;
 
 
 public:

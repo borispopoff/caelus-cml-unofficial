@@ -30,8 +30,8 @@ template<class Type>
 void CML::partialWrite::loadField
 (
     const word& fieldName,
-    UPtrList<GeometricField<Type, fvPatchField, volMesh> >& vflds,
-    UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& sflds
+    UPtrList<GeometricField<Type, fvPatchField, volMesh>>& vflds,
+    UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;
@@ -81,8 +81,8 @@ void CML::partialWrite::loadField
 template<class Type>
 void CML::partialWrite::changeWriteOptions
 (
-    UPtrList<GeometricField<Type, fvPatchField, volMesh> >& vflds,
-    UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& sflds,
+    UPtrList<GeometricField<Type, fvPatchField, volMesh>>& vflds,
+    UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds,
     const IOobject::writeOption wOption
 ) const
 {

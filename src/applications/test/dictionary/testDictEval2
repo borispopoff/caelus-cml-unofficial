@@ -1,0 +1,40 @@
+/*---------------------------------------------------------------------------*
+Caelus 9.04
+Web:   www.caelus-cml.com
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      testDictEval1;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+expr1   "hypot(3,4)";
+
+expr2   hypot(3,4);
+
+expr3   #{  hypot(3,4)  #};
+
+eval1   #eval " pi() * 2 * $expr1";
+
+eval2   #eval " pi() * 2 * $expr2";
+
+eval3   #eval " pi() * 2 * $expr3";
+
+factor  "pi()";
+
+factor10  10;
+
+hypot_a 3;
+hypot_b 4;
+
+eval4   #eval "$factor * 2 * hypot(${hypot_a}, $hypot_b)";
+
+axis1   (1 0 0);
+axis2   (0 1 0);
+axis3   (0 0 1);
+index   100;
+
+#remove ("axis[0-9]*" index)

@@ -41,7 +41,7 @@ namespace CML
                            Class SortableListEFA Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Type>
+template<class Type>
 class SortableListEFA
 :
     public List<Type>
@@ -120,7 +120,7 @@ public:
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::SortableListEFA<Type>::SortableListEFA(const List<Type>& values)
 :
     List<Type>(values),
@@ -130,7 +130,7 @@ CML::SortableListEFA<Type>::SortableListEFA(const List<Type>& values)
 }
 
 
-template <class Type>
+template<class Type>
 CML::SortableListEFA<Type>::SortableListEFA(const label size)
 :
     List<Type>(size),
@@ -143,7 +143,7 @@ CML::SortableListEFA<Type>::SortableListEFA(const label size)
 }
 
 
-template <class Type>
+template<class Type>
 CML::SortableListEFA<Type>::SortableListEFA(const label size, const Type& val)
 :
     List<Type>(size, val),
@@ -156,7 +156,7 @@ CML::SortableListEFA<Type>::SortableListEFA(const label size, const Type& val)
 }
 
 
-template <class Type>
+template<class Type>
 CML::SortableListEFA<Type>::SortableListEFA(const SortableListEFA<Type>& lst)
 :
     List<Type>(lst),
@@ -172,7 +172,7 @@ CML::SortableListEFA<Type>::SortableListEFA(const SortableListEFA<Type>& lst)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 void CML::SortableListEFA<Type>::setSize(const label newSize)
 {
     List<Type>::setSize(newSize);
@@ -180,7 +180,7 @@ void CML::SortableListEFA<Type>::setSize(const label newSize)
 }
 
 
-template <class Type>
+template<class Type>
 void CML::SortableListEFA<Type>::sort()
 {
     forAll(indices_, i)
@@ -201,7 +201,7 @@ void CML::SortableListEFA<Type>::sort()
 }
 
 
-template <class Type>
+template<class Type>
 void CML::SortableListEFA<Type>::partialSort(int M, int start)
 {
     std::partial_sort
@@ -214,7 +214,7 @@ void CML::SortableListEFA<Type>::partialSort(int M, int start)
 }
 
 
-template <class Type>
+template<class Type>
 void CML::SortableListEFA<Type>::stableSort()
 {
     forAll(indices_, i)
@@ -237,7 +237,7 @@ void CML::SortableListEFA<Type>::stableSort()
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 void CML::SortableListEFA<Type>::operator=(const SortableListEFA<Type>& rhs)
 {
     List<Type>::operator=(rhs);

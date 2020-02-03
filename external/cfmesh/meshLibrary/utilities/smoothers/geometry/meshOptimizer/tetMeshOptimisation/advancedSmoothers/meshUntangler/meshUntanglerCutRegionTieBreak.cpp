@@ -44,10 +44,10 @@ void meshUntangler::cutRegion::tieBreak(const DynList<label, 8>& f)
     // and then start marking vertices connected to that vertex via an edge.
 
     # ifdef DEBUGSmooth
-    Info << "Starting tie break" << endl;
+    Info<< "Starting tie break" << endl;
     # endif
 
-    //- delete pointer data
+    // delete pointer data
     deleteDemandDrivenData(cPtsPtr_);
     deleteDemandDrivenData(cEdgesPtr_);
     deleteDemandDrivenData(cFacesPtr_);
@@ -58,27 +58,29 @@ void meshUntangler::cutRegion::tieBreak(const DynList<label, 8>& f)
     forAll(f, eI)
         faceEdges.append(edges[f[eI]]);
 
-    labelListList fvertices = sortEdgesIntoChains(faceEdges).sortedChains();
-    if( fvertices.size() != label(1) )
+    const DynList<DynList<label>> fvertices =
+        sortEdgesIntoChains(faceEdges).sortedChains();
+
+    if (fvertices.size() != 1)
     {
         valid_ = false;
         return;
 
-        Info << "Face vertices " << fvertices << endl;
+        Info<< "Face vertices " << fvertices << endl;
         FatalErrorInFunction
             << "Number of created faces is not 1 but "
             << fvertices.size() << abort(FatalError);
     }
 
-    const labelList& fv = fvertices[0];
+    const DynList<label>& fv = fvertices[0];
 
     DynList<label, 64> vertexRegion;
     vertexRegion.setSize(fv.size());
-    vertexRegion = label(0);
+    vertexRegion = 0;
 
     label region(1);
     forAll(fv, vI)
-        if( !vertexTypes_[fv[vI]] && !vertexRegion[vI] )
+        if (!vertexTypes_[fv[vI]] && !vertexRegion[vI])
         {
             vertexRegion[vI] = region;
 
@@ -88,53 +90,53 @@ void meshUntangler::cutRegion::tieBreak(const DynList<label, 8>& f)
             do
             {
                 found = false;
-                if( !vertexTypes_[fv[fcI]] )
+                if (!vertexTypes_[fv[fcI]])
                 {
                     vertexRegion[fcI] = region;
                     fcI = fv.fcIndex(fcI);
                     found = true;
                 }
 
-                if( !vertexTypes_[fv[rcI]] )
+                if (!vertexTypes_[fv[rcI]])
                 {
                     vertexRegion[rcI] = region;
                     rcI = fv.rcIndex(rcI);
                     found = true;
                 }
-            } while( found );
+            } while (found);
 
             ++region;
         }
 
     # ifdef DEBUGSmooth
-    Info << "Tolerance " << tol_ << endl;
-    Info << "Number of regions " << region-1 << endl;
-    Info << "Vertex regions " << vertexRegion << endl;
+    Info<< "Tolerance " << tol_ << endl;
+    Info<< "Number of regions " << region - 1 << endl;
+    Info<< "Vertex regions " << vertexRegion << endl;
     # endif
 
-    if( region > label(2) )
+    if (region > 2)
     {
-        //- there are more than two regions which need to be cut off
+        // there are more than two regions which need to be cut off
         # ifdef DEBUGSmooth
         forAll(fv, vI)
-            Info << "Distance for vertex " << fv[vI] << " is "
+            Info<< "Distance for vertex " << fv[vI] << " is "
                 << vertexDistance_[fv[vI]] << endl;
         # endif
 
-        //- there should be only one cut-off region
-        //- there this region will be determined by the most negative
-        //- distance from plane
+        // there should be only one cut-off region
+        // there this region will be determined by the most negative
+        // distance from plane
         scalar minDist(VGREAT);
         label minRegion(-1);
         forAll(fv, vI)
-            if( vertexRegion[vI] && (vertexDistance_[fv[vI]] < minDist) )
+            if (vertexRegion[vI] && (vertexDistance_[fv[vI]] < minDist))
             {
                 minDist = vertexDistance_[fv[vI]];
                 minRegion = vertexRegion[vI];
             }
 
         forAll(vertexRegion, vI)
-            if( vertexRegion[vI] && (vertexRegion[vI] != minRegion) )
+            if (vertexRegion[vI] && (vertexRegion[vI] != minRegion))
             {
                 vertexTypes_[fv[vI]] |= INPLANE;
             }
@@ -142,7 +144,7 @@ void meshUntangler::cutRegion::tieBreak(const DynList<label, 8>& f)
     else
     {
         forAll(fv, vI)
-            if(
+            if (
                 (vertexTypes_[fv[vI]] & INPLANE) &&
                 !vertexRegion[fv.rcIndex(vI)] &&
                 !vertexRegion[fv.fcIndex(vI)]
@@ -152,35 +154,33 @@ void meshUntangler::cutRegion::tieBreak(const DynList<label, 8>& f)
                 vertexTypes_[fv[vI]] |= KEEP;
 
                 # ifdef DEBUGSmooth
-                Info << "Node " << vI << " was INPLANE" << endl;
-                Info << "New type " << label(vertexTypes_[fv[vI]]) << endl;
+                Info<< "Node " << vI << " was INPLANE" << endl;
+                Info<< "New type " << label(vertexTypes_[fv[vI]]) << endl;
                 # endif
             }
     }
 
     # ifdef DEBUGSmooth
     forAll(fv, vI)
-        Info << "Vertex type for vertex " << fv[vI] << " is "
+        Info<< "Vertex type for vertex " << fv[vI] << " is "
             << label(vertexTypes_[fv[vI]]) << endl;
     # endif
 
-    //- create new points
+    // create new points
     const DynList<point, 64>& points = *pointsPtr_;
     cPtsPtr_ = new DynList<point, 64>();
-    newVertexLabel_ = label(-1);
-    origNumVertices_ = label(0);
+    newVertexLabel_ = -1;
+    origNumVertices_ = 0;
     forAll(points, pI)
-        if( vertexTypes_[pI] )
+        if (vertexTypes_[pI])
         {
             cPtsPtr_->append(points[pI]);
             newVertexLabel_[pI] = origNumVertices_++;
         }
 
-    //- find new edges and continue creating faces
+    // find new edges and continue creating faces
     findNewEdges();
 }
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace CML
 

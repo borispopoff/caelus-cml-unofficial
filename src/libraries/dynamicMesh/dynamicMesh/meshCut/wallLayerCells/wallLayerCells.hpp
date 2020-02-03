@@ -53,8 +53,8 @@ class wallLayerCells
 {
     // Private Member Functions
 
-        //- Check if any of the faces of cellI is on processorPatch
-        bool usesCoupledPatch(const label cellI) const;
+        //- Check if any of the faces of celli is on processorPatch
+        bool usesCoupledPatch(const label celli) const;
 
 public:
 

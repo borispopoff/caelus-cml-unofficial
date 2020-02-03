@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -137,9 +137,9 @@ CML::autoPtr<CML::polyMesh> CML::meshReader::mesh
                 "constant",
                 registry
             ),
-            xferMove(points_),
-            xferMove(meshFaces_),
-            xferMove(cellPolys_)
+            move(points_),
+            move(meshFaces_),
+            move(cellPolys_)
         )
     );
 

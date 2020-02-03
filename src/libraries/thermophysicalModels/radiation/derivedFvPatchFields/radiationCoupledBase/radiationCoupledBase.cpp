@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -171,7 +171,7 @@ CML::scalarField CML::radiationCoupledBase::emissivity() const
 
         case LOOKUP:
         {
-            // return local value
+            // Return local value
             return emissivity_;
         }
 
@@ -190,10 +190,7 @@ CML::scalarField CML::radiationCoupledBase::emissivity() const
 }
 
 
-void CML::radiationCoupledBase::autoMap
-(
-    const fvPatchFieldMapper& m
-)
+void CML::radiationCoupledBase::autoMap(const fvPatchFieldMapper& m)
 {
     emissivity_.autoMap(m);
 }
@@ -214,7 +211,6 @@ void CML::radiationCoupledBase::rmap
 
 void CML::radiationCoupledBase::write(Ostream& os) const
 {
-    os.writeKeyword("emissivityMode") << emissivityMethodTypeNames_[method_]
-        << token::END_STATEMENT << nl;
-    emissivity_.writeEntry("emissivity", os);
+    writeEntry(os, "emissivityMode", emissivityMethodTypeNames_[method_]);
+    writeEntry(os, "emissivity", emissivity_);
 }

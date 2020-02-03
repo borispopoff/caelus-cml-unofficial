@@ -218,9 +218,9 @@ void CML::motionSmoother::makePatchPatchAddressing()
             << " constraintPoints to " << str.name() << endl;
         forAll(patchPatchPointConstraintPoints_, i)
         {
-            label pointI = patchPatchPointConstraintPoints_[i];
+            label pointi = patchPatchPointConstraintPoints_[i];
 
-            meshTools::writeOBJ(str, mesh_.points()[pointI]);
+            meshTools::writeOBJ(str, mesh_.points()[pointi]);
         }
 
         Pout<< "motionSmoother::makePatchPatchAddressing() : "
@@ -232,16 +232,16 @@ void CML::motionSmoother::makePatchPatchAddressing()
 
 void CML::motionSmoother::checkFld(const pointScalarField& fld)
 {
-    forAll(fld, pointI)
+    forAll(fld, pointi)
     {
-        const scalar val = fld[pointI];
+        const scalar val = fld[pointi];
 
         if ((val > -GREAT) && (val < GREAT))
         {}
         else
         {
             FatalErrorInFunction
-                << "Problem : point:" << pointI << " value:" << val
+                << "Problem : point:" << pointi << " value:" << val
                 << abort(FatalError);
         }
     }
@@ -287,13 +287,13 @@ void CML::motionSmoother::minSmooth
 
     forAll(meshPoints, i)
     {
-        label pointI = meshPoints[i];
-        if (isAffectedPoint.get(pointI) == 1)
+        label pointi = meshPoints[i];
+        if (isAffectedPoint.get(pointi) == 1)
         {
-            newFld[pointI] = min
+            newFld[pointi] = min
             (
-                fld[pointI],
-                0.5*fld[pointI] + 0.5*avgFld[pointI]
+                fld[pointi],
+                0.5*fld[pointi] + 0.5*avgFld[pointi]
             );
         }
     }
@@ -318,14 +318,14 @@ void CML::motionSmoother::minSmooth
     );
     const pointScalarField& avgFld = tavgFld();
 
-    forAll(fld, pointI)
+    forAll(fld, pointi)
     {
-        if (isAffectedPoint.get(pointI) == 1 && isInternalPoint(pointI))
+        if (isAffectedPoint.get(pointi) == 1 && isInternalPoint(pointi))
         {
-            newFld[pointI] = min
+            newFld[pointi] = min
             (
-                fld[pointI],
-                0.5*fld[pointI] + 0.5*avgFld[pointI]
+                fld[pointi],
+                0.5*fld[pointi] + 0.5*avgFld[pointi]
             );
         }
     }
@@ -366,19 +366,19 @@ void CML::motionSmoother::scaleField
 {
     forAll(meshPoints, i)
     {
-        label pointI = meshPoints[i];
+        label pointi = meshPoints[i];
 
-        if (pointLabels.found(pointI))
+        if (pointLabels.found(pointi))
         {
-            fld[pointI] *= scale;
+            fld[pointi] *= scale;
         }
     }
 }
 
 
-bool CML::motionSmoother::isInternalPoint(const label pointI) const
+bool CML::motionSmoother::isInternalPoint(const label pointi) const
 {
-    return isInternalPoint_.get(pointI) == 1;
+    return isInternalPoint_.get(pointi) == 1;
 }
 
 
@@ -409,13 +409,13 @@ void CML::motionSmoother::getAffectedFacesAndPoints
         {
             const labelList& pCells = mesh_.pointCells(iter.key());
 
-            forAll(pCells, pCellI)
+            forAll(pCells, pCelli)
             {
-                const cell& cFaces = mesh_.cells()[pCells[pCellI]];
+                const cell& cFaces = mesh_.cells()[pCells[pCelli]];
 
-                forAll(cFaces, cFaceI)
+                forAll(cFaces, cFacei)
                 {
-                    nbrFaces.insert(cFaces[cFaceI]);
+                    nbrFaces.insert(cFaces[cFacei]);
                 }
             }
         }
@@ -613,9 +613,9 @@ void CML::motionSmoother::setDisplacement(pointField& patchDisp)
     // See comment in .hpp file about shared points.
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -631,19 +631,19 @@ void CML::motionSmoother::setDisplacement(pointField& patchDisp)
     const labelList& ppMeshPoints = pp_.meshPoints();
 
     // Set internal point data from displacement on combined patch points.
-    forAll(ppMeshPoints, patchPointI)
+    forAll(ppMeshPoints, patchPointi)
     {
-        displacement_[ppMeshPoints[patchPointI]] = patchDisp[patchPointI];
+        displacement_[ppMeshPoints[patchPointi]] = patchDisp[patchPointi];
     }
 
     // Adapt the fixedValue bc's (i.e. copy internal point data to
     // boundaryField for all affected patches)
     forAll(adaptPatchIDs_, i)
     {
-        label patchI = adaptPatchIDs_[i];
+        label patchi = adaptPatchIDs_[i];
 
-        displacement_.boundaryField()[patchI] ==
-            displacement_.boundaryField()[patchI].patchInternalField();
+        displacement_.boundaryFieldRef()[patchi] ==
+            displacement_.boundaryFieldRef()[patchi].patchInternalField();
     }
 
     // Make consistent with non-adapted bc's by evaluating those now and
@@ -656,19 +656,19 @@ void CML::motionSmoother::setDisplacement(pointField& patchDisp)
 
     forAll(patchSchedule, patchEvalI)
     {
-        label patchI = patchSchedule[patchEvalI].patch;
+        label patchi = patchSchedule[patchEvalI].patch;
 
-        if (!adaptPatchSet.found(patchI))
+        if (!adaptPatchSet.found(patchi))
         {
             if (patchSchedule[patchEvalI].init)
             {
-                displacement_.boundaryField()[patchI]
-                    .initEvaluate(Pstream::scheduled);
+                displacement_.boundaryFieldRef()[patchi]
+                    .initEvaluate(Pstream::commsTypes::scheduled);
             }
             else
             {
-                displacement_.boundaryField()[patchI]
-                    .evaluate(Pstream::scheduled);
+                displacement_.boundaryFieldRef()[patchi]
+                    .evaluate(Pstream::commsTypes::scheduled);
             }
         }
     }
@@ -690,28 +690,28 @@ void CML::motionSmoother::setDisplacement(pointField& patchDisp)
     // by multi-corner constraints into account.
     forAll(adaptPatchIDs_, i)
     {
-        label patchI = adaptPatchIDs_[i];
+        label patchi = adaptPatchIDs_[i];
 
-        displacement_.boundaryField()[patchI] ==
-            displacement_.boundaryField()[patchI].patchInternalField();
+        displacement_.boundaryFieldRef()[patchi] ==
+            displacement_.boundaryFieldRef()[patchi].patchInternalField();
     }
 
     if (debug)
     {
         OFstream str(mesh_.db().path()/"changedPoints.obj");
         label nVerts = 0;
-        forAll(ppMeshPoints, patchPointI)
+        forAll(ppMeshPoints, patchPointi)
         {
-            const vector& newDisp = displacement_[ppMeshPoints[patchPointI]];
+            const vector& newDisp = displacement_[ppMeshPoints[patchPointi]];
 
-            if (mag(newDisp-patchDisp[patchPointI]) > SMALL)
+            if (mag(newDisp-patchDisp[patchPointi]) > SMALL)
             {
-                const point& pt = mesh_.points()[ppMeshPoints[patchPointI]];
+                const point& pt = mesh_.points()[ppMeshPoints[patchPointi]];
 
                 meshTools::writeOBJ(str, pt);
                 nVerts++;
                 //Pout<< "Point:" << pt
-                //    << " oldDisp:" << patchDisp[patchPointI]
+                //    << " oldDisp:" << patchDisp[patchPointi]
                 //    << " newDisp:" << newDisp << endl;
             }
         }
@@ -720,9 +720,9 @@ void CML::motionSmoother::setDisplacement(pointField& patchDisp)
     }
 
     // Now reset input displacement
-    forAll(ppMeshPoints, patchPointI)
+    forAll(ppMeshPoints, patchPointi)
     {
-        patchDisp[patchPointI] = displacement_[ppMeshPoints[patchPointI]];
+        patchDisp[patchPointi] = displacement_[ppMeshPoints[patchPointi]];
     }
 }
 
@@ -740,19 +740,19 @@ void CML::motionSmoother::correctBoundaryConditions
     // 1. evaluate on adaptPatches
     forAll(patchSchedule, patchEvalI)
     {
-        label patchI = patchSchedule[patchEvalI].patch;
+        label patchi = patchSchedule[patchEvalI].patch;
 
-        if (adaptPatchSet.found(patchI))
+        if (adaptPatchSet.found(patchi))
         {
             if (patchSchedule[patchEvalI].init)
             {
-                displacement.boundaryField()[patchI]
-                    .initEvaluate(Pstream::blocking);
+                displacement.boundaryFieldRef()[patchi]
+                    .initEvaluate(Pstream::commsTypes::blocking);
             }
             else
             {
-                displacement.boundaryField()[patchI]
-                    .evaluate(Pstream::blocking);
+                displacement.boundaryFieldRef()[patchi]
+                    .evaluate(Pstream::commsTypes::blocking);
             }
         }
     }
@@ -761,19 +761,19 @@ void CML::motionSmoother::correctBoundaryConditions
     // 2. evaluate on non-AdaptPatches
     forAll(patchSchedule, patchEvalI)
     {
-        label patchI = patchSchedule[patchEvalI].patch;
+        label patchi = patchSchedule[patchEvalI].patch;
 
-        if (!adaptPatchSet.found(patchI))
+        if (!adaptPatchSet.found(patchi))
         {
             if (patchSchedule[patchEvalI].init)
             {
-                displacement.boundaryField()[patchI]
-                    .initEvaluate(Pstream::blocking);
+                displacement.boundaryFieldRef()[patchi]
+                    .initEvaluate(Pstream::commsTypes::blocking);
             }
             else
             {
-                displacement.boundaryField()[patchI]
-                    .evaluate(Pstream::blocking);
+                displacement.boundaryFieldRef()[patchi]
+                    .evaluate(Pstream::commsTypes::blocking);
             }
         }
     }
@@ -929,14 +929,14 @@ bool CML::motionSmoother::scaleMesh
         const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
         Pout<< "Entering scaleMesh : coupled patches:" << endl;
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            if (patches[patchI].coupled())
+            if (patches[patchi].coupled())
             {
                 const coupledPolyPatch& pp =
-                    refCast<const coupledPolyPatch>(patches[patchI]);
+                    refCast<const coupledPolyPatch>(patches[patchi]);
 
-                Pout<< '\t' << patchI << '\t' << pp.name()
+                Pout<< '\t' << patchi << '\t' << pp.name()
                     << " parallel:" << pp.parallel()
                     << " separated:" << pp.separated()
                     << " forwardT:" << pp.forwardT().size()
@@ -993,12 +993,12 @@ bool CML::motionSmoother::scaleMesh
             );
         }
 
-        newPoints = oldPoints_ + totalDisplacement.internalField();
+        newPoints = oldPoints_ + totalDisplacement.primitiveField();
     }
 
     Info<< "Moving mesh using diplacement scaling :"
-        << " min:" << gMin(scale_.internalField())
-        << "  max:" << gMax(scale_.internalField())
+        << " min:" << gMin(scale_.primitiveField())
+        << "  max:" << gMax(scale_.primitiveField())
         << endl;
 
 
@@ -1142,20 +1142,20 @@ void CML::motionSmoother::updateMesh()
     // Check whether displacement has fixed value b.c. on adaptPatchID
     forAll(adaptPatchIDs_, i)
     {
-        label patchI = adaptPatchIDs_[i];
+        label patchi = adaptPatchIDs_[i];
 
         if
         (
            !isA<fixedValuePointPatchVectorField>
             (
-                displacement_.boundaryField()[patchI]
+                displacement_.boundaryField()[patchi]
             )
         )
         {
             FatalErrorInFunction
-                << "Patch " << patches[patchI].name()
+                << "Patch " << patches[patchi].name()
                 << " has wrong boundary condition "
-                << displacement_.boundaryField()[patchI].type()
+                << displacement_.boundaryField()[patchi].type()
                 << " on field " << displacement_.name() << nl
                 << "Only type allowed is "
                 << fixedValuePointPatchVectorField::typeName

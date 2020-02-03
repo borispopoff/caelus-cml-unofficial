@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -108,8 +108,7 @@ CML::Ostream& CML::operator<<(Ostream& os, const phaseProperties& pp)
 
     forAll(pp.names_, cmptI)
     {
-        os.writeKeyword(pp.names_[cmptI]) << pp.Y_[cmptI]
-            << token::END_STATEMENT << nl;
+        writeEntry(os, pp.names_[cmptI], pp.Y_[cmptI]);
     }
 
     os  << decrIndent << token::END_BLOCK << nl;

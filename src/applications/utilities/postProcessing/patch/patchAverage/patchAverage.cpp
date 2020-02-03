@@ -35,7 +35,7 @@ void printAverage
     const fvMesh& mesh,
     const IOobject& fieldHeader,
     const scalar area,
-    const label patchI,
+    const label patchi,
     bool& done
 )
 {
@@ -53,15 +53,15 @@ void printAverage
         {
             sumField = gSum
             (
-                mesh.magSf().boundaryField()[patchI]
-              * field.boundaryField()[patchI]
+                mesh.magSf().boundaryField()[patchi]
+              * field.boundaryField()[patchi]
             ) / area;
         }
 
         Info<< "    Average of " << fieldHeader.headerClassName()
             << " over patch "
-            << mesh.boundary()[patchI].name()
-            << '[' << patchI << ']' << " = "
+            << mesh.boundary()[patchi].name()
+            << '[' << patchi << ']' << " = "
             << sumField << endl;
 
         done = true;
@@ -75,8 +75,8 @@ int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
     #include "addRegionOption.hpp"
-    argList::validArgs.append("fieldName");
-    argList::validArgs.append("patchName");
+    argList::validArgs.append("field");
+    argList::validArgs.append("patch");
 #   include "setRootCase.hpp"
 #   include "createTime.hpp"
     instantList timeDirs = timeSelector::select0(runTime, args);
@@ -103,21 +103,21 @@ int main(int argc, char *argv[])
         {
             mesh.readUpdate();
 
-            const label patchI = mesh.boundaryMesh().findPatchID(patchName);
-            if (patchI < 0)
+            const label patchi = mesh.boundaryMesh().findPatchID(patchName);
+            if (patchi < 0)
             {
                 FatalError
                     << "Unable to find patch " << patchName << nl
                     << exit(FatalError);
             }
-            scalar area = gSum(mesh.magSf().boundaryField()[patchI]);
+            scalar area = gSum(mesh.magSf().boundaryField()[patchi]);
 
             bool done = false;
-            printAverage<volScalarField>(mesh, io, area, patchI, done);
-            printAverage<volVectorField>(mesh, io, area, patchI, done);
-            printAverage<volSphericalTensorField>(mesh, io, area, patchI, done);
-            printAverage<volSymmTensorField>(mesh, io, area, patchI, done);
-            printAverage<volTensorField>(mesh, io, area, patchI, done);
+            printAverage<volScalarField>(mesh, io, area, patchi, done);
+            printAverage<volVectorField>(mesh, io, area, patchi, done);
+            printAverage<volSphericalTensorField>(mesh, io, area, patchi, done);
+            printAverage<volSymmTensorField>(mesh, io, area, patchi, done);
+            printAverage<volTensorField>(mesh, io, area, patchi, done);
 
             if (!done)
             {

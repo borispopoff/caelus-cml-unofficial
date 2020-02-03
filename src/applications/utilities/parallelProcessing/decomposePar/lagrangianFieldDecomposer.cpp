@@ -94,7 +94,7 @@ CML::lagrangianFieldDecomposer::lagrangianFieldDecomposer
 
     particleIndices_.setSize(pi);
 
-    IOPosition<Cloud<passiveParticle> >(positions_).write();
+    IOPosition<Cloud<passiveParticle>>(positions_).write();
 }
 
 

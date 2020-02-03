@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2016 OpenCFD Ltd
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -57,6 +57,7 @@ SourceFiles
 
 namespace CML
 {
+
 // Forward declaration of classes
 class argList;
 
@@ -87,26 +88,27 @@ class Time
 public:
 
         //- Write control options
-        enum writeControls
+        enum class writeControl
         {
-            wcTimeStep,
-            wcRunTime,
-            wcAdjustableRunTime,
-            wcClockTime,
-            wcCpuTime
+            timeStep,
+            runTime,
+            adjustableRunTime,
+            adjustableRunTimeFixedSchedule,
+            clockTime,
+            cpuTime
         };
 
         //- Stop-run control options
-        enum stopAtControls
+        enum class stopAtControl
         {
-            saEndTime,    /*!< stop when Time reaches the prescribed endTime */
-            saNoWriteNow, /*!< set endTime to stop immediately w/o writing */
-            saWriteNow,   /*!< set endTime to stop immediately w/ writing */
-            saNextWrite   /*!< stop the next time data are written */
+            endTime,    //!< stop when Time reaches the prescribed endTime
+            noWriteNow, //!< set endTime to stop immediately w/o writing
+            writeNow,   //!< set endTime to stop immediately w/ writing
+            nextWrite   //!< stop the next time data are written
         };
 
         //- Supported time directory name formats
-        enum fmtflags
+        enum class format
         {
             general    = 0,
             fixed      = ios_base::fixed,
@@ -122,22 +124,16 @@ protected:
         scalar startTime_;
         mutable scalar endTime_;
 
-        static const NamedEnum<stopAtControls, 4> stopAtControlNames_;
-        mutable stopAtControls stopAt_;
+        static const NamedEnum<stopAtControl, 4> stopAtControlNames_;
+        mutable stopAtControl stopAt_;
 
-        static const NamedEnum<writeControls, 5> writeControlNames_;
-        writeControls writeControl_;
+        static const NamedEnum<writeControl, 6> writeControlNames_;
+        writeControl writeControl_;
 
         scalar writeInterval_;
 
-        // Additional writing
-
-            writeControls secondaryWriteControl_;
-
-            scalar secondaryWriteInterval_;
-
         label  purgeWrite_;
-        mutable FIFOStack<word> previousOutputTimes_;
+        mutable FIFOStack<word> previousWriteTimes_;
 
         // One-shot writing
         bool writeOnce_;
@@ -149,7 +145,7 @@ protected:
         autoPtr<TimeState> prevTimeState_;
 
 
-        // Signal handlers for secondary writing
+        // Signal handlers for writing
 
             //- Enable one-shot writing upon signal
             sigWriteNow sigWriteNow_;
@@ -159,13 +155,20 @@ protected:
 
 
         //- Time directory name format
-        static fmtflags format_;
+        static format format_;
 
         //- Time directory name precision
         static int precision_;
 
+        //- Maximum time directory name precision
+        static const int maxPrecision_;
+
         //- Adjust the time step so that writing occurs at the specified time
         void adjustDeltaT();
+
+        //- Adjust the time step so that writing occurs at the specified time
+        // for fixed schedule
+        void adjustDeltaTFS();
 
         //- Set the controls from the current controlDict
         void setControls();
@@ -381,6 +384,9 @@ public:
                 const word& constantName = "constant"
             );
 
+            //- Write time dictionary to the \<time\>/uniform directory
+            virtual bool writeTimeDict() const;
+
             //- Write using given format, version and compression
             virtual bool writeObject
             (
@@ -403,7 +409,12 @@ public:
         // Access
 
             //- Return time name of given scalar time
-            static word timeName(const scalar);
+            //  formatted with given precision
+            static word timeName
+            (
+                const scalar,
+                const int precision = precision_
+            );
 
             //- Return current time name
             virtual word timeName() const;
@@ -457,6 +468,9 @@ public:
 
         // Check
 
+            //- Return true if run should continue without any side effects
+            virtual bool running() const;
+
             //- Return true if run should continue,
             //  also invokes the functionObjectList::end() method
             //  when the time goes out of range
@@ -502,7 +516,7 @@ public:
             //- Adjust the current stopAtControl. Note that this value
             //  only persists until the next time the dictionary is read.
             //  Return true if the stopAtControl changed.
-            virtual bool stopAt(const stopAtControls) const;
+            virtual bool stopAt(const stopAtControl) const;
 
             //- Reset the time and time-index to those of the given time
             virtual void setTime(const Time&);
@@ -527,18 +541,14 @@ public:
             virtual void setEndTime(const scalar);
 
             //- Reset time step
-            virtual void setDeltaT
-            (
-                const dimensionedScalar&,
-                const bool adjustDeltaT = true
-            );
+            virtual void setDeltaT(const dimensionedScalar&);
 
             //- Reset time step
-            virtual void setDeltaT
-            (
-                const scalar,
-                const bool adjustDeltaT = true
-            );
+            virtual void setDeltaT(const scalar);
+
+            //- Reset time step without additional adjustment or modification
+            //  by function objects
+            virtual void setDeltaTNoAdjust(const scalar);
 
             //- Set time to sub-cycle for the given number of steps
             virtual TimeState subCycle(const label nSubCycles);

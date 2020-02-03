@@ -88,10 +88,10 @@ class FTRsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        FTRsurfaceFormat(const FTRsurfaceFormat<Face>&);
+        FTRsurfaceFormat(const FTRsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const FTRsurfaceFormat<Face>&);
+        void operator=(const FTRsurfaceFormat<Face>&) = delete;
 
 
 public:
@@ -105,9 +105,9 @@ public:
     // Selectors
 
         //- Read file and return surface
-        static autoPtr<UnsortedMeshedSurface<Face> > New(const fileName& name)
+        static autoPtr<UnsortedMeshedSurface<Face>> New(const fileName& name)
         {
-            return autoPtr<UnsortedMeshedSurface<Face> >
+            return autoPtr<UnsortedMeshedSurface<Face>>
             (
                 new FTRsurfaceFormat<Face>(name)
             );
@@ -172,17 +172,17 @@ bool CML::fileFormats::FTRsurfaceFormat<Face>::read
     is >> this->storedPoints();
 
     // triFaces read with attached keys
-    List< Keyed<triFace> > facesRead(is);
+    List< Keyed<triFace>> facesRead(is);
 
     List<Face>  faceLst(facesRead.size());
     List<label> zoneIds(facesRead.size());
 
     // disentangle faces/keys - already triangulated
-    forAll(facesRead, faceI)
+    forAll(facesRead, facei)
     {
         // unfortunately cannot transfer to save memory
-        faceLst[faceI] = facesRead[faceI];
-        zoneIds[faceI] = facesRead[faceI].key();
+        faceLst[facei] = facesRead[facei];
+        zoneIds[facei] = facesRead[facei].key();
     }
 
     this->storedFaces().transfer(faceLst);

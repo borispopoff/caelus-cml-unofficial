@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -100,23 +100,23 @@ class turbulenceFields
 {
 public:
 
-    enum compressibleField
+    enum class compressibleField
     {
-        cfR,
-        cfDevRhoReff,
-        cfMut,
-        cfMuEff,
-        cfAlphat,
-        cfAlphaEff
+        R,
+        devRhoReff,
+        mut,
+        muEff,
+        alphat,
+        alphaEff
     };
     static const NamedEnum<compressibleField, 6> compressibleFieldNames_;
 
-    enum incompressibleField
+    enum class incompressibleField
     {
-        ifR,
-        ifDevReff,
-        ifNut,
-        ifNuEff
+        R,
+        devReff,
+        nut,
+        nuEff
     };
     static const NamedEnum<incompressibleField, 4> incompressibleFieldNames_;
 
@@ -141,12 +141,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Disallow default bitwise copy construct
-        turbulenceFields(const turbulenceFields&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const turbulenceFields&);
-
         //- Return true if compressible turbulence model is identified
         bool compressible();
 
@@ -155,8 +149,19 @@ protected:
         void processField
         (
             const word& fieldName,
-            const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvalue
+            const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvalue
         );
+
+
+private:
+
+    // Private member functions
+
+        //- Disallow default bitwise copy construct
+        turbulenceFields(const turbulenceFields&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const turbulenceFields&) = delete;
 
 
 public:
@@ -229,7 +234,7 @@ template<class Type>
 void CML::turbulenceFields::processField
 (
     const word& fieldName,
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvalue
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvalue
 )
 {
     typedef GeometricField<Type, fvPatchField, volMesh> FieldType;

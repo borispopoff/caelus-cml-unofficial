@@ -116,7 +116,7 @@ public:
         PatchInteractionModel(const PatchInteractionModel<CloudType>& pim);
 
         //- Construct and return a clone
-        virtual autoPtr<PatchInteractionModel<CloudType> > clone() const = 0;
+        virtual autoPtr<PatchInteractionModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -124,7 +124,7 @@ public:
 
 
     //- Selector
-    static autoPtr<PatchInteractionModel<CloudType> > New
+    static autoPtr<PatchInteractionModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -190,7 +190,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<kinematicCloudType>, 0);            \
                                                                                \
     PatchInteractionModel<kinematicCloudType>::                                \
-        adddictionaryConstructorToTable<SS<kinematicCloudType> >               \
+        adddictionaryConstructorToTable<SS<kinematicCloudType>>                \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 
@@ -337,7 +337,7 @@ void CML::PatchInteractionModel<CloudType>::info(Ostream& os)
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::PatchInteractionModel<CloudType> >
+CML::autoPtr<CML::PatchInteractionModel<CloudType>>
 CML::PatchInteractionModel<CloudType>::New
 (
     const dictionary& dict,
@@ -361,7 +361,7 @@ CML::PatchInteractionModel<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<PatchInteractionModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<PatchInteractionModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

@@ -287,9 +287,9 @@ class edgeExtractor
                 const meshSurfacePartitioner& partitioner_;
 
                 //- faces attached to points at inter-processor boundaries
-                std::map<label, DynList<DynList<labelledPoint, 6> > > faceMap_;
-                std::map<label, DynList<label> > facePatches_;
-                std::map<label, DynList<label> > faceAtProc_;
+                std::map<label, DynList<DynList<labelledPoint, 6>>> faceMap_;
+                std::map<label, DynList<label>> facePatches_;
+                std::map<label, DynList<label>> faceAtProc_;
 
             // Private member functions
                 //- create addressing at inter-processor boundaries

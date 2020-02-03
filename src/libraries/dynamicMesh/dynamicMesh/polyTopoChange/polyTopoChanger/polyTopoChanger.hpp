@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -46,6 +46,7 @@ class polyMesh;
 class mapPolyMesh;
 class polyBoundaryMesh;
 
+
 // Forward declaration of friend functions and operators
 
 class polyTopoChanger;
@@ -65,10 +66,10 @@ class polyTopoChanger
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        polyTopoChanger(const polyTopoChanger&);
+        polyTopoChanger(const polyTopoChanger&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const polyTopoChanger&);
+        void operator=(const polyTopoChanger&) = delete;
 
         void readModifiers();
 

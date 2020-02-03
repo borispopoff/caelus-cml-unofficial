@@ -106,7 +106,7 @@ public:
     // Selectors
 
     //- Return a new norm calculator
-    static autoPtr<BlockCoeffNorm<Type> > New
+    static autoPtr<BlockCoeffNorm<Type>> New
     (
         const dictionary& dict
     );
@@ -145,7 +145,7 @@ BlockCoeffNorm<Type>::BlockCoeffNorm
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-autoPtr<typename CML::BlockCoeffNorm<Type> >
+autoPtr<typename CML::BlockCoeffNorm<Type>>
 BlockCoeffNorm<Type>::New
 (
     const dictionary& dict
@@ -166,7 +166,7 @@ BlockCoeffNorm<Type>::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<BlockCoeffNorm<Type> >
+    return autoPtr<BlockCoeffNorm<Type>>
     (
         constructorIter()
         (

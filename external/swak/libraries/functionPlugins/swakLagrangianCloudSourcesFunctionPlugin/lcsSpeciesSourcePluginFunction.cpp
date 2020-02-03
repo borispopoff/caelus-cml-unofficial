@@ -123,7 +123,7 @@ void lcsSpeciesSourcePluginFunction::doEvaluation()
         )
     );
 
-    pSource->internalField()=Srho.field();
+    pSource->primitiveFieldRef()=Srho.field();
 
     result().setObjectResult(pSource);
 }

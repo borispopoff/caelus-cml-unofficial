@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014 OpenFOAM Foundation
+Copyright (C) 2014-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -100,10 +100,11 @@ CML::IOmapDistribute::IOmapDistribute
 CML::IOmapDistribute::IOmapDistribute
 (
     const IOobject& io,
-    const Xfer<mapDistribute>& map
+    mapDistribute&& map
 )
 :
-    regIOobject(io)
+    regIOobject(io),
+    mapDistribute(move(map))
 {
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
@@ -114,8 +115,6 @@ CML::IOmapDistribute::IOmapDistribute
             " but IOmapDistribute does not support automatic rereading."
             << endl;
     }
-
-    mapDistribute::transfer(map());
 
     if
     (

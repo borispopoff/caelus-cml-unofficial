@@ -146,9 +146,9 @@ public:
         ParticleErosion(const ParticleErosion<CloudType>& pe);
 
         //- Construct and return a clone
-        virtual autoPtr<CloudFunctionObject<CloudType> > clone() const
+        virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
-            return autoPtr<CloudFunctionObject<CloudType> >
+            return autoPtr<CloudFunctionObject<CloudType>>
             (
                 new ParticleErosion<CloudType>(*this)
             );
@@ -285,7 +285,7 @@ void CML::ParticleErosion<CloudType>::preEvolve()
 {
     if (QPtr_.valid())
     {
-        QPtr_->internalField() = 0.0;
+        QPtr_->primitiveFieldRef() = 0.0;
     }
     else
     {
@@ -304,7 +304,7 @@ void CML::ParticleErosion<CloudType>::preEvolve()
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimVolume, 0.0)
+                dimensionedScalar("zero", dimVolume, 0)
             )
         );
     }
@@ -345,7 +345,7 @@ void CML::ParticleErosion<CloudType>::postPatch
 
         // Get the face value to accumulate into
         const label patchFacei = pp.whichFace(p.face());
-        scalar& Q = QPtr_->boundaryField()[patchi][patchFacei];
+        scalar& Q = QPtr_->boundaryFieldRef()[patchi][patchFacei];
 
         // Finnie's model
         const scalar coeff = p.nParticle()*p.mass()*sqr(magU)/(p_*psi_*K_);

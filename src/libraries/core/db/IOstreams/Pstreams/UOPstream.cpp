@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,12 +22,9 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.hpp"
-
 #include "UOPstream.hpp"
 #include "int.hpp"
 #include "token.hpp"
-
 #include <cctype>
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -72,8 +69,8 @@ inline void CML::UOPstream::writeToBuffer
     // Extend if necessary
     sendBuf_.setSize(alignedPos + count);
 
-    register const char* dataPtr = reinterpret_cast<const char*>(data);
-    register size_t i = count;
+    const char* dataPtr = reinterpret_cast<const char*>(data);
+    size_t i = count;
     while (i--) sendBuf_[alignedPos++] = *dataPtr++;
 }
 
@@ -111,7 +108,7 @@ CML::UOPstream::UOPstream(const int toProcNo, PstreamBuffers& buffers)
     toProcNo_(toProcNo),
     sendBuf_(buffers.sendBuf_[toProcNo]),
     tag_(buffers.tag_),
-    sendAtDestruct_(buffers.commsType_ != UPstream::nonBlocking)
+    sendAtDestruct_(buffers.commsType_ != UPstream::commsTypes::nonBlocking)
 {
     setOpened();
     setGood();
@@ -172,7 +169,7 @@ CML::Ostream& CML::UOPstream::write(const char* str)
 
     if (nonWhiteChars.size() == 1)
     {
-        return write(nonWhiteChars.c_str()[1]);
+        return write(nonWhiteChars[0]);
     }
     else if (nonWhiteChars.size())
     {

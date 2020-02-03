@@ -48,6 +48,7 @@ Description
 #include "cyclicPolyPatch.hpp"
 #include "cyclicAMIPolyPatch.hpp"
 #include "cyclicACMIPolyPatch.hpp"
+#include "cyclicRepeatAMIPolyPatch.hpp"
 #include "processorPolyPatch.hpp"
 #include "symmetryPolyPatch.hpp"
 #include "wallPolyPatch.hpp"
@@ -67,6 +68,7 @@ class polyPatch;
 class cyclicPolyPatch;
 class cyclicAMIPolyPatch;
 class cyclicACMIPolyPatch;
+class cyclicRepeatAMIPolyPatch;
 class processorPolyPatch;
 class symmetryPolyPatch;
 class wallPolyPatch;
@@ -121,7 +123,7 @@ public:
 
 
         // Constructor
-        template <class TrackCloudType>
+        template<class TrackCloudType>
         trackingData(const TrackCloudType& cloud)
         {}
     };
@@ -330,13 +332,13 @@ protected:
 
         //- Overridable function to handle the particle hitting an
         //  cyclicRepeatAMIPolyPatch
-//        template<class TrackCloudType>
-//        void hitCyclicRepeatAMIPatch
-//        (
-//            TrackCloudType&,
-//            trackingData&,
-//            const vector&
-//        );
+        template<class TrackCloudType>
+        void hitCyclicRepeatAMIPatch
+        (
+            TrackCloudType&,
+            trackingData&,
+            const vector&
+        );
 
         //- Overridable function to handle the particle hitting a processorPatch
         template<class TrackCloudType>
@@ -1116,10 +1118,10 @@ void CML::particle::hitFace
             {
                 p.hitCyclicAMIPatch(cloud, ttd, direction);
             }
-//            else if (isA<cyclicRepeatAMIPolyPatch>(patch))
-//            {
-//                p.hitCyclicRepeatAMIPatch(cloud, ttd, direction);
-//            }
+            else if (isA<cyclicRepeatAMIPolyPatch>(patch))
+            {
+                p.hitCyclicRepeatAMIPatch(cloud, ttd, direction);
+            }
             else if (isA<processorPolyPatch>(patch))
             {
                 p.hitProcessorPatch(cloud, ttd);
@@ -1251,7 +1253,9 @@ void CML::particle::hitCyclicAMIPatch
         static_cast<const cyclicAMIPolyPatch&>(mesh_.boundaryMesh()[patch()]);
     const cyclicAMIPolyPatch& receiveCpp = cpp.neighbPatch();
     const label sendFacei = cpp.whichFace(facei_);
-    const label receiveFacei = cpp.pointFace(sendFacei, direction, pos);
+    const labelPair receiveIs = cpp.pointAMIAndFace(sendFacei, direction, pos);
+    const label receiveAMIi = receiveIs.first();
+    const label receiveFacei = receiveIs.second();
 
     if (receiveFacei < 0)
     {
@@ -1262,6 +1266,7 @@ void CML::particle::hitCyclicAMIPatch
             << "Particle lost across " << cyclicAMIPolyPatch::typeName
             << " patches " << cpp.name() << " and " << receiveCpp.name()
             << " at position " << pos << endl;
+        return;
     }
 
     // Set the topology
@@ -1306,6 +1311,18 @@ void CML::particle::hitCyclicAMIPatch
         );
         transformProperties(-s);
     }
+    const vectorTensorTransform& T =
+        cpp.owner()
+      ? cpp.AMITransforms()[receiveAMIi]
+      : cpp.neighbPatch().AMITransforms()[receiveAMIi];
+    if (T.hasR())
+    {
+        transformProperties(T.R());
+    }
+    else if (T.t() != vector::zero)
+    {
+        transformProperties(T.t());
+    }
 }
 
 
@@ -1334,7 +1351,7 @@ void CML::particle::hitCyclicACMIPatch
     if (!couple && !nonOverlap)
     {
         vector pos = position();
-        couple = cpp.pointFace(localFacei, direction, pos) >= 0;
+        couple = cpp.pointAMIAndFace(localFacei, direction, pos).first() >= 0;
         nonOverlap = !couple;
     }
 
@@ -1352,17 +1369,16 @@ void CML::particle::hitCyclicACMIPatch
 }
 
 
-//template<class TrackCloudType>
-//void CML::particle::hitCyclicRepeatAMIPatch
-//(
-//    TrackCloudType& cloud,
-//    trackingData& td,
-//    const vector& direction
-//)
-//{
-//
-//    hitCyclicAMIPatch(cloud, td, direction);
-//}
+template<class TrackCloudType>
+void CML::particle::hitCyclicRepeatAMIPatch
+(
+    TrackCloudType& cloud,
+    trackingData& td,
+    const vector& direction
+)
+{
+    hitCyclicAMIPatch(cloud, td, direction);
+}
 
 
 template<class TrackCloudType>

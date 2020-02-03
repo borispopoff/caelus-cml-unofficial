@@ -282,9 +282,9 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<SprayParcel<ParcelType> > operator()(Istream& is) const
+            autoPtr<SprayParcel<ParcelType>> operator()(Istream& is) const
             {
-                return autoPtr<SprayParcel<ParcelType> >
+                return autoPtr<SprayParcel<ParcelType>>
                 (
                     new SprayParcel<ParcelType>(mesh_, is, true)
                 );
@@ -1487,7 +1487,7 @@ void CML::SprayParcel<ParcelType>::readFields
     c.checkFieldIOobject(c, user);
 
     label i = 0;
-    forAllIter(typename Cloud<SprayParcel<ParcelType> >, c, iter)
+    forAllIter(typename Cloud<SprayParcel<ParcelType>>, c, iter)
     {
         SprayParcel<ParcelType>& p = iter();
         p.d0_ = d0[i];
@@ -1555,7 +1555,7 @@ void CML::SprayParcel<ParcelType>::writeFields
     IOField<scalar> user(c.fieldIOobject("user", IOobject::NO_READ), np);
 
     label i = 0;
-    forAllConstIter(typename Cloud<SprayParcel<ParcelType> >, c, iter)
+    forAllConstIter(typename Cloud<SprayParcel<ParcelType>>, c, iter)
     {
         const SprayParcel<ParcelType>& p = iter();
         d0[i] = p.d0_;

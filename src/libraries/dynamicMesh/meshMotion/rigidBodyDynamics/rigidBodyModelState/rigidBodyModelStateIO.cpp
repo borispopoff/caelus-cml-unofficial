@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -35,10 +35,10 @@ void CML::RBD::rigidBodyModelState::write(dictionary& dict) const
 
 void CML::RBD::rigidBodyModelState::write(Ostream& os) const
 {
-    os.writeKeyword("q") << q_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qDot") << qDot_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qDdot") << qDdot_ << token::END_STATEMENT << nl;
-    os.writeKeyword("deltaT") << deltaT_ << token::END_STATEMENT << nl;
+    writeEntry(os, "q", q_);
+    writeEntry(os, "qDot", qDot_);
+    writeEntry(os, "qDdot", qDdot_);
+    writeEntry(os, "deltaT", deltaT_);
 }
 
 

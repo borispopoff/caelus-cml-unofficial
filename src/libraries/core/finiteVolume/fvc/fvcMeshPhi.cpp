@@ -35,7 +35,7 @@ CML::tmp<CML::surfaceScalarField> CML::fvc::meshPhi
     (
         vf.mesh(),
         vf.mesh().ddtScheme("ddt(" + vf.name() + ')')
-    )().meshPhi(vf);
+    ).ref().meshPhi(vf);
 }
 
 
@@ -49,7 +49,7 @@ CML::tmp<CML::surfaceScalarField> CML::fvc::meshPhi
     (
         vf.mesh(),
         vf.mesh().ddtScheme("ddt(" + rho.name() + ',' + vf.name() + ')')
-    )().meshPhi(vf);
+    ).ref().meshPhi(vf);
 }
 
 
@@ -63,7 +63,7 @@ CML::tmp<CML::surfaceScalarField> CML::fvc::meshPhi
     (
         vf.mesh(),
         vf.mesh().ddtScheme("ddt(" + rho.name() + ',' + vf.name() + ')')
-    )().meshPhi(vf);
+    ).ref().meshPhi(vf);
 }
 
 

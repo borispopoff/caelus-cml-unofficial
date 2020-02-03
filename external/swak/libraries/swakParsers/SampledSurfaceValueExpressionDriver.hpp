@@ -62,7 +62,7 @@ class SampledSurfaceValueExpressionDriver
     // Private Member Functions
 
     template<class Type,class volField,class surfField>
-    tmp<Field<Type> >
+    tmp<Field<Type>>
     sampleOrInterpolateInternal(const word &name,bool oldTime);
 
     static void setDebug();
@@ -147,27 +147,27 @@ public:
     virtual tmp<vectorField> makeFaceAreaField() const;
 
 //     template<class Type>
-//     tmp<Field<Type> > getField(const string &name);
+//     tmp<Field<Type>> getField(const string &name);
 
     virtual bool isCell() { return false; }
 
-    virtual tmp<Field<scalar> > getScalarField(
+    virtual tmp<Field<scalar>> getScalarField(
         const word &name,bool oldTime=false
     );
 
-    virtual tmp<Field<vector> > getVectorField(
+    virtual tmp<Field<vector>> getVectorField(
         const word &name,bool oldTime=false
     );
 
-    virtual tmp<Field<tensor> > getTensorField(
+    virtual tmp<Field<tensor>> getTensorField(
         const word &name,bool oldTime=false
     );
 
-    virtual tmp<Field<symmTensor> > getSymmTensorField(
+    virtual tmp<Field<symmTensor>> getSymmTensorField(
         const word &name,bool oldTime=false
     );
 
-    virtual tmp<Field<sphericalTensor> > getSphericalTensorField(
+    virtual tmp<Field<sphericalTensor>> getSphericalTensorField(
         const word &name,bool oldTime=false
     );
 
@@ -181,10 +181,10 @@ public:
     inline virtual const fvMesh &mesh() const;
 
 //     template<class Type>
-//     virtual tmp<Field<Type> > toFace(const Field<Type> &)=0;
+//     virtual tmp<Field<Type>> toFace(const Field<Type> &)=0;
 
 //     template<class Type>
-//     virtual tmp<Field<Type> > toPoint(const Field<Type> &)=0;
+//     virtual tmp<Field<Type>> toPoint(const Field<Type> &)=0;
 
     //- return a new plugin-function
     virtual autoPtr<CommonPluginFunction> newPluginFunction(

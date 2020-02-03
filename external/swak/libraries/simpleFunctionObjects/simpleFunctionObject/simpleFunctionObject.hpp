@@ -66,7 +66,7 @@ public:
     enum outputControlModeType {
         ocmTimestep,
         ocmDeltaT,
-        ocmOutputTime,
+        ocmWriteTime,
         ocmStartup
     };
 private:
@@ -128,7 +128,7 @@ protected:
     bool writeDebug() const { return writeDebug_; }
 
     //- Do output this time?
-    virtual bool outputTime(const bool forceWrite);
+    virtual bool writeTime(const bool forceWrite);
 
 public:
 

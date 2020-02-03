@@ -80,9 +80,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new symmetryPointPatchField<Type>
                 (
@@ -99,12 +99,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new symmetryPointPatchField<Type>
                 (
@@ -130,17 +130,11 @@ public:
 
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-symmetryPointPatchField<Type>::symmetryPointPatchField
+CML::symmetryPointPatchField<Type>::symmetryPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -151,7 +145,7 @@ symmetryPointPatchField<Type>::symmetryPointPatchField
 
 
 template<class Type>
-symmetryPointPatchField<Type>::symmetryPointPatchField
+CML::symmetryPointPatchField<Type>::symmetryPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -171,7 +165,7 @@ symmetryPointPatchField<Type>::symmetryPointPatchField
 
 
 template<class Type>
-symmetryPointPatchField<Type>::symmetryPointPatchField
+CML::symmetryPointPatchField<Type>::symmetryPointPatchField
 (
     const symmetryPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -194,7 +188,7 @@ symmetryPointPatchField<Type>::symmetryPointPatchField
 
 
 template<class Type>
-symmetryPointPatchField<Type>::symmetryPointPatchField
+CML::symmetryPointPatchField<Type>::symmetryPointPatchField
 (
     const symmetryPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -204,12 +198,4 @@ symmetryPointPatchField<Type>::symmetryPointPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

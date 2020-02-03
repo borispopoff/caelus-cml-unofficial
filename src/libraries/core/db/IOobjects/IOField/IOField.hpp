@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,6 +55,9 @@ public:
 
     // Constructors
 
+        //- Default copy construct
+        IOField(const IOField&) = default;
+
         //- Construct from IOobject
         IOField(const IOobject&);
 
@@ -64,8 +67,14 @@ public:
         //- Construct from components
         IOField(const IOobject&, const Field<Type>&);
 
-        //- Construct by transferring the Field contents
-        IOField(const IOobject&, const Xfer<Field<Type> >&);
+        //- Move construct by transferring the Field contents
+        IOField(const IOobject&, Field<Type>&&);
+
+        //- Move construct by transferring the Field contents
+        IOField(const IOobject&, const tmp<Field<Type>>&);
+
+        //- Move constructor
+        IOField(IOField<Type>&&);
 
 
     //- Destructor
@@ -80,8 +89,11 @@ public:
     // Member operators
 
         void operator=(const IOField<Type>&);
+        void operator=(IOField<Type>&&);
 
         void operator=(const Field<Type>&);
+        void operator=(Field<Type>&&);
+        void operator=(const tmp<Field<Type>>&);
 };
 
 
@@ -160,7 +172,8 @@ CML::IOField<Type>::IOField(const IOobject& io, const label size)
 template<class Type>
 CML::IOField<Type>::IOField(const IOobject& io, const Field<Type>& f)
 :
-    regIOobject(io)
+    regIOobject(io),
+    Field<Type>(f)
 {
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
@@ -184,17 +197,45 @@ CML::IOField<Type>::IOField(const IOobject& io, const Field<Type>& f)
         readStream(typeName) >> *this;
         close();
     }
-    else
+}
+
+
+template<class Type>
+CML::IOField<Type>::IOField(const IOobject& io, Field<Type>&& f)
+:
+    regIOobject(io),
+    Field<Type>(move(f))
+{
+    // Temporary warning
+    if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
     {
-        Field<Type>::operator=(f);
+        WarningInFunction
+            << "IOField " << name()
+            << " constructed with IOobject::MUST_READ_IF_MODIFIED"
+            " but IOField does not support automatic rereading."
+            << endl;
+    }
+
+    if
+    (
+        (
+            io.readOpt() == IOobject::MUST_READ
+         || io.readOpt() == IOobject::MUST_READ_IF_MODIFIED
+        )
+     || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
+    )
+    {
+        readStream(typeName) >> *this;
+        close();
     }
 }
 
 
 template<class Type>
-CML::IOField<Type>::IOField(const IOobject& io, const Xfer<Field<Type> >& f)
+CML::IOField<Type>::IOField(const IOobject& io, const tmp<Field<Type>>& f)
 :
-    regIOobject(io)
+    regIOobject(io),
+    Field<Type>(f)
 {
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
@@ -205,8 +246,6 @@ CML::IOField<Type>::IOField(const IOobject& io, const Xfer<Field<Type> >& f)
             " but IOField does not support automatic rereading."
             << endl;
     }
-
-    Field<Type>::transfer(f());
 
     if
     (
@@ -221,6 +260,14 @@ CML::IOField<Type>::IOField(const IOobject& io, const Xfer<Field<Type> >& f)
         close();
     }
 }
+
+
+template<class Type>
+CML::IOField<Type>::IOField(IOField<Type>&& f)
+:
+    regIOobject(move(f)),
+    Field<Type>(move(f))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -248,12 +295,31 @@ void CML::IOField<Type>::operator=(const IOField<Type>& rhs)
 
 
 template<class Type>
+void CML::IOField<Type>::operator=(IOField<Type>&& rhs)
+{
+    Field<Type>::operator=(move(rhs));
+}
+
+
+template<class Type>
 void CML::IOField<Type>::operator=(const Field<Type>& rhs)
 {
     Field<Type>::operator=(rhs);
 }
 
 
+template<class Type>
+void CML::IOField<Type>::operator=(Field<Type>&& rhs)
+{
+    Field<Type>::operator=(move(rhs));
+}
+
+
+template<class Type>
+void CML::IOField<Type>::operator=(const tmp<Field<Type>>& rhs)
+{
+    Field<Type>::operator=(rhs);
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
