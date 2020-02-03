@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,10 +68,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        dimFieldDecomposer(const dimFieldDecomposer&);
+        dimFieldDecomposer(const dimFieldDecomposer&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const dimFieldDecomposer&);
+        void operator=(const dimFieldDecomposer&) = delete;
 
 
 public:
@@ -96,7 +96,7 @@ public:
 
         //- Decompose field
         template<class Type>
-        tmp<DimensionedField<Type, volMesh> > decomposeField
+        tmp<DimensionedField<Type, volMesh>> decomposeField
         (
             const DimensionedField<Type, volMesh>& field
         ) const;
@@ -116,7 +116,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::DimensionedField<Type, CML::volMesh> >
+CML::tmp<CML::DimensionedField<Type, CML::volMesh>>
 CML::dimFieldDecomposer::decomposeField
 (
     const DimensionedField<Type, volMesh>& field
@@ -126,7 +126,7 @@ CML::dimFieldDecomposer::decomposeField
     Field<Type> mappedField(field, cellAddressing_);
 
     // Create the field for the processor
-    return tmp<DimensionedField<Type, volMesh> >
+    return tmp<DimensionedField<Type, volMesh>>
     (
         new DimensionedField<Type, volMesh>
         (
@@ -153,9 +153,9 @@ void CML::dimFieldDecomposer::decomposeFields
     const PtrList<GeoField>& fields
 ) const
 {
-    forAll(fields, fieldI)
+    forAll(fields, fieldi)
     {
-        decomposeField(fields[fieldI])().write();
+        decomposeField(fields[fieldi])().write();
     }
 }
 

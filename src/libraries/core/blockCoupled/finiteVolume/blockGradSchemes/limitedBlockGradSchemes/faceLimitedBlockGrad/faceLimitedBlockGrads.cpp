@@ -65,7 +65,7 @@ inline void faceLimitedBlockGrad<Type>::limitFace
 
 
 template<>
-tmp<BlockLduSystem<vector, vector> > faceLimitedBlockGrad<scalar>::fvmGrad
+tmp<BlockLduSystem<vector, vector>> faceLimitedBlockGrad<scalar>::fvmGrad
 (
     const volScalarField& vsf
 ) const
@@ -74,7 +74,7 @@ tmp<BlockLduSystem<vector, vector> > faceLimitedBlockGrad<scalar>::fvmGrad
     // grad use almost the same procedure to calculate limiter. VV, 9/June/2014
     const fvMesh& mesh = vsf.mesh();
 
-    tmp<BlockLduSystem<vector, vector> > tbs =
+    tmp<BlockLduSystem<vector, vector>> tbs =
         basicBlockGradScheme_().fvmGrad(vsf);
 
     if (k_ < SMALL)
@@ -82,7 +82,7 @@ tmp<BlockLduSystem<vector, vector> > faceLimitedBlockGrad<scalar>::fvmGrad
         return tbs;
     }
 
-    BlockLduSystem<vector, vector>& bs = tbs();
+    BlockLduSystem<vector, vector>& bs = tbs.ref();
 
     // Calculate current gradient for explicit limiting
     // Using cached gradient?  Check.  HJ, 4/Jun/2016
@@ -110,7 +110,7 @@ tmp<BlockLduSystem<vector, vector> > faceLimitedBlockGrad<scalar>::fvmGrad
         dimensionedScalar("one", dimless, 1),
         "zeroGradient"
     );
-    scalarField& lfIn = limitField.internalField();
+    scalarField& lfIn = limitField.primitiveFieldRef();
 
     scalar rk = (1.0/k_ - 1.0);
 
@@ -147,7 +147,7 @@ tmp<BlockLduSystem<vector, vector> > faceLimitedBlockGrad<scalar>::fvmGrad
         );
     }
 
-    const volScalarField::GeometricBoundaryField& bsf = vsf.boundaryField();
+    const volScalarField::Boundary& bsf = vsf.boundaryField();
 
     forAll(bsf, patchi)
     {
@@ -222,26 +222,26 @@ tmp<BlockLduSystem<vector, vector> > faceLimitedBlockGrad<scalar>::fvmGrad
     CoeffField<vector>::linearTypeField& l = bs.lower().asLinear();
 
     // Limit upper and lower coeffs
-    forAll(u, faceI)
+    forAll(u, facei)
     {
-        label own = owner[faceI];
-        label nei = neighbour[faceI];
+        label own = owner[facei];
+        label nei = neighbour[facei];
 
-        u[faceI] *= lfIn[own];
-        l[faceI] *= lfIn[nei];
+        u[facei] *= lfIn[own];
+        l[facei] *= lfIn[nei];
     }
 
     // Limit diag and source coeffs
-    forAll(d, cellI)
+    forAll(d, celli)
     {
-        d[cellI] *= lfIn[cellI];
-        source[cellI] *= lfIn[cellI];
+        d[celli] *= lfIn[celli];
+        source[celli] *= lfIn[celli];
     }
 
     // Limit coupling coeffs
-    forAll(vsf.boundaryField(), patchI)
+    forAll(vsf.boundaryField(), patchi)
     {
-        const fvPatchScalarField& pf = vsf.boundaryField()[patchI];
+        const fvPatchScalarField& pf = vsf.boundaryField()[patchi];
         const fvPatch& patch = pf.patch();
 
         const labelList& fc = patch.faceCells();
@@ -249,17 +249,17 @@ tmp<BlockLduSystem<vector, vector> > faceLimitedBlockGrad<scalar>::fvmGrad
         if (patch.coupled())
         {
             CoeffField<vector>::linearTypeField& pcoupleUpper =
-                bs.coupleUpper()[patchI].asLinear();
+                bs.coupleUpper()[patchi].asLinear();
             CoeffField<vector>::linearTypeField& pcoupleLower =
-                bs.coupleLower()[patchI].asLinear();
+                bs.coupleLower()[patchi].asLinear();
 
             const scalarField lfNei(
-                limitField.boundaryField()[patchI].patchNeighbourField());
+                limitField.boundaryField()[patchi].patchNeighbourField());
 
-            forAll(pf, faceI)
+            forAll(pf, facei)
             {
-                pcoupleUpper[faceI] *= lfIn[fc[faceI]];
-                pcoupleLower[faceI] *= lfNei[faceI];
+                pcoupleUpper[facei] *= lfIn[fc[facei]];
+                pcoupleLower[facei] *= lfNei[facei];
             }
         }
     }
@@ -285,7 +285,7 @@ faceLimitedBlockGrad<vector>::fvmGrad
 
     typedef outerProduct<vector, vector>::type GradType;
 
-    tmp<BlockLduSystem<vector, GradType> > tbs
+    tmp<BlockLduSystem<vector, GradType>> tbs
     (
         new BlockLduSystem<vector, GradType>(vsf.mesh())
     );

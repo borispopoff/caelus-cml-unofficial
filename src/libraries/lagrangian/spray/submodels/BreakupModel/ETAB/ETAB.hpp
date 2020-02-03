@@ -88,9 +88,9 @@ public:
         ETAB(const ETAB<CloudType>& bum);
 
         //- Construct and return a clone
-        virtual autoPtr<BreakupModel<CloudType> > clone() const
+        virtual autoPtr<BreakupModel<CloudType>> clone() const
         {
-            return autoPtr<BreakupModel<CloudType> >
+            return autoPtr<BreakupModel<CloudType>>
             (
                 new ETAB<CloudType>(*this)
             );

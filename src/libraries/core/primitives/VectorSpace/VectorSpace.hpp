@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -48,6 +48,9 @@ namespace CML
 // Forward declaration of friend functions and operators
 
 template<class Form, class Cmpt, direction Ncmpts> class VectorSpace;
+
+template<class Form, class Cmpt, direction Ncmpts>
+void writeEntry(Ostream& os, const VectorSpace<Form, Cmpt, Ncmpts>& value);
 
 template<class Form, class Cmpt, direction Ncmpts>
 Istream& operator>>
@@ -223,7 +226,7 @@ word name(const VectorSpace<Form, Cmpt, Ncmpts>&);
 #include "products.hpp"
 #include "VectorSpaceM.hpp"
 #include "ops.hpp"
-#include "StaticAssert.hpp"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -265,7 +268,11 @@ VectorSpace<Form, Cmpt, Ncmpts>::ConstBlock<SubVector, BStart>::ConstBlock
 :
     vs_(vs)
 {
-    StaticAssert(vsType::nComponents >= BStart + nComponents);
+    static_assert
+    (
+        vsType::nComponents >= BStart + nComponents,
+        "Requested block size > VectorSpace size"
+    );
 }
 
 
@@ -1062,6 +1069,15 @@ CML::word CML::name
     buf << ')';
 
     return buf.str();
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class Form, class Cmpt, CML::direction Ncmpts>
+void CML::writeEntry(Ostream& os, const VectorSpace<Form, Cmpt, Ncmpts>& value)
+{
+    os << value;
 }
 
 

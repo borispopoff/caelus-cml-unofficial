@@ -91,10 +91,10 @@ public:
             faceFlux, phiP, phiN, gradcP, gradcN, d
         );
 
-        return (r >= k_) ? scalar(1.0) : max
+        return (r >= k_) ? scalar(1) : max
         (
             0,
-            CML::sin(scalar(1.0)/(k_+VSMALL)*constant::mathematical::pi/2.0*r)
+            CML::sin(scalar(1)/(k_+VSMALL)*constant::mathematical::pi/2.0*r)
         );
     }
 };

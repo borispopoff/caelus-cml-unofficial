@@ -349,9 +349,9 @@ CML::Ostream& CML::OBJstream::write
     }
     else
     {
-        forAll(localFaces, faceI)
+        forAll(localFaces, facei)
         {
-            const face& f = localFaces[faceI];
+            const face& f = localFaces[facei];
             write('f');
             forAll(f, i)
             {

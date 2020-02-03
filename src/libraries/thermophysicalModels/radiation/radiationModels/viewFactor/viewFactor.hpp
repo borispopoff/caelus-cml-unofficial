@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,62 +63,65 @@ class viewFactor
 :
     public radiationModel
 {
+    // Private data
 
-    //- Agglomeration List
-    labelListIOList finalAgglom_;
+        //- Agglomeration List
+        labelListIOList finalAgglom_;
 
-    //- Map distributed
-    autoPtr<mapDistribute> map_;
+        //- Map distributed
+        autoPtr<mapDistribute> map_;
 
-    //- Coarse mesh
-    singleCellFvMesh coarseMesh_;
+        //- Coarse mesh
+        singleCellFvMesh coarseMesh_;
 
-    //- Net radiative heat flux [W/m2]
-    volScalarField qr_;
+        //- Net radiative heat flux [W/m2]
+        volScalarField qr_;
 
-    //- View factor matrix
-    autoPtr<scalarSquareMatrix> Fmatrix_;
+        //- View factor matrix
+        autoPtr<scalarSquareMatrix> Fmatrix_;
 
-    //- Inverse of C matrix
-    autoPtr<scalarSquareMatrix> CLU_;
+        //- Inverse of C matrix
+        autoPtr<scalarSquareMatrix> CLU_;
 
-    //- Selected patches
-    labelList selectedPatches_;
+        //- Selected patches
+        labelList selectedPatches_;
 
-    //- Total global coarse faces
-    label totalNCoarseFaces_;
+        //- Total global coarse faces
+        label totalNCoarseFaces_;
 
-    //- Total local coarse faces
-    label nLocalCoarseFaces_;
+        //- Total local coarse faces
+        label nLocalCoarseFaces_;
 
-    //- Constant emissivity
-    bool constEmissivity_;
+        //- Constant emissivity
+        bool constEmissivity_;
 
-    //- Iterations Counter
-    label iterCounter_;
+        //- Iterations Counter
+        label iterCounter_;
 
-    //- Pivot Indices for LU decomposition
-    labelList pivotIndices_;
+        //- Pivot Indices for LU decomposition
+        labelList pivotIndices_;
 
 
-    //- Initialise
-    void initialise();
+    // Private Member Functions
 
-    //- Insert view factors into main matrix
-    void insertMatrixElements
-    (
-        const globalIndex& index,
-        const label fromProci,
-        const labelListList& globalFaceFaces,
-        const scalarListList& viewFactors,
-        scalarSquareMatrix& matrix
-    );
+        //- Initialise
+        void initialise();
 
-    //- Disallow default bitwise copy construct
-    viewFactor(const viewFactor&);
+        //- Insert view factors into main matrix
+        void insertMatrixElements
+        (
+            const globalIndex& index,
+            const label fromProci,
+            const labelListList& globalFaceFaces,
+            const scalarListList& viewFactors,
+            scalarSquareMatrix& matrix
+        );
 
-    //- Disallow default bitwise assignment
-    void operator=(const viewFactor&);
+        //- Disallow default bitwise copy construct
+        viewFactor(const viewFactor&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const viewFactor&) = delete;
 
 
 public:
@@ -153,7 +156,7 @@ public:
     virtual tmp<volScalarField> Rp() const;
 
     //- Source term component (constant)
-    virtual tmp<DimensionedField<scalar, volMesh> > Ru() const;
+    virtual tmp<volScalarField::Internal> Ru() const;
 
 
     // Access

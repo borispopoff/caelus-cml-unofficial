@@ -52,11 +52,11 @@ void CML::boxToFace::combine(topoSet& set, const bool add) const
 {
     const pointField& ctrs = mesh_.faceCentres();
 
-    forAll(ctrs, faceI)
+    forAll(ctrs, facei)
     {
-        if (bb_.contains(ctrs[faceI]))
+        if (bb_.contains(ctrs[facei]))
         {
-            addOrDelete(set, faceI, add);
+            addOrDelete(set, facei, add);
         }
     }
 }

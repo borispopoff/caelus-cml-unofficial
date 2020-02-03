@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -46,22 +46,13 @@ namespace CML
 class cyclicGAMGInterface
 :
     public GAMGInterface,
-    virtual public cyclicLduInterface
+    public cyclicLduInterface
 {
     // Private data
 
         //- Reference tor the cyclicLduInterface from which this is
         //  agglomerated
         const cyclicLduInterface& fineCyclicInterface_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cyclicGAMGInterface(const cyclicGAMGInterface&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cyclicGAMGInterface&);
 
 
 public:
@@ -82,6 +73,9 @@ public:
             const labelField& restrictAddressing,
             const labelField& neighbourRestrictAddressing
         );
+
+        //- Disallow default bitwise copy construct
+        cyclicGAMGInterface(const cyclicGAMGInterface&) = delete;
 
 
     //- Destructor
@@ -132,6 +126,12 @@ public:
             {
                 return fineCyclicInterface_.reverseT();
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cyclicGAMGInterface&) = delete;
 };
 
 

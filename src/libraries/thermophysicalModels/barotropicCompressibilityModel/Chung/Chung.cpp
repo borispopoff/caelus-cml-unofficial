@@ -48,6 +48,12 @@ CML::compressibilityModels::Chung::Chung
 )
 :
     barotropicCompressibilityModel(compressibilityProperties, gamma, psiName),
+    pSat_
+    (
+        "pSat",
+        dimPressure,
+        compressibilityProperties_.lookup("pSat")
+    ),
     psiv_
     (
         "psiv",
@@ -59,12 +65,6 @@ CML::compressibilityModels::Chung::Chung
         "psil",
         dimCompressibility,
         compressibilityProperties_.lookup("psil")
-    ),
-    rhovSat_
-    (
-        "rhovSat",
-        dimDensity,
-        compressibilityProperties_.lookup("rhovSat")
     ),
     rholSat_
     (
@@ -85,8 +85,8 @@ void CML::compressibilityModels::Chung::correct()
     (
         sqrt
         (
-            (rhovSat_/psiv_)
-           /((scalar(1) - gamma_)*rhovSat_/psiv_ + gamma_*rholSat_/psil_)
+            pSat_
+           /((scalar(1) - gamma_)*pSat_ + gamma_*rholSat_/psil_)
         )
     );
 
@@ -105,9 +105,9 @@ bool CML::compressibilityModels::Chung::read
 {
     barotropicCompressibilityModel::read(compressibilityProperties);
 
+    compressibilityProperties_.lookup("pSat") >> pSat_;
     compressibilityProperties_.lookup("psiv") >> psiv_;
     compressibilityProperties_.lookup("psil") >> psil_;
-    compressibilityProperties_.lookup("rhovSat") >> rhovSat_;
     compressibilityProperties_.lookup("rholSat") >> rholSat_;
 
     return true;

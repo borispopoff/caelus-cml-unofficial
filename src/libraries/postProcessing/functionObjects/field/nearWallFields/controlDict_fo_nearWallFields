@@ -52,8 +52,8 @@ functions
         type nearWallFields;
 
         // Output every
-        outputControl outputTime; //timeStep;
-        //outputInterval 5;
+        writeControl writeTime; //timeStep;
+        //writeInterval 5;
 
         // Fields to be sampled. Per field original name and mapped field to
         // create.

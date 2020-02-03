@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,13 +66,11 @@ pressureDirectedInletVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchVectorField(p, iF),
+    fixedValueFvPatchVectorField(p, iF, dict),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     inletDir_("inletDirection", dict, p.size())
-{
-    fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
-}
+{}
 
 
 CML::pressureDirectedInletVelocityFvPatchVectorField::
@@ -161,8 +159,8 @@ void CML::pressureDirectedInletVelocityFvPatchVectorField::updateCoeffs()
         FatalErrorInFunction
             << "dimensions of phi are not correct"
             << "\n    on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalError);
     }
 
@@ -178,8 +176,8 @@ void CML::pressureDirectedInletVelocityFvPatchVectorField::write
     fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    inletDir_.writeEntry("inletDirection", os);
-    writeEntry("value", os);
+    writeEntry(os, "inletDirection", inletDir_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
     label nTracks = nParticle/sampleFrequency;
 
     // Storage for all particle tracks
-    List<DynamicList<vector> > allTracks(nTracks);
+    List<DynamicList<vector>> allTracks(nTracks);
 
     Info<< "\nGenerating " << nTracks << " particle tracks for cloud "
         << cloudName << nl << endl;
@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
             tracks[trackI].transfer(allTracks[trackI]);
         }
 
-        autoPtr<writer<scalar> > scalarFormatterPtr = writer<scalar>::New
+        autoPtr<writer<scalar>> scalarFormatterPtr = writer<scalar>::New
         (
             setFormat
         );

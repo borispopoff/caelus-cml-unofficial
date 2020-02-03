@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -233,7 +233,7 @@ bool CML::regIOobject::read()
             // not currently supported
             IPstream fromAbove
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 myComm.above(),
                 0,
                 Pstream::msgType(),
@@ -248,7 +248,7 @@ bool CML::regIOobject::read()
         {
             OPstream toBelow
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 myComm.below()[belowI],
                 0,
                 Pstream::msgType(),

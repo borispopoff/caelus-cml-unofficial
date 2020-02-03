@@ -70,7 +70,7 @@ private:
     // Private Member Functions
         void resizeFields
         (
-            List<std::pair<scalar, label> >&,
+            List<std::pair<scalar, label>>&,
             vectorField&,
             vectorField&,
             label
@@ -78,7 +78,7 @@ private:
 
         void writeRawData
         (
-            const List<std::pair<scalar, label> >&,
+            const List<std::pair<scalar, label>>&,
             const vectorField&,
             const vectorField&
         );
@@ -115,7 +115,7 @@ public:
 
         void readForceAndMomentData
         (
-            List<std::pair<scalar, label> >&,
+            List<std::pair<scalar, label>>&,
             vectorField&,
             vectorField&
         );

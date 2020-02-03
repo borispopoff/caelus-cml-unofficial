@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -79,7 +79,7 @@ class removeRegisteredObject
 {
 protected:
 
-    // Private data
+    // Protected data
 
         //- Name of this set of removeRegisteredObject
         word name_;
@@ -92,14 +92,16 @@ protected:
             wordList objectNames_;
 
 
+private:
+
     // Private Member Functions
 
 
         //- Disallow default bitwise copy construct
-        removeRegisteredObject(const removeRegisteredObject&);
+        removeRegisteredObject(const removeRegisteredObject&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const removeRegisteredObject&);
+        void operator=(const removeRegisteredObject&) = delete;
 
 
 public:

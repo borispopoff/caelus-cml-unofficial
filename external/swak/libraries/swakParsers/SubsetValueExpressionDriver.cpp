@@ -98,7 +98,7 @@ tmp<scalarField> SubsetValueExpressionDriver::makeIdField()
         new scalarField(this->size())
     );
     forAll(ids(),i) {
-        ids()[i]=i;
+        ids.ref()[i]=i;
     }
     return ids;
 }

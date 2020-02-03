@@ -87,9 +87,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type> > clone() const
+        virtual tmp<fvsPatchField<Type>> clone() const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new fixedValueFvsPatchField<Type>(*this)
             );
@@ -103,12 +103,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type> > clone
+        virtual tmp<fvsPatchField<Type>> clone
         (
             const DimensionedField<Type, surfaceMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new fixedValueFvsPatchField<Type>(*this, iF)
             );
@@ -132,25 +132,25 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const;
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
     // Member operators
@@ -177,19 +177,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+CML::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -200,7 +194,7 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+CML::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fixedValueFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -213,7 +207,7 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+CML::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -225,7 +219,7 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+CML::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fixedValueFvsPatchField<Type>& ptf
 )
@@ -235,7 +229,7 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 
 
 template<class Type>
-fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+CML::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 (
     const fixedValueFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -248,20 +242,22 @@ fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::valueInternalCoeffs
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvsPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
 {
-    return tmp<Field<Type> >
+    return tmp<Field<Type>>
     (
-        new Field<Type>(this->size(), pTraits<Type>::zero)
+        new Field<Type>(this->size(), Zero)
     );
 }
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::valueBoundaryCoeffs
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvsPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -271,24 +267,19 @@ tmp<Field<Type> > fixedValueFvsPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvsPatchField<Type>::gradientInternalCoeffs() const
 {
     return -pTraits<Type>::one*this->patch().deltaCoeffs();
 }
 
 
 template<class Type>
-tmp<Field<Type> > fixedValueFvsPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::fixedValueFvsPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return this->patch().deltaCoeffs()*(*this);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

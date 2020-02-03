@@ -94,7 +94,7 @@ public:
         inline scalar& searchRangeAccess();
 
         //- return the range of leaves at each processor
-        inline List<Pair<meshOctreeCubeCoordinates> >& neiRangeAccess();
+        inline List<Pair<meshOctreeCubeCoordinates>>& neiRangeAccess();
 
         //- return initial cube
         inline meshOctreeCube& initialCubeAccess();
@@ -226,7 +226,7 @@ inline scalar& meshOctreeModifier::searchRangeAccess()
     return octree_.searchRange_;
 }
 
-inline List<Pair<meshOctreeCubeCoordinates> >&
+inline List<Pair<meshOctreeCubeCoordinates>>&
 meshOctreeModifier::neiRangeAccess()
 {
     return octree_.neiRange_;

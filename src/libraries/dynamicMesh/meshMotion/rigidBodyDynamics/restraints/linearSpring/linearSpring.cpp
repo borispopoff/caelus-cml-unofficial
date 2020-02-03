@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -130,20 +130,15 @@ void CML::RBD::restraints::linearSpring::write
 {
     restraint::write(os);
 
-    os.writeKeyword("anchor")
-        << anchor_ << token::END_STATEMENT << nl;
+    writeEntry(os, "anchor", anchor_);
 
-    os.writeKeyword("refAttachmentPt")
-        << refAttachmentPt_ << token::END_STATEMENT << nl;
+    writeEntry(os, "refAttachmentPt", refAttachmentPt_);
 
-    os.writeKeyword("stiffness")
-        << stiffness_ << token::END_STATEMENT << nl;
+    writeEntry(os, "stiffness", stiffness_);
 
-    os.writeKeyword("damping")
-        << damping_ << token::END_STATEMENT << nl;
+    writeEntry(os, "damping", damping_);
 
-    os.writeKeyword("restLength")
-        << restLength_ << token::END_STATEMENT << nl;
+    writeEntry(os, "restLength", restLength_);
 }
 
 

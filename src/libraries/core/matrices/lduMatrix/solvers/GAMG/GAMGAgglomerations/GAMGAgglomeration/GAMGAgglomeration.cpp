@@ -48,13 +48,20 @@ void CML::GAMGAgglomeration::compactLevels(const label nCreatedLevels)
 
 bool CML::GAMGAgglomeration::continueAgglomerating
 (
+    const label nFineCells,
     const label nCoarseCells
 ) const
 {
-    // Check the need for further agglomeration on all processors
-    bool contAgg = nCoarseCells >= nCellsInCoarsestLevel_;
-    reduce(contAgg, andOp<bool>());
-    return contAgg;
+    const label nTotalCoarseCells = returnReduce(nCoarseCells, sumOp<label>());
+    if (nTotalCoarseCells < Pstream::nProcs()*nCellsInCoarsestLevel_)
+    {
+        return false;
+    }
+    else
+    {
+        const label nTotalFineCells = returnReduce(nFineCells, sumOp<label>());
+        return nTotalCoarseCells < nTotalFineCells;
+    }
 }
 
 

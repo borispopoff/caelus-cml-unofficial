@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,6 +68,7 @@ class faceZone
         //- The name associated with the zone-labels dictionary entry
         static const word labelsName_;
 
+
 protected:
 
     // Protected data
@@ -95,13 +96,7 @@ protected:
             mutable labelList* mePtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        faceZone(const faceZone&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceZone&);
+    // Protected Member Functions
 
         //- Build primitive patch
         void calcFaceZonePatch() const;
@@ -157,14 +152,14 @@ public:
             const faceZoneMesh& zm
         );
 
-        //- Construct from components, transferring contents
+        //- Construct from components, moving contents
         faceZone
         (
             const word& name,
-            const Xfer<labelList>& addr,
-            const Xfer<boolList>& fm,
-            const label index,
-            const faceZoneMesh&
+            labelList&& addr,
+            boolList&& fm,
+            const faceZoneMesh& zm,
+            const label index
         );
 
         //- Construct from dictionary
@@ -187,16 +182,19 @@ public:
             const faceZoneMesh&
         );
 
-        //- Construct given the original zone, resetting the
-        //  face list and zone mesh information
+        //- Construct from components, transferring addressing
         faceZone
         (
             const faceZone&,
-            const Xfer<labelList>& addr,
-            const Xfer<boolList>& fm,
+            labelList&& addr,
+            boolList&& fm,
             const label index,
             const faceZoneMesh&
         );
+
+        //- Disallow default bitwise copy construct
+        faceZone(const faceZone&) = delete;
+
 
         //- Construct and return a clone, resetting the zone mesh
         virtual autoPtr<faceZone> clone(const faceZoneMesh& zm) const
@@ -296,6 +294,16 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Assignment to zone, clearing demand-driven data
+        void operator=(const faceZone&);
+
+        //- Move assignment to zone, clearing demand-driven data
+        void operator=(faceZone&&);
+
 
     // I-O
 

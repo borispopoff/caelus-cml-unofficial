@@ -82,10 +82,10 @@ void mqFaceNonOrthoPluginFunction::doEvaluation()
     const labelList& own = mesh().faceOwner();
     const labelList& nei = mesh().faceNeighbour();
 
-    forAll(nonOrto,faceI)
+    forAll(nonOrto,facei)
     {
-        vector d = centres[nei[faceI]] - centres[own[faceI]];
-        const vector& s = areas[faceI];
+        vector d = centres[nei[facei]] - centres[own[facei]];
+        const vector& s = areas[facei];
 
         scalar dDotS = max(
             -1,
@@ -98,7 +98,7 @@ void mqFaceNonOrthoPluginFunction::doEvaluation()
         // Info << d << s << dDotS << endl;
         // Info << ::acos(dDotS) << endl;
 
-        nonOrto[faceI]=::acos(dDotS)/
+        nonOrto[facei]=::acos(dDotS)/
         constant::mathematical::pi
         *180.0;
     }

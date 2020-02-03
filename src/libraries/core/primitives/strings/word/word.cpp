@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,5 +27,49 @@ License
 const char* const CML::word::typeName = "word";
 int CML::word::debug(CML::debug::debugSwitch(word::typeName, 0));
 const CML::word CML::word::null;
+
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+CML::word CML::word::validate
+(
+    const char* first,
+    const char* last,
+    const bool prefix
+)
+{
+    std::string::size_type len = (last - first) + (prefix ? 1 : 0);
+
+    word out;
+    out.resize(len);
+
+    for (len=0; first != last; ++first)
+    {
+        const char c = *first;
+
+        if (word::valid(c))
+        {
+            if (!len && prefix && isdigit(c))
+            {
+                // First valid character was a digit - prefix with '_'
+                out[len++] = '_';
+            }
+
+            out[len++] = c;
+        }
+    }
+
+    out.resize(len);
+
+    return out;
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+void CML::writeEntry(Ostream& os, const word& value)
+{
+    os << value;
+}
+
 
 // ************************************************************************* //

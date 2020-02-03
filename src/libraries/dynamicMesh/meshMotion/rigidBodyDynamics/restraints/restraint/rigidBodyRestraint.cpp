@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------* \
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -74,10 +74,8 @@ bool CML::RBD::restraint::read(const dictionary& dict)
 
 void CML::RBD::restraint::write(Ostream& os) const
 {
-    os.writeKeyword("type")
-        << type() << token::END_STATEMENT << nl;
-    os.writeKeyword("body")
-        << model_.name(bodyID_) << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
+    writeEntry(os, "body", model_.name(bodyID_));
 }
 
 void CML::RBD::restraint::writeState(autoPtr<CML::OFstream> &stateFilePtr) const

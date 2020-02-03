@@ -94,7 +94,7 @@ void trapz::evaluateVector()
     List<vectorField> input = readVectorFields(indices_);
     scalarField time = readIOScalarField(callName_ + "_time");
 
-    vectorField trapezoidal(input.size(), vector::zero);
+    vectorField trapezoidal(input.size(), Zero);
 
     forAll (input, I)
     {

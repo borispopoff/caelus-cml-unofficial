@@ -65,7 +65,7 @@ void CML::manipulatePatchField::manipulate(
     const Field<bool> &mask
 )
 {
-    const typename TField::PatchFieldType &pField=field.boundaryField()[
+    const typename TField::Patch &pField=field.boundaryField()[
         field.mesh().boundaryMesh().findPatchID(this->patchName_)
     ];
     Field<typename TField::value_type> value(pField);
@@ -103,21 +103,21 @@ void CML::manipulatePatchField::manipulate(
 
     }
     label cnt=0;
-    forAll(value,cellI) {
-        if(mask[cellI]) {
+    forAll(value,celli) {
+        if(mask[celli]) {
             cnt++;
-            value[cellI]=newValue[cellI];
+            value[celli]=newValue[celli];
         }
     }
 
     reduce(cnt,plusOp<label>());
-    const_cast<typename TField::PatchFieldType &>(pField)==value;
+    const_cast<typename TField::Patch &>(pField)==value;
 
     Info << "Manipulated field " << name_ << " on patch " << patchName_ << " on " << cnt
         << " faces with the expression " << expression_ << endl;
 
     if(
-        obr_.time().outputTime()
+        obr_.time().writeTime()
         &&
         field.writeOpt()==IOobject::AUTO_WRITE
     ) {
@@ -138,7 +138,7 @@ void CML::manipulatePatchField::manipulatePoint(
     const Field<bool> &mask
 )
 {
-    const typename TField::PatchFieldType &pField=field.boundaryField()[
+    const typename TField::Patch &pField=field.boundaryField()[
         //        dynamicCast<const fvMesh &>(
         dynamic_cast<const fvMesh &>(
             this->obr_
@@ -180,21 +180,21 @@ void CML::manipulatePatchField::manipulatePoint(
 
     }
     label cnt=0;
-    forAll(value,cellI) {
-        if(mask[cellI]) {
+    forAll(value,celli) {
+        if(mask[celli]) {
             cnt++;
-            value[cellI]=newValue[cellI];
+            value[celli]=newValue[celli];
         }
     }
 
     reduce(cnt,plusOp<label>());
-    const_cast<typename TField::PatchFieldType &>(pField)==value;
+    const_cast<typename TField::Patch &>(pField)==value;
 
     Info << "Manipulated field " << name_ << " on patch " << patchName_ << " on " << cnt
         << " points with the expression " << expression_ << endl;
 
     if(
-        obr_.time().outputTime()
+        obr_.time().writeTime()
         &&
         field.writeOpt()==IOobject::AUTO_WRITE
     ) {

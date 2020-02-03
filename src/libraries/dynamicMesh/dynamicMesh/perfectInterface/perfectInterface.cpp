@@ -64,9 +64,9 @@ CML::pointField CML::perfectInterface::calcFaceCentres
 
     pointField ctrs(pp.size());
 
-    forAll(ctrs, patchFaceI)
+    forAll(ctrs, patchFacei)
     {
-        ctrs[patchFaceI] = pp[patchFaceI].centre(points);
+        ctrs[patchFacei] = pp[patchFacei].centre(points);
     }
 
     return ctrs;
@@ -254,11 +254,11 @@ void CML::perfectInterface::setRefinement
     labelHashSet affectedFaces(2*pp1.size());
     forAll(meshPts1, i)
     {
-        label meshPointI = meshPts1[i];
+        label meshPointi = meshPts1[i];
 
-        if (meshPointI != renumberPoints[meshPointI])
+        if (meshPointi != renumberPoints[meshPointi])
         {
-            const labelList& pFaces = mesh.pointFaces()[meshPointI];
+            const labelList& pFaces = mesh.pointFaces()[meshPointi];
 
             forAll(pFaces, pFaceI)
             {
@@ -276,13 +276,13 @@ void CML::perfectInterface::setRefinement
     // never be sure what the user is doing.
     forAll(pp0, i)
     {
-        label faceI = pp0.addressing()[i];
+        label facei = pp0.addressing()[i];
 
-        if (affectedFaces.erase(faceI))
+        if (affectedFaces.erase(facei))
         {
             WarningInFunction
-                << "Found face " << faceI << " vertices "
-                << mesh.faces()[faceI] << " whose points are"
+                << "Found face " << facei << " vertices "
+                << mesh.faces()[facei] << " whose points are"
                 << " used both by master patch and slave patch" << endl;
         }
     }
@@ -291,8 +291,8 @@ void CML::perfectInterface::setRefinement
     // 2. Renumber (non patch0/1) faces.
     forAllConstIter(labelHashSet, affectedFaces, iter)
     {
-        const label faceI = iter.key();
-        const face& f = mesh.faces()[faceI];
+        const label facei = iter.key();
+        const face& f = mesh.faces()[facei];
 
         face newFace(f.size());
 
@@ -303,18 +303,18 @@ void CML::perfectInterface::setRefinement
 
         label nbr = -1;
 
-        label patchI = -1;
+        label patchi = -1;
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
-            nbr = mesh.faceNeighbour()[faceI];
+            nbr = mesh.faceNeighbour()[facei];
         }
         else
         {
-            patchI = patches.whichPatch(faceI);
+            patchi = patches.whichPatch(facei);
         }
 
-        label zoneID = mesh.faceZones().whichZone(faceI);
+        label zoneID = mesh.faceZones().whichZone(facei);
 
         bool zoneFlip = false;
 
@@ -322,7 +322,7 @@ void CML::perfectInterface::setRefinement
         {
             const faceZone& fZone = mesh.faceZones()[zoneID];
 
-            zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+            zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
         }
 
         ref.setAction
@@ -330,11 +330,11 @@ void CML::perfectInterface::setRefinement
             polyModifyFace
             (
                 newFace,                    // modified face
-                faceI,                      // label of face being modified
-                mesh.faceOwner()[faceI],    // owner
+                facei,                      // label of face being modified
+                mesh.faceOwner()[facei],    // owner
                 nbr,                        // neighbour
                 false,                      // face flip
-                patchI,                     // patch for face
+                patchi,                     // patch for face
                 false,                      // remove from zone
                 zoneID,                     // zone for face
                 zoneFlip                    // face flip in zone
@@ -346,11 +346,11 @@ void CML::perfectInterface::setRefinement
     // 3. Remove patch1 points
     forAll(meshPts1, i)
     {
-        label meshPointI = meshPts1[i];
+        label meshPointi = meshPts1[i];
 
-        if (meshPointI != renumberPoints[meshPointI])
+        if (meshPointi != renumberPoints[meshPointi])
         {
-            ref.setAction(polyRemovePoint(meshPointI));
+            ref.setAction(polyRemovePoint(meshPointi));
         }
     }
 
@@ -358,8 +358,8 @@ void CML::perfectInterface::setRefinement
     // 4. Remove patch1 faces
     forAll(pp1, i)
     {
-        label faceI = pp1.addressing()[i];
-        ref.setAction(polyRemoveFace(faceI));
+        label facei = pp1.addressing()[i];
+        ref.setAction(polyRemoveFace(facei));
     }
 
 
@@ -371,9 +371,9 @@ void CML::perfectInterface::setRefinement
 
     forAll(pp0, i)
     {
-        label faceI = pp0.addressing()[i];
+        label facei = pp0.addressing()[i];
 
-        const face& f = mesh.faces()[faceI];
+        const face& f = mesh.faces()[facei];
 
         face newFace(f.size());
 
@@ -382,7 +382,7 @@ void CML::perfectInterface::setRefinement
             newFace[fp] = renumberPoints[f[fp]];
         }
 
-        label own = mesh.faceOwner()[faceI];
+        label own = mesh.faceOwner()[facei];
 
         label pp1FaceI = pp1.addressing()[from0To1Faces[i]];
 
@@ -395,7 +395,7 @@ void CML::perfectInterface::setRefinement
                 polyModifyFace
                 (
                     newFace,                // modified face
-                    faceI,                  // label of face being modified
+                    facei,                  // label of face being modified
                     own,                    // owner
                     nbr,                    // neighbour
                     false,                  // face flip
@@ -413,7 +413,7 @@ void CML::perfectInterface::setRefinement
                 polyModifyFace
                 (
                     newFace.reverseFace(),  // modified face
-                    faceI,                  // label of face being modified
+                    facei,                  // label of face being modified
                     nbr,                    // owner
                     own,                    // neighbour
                     true,                   // face flip

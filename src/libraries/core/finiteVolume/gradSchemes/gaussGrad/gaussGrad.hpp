@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,16 +55,7 @@ class gaussGrad
 {
     // Private data
 
-        tmp<surfaceInterpolationScheme<Type> > tinterpScheme_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        gaussGrad(const gaussGrad&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const gaussGrad&);
+        tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
 
 public:
@@ -91,7 +82,7 @@ public:
             if (is.eof())
             {
                 tinterpScheme_ =
-                    tmp<surfaceInterpolationScheme<Type> >
+                    tmp<surfaceInterpolationScheme<Type>>
                     (
                         new linear<Type>(mesh)
                     );
@@ -99,12 +90,15 @@ public:
             else
             {
                 tinterpScheme_ =
-                    tmp<surfaceInterpolationScheme<Type> >
+                    tmp<surfaceInterpolationScheme<Type>>
                     (
                         surfaceInterpolationScheme<Type>::New(mesh, is)
                     );
             }
         }
+
+        //- Disallow default bitwise copy construct
+        gaussGrad(const gaussGrad&) = delete;
 
 
     // Member Functions
@@ -142,6 +136,12 @@ public:
             GeometricField
             <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gaussGrad&) = delete;
 };
 
 
@@ -179,7 +179,7 @@ CML::fv::gaussGrad<Type>::gradf
 
     const fvMesh& mesh = ssf.mesh();
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tgGrad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tgGrad
     (
         new GeometricField<GradType, fvPatchField, volMesh>
         (
@@ -201,7 +201,7 @@ CML::fv::gaussGrad<Type>::gradf
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -259,11 +259,11 @@ CML::fv::gaussGrad<Type>::calcGrad
 {
     typedef typename outerProduct<vector, Type>::type GradType;
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tgGrad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tgGrad
     (
         gradf(tinterpScheme_().interpolate(vsf), name)
     );
-    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad.ref();
 
     correctBoundaryConditions(vsf, gGrad);
 
@@ -281,6 +281,11 @@ void CML::fv::gaussGrad<Type>::correctBoundaryConditions
     >& gGrad
 )
 {
+    typename GeometricField
+    <
+        typename outerProduct<vector, Type>::type, fvPatchField, volMesh
+    >::Boundary& gGradbf = gGrad.boundaryFieldRef();
+
     forAll(vsf.boundaryField(), patchi)
     {
         if (!vsf.boundaryField()[patchi].coupled())
@@ -291,10 +296,10 @@ void CML::fv::gaussGrad<Type>::correctBoundaryConditions
               / vsf.mesh().magSf().boundaryField()[patchi]
             );
 
-            gGrad.boundaryField()[patchi] += n *
+            gGradbf[patchi] += n *
             (
                 vsf.boundaryField()[patchi].snGrad()
-              - (n & gGrad.boundaryField()[patchi])
+              - (n & gGradbf[patchi])
             );
         }
      }

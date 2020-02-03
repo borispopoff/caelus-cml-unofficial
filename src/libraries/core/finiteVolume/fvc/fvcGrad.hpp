@@ -61,7 +61,7 @@ namespace fvc
         <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
     > grad
     (
-        const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+        const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>&
     );
 
     template<class Type>
@@ -82,7 +82,7 @@ namespace fvc
         <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
     > grad
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&,
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
         const word& name
     );
 
@@ -103,7 +103,7 @@ namespace fvc
         <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>
     > grad
     (
-        const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+        const tmp<GeometricField<Type, fvPatchField, volMesh>>&
     );
 }
 
@@ -157,11 +157,11 @@ tmp
 >
 grad
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >& tssf
+    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tssf
 )
 {
     typedef typename outerProduct<vector, Type>::type GradType;
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > Grad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> Grad
     (
         fvc::grad(tssf())
     );
@@ -202,7 +202,7 @@ tmp
 >
 grad
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvf,
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf,
     const word& name
 )
 {
@@ -248,11 +248,11 @@ tmp
 >
 grad
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvf
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 )
 {
     typedef typename outerProduct<vector, Type>::type GradType;
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > Grad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> Grad
     (
         fvc::grad(tvf())
     );

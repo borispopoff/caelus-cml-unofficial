@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -138,7 +138,7 @@ CML::tmp<CML::scalarField> CML::noiseFFT::window
     }
 
     tmp<scalarField> tpw(new scalarField(N));
-    scalarField& pw = tpw();
+    scalarField& pw = tpw.ref();
 
     label offset = ni*windowOffset;
 
@@ -191,7 +191,7 @@ CML::tmp<CML::scalarField> CML::noiseFFT::Pf
             scalarField::subField(tPn2(), tPn2().size()/2)
         )
     );
-    scalarField& Pn = tPn();
+    scalarField& Pn = tPn.ref();
 
     Pn *= 2.0/sqrt(scalar(tPn2().size()));
     Pn[0] /= 2.0;

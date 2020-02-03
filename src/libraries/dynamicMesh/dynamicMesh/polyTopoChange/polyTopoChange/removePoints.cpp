@@ -40,7 +40,7 @@ defineTypeNameAndDebug(removePoints, 0);
 
 //- Combine-reduce operator to combine data on faces. Takes care
 //  of reverse orientation on coupled face.
-template <class T, template<class> class CombineOp>
+template<class T, template<class> class CombineOp>
 class faceEqOp
 {
 
@@ -69,11 +69,11 @@ public:
 
 
 //// Dummy transform for List. Used in synchronisation.
-//template <class T>
+//template<class T>
 //class dummyTransformList
 //{
 //public:
-//    void operator()(const coupledPolyPatch&, Field<List<T> >&) const
+//    void operator()(const coupledPolyPatch&, Field<List<T>>&) const
 //    {}
 //};
 //// Dummy template specialisation. Used in synchronisation.
@@ -94,26 +94,26 @@ public:
 // Change the vertices of the face whilst keeping everything else the same.
 void CML::removePoints::modifyFace
 (
-    const label faceI,
+    const label facei,
     const face& newFace,
     polyTopoChange& meshMod
 ) const
 {
     // Get other face data.
-    label patchI = -1;
-    label owner = mesh_.faceOwner()[faceI];
+    label patchi = -1;
+    label owner = mesh_.faceOwner()[facei];
     label neighbour = -1;
 
-    if (mesh_.isInternalFace(faceI))
+    if (mesh_.isInternalFace(facei))
     {
-        neighbour = mesh_.faceNeighbour()[faceI];
+        neighbour = mesh_.faceNeighbour()[facei];
     }
     else
     {
-        patchI = mesh_.boundaryMesh().whichPatch(faceI);
+        patchi = mesh_.boundaryMesh().whichPatch(facei);
     }
 
-    label zoneID = mesh_.faceZones().whichZone(faceI);
+    label zoneID = mesh_.faceZones().whichZone(facei);
 
     bool zoneFlip = false;
 
@@ -121,7 +121,7 @@ void CML::removePoints::modifyFace
     {
         const faceZone& fZone = mesh_.faceZones()[zoneID];
 
-        zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
     }
 
     meshMod.setAction
@@ -129,11 +129,11 @@ void CML::removePoints::modifyFace
         polyModifyFace
         (
             newFace,        // modified face
-            faceI,          // label of face being modified
+            facei,          // label of face being modified
             owner,          // owner
             neighbour,      // neighbour
             false,          // face flip
-            patchI,         // patch for face
+            patchi,         // patch for face
             false,          // remove from zone
             zoneID,         // zone for face
             zoneFlip        // face flip in zone
@@ -179,31 +179,31 @@ CML::label CML::removePoints::countPointUsage
 
         forAll(e, eI)
         {
-            label pointI = e[eI];
+            label pointi = e[eI];
 
-            if (edge0[pointI] == -2)
+            if (edge0[pointi] == -2)
             {
                 // Already too many edges
             }
-            else if (edge0[pointI] == -1)
+            else if (edge0[pointi] == -1)
             {
                 // Store first edge using point
-                edge0[pointI] = edgeI;
+                edge0[pointi] = edgeI;
             }
             else
             {
                 // Already one edge using point. Check second container.
 
-                if (edge1[pointI] == -1)
+                if (edge1[pointi] == -1)
                 {
                     // Store second edge using point
-                    edge1[pointI] = edgeI;
+                    edge1[pointi] = edgeI;
                 }
                 else
                 {
                     // Third edge using point. Mark.
-                    edge0[pointI] = -2;
-                    edge1[pointI] = -2;
+                    edge0[pointi] = -2;
+                    edge1[pointi] = -2;
                 }
             }
         }
@@ -217,14 +217,14 @@ CML::label CML::removePoints::countPointUsage
     pointCanBeDeleted = false;
     label nDeleted = 0;
 
-    forAll(edge0, pointI)
+    forAll(edge0, pointi)
     {
-        if (edge0[pointI] >= 0 && edge1[pointI] >= 0)
+        if (edge0[pointi] >= 0 && edge1[pointi] >= 0)
         {
             // Point used by two edges exactly
 
-            const edge& e0 = edges[edge0[pointI]];
-            const edge& e1 = edges[edge1[pointI]];
+            const edge& e0 = edges[edge0[pointi]];
+            const edge& e1 = edges[edge1[pointi]];
 
             label common = e0.commonVertex(e1);
             label vLeft = e0.otherVertex(common);
@@ -238,14 +238,14 @@ CML::label CML::removePoints::countPointUsage
 
             if ((e0Vec & e1Vec) > minCos)
             {
-                pointCanBeDeleted[pointI] = true;
+                pointCanBeDeleted[pointi] = true;
                 nDeleted++;
             }
         }
-        else if (edge0[pointI] == -1)
+        else if (edge0[pointi] == -1)
         {
             // point not used at all
-            pointCanBeDeleted[pointI] = true;
+            pointCanBeDeleted[pointi] = true;
             nDeleted++;
         }
     }
@@ -255,9 +255,9 @@ CML::label CML::removePoints::countPointUsage
 
     // Protect any points on faces that would collapse down to nothing
     // No particular intelligence so might protect too many points
-    forAll(mesh_.faces(), faceI)
+    forAll(mesh_.faces(), facei)
     {
-        const face& f = mesh_.faces()[faceI];
+        const face& f = mesh_.faces()[facei];
 
         label nCollapse = 0;
         forAll(f, fp)
@@ -308,9 +308,9 @@ void CML::removePoints::setRefinement
 {
     // Count deleted points
     label nDeleted = 0;
-    forAll(pointCanBeDeleted, pointI)
+    forAll(pointCanBeDeleted, pointi)
     {
-        if (pointCanBeDeleted[pointI])
+        if (pointCanBeDeleted[pointi])
         {
             nDeleted++;
         }
@@ -337,19 +337,19 @@ void CML::removePoints::setRefinement
 
     nDeleted = 0;
 
-    forAll(pointCanBeDeleted, pointI)
+    forAll(pointCanBeDeleted, pointi)
     {
-        if (pointCanBeDeleted[pointI])
+        if (pointCanBeDeleted[pointi])
         {
             if (undoable_)
             {
-                pointToSaved.insert(pointI, nDeleted);
-                savedPoints_[nDeleted++] = mesh_.points()[pointI];
+                pointToSaved.insert(pointi, nDeleted);
+                savedPoints_[nDeleted++] = mesh_.points()[pointi];
             }
-            meshMod.setAction(polyRemovePoint(pointI));
+            meshMod.setAction(polyRemovePoint(pointi));
 
             // Store faces affected
-            const labelList& pFaces = mesh_.pointFaces()[pointI];
+            const labelList& pFaces = mesh_.pointFaces()[pointi];
 
             forAll(pFaces, i)
             {
@@ -373,9 +373,9 @@ void CML::removePoints::setRefinement
 
     forAllConstIter(labelHashSet, facesAffected, iter)
     {
-        label faceI = iter.key();
+        label facei = iter.key();
 
-        const face& f = mesh_.faces()[faceI];
+        const face& f = mesh_.faces()[facei];
 
         face newFace(f.size());
 
@@ -383,37 +383,37 @@ void CML::removePoints::setRefinement
 
         forAll(f, fp)
         {
-            label pointI = f[fp];
+            label pointi = f[fp];
 
-            if (!pointCanBeDeleted[pointI])
+            if (!pointCanBeDeleted[pointi])
             {
-                newFace[newI++] = pointI;
+                newFace[newI++] = pointi;
             }
         }
         newFace.setSize(newI);
 
         // Actually change the face to the new vertices
-        modifyFace(faceI, newFace, meshMod);
+        modifyFace(facei, newFace, meshMod);
 
         // Save the face. Negative indices are into savedPoints_
         if (undoable_)
         {
-            savedFaceLabels_[nSaved] = faceI;
+            savedFaceLabels_[nSaved] = facei;
 
             face& savedFace = savedFaces_[nSaved++];
             savedFace.setSize(f.size());
 
             forAll(f, fp)
             {
-                label pointI = f[fp];
+                label pointi = f[fp];
 
-                if (pointCanBeDeleted[pointI])
+                if (pointCanBeDeleted[pointi])
                 {
-                    savedFace[fp] = -pointToSaved[pointI]-1;
+                    savedFace[fp] = -pointToSaved[pointi]-1;
                 }
                 else
                 {
-                    savedFace[fp] = pointI;
+                    savedFace[fp] = pointi;
                 }
             }
         }
@@ -450,7 +450,7 @@ void CML::removePoints::setRefinement
                 if (meshPoints != keptPoints)
                 {
                     FatalErrorInFunction
-                        << "faceI:" << savedFaceLabels_[saveI] << nl
+                        << "facei:" << savedFaceLabels_[saveI] << nl
                         << "meshPoints:" << meshPoints << nl
                         << "keptPoints:" << keptPoints << nl
                         << abort(FatalError);
@@ -469,16 +469,16 @@ void CML::removePoints::updateMesh(const mapPolyMesh& map)
         {
             if (savedFaceLabels_[localI] >= 0)
             {
-                label newFaceI = map.reverseFaceMap()[savedFaceLabels_[localI]];
+                label newFacei = map.reverseFaceMap()[savedFaceLabels_[localI]];
 
-                if (newFaceI == -1)
+                if (newFacei == -1)
                 {
                     FatalErrorInFunction
                         << "Old face " << savedFaceLabels_[localI]
                         << " seems to have dissappeared."
                         << abort(FatalError);
                 }
-                savedFaceLabels_[localI] = newFaceI;
+                savedFaceLabels_[localI] = newFacei;
             }
         }
 
@@ -491,16 +491,16 @@ void CML::removePoints::updateMesh(const mapPolyMesh& map)
 
             forAll(f, fp)
             {
-                label pointI = f[fp];
+                label pointi = f[fp];
 
-                if (pointI >= 0)
+                if (pointi >= 0)
                 {
-                    f[fp] = map.reversePointMap()[pointI];
+                    f[fp] = map.reversePointMap()[pointi];
 
                     if (f[fp] == -1)
                     {
                         FatalErrorInFunction
-                            << "Old point " << pointI
+                            << "Old point " << pointi
                             << " seems to have dissappeared."
                             << abort(FatalError);
                     }
@@ -526,11 +526,11 @@ void CML::removePoints::updateMesh(const mapPolyMesh& map)
 
                     forAll(savedFace, fp)
                     {
-                        label pointI = savedFace[fp];
+                        label pointi = savedFace[fp];
 
-                        if (pointI >= 0)
+                        if (pointi >= 0)
                         {
-                            keptFace[keptFp++] = pointI;
+                            keptFace[keptFp++] = pointi;
                         }
                     }
                     keptFace.setSize(keptFp);
@@ -540,7 +540,7 @@ void CML::removePoints::updateMesh(const mapPolyMesh& map)
                     if (keptFace != f)
                     {
                         FatalErrorInFunction
-                            << "faceI:" << savedFaceLabels_[saveI] << nl
+                            << "facei:" << savedFaceLabels_[saveI] << nl
                             << "face:" << f << nl
                             << "keptFace:" << keptFace << nl
                             << "saved points:"
@@ -659,13 +659,13 @@ void CML::removePoints::getUnrefimentSet
         // Populate with my local points-to-restore.
         forAll(savedFaces_, saveI)
         {
-            label bFaceI = savedFaceLabels_[saveI] - mesh_.nInternalFaces();
+            label bFacei = savedFaceLabels_[saveI] - mesh_.nInternalFaces();
 
-            if (bFaceI >= 0)
+            if (bFacei >= 0)
             {
                 const face& savedFace = savedFaces_[saveI];
 
-                boolList& fRestore = faceVertexRestore[bFaceI];
+                boolList& fRestore = faceVertexRestore[bFacei];
 
                 fRestore.setSize(savedFace.size());
                 fRestore = false;
@@ -701,11 +701,11 @@ void CML::removePoints::getUnrefimentSet
 
         forAll(savedFaces_, saveI)
         {
-            label bFaceI = savedFaceLabels_[saveI] - mesh_.nInternalFaces();
+            label bFacei = savedFaceLabels_[saveI] - mesh_.nInternalFaces();
 
-            if (bFaceI >= 0)
+            if (bFacei >= 0)
             {
-                const boolList& fRestore = faceVertexRestore[bFaceI];
+                const boolList& fRestore = faceVertexRestore[bFacei];
 
                 const face& savedFace = savedFaces_[saveI];
 
@@ -836,12 +836,12 @@ void CML::removePoints::setUnrefinement
         {
             if (savedFace[fp] < 0)
             {
-                label addedPointI = addedPoints[-savedFace[fp]-1];
+                label addedPointi = addedPoints[-savedFace[fp]-1];
 
-                if (addedPointI != -1)
+                if (addedPointi != -1)
                 {
-                    savedFace[fp] = addedPointI;
-                    newFace[newFp++] = addedPointI;
+                    savedFace[fp] = addedPointi;
+                    newFace[newFp++] = addedPointi;
                 }
                 else
                 {
@@ -897,15 +897,15 @@ void CML::removePoints::setUnrefinement
             {
                 if (savedFace[fp] < 0)
                 {
-                    label addedPointI = addedPoints[-savedFace[fp]-1];
+                    label addedPointi = addedPoints[-savedFace[fp]-1];
 
-                    if (addedPointI != -1)
+                    if (addedPointi != -1)
                     {
                         FatalErrorInFunction
                             << "Face:" << savedFaceLabels_[saveI]
                             << " savedVerts:" << savedFace
                             << " uses restored point:" << -savedFace[fp]-1
-                            << " with new pointlabel:" << addedPointI
+                            << " with new pointlabel:" << addedPointi
                             << abort(FatalError);
                     }
                 }

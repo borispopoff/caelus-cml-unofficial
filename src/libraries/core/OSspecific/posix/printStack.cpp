@@ -250,7 +250,7 @@ unsigned backtrace(void **bt, unsigned maxAddrs)
     unsigned valid=0;
     bool ok=true;
 
-    for(int level=0;level<maxAddrs;level++) {
+    for(unsigned level=0;level<maxAddrs;level++) {
         if(ok) {
             bt[level]=getStackAddress(level);
             
@@ -274,7 +274,7 @@ char **backtrace_symbols(void **bt,unsigned nr)
 
     for(unsigned i=0;i<nr;i++) {
         Dl_info info;
-        int result=dladdr(bt[i],&info);
+//        int result=dladdr(bt[i],&info);
 
         char tmp[1000];
 #ifdef darwin

@@ -53,20 +53,20 @@ void topologicalCleaner::checkNonConsecutiveBoundaryVertices()
         const label start = boundaries[patchI].patchStart();
         const label end = start + boundaries[patchI].patchSize();
 
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
             # ifdef USE_OMP
-            # pragma omp task shared(decomposeFace,faces,cells,owner,faceI)
+            # pragma omp task shared(decomposeFace,faces,cells,owner,facei)
             # endif
             {
-                const face& bf = faces[faceI];
+                const face& bf = faces[facei];
 
                 # ifdef DEBUGCleaner
-                Info << "Checking boundary face " << faceI << " with vertices "
+                Info << "Checking boundary face " << facei << " with vertices "
                     << bf << endl;
                 # endif
 
-                const cell& c = cells[owner[faceI]];
+                const cell& c = cells[owner[facei]];
 
                 forAll(c, fI)
                     if(
@@ -96,8 +96,8 @@ void topologicalCleaner::checkNonConsecutiveBoundaryVertices()
                             Info << "1. Face has to be split" << endl;
                             # endif
 
-                            decomposeFace[faceI] = true;
-                            decomposeCell_[owner[faceI]] = true;
+                            decomposeFace[facei] = true;
+                            decomposeCell_[owner[facei]] = true;
                             changed = true;
                         }
                         else if( shN.size() == 2 )
@@ -112,8 +112,8 @@ void topologicalCleaner::checkNonConsecutiveBoundaryVertices()
                                 Info << "2. Face has to be split" << endl;
                                 # endif
 
-                                decomposeFace[faceI] = true;
-                                decomposeCell_[owner[faceI]] = true;
+                                decomposeFace[facei] = true;
+                                decomposeCell_[owner[facei]] = true;
                                 changed = true;
                             }
                         }

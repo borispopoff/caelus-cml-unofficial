@@ -129,14 +129,14 @@ void CML::CECCellToCellStencil::calcCellStencil
 
         forAll(eCells, j)
         {
-            label cellI = eCells[j];
+            label celli = eCells[j];
 
             // Insert pGlobals into globalCellCells
             merge
             (
-                globalNumbering().toGlobal(cellI),
+                globalNumbering().toGlobal(celli),
                 eGlobals,
-                globalCellCells[cellI]
+                globalCellCells[celli]
             );
         }
     }
@@ -161,13 +161,13 @@ void CML::CECCellToCellStencil::calcCellStencil
 
         forAll(eCells, j)
         {
-            label cellI = eCells[j];
+            label celli = eCells[j];
 
             merge
             (
-                globalNumbering().toGlobal(cellI),
+                globalNumbering().toGlobal(celli),
                 eGlobals,
-                globalCellCells[cellI]
+                globalCellCells[celli]
             );
         }
     }

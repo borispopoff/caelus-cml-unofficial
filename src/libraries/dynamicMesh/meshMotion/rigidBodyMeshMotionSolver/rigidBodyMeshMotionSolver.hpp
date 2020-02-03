@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -37,7 +37,7 @@ SourceFiles
 #include "displacementMotionSolver.hpp"
 #include "rigidBodyMotion.hpp"
 #include "OFstream.hpp"
-#include "outputFilterOutputControl.hpp"
+#include "outputFilterControl.hpp"
 #include "HashSet.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -108,7 +108,7 @@ class rigidBodyMeshMotionSolver
         label curTimeIndex_;
 
         //- Output controls
-        outputFilterOutputControl motionOutputControl_;
+        outputFilterControl motionOutputControl_;
 
         // Solver for the mesh motion
         autoPtr<motionSolver> meshSolverPtr_;
@@ -116,10 +116,10 @@ class rigidBodyMeshMotionSolver
         displacementMotionSolver& meshSolver_;
         
         //- List of stateFiles for bodies
-		List<autoPtr<OFstream> > bodyStateFilePtrs_; 
+		List<autoPtr<OFstream>> bodyStateFilePtrs_; 
 		
 		//- List of stateFiles for restraints
-		List<autoPtr<OFstream> > restraintStateFilePtrs_; 
+		List<autoPtr<OFstream>> restraintStateFilePtrs_; 
 
 
     // Private Member Functions
@@ -131,7 +131,7 @@ class rigidBodyMeshMotionSolver
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const rigidBodyMeshMotionSolver&);
+        void operator=(const rigidBodyMeshMotionSolver&) = delete;
 
 
 public:

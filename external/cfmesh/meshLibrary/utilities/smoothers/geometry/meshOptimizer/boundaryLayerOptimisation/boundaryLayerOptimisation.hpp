@@ -116,7 +116,7 @@ class boundaryLayerOptimisation
 
         //- calculate normal vector for all patches at a point
         //- points can be filtered by a type of hair edges
-        typedef std::map<label, std::pair<point, scalar> > patchNormalType;
+        typedef std::map<label, std::pair<point, scalar>> patchNormalType;
         typedef std::map<label, patchNormalType> pointNormalsType;
         void calculateNormalVectors
         (
@@ -147,7 +147,7 @@ class boundaryLayerOptimisation
         //- calculate hair edges at a boundary faces
         void hairEdgesAtBndFace
         (
-            const label cellI,
+            const label celli,
             const label baseFaceI,
             DynList<edge>&
         ) const;
@@ -166,7 +166,7 @@ class boundaryLayerOptimisation
         scalar calculateThicknessOverCell
         (
             const label heI,
-            const label cellI,
+            const label celli,
             const label baseFaceI
         ) const;
 

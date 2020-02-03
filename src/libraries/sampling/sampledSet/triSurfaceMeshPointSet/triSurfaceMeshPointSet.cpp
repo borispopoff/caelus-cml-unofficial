@@ -49,12 +49,12 @@ void CML::triSurfaceMeshPointSet::calcSamples
 {
     forAll(sampleCoords_, sampleI)
     {
-        label cellI = searchEngine().findCell(sampleCoords_[sampleI]);
+        label celli = searchEngine().findCell(sampleCoords_[sampleI]);
 
-        if (cellI != -1)
+        if (celli != -1)
         {
             samplingPts.append(sampleCoords_[sampleI]);
-            samplingCells.append(cellI);
+            samplingCells.append(celli);
             samplingFaces.append(-1);
             samplingSegments.append(0);
             samplingCurveDist.append(1.0 * sampleI);
@@ -165,7 +165,7 @@ CML::point CML::triSurfaceMeshPointSet::getRefPoint(const List<point>& pts)
     }
     else
     {
-        return vector::zero;
+        return Zero;
     }
 }
 

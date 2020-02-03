@@ -98,8 +98,8 @@ void CML::mapNearestMethod::calculateAddressing
     label& startSeedI
 )
 {
-    List<DynamicList<label> > srcToTgt(src_.nCells());
-    List<DynamicList<label> > tgtToSrc(tgt_.nCells());
+    List<DynamicList<label>> srcToTgt(src_.nCells());
+    List<DynamicList<label>> tgtToSrc(tgt_.nCells());
 
     const scalarField& srcVc = src_.cellVolumes();
     const scalarField& tgtVc = tgt_.cellVolumes();
@@ -248,18 +248,18 @@ void CML::mapNearestMethod::setNextNearestCells
     srcCellI = -1;
     forAll(srcNbr, i)
     {
-        label cellI = srcNbr[i];
-        if (mapFlag[cellI])
+        label celli = srcNbr[i];
+        if (mapFlag[celli])
         {
-            srcCellI = cellI;
+            srcCellI = celli;
             return;
         }
     }
 
     for (label i = startSeedI; i < srcCellIDs.size(); i++)
     {
-        label cellI = srcCellIDs[i];
-        if (mapFlag[cellI])
+        label celli = srcCellIDs[i];
+        if (mapFlag[celli])
         {
             startSeedI = i;
             break;
@@ -280,7 +280,7 @@ void CML::mapNearestMethod::setNextNearestCells
 CML::label CML::mapNearestMethod::findMappedSrcCell
 (
     const label tgtCellI,
-    const List<DynamicList<label> >& tgtToSrc
+    const List<DynamicList<label>>& tgtToSrc
 ) const
 {
     DynamicList<label> testCells(10);

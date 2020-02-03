@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -431,9 +431,9 @@ public:
         indexedOctree(const Type& shapes, Istream& is);
 
         //- Clone
-        autoPtr<indexedOctree<Type> > clone() const
+        autoPtr<indexedOctree<Type>> clone() const
         {
-            return autoPtr<indexedOctree<Type> >
+            return autoPtr<indexedOctree<Type>>
             (
                 new indexedOctree<Type>(*this)
             );
@@ -699,7 +699,7 @@ public:
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::scalar CML::indexedOctree<Type>::perturbTol_ = 10*SMALL;
 
 
@@ -748,7 +748,7 @@ bool CML::indexedOctree<Type>::overlaps
 
     point other;
 
-    if (octant & treeBoundBox::RIGHTHALF)
+    if (octant & treeBoundBox::octantBit::rightHalf)
     {
         other.x() = max.x();
     }
@@ -757,7 +757,7 @@ bool CML::indexedOctree<Type>::overlaps
         other.x() = min.x();
     }
 
-    if (octant & treeBoundBox::TOPHALF)
+    if (octant & treeBoundBox::octantBit::topHalf)
     {
         other.y() = max.y();
     }
@@ -766,7 +766,7 @@ bool CML::indexedOctree<Type>::overlaps
         other.y() = min.y();
     }
 
-    if (octant & treeBoundBox::FRONTHALF)
+    if (octant & treeBoundBox::octantBit::frontHalf)
     {
         other.z() = max.z();
     }
@@ -795,7 +795,7 @@ void CML::indexedOctree<Type>::divide
     labelListList& result
 ) const
 {
-    List<DynamicList<label> > subIndices(8);
+    List<DynamicList<label>> subIndices(8);
     for (direction octant = 0; octant < subIndices.size(); octant++)
     {
         subIndices[octant].setCapacity(indices.size()/8);
@@ -1033,7 +1033,7 @@ CML::volumeType CML::indexedOctree<Type>::calcVolumeType
 {
     const node& nod = nodes_[nodeI];
 
-    volumeType myType = volumeType::UNKNOWN;
+    volumeType myType = volumeType::unknown;
 
     for (direction octant = 0; octant < nod.subNodes_.size(); octant++)
     {
@@ -1050,7 +1050,7 @@ CML::volumeType CML::indexedOctree<Type>::calcVolumeType
         {
             // Contents. Depending on position in box might be on either
             // side.
-            subType = volumeType::MIXED;
+            subType = volumeType::mixed;
         }
         else
         {
@@ -1066,13 +1066,13 @@ CML::volumeType CML::indexedOctree<Type>::calcVolumeType
 
         // Combine sub node types into type for treeNode. Result is 'mixed' if
         // types differ among subnodes.
-        if (myType == volumeType::UNKNOWN)
+        if (myType == volumeType::unknown)
         {
             myType = subType;
         }
         else if (subType != myType)
         {
-            myType = volumeType::MIXED;
+            myType = volumeType::mixed;
         }
     }
     return myType;
@@ -1092,20 +1092,20 @@ CML::volumeType CML::indexedOctree<Type>::getVolumeType
 
     volumeType octantType = volumeType::type(nodeTypes_.get((nodeI<<3)+octant));
 
-    if (octantType == volumeType::INSIDE)
+    if (octantType == volumeType::inside)
     {
         return octantType;
     }
-    else if (octantType == volumeType::OUTSIDE)
+    else if (octantType == volumeType::outside)
     {
         return octantType;
     }
-    else if (octantType == volumeType::UNKNOWN)
+    else if (octantType == volumeType::unknown)
     {
         // Can happen for e.g. non-manifold surfaces.
         return octantType;
     }
-    else if (octantType == volumeType::MIXED)
+    else if (octantType == volumeType::mixed)
     {
         labelBits index = nod.subNodes_[octant];
 
@@ -1128,10 +1128,10 @@ CML::volumeType CML::indexedOctree<Type>::getVolumeType
             FatalErrorInFunction
                 << "Sample:" << sample << " node:" << nodeI
                 << " with bb:" << nodes_[nodeI].bb_ << nl
-                << "Empty subnode has invalid volume type MIXED."
+                << "Empty subnode has invalid volume type mixed."
                 << abort(FatalError);
 
-            return volumeType::UNKNOWN;
+            return volumeType::unknown;
         }
     }
     else
@@ -1143,7 +1143,7 @@ CML::volumeType CML::indexedOctree<Type>::getVolumeType
             << "Node has invalid volume type " << octantType
             << abort(FatalError);
 
-        return volumeType::UNKNOWN;
+        return volumeType::unknown;
     }
 }
 
@@ -1157,11 +1157,11 @@ CML::volumeType CML::indexedOctree<Type>::getSide
 {
     if ((outsideNormal&vec) >= 0)
     {
-        return volumeType::OUTSIDE;
+        return volumeType::outside;
     }
     else
     {
-        return volumeType::INSIDE;
+        return volumeType::inside;
     }
 }
 
@@ -1441,7 +1441,7 @@ CML::point CML::indexedOctree<Type>::pushPoint
             << abort(FatalError);
     }
 
-    if (faceID & treeBoundBox::LEFTBIT)
+    if (faceID & treeBoundBox::faceBit::left)
     {
         if (pushInside)
         {
@@ -1452,7 +1452,7 @@ CML::point CML::indexedOctree<Type>::pushPoint
             perturbedPt[0] = bb.min()[0] - (perturbVec[0] + ROOTVSMALL);
         }
     }
-    else if (faceID & treeBoundBox::RIGHTBIT)
+    else if (faceID & treeBoundBox::faceBit::right)
     {
         if (pushInside)
         {
@@ -1464,7 +1464,7 @@ CML::point CML::indexedOctree<Type>::pushPoint
         }
     }
 
-    if (faceID & treeBoundBox::BOTTOMBIT)
+    if (faceID & treeBoundBox::faceBit::bottom)
     {
         if (pushInside)
         {
@@ -1475,7 +1475,7 @@ CML::point CML::indexedOctree<Type>::pushPoint
             perturbedPt[1] = bb.min()[1] - (perturbVec[1] + ROOTVSMALL);
         }
     }
-    else if (faceID & treeBoundBox::TOPBIT)
+    else if (faceID & treeBoundBox::faceBit::top)
     {
         if (pushInside)
         {
@@ -1487,7 +1487,7 @@ CML::point CML::indexedOctree<Type>::pushPoint
         }
     }
 
-    if (faceID & treeBoundBox::BACKBIT)
+    if (faceID & treeBoundBox::faceBit::back)
     {
         if (pushInside)
         {
@@ -1498,7 +1498,7 @@ CML::point CML::indexedOctree<Type>::pushPoint
             perturbedPt[2] = bb.min()[2] - (perturbVec[2] + ROOTVSMALL);
         }
     }
-    else if (faceID & treeBoundBox::FRONTBIT)
+    else if (faceID & treeBoundBox::faceBit::front)
     {
         if (pushInside)
         {
@@ -1559,31 +1559,31 @@ CML::point CML::indexedOctree<Type>::pushPointIntoFace
     direction nFaces = 0;
     FixedList<direction, 3> faceIndices;
 
-    if (ptFaceID & treeBoundBox::LEFTBIT)
+    if (ptFaceID & treeBoundBox::faceBit::left)
     {
-        faceIndices[nFaces++] = treeBoundBox::LEFT;
+        faceIndices[nFaces++] = treeBoundBox::faceId::left;
     }
-    else if (ptFaceID & treeBoundBox::RIGHTBIT)
+    else if (ptFaceID & treeBoundBox::faceBit::right)
     {
-        faceIndices[nFaces++] = treeBoundBox::RIGHT;
-    }
-
-    if (ptFaceID & treeBoundBox::BOTTOMBIT)
-    {
-        faceIndices[nFaces++] = treeBoundBox::BOTTOM;
-    }
-    else if (ptFaceID & treeBoundBox::TOPBIT)
-    {
-        faceIndices[nFaces++] = treeBoundBox::TOP;
+        faceIndices[nFaces++] = treeBoundBox::faceId::right;
     }
 
-    if (ptFaceID & treeBoundBox::BACKBIT)
+    if (ptFaceID & treeBoundBox::faceBit::bottom)
     {
-        faceIndices[nFaces++] = treeBoundBox::BACK;
+        faceIndices[nFaces++] = treeBoundBox::faceId::bottom;
     }
-    else if (ptFaceID & treeBoundBox::FRONTBIT)
+    else if (ptFaceID & treeBoundBox::faceBit::top)
     {
-        faceIndices[nFaces++] = treeBoundBox::FRONT;
+        faceIndices[nFaces++] = treeBoundBox::faceId::top;
+    }
+
+    if (ptFaceID & treeBoundBox::faceBit::back)
+    {
+        faceIndices[nFaces++] = treeBoundBox::faceId::back;
+    }
+    else if (ptFaceID & treeBoundBox::faceBit::front)
+    {
+        faceIndices[nFaces++] = treeBoundBox::faceId::front;
     }
 
 
@@ -1629,35 +1629,35 @@ CML::point CML::indexedOctree<Type>::pushPointIntoFace
 
     // 2. Snap it back onto the preferred face
 
-    if (keepFaceID == treeBoundBox::LEFT)
+    if (keepFaceID == treeBoundBox::faceId::left)
     {
         facePoint.x() = bb.min().x();
-        faceID = treeBoundBox::LEFTBIT;
+        faceID = treeBoundBox::faceBit::left;
     }
-    else if (keepFaceID == treeBoundBox::RIGHT)
+    else if (keepFaceID == treeBoundBox::faceId::right)
     {
         facePoint.x() = bb.max().x();
-        faceID = treeBoundBox::RIGHTBIT;
+        faceID = treeBoundBox::faceBit::right;
     }
-    else if (keepFaceID == treeBoundBox::BOTTOM)
+    else if (keepFaceID == treeBoundBox::faceId::bottom)
     {
         facePoint.y() = bb.min().y();
-        faceID = treeBoundBox::BOTTOMBIT;
+        faceID = treeBoundBox::faceBit::bottom;
     }
-    else if (keepFaceID == treeBoundBox::TOP)
+    else if (keepFaceID == treeBoundBox::faceId::top)
     {
         facePoint.y() = bb.max().y();
-        faceID = treeBoundBox::TOPBIT;
+        faceID = treeBoundBox::faceBit::top;
     }
-    else if (keepFaceID == treeBoundBox::BACK)
+    else if (keepFaceID == treeBoundBox::faceId::back)
     {
         facePoint.z() = bb.min().z();
-        faceID = treeBoundBox::BACKBIT;
+        faceID = treeBoundBox::faceBit::back;
     }
-    else if (keepFaceID == treeBoundBox::FRONT)
+    else if (keepFaceID == treeBoundBox::faceId::front)
     {
         facePoint.z() = bb.max().z();
-        faceID = treeBoundBox::FRONTBIT;
+        faceID = treeBoundBox::faceBit::front;
     }
 
 
@@ -1954,42 +1954,42 @@ bool CML::indexedOctree<Type>::walkToNeighbour
     // on the right.
 
     // Coordinate direction to test
-    const direction X = treeBoundBox::RIGHTHALF;
-    const direction Y = treeBoundBox::TOPHALF;
-    const direction Z = treeBoundBox::FRONTHALF;
+    const direction X = treeBoundBox::octantBit::rightHalf;
+    const direction Y = treeBoundBox::octantBit::topHalf;
+    const direction Z = treeBoundBox::octantBit::frontHalf;
 
     direction octantMask = 0;
     direction wantedValue = 0;
 
-    if ((faceID & treeBoundBox::LEFTBIT) != 0)
+    if ((faceID & treeBoundBox::faceBit::left) != 0)
     {
         // We want to go left so check if in right octant (i.e. x-bit is set)
         octantMask |= X;
         wantedValue |= X;
     }
-    else if ((faceID & treeBoundBox::RIGHTBIT) != 0)
+    else if ((faceID & treeBoundBox::faceBit::right) != 0)
     {
         octantMask |= X;  // wantedValue already 0
     }
 
-    if ((faceID & treeBoundBox::BOTTOMBIT) != 0)
+    if ((faceID & treeBoundBox::faceBit::bottom) != 0)
     {
         // Want to go down so check for y-bit set.
         octantMask |= Y;
         wantedValue |= Y;
     }
-    else if ((faceID & treeBoundBox::TOPBIT) != 0)
+    else if ((faceID & treeBoundBox::faceBit::top) != 0)
     {
         // Want to go up so check for y-bit not set.
         octantMask |= Y;
     }
 
-    if ((faceID & treeBoundBox::BACKBIT) != 0)
+    if ((faceID & treeBoundBox::faceBit::back) != 0)
     {
         octantMask |= Z;
         wantedValue |= Z;
     }
-    else if ((faceID & treeBoundBox::FRONTBIT) != 0)
+    else if ((faceID & treeBoundBox::faceBit::front) != 0)
     {
         octantMask |= Z;
     }
@@ -2009,7 +2009,7 @@ bool CML::indexedOctree<Type>::walkToNeighbour
     // +---+-+-+
     //        \
     //
-    // e.g. ray is at (a) in octant 0(or 4) with faceIDs : LEFTBIT+TOPBIT.
+    // e.g. ray is at (a) in octant 0(or 4) with faceIDs : left+top.
     // If we would be in octant 1(or 5) we could go to the correct octant
     // in the same node by just flipping the x and y bits (exoring).
     // But if we are not in octant 1/5 we have to go up until we are.
@@ -2187,32 +2187,32 @@ CML::word CML::indexedOctree<Type>::faceString
     {
         desc = "noFace";
     }
-    if (faceID & treeBoundBox::LEFTBIT)
+    if (faceID & treeBoundBox::faceBit::left)
     {
         if (!desc.empty()) desc += "+";
         desc += "left";
     }
-    if (faceID & treeBoundBox::RIGHTBIT)
+    if (faceID & treeBoundBox::faceBit::right)
     {
         if (!desc.empty()) desc += "+";
         desc += "right";
     }
-    if (faceID & treeBoundBox::BOTTOMBIT)
+    if (faceID & treeBoundBox::faceBit::bottom)
     {
         if (!desc.empty()) desc += "+";
         desc += "bottom";
     }
-    if (faceID & treeBoundBox::TOPBIT)
+    if (faceID & treeBoundBox::faceBit::top)
     {
         if (!desc.empty()) desc += "+";
         desc += "top";
     }
-    if (faceID & treeBoundBox::BACKBIT)
+    if (faceID & treeBoundBox::faceBit::back)
     {
         if (!desc.empty()) desc += "+";
         desc += "back";
     }
-    if (faceID & treeBoundBox::FRONTBIT)
+    if (faceID & treeBoundBox::faceBit::front)
     {
         if (!desc.empty()) desc += "+";
         desc += "front";
@@ -2606,7 +2606,7 @@ CML::pointIndexHit CML::indexedOctree<Type>::findLine
         if ((startBit & endBit) != 0)
         {
             // Both start and end outside domain and in same block.
-            return pointIndexHit(false, vector::zero, -1);
+            return pointIndexHit(false, Zero, -1);
         }
 
 
@@ -2620,7 +2620,7 @@ CML::pointIndexHit CML::indexedOctree<Type>::findLine
             // Track start to inside domain.
             if (!treeBb.intersects(start, end, trackStart))
             {
-                return pointIndexHit(false, vector::zero, -1);
+                return pointIndexHit(false, Zero, -1);
             }
         }
 
@@ -2629,7 +2629,7 @@ CML::pointIndexHit CML::indexedOctree<Type>::findLine
             // Track end to inside domain.
             if (!treeBb.intersects(end, trackStart, trackEnd))
             {
-                return pointIndexHit(false, vector::zero, -1);
+                return pointIndexHit(false, Zero, -1);
             }
         }
 
@@ -3264,7 +3264,7 @@ CML::pointIndexHit CML::indexedOctree<Type>::findNearest
 {
     scalar nearestDistSqr = startDistSqr;
     label nearestShapeI = -1;
-    point nearestPoint = vector::zero;
+    point nearestPoint = Zero;
 
     if (nodes_.size())
     {
@@ -3315,7 +3315,7 @@ CML::pointIndexHit CML::indexedOctree<Type>::findNearest
 ) const
 {
     label nearestShapeI = -1;
-    point nearestPoint = vector::zero;
+    point nearestPoint = Zero;
 
     if (nodes_.size())
     {
@@ -3548,7 +3548,7 @@ CML::volumeType CML::indexedOctree<Type>::getVolumeType
 {
     if (nodes_.empty())
     {
-        return volumeType::UNKNOWN;
+        return volumeType::unknown;
     }
 
 //    // If the sample is not within the octree, then have to query shapes
@@ -3563,36 +3563,36 @@ CML::volumeType CML::indexedOctree<Type>::getVolumeType
         // Calculate type for every octant of node.
 
         nodeTypes_.setSize(8*nodes_.size());
-        nodeTypes_ = volumeType::UNKNOWN;
+        nodeTypes_ = volumeType::unknown;
 
         calcVolumeType(0);
 
         if (debug)
         {
-            label nUNKNOWN = 0;
-            label nMIXED = 0;
-            label nINSIDE = 0;
-            label nOUTSIDE = 0;
+            label nUnknown = 0;
+            label nMixed = 0;
+            label nInside = 0;
+            label nOutside = 0;
 
             forAll(nodeTypes_, i)
             {
                 volumeType type = volumeType::type(nodeTypes_.get(i));
 
-                if (type == volumeType::UNKNOWN)
+                if (type == volumeType::unknown)
                 {
-                    nUNKNOWN++;
+                    nUnknown++;
                 }
-                else if (type == volumeType::MIXED)
+                else if (type == volumeType::mixed)
                 {
-                    nMIXED++;
+                    nMixed++;
                 }
-                else if (type == volumeType::INSIDE)
+                else if (type == volumeType::inside)
                 {
-                    nINSIDE++;
+                    nInside++;
                 }
-                else if (type == volumeType::OUTSIDE)
+                else if (type == volumeType::outside)
                 {
-                    nOUTSIDE++;
+                    nOutside++;
                 }
                 else
                 {
@@ -3604,10 +3604,10 @@ CML::volumeType CML::indexedOctree<Type>::getVolumeType
                 << " bb:" << bb()
                 << " nodes_:" << nodes_.size()
                 << " nodeTypes_:" << nodeTypes_.size()
-                << " nUNKNOWN:" << nUNKNOWN
-                << " nMIXED:" << nMIXED
-                << " nINSIDE:" << nINSIDE
-                << " nOUTSIDE:" << nOUTSIDE
+                << " nUnknown:" << nUnknown
+                << " nMixed:" << nMixed
+                << " nInside:" << nInside
+                << " nOutside:" << nOutside
                 << endl;
         }
     }

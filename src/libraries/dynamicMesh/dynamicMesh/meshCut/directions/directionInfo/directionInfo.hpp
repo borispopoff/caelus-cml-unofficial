@@ -117,8 +117,8 @@ public:
         static label edgeToFaceIndex
         (
             const primitiveMesh& mesh,
-            const label cellI,
-            const label faceI,
+            const label celli,
+            const label facei,
             const label edgeI
         );
 
@@ -176,7 +176,7 @@ public:
             (
                 const polyMesh&,
                 const polyPatch&,
-                const label patchFaceI,
+                const label patchFacei,
                 const point& faceCentre,
                 TrackingData& td
             );
@@ -187,7 +187,7 @@ public:
             (
                 const polyMesh&,
                 const polyPatch&,
-                const label patchFaceI,
+                const label patchFacei,
                 const point& faceCentre,
                 TrackingData& td
             );

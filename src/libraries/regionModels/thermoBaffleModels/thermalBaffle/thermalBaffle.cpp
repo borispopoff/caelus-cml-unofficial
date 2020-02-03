@@ -84,11 +84,11 @@ void thermalBaffle::solveEnergy()
                 false
             ),
             regionMesh(),
-            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0)
         )
     );
 
-    volScalarField& Q = tQ();
+    volScalarField& Q = tQ.ref();
 
     volScalarField rho("rho", thermo_->rho());
     volScalarField alpha("alpha", thermo_->alpha());

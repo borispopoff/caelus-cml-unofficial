@@ -39,7 +39,7 @@ Description
 #include "pointFields.hpp"
 #include "uniformDimensionedFields.hpp"
 #include "ReadFields_.hpp"
-#include "fvIOoptionList.hpp"
+#include "fvOptions.hpp"
 
 #include "incompressible/singlePhaseTransportModel/singlePhaseTransportModel.hpp"
 
@@ -176,19 +176,19 @@ void calc
 
         // Read vol-internal fields.
 
-        PtrList<volScalarField::DimensionedInternalField> vsiFlds;
+        PtrList<volScalarField::Internal> vsiFlds;
         ReadFields(mesh, objects, vsiFlds);
 
-        PtrList<volVectorField::DimensionedInternalField> vviFlds;
+        PtrList<volVectorField::Internal> vviFlds;
         ReadFields(mesh, objects, vviFlds);
 
-        PtrList<volSphericalTensorField::DimensionedInternalField> vstiFlds;
+        PtrList<volSphericalTensorField::Internal> vstiFlds;
         ReadFields(mesh, objects, vstiFlds);
 
-        PtrList<volSymmTensorField::DimensionedInternalField> vsymtiFlds;
+        PtrList<volSymmTensorField::Internal> vsymtiFlds;
         ReadFields(mesh, objects, vsymtiFlds);
 
-        PtrList<volTensorField::DimensionedInternalField> vtiFlds;
+        PtrList<volTensorField::Internal> vtiFlds;
         ReadFields(mesh, objects, vtiFlds);
 
         // Read surface fields.
@@ -286,8 +286,6 @@ void calc
             ),
             mesh
         );
-
-        #include "createFvOptions.hpp"
 
         if (phi.dimensions() == dimVolume/dimTime)
         {

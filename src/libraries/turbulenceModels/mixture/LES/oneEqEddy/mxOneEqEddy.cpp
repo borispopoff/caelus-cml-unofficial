@@ -115,9 +115,9 @@ void oneEqEddy::correct(const tmp<volTensorField>& tgradU)
      - fvm::Sp(ce_*rho()*sqrt(k_)/delta(), k_)
     );
 
-    kEqn().relax();
-    mesh_.updateFvMatrix(kEqn());
-    kEqn().solve();
+    kEqn.ref().relax();
+    mesh_.updateFvMatrix(kEqn.ref());
+    kEqn.ref().solve();
 
     bound(k_, kMin_);
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -75,10 +75,10 @@ class displacementLaplacianFvMotionSolver
         displacementLaplacianFvMotionSolver
         (
             const displacementLaplacianFvMotionSolver&
-        );
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementLaplacianFvMotionSolver&);
+        void operator=(const displacementLaplacianFvMotionSolver&) = delete;
 
 
 public:

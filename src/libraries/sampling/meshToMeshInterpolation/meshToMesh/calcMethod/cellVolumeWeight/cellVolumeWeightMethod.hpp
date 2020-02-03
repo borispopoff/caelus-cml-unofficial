@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -81,19 +81,24 @@ protected:
         void setNextCells
         (
             label& startSeedI,
-            label& srcCellI,
-            label& tgtCellI,
+            label& srcCelli,
+            label& tgtCelli,
             const labelList& srcCellIDs,
             const boolList& mapFlag,
             const DynamicList<label>& visitedCells,
             labelList& seedCells
         ) const;
 
+
+private:
+
+    // Private member functions
+
         //- Disallow default bitwise copy construct
-        cellVolumeWeightMethod(const cellVolumeWeightMethod&);
+        cellVolumeWeightMethod(const cellVolumeWeightMethod&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cellVolumeWeightMethod&);
+        void operator=(const cellVolumeWeightMethod&) = delete;
 
 
 public:

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,8 +24,7 @@ Class
 Description
     This boundary condition sets the patch-normal component to a fixed value.
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         fixedValue   | fixed value             | yes         |
@@ -33,14 +32,14 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fixedNormalSlip;
         fixedValue      uniform 0;     // example entry for a scalar field
     }
     \endverbatim
 
-SeeAlso
+See also
     CML::transformFvPatchField
 
 
@@ -57,7 +56,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class fixedNormalSlipFvPatch Declaration
+                 Class fixedNormalSlipFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -111,9 +110,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedNormalSlipFvPatchField<Type>(*this)
             );
@@ -127,12 +126,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedNormalSlipFvPatchField<Type>(*this, iF)
             );
@@ -149,20 +148,16 @@ public:
                 return false;
             }
 
+
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchField<Type>&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchField<Type>&, const labelList&);
 
 
         // Return defining fields
@@ -181,16 +176,17 @@ public:
         // Evaluation functions
 
             //- Return gradient at boundary
-            virtual tmp<Field<Type> > snGrad() const;
+            virtual tmp<Field<Type>> snGrad() const;
 
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             );
 
             //- Return face-gradient transform diagonal
-            virtual tmp<Field<Type> > snGradTransformDiag() const;
+            virtual tmp<Field<Type>> snGradTransformDiag() const;
 
 
         //- Write
@@ -221,11 +217,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "symmTransformField.hpp"
 
@@ -240,7 +233,7 @@ CML::fixedNormalSlipFvPatchField<Type>::fixedNormalSlipFvPatchField
 )
 :
     transformFvPatchField<Type>(p, iF),
-    fixedValue_(p.size(), pTraits<Type>::zero)
+    fixedValue_(p.size(), Zero)
 {}
 
 
@@ -319,14 +312,14 @@ void CML::fixedNormalSlipFvPatchField<Type>::rmap
     transformFvPatchField<Type>::rmap(ptf, addr);
 
     const fixedNormalSlipFvPatchField<Type>& dmptf =
-        refCast<const fixedNormalSlipFvPatchField<Type> >(ptf);
+        refCast<const fixedNormalSlipFvPatchField<Type>>(ptf);
 
     fixedValue_.rmap(dmptf.fixedValue_, addr);
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::fixedNormalSlipFvPatchField<Type>::snGrad() const
 {
     const vectorField nHat(this->patch().nf());
@@ -363,7 +356,7 @@ void CML::fixedNormalSlipFvPatchField<Type>::evaluate
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::fixedNormalSlipFvPatchField<Type>::snGradTransformDiag() const
 {
     const vectorField nHat(this->patch().nf());
@@ -381,12 +374,8 @@ template<class Type>
 void CML::fixedNormalSlipFvPatchField<Type>::write(Ostream& os) const
 {
     transformFvPatchField<Type>::write(os);
-    fixedValue_.writeEntry("fixedValue", os);
+    writeEntry(os, "fixedValue", fixedValue_);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

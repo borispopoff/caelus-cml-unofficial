@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,10 +53,10 @@ CML::coordinateSystems::coordinateSystems
 CML::coordinateSystems::coordinateSystems
 (
     const IOobject& io,
-    const Xfer<PtrList<coordinateSystem> >& lst
+    PtrList<coordinateSystem>&& lst
 )
 :
-    IOPtrList<coordinateSystem>(io, lst)
+    IOPtrList<coordinateSystem>(io, move(lst))
 {}
 
 

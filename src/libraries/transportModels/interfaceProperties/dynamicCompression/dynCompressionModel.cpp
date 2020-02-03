@@ -93,7 +93,7 @@ void CML::dynCompressionModel::updateCompression()
     // (inlets, outlets etc.)
     forAll(phic_.boundaryField(), patchi)
     {
-        fvsPatchScalarField& phicp = phic_.boundaryField()[patchi];
+        fvsPatchScalarField& phicp = phic_.boundaryFieldRef()[patchi];
 
         if (!phicp.coupled())
         {

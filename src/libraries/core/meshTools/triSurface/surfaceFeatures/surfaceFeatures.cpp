@@ -176,9 +176,9 @@ void CML::surfaceFeatures::calcFeatPoints(const List<edgeStatus>& edgeStat)
 
     const labelListList& pointEdges = surf_.pointEdges();
 
-    forAll(pointEdges, pointI)
+    forAll(pointEdges, pointi)
     {
-        const labelList& pEdges = pointEdges[pointI];
+        const labelList& pEdges = pointEdges[pointi];
 
         label nFeatEdges = 0;
 
@@ -192,7 +192,7 @@ void CML::surfaceFeatures::calcFeatPoints(const List<edgeStatus>& edgeStat)
 
         if (nFeatEdges > 2)
         {
-            featurePoints.append(pointI);
+            featurePoints.append(pointi);
         }
     }
 
@@ -200,7 +200,7 @@ void CML::surfaceFeatures::calcFeatPoints(const List<edgeStatus>& edgeStat)
 }
 
 
-// Returns next feature edge connected to pointI with correct value.
+// Returns next feature edge connected to pointi with correct value.
 CML::label CML::surfaceFeatures::nextFeatEdge
 (
     const List<edgeStatus>& edgeStat,
@@ -242,7 +242,7 @@ CML::label CML::surfaceFeatures::nextFeatEdge
 
 
 // Finds connected feature edges by walking from prevEdgeI in direction of
-// prevPointI. Marks feature edges visited in featVisited by assigning them
+// prevPointi. Marks feature edges visited in featVisited by assigning them
 // the current feature line number. Returns cumulative length of edges walked.
 // Works in one of two modes:
 // - mark : step to edges with featVisited = -1.
@@ -254,20 +254,20 @@ CML::surfaceFeatures::labelScalar CML::surfaceFeatures::walkSegment
     const bool mark,
     const List<edgeStatus>& edgeStat,
     const label startEdgeI,
-    const label startPointI,
+    const label startPointi,
     const label currentFeatI,
     labelList& featVisited
 )
 {
     label edgeI = startEdgeI;
 
-    label vertI = startPointI;
+    label vertI = startPointi;
 
     scalar visitedLength = 0.0;
 
     label nVisited = 0;
 
-    if (findIndex(featurePoints_, startPointI) >= 0)
+    if (findIndex(featurePoints_, startPointi) >= 0)
     {
         // Do not walk across feature points
 
@@ -331,7 +331,7 @@ CML::surfaceFeatures::labelScalar CML::surfaceFeatures::walkSegment
         {
             Warning<< "walkSegment : reached iteration limit in walking "
                 << "feature edges on surface from edge:" << startEdgeI
-                << " vertex:" << startPointI << nl
+                << " vertex:" << startPointi << nl
                 << "Returning with large length" << endl;
 
             return labelScalar(nVisited, GREAT);
@@ -752,9 +752,9 @@ void CML::surfaceFeatures::writeObj(const fileName& prefix) const
 
     forAll(featurePoints_, i)
     {
-        label pointI = featurePoints_[i];
+        label pointi = featurePoints_[i];
 
-        meshTools::writeOBJ(pointStr, surf_.localPoints()[pointI]);
+        meshTools::writeOBJ(pointStr, surf_.localPoints()[pointi]);
     }
 }
 

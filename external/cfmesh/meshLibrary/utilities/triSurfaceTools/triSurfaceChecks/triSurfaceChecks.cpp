@@ -175,7 +175,7 @@ public:
         template<class labelListType>
         void collectGroups
         (
-            std::map<label, DynList<label> >& /*neiGroups*/,
+            std::map<label, DynList<label>>& /*neiGroups*/,
             const labelListType& /*elementInGroup*/,
             const DynList<label>& /*localGroupLabel*/
         ) const
@@ -438,7 +438,7 @@ public:
         template<class labelListType>
         void collectGroups
         (
-            std::map<label, DynList<label> >& /*neiGroups*/,
+            std::map<label, DynList<label>>& /*neiGroups*/,
             const labelListType& /*elementInGroup*/,
             const DynList<label>& /*localGroupLabel*/
         ) const
@@ -559,7 +559,7 @@ public:
         template<class labelListType>
         void collectGroups
         (
-            std::map<label, DynList<label> >& /*neiGroups*/,
+            std::map<label, DynList<label>>& /*neiGroups*/,
             const labelListType& /*elementInGroup*/,
             const DynList<label>& /*localGroupLabel*/
         ) const

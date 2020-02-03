@@ -83,10 +83,10 @@ void surfaceAreaPluginFunction::doEvaluation()
     }
 
     forAll(cells,i) {
-        const label cellI=cells[i];
+        const label celli=cells[i];
 
-        if(cellI>=0) {
-            pArea()[cellI]+=area[i];
+        if(celli>=0) {
+            pArea()[celli]+=area[i];
         }
     }
 

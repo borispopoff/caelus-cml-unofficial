@@ -58,7 +58,7 @@ Description
 #include "turbulenceModel.hpp"
 #include "interpolationTable.hpp"
 #include "pimpleControl.hpp"
-#include "fvIOoptionList.hpp"
+#include "fvOptions.hpp"
 #include "fvcSmooth.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -74,6 +74,7 @@ int main(int argc, char *argv[])
     #include "createTimeControls.hpp"
     #include "initContinuityErrs.hpp"
     #include "createFields.hpp"
+    #include "createFvOptions.hpp"
     #include "createMRF.hpp"
     #include "correctPhi.hpp"
 

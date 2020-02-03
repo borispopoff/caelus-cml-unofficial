@@ -324,7 +324,7 @@ void partTetMesh::createBufferLayers()
     pAtBufferLayers.clear();
     
     //- create the map
-    std::map<label, LongList<parPartTet> > exchangeTets;
+    std::map<label, LongList<parPartTet>> exchangeTets;
     forAll(neiProcs, procI)
         exchangeTets.insert
         (

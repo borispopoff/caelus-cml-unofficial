@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,8 +22,23 @@ Class
     CML::cyclicSlipFvPatchField
 
 Description
-    CML::cyclicSlipFvPatchField
+    This boundary condition is a light wrapper around the cyclicFvPatchField
+    condition, providing no new functionality.
 
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            cyclicSlip;
+    }
+    \endverbatim
+
+See also
+    Foam::cyclicFvPatchField
+
+SourceFiles
+    cyclicSlipFvPatchField.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -47,7 +62,6 @@ class cyclicSlipFvPatchField
 :
     public cyclicFvPatchField<Type>
 {
-    // Private data
 
 public:
 
@@ -88,9 +102,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicSlipFvPatchField<Type>(*this)
             );
@@ -104,33 +118,26 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cyclicSlipFvPatchField<Type>(*this, iF)
             );
         }
-
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
+CML::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -141,7 +148,7 @@ cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 
 
 template<class Type>
-cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
+CML::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 (
     const cyclicSlipFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -154,7 +161,7 @@ cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 
 
 template<class Type>
-cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
+CML::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -166,7 +173,7 @@ cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 
 
 template<class Type>
-cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
+CML::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 (
     const cyclicSlipFvPatchField<Type>& ptf
 )
@@ -176,7 +183,7 @@ cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 
 
 template<class Type>
-cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
+CML::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 (
     const cyclicSlipFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -186,12 +193,4 @@ cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

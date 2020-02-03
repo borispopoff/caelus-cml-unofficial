@@ -139,7 +139,7 @@ inline void CML::cellInfo::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -163,7 +163,7 @@ inline void CML::cellInfo::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -240,7 +240,7 @@ inline bool CML::cellInfo::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::cellInfo::equal
 (
     const cellInfo& rhs,

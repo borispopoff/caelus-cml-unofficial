@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -35,7 +35,7 @@ Description
             componentColumns    (1 2 3);    // component column indices
             separator           ",";        // optional (defaults to ",")
             mergeSeparators     no;         // merge multiple separators
-            fileName            "fileXYZ";  // name of csv data file
+            file                "fileXYZ";  // name of csv data file
             outOfBounds         clamp;      // optional out-of-bounds handling
             interpolationScheme linear;     // optional interpolation scheme
         }
@@ -98,11 +98,8 @@ class CSV
         //- Read csv data table
         void read();
 
-        //- Read the next value from the splitted string
+        //- Read the next value from the split string
         Type readValue(const List<string>&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const CSV<Type>&);
 
 
 public:
@@ -123,12 +120,6 @@ public:
         //- Copy constructor
         CSV(const CSV<Type>& tbl);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new CSV<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~CSV();
@@ -141,6 +132,12 @@ public:
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CSV<Type>&) = delete;
 };
 
 
@@ -162,56 +159,56 @@ CML::scalar CSV<scalar>::readValue(const List<string>& splitted);
 template<>
 CML::label CML::DataEntryTypes::CSV<CML::label>::readValue
 (
-    const List<string>& splitted
+    const List<string>& split
 )
 {
-    if (componentColumns_[0] >= splitted.size())
+    if (componentColumns_[0] >= split.size())
     {
         FatalErrorInFunction
             << "No column " << componentColumns_[0] << " in "
-            << splitted << endl
+            << split << endl
             << exit(FatalError);
     }
 
-    return readLabel(IStringStream(splitted[componentColumns_[0]])());
+    return readLabel(IStringStream(split[componentColumns_[0]])());
 }
 
 
 template<>
 CML::scalar CML::DataEntryTypes::CSV<CML::scalar>::readValue
 (
-    const List<string>& splitted
+    const List<string>& split
 )
 {
-    if (componentColumns_[0] >= splitted.size())
+    if (componentColumns_[0] >= split.size())
     {
         FatalErrorInFunction
             << "No column " << componentColumns_[0] << " in "
-            << splitted << endl
+            << split << endl
             << exit(FatalError);
     }
 
-    return readScalar(IStringStream(splitted[componentColumns_[0]])());
+    return readScalar(IStringStream(split[componentColumns_[0]])());
 }
 
 
 template<class Type>
-Type CML::DataEntryTypes::CSV<Type>::readValue(const List<string>& splitted)
+Type CML::DataEntryTypes::CSV<Type>::readValue(const List<string>& split)
 {
     Type result;
 
     for (label i = 0; i < pTraits<Type>::nComponents; i++)
     {
-        if (componentColumns_[i] >= splitted.size())
+        if (componentColumns_[i] >= split.size())
         {
             FatalErrorInFunction
-            << "No column " << componentColumns_[i] << " in "
-                << splitted << endl
+                << "No column " << componentColumns_[i] << " in "
+                << split << endl
                 << exit(FatalError);
         }
 
         result[i] =
-        readScalar(IStringStream(splitted[componentColumns_[i]])());
+        readScalar(IStringStream(split[componentColumns_[i]])());
     }
 
     return result;
@@ -231,18 +228,18 @@ void CML::DataEntryTypes::CSV<Type>::read()
             << exit(FatalIOError);
     }
 
-    DynamicList<Tuple2<scalar, Type> > values;
+    DynamicList<Tuple2<scalar, Type>> values;
 
-    // skip header
+    // Skip header
     for (label i = 0; i < nHeaderLine_; i++)
     {
         string line;
         is.getLine(line);
     }
 
-    label nEntries = max(componentColumns_);
+    const label nEntries = max(refColumn_, max(componentColumns_));
 
-    // read data
+    // Read data
     while (is.good())
     {
         string line;
@@ -251,7 +248,7 @@ void CML::DataEntryTypes::CSV<Type>::read()
 
         label n = 0;
         std::size_t pos = 0;
-        DynamicList<string> splitted;
+        DynamicList<string> split;
 
         if (mergeSeparators_)
         {
@@ -278,13 +275,13 @@ void CML::DataEntryTypes::CSV<Type>::read()
 
                 if (nPos == std::string::npos)
                 {
-                    splitted.append(line.substr(pos));
+                    split.append(line.substr(pos));
                     pos = nPos;
                     n++;
                 }
                 else
                 {
-                    splitted.append(line.substr(pos, nPos - pos));
+                    split.append(line.substr(pos, nPos - pos));
                     pos = nPos + 1;
                     n++;
                 }
@@ -298,13 +295,13 @@ void CML::DataEntryTypes::CSV<Type>::read()
 
                 if (nPos == std::string::npos)
                 {
-                    splitted.append(line.substr(pos));
+                    split.append(line.substr(pos));
                     pos = nPos;
                     n++;
                 }
                 else
                 {
-                    splitted.append(line.substr(pos, nPos - pos));
+                    split.append(line.substr(pos, nPos - pos));
                     pos = nPos + 1;
                     n++;
                 }
@@ -312,13 +309,13 @@ void CML::DataEntryTypes::CSV<Type>::read()
         }
 
 
-        if (splitted.size() <= 1)
+        if (split.size() <= 1)
         {
             break;
         }
 
-        scalar x = readScalar(IStringStream(splitted[refColumn_])());
-        Type value = readValue(splitted);
+        scalar x = readScalar(IStringStream(split[refColumn_])());
+        Type value = readValue(split);
 
         values.append(Tuple2<scalar,Type>(x, value));
     }
@@ -399,29 +396,13 @@ void CML::DataEntryTypes::CSV<Type>::writeData(Ostream& os) const
     // the values themselves
     TableBase<Type>::writeEntries(os);
 
-    os.writeKeyword("nHeaderLine") << nHeaderLine_ << token::END_STATEMENT
-        << nl;
-    os.writeKeyword("refColumn") << refColumn_ << token::END_STATEMENT << nl;
+    writeEntry(os, "nHeaderLine", nHeaderLine_);
+    writeEntry(os, "refColumn", refColumn_);
+    writeEntry(os, "componentColumns", componentColumns_);
+    writeEntry(os, "separator", string(separator_));
+    writeEntry(os, "mergeSeparators", mergeSeparators_);
+    writeEntry(os, "file", fName_);
 
-    // Force writing labelList in ascii
-    os.writeKeyword("componentColumns");
-    if (os.format() == IOstream::BINARY)
-    {
-        os.format(IOstream::ASCII);
-        os  << componentColumns_;
-        os.format(IOstream::BINARY);
-    }
-    else
-    {
-        os  << componentColumns_;
-    }
-    os  << token::END_STATEMENT << nl;
-
-    os.writeKeyword("separator") << string(separator_)
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("mergeSeparators") << mergeSeparators_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("file") << fName_ << token::END_STATEMENT << nl;
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 

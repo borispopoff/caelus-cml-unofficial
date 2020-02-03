@@ -87,10 +87,10 @@ protected:
 private:
 
     //- Disallow default bitwise copy construct
-    turbulenceModel(const turbulenceModel&);
+    turbulenceModel(const turbulenceModel&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const turbulenceModel&);
+    void operator=(const turbulenceModel&) = delete;
 
 
 public:

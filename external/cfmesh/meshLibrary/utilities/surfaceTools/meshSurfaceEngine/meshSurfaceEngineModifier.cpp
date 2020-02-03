@@ -184,7 +184,7 @@ void meshSurfaceEngineModifier::syncVerticesAtParallelBoundaries
     const labelList& bPoints = surfaceEngine_.boundaryPoints();
     const pointFieldPMG& points = surfaceEngine_.mesh().points();
 
-    std::map<label, LongList<labelledPoint> > exchangeData;
+    std::map<label, LongList<labelledPoint>> exchangeData;
     forAll(neiProcs, i)
         exchangeData.insert
         (
@@ -363,7 +363,7 @@ void meshSurfaceEngineModifier::updateGeometry
 
 
             //- start updating point normals
-            std::map<label, LongList<labelledPoint> > exchangeData;
+            std::map<label, LongList<labelledPoint>> exchangeData;
             forAll(neiProcs, i)
                 exchangeData[neiProcs[i]].clear();
 

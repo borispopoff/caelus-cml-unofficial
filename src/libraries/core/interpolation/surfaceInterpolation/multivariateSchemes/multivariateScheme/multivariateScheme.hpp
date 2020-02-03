@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,15 +54,6 @@ class multivariateScheme
         surfaceScalarField weights_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multivariateScheme(const multivariateScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateScheme&);
-
-
 public:
 
     //- Runtime type information
@@ -80,6 +71,9 @@ public:
             const surfaceScalarField& faceFlux,
             Istream& schemeData
         );
+
+        //- Disallow default bitwise copy construct
+        multivariateScheme(const multivariateScheme&) = delete;
 
 
     // Member Operators
@@ -123,16 +117,22 @@ public:
                 }
         };
 
-        tmp<surfaceInterpolationScheme<Type> > operator()
+        tmp<surfaceInterpolationScheme<Type>> operator()
         (
             const GeometricField<Type, fvPatchField, volMesh>& field
         ) const
         {
-            return tmp<surfaceInterpolationScheme<Type> >
+            return tmp<surfaceInterpolationScheme<Type>>
             (
                 new fieldScheme(field, weights_)
             );
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateScheme&) = delete;
 };
 
 
@@ -150,8 +150,13 @@ typedef multivariateScheme                                                     \
     scalar,                                                                    \
     LimitedScheme<scalar, LIMITER<NVDTVD>, limitFuncs::magSqr>                 \
 >                                                                              \
-    multivariateScheme##LIMITER_;                                              \
-defineTemplateTypeNameAndDebugWithName(multivariateScheme##LIMITER_, #SS, 0);  \
+    multivariateScheme##LIMITER##_;                                            \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        multivariateScheme##LIMITER##_,                                        \
+        #SS,                                                                   \
+        0                                                                      \
+    );                                                                         \
                                                                                \
 multivariateSurfaceInterpolationScheme<scalar>::addIstreamConstructorToTable   \
 <                                                                              \
@@ -175,22 +180,22 @@ multivariateSurfaceInterpolationScheme<scalar>::addIstreamConstructorToTable   \
 typedef multivariateScheme                                                     \
 <                                                                              \
     scalar,                                                                    \
-    LimitedScheme<scalar, LLIMITER<LIMITER<NVDTVD> >, limitFuncs::LIMFUNC>     \
+    LimitedScheme<scalar, LLIMITER<LIMITER<NVDTVD>>, limitFuncs::LIMFUNC>      \
 >                                                                              \
     multivariateScheme##LLIMITER##LIMITER##NVDTVD##LIMFUNC##_;                 \
-defineTemplateTypeNameAndDebugWithName                                         \
-(                                                                              \
-    multivariateScheme##LLIMITER##LIMITER##NVDTVD##LIMFUNC##_,                 \
-    #SS,                                                                       \
-    0                                                                          \
-);                                                                             \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        multivariateScheme##LLIMITER##LIMITER##NVDTVD##LIMFUNC##_,             \
+        #SS,                                                                   \
+        0                                                                      \
+    );                                                                         \
                                                                                \
 multivariateSurfaceInterpolationScheme<scalar>::addIstreamConstructorToTable   \
 <                                                                              \
     multivariateScheme                                                         \
     <                                                                          \
         scalar,                                                                \
-        LimitedScheme<scalar, LLIMITER<LIMITER<NVDTVD> >, limitFuncs::LIMFUNC> \
+        LimitedScheme<scalar, LLIMITER<LIMITER<NVDTVD>>, limitFuncs::LIMFUNC>  \
     >                                                                          \
 >                                                                              \
     addMultivariate##SS##ConstructorToTable_;

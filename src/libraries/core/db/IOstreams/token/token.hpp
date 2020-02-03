@@ -1,6 +1,7 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,6 +55,7 @@ namespace CML
 // Forward declaration of friend functions and operators
 
 class token;
+
 Istream& operator>>(Istream&, token&);
 Ostream& operator<<(Ostream&, const token&);
 
@@ -64,54 +66,62 @@ Ostream& operator<<(Ostream&, const token&);
 
 class token
 {
-
 public:
 
-    //- Enumeration defining the types of token
+    //- Enumeration defining the types of token.
+    //  Since these values are also used to tag content in Pstream,
+    //  the maximum number of types is limited to 30.
     enum tokenType
     {
-        UNDEFINED,
+        UNDEFINED = 0,    //!< An undefined token-type
 
-        PUNCTUATION,
-        WORD,
-        STRING,
-        VERBATIMSTRING,
-        LABEL,
-        FLOAT_SCALAR,
-        DOUBLE_SCALAR,
-        COMPOUND,
+        // Fundamental types
+        PUNCTUATION,      //!< single character punctuation
+        LABEL,            //!< label (integer) type
+        FLOAT_SCALAR,     //!< float (single-precision) type
+        DOUBLE_SCALAR,    //!< double (double-precision) type
 
-        ERROR
+        // Pointer types
+        WORD,             //!< A CML::word
+        STRING,           //!< A string
+        VARIABLE,         //!< A dictionary \c \$variable (string variant)
+        VERBATIMSTRING,   //!< Verbatim string content
+        COMPOUND,         //!< Compound type such as \c List\<label\> etc.
+
+        ERROR             //!< A token error encountered
     };
 
-
-    //- Standard punctuation tokens
-    enum punctuationToken
+    //- Standard punctuation tokens (a character)
+    enum punctuationToken : char
     {
-        NULL_TOKEN     = '\0',
-        SPACE          = ' ',
-        TAB            = '\t',
-        NL             = '\n',
+        NULL_TOKEN     = '\0',  //!< Nul character
+        SPACE          = ' ',   //!< Space [isspace]
+        TAB            = '\t',  //!< Tab [isspace]
+        NL             = '\n',  //!< Newline [isspace]
 
-        END_STATEMENT  = ';',
-        BEGIN_LIST     = '(',
-        END_LIST       = ')',
-        BEGIN_SQR      = '[',
-        END_SQR        = ']',
-        BEGIN_BLOCK    = '{',
-        END_BLOCK      = '}',
-        COLON          = ':',
-        COMMA          = ',',
-        HASH           = '#',
+        END_STATEMENT  = ';',   //!< End entry [#isseparator]
+        BEGIN_LIST     = '(',   //!< Begin list [#isseparator]
+        END_LIST       = ')',   //!< End list [#isseparator]
+        BEGIN_SQR      = '[',   //!< Begin dimensions [#isseparator]
+        END_SQR        = ']',   //!< End dimensions [#isseparator]
+        BEGIN_BLOCK    = '{',   //!< Begin block [#isseparator]
+        END_BLOCK      = '}',   //!< End block [#isseparator]
+        COLON          = ':',   //!< Colon [#isseparator]
+        COMMA          = ',',   //!< Comma [#isseparator]
+        HASH           = '#',   //!< Hash - directive or verbatim string
+        DOLLAR         = '$',   //!< Dollar - start variable
+        ATSYM          = '@',   //!< At
+        SQUOTE         = '\'',  //!< Single quote
+        DQUOTE         = '"',   //!< Double quote
 
-        BEGIN_STRING   = '"',
-        END_STRING     = BEGIN_STRING,
+        ASSIGN         = '=',   //!< Assignment/equals [#isseparator]
+        ADD            = '+',   //!< Addition [#isseparator]
+        SUBTRACT       = '-',   //!< Subtract or start of negative number
+        MULTIPLY       = '*',   //!< Multiply [#isseparator]
+        DIVIDE         = '/',   //!< Divide [#isseparator]
 
-        ASSIGN         = '=',
-        ADD            = '+',
-        SUBTRACT       = '-',
-        MULTIPLY       = '*',
-        DIVIDE         = '/'
+        BEGIN_STRING   = DQUOTE, //!< Begin string with double quote
+        END_STRING     = DQUOTE  //!< End string with double quote
     };
 
 
@@ -120,18 +130,7 @@ public:
     :
         public refCount
     {
-        // Private data
-
-            bool empty_;
-
-
-        // Private Member Functions
-
-            //- Disallow default bitwise copy construct
-            compound(const compound&);
-
-            //- Disallow default bitwise assignment
-            void operator=(const compound&);
+        bool empty_;
 
 
     public:
@@ -159,6 +158,9 @@ public:
                 empty_(false)
             {}
 
+            //- Disallow default bitwise copy construction
+            compound(const compound&) = delete;
+
 
         // Selectors
 
@@ -172,31 +174,28 @@ public:
 
         // Member Functions
 
-            // Access
+            //- Return true if name is a compound type
+            static bool isCompound(const word& name);
 
-                //- Return true if name is a compound type
-                static bool isCompound(const word& name);
+            bool empty() const
+            {
+                return empty_;
+            }
 
-                bool empty() const
-                {
-                    return empty_;
-                }
+            bool& empty()
+            {
+                return empty_;
+            }
 
-                bool& empty()
-                {
-                    return empty_;
-                }
+            virtual label size() const = 0;
 
-                virtual label size() const = 0;
+            virtual void write(Ostream&) const = 0;
 
 
-            // Check
+        // Member Operators
 
-            // Edit
-
-            // Write
-
-                virtual void write(Ostream&) const = 0;
+            //- Disallow default bitwise assignment
+            void operator=(const compound&) = delete;
 
 
         // IOstream Operators
@@ -240,7 +239,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- The token type
         tokenType type_;
@@ -272,7 +271,7 @@ private:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -282,7 +281,7 @@ public:
         //- Construct null
         inline token();
 
-        //- Construct as copy
+        //- Copy constructor
         inline token(const token&);
 
         //- Construct punctuation character token
@@ -311,7 +310,7 @@ public:
     inline ~token();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -328,8 +327,15 @@ public:
             inline bool isWord() const;
             inline const word& wordToken() const;
 
+            inline bool isVariable() const;
+
             inline bool isString() const;
             inline const string& stringToken() const;
+
+            inline bool isVerbatimString() const;
+
+            inline bool isAnyString() const;
+            inline const string& anyStringToken() const;
 
             inline bool isLabel() const;
             inline label labelToken() const;
@@ -370,7 +376,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         // Assignment
 
@@ -413,30 +419,32 @@ public:
             inline bool operator!=(const doubleScalar) const;
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, token&);
         friend Ostream& operator<<(Ostream&, const token&);
 
         friend Ostream& operator<<(Ostream&, const punctuationToken&);
         friend ostream& operator<<(ostream&, const punctuationToken&);
-        friend ostream& operator<<(ostream&, const InfoProxy<token>&);
 
+        friend ostream& operator<<(ostream&, const InfoProxy<token>&);
 };
 
 
 Ostream& operator<<(Ostream&, const token::punctuationToken&);
 ostream& operator<<(ostream&, const token::punctuationToken&);
+Ostream& operator<<(Ostream&, const token::compound&);
+
 ostream& operator<<(ostream&, const InfoProxy<token>&);
 
-Ostream& operator<<(Ostream&, const token::compound&);
+
 
 
 #define defineCompoundTypeName(Type, Name)                                    \
     defineTemplateTypeNameAndDebugWithName(token::Compound<Type>, #Type, 0);
 
 #define addCompoundToRunTimeSelectionTable(Type, Name)                        \
-    token::compound::addIstreamConstructorToTable<token::Compound<Type> >     \
+    token::compound::addIstreamConstructorToTable<token::Compound<Type>>      \
         add##Name##IstreamConstructorToTable_;
 
 
@@ -462,13 +470,13 @@ inline void token::clear()
     {
         delete wordTokenPtr_;
     }
-    else if (type_ == STRING || type_ == VERBATIMSTRING)
+    else if (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING)
     {
         delete stringTokenPtr_;
     }
     else if (type_ == COMPOUND)
     {
-        if (compoundTokenPtr_->okToDelete())
+        if (compoundTokenPtr_->unique())
         {
             delete compoundTokenPtr_;
         }
@@ -511,6 +519,7 @@ inline token::token(const token& t)
         break;
 
         case STRING:
+        case VARIABLE:
         case VERBATIMSTRING:
             stringTokenPtr_ = new string(*t.stringTokenPtr_);
         break;
@@ -653,27 +662,73 @@ inline const word& token::wordToken() const
     }
     else
     {
-        parseError("word");
+        parseError(word::typeName);
         return word::null;
     }
 }
 
+inline bool token::isVariable() const
+{
+    return (type_ == VARIABLE);
+}
+
 inline bool token::isString() const
 {
-    return (type_ == STRING || type_ == VERBATIMSTRING);
+    return 
+    (
+        type_ == STRING
+     || type_ == VARIABLE
+     || type_ == VERBATIMSTRING
+);
 }
 
 inline const string& token::stringToken() const
 {
-    if (type_ == STRING || type_ == VERBATIMSTRING)
+    if
+    (
+        type_ == STRING
+     || type_ == VARIABLE
+     || type_ == VERBATIMSTRING
+    )
     {
         return *stringTokenPtr_;
     }
     else
     {
-        parseError("string");
+        parseError(string::typeName);
         return string::null;
     }
+}
+
+inline bool token::isVerbatimString() const
+{
+    return (type_ == VERBATIMSTRING);
+}
+
+inline bool token::isAnyString() const
+{
+    return (isWord() || isString());
+}
+
+inline const string& token::anyStringToken() const
+{
+    if
+    (
+        type_ == STRING
+     || type_ == VARIABLE
+     || type_ == VERBATIMSTRING
+    )
+    {
+        return *stringTokenPtr_;
+    }
+    else if (type_ == WORD)
+    {
+        // Upcast to string
+        return static_cast<const string&>(*wordTokenPtr_);
+    }
+
+    parseError("string");
+    return string::null;
 }
 
 inline bool token::isLabel() const
@@ -689,7 +744,7 @@ inline label token::labelToken() const
     }
     else
     {
-        parseError("label");
+        parseError(pTraits<label>::typeName);
         return 0;
     }
 }
@@ -749,7 +804,7 @@ inline scalar token::scalarToken() const
     }
     else
     {
-        parseError("scalar");
+        parseError(pTraits<scalar>::typeName);
         return 0.0;
     }
 }
@@ -834,6 +889,7 @@ inline void token::operator=(const token& t)
         break;
 
         case STRING:
+        case VARIABLE:
         case VERBATIMSTRING:
             stringTokenPtr_ = new string(*t.stringTokenPtr_);
         break;
@@ -941,6 +997,7 @@ inline bool token::operator==(const token& t) const
             return *wordTokenPtr_ == *t.wordTokenPtr_;
 
         case STRING:
+        case VARIABLE:
         case VERBATIMSTRING:
             return *stringTokenPtr_ == *t.stringTokenPtr_;
 
@@ -975,7 +1032,11 @@ inline bool token::operator==(const word& w) const
 
 inline bool token::operator==(const string& s) const
 {
-    return ((type_ == STRING || type_ == VERBATIMSTRING) && stringToken() == s);
+    return
+    (
+        (type_ == STRING || type_ == VARIABLE || type_ == VERBATIMSTRING)
+     && stringToken() == s
+    );
 }
 
 inline bool token::operator==(const label l) const

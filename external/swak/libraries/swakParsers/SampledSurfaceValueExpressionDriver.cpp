@@ -169,7 +169,7 @@ void SampledSurfaceValueExpressionDriver::updateIfNeeded()
     }
 }
 
-tmp<Field<scalar> > SampledSurfaceValueExpressionDriver::getScalarField(
+tmp<Field<scalar>> SampledSurfaceValueExpressionDriver::getScalarField(
     const word &name,bool oldTime
 )
 {
@@ -180,7 +180,7 @@ tmp<Field<scalar> > SampledSurfaceValueExpressionDriver::getScalarField(
         );
 }
 
-tmp<Field<vector> > SampledSurfaceValueExpressionDriver::getVectorField(
+tmp<Field<vector>> SampledSurfaceValueExpressionDriver::getVectorField(
     const word &name,bool oldTime
 )
 {
@@ -191,7 +191,7 @@ tmp<Field<vector> > SampledSurfaceValueExpressionDriver::getVectorField(
         );
 }
 
-tmp<Field<tensor> > SampledSurfaceValueExpressionDriver::getTensorField(
+tmp<Field<tensor>> SampledSurfaceValueExpressionDriver::getTensorField(
     const word &name,bool oldTime
 )
 {
@@ -202,7 +202,7 @@ tmp<Field<tensor> > SampledSurfaceValueExpressionDriver::getTensorField(
         );
 }
 
-tmp<Field<symmTensor> > SampledSurfaceValueExpressionDriver::getSymmTensorField(
+tmp<Field<symmTensor>> SampledSurfaceValueExpressionDriver::getSymmTensorField(
     const word &name,bool oldTime
 )
 {
@@ -214,7 +214,7 @@ tmp<Field<symmTensor> > SampledSurfaceValueExpressionDriver::getSymmTensorField(
         );
 }
 
-tmp<Field<sphericalTensor> >
+tmp<Field<sphericalTensor>>
 SampledSurfaceValueExpressionDriver::getSphericalTensorField(
     const word &name,bool oldTime
 )

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM 
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,7 @@ namespace CML
 
 class fvMeshLduAddressing;
 class volMesh;
+
 
 /*---------------------------------------------------------------------------*\
                            Class fvMesh Declaration
@@ -186,7 +187,7 @@ public:
         fvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
+            pointField&& points,
             const cellShapeList& shapes,
             const faceListList& boundaryFaces,
             const wordList& boundaryPatchNames,
@@ -203,10 +204,10 @@ public:
         fvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<labelList>& allOwner,
-            const Xfer<labelList>& allNeighbour,
+            pointField&& points,
+            faceList&& faces,
+            labelList&& allOwner,
+            labelList&& allNeighbour,
             const bool syncPar = true,
             const bool defectCorr = false,
             const scalar areaSwitch = 1e-8
@@ -217,9 +218,9 @@ public:
         fvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<cellList>& cells,
+            pointField&& points,
+            faceList&& faces,
+            cellList&& cells,
             const bool syncPar = true,
             const bool defectCorr = false,
             const scalar areaSwitch = 1e-8
@@ -303,10 +304,10 @@ public:
             const DimensionedField<scalar, volMesh>& V00() const;
 
             //- Return sub-cycle cell volumes
-            tmp<DimensionedField<scalar, volMesh> > Vsc() const;
+            tmp<DimensionedField<scalar, volMesh>> Vsc() const;
 
             //- Return sub-cycl old-time cell volumes
-            tmp<DimensionedField<scalar, volMesh> > Vsc0() const;
+            tmp<DimensionedField<scalar, volMesh>> Vsc0() const;
 
             //- Return cell face area vectors
             const surfaceVectorField& Sf() const;
@@ -380,7 +381,7 @@ public:
         // Write
 
             //- Write the underlying polyMesh and other data
-            virtual bool writeObjects
+            virtual bool writeObject
             (
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
@@ -407,7 +408,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class GeometricField, class Type>
-const typename GeometricField::PatchFieldType& CML::fvPatch::lookupPatchField
+const typename GeometricField::Patch& CML::fvPatch::lookupPatchField
 (
     const word& name,
     const GeometricField*,

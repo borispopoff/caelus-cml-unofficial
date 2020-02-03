@@ -1,5 +1,5 @@
     // Save the face flux at the boundaries; required for dedicated boundary conditions
-    PtrList<IOField<scalar> > phiOldBoundary(mesh.boundary().size());
+    PtrList<IOField<scalar>> phiOldBoundary(mesh.boundary().size());
 
 	forAll (phiOldBoundary, patchi)
 	{

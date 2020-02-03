@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -76,11 +76,13 @@ public:
 
     // Member Operators
 
-        //- Conversion to point
+        #ifdef WM_DP
+        //- Conversion to double-precision point
         inline operator point() const
         {
             return point(x(), y(), z());
         }
+        #endif
 };
 
 

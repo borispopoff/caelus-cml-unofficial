@@ -31,7 +31,7 @@ inline Type CML::pointMVCWeight::interpolate
 {
     const labelList& vertices = psip.mesh()().cellPoints()[cellIndex_];
 
-    Type t = pTraits<Type>::zero;
+    Type t = Zero;
     forAll(vertices, i)
     {
         t += psip[vertices[i]]*weights_[i];

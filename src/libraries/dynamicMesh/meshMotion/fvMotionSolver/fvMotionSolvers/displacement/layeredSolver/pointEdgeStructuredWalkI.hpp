@@ -57,7 +57,7 @@ inline CML::pointEdgeStructuredWalk::pointEdgeStructuredWalk()
     point0_(vector::max),
     previousPoint_(vector::max),
     dist_(0),
-    data_(vector::zero)
+    data_(Zero)
 {}
 
 
@@ -143,7 +143,7 @@ template<class TrackingData>
 inline void CML::pointEdgeStructuredWalk::leaveDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -169,7 +169,7 @@ template<class TrackingData>
 inline void CML::pointEdgeStructuredWalk::enterDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -184,7 +184,7 @@ template<class TrackingData>
 inline bool CML::pointEdgeStructuredWalk::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const label edgeI,
     const pointEdgeStructuredWalk& edgeInfo,
     const scalar tol,
@@ -207,7 +207,7 @@ template<class TrackingData>
 inline bool CML::pointEdgeStructuredWalk::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const pointEdgeStructuredWalk& newPointInfo,
     const scalar tol,
     TrackingData& td
@@ -243,7 +243,7 @@ inline bool CML::pointEdgeStructuredWalk::updateEdge
 (
     const polyMesh& mesh,
     const label edgeI,
-    const label pointI,
+    const label pointi,
     const pointEdgeStructuredWalk& pointInfo,
     const scalar tol,
     TrackingData& td
@@ -260,7 +260,7 @@ inline bool CML::pointEdgeStructuredWalk::updateEdge
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::pointEdgeStructuredWalk::equal
 (
     const pointEdgeStructuredWalk& rhs,

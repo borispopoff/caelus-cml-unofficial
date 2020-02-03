@@ -33,7 +33,7 @@ Description
 #include "singlePhaseTransportModel.hpp"
 #include "turbulenceModel.hpp"
 #include "pimpleControl.hpp"
-#include "fvIOoptionList.hpp"
+#include "fvOptions.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -205,7 +205,7 @@ List<vectorField> spectralMethodsFFTBased::powerSpectra
     forAll (spectra, speci)
     {
         vectorField& spectrum(spectra[speci]);
-        spectrum.setSize(bins_/2, vector::zero);
+        spectrum.setSize(bins_/2, Zero);
 
         const vectorField& input(inputData[ speci ]);
 
@@ -254,12 +254,12 @@ Field<complex> spectralMethodsFFTBased::fft
 }
 
 
-List<Field<complex> > spectralMethodsFFTBased::fft
+List<Field<complex>> spectralMethodsFFTBased::fft
 (
     const List<scalarField>& input
 )
 {
-    List<Field<complex> > res(0);
+    List<Field<complex>> res(0);
 
     if (sweepCount_ < sweeps_)
     {

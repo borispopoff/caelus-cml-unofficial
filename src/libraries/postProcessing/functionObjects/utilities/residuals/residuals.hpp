@@ -28,8 +28,8 @@ Description
     residuals
     {
         type            residuals;
-        outputControl   timeStep;
-        outputInterval  1;
+        writeControl   timeStep;
+        writeInterval  1;
         fields
         (
             U
@@ -99,6 +99,11 @@ protected:
         //- Fields to write residuals
         wordList fieldSet_;
 
+        //- Output file header information
+        virtual void writeFileHeader(const label i);
+
+
+private:
 
     // Private Member Functions
 
@@ -107,9 +112,6 @@ protected:
 
         //- Disallow default bitwise assignment
         void operator=(const residuals&);
-
-        //- Output file header information
-        virtual void writeFileHeader(const label i);
 
 
 public:

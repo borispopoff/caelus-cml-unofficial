@@ -62,7 +62,7 @@ void CML::UPstream::allToAll
     const label communicator
 )
 {
-    recvData.assugb(sendData);
+    recvData.deepCopy(sendData);
 }
 
 CML::label CML::UPstream::nRequests()

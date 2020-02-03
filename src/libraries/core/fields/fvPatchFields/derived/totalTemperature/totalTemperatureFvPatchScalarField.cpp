@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2016 Applied CCM
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -28,8 +28,8 @@ License
 
 CML::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 (
-    fvPatch const& p,
-    DimensionedField<scalar, volMesh> const& iF
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF
 )
 :
     fixedValueFvPatchScalarField(p, iF),
@@ -43,10 +43,10 @@ CML::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 
 CML::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 (
-    totalTemperatureFvPatchScalarField const& ptf,
-    fvPatch const& p,
-    DimensionedField<scalar, volMesh> const& iF,
-    fvPatchFieldMapper const& mapper
+    const totalTemperatureFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
@@ -60,12 +60,12 @@ CML::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 
 CML::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 (
-    fvPatch const& p,
-    DimensionedField<scalar, volMesh> const& iF,
-    dictionary const& dict
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    fixedValueFvPatchScalarField(p, iF, dict, false),
     UName_(dict.lookupOrDefault<word>("U", "U")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
@@ -88,7 +88,7 @@ CML::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 
 CML::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 (
-    totalTemperatureFvPatchScalarField const& tppsf
+    const totalTemperatureFvPatchScalarField& tppsf
 )
 :
     fixedValueFvPatchScalarField(tppsf),
@@ -102,8 +102,8 @@ CML::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 
 CML::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 (
-    totalTemperatureFvPatchScalarField const& tppsf,
-    DimensionedField<scalar, volMesh> const& iF
+    const totalTemperatureFvPatchScalarField& tppsf,
+    const DimensionedField<scalar, volMesh>& iF
 )
 :
     fixedValueFvPatchScalarField(tppsf, iF),
@@ -117,7 +117,7 @@ CML::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 
 void CML::totalTemperatureFvPatchScalarField::autoMap
 (
-    fvPatchFieldMapper const& m
+    const fvPatchFieldMapper& m
 )
 {
     fixedValueFvPatchScalarField::autoMap(m);
@@ -127,14 +127,14 @@ void CML::totalTemperatureFvPatchScalarField::autoMap
 
 void CML::totalTemperatureFvPatchScalarField::rmap
 (
-    fvPatchScalarField const& ptf,
-    labelList const& addr
+    const fvPatchScalarField& ptf,
+    const labelList& addr
 )
 {
     fixedValueFvPatchScalarField::rmap(ptf, addr);
 
-    totalTemperatureFvPatchScalarField const& tiptf =
-        refCast<totalTemperatureFvPatchScalarField const>(ptf);
+    const totalTemperatureFvPatchScalarField& tiptf =
+        refCast<const totalTemperatureFvPatchScalarField>(ptf);
 
     T0_.rmap(tiptf.T0_, addr);
 }
@@ -147,13 +147,13 @@ void CML::totalTemperatureFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    fvPatchVectorField const& Up =
+    const fvPatchVectorField& Up =
         patch().lookupPatchField<volVectorField, vector>(UName_);
 
-    fvsPatchField<scalar> const& phip =
+    const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    fvPatchField<scalar> const& psip =
+    const fvPatchField<scalar>& psip =
         patch().lookupPatchField<volScalarField, scalar>(psiName_);
 
     scalar gM1ByG = (gamma_ - 1.0)/gamma_;
@@ -173,9 +173,9 @@ void CML::totalTemperatureFvPatchScalarField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
-    os.writeKeyword("gamma") << gamma_ << token::END_STATEMENT << nl;
-    T0_.writeEntry("T0", os);
-    writeEntry("value", os);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "T0", T0_);
+    writeEntry(os, "value", *this);
 }
 
 

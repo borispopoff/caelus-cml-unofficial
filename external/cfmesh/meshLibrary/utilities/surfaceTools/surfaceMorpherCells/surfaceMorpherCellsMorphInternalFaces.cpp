@@ -52,9 +52,9 @@ void surfaceMorpherCells::findBoundaryVertices()
         const label start = boundaries[patchI].patchStart();
         const label end = start + boundaries[patchI].patchSize();
 
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             forAll(f, pI)
             {
@@ -63,7 +63,7 @@ void surfaceMorpherCells::findBoundaryVertices()
                 {
                     Info << f << endl;
                     FatalError << "Wrong label " << f[pI] << " in face "
-                        << faceI << abort(FatalError);
+                        << facei << abort(FatalError);
                 }
                 # endif
 
@@ -92,15 +92,15 @@ void surfaceMorpherCells::findBoundaryVertices()
                 //- with other processors
                 labelHashSet addToSend;
                 labelLongList dts;
-                for(label faceI=start;faceI<end;++faceI)
+                for(label facei=start;facei<end;++facei)
                 {
-                    const face& f = faces[faceI];
+                    const face& f = faces[facei];
 
                     forAll(f, pI)
                         if( boundaryVertex_[f[pI]] && !addToSend.found(f[pI]) )
                         {
                             addToSend.insert(f[pI]);
-                            dts.append(faceI-start);
+                            dts.append(facei-start);
                             dts.append((f.size()-pI)%f.size());
                         }
                 }
@@ -112,7 +112,7 @@ void surfaceMorpherCells::findBoundaryVertices()
                 //- send the list of other processor
                 OPstream toOtherProc
                 (
-                    Pstream::blocking,
+                    Pstream::commsTypes::blocking,
                     procBoundaries[patchI].neiProcNo(),
                     bndVertsToSend.byteSize()
                 );
@@ -126,7 +126,7 @@ void surfaceMorpherCells::findBoundaryVertices()
                 labelList receivedBndNodes;
                 IPstream fromOtherProc
                 (
-                    Pstream::blocking,
+                    Pstream::commsTypes::blocking,
                     procBoundaries[patchI].neiProcNo()
                 );
                 fromOtherProc >> receivedBndNodes;
@@ -167,8 +167,8 @@ void surfaceMorpherCells::findBoundaryCells()
         const label start = boundaries[patchI].patchStart();
         const label end = start + boundaries[patchI].patchSize();
 
-        for(label faceI=start;faceI<end;++faceI)
-            cellFlags_[owner[faceI]] = BOUNDARY;
+        for(label facei=start;facei<end;++facei)
+            cellFlags_[owner[facei]] = BOUNDARY;
     }
 }
 
@@ -207,22 +207,22 @@ bool surfaceMorpherCells::morphInternalFaces()
         const label start = boundaries[patchI].patchStart();
         const label end = start + boundaries[patchI].patchSize();
 
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            newBoundaryFaces_.appendList(faces[faceI]);
-            newBoundaryOwners_.append(owner[faceI]);
+            newBoundaryFaces_.appendList(faces[facei]);
+            newBoundaryOwners_.append(owner[facei]);
             newBoundaryPatches_.append(0);
         }
     }
 
     //- start morphing internal faces
-    for(label faceI=0;faceI<nIntFaces;++faceI)
+    for(label facei=0;facei<nIntFaces;++facei)
     {
         # ifdef DEBUGMorph
-        Info << "Morphing internal face " << faceI << endl;
+        Info << "Morphing internal face " << facei << endl;
         # endif
 
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         DynList<bool> removeFaceVertex(f.size(), false);
 
@@ -257,8 +257,8 @@ bool surfaceMorpherCells::morphInternalFaces()
 
             # ifdef DEBUGMorph
             Info << "Removing edges " << removeEdge << endl;
-            Info << "Face label " << faceI << " owner " << owner[faceI]
-                << " neighbour " << neighbour[faceI] << endl;
+            Info << "Face label " << facei << " owner " << owner[facei]
+                << " neighbour " << neighbour[facei] << endl;
             Info << "Internal face " << f << " has been shrinked into "
                 << newF << endl;
             # endif
@@ -309,20 +309,20 @@ bool surfaceMorpherCells::morphInternalFaces()
 
                 # ifdef DEBUGMorph
                 Info << "Adding face " << newBf << " as boundary faces" << endl;
-                Info << "Owner and neighbour are " << owner[faceI] << " and "
-                    << neighbour[faceI] << endl;
+                Info << "Owner and neighbour are " << owner[facei] << " and "
+                    << neighbour[facei] << endl;
                 # endif
 
                 newBoundaryFaces_.appendList(newBf);
-                newBoundaryOwners_.append(owner[faceI]);
+                newBoundaryOwners_.append(owner[facei]);
                 newBoundaryPatches_.append(0);
 
                 newBoundaryFaces_.appendList(newBf.reverseFace());
-                newBoundaryOwners_.append(neighbour[faceI]);
+                newBoundaryOwners_.append(neighbour[facei]);
                 newBoundaryPatches_.append(0);
             }
 
-            const_cast<face&>(faces[faceI]) = newF;
+            const_cast<face&>(faces[facei]) = newF;
         }
     }
 
@@ -338,16 +338,16 @@ bool surfaceMorpherCells::morphInternalFaces()
             const label end = start + procBoundaries[patchI].patchSize();
             const bool isOwner = procBoundaries[patchI].owner();
 
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
                 face copy;
                 if( isOwner )
                 {
-                    copy = faces[faceI];
+                    copy = faces[facei];
                 }
                 else
                 {
-                    copy = faces[faceI].reverseFace();
+                    copy = faces[facei].reverseFace();
                 }
 
                 const face& f = copy;
@@ -385,8 +385,8 @@ bool surfaceMorpherCells::morphInternalFaces()
 
                     # ifdef DEBUGMorph
                     Info << "Removing edges " << removeEdge << endl;
-                    Info << "Face label " << faceI << " owner " << owner[faceI]
-                        << " neighbour " << neighbour[faceI] << endl;
+                    Info << "Face label " << facei << " owner " << owner[facei]
+                        << " neighbour " << neighbour[facei] << endl;
                     Info << "Internal face " << f << " has been shrinked into "
                         << newF << endl;
                     # endif
@@ -394,7 +394,7 @@ bool surfaceMorpherCells::morphInternalFaces()
                     //- create new boundary faces from the removed part
                     label mat(1);
                     DynList<direction> nodeMaterial(f.size(), direction(0));
-                    DynList< DynList<edge> > edgeMats;
+                    DynList< DynList<edge>> edgeMats;
                     forAll(nodeMaterial, nI)
                         if( !nodeMaterial[nI] && removeFaceVertex[nI] )
                         {
@@ -443,7 +443,7 @@ bool surfaceMorpherCells::morphInternalFaces()
                         Info << "Adding face " << newBf
                         << " as boundary faces" << endl;
                         Info << "Owner and neighbour are "
-                            << owner[faceI] << endl;
+                            << owner[facei] << endl;
                         # endif
 
                         if( isOwner )
@@ -454,17 +454,17 @@ bool surfaceMorpherCells::morphInternalFaces()
                         {
                             newBoundaryFaces_.appendList(newBf.reverseFace());
                         }
-                        newBoundaryOwners_.append(owner[faceI]);
+                        newBoundaryOwners_.append(owner[facei]);
                         newBoundaryPatches_.append(0);
                     }
 
                     if( isOwner || (newF.size() < 3) )
                     {
-                        const_cast<face&>(faces[faceI]) = newF;
+                        const_cast<face&>(faces[facei]) = newF;
                     }
                     else
                     {
-                        const_cast<face&>(faces[faceI]) = newF.reverseFace();
+                        const_cast<face&>(faces[facei]) = newF.reverseFace();
                     }
                 }
             }
@@ -528,10 +528,10 @@ bool surfaceMorpherCells::morphInternalFaces()
         boolList removeFace(faces.size(), false);
         bool removeFaces(false);
 
-        for(label faceI=0;faceI<nIntFaces;++faceI)
-            if( faces[faceI].size() < 3 )
+        for(label facei=0;facei<nIntFaces;++facei)
+            if( faces[facei].size() < 3 )
             {
-                removeFace[faceI] = true;
+                removeFace[facei] = true;
                 removeFaces = true;
             }
 
@@ -544,10 +544,10 @@ bool surfaceMorpherCells::morphInternalFaces()
             {
                 const label start = procBoundaries[patchI].patchStart();
                 const label end = start + procBoundaries[patchI].patchSize();
-                for(label faceI=start;faceI<end;++faceI)
-                    if( faces[faceI].size() < 3 )
+                for(label facei=start;facei<end;++facei)
+                    if( faces[facei].size() < 3 )
                     {
-                        removeFace[faceI] = true;
+                        removeFace[facei] = true;
                         removeFaces = true;
                     }
             }

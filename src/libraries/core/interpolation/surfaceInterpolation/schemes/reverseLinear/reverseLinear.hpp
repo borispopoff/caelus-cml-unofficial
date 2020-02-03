@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,12 +50,6 @@ class reverseLinear
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const reverseLinear&);
-
-
 public:
 
     //- Runtime type information
@@ -118,27 +112,35 @@ public:
                     dimless
                 )
             );
-            surfaceScalarField& reverseLinearWeights = treverseLinearWeights();
+            surfaceScalarField& reverseLinearWeights =
+                treverseLinearWeights.ref();
 
-            reverseLinearWeights.internalField() =
-                1.0 - cdWeights.internalField();
+            reverseLinearWeights.primitiveFieldRef() =
+                1.0 - cdWeights.primitiveField();
 
-            forAll(mesh.boundary(), patchI)
+            surfaceScalarField::Boundary& rlwbf =
+                reverseLinearWeights.boundaryFieldRef();
+
+            forAll(mesh.boundary(), patchi)
             {
-                if (reverseLinearWeights.boundaryField()[patchI].coupled())
+                if (rlwbf[patchi].coupled())
                 {
-                    reverseLinearWeights.boundaryField()[patchI] =
-                        1.0 - cdWeights.boundaryField()[patchI];
+                    rlwbf[patchi] = 1.0 - cdWeights.boundaryField()[patchi];
                 }
                 else
                 {
-                    reverseLinearWeights.boundaryField()[patchI] =
-                        cdWeights.boundaryField()[patchI];
+                    rlwbf[patchi] = cdWeights.boundaryField()[patchi];
                 }
             }
 
             return treverseLinearWeights;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const reverseLinear&) = delete;
 };
 
 

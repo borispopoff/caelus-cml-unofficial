@@ -76,7 +76,7 @@ mappedConvectiveHeatTransfer::mappedConvectiveHeatTransfer
             IOobject::NO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar("zero", dimMass/pow3(dimTime)/dimTemperature, 0.0),
+        dimensionedScalar("zero", dimMass/pow3(dimTime)/dimTemperature, 0),
         film.mappedPushedFieldPatchTypes<scalar>()
     )
 {

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014 OpenFOAM Foundation
+Copyright (C) 2014-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -64,8 +64,8 @@ public:
         //- Construct given an IOobject and mapDistribute
         IOmapDistribute(const IOobject&, const mapDistribute&);
 
-        //- Construct by transferring the mapDistribute contents
-        IOmapDistribute(const IOobject&, const Xfer<mapDistribute>&);
+        //- Move constructor transferring the mapDistribute contents
+        IOmapDistribute(const IOobject&, mapDistribute&&);
 
 
     //- Destructor

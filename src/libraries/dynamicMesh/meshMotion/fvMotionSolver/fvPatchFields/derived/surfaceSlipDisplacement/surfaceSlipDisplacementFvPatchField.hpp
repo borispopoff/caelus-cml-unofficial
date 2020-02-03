@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -103,9 +103,9 @@ public:
         {}
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new surfaceSlipDisplacementFvPatchField<Type>(*this)
             );
@@ -122,12 +122,12 @@ public:
         {}
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new surfaceSlipDisplacementFvPatchField<Type>(*this, iF)
             );
@@ -137,7 +137,7 @@ public:
         {
             slipFvPatchField<Type>::write(os);
             // Only so we can easily postprocess.
-            this->writeEntry("value", os);
+            writeEntry(os, "value", *this);
         }
 };
 

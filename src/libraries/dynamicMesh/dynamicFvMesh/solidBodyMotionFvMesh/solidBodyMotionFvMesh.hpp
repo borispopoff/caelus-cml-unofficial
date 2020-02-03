@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -74,10 +74,10 @@ class solidBodyMotionFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        solidBodyMotionFvMesh(const solidBodyMotionFvMesh&);
+        solidBodyMotionFvMesh(const solidBodyMotionFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const solidBodyMotionFvMesh&);
+        void operator=(const solidBodyMotionFvMesh&) = delete;
 
 
 public:

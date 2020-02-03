@@ -124,7 +124,7 @@ public:
             inline void leaveDomain
             (
                 const polyPatch& patch,
-                const label patchPointI,
+                const label patchPointi,
                 const point& pos,
                 TrackingData& td
             );
@@ -134,7 +134,7 @@ public:
             inline void enterDomain
             (
                 const polyPatch& patch,
-                const label patchPointI,
+                const label patchPointi,
                 const point& pos,
                 TrackingData& td
             );
@@ -152,7 +152,7 @@ public:
             inline bool updatePoint
             (
                 const polyMesh& mesh,
-                const label pointI,
+                const label pointi,
                 const label edgeI,
                 const pointEdgeCollapse& edgeInfo,
                 const scalar tol,
@@ -165,7 +165,7 @@ public:
             inline bool updatePoint
             (
                 const polyMesh& mesh,
-                const label pointI,
+                const label pointi,
                 const pointEdgeCollapse& newPointInfo,
                 const scalar tol,
                 TrackingData& td
@@ -187,7 +187,7 @@ public:
             (
                 const polyMesh& mesh,
                 const label edgeI,
-                const label pointI,
+                const label pointi,
                 const pointEdgeCollapse& pointInfo,
                 const scalar tol,
                 TrackingData& td
@@ -374,7 +374,7 @@ template<class TrackingData>
 inline void CML::pointEdgeCollapse::leaveDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -400,7 +400,7 @@ template<class TrackingData>
 inline void CML::pointEdgeCollapse::enterDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -415,7 +415,7 @@ template<class TrackingData>
 inline bool CML::pointEdgeCollapse::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const label edgeI,
     const pointEdgeCollapse& edgeInfo,
     const scalar tol,
@@ -431,7 +431,7 @@ template<class TrackingData>
 inline bool CML::pointEdgeCollapse::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const pointEdgeCollapse& newPointInfo,
     const scalar tol,
     TrackingData& td
@@ -460,7 +460,7 @@ inline bool CML::pointEdgeCollapse::updateEdge
 (
     const polyMesh& mesh,
     const label edgeI,
-    const label pointI,
+    const label pointi,
     const pointEdgeCollapse& pointInfo,
     const scalar tol,
     TrackingData& td

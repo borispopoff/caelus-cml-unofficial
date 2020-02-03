@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -183,8 +183,8 @@ void CML::filmPyrolysisVelocityCoupledFvPatchVectorField::updateCoeffs()
             << "Unable to process flux field phi with dimensions "
             << phi.dimensions() << nl
             << "    on patch " << patch().name()
-            << " of field " << dimensionedInternalField().name()
-            << " in file " << dimensionedInternalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 
@@ -224,7 +224,7 @@ void CML::filmPyrolysisVelocityCoupledFvPatchVectorField::write
     );
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

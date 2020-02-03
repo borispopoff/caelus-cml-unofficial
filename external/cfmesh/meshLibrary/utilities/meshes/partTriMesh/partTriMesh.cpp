@@ -237,7 +237,7 @@ void partTriMesh::updateVertex(const label pI, const point& newP)
     }
 }
 
-void partTriMesh::updateVerticesSMP(const List<LongList<labelledPoint> >& np)
+void partTriMesh::updateVerticesSMP(const List<LongList<labelledPoint>>& np)
 {
     triSurfModifier sMod(surf_);
     pointField& pts = sMod.pointsAccess();
@@ -283,7 +283,7 @@ void partTriMesh::updateVerticesSMP(const List<LongList<labelledPoint> >& np)
         const DynList<label>& neiProcs = this->neiProcs();
 
         //- create the map
-        std::map<label, LongList<labelledPoint> > exchangeData;
+        std::map<label, LongList<labelledPoint>> exchangeData;
         forAll(neiProcs, i)
             exchangeData.insert
             (
@@ -422,7 +422,7 @@ void partTriMesh::updateVertices(const labelLongList& movedPoints)
         const DynList<label>& neiProcs = this->neiProcs();
 
         //- create the map
-        std::map<label, LongList<labelledPoint> > exchangeData;
+        std::map<label, LongList<labelledPoint>> exchangeData;
         forAll(neiProcs, i)
             exchangeData.insert
             (

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -39,9 +39,7 @@ Description
 
     Example usage:
     \verbatim
-    rotorDiskSourceCoeffs
-    {
-        fieldNames      (U);    // names of fields on which to apply source
+        fields          (U);    // names of fields on which to apply source
         nBlades         3;      // number of blades
         tipEffect       0.96;   // normalised radius above which lift = 0
 
@@ -70,7 +68,6 @@ Description
         {
             ...
         }
-    }
     \endverbatim
 
     Where:
@@ -92,7 +89,7 @@ SourceFiles
 #ifndef rotorDiskSource_HPP
 #define rotorDiskSource_HPP
 
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 #include "cylindricalCS.hpp"
 #include "NamedEnum.hpp"
 #include "bladeModel.hpp"
@@ -118,7 +115,7 @@ namespace fv
 
 class rotorDiskSource
 :
-    public option
+    public cellSetOption
 {
 public:
 
@@ -164,7 +161,7 @@ protected:
 
     //- Rotor RPM as a DataEntry class 
     //  Positive anti-clockwise when looking along -ve lift direction
-    autoPtr<DataEntry<scalar> > rpm_;
+    autoPtr<DataEntry<scalar>> rpm_;
 
     //- Number of blades
     label nBlades_;
@@ -312,7 +309,7 @@ public:
         virtual void addSup
         (
             fvMatrix<vector>& eqn,
-            const label fieldI
+            const label fieldi
         );
 
         //- Source term to compressible momentum equation
@@ -320,12 +317,10 @@ public:
         (
             const volScalarField& rho,
             fvMatrix<vector>& eqn,
-            const label fieldI
+            const label fieldi
         );
 
-        // I-O
-        //- Write the source properties
-        virtual void writeData(Ostream&) const;
+        // IO
 
         //- Read source dictionary
         virtual bool read(const dictionary& dict);
@@ -373,6 +368,7 @@ CML::scalar CML::fv::rotorDiskSource::omega() const
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "volFields.hpp"
+#include "unitConversion.hpp"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -619,9 +615,9 @@ void CML::fv::rotorDiskSource::writeField
 {
     typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
 
-    if (mesh_.time().outputTime() || writeNow)
+    if (mesh_.time().writeTime() || writeNow)
     {
-        tmp<fieldType> tfld
+        tmp<fieldType> tfield
         (
             new fieldType
             (
@@ -634,11 +630,11 @@ void CML::fv::rotorDiskSource::writeField
                     IOobject::NO_WRITE
                 ),
                 mesh_,
-                dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
+                dimensioned<Type>("zero", dimless, Zero)
             )
         );
 
-        Field<Type>& fld = tfld().internalField();
+        Field<Type>& field = tfield.ref().primitiveFieldRef();
 
         if (cells_.size() != values.size())
         {
@@ -649,10 +645,10 @@ void CML::fv::rotorDiskSource::writeField
         forAll(cells_, i)
         {
             const label celli = cells_[i];
-            fld[celli] = values[i];
+            field[celli] = values[i];
         }
 
-        tfld().write();
+        tfield().write();
     }
 }
 

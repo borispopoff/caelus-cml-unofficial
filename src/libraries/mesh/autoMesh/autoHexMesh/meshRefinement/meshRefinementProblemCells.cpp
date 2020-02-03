@@ -992,10 +992,10 @@ CML::labelList CML::meshRefinement::markFacesOnProblemCells
 //        {
 //            if (hitInfo[i].hit())
 //            {
-//                //label pointI = meshPoints[i];
-//                //Pout<< "   " << pointI << " moved from "
-//                //    << mesh_.points()[pointI] << " by "
-//                //    << mag(hitInfo[i].hitPoint()-mesh_.points()[pointI])
+//                //label pointi = meshPoints[i];
+//                //Pout<< "   " << pointi << " moved from "
+//                //    << mesh_.points()[pointi] << " by "
+//                //    << mag(hitInfo[i].hitPoint()-mesh_.points()[pointi])
 //                //    << endl;
 //                newPoints[meshPoints[i]] = hitInfo[i].hitPoint();
 //            }

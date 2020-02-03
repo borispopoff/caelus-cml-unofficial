@@ -23,7 +23,7 @@ Class
     CML::isoCutFace
 
 Description
-    Class for cutting a face, faceI, of an fvMesh, mesh_, at its intersection
+    Class for cutting a face, facei, of an fvMesh, mesh_, at its intersection
     with an isosurface defined by the mesh point values f_ and the isovalue,
     isoValue_.
 
@@ -134,8 +134,8 @@ public:
 
     // Member functions
 
-        //- Calculate cut points along edges of faceI
-        label calcSubFace(const label faceI, const scalar isoValue);
+        //- Calculate cut points along edges of facei
+        label calcSubFace(const label facei, const scalar isoValue);
 
         //- Calculate cut points along edges of face with values f
         label calcSubFace

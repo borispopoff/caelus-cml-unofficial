@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -86,10 +86,10 @@ class caelusChemistryReader
     void readSpeciesComposition();
 
     //- Disallow default bitwise copy construct
-    caelusChemistryReader(const caelusChemistryReader&);
+    caelusChemistryReader(const caelusChemistryReader&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const caelusChemistryReader&);
+    void operator=(const caelusChemistryReader&) = delete;
 
 
 public:

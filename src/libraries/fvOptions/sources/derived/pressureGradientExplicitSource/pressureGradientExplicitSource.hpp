@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2015 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -51,7 +51,7 @@ SourceFiles
 #include "cellSet.hpp"
 #include "fvMesh.hpp"
 #include "volFields.hpp"
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,7 +66,7 @@ namespace fv
 
 class pressureGradientExplicitSource
 :
-    public option
+    public cellSetOption
 {
     // Private data
 
@@ -95,10 +95,10 @@ class pressureGradientExplicitSource
         void update(fvMatrix<vector>& eqn);
 
         //- Disallow default bitwise copy construct
-        pressureGradientExplicitSource(const pressureGradientExplicitSource&);
+        pressureGradientExplicitSource(const pressureGradientExplicitSource&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pressureGradientExplicitSource&);
+        void operator=(const pressureGradientExplicitSource&) = delete;
 
 
 public:
@@ -130,7 +130,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
             //- Add explicit contribution to compressible momentum equation
@@ -138,21 +138,18 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
             //- Set 1/A coefficient
             virtual void setValue
             (
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
 
-        // I-O
-
-            //- Write the source properties
-            virtual void writeData(Ostream&) const;
+        // IO
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);

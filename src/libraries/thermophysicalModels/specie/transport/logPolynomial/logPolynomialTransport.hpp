@@ -165,7 +165,7 @@ public:
     //- Construct and return a clone
     inline autoPtr<logPolynomialTransport> clone() const
     {
-        return autoPtr<logPolynomialTransport<Thermo, PolySize> >
+        return autoPtr<logPolynomialTransport<Thermo, PolySize>>
         (
             new logPolynomialTransport<Thermo, PolySize>(*this)
         );
@@ -177,7 +177,7 @@ public:
         const dictionary& dict
     )
     {
-        return autoPtr<logPolynomialTransport<Thermo, PolySize> >
+        return autoPtr<logPolynomialTransport<Thermo, PolySize>>
         (
             new logPolynomialTransport<Thermo, PolySize>(dict)
         );

@@ -55,7 +55,7 @@ template<class Type>
 class linearUpwindOSPRE : public upwind<Type>
 {
     word gradSchemeName_;
-    tmp<fv::gradScheme<Type> > gradScheme_;
+    tmp<fv::gradScheme<Type>> gradScheme_;
     scalar order_;
 
     //- Disallow default bitwise copy construct
@@ -163,7 +163,7 @@ public:
     }
 
     //- Return the explicit correction to the face-interpolate
-    virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+    virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
     correction
     (
         GeometricField<Type, fvPatchField, volMesh> const&

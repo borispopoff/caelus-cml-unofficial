@@ -58,9 +58,9 @@ public:
         NoAtomization(const NoAtomization<CloudType>& am);
 
         //- Construct and return a clone
-        virtual autoPtr<AtomizationModel<CloudType> > clone() const
+        virtual autoPtr<AtomizationModel<CloudType>> clone() const
         {
-            return autoPtr<AtomizationModel<CloudType> >
+            return autoPtr<AtomizationModel<CloudType>>
             (
                 new NoAtomization<CloudType>(*this)
             );

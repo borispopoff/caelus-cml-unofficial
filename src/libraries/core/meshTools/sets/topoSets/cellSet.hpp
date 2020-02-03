@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -46,12 +46,6 @@ class cellSet
 :
     public topoSet
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellSet(const cellSet&);
-
-
 public:
 
     //- Runtime type information
@@ -128,6 +122,9 @@ public:
                 const labelHashSet&,
                 writeOption w=NO_WRITE
             );
+
+        //- Disallow default bitwise copy construct
+        cellSet(const cellSet&) = delete;
 
 
     //- Destructor

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2013-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -64,7 +64,7 @@ void CML::yPlusRAS::calcIncompressibleYPlus
         mesh.lookupObject<incompressible::RASModel>("RASProperties");
 
     const volScalarField nut(model.nut());
-    const volScalarField::GeometricBoundaryField& nutPatches =
+    const volScalarField::Boundary& nutPatches =
         nut.boundaryField();
 
     bool foundPatch = false;
@@ -77,7 +77,7 @@ void CML::yPlusRAS::calcIncompressibleYPlus
             const wallFunctionPatchField& nutPw =
                 dynamic_cast<const wallFunctionPatchField&>(nutPatches[patchi]);
 
-            yPlus.boundaryField()[patchi] = nutPw.yPlus();
+            yPlus.boundaryFieldRef()[patchi] = nutPw.yPlus();
             const scalarField& Yp = yPlus.boundaryField()[patchi];
 
             scalar minYp = gMin(Yp);
@@ -121,7 +121,7 @@ void CML::yPlusRAS::calcCompressibleYPlus
         mesh.lookupObject<compressible::RASModel>("RASProperties");
 
     const volScalarField mut(model.mut());
-    const volScalarField::GeometricBoundaryField& mutPatches =
+    const volScalarField::Boundary& mutPatches =
         mut.boundaryField();
 
     bool foundPatch = false;
@@ -134,7 +134,7 @@ void CML::yPlusRAS::calcCompressibleYPlus
             const wallFunctionPatchField& mutPw =
                 dynamic_cast<const wallFunctionPatchField&>(mutPatches[patchi]);
 
-            yPlus.boundaryField()[patchi] = mutPw.yPlus();
+            yPlus.boundaryFieldRef()[patchi] = mutPw.yPlus();
             const scalarField& Yp = yPlus.boundaryField()[patchi];
 
             scalar minYp = gMin(Yp);
@@ -208,7 +208,7 @@ CML::yPlusRAS::yPlusRAS
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("0", dimless, 0.0)
+                dimensionedScalar("0", dimless, 0)
             )
         );
 
@@ -230,7 +230,7 @@ void CML::yPlusRAS::read(const dictionary& dict)
     if (active_)
     {
         log_ = dict.lookupOrDefault<Switch>("log", true);
-        phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
+        phiName_ = dict.lookupOrDefault<word>("phi", "phi");
     }
 }
 
@@ -247,10 +247,7 @@ void CML::yPlusRAS::execute()
         const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
         volScalarField& yPlusRAS =
-            const_cast<volScalarField&>
-            (
-                mesh.lookupObject<volScalarField>(type())
-            );
+            mesh.lookupObjectRef<volScalarField>(type());
 
         Info(log_)<< type() << " " << name_ << " output:" << nl;
 

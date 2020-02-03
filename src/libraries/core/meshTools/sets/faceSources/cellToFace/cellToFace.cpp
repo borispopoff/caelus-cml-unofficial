@@ -77,12 +77,12 @@ void CML::cellToFace::combine(topoSet& set, const bool add) const
         // Add all faces from cell
         forAllConstIter(cellSet, loadedSet, iter)
         {
-            const label cellI = iter.key();
-            const labelList& cFaces = mesh_.cells()[cellI];
+            const label celli = iter.key();
+            const labelList& cFaces = mesh_.cells()[celli];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                addOrDelete(set, cFaces[cFaceI], add);
+                addOrDelete(set, cFaces[cFacei], add);
             }
         }
     }
@@ -97,11 +97,11 @@ void CML::cellToFace::combine(topoSet& set, const bool add) const
 
 
         // Check all internal faces
-        for (label faceI = 0; faceI < nInt; faceI++)
+        for (label facei = 0; facei < nInt; facei++)
         {
-            if (loadedSet.found(own[faceI]) && loadedSet.found(nei[faceI]))
+            if (loadedSet.found(own[facei]) && loadedSet.found(nei[facei]))
             {
-                addOrDelete(set, faceI, add);
+                addOrDelete(set, facei, add);
             }
         }
 
@@ -109,17 +109,17 @@ void CML::cellToFace::combine(topoSet& set, const bool add) const
         // Get coupled cell status
         boolList neiInSet(mesh_.nFaces()-nInt, false);
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if (pp.coupled())
             {
-                label faceI = pp.start();
+                label facei = pp.start();
                 forAll(pp, i)
                 {
-                    neiInSet[faceI-nInt] = loadedSet.found(own[faceI]);
-                    faceI++;
+                    neiInSet[facei-nInt] = loadedSet.found(own[facei]);
+                    facei++;
                 }
             }
         }
@@ -127,20 +127,20 @@ void CML::cellToFace::combine(topoSet& set, const bool add) const
 
 
         // Check all boundary faces
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             if (pp.coupled())
             {
-                label faceI = pp.start();
+                label facei = pp.start();
                 forAll(pp, i)
                 {
-                    if (loadedSet.found(own[faceI]) && neiInSet[faceI-nInt])
+                    if (loadedSet.found(own[facei]) && neiInSet[facei-nInt])
                     {
-                        addOrDelete(set, faceI, add);
+                        addOrDelete(set, facei, add);
                     }
-                    faceI++;
+                    facei++;
                 }
             }
         }

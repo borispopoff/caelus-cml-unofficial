@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -99,7 +99,7 @@ class MRFZone
         vector axis_;
 
         //- Angular velocty (rad/sec)
-        autoPtr<DataEntry<scalar> > omega_;
+        autoPtr<DataEntry<scalar>> omega_;
 
 
     // Private Member Functions
@@ -140,12 +140,6 @@ class MRFZone
             surfaceScalarField& phi
         ) const;
 
-        //- Disallow default bitwise copy construct
-        MRFZone(const MRFZone&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const MRFZone&);
-
 
 public:
 
@@ -171,6 +165,8 @@ public:
             return autoPtr<MRFZone>(nullptr);
         }
 
+        //- Disallow default bitwise copy construct
+        MRFZone(const MRFZone&) = delete;
 
     // Member Functions
 
@@ -266,6 +262,12 @@ public:
 
         //- Read MRF dictionary
         bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const MRFZone&) = delete;
 };
 
 
@@ -293,9 +295,9 @@ void CML::MRFZone::makeRelativeRhoFlux
 
     const vector Omega = omega_->value(mesh_.time().timeOutputValue())*axis_;
 
-    const vectorField& Cfi = Cf.internalField();
-    const vectorField& Sfi = Sf.internalField();
-    scalarField& phii = phi.internalField();
+    const vectorField& Cfi = Cf;
+    const vectorField& Sfi = Sf;
+    scalarField& phii = phi.primitiveFieldRef();
 
     // Internal faces
     forAll(internalFaces_, i)
@@ -304,7 +306,7 @@ void CML::MRFZone::makeRelativeRhoFlux
         phii[facei] -= rho[facei]*(Omega ^ (Cfi[facei] - origin_)) & Sfi[facei];
     }
 
-    makeRelativeRhoFlux(rho.boundaryField(), phi.boundaryField());
+    makeRelativeRhoFlux(rho.boundaryField(), phi.boundaryFieldRef());
 }
 
 
@@ -408,9 +410,9 @@ void CML::MRFZone::makeAbsoluteRhoFlux
 
     const vector Omega = omega_->value(mesh_.time().timeOutputValue())*axis_;
 
-    const vectorField& Cfi = Cf.internalField();
-    const vectorField& Sfi = Sf.internalField();
-    scalarField& phii = phi.internalField();
+    const vectorField& Cfi = Cf;
+    const vectorField& Sfi = Sf;
+    scalarField& phii = phi.primitiveFieldRef();
 
     // Internal faces
     forAll(internalFaces_, i)
@@ -419,7 +421,7 @@ void CML::MRFZone::makeAbsoluteRhoFlux
         phii[facei] += rho[facei]*(Omega ^ (Cfi[facei] - origin_)) & Sfi[facei];
     }
 
-    surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryField();
+    surfaceScalarField::Boundary& phibf = phi.boundaryFieldRef();
 
 
     // Included patches
@@ -463,7 +465,7 @@ void CML::MRFZone::zero
         return;
     }
 
-    Field<Type>& phii = phi.internalField();
+    Field<Type>& phii = phi.primitiveFieldRef();
 
     forAll(internalFaces_, i)
     {
@@ -471,7 +473,7 @@ void CML::MRFZone::zero
     }
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& phibf = phi.boundaryField();
+        Boundary& phibf = phi.boundaryFieldRef();
 
     forAll(includedFaces_, patchi)
     {

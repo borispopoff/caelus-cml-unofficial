@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -95,7 +95,7 @@ CML::tmp<CML::pointField> CML::mappedPatchBase::facePoints
 
     // Initialise to face-centre
     tmp<pointField> tfacePoints(new pointField(patch_.size()));
-    pointField& facePoints = tfacePoints();
+    pointField& facePoints = tfacePoints.ref();
 
     forAll(pp, facei)
     {
@@ -103,7 +103,7 @@ CML::tmp<CML::pointField> CML::mappedPatchBase::facePoints
         (
             mesh,
             pp.start()+facei,
-            polyMesh::FACEDIAGTETS
+            polyMesh::FACE_DIAG_TRIS
         ).rawPoint();
     }
 
@@ -839,14 +839,14 @@ void CML::mappedPatchBase::calcAMI() const
     // Construct/apply AMI interpolation to determine addressing and weights
     AMIPtr_.reset
     (
-        new AMIPatchToPatchInterpolation
+        new AMIInterpolation
         (
             patch_,
             samplePolyPatch(), // nbrPatch0,
             surfPtr(),
             faceAreaIntersect::tmMesh,
             true,
-            AMIPatchToPatchInterpolation::imFaceAreaWeight,
+            AMIInterpolation::imFaceAreaWeight,
             -1,
             AMIReverse_
         )
@@ -865,7 +865,7 @@ CML::tmp<CML::pointField> CML::mappedPatchBase::readListOrField
 )
 {
     tmp<pointField> tfld(new pointField());
-    pointField& fld = tfld();
+    pointField& fld = tfld.ref();
 
     if (size)
     {
@@ -1265,7 +1265,7 @@ CML::tmp<CML::pointField> CML::mappedPatchBase::samplePoints
 ) const
 {
     tmp<pointField> tfld(new pointField(fc));
-    pointField& fld = tfld();
+    pointField& fld = tfld.ref();
 
     switch (offsetMode_)
     {
@@ -1304,15 +1304,15 @@ CML::pointIndexHit CML::mappedPatchBase::facePoint
 (
     const polyMesh& mesh,
     const label facei,
-    const polyMesh::cellRepresentation decompMode
+    const polyMesh::cellDecomposition decompMode
 )
 {
     const point& fc = mesh.faceCentres()[facei];
 
     switch (decompMode)
     {
-        case polyMesh::FACEPLANES:
-        case polyMesh::FACECENTRETETS:
+        case polyMesh::FACE_PLANES:
+        case polyMesh::FACE_CENTRE_TRIS:
         {
             // For both decompositions the face centre is guaranteed to be
             // on the face
@@ -1320,7 +1320,8 @@ CML::pointIndexHit CML::mappedPatchBase::facePoint
         }
         break;
 
-        case polyMesh::FACEDIAGTETS:
+        case polyMesh::FACE_DIAG_TRIS:
+        case polyMesh::CELL_TETS:
         {
             // Find the intersection of a ray from face centre to cell centre
             // Find intersection of (face-centre-decomposition) centre to
@@ -1354,7 +1355,7 @@ CML::pointIndexHit CML::mappedPatchBase::facePoint
                 (
                     cc,
                     d,
-                    intersection::HALF_RAY
+                    intersection::algorithm::halfRay
                 );
 
                 if (hitInfo.hit() && hitInfo.distance() > 0)
@@ -1382,17 +1383,14 @@ CML::pointIndexHit CML::mappedPatchBase::facePoint
 
 void CML::mappedPatchBase::write(Ostream& os) const
 {
-    os.writeKeyword("sampleMode") << sampleModeNames_[mode_]
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "sampleMode", sampleModeNames_[mode_]);
     if (!sampleRegion_.empty())
     {
-        os.writeKeyword("sampleRegion") << sampleRegion_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "sampleRegion", sampleRegion_);
     }
     if (!samplePatch_.empty())
     {
-        os.writeKeyword("samplePatch") << samplePatch_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "samplePatch", samplePatch_);
     }
     coupleGroup_.write(os);
 
@@ -1407,26 +1405,23 @@ void CML::mappedPatchBase::write(Ostream& os) const
     }
     else
     {
-        os.writeKeyword("offsetMode") << offsetModeNames_[offsetMode_]
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "offsetMode", offsetModeNames_[offsetMode_]);
 
         switch (offsetMode_)
         {
             case UNIFORM:
             {
-                os.writeKeyword("offset") << offset_ << token::END_STATEMENT
-                    << nl;
+                writeEntry(os, "offset", offset_);
                 break;
             }
             case NONUNIFORM:
             {
-                offsets_.writeEntry("offsets", os);
+                writeEntry(os, "offsets", offsets_);
                 break;
             }
             case NORMAL:
             {
-                os.writeKeyword("distance") << distance_ << token::END_STATEMENT
-                    << nl;
+                writeEntry(os, "distance", distance_);
                 break;
             }
         }
@@ -1435,8 +1430,7 @@ void CML::mappedPatchBase::write(Ostream& os) const
         {
             if (AMIReverse_)
             {
-                os.writeKeyword("flipNormals") << AMIReverse_
-                    << token::END_STATEMENT << nl;
+                writeEntry(os, "flipNormals", AMIReverse_);
             }
 
             if (!surfDict_.empty())

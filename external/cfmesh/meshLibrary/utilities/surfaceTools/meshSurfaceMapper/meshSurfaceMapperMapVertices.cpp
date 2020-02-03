@@ -102,7 +102,7 @@ void meshSurfaceMapper::mapToSmallestDistance(LongList<parMapperHelper>& parN)
     if( !Pstream::parRun() )
         return;
 
-    std::map<label, LongList<parMapperHelper> > exchangeData;
+    std::map<label, LongList<parMapperHelper>> exchangeData;
     const DynList<label>& neiProcs = surfaceEngine_.bpNeiProcs();
     forAll(neiProcs, i)
         exchangeData.insert

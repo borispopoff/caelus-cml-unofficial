@@ -37,8 +37,8 @@ tmp<volScalarField> kOmegaSSTDDES::FDES() const
 {
     return max
     (
-        Lt()/(CDES_*delta())*(scalar(1.0) - F1()),
-        scalar(1.0)
+        Lt()/(CDES_*delta())*(scalar(1) - F1()),
+        scalar(1)
     );
 }
 

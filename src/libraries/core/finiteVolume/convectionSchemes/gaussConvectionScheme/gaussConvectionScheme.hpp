@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2014 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -45,16 +45,7 @@ class gaussConvectionScheme
 {
     // Private data
 
-        tmp<surfaceInterpolationScheme<Type> > tinterpScheme_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        gaussConvectionScheme(const gaussConvectionScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const gaussConvectionScheme&);
+        tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
 
 public:
@@ -70,7 +61,7 @@ public:
         (
             const fvMesh& mesh,
             const surfaceScalarField& faceFlux,
-            const tmp<surfaceInterpolationScheme<Type> >& scheme
+            const tmp<surfaceInterpolationScheme<Type>>& scheme
         )
         :
             convectionScheme<Type>(mesh, faceFlux),
@@ -92,37 +83,45 @@ public:
             )
         {}
 
+        //- Disallow default bitwise copy construct
+        gaussConvectionScheme(const gaussConvectionScheme&) = delete;
 
     // Member Functions
 
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > interpolate
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > flux
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
-        tmp<fvMatrix<Type> > fvmDiv
+        tmp<fvMatrix<Type>> fvmDiv
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDiv
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDiv
         (
             const surfaceScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
-        tmp<surfaceInterpolationScheme<Type> > interpScheme() const
+        tmp<surfaceInterpolationScheme<Type>> interpScheme() const
         {
             return tinterpScheme_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gaussConvectionScheme&) = delete;
        
 };
 
@@ -141,7 +140,7 @@ namespace fv
 {
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 gaussConvectionScheme<Type>::interpolate
 (
     const surfaceScalarField&,
@@ -153,7 +152,7 @@ gaussConvectionScheme<Type>::interpolate
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 gaussConvectionScheme<Type>::flux
 (
     const surfaceScalarField& faceFlux,
@@ -165,7 +164,7 @@ gaussConvectionScheme<Type>::flux
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 gaussConvectionScheme<Type>::fvmDiv
 (
     const surfaceScalarField& faceFlux,
@@ -175,7 +174,7 @@ gaussConvectionScheme<Type>::fvmDiv
     tmp<surfaceScalarField> tweights = tinterpScheme_().weights(vf);
     const surfaceScalarField& weights = tweights();
 
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -183,20 +182,20 @@ gaussConvectionScheme<Type>::fvmDiv
             faceFlux.dimensions()*vf.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
-    fvm.lower() = -weights.internalField()*faceFlux.internalField();
-    fvm.upper() = fvm.lower() + faceFlux.internalField();
+    fvm.lower() = -weights.primitiveField()*faceFlux.primitiveField();
+    fvm.upper() = fvm.lower() + faceFlux.primitiveField();
     fvm.negSumDiag();
 
-    forAll(vf.boundaryField(), patchI)
+    forAll(vf.boundaryField(), patchi)
     {
-        const fvPatchField<Type>& psf = vf.boundaryField()[patchI];
-        const fvsPatchScalarField& patchFlux = faceFlux.boundaryField()[patchI];
-        const fvsPatchScalarField& pw = weights.boundaryField()[patchI];
+        const fvPatchField<Type>& psf = vf.boundaryField()[patchi];
+        const fvsPatchScalarField& patchFlux = faceFlux.boundaryField()[patchi];
+        const fvsPatchScalarField& pw = weights.boundaryField()[patchi];
 
-        fvm.internalCoeffs()[patchI] = patchFlux*psf.valueInternalCoeffs(pw);
-        fvm.boundaryCoeffs()[patchI] = -patchFlux*psf.valueBoundaryCoeffs(pw);
+        fvm.internalCoeffs()[patchi] = patchFlux*psf.valueInternalCoeffs(pw);
+        fvm.boundaryCoeffs()[patchi] = -patchFlux*psf.valueBoundaryCoeffs(pw);
     }
 
     if (tinterpScheme_().corrected())
@@ -209,19 +208,19 @@ gaussConvectionScheme<Type>::fvmDiv
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 gaussConvectionScheme<Type>::fvcDiv
 (
     const surfaceScalarField& faceFlux,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tConvection
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tConvection
     (
         fvc::surfaceIntegrate(flux(faceFlux, vf))
     );
 
-    tConvection().rename
+    tConvection.ref().rename
     (
         "convection(" + faceFlux.name() + ',' + vf.name() + ')'
     );

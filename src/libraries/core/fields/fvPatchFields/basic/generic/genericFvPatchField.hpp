@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -99,9 +99,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new genericFvPatchField<Type>(*this)
             );
@@ -115,12 +115,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new genericFvPatchField<Type>(*this, iF)
             );
@@ -149,33 +149,31 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            tmp<Field<Type> > gradientInternalCoeffs() const;
+            tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
         //- Write
         virtual void write(Ostream&) const;
 };
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace CML
 
@@ -195,7 +193,7 @@ CML::genericFvPatchField<Type>::genericFvPatchField
         << "Not Implemented\n    "
         << "Trying to construct an genericFvPatchField on patch "
         << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
+        << " of field " << this->internalField().name()
         << abort(FatalError);
 }
 
@@ -208,17 +206,19 @@ CML::genericFvPatchField<Type>::genericFvPatchField
     const dictionary& dict
 )
 :
-    calculatedFvPatchField<Type>(p, iF, dict, false),
+    calculatedFvPatchField<Type>(p, iF, dict),
     actualTypeName_(dict.lookup("type")),
     dict_(dict)
 {
     if (!dict.found("value"))
     {
-        FatalIOErrorInFunction(dict)
-            << "\n    Cannot find 'value' entry"
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "\n    Cannot find 'value' entry"
             << " on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << nl
             << "    which is required to set the"
                " values of the generic patch field." << nl
@@ -267,27 +267,29 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                         }
                         else
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    token following 'nonuniform' "
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    token following 'nonuniform' "
                                   "is not a compound"
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                             << exit(FatalIOError);
                         }
                     }
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<scalar> >::typeName
+                     == token::Compound<List<scalar>>::typeName
                     )
                     {
                         scalarField* fPtr = new scalarField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<scalar> > >
+                            dynamicCast<token::Compound<List<scalar>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -295,16 +297,18 @@ CML::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -313,13 +317,13 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<vector> >::typeName
+                     == token::Compound<List<vector>>::typeName
                     )
                     {
                         vectorField* fPtr = new vectorField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<vector> > >
+                            dynamicCast<token::Compound<List<vector>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -327,16 +331,18 @@ CML::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -345,7 +351,7 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<sphericalTensor> >::typeName
+                     == token::Compound<List<sphericalTensor>>::typeName
                     )
                     {
                         sphericalTensorField* fPtr = new sphericalTensorField;
@@ -353,7 +359,7 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                         (
                             dynamicCast
                             <
-                                token::Compound<List<sphericalTensor> >
+                                token::Compound<List<sphericalTensor>>
                             >
                             (
                                 fieldToken.transferCompoundToken(is)
@@ -362,16 +368,18 @@ CML::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -380,7 +388,7 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<symmTensor> >::typeName
+                     == token::Compound<List<symmTensor>>::typeName
                     )
                     {
                         symmTensorField* fPtr = new symmTensorField;
@@ -388,7 +396,7 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                         (
                             dynamicCast
                             <
-                                token::Compound<List<symmTensor> >
+                                token::Compound<List<symmTensor>>
                             >
                             (
                                 fieldToken.transferCompoundToken(is)
@@ -397,16 +405,18 @@ CML::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -415,13 +425,13 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                     else if
                     (
                         fieldToken.compoundToken().type()
-                     == token::Compound<List<tensor> >::typeName
+                     == token::Compound<List<tensor>>::typeName
                     )
                     {
                         tensorField* fPtr = new tensorField;
                         fPtr->transfer
                         (
-                            dynamicCast<token::Compound<List<tensor> > >
+                            dynamicCast<token::Compound<List<tensor>>>
                             (
                                 fieldToken.transferCompoundToken(is)
                             )
@@ -429,16 +439,18 @@ CML::genericFvPatchField<Type>::genericFvPatchField
 
                         if (fPtr->size() != this->size())
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    size of field " << iter().keyword()
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    size of field " << iter().keyword()
                                 << " (" << fPtr->size() << ')'
                                 << " is not the same size as the patch ("
                                 << this->size() << ')'
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
 
@@ -446,14 +458,16 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                     }
                     else
                     {
-                        FatalIOErrorInFunction(dict)
-                            << "\n    compound " << fieldToken.compoundToken()
+                        FatalIOErrorInFunction
+                        (
+                            dict
+                        )   << "\n    compound " << fieldToken.compoundToken()
                             << " not supported"
                             << "\n    on patch " << this->patch().name()
                             << " of field "
-                            << this->dimensionedInternalField().name()
+                            << this->internalField().name()
                             << " in file "
-                            << this->dimensionedInternalField().objectPath()
+                            << this->internalField().objectPath()
                             << exit(FatalIOError);
                     }
                 }
@@ -531,13 +545,15 @@ CML::genericFvPatchField<Type>::genericFvPatchField
                         }
                         else
                         {
-                            FatalIOErrorInFunction(dict)
-                                << "\n    unrecognised native type " << l
+                            FatalIOErrorInFunction
+                            (
+                                dict
+                            )   << "\n    unrecognised native type " << l
                                 << "\n    on patch " << this->patch().name()
                                 << " of field "
-                                << this->dimensionedInternalField().name()
+                                << this->internalField().name()
                                 << " in file "
-                                << this->dimensionedInternalField().objectPath()
+                                << this->internalField().objectPath()
                                 << exit(FatalIOError);
                         }
                     }
@@ -740,7 +756,7 @@ void CML::genericFvPatchField<Type>::rmap
     calculatedFvPatchField<Type>::rmap(ptf, addr);
 
     const genericFvPatchField<Type>& dptf =
-        refCast<const genericFvPatchField<Type> >(ptf);
+        refCast<const genericFvPatchField<Type>>(ptf);
 
     forAllIter
     (
@@ -825,7 +841,7 @@ void CML::genericFvPatchField<Type>::rmap
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::genericFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
@@ -836,18 +852,18 @@ CML::genericFvPatchField<Type>::valueInternalCoeffs
            "valueInternalCoeffs cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::genericFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
@@ -858,18 +874,18 @@ CML::genericFvPatchField<Type>::valueBoundaryCoeffs
            "valueBoundaryCoeffs cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::genericFvPatchField<Type>::gradientInternalCoeffs() const
 {
     FatalErrorInFunction
@@ -877,17 +893,17 @@ CML::genericFvPatchField<Type>::gradientInternalCoeffs() const
            "gradientInternalCoeffs cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     FatalErrorInFunction
@@ -895,11 +911,11 @@ CML::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
            "gradientBoundaryCoeffs cannot be called for a genericFvPatchField"
            " (actual type " << actualTypeName_ << ")"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "generic boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
@@ -908,7 +924,7 @@ CML::genericFvPatchField<Type>::gradientBoundaryCoeffs() const
 template<class Type>
 void CML::genericFvPatchField<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("type") << actualTypeName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "type", actualTypeName_);
 
     forAllConstIter(dictionary, dict_, iter)
     {
@@ -924,28 +940,48 @@ void CML::genericFvPatchField<Type>::write(Ostream& os) const
             {
                 if (scalarFields_.found(iter().keyword()))
                 {
-                    scalarFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *scalarFields_.find(iter().keyword())()
+                    );
                 }
                 else if (vectorFields_.found(iter().keyword()))
                 {
-                    vectorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *vectorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (sphericalTensorFields_.found(iter().keyword()))
                 {
-                    sphericalTensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *sphericalTensorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (symmTensorFields_.found(iter().keyword()))
                 {
-                    symmTensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *symmTensorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (tensorFields_.found(iter().keyword()))
                 {
-                    tensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *tensorFields_.find(iter().keyword())()
+                    );
                 }
             }
             else
@@ -955,10 +991,8 @@ void CML::genericFvPatchField<Type>::write(Ostream& os) const
         }
     }
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 
 #endif
-
-// ************************************************************************* //

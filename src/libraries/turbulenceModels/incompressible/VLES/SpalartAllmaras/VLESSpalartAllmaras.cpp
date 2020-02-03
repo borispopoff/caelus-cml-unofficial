@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VLESSpalartAllmaras.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -82,7 +83,7 @@ tmp<volScalarField> SpalartAllmarasVLES::fv2
     volScalarField const& fv1
 ) const
 {
-    return (scalar(1.0) - chi/(scalar(1.0)+chi*fv1));
+    return (scalar(1) - chi/(scalar(1)+chi*fv1));
 }
 
 
@@ -105,7 +106,7 @@ SpalartAllmarasVLES::fw(volScalarField const& Stilda) const
             scalar(10.0)
         )
     );
-    r.boundaryField() == 0.0;
+    r.boundaryFieldRef() == 0.0;
 
     volScalarField const g(r + Cw2_*(pow6(r) - r));
 
@@ -373,7 +374,7 @@ tmp<volScalarField> SpalartAllmarasVLES::epsilon() const
                 mesh_
             ),
             (
-                scalar(2.0)*nuEff()*magSqr(symm(fvc::grad(U())))
+                scalar(2)*nuEff()*magSqr(symm(fvc::grad(U())))
                 +
                 dimensionedScalar
                 (
@@ -438,6 +439,7 @@ bool SpalartAllmarasVLES::read()
 
 void SpalartAllmarasVLES::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     VLESModel::correct();
 
     if (!turbulence_)
@@ -473,7 +475,7 @@ void SpalartAllmarasVLES::correct()
 
     if (nD == 3)
     {
-        Lc.internalField() = Cx_*pow(mesh_.V(), 1.0/3.0);
+        Lc.primitiveFieldRef() = Cx_*pow(mesh_.V(), 1.0/3.0);
     }
     else if (nD == 2)
     {
@@ -489,7 +491,7 @@ void SpalartAllmarasVLES::correct()
             }
         }
 
-        Lc.internalField() = Cx_*sqrt(mesh_.V()/thickness);
+        Lc.primitiveFieldRef() = Cx_*sqrt(mesh_.V()/thickness);
     }
     else
     {
@@ -514,12 +516,12 @@ void SpalartAllmarasVLES::correct()
     {
         Fr_ = min
         (
-            scalar(1.0),
+            scalar(1),
             pow
             (
-                (scalar(1.0)-(1-F1())*exp(-0.002*Lc/Lk()))
+                (scalar(1)-(1-F1())*exp(-0.002*Lc/Lk()))
                 /
-                (scalar(1.0)-(1-F1())*exp(-0.002*Li()/Lk())),
+                (scalar(1)-(1-F1())*exp(-0.002*Li()/Lk())),
                 2.0
             )
         );
@@ -530,16 +532,16 @@ void SpalartAllmarasVLES::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-exp(-0.002*Lc/Lk()))
+                    (scalar(1)-exp(-0.002*Lc/Lk()))
                     /
-                    (scalar(1.0)-exp(-0.002*Li()/Lk())),
+                    (scalar(1)-exp(-0.002*Li()/Lk())),
                     2.0
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
 
@@ -561,11 +563,11 @@ void SpalartAllmarasVLES::correct()
        volSymmTensorField const DSijDt(fvc::DDt(this->phi_,Sij));
        volScalarField const rTilda
        (  
-           (scalar(2.0)/sqr(sqrD))*(Omegaij && (Sij & DSijDt))
+           (scalar(2)/sqr(sqrD))*(Omegaij && (Sij & DSijDt))
        );
        fr1_ = 
-       (scalar(1.0) + Cr1_)*scalar(2.0)*rStar/(scalar(1.0) + rStar)
-            *(scalar(1.0)-Cr3_*atan(Cr2_*rTilda)) - Cr1_;
+       (scalar(1) + Cr1_)*scalar(2)*rStar/(scalar(1) + rStar)
+            *(scalar(1)-Cr3_*atan(Cr2_*rTilda)) - Cr1_;
     }
 
     volScalarField const Stilda
@@ -582,12 +584,14 @@ void SpalartAllmarasVLES::correct()
      ==
         fr1_*Cb1_*Stilda*nuTilda_
       - fvm::Sp(Cw1_*fw(Stilda)*nuTilda_/sqr(d_), nuTilda_)
+      + fvOptions(nuTilda_)
     );
 
-    nuTildaEqn().relax();
-
-    mesh_.updateFvMatrix(nuTildaEqn());
+    nuTildaEqn.ref().relax();
+    fvOptions.constrain(nuTildaEqn.ref());
+    mesh_.updateFvMatrix(nuTildaEqn.ref());
     solve(nuTildaEqn);
+    fvOptions.correct(nuTilda_);
     bound(nuTilda_, dimensionedScalar("0", nuTilda_.dimensions(), 0.0));
     nuTilda_.correctBoundaryConditions();
 

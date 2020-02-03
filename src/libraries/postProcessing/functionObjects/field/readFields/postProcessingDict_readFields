@@ -19,8 +19,8 @@ functions
         type            readFields;
         functionObjectLibs ("libfieldFunctionObjects.so");
         enabled         true;
-        outputControl   timeStep;
-        outputInterval  1;
+        writeControl   timeStep;
+        writeInterval  1;
 
         fields
         (
@@ -33,8 +33,8 @@ functions
         type            faceSource;
         functionObjectLibs ("libfieldFunctionObjects.so");
         enabled         true;
-        outputControl   timeStep;
-        outputInterval  1;
+        writeControl   timeStep;
+        writeInterval  1;
         log             true;
         valueOutput     true;
         source          faceZone;

@@ -135,7 +135,7 @@ inline void smoothDelta::deltaData::enterDomain
 {}
 
 
-// Update this (cellI) with face information.
+// Update this (celli) with face information.
 template<class TrackingData>
 inline bool smoothDelta::deltaData::updateCell
 (
@@ -185,7 +185,7 @@ inline bool smoothDelta::deltaData::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool smoothDelta::deltaData::equal
 (
     const deltaData& rhs,

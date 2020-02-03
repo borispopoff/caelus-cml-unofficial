@@ -69,11 +69,11 @@ porosityCoefficient::porosityCoefficient
 :
     poroProperties_(poroProp),
 
-    linearCoefficient_(dimensionedVector("null", dimless, vector::zero)),
+    linearCoefficient_(dimensionedVector("null", dimless, Zero)),
 
-    quadraticCoefficient_(dimensionedVector("null", dimless, vector::zero)),
+    quadraticCoefficient_(dimensionedVector("null", dimless, Zero)),
 
-    KCQuadraticCoefficient_(dimensionedVector("null", dimless, vector::zero)),
+    KCQuadraticCoefficient_(dimensionedVector("null", dimless, Zero)),
 
     scaledKC_(dimensionedScalar("null", dimless, 0.0))
 {

@@ -89,9 +89,9 @@ void CML::primitiveMesh::makeFaceCentresAndAreas
         }
         else
         {
-            vector sumN = vector::zero;
+            vector sumN = Zero;
             scalar sumA = 0.0;
-            vector sumAc = vector::zero;
+            vector sumAc = Zero;
 
             point fCentre = p[f[0]];
             for (label pi = 1; pi < nPoints; pi++)
@@ -120,7 +120,7 @@ void CML::primitiveMesh::makeFaceCentresAndAreas
             if (sumA < ROOTVSMALL)
             {
                 fCtrs[facei] = fCentre;
-                fAreas[facei] = vector::zero;
+                fAreas[facei] = Zero;
             }
             else
             {

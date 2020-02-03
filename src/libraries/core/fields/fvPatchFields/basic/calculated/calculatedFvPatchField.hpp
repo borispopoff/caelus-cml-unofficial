@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,7 +22,19 @@ Class
     CML::calculatedFvPatchField
 
 Description
-    CML::calculatedFvPatchField
+    This boundary condition is not designed to be evaluated; it is assmued
+    that the value is assigned via field assignment, and not via a call to
+    e.g. \c updateCoeffs or \c evaluate.
+
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            calculated;
+        value           uniform (0 0 0);    // Required value entry
+    }
+    \endverbatim
 
 
 \*---------------------------------------------------------------------------*/
@@ -38,7 +50,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class calculatedFvPatch Declaration
+                   Class calculatedFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -68,7 +80,7 @@ public:
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
             const dictionary&,
-            const bool valueRequired=false
+            const bool valueRequired=true
         );
 
         //- Construct by mapping given patchField<Type> onto a new patch
@@ -77,7 +89,8 @@ public:
             const calculatedFvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const fvPatchFieldMapper&,
+            const bool mappingRequired=true
         );
 
         //- Construct as copy
@@ -87,9 +100,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new calculatedFvPatchField<Type>(*this)
             );
@@ -103,12 +116,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new calculatedFvPatchField<Type>(*this, iF)
             );
@@ -117,7 +130,7 @@ public:
 
     // Member functions
 
-        // Access
+        // Attributes
 
             //- Return true if this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving
@@ -132,25 +145,25 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            tmp<Field<Type> > gradientInternalCoeffs() const;
+            tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
         //- Write
@@ -158,29 +171,25 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fvPatchFieldMapper.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace CML
-{
 
 template<class Type>
-const word& fvPatchField<Type>::calculatedType()
+const CML::word& CML::fvPatchField<Type>::calculatedType()
 {
     return calculatedFvPatchField<Type>::typeName;
 }
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-calculatedFvPatchField<Type>::calculatedFvPatchField
+CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -191,20 +200,7 @@ calculatedFvPatchField<Type>::calculatedFvPatchField
 
 
 template<class Type>
-calculatedFvPatchField<Type>::calculatedFvPatchField
-(
-    const calculatedFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-calculatedFvPatchField<Type>::calculatedFvPatchField
+CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -217,7 +213,21 @@ calculatedFvPatchField<Type>::calculatedFvPatchField
 
 
 template<class Type>
-calculatedFvPatchField<Type>::calculatedFvPatchField
+CML::calculatedFvPatchField<Type>::calculatedFvPatchField
+(
+    const calculatedFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
+)
+:
+    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired)
+{}
+
+
+template<class Type>
+CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const calculatedFvPatchField<Type>& ptf
 )
@@ -227,7 +237,7 @@ calculatedFvPatchField<Type>::calculatedFvPatchField
 
 
 template<class Type>
-calculatedFvPatchField<Type>::calculatedFvPatchField
+CML::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const calculatedFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -238,7 +248,8 @@ calculatedFvPatchField<Type>::calculatedFvPatchField
 
 
 template<class Type>
-tmp<fvPatchField<Type> > fvPatchField<Type>::NewCalculatedType
+CML::tmp<CML::fvPatchField<Type>>
+CML::fvPatchField<Type>::NewCalculatedType
 (
     const fvPatch& p
 )
@@ -256,7 +267,7 @@ tmp<fvPatchField<Type> > fvPatchField<Type>::NewCalculatedType
     }
     else
     {
-        return tmp<fvPatchField<Type> >
+        return tmp<fvPatchField<Type>>
         (
             new calculatedFvPatchField<Type>
             (
@@ -270,7 +281,8 @@ tmp<fvPatchField<Type> > fvPatchField<Type>::NewCalculatedType
 
 template<class Type>
 template<class Type2>
-tmp<fvPatchField<Type> > fvPatchField<Type>::NewCalculatedType
+CML::tmp<CML::fvPatchField<Type>>
+CML::fvPatchField<Type>::NewCalculatedType
 (
     const fvPatchField<Type2>& pf
 )
@@ -282,7 +294,8 @@ tmp<fvPatchField<Type> > fvPatchField<Type>::NewCalculatedType
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > calculatedFvPatchField<Type>::valueInternalCoeffs
+CML::tmp<CML::Field<Type>>
+CML::calculatedFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -291,18 +304,19 @@ tmp<Field<Type> > calculatedFvPatchField<Type>::valueInternalCoeffs
         << "\n    "
            "valueInternalCoeffs cannot be called for a calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
 
 
 template<class Type>
-tmp<Field<Type> > calculatedFvPatchField<Type>::valueBoundaryCoeffs
+CML::tmp<CML::Field<Type>>
+CML::calculatedFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -311,65 +325,60 @@ tmp<Field<Type> > calculatedFvPatchField<Type>::valueBoundaryCoeffs
         << "\n    "
            "valueBoundaryCoeffs cannot be called for a calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
 
+
 template<class Type>
-tmp<Field<Type> > calculatedFvPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::calculatedFvPatchField<Type>::gradientInternalCoeffs() const
 {
     FatalErrorInFunction
         << "\n    "
            "gradientInternalCoeffs cannot be called for a "
            "calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
 
+
 template<class Type>
-tmp<Field<Type> > calculatedFvPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::calculatedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     FatalErrorInFunction
         << "\n    "
            "gradientBoundaryCoeffs cannot be called for a "
            "calculatedFvPatchField"
         << "\n    on patch " << this->patch().name()
-        << " of field " << this->dimensionedInternalField().name()
-        << " in file " << this->dimensionedInternalField().objectPath()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
            "default boundary condition."
-        << exit(FatalError);
+        << abort(FatalError);
 
     return *this;
 }
 
 
-// Write
 template<class Type>
-void calculatedFvPatchField<Type>::write(Ostream& os) const
+void CML::calculatedFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

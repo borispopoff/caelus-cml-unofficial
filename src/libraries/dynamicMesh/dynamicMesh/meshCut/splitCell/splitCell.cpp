@@ -25,9 +25,9 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from cell number and parent
-CML::splitCell::splitCell(const label cellI, splitCell* parent)
+CML::splitCell::splitCell(const label celli, splitCell* parent)
 :
-    cellI_(cellI),
+    celli_(celli),
     parent_(parent),
     master_(nullptr),
     slave_(nullptr)

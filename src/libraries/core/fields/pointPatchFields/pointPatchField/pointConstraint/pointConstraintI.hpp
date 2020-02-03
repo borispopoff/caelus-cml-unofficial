@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -23,7 +23,7 @@ License
 
 inline CML::pointConstraint::pointConstraint()
 :
-    Tuple2<label, vector>(0, vector::zero)
+    Tuple2<label, vector>(0, Zero)
 {}
 
 
@@ -41,7 +41,7 @@ inline CML::pointConstraint::pointConstraint(Istream& is)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void CML::pointConstraint::applyConstraint(const vector& cd)
+inline void CML::pointConstraint::applyConstraint(const vector& cd)
 {
     if (first() == 0)
     {
@@ -64,13 +64,13 @@ void CML::pointConstraint::applyConstraint(const vector& cd)
         if (mag(cd & second()) > 1e-3)
         {
             first() = 3;
-            second() = vector::zero;
+            second() = Zero;
         }
     }
 }
 
 
-void CML::pointConstraint::combine(const pointConstraint& pc)
+inline void CML::pointConstraint::combine(const pointConstraint& pc)
 {
     if (first() == 0)
     {
@@ -99,19 +99,19 @@ void CML::pointConstraint::combine(const pointConstraint& pc)
             {
                 // Different directions
                 first() = 3;
-                second() = vector::zero;
+                second() = Zero;
             }
         }
         else
         {
             first() = 3;
-            second() = vector::zero;
+            second() = Zero;
         }
     }
 }
 
 
-CML::tensor CML::pointConstraint::constraintTransformation() const
+inline CML::tensor CML::pointConstraint::constraintTransformation() const
 {
     if (first() == 0)
     {
@@ -127,13 +127,16 @@ CML::tensor CML::pointConstraint::constraintTransformation() const
     }
     else
     {
-        return tensor::zero;
+        return Zero;
     }
 }
 
 
-void CML::pointConstraint::unconstrainedDirections(label& n, tensor& tt)
-const
+inline void CML::pointConstraint::unconstrainedDirections
+(
+    label& n,
+    tensor& tt
+) const
 {
     n = 3-first();
 
@@ -168,14 +171,43 @@ const
     // Knock out remaining vectors
     for (direction dir = n; dir < vecs.size(); dir++)
     {
-        vecs[dir] = vector::zero;
+        vecs[dir] = Zero;
     }
 
     tt = tensor(vecs[0], vecs[1], vecs[2]);
 }
 
 
-void CML::combineConstraintsEqOp::operator()
+inline CML::vector CML::pointConstraint::constrainDisplacement
+(
+    const vector& d
+) const
+{
+    vector cd;
+
+    if (first() == 0)
+    {
+        cd = d;
+    }
+    else if (first() == 1)
+    {
+        // Remove plane normal
+        cd = d-(d&second())*second();
+    }
+    else if (first() == 2)
+    {
+        // Keep line direction only
+        cd = (d&second())*second();
+    }
+    else
+    {
+        cd = Zero;
+    }
+    return cd;
+}
+
+
+inline void CML::combineConstraintsEqOp::operator()
 (
     pointConstraint& x,
     const pointConstraint& y
@@ -185,7 +217,7 @@ void CML::combineConstraintsEqOp::operator()
 }
 
 
-CML::pointConstraint CML::transform
+inline CML::pointConstraint CML::transform
 (
     const tensor& tt,
     const pointConstraint& v

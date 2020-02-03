@@ -71,7 +71,7 @@ CML::radiation::absorptionEmissionModel::aCont(const label bandI) const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless/dimLength, 0.0)
+            dimensionedScalar("zero", dimless/dimLength, 0)
         )
     );
 }
@@ -94,7 +94,7 @@ CML::radiation::absorptionEmissionModel::aDisp(const label bandI) const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless/dimLength, 0.0)
+            dimensionedScalar("zero", dimless/dimLength, 0)
         )
     );
 }
@@ -124,7 +124,7 @@ CML::radiation::absorptionEmissionModel::eCont(const label bandI) const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless/dimLength, 0.0)
+            dimensionedScalar("zero", dimless/dimLength, 0)
         )
     );
 }
@@ -147,7 +147,7 @@ CML::radiation::absorptionEmissionModel::eDisp(const label bandI) const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimless/dimLength, 0.0)
+            dimensionedScalar("zero", dimless/dimLength, 0)
         )
     );
 }
@@ -177,7 +177,7 @@ CML::radiation::absorptionEmissionModel::ECont(const label bandI) const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0.0)
+            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0)
         )
     );
 }
@@ -200,7 +200,7 @@ CML::radiation::absorptionEmissionModel::EDisp(const label bandI) const
                 false
             ),
             mesh_,
-            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0.0)
+            dimensionedScalar("zero", dimMass/dimLength/pow3(dimTime), 0)
         )
     );
 }

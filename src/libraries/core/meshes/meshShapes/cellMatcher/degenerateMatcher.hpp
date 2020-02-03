@@ -71,7 +71,7 @@ class degenerateMatcher
         (
             const faceList& faces,
             const labelList& faceOwner,
-            const label cellI,
+            const label celli,
             const labelList& cellFaces
         );
 
@@ -86,8 +86,8 @@ public:
         //  vertices. cellShape just used to extract faces.
         static cellShape match(const cellShape& shape);
 
-        //- Recognize shape given mesh and cellI
-        static cellShape match(const primitiveMesh& mesh, const label cellI);
+        //- Recognize shape given mesh and celli
+        static cellShape match(const primitiveMesh& mesh, const label celli);
 };
 
 

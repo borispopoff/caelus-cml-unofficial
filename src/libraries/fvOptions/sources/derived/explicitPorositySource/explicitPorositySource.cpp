@@ -52,7 +52,7 @@ CML::fv::explicitPorositySource::explicitPorositySource
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh),
+    cellSetOption(name, modelType, dict, mesh),
     porosityPtr_(nullptr)
 {
     read(dict);
@@ -83,7 +83,7 @@ CML::fv::explicitPorositySource::explicitPorositySource
 void CML::fv::explicitPorositySource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -96,7 +96,7 @@ void CML::fv::explicitPorositySource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -110,7 +110,7 @@ void CML::fv::explicitPorositySource::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -119,24 +119,17 @@ void CML::fv::explicitPorositySource::addSup
 }
 
 
-void CML::fv::explicitPorositySource::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-}
-
-
 bool CML::fv::explicitPorositySource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         if (coeffs_.found("UNames"))
         {
             coeffs_.lookup("UNames") >> fieldNames_;
         }
-        else if (coeffs_.found("UName"))
+        else if (coeffs_.found("U"))
         {
-            word UName(coeffs_.lookup("UName"));
+            word UName(coeffs_.lookup("U"));
             fieldNames_ = wordList(1, UName);
         }
         else

@@ -9,7 +9,7 @@ import os
 import utils
 
 cxxflags = dict(
-    general = "-m64 -ftemplate-depth-100",
+    general = "-std=c++11 -ftemplate-depth-100",
     warnings = "-Wall -Wextra -Wno-unused-parameter -Wnon-virtual-dtor -Wno-attributes -Wno-invalid-offsetof",
     debug = "-O0 -fdefault-inline -ggdb3 -DFULLDEBUG",
     prof = "-O2 -pg",
@@ -47,7 +47,7 @@ _compiler_flags_map = {
 
 def windows_flags(env):
     """Windows specific compiler flags"""
-    env.Append(CXXFLAGS = '-std=c++11')
+    env.Append(CXXFLAGS = '-m64')
     env.Append(
         CPPPATH = [
             env['MPI_INC_PATH'],
@@ -64,7 +64,10 @@ def windows_flags(env):
 
 def linux_flags(env):
     """Linux specific compiler flags"""
-    env.Append(CXXFLAGS = '-std=c++11')
+    machine = os.uname()[4]
+    if machine == 'x86_64':
+        env.Append(CXXFLAGS = '-m64')
+
     if env['INT_TYPE'] == '64':
         env.Append(CXXFLAGS = '-DCAELUS_LABEL64')
     env.Append(
@@ -83,7 +86,7 @@ def linux_flags(env):
 
 def darwin_flags(env):
     """Darwin specific compiler flags"""
-    env.Append(CXXFLAGS = '-std=c++11')
+    env.Append(CXXFLAGS = '-m64 ')
 
     env.Append(LIBPATH_COMMON = [env['MPI_LIB_PATH']],
                CPPPATH = [env['MPI_INC_PATH']],

@@ -73,7 +73,7 @@ public:
         //- Construct null.  Used only for list construction
         polyAddPoint()
         :
-            p_(vector::zero),
+            p_(Zero),
             masterPointID_(-1),
             zoneID_(-1),
             inCell_(false)

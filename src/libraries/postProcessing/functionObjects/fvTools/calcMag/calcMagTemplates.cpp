@@ -48,7 +48,7 @@ FieldType& CML::calcMag::magField
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dims, 0.0)
+                dimensionedScalar("zero", dims, 0)
             )
         );
 

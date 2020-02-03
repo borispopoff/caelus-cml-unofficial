@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,10 +60,10 @@ class surfZoneIOList
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        surfZoneIOList(const surfZoneIOList&);
+        surfZoneIOList(const surfZoneIOList&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const surfZoneIOList&);
+        void operator=(const surfZoneIOList&) = delete;
 
 
 public:
@@ -81,7 +81,7 @@ public:
         surfZoneIOList(const IOobject&, const surfZoneList&);
 
         //- Construct from IOobject and surfZoneList
-        surfZoneIOList(const IOobject&, const Xfer<surfZoneList>&);
+        surfZoneIOList(const IOobject&, surfZoneList&&);
 
 
     //- Destructor

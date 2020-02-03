@@ -55,7 +55,7 @@ class GeneralSetEvaluationPluginFunction
 
     GeneralSetEvaluationPluginFunction(const GeneralSetEvaluationPluginFunction &);
 
-    autoPtr<Field<Type> > values_;
+    autoPtr<Field<Type>> values_;
 
 protected:
 

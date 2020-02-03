@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -36,15 +36,15 @@ namespace CML
 
 bool CML::directMethod::intersect
 (
-    const label srcCellI,
-    const label tgtCellI
+    const label srcCelli,
+    const label tgtCelli
 ) const
 {
     return tgt_.pointInCell
     (
-        src_.cellCentres()[srcCellI],
-        tgtCellI,
-        polyMesh::FACEPLANES
+        src_.cellCentres()[srcCelli],
+        tgtCelli,
+        polyMesh::FACE_PLANES
     );
 }
 
@@ -68,21 +68,15 @@ bool CML::directMethod::findInitialSeeds
 
         if (mapFlag[srcI])
         {
-            const pointField
-                pts(srcCells[srcI].points(srcFaces, srcPts).xfer());
-
-            forAll(pts, ptI)
-            {
-                const point& pt = pts[ptI];
-                label tgtI = tgt_.cellTree().findInside(pt);
+            const point srcCtr(srcCells[srcI].centre(srcPts, srcFaces));
+            label tgtI = tgt_.cellTree().findInside(srcCtr);
 
                 if (tgtI != -1 && intersect(srcI, tgtI))
                 {
                     srcSeedI = srcI;
                     tgtSeedI = tgtI;
 
-                    return true;
-                }
+                return true;
             }
         }
     }
@@ -112,28 +106,28 @@ void CML::directMethod::calculateAddressing
     // store a list of src cells already mapped
     labelList srcTgtSeed(src_.nCells(), -1);
 
-    List<DynamicList<label> > srcToTgt(src_.nCells());
-    List<DynamicList<label> > tgtToSrc(tgt_.nCells());
+    List<DynamicList<label>> srcToTgt(src_.nCells());
+    List<DynamicList<label>> tgtToSrc(tgt_.nCells());
 
     DynamicList<label> srcSeeds(10);
 
     const scalarField& srcVc = src_.cellVolumes();
     const scalarField& tgtVc = tgt_.cellVolumes();
 
-    label srcCellI = srcSeedI;
-    label tgtCellI = tgtSeedI;
+    label srcCelli = srcSeedI;
+    label tgtCelli = tgtSeedI;
 
     do
     {
         // store src/tgt cell pair
-        srcToTgt[srcCellI].append(tgtCellI);
-        tgtToSrc[tgtCellI].append(srcCellI);
+        srcToTgt[srcCelli].append(tgtCelli);
+        tgtToSrc[tgtCelli].append(srcCelli);
 
         // mark source cell srcSeedI as matched
-        mapFlag[srcCellI] = false;
+        mapFlag[srcCelli] = false;
 
         // accumulate intersection volume
-        V_ += srcVc[srcCellI];
+        V_ += srcVc[srcCelli];
 
         // find new source seed cell
         appendToDirectSeeds
@@ -141,11 +135,11 @@ void CML::directMethod::calculateAddressing
             mapFlag,
             srcTgtSeed,
             srcSeeds,
-            srcCellI,
-            tgtCellI
+            srcCelli,
+            tgtCelli
         );
     }
-    while (srcCellI >= 0);
+    while (srcCelli >= 0);
 
     // transfer addressing into persistent storage
     forAll(srcToTgtCellAddr, i)
@@ -174,8 +168,6 @@ void CML::directMethod::appendToDirectSeeds
     const labelList& srcNbr = src_.cellCells()[srcSeedI];
     const labelList& tgtNbr = tgt_.cellCells()[tgtSeedI];
 
-    const vectorField& srcCentre = src_.cellCentres();
-
     forAll(srcNbr, i)
     {
         label srcI = srcNbr[i];
@@ -190,15 +182,7 @@ void CML::directMethod::appendToDirectSeeds
             {
                 label tgtI = tgtNbr[j];
 
-                if
-                (
-                    tgt_.pointInCell
-                    (
-                        srcCentre[srcI],
-                        tgtI,
-                        polyMesh::FACEPLANES
-                    )
-                )
+                if (intersect(srcI, tgtI))
                 {
                     // new match - append to lists
                     found = true;

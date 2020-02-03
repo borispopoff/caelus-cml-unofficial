@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -93,6 +93,7 @@ Description
        average       | ensemble average
        weightedAverage | weighted average
        areaAverage   | area weighted average
+       weightedAreaAverage | weighted area average
        areaIntegrate | area integral
        min           | minimum
        max           | maximum
@@ -163,38 +164,39 @@ public:
     // Public data types
 
         //- Source type enumeration
-        enum sourceType
+        enum class sourceTypes
         {
-            stFaceZone,
-            stPatch,
-            stSampledSurface
+            faceZone,
+            patch,
+            sampledSurface
         };
 
         //- Source type names
-        static const NamedEnum<sourceType, 3> sourceTypeNames_;
+        static const NamedEnum<sourceTypes, 3> sourceTypeNames_;
 
 
         //- Operation type enumeration
-        enum operationType
+        enum class operationType
         {
-            opNone,
-            opSum,
-            opSumMag,
-            opSumDirection,
-            opSumDirectionBalance,
-            opAverage,
-            opWeightedAverage,
-            opAreaAverage,
-            opAreaIntegrate,
-            opMin,
-            opMax,
-            opCoV,
-            opAreaNormalAverage,
-            opAreaNormalIntegrate
+            none,
+            sum,
+            sumMag,
+            sumDirection,
+            sumDirectionBalance,
+            average,
+            weightedAverage,
+            areaAverage,
+            weightedAreaAverage,
+            areaIntegrate,
+            min,
+            max,
+            CoV,
+            areaNormalAverage,
+            areaNormalIntegrate
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 14> operationTypeNames_;
+        static const NamedEnum<operationType, 15> operationTypeNames_;
 
 
 private:
@@ -236,7 +238,7 @@ protected:
         autoPtr<surfaceWriter> surfaceWriterPtr_;
 
         //- Source type
-        sourceType source_;
+        sourceTypes source_;
 
         //- Operation to apply to values
         operationType operation_;
@@ -293,7 +295,7 @@ protected:
 
         //- Return field values by looking up field name
         template<class Type>
-        tmp<Field<Type> > getFieldValues
+        tmp<Field<Type>> getFieldValues
         (
             const word& fieldName,
             const bool mustGet = false,
@@ -349,7 +351,7 @@ public:
         // Access
 
             //- Return the source type
-            inline const sourceType& source() const;
+            inline const sourceTypes& source() const;
 
             //- Return the local list of face IDs
             inline const labelList& faceId() const;
@@ -380,7 +382,7 @@ public:
 
             //- Filter a surface field according to faceIds
             template<class Type>
-            tmp<Field<Type> > filterField
+            tmp<Field<Type>> filterField
             (
                 const GeometricField<Type, fvsPatchField, surfaceMesh>& field,
                 const bool applyOrientation
@@ -388,7 +390,7 @@ public:
 
             //- Filter a volume field according to faceIds
             template<class Type>
-            tmp<Field<Type> > filterField
+            tmp<Field<Type>> filterField
             (
                 const GeometricField<Type, fvPatchField, volMesh>& field,
                 const bool applyOrientation
@@ -436,12 +438,19 @@ vector faceSource::processValues
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-bool CML::fieldValues::faceSource::validField(const word& fieldName) const
+bool CML::fieldValues::faceSource::validField
+(
+    const word& fieldName
+) const
 {
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> sf;
     typedef GeometricField<Type, fvPatchField, volMesh> vf;
 
-    if (source_ != stSampledSurface && obr_.foundObject<sf>(fieldName))
+    if
+    (
+        source_ != sourceTypes::sampledSurface
+     && obr_.foundObject<sf>(fieldName)
+    )
     {
         return true;
     }
@@ -455,7 +464,8 @@ bool CML::fieldValues::faceSource::validField(const word& fieldName) const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::getFieldValues
+CML::tmp<CML::Field<Type>>
+CML::fieldValues::faceSource::getFieldValues
 (
     const word& fieldName,
     const bool mustGet,
@@ -465,7 +475,11 @@ CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::getFieldValues
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> sf;
     typedef GeometricField<Type, fvPatchField, volMesh> vf;
 
-    if (source_ != stSampledSurface && obr_.foundObject<sf>(fieldName))
+    if
+    (
+        source_ != sourceTypes::sampledSurface
+     && obr_.foundObject<sf>(fieldName)
+    )
     {
         return filterField(obr_.lookupObject<sf>(fieldName), applyOrientation);
     }
@@ -478,25 +492,25 @@ CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::getFieldValues
             if (surfacePtr_().interpolate())
             {
                 const interpolationCellPoint<Type> interp(fld);
-                tmp<Field<Type> > tintFld(surfacePtr_().interpolate(interp));
+                tmp<Field<Type>> tintFld(surfacePtr_().interpolate(interp));
                 const Field<Type>& intFld = tintFld();
 
                 // Average
                 const faceList& faces = surfacePtr_().faces();
-                tmp<Field<Type> > tavg
+                tmp<Field<Type>> tavg
                 (
-                    new Field<Type>(faces.size(), pTraits<Type>::zero)
+                    new Field<Type>(faces.size(), Zero)
                 );
-                Field<Type>& avg = tavg();
+                Field<Type>& avg = tavg.ref();
 
-                forAll(faces, faceI)
+                forAll(faces, facei)
                 {
-                    const face& f = faces[faceI];
+                    const face& f = faces[facei];
                     forAll(f, fp)
                     {
-                        avg[faceI] += intFld[f[fp]];
+                        avg[facei] += intFld[f[fp]];
                     }
-                    avg[faceI] /= f.size();
+                    avg[facei] /= f.size();
                 }
 
                 return tavg;
@@ -519,7 +533,7 @@ CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::getFieldValues
             << abort(FatalError);
     }
 
-    return tmp<Field<Type> >(new Field<Type>(0));
+    return tmp<Field<Type>>(new Field<Type>(0));
 }
 
 
@@ -531,20 +545,20 @@ Type CML::fieldValues::faceSource::processSameTypeValues
     const scalarField& weightField
 ) const
 {
-    Type result = pTraits<Type>::zero;
+    Type result = Zero;
     switch (operation_)
     {
-        case opSum:
+        case operationType::sum:
         {
             result = sum(values);
             break;
         }
-        case opSumMag:
+        case operationType::sumMag:
         {
             result = sum(cmptMag(values));
             break;
         }
-        case opSumDirection:
+        case operationType::sumDirection:
         {
             FatalErrorInFunction
                 << "Operation " << operationTypeNames_[operation_]
@@ -552,10 +566,10 @@ Type CML::fieldValues::faceSource::processSameTypeValues
                 << pTraits<Type>::typeName
                 << exit(FatalError);
 
-            result = pTraits<Type>::zero;
+            result = Zero;
             break;
         }
-        case opSumDirectionBalance:
+        case operationType::sumDirectionBalance:
         {
             FatalErrorInFunction
                 << "Operation " << operationTypeNames_[operation_]
@@ -563,19 +577,19 @@ Type CML::fieldValues::faceSource::processSameTypeValues
                 << pTraits<Type>::typeName
                 << exit(FatalError);
 
-            result = pTraits<Type>::zero;
+            result = Zero;
             break;
         }
-        case opAverage:
+        case operationType::average:
         {
             result = sum(values)/values.size();
             break;
         }
-        case opWeightedAverage:
+        case operationType::weightedAverage:
         {
             if (weightField.size())
             {
-                result = sum(values)/sum(weightField);
+                result = sum(weightField*values)/sum(weightField);
             }
             else
             {
@@ -583,31 +597,45 @@ Type CML::fieldValues::faceSource::processSameTypeValues
             }
             break;
         }
-        case opAreaAverage:
+        case operationType::areaAverage:
         {
             const scalarField magSf(mag(Sf));
 
-            result = sum(values*magSf)/sum(magSf);
+            result = sum(magSf*values)/sum(magSf);
             break;
         }
-        case opAreaIntegrate:
+        case operationType::weightedAreaAverage:
         {
             const scalarField magSf(mag(Sf));
 
-            result = sum(values*magSf);
+            if (weightField.size())
+            {
+                result = sum(weightField*magSf*values)/sum(magSf*weightField);
+            }
+            else
+            {
+                result = sum(magSf*values)/sum(magSf);
+            }
             break;
         }
-        case opMin:
+        case operationType::areaIntegrate:
+        {
+            const scalarField magSf(mag(Sf));
+
+            result = sum(magSf*values);
+            break;
+        }
+        case operationType::min:
         {
             result = min(values);
             break;
         }
-        case opMax:
+        case operationType::max:
         {
             result = max(values);
             break;
         }
-        case opCoV:
+        case operationType::CoV:
         {
             const scalarField magSf(mag(Sf));
 
@@ -626,10 +654,12 @@ Type CML::fieldValues::faceSource::processSameTypeValues
 
             break;
         }
-        default:
-        {
-            // Do nothing
-        }
+        case operationType::areaNormalAverage:
+        {}
+        case operationType::areaNormalIntegrate:
+        {}
+        case operationType::none:
+        {}
     }
 
     return result;
@@ -715,18 +745,14 @@ bool CML::fieldValues::faceSource::writeValues
         }
 
 
-        // apply scale factor and weight field
+        // Apply scale factor and weight field
         values *= scaleFactor_;
-        if (weightField.size())
-        {
-            values *= weightField;
-        }
 
         if (Pstream::master())
         {
             Type result = processValues(values, Sf, weightField);
 
-            // add to result dictionary, over-writing any previous entry
+            // Add to result dictionary, over-writing any previous entry
             resultDict_.add(fieldName, result, true);
 
             file()<< tab << result;
@@ -742,22 +768,22 @@ bool CML::fieldValues::faceSource::writeValues
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::filterField
+CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
 (
     const GeometricField<Type, fvPatchField, volMesh>& field,
     const bool applyOrientation
 ) const
 {
-    tmp<Field<Type> > tvalues(new Field<Type>(faceId_.size()));
-    Field<Type>& values = tvalues();
+    tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));
+    Field<Type>& values = tvalues.ref();
 
     forAll(values, i)
     {
-        label faceI = faceId_[i];
-        label patchI = facePatchId_[i];
-        if (patchI >= 0)
+        label facei = faceId_[i];
+        label patchi = facePatchId_[i];
+        if (patchi >= 0)
         {
-            values[i] = field.boundaryField()[patchI][faceI];
+            values[i] = field.boundaryField()[patchi][facei];
         }
         else
         {
@@ -783,26 +809,26 @@ CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::filterField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fieldValues::faceSource::filterField
+CML::tmp<CML::Field<Type>> CML::fieldValues::faceSource::filterField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field,
     const bool applyOrientation
 ) const
 {
-    tmp<Field<Type> > tvalues(new Field<Type>(faceId_.size()));
-    Field<Type>& values = tvalues();
+    tmp<Field<Type>> tvalues(new Field<Type>(faceId_.size()));
+    Field<Type>& values = tvalues.ref();
 
     forAll(values, i)
     {
-        label faceI = faceId_[i];
-        label patchI = facePatchId_[i];
-        if (patchI >= 0)
+        label facei = faceId_[i];
+        label patchi = facePatchId_[i];
+        if (patchi >= 0)
         {
-            values[i] = field.boundaryField()[patchI][faceI];
+            values[i] = field.boundaryField()[patchi][facei];
         }
         else
         {
-            values[i] = field[faceI];
+            values[i] = field[facei];
         }
     }
 

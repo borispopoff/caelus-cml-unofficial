@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -78,10 +78,10 @@ class STARCDsurfaceFormat
         );
 
         //- Disallow default bitwise copy construct
-        STARCDsurfaceFormat(const STARCDsurfaceFormat<Face>&);
+        STARCDsurfaceFormat(const STARCDsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const STARCDsurfaceFormat<Face>&);
+        void operator=(const STARCDsurfaceFormat<Face>&) = delete;
 
 
 public:
@@ -95,9 +95,9 @@ public:
     // Selectors
 
         //- Read file and return surface
-        static autoPtr<MeshedSurface<Face> > New(const fileName& name)
+        static autoPtr<MeshedSurface<Face>> New(const fileName& name)
         {
-            return autoPtr<MeshedSurface<Face> >
+            return autoPtr<MeshedSurface<Face>>
             (
                 new STARCDsurfaceFormat<Face>(name)
             );
@@ -312,14 +312,14 @@ bool CML::fileFormats::STARCDsurfaceFormat<Face>::read
                 label nTri = 0;
                 f.triangles(this->points(), nTri, triFaces);
 
-                forAll(triFaces, faceI)
+                forAll(triFaces, facei)
                 {
                     // a triangular face, but not yet a triFace
                     dynFaces.append
                     (
                         triFace
                         (
-                            static_cast<labelUList&>(triFaces[faceI])
+                            static_cast<labelUList&>(triFaces[facei])
                         )
                     );
                     dynZones.append(zoneI);
@@ -336,7 +336,7 @@ bool CML::fileFormats::STARCDsurfaceFormat<Face>::read
     }
     mapPointId.clear();
 
-    this->sortFacesAndStore(dynFaces.xfer(), dynZones.xfer(), sorted);
+    this->sortFacesAndStore(move(dynFaces), move(dynZones), sorted);
 
     // add zones, culling empty ones
     this->addZones(dynSizes, dynNames, true);
@@ -378,7 +378,7 @@ void CML::fileFormats::STARCDsurfaceFormat<Face>::write
 
         if (useFaceMap)
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceMap[faceIndex++]];
                 writeShell(os, f, faceIndex, zoneI + 1);
@@ -386,7 +386,7 @@ void CML::fileFormats::STARCDsurfaceFormat<Face>::write
         }
         else
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceIndex++];
                 writeShell(os, f, faceIndex, zoneI + 1);

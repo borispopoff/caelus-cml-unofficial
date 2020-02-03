@@ -62,9 +62,9 @@ public:
         StochasticDispersionRAS(const StochasticDispersionRAS<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<DispersionModel<CloudType> > clone() const
+        virtual autoPtr<DispersionModel<CloudType>> clone() const
         {
-            return autoPtr<DispersionModel<CloudType> >
+            return autoPtr<DispersionModel<CloudType>>
             (
                 new StochasticDispersionRAS<CloudType>(*this)
             );
@@ -141,9 +141,9 @@ CML::vector CML::StochasticDispersionRAS<CloudType>::update
 
     const scalar cps = 0.16432;
 
-    const scalar k = this->kPtr_->internalField()[celli];
+    const scalar k = this->kPtr_->primitiveField()[celli];
     const scalar epsilon =
-        this->epsilonPtr_->internalField()[celli] + ROOTVSMALL;
+        this->epsilonPtr_->primitiveField()[celli] + ROOTVSMALL;
 
     const scalar UrelMag = mag(U - Uc - UTurb);
 

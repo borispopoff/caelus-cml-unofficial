@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -67,7 +67,7 @@ class StandardChemistryModel
     StandardChemistryModel(const StandardChemistryModel&);
 
     //- Disallow default bitwise assignment
-    void operator=(const StandardChemistryModel&);
+    void operator=(const StandardChemistryModel&) = delete;
 
 
 protected:
@@ -78,7 +78,7 @@ protected:
     PtrList<volScalarField>& Y_;
 
     //- Reactions
-    const PtrList<Reaction<ThermoType> >& reactions_;
+    const PtrList<Reaction<ThermoType>>& reactions_;
 
     //- Thermodynamic data of the species
     const PtrList<ThermoType>& specieThermo_;
@@ -93,7 +93,7 @@ protected:
     scalar Treact_;
 
     //- List of reaction rate per specie [kg/m3/s]
-    PtrList<DimensionedField<scalar, volMesh> > RR_;
+    PtrList<DimensionedField<scalar, volMesh>> RR_;
 
     //- Temporary concentration field
     mutable scalarField c_;
@@ -104,7 +104,7 @@ protected:
 
     //- Write access to chemical source terms
     //  (e.g. for multi-chemistry model)
-    inline PtrList<DimensionedField<scalar, volMesh> >& RR();
+    inline PtrList<DimensionedField<scalar, volMesh>>& RR();
 
 
 public:
@@ -125,7 +125,7 @@ public:
     // Member Functions
 
     //- The reactions
-    inline const PtrList<Reaction<ThermoType> >& reactions() const;
+    inline const PtrList<Reaction<ThermoType>>& reactions() const;
 
     //- Thermodynamic data of the species
     inline const PtrList<ThermoType>& specieThermo() const;
@@ -188,7 +188,7 @@ public:
     );
 
     //- Return reaction rate of the speciei in reactionI
-    virtual tmp<DimensionedField<scalar, volMesh> > calculateRR
+    virtual tmp<DimensionedField<scalar, volMesh>> calculateRR
     (
         const label reactionI,
         const label speciei
@@ -258,7 +258,7 @@ CML::StandardChemistryModel<ReactionThermo, ThermoType>::nEqns() const
 
 
 template<class ReactionThermo, class ThermoType>
-inline CML::PtrList<CML::DimensionedField<CML::scalar, CML::volMesh> >&
+inline CML::PtrList<CML::DimensionedField<CML::scalar, CML::volMesh>>&
 CML::StandardChemistryModel<ReactionThermo, ThermoType>::RR()
 {
     return RR_;
@@ -266,7 +266,7 @@ CML::StandardChemistryModel<ReactionThermo, ThermoType>::RR()
 
 
 template<class ReactionThermo, class ThermoType>
-inline const CML::PtrList<CML::Reaction<ThermoType> >&
+inline const CML::PtrList<CML::Reaction<ThermoType>>&
 CML::StandardChemistryModel<ReactionThermo, ThermoType>::reactions() const
 {
     return reactions_;
@@ -594,7 +594,7 @@ CML::StandardChemistryModel<ReactionThermo, ThermoType>::tc() const
         )
     );
 
-    scalarField& tc = ttc();
+    scalarField& tc = ttc.ref();
 
     tmp<volScalarField> trho(this->thermo().rho());
     const scalarField& rho = trho();
@@ -639,7 +639,7 @@ CML::StandardChemistryModel<ReactionThermo, ThermoType>::tc() const
         }
     }
 
-    ttc().correctBoundaryConditions();
+    ttc.ref().correctBoundaryConditions();
 
     return ttc;
 }
@@ -669,7 +669,7 @@ CML::StandardChemistryModel<ReactionThermo, ThermoType>::Qdot() const
 
     if (this->chemistry_)
     {
-        scalarField& Qdot = tQdot();
+        scalarField& Qdot = tQdot.ref();
 
         forAll(Y_, i)
         {
@@ -686,14 +686,14 @@ CML::StandardChemistryModel<ReactionThermo, ThermoType>::Qdot() const
 
 
 template<class ReactionThermo, class ThermoType>
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::StandardChemistryModel<ReactionThermo, ThermoType>::calculateRR
 (
     const label ri,
     const label si
 ) const
 {
-    tmp<DimensionedField<scalar, volMesh> > tRR
+    tmp<DimensionedField<scalar, volMesh>> tRR
     (
         new DimensionedField<scalar, volMesh>
         (
@@ -710,7 +710,7 @@ CML::StandardChemistryModel<ReactionThermo, ThermoType>::calculateRR
         )
     );
 
-    DimensionedField<scalar, volMesh>& RR = tRR();
+    DimensionedField<scalar, volMesh>& RR = tRR.ref();
 
     tmp<volScalarField> trho(this->thermo().rho());
     const scalarField& rho = trho();
@@ -878,7 +878,7 @@ CML::scalar CML::StandardChemistryModel<ReactionThermo, ThermoType>::solve
     // Don't allow the time-step to change more than a factor of 2
     return min
     (
-        this->solve<uniformField<scalar> >(uniformField<scalar>(deltaT)),
+        this->solve<uniformField<scalar>>(uniformField<scalar>(deltaT)),
         2*deltaT
     );
 }

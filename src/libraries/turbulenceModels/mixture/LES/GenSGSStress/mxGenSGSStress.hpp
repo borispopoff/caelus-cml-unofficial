@@ -59,8 +59,8 @@ class GenSGSStress
 private:
 
     // Disallow default bitwise copy construct and assignment
-    GenSGSStress(const GenSGSStress&);
-    GenSGSStress& operator=(const GenSGSStress&);
+    GenSGSStress(const GenSGSStress&) = delete;
+    GenSGSStress& operator=(const GenSGSStress&) = delete;
 
 
 protected:

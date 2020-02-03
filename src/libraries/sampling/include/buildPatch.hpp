@@ -36,12 +36,12 @@ const fvPatchList& patches = mesh.boundary();
 bool targetPatchNamePresent(false);
 label targetPatchNumber = -1;
 
-forAll(patches, patchI)
+forAll(patches, patchi)
 {
-    if (patches[patchI].name() == toPatchName)
+    if (patches[patchi].name() == toPatchName)
     {
         targetPatchNamePresent = true;
-        targetPatchNumber = patchI;
+        targetPatchNumber = patchi;
     }
 }
 

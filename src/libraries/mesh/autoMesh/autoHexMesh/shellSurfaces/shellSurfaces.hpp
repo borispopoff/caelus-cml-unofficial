@@ -93,7 +93,7 @@ private:
         void setAndCheckLevels
         (
             const label shellI,
-            const List<Tuple2<scalar, label> >&
+            const List<Tuple2<scalar, label>>&
         );
 
         void orient();

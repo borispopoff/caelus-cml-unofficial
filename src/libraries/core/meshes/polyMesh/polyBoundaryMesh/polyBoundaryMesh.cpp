@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -212,8 +212,8 @@ void CML::polyBoundaryMesh::calcGeometry()
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(*this, patchi)
@@ -228,7 +228,7 @@ void CML::polyBoundaryMesh::calcGeometry()
             operator[](patchi).calcGeometry(pBufs);
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = mesh().globalData().patchSchedule();
 
@@ -288,7 +288,7 @@ CML::polyBoundaryMesh::neighbourEdges() const
 
         // From mesh edge (expressed as a point pair so as not to construct
         // point addressing) to patch + relative edge index.
-        HashTable<labelPair, edge, Hash<edge> > pointsToEdge(nEdgePairs);
+        HashTable<labelPair, edge, Hash<edge>> pointsToEdge(nEdgePairs);
 
         forAll(*this, patchi)
         {
@@ -309,7 +309,7 @@ CML::polyBoundaryMesh::neighbourEdges() const
                 // Edge in mesh points.
                 edge meshEdge(pp.meshPoints()[e[0]], pp.meshPoints()[e[1]]);
 
-                HashTable<labelPair, edge, Hash<edge> >::iterator fnd =
+                HashTable<labelPair, edge, Hash<edge>>::iterator fnd =
                     pointsToEdge.find(meshEdge);
 
                 if (fnd == pointsToEdge.end())
@@ -656,7 +656,7 @@ CML::labelList CML::polyBoundaryMesh::findIndices
         }
     }
 
-    return indices;
+    return move(indices);
 }
 
 
@@ -879,6 +879,7 @@ bool CML::polyBoundaryMesh::checkParallelSync(const bool report) const
         return false;
     }
 
+
     const polyBoundaryMesh& bm = *this;
 
     bool hasError = false;
@@ -1021,8 +1022,8 @@ void CML::polyBoundaryMesh::movePoints(const pointField& p)
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(*this, patchi)
@@ -1037,7 +1038,7 @@ void CML::polyBoundaryMesh::movePoints(const pointField& p)
             operator[](patchi).movePoints(pBufs, p);
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = mesh().globalData().patchSchedule();
 
@@ -1071,8 +1072,8 @@ void CML::polyBoundaryMesh::updateMesh()
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(*this, patchi)
@@ -1087,7 +1088,7 @@ void CML::polyBoundaryMesh::updateMesh()
             operator[](patchi).updateMesh(pBufs);
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = mesh().globalData().patchSchedule();
 

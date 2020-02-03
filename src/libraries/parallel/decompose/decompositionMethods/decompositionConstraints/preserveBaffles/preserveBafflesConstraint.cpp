@@ -144,10 +144,10 @@ void CML::decompositionConstraints::preserveBafflesConstraint::add
 
         // Convert back into labelPairList
         label n = 0;
-        forAll(faceToFace, faceI)
+        forAll(faceToFace, facei)
         {
-            label otherFaceI = faceToFace[faceI];
-            if (otherFaceI != -1 && faceI < otherFaceI)
+            label otherFacei = faceToFace[facei];
+            if (otherFacei != -1 && facei < otherFacei)
             {
                 // I am master of slave
                 n++;
@@ -155,12 +155,12 @@ void CML::decompositionConstraints::preserveBafflesConstraint::add
         }
         explicitConnections.setSize(n);
         n = 0;
-        forAll(faceToFace, faceI)
+        forAll(faceToFace, facei)
         {
-            label otherFaceI = faceToFace[faceI];
-            if (otherFaceI != -1 && faceI < otherFaceI)
+            label otherFacei = faceToFace[facei];
+            if (otherFacei != -1 && facei < otherFacei)
             {
-                explicitConnections[n++] = labelPair(faceI, otherFaceI);
+                explicitConnections[n++] = labelPair(facei, otherFacei);
             }
         }
     }
@@ -199,30 +199,30 @@ void CML::decompositionConstraints::preserveBafflesConstraint::apply
         label f0 = baffle.first();
         label f1 = baffle.second();
 
-        const label procI = decomposition[mesh.faceOwner()[f0]];
+        const label proci = decomposition[mesh.faceOwner()[f0]];
 
         if (mesh.isInternalFace(f0))
         {
             label nei0 = mesh.faceNeighbour()[f0];
-            if (decomposition[nei0] != procI)
+            if (decomposition[nei0] != proci)
             {
-                decomposition[nei0] = procI;
+                decomposition[nei0] = proci;
                 nChanged++;
             }
         }
 
         label own1 = mesh.faceOwner()[f1];
-        if (decomposition[own1] != procI)
+        if (decomposition[own1] != proci)
         {
-            decomposition[own1] = procI;
+            decomposition[own1] = proci;
             nChanged++;
         }
         if (mesh.isInternalFace(f1))
         {
             label nei1 = mesh.faceNeighbour()[f1];
-            if (decomposition[nei1] != procI)
+            if (decomposition[nei1] != proci)
             {
-                decomposition[nei1] = procI;
+                decomposition[nei1] = proci;
             }
         }
     }

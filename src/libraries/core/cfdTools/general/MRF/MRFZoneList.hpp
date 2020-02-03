@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2018 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -40,19 +40,14 @@ namespace CML
 class MRFZoneList;
 Ostream& operator<<(Ostream& os, const MRFZoneList& models);
 
+/*---------------------------------------------------------------------------*\
+                         Class MRFZoneList Declaration
+\*---------------------------------------------------------------------------*/
+
 class MRFZoneList
 :
     public PtrList<MRFZone>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        MRFZoneList(const MRFZoneList&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const MRFZoneList&);
-
-
 protected:
 
     // Protected data
@@ -65,6 +60,9 @@ public:
 
     //- Constructor
     MRFZoneList(const fvMesh& mesh, const dictionary& dict);
+
+    //- Disallow default bitwise copy construct
+    MRFZoneList(const MRFZoneList&) = delete;
 
     //- Destructor
     ~MRFZoneList();
@@ -122,16 +120,16 @@ public:
 
         //- Return the given absolute boundary flux relative within
         //  the MRF region
-        tmp<FieldField<fvsPatchField, scalar> > relative
+        tmp<FieldField<fvsPatchField, scalar>> relative
         (
-            const tmp<FieldField<fvsPatchField, scalar> >& tphi
+            const tmp<FieldField<fvsPatchField, scalar>>& tphi
         ) const;
 
         //- Return the given absolute patch flux relative within
         //  the MRF region
-        tmp<Field<scalar> > relative
+        tmp<Field<scalar>> relative
         (
-            const tmp<Field<scalar> >& tphi,
+            const tmp<Field<scalar>>& tphi,
             const label patchi
         ) const;
 
@@ -174,9 +172,9 @@ public:
         //- Filter-out the MRF region contribution from the given field
         // setting the corresponding values to zero
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > zeroFilter
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> zeroFilter
         (
-            const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >& tphi
+            const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tphi
         ) const;
 
         //- Update MRFZone faces if the mesh topology changes
@@ -197,6 +195,12 @@ public:
                 Ostream& os,
                 const MRFZoneList& models
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const MRFZoneList&) = delete;
 };
 
 } // End namespace CML
@@ -205,18 +209,17 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::MRFZoneList::zeroFilter
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >& tphi
+    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tphi
 ) const
 {
     if (size())
     {
         tmp<surfaceScalarField> zphi
         (
-             reuseTmpGeometricField<scalar, scalar, fvsPatchField, surfaceMesh>
-            ::New
+            New
             (
                 tphi,
                 "zeroFilter(" + tphi().name() + ')',
@@ -227,7 +230,7 @@ CML::MRFZoneList::zeroFilter
 
         forAll(*this, i)
         {
-            operator[](i).zero(zphi());
+            operator[](i).zero(zphi.ref());
         }
 
         return zphi;

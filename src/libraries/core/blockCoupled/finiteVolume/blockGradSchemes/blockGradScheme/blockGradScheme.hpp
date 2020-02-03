@@ -57,7 +57,7 @@ public:
 
     typedef Field<Type> FieldType;
     typedef GeometricField<Type, fvPatchField, volMesh> GeoFieldType;
-    typedef typename GeoFieldType::GeometricBoundaryField GeoBoundaryFieldType;
+    typedef typename GeoFieldType::Boundary GeoBoundaryFieldType;
 
     typedef Field<typename outerProduct<vector, Type>::type> GradFieldType;
     typedef GeometricField
@@ -99,7 +99,7 @@ public:
 
     // Selectors
     //- Return a pointer to a new blockGradScheme created on freestore
-    static tmp<blockGradScheme<Type> > New
+    static tmp<blockGradScheme<Type>> New
     (
         const fvMesh& mesh,
         Istream& schemeData
@@ -139,7 +139,7 @@ public:
     {                                                                         \
         namespace fv                                                          \
         {                                                                     \
-            blockGradScheme<Type>::addIstreamConstructorToTable<SS<Type> >    \
+            blockGradScheme<Type>::addIstreamConstructorToTable<SS<Type>>     \
                 add##SS##Type##IstreamConstructorToTable_;                    \
         }                                                                     \
     }
@@ -158,7 +158,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<blockGradScheme<Type> > blockGradScheme<Type>::New
+tmp<blockGradScheme<Type>> blockGradScheme<Type>::New
 (
     const fvMesh& mesh,
     Istream& schemeData
@@ -224,7 +224,7 @@ fv::blockGradScheme<Type>::fvmGrad
 
     typedef typename outerProduct<vector, Type>::type GradType;
 
-    tmp<BlockLduSystem<vector, GradType> > tbs
+    tmp<BlockLduSystem<vector, GradType>> tbs
     (
         new BlockLduSystem<vector, GradType>(vf.mesh())
     );

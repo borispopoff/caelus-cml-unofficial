@@ -48,7 +48,7 @@ void readFields
     const typename GeoField::Mesh& mesh,
     const IOobjectList& objects,
     const HashSet<word>& selectedFields,
-    PtrList<GeoField>& fields
+    PtrList<const GeoField>& fields
 );
 
 } // End namespace CML
@@ -71,7 +71,7 @@ void readFields
     const typename GeoField::Mesh& mesh,
     const IOobjectList& objects,
     const HashSet<word>& selectedFields,
-    PtrList<GeoField>& fields
+    PtrList<const GeoField>& fields
 )
 {
     // Search list of objects for volScalarFields
@@ -95,7 +95,7 @@ void readFields
                         *iter(),
                         mesh
                     )
-                )
+                ).ptr()
             );
             nFields++;
         }

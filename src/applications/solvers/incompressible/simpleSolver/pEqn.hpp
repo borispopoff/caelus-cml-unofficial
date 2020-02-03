@@ -1,8 +1,8 @@
 {
-    p.boundaryField().updateCoeffs();
+    p.boundaryFieldRef().updateCoeffs();
     volScalarField pHat = p;
 
-    scalarField& VolI = Vol.internalField();
+    scalarField& VolI = Vol.primitiveFieldRef();
     VolI = mesh.V();
     Vol.correctBoundaryConditions();
 
@@ -16,11 +16,11 @@
            
     if (simple.consistent())
     {
-        rAU = 1.0/UEqn().Ac();
+        rAU = 1.0/UEqn.Ac();
     }
     else
     {
-        rAU = 1.0/UEqn().A();
+        rAU = 1.0/UEqn.A();
     }
 
     surfaceScalarField const rAUfLeft
@@ -69,12 +69,12 @@
         }
         else
         {
-            U = rAU*UEqn().H();
+            U = rAU*UEqn.H();
             phi = fvc::interpolate(U, "interpolate(HbyA)") & mesh.Sf();
         }
     }
 
-    UEqn.clear();
+    tUEqn.clear();
 
     MRF.makeRelative(phi);
     adjustPhi(phi, U, p);

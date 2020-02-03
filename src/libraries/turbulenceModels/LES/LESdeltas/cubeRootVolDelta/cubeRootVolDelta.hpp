@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,7 +54,7 @@ class cubeRootVolDelta
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        cubeRootVolDelta(const cubeRootVolDelta&);
+        cubeRootVolDelta(const cubeRootVolDelta&) = delete;
         void operator=(const cubeRootVolDelta&);
 
         // Calculate the delta values

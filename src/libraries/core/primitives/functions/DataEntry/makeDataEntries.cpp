@@ -62,4 +62,19 @@ namespace CML
 }
 
 
+template<>
+CML::tmp<CML::Field<CML::label>>
+CML::DataEntryTypes::Constant<CML::label>::integrate
+(
+    const scalarField& x1,
+    const scalarField& x2
+) const
+{
+    FatalErrorInFunction
+        << "Evaluation is not defined for " << type() << " functions"
+        << exit(FatalError);
+
+    return tmp<Field<label>>(new Field<label>(x1.size()));
+}
+
 // ************************************************************************* //

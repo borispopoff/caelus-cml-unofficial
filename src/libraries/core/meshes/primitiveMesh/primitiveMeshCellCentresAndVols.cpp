@@ -76,14 +76,14 @@ void CML::primitiveMesh::makeCellCentres
 ) const
 {
     // Clear the fields for accumulation
-    cellCtrs = vector::zero;
+    cellCtrs = Zero;
 
     const labelList& own = faceOwner();
     const labelList& nei = faceNeighbour();
 
     // Face weighted average
     scalarField sumA(nCells(), 0);
-    vectorField sumPA(nCells(), vector::zero);
+    vectorField sumPA(nCells(), Zero);
 
     forAll(own, facei)
     {
@@ -154,7 +154,7 @@ void CML::primitiveMesh::makeCellCentresAndVolsGeometric
 ) const
 {
     // Clear the fields for accumulation
-    cellCtrs = vector::zero;
+    cellCtrs = Zero;
     cellVols = 0.0;
 
     const labelList& own = faceOwner();
@@ -163,8 +163,8 @@ void CML::primitiveMesh::makeCellCentresAndVolsGeometric
     // First estimate the approximate cell centre as the average of
     // face centres
 
-    vectorField cEst(nCells(), vector::zero);
-    vectorField cEstAvg(nCells(), vector::zero);
+    vectorField cEst(nCells(), Zero);
+    vectorField cEstAvg(nCells(), Zero);
     labelField estCentre(nCells(), 0);
     labelField nCellFaces(nCells(), 0);
 

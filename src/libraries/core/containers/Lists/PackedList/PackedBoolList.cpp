@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -257,7 +257,7 @@ CML::label CML::PackedBoolList::subset(const UIndirectList<label>& indices)
 }
 
 
-CML::Xfer<CML::labelList> CML::PackedBoolList::used() const
+CML::labelList CML::PackedBoolList::used() const
 {
     labelList lst(this->count());
 
@@ -276,23 +276,21 @@ CML::Xfer<CML::labelList> CML::PackedBoolList::used() const
         lst.setSize(nElem);
     }
 
-    return lst.xfer();
+    return lst;
 }
 
 
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
-CML::PackedBoolList&
-CML::PackedBoolList::operator=(const CML::UList<bool>& lst)
+
+void CML::PackedBoolList::operator=(const CML::UList<bool>& lst)
 {
-   this->setSize(lst.size());
+    this->setSize(lst.size());
 
-   // overwrite with new true/false values
-   forAll(*this, elemI)
-   {
-       set(elemI, lst[elemI]);
-   }
-
-   return *this;
+    // overwrite with new true/false values
+    forAll(*this, elemI)
+    {
+        set(elemI, lst[elemI]);
+    }
 }
 
 

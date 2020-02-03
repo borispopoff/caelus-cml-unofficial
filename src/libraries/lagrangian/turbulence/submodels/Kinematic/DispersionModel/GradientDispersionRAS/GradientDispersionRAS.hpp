@@ -76,9 +76,9 @@ public:
         GradientDispersionRAS(const GradientDispersionRAS<CloudType>& dm);
 
         //- Construct and return a clone
-        virtual autoPtr<DispersionModel<CloudType> > clone() const
+        virtual autoPtr<DispersionModel<CloudType>> clone() const
         {
-            return autoPtr<DispersionModel<CloudType> >
+            return autoPtr<DispersionModel<CloudType>>
             (
                 new GradientDispersionRAS<CloudType>(*this)
             );
@@ -189,10 +189,10 @@ CML::vector CML::GradientDispersionRAS<CloudType>::update
 
     const scalar cps = 0.16432;
 
-    const scalar k = this->kPtr_->internalField()[celli];
+    const scalar k = this->kPtr_->primitiveField()[celli];
     const scalar epsilon =
-        this->epsilonPtr_->internalField()[celli] + ROOTVSMALL;
-    const vector& gradk = this->gradkPtr_->internalField()[celli];
+        this->epsilonPtr_->primitiveField()[celli] + ROOTVSMALL;
+    const vector& gradk = this->gradkPtr_->primitiveField()[celli];
 
     const scalar UrelMag = mag(U - Uc - UTurb);
 

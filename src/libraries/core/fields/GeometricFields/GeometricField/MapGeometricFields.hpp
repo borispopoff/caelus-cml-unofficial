@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -71,7 +71,7 @@ void MapGeometricFields
     HashTable<const GeometricField<Type, PatchField, GeoMesh>*> fields
     (
         mapper.thisDb().objectRegistry::template
-            lookupClass<GeometricField<Type, PatchField, GeoMesh> >()
+            lookupClass<GeometricField<Type, PatchField, GeoMesh>>()
     );
 
     // It is necessary to enforce that all old-time fields are stored
@@ -91,7 +91,7 @@ void MapGeometricFields
             const_cast<GeometricField<Type, PatchField, GeoMesh>&>
             (*fieldIter());
 
-        //Note: check can be removed once pointFields are actually stored on
+        // Note: check can be removed once pointFields are actually stored on
         //      the pointMesh instead of now on the polyMesh!
         if (&field.mesh() == &mapper.mesh())
         {
@@ -122,13 +122,13 @@ void MapGeometricFields
             // Map the internal field
             MapInternalField<Type, MeshMapper, GeoMesh>()
             (
-                field.internalField(),
+                field.primitiveFieldRef(),
                 mapper
             );
 
             // Map the patch fields
             typename GeometricField<Type, PatchField, GeoMesh>
-            ::GeometricBoundaryField& bfield = field.boundaryField();
+            ::Boundary& bfield = field.boundaryFieldRef();
             forAll(bfield, patchi)
             {
                 // Cannot check sizes for patch fields because of

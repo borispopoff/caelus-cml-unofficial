@@ -84,16 +84,16 @@ int main(int argc, char *argv[])
         // Create the processor databases
         databases.setSize(nProcs);
 
-        forAll(databases, procI)
+        forAll(databases, proci)
         {
             databases.set
             (
-                procI,
+                proci,
                 new Time
                 (
                     Time::controlDictName,
                     args.rootPath(),
-                    args.caseName()/fileName(word("processor") + name(procI))
+                    args.caseName()/fileName(word("processor") + name(proci))
                 )
             );
         }
@@ -124,11 +124,11 @@ int main(int argc, char *argv[])
     {
         if (args.optionFound("processor"))
         {
-            for (label procI=0; procI<nProcs; procI++)
+            for (label proci=0; proci<nProcs; proci++)
             {
                 fileName procPath
                 (
-                    args.path()/(word("processor") + name(procI))
+                    args.path()/(word("processor") + name(proci))
                 );
 
                 forAll(timeDirs, timeI)

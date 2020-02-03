@@ -295,7 +295,7 @@ void CML::binaryOperationSearchableSurface::findLine
         Info << "CML::binaryOperationSearchableSurface::findLine " << name() << endl;
     }
 
-    List<List<pointIndexHit> > infoAll;
+    List<List<pointIndexHit>> infoAll;
     findLineAll(start,end,infoAll);
     info.setSize(start.size());
 
@@ -326,14 +326,14 @@ void CML::binaryOperationSearchableSurface::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     if(debug) {
         Info << "CML::binaryOperationSearchableSurface::findLineAll " << name() << endl;
     }
-    List<List<pointIndexHit> > infoA;
-    List<List<pointIndexHit> > infoB;
+    List<List<pointIndexHit>> infoA;
+    List<List<pointIndexHit>> infoB;
 
     a().findLineAll(start,end,infoA);
     b().findLineAll(start,end,infoB);

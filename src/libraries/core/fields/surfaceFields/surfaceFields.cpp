@@ -30,27 +30,27 @@ namespace CML
 
 defineTemplate2TypeNameAndDebug
 (
-    surfaceScalarField::DimensionedInternalField,
+    surfaceScalarField::Internal,
     0
 );
 defineTemplate2TypeNameAndDebug
 (
-    surfaceVectorField::DimensionedInternalField,
+    surfaceVectorField::Internal,
     0
 );
 defineTemplate2TypeNameAndDebug
 (
-    surfaceSphericalTensorField::DimensionedInternalField,
+    surfaceSphericalTensorField::Internal,
     0
 );
 defineTemplate2TypeNameAndDebug
 (
-    surfaceSymmTensorField::DimensionedInternalField,
+    surfaceSymmTensorField::Internal,
     0
 );
 defineTemplate2TypeNameAndDebug
 (
-    surfaceTensorField::DimensionedInternalField,
+    surfaceTensorField::Internal,
     0
 );
 

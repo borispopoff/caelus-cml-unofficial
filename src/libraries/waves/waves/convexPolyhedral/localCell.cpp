@@ -39,7 +39,7 @@ namespace CML
 localCell::localCell
 (
     const fvMesh& mesh,
-    const label& cellI
+    const label& celli
 )
 :
     ccNeg_(0),
@@ -48,7 +48,7 @@ localCell::localCell
     posCount_(0),
     nextFace_(0)
 {
-    localizeCell(mesh, cellI);
+    localizeCell(mesh, celli);
 }
 
 
@@ -94,7 +94,7 @@ localCell::localCell()
 void localCell::localizeCell
 (
     const fvMesh& mesh,
-    const label& cellI
+    const label& celli
 )
 {
     // Reference to some global mesh data
@@ -104,7 +104,7 @@ void localCell::localizeCell
     const label nFaces      = mesh.nInternalFaces();
 
     // Get local cell properties
-    cc_ = mesh.cells()[cellI];
+    cc_ = mesh.cells()[celli];
     fL_.setSize(cc_.nFaces());
 
     // Initialise the faceList
@@ -120,7 +120,7 @@ void localCell::localizeCell
         label nFace(cc_[facei]);
 
         // If the other holds, the normal points outward per definition
-        if (nFace < nFaces && own[nFace] != cellI)
+        if (nFace < nFaces && own[nFace] != celli)
         {
             face& f(fL_[facei]);
             f = f.reverseFace();
@@ -321,9 +321,9 @@ void localCell::localizeCell
 }
 
 
-void localCell::initCell( const fvMesh& mesh, const label& cellI)
+void localCell::initCell( const fvMesh& mesh, const label& celli)
 {
-    localizeCell(mesh, cellI);
+    localizeCell(mesh, celli);
 }
 
 

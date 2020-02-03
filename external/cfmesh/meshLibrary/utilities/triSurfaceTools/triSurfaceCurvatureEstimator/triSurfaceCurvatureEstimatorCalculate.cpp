@@ -149,7 +149,7 @@ void writeSurfaceToVTK
 (
     const word& name,
     const triSurf& surf,
-    const List<DynList<scalar, 1> >& data
+    const List<DynList<scalar, 1>>& data
 )
 {
     OFstream file(name+".vtk");
@@ -176,7 +176,7 @@ void writeSurfaceToVTK
 (
     const word& name,
     const triSurf& surf,
-    const List<DynList<vector, 1> >& data
+    const List<DynList<vector, 1>>& data
 )
 {
     OFstream file(name+".vtk");
@@ -300,14 +300,14 @@ void triSurfaceCurvatureEstimator::calculateSurfaceCurvatures()
     maxCurvatureVector_.setSize(points.size());
     minCurvatureVector_.setSize(points.size());
 
-    List<DynList<label, 4> > pointPatches(points.size());
+    List<DynList<label, 4>> pointPatches(points.size());
 
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 40)
     # endif
     forAll(pointTriangles, pointI)
     {
-        std::map<label, DynList<label> > regionTriangles;
+        std::map<label, DynList<label>> regionTriangles;
         Map<labelHashSet> otherLabels;
         Map<vector> normals;
 
@@ -439,8 +439,8 @@ void triSurfaceCurvatureEstimator::calculateSurfaceCurvatures()
     }
 
     //- smooth curvatures using weighted Laplace
-    List<DynList<scalar, 1> > smoothMinCurv(points.size());
-    List<DynList<scalar, 1> > smoothMaxCurv(points.size());
+    List<DynList<scalar, 1>> smoothMinCurv(points.size());
+    List<DynList<scalar, 1>> smoothMaxCurv(points.size());
 
     # ifdef USE_OMP
     # pragma omp parallel
@@ -456,7 +456,7 @@ void triSurfaceCurvatureEstimator::calculateSurfaceCurvatures()
                 const constRow pTriangles = pointTriangles[pointI];
 
                 //- find neighbouring points for each patch
-                Map<DynList<label> > patchNeiPoints;
+                Map<DynList<label>> patchNeiPoints;
                 forAll(pointPatches[pointI], ppI)
                     patchNeiPoints.insert
                     (
@@ -578,7 +578,7 @@ void triSurfaceCurvatureEstimator::calculateGaussianCurvature()
 {
     gaussianCurvature_.setSize(surface_.patches().size());
 
-    List<std::map<label, scalar> > magAreas(gaussianCurvature_.size());
+    List<std::map<label, scalar>> magAreas(gaussianCurvature_.size());
 
     forAll(surface_, triI)
     {
@@ -700,7 +700,7 @@ void triSurfaceCurvatureEstimator::calculateMeanCurvature()
 
     meanCurvature_.setSize(surface_.patches().size());
 
-    List<Map<label> > nNeighbours(meanCurvature_.size());
+    List<Map<label>> nNeighbours(meanCurvature_.size());
 
     const edgeList& edges = surface_.edges();
     const labelListList& edgeFaces = surface_.edgeFaces();

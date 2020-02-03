@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -115,12 +115,6 @@ private:
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construct
-        DarcyForchheimer(const DarcyForchheimer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const DarcyForchheimer&);
-
 
 public:
 
@@ -137,6 +131,10 @@ public:
         const word& cellZoneName
     );
 
+    //- Disallow default bitwise copy construct
+    DarcyForchheimer(const DarcyForchheimer&) = delete;
+
+
     //- Destructor
     virtual ~DarcyForchheimer();
 
@@ -144,7 +142,7 @@ public:
     // Member Functions
 
         //- Transform the model data wrt mesh changes
-        virtual void calcTranformModelData();
+        virtual void calcTransformModelData();
 
         //- Calculate the porosity force
         virtual void calcForce
@@ -178,6 +176,13 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DarcyForchheimer&) = delete;
+
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -209,15 +214,15 @@ void CML::porosityModels::DarcyForchheimer::apply
 
         forAll(cells, i)
         {
-            const label cellI = cells[i];
+            const label celli = cells[i];
             const label j = this->fieldIndex(i);
             const tensor Cd =
-                mu[cellI]*dZones[j] + (rho[cellI]*mag(U[cellI]))*fZones[j];
+                mu[celli]*dZones[j] + (rho[celli]*mag(U[celli]))*fZones[j];
 
             const scalar isoCd = tr(Cd);
 
-            Udiag[cellI] += V[cellI]*isoCd;
-            Usource[cellI] -= V[cellI]*((Cd - I*isoCd) & U[cellI]);
+            Udiag[celli] += V[celli]*isoCd;
+            Usource[celli] -= V[celli]*((Cd - I*isoCd) & U[celli]);
         }
     }
 }
@@ -241,12 +246,12 @@ void CML::porosityModels::DarcyForchheimer::apply
 
         forAll(cells, i)
         {
-            const label cellI = cells[i];
+            const label celli = cells[i];
             const label j = this->fieldIndex(i);
             const tensor D = dZones[j];
             const tensor F = fZones[j];
 
-            AU[cellI] += mu[cellI]*D + (rho[cellI]*mag(U[cellI]))*F;
+            AU[celli] += mu[celli]*D + (rho[celli]*mag(U[celli]))*F;
         }
     }
 }

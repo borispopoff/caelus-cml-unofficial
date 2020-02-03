@@ -78,7 +78,7 @@ void fvcConvectionDivFunctionPlugin<T>::doEvaluation()
 {
     IStringStream spec(specString_);
 
-    tmp<fv::convectionScheme<T> > scheme(
+    tmp<fv::convectionScheme<T>> scheme(
         fv::convectionScheme<T>::New(
             mesh(),
             flow_(),

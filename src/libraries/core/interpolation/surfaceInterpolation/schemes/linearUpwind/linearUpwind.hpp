@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,16 +53,7 @@ class linearUpwind
     // Private Data
 
         word gradSchemeName_;
-        tmp<fv::gradScheme<Type> > gradScheme_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        linearUpwind(const linearUpwind&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const linearUpwind&);
+        tmp<fv::gradScheme<Type>> gradScheme_;
 
 
 public:
@@ -148,6 +139,9 @@ public:
             }
         }
 
+        //- Disallow default bitwise copy construct
+        linearUpwind(const linearUpwind&) = delete;
+
 
     // Member Functions
 
@@ -158,11 +152,17 @@ public:
         }
 
         //- Return the explicit correction to the face-interpolate
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const linearUpwind&) = delete;
 
 };
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -75,15 +75,6 @@ private:
 
        //- Number of elements in in list
        label nElmts_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        DLListBase(const DLListBase&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const DLListBase&);
 
 
 public:
@@ -168,6 +159,13 @@ public:
             //- Transfer the contents of the argument into this List
             //  and annul the argument list.
             inline void transfer(DLListBase&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DLListBase&) = delete;
+
 
     // STL iterator
 
@@ -258,7 +256,7 @@ public:
 
 private:
 
-        //- iterator returned by end()
+        //- Iterator returned by end()
         static iterator endIter_;
 
         //- const_iterator returned by end()

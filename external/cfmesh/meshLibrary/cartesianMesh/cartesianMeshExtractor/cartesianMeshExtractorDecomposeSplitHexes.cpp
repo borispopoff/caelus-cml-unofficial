@@ -48,13 +48,13 @@ void cartesianMeshExtractor::decomposeSplitHexesIntoTetsAndPyramids()
     boolList decompose(faces.size(), false);
     
     label nDecomposed(0);
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        if( faces[faceI].size() > 4 )
+        if( faces[facei].size() > 4 )
         {
             ++nDecomposed;
             
-            decompose[faceI] = true;
+            decompose[facei] = true;
         }
     }
     
@@ -75,12 +75,12 @@ void cartesianMeshExtractor::decomposeSplitHexesIntoTetsAndPyramids()
     decompose = false;
     
     hexMatcher hex;
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        if( !hex.matchShape(true, faces, mesh_.owner(), cellI, cells[cellI]) )
+        if( !hex.matchShape(true, faces, mesh_.owner(), celli, cells[celli]) )
         {
             ++nDecomposed;
-            decompose[cellI] = true;
+            decompose[celli] = true;
         }
     }
     

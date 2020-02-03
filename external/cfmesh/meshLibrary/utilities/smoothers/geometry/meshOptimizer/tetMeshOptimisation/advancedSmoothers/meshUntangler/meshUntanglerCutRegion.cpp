@@ -54,7 +54,7 @@ void meshUntangler::cutRegion::createInitialConfiguration
     facesPtr_ = new DynList<DynList<label, 8>, 64>();
     DynList<DynList<label, 8>, 64>& bFaces = *facesPtr_;
 
-    //- set vertices
+    // set vertices
     const point c = (bb.max() + bb.min()) / 2.0;
     const point vec = (bb.max() - bb.min()) / 2.0;
     bVertices.append
@@ -90,31 +90,31 @@ void meshUntangler::cutRegion::createInitialConfiguration
         point(c.x() - vec.x(), c.y() + vec.y(), c.z() + vec.z())
     );
 
-    //- set edges
+    // set edges
 
-    //- edges in x direction
+    // edges in x direction
     bEdges.append(edge(0, 1));
     bEdges.append(edge(3, 2));
     bEdges.append(edge(7, 6));
     bEdges.append(edge(4, 5));
 
-    //- edges in y direction
+    // edges in y direction
     bEdges.append(edge(1, 2));
     bEdges.append(edge(0, 3));
     bEdges.append(edge(4, 7));
     bEdges.append(edge(5, 6));
 
-    //- edges in z direction
+    // edges in z direction
     bEdges.append(edge(0, 4));
     bEdges.append(edge(1, 5));
     bEdges.append(edge(2, 6));
     bEdges.append(edge(3, 7));
 
-    //- set faces
+    // set faces
     DynList<label, 8> f;
     f.setSize(4);
 
-    //- faces in x direction
+    // faces in x direction
     f[0] = 5;
     f[1] = 11;
     f[2] = 6;
@@ -125,7 +125,7 @@ void meshUntangler::cutRegion::createInitialConfiguration
     f[2] = 7;
     f[3] = 9;
     bFaces.append(f);
-    //- faces in y direction
+    // faces in y direction
     f[0] = 0;
     f[1] = 8;
     f[2] = 3;
@@ -136,7 +136,7 @@ void meshUntangler::cutRegion::createInitialConfiguration
     f[2] = 2;
     f[3] = 10;
     bFaces.append(f);
-    //- faces in z direction
+    // faces in z direction
     f[0] = 0;
     f[1] = 4;
     f[2] = 1;
@@ -149,11 +149,13 @@ void meshUntangler::cutRegion::createInitialConfiguration
     bFaces.append(f);
 
     # ifdef DEBUGSmooth
-    Info << "Original vertices " << *pointsPtr_ << endl;
-    Info << "Original edges " << *edgesPtr_ << endl;
-    Info << "Original faces " << *facesPtr_ << endl;
+    Info<< "Original vertices " << *pointsPtr_ << endl;
+    Info<< "Original edges " << *edgesPtr_ << endl;
+    Info<< "Original faces " << *facesPtr_ << endl;
     # endif
+
 }
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -170,11 +172,12 @@ meshUntangler::cutRegion::cutRegion(const boundBox& bb)
     vertexTypes_(),
     newEdgeLabel_(),
     origNumVertices_(),
-    tol_(SMALL * bb.mag()),
+    tol_(SMALL*bb.mag()),
     valid_(true)
 {
     createInitialConfiguration(bb);
 }
+
 
 meshUntangler::cutRegion::~cutRegion()
 {
@@ -186,18 +189,19 @@ meshUntangler::cutRegion::~cutRegion()
     deleteDemandDrivenData(cFacesPtr_);
 }
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 void meshUntangler::cutRegion::planeCut(const plane& plane)
 {
-    if( !valid_ )
+    if (!valid_)
         return;
 
     # ifdef DEBUGSmooth
-    if( cFacesPtr_ || cPtsPtr_ || cEdgesPtr_ )
+    if (cFacesPtr_ || cPtsPtr_ || cEdgesPtr_)
     {
         FatalErrorInFunction
-          << "Pointers should not be allocated!" << abort(FatalError);
+            << "Pointers should not be allocated!" << abort(FatalError);
     }
 
     CML::Time runTime
@@ -216,13 +220,13 @@ void meshUntangler::cutRegion::planeCut(const plane& plane)
     this->createPolyMeshFromRegion(pmg);
     # endif
 
-    if( findNewVertices(plane) )
+    if (findNewVertices(plane))
     {
         findNewEdges();
 
         findNewFaces();
 
-        if( !valid_ ) return;
+        if (!valid_) return;
 
         deleteDemandDrivenData(pointsPtr_);
         pointsPtr_ = cPtsPtr_;
@@ -237,6 +241,7 @@ void meshUntangler::cutRegion::planeCut(const plane& plane)
         cFacesPtr_ = nullptr;
     }
 }
+
 
 void meshUntangler::cutRegion::createPolyMeshFromRegion
 (
@@ -264,19 +269,20 @@ void meshUntangler::cutRegion::createPolyMeshFromRegion
         forAll(f, eI)
             fEdges.append(edges[f[eI]]);
 
-        Info << "Edges forming face " << fI << " are " << fEdges << endl;
-        labelListList sf = sortEdgesIntoChains(fEdges).sortedChains();
-        if( sf.size() != 1 )
+        Info<< "Edges forming face " << fI << " are " << fEdges << endl;
+        const DynList<DynList<label>> sf =
+            sortEdgesIntoChains(fEdges).sortedChains();
+        if (sf.size() != 1)
             FatalErrorInFunction
-              << "More than one face created!" << abort(FatalError);
+                << "More than one face created!" << abort(FatalError);
 
-        faces[fI] = face(sf[0]);
+        faces[fI].setSize(sf[0].size());
+        forAll(sf[0], pI)
+            faces[fI][pI] = sf[0][pI];
 
         cells[0][fI] = fI;
     }
 }
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace CML
 

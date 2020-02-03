@@ -61,7 +61,7 @@ Ostream& operator<<
 Ostream& operator<<
 (
     Ostream&,
-    const tmp<CoeffField<sphericalTensor> >&
+    const tmp<CoeffField<sphericalTensor>>&
 );
 
 
@@ -82,14 +82,14 @@ public:
     explicit CoeffField(const DecoupledCoeffField<sphericalTensor>&);
 
     //- Construct as copy of base
-    explicit CoeffField(const tmp<DecoupledCoeffField<sphericalTensor> >&);
+    explicit CoeffField(const tmp<DecoupledCoeffField<sphericalTensor>>&);
 
     //- Construct from Istream
     explicit CoeffField(Istream&);
 
     // Member operators
     void operator=(const CoeffField<sphericalTensor>&);
-    void operator=(const tmp<CoeffField<sphericalTensor> >&);
+    void operator=(const tmp<CoeffField<sphericalTensor>>&);
     void operator=(const scalarTypeField&);
     void operator=(const tmp<scalarTypeField>&);
     void operator=(const linearTypeField&);
@@ -105,13 +105,13 @@ public:
     friend Ostream& operator<<
     (
         Ostream&,
-        const tmp<CoeffField<sphericalTensor> >&
+        const tmp<CoeffField<sphericalTensor>>&
     );
 };
 
 /* * * * * * * * * * * * * * * * Global functions  * * * * * * * * * * * * * */
 
-tmp<CoeffField<sphericalTensor> > inv(const CoeffField<sphericalTensor>& f);
+tmp<CoeffField<sphericalTensor>> inv(const CoeffField<sphericalTensor>& f);
 
 
 template<>

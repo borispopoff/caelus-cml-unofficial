@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -148,16 +148,16 @@ class globalPoints
 
         labelPairList addSendTransform
         (
-            const label patchI,
+            const label patchi,
             const labelPairList& info
         ) const;
 
-        //- Add information about patchPointI in relative indices to send
+        //- Add information about patchPointi in relative indices to send
         //  buffers (patchFaces, indexInFace etc.)
         void addToSend
         (
             const polyPatch&,
-            const label patchPointI,
+            const label patchPointi,
             const labelPairList&,
             DynamicList<label>& patchFaces,
             DynamicList<label>& indexInFace,
@@ -168,7 +168,7 @@ class globalPoints
         bool mergeInfo
         (
             const labelPairList& nbrInfo,
-            const label localPointI,
+            const label localPointi,
             labelPairList& myInfo
         ) const;
 
@@ -177,28 +177,28 @@ class globalPoints
         static label meshToLocalPoint
         (
             const Map<label>& meshToPatchPoint,
-            const label meshPointI
+            const label meshPointi
         );
 
         //- Opposite of meshToLocalPoint.
         static label localToMeshPoint
         (
             const labelList& patchToMeshPoint,
-            const label localPointI
+            const label localPointi
         );
 
-        //- Store (and merge) info for meshPointI
+        //- Store (and merge) info for meshPointi
         bool storeInitialInfo
         (
             const labelPairList& nbrInfo,
-            const label localPointI
+            const label localPointi
         );
 
-        //- Store (and merge) info for meshPointI
+        //- Store (and merge) info for meshPointi
         bool mergeInfo
         (
             const labelPairList& nbrInfo,
-            const label localPointI
+            const label localPointi
         );
 
         //- Debug printing
@@ -258,12 +258,6 @@ class globalPoints
             const bool mergeSeparated
         );
 
-        //- Disallow default bitwise copy construct
-        globalPoints(const globalPoints&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const globalPoints&);
-
 
 public:
 
@@ -296,6 +290,9 @@ public:
             const bool keepAllPoints,
             const bool mergeSeparated
         );
+
+        //- Disallow default bitwise copy construct
+        globalPoints(const globalPoints&) = delete;
 
 
     // Member Functions
@@ -364,6 +361,12 @@ public:
             {
                 return procPoints_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const globalPoints&) = delete;
 };
 
 

@@ -74,7 +74,7 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
     );
 
 
-    scalarField& invR1 = tinvR1().internalField();
+    scalarField& invR1 = tinvR1.ref().primitiveFieldRef();
 
     // apply defined patch radii
     const scalar rMin = 1e-6;
@@ -97,7 +97,7 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
         }
     }
 
-    if (debug && mesh.time().outputTime())
+    if (debug && mesh.time().writeTime())
     {
         tinvR1().write();
     }
@@ -188,7 +188,7 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
     }
 */
     // checks
-    if (debug && mesh.time().outputTime())
+    if (debug && mesh.time().writeTime())
     {
         volScalarField volCosAngle
         (
@@ -200,10 +200,10 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
                 IOobject::NO_READ
             ),
             mesh,
-            dimensionedScalar("zero", dimless, 0.0),
+            dimensionedScalar("zero", dimless, 0),
             zeroGradientFvPatchScalarField::typeName
         );
-        volCosAngle.internalField() = cosAngle;
+        volCosAngle.primitiveFieldRef() = cosAngle;
         volCosAngle.correctBoundaryConditions();
         volCosAngle.write();
     }
@@ -330,7 +330,7 @@ void curvatureSeparation::correct
 
     addToInjectedMass(sum(separated*availableMass));
 
-    if (debug && mesh.time().outputTime())
+    if (debug && mesh.time().writeTime())
     {
         volScalarField volFnet
         (
@@ -342,10 +342,10 @@ void curvatureSeparation::correct
                 IOobject::NO_READ
             ),
             mesh,
-            dimensionedScalar("zero", dimForce, 0.0),
+            dimensionedScalar("zero", dimForce, 0),
             zeroGradientFvPatchScalarField::typeName
         );
-        volFnet.internalField() = Fnet;
+        volFnet.primitiveFieldRef() = Fnet;
         volFnet.correctBoundaryConditions();
         volFnet.write();
     }

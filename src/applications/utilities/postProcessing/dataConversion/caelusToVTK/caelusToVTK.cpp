@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,6 +55,7 @@ Usage
 
       - \par -cellSet \<name\>
       - \par -faceSet \<name\>
+
       - \par -pointSet \<name\>
         Restrict conversion to the cellSet, faceSet or pointSet.
 
@@ -160,7 +161,7 @@ Note
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class GeoField>
-void print(const char* msg, Ostream& os, const PtrList<GeoField>& flds)
+void print(const char* msg, Ostream& os, const PtrList<const GeoField>& flds)
 {
     if (flds.size())
     {
@@ -194,9 +195,9 @@ labelList getSelectedPatches
 
     Info<< "Combining patches:" << endl;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if
         (
@@ -204,18 +205,18 @@ labelList getSelectedPatches
             || (Pstream::parRun() && isType<processorPolyPatch>(pp))
         )
         {
-            Info<< "    discarding empty/processor patch " << patchI
+            Info<< "    discarding empty/processor patch " << patchi
                 << " " << pp.name() << endl;
         }
         else if (findStrings(excludePatches, pp.name()))
         {
-            Info<< "    excluding patch " << patchI
+            Info<< "    excluding patch " << patchi
                 << " " << pp.name() << endl;
         }
         else
         {
-            patchIDs.append(patchI);
-            Info<< "    patch " << patchI << " " << pp.name() << endl;
+            patchIDs.append(patchi);
+            Info<< "    patch " << patchi << " " << pp.name() << endl;
         }
     }
     return patchIDs.shrink();
@@ -441,7 +442,7 @@ int main(int argc, char *argv[])
             readDir
             (
                 runTime.timePath()/regionPrefix/cloud::prefix,
-                fileName::DIRECTORY
+                fileType::directory
             )
         );
         forAll(cloudDirs, i)
@@ -553,11 +554,11 @@ int main(int argc, char *argv[])
 
         // Construct the vol fields (on the original mesh if subsetted)
 
-        PtrList<volScalarField> vsf;
-        PtrList<volVectorField> vvf;
-        PtrList<volSphericalTensorField> vSpheretf;
-        PtrList<volSymmTensorField> vSymmtf;
-        PtrList<volTensorField> vtf;
+        PtrList<const volScalarField> vsf;
+        PtrList<const volVectorField> vvf;
+        PtrList<const volSphericalTensorField> vSpheretf;
+        PtrList<const volSymmTensorField> vSymmtf;
+        PtrList<const volTensorField> vtf;
 
         if (!specifiedFields || selectedFields.size())
         {
@@ -609,11 +610,11 @@ int main(int argc, char *argv[])
                 << " (\"-noPointValues\" (at your option)\n";
         }
 
-        PtrList<pointScalarField> psf;
-        PtrList<pointVectorField> pvf;
-        PtrList<pointSphericalTensorField> pSpheretf;
-        PtrList<pointSymmTensorField> pSymmtf;
-        PtrList<pointTensorField> ptf;
+        PtrList<const pointScalarField> psf;
+        PtrList<const pointVectorField> pvf;
+        PtrList<const pointSphericalTensorField> pSpheretf;
+        PtrList<const pointSymmTensorField> pSymmtf;
+        PtrList<const pointTensorField> ptf;
 
         if (!noPointValues && !(specifiedFields && selectedFields.empty()))
         {
@@ -744,7 +745,7 @@ int main(int argc, char *argv[])
 
         if (args.optionFound("surfaceFields"))
         {
-            PtrList<surfaceScalarField> ssf;
+            PtrList<const surfaceScalarField> ssf;
             readFields
             (
                 vMesh,
@@ -755,7 +756,7 @@ int main(int argc, char *argv[])
             );
             print("    surfScalarFields  :", Info, ssf);
 
-            PtrList<surfaceVectorField> svf;
+            PtrList<const surfaceVectorField> svf;
             readFields
             (
                 vMesh,
@@ -777,8 +778,9 @@ int main(int argc, char *argv[])
 
                 forAll(ssf, i)
                 {
-                    svf.set(sz+i, ssf[i]*n);
-                    svf[sz+i].rename(ssf[i].name());
+                    surfaceVectorField* ssfiPtr = (ssf[i]*n).ptr();
+                    ssfiPtr->rename(ssf[i].name());
+                    svf.set(sz+i, ssfiPtr);
                 }
                 ssf.clear();
 
@@ -987,7 +989,7 @@ int main(int argc, char *argv[])
 
         if (doFaceZones)
         {
-            PtrList<surfaceScalarField> ssf;
+            PtrList<const surfaceScalarField> ssf;
             readFields
             (
                 vMesh,
@@ -998,7 +1000,7 @@ int main(int argc, char *argv[])
             );
             print("    surfScalarFields  :", Info, ssf);
 
-            PtrList<surfaceVectorField> svf;
+            PtrList<const surfaceVectorField> svf;
             readFields
             (
                 vMesh,
@@ -1204,14 +1206,14 @@ int main(int argc, char *argv[])
            /"VTK"
         );
 
-        fileNameList dirs(readDir(procVTK, fileName::DIRECTORY));
+        fileNameList dirs(readDir(procVTK, fileType::directory));
         label sz = dirs.size();
         dirs.setSize(sz+1);
         dirs[sz] = ".";
 
         forAll(dirs, i)
         {
-            fileNameList subFiles(readDir(procVTK/dirs[i], fileName::FILE));
+            fileNameList subFiles(readDir(procVTK/dirs[i], fileType::file));
 
             forAll(subFiles, j)
             {

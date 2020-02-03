@@ -22,7 +22,6 @@ caelus_inc = [
 'turbulenceModels/compressible/LES/lnInclude',
 'turbulenceModels/LES/LESdeltas/lnInclude',
 'thermophysicalModels/basic/lnInclude',
-'fvOptions/lnInclude',
 'sampling/lnInclude',
 'waves/waves/lnInclude',
 'waves/waves/include',

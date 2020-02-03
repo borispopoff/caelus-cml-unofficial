@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,10 +58,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        phaseChangeModel(const phaseChangeModel&);
+        phaseChangeModel(const phaseChangeModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const phaseChangeModel&);
+        void operator=(const phaseChangeModel&) = delete;
 
 
 protected:

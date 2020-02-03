@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -64,16 +64,17 @@ class triSurfaceMesh
     public triSurface,
     public triSurfaceRegionSearch
 {
-private:
-
     // Private member data
+
+        //- Supplied fileName override
+        fileName fName_;
 
         //- Optional min triangle quality. Triangles below this get
         //  ignored for normal calculation
         scalar minQuality_;
 
         //- Search tree for boundary edges.
-        mutable autoPtr<indexedOctree<treeDataEdge> > edgeTree_;
+        mutable autoPtr<indexedOctree<treeDataEdge>> edgeTree_;
 
         //- Names of regions
         mutable wordList regions_;
@@ -84,20 +85,11 @@ private:
 
     // Private Member Functions
 
-        ////- Helper: find instance of files without header
-        //static word findRawInstance
-        //(
-        //    const Time&,
-        //    const fileName&,
-        //    const word&
-        //);
+        //- Return fileName to load IOobject from
+        static fileName checkFile(const IOobject& io);
 
-        //- Check file existence
-        static const fileName& checkFile
-        (
-            const fileName& fName,
-            const fileName& objectName
-        );
+        //- Return fileName to load IOobject from. Optional override of fileName
+        static fileName checkFile(const IOobject&, const dictionary&);
 
         //- Helper function for isSurfaceClosed
         static bool addFaceToEdge
@@ -121,12 +113,6 @@ private:
             DynamicList<pointIndexHit, 1, 1>& hits
         );
 
-        //- Disallow default bitwise copy construct
-        triSurfaceMesh(const triSurfaceMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceMesh&);
-
 
 public:
 
@@ -149,6 +135,9 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        triSurfaceMesh(const triSurfaceMesh&) = delete;
 
 
     //- Destructor
@@ -232,7 +221,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const;
 
             //- From a set of points and indices get the region
@@ -283,6 +272,12 @@ public:
                 IOstream::versionNumber ver,
                 IOstream::compressionType cmp
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceMesh&) = delete;
 };
 
 

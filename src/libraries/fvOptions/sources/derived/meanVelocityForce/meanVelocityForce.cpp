@@ -42,6 +42,7 @@ namespace fv
 }
 }
 
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void CML::fv::meanVelocityForce::writeProps
@@ -50,7 +51,7 @@ void CML::fv::meanVelocityForce::writeProps
 ) const
 {
     // Only write on output time
-    if (mesh_.time().outputTime())
+    if (mesh_.time().writeTime())
     {
         IOdictionary propsDict
         (
@@ -93,7 +94,7 @@ CML::fv::meanVelocityForce::meanVelocityForce
     const fvMesh& mesh
 )
 :
-    option(sourceName, modelType, dict, mesh),
+    cellSetOption(sourceName, modelType, dict, mesh),
     Ubar_(coeffs_.lookup("Ubar")),
     gradP0_(0.0),
     dGradP_(0.0),
@@ -101,7 +102,7 @@ CML::fv::meanVelocityForce::meanVelocityForce
     relaxation_(coeffs_.lookupOrDefault<scalar>("relaxation", 1.0)),
     rAPtr_(nullptr)
 {
-    coeffs_.lookup("fieldNames") >> fieldNames_;
+    coeffs_.lookup("fields") >> fieldNames_;
 
     if (fieldNames_.size() != 1)
     {
@@ -141,9 +142,9 @@ CML::scalar CML::fv::meanVelocityForce::magUbarAve
     const scalarField& cv = mesh_.V();
     forAll(cells_, i)
     {
-        label cellI = cells_[i];
-        scalar volCell = cv[cellI];
-        magUbarAve += (flowDir_ & U[cellI])*volCell;
+        label celli = cells_[i];
+        scalar volCell = cv[celli];
+        magUbarAve += (flowDir_ & U[celli])*volCell;
     }
 
     reduce(magUbarAve, sumOp<scalar>());
@@ -156,16 +157,16 @@ CML::scalar CML::fv::meanVelocityForce::magUbarAve
 
 void CML::fv::meanVelocityForce::correct(volVectorField& U)
 {
-    const scalarField& rAU = rAPtr_().internalField();
+    const scalarField& rAU = rAPtr_();
 
     // Integrate flow variables over cell set
     scalar rAUave = 0.0;
     const scalarField& cv = mesh_.V();
     forAll(cells_, i)
     {
-        label cellI = cells_[i];
-        scalar volCell = cv[cellI];
-        rAUave += rAU[cellI]*volCell;
+        label celli = cells_[i];
+        scalar volCell = cv[celli];
+        rAUave += rAU[celli]*volCell;
     }
 
     // Collect across all processors
@@ -183,8 +184,8 @@ void CML::fv::meanVelocityForce::correct(volVectorField& U)
     // Apply correction to velocity field
     forAll(cells_, i)
     {
-        label cellI = cells_[i];
-        U[cellI] += flowDir_*rAU[cellI]*dGradP_;
+        label celli = cells_[i];
+        U[celli] += flowDir_*rAU[celli]*dGradP_;
     }
 
     scalar gradP = gradP0_ + dGradP_;
@@ -199,21 +200,21 @@ void CML::fv::meanVelocityForce::correct(volVectorField& U)
 void CML::fv::meanVelocityForce::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    DimensionedField<vector, volMesh> Su
+    volVectorField::Internal Su
     (
         IOobject
         (
-            name_ + fieldNames_[fieldI] + "Sup",
+            name_ + fieldNames_[fieldi] + "Sup",
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedVector("zero", eqn.dimensions()/dimVolume, vector::zero)
+        dimensionedVector("zero", eqn.dimensions()/dimVolume, Zero)
     );
 
     scalar gradP = gradP0_ + dGradP_;
@@ -228,10 +229,10 @@ void CML::fv::meanVelocityForce::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    this->addSup(eqn, fieldI);
+    this->addSup(eqn, fieldi);
 }
 
 

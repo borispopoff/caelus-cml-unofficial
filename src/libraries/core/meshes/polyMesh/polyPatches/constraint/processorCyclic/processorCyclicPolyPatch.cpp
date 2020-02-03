@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -37,7 +37,6 @@ namespace CML
 
 CML::processorCyclicPolyPatch::processorCyclicPolyPatch
 (
-    const word& name,
     const label size,
     const label start,
     const label index,
@@ -51,7 +50,7 @@ CML::processorCyclicPolyPatch::processorCyclicPolyPatch
 :
     processorPolyPatch
     (
-        name,
+        newName(referPatchName, myProcNo, neighbProcNo),
         size,
         start,
         index,
@@ -61,20 +60,10 @@ CML::processorCyclicPolyPatch::processorCyclicPolyPatch
         transform,
         patchType
     ),
-    tag_
-    (
-        Pstream::nProcs()*max(myProcNo, neighbProcNo)
-      + min(myProcNo, neighbProcNo)
-    ),
     referPatchName_(referPatchName),
+    tag_(-1),
     referPatchID_(-1)
-{
-    if (debug)
-    {
-        Pout<< "processorCyclicPolyPatch " << name << " uses tag " << tag_
-            << endl;
-    }
-}
+{}
 
 
 CML::processorCyclicPolyPatch::processorCyclicPolyPatch
@@ -87,20 +76,10 @@ CML::processorCyclicPolyPatch::processorCyclicPolyPatch
 )
 :
     processorPolyPatch(name, dict, index, bm, patchType),
-    tag_
-    (
-        Pstream::nProcs()*max(myProcNo(), neighbProcNo())
-      + min(myProcNo(), neighbProcNo())
-    ),
     referPatchName_(dict.lookup("referPatch")),
+    tag_(dict.lookupOrDefault<int>("tag", -1)),
     referPatchID_(-1)
-{
-    if (debug)
-    {
-        Pout<< "processorCyclicPolyPatch " << name << " uses tag " << tag_
-            << endl;
-    }
-}
+{}
 
 
 CML::processorCyclicPolyPatch::processorCyclicPolyPatch
@@ -110,8 +89,8 @@ CML::processorCyclicPolyPatch::processorCyclicPolyPatch
 )
 :
     processorPolyPatch(pp, bm),
-    tag_(pp.tag_),
     referPatchName_(pp.referPatchName()),
+    tag_(pp.tag()),
     referPatchID_(-1)
 {}
 
@@ -126,8 +105,8 @@ CML::processorCyclicPolyPatch::processorCyclicPolyPatch
 )
 :
     processorPolyPatch(pp, bm, index, newSize, newStart),
-    tag_(pp.tag_),
     referPatchName_(pp.referPatchName_),
+    tag_(pp.tag()),
     referPatchID_(-1)
 {}
 
@@ -143,8 +122,8 @@ CML::processorCyclicPolyPatch::processorCyclicPolyPatch
 )
 :
     processorPolyPatch(pp, bm, index, newSize, newStart),
-    tag_(pp.tag_),
     referPatchName_(referPatchName),
+    tag_(-1),
     referPatchID_(-1)
 {}
 
@@ -159,8 +138,8 @@ CML::processorCyclicPolyPatch::processorCyclicPolyPatch
 )
 :
     processorPolyPatch(pp, bm, index, mapAddressing, newStart),
-    tag_(pp.tag_),
     referPatchName_(pp.referPatchName()),
+    tag_(-1),
     referPatchID_(-1)
 {}
 
@@ -172,6 +151,72 @@ CML::processorCyclicPolyPatch::~processorCyclicPolyPatch()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+CML::word CML::processorCyclicPolyPatch::newName
+(
+    const word& cyclicPolyPatchName,
+    const label myProcNo,
+    const label neighbProcNo
+)
+{
+    return
+        processorPolyPatch::newName(myProcNo, neighbProcNo)
+      + "through"
+      + cyclicPolyPatchName;
+}
+
+
+CML::labelList CML::processorCyclicPolyPatch::patchIDs
+(
+    const word& cyclicPolyPatchName,
+    const polyBoundaryMesh& bm
+)
+{
+    return bm.findIndices
+    (
+        string("procBoundary.*to.*through" + cyclicPolyPatchName)
+    );
+}
+
+
+int CML::processorCyclicPolyPatch::tag() const
+{
+    if (tag_ == -1)
+    {
+        // Get unique tag to use for all comms. Make sure that both sides
+        // use the same tag
+        const cyclicPolyPatch& cycPatch = refCast<const cyclicPolyPatch>
+        (
+            referPatch()
+        );
+
+        if (owner())
+        {
+            tag_ = Hash<word>()(cycPatch.name()) % 32768u;
+        }
+        else
+        {
+            tag_ = Hash<word>()(cycPatch.neighbPatch().name()) % 32768u;
+        }
+
+        if (tag_ == Pstream::msgType() || tag_ == -1)
+        {
+            FatalErrorInFunction
+                << "Tag calculated from cyclic patch name " << tag_
+                << " is the same as the current message type "
+                << Pstream::msgType() << " or -1" << nl
+                << "Please set a non-conflicting, unique, tag by hand"
+                << " using the 'tag' entry"
+                << exit(FatalError);
+        }
+        if (debug)
+        {
+            Pout<< "processorCyclicPolyPatch " << name() << " uses tag " << tag_
+                << endl;
+        }
+    }
+    return tag_;
+}
 
 
 void CML::processorCyclicPolyPatch::initGeometry(PstreamBuffers& pBufs)
@@ -292,8 +337,11 @@ bool CML::processorCyclicPolyPatch::order
 void CML::processorCyclicPolyPatch::write(Ostream& os) const
 {
     processorPolyPatch::write(os);
-    os.writeKeyword("referPatch") << referPatchName_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "referPatch", referPatchName_);
+    if (tag_ != -1)
+    {
+        writeEntry(os, "tag", tag_);
+    }
 }
 
 

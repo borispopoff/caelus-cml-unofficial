@@ -113,7 +113,7 @@ template <class T>
 Field<T> patchAverageFunctionObject::average(const word& fieldName,T unsetVal) const
 {
     const GeometricField<T, fvPatchField, volMesh>& fld =
-        obr_.lookupObject<GeometricField<T, fvPatchField, volMesh> >
+        obr_.lookupObject<GeometricField<T, fvPatchField, volMesh>>
         (
             fieldName
         );

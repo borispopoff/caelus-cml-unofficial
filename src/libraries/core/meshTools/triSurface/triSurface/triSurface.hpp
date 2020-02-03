@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,6 +49,7 @@ namespace CML
 class Time;
 class IFstream;
 
+
 // Forward declaration of friend functions and operators
 
 class triSurface;
@@ -62,20 +63,14 @@ Ostream& operator<<(Ostream&, const triSurface&);
 
 class triSurface
 :
-    public PrimitivePatch<labelledTri, ::CML::List, pointField, point>
+    public PrimitivePatch<::CML::List<labelledTri>, pointField>
 {
     // Private typedefs
 
     //- Typedefs for convenience
         typedef labelledTri Face;
-        typedef PrimitivePatch
-        <
-            labelledTri,
-            ::CML::List,
-            pointField,
-            point
-        >
-        ParentType;
+        typedef PrimitivePatch<::CML::List<labelledTri>, pointField>
+            ParentType;
 
 
     // Private data
@@ -265,6 +260,14 @@ public:
             const bool reuse
         );
 
+        //- Construct from triangles, patches, points.
+        triSurface
+        (
+            List<labelledTri>&&,
+            const geometricSurfacePatchList&,
+            List<point>&&
+        );
+
         //- Construct from triangles, points. Set patchnames to default.
         triSurface(const List<labelledTri>&, const pointField&);
 
@@ -281,8 +284,11 @@ public:
         //- Construct from objectRegistry
         triSurface(const Time& d);
 
-        //- Construct as copy
+        //- Copy constructor
         triSurface(const triSurface&);
+
+        //- Move constructor
+        triSurface(triSurface&&);
 
 
     //- Destructor
@@ -428,6 +434,7 @@ public:
     // Member operators
 
         void operator=(const triSurface&);
+        void operator=(triSurface&&);
 
 
     // Ostream Operator

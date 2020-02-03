@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,7 +22,40 @@ Class
     CML::mixedFvPatchField
 
 Description
-    CML::mixedFvPatchField
+    This boundary condition provides a base class for 'mixed' type boundary
+    conditions, i.e. conditions that mix fixed value and patch-normal gradient
+    conditions.
+
+    The respective contributions from each is determined by a weight field:
+
+        \f[
+            x_p = w x_p + (1-w) \left(x_c + \frac{\nabla_\perp x}{\Delta}\right)
+        \f]
+
+    where
+    \vartable
+        x_p   | patch values
+        x_c   | patch internal cell values
+        w     | weight field
+        \Delta| inverse distance from face centre to internal cell centre
+        w     | weighting (0-1)
+    \endvartable
+
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        valueFraction | weight field           | yes         |
+        refValue     | fixed value             | yes         |
+        refGrad      | patch normal gradient   | yes         |
+    \endtable
+
+Note
+    This condition is not usually applied directly; instead, use a derived
+    mixed condition such as \c inletOutlet
+
+See also
+    CML::inletOutletFvPatchField
 
 
 \*---------------------------------------------------------------------------*/
@@ -38,7 +71,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class mixedFvPatch Declaration
+                      Class mixedFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -87,7 +120,8 @@ public:
             const mixedFvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const fvPatchFieldMapper&,
+            const bool mappingRequired=true
         );
 
         //- Construct as copy
@@ -97,9 +131,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mixedFvPatchField<Type>(*this)
             );
@@ -113,12 +147,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mixedFvPatchField<Type>(*this, iF)
             );
@@ -180,51 +214,47 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchField<Type>&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchField<Type>&, const labelList&);
 
 
         // Evaluation functions
 
             //- Return gradient at boundary
-            virtual tmp<Field<Type> > snGrad() const;
+            virtual tmp<Field<Type>> snGrad() const;
 
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             );
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const;
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
         //- Write
@@ -255,19 +285,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+CML::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -281,30 +305,14 @@ mixedFvPatchField<Type>::mixedFvPatchField
 
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
-(
-    const mixedFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fvPatchField<Type>(ptf, p, iF, mapper),
-    refValue_(ptf.refValue_, mapper),
-    refGrad_(ptf.refGrad_, mapper),
-    valueFraction_(ptf.valueFraction_, mapper)
-{}
-
-
-template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+CML::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
 )
 :
-    fvPatchField<Type>(p, iF, dict),
+    fvPatchField<Type>(p, iF, dict, false),
     refValue_("refValue", dict, p.size()),
     refGrad_("refGradient", dict, p.size()),
     valueFraction_("valueFraction", dict, p.size())
@@ -314,7 +322,34 @@ mixedFvPatchField<Type>::mixedFvPatchField
 
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+CML::mixedFvPatchField<Type>::mixedFvPatchField
+(
+    const mixedFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
+)
+:
+    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired),
+    refValue_(ptf.refValue_, mapper),
+    refGrad_(ptf.refGrad_, mapper),
+    valueFraction_(ptf.valueFraction_, mapper)
+{
+    if (mappingRequired && notNull(iF) && mapper.hasUnmapped())
+    {
+        WarningInFunction
+            << "On field " << iF.name() << " patch " << p.name()
+            << " patchField " << this->type()
+            << " : mapper does not map all values." << nl
+            << "    To avoid this warning fully specify the mapping in derived"
+            << " patch fields." << endl;
+    }
+}
+
+
+template<class Type>
+CML::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const mixedFvPatchField<Type>& ptf
 )
@@ -327,7 +362,7 @@ mixedFvPatchField<Type>::mixedFvPatchField
 
 
 template<class Type>
-mixedFvPatchField<Type>::mixedFvPatchField
+CML::mixedFvPatchField<Type>::mixedFvPatchField
 (
     const mixedFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -343,7 +378,7 @@ mixedFvPatchField<Type>::mixedFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void mixedFvPatchField<Type>::autoMap
+void CML::mixedFvPatchField<Type>::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -356,7 +391,7 @@ void mixedFvPatchField<Type>::autoMap
 
 
 template<class Type>
-void mixedFvPatchField<Type>::rmap
+void CML::mixedFvPatchField<Type>::rmap
 (
     const fvPatchField<Type>& ptf,
     const labelList& addr
@@ -365,7 +400,7 @@ void mixedFvPatchField<Type>::rmap
     fvPatchField<Type>::rmap(ptf, addr);
 
     const mixedFvPatchField<Type>& mptf =
-        refCast<const mixedFvPatchField<Type> >(ptf);
+        refCast<const mixedFvPatchField<Type>>(ptf);
 
     refValue_.rmap(mptf.refValue_, addr);
     refGrad_.rmap(mptf.refGrad_, addr);
@@ -374,7 +409,7 @@ void mixedFvPatchField<Type>::rmap
 
 
 template<class Type>
-void mixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
+void CML::mixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     if (!this->updated())
     {
@@ -397,7 +432,8 @@ void mixedFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::snGrad() const
+CML::tmp<CML::Field<Type>>
+CML::mixedFvPatchField<Type>::snGrad() const
 {
     return
         valueFraction_
@@ -408,7 +444,8 @@ tmp<Field<Type> > mixedFvPatchField<Type>::snGrad() const
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::valueInternalCoeffs
+CML::tmp<CML::Field<Type>>
+CML::mixedFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -419,7 +456,8 @@ tmp<Field<Type> > mixedFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::valueBoundaryCoeffs
+CML::tmp<CML::Field<Type>>
+CML::mixedFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -431,14 +469,16 @@ tmp<Field<Type> > mixedFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::mixedFvPatchField<Type>::gradientInternalCoeffs() const
 {
     return -Type(pTraits<Type>::one)*valueFraction_*this->patch().deltaCoeffs();
 }
 
 
 template<class Type>
-tmp<Field<Type> > mixedFvPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::mixedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     return
         valueFraction_*this->patch().deltaCoeffs()*refValue_
@@ -447,22 +487,14 @@ tmp<Field<Type> > mixedFvPatchField<Type>::gradientBoundaryCoeffs() const
 
 
 template<class Type>
-void mixedFvPatchField<Type>::write(Ostream& os) const
+void CML::mixedFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    refValue_.writeEntry("refValue", os);
-    refGrad_.writeEntry("refGradient", os);
-    valueFraction_.writeEntry("valueFraction", os);
-    this->writeEntry("value", os);
+    writeEntry(os, "refValue", refValue_);
+    writeEntry(os, "refGradient", refGrad_);
+    writeEntry(os, "valueFraction", valueFraction_);
+    writeEntry(os, "value", *this);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

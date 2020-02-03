@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,7 +80,7 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const = 0;
+        virtual autoPtr<pointPatchField<Type>> clone() const = 0;
 
         //- Construct as copy setting internal field reference
         coupledPointPatchField
@@ -90,7 +90,7 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const = 0;
@@ -110,7 +110,8 @@ public:
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             ) = 0;
 
             //- Initialise swap of patch point values
@@ -130,19 +131,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * //
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+CML::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -153,7 +148,7 @@ coupledPointPatchField<Type>::coupledPointPatchField
 
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+CML::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -165,7 +160,7 @@ coupledPointPatchField<Type>::coupledPointPatchField
 
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+CML::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const coupledPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -178,7 +173,7 @@ coupledPointPatchField<Type>::coupledPointPatchField
 
 
 template<class Type>
-coupledPointPatchField<Type>::coupledPointPatchField
+CML::coupledPointPatchField<Type>::coupledPointPatchField
 (
     const coupledPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -188,13 +183,4 @@ coupledPointPatchField<Type>::coupledPointPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

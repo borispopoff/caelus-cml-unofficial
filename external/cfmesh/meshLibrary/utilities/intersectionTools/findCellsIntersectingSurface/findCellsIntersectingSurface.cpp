@@ -72,14 +72,14 @@ void findCellsIntersectingSurface::findIntersectedCells()
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 40)
     # endif
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
         bool intersected(false);
 
-        const cell& c = cells[cellI];
+        const cell& c = cells[celli];
 
         //- find the bounding box of the cell
-        boundBox bb(cellCentres[cellI], cellCentres[cellI]);
+        boundBox bb(cellCentres[celli], cellCentres[celli]);
 
         forAll(c, fI)
         {
@@ -162,7 +162,7 @@ void findCellsIntersectingSurface::findIntersectedCells()
             {
                 const face& f = faces[c[fI]];
 
-                if( owner[c[fI]] == cellI )
+                if( owner[c[fI]] == celli )
                 {
                     forAll(f, pI)
                     {
@@ -171,7 +171,7 @@ void findCellsIntersectingSurface::findIntersectedCells()
                             points[f[pI]],
                             points[f.prevLabel(pI)],
                             faceCentres[c[fI]],
-                            cellCentres[cellI]
+                            cellCentres[celli]
                         );
 
                         if( help::pointInTetrahedron(p, tet) )
@@ -202,7 +202,7 @@ void findCellsIntersectingSurface::findIntersectedCells()
                             points[f[pI]],
                             points[f.nextLabel(pI)],
                             faceCentres[c[fI]],
-                            cellCentres[cellI]
+                            cellCentres[celli]
                         );
 
                         if( help::pointInTetrahedron(p, tet) )
@@ -257,14 +257,14 @@ void findCellsIntersectingSurface::findIntersectedCells()
         }
 
         //- store the results for this cell
-        intersectedCells_[cellI] = intersected;
+        intersectedCells_[celli] = intersected;
         if( intersected )
         {
             # ifdef USE_OMP
             # pragma omp critical
             # endif
             {
-                facetsIntersectingCell_.setRow(cellI, facetsInCell.toc());
+                facetsIntersectingCell_.setRow(celli, facetsInCell.toc());
             }
         }
     }
@@ -331,9 +331,9 @@ void findCellsIntersectingSurface::addIntersectedCellsToSubset
 {
     const label setId = mesh_.addCellSubset(subsetName);
 
-    forAll(intersectedCells_, cellI)
-        if( intersectedCells_[cellI] )
-            mesh_.addCellToSubset(setId, cellI);
+    forAll(intersectedCells_, celli)
+        if( intersectedCells_[celli] )
+            mesh_.addCellToSubset(setId, celli);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

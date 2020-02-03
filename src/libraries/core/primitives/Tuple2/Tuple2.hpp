@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -23,7 +23,7 @@ Class
 Description
     A 2-tuple for storing two objects of different types.
 
-SeeAlso
+See also
     CML::Pair for storing two objects of identical types.
 
 \*---------------------------------------------------------------------------*/
@@ -64,6 +64,11 @@ class Tuple2
 
 
 public:
+
+    // Static data members
+
+        static const char* const typeName;
+
 
     // Constructors
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,10 +59,10 @@ class data
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        data(const data&);
+        data(const data&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const data&);
+        void operator=(const data&) = delete;
 
 
 public:

@@ -61,7 +61,7 @@ interpolateForcesAndMoments::~interpolateForcesAndMoments()
 
 void interpolateForcesAndMoments::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     vectorField forces, moments;
 
     rawForcesAndMoments rfm(rT_, actionProperties_, actionType_);
@@ -76,7 +76,7 @@ void interpolateForcesAndMoments::evaluate()
 
     interpolationWeights(timeLabel, t, weights, leftData, rightData);
 
-    vectorField output(weights.size(), vector::zero);
+    vectorField output(weights.size(), Zero);
 
     // Outputs the forces as index 0
     {

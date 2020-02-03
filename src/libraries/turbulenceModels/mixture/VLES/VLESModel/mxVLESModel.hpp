@@ -82,9 +82,9 @@ protected:
 
 private:
 
-    VLESModel(const VLESModel&);
+    VLESModel(const VLESModel&) = delete;
 
-    void operator=(const VLESModel&);
+    void operator=(const VLESModel&) = delete;
 
 public:
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -108,12 +108,8 @@ public:
 
     // Member Functions
 
-        //- Is patch 'coupled'. Note that on AMI the geometry is not
-        //  coupled but the fields are!
-        virtual bool coupled() const
-        {
-            return false;
-        }
+        //- Return true if this patch field is coupled
+        virtual bool coupled() const;
 
         //- Return the constraint type this pointPatch implements.
         virtual const word& constraintType() const
@@ -130,8 +126,8 @@ public:
         //- Return neighbour point patch
         const cyclicAMIPointPatch& neighbPatch() const
         {
-            label patchI = cyclicAMIPolyPatch_.neighbPatchID();
-            const pointPatch& pp = this->boundaryMesh()[patchI];
+            label patchi = cyclicAMIPolyPatch_.neighbPatchID();
+            const pointPatch& pp = this->boundaryMesh()[patchi];
             return refCast<const cyclicAMIPointPatch>(pp);
         }
 

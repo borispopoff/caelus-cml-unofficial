@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,10 +59,10 @@ private:
 
         // Per instance data
 
-            //- instance name
+            //- Instance name
             wordList instance_;
 
-            //- scaling vector
+            //- Scaling vector
             vectorField scale_;
 
             //- transformation
@@ -72,21 +72,22 @@ private:
 
             Switch mergeSubRegions_;
 
-            //- offsets for indices coming from different surfaces
+            //- Offsets for indices coming from different surfaces
             //  (sized with size() of each surface)
             labelList indexOffset_;
 
         //- Region names
         mutable wordList regions_;
+
         //- From individual regions to collection regions
         mutable labelList regionOffset_;
 
 
     // Private Member Functions
-    
+
         //- Inherit findNearest from searchableSurface
         using searchableSurface::findNearest;
-    
+
         //- Find point nearest to sample. Updates minDistSqr. Sets nearestInfo
         //  and surface index
         void findNearest
@@ -102,16 +103,9 @@ private:
         void sortHits
         (
             const List<pointIndexHit>& info,
-            List<List<pointIndexHit> >& surfInfo,
+            List<List<pointIndexHit>>& surfInfo,
             labelListList& infoMap
         ) const;
-
-
-        //- Disallow default bitwise copy construct
-        searchableSurfaceCollection(const searchableSurfaceCollection&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaceCollection&);
 
 
 public:
@@ -129,36 +123,42 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construct
+        searchableSurfaceCollection
+        (
+            const searchableSurfaceCollection&
+        ) = delete;
+
+
     //- Destructor
     virtual ~searchableSurfaceCollection();
 
 
     // Member Functions
 
-        //- scaling vector per subsurface
+        //- Scaling vector per subsurface
         const vectorField& scale() const
         {
             return scale_;
         }
 
-        //- scaling vector per subsurface
+        //- Scaling vector per subsurface
         vectorField& scale()
         {
             return scale_;
         }
 
-        //- coordinate system per subsurface
+        //- Coordinate system per subsurface
         const PtrList<coordinateSystem>& transform() const
         {
             return transform_;
         }
 
-        //- coordinate system per subsurface
+        //- Coordinate system per subsurface
         PtrList<coordinateSystem>& transform()
         {
             return transform_;
         }
-
 
         virtual const wordList& regions() const;
 
@@ -223,7 +223,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const;
 
             //- From a set of points and indices get the region
@@ -277,6 +277,12 @@ public:
                 NotImplemented;
                 return false;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSurfaceCollection&) = delete;
 
 };
 

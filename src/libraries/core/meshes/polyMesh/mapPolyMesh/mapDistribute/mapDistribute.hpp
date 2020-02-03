@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -168,6 +168,7 @@ class mapDistribute
         //- Destination in constructMap for transformed elements
         labelList transformStart_;
 
+
     // Private Member Functions
 
         //- Helper function: copy transformElements without transformation
@@ -193,6 +194,7 @@ class mapDistribute
             List<T>& field,
             const TransformOp& top
         ) const;
+
 
 public:
 
@@ -220,7 +222,7 @@ public:
             (
                 const vectorTensorTransform& vt,
                 const bool forward,
-                List<List<Type> >& flds
+                List<List<Type>>& flds
             ) const
             {
                 forAll(flds, i)
@@ -263,7 +265,7 @@ public:
                 List<point>& fld
             ) const
             {
-                pointField pfld(fld.xfer());
+                pointField pfld(move(fld));
                 if (forward)
                 {
                     fld = vt.transformPosition(pfld);
@@ -277,7 +279,7 @@ public:
             (
                 const vectorTensorTransform& vt,
                 const bool forward,
-                List<List<point> >& flds
+                List<List<point>>& flds
             ) const
             {
                 forAll(flds, i)
@@ -323,8 +325,8 @@ public:
         mapDistribute
         (
             const label constructSize,
-            const Xfer<labelListList>& subMap,
-            const Xfer<labelListList>& constructMap,
+            labelListList&& subMap,
+            labelListList&& constructMap,
             const bool subHasFlip = false,
             const bool constructHasFlip = false
         );
@@ -333,10 +335,10 @@ public:
         mapDistribute
         (
             const label constructSize,
-            const Xfer<labelListList>& subMap,
-            const Xfer<labelListList>& constructMap,
-            const Xfer<labelListList>& transformElements,
-            const Xfer<labelList>& transformStart,
+            labelListList&& subMap,
+            labelListList&& constructMap,
+            labelListList&& transformElements,
+            labelList&& transformStart,
             const bool subHasFlip = false,
             const bool constructHasFlip = false
         );
@@ -358,7 +360,7 @@ public:
         (
             const globalIndex&,
             labelList& elements,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -369,7 +371,7 @@ public:
         (
             const globalIndex&,
             labelListList& cellCells,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -386,7 +388,7 @@ public:
             const globalIndexAndTransform&,
             const labelPairList& transformedElements,
             labelList& transformedIndices,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
@@ -398,15 +400,15 @@ public:
             const globalIndexAndTransform&,
             const List<labelPairList>& transformedElements,
             labelListList& transformedIndices,
-            List<Map<label> >& compactMap,
+            List<Map<label>>& compactMap,
             const int tag = Pstream::msgType()
         );
 
-        //- Construct by transferring parameter content
-        mapDistribute(const Xfer<mapDistribute>&);
-
-        //- Construct copy
+        //- Copy constructor
         mapDistribute(const mapDistribute&);
+
+        //- Move constructor
+        mapDistribute(mapDistribute&&);
 
         //- Construct from Istream
         mapDistribute(Istream&);
@@ -445,10 +447,6 @@ public:
 
             //- Transfer the contents of the argument and annul the argument.
             void transfer(mapDistribute&);
-
-            //- Transfer contents to the Xfer container
-            Xfer<mapDistribute> xfer();
-
 
             //- Distribute data using default commsType.
             template<class T>

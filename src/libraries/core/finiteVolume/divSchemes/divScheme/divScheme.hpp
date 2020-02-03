@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,7 +58,7 @@ namespace fv
 template<class Type>
 class divScheme
 :
-    public refCount
+    public tmp<divScheme<Type>>::refCount
 {
 
 protected:
@@ -66,16 +66,13 @@ protected:
     // Protected data
 
         const fvMesh& mesh_;
-        tmp<surfaceInterpolationScheme<Type> > tinterpScheme_;
+        tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
 
     // Private Member Functions
 
         //- Disallow copy construct
         divScheme(const divScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const divScheme&);
 
 
 public:
@@ -116,7 +113,7 @@ public:
     // Selectors
 
         //- Return a pointer to a new divScheme created on freestore
-        static tmp<divScheme<Type> > New
+        static tmp<divScheme<Type>> New
         (
             const fvMesh& mesh,
             Istream& schemeData
@@ -143,6 +140,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const divScheme&) = delete;
 };
 
 
@@ -165,7 +168,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            divScheme<Type>::addIstreamConstructorToTable<SS<Type> >           \
+            divScheme<Type>::addIstreamConstructorToTable<SS<Type>>           \
                 add##SS##Type##IstreamConstructorToTable_;                     \
         }                                                                      \
     }
@@ -197,7 +200,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<divScheme<Type> > divScheme<Type>::New
+tmp<divScheme<Type>> divScheme<Type>::New
 (
     const fvMesh& mesh,
     Istream& schemeData

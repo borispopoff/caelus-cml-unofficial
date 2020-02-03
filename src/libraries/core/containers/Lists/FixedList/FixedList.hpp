@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 Copyright (C) 2017-2018 OpenCFD Ltd.
 -------------------------------------------------------------------------------
@@ -36,7 +36,6 @@ Description
 #include "uLabel.hpp"
 #include "Hash.hpp"
 #include "autoPtr.hpp"
-#include "StaticAssert.hpp"
 #include <type_traits>
 #include <initializer_list>
 
@@ -50,14 +49,20 @@ namespace CML
 template<class T, unsigned Size> class FixedList;
 
 template<class T, unsigned Size>
+void writeEntry(Ostream& os, const FixedList<T, Size>&);
+
+template<class T, unsigned Size>
 Istream& operator>>(Istream&, FixedList<T, Size>&);
 
 template<class T, unsigned Size>
 Ostream& operator<<(Ostream&, const FixedList<T, Size>&);
 
 template<class T> class UList;
-template<class T> class SLList;
 
+class SLListBase;
+template<class LListBase, class T> class LList;
+template<class T>
+using SLList = LList<SLListBase, T>;
 
 /*---------------------------------------------------------------------------*\
                            Class FixedList Declaration
@@ -66,8 +71,11 @@ template<class T> class SLList;
 template<class T, unsigned Size>
 class FixedList
 {
-    //- Size must be positive (non-zero) and also fit as a signed value
-    StaticAssert(Size && Size <= INT_MAX);
+    static_assert
+    (
+        Size && Size <= INT_MAX,
+        "Size must be positive (non-zero) and also fit as a signed value"
+    );
 
     // Private data
 
@@ -79,7 +87,7 @@ public:
 
     //- Hashing function class.
     //  Use Hasher directly for contiguous data. Otherwise hash incrementally.
-    template< class HashT=Hash<T> >
+    template<class HashT=Hash<T>>
     class Hash
     {
     public:
@@ -106,7 +114,7 @@ public:
         inline FixedList();
 
         //- Construct from value
-        explicit FixedList(const T&);
+        explicit inline FixedList(const T&);
 
         //- Construct from C-array
         explicit inline FixedList(const T v[Size]);
@@ -115,7 +123,7 @@ public:
         template<class InputIterator>
         inline FixedList(InputIterator first, InputIterator last);
 
-        //- Construct from brace-enclosed values
+        //- Construct from an initializer list
         inline FixedList(std::initializer_list<T>);
 
         //- Construct from UList
@@ -131,7 +139,7 @@ public:
         FixedList(Istream&);
 
         //- Clone
-        inline autoPtr< FixedList<T, Size> > clone() const;
+        inline autoPtr<FixedList<T, Size>> clone() const;
 
 
     // Member Functions
@@ -196,6 +204,10 @@ public:
             //  needed to make FixedList consistent with List
             void transfer(const FixedList<T, Size>&);
 
+        //- Write the List, with line-breaks in ASCII if the list length
+        //- exceeds shortListLen.
+        //  Using '0' suppresses line-breaks entirely.
+        Ostream& writeList(Ostream& os, const label shortListLen=0) const;
 
     // Member operators
 
@@ -213,6 +225,9 @@ public:
 
         //- Assignment to SLList operator. Takes linear time
         inline void operator=(const SLList<T>&);
+
+        //- Assignment to an initializer list. Takes linear time
+        inline void operator=(std::initializer_list<T>);
 
         //- Assignment of all entries to the given value
         inline void operator=(const T&);
@@ -336,19 +351,6 @@ public:
         //- Return true if !(a < b). Takes linear time
         bool operator>=(const FixedList<T, Size>&) const;
 
-    // Writing
-
-        //- Write the FixedList as a dictionary entry
-        void writeEntry(Ostream&) const;
-
-        //- Write the List as a dictionary entry with keyword
-        void writeEntry(const word& keyword, Ostream& os) const;
-
-        //- Write the List, with line-breaks in ASCII if the list length
-        //- exceeds shortListLen.
-        //  Using '0' suppresses line-breaks entirely.
-        Ostream& writeList(Ostream& os, const label shortListLen=0) const;
-
 
     // IOstream operators
 
@@ -463,10 +465,10 @@ inline CML::FixedList<T, Size>::FixedList(const FixedList<T, Size>& lst)
 
 
 template<class T, unsigned Size>
-inline CML::autoPtr< CML::FixedList<T, Size> >
+inline CML::autoPtr< CML::FixedList<T, Size>>
 CML::FixedList<T, Size>::clone() const
 {
-    return autoPtr< FixedList<T, Size> >(new FixedList<T, Size>(*this));
+    return autoPtr<FixedList<T, Size>>(new FixedList<T, Size>(*this));
 }
 
 
@@ -475,7 +477,7 @@ CML::FixedList<T, Size>::clone() const
 template<class T, unsigned Size>
 inline const CML::FixedList<T, Size>& CML::FixedList<T, Size>::null()
 {
-    return NullSingletonRef< FixedList<T, Size> >();
+    return NullSingletonRef<FixedList<T, Size>>();
 }
 
 
@@ -493,7 +495,6 @@ inline CML::label CML::FixedList<T, Size>::rcIndex(const label i) const
 }
 
 
-// Check start is within valid range (0 ... size-1).
 template<class T, unsigned Size>
 inline void CML::FixedList<T, Size>::checkStart(const label start) const
 {
@@ -506,21 +507,18 @@ inline void CML::FixedList<T, Size>::checkStart(const label start) const
 }
 
 
-// Check size is within valid range (0 ... size).
 template<class T, unsigned Size>
 inline void CML::FixedList<T, Size>::checkSize(const label size) const
 {
-    if (size < 0 || unsigned(size) > Size)
+    if (unsigned(size) != Size)
     {
         FatalErrorInFunction
-            << "size " << size << " out of range 0 ... " << (Size)
+            << "size " << size << " != " << Size
             << abort(FatalError);
     }
 }
 
 
-// Check index i is within valid range (0 ... size-1)
-// The check for zero-sized list is already done in static assert
 template<class T, unsigned Size>
 inline void CML::FixedList<T, Size>::checkIndex(const label i) const
 {
@@ -605,7 +603,6 @@ inline const T& CML::FixedList<T, Size>::last() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-// element access
 template<class T, unsigned Size>
 inline T& CML::FixedList<T, Size>::operator[](const label i)
 {
@@ -616,7 +613,6 @@ inline T& CML::FixedList<T, Size>::operator[](const label i)
 }
 
 
-// const element access
 template<class T, unsigned Size>
 inline const T& CML::FixedList<T, Size>::operator[](const label i) const
 {
@@ -652,15 +648,22 @@ inline void CML::FixedList<T, Size>::operator=(const SLList<T>& lst)
 {
     checkSize(lst.size());
 
-    label i = 0;
-    for
-    (
-        typename SLList<T>::const_iterator iter = lst.begin();
-        iter != lst.end();
-        ++iter
-    )
+    typename SLList<T>::const_iterator iter = lst.begin();
+    for (unsigned i=0; i<Size; i++)
     {
-        operator[](i++) = iter();
+        v_[i] = *iter++;
+    }
+}
+
+template<class T, unsigned Size>
+inline void CML::FixedList<T, Size>::operator=(std::initializer_list<T> lst)
+{
+    checkSize(lst.size());
+
+    typename std::initializer_list<T>::iterator iter = lst.begin();
+    for (unsigned i=0; i<Size; i++)
+    {
+        v_[i] = *iter++;
     }
 }
 
@@ -821,8 +824,6 @@ inline unsigned CML::FixedList<T, Size>::Hash<HashT>::operator()
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #include "ListLoopM.hpp"
 
 
@@ -919,12 +920,19 @@ bool CML::FixedList<T, Size>::operator>=(const FixedList<T, Size>& a) const
 }
 
 
-// * * * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * //
-
 #include "Istream.hpp"
 #include "Ostream.hpp"
 #include "token.hpp"
 #include "contiguous.hpp"
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class T, unsigned Size>
+void CML::writeEntry(Ostream& os, const FixedList<T, Size>& l)
+{
+    writeListEntry(os, l);
+}
+
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
@@ -951,7 +959,7 @@ CML::Istream& CML::operator>>(CML::Istream& is, FixedList<T, Size>& L)
 
         if (firstToken.isCompound())
         {
-            L = dynamicCast<token::Compound<List<T> > >
+            L = dynamicCast<token::Compound<List<T>>>
             (
                 firstToken.transferCompoundToken(is)
             );
@@ -1029,34 +1037,6 @@ CML::Istream& CML::operator>>(CML::Istream& is, FixedList<T, Size>& L)
 
 
 // * * * * * * * * * * * * * * * Ostream Operator *  * * * * * * * * * * * * //
-
-template<class T, unsigned Size>
-void CML::FixedList<T, Size>::writeEntry(Ostream& os) const
-{
-    if
-    (
-        token::compound::isCompound("List<" + word(pTraits<T>::typeName) + '>')
-    )
-    {
-        os  << word("List<" + word(pTraits<T>::typeName) + '>') << " ";
-    }
-
-    os << *this;
-}
-
-
-template<class T, unsigned Size>
-void CML::FixedList<T, Size>::writeEntry
-(
-    const word& keyword,
-    Ostream& os
-) const
-{
-    os.writeKeyword(keyword);
-    writeEntry(os);
-    os << token::END_STATEMENT << endl;
-}
-
 
 template<class T, unsigned Size>
 CML::Ostream& CML::FixedList<T, Size>::writeList
@@ -1197,9 +1177,6 @@ CML::Ostream& CML::operator<<(Ostream& os, const FixedList<T, Size>& L)
     return os;
 }
 
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

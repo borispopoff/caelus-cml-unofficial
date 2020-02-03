@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -87,9 +87,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new cyclicPointPatchField<Type>
                 (
@@ -106,12 +106,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new cyclicPointPatchField<Type>
                 (
@@ -157,7 +157,8 @@ public:
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             )
             {}
 
@@ -170,11 +171,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "Swap.hpp"
 #include "transformField.hpp"
@@ -271,13 +269,13 @@ void CML::cyclicPointPatchField<Type>::swapAddSeparated
 
         // Get neighbouring pointPatchField	
 		const GeometricField<Type, pointPatchField, pointMesh>& fld =
-            refCast<const GeometricField<Type, pointPatchField, pointMesh> >
+            refCast<const GeometricField<Type, pointPatchField, pointMesh>>
             (
-                this->dimensionedInternalField()
+                this->internalField()
             );	
 		
         const cyclicPointPatchField<Type>& nbr =
-            refCast<const cyclicPointPatchField<Type> >
+            refCast<const cyclicPointPatchField<Type>>
             (
                 fld.boundaryField()[nbrPatch.index()]
             );
@@ -314,9 +312,4 @@ void CML::cyclicPointPatchField<Type>::swapAddSeparated
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

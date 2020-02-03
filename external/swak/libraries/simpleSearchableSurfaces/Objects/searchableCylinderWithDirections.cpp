@@ -190,7 +190,7 @@ void CML::searchableCylinderWithDirections::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >&info
+    List<List<pointIndexHit>>&info
 ) const
 {
     searchableCylinder::findLineAll(

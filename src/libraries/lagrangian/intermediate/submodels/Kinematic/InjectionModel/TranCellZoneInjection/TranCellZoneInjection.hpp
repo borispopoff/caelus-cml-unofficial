@@ -124,9 +124,9 @@ public:
         TranCellZoneInjection(const TranCellZoneInjection<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<InjectionModel<CloudType> > clone() const
+        virtual autoPtr<InjectionModel<CloudType>> clone() const
         {
-            return autoPtr<InjectionModel<CloudType> >
+            return autoPtr<InjectionModel<CloudType>>
             (
                 new TranCellZoneInjection<CloudType>(*this)
             );
@@ -219,10 +219,10 @@ void CML::TranCellZoneInjection<CloudType>::setPositions
 
     forAll(cellZoneCells, i)
     {
-        const label cellI = cellZoneCells[i];
+        const label celli = cellZoneCells[i];
 
         // Calc number of particles to add
-        const scalar newParticles = V[cellI]*numberDensity_;
+        const scalar newParticles = V[celli]*numberDensity_;
         newParticlesTotal += newParticles;
         label addParticles = floor(newParticles);
         addParticlesTotal += addParticles;
@@ -237,14 +237,14 @@ void CML::TranCellZoneInjection<CloudType>::setPositions
 
         // Construct cell tet indices
         const List<tetIndices> cellTetIs =
-            polyMeshTetDecomposition::cellTetIndices(mesh, cellI);
+            polyMeshTetDecomposition::cellTetIndices(mesh, celli);
 
         // Construct cell tet volume fractions
         scalarList cTetVFrac(cellTetIs.size(), 0.0);
         for (label tetI = 1; tetI < cellTetIs.size() - 1; tetI++)
         {
             cTetVFrac[tetI] =
-                cTetVFrac[tetI-1] + cellTetIs[tetI].tet(mesh).mag()/V[cellI];
+                cTetVFrac[tetI-1] + cellTetIs[tetI].tet(mesh).mag()/V[celli];
         }
         cTetVFrac.last() = 1.0;
 
@@ -263,7 +263,7 @@ void CML::TranCellZoneInjection<CloudType>::setPositions
             }
             positions.append(cellTetIs[tetI].tet(mesh).randomPoint(rnd));
 
-            injectorCells.append(cellI);
+            injectorCells.append(celli);
             injectorTetFaces.append(cellTetIs[tetI].face());
             injectorTetPts.append(cellTetIs[tetI].tetPt());
         }
@@ -282,7 +282,7 @@ void CML::TranCellZoneInjection<CloudType>::setPositions
         allPositions,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(positions);
+    ) = positions;
 
     Pstream::listCombineGather(allPositions, minEqOp<point>());
     Pstream::listCombineScatter(allPositions);
@@ -293,19 +293,19 @@ void CML::TranCellZoneInjection<CloudType>::setPositions
         allInjectorCells,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(injectorCells);
+    ) = injectorCells;
     SubList<label>
     (
         allInjectorTetFaces,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(injectorTetFaces);
+    ) = injectorTetFaces;
     SubList<label>
     (
         allInjectorTetPts,
         globalPositions.localSize(Pstream::myProcNo()),
         globalPositions.offset(Pstream::myProcNo())
-    ).assign(injectorTetPts);
+    ) = injectorTetPts;
 
     // Transfer data
     positions_.transfer(allPositions);

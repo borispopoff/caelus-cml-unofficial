@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,15 +49,6 @@ class pointPatchFieldMapperPatchRef
         const pointPatch& targetPatch_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointPatchFieldMapperPatchRef(const pointPatchFieldMapperPatchRef&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointPatchFieldMapperPatchRef&);
-
-
 public:
 
     // Constructors
@@ -73,6 +64,12 @@ public:
             targetPatch_(target)
         {}
 
+        //- Disallow default bitwise copy construct
+        pointPatchFieldMapperPatchRef
+        (
+            const pointPatchFieldMapperPatchRef&
+        ) = delete;
+
 
     // Member functions
 
@@ -85,6 +82,12 @@ public:
         {
             return targetPatch_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointPatchFieldMapperPatchRef&) = delete;
 };
 
 

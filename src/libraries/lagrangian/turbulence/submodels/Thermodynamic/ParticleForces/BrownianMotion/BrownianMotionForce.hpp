@@ -108,9 +108,9 @@ public:
         BrownianMotionForce(const BrownianMotionForce& bmf);
 
         //- Construct and return a clone
-        virtual autoPtr<ParticleForce<CloudType> > clone() const
+        virtual autoPtr<ParticleForce<CloudType>> clone() const
         {
-            return autoPtr<ParticleForce<CloudType> >
+            return autoPtr<ParticleForce<CloudType>>
             (
                 new BrownianMotionForce<CloudType>(*this)
             );
@@ -282,7 +282,7 @@ void CML::BrownianMotionForce<CloudType>::cacheFields(const bool store)
             }
             else
             {
-                kPtr_ = tk.operator->();
+                kPtr_ = &tk();
                 ownK_ = false;
             }
         }

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -61,9 +61,7 @@ bool CML::dynamicMotionSolverFvMesh::update()
 
     if (foundObject<volVectorField>("U"))
     {
-        volVectorField& U =
-            const_cast<volVectorField&>(lookupObject<volVectorField>("U"));
-        U.correctBoundaryConditions();
+        lookupObjectRef<volVectorField>("U").correctBoundaryConditions();
     }
 
     return true;

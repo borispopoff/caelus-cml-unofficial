@@ -131,7 +131,7 @@ ConcretePluginFunction<DriverType>::ConcretePluginFunction(
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class DriverType>
-autoPtr<ConcretePluginFunction<DriverType> > ConcretePluginFunction<DriverType>::New (
+autoPtr<ConcretePluginFunction<DriverType>> ConcretePluginFunction<DriverType>::New (
     const DriverType& driver,
     const word &name
 )

@@ -43,14 +43,14 @@ void CML::enrichedPatch::completePointMap() const
     const labelList& masterMeshPoints = masterPatch_.meshPoints();
     const pointField& masterLocalPoints = masterPatch_.localPoints();
 
-    forAll(masterMeshPoints, pointI)
+    forAll(masterMeshPoints, pointi)
     {
-        if (!pmm.found(masterMeshPoints[pointI]))
+        if (!pmm.found(masterMeshPoints[pointi]))
         {
             pointMap_.insert
             (
-                masterMeshPoints[pointI],
-                masterLocalPoints[pointI]
+                masterMeshPoints[pointi],
+                masterLocalPoints[pointi]
             );
         }
     }
@@ -59,14 +59,14 @@ void CML::enrichedPatch::completePointMap() const
     const labelList& slaveMeshPoints = slavePatch_.meshPoints();
     const pointField& slaveLocalPoints = slavePatch_.localPoints();
 
-    forAll(slaveMeshPoints, pointI)
+    forAll(slaveMeshPoints, pointi)
     {
-        if (!pmm.found(slaveMeshPoints[pointI]))
+        if (!pmm.found(slaveMeshPoints[pointi]))
         {
             pointMap_.insert
             (
-                slaveMeshPoints[pointI],
-                slaveLocalPoints[pointI]
+                slaveMeshPoints[pointi],
+                slaveLocalPoints[pointi]
             );
         }
     }

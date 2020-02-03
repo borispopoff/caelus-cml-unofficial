@@ -99,7 +99,7 @@ CML::label CML::meshCutter::findCutCell
 }
 
 
-//- Returns first pointI in pointLabels that uses an internal
+//- Returns first pointi in pointLabels that uses an internal
 //  face. Used to find point to inflate cell/face from (has to be
 //  connected to internal face). Returns -1 (so inflate from nothing) if
 //  none found.
@@ -199,7 +199,7 @@ void CML::meshCutter::getFaceInfo
 }
 
 
-// Adds a face on top of existing faceI.
+// Adds a face on top of existing facei.
 void CML::meshCutter::addFace
 (
     polyTopoChange& meshMod,
@@ -278,7 +278,7 @@ void CML::meshCutter::addFace
 }
 
 
-// Modifies existing faceI for either new owner/neighbour or new face points.
+// Modifies existing facei for either new owner/neighbour or new face points.
 void CML::meshCutter::modFace
 (
     polyTopoChange& meshMod,
@@ -439,7 +439,7 @@ CML::face CML::meshCutter::addEdgeCutsToFace(const label facei) const
         // Check if edge has been cut.
         label fp1 = f.fcIndex(fp);
 
-        HashTable<label, edge, Hash<edge> >::const_iterator fnd =
+        HashTable<label, edge, Hash<edge>>::const_iterator fnd =
             addedPoints_.find(edge(f[fp], f[fp1]));
 
         if (fnd != addedPoints_.end())
@@ -455,7 +455,7 @@ CML::face CML::meshCutter::addEdgeCutsToFace(const label facei) const
 }
 
 
-// Walk loop (loop of cuts) across circumference of cellI. Returns face in
+// Walk loop (loop of cuts) across circumference of celli. Returns face in
 // new vertices.
 // Note: tricky bit is that it can use existing edges which have been split.
 CML::face CML::meshCutter::loopToFace
@@ -501,7 +501,7 @@ CML::face CML::meshCutter::loopToFace
                 if (edgeI != -1)
                 {
                     // Existing edge. Insert split-edge point if any.
-                    HashTable<label, edge, Hash<edge> >::const_iterator fnd =
+                    HashTable<label, edge, Hash<edge>>::const_iterator fnd =
                         addedPoints_.find(mesh().edges()[edgeI]);
 
                     if (fnd != addedPoints_.end())
@@ -1087,11 +1087,11 @@ void CML::meshCutter::updateMesh(const mapPolyMesh& morphMap)
     }
 
     {
-        HashTable<label, edge, Hash<edge> > newAddedPoints(addedPoints_.size());
+        HashTable<label, edge, Hash<edge>> newAddedPoints(addedPoints_.size());
 
         for
         (
-            HashTable<label, edge, Hash<edge> >::const_iterator iter =
+            HashTable<label, edge, Hash<edge>>::const_iterator iter =
                 addedPoints_.begin();
             iter != addedPoints_.end();
             ++iter

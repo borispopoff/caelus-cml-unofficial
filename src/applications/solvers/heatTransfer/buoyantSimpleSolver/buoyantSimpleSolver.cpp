@@ -31,7 +31,7 @@ Description
 #include "compressibleRASModel.hpp"
 #include "radiationModel.hpp"
 #include "fixedGradientFvPatchFields.hpp"
-#include "fvIOoptionList.hpp"
+#include "fvOptions.hpp"
 #include "simpleControl.hpp"
 
 int main(int argc, char *argv[])

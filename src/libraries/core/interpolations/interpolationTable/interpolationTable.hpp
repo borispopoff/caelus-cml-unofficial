@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -71,7 +71,7 @@ namespace CML
 template<class Type>
 class interpolationTable
 :
-    public List<Tuple2<scalar, Type> >
+    public List<Tuple2<scalar, Type>>
 {
 public:
 
@@ -98,7 +98,7 @@ private:
         fileName fileName_;
 
         //- the actual reader
-        autoPtr<tableReader<Type> > reader_;
+        autoPtr<tableReader<Type>> reader_;
 
     // Private Member Functions
 
@@ -116,7 +116,7 @@ public:
         //- Construct from components
         interpolationTable
         (
-            const List<Tuple2<scalar, Type> >& values,
+            const List<Tuple2<scalar, Type>>& values,
             const boundsHandling bounds,
             const fileName& fName
         );
@@ -206,7 +206,7 @@ void CML::interpolationTable<Type>::readTable()
 template<class Type>
 CML::interpolationTable<Type>::interpolationTable()
 :
-    List<Tuple2<scalar, Type> >(),
+    List<Tuple2<scalar, Type>>(),
     boundsHandling_(interpolationTable::WARN),
     fileName_("fileNameIsUndefined"),
     reader_(nullptr)
@@ -216,12 +216,12 @@ CML::interpolationTable<Type>::interpolationTable()
 template<class Type>
 CML::interpolationTable<Type>::interpolationTable
 (
-    const List<Tuple2<scalar, Type> >& values,
+    const List<Tuple2<scalar, Type>>& values,
     const boundsHandling bounds,
     const fileName& fName
 )
 :
-    List<Tuple2<scalar, Type> >(values),
+    List<Tuple2<scalar, Type>>(values),
     boundsHandling_(bounds),
     fileName_(fName),
     reader_(nullptr)
@@ -231,7 +231,7 @@ CML::interpolationTable<Type>::interpolationTable
 template<class Type>
 CML::interpolationTable<Type>::interpolationTable(const fileName& fName)
 :
-    List<Tuple2<scalar, Type> >(),
+    List<Tuple2<scalar, Type>>(),
     boundsHandling_(interpolationTable::WARN),
     fileName_(fName),
     reader_(new caelusTableReader<Type>(dictionary()))
@@ -243,9 +243,9 @@ CML::interpolationTable<Type>::interpolationTable(const fileName& fName)
 template<class Type>
 CML::interpolationTable<Type>::interpolationTable(const dictionary& dict)
 :
-    List<Tuple2<scalar, Type> >(),
+    List<Tuple2<scalar, Type>>(),
     boundsHandling_(wordToBoundsHandling(dict.lookup("outOfBounds"))),
-    fileName_(dict.lookup("fileName")),
+    fileName_(dict.lookup("file")),
     reader_(tableReader<Type>::New(dict))
 {
     readTable();
@@ -258,7 +258,7 @@ CML::interpolationTable<Type>::interpolationTable
      const interpolationTable& interpTable
 )
 :
-    List<Tuple2<scalar, Type> >(interpTable),
+    List<Tuple2<scalar, Type>>(interpTable),
     boundsHandling_(interpTable.boundsHandling_),
     fileName_(interpTable.fileName_),
     reader_(interpTable.reader_)    // note: steals reader. Used in write().
@@ -354,12 +354,12 @@ template<class Type>
 void CML::interpolationTable<Type>::check() const
 {
     label n = this->size();
-    scalar prevValue = List<Tuple2<scalar, Type> >::operator[](0).first();
+    scalar prevValue = List<Tuple2<scalar, Type>>::operator[](0).first();
 
     for (label i=1; i<n; ++i)
     {
         const scalar currValue =
-            List<Tuple2<scalar, Type> >::operator[](i).first();
+            List<Tuple2<scalar, Type>>::operator[](i).first();
 
         // avoid duplicate values (divide-by-zero error)
         if (currValue <= prevValue)
@@ -377,10 +377,8 @@ void CML::interpolationTable<Type>::check() const
 template<class Type>
 void CML::interpolationTable<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("fileName")
-        << fileName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("outOfBounds")
-        << boundsHandlingToWord(boundsHandling_) << token::END_STATEMENT << nl;
+    writeEntry(os, "file", fileName_);
+    writeEntry(os, "outOfBounds", boundsHandlingToWord(boundsHandling_));
     if (reader_.valid())
     {
         reader_->write(os);
@@ -399,8 +397,8 @@ Type CML::interpolationTable<Type>::rateOfChange(const scalar value) const
         return 0;
     }
 
-    scalar minLimit = List<Tuple2<scalar, Type> >::operator[](0).first();
-    scalar maxLimit = List<Tuple2<scalar, Type> >::operator[](n-1).first();
+    scalar minLimit = List<Tuple2<scalar, Type>>::operator[](0).first();
+    scalar maxLimit = List<Tuple2<scalar, Type>>::operator[](n-1).first();
     scalar lookupValue = value;
 
     if (lookupValue < minLimit)
@@ -478,7 +476,7 @@ Type CML::interpolationTable<Type>::rateOfChange(const scalar value) const
     // look for the correct range
     for (label i = 0; i < n; ++i)
     {
-        if (lookupValue >= List<Tuple2<scalar, Type> >::operator[](i).first())
+        if (lookupValue >= List<Tuple2<scalar, Type>>::operator[](i).first())
         {
             lo = hi = i;
         }
@@ -506,13 +504,13 @@ Type CML::interpolationTable<Type>::rateOfChange(const scalar value) const
         return
         (
             (
-                List<Tuple2<scalar, Type> >::operator[](hi).second()
-              - List<Tuple2<scalar, Type> >::operator[](lo).second()
+                List<Tuple2<scalar, Type>>::operator[](hi).second()
+              - List<Tuple2<scalar, Type>>::operator[](lo).second()
             )
            /(
-               List<Tuple2<scalar, Type> >::operator[](hi).first()
+               List<Tuple2<scalar, Type>>::operator[](hi).first()
              + minLimit
-             - List<Tuple2<scalar, Type> >::operator[](lo).first()
+             - List<Tuple2<scalar, Type>>::operator[](lo).first()
             )
         );
     }
@@ -522,12 +520,12 @@ Type CML::interpolationTable<Type>::rateOfChange(const scalar value) const
         return
         (
             (
-                List<Tuple2<scalar, Type> >::operator[](hi).second()
-              - List<Tuple2<scalar, Type> >::operator[](lo).second()
+                List<Tuple2<scalar, Type>>::operator[](hi).second()
+              - List<Tuple2<scalar, Type>>::operator[](lo).second()
             )
            /(
-                List<Tuple2<scalar, Type> >::operator[](hi).first()
-              - List<Tuple2<scalar, Type> >::operator[](lo).first()
+                List<Tuple2<scalar, Type>>::operator[](hi).first()
+              - List<Tuple2<scalar, Type>>::operator[](lo).first()
             )
         );
     }
@@ -618,7 +616,7 @@ CML::interpolationTable<Type>::operator[](const label i) const
         }
     }
 
-    return List<Tuple2<scalar, Type> >::operator[](ii);
+    return List<Tuple2<scalar, Type>>::operator[](ii);
 }
 
 
@@ -629,11 +627,11 @@ Type CML::interpolationTable<Type>::operator()(const scalar value) const
 
     if (n <= 1)
     {
-        return List<Tuple2<scalar, Type> >::operator[](0).second();
+        return List<Tuple2<scalar, Type>>::operator[](0).second();
     }
 
-    scalar minLimit = List<Tuple2<scalar, Type> >::operator[](0).first();
-    scalar maxLimit = List<Tuple2<scalar, Type> >::operator[](n-1).first();
+    scalar minLimit = List<Tuple2<scalar, Type>>::operator[](0).first();
+    scalar maxLimit = List<Tuple2<scalar, Type>>::operator[](n-1).first();
     scalar lookupValue = value;
 
     if (lookupValue < minLimit)
@@ -658,7 +656,7 @@ Type CML::interpolationTable<Type>::operator()(const scalar value) const
             }
             case interpolationTable::CLAMP:
             {
-                return List<Tuple2<scalar, Type> >::operator[](0).second();
+                return List<Tuple2<scalar, Type>>::operator[](0).second();
                 break;
             }
             case interpolationTable::REPEAT:
@@ -692,7 +690,7 @@ Type CML::interpolationTable<Type>::operator()(const scalar value) const
             }
             case interpolationTable::CLAMP:
             {
-                return List<Tuple2<scalar, Type> >::operator[](n-1).second();
+                return List<Tuple2<scalar, Type>>::operator[](n-1).second();
                 break;
             }
             case interpolationTable::REPEAT:
@@ -711,7 +709,7 @@ Type CML::interpolationTable<Type>::operator()(const scalar value) const
     // look for the correct range
     for (label i = 0; i < n; ++i)
     {
-        if (lookupValue >= List<Tuple2<scalar, Type> >::operator[](i).first())
+        if (lookupValue >= List<Tuple2<scalar, Type>>::operator[](i).first())
         {
             lo = hi = i;
         }
@@ -725,7 +723,7 @@ Type CML::interpolationTable<Type>::operator()(const scalar value) const
     if (lo == hi)
     {
         // we are at the end of the table - or there is only a single entry
-        return List<Tuple2<scalar, Type> >::operator[](hi).second();
+        return List<Tuple2<scalar, Type>>::operator[](hi).second();
     }
     else if (hi == 0)
     {
@@ -738,10 +736,10 @@ Type CML::interpolationTable<Type>::operator()(const scalar value) const
 
         return
         (
-            List<Tuple2<scalar, Type> >::operator[](lo).second()
+            List<Tuple2<scalar, Type>>::operator[](lo).second()
           + (
-                List<Tuple2<scalar, Type> >::operator[](hi).second()
-              - List<Tuple2<scalar, Type> >::operator[](lo).second()
+                List<Tuple2<scalar, Type>>::operator[](hi).second()
+              - List<Tuple2<scalar, Type>>::operator[](lo).second()
             )
            *(lookupValue / minLimit)
         );
@@ -751,18 +749,18 @@ Type CML::interpolationTable<Type>::operator()(const scalar value) const
         // normal interpolation
         return
         (
-            List<Tuple2<scalar, Type> >::operator[](lo).second()
+            List<Tuple2<scalar, Type>>::operator[](lo).second()
           + (
-                List<Tuple2<scalar, Type> >::operator[](hi).second()
-              - List<Tuple2<scalar, Type> >::operator[](lo).second()
+                List<Tuple2<scalar, Type>>::operator[](hi).second()
+              - List<Tuple2<scalar, Type>>::operator[](lo).second()
             )
            *(
                 lookupValue
-              - List<Tuple2<scalar, Type> >::operator[](lo).first()
+              - List<Tuple2<scalar, Type>>::operator[](lo).first()
             )
            /(
-                List<Tuple2<scalar, Type> >::operator[](hi).first()
-              - List<Tuple2<scalar, Type> >::operator[](lo).first()
+                List<Tuple2<scalar, Type>>::operator[](hi).first()
+              - List<Tuple2<scalar, Type>>::operator[](lo).first()
             )
         );
     }

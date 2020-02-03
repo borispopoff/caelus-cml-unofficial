@@ -20,7 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "halfCosineRamp.hpp"
-#include "mathematicalConstants.hpp"
+
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -49,14 +49,6 @@ CML::DataEntryTypes::halfCosineRamp::halfCosineRamp
 
 CML::DataEntryTypes::halfCosineRamp::~halfCosineRamp()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-CML::scalar CML::DataEntryTypes::halfCosineRamp::value(const scalar t) const
-{
-    return 0.5*(1 - cos(constant::mathematical::pi*linearRamp(t)));
-}
 
 
 // ************************************************************************* //

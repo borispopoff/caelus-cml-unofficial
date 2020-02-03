@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -25,7 +25,6 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-
 namespace CML
 {
     defineTypeNameAndDebug(treeDataCell, 0);
@@ -34,7 +33,7 @@ namespace CML
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-CML::treeBoundBox CML::treeDataCell::calcCellBb(const label cellI) const
+CML::treeBoundBox CML::treeDataCell::calcCellBb(const label celli) const
 {
     const cellList& cells = mesh_.cells();
     const faceList& faces = mesh_.faces();
@@ -46,11 +45,11 @@ CML::treeBoundBox CML::treeDataCell::calcCellBb(const label cellI) const
         vector(-GREAT, -GREAT, -GREAT)
     );
 
-    const cell& cFaces = cells[cellI];
+    const cell& cFaces = cells[celli];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        const face& f = faces[cFaces[cFaceI]];
+        const face& f = faces[cFaces[cFacei]];
 
         forAll(f, fp)
         {
@@ -85,7 +84,7 @@ CML::treeDataCell::treeDataCell
     const bool cacheBb,
     const polyMesh& mesh,
     const labelUList& cellLabels,
-    const polyMesh::cellRepresentation decompMode
+    const polyMesh::cellDecomposition decompMode
 )
 :
     mesh_(mesh),
@@ -101,12 +100,12 @@ CML::treeDataCell::treeDataCell
 (
     const bool cacheBb,
     const polyMesh& mesh,
-    const Xfer<labelList>& cellLabels,
-    const polyMesh::cellRepresentation decompMode
+    labelList&& cellLabels,
+    const polyMesh::cellDecomposition decompMode
 )
 :
     mesh_(mesh),
-    cellLabels_(cellLabels),
+    cellLabels_(move(cellLabels)),
     cacheBb_(cacheBb),
     decompMode_(decompMode)
 {
@@ -118,7 +117,7 @@ CML::treeDataCell::treeDataCell
 (
     const bool cacheBb,
     const polyMesh& mesh,
-    const polyMesh::cellRepresentation decompMode
+    const polyMesh::cellDecomposition decompMode
 )
 :
     mesh_(mesh),
@@ -205,14 +204,14 @@ void CML::treeDataCell::findNearestOp::operator()
     forAll(indices, i)
     {
         label index = indices[i];
-        label cellI = shape.cellLabels()[index];
-        scalar distSqr = magSqr(sample - shape.mesh().cellCentres()[cellI]);
+        label celli = shape.cellLabels()[index];
+        scalar distSqr = magSqr(sample - shape.mesh().cellCentres()[celli]);
 
         if (distSqr < nearestDistSqr)
         {
             nearestDistSqr = distSqr;
             minIndex = index;
-            nearestPoint = shape.mesh().cellCentres()[cellI];
+            nearestPoint = shape.mesh().cellCentres()[celli];
         }
     }
 }
@@ -250,7 +249,7 @@ bool CML::treeDataCell::findIntersectOp::operator()
 
         if ((cellBb.posBits(start) & cellBb.posBits(end)) != 0)
         {
-            // start and end in same block outside of cellBb.
+            // Start and end in same block outside of cellBb.
             return false;
         }
     }
@@ -260,7 +259,7 @@ bool CML::treeDataCell::findIntersectOp::operator()
 
         if ((cellBb.posBits(start) & cellBb.posBits(end)) != 0)
         {
-            // start and end in same block outside of cellBb.
+            // Start and end in same block outside of cellBb.
             return false;
         }
     }
@@ -287,7 +286,7 @@ bool CML::treeDataCell::findIntersectOp::operator()
             start,
             dir,
             shape.mesh_.points(),
-            intersection::HALF_RAY
+            intersection::algorithm::halfRay
         );
 
         if (inter.hit() && sqr(inter.distance()) <= minDistSqr)

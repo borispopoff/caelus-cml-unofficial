@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -63,10 +63,10 @@ protected:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        extrudeModel(const extrudeModel&);
+        extrudeModel(const extrudeModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const extrudeModel&);
+        void operator=(const extrudeModel&) = delete;
 
 
 public:

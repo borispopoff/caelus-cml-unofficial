@@ -196,7 +196,7 @@ CML::triSurfaceSearch::tree() const
     if (treePtr_.empty())
     {
         // Calculate bb without constructing local point numbering.
-        treeBoundBox bb(vector::zero, vector::zero);
+        treeBoundBox bb(Zero, Zero);
 
         if (surface().size())
         {
@@ -256,7 +256,7 @@ CML::boolList CML::triSurfaceSearch::calcInside
         {
             inside[sampleI] = false;
         }
-        else if (tree().getVolumeType(sample) == volumeType::INSIDE)
+        else if (tree().getVolumeType(sample) == volumeType::inside)
         {
             inside[sampleI] = true;
         }
@@ -368,7 +368,7 @@ void CML::triSurfaceSearch::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     const indexedOctree<treeDataTriSurface>& octree = tree();

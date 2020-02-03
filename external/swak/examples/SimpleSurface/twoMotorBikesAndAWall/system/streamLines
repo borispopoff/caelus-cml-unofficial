@@ -8,7 +8,7 @@ streamLines
     type            streamLine;
 
     // Output every
-    outputControl   outputTime;
+    outputControl   writeTime;
     // outputInterval 10;
 
     setFormat       vtk; //gnuplot; //xmgr; //raw; //jplot; //csv; //ensight;

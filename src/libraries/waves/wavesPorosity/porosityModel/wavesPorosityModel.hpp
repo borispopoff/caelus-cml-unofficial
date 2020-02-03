@@ -123,27 +123,27 @@ public:
         //  NGJ, 29.10.2014
 
         //- mirror fvm::ddt with porosity
-        virtual tmp<fvMatrix<vector> > ddt
+        virtual tmp<fvMatrix<vector>> ddt
         (
             GeometricField<vector, fvPatchField, volMesh>&
         ) = 0;
 
         //- mirror fvm::ddt with porosity
-        virtual tmp<fvMatrix<vector> > ddt
+        virtual tmp<fvMatrix<vector>> ddt
         (
             const geometricOneField&,
             GeometricField<vector, fvPatchField, volMesh>&
         ) = 0;
 
         //- mirror fvm::ddt with porosity
-        virtual tmp<fvMatrix<vector> > ddt
+        virtual tmp<fvMatrix<vector>> ddt
         (
             const dimensionedScalar&,
             GeometricField<vector, fvPatchField, volMesh>&
         ) = 0;
 
         //- mirror fvm::ddt with porosity
-        virtual tmp<fvMatrix<vector> > ddt
+        virtual tmp<fvMatrix<vector>> ddt
         (
             const volScalarField&,
             GeometricField<vector, fvPatchField, volMesh>&

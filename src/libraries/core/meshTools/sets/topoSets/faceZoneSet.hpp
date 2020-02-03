@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -21,7 +21,7 @@ Class
     CML::faceZoneSet
 
 Description
-    Like faceSet but updates faceZone when writing.
+    Like faceSet but -reads data from faceZone -updates faceZone when writing.
 
 SourceFiles
     faceZone.cpp
@@ -163,10 +163,6 @@ public:
 
         //- Return max index+1.
         virtual label maxSize(const polyMesh& mesh) const;
-
-
-
-
 };
 
 

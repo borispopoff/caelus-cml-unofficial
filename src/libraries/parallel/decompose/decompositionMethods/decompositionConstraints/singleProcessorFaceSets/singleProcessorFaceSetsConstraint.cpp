@@ -71,7 +71,7 @@ singleProcessorFaceSetsConstraint
 CML::decompositionConstraints::singleProcessorFaceSetsConstraint::
 singleProcessorFaceSetsConstraint
 (
-    const List<Tuple2<word, label> >& setNameAndProcs
+    const List<Tuple2<word, label>>& setNameAndProcs
 )
 :
     decompositionConstraint(dictionary(), typeName),
@@ -192,11 +192,11 @@ void CML::decompositionConstraints::singleProcessorFaceSetsConstraint::add
 
     label nUnblocked = 0;
 
-    forAll(procFacePoint, pointI)
+    forAll(procFacePoint, pointi)
     {
-        if (procFacePoint[pointI])
+        if (procFacePoint[pointi])
         {
-            const labelList& pFaces = mesh.pointFaces()[pointI];
+            const labelList& pFaces = mesh.pointFaces()[pointi];
             forAll(pFaces, i)
             {
                 if (blockedFace[pFaces[i]])
@@ -248,16 +248,16 @@ void CML::decompositionConstraints::singleProcessorFaceSetsConstraint::apply
         const labelList& set = specifiedProcessorFaces[setI];
 
         // Get the processor to use for the set
-        label procI = specifiedProcessor[setI];
-        if (procI == -1)
+        label proci = specifiedProcessor[setI];
+        if (proci == -1)
         {
             // If no processor specified use the one from the
             // 0th element
             if (set.size())
             {
-                procI = decomposition[mesh.faceOwner()[set[0]]];
+                proci = decomposition[mesh.faceOwner()[set[0]]];
             }
-            reduce(procI, maxOp<label>());
+            reduce(proci, maxOp<label>());
         }
 
         // Get all points on the sets
@@ -273,27 +273,27 @@ void CML::decompositionConstraints::singleProcessorFaceSetsConstraint::apply
         syncTools::syncPointList(mesh, procFacePoint, orEqOp<bool>(), false);
 
         // 2. Unblock all faces on procFacePoint
-        forAll(procFacePoint, pointI)
+        forAll(procFacePoint, pointi)
         {
-            if (procFacePoint[pointI])
+            if (procFacePoint[pointi])
             {
-                const labelList& pFaces = mesh.pointFaces()[pointI];
+                const labelList& pFaces = mesh.pointFaces()[pointi];
                 forAll(pFaces, i)
                 {
-                    label faceI = pFaces[i];
+                    label facei = pFaces[i];
 
-                    label own = mesh.faceOwner()[faceI];
-                    if (decomposition[own] != procI)
+                    label own = mesh.faceOwner()[facei];
+                    if (decomposition[own] != proci)
                     {
-                        decomposition[own] = procI;
+                        decomposition[own] = proci;
                         nChanged++;
                     }
-                    if (mesh.isInternalFace(faceI))
+                    if (mesh.isInternalFace(facei))
                     {
-                        label nei = mesh.faceNeighbour()[faceI];
-                        if (decomposition[nei] != procI)
+                        label nei = mesh.faceNeighbour()[facei];
+                        if (decomposition[nei] != proci)
                         {
-                            decomposition[nei] = procI;
+                            decomposition[nei] = proci;
                             nChanged++;
                         }
                     }

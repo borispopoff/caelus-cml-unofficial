@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -39,7 +39,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class symmetryFvPatch Declaration
+                         Class symmetryFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -87,9 +87,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new symmetryFvPatchField<Type>(*this)
             );
@@ -103,12 +103,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new symmetryFvPatchField<Type>(*this, iF)
             );
@@ -116,19 +116,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-symmetryFvPatchField<Type>::symmetryFvPatchField
+CML::symmetryFvPatchField<Type>::symmetryFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -139,7 +133,7 @@ symmetryFvPatchField<Type>::symmetryFvPatchField
 
 
 template<class Type>
-symmetryFvPatchField<Type>::symmetryFvPatchField
+CML::symmetryFvPatchField<Type>::symmetryFvPatchField
 (
     const symmetryFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -155,15 +149,15 @@ symmetryFvPatchField<Type>::symmetryFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
 
 
 template<class Type>
-symmetryFvPatchField<Type>::symmetryFvPatchField
+CML::symmetryFvPatchField<Type>::symmetryFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -178,15 +172,15 @@ symmetryFvPatchField<Type>::symmetryFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
 
 
 template<class Type>
-symmetryFvPatchField<Type>::symmetryFvPatchField
+CML::symmetryFvPatchField<Type>::symmetryFvPatchField
 (
     const symmetryFvPatchField<Type>& ptf
 )
@@ -196,7 +190,7 @@ symmetryFvPatchField<Type>::symmetryFvPatchField
 
 
 template<class Type>
-symmetryFvPatchField<Type>::symmetryFvPatchField
+CML::symmetryFvPatchField<Type>::symmetryFvPatchField
 (
     const symmetryFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -206,13 +200,4 @@ symmetryFvPatchField<Type>::symmetryFvPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

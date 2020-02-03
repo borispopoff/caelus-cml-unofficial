@@ -76,7 +76,7 @@ CML::vorticity::vorticity
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedVector("0", dimless/dimTime, vector::zero)
+                dimensionedVector("0", dimless/dimTime, Zero)
             )
         );
 
@@ -97,7 +97,7 @@ void CML::vorticity::read(const dictionary& dict)
 {
     if (active_)
     {
-        UName_ = dict.lookupOrDefault<word>("UName", "U");
+        UName_ = dict.lookupOrDefault<word>("U", "U");
         if (UName_ != "U")
         {
             outputName_ = typeName + "(" + UName_ + ")";

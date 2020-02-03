@@ -23,7 +23,7 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const CML::fieldValues::cellSource::sourceType&
+inline const CML::fieldValues::cellSource::sourceTypes&
 CML::fieldValues::cellSource::source() const
 {
     return source_;

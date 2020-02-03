@@ -43,7 +43,7 @@ namespace CML
     (
         const typename GeoMesh::Mesh& mesh,
         const IOobjectList& objects,
-        PtrList<GeometricField<Type, PatchField, GeoMesh> >& fields,
+        PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
         const bool readOldTime
     );
 
@@ -65,7 +65,7 @@ void CML::readFields
 (
     const typename GeoMesh::Mesh& mesh,
     const IOobjectList& objects,
-    PtrList<GeometricField<Type, PatchField, GeoMesh> >& fields,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
     const bool readOldTime
 )
 {

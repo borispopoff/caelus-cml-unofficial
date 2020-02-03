@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -37,15 +37,15 @@ CML::tmp<CML::volVectorField> CML::constrainHbyA
     if (tHbyA.isTmp())
     {
         tHbyANew = tHbyA;
-        tHbyANew().rename("HbyA");
+        tHbyANew.ref().rename("HbyA");
     }
     else
     {
         tHbyANew = new volVectorField("HbyA", tHbyA);
     }
 
-    volVectorField& HbyA = tHbyANew();
-//    volVectorField::boundaryField& HbyAbf = HbyA.boundaryField();
+    volVectorField& HbyA = tHbyANew.ref();
+    volVectorField::Boundary& HbyAbf = HbyA.boundaryFieldRef();
 
     forAll(U.boundaryField(), patchi)
     {
@@ -58,7 +58,7 @@ CML::tmp<CML::volVectorField> CML::constrainHbyA
             )
         )
         {
-            HbyA.boundaryField()[patchi] = U.boundaryField()[patchi];
+            HbyAbf[patchi] = U.boundaryField()[patchi];
         }
     }
 

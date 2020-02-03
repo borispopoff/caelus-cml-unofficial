@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -40,14 +40,6 @@ class diagonalSolver
 :
     public lduMatrix::solver
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        diagonalSolver(const diagonalSolver&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const diagonalSolver&);
-
 
 public:
 
@@ -68,6 +60,9 @@ public:
             const dictionary& solverControls
         );
 
+        //- Disallow default bitwise copy construct
+        diagonalSolver(const diagonalSolver&) = delete;
+
 
     // Member Functions
 
@@ -82,6 +77,12 @@ public:
             const scalarField& b,
             const direction cmpt=0
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const diagonalSolver&) = delete;
 };
 
 

@@ -70,11 +70,25 @@ inline int CML::ISstream::peek()
 }
 
 
-inline CML::ISstream& CML::ISstream::getLine(string& s)
+/*inline CML::ISstream& CML::ISstream::getLine(string& s)
 {
     getline(is_, s);
     setState(is_.rdstate());
     lineNumber_++;
+
+    return *this;
+}
+*/
+
+inline CML::ISstream& CML::ISstream::getLine(std::string& str, char delim)
+{
+    std::getline(is_, str, delim);
+    setState(is_.rdstate());
+
+    if (delim == '\n')
+    {
+        ++lineNumber_;
+    }
 
     return *this;
 }

@@ -56,7 +56,7 @@ private:
 
     wordList relaxNames_;
 
-    List<autoPtr<relaxationSchemes::relaxationScheme> > relaxSchemePtr_;
+    List<autoPtr<relaxationSchemes::relaxationScheme>> relaxSchemePtr_;
 
     void resetTargetFields();
 

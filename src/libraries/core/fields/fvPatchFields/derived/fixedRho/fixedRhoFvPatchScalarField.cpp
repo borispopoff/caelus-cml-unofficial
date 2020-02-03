@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -26,7 +26,6 @@ License
 #include "surfaceFields.hpp"
 #include "fvCFD.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace CML
 {
@@ -68,20 +67,20 @@ fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
 
 fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
 (
-    const fixedRhoFvPatchScalarField& tppsf
+    const fixedRhoFvPatchScalarField& frpsf
 )
 :
-    fixedValueFvPatchScalarField(tppsf)
+    fixedValueFvPatchScalarField(frpsf)
 {}
 
 
 fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
 (
-    const fixedRhoFvPatchScalarField& tppsf,
+    const fixedRhoFvPatchScalarField& frpsf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchScalarField(tppsf, iF)
+    fixedValueFvPatchScalarField(frpsf, iF)
 {}
 
 
@@ -106,6 +105,13 @@ void fixedRhoFvPatchScalarField::updateCoeffs()
 }
 
 
+void CML::fixedRhoFvPatchScalarField::write(Ostream& os) const
+{
+    fvPatchScalarField::write(os);
+
+    writeEntry(os, "value", *this);
+}
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 makePatchTypeField
@@ -114,7 +120,6 @@ makePatchTypeField
     fixedRhoFvPatchScalarField
 );
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace CML
 

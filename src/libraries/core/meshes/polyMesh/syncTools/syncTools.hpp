@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -623,7 +623,6 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Combine val with existing value at index
 template<class T, class CombineOp>
 void CML::syncTools::combine
 (
@@ -646,7 +645,6 @@ void CML::syncTools::combine
 }
 
 
-// Combine val with existing value at (implicit index) e.
 template<class T, class CombineOp>
 void CML::syncTools::combine
 (
@@ -719,7 +717,7 @@ void CML::syncTools::syncPointMap
 
     if (Pstream::parRun())
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         // Send
 
@@ -901,7 +899,7 @@ void CML::syncTools::syncPointMap
                     slave++
                 )
                 {
-                    IPstream fromSlave(Pstream::scheduled, slave);
+                    IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                     Map<T> nbrValues(fromSlave);
 
                     // Merge neighbouring values with my values
@@ -925,7 +923,7 @@ void CML::syncTools::syncPointMap
                     slave++
                 )
                 {
-                    OPstream toSlave(Pstream::scheduled, slave);
+                    OPstream toSlave(Pstream::commsTypes::scheduled, slave);
                     toSlave << sharedPointValues;
                 }
             }
@@ -935,7 +933,7 @@ void CML::syncTools::syncPointMap
                 {
                     OPstream toMaster
                     (
-                        Pstream::scheduled,
+                        Pstream::commsTypes::scheduled,
                         Pstream::masterNo()
                     );
                     toMaster << sharedPointValues;
@@ -944,7 +942,7 @@ void CML::syncTools::syncPointMap
                 {
                     IPstream fromMaster
                     (
-                        Pstream::scheduled,
+                        Pstream::commsTypes::scheduled,
                         Pstream::masterNo()
                     );
                     fromMaster >> sharedPointValues;
@@ -999,7 +997,7 @@ void CML::syncTools::syncEdgeMap
 
     if (Pstream::parRun())
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         // Send
 
@@ -1281,7 +1279,7 @@ void CML::syncTools::syncEdgeMap
                 slave++
             )
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 EdgeMap<T> nbrValues(fromSlave);
 
                 // Merge neighbouring values with my values
@@ -1306,7 +1304,7 @@ void CML::syncTools::syncEdgeMap
             )
             {
 
-                OPstream toSlave(Pstream::scheduled, slave);
+                OPstream toSlave(Pstream::commsTypes::scheduled, slave);
                 toSlave << sharedEdgeValues;
             }
         }
@@ -1316,7 +1314,7 @@ void CML::syncTools::syncEdgeMap
             {
                 OPstream toMaster
                 (
-                    Pstream::scheduled,
+                    Pstream::commsTypes::scheduled,
                     Pstream::masterNo()
                 );
                 toMaster << sharedEdgeValues;
@@ -1325,7 +1323,7 @@ void CML::syncTools::syncEdgeMap
             {
                 IPstream fromMaster
                 (
-                    Pstream::scheduled,
+                    Pstream::commsTypes::scheduled,
                     Pstream::masterNo()
                 );
                 fromMaster >> sharedEdgeValues;
@@ -1401,7 +1399,7 @@ void CML::syncTools::syncEdgeMap
 //
 //    if (Pstream::parRun())
 //    {
-//        PstreamBuffers pBufs(Pstream::nonBlocking);
+//        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 //
 //        // Send
 //
@@ -1904,7 +1902,7 @@ void CML::syncTools::syncBoundaryFaceList
 
     if (parRun)
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         // Send
 
@@ -2024,7 +2022,7 @@ void CML::syncTools::syncFaceList
 
     if (parRun)
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         // Send
 

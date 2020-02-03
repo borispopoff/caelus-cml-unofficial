@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -88,7 +88,7 @@ CML::tmp<CML::labelField> CML::pairGAMGAgglomeration::agglomerate
     // go through the faces and create clusters
 
     tmp<labelField> tcoarseCellMap(new labelField(nFineCells, -1));
-    labelField& coarseCellMap = tcoarseCellMap();
+    labelField& coarseCellMap = tcoarseCellMap.ref();
 
     nCoarseCells = 0;
 
@@ -167,7 +167,6 @@ CML::tmp<CML::labelField> CML::pairGAMGAgglomeration::agglomerate
         }
     }
 
-
     // Check that all cells are part of clusters,
     // if not create single-cell "clusters" for each
     for (label celli=0; celli<nFineCells; celli++)
@@ -227,7 +226,7 @@ void CML::pairGAMGAgglomeration::agglomerate
             *faceWeightsPtr
         );
 
-        if (continueAgglomerating(nCoarseCells))
+        if (continueAgglomerating(finalAgglomPtr().size(), nCoarseCells))
         {
             nCells_[nCreatedLevels] = nCoarseCells;
             restrictAddressing_.set(nCreatedLevels, finalAgglomPtr);

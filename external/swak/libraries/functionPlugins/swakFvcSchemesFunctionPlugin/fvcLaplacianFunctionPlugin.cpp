@@ -78,7 +78,7 @@ void fvcLaplacianFunctionPlugin<T>::doEvaluation()
 {
     IStringStream spec(specString_);
 
-    tmp<fv::laplacianScheme<T,scalar> > scheme(
+    tmp<fv::laplacianScheme<T,scalar>> scheme(
         fv::laplacianScheme<T,scalar>::New(
             mesh(),
             spec
@@ -94,7 +94,7 @@ void fvcLaplacianFunctionPlugin<T>::doEvaluation()
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            scheme().fvcLaplacian(original_())
+            scheme.ref().fvcLaplacian(original_())
         )
     );
 

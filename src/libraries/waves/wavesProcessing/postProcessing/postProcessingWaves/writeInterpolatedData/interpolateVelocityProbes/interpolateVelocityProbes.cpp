@@ -61,7 +61,7 @@ interpolateVelocityProbes::~interpolateVelocityProbes()
 
 void interpolateVelocityProbes::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     scalarField x, y, z;
     List<vectorField> Us;
 
@@ -77,7 +77,7 @@ void interpolateVelocityProbes::evaluate()
 
     interpolationWeights(timeLabel, t, weights, leftData, rightData);
 
-    vectorField output(weights.size(), vector::zero);
+    vectorField output(weights.size(), Zero);
 
     forAll (Us, UI)
     {

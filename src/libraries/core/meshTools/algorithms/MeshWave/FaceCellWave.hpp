@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -43,8 +43,8 @@ SourceFiles
 #ifndef FaceCellWave_H
 #define FaceCellWave_H
 
-#include "boolList.hpp"
-#include "labelList.hpp"
+#include "PackedBoolList.hpp"
+#include "DynamicList.hpp"
 #include "primitiveFieldsFwd.hpp"
 #include "labelPair.hpp"
 
@@ -56,6 +56,7 @@ namespace CML
 // Forward declaration of classes
 class polyMesh;
 class polyPatch;
+class vectorTensorTransform;
 
 /*---------------------------------------------------------------------------*\
                         Class FaceCellWaveName Declaration
@@ -73,13 +74,15 @@ class FaceCellWave
 :
     public FaceCellWaveName
 {
-    // Private data
+protected:
+
+    // Protected data
 
         //- Reference to mesh
         const polyMesh& mesh_;
 
         //- Optional boundary faces that information should travel through
-        const List<labelPair> explicitConnections_;
+        const labelPairList explicitConnections_;
 
         //- Information for all faces
         UList<Type>& allFaceInfo_;
@@ -91,18 +94,17 @@ class FaceCellWave
         TrackingData& td_;
 
         //- Has face changed
-        boolList changedFace_;
+        PackedBoolList changedFace_;
 
         //- List of changed faces
-        labelList changedFaces_;
+        DynamicList<label> changedFaces_;
 
-        //- Number of changed faces
-        label nChangedFaces_;
+        //- Has cell changed
+        PackedBoolList changedCell_;
 
         // Cells that have changed
-        boolList changedCell_;
-        labelList changedCells_;
-        label nChangedCells_;
+        DynamicList<label> changedCells_;
+
 
         //- Contains cyclics
         const bool hasCyclicPatches_;
@@ -118,21 +120,12 @@ class FaceCellWave
         label nUnvisitedFaces_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        FaceCellWave(const FaceCellWave&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const FaceCellWave&);
-
-
         //- Updates cellInfo with information from neighbour. Updates all
         //  statistics.
         bool updateCell
         (
-            const label cellI,
-            const label neighbourFaceI,
+            const label celli,
+            const label neighbourFacei,
             const Type& neighbourInfo,
             const scalar tol,
             Type& cellInfo
@@ -142,8 +135,8 @@ class FaceCellWave
         //  statistics.
         bool updateFace
         (
-            const label faceI,
-            const label neighbourCellI,
+            const label facei,
+            const label neighbourCelli,
             const Type& neighbourInfo,
             const scalar tol,
             Type& faceInfo
@@ -153,7 +146,7 @@ class FaceCellWave
         //  statistics.
         bool updateFace
         (
-            const label faceI,
+            const label facei,
             const Type& neighbourInfo,
             const scalar tol,
             Type& faceInfo
@@ -166,7 +159,7 @@ class FaceCellWave
             void checkCyclic(const polyPatch& pPatch) const;
 
             //- Has cyclic patch?
-            template <class PatchType>
+            template<class PatchType>
             bool hasPatch() const;
 
             //- Merge received patch data into global data
@@ -182,7 +175,7 @@ class FaceCellWave
             label getChangedPatchFaces
             (
                 const polyPatch& patch,
-                const label startFaceI,
+                const label startFacei,
                 const label nFaces,
                 labelList& changedPatchFaces,
                 List<Type>& changedPatchFacesInfo
@@ -223,6 +216,14 @@ class FaceCellWave
                 List<Type>& faceInfo
             );
 
+            //- Apply transformation to Type
+            void transform
+            (
+                const vectorTensorTransform& trans,
+                const label nFaces,
+                List<Type>& faceInfo
+            );
+
             //- Merge data from across processor boundaries
             void handleProcPatches();
 
@@ -237,7 +238,7 @@ class FaceCellWave
             void handleExplicitConnections();
 
 
-      // Private static data
+      // Protected static data
 
             static const scalar geomTol_;
             static scalar propagationTol_;
@@ -297,7 +298,7 @@ public:
         FaceCellWave
         (
             const polyMesh&,
-            const List<labelPair>& explicitConnections,
+            const labelPairList& explicitConnections,
             const bool handleCyclicAMI,
             const labelList& initialChangedFaces,
             const List<Type>& changedFacesInfo,
@@ -306,6 +307,14 @@ public:
             const label maxIter,
             TrackingData& td = dummyTrackData_
         );
+
+        //- Disallow default bitwise copy construct
+        FaceCellWave(const FaceCellWave&) = delete;
+
+
+    //- Destructor
+    virtual ~FaceCellWave()
+    {}
 
 
     // Member Functions
@@ -358,17 +367,22 @@ public:
 
             //- Propagate from face to cell. Returns total number of cells
             //  (over all processors) changed.
-            label faceToCell();
+            virtual label faceToCell();
 
             //- Propagate from cell to face. Returns total number of faces
             //  (over all processors) changed. (Faces on processorpatches are
             //  counted double)
-            label cellToFace();
+            virtual label cellToFace();
 
             //- Iterate until no changes or maxIter reached.  Returns actual
             //  number of iterations.
-            label iterate(const label maxIter);
+            virtual label iterate(const label maxIter);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const FaceCellWave&) = delete;
 };
 
 
@@ -393,21 +407,22 @@ public:
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 const CML::scalar CML::FaceCellWave<Type, TrackingData>::geomTol_ = 1e-6;
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::scalar CML::FaceCellWave<Type, TrackingData>::propagationTol_ = 0.01;
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 int CML::FaceCellWave<Type, TrackingData>::dummyTrackData_ = 12345;
 
 namespace CML
 {
-    //- Combine operator for AMIInterpolation
     template<class Type, class TrackingData>
     class combine
     {
+        //- Combine operator for AMIInterpolation
+
         FaceCellWave<Type, TrackingData>& solver_;
 
         const cyclicAMIPolyPatch& patch_;
@@ -428,26 +443,26 @@ namespace CML
             void operator()
             (
                 Type& x,
-                const label faceI,
+                const label facei,
                 const Type& y,
                 const scalar weight
             ) const
             {
                 if (y.valid(solver_.data()))
                 {
-                    label meshFaceI = -1;
+                    label meshFacei = -1;
                     if (patch_.owner())
                     {
-                        meshFaceI = patch_.start() + faceI;
+                        meshFacei = patch_.start() + facei;
                     }
                     else
                     {
-                        meshFaceI = patch_.neighbPatch().start() + faceI;
+                        meshFacei = patch_.neighbPatch().start() + facei;
                     }
                     x.updateFace
                     (
                         solver_.mesh(),
-                        meshFaceI,
+                        meshFacei,
                         y,
                         solver_.propagationTol(),
                         solver_.data()
@@ -458,24 +473,24 @@ namespace CML
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-// Update info for cellI, at position pt, with information from
-// neighbouring face/cell.
-// Updates:
-//      - changedCell_, changedCells_, nChangedCells_,
-//      - statistics: nEvals_, nUnvisitedCells_
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 bool CML::FaceCellWave<Type, TrackingData>::updateCell
 (
-    const label cellI,
-    const label neighbourFaceI,
+    const label celli,
+    const label neighbourFacei,
     const Type& neighbourInfo,
     const scalar tol,
     Type& cellInfo
 )
 {
+    // Update info for celli, at position pt, with information from
+    // neighbouring face/cell.
+    // Updates:
+    //      - changedCell_, changedCells_
+    //      - statistics: nEvals_, nUnvisitedCells_
+
     nEvals_++;
 
     bool wasValid = cellInfo.valid(td_);
@@ -484,8 +499,8 @@ bool CML::FaceCellWave<Type, TrackingData>::updateCell
         cellInfo.updateCell
         (
             mesh_,
-            cellI,
-            neighbourFaceI,
+            celli,
+            neighbourFacei,
             neighbourInfo,
             tol,
             td_
@@ -493,10 +508,10 @@ bool CML::FaceCellWave<Type, TrackingData>::updateCell
 
     if (propagate)
     {
-        if (!changedCell_[cellI])
+        if (!changedCell_[celli])
         {
-            changedCell_[cellI] = true;
-            changedCells_[nChangedCells_++] = cellI;
+            changedCell_[celli] = true;
+            changedCells_.append(celli);
         }
     }
 
@@ -509,21 +524,22 @@ bool CML::FaceCellWave<Type, TrackingData>::updateCell
 }
 
 
-// Update info for faceI, at position pt, with information from
-// neighbouring face/cell.
-// Updates:
-//      - changedFace_, changedFaces_, nChangedFaces_,
-//      - statistics: nEvals_, nUnvisitedFaces_
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 bool CML::FaceCellWave<Type, TrackingData>::updateFace
 (
-    const label faceI,
-    const label neighbourCellI,
+    const label facei,
+    const label neighbourCelli,
     const Type& neighbourInfo,
     const scalar tol,
     Type& faceInfo
 )
 {
+    // Update info for facei, at position pt, with information from
+    // neighbouring face/cell.
+    // Updates:
+    //      - changedFace_, changedFaces_,
+    //      - statistics: nEvals_, nUnvisitedFaces_
+
     nEvals_++;
 
     bool wasValid = faceInfo.valid(td_);
@@ -532,8 +548,8 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
         faceInfo.updateFace
         (
             mesh_,
-            faceI,
-            neighbourCellI,
+            facei,
+            neighbourCelli,
             neighbourInfo,
             tol,
             td_
@@ -541,10 +557,10 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
 
     if (propagate)
     {
-        if (!changedFace_[faceI])
+        if (!changedFace_[facei])
         {
-            changedFace_[faceI] = true;
-            changedFaces_[nChangedFaces_++] = faceI;
+            changedFace_[facei] = true;
+            changedFaces_.append(facei);
         }
     }
 
@@ -557,20 +573,21 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
 }
 
 
-// Update info for faceI, at position pt, with information from
-// same face.
-// Updates:
-//      - changedFace_, changedFaces_, nChangedFaces_,
-//      - statistics: nEvals_, nUnvisitedFaces_
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 bool CML::FaceCellWave<Type, TrackingData>::updateFace
 (
-    const label faceI,
+    const label facei,
     const Type& neighbourInfo,
     const scalar tol,
     Type& faceInfo
 )
 {
+    // Update info for facei, at position pt, with information from
+    // same face.
+    // Updates:
+    //      - changedFace_, changedFaces_,
+    //      - statistics: nEvals_, nUnvisitedFaces_
+
     nEvals_++;
 
     bool wasValid = faceInfo.valid(td_);
@@ -579,7 +596,7 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
         faceInfo.updateFace
         (
             mesh_,
-            faceI,
+            facei,
             neighbourInfo,
             tol,
             td_
@@ -587,10 +604,10 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
 
     if (propagate)
     {
-        if (!changedFace_[faceI])
+        if (!changedFace_[facei])
         {
-            changedFace_[faceI] = true;
-            changedFaces_[nChangedFaces_++] = faceI;
+            changedFace_[facei] = true;
+            changedFaces_.append(facei);
         }
     }
 
@@ -603,20 +620,21 @@ bool CML::FaceCellWave<Type, TrackingData>::updateFace
 }
 
 
-// For debugging: check status on both sides of cyclic
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::checkCyclic
 (
     const polyPatch& patch
 ) const
 {
+    // For debugging: check status on both sides of cyclic
+
     const cyclicPolyPatch& nbrPatch =
         refCast<const cyclicPolyPatch>(patch).neighbPatch();
 
-    forAll(patch, patchFaceI)
+    forAll(patch, patchFacei)
     {
-        label i1 = patch.start() + patchFaceI;
-        label i2 = nbrPatch.start() + patchFaceI;
+        label i1 = patch.start() + patchFacei;
+        label i2 = nbrPatch.start() + patchFacei;
 
         if
         (
@@ -630,7 +648,6 @@ void CML::FaceCellWave<Type, TrackingData>::checkCyclic
         )
         {
             FatalErrorInFunction
-                << "problem: i:" << i1 << "  otheri:" << i2
                 << "   faceInfo:" << allFaceInfo_[i1]
                 << "   otherfaceInfo:" << allFaceInfo_[i2]
                 << abort(FatalError);
@@ -639,7 +656,6 @@ void CML::FaceCellWave<Type, TrackingData>::checkCyclic
         if (changedFace_[i1] != changedFace_[i2])
         {
             FatalErrorInFunction
-                << " problem: i:" << i1 << "  otheri:" << i2
                 << "   faceInfo:" << allFaceInfo_[i1]
                 << "   otherfaceInfo:" << allFaceInfo_[i2]
                 << "   changedFace:" << changedFace_[i1]
@@ -650,14 +666,13 @@ void CML::FaceCellWave<Type, TrackingData>::checkCyclic
 }
 
 
-// Check if has cyclic patches
-template <class Type, class TrackingData>
-template <class PatchType>
+template<class Type, class TrackingData>
+template<class PatchType>
 bool CML::FaceCellWave<Type, TrackingData>::hasPatch() const
 {
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        if (isA<PatchType>(mesh_.boundaryMesh()[patchI]))
+        if (isA<PatchType>(mesh_.boundaryMesh()[patchi]))
         {
             return true;
         }
@@ -666,39 +681,37 @@ bool CML::FaceCellWave<Type, TrackingData>::hasPatch() const
 }
 
 
-// Copy face information into member data
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::setFaceInfo
 (
     const labelList& changedFaces,
     const List<Type>& changedFacesInfo
 )
 {
-    forAll(changedFaces, changedFaceI)
+    forAll(changedFaces, changedFacei)
     {
-        label faceI = changedFaces[changedFaceI];
+        label facei = changedFaces[changedFacei];
 
-        bool wasValid = allFaceInfo_[faceI].valid(td_);
+        bool wasValid = allFaceInfo_[facei].valid(td_);
 
-        // Copy info for faceI
-        allFaceInfo_[faceI] = changedFacesInfo[changedFaceI];
+        // Copy info for facei
+        allFaceInfo_[facei] = changedFacesInfo[changedFacei];
 
         // Maintain count of unset faces
-        if (!wasValid && allFaceInfo_[faceI].valid(td_))
+        if (!wasValid && allFaceInfo_[facei].valid(td_))
         {
             --nUnvisitedFaces_;
         }
 
-        // Mark faceI as changed, both on list and on face itself.
+        // Mark facei as changed, both on list and on face itself.
 
-        changedFace_[faceI] = true;
-        changedFaces_[nChangedFaces_++] = faceI;
+        changedFace_[facei] = true;
+        changedFaces_.append(facei);
     }
 }
 
 
-// Merge face information into member data
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::mergeFaceInfo
 (
     const polyPatch& patch,
@@ -707,20 +720,22 @@ void CML::FaceCellWave<Type, TrackingData>::mergeFaceInfo
     const List<Type>& changedFacesInfo
 )
 {
-    for (label changedFaceI = 0; changedFaceI < nFaces; changedFaceI++)
+    // Merge face information into member data
+
+    for (label changedFacei = 0; changedFacei < nFaces; changedFacei++)
     {
-        const Type& neighbourWallInfo = changedFacesInfo[changedFaceI];
-        label patchFaceI = changedFaces[changedFaceI];
+        const Type& neighbourWallInfo = changedFacesInfo[changedFacei];
+        label patchFacei = changedFaces[changedFacei];
 
-        label meshFaceI = patch.start() + patchFaceI;
+        label meshFacei = patch.start() + patchFacei;
 
-        Type& currentWallInfo = allFaceInfo_[meshFaceI];
+        Type& currentWallInfo = allFaceInfo_[meshFacei];
 
         if (!currentWallInfo.equal(neighbourWallInfo, td_))
         {
             updateFace
             (
-                meshFaceI,
+                meshFacei,
                 neighbourWallInfo,
                 propagationTol_,
                 currentWallInfo
@@ -730,31 +745,31 @@ void CML::FaceCellWave<Type, TrackingData>::mergeFaceInfo
 }
 
 
-// Construct compact patchFace change arrays for a (slice of a) single patch.
-// changedPatchFaces in local patch numbering.
-// Return length of arrays.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::getChangedPatchFaces
 (
     const polyPatch& patch,
-    const label startFaceI,
+    const label startFacei,
     const label nFaces,
     labelList& changedPatchFaces,
     List<Type>& changedPatchFacesInfo
 ) const
 {
+    // Construct compact patchFace change arrays for a (slice of a) single
+    // patch. changedPatchFaces in local patch numbering.
+    // Return length of arrays.
     label nChangedPatchFaces = 0;
 
     for (label i = 0; i < nFaces; i++)
     {
-        label patchFaceI = i + startFaceI;
+        label patchFacei = i + startFacei;
 
-        label meshFaceI = patch.start() + patchFaceI;
+        label meshFacei = patch.start() + patchFacei;
 
-        if (changedFace_[meshFaceI])
+        if (changedFace_[meshFacei])
         {
-            changedPatchFaces[nChangedPatchFaces] = patchFaceI;
-            changedPatchFacesInfo[nChangedPatchFaces] = allFaceInfo_[meshFaceI];
+            changedPatchFaces[nChangedPatchFaces] = patchFacei;
+            changedPatchFacesInfo[nChangedPatchFaces] = allFaceInfo_[meshFacei];
             nChangedPatchFaces++;
         }
     }
@@ -762,8 +777,7 @@ CML::label CML::FaceCellWave<Type, TrackingData>::getChangedPatchFaces
 }
 
 
-// Handle leaving domain. Implementation referred to Type
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::leaveDomain
 (
     const polyPatch& patch,
@@ -772,20 +786,21 @@ void CML::FaceCellWave<Type, TrackingData>::leaveDomain
     List<Type>& faceInfo
 ) const
 {
+    // Handle leaving domain. Implementation referred to Type
+
     const vectorField& fc = mesh_.faceCentres();
 
     for (label i = 0; i < nFaces; i++)
     {
-        label patchFaceI = faceLabels[i];
+        label patchFacei = faceLabels[i];
 
-        label meshFaceI = patch.start() + patchFaceI;
-        faceInfo[i].leaveDomain(mesh_, patch, patchFaceI, fc[meshFaceI], td_);
+        label meshFacei = patch.start() + patchFacei;
+        faceInfo[i].leaveDomain(mesh_, patch, patchFacei, fc[meshFacei], td_);
     }
 }
 
 
-// Handle entering domain. Implementation referred to Type
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::enterDomain
 (
     const polyPatch& patch,
@@ -794,20 +809,21 @@ void CML::FaceCellWave<Type, TrackingData>::enterDomain
     List<Type>& faceInfo
 ) const
 {
+    // Handle entering domain. Implementation referred to Type
+
     const vectorField& fc = mesh_.faceCentres();
 
     for (label i = 0; i < nFaces; i++)
     {
-        label patchFaceI = faceLabels[i];
+        label patchFacei = faceLabels[i];
 
-        label meshFaceI = patch.start() + patchFaceI;
-        faceInfo[i].enterDomain(mesh_, patch, patchFaceI, fc[meshFaceI], td_);
+        label meshFacei = patch.start() + patchFacei;
+        faceInfo[i].enterDomain(mesh_, patch, patchFacei, fc[meshFacei], td_);
     }
 }
 
 
-// Transform. Implementation referred to Type
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::transform
 (
     const tensorField& rotTensor,
@@ -815,27 +831,48 @@ void CML::FaceCellWave<Type, TrackingData>::transform
     List<Type>& faceInfo
 )
 {
+    // Transform. Implementation referred to Type
+
     if (rotTensor.size() == 1)
     {
         const tensor& T = rotTensor[0];
 
-        for (label faceI = 0; faceI < nFaces; faceI++)
+        for (label facei = 0; facei < nFaces; facei++)
         {
-            faceInfo[faceI].transform(mesh_, T, td_);
+            faceInfo[facei].transform(mesh_, T, td_);
         }
     }
     else
     {
-        for (label faceI = 0; faceI < nFaces; faceI++)
+        for (label facei = 0; facei < nFaces; facei++)
         {
-            faceInfo[faceI].transform(mesh_, rotTensor[faceI], td_);
+            faceInfo[facei].transform(mesh_, rotTensor[facei], td_);
         }
     }
 }
 
 
-// Offset mesh face. Used for transferring from one cyclic half to the other.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
+void CML::FaceCellWave<Type, TrackingData>::transform
+(
+    const vectorTensorTransform& trans,
+    const label nFaces,
+    List<Type>& faceInfo
+)
+{
+    // Transform. Implementation referred to Type
+
+    if (trans.hasR())
+    {
+        for (label facei = 0; facei < nFaces; facei++)
+        {
+            faceInfo[facei].transform(mesh_, trans.R(), td_);
+        }
+    }
+}
+
+
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::offset
 (
     const polyPatch&,
@@ -844,17 +881,21 @@ void CML::FaceCellWave<Type, TrackingData>::offset
     labelList& faces
 )
 {
-    for (label faceI = 0; faceI < nFaces; faceI++)
+    // Offset mesh face. Used for transferring from one cyclic half to the
+    // other.
+
+    for (label facei = 0; facei < nFaces; facei++)
     {
-        faces[faceI] += cycOffset;
+        faces[facei] += cycOffset;
     }
 }
 
 
-// Transfer all the information to/from neighbouring processors
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 {
+    // Transfer all the information to/from neighbouring processors
+
     const globalMeshData& pData = mesh_.globalData();
 
     // Which patches are processor patches
@@ -862,14 +903,14 @@ void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 
     // Send all
 
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
     forAll(procPatches, i)
     {
-        label patchI = procPatches[i];
+        label patchi = procPatches[i];
 
         const processorPolyPatch& procPatch =
-            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchI]);
+            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchi]);
 
         // Allocate buffers
         label nSendFaces;
@@ -897,14 +938,14 @@ void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 
         if (debug)
         {
-            Pout<< " Processor patch " << patchI << ' ' << procPatch.name()
+            Pout<< " Processor patch " << patchi << ' ' << procPatch.name()
                 << " communicating with " << procPatch.neighbProcNo()
                 << "  Sending:" << nSendFaces
                 << endl;
         }
 
         UOPstream toNeighbour(procPatch.neighbProcNo(), pBufs);
-        //writeFaces(nSendFaces, sendFaces, sendFacesInfo, toNeighbour);
+        // writeFaces(nSendFaces, sendFaces, sendFacesInfo, toNeighbour);
         toNeighbour
             << SubList<label>(sendFaces, nSendFaces)
             << SubList<Type>(sendFacesInfo, nSendFaces);
@@ -916,10 +957,10 @@ void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 
     forAll(procPatches, i)
     {
-        label patchI = procPatches[i];
+        label patchi = procPatches[i];
 
         const processorPolyPatch& procPatch =
-            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchI]);
+            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchi]);
 
         // Allocate buffers
         labelList receiveFaces;
@@ -932,7 +973,7 @@ void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 
         if (debug)
         {
-            Pout<< " Processor patch " << patchI << ' ' << procPatch.name()
+            Pout<< " Processor patch " << patchi << ' ' << procPatch.name()
                 << " communicating with " << procPatch.neighbProcNo()
                 << "  Receiving:" << receiveFaces.size()
                 << endl;
@@ -970,13 +1011,14 @@ void CML::FaceCellWave<Type, TrackingData>::handleProcPatches()
 }
 
 
-// Transfer information across cyclic halves.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
 {
-    forAll(mesh_.boundaryMesh(), patchI)
+    // Transfer information across cyclic halves.
+
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        const polyPatch& patch = mesh_.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh_.boundaryMesh()[patchi];
 
         if (isA<cyclicPolyPatch>(patch))
         {
@@ -1023,7 +1065,7 @@ void CML::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
 
             if (debug)
             {
-                Pout<< " Cyclic patch " << patchI << ' ' << cycPatch.name()
+                Pout<< " Cyclic patch " << patchi << ' ' << cycPatch.name()
                     << "  Changed : " << nReceiveFaces
                     << endl;
             }
@@ -1055,13 +1097,14 @@ void CML::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
 }
 
 
-// Transfer information across cyclic halves.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 void CML::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
 {
-    forAll(mesh_.boundaryMesh(), patchI)
+    // Transfer information across cyclicAMI halves.
+
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        const polyPatch& patch = mesh_.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh_.boundaryMesh()[patchi];
 
         if (isA<cyclicAMIPolyPatch>(patch))
         {
@@ -1096,18 +1139,51 @@ void CML::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
                 // Transfer sendInfo to cycPatch
                 combine<Type, TrackingData> cmb(*this, cycPatch);
 
+                List<Type> defVals;
                 if (cycPatch.applyLowWeightCorrection())
                 {
-                    List<Type> defVals
-                    (
-                        cycPatch.patchInternalList(allCellInfo_)
-                    );
+                    defVals = cycPatch.patchInternalList(allCellInfo_);
+                }
 
-                    cycPatch.interpolate(sendInfo, cmb, receiveInfo, defVals);
+                if (cycPatch.owner())
+                {
+                    forAll(cycPatch.AMIs(), i)
+                    {
+                        List<Type> sendInfoT(sendInfo);
+                        transform
+                        (
+                            cycPatch.AMITransforms()[i],
+                            sendInfoT.size(),
+                            sendInfoT
+                        );
+                        cycPatch.AMIs()[i].interpolateToSource
+                        (
+                            sendInfoT,
+                            cmb,
+                            receiveInfo,
+                            defVals
+                        );
+                    }
                 }
                 else
                 {
-                    cycPatch.interpolate(sendInfo, cmb, receiveInfo);
+                    forAll(cycPatch.neighbPatch().AMIs(), i)
+                    {
+                        List<Type> sendInfoT(sendInfo);
+                        transform
+                        (
+                            cycPatch.neighbPatch().AMITransforms()[i],
+                            sendInfoT.size(),
+                            sendInfoT
+                        );
+                        cycPatch.neighbPatch().AMIs()[i].interpolateToTarget
+                        (
+                            sendInfoT,
+                            cmb,
+                            receiveInfo,
+                            defVals
+                        );
+                    }
                 }
             }
 
@@ -1135,9 +1211,9 @@ void CML::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
             // Merge into global storage
             forAll(receiveInfo, i)
             {
-                label meshFaceI = cycPatch.start()+i;
+                label meshFacei = cycPatch.start()+i;
 
-                Type& currentWallInfo = allFaceInfo_[meshFaceI];
+                Type& currentWallInfo = allFaceInfo_[meshFacei];
 
                 if
                 (
@@ -1147,7 +1223,7 @@ void CML::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
                 {
                     updateFace
                     (
-                        meshFaceI,
+                        meshFacei,
                         receiveInfo[i],
                         propagationTol_,
                         currentWallInfo
@@ -1234,8 +1310,7 @@ void CML::FaceCellWave<Type, TrackingData>::handleExplicitConnections()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Set up only. Use setFaceInfo and iterate() to do actual calculation.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::FaceCellWave<Type, TrackingData>::FaceCellWave
 (
     const polyMesh& mesh,
@@ -1251,10 +1326,8 @@ CML::FaceCellWave<Type, TrackingData>::FaceCellWave
     td_(td),
     changedFace_(mesh_.nFaces(), false),
     changedFaces_(mesh_.nFaces()),
-    nChangedFaces_(0),
     changedCell_(mesh_.nCells(), false),
     changedCells_(mesh_.nCells()),
-    nChangedCells_(0),
     hasCyclicPatches_(hasPatch<cyclicPolyPatch>()),
     hasCyclicAMIPatches_
     (
@@ -1282,9 +1355,7 @@ CML::FaceCellWave<Type, TrackingData>::FaceCellWave
 }
 
 
-// Iterate, propagating changedFacesInfo across mesh, until no change (or
-// maxIter reached). Initial cell values specified.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::FaceCellWave<Type, TrackingData>::FaceCellWave
 (
     const polyMesh& mesh,
@@ -1303,10 +1374,8 @@ CML::FaceCellWave<Type, TrackingData>::FaceCellWave
     td_(td),
     changedFace_(mesh_.nFaces(), false),
     changedFaces_(mesh_.nFaces()),
-    nChangedFaces_(0),
     changedCell_(mesh_.nCells(), false),
     changedCells_(mesh_.nCells()),
-    nChangedCells_(0),
     hasCyclicPatches_(hasPatch<cyclicPolyPatch>()),
     hasCyclicAMIPatches_
     (
@@ -1343,20 +1412,18 @@ CML::FaceCellWave<Type, TrackingData>::FaceCellWave
         FatalErrorInFunction
             << "Maximum number of iterations reached. Increase maxIter." << endl
             << "    maxIter:" << maxIter << endl
-            << "    nChangedCells:" << nChangedCells_ << endl
-            << "    nChangedFaces:" << nChangedFaces_ << endl
+            << "    nChangedCells:" << changedCells_.size() << endl
+            << "    nChangedFaces:" << changedFaces_.size() << endl
             << exit(FatalError);
     }
 }
 
 
-// Iterate, propagating changedFacesInfo across mesh, until no change (or
-// maxIter reached). Initial cell values specified.
 template<class Type, class TrackingData>
 CML::FaceCellWave<Type, TrackingData>::FaceCellWave
 (
     const polyMesh& mesh,
-    const List<labelPair>& explicitConnections,
+    const labelPairList& explicitConnections,
     const bool handleCyclicAMI,
     const labelList& changedFaces,
     const List<Type>& changedFacesInfo,
@@ -1373,10 +1440,8 @@ CML::FaceCellWave<Type, TrackingData>::FaceCellWave
     td_(td),
     changedFace_(mesh_.nFaces(), false),
     changedFaces_(mesh_.nFaces()),
-    nChangedFaces_(0),
     changedCell_(mesh_.nCells(), false),
     changedCells_(mesh_.nCells()),
-    nChangedCells_(0),
     hasCyclicPatches_(hasPatch<cyclicPolyPatch>()),
     hasCyclicAMIPatches_
     (
@@ -1414,8 +1479,8 @@ CML::FaceCellWave<Type, TrackingData>::FaceCellWave
         FatalErrorInFunction
             << "Maximum number of iterations reached. Increase maxIter." << endl
             << "    maxIter:" << maxIter << endl
-            << "    nChangedCells:" << nChangedCells_ << endl
-            << "    nChangedFaces:" << nChangedFaces_ << endl
+            << "    nChangedCells:" << changedCells_.size() << endl
+            << "    nChangedFaces:" << changedFaces_.size() << endl
             << exit(FatalError);
     }
 }
@@ -1423,61 +1488,55 @@ CML::FaceCellWave<Type, TrackingData>::FaceCellWave
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::getUnsetCells() const
 {
     return nUnvisitedCells_;
 }
 
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::getUnsetFaces() const
 {
     return nUnvisitedFaces_;
 }
 
 
-
-// Propagate cell to face
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::faceToCell()
 {
+    // Propagate face to cell
+
     const labelList& owner = mesh_.faceOwner();
     const labelList& neighbour = mesh_.faceNeighbour();
     label nInternalFaces = mesh_.nInternalFaces();
 
-    for
-    (
-        label changedFaceI = 0;
-        changedFaceI < nChangedFaces_;
-        changedFaceI++
-    )
+    forAll(changedFaces_, changedFacei)
     {
-        label faceI = changedFaces_[changedFaceI];
-        if (!changedFace_[faceI])
+        label facei = changedFaces_[changedFacei];
+        if (!changedFace_[facei])
         {
             FatalErrorInFunction
-                << "Face " << faceI
+                << "Face " << facei
                 << " not marked as having been changed"
                 << abort(FatalError);
         }
 
 
-        const Type& neighbourWallInfo = allFaceInfo_[faceI];
+        const Type& neighbourWallInfo = allFaceInfo_[facei];
 
         // Evaluate all connected cells
 
         // Owner
-        label cellI = owner[faceI];
-        Type& currentWallInfo = allCellInfo_[cellI];
+        label celli = owner[facei];
+        Type& currentWallInfo = allCellInfo_[celli];
 
         if (!currentWallInfo.equal(neighbourWallInfo, td_))
         {
             updateCell
             (
-                cellI,
-                faceI,
+                celli,
+                facei,
                 neighbourWallInfo,
                 propagationTol_,
                 currentWallInfo
@@ -1485,17 +1544,17 @@ CML::label CML::FaceCellWave<Type, TrackingData>::faceToCell()
         }
 
         // Neighbour.
-        if (faceI < nInternalFaces)
+        if (facei < nInternalFaces)
         {
-            cellI = neighbour[faceI];
-            Type& currentWallInfo2 = allCellInfo_[cellI];
+            celli = neighbour[facei];
+            Type& currentWallInfo2 = allCellInfo_[celli];
 
             if (!currentWallInfo2.equal(neighbourWallInfo, td_))
             {
                 updateCell
                 (
-                    cellI,
-                    faceI,
+                    celli,
+                    facei,
                     neighbourWallInfo,
                     propagationTol_,
                     currentWallInfo2
@@ -1504,19 +1563,19 @@ CML::label CML::FaceCellWave<Type, TrackingData>::faceToCell()
         }
 
         // Reset status of face
-        changedFace_[faceI] = false;
+        changedFace_[facei] = false;
     }
 
     // Handled all changed faces by now
-    nChangedFaces_ = 0;
+    changedFaces_.clear();
 
     if (debug)
     {
-        Pout<< " Changed cells            : " << nChangedCells_ << endl;
+        Pout<< " Changed cells            : " << changedCells_.size() << endl;
     }
 
-    // Sum nChangedCells over all procs
-    label totNChanged = nChangedCells_;
+    // Sum changedCells over all procs
+    label totNChanged = changedCells_.size();
 
     reduce(totNChanged, sumOp<label>());
 
@@ -1524,43 +1583,39 @@ CML::label CML::FaceCellWave<Type, TrackingData>::faceToCell()
 }
 
 
-// Propagate cell to face
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::cellToFace()
 {
+    // Propagate cell to face
+
     const cellList& cells = mesh_.cells();
 
-    for
-    (
-        label changedCellI = 0;
-        changedCellI < nChangedCells_;
-        changedCellI++
-    )
+    forAll(changedCells_, changedCelli)
     {
-        label cellI = changedCells_[changedCellI];
-        if (!changedCell_[cellI])
+        label celli = changedCells_[changedCelli];
+        if (!changedCell_[celli])
         {
             FatalErrorInFunction
-                << "Cell " << cellI << " not marked as having been changed"
+                << "Cell " << celli << " not marked as having been changed"
                 << abort(FatalError);
         }
 
-        const Type& neighbourWallInfo = allCellInfo_[cellI];
+        const Type& neighbourWallInfo = allCellInfo_[celli];
 
         // Evaluate all connected faces
 
-        const labelList& faceLabels = cells[cellI];
+        const labelList& faceLabels = cells[celli];
         forAll(faceLabels, faceLabelI)
         {
-            label faceI = faceLabels[faceLabelI];
-            Type& currentWallInfo = allFaceInfo_[faceI];
+            label facei = faceLabels[faceLabelI];
+            Type& currentWallInfo = allFaceInfo_[facei];
 
             if (!currentWallInfo.equal(neighbourWallInfo, td_))
             {
                 updateFace
                 (
-                    faceI,
-                    cellI,
+                    facei,
+                    celli,
                     neighbourWallInfo,
                     propagationTol_,
                     currentWallInfo
@@ -1569,11 +1624,11 @@ CML::label CML::FaceCellWave<Type, TrackingData>::cellToFace()
         }
 
         // Reset status of cell
-        changedCell_[cellI] = false;
+        changedCell_[celli] = false;
     }
 
     // Handled all changed cells by now
-    nChangedCells_ = 0;
+    changedCells_.clear();
 
 
     // Transfer across any explicitly provided internal connections
@@ -1598,11 +1653,11 @@ CML::label CML::FaceCellWave<Type, TrackingData>::cellToFace()
 
     if (debug)
     {
-        Pout<< " Changed faces            : " << nChangedFaces_ << endl;
+        Pout<< " Changed faces            : " << changedFaces_.size() << endl;
     }
 
     // Sum nChangedFaces over all procs
-    label totNChanged = nChangedFaces_;
+    label totNChanged = changedFaces_.size();
 
     reduce(totNChanged, sumOp<label>());
 
@@ -1611,7 +1666,7 @@ CML::label CML::FaceCellWave<Type, TrackingData>::cellToFace()
 
 
 // Iterate
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::label CML::FaceCellWave<Type, TrackingData>::iterate(const label maxIter)
 {
     if (hasCyclicPatches_)
@@ -1675,9 +1730,6 @@ CML::label CML::FaceCellWave<Type, TrackingData>::iterate(const label maxIter)
     return iter;
 }
 
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

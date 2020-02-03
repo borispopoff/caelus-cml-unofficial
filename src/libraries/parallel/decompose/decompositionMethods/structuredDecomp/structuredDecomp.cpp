@@ -148,23 +148,23 @@ CML::labelList CML::structuredDecomp::decompose
 
     // And extract
     bool haveWarned = false;
-    forAll(finalDecomp, cellI)
+    forAll(finalDecomp, celli)
     {
-        if (!cellData[cellI].valid(deltaCalc.data()))
+        if (!cellData[celli].valid(deltaCalc.data()))
         {
             if (!haveWarned)
             {
                 WarningInFunction
-                    << "Did not visit some cells, e.g. cell " << cellI
-                    << " at " << mesh.cellCentres()[cellI] << endl
+                    << "Did not visit some cells, e.g. cell " << celli
+                    << " at " << mesh.cellCentres()[celli] << endl
                     << "Assigning  these cells to domain 0." << endl;
                 haveWarned = true;
             }
-            finalDecomp[cellI] = 0;
+            finalDecomp[celli] = 0;
         }
         else
         {
-            finalDecomp[cellI] = cellData[cellI].data();
+            finalDecomp[celli] = cellData[celli].data();
         }
     }
 

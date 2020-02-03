@@ -49,10 +49,10 @@ bool surfaceMorpherCells::removeCellsWithAllVerticesAtTheBoundary()
     bool changed(false);
 
     label nRemoved(0);
-    forAll(cellFlags_, cellI)
-        if( cellFlags_[cellI] & BOUNDARY )
+    forAll(cellFlags_, celli)
+        if( cellFlags_[celli] & BOUNDARY )
         {
-            const cell& c = cells[cellI];
+            const cell& c = cells[celli];
             //- remove cells which have all their vertices at the boundary
             bool allBoundary(true);
 
@@ -69,7 +69,7 @@ bool surfaceMorpherCells::removeCellsWithAllVerticesAtTheBoundary()
             {
                 ++nRemoved;
                 changed = true;
-                removeCells[cellI] = true;
+                removeCells[celli] = true;
             }
 
             //- remove cells which are not topologically closed
@@ -100,7 +100,7 @@ bool surfaceMorpherCells::removeCellsWithAllVerticesAtTheBoundary()
                 {
                     ++nRemoved;
                     changed = true;
-                    removeCells[cellI] = true;
+                    removeCells[celli] = true;
                 }
 
         }
@@ -136,10 +136,10 @@ bool surfaceMorpherCells::morphBoundaryFaces()
 
     bool changed(false);
 
-    forAll(cells, cellI)
-        if( cellFlags_[cellI] & BOUNDARY )
+    forAll(cells, celli)
+        if( cellFlags_[celli] & BOUNDARY )
         {
-            const cell& c = cells[cellI];
+            const cell& c = cells[celli];
 
             DynList<label> bFaces;
 
@@ -148,7 +148,7 @@ bool surfaceMorpherCells::morphBoundaryFaces()
                     bFaces.append(c[fI]);
 
             # ifdef DEBUGMorph
-            Info << "Boundary faces in cell " << cellI
+            Info << "Boundary faces in cell " << celli
                 << " are " << bFaces << endl;
             forAll(bFaces, bfI)
                 Info << "Face " << bFaces[bfI] << " is "
@@ -195,13 +195,13 @@ bool surfaceMorpherCells::morphBoundaryFaces()
                         finished = false;
 
                         //- set CHANGED flag
-                        cellFlags_[cellI] |= CHANGED;
+                        cellFlags_[celli] |= CHANGED;
                     }
                 }
             }  while( !finished );
 
             newBoundaryFaces_.appendList(mf);
-            newBoundaryOwners_.append(cellI);
+            newBoundaryOwners_.append(celli);
             newBoundaryPatches_.append(0);
 
             # ifdef DEBUGMorph
@@ -212,7 +212,7 @@ bool surfaceMorpherCells::morphBoundaryFaces()
                 if( !mergedFaces[i] )
                 {
                     newBoundaryFaces_.appendList(faces[bFaces[i]]);
-                    newBoundaryOwners_.append(cellI);
+                    newBoundaryOwners_.append(celli);
                     newBoundaryPatches_.append(0);
 
                     # ifdef DEBUGMorph

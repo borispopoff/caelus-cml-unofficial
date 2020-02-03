@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("null", dimless, 1.0),
+        dimensionedScalar("null", dimless, 1),
         "zeroGradient"
     );
 

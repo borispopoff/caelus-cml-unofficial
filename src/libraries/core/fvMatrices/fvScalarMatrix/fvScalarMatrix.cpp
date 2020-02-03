@@ -108,12 +108,12 @@ CML::solverPerformance CML::fvMatrix<CML::scalar>::fvSolver::solve
     scalarField totalSource(fvMat_.source());
     fvMat_.addBoundarySource(totalSource, false);
 
-    // assign new solver controls
+    // Assign new solver controls
     solver_->read(solverControls);
 
     solverPerformance solverPerf = solver_->solve
     (
-        psi.internalField(),
+        psi.primitiveFieldRef(),
         totalSource
     );
 
@@ -158,9 +158,9 @@ CML::solverPerformance CML::fvMatrix<CML::scalar>::solve
         *this,
         boundaryCoeffs_,
         internalCoeffs_,
-        psi.boundaryField().interfaces(),
+        psi_.boundaryField().interfaces(),
         solverControls
-    )->solve(psi.internalField(), totalSource);
+    )->solve(psi.primitiveFieldRef(), totalSource);
 
     solverPerf.print();
 
@@ -184,15 +184,15 @@ CML::tmp<CML::scalarField> CML::fvMatrix<CML::scalar>::residual() const
     (
         lduMatrix::residual
         (
-            psi_.internalField(),
-            source_ - boundaryDiag*psi_.internalField(),
+            psi_.primitiveField(),
+            source_ - boundaryDiag*psi_.primitiveField(),
             boundaryCoeffs_,
             psi_.boundaryField().interfaces(),
             0
         )
     );
 
-    addBoundarySource(tres());
+    addBoundarySource(tres.ref());
 
     return tres;
 }
@@ -218,12 +218,12 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<CML::scalar>::H() const
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-    volScalarField& Hphi = tHphi();
+    volScalarField& Hphi = tHphi.ref();
 
-    Hphi.internalField() = (lduMatrix::H(psi_.internalField()) + source_);
-    addBoundarySource(Hphi.internalField());
+    Hphi.primitiveFieldRef() = (lduMatrix::H(psi_.primitiveField()) + source_);
+    addBoundarySource(Hphi.primitiveFieldRef());
 
-    Hphi.internalField() /= psi_.mesh().V();
+    Hphi.primitiveFieldRef() /= psi_.mesh().V();
     Hphi.correctBoundaryConditions();
 
     return tHphi;
@@ -250,12 +250,12 @@ CML::tmp<CML::volScalarField> CML::fvMatrix<CML::scalar>::H1() const
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-    volScalarField& H1_ = tH1();
+    volScalarField& H1_ = tH1.ref();
 
-    H1_.internalField() = lduMatrix::H1();
-    //addBoundarySource(Hphi.internalField());
+    H1_.primitiveFieldRef() = lduMatrix::H1();
+    // addBoundarySource(Hphi.primitiveField());
 
-    H1_.internalField() /= psi_.mesh().V();
+    H1_.primitiveFieldRef() /= psi_.mesh().V();
     H1_.correctBoundaryConditions();
 
     return tH1;

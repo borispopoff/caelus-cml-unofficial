@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -185,10 +185,10 @@ int main(int argc, char *argv[])
 
             const pointField& cellCentres = topo.cellCentres();
 
-            forAll(cellCentres, cellI)
+            forAll(cellCentres, celli)
             {
-                //point cc = b.blockShape().centre(b.points());
-                const point& cc = cellCentres[cellI];
+                // point cc = b.blockShape().centre(b.points());
+                const point& cc = cellCentres[celli];
 
                 str << "v " << cc.x() << ' ' << cc.y() << ' ' << cc.z() << nl;
             }
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
             runTime.constant(),
             runTime
         ),
-        xferCopy(blocks.points()),           // could we re-use space?
+        clone(blocks.points()),           // could we re-use space?
         blocks.cells(),
         blocks.patches(),
         blocks.patchNames(),
@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
     // Read in a list of dictionaries for the merge patch pairs
     if (meshDict.found("mergePatchPairs"))
     {
-        List<Pair<word> > mergePatchPairs
+        List<Pair<word>> mergePatchPairs
         (
             meshDict.lookup("mergePatchPairs")
         );
@@ -251,10 +251,10 @@ int main(int argc, char *argv[])
         HashTable<label> zoneMap(nZones);
 
         // Cells per zone.
-        List<DynamicList<label> > zoneCells(nZones);
+        List<DynamicList<label>> zoneCells(nZones);
 
         // Running cell counter
-        label cellI = 0;
+        label celli = 0;
 
         // Largest zone so far
         label freeZoneI = 0;
@@ -286,12 +286,12 @@ int main(int argc, char *argv[])
 
                 forAll(blockCells, i)
                 {
-                    zoneCells[zoneI].append(cellI++);
+                    zoneCells[zoneI].append(celli++);
                 }
             }
             else
             {
-                cellI += b.cells().size();
+                celli += b.cells().size();
             }
         }
 
@@ -336,9 +336,7 @@ int main(int argc, char *argv[])
     }
 
 
-    //
-    // write some information
-    //
+    // Write summary
     {
         const polyPatchList& patches = mesh.boundaryMesh();
 
@@ -355,11 +353,11 @@ int main(int argc, char *argv[])
             << "Patches" << nl
             << "----------------" << nl;
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& p = patches[patchI];
+            const polyPatch& p = patches[patchi];
 
-            Info<< "  " << "patch " << patchI
+            Info<< "  " << "patch " << patchi
                 << " (start: " << p.start()
                 << " size: " << p.size()
                 << ") name: " << p.name()

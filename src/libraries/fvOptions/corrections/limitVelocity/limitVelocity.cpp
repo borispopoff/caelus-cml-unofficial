@@ -45,7 +45,7 @@ CML::fv::limitVelocity::limitVelocity
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh),
+    cellSetOption(name, modelType, dict, mesh),
     UName_(coeffs_.lookupOrDefault<word>("U", "U")),
     max_(readScalar(coeffs_.lookup("max")))
 {
@@ -58,7 +58,7 @@ CML::fv::limitVelocity::limitVelocity
 
 bool CML::fv::limitVelocity::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         coeffs_.lookup("max") >> max_;
 
@@ -75,7 +75,7 @@ void CML::fv::limitVelocity::correct(volVectorField& U)
 {
     const scalar maxSqrU = sqr(max_);
 
-    vectorField& Uif = U.internalField();
+    vectorField& Uif = U.primitiveFieldRef();
 
     forAll(cells_, i)
     {
@@ -94,7 +94,7 @@ void CML::fv::limitVelocity::correct(volVectorField& U)
     {
         forAll(U.boundaryField(), patchi)
         {
-            fvPatchVectorField& Up = U.boundaryField()[patchi];
+            fvPatchVectorField& Up = U.boundaryFieldRef()[patchi];
 
             if (!Up.fixesValue())
             {

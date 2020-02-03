@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
- 
+
     Caelus is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -33,10 +33,13 @@ CML::fieldAverageItem::fieldAverageItem(Istream& is)
     meanFieldName_("unknown"),
     prime2Mean_(0),
     prime2MeanFieldName_("unknown"),
-    base_(ITER),
+    base_(baseType::iter),
     window_(-1.0)
 {
-    is.check("CML::fieldAverageItem::fieldAverageItem(CML::Istream&)");
+    is.check
+    (
+        "CML::fieldAverageItem::fieldAverageItem(CML::Istream&)"
+    );
 
     const dictionaryEntry entry(dictionary::null, is);
 
@@ -59,7 +62,11 @@ CML::fieldAverageItem::fieldAverageItem(Istream& is)
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-CML::Istream& CML::operator>>(Istream& is, fieldAverageItem& faItem)
+CML::Istream& CML::operator>>
+(
+    Istream& is,
+    fieldAverageItem& faItem
+)
 {
     is.check
     (
@@ -93,7 +100,11 @@ CML::Istream& CML::operator>>(Istream& is, fieldAverageItem& faItem)
 }
 
 
-CML::Ostream& CML::operator<<(Ostream& os, const fieldAverageItem& faItem)
+CML::Ostream& CML::operator<<
+(
+    Ostream& os,
+    const fieldAverageItem& faItem
+)
 {
     os.check
     (
@@ -102,21 +113,18 @@ CML::Ostream& CML::operator<<(Ostream& os, const fieldAverageItem& faItem)
     );
 
     os  << faItem.fieldName_ << nl << token::BEGIN_BLOCK << nl;
-    os.writeKeyword("mean") << faItem.mean_ << token::END_STATEMENT << nl;
-    os.writeKeyword("prime2Mean") << faItem.mean_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("base") << faItem.baseTypeNames_[faItem.base_]
-        << token::END_STATEMENT << nl;
+
+    writeEntry(os, "mean", faItem.mean_);
+    writeEntry(os, "prime2Mean", faItem.prime2Mean_);
+    writeEntry(os, "base", faItem.baseTypeNames_[faItem.base_]);
 
     if (faItem.window_ > 0)
     {
-        os.writeKeyword("window") << faItem.window_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "window", faItem.window_);
 
         if (faItem.windowName_ != "")
         {
-            os.writeKeyword("windowName") << faItem.windowName_
-                << token::END_STATEMENT << nl;
+            writeEntry(os, "windowName", faItem.windowName_);
         }
     }
 

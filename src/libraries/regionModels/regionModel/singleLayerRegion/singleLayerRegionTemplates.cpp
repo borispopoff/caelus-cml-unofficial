@@ -36,8 +36,8 @@ CML::regionModels::singleLayerRegion::mappedFieldAndInternalPatchTypes() const
 
     forAll(intCoupledPatchIDs_, i)
     {
-        const label patchI = intCoupledPatchIDs_[i];
-        bTypes[patchI] = mappedFixedInternalValueFvPatchField<Type>::typeName;
+        const label patchi = intCoupledPatchIDs_[i];
+        bTypes[patchi] = mappedFixedInternalValueFvPatchField<Type>::typeName;
     }
 
     return bTypes;
@@ -54,8 +54,8 @@ CML::regionModels::singleLayerRegion::mappedPushedFieldPatchTypes() const
 
     forAll(intCoupledPatchIDs_, i)
     {
-        const label patchI = intCoupledPatchIDs_[i];
-        bTypes[patchI] =
+        const label patchi = intCoupledPatchIDs_[i];
+        bTypes[patchi] =
             mappedFixedPushedInternalValueFvPatchField<Type>::typeName;
     }
 

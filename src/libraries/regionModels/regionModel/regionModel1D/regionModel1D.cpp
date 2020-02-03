@@ -49,7 +49,7 @@ void CML::regionModels::regionModel1D::constructMeshObjects()
                 IOobject::NO_WRITE
             ),
             regionMesh(),
-            dimensionedScalar("zero", dimArea, 0.0)
+            dimensionedScalar("zero", dimArea, 0)
         )
     );
 }
@@ -117,7 +117,7 @@ void CML::regionModels::regionModel1D::initialise()
     boundaryFaceCells_.setSize(localPyrolysisFacei);
 
     surfaceScalarField& nMagSf = nMagSfPtr_();
-    surfaceScalarField::GeometricBoundaryField nMagSfBf =  nMagSf.boundaryField();   
+    surfaceScalarField::Boundary nMagSfBf =  nMagSf.boundaryField();   
 
     localPyrolysisFacei = 0;
 
@@ -180,7 +180,7 @@ CML::tmp<CML::labelField> CML::regionModels::regionModel1D::moveMesh
 )
 {
     tmp<labelField> tcellMoveMap(new labelField(regionMesh().nCells(), 0));
-    labelField& cellMoveMap = tcellMoveMap();
+    labelField& cellMoveMap = tcellMoveMap.ref();
 
     if (!moveMesh_)
     {

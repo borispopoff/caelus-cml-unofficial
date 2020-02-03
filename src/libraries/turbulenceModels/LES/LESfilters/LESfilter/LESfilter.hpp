@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,8 +58,25 @@ class LESfilter
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        LESfilter(const LESfilter&);
+        LESfilter(const LESfilter&) = delete;
         void operator=(const LESfilter&);
+
+
+protected:
+
+    //- Temporary function to ensure the coupled boundary conditions of the
+    //  field are correct for filtering.
+    //
+    //  Following the rewrite of the turbulence models to use
+    //  GeometricField::InternalField for sources etc. delta() will return a
+    //  GeometricField::InternalField and filters will take a
+    //  tmp<GeometricField::InternalField> argument and handle the coupled BCs
+    //  appropriately
+    template<class GeoFieldType>
+    void correctBoundaryConditions(const tmp<GeoFieldType>& tgf) const
+    {
+        const_cast<GeoFieldType&>(tgf()).correctBoundaryConditions();
+    }
 
 
 public:

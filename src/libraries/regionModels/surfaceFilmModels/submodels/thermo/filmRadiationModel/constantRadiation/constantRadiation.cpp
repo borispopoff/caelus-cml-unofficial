@@ -112,7 +112,7 @@ tmp<volScalarField> constantRadiation::Shs()
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
+            dimensionedScalar("zero", dimMass/pow3(dimTime), 0)
         )
     );
 
@@ -120,7 +120,7 @@ tmp<volScalarField> constantRadiation::Shs()
 
     if ((time >= timeStart_) && (time <= timeStart_ + duration_))
     {
-        scalarField& Shs = tShs();
+        scalarField& Shs = tShs.ref();
         const scalarField& qr = qrConst_;
         const scalarField& alpha = filmModel_.alpha();
 

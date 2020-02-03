@@ -132,9 +132,9 @@ void voronoiMeshExtractor::createPolyMesh()
         if( faceLabel[edgeI] < 0 )
             continue;
 
-        const label faceI = faceLabel[edgeI];
+        const label facei = faceLabel[edgeI];
 
-        face& f = faces[faceI];
+        face& f = faces[facei];
         f.setSize(edgeTets.sizeOfRow(edgeI));
 
         //- fill the faces with the node labels
@@ -166,10 +166,10 @@ void voronoiMeshExtractor::createPolyMesh()
     # endif
 
     cells.setSize(nCells);
-    forAll(nFacesInCell, cellI)
+    forAll(nFacesInCell, celli)
     {
-        cells[cellI].setSize(nFacesInCell[cellI]);
-        nFacesInCell[cellI] = 0;
+        cells[celli].setSize(nFacesInCell[celli]);
+        nFacesInCell[celli] = 0;
     }
 
     # ifdef DEBUGVoronoi
@@ -181,15 +181,15 @@ void voronoiMeshExtractor::createPolyMesh()
         if( faceLabel[edgeI] < 0 )
             continue;
 
-        const label faceI = faceLabel[edgeI];
+        const label facei = faceLabel[edgeI];
         const edge& e = edges[edgeI];
         const label cOwn = cellLabel[e[0]];
         const label cNei = cellLabel[e[1]];
 
         if( cOwn >= 0 )
-            cells[cOwn][nFacesInCell[cOwn]++] = faceI;
+            cells[cOwn][nFacesInCell[cOwn]++] = facei;
         if( cNei >= 0 )
-            cells[cNei][nFacesInCell[cNei]++] = faceI;
+            cells[cNei][nFacesInCell[cNei]++] = facei;
     }
 
     # ifdef DEBUGVoronoi

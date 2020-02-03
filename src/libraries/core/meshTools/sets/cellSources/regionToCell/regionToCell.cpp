@@ -56,7 +56,7 @@ CML::topoSetSource::addToUsageTable CML::regionToCell::usage_
 
 void CML::regionToCell::combine(topoSet& set, const bool add) const
 {
-    label cellI = mesh_.findCell(insidePoint_);
+    label celli = mesh_.findCell(insidePoint_);
 
     // Load the subset of cells
     boolList blockedFace(mesh_.nFaces(), false);
@@ -71,42 +71,42 @@ void CML::regionToCell::combine(topoSet& set, const bool add) const
             inSubset[iter.key()] = true;
         }
 
-        if (cellI != -1 && inSubset[cellI])
+        if (celli != -1 && inSubset[celli])
         {
             Pout<< "Point " << insidePoint_ << " is inside cellSet "
                 << setName_ << endl
-                << "Collecting all cells connected to " << cellI
+                << "Collecting all cells connected to " << celli
                 << " and inside cellSet " << setName_ << endl;
         }
         else
         {
             Pout<< "Point " << insidePoint_ << " is outside cellSet "
                 << setName_ << endl
-                << "Collecting all cells connected to " << cellI
+                << "Collecting all cells connected to " << celli
                 << " and outside cellSet " << setName_ << endl;
         }
 
         // Get coupled cell status
         label nInt = mesh_.nInternalFaces();
         boolList neiSet(mesh_.nFaces()-nInt, false);
-        for (label faceI = nInt; faceI < mesh_.nFaces(); faceI++)
+        for (label facei = nInt; facei < mesh_.nFaces(); facei++)
         {
-             neiSet[faceI-nInt] = inSubset[mesh_.faceOwner()[faceI]];
+             neiSet[facei-nInt] = inSubset[mesh_.faceOwner()[facei]];
         }
         syncTools::swapBoundaryFaceList(mesh_, neiSet);
 
         // Find faces inbetween subSet and non-subset.
-        for (label faceI = 0; faceI < nInt; faceI++)
+        for (label facei = 0; facei < nInt; facei++)
         {
-            bool ownInSet = inSubset[mesh_.faceOwner()[faceI]];
-            bool neiInSet = inSubset[mesh_.faceNeighbour()[faceI]];
-            blockedFace[faceI] = (ownInSet != neiInSet);
+            bool ownInSet = inSubset[mesh_.faceOwner()[facei]];
+            bool neiInSet = inSubset[mesh_.faceNeighbour()[facei]];
+            blockedFace[facei] = (ownInSet != neiInSet);
         }
-        for (label faceI = nInt; faceI < mesh_.nFaces(); faceI++)
+        for (label facei = nInt; facei < mesh_.nFaces(); facei++)
         {
-            bool ownInSet = inSubset[mesh_.faceOwner()[faceI]];
-            bool neiInSet = neiSet[faceI-nInt];
-            blockedFace[faceI] = (ownInSet != neiInSet);
+            bool ownInSet = inSubset[mesh_.faceOwner()[facei]];
+            bool neiInSet = neiSet[facei-nInt];
+            blockedFace[facei] = (ownInSet != neiInSet);
         }
     }
 
@@ -116,10 +116,10 @@ void CML::regionToCell::combine(topoSet& set, const bool add) const
     // Get the region containing the insidePoint
     label regionI = -1;
 
-    if (cellI != -1)
+    if (celli != -1)
     {
         // On processor that has found cell.
-        regionI = regions[cellI];
+        regionI = regions[celli];
     }
 
     reduce(regionI, maxOp<label>());

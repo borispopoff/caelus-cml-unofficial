@@ -64,7 +64,7 @@ void CML::data::setSolverPerformance
 {
     dictionary& dict = const_cast<dictionary&>(solverPerformanceDict());
 
-    List<solverPerformance> perfs;
+     DynamicList<solverPerformance> perfs;
 
     if (prevTimeIndex_ != this->time().timeIndex())
     {
@@ -77,8 +77,8 @@ void CML::data::setSolverPerformance
         dict.readIfPresent(name, perfs);
     }
 
-    // append to list
-    perfs.setSize(perfs.size()+1, sp);
+    // Append to list
+    perfs.append(sp);
 
     dict.set(name, perfs);
 }

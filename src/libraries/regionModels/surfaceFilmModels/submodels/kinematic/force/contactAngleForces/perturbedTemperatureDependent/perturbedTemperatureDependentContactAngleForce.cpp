@@ -92,8 +92,8 @@ perturbedTemperatureDependentContactAngleForce::theta() const
         )
     );
 
-    volScalarField& theta = ttheta();
-    DimensionedField<scalar, volMesh>& thetai = theta.dimensionedInternalField();
+    volScalarField& theta = ttheta.ref();
+    DimensionedField<scalar, volMesh>& thetai = theta.ref();
 
     const volScalarField& T = filmModel_.T();
 
@@ -110,7 +110,7 @@ perturbedTemperatureDependentContactAngleForce::theta() const
     {
         if (!filmModel_.isCoupledPatch(patchi))
         {
-            fvPatchField<scalar>& thetaf = theta.boundaryField()[patchi];
+            fvPatchField<scalar>& thetaf = theta.boundaryFieldRef()[patchi];
 
             // Initialize with the function of temperature
             thetaf = thetaPtr_->value(T.boundaryField()[patchi]);

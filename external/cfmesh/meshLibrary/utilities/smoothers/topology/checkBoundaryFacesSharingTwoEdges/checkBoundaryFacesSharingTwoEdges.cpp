@@ -120,9 +120,9 @@ void checkBoundaryFacesSharingTwoEdges::findFacesAtBndEdge()
             # ifdef USE_OMP
             # pragma omp parallel for schedule(dynamic, 10)
             # endif
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
 
                 forAll(f, pI)
                 {
@@ -262,9 +262,9 @@ void checkBoundaryFacesSharingTwoEdges::removeExcessiveVertices()
     # ifdef USE_OMP
     # pragma omp parallel for if( nIntFaces > 100 ) schedule(dynamic, 10)
     # endif
-    for(label faceI=0;faceI<nIntFaces;++faceI)
+    for(label facei=0;facei<nIntFaces;++facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         DynList<label> newF;
         forAll(f, pI)
@@ -299,9 +299,9 @@ void checkBoundaryFacesSharingTwoEdges::removeExcessiveVertices()
         # pragma omp parallel for if( end - start > 100 ) \
         schedule(dynamic, 10)
         # endif
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             DynList<label> newF;
             forAll(f, pI)
@@ -335,9 +335,9 @@ void checkBoundaryFacesSharingTwoEdges::removeExcessiveVertices()
         # pragma omp parallel for if( patch.patchSize() > 100 ) \
         schedule(dynamic, 10)
         # endif
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             DynList<label> newF;
             forAll(f, pI)
@@ -473,10 +473,10 @@ bool checkBoundaryFacesSharingTwoEdges::improveTopology()
         //- find cells which will be decomposed
         boolList decomposeCell(mesh_.cells().size(), false);
         const labelList& owner = mesh_.owner();
-        forAll(decomposeFace, faceI)
+        forAll(decomposeFace, facei)
         {
-            if( decomposeFace[faceI] )
-                decomposeCell[owner[faceI]];
+            if( decomposeFace[facei] )
+                decomposeCell[owner[facei]];
         }
 
         //- decompose marked faces

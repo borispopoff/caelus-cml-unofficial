@@ -58,8 +58,8 @@ class cellLimitedBlockGrad
     public fv::blockGradScheme<Type>
 {
 
-    tmp<fv::blockGradScheme<Type> > basicBlockGradScheme_;
-    tmp<fv::gradScheme<Type> >      basicGradScheme_;
+    tmp<fv::blockGradScheme<Type>> basicBlockGradScheme_;
+    tmp<fv::gradScheme<Type>>      basicGradScheme_;
 
     //- Limiter coefficient
     const scalar k_;
@@ -92,7 +92,7 @@ public:
         // Advance token on stream as we don't need the first
         const word schemeName(schemeData);
 
-        basicGradScheme_ = tmp<fv::gradScheme<Type> >
+        basicGradScheme_ = tmp<fv::gradScheme<Type>>
             (
                fv::gradScheme<Type>::New(mesh, schemeData)
             );
@@ -126,7 +126,7 @@ public:
 
     //- Return the BlockLduSystem corresponding to the implicit cell
     //  limited grad discretization.  For block coupled systems.
-    tmp<BlockLduSystem<vector, typename outerProduct<vector, Type>::type> >
+    tmp<BlockLduSystem<vector, typename outerProduct<vector, Type>::type>>
     fvmGrad
     (
         const GeometricField<Type, fvPatchField, volMesh>&

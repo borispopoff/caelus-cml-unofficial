@@ -1,7 +1,7 @@
 {
     if (correctPhi)
     {
-        rAU() = 1.0/UEqn.A();
+        rAU.ref() = 1.0/UEqn.A();
     }
     else
     {

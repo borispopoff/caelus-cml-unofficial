@@ -53,7 +53,7 @@ class rawSurfaceWriter
         (
             Ostream&,
             const pointField&,
-            const label pointI
+            const label pointi
         );
 
         static inline void writeLocation
@@ -61,7 +61,7 @@ class rawSurfaceWriter
             Ostream&,
             const pointField&,
             const faceList&,
-            const label faceI
+            const label facei
         );
 
         template<class Type>

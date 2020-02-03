@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -77,10 +77,12 @@ CML::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
      || mag(accommodationCoeff_) > 2.0
     )
     {
-        FatalIOErrorInFunction(dict)
-            << "unphysical accommodationCoeff specified"
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "unphysical accommodationCoeff specified"
             << "(0 < accommodationCoeff <= 1)" << endl
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     if (dict.found("value"))
@@ -187,16 +189,13 @@ void CML::smoluchowskiJumpTFvPatchScalarField::updateCoeffs()
 }
 
 
-// Write
 void CML::smoluchowskiJumpTFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
-    os.writeKeyword("accommodationCoeff")
-        << accommodationCoeff_ << token::END_STATEMENT << nl;
-    Twall_.writeEntry("Twall", os);
-    os.writeKeyword("gamma")
-        << gamma_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "accommodationCoeff", accommodationCoeff_);
+    writeEntry(os, "Twall", Twall_);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "value", *this);
 }
 
 

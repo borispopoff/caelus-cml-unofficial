@@ -44,7 +44,7 @@ namespace CML
     typedef UList<bool> boolUList;
 
     typedef List<bool> boolList;
-    typedef List<List<bool> > boolListList;
+    typedef List<List<bool>> boolListList;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

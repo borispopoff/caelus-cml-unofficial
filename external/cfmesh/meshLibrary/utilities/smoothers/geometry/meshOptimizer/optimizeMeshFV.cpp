@@ -84,10 +84,10 @@ void meshOptimizer::untangleMeshFV
 
     boolList boundaryVertex(tetPolyMesh.points().size(), false);
     const labelList& neighbour = tetPolyMesh.neighbour();
-    forAll(neighbour, faceI)
-        if( neighbour[faceI] == -1 )
+    forAll(neighbour, facei)
+        if( neighbour[facei] == -1 )
         {
-            const face& f = tetPolyMesh.faces()[faceI];
+            const face& f = tetPolyMesh.faces()[facei];
 
             forAll(f, pI)
                 boundaryVertex[f[pI]] = true;

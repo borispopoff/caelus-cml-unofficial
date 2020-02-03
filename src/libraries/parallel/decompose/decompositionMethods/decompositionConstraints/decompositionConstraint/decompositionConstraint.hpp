@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2015 OpenFOAM Foundation
+Copyright (C) 2015-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -62,10 +62,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        decompositionConstraint(const decompositionConstraint&);
+        decompositionConstraint(const decompositionConstraint&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const decompositionConstraint&);
+        void operator=(const decompositionConstraint&) = delete;
 
 
 public:

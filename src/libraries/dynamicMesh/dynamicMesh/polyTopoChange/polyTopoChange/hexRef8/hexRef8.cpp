@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -244,11 +244,11 @@ CML::label CML::hexRef8::addInternalFace
 
         ////- Inflate-from-point:
         //// Check if point has any internal faces we can use.
-        //label masterPointi = -1;
+        // label masterPointi = -1;
         //
-        //const labelList& pFaces = mesh_.pointFaces()[meshPointi];
+        // const labelList& pFaces = mesh_.pointFaces()[meshPointi];
         //
-        //forAll(pFaces, i)
+        // forAll(pFaces, i)
         //{
         //    if (mesh_.isInternalFace(pFaces[i]))
         //    {
@@ -259,7 +259,7 @@ CML::label CML::hexRef8::addInternalFace
         //    }
         //}
         //
-        //return meshMod.setAction
+        // return meshMod.setAction
         //(
         //    polyAddFace
         //    (
@@ -4629,7 +4629,7 @@ void CML::hexRef8::checkMesh() const
             {
                 // Check how many faces between owner and neighbour. Should
                 // be only one.
-                HashTable<label, labelPair, labelPair::Hash<> >
+                HashTable<label, labelPair, labelPair::Hash<>>
                     cellToFace(2*pp.size());
 
                 label facei = pp.start();
@@ -5027,7 +5027,7 @@ void CML::hexRef8::checkRefinementLevels
     //        false                   // no separation
     //    );
     //
-    //    //OFstream str(mesh_.time().path()/"hangingPoints.obj");
+    //    // OFstream str(mesh_.time().path()/"hangingPoints.obj");
     //
     //    label nHanging = 0;
     //
@@ -5040,7 +5040,7 @@ void CML::hexRef8::checkRefinementLevels
     //            Pout<< "Hanging boundary point " << pointi
     //                << " at " << mesh_.points()[pointi]
     //                << endl;
-    //            //meshTools::writeOBJ(str, mesh_.points()[pointi]);
+    //            // meshTools::writeOBJ(str, mesh_.points()[pointi]);
     //        }
     //    }
     //
@@ -5090,7 +5090,7 @@ const CML::cellShapeList& CML::hexRef8::cellShapes() const
 
                 if (haveQuads)
                 {
-                    faceList faces(quads.xfer());
+                    faceList faces(move(quads));
                     cellShapesPtr_()[celli] = degenerateMatcher::match(faces);
                     nSplitHex++;
                 }

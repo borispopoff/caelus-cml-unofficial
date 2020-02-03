@@ -99,7 +99,7 @@ public:
         inline SquareMatrix(Istream&);
 
         //- Clone
-        inline autoPtr<SquareMatrix<Type> > clone() const;
+        inline autoPtr<SquareMatrix<Type>> clone() const;
 
 
     // Member Functions

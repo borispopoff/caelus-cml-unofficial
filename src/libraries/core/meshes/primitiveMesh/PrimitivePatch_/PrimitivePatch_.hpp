@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -71,26 +71,26 @@ TemplateName(PrimitivePatch);
                            Class PrimitivePatch Declaration
 \*---------------------------------------------------------------------------*/
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType=point
->
+template<class FaceList, class PointField>
 class PrimitivePatch
 :
     public PrimitivePatchName,
-    public FaceList<Face>
+    public FaceList
 {
 
 public:
 
     // Public typedefs
 
-        typedef Face FaceType;
-        typedef FaceList<Face> FaceListType;
+        typedef FaceList FaceListType;
+
+        typedef typename std::remove_reference<FaceList>::type::value_type
+            FaceType;
+
         typedef PointField PointFieldType;
+
+        typedef typename std::remove_reference<PointField>::type::value_type
+            PointType;
 
 
     // Public data types
@@ -140,13 +140,13 @@ private:
         mutable labelListList* pointFacesPtr_;
 
         //- Faces addressing into local point list
-        mutable List<Face>* localFacesPtr_;
+        mutable List<FaceType>* localFacesPtr_;
 
         //- Labels of mesh points
         mutable labelList* meshPointsPtr_;
 
         //- Mesh point map.  Given the global point index find its
-        //location in the patch
+        // location in the patch
         mutable Map<label>* meshPointMapPtr_;
 
         //- Outside edge loops
@@ -217,9 +217,9 @@ private:
         //  Used to determine if surface multiply connected through point.
         void visitPointRegion
         (
-            const label pointI,
+            const label pointi,
             const labelList& pFaces,
-            const label startFaceI,
+            const label startFacei,
             const label startEdgeI,
             boolList& pFacesHad
         ) const;
@@ -232,24 +232,43 @@ public:
         //- Construct from components
         PrimitivePatch
         (
-            const FaceList<Face>& faces,
+            const FaceList& faces,
             const Field<PointType>& points
+        );
+
+        //- Move constructor from components
+        PrimitivePatch
+        (
+            FaceList&& faces,
+            Field<PointType>&& points
+        );
+
+        //- Move constructor from components
+        PrimitivePatch
+        (
+            FaceList&& faces,
+            List<PointType>&& points
         );
 
         //- Construct from components, reuse storage
         PrimitivePatch
         (
-            FaceList<Face>& faces,
+            FaceList& faces,
             Field<PointType>& points,
-            const bool reUse
+            const bool reuse
         );
 
-        //- Construct as copy
+        //- Copy constructor
         PrimitivePatch
         (
-            const PrimitivePatch<Face, FaceList, PointField, PointType>&
+            const PrimitivePatch<FaceList, PointField>&
         );
 
+        //- Move constructor
+        PrimitivePatch
+        (
+            PrimitivePatch<FaceList, PointField>&&
+        );
 
     //- Destructor
     virtual ~PrimitivePatch();
@@ -265,18 +284,16 @@ public:
 
     // Member Functions
 
-    // Access
+        // Access
 
-        //- Return reference to global points
-        const Field<PointType>& points() const
-        {
-            return points_;
-        }
+            //- Return reference to global points
+            const Field<PointType>& points() const
+            {
+                return points_;
+            }
 
 
-    // Access functions for demand driven data
-
-        // Topological data; no mesh required.
+        // Access functions for Topological data; no mesh required.
 
             //- Return number of points supporting patch faces
             label nPoints() const
@@ -322,7 +339,7 @@ public:
             const labelListList& pointFaces() const;
 
             //- Return patch faces addressing into local point list
-            const List<Face>& localFaces() const;
+            const List<FaceType>& localFaces() const;
 
 
         // Addressing into mesh
@@ -380,23 +397,27 @@ public:
         // Other patch operations
 
             //- Project vertices of patch onto another patch
-            template <class ToPatch>
+            template<class ToPatch>
             List<objectHit> projectPoints
             (
                 const ToPatch& targetPatch,
                 const Field<PointType>& projectionDirection,
-                const intersection::algorithm = intersection::FULL_RAY,
-                const intersection::direction = intersection::VECTOR
+                const intersection::algorithm =
+                    intersection::algorithm::fullRay,
+                const intersection::direction =
+                    intersection::direction::vector
             ) const;
 
             //- Project vertices of patch onto another patch
-            template <class ToPatch>
+            template<class ToPatch>
             List<objectHit> projectFaceCentres
             (
                 const ToPatch& targetPatch,
                 const Field<PointType>& projectionDirection,
-                const intersection::algorithm = intersection::FULL_RAY,
-                const intersection::direction = intersection::VECTOR
+                const intersection::algorithm =
+                    intersection::algorithm::fullRay,
+                const intersection::direction =
+                    intersection::direction::vector
             ) const;
 
             //- Return list of closed loops of boundary vertices.
@@ -405,49 +426,55 @@ public:
             const labelListList& edgeLoops() const;
 
 
-    // Check
+        // Check
 
-        //- Calculate surface type formed by patch.
-        //  Types:
-        //  - all edges have two neighbours (manifold)
-        //  - some edges have more than two neighbours (illegal)
-        //  - other (open)
-        surfaceTopo surfaceType() const;
+            //- Calculate surface type formed by patch.
+            //  Types:
+            //  - all edges have two neighbours (manifold)
+            //  - some edges have more than two neighbours (illegal)
+            //  - other (open)
+            surfaceTopo surfaceType() const;
 
-        //- Check surface formed by patch for manifoldness (see above).
-        //  Return true if any incorrect edges are found.
-        //  Insert vertices of incorrect edges into set.
-        bool checkTopology
-        (
-            const bool report = false,
-            labelHashSet* setPtr = nullptr
-        ) const;
+            //- Check surface formed by patch for manifoldness (see above).
+            //  Return true if any incorrect edges are found.
+            //  Insert vertices of incorrect edges into set.
+            bool checkTopology
+            (
+                const bool report = false,
+                labelHashSet* setPtr = nullptr
+            ) const;
 
-        //- Checks primitivePatch for faces sharing point but not edge.
-        //  This denotes a surface that is pinched at a single point
-        //  (test for pinched at single edge is already in PrimitivePatch)
-        //  Returns true if this situation found and puts conflicting
-        //  (mesh)point in set. Based on all the checking routines in
-        //  primitiveMesh.
-        bool checkPointManifold
-        (
-            const bool report = false,
-            labelHashSet* setPtr = nullptr
-        ) const;
+            //- Checks primitivePatch for faces sharing point but not edge.
+            //  This denotes a surface that is pinched at a single point
+            //  (test for pinched at single edge is already in PrimitivePatch)
+            //  Returns true if this situation found and puts conflicting
+            //  (mesh)point in set. Based on all the checking routines in
+            //  primitiveMesh.
+            bool checkPointManifold
+            (
+                const bool report = false,
+                labelHashSet* setPtr = nullptr
+            ) const;
 
 
-    // Edit
+        // Edit
 
-        //- Correct patch after moving points
-        virtual void movePoints(const Field<PointType>&);
+            //- Correct patch after moving points
+            virtual void movePoints(const Field<PointType>&);
 
 
     // Member operators
 
-        //- Assignment
+        //- Assignment operator
         void operator=
         (
-            const PrimitivePatch<Face, FaceList, PointField, PointType>&
+            const PrimitivePatch<FaceList, PointField>&
+        );
+
+        //- Move assignment operator
+        void operator=
+        (
+            PrimitivePatch<FaceList, PointField>&&
         );
 };
 
@@ -459,21 +486,14 @@ public:
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-PrimitivePatch
+template<class FaceList, class PointField>
+CML::PrimitivePatch<FaceList, PointField>::PrimitivePatch
 (
-    const FaceList<Face>& faces,
+    const FaceList& faces,
     const Field<PointType>& points
 )
 :
-    FaceList<Face>(faces),
+    FaceList(faces),
     points_(points),
     edgesPtr_(nullptr),
     nInternalEdges_(-1),
@@ -495,23 +515,15 @@ PrimitivePatch
 {}
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-PrimitivePatch
+template<class FaceList, class PointField>
+CML::PrimitivePatch<FaceList, PointField>::PrimitivePatch
 (
-    FaceList<Face>& faces,
-    Field<PointType>& points,
-    const bool reUse
+    FaceList&& faces,
+    Field<PointType>&& points
 )
 :
-    FaceList<Face>(faces, reUse),
-    points_(points, reUse),
+    FaceList(move(faces)),
+    points_(move(points)),
     edgesPtr_(nullptr),
     nInternalEdges_(-1),
     boundaryPointsPtr_(nullptr),
@@ -532,22 +544,103 @@ PrimitivePatch
 {}
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-PrimitivePatch
+template<class FaceList, class PointField>
+CML::PrimitivePatch<FaceList, PointField>::PrimitivePatch
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& pp
+    FaceList&& faces,
+    List<PointType>&& points
+)
+:
+    FaceList(move(faces)),
+    points_(move(points)),
+    edgesPtr_(nullptr),
+    nInternalEdges_(-1),
+    boundaryPointsPtr_(nullptr),
+    faceFacesPtr_(nullptr),
+    edgeFacesPtr_(nullptr),
+    faceEdgesPtr_(nullptr),
+    pointEdgesPtr_(nullptr),
+    pointFacesPtr_(nullptr),
+    localFacesPtr_(nullptr),
+    meshPointsPtr_(nullptr),
+    meshPointMapPtr_(nullptr),
+    edgeLoopsPtr_(nullptr),
+    localPointsPtr_(nullptr),
+    localPointOrderPtr_(nullptr),
+    faceCentresPtr_(nullptr),
+    faceNormalsPtr_(nullptr),
+    pointNormalsPtr_(nullptr)
+{}
+
+
+template<class FaceList, class PointField>
+CML::PrimitivePatch<FaceList, PointField>::PrimitivePatch
+(
+    FaceList& faces,
+    Field<PointType>& points,
+    const bool reuse
+)
+:
+    FaceList(faces, reuse),
+    points_(points, reuse),
+    edgesPtr_(nullptr),
+    nInternalEdges_(-1),
+    boundaryPointsPtr_(nullptr),
+    faceFacesPtr_(nullptr),
+    edgeFacesPtr_(nullptr),
+    faceEdgesPtr_(nullptr),
+    pointEdgesPtr_(nullptr),
+    pointFacesPtr_(nullptr),
+    localFacesPtr_(nullptr),
+    meshPointsPtr_(nullptr),
+    meshPointMapPtr_(nullptr),
+    edgeLoopsPtr_(nullptr),
+    localPointsPtr_(nullptr),
+    localPointOrderPtr_(nullptr),
+    faceCentresPtr_(nullptr),
+    faceNormalsPtr_(nullptr),
+    pointNormalsPtr_(nullptr)
+{}
+
+
+template<class FaceList, class PointField>
+CML::PrimitivePatch<FaceList, PointField>::PrimitivePatch
+(
+    const PrimitivePatch<FaceList, PointField>& pp
 )
 :
     PrimitivePatchName(),
-    FaceList<Face>(pp),
+    FaceList(pp),
     points_(pp.points_),
+    edgesPtr_(nullptr),
+    nInternalEdges_(-1),
+    boundaryPointsPtr_(nullptr),
+    faceFacesPtr_(nullptr),
+    edgeFacesPtr_(nullptr),
+    faceEdgesPtr_(nullptr),
+    pointEdgesPtr_(nullptr),
+    pointFacesPtr_(nullptr),
+    localFacesPtr_(nullptr),
+    meshPointsPtr_(nullptr),
+    meshPointMapPtr_(nullptr),
+    edgeLoopsPtr_(nullptr),
+    localPointsPtr_(nullptr),
+    localPointOrderPtr_(nullptr),
+    faceCentresPtr_(nullptr),
+    faceNormalsPtr_(nullptr),
+    pointNormalsPtr_(nullptr)
+{}
+
+
+template<class FaceList, class PointField>
+CML::PrimitivePatch<FaceList, PointField>::PrimitivePatch
+(
+    PrimitivePatch<FaceList, PointField>&& pp
+)
+:
+    PrimitivePatchName(),
+    FaceList(move(pp)),
+    points_(move(pp.points_)),
     edgesPtr_(nullptr),
     nInternalEdges_(-1),
     boundaryPointsPtr_(nullptr),
@@ -570,15 +663,8 @@ PrimitivePatch
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-~PrimitivePatch()
+template<class FaceList, class PointField>
+CML::PrimitivePatch<FaceList, PointField>::~PrimitivePatch()
 {
     clearOut();
 }
@@ -586,23 +672,15 @@ CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-movePoints
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::movePoints
 (
     const Field<PointType>&
 )
 {
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
+        Pout<< "PrimitivePatch<FaceList, PointField>::"
             << "movePoints() : "
             << "recalculating PrimitivePatch geometry following mesh motion"
             << endl;
@@ -612,16 +690,8 @@ movePoints
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-const CML::edgeList&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-edges() const
+template<class FaceList, class PointField>
+const CML::edgeList& CML::PrimitivePatch<FaceList, PointField>::edges() const
 {
     if (!edgesPtr_)
     {
@@ -632,16 +702,8 @@ edges() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-CML::label
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-nInternalEdges() const
+template<class FaceList, class PointField>
+CML::label CML::PrimitivePatch<FaceList, PointField>::nInternalEdges() const
 {
     if (!edgesPtr_)
     {
@@ -652,16 +714,9 @@ nInternalEdges() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 const CML::labelList&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-boundaryPoints() const
+CML::PrimitivePatch<FaceList, PointField>::boundaryPoints() const
 {
     if (!boundaryPointsPtr_)
     {
@@ -672,15 +727,9 @@ boundaryPoints() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 const CML::labelListList&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
+CML::PrimitivePatch<FaceList, PointField>::
 faceFaces() const
 {
     if (!faceFacesPtr_)
@@ -692,16 +741,9 @@ faceFaces() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 const CML::labelListList&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-edgeFaces() const
+CML::PrimitivePatch<FaceList, PointField>::edgeFaces() const
 {
     if (!edgeFacesPtr_)
     {
@@ -712,16 +754,9 @@ edgeFaces() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 const CML::labelListList&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-faceEdges() const
+CML::PrimitivePatch<FaceList, PointField>::faceEdges() const
 {
     if (!faceEdgesPtr_)
     {
@@ -732,16 +767,9 @@ faceEdges() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 const CML::labelListList&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-pointEdges() const
+CML::PrimitivePatch<FaceList, PointField>::pointEdges() const
 {
     if (!pointEdgesPtr_)
     {
@@ -752,16 +780,9 @@ pointEdges() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 const CML::labelListList&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-pointFaces() const
+CML::PrimitivePatch<FaceList, PointField>::pointFaces() const
 {
     if (!pointFacesPtr_)
     {
@@ -772,16 +793,12 @@ pointFaces() const
 }
 
 
-template
+template<class FaceList, class PointField>
+const CML::List
 <
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-const CML::List<Face>&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-localFaces() const
+    typename CML::PrimitivePatch<FaceList, PointField>::FaceType
+>&
+CML::PrimitivePatch<FaceList, PointField>::localFaces() const
 {
     if (!localFacesPtr_)
     {
@@ -792,16 +809,9 @@ localFaces() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 const CML::labelList&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-meshPoints() const
+CML::PrimitivePatch<FaceList, PointField>::meshPoints() const
 {
     if (!meshPointsPtr_)
     {
@@ -812,16 +822,9 @@ meshPoints() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 const CML::Map<CML::label>&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-meshPointMap() const
+CML::PrimitivePatch<FaceList, PointField>::meshPointMap() const
 {
     if (!meshPointMapPtr_)
     {
@@ -832,16 +835,12 @@ meshPointMap() const
 }
 
 
-template
+template<class FaceList, class PointField>
+const CML::Field
 <
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-const CML::Field<PointType>&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-localPoints() const
+    typename CML::PrimitivePatch<FaceList, PointField>::PointType
+>&
+CML::PrimitivePatch<FaceList, PointField>::localPoints() const
 {
     if (!localPointsPtr_)
     {
@@ -852,16 +851,9 @@ localPoints() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 const CML::labelList&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-localPointOrder() const
+CML::PrimitivePatch<FaceList, PointField>::localPointOrder() const
 {
     if (!localPointOrderPtr_)
     {
@@ -872,16 +864,8 @@ localPointOrder() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-CML::label
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-whichPoint
+template<class FaceList, class PointField>
+CML::label CML::PrimitivePatch<FaceList, PointField>::whichPoint
 (
     const label gp
 ) const
@@ -900,16 +884,12 @@ whichPoint
 }
 
 
-template
+template<class FaceList, class PointField>
+const CML::Field
 <
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-const CML::Field<PointType>&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-faceCentres() const
+    typename CML::PrimitivePatch<FaceList, PointField>::PointType
+>&
+CML::PrimitivePatch<FaceList, PointField>::faceCentres() const
 {
     if (!faceCentresPtr_)
     {
@@ -920,16 +900,12 @@ faceCentres() const
 }
 
 
-template
+template<class FaceList, class PointField>
+const CML::Field
 <
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-const CML::Field<PointType>&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-faceNormals() const
+    typename CML::PrimitivePatch<FaceList, PointField>::PointType
+>&
+CML::PrimitivePatch<FaceList, PointField>::faceNormals() const
 {
     if (!faceNormalsPtr_)
     {
@@ -940,16 +916,12 @@ faceNormals() const
 }
 
 
-template
+template<class FaceList, class PointField>
+const CML::Field
 <
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-const CML::Field<PointType>&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-pointNormals() const
+    typename CML::PrimitivePatch<FaceList, PointField>::PointType
+>&
+CML::PrimitivePatch<FaceList, PointField>::pointNormals() const
 {
     if (!pointNormalsPtr_)
     {
@@ -962,44 +934,42 @@ pointNormals() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-operator=
+CML::PrimitivePatch<FaceList, PointField>::operator=
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& pp
+    const PrimitivePatch<FaceList, PointField>& pp
 )
 {
     clearOut();
 
-    FaceList<Face>::operator=(pp);
+    FaceList::shallowCopy(pp);
+}
+
+
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::operator=
+(
+    PrimitivePatch<FaceList, PointField>&& pp
+)
+{
+    clearOut();
+
+    FaceList::operator=(move(pp));
+
+    // This is only valid if PointField is not a reference
+    // points_ = move(pp.points_);
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcAddressing() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcAddressing() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcAddressing() : calculating patch addressing"
-            << endl;
+        InfoInFunction << "calculating patch addressing" << endl;
     }
 
     if (edgesPtr_ || faceFacesPtr_ || edgeFacesPtr_ || faceEdgesPtr_)
@@ -1012,16 +982,16 @@ calcAddressing() const
     }
 
     // get reference to localFaces
-    const List<Face>& locFcs = localFaces();
+    const List<FaceType>& locFcs = localFaces();
 
     // get reference to pointFaces
     const labelListList& pf = pointFaces();
 
     // Guess the max number of edges and neighbours for a face
     label maxEdges = 0;
-    forAll(locFcs, faceI)
+    forAll(locFcs, facei)
     {
-        maxEdges += locFcs[faceI].size();
+        maxEdges += locFcs[facei].size();
     }
 
     // create the lists for the various results. (resized on completion)
@@ -1033,7 +1003,7 @@ calcAddressing() const
 
     // faceFaces created using a dynamic list.  Cannot guess size because
     // of multiple connections
-    List<DynamicList<label> > ff(locFcs.size());
+    List<DynamicList<label>> ff(locFcs.size());
 
     faceEdgesPtr_ = new labelListList(locFcs.size());
     labelListList& faceEdges = *faceEdgesPtr_;
@@ -1044,12 +1014,12 @@ calcAddressing() const
     // initialise the lists of subshapes for each face to avoid duplication
     edgeListList faceIntoEdges(locFcs.size());
 
-    forAll(locFcs, faceI)
+    forAll(locFcs, facei)
     {
-        faceIntoEdges[faceI] = locFcs[faceI].edges();
+        faceIntoEdges[facei] = locFcs[facei].edges();
 
-        labelList& curFaceEdges = faceEdges[faceI];
-        curFaceEdges.setSize(faceIntoEdges[faceI].size());
+        labelList& curFaceEdges = faceEdges[facei];
+        curFaceEdges.setSize(faceIntoEdges[facei].size());
 
         forAll(curFaceEdges, faceEdgeI)
         {
@@ -1069,15 +1039,15 @@ calcAddressing() const
     // in face (i.e. curEdges[0] is edge between f[0] and f[1])
 
     // For all local faces ...
-    forAll(locFcs, faceI)
+    forAll(locFcs, facei)
     {
         // Get reference to vertices of current face and corresponding edges.
-        const Face& curF = locFcs[faceI];
-        const edgeList& curEdges = faceIntoEdges[faceI];
+        const FaceType& curF = locFcs[facei];
+        const edgeList& curEdges = faceIntoEdges[facei];
 
         // Record the neighbour face.  Multiple connectivity allowed
-        List<DynamicList<label> > neiFaces(curF.size());
-        List<DynamicList<label> > edgeOfNeiFace(curF.size());
+        List<DynamicList<label>> neiFaces(curF.size());
+        List<DynamicList<label>> edgeOfNeiFace(curF.size());
 
         label nNeighbours = 0;
 
@@ -1085,7 +1055,7 @@ calcAddressing() const
         forAll(curEdges, edgeI)
         {
             // If the edge is already detected, skip
-            if (faceEdges[faceI][edgeI] >= 0) continue;
+            if (faceEdges[facei][edgeI] >= 0) continue;
 
             found = false;
 
@@ -1096,13 +1066,13 @@ calcAddressing() const
 
             const labelList& nbrFaces = pf[e.start()];
 
-            forAll(nbrFaces, nbrFaceI)
+            forAll(nbrFaces, nbrFacei)
             {
                 // set reference to the current neighbour
-                label curNei = nbrFaces[nbrFaceI];
+                label curNei = nbrFaces[nbrFacei];
 
                 // Reject neighbours with the lower label
-                if (curNei > faceI)
+                if (curNei > facei)
                 {
                     // get the reference to subshapes of the neighbour
                     const edgeList& searchEdges = faceIntoEdges[curNei];
@@ -1118,8 +1088,8 @@ calcAddressing() const
                             edgeOfNeiFace[edgeI].append(neiEdgeI);
 
                             // Record faceFaces both ways
-                            ff[faceI].append(curNei);
-                            ff[curNei].append(faceI);
+                            ff[facei].append(curNei);
+                            ff[curNei].append(facei);
 
                             // Keep searching due to multiple connectivity
                         }
@@ -1160,7 +1130,7 @@ calcAddressing() const
                 edges[nEdges] = curEdges[nextNei];
 
                 // Set face-edge and face-neighbour-edge to current face label
-                faceEdges[faceI][nextNei] = nEdges;
+                faceEdges[facei][nextNei] = nEdges;
 
                 DynamicList<label>& cnf = neiFaces[nextNei];
                 DynamicList<label>& eonf = edgeOfNeiFace[nextNei];
@@ -1168,7 +1138,7 @@ calcAddressing() const
                 // Set edge-face addressing
                 labelList& curEf = edgeFaces[nEdges];
                 curEf.setSize(cnf.size() + 1);
-                curEf[0] = faceI;
+                curEf[0] = facei;
 
                 forAll(cnf, cnfI)
                 {
@@ -1197,22 +1167,22 @@ calcAddressing() const
 
     // Do boundary faces
 
-    forAll(faceEdges, faceI)
+    forAll(faceEdges, facei)
     {
-        labelList& curEdges = faceEdges[faceI];
+        labelList& curEdges = faceEdges[facei];
 
         forAll(curEdges, edgeI)
         {
             if (curEdges[edgeI] < 0)
             {
                 // Grab edge and faceEdge
-                edges[nEdges] = faceIntoEdges[faceI][edgeI];
+                edges[nEdges] = faceIntoEdges[facei][edgeI];
                 curEdges[edgeI] = nEdges;
 
                 // Add edgeFace
                 labelList& curEf = edgeFaces[nEdges];
                 curEf.setSize(1);
-                curEf[0] = faceI;
+                curEf[0] = facei;
 
                 nEdges++;
             }
@@ -1229,40 +1199,27 @@ calcAddressing() const
     faceFacesPtr_ = new labelListList(locFcs.size());
     labelListList& faceFaces = *faceFacesPtr_;
 
-    forAll(faceFaces, faceI)
+    forAll(faceFaces, facei)
     {
-        faceFaces[faceI].transfer(ff[faceI]);
+        faceFaces[facei].transfer(ff[facei]);
     }
 
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcAddressing() : finished calculating patch addressing"
-            << endl;
+        InfoInFunction << "Finished calculating patch addressing" << endl;
     }
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcEdgeLoops() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcEdgeLoops() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcEdgeLoops() : "
-            << "calculating boundary edge loops"
-            << endl;
+        InfoInFunction << "Calculating boundary edge loops" << endl;
     }
 
     if (edgeLoopsPtr_)
@@ -1367,24 +1324,14 @@ calcEdgeLoops() const
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcEdgeLoops() : "
-            << "finished calculating boundary edge loops"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 const CML::labelListList&
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-edgeLoops() const
+CML::PrimitivePatch<FaceList, PointField>::edgeLoops() const
 {
     if (!edgeLoopsPtr_)
     {
@@ -1397,22 +1344,12 @@ edgeLoops() const
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-clearGeom()
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::clearGeom()
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "clearGeom() : clearing geometric data"
-            << endl;
+        InfoInFunction << "Clearing geometric data" << endl;
     }
 
     deleteDemandDrivenData(localPointsPtr_);
@@ -1422,22 +1359,12 @@ clearGeom()
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-clearTopology()
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::clearTopology()
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "clearTopology() : clearing patch addressing"
-            << endl;
+        InfoInFunction << "Clearing patch addressing" << endl;
     }
 
     // group created and destroyed together
@@ -1464,23 +1391,12 @@ clearTopology()
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-clearPatchMeshAddr()
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::clearPatchMeshAddr()
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "clearPatchMeshAddr() : "
-            << "clearing patch-mesh addressing"
-            << endl;
+        InfoInFunction << "Clearing patch-mesh addressing" << endl;
     }
 
     deleteDemandDrivenData(meshPointsPtr_);
@@ -1489,16 +1405,8 @@ clearPatchMeshAddr()
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-clearOut()
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::clearOut()
 {
     clearGeom();
     clearTopology();
@@ -1508,23 +1416,12 @@ clearOut()
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcBdryPoints() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcBdryPoints() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcBdryPoints() : "
-            << "calculating boundary points"
-            << endl;
+        InfoInFunction << "Calculating boundary points" << endl;
     }
 
     if (boundaryPointsPtr_)
@@ -1553,26 +1450,15 @@ calcBdryPoints() const
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcBdryPoints() : "
-            << "finished calculating boundary points"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcLocalPointOrder() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcLocalPointOrder() const
 {
     // Note: Cannot use bandCompressing as point-point addressing does
     // not exist and is not considered generally useful.
@@ -1580,7 +1466,7 @@ calcLocalPointOrder() const
 
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
+        Pout<< "PrimitivePatch<FaceList, PointField>::"
             << "calcLocalPointOrder() : "
             << "calculating local point order"
             << endl;
@@ -1595,7 +1481,7 @@ calcLocalPointOrder() const
             << abort(FatalError);
     }
 
-    const List<Face>& lf = localFaces();
+    const List<FaceType>& lf = localFaces();
 
     const labelListList& ff = faceFaces();
 
@@ -1609,11 +1495,11 @@ calcLocalPointOrder() const
 
     label nPoints = 0;
 
-    forAll(lf, faceI)
+    forAll(lf, facei)
     {
-        if (!visitedFace[faceI])
+        if (!visitedFace[facei])
         {
-            SLList<label> faceOrder(faceI);
+            SLList<label> faceOrder(facei);
 
             do
             {
@@ -1628,13 +1514,13 @@ calcLocalPointOrder() const
                     const labelList& curPoints = lf[curFace];
 
                     // mark points
-                    forAll(curPoints, pointI)
+                    forAll(curPoints, pointi)
                     {
-                        if (!visitedPoint[curPoints[pointI]])
+                        if (!visitedPoint[curPoints[pointi]])
                         {
-                            visitedPoint[curPoints[pointI]] = true;
+                            visitedPoint[curPoints[pointi]] = true;
 
-                            pointOrder[nPoints] = curPoints[pointI];
+                            pointOrder[nPoints] = curPoints[pointi];
 
                             nPoints++;
                         }
@@ -1657,7 +1543,7 @@ calcLocalPointOrder() const
 
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
+        Pout<< "PrimitivePatch<FaceList, PointField>::"
             << "calcLocalPointOrder() "
             << "finished calculating local point order"
             << endl;
@@ -1667,21 +1553,12 @@ calcLocalPointOrder() const
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcMeshData() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcMeshData() const
 {
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "calcMeshData() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcMeshData() : "
                "calculating mesh data in PrimitivePatch"
             << endl;
     }
@@ -1708,9 +1585,9 @@ calcMeshData() const
 
     ////- 1.5 code:
     //// if the point is used, set the mark to 1
-    //forAll(*this, facei)
+    // forAll(*this, facei)
     //{
-    //    const Face& curPoints = this->operator[](facei);
+    //    const FaceType& curPoints = this->operator[](facei);
     //
     //    forAll(curPoints, pointi)
     //    {
@@ -1720,14 +1597,14 @@ calcMeshData() const
     //
     //// Create the storage and store the meshPoints.  Mesh points are
     //// the ones marked by the usage loop above
-    //meshPointsPtr_ = new labelList(markedPoints.toc());
-    //labelList& pointPatch = *meshPointsPtr_;
+    // meshPointsPtr_ = new labelList(markedPoints.toc());
+    // labelList& pointPatch = *meshPointsPtr_;
     //
     //// Sort the list to preserve compatibility with the old ordering
-    //sort(pointPatch);
+    // sort(pointPatch);
     //
     //// For every point in map give it its label in mesh points
-    //forAll(pointPatch, pointi)
+    // forAll(pointPatch, pointi)
     //{
     //    markedPoints.find(pointPatch[pointi])() = pointi;
     //}
@@ -1736,7 +1613,7 @@ calcMeshData() const
     DynamicList<label> meshPoints(2*this->size());
     forAll(*this, facei)
     {
-        const Face& curPoints = this->operator[](facei);
+        const FaceType& curPoints = this->operator[](facei);
 
         forAll(curPoints, pointi)
         {
@@ -1753,12 +1630,12 @@ calcMeshData() const
     // Create local faces. Note that we start off from copy of original face
     // list (even though vertices are overwritten below). This is done so
     // additional data gets copied (e.g. region number of labelledTri)
-    localFacesPtr_ = new List<Face>(*this);
-    List<Face>& lf = *localFacesPtr_;
+    localFacesPtr_ = new List<FaceType>(*this);
+    List<FaceType>& lf = *localFacesPtr_;
 
     forAll(*this, facei)
     {
-        const Face& curFace = this->operator[](facei);
+        const FaceType& curFace = this->operator[](facei);
         lf[facei].setSize(curFace.size());
 
         forAll(curFace, labelI)
@@ -1769,29 +1646,19 @@ calcMeshData() const
 
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "calcMeshData() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcMeshData() : "
                "finished calculating mesh data in PrimitivePatch"
             << endl;
     }
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcMeshPointMap() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcMeshPointMap() const
 {
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "calcMeshPointMap() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcMeshPointMap() : "
                "calculating mesh point map in PrimitivePatch"
             << endl;
     }
@@ -1817,29 +1684,19 @@ calcMeshPointMap() const
 
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "calcMeshPointMap() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcMeshPointMap() : "
                "finished calculating mesh point map in PrimitivePatch"
             << endl;
     }
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcLocalPoints() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcLocalPoints() const
 {
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "calcLocalPoints() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcLocalPoints() : "
                "calculating localPoints in PrimitivePatch"
             << endl;
     }
@@ -1866,29 +1723,19 @@ calcLocalPoints() const
 
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcLocalPoints() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcLocalPoints() : "
             << "finished calculating localPoints in PrimitivePatch"
             << endl;
     }
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcPointNormals() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcPointNormals() const
 {
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "calcPointNormals() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcPointNormals() : "
                "calculating pointNormals in PrimitivePatch"
             << endl;
     }
@@ -1930,29 +1777,19 @@ calcPointNormals() const
 
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "calcPointNormals() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcPointNormals() : "
                "finished calculating pointNormals in PrimitivePatch"
             << endl;
     }
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcFaceCentres() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcFaceCentres() const
 {
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "calcFaceCentres() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcFaceCentres() : "
                "calculating faceCentres in PrimitivePatch"
             << endl;
     }
@@ -1977,29 +1814,19 @@ calcFaceCentres() const
 
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "calcFaceCentres() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcFaceCentres() : "
                "finished calculating faceCentres in PrimitivePatch"
             << endl;
     }
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcFaceNormals() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcFaceNormals() const
 {
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "calcFaceNormals() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcFaceNormals() : "
                "calculating faceNormals in PrimitivePatch"
             << endl;
     }
@@ -2024,8 +1851,7 @@ calcFaceNormals() const
 
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "calcFaceNormals() : "
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcFaceNormals() : "
                "finished calculating faceNormals in PrimitivePatch"
             << endl;
     }
@@ -2034,16 +1860,8 @@ calcFaceNormals() const
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-CML::labelList
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-meshEdges
+template<class FaceList, class PointField>
+CML::labelList CML::PrimitivePatch<FaceList, PointField>::meshEdges
 (
     const edgeList& allEdges,
     const labelListList& cellEdges,
@@ -2052,10 +1870,8 @@ meshEdges
 {
     if (debug)
     {
-        Info<< "labelList PrimitivePatch<Face, FaceList, PointField, PointType>"
-            << "::meshEdges() : "
-            << "calculating labels of patch edges in mesh edge list"
-            << endl;
+        InfoInFunction
+            << "Calculating labels of patch edges in mesh edge list" << endl;
     }
 
     // get reference to the list of edges on the patch
@@ -2066,7 +1882,7 @@ meshEdges
     // create the storage
     labelList meshEdges(PatchEdges.size());
 
-    register bool found = false;
+    bool found = false;
 
     // get reference to the points on the patch
     const labelList& pp = meshPoints();
@@ -2083,10 +1899,10 @@ meshEdges
         // get the patch faces sharing the edge
         const labelList& curFaces = EdgeFaces[edgeI];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
             // get the cell next to the face
-            label curCell = faceCells[curFaces[faceI]];
+            label curCell = faceCells[curFaces[facei]];
 
             // get reference to edges on the cell
             const labelList& ce = cellEdges[curCell];
@@ -2111,16 +1927,8 @@ meshEdges
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-CML::labelList
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-meshEdges
+template<class FaceList, class PointField>
+CML::labelList CML::PrimitivePatch<FaceList, PointField>::meshEdges
 (
     const edgeList& allEdges,
     const labelListList& pointEdges
@@ -2128,10 +1936,8 @@ meshEdges
 {
     if (debug)
     {
-        Info<< "labelList PrimitivePatch<Face, FaceList, PointField, PointType>"
-            << "::meshEdges() : "
-            << "calculating labels of patch edges in mesh edge list"
-            << endl;
+        InfoInFunction
+            << "Calculating labels of patch edges in mesh edge list" << endl;
     }
 
     // get reference to the list of edges on the patch
@@ -2147,10 +1953,10 @@ meshEdges
     // local-to-global point label translation is necessary
     forAll(PatchEdges, edgeI)
     {
-        const label globalPointI = pp[PatchEdges[edgeI].start()];
-        const edge curEdge(globalPointI, pp[PatchEdges[edgeI].end()]);
+        const label globalPointi = pp[PatchEdges[edgeI].start()];
+        const edge curEdge(globalPointi, pp[PatchEdges[edgeI].end()]);
 
-        const labelList& pe = pointEdges[globalPointI];
+        const labelList& pe = pointEdges[globalPointi];
 
         forAll(pe, i)
         {
@@ -2168,16 +1974,8 @@ meshEdges
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-CML::label
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-whichEdge
+template<class FaceList, class PointField>
+CML::label CML::PrimitivePatch<FaceList, PointField>::whichEdge
 (
     const edge& e
 ) const
@@ -2205,22 +2003,12 @@ whichEdge
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcPointEdges() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcPointEdges() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcPointEdges() : calculating pointEdges"
-            << endl;
+        InfoInFunction << "Calculating pointEdges" << endl;
     }
 
     if (pointEdgesPtr_)
@@ -2232,60 +2020,25 @@ calcPointEdges() const
             << abort(FatalError);
     }
 
-    const edgeList& e = edges();
-
-    // set up storage for pointEdges
-    List<SLList<label> > pointEdges(meshPoints().size());
-
-    forAll(e, edgeI)
-    {
-        pointEdges[e[edgeI].start()].append(edgeI);
-        pointEdges[e[edgeI].end()].append(edgeI);
-    }
-
-    // sort out the list
-    pointEdgesPtr_ = new labelListList(pointEdges.size());
+    pointEdgesPtr_ = new labelListList(meshPoints().size());
 
     labelListList& pe = *pointEdgesPtr_;
 
-    forAll(pointEdges, pointI)
-    {
-        const SLList<label>& pEdge = pointEdges[pointI];
-
-        pe[pointI].setSize(pEdge.size());
-
-        label i = 0;
-        forAllConstIter(SLList<label>, pEdge, iter)
-        {
-            pe[pointI][i++] = iter();
-        }
-    }
+    invertManyToMany(pe.size(), edges(), pe);
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcPointEdges() finished calculating pointEdges"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcPointFaces() const
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::calcPointFaces() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcPointFaces() : calculating pointFaces"
-            << endl;
+        InfoInFunction << "Calculating pointFaces" << endl;
     }
 
     if (pointFacesPtr_)
@@ -2297,18 +2050,18 @@ calcPointFaces() const
             << abort(FatalError);
     }
 
-    const List<Face>& f = localFaces();
+    const List<FaceType>& f = localFaces();
 
     // set up storage for pointFaces
-    List<SLList<label> > pointFcs(meshPoints().size());
+    List<SLList<label>> pointFcs(meshPoints().size());
 
-    forAll(f, faceI)
+    forAll(f, facei)
     {
-        const Face& curPoints = f[faceI];
+        const FaceType& curPoints = f[facei];
 
-        forAll(curPoints, pointI)
+        forAll(curPoints, pointi)
         {
-            pointFcs[curPoints[pointI]].append(faceI);
+            pointFcs[curPoints[pointi]].append(facei);
         }
     }
 
@@ -2317,39 +2070,30 @@ calcPointFaces() const
 
     labelListList& pf = *pointFacesPtr_;
 
-    forAll(pointFcs, pointI)
+    forAll(pointFcs, pointi)
     {
-        pf[pointI].setSize(pointFcs[pointI].size());
+        pf[pointi].setSize(pointFcs[pointi].size());
 
         label i = 0;
-        forAllIter(SLList<label>, pointFcs[pointI], curFacesIter)
+        forAllIter(SLList<label>, pointFcs[pointi], curFacesIter)
         {
-            pf[pointI][i++] = curFacesIter();
+            pf[pointi][i++] = curFacesIter();
         }
     }
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-            << "calcPointFaces() finished calculating pointFaces"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-template <class ToPatch>
+template<class FaceList, class PointField>
+template<class ToPatch>
 CML::List<CML::objectHit>
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-projectPoints
+CML::PrimitivePatch<FaceList, PointField>::projectPoints
 (
     const ToPatch& targetPatch,
     const Field<PointType>& projectionDirection,
@@ -2362,7 +2106,7 @@ projectPoints
     if (projectionDirection.size() != nPoints())
     {
         FatalErrorInFunction
-           << "Projection direction field does not correspond to "
+            << "Projection direction field does not correspond to "
             << "patch points." << endl
             << "Size: " << projectionDirection.size()
             << " Number of points: " << nPoints()
@@ -2385,10 +2129,10 @@ projectPoints
     // Estimate face centre of target side
     Field<PointType> masterFaceCentres(targetPatch.size());
 
-    forAll(masterFaceCentres, faceI)
+    forAll(masterFaceCentres, facei)
     {
-        masterFaceCentres[faceI] =
-            average(masterFaces[faceI].points(masterPoints));
+        masterFaceCentres[facei] =
+            average(masterFaces[facei].points(masterPoints));
     }
 
     // Algorithm:
@@ -2402,10 +2146,10 @@ projectPoints
     label curFace = 0;
     label nNSquaredSearches = 0;
 
-    forAll(slavePointOrder, pointI)
+    forAll(slavePointOrder, pointi)
     {
         // Pick up slave point and direction
-        const label curLocalPointLabel = slavePointOrder[pointI];
+        const label curLocalPointLabel = slavePointOrder[pointi];
 
         const PointType& curPoint =
             points_[slaveMeshPoints[curLocalPointLabel]];
@@ -2424,7 +2168,7 @@ projectPoints
 
         // Force the full search for the first point to ensure good
         // starting face
-        if (pointI == 0)
+        if (pointi == 0)
         {
             doNSquaredSearch = true;
         }
@@ -2525,10 +2269,10 @@ projectPoints
             result[curLocalPointLabel] = objectHit(false, -1);
             scalar minDistance = GREAT;
 
-            forAll(masterFaces, faceI)
+            forAll(masterFaces, facei)
             {
                 PointHit<PointType> curHit =
-                    masterFaces[faceI].ray
+                    masterFaces[facei].ray
                     (
                         curPoint,
                         curProjectionDir,
@@ -2539,8 +2283,8 @@ projectPoints
 
                 if (curHit.hit())
                 {
-                    result[curLocalPointLabel] = objectHit(true, faceI);
-                    curFace = faceI;
+                    result[curLocalPointLabel] = objectHit(true, facei);
+                    curFace = facei;
 
                     break;
                 }
@@ -2554,8 +2298,8 @@ projectPoints
                     {
                         minDistance = missDist;
 
-                        result[curLocalPointLabel] = objectHit(false, faceI);
-                        curFace = faceI;
+                        result[curLocalPointLabel] = objectHit(false, facei);
+                        curFace = facei;
                     }
                 }
             }
@@ -2582,17 +2326,10 @@ projectPoints
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-template <class ToPatch>
+template<class FaceList, class PointField>
+template<class ToPatch>
 CML::List<CML::objectHit>
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-projectFaceCentres
+CML::PrimitivePatch<FaceList, PointField>::projectFaceCentres
 (
     const ToPatch& targetPatch,
     const Field<PointType>& projectionDirection,
@@ -2622,17 +2359,16 @@ projectFaceCentres
 
     const typename ToPatch::PointFieldType& masterPoints = targetPatch.points();
 
-    forAll(masterFaceCentres, faceI)
+    forAll(masterFaceCentres, facei)
     {
-        masterFaceCentres[faceI] =
-            masterFaces[faceI].centre(masterPoints);
+        masterFaceCentres[facei] =
+            masterFaces[facei].centre(masterPoints);
     }
 
     // Result
     List<objectHit> result(this->size());
 
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& slaveFaces =
-        *this;
+    const PrimitivePatch<FaceList, PointField>& slaveFaces = *this;
 
     const PointField& slaveGlobalPoints = points();
 
@@ -2647,10 +2383,10 @@ projectFaceCentres
     label curFace = 0;
     label nNSquaredSearches = 0;
 
-    forAll(slaveFaceOrder, faceI)
+    forAll(slaveFaceOrder, facei)
     {
         // pick up slave point and direction
-        const label curLocalFaceLabel = slaveFaceOrder[faceI];
+        const label curLocalFaceLabel = slaveFaceOrder[facei];
 
         const point& curFaceCentre =
             slaveFaces[curLocalFaceLabel].centre(slaveGlobalPoints);
@@ -2669,7 +2405,7 @@ projectFaceCentres
 
         // Force the full search for the first point to ensure good
         // starting face
-        if (faceI == 0)
+        if (facei == 0)
         {
             doNSquaredSearch = true;
         }
@@ -2766,10 +2502,10 @@ projectFaceCentres
             result[curLocalFaceLabel] = objectHit(false, -1);
             scalar minDistance = GREAT;
 
-            forAll(masterFaces, faceI)
+            forAll(masterFaces, facei)
             {
                 PointHit<PointType> curHit =
-                    masterFaces[faceI].ray
+                    masterFaces[facei].ray
                     (
                         curFaceCentre,
                         curProjectionDir,
@@ -2780,8 +2516,8 @@ projectFaceCentres
 
                 if (curHit.hit())
                 {
-                    result[curLocalFaceLabel] = objectHit(true, faceI);
-                    curFace = faceI;
+                    result[curLocalFaceLabel] = objectHit(true, facei);
+                    curFace = facei;
 
                     break;
                 }
@@ -2795,8 +2531,8 @@ projectFaceCentres
                     {
                         minDistance = missDist;
 
-                        result[curLocalFaceLabel] = objectHit(false, faceI);
-                        curFace = faceI;
+                        result[curLocalFaceLabel] = objectHit(false, facei);
+                        curFace = facei;
                     }
                 }
             }
@@ -2825,33 +2561,25 @@ projectFaceCentres
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
-visitPointRegion
+template<class FaceList, class PointField>
+void CML::PrimitivePatch<FaceList, PointField>::visitPointRegion
 (
-    const label pointI,
+    const label pointi,
     const labelList& pFaces,
-    const label startFaceI,
+    const label startFacei,
     const label startEdgeI,
     boolList& pFacesHad
 ) const
 {
-    label index = findIndex(pFaces, startFaceI);
+    label index = findIndex(pFaces, startFacei);
 
     if (!pFacesHad[index])
     {
         // Mark face as been visited.
         pFacesHad[index] = true;
 
-        // Step to next edge on face which is still using pointI
-        const labelList& fEdges = faceEdges()[startFaceI];
+        // Step to next edge on face which is still using pointi
+        const labelList& fEdges = faceEdges()[startFacei];
 
         label nextEdgeI = -1;
 
@@ -2861,7 +2589,7 @@ visitPointRegion
 
             const edge& e = edges()[edgeI];
 
-            if (edgeI != startEdgeI && (e[0] == pointI || e[1] == pointI))
+            if (edgeI != startEdgeI && (e[0] == pointi || e[1] == pointi))
             {
                 nextEdgeI = edgeI;
 
@@ -2873,7 +2601,7 @@ visitPointRegion
         {
             FatalErrorInFunction
                 << "Problem: cannot find edge out of " << fEdges
-                << "on face " << startFaceI << " that uses point " << pointI
+                << "on face " << startFacei << " that uses point " << pointi
                 << " and is not edge " << startEdgeI << abort(FatalError);
         }
 
@@ -2882,11 +2610,11 @@ visitPointRegion
 
         forAll(eFaces, i)
         {
-            if (eFaces[i] != startFaceI)
+            if (eFaces[i] != startFacei)
             {
                 visitPointRegion
                 (
-                    pointI,
+                    pointi,
                     pFaces,
                     eFaces[i],
                     nextEdgeI,
@@ -2900,24 +2628,15 @@ visitPointRegion
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 typename
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::surfaceTopo
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
+CML::PrimitivePatch<FaceList, PointField>::surfaceTopo
+CML::PrimitivePatch<FaceList, PointField>::
 surfaceType() const
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "surfaceType() : "
-               "calculating patch topology"
-            << endl;
+        InfoInFunction << "Calculating patch topology" << endl;
     }
 
     const labelListList& edgeFcs = edgeFaces();
@@ -2944,25 +2663,16 @@ surfaceType() const
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "surfaceType() : "
-               "finished calculating patch topology"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 
     return pType;
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 bool
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
+CML::PrimitivePatch<FaceList, PointField>::
 checkTopology
 (
     const bool report,
@@ -2971,17 +2681,14 @@ checkTopology
 {
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "checkTopology(const bool, labelHashSet&) : "
-               "checking patch topology"
-            << endl;
+        InfoInFunction << "Checking patch topology" << endl;
     }
 
     // Check edgeFaces
 
     const labelListList& edgeFcs = edgeFaces();
 
-    surfaceTopo surfaceType = MANIFOLD;
+    bool illegalTopo = false;
 
     forAll(edgeFcs, edgeI)
     {
@@ -2989,7 +2696,7 @@ checkTopology
 
         if (nNbrs < 1 || nNbrs > 2)
         {
-            surfaceType = ILLEGAL;
+            illegalTopo = true;
 
             if (report)
             {
@@ -3006,33 +2713,20 @@ checkTopology
                 setPtr->insert(meshPoints()[e.end()]);
             }
         }
-        else if (nNbrs == 1)
-        {
-            surfaceType = OPEN;
-        }
     }
 
     if (debug)
     {
-        Info<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
-               "checkTopology(const bool, labelHashSet&) : "
-               "finished checking patch topology"
-            << endl;
+        Info<< "    Finished." << endl;
     }
 
-    return surfaceType == ILLEGAL;
+    return illegalTopo;
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 bool
-CML::PrimitivePatch<Face, FaceList, PointField, PointType>::
+CML::PrimitivePatch<FaceList, PointField>::
 checkPointManifold
 (
     const bool report,
@@ -3046,26 +2740,26 @@ checkPointManifold
 
     bool foundError = false;
 
-    forAll(pf, pointI)
+    forAll(pf, pointi)
     {
-        const labelList& pFaces = pf[pointI];
+        const labelList& pFaces = pf[pointi];
 
         // Visited faces (as indices into pFaces)
         boolList pFacesHad(pFaces.size(), false);
 
         // Starting edge
-        const labelList& pEdges = pe[pointI];
+        const labelList& pEdges = pe[pointi];
         label startEdgeI = pEdges[0];
 
         const labelList& eFaces = ef[startEdgeI];
 
         forAll(eFaces, i)
         {
-            // Visit all faces using pointI, starting from eFaces[i] and
+            // Visit all faces using pointi, starting from eFaces[i] and
             // startEdgeI. Mark off all faces visited in pFacesHad.
             this->visitPointRegion
             (
-                pointI,
+                pointi,
                 pFaces,
                 eFaces[i],  // starting face for walk
                 startEdgeI, // starting edge for walk
@@ -3073,7 +2767,7 @@ checkPointManifold
             );
         }
 
-        // After this all faces using pointI should have been visited and
+        // After this all faces using pointi should have been visited and
         // marked off in pFacesHad.
 
         label unset = findIndex(pFacesHad, false);
@@ -3082,16 +2776,16 @@ checkPointManifold
         {
             foundError = true;
 
-            label meshPointI = mp[pointI];
+            label meshPointi = mp[pointi];
 
             if (setPtr)
             {
-                setPtr->insert(meshPointI);
+                setPtr->insert(meshPointi);
             }
 
             if (report)
             {
-                Info<< "Point " << meshPointI
+                Info<< "Point " << meshPointi
                     << " uses faces which are not connected through an edge"
                     << nl
                     << "This means that the surface formed by this patched"

@@ -40,13 +40,13 @@ void CML::edgeVertex::updateLabels
     {
         const refineCell& refCell = refCells[refI];
 
-        label oldCellI = refCell.cellNo();
+        label oldCelli = refCell.cellNo();
 
-        label newCellI = map[oldCellI];
+        label newCelli = map[oldCelli];
 
-        if (newCellI != -1)
+        if (newCelli != -1)
         {
-            refCells[newRefI++] = refineCell(newCellI, refCell.direction());
+            refCells[newRefI++] = refineCell(newCelli, refCell.direction());
         }
     }
     refCells.setSize(newRefI);
@@ -129,9 +129,9 @@ void CML::edgeVertex::updateLabels
 
     forAllConstIter(labelHashSet, cells, iter)
     {
-        const label newCellI = map[iter.key()];
+        const label newCelli = map[iter.key()];
 
-        if (newCellI != iter.key())
+        if (newCelli != iter.key())
         {
             changed = true;
 
@@ -146,11 +146,11 @@ void CML::edgeVertex::updateLabels
 
         forAllConstIter(labelHashSet, cells, iter)
         {
-            const label newCellI = map[iter.key()];
+            const label newCelli = map[iter.key()];
 
-            if (newCellI != -1)
+            if (newCelli != -1)
             {
-                newCells.insert(newCellI);
+                newCells.insert(newCelli);
             }
         }
 

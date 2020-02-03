@@ -31,6 +31,7 @@ namespace CML
     defineTypeNameAndDebug(dlLibraryTable, 0);
 }
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 CML::dlLibraryTable::dlLibraryTable()
@@ -57,8 +58,8 @@ CML::dlLibraryTable::~dlLibraryTable()
         {
             if (debug)
             {
-                Info<< "dlLibraryTable::~dlLibraryTable() : closing "
-                    << libNames_[i]
+                InfoInFunction
+                    << "Closing " << libNames_[i]
                     << " with handle " << reinterpret_cast<long long>(libPtrs_[i]) << endl;
             }
             dlClose(libPtrs_[i]);
@@ -77,11 +78,16 @@ bool CML::dlLibraryTable::open
 {
     if (functionLibName.size())
     {
-        void* functionLibPtr = dlOpen(functionLibName, verbose);
+        void* functionLibPtr = dlOpen
+        (
+            fileName(functionLibName).expand(),
+            verbose
+        );
 
         if (debug)
         {
-            Info<< "dlLibraryTable::open : opened " << functionLibName
+            InfoInFunction
+                << "Opened " << functionLibName
                 << " resulting in handle " << reinterpret_cast<long long>(functionLibPtr) << endl;
         }
 
@@ -130,7 +136,8 @@ bool CML::dlLibraryTable::close
     {
         if (debug)
         {
-            Info<< "dlLibraryTable::close : closing " << functionLibName
+            InfoInFunction
+                << "Closing " << functionLibName
                 << " with handle " << reinterpret_cast<long long>(libPtrs_[index]) << endl;
         }
 

@@ -33,7 +33,7 @@ int CML::sigStopAtWriteNow::signal_
     debug::optimisationSwitch("stopAtWriteNowSignal", -1)
 );
 
-static CML::Time const* runTimePtr_ = nullptr;
+CML::Time const* CML::sigStopAtWriteNow::runTimePtr_ = nullptr;
 
 
 struct sigaction CML::sigStopAtWriteNow::oldAction_;
@@ -57,7 +57,7 @@ void CML::sigStopAtWriteNow::sigHandler(int)
     Info<< "sigStopAtWriteNow :"
         << " setting up write and stop at end of the next iteration"
         << nl << endl;
-    runTimePtr_->stopAt(Time::saWriteNow);
+    runTimePtr_->stopAt(Time::stopAtControl::writeNow);
 
     //// Throw signal (to old handler)
     //raise(signal_);

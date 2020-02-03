@@ -118,9 +118,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mappedFixedInternalValueFvPatchField<Type>(*this)
             );
@@ -134,12 +134,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mappedFixedInternalValueFvPatchField<Type>(*this, iF)
             );
@@ -158,11 +158,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "UIndirectList.hpp"
 
@@ -285,20 +282,20 @@ void CML::mappedFixedInternalValueFvPatchField<Type>::updateCoeffs()
         }
         case mappedPatchBase::NEARESTFACE:
         {
-            Field<Type> allValues(nbrMesh.nFaces(), pTraits<Type>::zero);
+            Field<Type> allValues(nbrMesh.nFaces(), Zero);
 
             const FieldType& nbrField = this->sampleField();
 
-            forAll(nbrField.boundaryField(), patchI)
+            forAll(nbrField.boundaryField(), patchi)
             {
-                const fvPatchField<Type>& pf = nbrField.boundaryField()[patchI];
+                const fvPatchField<Type>& pf = nbrField.boundaryField()[patchi];
                 const Field<Type> pif(pf.patchInternalField());
 
                 label faceStart = pf.patch().start();
 
-                forAll(pf, faceI)
+                forAll(pf, facei)
                 {
-                    allValues[faceStart++] = pif[faceI];
+                    allValues[faceStart++] = pif[facei];
                 }
             }
 
@@ -319,7 +316,7 @@ void CML::mappedFixedInternalValueFvPatchField<Type>::updateCoeffs()
     UPstream::msgType() = oldTag;
 
     // Assign to (this) patch internal field its neighbour values
-    Field<Type>& intFld = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& intFld = const_cast<Field<Type>&>(this->primitiveField());
     UIndirectList<Type>(intFld, this->patch().faceCells()) = nbrIntFld;
 }
 
@@ -334,9 +331,4 @@ void CML::mappedFixedInternalValueFvPatchField<Type>::write
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

@@ -50,15 +50,15 @@ void CML::vtkSurfaceWriter::writeGeometry
     label nPoints = points.size();
     os << "POINTS " << nPoints << " float" << nl;
 
-   DynamicList<floatScalar> ptField(3*nPoints);
-   writeFuns::insert(points, ptField);
-   writeFuns::write(os, binary, ptField);
+    DynamicList<floatScalar> ptField(3*nPoints);
+    writeFuns::insert(points, ptField);
+    writeFuns::write(os, binary, ptField);
 
     // Write faces
     label nNodes = 0;
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        nNodes += faces[faceI].size();
+        nNodes += faces[facei].size();
     }
 
     os  << "POLYGONS " << faces.size() << ' ' << faces.size() + nNodes << nl;
@@ -201,7 +201,7 @@ CML::vtkSurfaceWriter::vtkSurfaceWriter(const dictionary& options)
     // Choose ascii or binary format
     if (options.found("binary"))
     {
-        binary_ = options.lookup("binary");
+        binary_ = options.lookupOrDefault<Switch>("binary", false);
     }
 }
 

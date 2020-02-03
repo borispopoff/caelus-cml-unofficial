@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -65,7 +65,7 @@ void CML::multiLevelDecomp::subsetGlobalCellCells
     subCellCells = UIndirectList<labelList>(cellCells, set);
 
     // Get new indices for neighbouring processors
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
     mapDistribute map(globalCells, subCellCells, compactMap);
     map.distribute(oldToNew);
     labelList allDist(dist);
@@ -95,8 +95,8 @@ void CML::multiLevelDecomp::subsetGlobalCellCells
         forAll(cCells, i)
         {
             // Get locally-compact cell index of neighbouring cell
-            label nbrCellI = oldToNew[cCells[i]];
-            if (nbrCellI == -1)
+            label nbrCelli = oldToNew[cCells[i]];
+            if (nbrCelli == -1)
             {
                 cutConnections[allDist[cCells[i]]]++;
             }
@@ -105,12 +105,12 @@ void CML::multiLevelDecomp::subsetGlobalCellCells
                 // Reconvert local cell index into global one
 
                 // Get original neighbour
-                label cellI = set[subCellI];
-                label oldNbrCellI = cellCells[cellI][i];
+                label celli = set[subCellI];
+                label oldNbrCellI = cellCells[celli][i];
                 // Get processor from original neighbour
-                label procI = globalCells.whichProcID(oldNbrCellI);
+                label proci = globalCells.whichProcID(oldNbrCellI);
                 // Convert into global compact numbering
-                cCells[newI++] = globalSubCells.toGlobal(procI, nbrCellI);
+                cCells[newI++] = globalSubCells.toGlobal(proci, nbrCelli);
             }
         }
         cCells.setSize(newI);
@@ -269,13 +269,13 @@ void CML::multiLevelDecomp::decompose
 
                 label nPoints = 0;
                 labelList nOutsideConnections(n, 0);
-                forAll(pointPoints, pointI)
+                forAll(pointPoints, pointi)
                 {
-                    if ((dist[pointI] / nNext) == blockI)
+                    if ((dist[pointi] / nNext) == blockI)
                     {
                         nPoints++;
 
-                        const labelList& pPoints = pointPoints[pointI];
+                        const labelList& pPoints = pointPoints[pointi];
 
                         forAll(pPoints, i)
                         {
@@ -395,7 +395,7 @@ CML::labelList CML::multiLevelDecomp::decompose
         finalDecomp
     );
 
-    return finalDecomp;
+    return move(finalDecomp);
 }
 
 
@@ -420,7 +420,7 @@ CML::labelList CML::multiLevelDecomp::decompose
         finalDecomp
     );
 
-    return finalDecomp;
+    return move(finalDecomp);
 }
 
 

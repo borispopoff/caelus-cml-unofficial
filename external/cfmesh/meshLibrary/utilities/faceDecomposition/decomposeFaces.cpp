@@ -85,14 +85,14 @@ void decomposeFaces::decomposeMeshFaces(const boolList& decomposeFace)
     VRWGraph newFaces;
 
     //- decompose internal faces
-    for(label faceI=0;faceI<nIntFaces;++faceI)
+    for(label facei=0;facei<nIntFaces;++facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
-        if( decomposeFace[faceI] )
+        if( decomposeFace[facei] )
         {
             # ifdef DEBUGDec
-            Info << "Decomposing internal face " << faceI << " with nodes "
+            Info << "Decomposing internal face " << facei << " with nodes "
                 << f << endl;
             # endif
 
@@ -110,7 +110,7 @@ void decomposeFaces::decomposeMeshFaces(const boolList& decomposeFace)
                 # endif
 
                 newFaces.appendList(newF);
-                newFacesForFace_.append(faceI, nFaces++);
+                newFacesForFace_.append(facei, nFaces++);
             }
 
             p = f.centre(points);
@@ -120,12 +120,12 @@ void decomposeFaces::decomposeMeshFaces(const boolList& decomposeFace)
         else
         {
             # ifdef DEBUGDec
-            Info << "Storing internal face " << faceI << " with nodes "
-                << f << " as new face " << faceI << endl;
+            Info << "Storing internal face " << facei << " with nodes "
+                << f << " as new face " << facei << endl;
             # endif
 
             newFaces.appendList(f);
-            newFacesForFace_.append(faceI, nFaces++);
+            newFacesForFace_.append(facei, nFaces++);
         }
     }
 
@@ -271,13 +271,13 @@ void decomposeFaces::decomposeMeshFaces(const boolList& decomposeFace)
 
     //- store the faces back into their list
     faces.setSize(nFaces);
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        face& f = faces[faceI];
-        f.setSize(newFaces.sizeOfRow(faceI));
+        face& f = faces[facei];
+        f.setSize(newFaces.sizeOfRow(facei));
 
         forAll(f, pI)
-            f[pI] = newFaces(faceI, pI);
+            f[pI] = newFaces(facei, pI);
     }
     newFaces.setSize(0);
 
@@ -290,21 +290,21 @@ void decomposeFaces::decomposeMeshFaces(const boolList& decomposeFace)
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 40)
     # endif
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        cell& c = cells[cellI];
+        cell& c = cells[celli];
 
         DynList<label> newC;
 
         forAll(c, fJ)
         {
-            const label faceI = c[fJ];
-            forAllRow(newFacesForFace_, faceI, nfI)
-            newC.append(newFacesForFace_(faceI, nfI));
+            const label facei = c[fJ];
+            forAllRow(newFacesForFace_, facei, nfI)
+            newC.append(newFacesForFace_(facei, nfI));
         }
 
         # ifdef DEBUGDec
-        Info << "Cell " << cellI << " with faces " << c
+        Info << "Cell " << celli << " with faces " << c
             << " is changed into " << newC << endl;
         # endif
 
@@ -359,9 +359,9 @@ void decomposeFaces::decomposeConcaveInternalFaces
     # endif
 
     //- decompose internal faces
-    for(label faceI=0;faceI<nIntFaces;++faceI)
+    for(label facei=0;facei<nIntFaces;++facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         DynList<label> concavePos;
         forAll(f, pI)
@@ -373,9 +373,9 @@ void decomposeFaces::decomposeConcaveInternalFaces
         if( concavePos.size() == 1 )
         {
             # ifdef DEBUGDec
-            Info << "1. Decomposing internal face " << faceI << " with nodes "
+            Info << "1. Decomposing internal face " << facei << " with nodes "
                 << f << endl;
-            mesh_.addFaceToSubset(id, faceI);
+            mesh_.addFaceToSubset(id, facei);
             # endif
 
             newF[0] = f[concavePos[0]];
@@ -391,16 +391,16 @@ void decomposeFaces::decomposeConcaveInternalFaces
                     << newFaces.size() << endl;
                 # endif
 
-                newFacesForFace_.append(faceI, newFaces.size());
+                newFacesForFace_.append(facei, newFaces.size());
                 newFaces.appendList(newF);
             }
         }
         else if( concavePos.size() > 1 )
         {
             # ifdef DEBUGDec
-            Info << "2. Decomposing internal face " << faceI << " with nodes "
+            Info << "2. Decomposing internal face " << facei << " with nodes "
                 << f << endl;
-            mesh_.addFaceToSubset(id, faceI);
+            mesh_.addFaceToSubset(id, facei);
             # endif
 
             newF[0] = points.size();
@@ -414,7 +414,7 @@ void decomposeFaces::decomposeConcaveInternalFaces
                     << newFaces.size() << endl;
                 # endif
 
-                newFacesForFace_.append(faceI, newFaces.size());
+                newFacesForFace_.append(facei, newFaces.size());
                 newFaces.appendList(newF);
             }
 
@@ -424,11 +424,11 @@ void decomposeFaces::decomposeConcaveInternalFaces
         else
         {
             # ifdef DEBUGDec
-            Info << "Storing internal face " << faceI << " with nodes "
+            Info << "Storing internal face " << facei << " with nodes "
                 << f << " as new face " << newFaces.size() << endl;
             # endif
 
-            newFacesForFace_.append(faceI, newFaces.size());
+            newFacesForFace_.append(facei, newFaces.size());
             newFaces.appendList(f);
         }
     }
@@ -452,12 +452,12 @@ void decomposeFaces::decomposeConcaveInternalFaces
 
     //- copy new faces into the faceListPMG
     faces.setSize(newFaces.size());
-    forAll(newFaces, faceI)
+    forAll(newFaces, facei)
     {
-        faces[faceI].setSize(newFaces.sizeOfRow(faceI));
+        faces[facei].setSize(newFaces.sizeOfRow(facei));
 
-        forAllRow(newFaces, faceI, pI)
-            faces[faceI][pI] = newFaces(faceI, pI);
+        forAllRow(newFaces, facei, pI)
+            faces[facei][pI] = newFaces(facei, pI);
     }
 
     newFaces.setSize(0);
@@ -468,21 +468,21 @@ void decomposeFaces::decomposeConcaveInternalFaces
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 40)
     # endif
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        cell& c = cells[cellI];
+        cell& c = cells[celli];
 
         DynList<label, 24> newC;
 
         forAll(c, fJ)
         {
-            const label faceI = c[fJ];
-            forAllRow(newFacesForFace_, faceI, nfI)
-            newC.append(newFacesForFace_(faceI, nfI));
+            const label facei = c[fJ];
+            forAllRow(newFacesForFace_, facei, nfI)
+            newC.append(newFacesForFace_(facei, nfI));
         }
 
         # ifdef DEBUGDec
-        Info << "Cell " << cellI << " with faces " << c
+        Info << "Cell " << celli << " with faces " << c
             << " is changed into " << newC << endl;
         # endif
 

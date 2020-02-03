@@ -244,8 +244,8 @@ void CML::MULES::implicitSolve
             MULEScontrols
         );
 
-        scalar maxPsiM1 = gMax(psi.internalField()) - 1.0;
-        scalar minPsi = gMin(psi.internalField());
+        scalar maxPsiM1 = gMax(psi.primitiveField()) - 1.0;
+        scalar minPsi = gMin(psi.primitiveField());
 
         scalar unboundedness = max(max(maxPsiM1, 0.0), -min(minPsi, 0.0));
 

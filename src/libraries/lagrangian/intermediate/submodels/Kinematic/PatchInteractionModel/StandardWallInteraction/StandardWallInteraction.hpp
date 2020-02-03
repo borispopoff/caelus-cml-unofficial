@@ -104,9 +104,9 @@ public:
         StandardWallInteraction(const StandardWallInteraction<CloudType>& pim);
 
         //- Construct and return a clone using supplied owner cloud
-        virtual autoPtr<PatchInteractionModel<CloudType> > clone() const
+        virtual autoPtr<PatchInteractionModel<CloudType>> clone() const
         {
-            return autoPtr<PatchInteractionModel<CloudType> >
+            return autoPtr<PatchInteractionModel<CloudType>>
             (
                 new StandardWallInteraction<CloudType>(*this)
             );

@@ -52,7 +52,7 @@ void CML::porousBafflePressureFvPatchField<CML::scalar>::updateCoeffs()
         return;
     }
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const surfaceScalarField& phi =
             db().lookupObject<surfaceScalarField>("phi");
@@ -70,7 +70,7 @@ void CML::porousBafflePressureFvPatchField<CML::scalar>::updateCoeffs()
                 "turbulenceModel"
             );
 
-        const scalarField nu = turbModel.nu()().boundaryField()[patchI];
+        const scalarField nu = turbModel.nu()().boundaryField()[patchi];
 
         scalarField magUn(mag(Un));
 
@@ -84,7 +84,7 @@ void CML::porousBafflePressureFvPatchField<CML::scalar>::updateCoeffs()
                 "turbulenceModel"
             );
 
-        const scalarField mu = turbModel.mu().boundaryField()[patchI];
+        const scalarField mu = turbModel.mu().boundaryField()[patchi];
 
         const scalarField rhow =
             patch().lookupPatchField<volScalarField, scalar>("rho");

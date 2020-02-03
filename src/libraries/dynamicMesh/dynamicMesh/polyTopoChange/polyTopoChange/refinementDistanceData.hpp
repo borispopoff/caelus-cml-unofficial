@@ -163,7 +163,7 @@ public:
             (
                 const polyMesh&,
                 const polyPatch&,
-                const label patchFaceI,
+                const label patchFacei,
                 const point& faceCentre,
                 TrackingData&
             );
@@ -174,7 +174,7 @@ public:
             (
                 const polyMesh&,
                 const polyPatch&,
-                const label patchFaceI,
+                const label patchFacei,
                 const point& faceCentre,
                 TrackingData&
             );

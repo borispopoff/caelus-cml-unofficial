@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,16 +51,6 @@ class objectRegistry;
 class interpolationWeights
 {
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        interpolationWeights(const interpolationWeights&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const interpolationWeights&);
-
 protected:
 
         const scalarField& samples_;
@@ -89,6 +79,9 @@ public:
 
         //- Construct from components
         interpolationWeights(const scalarField& samples);
+
+        //- Disallow default bitwise copy construct
+        interpolationWeights(const interpolationWeights&) = delete;
 
 
     // Selectors
@@ -135,6 +128,11 @@ public:
         >::type
         weightedSum(const ListType1& f1, const ListType2& f2);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const interpolationWeights&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

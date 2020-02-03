@@ -160,9 +160,9 @@ void CML::isoAdvection::timeIntegratedFlux()
     checkBounding_ = false;
 
     // Get necessary references
-    const scalarField& phiIn = phi_.internalField();
-    const scalarField& magSfIn = mesh_.magSf().internalField();
-    scalarField& dVfIn = dVf_.internalField();
+    const scalarField& phiIn = phi_.primitiveField();
+    const scalarField& magSfIn = mesh_.magSf().primitiveField();
+    scalarField& dVfIn = dVf_.primitiveFieldRef();
 
     // Get necessary mesh data
     const labelListList& cellPoints = mesh_.cellPoints();
@@ -174,12 +174,12 @@ void CML::isoAdvection::timeIntegratedFlux()
     const pointField& points = mesh_.points();
 
     // Storage for isoFace points. Only used if writeIsoFacesToFile_
-    DynamicList<List<point> > isoFacePts;
+    DynamicList<List<point>> isoFacePts;
 
     // Interpolating alpha1 cell centre values to mesh points (vertices)
     ap_ = volPointInterpolation::New(mesh_).interpolate(alpha1_);
 
-    vectorField gradAlpha(mesh_.nPoints(), vector::zero);
+    vectorField gradAlpha(mesh_.nPoints(), Zero);
     if (gradAlphaBasedNormal_)
     {
         // Calculate gradient of alpha1 and interpolate to vertices
@@ -212,15 +212,15 @@ void CML::isoAdvection::timeIntegratedFlux()
             {
                 // Calculating smoothed alpha gradient in surface cell in order
                 // to use it as the isoface orientation.
-                vector smoothedGradA = vector::zero;
+                vector smoothedGradA = Zero;
                 const point& cellCentre = cellCentres[celli];
                 scalar wSum = 0;
-                forAll(cp, pointI)
+                forAll(cp, pointi)
                 {
-                    point vertex = points[cp[pointI]];
+                    point vertex = points[cp[pointi]];
                     scalar w = 1.0/mag(vertex - cellCentre);
                     wSum += w;
-                    smoothedGradA += w*gradAlpha[cp[pointI]];
+                    smoothedGradA += w*gradAlpha[cp[pointi]];
                 }
                 smoothedGradA /= wSum;
 
@@ -265,7 +265,7 @@ void CML::isoAdvection::timeIntegratedFlux()
                 vector n0 = isoCutCell_.isoFaceArea();
                 n0 /= (mag(n0));
 
-                if (writeIsoFacesToFile_ && mesh_.time().outputTime())
+                if (writeIsoFacesToFile_ && mesh_.time().writeTime())
                 {
                     isoFacePts.append(isoCutCell_.isoFacePoints());
                 }
@@ -358,16 +358,16 @@ void CML::isoAdvection::timeIntegratedFlux()
         }
     }
 
-    if (writeIsoFacesToFile_ && mesh_.time().outputTime())
+    if (writeIsoFacesToFile_ && mesh_.time().writeTime())
     {
         writeIsoFaces(isoFacePts);
     }
 
     // Get references to boundary fields
     const polyBoundaryMesh& boundaryMesh = mesh_.boundaryMesh();
-    const surfaceScalarField::GeometricBoundaryField& phib = phi_.boundaryField();
-    const surfaceScalarField::GeometricBoundaryField& magSfb = mesh_.magSf().boundaryField();
-    surfaceScalarField::GeometricBoundaryField& dVfb = dVf_.boundaryField();
+    const surfaceScalarField::Boundary& phib = phi_.boundaryField();
+    const surfaceScalarField::Boundary& magSfb = mesh_.magSf().boundaryField();
+    surfaceScalarField::Boundary& dVfb = dVf_.boundaryFieldRef();
     const label nInternalFaces = mesh_.nInternalFaces();
 
     // Loop through boundary surface faces
@@ -897,7 +897,7 @@ void CML::isoAdvection::syncProcPatches
             );
 
             // Send data to neighbouring processor
-            OPstream toNbr(Pstream::blocking, procPatch.neighbProcNo());
+            OPstream toNbr(Pstream::commsTypes::blocking, procPatch.neighbProcNo());
             toNbr << surfCellFacesOnProcPatch << dVfPatch;
         }
 
@@ -911,7 +911,7 @@ void CML::isoAdvection::syncProcPatches
 
             List<label> faceIDs;
             List<scalar> nbrdVfs;
-            IPstream fromNbr(Pstream::blocking, procPatch.neighbProcNo());
+            IPstream fromNbr(Pstream::commsTypes::blocking, procPatch.neighbProcNo());
             fromNbr >> faceIDs >> nbrdVfs;
 
             if (debug)
@@ -923,7 +923,7 @@ void CML::isoAdvection::syncProcPatches
             }
 
             // Combine fluxes
-            scalarField& localFlux = dVf.boundaryField()[patchi];
+            scalarField& localFlux = dVf.boundaryFieldRef()[patchi];
 
             forAll(faceIDs, i)
             {
@@ -1033,7 +1033,7 @@ void CML::isoAdvection::applyBruteForceBounding()
     bool clip = dict_.lookupOrDefault<bool>("clip", true);
     if (clip)
     {
-        alpha1_ = min(scalar(1.0), max(scalar(0.0), alpha1_));
+        alpha1_ = min(scalar(1), max(scalar(0), alpha1_));
         alpha1Changed = true;
     }
 
@@ -1099,7 +1099,7 @@ void CML::isoAdvection::writeBoundedCells() const
 
 void CML::isoAdvection::writeIsoFaces
 (
-    const DynamicList<List<point> >& faces
+    const DynamicList<List<point>>& faces
 ) const
 {
     // Writing isofaces to obj file for inspection, e.g. in paraview
@@ -1117,7 +1117,7 @@ void CML::isoAdvection::writeIsoFaces
     if (Pstream::parRun())
     {
         // Collect points from all the processors
-        List<DynamicList<List<point> > > allProcFaces(Pstream::nProcs());
+        List<DynamicList<List<point>>> allProcFaces(Pstream::nProcs());
         allProcFaces[Pstream::myProcNo()] = faces;
         Pstream::gatherList(allProcFaces);
 
@@ -1131,7 +1131,7 @@ void CML::isoAdvection::writeIsoFaces
             face f;
             forAll(allProcFaces, proci)
             {
-                const DynamicList<List<point> >& procFacePts =
+                const DynamicList<List<point>>& procFacePts =
                     allProcFaces[proci];
 
                 forAll(procFacePts, i)

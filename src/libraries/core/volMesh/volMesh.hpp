@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -23,6 +23,12 @@ Class
 Description
     Mesh data needed to do the Finite Volume discretisation.
 
+Class
+    CML::isVolMesh
+
+Description
+    Supports static assertion that a template argument is of type volMesh.
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef volMesh_H
@@ -31,6 +37,7 @@ Description
 #include "GeoMesh.hpp"
 #include "fvMesh.hpp"
 #include "primitiveMesh.hpp"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -77,6 +84,24 @@ public:
             return mesh_.C();
         }
 };
+
+
+/*---------------------------------------------------------------------------*\
+                          Class isVolMesh Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class T>
+class isVolMesh
+:
+    public std::false_type
+{};
+
+
+template<>
+class isVolMesh<volMesh>
+:
+    public std::true_type
+{};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

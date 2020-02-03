@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -469,7 +469,7 @@ baffleThickness() const
         (
             new scalarField(nbrField.baffleThickness())
         );
-        scalarField& thickness = tthickness();
+        scalarField& thickness = tthickness.ref();
         mapDist.distribute(thickness);
         return tthickness;
     }
@@ -497,7 +497,7 @@ tmp<scalarField> thermalBaffle1DFvPatchScalarField<solidType>::Qs() const
         );
 
         tmp<scalarField> tQs(new scalarField(nbrField.Qs()));
-        scalarField& Qs = tQs();
+        scalarField& Qs = tQs.ref();
         mapDist.distribute(Qs);
         return tQs;
     }
@@ -617,9 +617,9 @@ void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
             scalar Q = gAverage(kappaw*snGrad());
             Info<< patch().boundaryMesh().mesh().name() << ':'
                 << patch().name() << ':'
-                << this->dimensionedInternalField().name() << " <- "
+                << this->internalField().name() << " <- "
                 << nbrPatch.name() << ':'
-                << this->dimensionedInternalField().name() << " :"
+                << this->internalField().name() << " :"
                 << " heat[W]:" << Q
                 << " walltemperature "
                 << " min:" << gMin(*this)
@@ -643,15 +643,14 @@ void thermalBaffle1DFvPatchScalarField<solidType>::write(Ostream& os) const
 
     if (this->owner())
     {
-        baffleThickness()().writeEntry("thickness", os);
-        Qs()().writeEntry("Qs", os);
+        writeEntry(os, "thickness", baffleThickness()());
+        writeEntry(os, "Qs", Qs()());
         solid().write(os);
     }
 
-    qrPrevious_.writeEntry("qrPrevious", os);
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qrRelaxation")<< qrRelaxation_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "qrPrevious", qrPrevious_);
+    writeEntry(os, "qr", qrName_);
+    writeEntry(os, "qrRelaxation", qrRelaxation_);
 }
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,7 +55,7 @@ class processorCyclicGAMGInterfaceField
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const processorCyclicGAMGInterfaceField&);
+        void operator=(const processorCyclicGAMGInterfaceField&) = delete;
 
 
 public:

@@ -91,14 +91,14 @@ CML::scalar CML::cellDistFuncs::smallestDist
 
     for (label wallFaceI = 0; wallFaceI < nWallFaces; wallFaceI++)
     {
-        label patchFaceI = wallFaces[wallFaceI];
+        label patchFacei = wallFaces[wallFaceI];
 
-        pointHit curHit = patch[patchFaceI].nearestPoint(p, points);
+        pointHit curHit = patch[patchFacei].nearestPoint(p, points);
 
         if (curHit.distance() < minDist)
         {
             minDist = curHit.distance();
-            minFaceI = patch.start() + patchFaceI;
+            minFaceI = patch.start() + patchFacei;
         }
     }
 
@@ -106,23 +106,23 @@ CML::scalar CML::cellDistFuncs::smallestDist
 }
 
 
-// Get point neighbours of faceI (including faceI). Returns number of faces.
+// Get point neighbours of facei (including facei). Returns number of faces.
 // Note: does not allocate storage but does use linear search to determine
 // uniqueness. For polygonal faces this might be quite inefficient.
 CML::label CML::cellDistFuncs::getPointNeighbours
 (
     const primitivePatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     labelList& neighbours
 ) const
 {
     label nNeighbours = 0;
 
     // Add myself
-    neighbours[nNeighbours++] = patchFaceI;
+    neighbours[nNeighbours++] = patchFacei;
 
     // Add all face neighbours
-    const labelList& faceNeighbours = patch.faceFaces()[patchFaceI];
+    const labelList& faceNeighbours = patch.faceFaces()[patchFacei];
 
     forAll(faceNeighbours, faceNeighbourI)
     {
@@ -137,22 +137,22 @@ CML::label CML::cellDistFuncs::getPointNeighbours
     // Assumes that point-only neighbours are not using multiple points on
     // face.
 
-    const face& f = patch.localFaces()[patchFaceI];
+    const face& f = patch.localFaces()[patchFacei];
 
     forAll(f, fp)
     {
-        label pointI = f[fp];
+        label pointi = f[fp];
 
-        const labelList& pointNbs = patch.pointFaces()[pointI];
+        const labelList& pointNbs = patch.pointFaces()[pointi];
 
         forAll(pointNbs, nbI)
         {
-            label faceI = pointNbs[nbI];
+            label facei = pointNbs[nbI];
 
-            // Check for faceI in edge-neighbours part of neighbours
-            if (findIndex(nEdgeNbs, neighbours, faceI) == -1)
+            // Check for facei in edge-neighbours part of neighbours
+            if (findIndex(nEdgeNbs, neighbours, facei) == -1)
             {
-                neighbours[nNeighbours++] = faceI;
+                neighbours[nNeighbours++] = facei;
             }
         }
     }
@@ -183,7 +183,7 @@ CML::label CML::cellDistFuncs::getPointNeighbours
             if (!nbs.found(nb))
             {
                 SeriousErrorInFunction
-                    << "getPointNeighbours : patchFaceI:" << patchFaceI
+                    << "getPointNeighbours : patchFacei:" << patchFacei
                     << " verts:" << f << endl;
 
                 forAll(f, fp)
@@ -228,11 +228,11 @@ CML::label CML::cellDistFuncs::maxPatchSize
 {
     label maxSize = 0;
 
-    forAll(mesh().boundaryMesh(), patchI)
+    forAll(mesh().boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh().boundaryMesh()[patchI];
+            const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
             maxSize = CML::max(maxSize, patch.size());
         }
@@ -250,11 +250,11 @@ const
 {
     label sum = 0;
 
-    forAll(mesh().boundaryMesh(), patchI)
+    forAll(mesh().boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh().boundaryMesh()[patchI];
+            const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
             sum += patch.size();
         }
@@ -281,29 +281,29 @@ void CML::cellDistFuncs::correctBoundaryFaceCells
     const vectorField& cellCentres = mesh().cellCentres();
     const labelList& faceOwner = mesh().faceOwner();
 
-    forAll(mesh().boundaryMesh(), patchI)
+    forAll(mesh().boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh().boundaryMesh()[patchI];
+            const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
             // Check cells with face on wall
-            forAll(patch, patchFaceI)
+            forAll(patch, patchFacei)
             {
                 label nNeighbours = getPointNeighbours
                 (
                     patch,
-                    patchFaceI,
+                    patchFacei,
                     neighbours
                 );
 
-                label cellI = faceOwner[patch.start() + patchFaceI];
+                label celli = faceOwner[patch.start() + patchFacei];
 
                 label minFaceI = -1;
 
-                wallDistCorrected[cellI] = smallestDist
+                wallDistCorrected[celli] = smallestDist
                 (
-                    cellCentres[cellI],
+                    cellCentres[celli],
                     patch,
                     nNeighbours,
                     neighbours,
@@ -311,7 +311,7 @@ void CML::cellDistFuncs::correctBoundaryFaceCells
                 );
 
                 // Store wallCell and its nearest neighbour
-                nearestFace.insert(cellI, minFaceI);
+                nearestFace.insert(celli, minFaceI);
             }
         }
     }
@@ -331,34 +331,34 @@ void CML::cellDistFuncs::correctBoundaryPointCells
 
     const vectorField& cellCentres = mesh().cellCentres();
 
-    forAll(mesh().boundaryMesh(), patchI)
+    forAll(mesh().boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh().boundaryMesh()[patchI];
+            const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
             const labelList& meshPoints = patch.meshPoints();
             const labelListList& pointFaces = patch.pointFaces();
 
-            forAll(meshPoints, meshPointI)
+            forAll(meshPoints, meshPointi)
             {
-                label vertI = meshPoints[meshPointI];
+                label vertI = meshPoints[meshPointi];
 
                 const labelList& neighbours = mesh().pointCells(vertI);
 
                 forAll(neighbours, neighbourI)
                 {
-                    label cellI = neighbours[neighbourI];
+                    label celli = neighbours[neighbourI];
 
-                    if (!nearestFace.found(cellI))
+                    if (!nearestFace.found(celli))
                     {
-                        const labelList& wallFaces = pointFaces[meshPointI];
+                        const labelList& wallFaces = pointFaces[meshPointi];
 
                         label minFaceI = -1;
 
-                        wallDistCorrected[cellI] = smallestDist
+                        wallDistCorrected[celli] = smallestDist
                         (
-                            cellCentres[cellI],
+                            cellCentres[celli],
                             patch,
                             wallFaces.size(),
                             wallFaces,
@@ -366,7 +366,7 @@ void CML::cellDistFuncs::correctBoundaryPointCells
                         );
 
                         // Store wallCell and its nearest neighbour
-                        nearestFace.insert(cellI, minFaceI);
+                        nearestFace.insert(celli, minFaceI);
                     }
                 }
             }

@@ -49,9 +49,9 @@ CML::topoSetSource::addToUsageTable CML::nearestToCell::usage_
 
 void CML::nearestToCell::combine(topoSet& set, const bool add) const
 {
-    forAll(points_, pointI)
+    forAll(points_, pointi)
     {
-        addOrDelete(set, mesh_.findNearestCell(points_[pointI]), add);
+        addOrDelete(set, mesh_.findNearestCell(points_[pointi]), add);
     }
 }
 

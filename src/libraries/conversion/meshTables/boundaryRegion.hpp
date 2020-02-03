@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -71,7 +71,7 @@ class boundaryRegion
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        boundaryRegion(const boundaryRegion&);
+        boundaryRegion(const boundaryRegion&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,12 +49,12 @@ class ensightPartFaces
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const ensightPartFaces&);
+        void operator=(const ensightPartFaces&) = delete;
 
-        //- track points used
+        //- Track points used
         virtual localPoints calcLocalPoints() const;
 
-        //- element connectivity
+        //- Element connectivity
         virtual void writeConnectivity
         (
             ensightGeoFile&,
@@ -66,7 +66,7 @@ class ensightPartFaces
 
 protected:
 
-        //- addressable ensight element types
+        //- Addressable ensight element types
         enum elemType
         {
             tria3Elements,
@@ -82,7 +82,7 @@ protected:
 
     // Protected data
 
-        //- faces referenced
+        //- Faces referenced
         const faceList& faces_;
 
         //- Can skip local point renumbering when points are contiguous
@@ -134,7 +134,7 @@ public:
             const polyPatch&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         ensightPartFaces(const ensightPartFaces&);
 
         //- Reconstruct part characteristics (eg, element types) from Istream
@@ -156,10 +156,10 @@ public:
 
     // Member Functions
 
-        //- write geometry
+        //- Write geometry
         virtual void writeGeometry(ensightGeoFile&) const;
 
-        //- static listing of the element types
+        //- Static listing of the element types
         virtual const List<word>& elementTypes() const
         {
             return elemTypes_;

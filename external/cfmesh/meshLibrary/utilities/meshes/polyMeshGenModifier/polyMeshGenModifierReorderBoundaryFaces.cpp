@@ -87,10 +87,10 @@ void polyMeshGenModifier::reorderBoundaryFaces()
         # ifdef USE_OMP
         # pragma omp for schedule(static)
         # endif
-        for(label faceI=0;faceI<nInternalFaces;++faceI)
+        for(label facei=0;facei<nInternalFaces;++facei)
         {
-            if( neighbour[faceI] == -1 )
-                internalToChangeLocal.append(faceI);
+            if( neighbour[facei] == -1 )
+                internalToChangeLocal.append(facei);
         }
 
         nItc = internalToChangeLocal.size();
@@ -99,10 +99,10 @@ void polyMeshGenModifier::reorderBoundaryFaces()
         # ifdef USE_OMP
         # pragma omp for schedule(static)
         # endif
-        for(label faceI=nInternalFaces;faceI<faces.size();++faceI)
+        for(label facei=nInternalFaces;facei<faces.size();++facei)
         {
-            if( neighbour[faceI] != -1 )
-                boundaryToChangeLocal.append(faceI);
+            if( neighbour[facei] != -1 )
+                boundaryToChangeLocal.append(facei);
         }
 
         nBtc = boundaryToChangeLocal.size();
@@ -165,9 +165,9 @@ void polyMeshGenModifier::reorderBoundaryFaces()
         //- renumber cells
         # pragma omp for schedule(dynamic, 40)
         # endif
-        forAll(cells, cellI)
+        forAll(cells, celli)
         {
-            cell& c = cells[cellI];
+            cell& c = cells[celli];
 
             forAll(c, fI)
                 if( newFaceLabel[c[fI]] != -1 )
@@ -252,10 +252,10 @@ void polyMeshGenModifier::reorderProcBoundaryFaces()
     //- faces added after processor boundaries should be moved up front
     faceList facesAtEnd(shift);
     label counter(0);
-    for(label faceI=(origProcStart + nProcFaces);faceI<faces.size();++faceI)
+    for(label facei=(origProcStart + nProcFaces);facei<faces.size();++facei)
     {
-        facesAtEnd[counter].transfer(faces[faceI]);
-        newFaceLabel[faceI] = origProcStart + counter;
+        facesAtEnd[counter].transfer(faces[facei]);
+        newFaceLabel[facei] = origProcStart + counter;
         ++counter;
     }
 
@@ -268,10 +268,10 @@ void polyMeshGenModifier::reorderProcBoundaryFaces()
         //- set patch start to the new value
         procBoundaries[patchI].patchStart() += shift;
 
-        for(label faceI=end-1;faceI>=start;--faceI)
+        for(label facei=end-1;facei>=start;--facei)
         {
-            faces[faceI+shift].transfer(faces[faceI]);
-            newFaceLabel[faceI] = faceI + shift;
+            faces[facei+shift].transfer(faces[facei]);
+            newFaceLabel[facei] = facei + shift;
         }
     }
 
@@ -311,9 +311,9 @@ void polyMeshGenModifier::reorderProcBoundaryFaces()
     # ifdef USE_OMP
     # pragma omp parallel for schedule(dynamic, 40)
     # endif
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        cell& c = cells[cellI];
+        cell& c = cells[celli];
 
         forAll(c, fI)
             if( newFaceLabel[c[fI]] != -1 )

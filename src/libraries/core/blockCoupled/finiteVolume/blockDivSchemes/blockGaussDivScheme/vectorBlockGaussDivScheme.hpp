@@ -45,14 +45,14 @@ namespace fv
 {
 
     template<>
-    tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
+    tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
     (
         const GeometricField<vector, fvPatchField, volMesh>&
     ) const;
 
 
     template<>
-    tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
+    tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
     (
         const surfaceScalarField& flux,
         const GeometricField<vector, fvPatchField, volMesh>&

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,7 +63,7 @@ class uniformFixedValuePointPatchField
 {
     // Private data
 
-        autoPtr<DataEntry<Type> > uniformValue_;
+        autoPtr<DataEntry<Type>> uniformValue_;
 
 
 public:
@@ -105,9 +105,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new uniformFixedValuePointPatchField<Type>
                 (
@@ -125,12 +125,12 @@ public:
 
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new uniformFixedValuePointPatchField<Type>
                 (
@@ -162,19 +162,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * //
 
 template<class Type>
-uniformFixedValuePointPatchField<Type>::
+CML::uniformFixedValuePointPatchField<Type>::
 uniformFixedValuePointPatchField
 (
     const pointPatch& p,
@@ -187,7 +181,7 @@ uniformFixedValuePointPatchField
 
 
 template<class Type>
-uniformFixedValuePointPatchField<Type>::
+CML::uniformFixedValuePointPatchField<Type>::
 uniformFixedValuePointPatchField
 (
     const pointPatch& p,
@@ -214,7 +208,7 @@ uniformFixedValuePointPatchField
 
 
 template<class Type>
-uniformFixedValuePointPatchField<Type>::
+CML::uniformFixedValuePointPatchField<Type>::
 uniformFixedValuePointPatchField
 (
     const uniformFixedValuePointPatchField<Type>& ptf,
@@ -224,7 +218,7 @@ uniformFixedValuePointPatchField
 )
 :
     fixedValuePointPatchField<Type>(ptf, p, iF, mapper),
-    uniformValue_(ptf.uniformValue_().clone().ptr())
+    uniformValue_(ptf.uniformValue_, false)
 {
     // For safety re-evaluate
     const scalar t = this->db().time().timeOutputValue();
@@ -233,19 +227,19 @@ uniformFixedValuePointPatchField
 
 
 template<class Type>
-uniformFixedValuePointPatchField<Type>::
+CML::uniformFixedValuePointPatchField<Type>::
 uniformFixedValuePointPatchField
 (
     const uniformFixedValuePointPatchField<Type>& ptf
 )
 :
     fixedValuePointPatchField<Type>(ptf),
-    uniformValue_(ptf.uniformValue_().clone().ptr())
+    uniformValue_(ptf.uniformValue_, false)
 {}
 
 
 template<class Type>
-uniformFixedValuePointPatchField<Type>::
+CML::uniformFixedValuePointPatchField<Type>::
 uniformFixedValuePointPatchField
 (
     const uniformFixedValuePointPatchField<Type>& ptf,
@@ -253,7 +247,7 @@ uniformFixedValuePointPatchField
 )
 :
     fixedValuePointPatchField<Type>(ptf, iF),
-    uniformValue_(ptf.uniformValue_().clone().ptr())
+    uniformValue_(ptf.uniformValue_, false)
 {
     // For safety re-evaluate
     const scalar t = this->db().time().timeOutputValue();
@@ -264,7 +258,7 @@ uniformFixedValuePointPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void uniformFixedValuePointPatchField<Type>::updateCoeffs()
+void CML::uniformFixedValuePointPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
     {
@@ -279,23 +273,13 @@ void uniformFixedValuePointPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void uniformFixedValuePointPatchField<Type>::
+void CML::uniformFixedValuePointPatchField<Type>::
 write(Ostream& os) const
 {
     // Note: write value
     fixedValuePointPatchField<Type>::write(os);
-    uniformValue_->writeData(os);
+    writeEntry(os, uniformValue_());
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// ******************************
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

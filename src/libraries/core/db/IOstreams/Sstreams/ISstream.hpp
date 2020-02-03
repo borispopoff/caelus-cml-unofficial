@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -69,9 +69,9 @@ class ISstream
         //- Read a verbatim string (excluding block delimiters).
         Istream& readVerbatim(string&);
 
+        //- Read a variable name (includes '{')
+        Istream& readVariable(string&);
 
-        //- Disallow default bitwise assignment
-        void operator=(const ISstream&);
 
 
 public:
@@ -128,7 +128,10 @@ public:
             inline int peek();
 
             //- Raw, low-level getline into a string function.
-            inline ISstream& getLine(string&);
+//            inline ISstream& getLine(string&);
+
+            //- Raw, low-level getline into a string function.
+            inline ISstream& getLine(std::string& str, char delim = '\n');
 
             //- Raw, low-level putback character function.
             inline ISstream& putback(const char&);
@@ -188,6 +191,12 @@ public:
 
             //- Print description of IOstream to Ostream
             virtual void print(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ISstream&) = delete;
 };
 
 

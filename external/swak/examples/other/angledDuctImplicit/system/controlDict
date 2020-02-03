@@ -472,7 +472,7 @@ functions
     testPlaneArea
     {
         type expressionField;
-        outputControl outputTime;
+        outputControl writeTime;
         //        outputInterval 1;
         fieldName testPlaneArea;
         expression "surfaceArea(testPlane)";
@@ -786,7 +786,7 @@ functions
     velocityClass
     {
         type expressionField;
-        outputControl outputTime;
+        outputControl writeTime;
         //        outputInterval 1;
         fieldName velClass;
         lookuptables (

@@ -73,9 +73,9 @@ void setNrOfPointsInCellPluginFunction::doEvaluation()
     const labelList &cells=theSet().cells();
 
     forAll(cells,i) {
-        const label cellI=cells[i];
+        const label celli=cells[i];
 
-        pNrOfPointsInCell()[cellI]+=1;
+        pNrOfPointsInCell()[celli]+=1;
     }
 
     pNrOfPointsInCell->correctBoundaryConditions();

@@ -38,28 +38,28 @@ void CML::CFCCellToCellStencil::calcFaceBoundaryData
 
     neiGlobal.setSize(nBnd);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
-        label faceI = pp.start();
+        const polyPatch& pp = patches[patchi];
+        label facei = pp.start();
 
         if (pp.coupled())
         {
             // For coupled faces get the cell on the other side
             forAll(pp, i)
             {
-                label bFaceI = faceI-mesh().nInternalFaces();
-                neiGlobal[bFaceI] = globalNumbering().toGlobal(own[faceI]);
-                faceI++;
+                label bFacei = facei-mesh().nInternalFaces();
+                neiGlobal[bFacei] = globalNumbering().toGlobal(own[facei]);
+                facei++;
             }
         }
         else if (isA<emptyPolyPatch>(pp))
         {
             forAll(pp, i)
             {
-                label bFaceI = faceI-mesh().nInternalFaces();
-                neiGlobal[bFaceI] = -1;
-                faceI++;
+                label bFacei = facei-mesh().nInternalFaces();
+                neiGlobal[bFacei] = -1;
+                facei++;
             }
         }
         else
@@ -67,10 +67,10 @@ void CML::CFCCellToCellStencil::calcFaceBoundaryData
             // For noncoupled faces get the boundary face.
             forAll(pp, i)
             {
-                label bFaceI = faceI-mesh().nInternalFaces();
-                neiGlobal[bFaceI] =
-                    globalNumbering().toGlobal(mesh().nCells()+bFaceI);
-                faceI++;
+                label bFacei = facei-mesh().nInternalFaces();
+                neiGlobal[bFacei] =
+                    globalNumbering().toGlobal(mesh().nCells()+bFacei);
+                facei++;
             }
         }
     }
@@ -99,39 +99,39 @@ void CML::CFCCellToCellStencil::calcCellStencil(labelListList& globalCellCells)
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     globalCellCells.setSize(mesh().nCells());
-    forAll(globalCellCells, cellI)
+    forAll(globalCellCells, celli)
     {
-        const cell& cFaces = mesh().cells()[cellI];
+        const cell& cFaces = mesh().cells()[celli];
 
-        labelList& cCells = globalCellCells[cellI];
+        labelList& cCells = globalCellCells[celli];
 
         cCells.setSize(cFaces.size()+1);
 
         label nNbr = 0;
 
         // Myself
-        cCells[nNbr++] = globalNumbering().toGlobal(cellI);
+        cCells[nNbr++] = globalNumbering().toGlobal(celli);
 
         // Collect neighbouring cells/faces
         forAll(cFaces, i)
         {
-            label faceI = cFaces[i];
+            label facei = cFaces[i];
 
-            if (mesh().isInternalFace(faceI))
+            if (mesh().isInternalFace(facei))
             {
-                label nbrCellI = own[faceI];
-                if (nbrCellI == cellI)
+                label nbrCelli = own[facei];
+                if (nbrCelli == celli)
                 {
-                    nbrCellI = nei[faceI];
+                    nbrCelli = nei[facei];
                 }
-                cCells[nNbr++] = globalNumbering().toGlobal(nbrCellI);
+                cCells[nNbr++] = globalNumbering().toGlobal(nbrCelli);
             }
             else
             {
-                label nbrCellI = neiGlobal[faceI-mesh().nInternalFaces()];
-                if (nbrCellI != -1)
+                label nbrCelli = neiGlobal[facei-mesh().nInternalFaces()];
+                if (nbrCelli != -1)
                 {
-                    cCells[nNbr++] = nbrCellI;
+                    cCells[nNbr++] = nbrCelli;
                 }
             }
         }

@@ -162,22 +162,22 @@ void CML::meshReaders::STARCD::readPoints
 
         label lineLabel;
 
-        label pointI = 0;
+        label pointi = 0;
         while ((is >> lineLabel).good())
         {
-            is  >> points_[pointI].x()
-                >> points_[pointI].y()
-                >> points_[pointI].z();
+            is  >> points_[pointi].x()
+                >> points_[pointi].y()
+                >> points_[pointi].z();
 
             // might need again in the future
-            ////  origPointId[pointI] = lineLabel;
-            mapToCaelusPointId_[lineLabel] = pointI;
-            pointI++;
+            ////  origPointId[pointi] = lineLabel;
+            mapToCaelusPointId_[lineLabel] = pointi;
+            pointi++;
         }
 
-        if (nPoints > pointI)
+        if (nPoints > pointi)
         {
-            nPoints = pointI;
+            nPoints = pointi;
             points_.setSize(nPoints);
             // might need again in the future
             //// origPointId.setSize(nPoints);
@@ -374,7 +374,7 @@ void CML::meshReaders::STARCD::readCells(const fileName& inputName)
         labelList starLabels(64);
         label lineLabel, shapeId, nLabels, cellTableId, typeId;
 
-        label cellI = 0;
+        label celli = 0;
         label baffleI = 0;
 
         while ((is >> lineLabel).good())
@@ -453,18 +453,18 @@ void CML::meshReaders::STARCD::readCells(const fileName& inputName)
                 }
 
                 // record original cell number and lookup
-                origCellId_[cellI] = starCellId;
-                mapToCaelusCellId_[starCellId] = cellI;
+                origCellId_[celli] = starCellId;
+                mapToCaelusCellId_[starCellId] = celli;
 
-                cellTableId_[cellI] = cellTableId;
-                cellShapes_[cellI] = cellShape
+                cellTableId_[celli] = cellTableId;
+                cellShapes_[celli] = cellShape
                 (
                     *curModelPtr,
                     SubList<label>(starLabels, nLabels)
                 );
 
-                cellFaces_[cellI] = cellShapes_[cellI].faces();
-                cellI++;
+                cellFaces_[celli] = cellShapes_[celli].faces();
+                celli++;
             }
             else if (shapeId == starcdPoly)
             {
@@ -495,7 +495,7 @@ void CML::meshReaders::STARCD::readCells(const fileName& inputName)
 
                 // traverse beg/end indices
                 faceList faces(nFaces);
-                label faceI = 0;
+                label facei = 0;
                 for (label i=0; i < nFaces; ++i)
                 {
                     label beg = starLabels[i];
@@ -511,19 +511,19 @@ void CML::meshReaders::STARCD::readCells(const fileName& inputName)
                     // valid faces only
                     if (f.size() >= 3)
                     {
-                        faces[faceI++] = f;
+                        faces[facei++] = f;
                     }
                 }
 
-                if (nFaces > faceI)
+                if (nFaces > facei)
                 {
                     Info<< "star cell " << starCellId << " has "
-                        << (nFaces - faceI)
+                        << (nFaces - facei)
                         << " empty faces - could cause boundary "
                         << "addressing problems"
                         << endl;
 
-                    nFaces = faceI;
+                    nFaces = facei;
                     faces.setSize(nFaces);
                 }
 
@@ -535,13 +535,13 @@ void CML::meshReaders::STARCD::readCells(const fileName& inputName)
                 }
 
                 // record original cell number and lookup
-                origCellId_[cellI] = starCellId;
-                mapToCaelusCellId_[starCellId] = cellI;
+                origCellId_[celli] = starCellId;
+                mapToCaelusCellId_[starCellId] = celli;
 
-                cellTableId_[cellI] = cellTableId;
-                cellShapes_[cellI]  = genericShape;
-                cellFaces_[cellI]   = faces;
-                cellI++;
+                cellTableId_[celli] = cellTableId;
+                cellShapes_[celli]  = genericShape;
+                cellFaces_[celli]   = faces;
+                celli++;
             }
             else if (typeId == starcdBaffleType)
             {
@@ -729,12 +729,12 @@ void CML::meshReaders::STARCD::readBoundary(const fileName& inputName)
 
     // create names
     // - use 'Label' entry from "constant/boundaryRegion" dictionary
-    forAll(patchTypes_, patchI)
+    forAll(patchTypes_, patchi)
     {
         bool foundName = false, foundType = false;
 
         Map<dictionary>::const_iterator
-            iter = boundaryRegion_.find(origRegion[patchI]);
+            iter = boundaryRegion_.find(origRegion[patchi]);
 
         if
         (
@@ -744,13 +744,13 @@ void CML::meshReaders::STARCD::readBoundary(const fileName& inputName)
             foundType = iter().readIfPresent
             (
                 "BoundaryType",
-                patchTypes_[patchI]
+                patchTypes_[patchi]
             );
 
             foundName = iter().readIfPresent
             (
                 "Label",
-                patchNames_[patchI]
+                patchNames_[patchi]
             );
         }
 
@@ -758,34 +758,34 @@ void CML::meshReaders::STARCD::readBoundary(const fileName& inputName)
         if (!foundType)
         {
             // transform
-            forAllIter(string, patchTypes_[patchI], i)
+            forAllIter(string, patchTypes_[patchi], i)
             {
                 *i = tolower(*i);
             }
 
-            if (patchTypes_[patchI] == "symp")
+            if (patchTypes_[patchi] == "symp")
             {
-                patchTypes_[patchI] = "symplane";
+                patchTypes_[patchi] = "symplane";
             }
-            else if (patchTypes_[patchI] == "cycl")
+            else if (patchTypes_[patchi] == "cycl")
             {
-                patchTypes_[patchI] = "cyclic";
+                patchTypes_[patchi] = "cyclic";
             }
-            else if (patchTypes_[patchI] == "baff")
+            else if (patchTypes_[patchi] == "baff")
             {
-                patchTypes_[patchI] = "baffle";
+                patchTypes_[patchi] = "baffle";
             }
-            else if (patchTypes_[patchI] == "moni")
+            else if (patchTypes_[patchi] == "moni")
             {
-                patchTypes_[patchI] = "monitoring";
+                patchTypes_[patchi] = "monitoring";
             }
         }
 
         // create a name if needed
         if (!foundName)
         {
-            patchNames_[patchI] =
-                patchTypes_[patchI] + "_" + name(origRegion[patchI]);
+            patchNames_[patchi] =
+                patchTypes_[patchi] + "_" + name(origRegion[patchi]);
         }
     }
 
@@ -837,16 +837,16 @@ void CML::meshReaders::STARCD::readBoundary(const fileName& inputName)
     }
 
     mapToCaelusPatchId.setSize(maxId+1, -1);
-    forAll(origRegion, patchI)
+    forAll(origRegion, patchi)
     {
-        mapToCaelusPatchId[origRegion[patchI]] = patchI;
+        mapToCaelusPatchId[origRegion[patchi]] = patchi;
     }
 
     boundaryIds_.setSize(nPatches);
-    forAll(boundaryIds_, patchI)
+    forAll(boundaryIds_, patchi)
     {
-        boundaryIds_[patchI].setSize(nPatchFaces[patchI]);
-        nPatchFaces[patchI] = 0;
+        boundaryIds_[patchi].setSize(nPatchFaces[patchi]);
+        nPatchFaces[patchi] = 0;
     }
 
 
@@ -866,7 +866,7 @@ void CML::meshReaders::STARCD::readBoundary(const fileName& inputName)
                 >> configNumber
                 >> patchType;
 
-            label patchI = mapToCaelusPatchId[starRegion];
+            label patchi = mapToCaelusPatchId[starRegion];
 
             // zero-based indexing
             cellFaceId--;
@@ -905,14 +905,14 @@ void CML::meshReaders::STARCD::readBoundary(const fileName& inputName)
                     cellFaceId = -1;
                 }
 
-                boundaryIds_[patchI][nPatchFaces[patchI]] =
+                boundaryIds_[patchi][nPatchFaces[patchi]] =
                     cellFaceIdentifier(cellId, cellFaceId);
 
 #ifdef DEBUG_BOUNDARY
                 Info<< "bnd " << cellId << " " << cellFaceId << endl;
 #endif
                 // increment counter of faces in current patch
-                nPatchFaces[patchI]++;
+                nPatchFaces[patchi]++;
             }
         }
     }
@@ -921,50 +921,50 @@ void CML::meshReaders::STARCD::readBoundary(const fileName& inputName)
     patchPhysicalTypes_.setSize(patchTypes_.size());
 
 
-    forAll(boundaryIds_, patchI)
+    forAll(boundaryIds_, patchi)
     {
         // resize - avoid invalid boundaries
-        if (nPatchFaces[patchI] < boundaryIds_[patchI].size())
+        if (nPatchFaces[patchi] < boundaryIds_[patchi].size())
         {
-            boundaryIds_[patchI].setSize(nPatchFaces[patchI]);
+            boundaryIds_[patchi].setSize(nPatchFaces[patchi]);
         }
 
-        word origType = patchTypes_[patchI];
-        patchPhysicalTypes_[patchI] = origType;
+        word origType = patchTypes_[patchi];
+        patchPhysicalTypes_[patchi] = origType;
 
         if (origType == "symplane")
         {
-            patchTypes_[patchI] = symmetryPolyPatch::typeName;
-            patchPhysicalTypes_[patchI] = patchTypes_[patchI];
+            patchTypes_[patchi] = symmetryPolyPatch::typeName;
+            patchPhysicalTypes_[patchi] = patchTypes_[patchi];
         }
         else if (origType == "wall")
         {
-            patchTypes_[patchI] = wallPolyPatch::typeName;
-            patchPhysicalTypes_[patchI] = patchTypes_[patchI];
+            patchTypes_[patchi] = wallPolyPatch::typeName;
+            patchPhysicalTypes_[patchi] = patchTypes_[patchi];
         }
         else if (origType == "cyclic")
         {
             // incorrect. should be cyclicPatch but this
             // requires info on connected faces.
-            patchTypes_[patchI] = oldCyclicPolyPatch::typeName;
-            patchPhysicalTypes_[patchI] = patchTypes_[patchI];
+            patchTypes_[patchi] = oldCyclicPolyPatch::typeName;
+            patchPhysicalTypes_[patchi] = patchTypes_[patchi];
         }
         else if (origType == "baffle")
         {
             // incorrect. tag the patch until we get proper support.
             // set physical type to a canonical "baffle"
-            patchTypes_[patchI] = emptyPolyPatch::typeName;
-            patchPhysicalTypes_[patchI] = "baffle";
+            patchTypes_[patchi] = emptyPolyPatch::typeName;
+            patchPhysicalTypes_[patchi] = "baffle";
         }
         else
         {
-            patchTypes_[patchI] = polyPatch::typeName;
+            patchTypes_[patchi] = polyPatch::typeName;
         }
 
-        Info<< "patch " << patchI
-            << " (region " << origRegion[patchI]
-            << ": " << origType << ") type: '" << patchTypes_[patchI]
-            << "' name: " << patchNames_[patchI] << endl;
+        Info<< "patch " << patchi
+            << " (region " << origRegion[patchi]
+            << ": " << origType << ") type: '" << patchTypes_[patchi]
+            << "' name: " << patchNames_[patchi] << endl;
     }
 
     // cleanup
@@ -982,9 +982,9 @@ void CML::meshReaders::STARCD::cullPoints()
     labelList oldToNew(nPoints, -1);
 
     // loop through cell faces and note which points are being used
-    forAll(cellFaces_, cellI)
+    forAll(cellFaces_, celli)
     {
-        const faceList& faces = cellFaces_[cellI];
+        const faceList& faces = cellFaces_[celli];
         forAll(faces, i)
         {
             const labelList& labels = faces[i];
@@ -996,29 +996,29 @@ void CML::meshReaders::STARCD::cullPoints()
     }
 
     // the new ordering and the count of unused points
-    label pointI = 0;
+    label pointi = 0;
     forAll(oldToNew, i)
     {
         if (oldToNew[i] >= 0)
         {
-            oldToNew[i] = pointI++;
+            oldToNew[i] = pointi++;
         }
     }
 
     // report unused points
-    if (nPoints > pointI)
+    if (nPoints > pointi)
     {
-        Info<< "Unused    points  = " << (nPoints - pointI) << endl;
-        nPoints = pointI;
+        Info<< "Unused    points  = " << (nPoints - pointi) << endl;
+        nPoints = pointi;
 
         // adjust points and truncate
         inplaceReorder(oldToNew, points_);
         points_.setSize(nPoints);
 
         // adjust cellFaces - with mesh shapes this might be faster
-        forAll(cellFaces_, cellI)
+        forAll(cellFaces_, celli)
         {
-            faceList& faces = cellFaces_[cellI];
+            faceList& faces = cellFaces_[celli];
             forAll(faces, i)
             {
                 inplaceRenumber(oldToNew, faces[i]);
@@ -1026,9 +1026,9 @@ void CML::meshReaders::STARCD::cullPoints()
         }
 
         // adjust baffles
-        forAll(baffleFaces_, faceI)
+        forAll(baffleFaces_, facei)
         {
-            inplaceRenumber(oldToNew, baffleFaces_[faceI]);
+            inplaceRenumber(oldToNew, baffleFaces_[facei]);
         }
     }
 }

@@ -101,7 +101,7 @@ CML::chemistryReductionMethods::EFA<CompType, ThermoType>::EFA
     sN_(this->nSpecie_,0),
     sortPart_(0.05)
 {
-    const List<List<specieElement> >& specieComposition =
+    const List<List<specieElement>>& specieComposition =
     this->chemistry_.specieComp();
     for (label i=0; i<this->nSpecie_; i++)
     {

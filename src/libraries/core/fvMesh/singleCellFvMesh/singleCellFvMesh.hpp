@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -74,13 +74,6 @@ class singleCellFvMesh
         void agglomerateMesh(const fvMesh&, const labelListList&);
 
 
-        //- Disallow default bitwise copy construct
-        singleCellFvMesh(const singleCellFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const singleCellFvMesh&);
-
-
 public:
 
         //- Patch field mapper class for agglomerated meshes
@@ -93,6 +86,7 @@ public:
                 const labelListList& addressing_;
                 const scalarListList& weights_;
                 bool hasUnmapped_;
+
 
         public:
 
@@ -163,6 +157,10 @@ public:
         //- Read from IOobject
         singleCellFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construct
+        singleCellFvMesh(const singleCellFvMesh&) = delete;
+
+
     // Member Functions
 
         bool agglomerate() const
@@ -198,11 +196,17 @@ public:
         //- Map volField. Internal field set to average, patch fields straight
         //  copies.
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> >
+        tmp<GeometricField<Type, fvPatchField, volMesh>>
         interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const singleCellFvMesh&) = delete;
 
 };
 
@@ -224,30 +228,30 @@ namespace CML
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> > singleCellFvMesh::interpolate
+tmp<GeometricField<Type, fvPatchField, volMesh>> singleCellFvMesh::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvPatchField<Type> > patchFields(vf.boundaryField().size());
+    PtrList<fvPatchField<Type>> patchFields(vf.boundaryField().size());
 
-    forAll(patchFields, patchI)
+    forAll(patchFields, patchi)
     {
         patchFields.set
         (
-            patchI,
+            patchi,
             fvPatchField<Type>::New
             (
                 calculatedFvPatchField<Type>::typeName,
-                boundary()[patchI],
+                boundary()[patchi],
                 DimensionedField<Type, volMesh>::null()
             )
         );
     }
 
     // Create the complete field from the pieces
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tresF
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tresF
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -265,26 +269,26 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > singleCellFvMesh::interpolate
             patchFields
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& resF = tresF();
+    GeometricField<Type, fvPatchField, volMesh>& resF = tresF.ref();
 
 
     // 2. Change the fvPatchFields to the correct type using a mapper
     //  constructor (with reference to the now correct internal field)
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-        GeometricBoundaryField& bf = resF.boundaryField();
+        Boundary& bf = resF.boundaryFieldRef();
 
     if (agglomerate())
     {
-        forAll(vf.boundaryField(), patchI)
+        forAll(vf.boundaryField(), patchi)
         {
-            const labelList& agglom = patchFaceAgglomeration_[patchI];
+            const labelList& agglom = patchFaceAgglomeration_[patchi];
             label nAgglom = max(agglom)+1;
 
             // Use inverse of agglomeration. This is from agglomeration to
             // original (fine) mesh patch face.
             labelListList coarseToFine(invertOneToMany(nAgglom, agglom));
-            inplaceReorder(patchFaceMap_[patchI], coarseToFine);
+            inplaceReorder(patchFaceMap_[patchi], coarseToFine);
             scalarListList coarseWeights(nAgglom);
             forAll(coarseToFine, coarseI)
             {
@@ -298,12 +302,12 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > singleCellFvMesh::interpolate
 
             bf.set
             (
-                patchI,
+                patchi,
                 fvPatchField<Type>::New
                 (
-                    vf.boundaryField()[patchI],
-                    boundary()[patchI],
-                    resF.dimensionedInternalField(),
+                    vf.boundaryField()[patchi],
+                    boundary()[patchi],
+                    resF(),
                     agglomPatchFieldMapper(coarseToFine, coarseWeights)
                 )
             );
@@ -311,18 +315,18 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > singleCellFvMesh::interpolate
     }
     else
     {
-        forAll(vf.boundaryField(), patchI)
+        forAll(vf.boundaryField(), patchi)
         {
-            labelList map(identity(vf.boundaryField()[patchI].size()));
+            labelList map(identity(vf.boundaryField()[patchi].size()));
 
             bf.set
             (
-                patchI,
+                patchi,
                 fvPatchField<Type>::New
                 (
-                    vf.boundaryField()[patchI],
-                    boundary()[patchI],
-                    resF.dimensionedInternalField(),
+                    vf.boundaryField()[patchi],
+                    boundary()[patchi],
+                    resF(),
                     directFvPatchFieldMapper(map)
                 )
             );

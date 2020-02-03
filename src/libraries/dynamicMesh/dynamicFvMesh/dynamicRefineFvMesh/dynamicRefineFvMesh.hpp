@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -250,10 +250,10 @@ private:
         bool allowUnrefinement_;
 
         //- Disallow default bitwise copy construct
-        dynamicRefineFvMesh(const dynamicRefineFvMesh&);
+        dynamicRefineFvMesh(const dynamicRefineFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const dynamicRefineFvMesh&);
+        void operator=(const dynamicRefineFvMesh&) = delete;
 
 public:
 

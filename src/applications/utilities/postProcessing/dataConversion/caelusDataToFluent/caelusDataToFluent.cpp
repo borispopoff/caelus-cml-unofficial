@@ -74,9 +74,9 @@ int main(int argc, char *argv[])
         // Writing number of faces
         label nFaces = mesh.nFaces();
 
-        forAll(mesh.boundary(), patchI)
+        forAll(mesh.boundary(), patchi)
         {
-            nFaces += mesh.boundary()[patchI].size();
+            nFaces += mesh.boundary()[patchi].size();
         }
 
         fluentDataFile

@@ -692,9 +692,9 @@ void CML::invertManyToMany
     // Number of points per edge
     labelList nPointsPerEdge(nEdges, 0);
 
-    forAll(pointEdges, pointI)
+    forAll(pointEdges, pointi)
     {
-        const InList& pEdges = pointEdges[pointI];
+        const InList& pEdges = pointEdges[pointi];
 
         forAll(pEdges, j)
         {
@@ -712,15 +712,15 @@ void CML::invertManyToMany
     nPointsPerEdge = 0;
 
     // Fill edges
-    forAll(pointEdges, pointI)
+    forAll(pointEdges, pointi)
     {
-        const InList& pEdges = pointEdges[pointI];
+        const InList& pEdges = pointEdges[pointi];
 
         forAll(pEdges, j)
         {
             label edgeI = pEdges[j];
 
-            edges[edgeI][nPointsPerEdge[edgeI]++] = pointI;
+            edges[edgeI][nPointsPerEdge[edgeI]++] = pointi;
         }
     }
 }

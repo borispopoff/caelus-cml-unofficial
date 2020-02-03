@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -50,12 +50,13 @@ class opaqueSolid
 :
     public radiationModel
 {
+    // Private Member Functions
 
-    //- Disallow default bitwise copy construct
-    opaqueSolid(const opaqueSolid&);
+        //- Disallow default bitwise copy construct
+        opaqueSolid(const opaqueSolid&) = delete;
 
-    //- Disallow default bitwise assignment
-    void operator=(const opaqueSolid&);
+        //- Disallow default bitwise assignment
+        void operator=(const opaqueSolid&) = delete;
 
 
 public:
@@ -88,7 +89,7 @@ public:
     tmp<volScalarField> Rp() const;
 
     //- Source term component (constant)
-    tmp<DimensionedField<scalar, volMesh> > Ru() const;
+    tmp<volScalarField::Internal> Ru() const;
 
 };
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017-2018 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -55,10 +55,10 @@ class waxSolventEvaporation
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        waxSolventEvaporation(const waxSolventEvaporation&);
+        waxSolventEvaporation(const waxSolventEvaporation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const waxSolventEvaporation&);
+        void operator=(const waxSolventEvaporation&) = delete;
 
 
 protected:
@@ -91,7 +91,7 @@ protected:
         Switch YInfZero_;
 
         //- Activity coefficient as a function of solvent mole fraction
-        autoPtr<DataEntry<scalar> > activityCoeff_;
+        autoPtr<DataEntry<scalar>> activityCoeff_;
 
 
     // Protected member functions

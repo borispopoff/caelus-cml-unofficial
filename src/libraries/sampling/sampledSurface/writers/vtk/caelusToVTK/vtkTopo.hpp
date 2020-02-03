@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -65,10 +65,10 @@ class vtkTopo
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        vtkTopo(const vtkTopo&);
+        vtkTopo(const vtkTopo&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const vtkTopo&);
+        void operator=(const vtkTopo&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -37,8 +37,8 @@ pressureInletOutletVelocityFvPatchVectorField
     directionMixedFvPatchVectorField(p, iF),
     phiName_("phi")
 {
-    refValue() = vector::zero;
-    refGrad() = vector::zero;
+    refValue() = Zero;
+    refGrad() = Zero;
     valueFraction() = symmTensor::zero;
 }
 
@@ -84,10 +84,10 @@ pressureInletOutletVelocityFvPatchVectorField
     }
     else
     {
-        refValue() = vector::zero;
+        refValue() = Zero;
     }
 
-    refGrad() = vector::zero;
+    refGrad() = Zero;
     valueFraction() = symmTensor::zero;
 }
 
@@ -186,9 +186,9 @@ const
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     if (tangentialVelocity_.size())
     {
-        tangentialVelocity_.writeEntry("tangentialVelocity", os);
+        writeEntry(os, "tangentialVelocity", tangentialVelocity_);
     }
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

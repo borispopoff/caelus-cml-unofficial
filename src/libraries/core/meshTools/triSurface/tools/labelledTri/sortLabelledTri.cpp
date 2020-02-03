@@ -50,9 +50,9 @@ sortLabelledTri::sortLabelledTri(const triSurface& surf)
 {
 
     // Set the face label
-    forAll(surf, faceI)
+    forAll(surf, facei)
     {
-        operator[](faceI).index_ = faceI;
+        operator[](facei).index_ = facei;
     }
 
     // Sort according to region number.

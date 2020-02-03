@@ -137,9 +137,9 @@ void correctEdgesBetweenPatches::decomposeProblematicFaces()
     # ifdef USE_OMP
     # pragma omp parallel for schedule(guided) reduction(+ : nDecomposedFaces)
     # endif
-    for(label faceI=0;faceI<nIntFaces;++faceI)
+    for(label facei=0;facei<nIntFaces;++facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         label nFeatureEdges(0);
 
@@ -165,9 +165,9 @@ void correctEdgesBetweenPatches::decomposeProblematicFaces()
         if( nFeatureEdges > 1 )
         {
             ++nDecomposedFaces;
-            decomposeFace[faceI] = true;
-            decomposeCell_[owner[faceI]] = true;
-            decomposeCell_[neighbour[faceI]] = true;
+            decomposeFace[facei] = true;
+            decomposeCell_[owner[facei]] = true;
+            decomposeCell_[neighbour[facei]] = true;
         }
     }
 
@@ -207,9 +207,9 @@ void correctEdgesBetweenPatches::decomposeProblematicFaces()
             # pragma omp parallel for schedule(guided) \
             reduction(+ : nDecomposedFaces)
             # endif
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
 
                 label nFeatureEdges(0);
 
@@ -236,8 +236,8 @@ void correctEdgesBetweenPatches::decomposeProblematicFaces()
                 if( nFeatureEdges > 1 )
                 {
                     ++nDecomposedFaces;
-                    decomposeFace[faceI] = true;
-                    decomposeCell_[owner[faceI]] = true;
+                    decomposeFace[facei] = true;
+                    decomposeCell_[owner[facei]] = true;
                 }
             }
         }
@@ -368,9 +368,9 @@ void correctEdgesBetweenPatches::decomposeConcaveFaces()
     # pragma omp parallel for schedule(dynamic, 100) \
     reduction(+ : nDecomposed)
     # endif
-    for(label faceI=0;faceI<mesh_.nInternalFaces();++faceI)
+    for(label facei=0;facei<mesh_.nInternalFaces();++facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         bool hasConcave(false);
         label nBndEdges(0);
@@ -408,10 +408,10 @@ void correctEdgesBetweenPatches::decomposeConcaveFaces()
         {
             //- the face has two or more edges at the boundary
             //- Hence, it is marked for decomposition
-            decomposeFace[faceI] = true;
+            decomposeFace[facei] = true;
 
-            decomposeCell_[owner[faceI]] = true;
-            decomposeCell_[neighbour[faceI]] = true;
+            decomposeCell_[owner[facei]] = true;
+            decomposeCell_[neighbour[facei]] = true;
 
             ++nDecomposed;
         }

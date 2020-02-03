@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,7 +42,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class orthogonalSnGrad Declaration
+                 Class orthogonalSnGrad Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -50,12 +50,6 @@ class orthogonalSnGrad
 :
     public snGradScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const orthogonalSnGrad&);
-
-
 public:
 
     //- Runtime type information
@@ -101,8 +95,14 @@ public:
 
         //- Return the explicit correction to the orthogonalSnGrad
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const orthogonalSnGrad&) = delete;
 };
 
 
@@ -139,14 +139,14 @@ orthogonalSnGrad<Type>::~orthogonalSnGrad()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 orthogonalSnGrad<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>&
 ) const
 {
     NotImplemented;
-    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >(nullptr);
+    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>(nullptr);
 }
 
 

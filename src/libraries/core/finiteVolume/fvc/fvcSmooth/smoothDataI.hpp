@@ -173,7 +173,7 @@ inline bool CML::smoothData::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::smoothData::equal
 (
     const smoothData& rhs,

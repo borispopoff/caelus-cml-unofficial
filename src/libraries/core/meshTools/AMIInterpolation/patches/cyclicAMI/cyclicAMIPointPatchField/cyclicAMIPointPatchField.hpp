@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,10 +55,10 @@ class cyclicAMIPointPatchField
         const cyclicAMIPointPatch& cyclicAMIPatch_;
 
         //- Owner side patch interpolation pointer
-        mutable autoPtr<PrimitivePatchInterpolation<primitivePatch> > ppiPtr_;
+        mutable autoPtr<PrimitivePatchInterpolation<primitivePatch>> ppiPtr_;
 
         //- Neighbour side patch interpolation pointer
-        mutable autoPtr<PrimitivePatchInterpolation<primitivePatch> >
+        mutable autoPtr<PrimitivePatchInterpolation<primitivePatch>>
             nbrPpiPtr_;
 
 
@@ -132,9 +132,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new cyclicAMIPointPatchField<Type>
                 (
@@ -151,12 +151,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new cyclicAMIPointPatchField<Type>
                 (
@@ -179,7 +179,7 @@ public:
 
         // Cyclic AMI coupled interface functions
 
-            //- Does the patch field perform the transfromation
+            //- Does the patch field perform the transformation
             virtual bool doTransform() const
             {
                 return
@@ -204,10 +204,15 @@ public:
 
         // Evaluation functions
 
+            //- Return true if coupled. Note that the underlying patch
+            //  is not coupled() - the points don't align.
+            virtual bool coupled() const;
+
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             )
             {}
 
@@ -259,10 +264,12 @@ CML::cyclicAMIPointPatchField<Type>::cyclicAMIPointPatchField
     ppiPtr_(nullptr),
     nbrPpiPtr_(nullptr)
 {
-    if (!isType<cyclicAMIPointPatch>(p))
+    if (!isA<cyclicAMIPointPatch>(p))
     {
-        FatalIOErrorInFunction(dict)
-            << "patch " << this->patch().index() << " not cyclicAMI type. "
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "patch " << this->patch().index() << " not cyclicAMI type. "
             << "Patch type = " << p.type()
             << exit(FatalIOError);
     }
@@ -283,7 +290,7 @@ CML::cyclicAMIPointPatchField<Type>::cyclicAMIPointPatchField
     ppiPtr_(nullptr),
     nbrPpiPtr_(nullptr)
 {
-    if (!isType<cyclicAMIPointPatch>(this->patch()))
+    if (!isA<cyclicAMIPointPatch>(this->patch()))
     {
         FatalErrorInFunction
             << "Field type does not correspond to patch type for patch "
@@ -312,6 +319,13 @@ CML::cyclicAMIPointPatchField<Type>::cyclicAMIPointPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
+bool CML::cyclicAMIPointPatchField<Type>::coupled() const
+{
+    return cyclicAMIPatch_.coupled();
+}
+
+
+template<class Type>
 void CML::cyclicAMIPointPatchField<Type>::swapAddSeparated
 (
     const Pstream::commsTypes,
@@ -329,13 +343,13 @@ void CML::cyclicAMIPointPatchField<Type>::swapAddSeparated
 
         // Get neighbouring pointPatchField		
 	    const GeometricField<Type, pointPatchField, pointMesh>& fld =
-            refCast<const GeometricField<Type, pointPatchField, pointMesh> >
+            refCast<const GeometricField<Type, pointPatchField, pointMesh>>
             (
-                this->dimensionedInternalField()
+                this->internalField()
             );		
 
         const cyclicAMIPointPatchField<Type>& nbr =
-            refCast<const cyclicAMIPointPatchField<Type> >
+            refCast<const cyclicAMIPointPatchField<Type>>
             (
                 fld.boundaryField()[nbrPatch.index()]
             );

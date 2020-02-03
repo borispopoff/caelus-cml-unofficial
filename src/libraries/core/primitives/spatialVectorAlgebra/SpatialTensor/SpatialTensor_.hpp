@@ -123,7 +123,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfTranspose<Cmpt, SpatialTensor<Cmpt> >
+class typeOfTranspose<Cmpt, SpatialTensor<Cmpt>>
 {
 public:
 
@@ -132,7 +132,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfOuterProduct<Cmpt, SpatialVector<Cmpt>, SpatialVector<Cmpt> >
+class typeOfOuterProduct<Cmpt, SpatialVector<Cmpt>, SpatialVector<Cmpt>>
 {
 public:
 
@@ -141,7 +141,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfInnerProduct<Cmpt, SpatialTensor<Cmpt>, SpatialVector<Cmpt> >
+class typeOfInnerProduct<Cmpt, SpatialTensor<Cmpt>, SpatialVector<Cmpt>>
 {
 public:
 
@@ -150,7 +150,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfInnerProduct<Cmpt, SpatialTensor<Cmpt>, SpatialTensor<Cmpt> >
+class typeOfInnerProduct<Cmpt, SpatialTensor<Cmpt>, SpatialTensor<Cmpt>>
 {
 public:
 

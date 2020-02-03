@@ -1,5 +1,5 @@
 /*-------------------------------*- C++ -*-----------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -973,6 +973,8 @@ CML::token::compound& CML::token::transferCompoundToken(const Istream& is)
 #include "Ostream.hpp"
 #include "demandDrivenData.hpp"
 #include "simpleObjectRegistry.hpp"
+#include "IOobject.hpp"
+#include "HashSet.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -991,6 +993,10 @@ dictionary* optimisationSwitchesPtr_(nullptr);
 
 // Debug switch read and write callback tables.
 simpleObjectRegistry* debugObjectsPtr_(nullptr);
+simpleObjectRegistry* infoObjectsPtr_(nullptr);
+simpleObjectRegistry* optimisationObjectsPtr_(nullptr);
+simpleObjectRegistry* dimensionSetObjectsPtr_(nullptr);
+simpleObjectRegistry* dimensionedConstantObjectsPtr_(nullptr);
 
 
 // To ensure controlDictPtr_ is deleted at the end of the run
@@ -1004,6 +1010,10 @@ public:
     ~deleteControlDictPtr()
     {
         deleteDemandDrivenData(debugObjectsPtr_);
+        deleteDemandDrivenData(infoObjectsPtr_);
+        deleteDemandDrivenData(optimisationObjectsPtr_);
+        deleteDemandDrivenData(dimensionSetObjectsPtr_);
+        deleteDemandDrivenData(dimensionedConstantObjectsPtr_);
 
         debugSwitchesPtr_ = nullptr;
         infoSwitchesPtr_ = nullptr;
@@ -1139,6 +1149,105 @@ void CML::debug::addDebugObject(const char* name, simpleRegIOobject* obj)
 }
 
 
+void CML::debug::addInfoObject(const char* name, simpleRegIOobject* obj)
+{
+    simpleObjectRegistryEntry* ptr = infoObjects().lookupPtr(name);
+    if (ptr)
+    {
+        ptr->append(obj);
+    }
+    else
+    {
+        infoObjects().append
+        (
+            name,
+            new simpleObjectRegistryEntry
+            (
+                List<simpleRegIOobject*>(1, obj)
+            )
+        );
+    }
+}
+
+
+void CML::debug::addOptimisationObject
+(
+    const char* name,
+    simpleRegIOobject* obj
+)
+{
+    simpleObjectRegistryEntry* ptr = optimisationObjects().lookupPtr(name);
+    if (ptr)
+    {
+        ptr->append(obj);
+    }
+    else
+    {
+        optimisationObjects().append
+        (
+            name,
+            new simpleObjectRegistryEntry
+            (
+                List<simpleRegIOobject*>(1, obj)
+            )
+        );
+    }
+}
+
+
+void CML::debug::addDimensionSetObject
+(
+    const char* name,
+    simpleRegIOobject* obj
+)
+{
+    simpleObjectRegistryEntry* ptr = dimensionSetObjects().lookupPtr(name);
+    if (ptr)
+    {
+        ptr->append(obj);
+    }
+    else
+    {
+        dimensionSetObjects().append
+        (
+            name,
+            new simpleObjectRegistryEntry
+            (
+                List<simpleRegIOobject*>(1, obj)
+            )
+        );
+    }
+}
+
+
+void CML::debug::addDimensionedConstantObject
+(
+    const char* name,
+    simpleRegIOobject* obj
+)
+{
+    simpleObjectRegistryEntry* ptr = dimensionedConstantObjects().lookupPtr
+    (
+        name
+    );
+    if (ptr)
+    {
+        ptr->append(obj);
+    }
+    else
+    {
+        dimensionedConstantObjects().append
+        (
+            name,
+            new simpleObjectRegistryEntry
+            (
+                List<simpleRegIOobject*>(1, obj)
+            )
+        );
+    }
+}
+
+
 CML::simpleObjectRegistry& CML::debug::debugObjects()
 {
     if (!debugObjectsPtr_)
@@ -1147,6 +1256,137 @@ CML::simpleObjectRegistry& CML::debug::debugObjects()
     }
 
     return *debugObjectsPtr_;
+}
+
+
+CML::simpleObjectRegistry& CML::debug::infoObjects()
+{
+    if (!infoObjectsPtr_)
+    {
+        infoObjectsPtr_ = new simpleObjectRegistry(100);
+    }
+
+    return *infoObjectsPtr_;
+}
+
+
+CML::simpleObjectRegistry& CML::debug::optimisationObjects()
+{
+    if (!optimisationObjectsPtr_)
+    {
+        optimisationObjectsPtr_ = new simpleObjectRegistry(100);
+    }
+
+    return *optimisationObjectsPtr_;
+}
+
+
+CML::simpleObjectRegistry& CML::debug::dimensionSetObjects()
+{
+    if (!dimensionSetObjectsPtr_)
+    {
+        dimensionSetObjectsPtr_ = new simpleObjectRegistry(100);
+    }
+
+    return *dimensionSetObjectsPtr_;
+}
+
+
+CML::simpleObjectRegistry& CML::debug::dimensionedConstantObjects()
+{
+    if (!dimensionedConstantObjectsPtr_)
+    {
+        dimensionedConstantObjectsPtr_ = new simpleObjectRegistry(100);
+    }
+
+    return *dimensionedConstantObjectsPtr_;
+}
+
+
+namespace CML
+{
+
+void listSwitches
+(
+    const wordList& debugSwitches,
+    const wordList& infoSwitches,
+    const wordList& optSwitches,
+    const bool unset
+)
+{
+    if (unset)
+    {
+        fileNameList controlDictFiles = findEtcFiles("controlDict", true);
+        dictionary controlDict;
+        forAllReverse(controlDictFiles, cdfi)
+        {
+            controlDict.merge(dictionary(IFstream(controlDictFiles[cdfi])()));
+        }
+
+        wordHashSet controlDictDebug
+        (
+            controlDict.subDict("DebugSwitches").sortedToc()
+        );
+
+        wordHashSet controlDictInfo
+        (
+            controlDict.subDict("InfoSwitches").sortedToc()
+        );
+
+        wordHashSet controlDictOpt
+        (
+            controlDict.subDict("OptimisationSwitches").sortedToc()
+        );
+
+
+        IOobject::writeDivider(Info);
+
+        wordHashSet hashset;
+        hashset = debugSwitches;
+        hashset -= controlDictDebug;
+        Info<< "Unset DebugSwitches" << hashset.sortedToc() << endl;
+
+        hashset = infoSwitches;
+        hashset -= controlDictInfo;
+        Info<< "Unset InfoSwitches" << hashset.sortedToc() << endl;
+
+        hashset = optSwitches;
+        hashset -= controlDictOpt;
+        Info<< "Unset OptimisationSwitches" << hashset.sortedToc() << endl;
+    }
+    else
+    {
+        IOobject::writeDivider(Info);
+        Info<< "DebugSwitches" << debugSwitches << endl;
+        Info<< "InfoSwitches" << infoSwitches << endl;
+        Info<< "OptimisationSwitches" << optSwitches << endl;
+    }
+}
+
+}
+
+
+void CML::debug::listSwitches(const bool unset)
+{
+    listSwitches
+    (
+        debug::debugSwitches().sortedToc(),
+        debug::infoSwitches().sortedToc(),
+        debug::optimisationSwitches().sortedToc(),
+        unset
+    );
+}
+
+
+void CML::debug::listRegisteredSwitches(const bool unset)
+{
+    listSwitches
+    (
+        debug::debugObjects().sortedToc(),
+        debug::infoObjects().sortedToc(),
+        debug::optimisationObjects().sortedToc(),
+        unset
+    );
 }
 
 
@@ -1640,7 +1880,7 @@ void CML::UPstream::calcLinearComm(const label nProcs)
 void CML::UPstream::collectReceives
 (
     const label procID,
-    const List<DynamicList<label> >& receives,
+    const List<DynamicList<label>>& receives,
     DynamicList<label>& allReceives
 )
 {
@@ -1688,7 +1928,7 @@ void CML::UPstream::calcTreeComm(label nProcs)
         nLevels++;
     }
 
-    List<DynamicList<label> > receives(nProcs);
+    List<DynamicList<label>> receives(nProcs);
     labelList sends(nProcs, -1);
 
     // Info<< "Using " << nLevels << " communication levels" << endl;
@@ -1719,7 +1959,7 @@ void CML::UPstream::calcTreeComm(label nProcs)
 
     // For all processors find the processors it receives data from
     // (and the processors they receive data from etc.)
-    List<DynamicList<label> > allReceives(nProcs);
+    List<DynamicList<label>> allReceives(nProcs);
     for (label procID = 0; procID < nProcs; procID++)
     {
         collectReceives(procID, receives, allReceives[procID]);

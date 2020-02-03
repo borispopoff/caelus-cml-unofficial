@@ -49,11 +49,11 @@ bool CML::surfaceIntersection::excludeEdgeHit
 (
     const triSurface& surf,
     const label edgeI,
-    const label faceI,
+    const label facei,
     const scalar
 )
 {
-    const triSurface::FaceType& f = surf.localFaces()[faceI];
+    const triSurface::FaceType& f = surf.localFaces()[facei];
     const edge& e = surf.edges()[edgeI];
 
     forAll(f, fp)
@@ -69,7 +69,7 @@ bool CML::surfaceIntersection::excludeEdgeHit
 //        vector eVec = e.vec(surf.localPoints());
 //        eVec /= mag(eVec) + VSMALL;
 //
-//        const labelList& eLabels = surf.faceEdges()[faceI];
+//        const labelList& eLabels = surf.faceEdges()[facei];
 //
 //        // Get edge vector of 0th edge of face
 //        vector e0Vec = surf.edges()[eLabels[0]].vec(surf.localPoints());
@@ -94,12 +94,12 @@ bool CML::surfaceIntersection::excludeEdgeHit
 //        }
 //
 //        // Check if same as faceNormal
-//        if (mag(n & surf.faceNormals()[faceI]) > 1-tol)
+//        if (mag(n & surf.faceNormals()[facei]) > 1-tol)
 //        {
 //
-//            Pout<< "edge:" << e << "  face:" << faceI
+//            Pout<< "edge:" << e << "  face:" << facei
 //                << "  e0Vec:" << e0Vec << "  n:" << n
-//                << "  normalComponent:" << (n & surf.faceNormals()[faceI])
+//                << "  normalComponent:" << (n & surf.faceNormals()[facei])
 //                << "  tol:" << tol << endl;
 //
 //            return true;
@@ -280,7 +280,7 @@ void CML::surfaceIntersection::classifyHit
 
     DynamicList<edge>& allCutEdges,
     DynamicList<point>& allCutPoints,
-    List<DynamicList<label> >& surfEdgeCuts
+    List<DynamicList<label>>& surfEdgeCuts
 )
 {
     const edge& e = surf1.edges()[edgeI];
@@ -561,7 +561,7 @@ void CML::surfaceIntersection::doCutEdges
 
     DynamicList<edge>& allCutEdges,
     DynamicList<point>& allCutPoints,
-    List<DynamicList<label> >& surfEdgeCuts
+    List<DynamicList<label>>& surfEdgeCuts
 )
 {
     scalar oldTol = intersection::setPlanarTol(1E-3);
@@ -571,11 +571,11 @@ void CML::surfaceIntersection::doCutEdges
     // Calculate local (to point) tolerance based on min edge length.
     scalarField surf1PointTol(surf1Pts.size());
 
-    forAll(surf1PointTol, pointI)
+    forAll(surf1PointTol, pointi)
     {
-        surf1PointTol[pointI] =
+        surf1PointTol[pointi] =
             intersection::planarTol()
-          * minEdgeLen(surf1, pointI);
+          * minEdgeLen(surf1, pointi);
     }
 
     const triSurface& surf2 = querySurf2.surface();
@@ -735,7 +735,7 @@ CML::surfaceIntersection::surfaceIntersection
 
 
     // From edge to cut index on surface1
-    List<DynamicList<label> > edgeCuts1(query1.surface().nEdges());
+    List<DynamicList<label>> edgeCuts1(query1.surface().nEdges());
 
     doCutEdges
     (
@@ -762,7 +762,7 @@ CML::surfaceIntersection::surfaceIntersection
     }
 
     // From edge to cut index
-    List<DynamicList<label> > edgeCuts2(query2.surface().nEdges());
+    List<DynamicList<label>> edgeCuts2(query2.surface().nEdges());
 
     doCutEdges
     (
@@ -839,7 +839,7 @@ CML::surfaceIntersection::surfaceIntersection
 
     {
         // From edge to cut index on surface1
-        List<DynamicList<label> > edgeCuts1(surf1.nEdges());
+        List<DynamicList<label>> edgeCuts1(surf1.nEdges());
 
         forAll(intersections1, edgeI)
         {
@@ -880,7 +880,7 @@ CML::surfaceIntersection::surfaceIntersection
 
     {
         // From edge to cut index on surface2
-        List<DynamicList<label> > edgeCuts2(surf2.nEdges());
+        List<DynamicList<label>> edgeCuts2(surf2.nEdges());
 
         forAll(intersections2, edgeI)
         {
@@ -956,13 +956,13 @@ CML::surfaceIntersection::surfaceIntersection
 
         forAllConstIter(labelPairLookup, facePairToVertex_, iter)
         {
-            label pointI = iter();
+            label pointi = iter();
 
-            if (!usedPoints.found(pointI))
+            if (!usedPoints.found(pointi))
             {
                 FatalErrorInFunction
-                    << "Problem: cut point:" << pointI
-                    << " coord:" << cutPoints_[pointI]
+                    << "Problem: cut point:" << pointi
+                    << " coord:" << cutPoints_[pointi]
                     << " not used by any edge" << abort(FatalError);
             }
         }
@@ -997,7 +997,7 @@ CML::surfaceIntersection::surfaceIntersection
     DynamicList<point> allCutPoints;
 
     // From edge to cut index on surface1
-    List<DynamicList<label> > edgeCuts1(query1.surface().nEdges());
+    List<DynamicList<label>> edgeCuts1(query1.surface().nEdges());
 
     doCutEdges
     (

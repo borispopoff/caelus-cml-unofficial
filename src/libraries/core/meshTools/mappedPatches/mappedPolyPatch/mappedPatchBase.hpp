@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -81,7 +81,7 @@ SourceFiles
 #include "pointField.hpp"
 #include "Tuple2.hpp"
 #include "pointIndexHit.hpp"
-#include "AMIPatchToPatchInterpolation.hpp"
+#include "AMIInterpolation.hpp"
 #include "coupleGroupIdentifier.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -133,7 +133,7 @@ public:
     //  - point+local index
     //  - sqr(distance)
     //  - processor
-    typedef Tuple2<pointIndexHit, Tuple2<scalar, label> > nearInfo;
+    typedef Tuple2<pointIndexHit, Tuple2<scalar, label>> nearInfo;
 
     class nearestEqOp
     {
@@ -226,7 +226,7 @@ protected:
         // AMI interpolator (only for NEARESTPATCHFACEAMI)
 
             //- Pointer to AMI interpolator
-            mutable autoPtr<AMIPatchToPatchInterpolation> AMIPtr_;
+            mutable autoPtr<AMIInterpolation> AMIPtr_;
 
             //- Flag to indicate that slave patch should be reversed for AMI
             const bool AMIReverse_;
@@ -380,7 +380,7 @@ public:
             inline const mapDistribute& map() const;
 
             //- Return reference to the AMI interpolator
-            inline const AMIPatchToPatchInterpolation& AMI
+            inline const AMIInterpolation& AMI
             (
                 const bool forceUpdate = false
             ) const;
@@ -410,7 +410,7 @@ public:
             (
                 const polyMesh&,
                 const label facei,
-                const polyMesh::cellRepresentation
+                const polyMesh::cellDecomposition
             );
 
 
@@ -571,7 +571,7 @@ inline const CML::mapDistribute& CML::mappedPatchBase::map() const
 }
 
 
-inline const CML::AMIPatchToPatchInterpolation& CML::mappedPatchBase::AMI
+inline const CML::AMIInterpolation& CML::mappedPatchBase::AMI
 (
     bool forceUpdate
 ) const
@@ -595,7 +595,7 @@ void CML::mappedPatchBase::distribute(List<Type>& lst) const
     {
         case NEARESTPATCHFACEAMI:
         {
-            lst = AMI().interpolateToSource(Field<Type>(lst.xfer()));
+            lst = AMI().interpolateToSource(Field<Type>(move(lst)));
             break;
         }
         default:
@@ -619,7 +619,7 @@ void CML::mappedPatchBase::distribute
         {
             lst = AMI().interpolateToSource
                 (
-                    Field<Type>(lst.xfer()),
+                    Field<Type>(move(lst)),
                     cop
                 );
             break;
@@ -652,7 +652,7 @@ void CML::mappedPatchBase::reverseDistribute(List<Type>& lst) const
     {
         case NEARESTPATCHFACEAMI:
         {
-            lst = AMI().interpolateToTarget(Field<Type>(lst.xfer()));
+            lst = AMI().interpolateToTarget(Field<Type>(move(lst)));
             break;
         }
         default:
@@ -677,7 +677,7 @@ void CML::mappedPatchBase::reverseDistribute
         {
             lst = AMI().interpolateToTarget
                 (
-                    Field<Type>(lst.xfer()),
+                    Field<Type>(move(lst)),
                     cop
                 );
             break;

@@ -134,12 +134,12 @@ class sampledSurface
         void project
         (
             Field<ReturnType>&,
-            const tmp<Field<Type> >&
+            const tmp<Field<Type>>&
         ) const;
 
         //- Project field onto surface
         template<class ReturnType, class Type>
-        tmp<Field<ReturnType> > project(const tmp<Field<Type> >&) const;
+        tmp<Field<ReturnType>> project(const tmp<Field<Type>>&) const;
 
 
 protected:
@@ -294,7 +294,7 @@ public:
 
         //- Integration of a field across the surface
         template<class Type>
-        Type integrate(const tmp<Field<Type> >&) const;
+        Type integrate(const tmp<Field<Type>>&) const;
 
         //- Area-averaged value of a field across the surface
         template<class Type>
@@ -302,26 +302,26 @@ public:
 
         //- Area-averaged value of a field across the surface
         template<class Type>
-        Type average(const tmp<Field<Type> >&) const;
+        Type average(const tmp<Field<Type>>&) const;
 
         //- Project field onto surface
-        tmp<Field<scalar> > project(const Field<scalar>&) const;
+        tmp<Field<scalar>> project(const Field<scalar>&) const;
 
         //- Project field onto surface
-        tmp<Field<scalar> > project(const Field<vector>&) const;
+        tmp<Field<scalar>> project(const Field<vector>&) const;
 
         //- Project field onto surface
-        tmp<Field<vector> > project(const Field<sphericalTensor>&) const;
+        tmp<Field<vector>> project(const Field<sphericalTensor>&) const;
 
         //- Project field onto surface
-        tmp<Field<vector> > project(const Field<symmTensor>&) const;
+        tmp<Field<vector>> project(const Field<symmTensor>&) const;
 
         //- Project field onto surface
-        tmp<Field<vector> > project(const Field<tensor>&) const;
+        tmp<Field<vector>> project(const Field<tensor>&) const;
 
         //- Interpolate from points to cell centre
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> > pointAverage
+        tmp<GeometricField<Type, fvPatchField, volMesh>> pointAverage
         (
             const GeometricField<Type, pointPatchField, pointMesh>& pfld
         ) const;
@@ -480,7 +480,7 @@ Type CML::sampledSurface::integrate(const Field<Type>& field) const
 
 
 template<class Type>
-Type CML::sampledSurface::integrate(const tmp<Field<Type> >& field) const
+Type CML::sampledSurface::integrate(const tmp<Field<Type>>& field) const
 {
     Type value = integrate(field());
     field.clear();
@@ -513,7 +513,7 @@ Type CML::sampledSurface::average(const Field<Type>& field) const
 
 
 template<class Type>
-Type CML::sampledSurface::average(const tmp<Field<Type> >& field) const
+Type CML::sampledSurface::average(const tmp<Field<Type>>& field) const
 {
     Type value = average(field());
     field.clear();
@@ -532,9 +532,9 @@ void CML::sampledSurface::project
     {
         const vectorField& norm = Sf();
 
-        forAll(norm, faceI)
+        forAll(norm, facei)
         {
-            res[faceI] = field[faceI] & (norm[faceI]/mag(norm[faceI]));
+            res[facei] = field[facei] & (norm[facei]/mag(norm[facei]));
         }
     }
     else
@@ -548,7 +548,7 @@ template<class ReturnType, class Type>
 void CML::sampledSurface::project
 (
     Field<ReturnType>& res,
-    const tmp<Field<Type> >& field
+    const tmp<Field<Type>>& field
 ) const
 {
     project(res, field());
@@ -557,20 +557,20 @@ void CML::sampledSurface::project
 
 
 template<class ReturnType, class Type>
-CML::tmp<CML::Field<ReturnType> >
+CML::tmp<CML::Field<ReturnType>>
 CML::sampledSurface::project
 (
-    const tmp<Field<Type> >& field
+    const tmp<Field<Type>>& field
 ) const
 {
-    tmp<Field<ReturnType> > tRes(new Field<ReturnType>(faces().size()));
+    tmp<Field<ReturnType>> tRes(new Field<ReturnType>(faces().size()));
     project(tRes(), field);
     return tRes;
 }
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh>>
 CML::sampledSurface::pointAverage
 (
     const GeometricField<Type, pointPatchField, pointMesh>& pfld
@@ -578,7 +578,7 @@ CML::sampledSurface::pointAverage
 {
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(pfld.mesh()());
 
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tcellAvg
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tcellAvg
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -592,29 +592,29 @@ CML::sampledSurface::pointAverage
                 false
             ),
             mesh,
-            dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
+            dimensioned<Type>("zero", dimless, Zero)
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& cellAvg = tcellAvg();
+    GeometricField<Type, fvPatchField, volMesh>& cellAvg = tcellAvg.ref();
 
     labelField nPointCells(mesh.nCells(), 0);
     {
-        for (label pointI = 0; pointI < mesh.nPoints(); pointI++)
+        for (label pointi = 0; pointi < mesh.nPoints(); pointi++)
         {
-            const labelList& pCells = mesh.pointCells(pointI);
+            const labelList& pCells = mesh.pointCells(pointi);
 
             forAll(pCells, i)
             {
-                label cellI = pCells[i];
+                label celli = pCells[i];
 
-                cellAvg[cellI] += pfld[pointI];
-                nPointCells[cellI]++;
+                cellAvg[celli] += pfld[pointi];
+                nPointCells[celli]++;
             }
         }
     }
-    forAll(cellAvg, cellI)
+    forAll(cellAvg, celli)
     {
-        cellAvg[cellI] /= nPointCells[cellI];
+        cellAvg[celli] /= nPointCells[celli];
     }
     // Give value to calculatedFvPatchFields
     cellAvg.correctBoundaryConditions();

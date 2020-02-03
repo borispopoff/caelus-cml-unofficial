@@ -136,7 +136,7 @@ CML::tmp<CML::volScalarField> CML::pressureTools::pDyn
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("zero", dimPressure, 0.0)
+            dimensionedScalar("zero", dimPressure, 0)
         )
     );
 
@@ -144,7 +144,7 @@ CML::tmp<CML::volScalarField> CML::pressureTools::pDyn
     {
         const volVectorField& U = obr_.lookupObject<volVectorField>(UName_);
 
-        tpDyn() == rho(p)*0.5*magSqr(U);
+        tpDyn.ref() == rho(p)*0.5*magSqr(U);
     }
 
     return tpDyn;
@@ -160,13 +160,13 @@ CML::tmp<CML::volScalarField> CML::pressureTools::convertToCoeff
 
     if (calcCoeff_)
     {
-        tCoeff() -= dimensionedScalar("pInf", dimPressure, pInf_);
+        tCoeff.ref() -= dimensionedScalar("pInf", dimPressure, pInf_);
 
         const dimensionedScalar p0("p0", dimPressure, SMALL);
         const dimensionedVector U("U", dimVelocity, UInf_);
         const dimensionedScalar rho("rho", dimDensity, rhoInf_);
 
-        tCoeff() /= 0.5*rho*magSqr(U) + p0;
+        tCoeff.ref() /= 0.5*rho*magSqr(U) + p0;
     }
 
     return tCoeff;
@@ -193,7 +193,7 @@ CML::pressureTools::pressureTools
     pRef_(0.0),
     calcCoeff_(false),
     pInf_(0.0),
-    UInf_(vector::zero),
+    UInf_(Zero),
     rhoInf_(0.0)
 {
     // Check if the available mesh is an fvMesh, otherwise deactivate
@@ -231,7 +231,7 @@ CML::pressureTools::pressureTools
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("0", pDims, 0.0)
+                dimensionedScalar("0", pDims, 0)
             )
         );
 
@@ -252,9 +252,9 @@ void CML::pressureTools::read(const dictionary& dict)
 {
     if (active_)
     {
-        dict.readIfPresent("pName", pName_);
-        dict.readIfPresent("UName", UName_);
-        dict.readIfPresent("rhoName", rhoName_);
+        dict.readIfPresent("p", pName_);
+        dict.readIfPresent("U", UName_);
+        dict.readIfPresent("rho", rhoName_);
 
         if (rhoName_ == "rhoInf")
         {

@@ -103,7 +103,7 @@ void VRWGraphSMPModifier::reverseAddressing(const VRWGraph& origGraph)
     # endif
 
     label minRow(INT_MAX), maxRow(-1);
-    List<List<LongList<labelPair> > > dataForOtherThreads(nThreads);
+    List<List<LongList<labelPair>>> dataForOtherThreads(nThreads);
 
     # ifdef USE_OMP
     # pragma omp parallel num_threads(nThreads)
@@ -115,7 +115,7 @@ void VRWGraphSMPModifier::reverseAddressing(const VRWGraph& origGraph)
         const label threadI(0);
         # endif
 
-        List<LongList<labelPair> >& dot = dataForOtherThreads[threadI];
+        List<LongList<labelPair>>& dot = dataForOtherThreads[threadI];
         dot.setSize(nThreads);
 
         //- find min and max entry in the graph

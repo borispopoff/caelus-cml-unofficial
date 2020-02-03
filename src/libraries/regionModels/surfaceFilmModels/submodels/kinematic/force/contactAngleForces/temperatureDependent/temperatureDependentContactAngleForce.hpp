@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017-2018 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -61,7 +61,7 @@ class temperatureDependentContactAngleForce
     // Private Data
 
         //- Contact angle function
-        autoPtr<DataEntry<scalar> > thetaPtr_;
+        autoPtr<DataEntry<scalar>> thetaPtr_;
 
 
     // Private member functions
@@ -73,7 +73,7 @@ class temperatureDependentContactAngleForce
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const temperatureDependentContactAngleForce&);
+        void operator=(const temperatureDependentContactAngleForce&) = delete;
 
 
 protected:

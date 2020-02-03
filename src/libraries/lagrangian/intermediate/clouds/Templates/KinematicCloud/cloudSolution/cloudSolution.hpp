@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -96,13 +96,13 @@ class cloudSolution
             Switch resetSourcesOnStartup_;
 
             //- List schemes, e.g. U semiImplicit 1
-            List<Tuple2<word, Tuple2<bool, scalar> > > schemes_;
+            List<Tuple2<word, Tuple2<bool, scalar>>> schemes_;
 
 
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const cloudSolution&);
+        void operator=(const cloudSolution&) = delete;
 
 
 public:

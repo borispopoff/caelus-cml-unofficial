@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -47,7 +47,7 @@ CML::profileModel::profileModel(const dictionary& dict, const word& name)
     name_(name),
     fName_(fileName::null)
 {
-    dict.readIfPresent("fileName", fName_);
+    dict.readIfPresent("file", fName_);
 }
 
 // * * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //

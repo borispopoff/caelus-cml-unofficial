@@ -73,25 +73,25 @@ void lcFaceMinimumPluginFunction::doCellCalculation(volScalarField &field)
     const cellList &cl=field.mesh().cells();
     const surfaceScalarField &o=original_();
 
-    forAll(field,cellI) {
+    forAll(field,celli) {
         scalar minVal=1e30;
 
-        const cell &c=cl[cellI];
+        const cell &c=cl[celli];
         forAll(c,i) {
-            const label faceI=c[i];
-            if(faceI<field.mesh().nInternalFaces()) {
-                minVal=min(minVal,o[faceI]);
+            const label facei=c[i];
+            if(facei<field.mesh().nInternalFaces()) {
+                minVal=min(minVal,o[facei]);
             } else {
-                label patchID=field.mesh().boundaryMesh().whichPatch(faceI);
+                label patchID=field.mesh().boundaryMesh().whichPatch(facei);
                 label startI=field.mesh().boundaryMesh()[patchID].start();
                 minVal=min(
                     minVal,
-                    o.boundaryField()[patchID][faceI-startI]
+                    o.boundaryField()[patchID][facei-startI]
                 );
             }
         }
 
-        field[cellI]=minVal;
+        field[celli]=minVal;
     }
 }
 

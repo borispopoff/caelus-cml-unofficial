@@ -1,0 +1,48 @@
+/*---------------------------------------------------------------------------*
+Caelus 9.04
+Web:   www.caelus-cml.com
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      testDictEval1;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+expr1   "hypot(3,4)";
+
+expr2   hypot(6,8);
+
+eval1   #eval
+#{
+    (true ? pi() * 2 * $expr1 : pi() * 2 * $expr2)
+#};
+
+eval2   #eval
+#{
+    (2 < 1 ? pi() * 2 * $expr1 : pi() * 2 * $expr2)
+#};
+
+
+eval3   #eval
+#{
+    (bool(0.1) ? 10 : 0)
+#};
+
+
+eval4   #eval
+#{
+    2 * mag(true) * pi()
+#};
+
+
+eval4b   #eval
+#{
+    2 * mag(!false) * pi()
+#};
+
+
+// Could flag as an input error or treat as zero
+empty  #eval "";

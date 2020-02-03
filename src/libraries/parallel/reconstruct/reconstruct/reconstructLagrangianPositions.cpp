@@ -73,7 +73,7 @@ void CML::reconstructLagrangianPositions
         }
     }
 
-    IOPosition<Cloud<passiveParticle> >(lagrangianPositions).write();
+    IOPosition<Cloud<passiveParticle>>(lagrangianPositions).write();
 }
 
 

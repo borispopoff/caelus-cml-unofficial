@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,10 +51,10 @@ class topoChangerFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        topoChangerFvMesh(const topoChangerFvMesh&);
+        topoChangerFvMesh(const topoChangerFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const topoChangerFvMesh&);
+        void operator=(const topoChangerFvMesh&) = delete;
 
 
 protected:

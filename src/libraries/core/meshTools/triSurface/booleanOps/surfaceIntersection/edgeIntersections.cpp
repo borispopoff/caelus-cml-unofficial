@@ -461,7 +461,7 @@ bool CML::edgeIntersections::offsetPerturb
 // Construct null
 CML::edgeIntersections::edgeIntersections()
 :
-    List<List<pointIndexHit> >(),
+    List<List<pointIndexHit>>(),
     classification_()
 {}
 
@@ -474,7 +474,7 @@ CML::edgeIntersections::edgeIntersections
     const scalarField& surf1PointTol
 )
 :
-    List<List<pointIndexHit> >(surf1.nEdges()),
+    List<List<pointIndexHit>>(surf1.nEdges()),
     classification_(surf1.nEdges())
 {
     checkEdges(surf1);
@@ -504,11 +504,11 @@ CML::edgeIntersections::edgeIntersections
 // Construct from components
 CML::edgeIntersections::edgeIntersections
 (
-    const List<List<pointIndexHit> >& intersections,
+    const List<List<pointIndexHit>>& intersections,
     const labelListList& classification
 )
 :
-    List<List<pointIndexHit> >(intersections),
+    List<List<pointIndexHit>>(intersections),
     classification_(classification)
 {}
 

@@ -29,7 +29,6 @@ autoHexMesh/trackedParticle/trackedParticleCloud.cpp
 
 caelus_inc = [
 'dynamicMesh/dynamicMesh/lnInclude',
-'edgeMesh/lnInclude',
 'lagrangian/basic/lnInclude',
 'parallel/decompose/decompositionMethods/lnInclude'
 ]
@@ -38,7 +37,6 @@ caelus_libs = [
 'core',
 'dynamicMesh',
 'lagrangian',
-'edgeMesh',
 'distributed',
 'decompositionMethods'
 ]

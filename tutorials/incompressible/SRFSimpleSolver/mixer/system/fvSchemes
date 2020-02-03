@@ -34,7 +34,7 @@ divSchemes
     div(phi,R)      Gauss upwind;
     div(R)          Gauss linear;
     div(phi,nuTilda) Gauss upwind;
-    div((nuEff*dev(T(grad(Urel))))) Gauss linear;
+    div((nuEff*dev2(T(grad(Urel))))) Gauss linear;
 }
 
 laplacianSchemes

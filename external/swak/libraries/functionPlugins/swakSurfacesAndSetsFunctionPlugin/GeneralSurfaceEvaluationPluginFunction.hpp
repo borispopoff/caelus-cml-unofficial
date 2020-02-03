@@ -55,7 +55,7 @@ class GeneralSurfaceEvaluationPluginFunction
 
     GeneralSurfaceEvaluationPluginFunction(const GeneralSurfaceEvaluationPluginFunction &);
 
-    autoPtr<Field<Type> > values_;
+    autoPtr<Field<Type>> values_;
 
 protected:
 

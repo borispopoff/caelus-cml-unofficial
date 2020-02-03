@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -818,7 +818,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRemoveCells
 //
 //
 //    // Transfer lists.
-//    PtrList<HashSet<edge, Hash<edge> > > regionConnectivity
+//    PtrList<HashSet<edge, Hash<edge>>> regionConnectivity
 //    (Pstream::nProcs());
 //    forAll(regionConnectivity, proci)
 //    {
@@ -827,7 +827,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRemoveCells
 //            regionConnectivity.set
 //            (
 //                proci,
-//                new HashSet<edge, Hash<edge> >
+//                new HashSet<edge, Hash<edge>>
 //                (
 //                    coupledRegionToShifted.size()
 //                  / Pstream::nProcs()
@@ -905,7 +905,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRemoveCells
 //    {
 //        if (proci != Pstream::myProcNo())
 //        {
-//            OPstream str(Pstream::blocking, proci);
+//            OPstream str(Pstream::commsTypes::blocking, proci);
 //            str << regionConnectivity[proci];
 //        }
 //    }
@@ -914,7 +914,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRemoveCells
 //    {
 //        if (proci != Pstream::myProcNo())
 //        {
-//            IPstream str(Pstream::blocking, proci);
+//            IPstream str(Pstream::commsTypes::blocking, proci);
 //            str >> regionConnectivity[proci];
 //        }
 //    }
@@ -926,7 +926,7 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRemoveCells
 //        {
 //            for
 //            (
-//                HashSet<edge, Hash<edge> >::const_iterator iter =
+//                HashSet<edge, Hash<edge>>::const_iterator iter =
 //                    regionConnectivity[proci].begin();
 //                iter != regionConnectivity[proci].end();
 //                ++iter
@@ -2003,7 +2003,7 @@ CML::labelList CML::meshRefinement::meshedPatches() const
         }
     }
 
-    return patchIDs;
+    return move(patchIDs);
 }
 
 
@@ -2044,11 +2044,11 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::splitMeshRegions
 
     label regionI = -1;
 
-    label cellI = mesh_.findCell(keepPoint);
+    label celli = mesh_.findCell(keepPoint);
 
-    if (cellI != -1)
+    if (celli != -1)
     {
-        regionI = cellRegion[cellI];
+        regionI = cellRegion[celli];
     }
 
     reduce(regionI, maxOp<label>());

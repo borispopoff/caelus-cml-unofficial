@@ -119,9 +119,9 @@ public:
             }
         }
 
-        void addNeg(const label faceI)
+        void addNeg(const label facei)
         {
-            ccNeg_[negCount_++] = faceI;
+            ccNeg_[negCount_++] = facei;
         }
 
         void fullNeg()

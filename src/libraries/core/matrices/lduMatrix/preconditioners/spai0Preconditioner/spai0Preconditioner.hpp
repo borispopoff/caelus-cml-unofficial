@@ -59,13 +59,6 @@ class spai0Preconditioner : public lduMatrix::preconditioner
     //- The reciprocal spai0
     scalarField rD_;
 
-    // Private Member Functions
-
-    //- Disallow default bitwise copy construct
-    spai0Preconditioner(const spai0Preconditioner&);
-
-    //- Disallow default bitwise assignment
-    void operator=(const spai0Preconditioner&);
 
 public:
 
@@ -79,8 +72,13 @@ public:
         dictionary const& solverControlsUnused
     );
 
+    //- Disallow default bitwise copy construct
+    spai0Preconditioner(const spai0Preconditioner&) = delete;
+
+
     virtual ~spai0Preconditioner()
     {}
+
 
     // Member Functions
 
@@ -105,6 +103,12 @@ public:
     {
         return precondition(wT, rT, cmpt);
     }
+
+
+    // Member Operators
+
+    //- Disallow default bitwise assignment
+    void operator=(const spai0Preconditioner&) = delete;
 };
 
 

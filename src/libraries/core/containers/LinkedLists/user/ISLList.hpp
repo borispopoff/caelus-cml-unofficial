@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -17,7 +17,7 @@ License
     You should have received a copy of the GNU General Public License
     along with CAELUS.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
+Alias
     CML::ISLList
 
 Description
@@ -35,52 +35,9 @@ Description
 
 namespace CML
 {
+    template<class T>
+    using ISLList = ILList<SLListBase, T>;
+}
 
-/*---------------------------------------------------------------------------*\
-                           Class ISLList Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class T>
-class ISLList
-:
-    public ILList<SLListBase, T>
-{
-
-public:
-
-    // Constructors
-
-        //- Null construct
-        ISLList()
-        {}
-
-        //- Construct given initial T
-        ISLList(const T& a)
-        :
-            ILList<SLListBase, T>(a)
-        {}
-
-        //- Construct from Istream using given Istream constructor class
-        template<class INew>
-        ISLList(Istream& is, const INew& inewt)
-        :
-            ILList<SLListBase, T>(is, inewt)
-        {}
-
-        //- Construct from Istream
-        ISLList(Istream& is)
-        :
-            ILList<SLListBase, T>(is)
-        {}
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-// ************************************************************************* //

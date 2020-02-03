@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,6 +22,7 @@ License
 #include "cyclicAMIFvPatch.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 #include "fvMesh.hpp"
+#include "Time.hpp"
 #include "transform.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -33,26 +34,24 @@ namespace CML
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-bool CML::cyclicAMIFvPatch::coupled() const
+CML::tmp<CML::scalarField> CML::cyclicAMIFvPatch::deltan() const
 {
-    return Pstream::parRun() || (this->size() && neighbFvPatch().size());
+    return nf() & coupledFvPatch::delta();
 }
 
 
-void CML::cyclicAMIFvPatch::makeWeights(scalarField& w) const
+CML::tmp<CML::scalarField> CML::cyclicAMIFvPatch::nbrDeltan() const
 {
     if (coupled())
     {
         const cyclicAMIFvPatch& nbrPatch = neighbFvPatch();
 
-        const scalarField deltas(nf() & coupledFvPatch::delta());
-
-        tmp<scalarField> tnbrDeltas;
+        tmp<scalarField> tnbrDeltan;
         if (applyLowWeightCorrection())
         {
-            tnbrDeltas =
+            tnbrDeltan =
                 interpolate
                 (
                     nbrPatch.nf() & nbrPatch.coupledFvPatch::delta(),
@@ -61,18 +60,32 @@ void CML::cyclicAMIFvPatch::makeWeights(scalarField& w) const
         }
         else
         {
-            tnbrDeltas =
+            tnbrDeltan =
                 interpolate(nbrPatch.nf() & nbrPatch.coupledFvPatch::delta());
         }
 
-        const scalarField& nbrDeltas = tnbrDeltas();
+        return tnbrDeltan;
+    }
+    else
+    {
+        return tmp<scalarField>();
+    }
+}
 
-        forAll(deltas, faceI)
+
+void CML::cyclicAMIFvPatch::makeWeights(scalarField& w) const
+{
+    if (coupled())
+    {
+        const scalarField deltan(this->deltan());
+        const scalarField nbrDeltan(this->nbrDeltan());
+
+        forAll(deltan, facei)
         {
-            scalar di = deltas[faceI];
-            scalar dni = nbrDeltas[faceI];
+            scalar di = deltan[facei];
+            scalar dni = nbrDeltan[facei];
 
-            w[faceI] = dni/(di + dni);
+            w[facei] = dni/(di + dni);
         }
     }
     else
@@ -80,6 +93,16 @@ void CML::cyclicAMIFvPatch::makeWeights(scalarField& w) const
         // Behave as uncoupled patch
         fvPatch::makeWeights(w);
     }
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool CML::cyclicAMIFvPatch::coupled() const
+{
+    return
+        Pstream::parRun()
+     || !this->boundaryMesh().mesh().time().processorCase();
 }
 
 
@@ -98,7 +121,7 @@ CML::tmp<CML::vectorField> CML::cyclicAMIFvPatch::delta() const
                 interpolate
                 (
                     nbrPatch.coupledFvPatch::delta(),
-                    vectorField(this->size(), vector::zero)
+                    vectorField(this->size(), Zero)
                 );
         }
         else
@@ -109,27 +132,27 @@ CML::tmp<CML::vectorField> CML::cyclicAMIFvPatch::delta() const
         const vectorField& nbrPatchD = tnbrPatchD();
 
         tmp<vectorField> tpdv(new vectorField(patchD.size()));
-        vectorField& pdv = tpdv();
+        vectorField& pdv = tpdv.ref();
 
         // do the transformation if necessary
         if (parallel())
         {
-            forAll(patchD, faceI)
+            forAll(patchD, facei)
             {
-                const vector& ddi = patchD[faceI];
-                const vector& dni = nbrPatchD[faceI];
+                const vector& ddi = patchD[facei];
+                const vector& dni = nbrPatchD[facei];
 
-                pdv[faceI] = ddi - dni;
+                pdv[facei] = ddi - dni;
             }
         }
         else
         {
-            forAll(patchD, faceI)
+            forAll(patchD, facei)
             {
-                const vector& ddi = patchD[faceI];
-                const vector& dni = nbrPatchD[faceI];
+                const vector& ddi = patchD[facei];
+                const vector& dni = nbrPatchD[facei];
 
-                pdv[faceI] = ddi - transform(forwardT()[0], dni);
+                pdv[facei] = ddi - transform(forwardT()[0], dni);
             }
         }
 
@@ -140,13 +163,6 @@ CML::tmp<CML::vectorField> CML::cyclicAMIFvPatch::delta() const
         return coupledFvPatch::delta();
     }
 }
-
-
-CML::tmp<CML::vectorField> CML::cyclicAMIFvPatch::deltaFull() const
-{
-    return cyclicAMIFvPatch::delta();
-}
-
 
 
 CML::tmp<CML::labelField> CML::cyclicAMIFvPatch::interfaceInternalField

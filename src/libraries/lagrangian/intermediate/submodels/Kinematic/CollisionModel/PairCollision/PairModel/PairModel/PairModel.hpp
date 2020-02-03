@@ -93,7 +93,7 @@ public:
 
 
     //- Selector
-    static autoPtr<PairModel<CloudType> > New
+    static autoPtr<PairModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -154,7 +154,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<CloudType>, 0);                     \
                                                                                \
     PairModel<CloudType>::                                                     \
-        adddictionaryConstructorToTable<SS<CloudType> >                        \
+        adddictionaryConstructorToTable<SS<CloudType>>                         \
         add##SS##CloudType##ConstructorToTable_;
 
 
@@ -208,7 +208,7 @@ const CML::dictionary& CML::PairModel<CloudType>::coeffDict() const
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::PairModel<CloudType> >
+CML::autoPtr<CML::PairModel<CloudType>>
 CML::PairModel<CloudType>::New
 (
     const dictionary& dict,
@@ -232,7 +232,7 @@ CML::PairModel<CloudType>::New
             << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);
     }
 
-    return autoPtr<PairModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<PairModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

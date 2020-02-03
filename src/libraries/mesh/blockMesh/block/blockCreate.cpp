@@ -54,7 +54,7 @@ void CML::block::createPoints() const
 
 
     // list of edge point and weighting factors
-    const List< List<point> >& p = blockEdgePoints();
+    const List< List<point>>& p = blockEdgePoints();
     const scalarListList& w = blockEdgeWeights();
 
     //

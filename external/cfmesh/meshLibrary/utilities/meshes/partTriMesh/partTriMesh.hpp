@@ -237,7 +237,7 @@ public:
 
         //- move vertices to their new positions
         //- intended for SMP parallelisation
-        void updateVerticesSMP(const List<LongList<labelledPoint> >&);
+        void updateVerticesSMP(const List<LongList<labelledPoint>>&);
 
         //- update coordinates of points in partTriMesh to match the coordinates
         //- in the mesh surface

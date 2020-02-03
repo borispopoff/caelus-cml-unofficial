@@ -32,7 +32,7 @@ Description
 #include "RASModel.hpp"
 #include "SRFModel.hpp"
 #include "simpleControl.hpp"
-#include "fvIOoptionList.hpp"
+#include "fvOptions.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 
         turbulence->correct();
 
-        if (runTime.outputTime())
+        if (runTime.writeTime())
         {
             volVectorField Uabs
             (

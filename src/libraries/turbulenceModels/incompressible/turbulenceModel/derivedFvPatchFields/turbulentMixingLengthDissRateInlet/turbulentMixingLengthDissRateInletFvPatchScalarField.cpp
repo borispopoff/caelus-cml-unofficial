@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,6 +52,7 @@ turbulentMixingLengthDissipationRateInletFvPatchScalarField
     this->valueFraction() = 0.0;
 }
 
+
 turbulentMixingLengthDissipationRateInletFvPatchScalarField::
 turbulentMixingLengthDissipationRateInletFvPatchScalarField
 (
@@ -66,6 +67,7 @@ turbulentMixingLengthDissipationRateInletFvPatchScalarField
     phiName_(ptf.phiName_),
     kName_(ptf.kName_)
 {}
+
 
 turbulentMixingLengthDissipationRateInletFvPatchScalarField::
 turbulentMixingLengthDissipationRateInletFvPatchScalarField
@@ -87,6 +89,7 @@ turbulentMixingLengthDissipationRateInletFvPatchScalarField
     this->valueFraction() = 0.0;
 }
 
+
 turbulentMixingLengthDissipationRateInletFvPatchScalarField::
 turbulentMixingLengthDissipationRateInletFvPatchScalarField
 (
@@ -98,6 +101,7 @@ turbulentMixingLengthDissipationRateInletFvPatchScalarField
     phiName_(ptf.phiName_),
     kName_(ptf.kName_)
 {}
+
 
 turbulentMixingLengthDissipationRateInletFvPatchScalarField::
 turbulentMixingLengthDissipationRateInletFvPatchScalarField
@@ -150,11 +154,10 @@ void turbulentMixingLengthDissipationRateInletFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-    os.writeKeyword("mixingLength")
-        << mixingLength_ << token::END_STATEMENT << nl;
-    os.writeKeyword("phi") << phiName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("k") << kName_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "mixingLength", mixingLength_);
+    writeEntry(os, "phi", this->phiName_);
+    writeEntry(os, "k", kName_);
+    writeEntry(os, "value", *this);
 }
 
 

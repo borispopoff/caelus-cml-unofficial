@@ -46,9 +46,9 @@ namespace CML
 
 #define makeHyperVectorTensorWedgeFuncDefs(Type)                              \
 template<>                                                                    \
-tmp<Field<Type> > wedgeFvPatchField<Type>::snGrad() const                     \
+tmp<Field<Type>> wedgeFvPatchField<Type>::snGrad() const                      \
 {                                                                             \
-    return tmp<Field<Type> >                                                  \
+    return tmp<Field<Type>>                                                   \
     (                                                                         \
         new Field<Type>(size(), pTraits<Type>::zero)                          \
     );                                                                        \
@@ -71,10 +71,10 @@ void wedgeFvPatchField<Type>::evaluate                                        \
                                                                               \
                                                                               \
 template<>                                                                    \
-tmp<Field<Type> > wedgeFvPatchField<Type>::snGradTransformDiag()              \
+tmp<Field<Type>> wedgeFvPatchField<Type>::snGradTransformDiag()               \
 const                                                                         \
 {                                                                             \
-    return tmp<Field<Type> >                                                  \
+    return tmp<Field<Type>>                                                   \
     (                                                                         \
         new Field<Type>(this->size(), pTraits<Type>::zero)                    \
     );                                                                        \

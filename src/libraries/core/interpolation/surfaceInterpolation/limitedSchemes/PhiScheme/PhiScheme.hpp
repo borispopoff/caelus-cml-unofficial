@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,14 +58,6 @@ class PhiScheme
     public limitedSurfaceInterpolationScheme<Type>,
     public PhiLimiter
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        PhiScheme(const PhiScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const PhiScheme&);
-
 
 public:
 
@@ -112,6 +104,9 @@ public:
             PhiLimiter(is)
         {}
 
+        //- Disallow default bitwise copy construction
+        PhiScheme(const PhiScheme&) = delete;
+
 
     // Member Functions
 
@@ -120,6 +115,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PhiScheme&) = delete;
 };
 
 
@@ -137,16 +138,16 @@ typedef PhiScheme<TYPE, WEIGHT> Phischeme##WEIGHT_;                            \
 defineTemplateTypeNameAndDebugWithName(Phischeme##WEIGHT_, #SS, 0);            \
                                                                                \
 surfaceInterpolationScheme<TYPE>::addMeshConstructorToTable                    \
-<PhiScheme<TYPE, WEIGHT> > add##SS##TYPE##MeshConstructorToTable_;             \
+<PhiScheme<TYPE, WEIGHT>> add##SS##TYPE##MeshConstructorToTable_;              \
                                                                                \
 surfaceInterpolationScheme<TYPE>::addMeshFluxConstructorToTable                \
-<PhiScheme<TYPE, WEIGHT> > add##SS##TYPE##MeshFluxConstructorToTable_;         \
+<PhiScheme<TYPE, WEIGHT>> add##SS##TYPE##MeshFluxConstructorToTable_;          \
                                                                                \
 limitedSurfaceInterpolationScheme<TYPE>::addMeshConstructorToTable             \
-<PhiScheme<TYPE, WEIGHT> > add##SS##TYPE##MeshConstructorToLimitedTable_;      \
+<PhiScheme<TYPE, WEIGHT>> add##SS##TYPE##MeshConstructorToLimitedTable_;       \
                                                                                \
 limitedSurfaceInterpolationScheme<TYPE>::addMeshFluxConstructorToTable         \
-<PhiScheme<TYPE, WEIGHT> > add##SS##TYPE##MeshFluxConstructorToLimitedTable_;
+<PhiScheme<TYPE, WEIGHT>> add##SS##TYPE##MeshFluxConstructorToLimitedTable_;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -181,7 +182,7 @@ CML::PhiScheme<Type, PhiLimiter>::limiter
             dimless
         )
     );
-    surfaceScalarField& Limiter = tLimiter();
+    surfaceScalarField& Limiter = tLimiter.ref();
 
     const surfaceScalarField& CDweights = mesh.surfaceInterpolation::weights();
 
@@ -210,7 +211,7 @@ CML::PhiScheme<Type, PhiLimiter>::limiter
 
     const surfaceScalarField& Uflux = tUflux();
 
-    scalarField& pLimiter = Limiter.internalField();
+    scalarField& pLimiter = Limiter.primitiveFieldRef();
 
     forAll(pLimiter, face)
     {
@@ -226,27 +227,27 @@ CML::PhiScheme<Type, PhiLimiter>::limiter
     }
 
 
-    surfaceScalarField::GeometricBoundaryField& bLimiter =
-        Limiter.boundaryField();
+    surfaceScalarField::Boundary& bLimiter =
+        Limiter.boundaryFieldRef();
 
-    forAll(bLimiter, patchI)
+    forAll(bLimiter, patchi)
     {
-        scalarField& pLimiter = bLimiter[patchI];
+        scalarField& pLimiter = bLimiter[patchi];
 
-        if (bLimiter[patchI].coupled())
+        if (bLimiter[patchi].coupled())
         {
-            const scalarField& pCDweights = CDweights.boundaryField()[patchI];
-            const vectorField& pSf = Sf.boundaryField()[patchI];
-            const scalarField& pmagSf = magSf.boundaryField()[patchI];
-            const scalarField& pFaceFlux = Uflux.boundaryField()[patchI];
+            const scalarField& pCDweights = CDweights.boundaryField()[patchi];
+            const vectorField& pSf = Sf.boundaryField()[patchi];
+            const scalarField& pmagSf = magSf.boundaryField()[patchi];
+            const scalarField& pFaceFlux = Uflux.boundaryField()[patchi];
 
             const Field<Type> pphiP
             (
-                phi.boundaryField()[patchI].patchInternalField()
+                phi.boundaryField()[patchi].patchInternalField()
             );
             const Field<Type> pphiN
             (
-                phi.boundaryField()[patchI].patchNeighbourField()
+                phi.boundaryField()[patchi].patchNeighbourField()
             );
 
             forAll(pLimiter, face)

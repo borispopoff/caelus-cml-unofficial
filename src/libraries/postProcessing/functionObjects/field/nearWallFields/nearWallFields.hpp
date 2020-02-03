@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -105,7 +105,7 @@ protected:
         // Read from dictionary
 
             //- Fields to process
-            List<Tuple2<word, word> > fieldSet_;
+            List<Tuple2<word, word>> fieldSet_;
 
             //- Patches to sample
             labelHashSet patchSet_;
@@ -126,7 +126,7 @@ protected:
             labelListList cellToWalls_;
 
             //- From cell to tracked end point
-            List<List<point> > cellToSamples_;
+            List<List<point>> cellToSamples_;
 
             //- Map from cell based data back to patch based data
             autoPtr<mapDistribute> getPatchDataMapPtr_;
@@ -149,7 +149,7 @@ protected:
         template<class Type>
         void createFields
         (
-            PtrList<GeometricField<Type, fvPatchField, volMesh> >&
+            PtrList<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
 
         //- Override boundary fields with sampled values
@@ -163,17 +163,17 @@ protected:
         template<class Type>
         void sampleFields
         (
-            PtrList<GeometricField<Type, fvPatchField, volMesh> >&
+            PtrList<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
 
 
 private:
 
         //- Disallow default bitwise copy construct
-        nearWallFields(const nearWallFields&);
+        nearWallFields(const nearWallFields&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const nearWallFields&);
+        void operator=(const nearWallFields&) = delete;
 
 public:
 
@@ -244,7 +244,7 @@ public:
 template<class Type>
 void CML::nearWallFields::createFields
 (
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& sflds
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;
@@ -295,14 +295,14 @@ void CML::nearWallFields::sampleBoundaryField
     // Construct flat fields for all patch faces to be sampled
     Field<Type> sampledValues(getPatchDataMapPtr_().constructSize());
 
-    forAll(cellToWalls_, cellI)
+    forAll(cellToWalls_, celli)
     {
-        const labelList& cData = cellToWalls_[cellI];
+        const labelList& cData = cellToWalls_[celli];
 
         forAll(cData, i)
         {
-            const point& samplePt = cellToSamples_[cellI][i];
-            sampledValues[cData[i]] = interpolator.interpolate(samplePt, cellI);
+            const point& samplePt = cellToSamples_[celli][i];
+            sampledValues[cData[i]] = interpolator.interpolate(samplePt, celli);
         }
     }
 
@@ -317,9 +317,9 @@ void CML::nearWallFields::sampleBoundaryField
     label nPatchFaces = 0;
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
-        label patchI = iter.key();
+        label patchi = iter.key();
 
-        fvPatchField<Type>& pfld = fld.boundaryField()[patchI];
+        fvPatchField<Type>& pfld = fld.boundaryFieldRef()[patchi];
 
         Field<Type> newFld(pfld.size());
         forAll(pfld, i)
@@ -335,7 +335,7 @@ void CML::nearWallFields::sampleBoundaryField
 template<class Type>
 void CML::nearWallFields::sampleFields
 (
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& sflds
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;

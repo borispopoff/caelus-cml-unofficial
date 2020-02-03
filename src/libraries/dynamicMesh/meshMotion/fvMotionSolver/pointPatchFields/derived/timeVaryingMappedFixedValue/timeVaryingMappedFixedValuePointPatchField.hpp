@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2015 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -92,7 +92,7 @@ class timeVaryingMappedFixedValuePointPatchField
         Type endAverage_;
 
         //- Time varying offset values to interpolated data
-        autoPtr<DataEntry<Type> > offset_;
+        autoPtr<DataEntry<Type>> offset_;
 
 
 public:
@@ -134,9 +134,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new timeVaryingMappedFixedValuePointPatchField<Type>(*this)
             );
@@ -150,12 +150,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new timeVaryingMappedFixedValuePointPatchField<Type>(*this, iF)
             );
@@ -166,7 +166,7 @@ public:
 
         // Utility functions
 
-            //- Find boundary data inbetween current time and interpolate
+            //- Find boundary data in between current time and interpolate
             void checkTable();
 
 
@@ -222,10 +222,10 @@ timeVaryingMappedFixedValuePointPatchField
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),
-    startAverage_(pTraits<Type>::zero),
+    startAverage_(Zero),
     endSampleTime_(-1),
     endSampledValues_(0),
-    endAverage_(pTraits<Type>::zero),
+    endAverage_(Zero),
     offset_()
 {}
 
@@ -250,10 +250,10 @@ timeVaryingMappedFixedValuePointPatchField
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),
-    startAverage_(pTraits<Type>::zero),
+    startAverage_(Zero),
     endSampleTime_(-1),
     endSampledValues_(0),
-    endAverage_(pTraits<Type>::zero),
+    endAverage_(Zero),
     offset_
     (
         ptf.offset_.valid()
@@ -289,10 +289,10 @@ timeVaryingMappedFixedValuePointPatchField
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),
-    startAverage_(pTraits<Type>::zero),
+    startAverage_(Zero),
     endSampleTime_(-1),
     endSampledValues_(0),
-    endAverage_(pTraits<Type>::zero),
+    endAverage_(Zero),
     offset_()
 {
     if (dict.found("offset"))
@@ -315,7 +315,7 @@ timeVaryingMappedFixedValuePointPatchField
         //       of the pointPatchField::updated_ flag. This is
         //       so if first use is in the next time step it retriggers
         //       a new update.
-        pointPatchField<Type>::evaluate(Pstream::blocking);
+        pointPatchField<Type>::evaluate(Pstream::commsTypes::blocking);
     }
 }
 
@@ -412,7 +412,7 @@ void CML::timeVaryingMappedFixedValuePointPatchField<Type>::rmap
     fixedValuePointPatchField<Type>::rmap(ptf, addr);
 
     const timeVaryingMappedFixedValuePointPatchField<Type>& tiptf =
-        refCast<const timeVaryingMappedFixedValuePointPatchField<Type> >(ptf);
+        refCast<const timeVaryingMappedFixedValuePointPatchField<Type>>(ptf);
 
     startSampledValues_.rmap(tiptf.startSampledValues_, addr);
     endSampledValues_.rmap(tiptf.endSampledValues_, addr);
@@ -770,33 +770,30 @@ void CML::timeVaryingMappedFixedValuePointPatchField<Type>::write
 ) const
 {
     fixedValuePointPatchField<Type>::write(os);
-    os.writeKeyword("setAverage") << setAverage_ << token::END_STATEMENT << nl;
-    if (perturb_ != 1e-5)
-    {
-        os.writeKeyword("perturb") << perturb_ << token::END_STATEMENT << nl;
-    }
 
-    if (fieldTableName_ != this->dimensionedInternalField().name())
-    {
-        os.writeKeyword("fieldTableName") << fieldTableName_
-            << token::END_STATEMENT << nl;
-    }
+    writeEntryIfDifferent(os, "setAverage", bool(false), setAverage_);
 
-    if
+    writeEntryIfDifferent(os, "perturb", scalar(1e-5), perturb_);
+
+    writeEntryIfDifferent
     (
-        (
-           !mapMethod_.empty()
-         && mapMethod_ != "planarInterpolation"
-        )
-    )
-    {
-        os.writeKeyword("mapMethod") << mapMethod_
-            << token::END_STATEMENT << nl;
-    }
+        os,
+        "fieldTable",
+        this->internalField().name(),
+        fieldTableName_
+    );
+
+    writeEntryIfDifferent
+    (
+        os,
+        "mapMethod",
+        word("planarInterpolation"),
+        mapMethod_
+    );
 
     if (offset_.valid())
     {
-        offset_->writeData(os);
+        writeEntry(os, offset_());
     }
 }
 #endif

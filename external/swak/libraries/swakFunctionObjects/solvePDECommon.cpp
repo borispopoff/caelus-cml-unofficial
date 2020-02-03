@@ -174,7 +174,7 @@ void CML::solvePDECommon::execute()
         solveWrapper();
 
         // as this is executed after the general write, write the field separately
-        if(mesh.time().outputTime()) {
+        if(mesh.time().writeTime()) {
             writeData();
         }
     }
@@ -203,7 +203,7 @@ void CML::solvePDECommon::solveWrapper()
 
     solve();
 
-    if(writeBeforeAfter_ && !mesh.time().outputTime()) {
+    if(writeBeforeAfter_ && !mesh.time().writeTime()) {
         Info << "Write " << fieldName_ << " after" << endl;
         this->writeNewField();
     }
@@ -218,7 +218,7 @@ void CML::solvePDECommon::write()
     if(
         solveAt_==saWrite
         &&
-        mesh.time().outputTime()
+        mesh.time().writeTime()
     ) {
         solveWrapper();
 

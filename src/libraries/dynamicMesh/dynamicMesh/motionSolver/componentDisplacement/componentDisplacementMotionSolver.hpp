@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -68,6 +68,7 @@ protected:
         //- Point motion field
         mutable pointScalarField pointDisplacement_;
 
+
 private:
 
     // Private Member Functions
@@ -82,7 +83,8 @@ private:
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const componentDisplacementMotionSolver&);
+        void operator=(const componentDisplacementMotionSolver&) = delete;
+
 
 public:
 

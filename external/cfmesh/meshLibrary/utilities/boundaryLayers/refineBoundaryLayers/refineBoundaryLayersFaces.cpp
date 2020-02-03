@@ -53,7 +53,7 @@ void refineBoundaryLayers::refineFace
         WarningIn
         (
             "void refineBoundaryLayers::refineFace(const face&,"
-            " const FixedList<label, 2>&, DynList<DynList<label, 4> >&)"
+            " const FixedList<label, 2>&, DynList<DynList<label, 4>>&)"
         ) << "Face " << f << " is not a quad" << endl;
         return;
     }
@@ -235,7 +235,7 @@ void refineBoundaryLayers::refineFace
     # endif
 
     //- map the face onto a matrix for easier orientation
-    DynList<DynList<label> > facePoints;
+    DynList<DynList<label>> facePoints;
     facePoints.setSize(nLayersDir0+1);
     forAll(facePoints, i)
     {
@@ -433,18 +433,18 @@ void refineBoundaryLayers::refineFace
 
 void refineBoundaryLayers::sortFacePoints
 (
-    const label faceI,
-    DynList<DynList<label> >& facePoints,
+    const label facei,
+    DynList<DynList<label>>& facePoints,
     const label transpose
 ) const
 {
     const faceListPMG& faces = mesh_.faces();
-    const face& f = faces[faceI];
+    const face& f = faces[facei];
 
     # ifdef DEBUGLayer
-    Pout << "Creating matrix of points on a split face " << faceI << endl;
+    Pout << "Creating matrix of points on a split face " << facei << endl;
     Pout << "Face comprises of points " << f << endl;
-    Pout << "New faces from face " << facesFromFace_.sizeOfRow(faceI) << endl;
+    Pout << "New faces from face " << facesFromFace_.sizeOfRow(facei) << endl;
     # endif
 
     label procStart = mesh_.faces().size();
@@ -453,8 +453,8 @@ void refineBoundaryLayers::sortFacePoints
         procStart = procBoundaries[0].patchStart();
 
     if(
-        (faceI < procStart) ||
-        procBoundaries[mesh_.faceIsInProcPatch(faceI)].owner()
+        (facei < procStart) ||
+        procBoundaries[mesh_.faceIsInProcPatch(facei)].owner()
     )
     {
         //- orientation of new faces is the same as the face itself
@@ -462,11 +462,11 @@ void refineBoundaryLayers::sortFacePoints
         //- both i and j direction
         label numSplitsI(1);
 
-        const label pos = f.which(newFaces_(facesFromFace_(faceI, 0), 0));
+        const label pos = f.which(newFaces_(facesFromFace_(facei, 0), 0));
 
-        forAllRow(facesFromFace_, faceI, i)
+        forAllRow(facesFromFace_, facei, i)
         {
-            const label nfI = facesFromFace_(faceI, i);
+            const label nfI = facesFromFace_(facei, i);
 
             if( (numSplitsI == 1) && newFaces_.contains(nfI, f.nextLabel(pos)) )
             {
@@ -475,7 +475,7 @@ void refineBoundaryLayers::sortFacePoints
             }
         }
 
-        const label numSplitsJ = (facesFromFace_.sizeOfRow(faceI) / numSplitsI);
+        const label numSplitsJ = (facesFromFace_.sizeOfRow(facei) / numSplitsI);
 
         # ifdef DEBUGLayer
         Pout << "Pos " << pos << endl;
@@ -488,9 +488,9 @@ void refineBoundaryLayers::sortFacePoints
             facePoints[i].setSize(numSplitsJ+1);
 
         //- start filling in the matrix
-        forAllRow(facesFromFace_, faceI, fI)
+        forAllRow(facesFromFace_, facei, fI)
         {
-            const label nfI = facesFromFace_(faceI, fI);
+            const label nfI = facesFromFace_(facei, fI);
 
             const label i = fI % numSplitsI;
             const label j = fI / numSplitsI;
@@ -541,7 +541,7 @@ void refineBoundaryLayers::sortFacePoints
         }
 
         # ifdef DEBUGLayer
-        Pout << "Generated matrix of points on face " << faceI
+        Pout << "Generated matrix of points on face " << facei
              << " is " << facePoints << endl;
         # endif
     }
@@ -551,11 +551,11 @@ void refineBoundaryLayers::sortFacePoints
         //- on neighbour processor. i and j coordinates are reversed
         label numSplitsJ(1);
 
-        const label pos = f.which(newFaces_(facesFromFace_(faceI, 0), 0));
+        const label pos = f.which(newFaces_(facesFromFace_(facei, 0), 0));
 
-        forAllRow(facesFromFace_, faceI, j)
+        forAllRow(facesFromFace_, facei, j)
         {
-            const label nfI = facesFromFace_(faceI, j);
+            const label nfI = facesFromFace_(facei, j);
 
             if( (numSplitsJ == 1) && newFaces_.contains(nfI, f.prevLabel(pos)) )
             {
@@ -564,7 +564,7 @@ void refineBoundaryLayers::sortFacePoints
             }
         }
 
-        const label numSplitsI = (facesFromFace_.sizeOfRow(faceI) / numSplitsJ);
+        const label numSplitsI = (facesFromFace_.sizeOfRow(facei) / numSplitsJ);
 
         # ifdef DEBUGLayer
         Pout << "2. Face comprises of points " << f << endl;
@@ -577,9 +577,9 @@ void refineBoundaryLayers::sortFacePoints
             facePoints[i].setSize(numSplitsJ+1);
 
         //- start filling in the matrix
-        forAllRow(facesFromFace_, faceI, fI)
+        forAllRow(facesFromFace_, facei, fI)
         {
-            const label nfI = facesFromFace_(faceI, fI);
+            const label nfI = facesFromFace_(facei, fI);
 
             const label i = fI / numSplitsJ;
             const label j = fI % numSplitsJ;
@@ -630,14 +630,14 @@ void refineBoundaryLayers::sortFacePoints
         }
 
         # ifdef DEBUGLayer
-        Pout << "Generated matrix of points on processor face " << faceI
+        Pout << "Generated matrix of points on processor face " << facei
              << " is " << facePoints << endl;
         # endif
     }
 
     if( transpose )
     {
-        DynList<DynList<label> > transposedFacePoints;
+        DynList<DynList<label>> transposedFacePoints;
         transposedFacePoints.setSize(facePoints[0].size());
         forAll(transposedFacePoints, j)
             transposedFacePoints[j].setSize(facePoints.size());
@@ -656,16 +656,16 @@ void refineBoundaryLayers::sortFacePoints
 
 void refineBoundaryLayers::sortFaceFaces
 (
-    const label faceI,
-    DynList<DynList<label> >& faceFaces,
+    const label facei,
+    DynList<DynList<label>>& faceFaces,
     const label transpose
 ) const
 {
     const faceListPMG& faces = mesh_.faces();
-    const face& f = faces[faceI];
+    const face& f = faces[facei];
 
     # ifdef DEBUGLayer
-    Pout << "Creating matrix of faces on a split face " << faceI << endl;
+    Pout << "Creating matrix of faces on a split face " << facei << endl;
     Pout << "Face comprises of points " << f << endl;
     # endif
 
@@ -675,8 +675,8 @@ void refineBoundaryLayers::sortFaceFaces
         procStart = procBoundaries[0].patchStart();
 
     if(
-        (faceI < procStart) ||
-        procBoundaries[mesh_.faceIsInProcPatch(faceI)].owner()
+        (facei < procStart) ||
+        procBoundaries[mesh_.faceIsInProcPatch(facei)].owner()
     )
     {
         //- orientation of new faces is the same as the face itself
@@ -684,11 +684,11 @@ void refineBoundaryLayers::sortFaceFaces
         //- both i and j direction
         label numSplitsI(1);
 
-        const label pos = f.which(newFaces_(facesFromFace_(faceI, 0), 0));
+        const label pos = f.which(newFaces_(facesFromFace_(facei, 0), 0));
 
-        forAllRow(facesFromFace_, faceI, i)
+        forAllRow(facesFromFace_, facei, i)
         {
-            const label nfI = facesFromFace_(faceI, i);
+            const label nfI = facesFromFace_(facei, i);
 
             if( (numSplitsI == 1) && newFaces_.contains(nfI, f.nextLabel(pos)) )
             {
@@ -697,7 +697,7 @@ void refineBoundaryLayers::sortFaceFaces
             }
         }
 
-        label numSplitsJ = (facesFromFace_.sizeOfRow(faceI) / numSplitsI);
+        label numSplitsJ = (facesFromFace_.sizeOfRow(facei) / numSplitsI);
 
         # ifdef DEBUGLayer
         Pout << "3. Num splits in direction 0 " << numSplitsI << endl;
@@ -709,9 +709,9 @@ void refineBoundaryLayers::sortFaceFaces
             faceFaces[i].setSize(numSplitsJ);
 
         //- start filling in the matrix
-        forAllRow(facesFromFace_, faceI, fI)
+        forAllRow(facesFromFace_, facei, fI)
         {
-            const label nfI = facesFromFace_(faceI, fI);
+            const label nfI = facesFromFace_(facei, fI);
 
             const label i = fI % numSplitsI;
             const label j = fI / numSplitsI;
@@ -726,7 +726,7 @@ void refineBoundaryLayers::sortFaceFaces
         }
 
         # ifdef DEBUGLayer
-        Pout << "3. Generated matrix of points on face " << faceI
+        Pout << "3. Generated matrix of points on face " << facei
              << " is " << faceFaces << endl;
         # endif
     }
@@ -736,11 +736,11 @@ void refineBoundaryLayers::sortFaceFaces
         //- on neighbour processor. i and j coordinates are reversed
         label numSplitsJ(1);
 
-        const label pos = f.which(newFaces_(facesFromFace_(faceI, 0), 0));
+        const label pos = f.which(newFaces_(facesFromFace_(facei, 0), 0));
 
-        forAllRow(facesFromFace_, faceI, j)
+        forAllRow(facesFromFace_, facei, j)
         {
-            const label nfI = facesFromFace_(faceI, j);
+            const label nfI = facesFromFace_(facei, j);
 
             if( (numSplitsJ == 1) && newFaces_.contains(nfI, f.prevLabel(pos)) )
             {
@@ -749,7 +749,7 @@ void refineBoundaryLayers::sortFaceFaces
             }
         }
 
-        const label numSplitsI = (facesFromFace_.sizeOfRow(faceI) / numSplitsJ);
+        const label numSplitsI = (facesFromFace_.sizeOfRow(facei) / numSplitsJ);
 
         # ifdef DEBUGLayer
         Pout << "4. Num splits in direction 0 " << numSplitsI << endl;
@@ -761,9 +761,9 @@ void refineBoundaryLayers::sortFaceFaces
             faceFaces[i].setSize(numSplitsJ);
 
         //- start filling in the matrix
-        forAllRow(facesFromFace_, faceI, fI)
+        forAllRow(facesFromFace_, facei, fI)
         {
-            const label nfI = facesFromFace_(faceI, fI);
+            const label nfI = facesFromFace_(facei, fI);
 
             const label i = fI / numSplitsJ;
             const label j = fI % numSplitsJ;
@@ -778,14 +778,14 @@ void refineBoundaryLayers::sortFaceFaces
         }
 
         # ifdef DEBUGLayer
-        Pout << "4. Generated matrix of faces on processor face " << faceI
+        Pout << "4. Generated matrix of faces on processor face " << facei
              << " is " << faceFaces << endl;
         # endif
     }
 
     if( transpose )
     {
-        DynList<DynList<label> > transposedFaceFaces;
+        DynList<DynList<label>> transposedFaceFaces;
         transposedFaceFaces.setSize(faceFaces[0].size());
         forAll(transposedFaceFaces, j)
             transposedFaceFaces[j].setSize(faceFaces.size());
@@ -823,14 +823,14 @@ void refineBoundaryLayers::generateNewFaces()
     newFaces_.clear();
 
     //- split internal faces
-    for(label faceI=0;faceI<nInternalFaces;++faceI)
+    for(label facei=0;facei<nInternalFaces;++facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         //- only quad faces can be split
         if( f.size() != 4 )
         {
-            facesFromFace_.append(faceI, newFaces_.size());
+            facesFromFace_.append(facei, newFaces_.size());
             newFaces_.appendList(f);
             continue;
         }
@@ -877,18 +877,18 @@ void refineBoundaryLayers::generateNewFaces()
         //- store decomposed faces
         forAll(newFacesForFace, fI)
         {
-            facesFromFace_.append(faceI, newFaces_.size());
+            facesFromFace_.append(facei, newFaces_.size());
             newFaces_.appendList(newFacesForFace[fI]);
         }
 
         # ifdef DEBUGLayer
-        Pout << "Internal face " << faceI << " with points " << f
+        Pout << "Internal face " << facei << " with points " << f
              << " is refined " << endl;
-        forAllRow(facesFromFace_, faceI, i)
+        forAllRow(facesFromFace_, facei, i)
             Pout << "New face " << i << " is "
-                 << newFaces_[facesFromFace_(faceI, i)] << endl;
-        DynList<DynList<label> > tralala;
-        sortFacePoints(faceI, tralala);
+                 << newFaces_[facesFromFace_(facei, i)] << endl;
+        DynList<DynList<label>> tralala;
+        sortFacePoints(facei, tralala);
         # endif
     }
 
@@ -898,12 +898,12 @@ void refineBoundaryLayers::generateNewFaces()
     forAll(bFaces, bfI)
     {
         const face& bf = bFaces[bfI];
-        const label faceI = startingBoundaryFace + bfI;
+        const label facei = startingBoundaryFace + bfI;
 
         //- only quad faces can be split
         if( bf.size() != 4 )
         {
-            facesFromFace_.append(faceI, newFaces_.size());
+            facesFromFace_.append(facei, newFaces_.size());
             newFaces_.appendList(bf);
             continue;
         }
@@ -958,16 +958,16 @@ void refineBoundaryLayers::generateNewFaces()
         //- store the refined faces
         forAll(newFacesForFace, fI)
         {
-            facesFromFace_.append(faceI, newFaces_.size());
+            facesFromFace_.append(facei, newFaces_.size());
             newFaces_.appendList(newFacesForFace[fI]);
         }
 
         # ifdef DEBUGLayer
-        Pout << "Boundary face " << faceI << " with points " << bf
-             << " owner cell " << mesh_.owner()[faceI] << " is refined " << endl;
-        forAllRow(facesFromFace_, faceI, i)
+        Pout << "Boundary face " << facei << " with points " << bf
+             << " owner cell " << mesh_.owner()[facei] << " is refined " << endl;
+        forAllRow(facesFromFace_, facei, i)
             Pout << "New face " << i << " is "
-                 << newFaces_[facesFromFace_(faceI, i)] << endl;
+                 << newFaces_[facesFromFace_(facei, i)] << endl;
         # endif
     }
 
@@ -979,7 +979,7 @@ void refineBoundaryLayers::generateNewFaces()
 
         //- exchange information about the number of splits
         //- to other processors
-        std::map<label, DynList<labelPair, 2> > localSplits;
+        std::map<label, DynList<labelPair, 2>> localSplits;
         forAll(procBoundaries, patchI)
         {
             labelLongList sendData;
@@ -989,8 +989,8 @@ void refineBoundaryLayers::generateNewFaces()
 
             for(label fI=0;fI<size;++fI)
             {
-                const label faceI = start + fI;
-                const face& f = faces[faceI];
+                const label facei = start + fI;
+                const face& f = faces[facei];
 
                 forAll(f, eI)
                 {
@@ -1031,7 +1031,7 @@ void refineBoundaryLayers::generateNewFaces()
                             sendData.append(fI);
                             sendData.append(dir);
                             sendData.append(nSplits0);
-                            localSplits[faceI].append(labelPair(dir, nSplits0));
+                            localSplits[facei].append(labelPair(dir, nSplits0));
                         }
                     }
                 }
@@ -1039,7 +1039,7 @@ void refineBoundaryLayers::generateNewFaces()
 
             OPstream toOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo(),
                 sendData.byteSize()
             );
@@ -1055,7 +1055,7 @@ void refineBoundaryLayers::generateNewFaces()
 
             IPstream fromOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo()
             );
 
@@ -1093,16 +1093,16 @@ void refineBoundaryLayers::generateNewFaces()
 
             for(label fI=0;fI<size;++fI)
             {
-                const label faceI = start + fI;
+                const label facei = start + fI;
 
-                std::map<label, DynList<labelPair, 2> >::const_iterator it =
-                    localSplits.find(faceI);
+                std::map<label, DynList<labelPair, 2>>::const_iterator it =
+                    localSplits.find(facei);
 
                 if( it == localSplits.end() )
                 {
                     //- this face is not split
-                    facesFromFace_.append(faceI, newFaces_.size());
-                    newFaces_.appendList(faces[faceI]);
+                    facesFromFace_.append(facei, newFaces_.size());
+                    newFaces_.appendList(faces[facei]);
                     continue;
                 }
 
@@ -1121,17 +1121,17 @@ void refineBoundaryLayers::generateNewFaces()
                         << procBoundaries[patchI].myProcNo()
                         << " neighbour processor "
                         << procBoundaries[patchI].neiProcNo()
-                        << " face " << faces[faceI] << " refinement direction "
+                        << " face " << faces[facei] << " refinement direction "
                         << nLayersInDirection << endl;
                     # endif
 
                     DynList<DynList<label, 4>, 128> facesFromFace;
-                    refineFace(faces[faceI], nLayersInDirection, facesFromFace);
+                    refineFace(faces[facei], nLayersInDirection, facesFromFace);
 
                     //- add faces
                     forAll(facesFromFace, i)
                     {
-                        facesFromFace_.append(faceI, newFaces_.size());
+                        facesFromFace_.append(facei, newFaces_.size());
                         newFaces_.appendList(facesFromFace[i]);
                     }
                 }
@@ -1144,7 +1144,7 @@ void refineBoundaryLayers::generateNewFaces()
                         nLayersInDirection[(dirSplits[i].first()+1)%2] =
                             dirSplits[i].second();
 
-                    const face rFace = faces[faceI].reverseFace();
+                    const face rFace = faces[facei].reverseFace();
 
                     # ifdef DEBUGLayer
                     Pout << "Face " << fI << " at owner processor "
@@ -1163,7 +1163,7 @@ void refineBoundaryLayers::generateNewFaces()
                         const DynList<label, 4>& df = facesFromFace[i];
                         DynList<label, 4> rFace = help::reverseFace(df);
 
-                        facesFromFace_.append(faceI, newFaces_.size());
+                        facesFromFace_.append(facei, newFaces_.size());
                         newFaces_.appendList(rFace);
                     }
                 }
@@ -1183,13 +1183,13 @@ void refineBoundaryLayers::generateNewFaces()
 
                     for(label fI=0;fI<size;++fI)
                     {
-                        const label faceI = start + fI;
-                        const face& f = faces[faceI];
+                        const label facei = start + fI;
+                        const face& f = faces[facei];
                         Pout << "Face " << fI << " in patch "
                              << procBoundaries[patchI].patchName()
                              << " has nodes " << f
-                             << " local splits " << localSplits[faceI]
-                             << " new faces from face " << facesFromFace_[faceI]
+                             << " local splits " << localSplits[facei]
+                             << " new faces from face " << facesFromFace_[facei]
                              << endl;
 
                         Pout << " Face points ";
@@ -1197,9 +1197,9 @@ void refineBoundaryLayers::generateNewFaces()
                             Pout << mesh_.points()[f[pI]] << " ";
                         Pout << endl;
 
-                        forAllRow(facesFromFace_, faceI, ffI)
+                        forAllRow(facesFromFace_, facei, ffI)
                         {
-                            const label nfI = facesFromFace_(faceI, ffI);
+                            const label nfI = facesFromFace_(facei, ffI);
                             Pout << "New face " << ffI << " with label " << nfI
                                  << " consists of points ";
                             forAllRow(newFaces_, nfI, pI)
@@ -1252,19 +1252,19 @@ void refineBoundaryLayers::generateNewFaces()
 
     //- write faces
     label counter(0);
-    forAll(newFaces_, faceI)
+    forAll(newFaces_, facei)
     {
-        counter += newFaces_.sizeOfRow(faceI);
+        counter += newFaces_.sizeOfRow(facei);
         ++counter;
     }
 
     file << "\nPOLYGONS " << faces.size()
          << " " << counter << nl;
-    forAll(newFaces_, faceI)
+    forAll(newFaces_, facei)
     {
-        file << newFaces_.sizeOfRow(faceI);
-        forAllRow(newFaces_, faceI, i)
-            file << " " << newFaces_(faceI, i);
+        file << newFaces_.sizeOfRow(facei);
+        forAllRow(newFaces_, facei, i)
+            file << " " << newFaces_(facei, i);
         file << nl;
     }
 

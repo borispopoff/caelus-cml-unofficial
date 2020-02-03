@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014-2016 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -168,21 +168,6 @@ public:
             const DimensionedField<Type, volMesh>&
         );
 
-        fvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-            Type const
-        );
-
-        //- Construct from patch and internal field and patch type
-        fvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-            const word& patchType
-        );
-
         //- Construct from patch and internal field and patch field
         fvPatchField
         (
@@ -197,7 +182,7 @@ public:
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
             const dictionary&,
-            const bool valueRequired=false
+            const bool valueRequired=true
         );
 
         //- Construct by mapping the given fvPatchField onto a new patch
@@ -206,16 +191,17 @@ public:
             const fvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const fvPatchFieldMapper&,
+            const bool mappingRequired=true
         );
 
         //- Construct as copy
         fvPatchField(const fvPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >(new fvPatchField<Type>(*this));
+            return tmp<fvPatchField<Type>>(new fvPatchField<Type>(*this));
         }
 
         //- Construct as copy setting internal field reference
@@ -226,12 +212,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >(new fvPatchField<Type>(*this, iF));
+            return tmp<fvPatchField<Type>>(new fvPatchField<Type>(*this, iF));
         }
 
 
@@ -240,7 +226,7 @@ public:
         //- Return a pointer to a new patchField created on freestore given
         //  patch and internal field
         //  (does not set the patch field values)
-        static tmp<fvPatchField<Type> > New
+        static tmp<fvPatchField<Type>> New
         (
             const word&,
             const fvPatch&,
@@ -251,7 +237,7 @@ public:
         //  patch and internal field
         //  (does not set the patch field values).
         //  Allows override of constraint type
-        static tmp<fvPatchField<Type> > New
+        static tmp<fvPatchField<Type>> New
         (
             const word&,
             const word& actualPatchType,
@@ -261,7 +247,7 @@ public:
 
         //- Return a pointer to a new patchField created on freestore from
         //  a given fvPatchField mapped onto a new patch
-        static tmp<fvPatchField<Type> > New
+        static tmp<fvPatchField<Type>> New
         (
             const fvPatchField<Type>&,
             const fvPatch&,
@@ -271,7 +257,7 @@ public:
 
         //- Return a pointer to a new patchField created on freestore
         //  from dictionary
-        static tmp<fvPatchField<Type> > New
+        static tmp<fvPatchField<Type>> New
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
@@ -280,7 +266,7 @@ public:
 
         //- Return a pointer to a new calculatedFvPatchField created on
         //  freestore without setting patchField values
-        static tmp<fvPatchField<Type> > NewCalculatedType
+        static tmp<fvPatchField<Type>> NewCalculatedType
         (
             const fvPatch&
         );
@@ -288,7 +274,7 @@ public:
         //- Return a pointer to a new calculatedFvPatchField created on
         //  freestore without setting patchField values
         template<class Type2>
-        static tmp<fvPatchField<Type> > NewCalculatedType
+        static tmp<fvPatchField<Type>> NewCalculatedType
         (
             const fvPatchField<Type2>&
         );
@@ -306,19 +292,19 @@ public:
             //- Return the type of the calculated for of fvPatchField
             static const word& calculatedType();
 
-            //- Return true if the value of the patch field
-            //  is altered by assignment (the default)
-            virtual bool assignable() const
-            {
-                return true;
-            }
-
             //- Return true if this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving
             //  Poissons equations.
             virtual bool fixesValue() const
             {
                 return false;
+            }
+
+            //- Return true if the value of the patch field
+            //  is altered by assignment (the default)
+            virtual bool assignable() const
+            {
+                return true;
             }
 
             //- Return true if this patch field is coupled
@@ -346,13 +332,13 @@ public:
 
             //- Return dimensioned internal field reference
             const DimensionedField<Type, volMesh>&
-            dimensionedInternalField() const
+            internalField() const
             {
                 return internalField_;
             }
 
             //- Return internal field reference
-            const Field<Type>& internalField() const
+            const Field<Type>& primitiveField() const
             {
                 return internalField_;
             }
@@ -385,27 +371,22 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchField<Type>&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchField<Type>&, const labelList&);
 
 
         // Evaluation functions
 
             //- Return patch-normal gradient
-            virtual tmp<Field<Type> > snGrad() const;
+            virtual tmp<Field<Type>> snGrad() const;
 
             //- Return patch-normal gradient for coupled-patches
             //  using the deltaCoeffs provided
-            virtual tmp<Field<Type> > snGrad
+            virtual tmp<Field<Type>> snGrad
             (
                 const scalarField& deltaCoeffs
             ) const
@@ -419,18 +400,19 @@ public:
             virtual void updateCoeffs();
 
             //- Update the coefficients associated with the patch field
-            //  and apply weight field
-            //  Sets Updated to true
-            virtual void updateCoeffs(const scalarField& weights);
+            //  with a weight field (0..1). This weight field is usually
+            //  provided as the amount of geometric overlap for 'duplicate'
+            //  patches. Sets Updated to true
+            virtual void updateWeightedCoeffs(const scalarField& weights);
 
             //- Return internal field next to patch as patch field
-            virtual tmp<Field<Type> > patchInternalField() const;
+            virtual tmp<Field<Type>> patchInternalField() const;
 
             //- Return internal field next to patch as patch field
             virtual void patchInternalField(Field<Type>&) const;
 
             //- Return patchField on the opposite patch of a coupled patch
-            virtual tmp<Field<Type> > patchNeighbourField() const
+            virtual tmp<Field<Type>> patchNeighbourField() const
             {
                 NotImplemented;
                 return *this;
@@ -439,22 +421,24 @@ public:
             //- Initialise the evaluation of the patch field
             virtual void initEvaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             )
             {}
 
             //- Evaluate the patch field, sets Updated to false
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             );
 
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
-                const tmp<Field<scalar> >&
+                const tmp<Field<scalar>>&
             ) const
             {
                 NotImplemented;
@@ -463,9 +447,9 @@ public:
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
-                const tmp<Field<scalar> >&
+                const tmp<Field<scalar>>&
             ) const
             {
                 NotImplemented;
@@ -474,7 +458,7 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const
             {
                 NotImplemented;
                 return *this;
@@ -483,7 +467,7 @@ public:
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this coupled patchField
             //  using the deltaCoeffs provided
-            virtual tmp<Field<Type> > gradientInternalCoeffs
+            virtual tmp<Field<Type>> gradientInternalCoeffs
             (
                 const scalarField& deltaCoeffs
             ) const
@@ -494,7 +478,7 @@ public:
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const
             {
                 NotImplemented;
                 return *this;
@@ -503,7 +487,7 @@ public:
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this coupled patchField
             //  using the deltaCoeffs provided
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs
             (
                 const scalarField& deltaCoeffs
             ) const
@@ -583,17 +567,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "IOobject.hpp"
 #include "dictionary.hpp"
 #include "fvMesh.hpp"
 #include "fvPatchFieldMapper.hpp"
-//#include "fvMatrices.hpp"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -610,38 +590,6 @@ CML::fvPatchField<Type>::fvPatchField
     updated_(false),
     manipulatedMatrix_(false),
     patchType_(word::null)
-{}
-
-template<class Type>
-CML::fvPatchField<Type>::fvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    Type const val
-)
-:
-    Field<Type>(p.size(),val),
-    patch_(p),
-    internalField_(iF),
-    updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(word::null)
-{}
-
-template<class Type>
-CML::fvPatchField<Type>::fvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const word& patchType
-)
-:
-    Field<Type>(p.size()),
-    patch_(p),
-    internalField_(iF),
-    updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(patchType)
 {}
 
 
@@ -665,31 +613,6 @@ CML::fvPatchField<Type>::fvPatchField
 template<class Type>
 CML::fvPatchField<Type>::fvPatchField
 (
-    const fvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    Field<Type>(p.size()),
-    patch_(p),
-    internalField_(iF),
-    updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(ptf.patchType_)
-{
-    // For unmapped faces set to internal field value (zero-gradient)
-    if (notNull(iF) && mapper.hasUnmapped())
-    {
-        fvPatchField<Type>::operator=(this->patchInternalField());
-    }
-    this->map(ptf, mapper);
-}
-
-
-template<class Type>
-CML::fvPatchField<Type>::fvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict,
@@ -703,22 +626,52 @@ CML::fvPatchField<Type>::fvPatchField
     manipulatedMatrix_(false),
     patchType_(dict.lookupOrDefault<word>("patchType", word::null))
 {
-    if (dict.found("value"))
+    if (valueRequired)
     {
-        fvPatchField<Type>::operator=
-        (
-            Field<Type>("value", dict, p.size())
-        );
+        if (dict.found("value"))
+        {
+            Field<Type>::operator=
+            (
+                Field<Type>("value", dict, p.size())
+            );
+        }
+        else
+        {
+            FatalIOErrorInFunction
+            (
+                dict
+            )   << "Essential entry 'value' missing"
+                << exit(FatalIOError);
+        }
     }
-    else if (!valueRequired)
+}
+
+
+template<class Type>
+CML::fvPatchField<Type>::fvPatchField
+(
+    const fvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
+)
+:
+    Field<Type>(p.size()),
+    patch_(p),
+    internalField_(iF),
+    updated_(false),
+    manipulatedMatrix_(false),
+    patchType_(ptf.patchType_)
+{
+    if (mappingRequired)
     {
-        fvPatchField<Type>::operator=(pTraits<Type>::zero);
-    }
-    else
-    {
-        FatalIOErrorInFunction(dict)
-            << "Essential entry 'value' missing"
-            << exit(FatalIOError);
+        // For unmapped faces set to internal field value (zero-gradient)
+        if (notNull(iF) && mapper.hasUnmapped())
+        {
+            fvPatchField<Type>::operator=(this->patchInternalField());
+        }
+        this->map(ptf, mapper);
     }
 }
 
@@ -775,17 +728,15 @@ void CML::fvPatchField<Type>::check(const fvPatchField<Type>& ptf) const
 }
 
 
-// Return gradient at boundary
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fvPatchField<Type>::snGrad() const
+CML::tmp<CML::Field<Type>> CML::fvPatchField<Type>::snGrad() const
 {
     return patch_.deltaCoeffs()*(*this - patchInternalField());
 }
 
 
-// Return internal field next to patch as patch field
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::fvPatchField<Type>::patchInternalField() const
 {
     return patch_.patchInternalField(internalField_);
@@ -880,14 +831,12 @@ void CML::fvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void CML::fvPatchField<Type>::updateCoeffs(const scalarField& weights)
+void CML::fvPatchField<Type>::updateWeightedCoeffs(const scalarField& weights)
 {
+    // Default behaviour ignores the weights
     if (!updated_)
     {
         updateCoeffs();
-
-        Field<Type>& fld = *this;
-        fld *= weights;
 
         updated_ = true;
     }
@@ -1124,7 +1073,6 @@ void CML::fvPatchField<Type>::operator/=
 }
 
 
-// Force an assignment, overriding fixedValue status
 template<class Type>
 void CML::fvPatchField<Type>::operator==
 (
@@ -1168,12 +1116,10 @@ CML::Ostream& CML::operator<<(Ostream& os, const fvPatchField<Type>& ptf)
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::fvPatchField<Type> > CML::fvPatchField<Type>::New
+CML::tmp<CML::fvPatchField<Type>> CML::fvPatchField<Type>::New
 (
     const word& patchFieldType,
     const word& actualPatchType,
@@ -1224,12 +1170,12 @@ CML::tmp<CML::fvPatchField<Type> > CML::fvPatchField<Type>::New
     }
     else
     {
-        tmp<fvPatchField<Type> > tfvp = cstrIter()(p, iF);
+        tmp<fvPatchField<Type>> tfvp = cstrIter()(p, iF);
 
         // Check if constraint type override and store patchType if so
         if ((patchTypeCstrIter != patchConstructorTablePtr_->end()))
         {
-            tfvp().patchType() = actualPatchType;
+            tfvp.ref().patchType() = actualPatchType;
         }
         return tfvp;
     }
@@ -1237,7 +1183,7 @@ CML::tmp<CML::fvPatchField<Type> > CML::fvPatchField<Type>::New
 
 
 template<class Type>
-CML::tmp<CML::fvPatchField<Type> > CML::fvPatchField<Type>::New
+CML::tmp<CML::fvPatchField<Type>> CML::fvPatchField<Type>::New
 (
     const word& patchFieldType,
     const fvPatch& p,
@@ -1249,7 +1195,7 @@ CML::tmp<CML::fvPatchField<Type> > CML::fvPatchField<Type>::New
 
 
 template<class Type>
-CML::tmp<CML::fvPatchField<Type> > CML::fvPatchField<Type>::New
+CML::tmp<CML::fvPatchField<Type>> CML::fvPatchField<Type>::New
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -1315,7 +1261,7 @@ CML::tmp<CML::fvPatchField<Type> > CML::fvPatchField<Type>::New
 
 
 template<class Type>
-CML::tmp<CML::fvPatchField<Type> > CML::fvPatchField<Type>::New
+CML::tmp<CML::fvPatchField<Type>> CML::fvPatchField<Type>::New
 (
     const fvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -1385,7 +1331,7 @@ defineTemplateRunTimeSelectionTable(fvPatchTypeField, dictionary);
     );
 
 
-// use with caution
+// Use with caution
 #define addRemovableToPatchFieldRunTimeSelection\
 (PatchTypeField, typePatchTypeField)                                           \
                                                                                \
@@ -1457,7 +1403,7 @@ defineTemplateRunTimeSelectionTable(fvPatchTypeField, dictionary);
 #define makePatchFieldsTypeName(type)                                          \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchScalarField, 0);          \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchVectorField, 0);          \
-    defineNamedTemplateTypeNameAndDebug(type##FvPatchSphericalTensorField, 0);\
+    defineNamedTemplateTypeNameAndDebug(type##FvPatchSphericalTensorField, 0); \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchSymmTensorField, 0);      \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchTensorField, 0)
 

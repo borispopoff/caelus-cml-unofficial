@@ -50,12 +50,4 @@ CML::DataEntryTypes::linearRamp::~linearRamp()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-CML::scalar CML::DataEntryTypes::linearRamp::value(const scalar t) const
-{
-    return ramp::linearRamp(t);
-}
-
-
 // ************************************************************************* //

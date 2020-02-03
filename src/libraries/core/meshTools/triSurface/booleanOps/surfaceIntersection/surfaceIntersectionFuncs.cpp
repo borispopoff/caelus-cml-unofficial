@@ -60,10 +60,10 @@ void CML::surfaceIntersection::writeOBJ
 CML::scalar CML::surfaceIntersection::minEdgeLen
 (
     const triSurface& surf,
-    const label pointI
+    const label pointi
 )
 {
-    const labelList& pEdges = surf.pointEdges()[pointI];
+    const labelList& pEdges = surf.pointEdges()[pointi];
 
     scalar minLen = GREAT;
 
@@ -78,17 +78,17 @@ CML::scalar CML::surfaceIntersection::minEdgeLen
 }
 
 
-// Get edge between fp and fp+1 on faceI.
+// Get edge between fp and fp+1 on facei.
 CML::label CML::surfaceIntersection::getEdge
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     const label fp
 )
 {
-    const edge faceEdge = surf.localFaces()[faceI].faceEdge(fp);
+    const edge faceEdge = surf.localFaces()[facei].faceEdge(fp);
 
-    const labelList& eLabels = surf.faceEdges()[faceI];
+    const labelList& eLabels = surf.faceEdges()[facei];
 
     forAll(eLabels, eI)
     {
@@ -102,7 +102,7 @@ CML::label CML::surfaceIntersection::getEdge
 
     FatalErrorInFunction
         << "Problem:: Cannot find edge with vertices " << faceEdge
-        << " in face " << faceI
+        << " in face " << facei
         << abort(FatalError);
 
     return -1;
@@ -180,7 +180,7 @@ CML::edgeList CML::surfaceIntersection::filterEdges
     labelList& map
 )
 {
-    HashSet<edge, Hash<edge> > uniqueEdges(10*edges.size());
+    HashSet<edge, Hash<edge>> uniqueEdges(10*edges.size());
 
     edgeList newEdges(edges.size());
 
@@ -261,13 +261,13 @@ void CML::surfaceIntersection::writeIntersectedEdges
     // Dump all points (surface followed by cutPoints)
     const pointField& pts = surf.localPoints();
 
-    forAll(pts, pointI)
+    forAll(pts, pointi)
     {
-        writeOBJ(pts[pointI], os);
+        writeOBJ(pts[pointi], os);
     }
-    forAll(cutPoints(), cutPointI)
+    forAll(cutPoints(), cutPointi)
     {
-        writeOBJ(cutPoints()[cutPointI], os);
+        writeOBJ(cutPoints()[cutPointi], os);
     }
 
     forAll(edgeCutVerts, edgeI)

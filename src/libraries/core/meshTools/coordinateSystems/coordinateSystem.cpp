@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -298,16 +298,16 @@ void CML::coordinateSystem::writeDict(Ostream& os, bool subDict) const
             << indent << token::BEGIN_BLOCK << incrIndent << nl;
     }
 
-    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
 
 
     // The note entry is optional
     if (note_.size())
     {
-        os.writeKeyword("note") << note_ << token::END_STATEMENT << nl;
+        writeEntry(os, "note", note_);
     }
 
-    os.writeKeyword("origin") << origin_ << token::END_STATEMENT << nl;
+    writeEntry(os, "origin", origin_);
     R_->write(os);
 
     if (subDict)

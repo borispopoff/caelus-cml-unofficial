@@ -46,7 +46,7 @@ SourceFiles
 
 #define UNARY_FUNCTION(typeF1, typeF2, FUNC)                                  \
 void FUNC(Field<typeF1>& f1, const UList<typeF2>& f2);                        \
-void FUNC(Field<typeF1>& f1, const tmp<Field<typeF2> >& tf2);
+void FUNC(Field<typeF1>& f1, const tmp<Field<typeF2>>& tf2);
 
 
 #define ExpandFieldFunctions(tensorType, vectorType, cmptType, args...)       \

@@ -111,7 +111,7 @@ void CML::hllcFlux::evaluateFlux
 
     scalar convectionSpeed = 0.0;
     scalar rhoState = 0.0;
-    vector rhoUState = vector::zero;
+    vector rhoUState = Zero;
     scalar rhoEState = 0.0;
     scalar pState = 0.0;
 
@@ -125,7 +125,7 @@ void CML::hllcFlux::evaluateFlux
     }
     else if (pos(SStar))
     {
-        scalar omegaLeft = scalar(1.0)/stabilise((SLeft - SStar),VSMALL);
+        scalar omegaLeft = scalar(1)/stabilise((SLeft - SStar),VSMALL);
 
         convectionSpeed = SStar;
         rhoState  = omegaLeft*(SLeft - qLeft)*rhoLeft;
@@ -137,7 +137,7 @@ void CML::hllcFlux::evaluateFlux
     }
     else if (pos(SRight))
     {
-        scalar omegaRight = scalar(1.0)/stabilise((SRight - SStar),VSMALL);
+        scalar omegaRight = scalar(1)/stabilise((SRight - SStar),VSMALL);
 
         convectionSpeed = SStar;
         rhoState  = omegaRight*(SRight - qRight)*rhoRight;

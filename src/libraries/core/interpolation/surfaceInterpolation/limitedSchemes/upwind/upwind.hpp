@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,12 +49,6 @@ class upwind
 :
     public limitedSurfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const upwind&);
-
-
 public:
 
     //- Runtime type information
@@ -116,7 +110,7 @@ public:
                         this->mesh()
                     ),
                     this->mesh(),
-                    dimensionedScalar("upwindLimiter", dimless, 0.0)
+                    dimensionedScalar("upwindLimiter", dimless, 0)
                 )
             );
         }
@@ -135,6 +129,12 @@ public:
         {
             return weights();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const upwind&) = delete;
 };
 
 

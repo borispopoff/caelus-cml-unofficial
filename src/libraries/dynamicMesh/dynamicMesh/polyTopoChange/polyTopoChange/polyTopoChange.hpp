@@ -198,7 +198,7 @@ class polyTopoChange
         template<class T>
         static void reorder(const labelList& map, DynamicList<T>&);
         template<class T>
-        static void reorder(const labelList& map, List<DynamicList<T> >&);
+        static void reorder(const labelList& map, List<DynamicList<T>>&);
         template<class T>
         static void renumberKey(const labelList& map, Map<T>&);
 
@@ -246,10 +246,10 @@ class polyTopoChange
         void checkFace
         (
             const face&,
-            const label faceI,
+            const label facei,
             const label own,
             const label nei,
-            const label patchI,
+            const label patchi,
             const label zoneI
         ) const;
 
@@ -319,7 +319,7 @@ class polyTopoChange
         //- Calculate mapping for patchpoints only
         void calcPatchPointMap
         (
-            const List<Map<label> >&,
+            const List<Map<label>>&,
             const polyBoundaryMesh&,
             labelListList&
         ) const;
@@ -353,7 +353,7 @@ class polyTopoChange
         void calcFaceZonePointMap
         (
             const polyMesh&,
-            const List<Map<label> >&,
+            const List<Map<label>>&,
             labelListList&
         ) const;
 
@@ -391,10 +391,10 @@ class polyTopoChange
             List<objectMap>& cellsFromEdges,
             List<objectMap>& cellsFromFaces,
             List<objectMap>& cellsFromCells,
-            List<Map<label> >& oldPatchMeshPointMaps,
+            List<Map<label>>& oldPatchMeshPointMaps,
             labelList& oldPatchNMeshPoints,
             labelList& oldPatchStarts,
-            List<Map<label> >& oldFaceZoneMeshPointMaps
+            List<Map<label>>& oldFaceZoneMeshPointMaps
         );
 
 public:
@@ -445,11 +445,11 @@ public:
             }
 
             //- Is point removed?
-            inline bool pointRemoved(const label pointI) const;
+            inline bool pointRemoved(const label pointi) const;
             //- Is face removed?
-            inline bool faceRemoved(const label faceI) const;
+            inline bool faceRemoved(const label facei) const;
             //- Is cell removed?
-            inline bool cellRemoved(const label cellI) const;
+            inline bool cellRemoved(const label celli) const;
 
 
         // Edit
@@ -529,7 +529,7 @@ public:
             void modifyFace
             (
                 const face& f,
-                const label faceI,
+                const label facei,
                 const label own,
                 const label nei,
                 const bool flipFaceFlux,
@@ -568,7 +568,7 @@ public:
             //  Clears all data. Returns map.
             //  inflate = true : keep old mesh points. Put new points into the
             //  returned map (preMotionPoints) so we can use inflation. Any
-            //  points out of nothing (appended points) are vector::zero.
+            //  points out of nothing (appended points) are Zero.
             //  inflate = false: set mesh points directly. Empty preMotionPoints
             //  in the map.
             //  orderCells :  whether to order the cells (see bandCompression.H)
@@ -606,9 +606,9 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-inline bool CML::polyTopoChange::pointRemoved(const label pointI) const
+inline bool CML::polyTopoChange::pointRemoved(const label pointi) const
 {
-    const point& pt = points_[pointI];
+    const point& pt = points_[pointi];
 
     return
         pt.x() > 0.5*vector::max.x()
@@ -617,15 +617,15 @@ inline bool CML::polyTopoChange::pointRemoved(const label pointI) const
 }
 
 
-inline bool CML::polyTopoChange::faceRemoved(const label faceI) const
+inline bool CML::polyTopoChange::faceRemoved(const label facei) const
 {
-    return faces_[faceI].empty();
+    return faces_[facei].empty();
 }
 
 
-inline bool CML::polyTopoChange::cellRemoved(const label cellI) const
+inline bool CML::polyTopoChange::cellRemoved(const label celli) const
 {
-    return cellMap_[cellI] == -2;
+    return cellMap_[celli] == -2;
 }
 
 
@@ -637,7 +637,7 @@ inline void CML::polyTopoChange::setNumPatches(const label nPatches)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class T>
+template<class T>
 void CML::polyTopoChange::reorder
 (
     const labelList& oldToNew,
@@ -659,15 +659,15 @@ void CML::polyTopoChange::reorder
 }
 
 
-template <class T>
+template<class T>
 void CML::polyTopoChange::reorder
 (
     const labelList& oldToNew,
-    List<DynamicList<T> >& lst
+    List<DynamicList<T>>& lst
 )
 {
     // Create copy
-    List<DynamicList<T> > oldLst(lst);
+    List<DynamicList<T>> oldLst(lst);
 
     forAll(oldToNew, elemI)
     {
@@ -681,7 +681,7 @@ void CML::polyTopoChange::reorder
 }
 
 
-template <class T>
+template<class T>
 void CML::polyTopoChange::renumberKey
 (
     const labelList& oldToNew,

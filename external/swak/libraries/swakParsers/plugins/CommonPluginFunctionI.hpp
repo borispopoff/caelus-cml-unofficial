@@ -42,7 +42,7 @@ tmp<T> CommonPluginFunction::evaluate(
 }
 
 template <typename T>
-tmp<Field<T> > CommonPluginFunction::evaluate(
+tmp<Field<T>> CommonPluginFunction::evaluate(
     const string &content,
     int &consumed,
     bool isPoint
@@ -58,7 +58,7 @@ tmp<Field<T> > CommonPluginFunction::evaluate(
             << exit(FatalError);
 
     }
-    return tmp<Field<T> >(result_.getResult<T>(false));
+    return tmp<Field<T>>(result_.getResult<T>(false));
 }
 
 inline CommonValueExpressionDriver &CommonPluginFunction::parentDriver()

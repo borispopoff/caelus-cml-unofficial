@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -43,12 +43,12 @@ namespace CML
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                           Class nearWallDist Declaration
+                        Class nearWallDist Declaration
 \*---------------------------------------------------------------------------*/
 
 class nearWallDist
 :
-    public volScalarField::GeometricBoundaryField
+    public volScalarField::Boundary
 {
     // Private data
 
@@ -61,12 +61,6 @@ class nearWallDist
         //- Do all calculations
         void calculate();
 
-        //- Disallow default bitwise copy construct
-        nearWallDist(const nearWallDist&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const nearWallDist&);
-
 
 public:
 
@@ -75,6 +69,8 @@ public:
         //- Construct from components
         nearWallDist(const fvMesh& mesh);
 
+        //- Disallow default bitwise copy construct
+        nearWallDist(const nearWallDist&) = delete;
 
     //- Destructor
     virtual ~nearWallDist();
@@ -82,13 +78,19 @@ public:
 
     // Member Functions
 
-        const volScalarField::GeometricBoundaryField& y() const
+        const volScalarField::Boundary& y() const
         {
             return *this;
         }
 
         //- Correct for mesh geom/topo changes
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const nearWallDist&) = delete;
 };
 
 

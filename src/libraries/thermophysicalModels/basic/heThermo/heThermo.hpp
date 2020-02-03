@@ -306,7 +306,7 @@ template<class BasicThermo, class MixtureType>
 void CML::heThermo<BasicThermo, MixtureType>::
 heBoundaryCorrection(volScalarField& h)
 {
-    volScalarField::GeometricBoundaryField& hBf = h.boundaryField();
+    volScalarField::Boundary& hBf = h.boundaryFieldRef();
 
     forAll(hBf, patchi)
     {
@@ -327,9 +327,9 @@ heBoundaryCorrection(volScalarField& h)
 template<class BasicThermo, class MixtureType>
 void CML::heThermo<BasicThermo, MixtureType>::init()
 {
-    scalarField& heCells = he_.internalField();
-    const scalarField& pCells = this->p_.internalField();
-    const scalarField& TCells = this->T_.internalField();
+    scalarField& heCells = he_.primitiveFieldRef();
+    const scalarField& pCells = this->p_;
+    const scalarField& TCells = this->T_;
 
     forAll(heCells, celli)
     {
@@ -337,7 +337,7 @@ void CML::heThermo<BasicThermo, MixtureType>::init()
             this->cellMixture(celli).HE(pCells[celli], TCells[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& heBf = he_.boundaryField();
+    volScalarField::Boundary& heBf = he_.boundaryFieldRef();
 
     forAll(heBf, patchi)
     {
@@ -459,10 +459,10 @@ CML::tmp<CML::volScalarField> CML::heThermo<BasicThermo, MixtureType>::he
         )
     );
 
-    volScalarField& he = the();
-    scalarField& heCells = he.internalField();
-    const scalarField& pCells = p.internalField();
-    const scalarField& TCells = T.internalField();
+    volScalarField& he = the.ref();
+    scalarField& heCells = he.primitiveFieldRef();
+    const scalarField& pCells = p;
+    const scalarField& TCells = T;
 
     forAll(heCells, celli)
     {
@@ -470,7 +470,7 @@ CML::tmp<CML::volScalarField> CML::heThermo<BasicThermo, MixtureType>::he
             this->cellMixture(celli).HE(pCells[celli], TCells[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& heBf = he.boundaryField();
+    volScalarField::Boundary& heBf = he.boundaryFieldRef();
 
     forAll(heBf, patchi)
     {
@@ -498,7 +498,7 @@ CML::tmp<CML::scalarField> CML::heThermo<BasicThermo, MixtureType>::he
 ) const
 {
     tmp<scalarField> the(new scalarField(T.size()));
-    scalarField& he = the();
+    scalarField& he = the.ref();
 
     forAll(T, celli)
     {
@@ -518,7 +518,7 @@ CML::tmp<CML::scalarField> CML::heThermo<BasicThermo, MixtureType>::he
 ) const
 {
     tmp<scalarField> the(new scalarField(T.size()));
-    scalarField& he = the();
+    scalarField& he = the.ref();
 
     forAll(T, facei)
     {
@@ -554,15 +554,15 @@ CML::heThermo<BasicThermo, MixtureType>::hc() const
         )
     );
 
-    volScalarField& hcf = thc();
-    scalarField& hcCells = hcf.internalField();
+    volScalarField& hcf = thc.ref();
+    scalarField& hcCells = hcf.primitiveFieldRef();
 
     forAll(hcCells, celli)
     {
         hcCells[celli] = this->cellMixture(celli).Hc();
     }
 
-    volScalarField::GeometricBoundaryField& hcfBf = hcf.boundaryField();
+    volScalarField::Boundary& hcfBf = hcf.boundaryFieldRef();
 
     forAll(hcfBf, patchi)
     {
@@ -587,7 +587,7 @@ CML::tmp<CML::scalarField> CML::heThermo<BasicThermo, MixtureType>::Cp
 ) const
 {
     tmp<scalarField> tCp(new scalarField(T.size()));
-    scalarField& cp = tCp();
+    scalarField& cp = tCp.ref();
 
     forAll(T, facei)
     {
@@ -623,7 +623,7 @@ CML::heThermo<BasicThermo, MixtureType>::Cp() const
         )
     );
 
-    volScalarField& cp = tCp();
+    volScalarField& cp = tCp.ref();
 
     forAll(this->T_, celli)
     {
@@ -631,7 +631,7 @@ CML::heThermo<BasicThermo, MixtureType>::Cp() const
             this->cellMixture(celli).Cp(this->p_[celli], this->T_[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& cpBf = cp.boundaryField();
+    volScalarField::Boundary& cpBf = cp.boundaryFieldRef();
 
     forAll(cpBf, patchi)
     {
@@ -660,7 +660,7 @@ CML::heThermo<BasicThermo, MixtureType>::Cv
 ) const
 {
     tmp<scalarField> tCv(new scalarField(T.size()));
-    scalarField& cv = tCv();
+    scalarField& cv = tCv.ref();
 
     forAll(T, facei)
     {
@@ -696,7 +696,7 @@ CML::heThermo<BasicThermo, MixtureType>::Cv() const
         )
     );
 
-    volScalarField& cv = tCv();
+    volScalarField& cv = tCv.ref();
 
     forAll(this->T_, celli)
     {
@@ -704,7 +704,7 @@ CML::heThermo<BasicThermo, MixtureType>::Cv() const
             this->cellMixture(celli).Cv(this->p_[celli], this->T_[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& cvBf = cv.boundaryField();
+    volScalarField::Boundary& cvBf = cv.boundaryFieldRef();
 
     forAll(cvBf, patchi)
     {
@@ -729,7 +729,7 @@ CML::tmp<CML::scalarField> CML::heThermo<BasicThermo, MixtureType>::gamma
 ) const
 {
     tmp<scalarField> tgamma(new scalarField(T.size()));
-    scalarField& gamma = tgamma();
+    scalarField& gamma = tgamma.ref();
 
     forAll(T, facei)
     {
@@ -765,7 +765,7 @@ CML::heThermo<BasicThermo, MixtureType>::gamma() const
         )
     );
 
-    volScalarField& gamma = tgamma();
+    volScalarField& gamma = tgamma.ref();
 
     forAll(this->T_, celli)
     {
@@ -773,7 +773,7 @@ CML::heThermo<BasicThermo, MixtureType>::gamma() const
             this->cellMixture(celli).gamma(this->p_[celli], this->T_[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& gammaBf = gamma.boundaryField();
+    volScalarField::Boundary& gammaBf = gamma.boundaryFieldRef();
 
     forAll(gammaBf, patchi)
     {
@@ -804,7 +804,7 @@ CML::tmp<CML::scalarField> CML::heThermo<BasicThermo, MixtureType>::Cpv
 ) const
 {
     tmp<scalarField> tCpv(new scalarField(T.size()));
-    scalarField& Cpv = tCpv();
+    scalarField& Cpv = tCpv.ref();
 
     forAll(T, facei)
     {
@@ -840,7 +840,7 @@ CML::heThermo<BasicThermo, MixtureType>::Cpv() const
         )
     );
 
-    volScalarField& Cpv = tCpv();
+    volScalarField& Cpv = tCpv.ref();
 
     forAll(this->T_, celli)
     {
@@ -848,7 +848,7 @@ CML::heThermo<BasicThermo, MixtureType>::Cpv() const
             this->cellMixture(celli).Cpv(this->p_[celli], this->T_[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& CpvBf = Cpv.boundaryField();
+    volScalarField::Boundary& CpvBf = Cpv.boundaryFieldRef();
 
     forAll(CpvBf, patchi)
     {
@@ -876,7 +876,7 @@ CML::tmp<CML::scalarField> CML::heThermo<BasicThermo, MixtureType>::CpByCpv
 ) const
 {
     tmp<scalarField> tCpByCpv(new scalarField(T.size()));
-    scalarField& CpByCpv = tCpByCpv();
+    scalarField& CpByCpv = tCpByCpv.ref();
 
     forAll(T, facei)
     {
@@ -912,7 +912,7 @@ CML::heThermo<BasicThermo, MixtureType>::CpByCpv() const
         )
     );
 
-    volScalarField& CpByCpv = tCpByCpv();
+    volScalarField& CpByCpv = tCpByCpv.ref();
 
     forAll(this->T_, celli)
     {
@@ -923,8 +923,8 @@ CML::heThermo<BasicThermo, MixtureType>::CpByCpv() const
         );
     }
 
-    volScalarField::GeometricBoundaryField& CpByCpvBf =
-        CpByCpv.boundaryField();
+    volScalarField::Boundary& CpByCpvBf =
+        CpByCpv.boundaryFieldRef();
 
     forAll(CpByCpvBf, patchi)
     {
@@ -956,7 +956,7 @@ CML::tmp<CML::scalarField> CML::heThermo<BasicThermo, MixtureType>::THE
 ) const
 {
     tmp<scalarField> tT(new scalarField(h.size()));
-    scalarField& T = tT();
+    scalarField& T = tT.ref();
 
     forAll(h, celli)
     {
@@ -979,7 +979,7 @@ CML::tmp<CML::scalarField> CML::heThermo<BasicThermo, MixtureType>::THE
 {
 
     tmp<scalarField> tT(new scalarField(h.size()));
-    scalarField& T = tT();
+    scalarField& T = tT.ref();
     forAll(h, facei)
     {
         T[facei] = this->patchFaceMixture
@@ -1018,15 +1018,15 @@ CML::tmp<CML::volScalarField> CML::heThermo<BasicThermo, MixtureType>::W
         )
     );
 
-    volScalarField& W = tW();
-    scalarField& WCells = W.internalField();
+    volScalarField& W = tW.ref();
+    scalarField& WCells = W.primitiveFieldRef();
 
     forAll(WCells, celli)
     {
         WCells[celli] = this->cellMixture(celli).W();
     }
 
-    volScalarField::GeometricBoundaryField& WBf = W.boundaryField();
+    volScalarField::Boundary& WBf = W.boundaryFieldRef();
 
     forAll(WBf, patchi)
     {
@@ -1050,7 +1050,7 @@ CML::tmp<CML::scalarField> CML::heThermo<BasicThermo, MixtureType>::W
     const fvMesh& mesh = this->T_.mesh();
 
     tmp<scalarField> tW(new scalarField(mesh.boundaryMesh()[patchi].size()));
-    scalarField& W = tW();
+    scalarField& W = tW.ref();
     forAll(W, facei)
     {
         W[facei] = this->patchFaceMixture(patchi, facei).W();
@@ -1065,7 +1065,7 @@ CML::tmp<CML::volScalarField>
 CML::heThermo<BasicThermo, MixtureType>::kappa() const
 {
     tmp<CML::volScalarField> kappa(Cp()*this->alpha_);
-    kappa().rename("kappa");
+    kappa.ref().rename("kappa");
     return kappa;
 }
 
@@ -1094,7 +1094,7 @@ CML::heThermo<BasicThermo, MixtureType>::kappaEff
 ) const
 {
     tmp<CML::volScalarField> kappaEff(Cp()*(this->alpha_ + alphat));
-    kappaEff().rename("kappaEff");
+    kappaEff.ref().rename("kappaEff");
     return kappaEff;
 }
 
@@ -1129,7 +1129,7 @@ CML::heThermo<BasicThermo, MixtureType>::alphaEff
 ) const
 {
     tmp<CML::volScalarField> alphaEff(this->CpByCpv()*(this->alpha_ + alphat));
-    alphaEff().rename("alphaEff");
+    alphaEff.ref().rename("alphaEff");
     return alphaEff;
 }
 

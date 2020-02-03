@@ -82,28 +82,28 @@ void mqFaceSkewnessPluginFunction::doEvaluation()
     const vectorField& faceCtrs = mesh().faceCentres();
     const vectorField& fAreas = mesh().faceAreas();
 
-    forAll(nei, faceI)
+    forAll(nei, facei)
     {
-        vector Cpf = faceCtrs[faceI] - cellCtrs[own[faceI]];
-        vector d = cellCtrs[nei[faceI]] - cellCtrs[own[faceI]];
+        vector Cpf = faceCtrs[facei] - cellCtrs[own[facei]];
+        vector d = cellCtrs[nei[facei]] - cellCtrs[own[facei]];
 
         // Skewness vector
         vector sv =
-            Cpf - ((fAreas[faceI] & Cpf)/((fAreas[faceI] & d) + SMALL))*d;
+            Cpf - ((fAreas[facei] & Cpf)/((fAreas[facei] & d) + SMALL))*d;
         vector svHat = sv/(mag(sv) + VSMALL);
 
         // Normalisation distance calculated as the approximate distance
         // from the face centre to the edge of the face in the direction of
         // the skewness
         scalar fd = 0.2*mag(d) + VSMALL;
-        const face& f = fcs[faceI];
+        const face& f = fcs[facei];
         forAll(f, pi)
         {
-            fd = max(fd, mag(svHat & (p[f[pi]] - faceCtrs[faceI])));
+            fd = max(fd, mag(svHat & (p[f[pi]] - faceCtrs[facei])));
         }
 
         // Normalised skewness
-        skewness[faceI] = mag(sv)/fd;
+        skewness[facei] = mag(sv)/fd;
     }
 
 
@@ -112,31 +112,31 @@ void mqFaceSkewnessPluginFunction::doEvaluation()
 
     forAll(skewness.boundaryField(),patchI)
     {
-        fvsPatchField<scalar> &thePatch=skewness.boundaryField()[patchI];
+        fvsPatchField<scalar> &thePatch=skewness.boundaryFieldRef()[patchI];
 
         forAll(thePatch,i)
         {
-            scalar faceI=i+thePatch.patch().patch().start();
+            scalar facei=i+thePatch.patch().patch().start();
 
-            vector Cpf = faceCtrs[faceI] - cellCtrs[own[faceI]];
+            vector Cpf = faceCtrs[facei] - cellCtrs[own[facei]];
 
-            vector normal = fAreas[faceI];
+            vector normal = fAreas[facei];
             normal /= mag(normal) + VSMALL;
             vector d = normal*(normal & Cpf);
 
 
             // Skewness vector
-            vector sv = Cpf - ((fAreas[faceI]&Cpf)/((fAreas[faceI]&d)+VSMALL))*d;
+            vector sv = Cpf - ((fAreas[facei]&Cpf)/((fAreas[facei]&d)+VSMALL))*d;
             vector svHat = sv/(mag(sv) + VSMALL);
 
             // Normalisation distance calculated as the approximate distance
             // from the face centre to the edge of the face in the direction of
             // the skewness
             scalar fd = 0.4*mag(d) + VSMALL;
-            const face& f = fcs[faceI];
+            const face& f = fcs[facei];
             forAll(f, pi)
             {
-                fd = max(fd, mag(svHat & (p[f[pi]] - faceCtrs[faceI])));
+                fd = max(fd, mag(svHat & (p[f[pi]] - faceCtrs[facei])));
             }
 
             // Normalised skewness

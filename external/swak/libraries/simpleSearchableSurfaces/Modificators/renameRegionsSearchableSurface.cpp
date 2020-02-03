@@ -52,7 +52,7 @@ CML::renameRegionsSearchableSurface::renameRegionsSearchableSurface
     wrapperSearchableSurface(io,dict)
 {
     regions_=delegate().regions();
-    List<Pair<word> > replace(dict.lookup("replacementPairs"));
+    List<Pair<word>> replace(dict.lookup("replacementPairs"));
 
     if(debug) {
         Info << "renameRegionsSearchableSurface::renameRegionsSearchableSurface"

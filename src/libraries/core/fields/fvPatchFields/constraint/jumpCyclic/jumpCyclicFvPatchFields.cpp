@@ -49,7 +49,7 @@ void CML::jumpCyclicFvPatchField<CML::scalar>::updateInterfaceMatrix
         this->cyclicPatch().neighbFvPatch().faceCells();
 
     // Only apply jump to original field
-    if (&psiInternal == &this->internalField())
+    if (&psiInternal == &this->primitiveField())
     {
         Field<scalar> jf(this->jump());
 

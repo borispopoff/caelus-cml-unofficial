@@ -61,7 +61,7 @@ inline CML::quaternion::quaternion
 inline CML::quaternion::quaternion(const scalar w)
 :
     w_(w),
-    v_(vector::zero)
+    v_(Zero)
 {}
 
 inline CML::quaternion::quaternion(const vector& v)
@@ -345,7 +345,7 @@ inline CML::tensor CML::quaternion::R() const
 
 inline CML::vector CML::quaternion::eulerAngles(const quaternion& q) const
 {
-    vector angles(vector::zero);
+    vector angles(Zero);
 
     const scalar& w = q.w();
     const vector& v = q.v();
@@ -544,7 +544,7 @@ inline CML::vector CML::quaternion::eulerAngles
         default:
             FatalErrorInFunction
                 << "Unknown rotation sequence " << rs << abort(FatalError);
-            return vector::zero;
+            return Zero;
             break;
     }
 }

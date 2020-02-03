@@ -26,7 +26,7 @@ License
 template<class Type>
 void CML::nearWallFields::createFields
 (
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& sflds
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;
@@ -77,14 +77,14 @@ void CML::nearWallFields::sampleBoundaryField
     // Construct flat fields for all patch faces to be sampled
     Field<Type> sampledValues(getPatchDataMapPtr_().constructSize());
 
-    forAll(cellToWalls_, cellI)
+    forAll(cellToWalls_, celli)
     {
-        const labelList& cData = cellToWalls_[cellI];
+        const labelList& cData = cellToWalls_[celli];
 
         forAll(cData, i)
         {
-            const point& samplePt = cellToSamples_[cellI][i];
-            sampledValues[cData[i]] = interpolator.interpolate(samplePt, cellI);
+            const point& samplePt = cellToSamples_[celli][i];
+            sampledValues[cData[i]] = interpolator.interpolate(samplePt, celli);
         }
     }
 
@@ -99,9 +99,9 @@ void CML::nearWallFields::sampleBoundaryField
     label nPatchFaces = 0;
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
-        label patchI = iter.key();
+        label patchi = iter.key();
 
-        fvPatchField<Type>& pfld = fld.boundaryField()[patchI];
+        fvPatchField<Type>& pfld = fld.boundaryField()[patchi];
 
         Field<Type> newFld(pfld.size());
         forAll(pfld, i)
@@ -117,7 +117,7 @@ void CML::nearWallFields::sampleBoundaryField
 template<class Type>
 void CML::nearWallFields::sampleFields
 (
-    PtrList<GeometricField<Type, fvPatchField, volMesh> >& sflds
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;

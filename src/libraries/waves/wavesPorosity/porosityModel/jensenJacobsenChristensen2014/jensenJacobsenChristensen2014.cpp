@@ -55,7 +55,7 @@ jensenJacobsenChristensen2014::jensenJacobsenChristensen2014
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-tmp<fvMatrix<vector> > jensenJacobsenChristensen2014::ddt
+tmp<fvMatrix<vector>> jensenJacobsenChristensen2014::ddt
 (
     GeometricField<vector, fvPatchField, volMesh>& U
 )
@@ -64,7 +64,7 @@ tmp<fvMatrix<vector> > jensenJacobsenChristensen2014::ddt
 }
 
 
-tmp<fvMatrix<vector> > jensenJacobsenChristensen2014::ddt
+tmp<fvMatrix<vector>> jensenJacobsenChristensen2014::ddt
 (
     const geometricOneField& rho,
     GeometricField<vector, fvPatchField, volMesh>& U
@@ -74,7 +74,7 @@ tmp<fvMatrix<vector> > jensenJacobsenChristensen2014::ddt
 }
 
 
-tmp<fvMatrix<vector> > jensenJacobsenChristensen2014::ddt
+tmp<fvMatrix<vector>> jensenJacobsenChristensen2014::ddt
 (
     const dimensionedScalar& rho,
     GeometricField<vector, fvPatchField, volMesh>& U
@@ -84,7 +84,7 @@ tmp<fvMatrix<vector> > jensenJacobsenChristensen2014::ddt
 }
 
 
-tmp<fvMatrix<vector> > jensenJacobsenChristensen2014::ddt
+tmp<fvMatrix<vector>> jensenJacobsenChristensen2014::ddt
 (
     const volScalarField& rho,
     GeometricField<vector, fvPatchField, volMesh>& U
@@ -104,7 +104,7 @@ void jensenJacobsenChristensen2014::updatePorosity()
 	const volScalarField& poro = tporosity();
 
     // Set the internal field values
-	porosity_.internalField() = poro.internalField();
+	porosity_.primitiveFieldRef() = poro.primitiveField();
 
 	// Update boundary conditions
 	porosity_.correctBoundaryConditions();

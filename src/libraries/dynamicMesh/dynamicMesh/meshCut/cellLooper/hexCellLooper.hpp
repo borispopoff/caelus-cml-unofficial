@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -70,12 +70,12 @@ private:
 
     // Private Member Functions
 
-        //- walk across faces of hex. Update loop/loopWeights with edges cut.
+        //- Walk across faces of hex. Update loop/loopWeights with edges cut.
         //  Return true if successful walk. (should be always!)
         bool walkHex
         (
-            const label cellI,
-            const label startFaceI,
+            const label celli,
+            const label startFacei,
             const label startEdgeI,
 
             labelList& loop,
@@ -94,10 +94,10 @@ private:
 
 
         //- Disallow default bitwise copy construct
-        hexCellLooper(const hexCellLooper&);
+        hexCellLooper(const hexCellLooper&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const hexCellLooper&);
+        void operator=(const hexCellLooper&) = delete;
 
 
 public:
@@ -118,14 +118,14 @@ public:
 
     // Member Functions
 
-        //- Create cut along circumference of cellI. Gets current mesh cuts.
+        //- Create cut along circumference of celli. Gets current mesh cuts.
         //  Cut along circumference is expressed as loop of cuts plus weights
         //  for cuts along edges (only valid for edge cuts).
         //  Return true if successful cut.
         virtual bool cut
         (
             const vector& refDir,
-            const label cellI,
+            const label celli,
             const boolList& vertIsCut,
             const boolList& edgeIsCut,
             const scalarField& edgeWeight,
@@ -140,7 +140,7 @@ public:
         virtual bool cut
         (
             const plane& cutPlane,
-            const label cellI,
+            const label celli,
             const boolList& vertIsCut,
             const boolList& edgeIsCut,
             const scalarField& edgeWeight,

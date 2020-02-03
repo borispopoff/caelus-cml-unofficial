@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------* \
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -36,7 +36,7 @@ SRFFreestreamVelocityFvPatchVectorField
 )
 :
     inletOutletFvPatchVectorField(p, iF),
-    UInf_(vector::zero)
+    UInf_(Zero)
 {}
 
 
@@ -122,8 +122,8 @@ void CML::SRFFreestreamVelocityFvPatchVectorField::updateCoeffs()
 void CML::SRFFreestreamVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("UInf") << UInf_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "UInf", UInf_);
+    writeEntry(os, "value", *this);
 }
 
 

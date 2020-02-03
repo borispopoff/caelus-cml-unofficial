@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -137,9 +137,9 @@ void pointZoneSet::invert(const label maxLen)
     // Count
     label n = 0;
 
-    for (label pointI = 0; pointI < maxLen; pointI++)
+    for (label pointi = 0; pointi < maxLen; pointi++)
     {
-        if (!found(pointI))
+        if (!found(pointi))
         {
             n++;
         }
@@ -149,11 +149,11 @@ void pointZoneSet::invert(const label maxLen)
     addressing_.setSize(n);
     n = 0;
 
-    for (label pointI = 0; pointI < maxLen; pointI++)
+    for (label pointi = 0; pointi < maxLen; pointi++)
     {
-        if (!found(pointI))
+        if (!found(pointi))
         {
-            addressing_[n] = pointI;
+            addressing_[n] = pointi;
             n++;
         }
     }
@@ -169,11 +169,11 @@ void pointZoneSet::subset(const topoSet& set)
 
     forAll(fSet.addressing(), i)
     {
-        label pointI = fSet.addressing()[i];
+        label pointi = fSet.addressing()[i];
 
-        if (found(pointI))
+        if (found(pointi))
         {
-            newAddressing.append(pointI);
+            newAddressing.append(pointi);
         }
     }
 
@@ -190,11 +190,11 @@ void pointZoneSet::addSet(const topoSet& set)
 
     forAll(fSet.addressing(), i)
     {
-        label pointI = fSet.addressing()[i];
+        label pointi = fSet.addressing()[i];
 
-        if (!found(pointI))
+        if (!found(pointi))
         {
-            newAddressing.append(pointI);
+            newAddressing.append(pointi);
         }
     }
 
@@ -211,12 +211,12 @@ void pointZoneSet::deleteSet(const topoSet& set)
 
     forAll(addressing_, i)
     {
-        label pointI = addressing_[i];
+        label pointi = addressing_[i];
 
-        if (!fSet.found(pointI))
+        if (!fSet.found(pointi))
         {
             // Not found in fSet so add
-            newAddressing.append(pointI);
+            newAddressing.append(pointi);
         }
     }
 
@@ -226,7 +226,13 @@ void pointZoneSet::deleteSet(const topoSet& set)
 
 
 void pointZoneSet::sync(const polyMesh& mesh)
-{}
+{
+    pointSet::sync(mesh);
+
+    // Take over contents of pointSet into addressing.
+    addressing_ = sortedToc();
+    updateSet();
+}
 
 
 label pointZoneSet::maxSize(const polyMesh& mesh) const
@@ -235,7 +241,6 @@ label pointZoneSet::maxSize(const polyMesh& mesh) const
 }
 
 
-//- Write using given format, version and compression
 bool pointZoneSet::writeObject
 (
     IOstream::streamFormat s,
@@ -288,11 +293,11 @@ void pointZoneSet::updateMesh(const mapPolyMesh& morphMap)
     label n = 0;
     forAll(addressing_, i)
     {
-        label pointI = addressing_[i];
-        label newPointI = morphMap.reversePointMap()[pointI];
-        if (newPointI >= 0)
+        label pointi = addressing_[i];
+        label newPointi = morphMap.reversePointMap()[pointi];
+        if (newPointi >= 0)
         {
-            newAddressing[n] = newPointI;
+            newAddressing[n] = newPointi;
             n++;
         }
     }

@@ -29,7 +29,7 @@ Author
 
 #define makeBlendedCorrection(limiterType)                                     \
 template<class Type>                                                           \
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >     \
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>      \
 CML::blended##limiterType<Type>::correction                                    \
 (                                                                              \
     GeometricField<Type, fvPatchField, volMesh> const& vf                      \
@@ -37,7 +37,7 @@ CML::blended##limiterType<Type>::correction                                    \
 {                                                                              \
     fvMesh const& mesh = this->mesh();                                         \
                                                                                \
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsfCorr             \
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr              \
     (                                                                          \
         new GeometricField<Type, fvsPatchField, surfaceMesh>                   \
         (                                                                      \
@@ -55,7 +55,7 @@ CML::blended##limiterType<Type>::correction                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr();      \
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();  \
                                                                                \
     surfaceScalarField const& faceFlux = this->faceFlux_;                      \
                                                                                \
@@ -101,10 +101,10 @@ CML::blended##limiterType<Type>::correction                                    \
                                                                                \
         scalar const r                                                         \
         (                                                                      \
-            (scalar(2.0)*mag((C[cellD]-C[cellC])&gradVf[cellC])                \
+            (scalar(2)*mag((C[cellD]-C[cellC])&gradVf[cellC])                  \
             /(mag(vf[cellD]-vf[cellC]) + VSMALL))                              \
             -                                                                  \
-            scalar(1.0)                                                        \
+            scalar(1)                                                          \
         );                                                                     \
                                                                                \
         scalar const sLimiter = slopeLimiter(r);                               \
@@ -113,13 +113,13 @@ CML::blended##limiterType<Type>::correction                                    \
                                                                                \
         sfCorr[facei] -= 0.5*vf[cellC];                                        \
         sfCorr[facei] += 0.5*sLimiter*(Cf[facei] - C[cellC]) & gradVf[cellC];  \
-	sfCorr[facei] += 0.5*vf[cellD];                                        \
+	sfCorr[facei] += 0.5*vf[cellD];                                            \
         sfCorr[facei] += 0.5*sLimiter*(Cf[facei] - C[cellD]) & gradVf[cellD];  \
         sfCorr[facei]  = beta_*sfCorr[facei] + (1-beta_)*corr1;                \
     }                                                                          \
                                                                                \
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::                \
-        GeometricBoundaryField& bSfCorr = sfCorr.boundaryField();              \
+        Boundary& bSfCorr = sfCorr.boundaryFieldRef();                         \
                                                                                \
     forAll(bSfCorr, patchi)                                                    \
     {                                                                          \
@@ -157,10 +157,10 @@ CML::blended##limiterType<Type>::correction                                    \
                                                                                \
                 if (pFaceFlux[facei] > 0)                                      \
                 {                                                              \
-                    r = (scalar(2.0)                                           \
+                    r = (scalar(2)                                             \
                         *mag(pd[facei]&gradVf[pown]))                          \
                         /(mag(vfNei[facei]-vf[pown]) + VSMALL)                 \
-                        - scalar(1.0);                                         \
+                        - scalar(1);                                           \
                                                                                \
                     sLimiter = slopeLimiter(r);                                \
                                                                                \
@@ -181,10 +181,10 @@ CML::blended##limiterType<Type>::correction                                    \
                 }                                                              \
                 else                                                           \
                 {                                                              \
-                    r = (scalar(2.0)                                           \
+                    r = (scalar(2)                                             \
                         *mag(pd[facei]&pGradVfNei[facei]))                     \
                         /(mag(vf[pown]-vfNei[facei]) + VSMALL)                 \
-                        - scalar(1.0);                                         \
+                        - scalar(1);                                           \
                                                                                \
                     sLimiter = slopeLimiter(r);                                \
                                                                                \

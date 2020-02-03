@@ -77,7 +77,7 @@ public:
         polyModifyPoint()
         :
             pointID_(-1),
-            location_(vector::zero),
+            location_(Zero),
             removeFromZone_(false),
             zoneID_(-1),
             inCell_(false)

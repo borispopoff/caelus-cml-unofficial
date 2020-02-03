@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -371,7 +371,7 @@ class cellCuts
                 const labelList& loop
             ) const;
 
-            //- Determines if loop through cellI consistent with existing
+            //- Determines if loop through celli consistent with existing
             //  pattern.
             bool conservativeValidLoop
             (
@@ -444,10 +444,10 @@ class cellCuts
 
 
         //- Disallow default bitwise copy construct
-        cellCuts(const cellCuts&);
+        cellCuts(const cellCuts&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cellCuts&);
+        void operator=(const cellCuts&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2014-2015 OpenFOAM Foundation
+Copyright (C) 2014-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -46,7 +46,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
     List<labelPair> allComms;
 
     {
-        HashSet<labelPair, labelPair::Hash<> > commsSet(Pstream::nProcs());
+        HashSet<labelPair, labelPair::Hash<>> commsSet(Pstream::nProcs());
 
         // Find what communication is required
         forAll(subMap, proci)
@@ -80,7 +80,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
             slave++
         )
         {
-            IPstream fromSlave(Pstream::scheduled, slave, 0, tag);
+            IPstream fromSlave(Pstream::commsTypes::scheduled, slave, 0, tag);
             List<labelPair> nbrData(fromSlave);
 
             forAll(nbrData, i)
@@ -101,7 +101,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
             slave++
         )
         {
-            OPstream toSlave(Pstream::scheduled, slave, 0, tag);
+            OPstream toSlave(Pstream::commsTypes::scheduled, slave, 0, tag);
             toSlave << allComms;
         }
     }
@@ -110,7 +110,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
         {
             OPstream toMaster
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 0,
                 tag
@@ -120,7 +120,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
         {
             IPstream fromMaster
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 0,
                 tag
@@ -144,7 +144,7 @@ CML::List<CML::labelPair> CML::mapDistributeBase::schedule
     return List<labelPair>(UIndirectList<labelPair>(allComms, mySchedule));
 
 
-    //if (debug)
+    // if (debug)
     //{
     //    Pout<< "I need to:" << endl;
     //    const List<labelPair>& comms = schedule();
@@ -282,7 +282,7 @@ void CML::mapDistributeBase::calcCompactAddressing
 (
     const globalIndex& globalNumbering,
     const labelList& elements,
-    List<Map<label> >& compactMap
+    List<Map<label>>& compactMap
 ) const
 {
     compactMap.setSize(Pstream::nProcs());
@@ -331,7 +331,7 @@ void CML::mapDistributeBase::calcCompactAddressing
 (
     const globalIndex& globalNumbering,
     const labelListList& cellCells,
-    List<Map<label> >& compactMap
+    List<Map<label>>& compactMap
 ) const
 {
     compactMap.setSize(Pstream::nProcs());
@@ -339,9 +339,9 @@ void CML::mapDistributeBase::calcCompactAddressing
     // Count all (non-local) elements needed. Just for presizing map.
     labelList nNonLocal(Pstream::nProcs(), 0);
 
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        const labelList& cCells = cellCells[cellI];
+        const labelList& cCells = cellCells[celli];
 
         forAll(cCells, i)
         {
@@ -366,9 +366,9 @@ void CML::mapDistributeBase::calcCompactAddressing
 
 
     // Collect all (non-local) elements needed.
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        const labelList& cCells = cellCells[cellI];
+        const labelList& cCells = cellCells[celli];
 
         forAll(cCells, i)
         {
@@ -391,7 +391,7 @@ void CML::mapDistributeBase::exchangeAddressing
     const int tag,
     const globalIndex& globalNumbering,
     labelList& elements,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     labelList& compactStart
 )
 {
@@ -468,7 +468,7 @@ void CML::mapDistributeBase::exchangeAddressing
     const int tag,
     const globalIndex& globalNumbering,
     labelListList& cellCells,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     labelList& compactStart
 )
 {
@@ -533,9 +533,9 @@ void CML::mapDistributeBase::exchangeAddressing
     );
 
     // Renumber elements
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        labelList& cCells = cellCells[cellI];
+        labelList& cCells = cellCells[celli];
 
         forAll(cCells, i)
         {
@@ -561,15 +561,15 @@ CML::mapDistributeBase::mapDistributeBase()
 CML::mapDistributeBase::mapDistributeBase
 (
     const label constructSize,
-    const Xfer<labelListList>& subMap,
-    const Xfer<labelListList>& constructMap,
+    const labelListList&& subMap,
+    const labelListList&& constructMap,
     const bool subHasFlip,
     const bool constructHasFlip
 )
 :
     constructSize_(constructSize),
-    subMap_(subMap),
-    constructMap_(constructMap),
+    subMap_(move(subMap)),
+    constructMap_(move(constructMap)),
     subHasFlip_(subHasFlip),
     constructHasFlip_(constructHasFlip),
     schedulePtr_()
@@ -654,7 +654,7 @@ CML::mapDistributeBase::mapDistributeBase
 (
     const globalIndex& globalNumbering,
     labelList& elements,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -674,13 +674,13 @@ CML::mapDistributeBase::mapDistributeBase
     );
 
     //// Sort remote elements needed (not really necessary)
-    //forAll(compactMap, proci)
+    // forAll(compactMap, proci)
     //{
     //    if (proci != Pstream::myProcNo())
     //    {
     //        Map<label>& globalMap = compactMap[proci];
     //
-    //        SortableList<label> sorted(globalMap.toc().xfer());
+    //        SortableList<label> sorted(move(globalMap.toc()));
     //
     //        forAll(sorted, i)
     //        {
@@ -714,7 +714,7 @@ CML::mapDistributeBase::mapDistributeBase
 (
     const globalIndex& globalNumbering,
     labelListList& cellCells,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -734,13 +734,13 @@ CML::mapDistributeBase::mapDistributeBase
     );
 
     //// Sort remote elements needed (not really necessary)
-    //forAll(compactMap, proci)
+    // forAll(compactMap, proci)
     //{
     //    if (proci != Pstream::myProcNo())
     //    {
     //        Map<label>& globalMap = compactMap[proci];
     //
-    //        SortableList<label> sorted(globalMap.toc().xfer());
+    //        SortableList<label> sorted(move(globalMap.toc()));
     //
     //        forAll(sorted, i)
     //        {
@@ -781,13 +781,13 @@ CML::mapDistributeBase::mapDistributeBase(const mapDistributeBase& map)
 {}
 
 
-CML::mapDistributeBase::mapDistributeBase(const Xfer<mapDistributeBase>& map)
+CML::mapDistributeBase::mapDistributeBase(mapDistributeBase&& map)
 :
-    constructSize_(map().constructSize_),
-    subMap_(map().subMap_.xfer()),
-    constructMap_(map().constructMap_.xfer()),
-    subHasFlip_(map().subHasFlip_),
-    constructHasFlip_(map().constructHasFlip_),
+    constructSize_(map.constructSize_),
+    subMap_(move(map.subMap_)),
+    constructMap_(move(map.constructMap_)),
+    subHasFlip_(map.subHasFlip_),
+    constructHasFlip_(map.constructHasFlip_),
     schedulePtr_()
 {}
 
@@ -811,16 +811,10 @@ void CML::mapDistributeBase::transfer(mapDistributeBase& rhs)
 }
 
 
-CML::Xfer<CML::mapDistributeBase> CML::mapDistributeBase::xfer()
-{
-    return xferMove(*this);
-}
-
-
 CML::label CML::mapDistributeBase::renumber
 (
     const globalIndex& globalNumbering,
-    const List<Map<label> >& compactMap,
+    const List<Map<label>>& compactMap,
     const label globalI
 )
 {
@@ -866,7 +860,7 @@ void CML::mapDistributeBase::compact(const boolList& elemIsUsed, const int tag)
                 recvFields[domain].setSize(map.size());
                 IPstream::read
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<char*>(recvFields[domain].begin()),
                     recvFields[domain].size()*sizeof(bool),
@@ -899,7 +893,7 @@ void CML::mapDistributeBase::compact(const boolList& elemIsUsed, const int tag)
 
                 OPstream::write
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<const char*>(subField.begin()),
                     subField.size()*sizeof(bool),
@@ -1033,7 +1027,7 @@ void CML::mapDistributeBase::compact
                 recvFields[domain].setSize(map.size());
                 IPstream::read
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<char*>(recvFields[domain].begin()),
                     recvFields[domain].size()*sizeof(bool),
@@ -1065,7 +1059,7 @@ void CML::mapDistributeBase::compact
 
                 OPstream::write
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<const char*>(subField.begin()),
                     subField.size()*sizeof(bool),

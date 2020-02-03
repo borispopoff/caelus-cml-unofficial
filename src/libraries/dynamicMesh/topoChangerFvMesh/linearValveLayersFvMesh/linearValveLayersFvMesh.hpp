@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,10 +56,10 @@ class linearValveLayersFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        linearValveLayersFvMesh(const linearValveLayersFvMesh&);
+        linearValveLayersFvMesh(const linearValveLayersFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const linearValveLayersFvMesh&);
+        void operator=(const linearValveLayersFvMesh&) = delete;
 
 
         //- Add linearValveLayers zones and modifiers

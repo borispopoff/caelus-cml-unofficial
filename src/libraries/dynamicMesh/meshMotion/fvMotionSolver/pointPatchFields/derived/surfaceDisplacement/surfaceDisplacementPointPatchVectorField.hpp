@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -119,7 +119,10 @@ private:
 
 
         //- Disallow default bitwise assignment
-        void operator=(const surfaceDisplacementPointPatchVectorField&);
+        void operator=
+        (
+            const surfaceDisplacementPointPatchVectorField&
+        ) = delete;
 
 public:
 
@@ -153,7 +156,7 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         surfaceDisplacementPointPatchVectorField
         (
             const surfaceDisplacementPointPatchVectorField&
@@ -171,7 +174,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         surfaceDisplacementPointPatchVectorField
         (
             const surfaceDisplacementPointPatchVectorField&,

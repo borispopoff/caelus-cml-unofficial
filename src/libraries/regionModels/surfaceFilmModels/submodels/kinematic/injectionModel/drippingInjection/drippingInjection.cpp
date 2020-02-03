@@ -64,9 +64,9 @@ drippingInjection::drippingInjection
     ),
     diameter_(film.regionMesh().nCells(), -1.0)
 {
-    forAll(diameter_, faceI)
+    forAll(diameter_, facei)
     {
-        diameter_[faceI] = parcelDistribution_->sample();
+        diameter_[facei] = parcelDistribution_->sample();
     }
 }
 

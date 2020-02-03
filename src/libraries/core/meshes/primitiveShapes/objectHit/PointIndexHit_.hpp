@@ -85,7 +85,7 @@ public:
         PointIndexHit()
         :
             hit_(false),
-            hitPoint_(vector::zero),
+            hitPoint_(Zero),
             index_(-1)
         {}
 

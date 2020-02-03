@@ -69,21 +69,21 @@ void polyMeshGenAddressing::calcCellEdges() const
             # ifdef USE_OMP
             # pragma omp for schedule(static)
             # endif
-            forAll(cells, cellI)
+            forAll(cells, celli)
             {
-                const cell& c = cells[cellI];
+                const cell& c = cells[celli];
 
                 DynList<label, 32> cEdges;
 
                 forAll(c, fI)
                 {
-                    const label faceI = c[fI];
+                    const label facei = c[fI];
 
-                    forAllRow(fe, faceI, eI)
-                        cEdges.appendIfNotIn(fe(faceI, eI));
+                    forAllRow(fe, facei, eI)
+                        cEdges.appendIfNotIn(fe(facei, eI));
                 }
 
-                nEdges[cellI] = cEdges.size();
+                nEdges[celli] = cEdges.size();
             }
 
             # ifdef USE_OMP
@@ -98,21 +98,21 @@ void polyMeshGenAddressing::calcCellEdges() const
 
             # pragma omp for schedule(static)
             # endif
-            forAll(cells, cellI)
+            forAll(cells, celli)
             {
-                const cell& c = cells[cellI];
+                const cell& c = cells[celli];
 
                 DynList<label, 32> cEdges;
 
                 forAll(c, fI)
                 {
-                    const label faceI = c[fI];
+                    const label facei = c[fI];
 
-                    forAllRow(fe, faceI, eI)
-                        cEdges.appendIfNotIn(fe(faceI, eI));
+                    forAllRow(fe, facei, eI)
+                        cEdges.appendIfNotIn(fe(facei, eI));
                 }
 
-                cellEdgeAddr.setRow(cellI, cEdges);
+                cellEdgeAddr.setRow(celli, cEdges);
             }
         }
     }

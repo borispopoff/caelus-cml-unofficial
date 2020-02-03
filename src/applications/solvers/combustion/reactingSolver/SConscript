@@ -22,7 +22,6 @@ caelus_inc = [
 'thermophysicalModels/chemistryModel/lnInclude',
 'combustionModels/lnInclude',
 'transportModels/basic/lnInclude',
-'fvOptions/lnInclude',
 'sampling/lnInclude',
 'thermophysicalModels/numericFluxes/DBNS/numericFlux/lnInclude',
 'ODE/lnInclude'

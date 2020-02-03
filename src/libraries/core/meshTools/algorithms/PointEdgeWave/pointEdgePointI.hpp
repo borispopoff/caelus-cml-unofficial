@@ -195,7 +195,7 @@ template<class TrackingData>
 inline void CML::pointEdgePoint::leaveDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -221,7 +221,7 @@ template<class TrackingData>
 inline void CML::pointEdgePoint::enterDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -236,14 +236,14 @@ template<class TrackingData>
 inline bool CML::pointEdgePoint::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const label edgeI,
     const pointEdgePoint& edgeInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(mesh.points()[pointI], edgeInfo, tol, td);
+    return update(mesh.points()[pointi], edgeInfo, tol, td);
 }
 
 
@@ -252,13 +252,13 @@ template<class TrackingData>
 inline bool CML::pointEdgePoint::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const pointEdgePoint& newPointInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(mesh.points()[pointI], newPointInfo, tol, td);
+    return update(mesh.points()[pointi], newPointInfo, tol, td);
 }
 
 
@@ -281,7 +281,7 @@ inline bool CML::pointEdgePoint::updateEdge
 (
     const polyMesh& mesh,
     const label edgeI,
-    const label pointI,
+    const label pointi,
     const pointEdgePoint& pointInfo,
     const scalar tol,
     TrackingData& td
@@ -292,7 +292,7 @@ inline bool CML::pointEdgePoint::updateEdge
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::pointEdgePoint::equal
 (
     const pointEdgePoint& rhs,

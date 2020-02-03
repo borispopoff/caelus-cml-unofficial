@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -40,7 +40,7 @@ pressureInletOutletParSlipVelocityFvPatchVectorField
     rhoName_("rho")
 {
     refValue() = *this;
-    refGrad() = vector::zero;
+    refGrad() = Zero;
     valueFraction() = 0.0;
 }
 
@@ -74,7 +74,7 @@ pressureInletOutletParSlipVelocityFvPatchVectorField
 {
     fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
     refValue() = *this;
-    refGrad() = vector::zero;
+    refGrad() = Zero;
     valueFraction() = 0.0;
 }
 
@@ -142,8 +142,8 @@ void CML::pressureInletOutletParSlipVelocityFvPatchVectorField::updateCoeffs()
         FatalErrorInFunction
             << "dimensions of phi are not correct" << nl
             << "    on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalError);
     }
 
@@ -159,9 +159,9 @@ void CML::pressureInletOutletParSlipVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("phi") << phiName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("rho") << rhoName_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
+    writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
+    writeEntry(os, "value", *this);
 }
 
 

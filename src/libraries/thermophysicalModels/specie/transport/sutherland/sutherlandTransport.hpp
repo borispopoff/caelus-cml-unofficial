@@ -262,10 +262,10 @@ inline CML::sutherlandTransport<Thermo>::sutherlandTransport
 
 
 template<class Thermo>
-inline CML::autoPtr<CML::sutherlandTransport<Thermo> >
+inline CML::autoPtr<CML::sutherlandTransport<Thermo>>
 CML::sutherlandTransport<Thermo>::clone() const
 {
-    return autoPtr<sutherlandTransport<Thermo> >
+    return autoPtr<sutherlandTransport<Thermo>>
     (
         new sutherlandTransport<Thermo>(*this)
     );
@@ -273,13 +273,13 @@ CML::sutherlandTransport<Thermo>::clone() const
 
 
 template<class Thermo>
-inline CML::autoPtr<CML::sutherlandTransport<Thermo> >
+inline CML::autoPtr<CML::sutherlandTransport<Thermo>>
 CML::sutherlandTransport<Thermo>::New
 (
     const dictionary& dict
 )
 {
-    return autoPtr<sutherlandTransport<Thermo> >
+    return autoPtr<sutherlandTransport<Thermo>>
     (
         new sutherlandTransport<Thermo>(dict)
     );

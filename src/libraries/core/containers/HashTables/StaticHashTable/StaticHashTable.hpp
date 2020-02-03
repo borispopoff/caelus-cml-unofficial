@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -41,7 +41,6 @@ SourceFiles
 #include "label.hpp"
 #include "uLabel.hpp"
 #include "word.hpp"
-#include "Xfer.hpp"
 #include "className.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -107,10 +106,10 @@ class StaticHashTable
     // Private data type for table entries
 
         //- The lookup keys, ordered per hash value
-        List<List<Key> > keys_;
+        List<List<Key>> keys_;
 
         //- For each key the corresponding object.
-        List<List<T> > objects_;
+        List<List<T>> objects_;
 
         //- The current number of elements in table
         label nElmts_;
@@ -173,8 +172,8 @@ public:
         //- Construct as copy
         StaticHashTable(const StaticHashTable<T, Key, Hash>&);
 
-        //- Construct by transferring the parameter contents
-        StaticHashTable(const Xfer<StaticHashTable<T, Key, Hash> >&);
+        //- Move constructor
+        StaticHashTable(StaticHashTable<T, Key, Hash>&&);
 
 
     //- Destructor
@@ -241,9 +240,6 @@ public:
             //  and annul the argument table.
             void transfer(StaticHashTable<T, Key, Hash>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<StaticHashTable<T, Key, Hash> > xfer();
-
 
     // Member Operators
 
@@ -256,8 +252,11 @@ public:
         //- Find and return an hashed entry, create it null if not present.
         inline T& operator()(const Key&);
 
-        //- Assignment
+        //- Assignment operator
         void operator=(const StaticHashTable<T, Key, Hash>&);
+
+        //- Move assignment operator
+        void operator=(StaticHashTable<T, Key, Hash>&&);
 
         //- Equality. Two hash tables are equal if all contents of first are
         //  also in second and vice versa.
@@ -293,10 +292,8 @@ public:
         {
             friend class StaticHashTable;
 
-#           ifndef __INTEL_COMPILER
             template<class TRef2, class TableRef2>
             friend class Iterator;
-#           endif
 
             // Private data
 
@@ -389,10 +386,10 @@ public:
         };
 
 
-        //- iterator set to the beginning of the StaticHashTable
+        //- Iterator set to the beginning of the StaticHashTable
         inline iterator begin();
 
-        //- iterator set to beyond the end of the StaticHashTable
+        //- Iterator set to beyond the end of the StaticHashTable
         inline const iterator& end();
 
         //- const_iterator set to the beginning of the StaticHashTable
@@ -424,7 +421,7 @@ public:
 
 private:
 
-        //- iterator returned by end()
+        //- Iterator returned by end()
         iterator endIter_;
 
         //- const_iterator returned by end()
@@ -441,7 +438,6 @@ private:
 #include "error.hpp"
 #include "IOstreams.hpp"
 
-// * * * * * * * * * * * * * Private Member Classes * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
@@ -489,14 +485,6 @@ inline bool CML::StaticHashTable<T, Key, Hash>::set
 )
 {
     return set(key, newEntry, false);
-}
-
-
-template<class T, class Key, class Hash>
-inline CML::Xfer<CML::StaticHashTable<T, Key, Hash> >
-CML::StaticHashTable<T, Key, Hash>::xfer()
-{
-    return xferMove(*this);
 }
 
 
@@ -849,12 +837,12 @@ CML::label CML::StaticHashTableCore::canonicalSize(const label size)
         return 0;
     }
 
-    // enforce power of two
+    // Enforce power of two
     unsigned int goodSize = size;
 
     if (goodSize & (goodSize - 1))
     {
-        // brute-force is fast enough
+        // Brute-force is fast enough
         goodSize = 1;
         while (goodSize < unsigned(size))
         {
@@ -868,7 +856,6 @@ CML::label CML::StaticHashTableCore::canonicalSize(const label size)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct given initial table size
 template<class T, class Key, class Hash>
 CML::StaticHashTable<T, Key, Hash>::StaticHashTable(const label size)
 :
@@ -888,7 +875,6 @@ CML::StaticHashTable<T, Key, Hash>::StaticHashTable(const label size)
 }
 
 
-// Construct as copy
 template<class T, class Key, class Hash>
 CML::StaticHashTable<T, Key, Hash>::StaticHashTable
 (
@@ -907,7 +893,7 @@ CML::StaticHashTable<T, Key, Hash>::StaticHashTable
 template<class T, class Key, class Hash>
 CML::StaticHashTable<T, Key, Hash>::StaticHashTable
 (
-    const Xfer<StaticHashTable<T, Key, Hash> >& ht
+    StaticHashTable<T, Key, Hash>&& ht
 )
 :
     StaticHashTableCore(),
@@ -917,7 +903,7 @@ CML::StaticHashTable<T, Key, Hash>::StaticHashTable
     endIter_(*this, 0, 0),
     endConstIter_(*this, 0, 0)
 {
-    transfer(ht());
+    transfer(ht);
 }
 
 
@@ -947,13 +933,12 @@ bool CML::StaticHashTable<T, Key, Hash>::found(const Key& key) const
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (debug)
     {
-        Info<< "StaticHashTable<T, Key, Hash>::found(const Key&) : "
-            << "Entry " << key << " not found in hash table\n";
+        InfoInFunction << "Entry " << key << " not found in hash table\n";
     }
-#   endif
+    #endif
 
     return false;
 }
@@ -980,13 +965,12 @@ CML::StaticHashTable<T, Key, Hash>::find
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (debug)
     {
-        Info<< "StaticHashTable<T, Key, Hash>::find(const Key&) : "
-            << "Entry " << key << " not found in hash table\n";
+        InfoInFunction << "Entry " << key << " not found in hash table\n";
     }
-#   endif
+    #endif
 
     return end();
 }
@@ -1013,19 +997,17 @@ CML::StaticHashTable<T, Key, Hash>::find
         }
     }
 
-#   ifdef FULLDEBUG
+    #ifdef FULLDEBUG
     if (debug)
     {
-        Info<< "StaticHashTable<T, Key, Hash>::find(const Key&) const : "
-            << "Entry " << key << " not found in hash table\n";
+        InfoInFunction << "Entry " << key << " not found in hash table\n";
     }
-#   endif
+    #endif
 
     return cend();
 }
 
 
-// Return the table of contents
 template<class T, class Key, class Hash>
 CML::List<Key> CML::StaticHashTable<T, Key, Hash>::toc() const
 {
@@ -1064,7 +1046,7 @@ bool CML::StaticHashTable<T, Key, Hash>::set
 
     if (existing == localKeys.size())
     {
-        // not found, append
+        // Not found, append
         List<T>& localObjects = objects_[hashIdx];
 
         localKeys.setSize(existing+1);
@@ -1077,21 +1059,20 @@ bool CML::StaticHashTable<T, Key, Hash>::set
     }
     else if (protect)
     {
-        // found - but protected from overwriting
+        // Found - but protected from overwriting
         // this corresponds to the STL 'insert' convention
-#       ifdef FULLDEBUG
+        #ifdef FULLDEBUG
         if (debug)
         {
-            Info<< "StaticHashTable<T, Key, Hash>::set"
-                "(const Key& key, T newEntry, true) : "
-                "Cannot insert " << key << " already in hash table\n";
+            InfoInFunction
+                << "Cannot insert " << key << " already in hash table\n";
         }
-#       endif
+        #endif
         return false;
     }
     else
     {
-        // found - overwrite existing entry
+        // Found - overwrite existing entry
         // this corresponds to the Perl convention
         objects_[hashIdx][existing] = newEntry;
     }
@@ -1117,7 +1098,7 @@ bool CML::StaticHashTable<T, Key, Hash>::erase(const iterator& cit)
         localKeys.setSize(localKeys.size()-1);
         localObjects.setSize(localObjects.size()-1);
 
-        // adjust iterator after erase
+        // Adjust iterator after erase
         iterator& it = const_cast<iterator&>(cit);
 
         it.elemIndex_--;
@@ -1131,25 +1112,24 @@ bool CML::StaticHashTable<T, Key, Hash>::erase(const iterator& cit)
 
         nElmts_--;
 
-#       ifdef FULLDEBUG
+        #ifdef FULLDEBUG
         if (debug)
         {
-            Info<< "StaticHashTable<T, Key, Hash>::erase(iterator&) : "
-                << "hashedEntry removed.\n";
+            InfoInFunction << "hashedEntry removed.\n";
         }
-#       endif
+        #endif
 
         return true;
     }
     else
     {
-#       ifdef FULLDEBUG
+        #ifdef FULLDEBUG
         if (debug)
         {
-            Info<< "StaticHashTable<T, Key, Hash>::erase(iterator&) : "
-                << "cannot remove hashedEntry from hash table\n";
+            InfoInFunction
+                << "Cannot remove hashedEntry from hash table\n";
         }
-#       endif
+        #endif
 
         return false;
     }
@@ -1201,13 +1181,12 @@ void CML::StaticHashTable<T, Key, Hash>::resize(const label sz)
 
     if (newSize == keys_.size())
     {
-#       ifdef FULLDEBUG
+        #ifdef FULLDEBUG
         if (debug)
         {
-            Info<< "StaticHashTable<T, Key, Hash>::resize(const label) : "
-                << "new table size == old table size\n";
+            InfoInFunction << "New table size == old table size\n";
         }
-#       endif
+        #endif
 
         return;
     }
@@ -1321,13 +1300,32 @@ void CML::StaticHashTable<T, Key, Hash>::operator=
     }
 }
 
+
+template<class T, class Key, class Hash>
+void CML::StaticHashTable<T, Key, Hash>::operator=
+(
+    StaticHashTable<T, Key, Hash>&& rhs
+)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    transfer(rhs);
+}
+
+
 template<class T, class Key, class Hash>
 bool CML::StaticHashTable<T, Key, Hash>::operator==
 (
     const StaticHashTable<T, Key, Hash>& rhs
 ) const
 {
-    // sizes (number of keys) must match
+    // Sizes (number of keys) must match
 
     for (const_iterator iter = rhs.cbegin(); iter != rhs.cend(); ++iter)
     {

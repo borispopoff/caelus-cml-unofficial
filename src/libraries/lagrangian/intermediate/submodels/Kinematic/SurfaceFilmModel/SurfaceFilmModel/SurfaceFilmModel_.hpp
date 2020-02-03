@@ -157,7 +157,7 @@ public:
         SurfaceFilmModel(const SurfaceFilmModel<CloudType>& sfm);
 
         //- Construct and return a clone
-        virtual autoPtr<SurfaceFilmModel<CloudType> > clone() const = 0;
+        virtual autoPtr<SurfaceFilmModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -165,7 +165,7 @@ public:
 
 
     //- Selector
-    static autoPtr<SurfaceFilmModel<CloudType> > New
+    static autoPtr<SurfaceFilmModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -246,7 +246,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<kinematicCloudType>, 0);            \
                                                                                \
     SurfaceFilmModel<kinematicCloudType>::                                     \
-        adddictionaryConstructorToTable<SS<kinematicCloudType> >               \
+        adddictionaryConstructorToTable<SS<kinematicCloudType>>                \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 
@@ -524,7 +524,7 @@ void CML::SurfaceFilmModel<CloudType>::info(Ostream& os)
 
 
 template<class CloudType>
-CML::autoPtr<CML::SurfaceFilmModel<CloudType> >
+CML::autoPtr<CML::SurfaceFilmModel<CloudType>>
 CML::SurfaceFilmModel<CloudType>::New
 (
     const dictionary& dict,
@@ -548,7 +548,7 @@ CML::SurfaceFilmModel<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<SurfaceFilmModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<SurfaceFilmModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

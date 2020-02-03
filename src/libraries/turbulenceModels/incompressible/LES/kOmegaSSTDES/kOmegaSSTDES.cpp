@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kOmegaSSTDES.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -77,7 +78,7 @@ tmp<volScalarField> kOmegaSSTDES::Lt() const
 
 tmp<volScalarField> kOmegaSSTDES::FDES() const
 {
-    return max(Lt()/(CDES_*delta()),scalar(1.0));
+    return max(Lt()/(CDES_*delta()),scalar(1));
 }
 
 
@@ -348,7 +349,7 @@ tmp<fvVectorMatrix> kOmegaSSTDES::divDevReff(volVectorField& U) const
     return
     (
       - fvm::laplacian(nuEff(), U)
-      - fvc::div(nuEff()*dev(T(fvc::grad(U))))
+      - fvc::div(nuEff()*dev2(T(fvc::grad(U))))
     );
 }
 
@@ -363,7 +364,7 @@ tmp<fvVectorMatrix> kOmegaSSTDES::divDevRhoReff
     return
     (
       - fvm::laplacian(muEff, U)
-      - fvc::div(muEff*dev(T(fvc::grad(U))))
+      - fvc::div(muEff*dev2(T(fvc::grad(U))))
     );
 }
 
@@ -402,12 +403,13 @@ bool kOmegaSSTDES::read()
 
 void kOmegaSSTDES::correct(tmp<volTensorField> const& gradU)
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     LESModel::correct(gradU);
 
     if (mesh_.changing())
     {
         y_.correct();
-        y_.boundaryField() = max(y_.boundaryField(), VSMALL);
+        y_.boundaryFieldRef() = max(y_.boundaryField(), VSMALL);
     }
 
     volScalarField const S2(2*magSqr(symm(fvc::grad(U_))));
@@ -415,7 +417,7 @@ void kOmegaSSTDES::correct(tmp<volTensorField> const& gradU)
     volScalarField G(GName(), nuSgs_*S2);
 
     // Update omega and G at the wall
-    omega_.boundaryField().updateCoeffs();
+    omega_.boundaryFieldRef().updateCoeffs();
 
     volScalarField const CDkOmega
     (
@@ -449,16 +451,16 @@ void kOmegaSSTDES::correct(tmp<volTensorField> const& gradU)
         volSymmTensorField const DSijDt(fvc::DDt(this->phi_,Sij));
         volScalarField const rTilda
         (  
-            (scalar(2.0)/sqr(sqrD))*(Omegaij && (Sij & DSijDt))
+            (scalar(2)/sqr(sqrD))*(Omegaij && (Sij & DSijDt))
         );
         volScalarField const frotation
         (
-            (scalar(1.0) + Cr1_)
-            *scalar(2.0)*rStar/(scalar(1.0) + rStar)*
-            (scalar(1.0)-Cr3_*atan(Cr2_*rTilda)) - Cr1_
+            (scalar(1) + Cr1_)
+            *scalar(2)*rStar/(scalar(1) + rStar)*
+            (scalar(1)-Cr3_*atan(Cr2_*rTilda)) - Cr1_
         );
         volScalarField const frTilda(max(min(frotation, frMax_), scalar(0))); 
-        fr1_ = max(scalar(0.0), scalar(1.0) + Cscale_*(frTilda - scalar(1.0)));
+        fr1_ = max(scalar(0), scalar(1) + Cscale_*(frTilda - scalar(1)));
     }
 
     // Turbulent frequency equation
@@ -471,13 +473,15 @@ void kOmegaSSTDES::correct(tmp<volTensorField> const& gradU)
         gamma(F1)* min(fr1_*G, c1_*betaStar_*k_*omega_)/(nuSgs_ + nuSgsMin)
       - fvm::Sp(beta(F1)*omega_, omega_)
       + 2*(1-F1)*alphaOmega2_*(fvc::grad(k_)&fvc::grad(omega_))/omega_
+      + fvOptions(omega_)
     );
 
-    omegaEqn().relax();
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
-    mesh_.updateFvMatrix(omegaEqn());
-    omegaEqn().solve();
-
+    omegaEqn.ref().relax();
+    fvOptions.constrain(omegaEqn.ref());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
+    mesh_.updateFvMatrix(omegaEqn.ref());
+    omegaEqn.ref().solve();
+    fvOptions.correct(omega_);
     bound(omega_, dimensionedScalar("zero", omega_.dimensions(), 0.0));
 
     // Turbulent kinetic energy equation
@@ -489,12 +493,14 @@ void kOmegaSSTDES::correct(tmp<volTensorField> const& gradU)
      ==
         min(fr1_*G, c1_*betaStar_*k_*omega_)
       - fvm::Sp(betaStar_*omega_*FDES(), k_)
+      + fvOptions(k_)
     );
 
-    kEqn().relax();
-    mesh_.updateFvMatrix(kEqn());
-    kEqn().solve();
-    
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
+    mesh_.updateFvMatrix(kEqn.ref());
+    kEqn.ref().solve();
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
 

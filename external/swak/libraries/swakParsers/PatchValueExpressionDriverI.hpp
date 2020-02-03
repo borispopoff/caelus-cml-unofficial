@@ -42,7 +42,7 @@ Contributors/Copyright:
 namespace CML {
 
    template<class Type>
-    tmp<Field<Type> > PatchValueExpressionDriver::getField(const word &inName)
+    tmp<Field<Type>> PatchValueExpressionDriver::getField(const word &inName)
     {
         word name(inName);
         if(this->hasAlias(name)) {
@@ -58,7 +58,7 @@ namespace CML {
         typedef GeometricField<Type,pointPatchField,pointMesh> localPointField;
 
         {
-            autoPtr<Field<Type> >vals;
+            autoPtr<Field<Type>>vals;
             bool isPoint=false;
             bool isSingleValue=false;
 
@@ -100,7 +100,7 @@ namespace CML {
                         qPSize
                     )
                 ) {
-                    return tmp<Field<Type> >(
+                    return tmp<Field<Type>>(
                         vals.ptr()
                     );
                 } else {
@@ -112,7 +112,7 @@ namespace CML {
                             << "hoping for the best"
                             << endl;
                     }
-                    return tmp<Field<Type> >(
+                    return tmp<Field<Type>>(
                         new Field<Type>(
                             this->size(),gAverage(vals())
                         )
@@ -160,27 +160,27 @@ namespace CML {
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localVolField>(name)
         ) {
-            const typename localVolField::PatchFieldType &pField=
+            const typename localVolField::Patch &pField=
                 patch_.lookupPatchField<localVolField,Type>(name);
 
-            return tmp<Field<Type> >(
+            return tmp<Field<Type>>(
                 new Field<Type>(pField)
             );
         } else if(
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localSurfaceField>(name)
         ) {
-            const typename localSurfaceField::PatchFieldType &pField=
+            const typename localSurfaceField::Patch &pField=
                 patch_.lookupPatchField<localSurfaceField,Type>(name);
 
-            return tmp<Field<Type> >(
+            return tmp<Field<Type>>(
                 new Field<Type>(pField)
             );
         } else if(
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localPointField>(name)
         ) {
-            const typename localPointField::PatchFieldType &pField=
+            const typename localPointField::Patch &pField=
                 patch_.lookupPatchField<localPointField,Type>(name);
 
             return pField.patchInternalField();
@@ -200,14 +200,14 @@ namespace CML {
                 << endl
                 << exit(FatalError);
 
-            return tmp<Field<Type> >(
+            return tmp<Field<Type>>(
                 new Field<Type>(0)
             );
         }
     }
 
     template<class Type>
-    tmp<Field<Type> > PatchValueExpressionDriver::getOldTimeField(
+    tmp<Field<Type>> PatchValueExpressionDriver::getOldTimeField(
         const word &inName
     )
     {
@@ -260,28 +260,28 @@ namespace CML {
         if(
             mesh.objectRegistry::foundObject<localVolField>(name)
         ) {
-            const typename localVolField::PatchFieldType &pField=
+            const typename localVolField::Patch &pField=
                 mesh.lookupObject<localVolField>(name).
                 oldTime().boundaryField()[patchI];
-            return tmp<Field<Type> >(
+            return tmp<Field<Type>>(
                 new Field<Type>(pField)
             );
         } else if(
             mesh.objectRegistry::foundObject<localSurfaceField>(name)
         ) {
-            const typename localSurfaceField::PatchFieldType &pField=
+            const typename localSurfaceField::Patch &pField=
                 mesh.lookupObject<localSurfaceField>(name).
                 oldTime().boundaryField()[patchI];
-            return tmp<Field<Type> >(
+            return tmp<Field<Type>>(
                 new Field<Type>(pField)
             );
         } else if(
             mesh.objectRegistry::foundObject<localPointField>(name)
         ) {
-            const typename localPointField::PatchFieldType &pField=
+            const typename localPointField::Patch &pField=
                 mesh.lookupObject<localPointField>(name).
                 oldTime().boundaryField()[patchI];
-            return tmp<Field<Type> >(
+            return tmp<Field<Type>>(
                 new Field<Type>(pField.patchInternalField())
             );
         } else{
@@ -291,12 +291,12 @@ namespace CML {
                 << endl
                 << exit(FatalError);
 
-            return tmp<Field<Type> >(new Field<Type>(0));;
+            return tmp<Field<Type>>(new Field<Type>(0));;
         }
     }
 
     template<class Type>
-    tmp<Field<Type> > PatchValueExpressionDriver::getPatchInternalField(
+    tmp<Field<Type>> PatchValueExpressionDriver::getPatchInternalField(
         const word &inName
     )
     {
@@ -334,14 +334,14 @@ namespace CML {
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localVolField>(name)
         ) {
-            const typename localVolField::PatchFieldType &pField=
+            const typename localVolField::Patch &pField=
                 patch_.lookupPatchField<localVolField,Type>(name);
             return pField.patchInternalField();
         } else if(
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localPointField>(name)
         ) {
-            const typename localPointField::PatchFieldType &pField=
+            const typename localPointField::Patch &pField=
                 patch_.lookupPatchField<localPointField,Type>(name);
             return pField.patchInternalField();
         } else{
@@ -351,14 +351,14 @@ namespace CML {
                 << endl
                 << exit(FatalError);
 
-            return tmp<Field<Type> >(
+            return tmp<Field<Type>>(
                 new Field<Type>(0)
             );
         }
     }
 
     template<class Type>
-    tmp<Field<Type> > PatchValueExpressionDriver::getPatchNeighbourField(
+    tmp<Field<Type>> PatchValueExpressionDriver::getPatchNeighbourField(
         const word &inName
     )
     {
@@ -395,7 +395,7 @@ namespace CML {
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localVolField>(name)
         ) {
-            const typename localVolField::PatchFieldType &pField=
+            const typename localVolField::Patch &pField=
                 patch_.lookupPatchField<localVolField,Type>(name);
             return pField.patchNeighbourField();
         } else{
@@ -406,14 +406,14 @@ namespace CML {
                 << endl
                 << exit(FatalError);
 
-            return tmp<Field<Type> >(
+            return tmp<Field<Type>>(
                 new Field<Type>(0)
             );
         }
     }
 
     template<class Type>
-    tmp<Field<Type> > PatchValueExpressionDriver::getSurfaceNormalField(
+    tmp<Field<Type>> PatchValueExpressionDriver::getSurfaceNormalField(
         const word &inName
     )
     {
@@ -442,7 +442,7 @@ namespace CML {
             patch_.boundaryMesh().mesh().
             objectRegistry::foundObject<localVolField>(name)
         ) {
-            const typename localVolField::PatchFieldType &pField=
+            const typename localVolField::Patch &pField=
                 patch_.lookupPatchField<localVolField,Type>(name);
             return pField.snGrad();
         } else{
@@ -459,14 +459,14 @@ namespace CML {
                 << endl
                 << exit(FatalError);
 
-            return tmp<Field<Type> >(
+            return tmp<Field<Type>>(
                 new Field<Type>(0)
             );
         }
     }
 
     template<class Type>
-    tmp<Field<Type> > PatchValueExpressionDriver::toFace(
+    tmp<Field<Type>> PatchValueExpressionDriver::toFace(
         const Field<Type> &pField
     )
     {
@@ -476,7 +476,7 @@ namespace CML {
     }
 
     template<class Type>
-    tmp<Field<Type> > PatchValueExpressionDriver::toPoint(
+    tmp<Field<Type>> PatchValueExpressionDriver::toPoint(
         const Field<Type> &fField
     )
     {
@@ -492,7 +492,7 @@ namespace CML {
     {
         const word &name=psi.name();
 
-        HashPtrTable<interpolation<Type> > &table=
+        HashPtrTable<interpolation<Type>> &table=
             this->interpolations<Type>();
 
         if(!table.found(name)) {
@@ -515,7 +515,7 @@ namespace CML {
     }
 
     template<class T>
-    tmp<Field<T> > PatchValueExpressionDriver::mapField(
+    tmp<Field<T>> PatchValueExpressionDriver::mapField(
         const word &inName,
         bool internalField
     ) {
@@ -574,8 +574,8 @@ namespace CML {
             }
         }
 
-        tmp<Field<T> > result(new Field<T>(this->size(),pTraits<T>::zero));
-        Field<T> &newValues=result();
+        tmp<Field<T>> result(new Field<T>(this->size(),pTraits<T>::zero));
+        Field<T> &newValues=result.ref();
 
         if(
             isSurfaceField
@@ -640,14 +640,14 @@ namespace CML {
                         );
 
                     newValues.setSize(samples.size(), pTraits<T>::max);
-                    forAll(samples, cellI)
+                    forAll(samples, celli)
                     {
-                        if (samples[cellI] != point::max)
+                        if (samples[celli] != point::max)
                         {
-                            newValues[cellI] = interp.interpolate
+                            newValues[celli] = interp.interpolate
                                 (
-                                    samples[cellI],
-                                    cellI
+                                    samples[celli],
+                                    celli
                                 );
                         }
                     }
@@ -725,18 +725,18 @@ namespace CML {
                         const Field<T> pif(pf.patchInternalField());
                         label faceStart = pf.patch().patch().start();
 
-                        forAll(pf, faceI)
+                        forAll(pf, facei)
                         {
-                            allValues[faceStart++] = pif[faceI];
+                            allValues[faceStart++] = pif[facei];
                         }
                     } else {
                         const fvPatchField<T>& pf =
                             nbrField.boundaryField()[patchI];
                         label faceStart = pf.patch().patch().start();
 
-                        forAll(pf, faceI)
+                        forAll(pf, facei)
                         {
-                            allValues[faceStart++] = pf[faceI];
+                            allValues[faceStart++] = pf[facei];
                         }
                     }
                 }
@@ -758,10 +758,10 @@ namespace CML {
     }
 
     template<class T>
-    tmp<Field<T> > PatchValueExpressionDriver::mapField(tmp<Field<T> > orig)
+    tmp<Field<T>> PatchValueExpressionDriver::mapField(tmp<Field<T>> orig)
     {
         if(debug) {
-            Info << "PatchValueExpressionDriver::mapField(tmp<Field<T> > orig)"
+            Info << "PatchValueExpressionDriver::mapField(tmp<Field<T>> orig)"
                 << endl << "orig: " << orig() << endl;
         }
 
@@ -794,11 +794,11 @@ namespace CML {
         //        const fvMesh& thisMesh = patch_.boundaryMesh().mesh();
         const fvMesh& nbrMesh = refCast<const fvMesh>(mpp.sampleMesh());
 
-        tmp<Field<T> > pResult(
+        tmp<Field<T>> pResult(
             new Field<T>(orig)
         );
 
-        Field<T> &result=pResult();
+        Field<T> &result=pResult.ref();
 
         const label nbrPatchID =
             nbrMesh.boundaryMesh().findPatchID(mpp.samplePatch());
@@ -820,7 +820,7 @@ namespace CML {
     }
 
     template<class T>
-    tmp<Field<T> > PatchValueExpressionDriver::mapPointField(
+    tmp<Field<T>> PatchValueExpressionDriver::mapPointField(
         const word &inName
     ) {
         word name(inName);
@@ -833,7 +833,7 @@ namespace CML {
         }
 
         // dummy implemntation
-        tmp<Field<T> > result(new Field<T>(this->pointSize(),pTraits<T>::zero));
+        tmp<Field<T>> result(new Field<T>(this->pointSize(),pTraits<T>::zero));
 
         NotImplemented;
 

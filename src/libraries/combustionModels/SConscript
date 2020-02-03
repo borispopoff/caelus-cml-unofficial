@@ -19,6 +19,7 @@ FSD/reactionRateFlameAreaModels/reactionRateFlameArea/reactionRateFlameAreaNew.c
 FSD/reactionRateFlameAreaModels/relaxation/relaxation.cpp
 FSD/FSDs.cpp
 noCombustion/noCombustions.cpp
+zoneCombustion/zoneCombustions.cpp
 """)
 
 caelus_inc = [

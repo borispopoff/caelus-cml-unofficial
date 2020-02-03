@@ -74,10 +74,10 @@ class PairCollision
     // Private data
 
         //- PairModel to calculate the interaction between two parcels
-        autoPtr<PairModel<CloudType> > pairModel_;
+        autoPtr<PairModel<CloudType>> pairModel_;
 
         //- WallModel to calculate the interaction between the parcel and walls
-        autoPtr<WallModel<CloudType> > wallModel_;
+        autoPtr<WallModel<CloudType>> wallModel_;
 
         //- Interactions lists determining which cells are in
         //  interaction range of each other
@@ -130,9 +130,9 @@ class PairCollision
         (
             typename CloudType::parcelType& p,
             const List<point>& flatSitePoints,
-            const List<WallSiteData<vector> >& flatSiteData,
+            const List<WallSiteData<vector>>& flatSiteData,
             const List<point>& sharpSitePoints,
-            const List<WallSiteData<vector> >& sharpSiteData
+            const List<WallSiteData<vector>>& sharpSiteData
         ) const;
 
 
@@ -151,9 +151,9 @@ public:
         PairCollision(const PairCollision<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<CollisionModel<CloudType> > clone() const
+        virtual autoPtr<CollisionModel<CloudType>> clone() const
         {
-            return autoPtr<CollisionModel<CloudType> >
+            return autoPtr<CollisionModel<CloudType>>
             (
                 new PairCollision<CloudType>(*this)
             );
@@ -210,7 +210,7 @@ void CML::PairCollision<CloudType>::preInteraction()
 template<class CloudType>
 void CML::PairCollision<CloudType>::parcelInteraction()
 {
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
     label startOfRequests = Pstream::nRequests();
 
@@ -233,7 +233,7 @@ void CML::PairCollision<CloudType>::realRealInteraction()
     typename CloudType::parcelType* pA_ptr = nullptr;
     typename CloudType::parcelType* pB_ptr = nullptr;
 
-    List<DynamicList<typename CloudType::parcelType*> >& cellOccupancy =
+    List<DynamicList<typename CloudType::parcelType*>>& cellOccupancy =
         this->owner().cellOccupancy();
 
     forAll(dil, realCelli)
@@ -280,10 +280,10 @@ void CML::PairCollision<CloudType>::realReferredInteraction()
     // Referred interaction list (ril)
     const labelListList& ril = il_.ril();
 
-    List<IDLList<typename CloudType::parcelType> >& referredParticles =
+    List<IDLList<typename CloudType::parcelType>>& referredParticles =
         il_.referredParticles();
 
-    List<DynamicList<typename CloudType::parcelType*> >& cellOccupancy =
+    List<DynamicList<typename CloudType::parcelType*>>& cellOccupancy =
         this->owner().cellOccupancy();
 
     // Loop over all referred cells
@@ -338,19 +338,19 @@ void CML::PairCollision<CloudType>::wallInteraction()
 
     const volVectorField& U = mesh.lookupObject<volVectorField>(il_.UName());
 
-    List<DynamicList<typename CloudType::parcelType*> >& cellOccupancy =
+    List<DynamicList<typename CloudType::parcelType*>>& cellOccupancy =
         this->owner().cellOccupancy();
 
     // Storage for the wall interaction sites
     DynamicList<point> flatSitePoints;
     DynamicList<scalar> flatSiteExclusionDistancesSqr;
-    DynamicList<WallSiteData<vector> > flatSiteData;
+    DynamicList<WallSiteData<vector>> flatSiteData;
     DynamicList<point> otherSitePoints;
     DynamicList<scalar> otherSiteDistances;
-    DynamicList<WallSiteData<vector> > otherSiteData;
+    DynamicList<WallSiteData<vector>> otherSiteData;
     DynamicList<point> sharpSitePoints;
     DynamicList<scalar> sharpSiteExclusionDistancesSqr;
-    DynamicList<WallSiteData<vector> > sharpSiteData;
+    DynamicList<WallSiteData<vector>> sharpSiteData;
 
     forAll(dil, realCelli)
     {
@@ -657,9 +657,9 @@ void CML::PairCollision<CloudType>::evaluateWall
 (
     typename CloudType::parcelType& p,
     const List<point>& flatSitePoints,
-    const List<WallSiteData<vector> >& flatSiteData,
+    const List<WallSiteData<vector>>& flatSiteData,
     const List<point>& sharpSitePoints,
-    const List<WallSiteData<vector> >& sharpSiteData
+    const List<WallSiteData<vector>>& sharpSiteData
 ) const
 {
     wallModel_->evaluateWall

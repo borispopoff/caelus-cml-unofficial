@@ -154,7 +154,7 @@ public:
 
         //- Interpolate
         template<class Type>
-        tmp<Field<Type> > interpolate(const Field<Type>& ctrlField) const;
+        tmp<Field<Type>> interpolate(const Field<Type>& ctrlField) const;
 
         //- Move points
         void movePoints();
@@ -169,7 +169,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::RBFInterpolation::interpolate
+CML::tmp<CML::Field<Type>> CML::RBFInterpolation::interpolate
 (
     const Field<Type>& ctrlField
 ) const
@@ -183,12 +183,12 @@ CML::tmp<CML::Field<Type> > CML::RBFInterpolation::interpolate
             << abort(FatalError);
     }
 
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
-        new Field<Type>(allPoints_.size(), pTraits<Type>::zero)
+        new Field<Type>(allPoints_.size(), Zero)
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     // FB 21-12-2008
     // 1) Calculate alpha and beta coefficients using the Inverse
@@ -200,8 +200,8 @@ CML::tmp<CML::Field<Type> > CML::RBFInterpolation::interpolate
     const scalarSquareMatrix& mat = this->B();
 
     // Determine interpolation coefficients
-    Field<Type> alpha(nControlPoints, pTraits<Type>::zero);
-    Field<Type> beta(4, pTraits<Type>::zero);
+    Field<Type> alpha(nControlPoints, Zero);
+    Field<Type> beta(4, Zero);
 
     for (label row = 0; row < nControlPoints; row++)
     {

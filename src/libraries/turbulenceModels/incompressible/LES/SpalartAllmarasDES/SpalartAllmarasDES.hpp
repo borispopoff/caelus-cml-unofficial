@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ class SpalartAllmarasDES
         void updateSubGridScaleFields();
 
         // Disallow default bitwise copy construct and assignment
-        SpalartAllmarasDES(const SpalartAllmarasDES&);
-        SpalartAllmarasDES& operator=(const SpalartAllmarasDES&);
+        SpalartAllmarasDES(const SpalartAllmarasDES&) = delete;
+        SpalartAllmarasDES& operator=(const SpalartAllmarasDES&) = delete;
 
 
 protected:

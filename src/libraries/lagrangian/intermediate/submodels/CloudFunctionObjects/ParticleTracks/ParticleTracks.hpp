@@ -56,7 +56,7 @@ class ParticleTracks
             typedef typename CloudType::parcelType parcelType;
 
             //- Convenience typedef for hash hit-table
-            typedef HashTable<label, labelPair, typename labelPair::Hash<> >
+            typedef HashTable<label, labelPair, typename labelPair::Hash<>>
                 hitTableType;
 
         //- Number of face-hit intervals between storing parcel data
@@ -72,7 +72,7 @@ class ParticleTracks
         hitTableType faceHitCounter_;
 
         //- Pointer to the cloud storage
-        autoPtr<Cloud<parcelType> > cloudPtr_;
+        autoPtr<Cloud<parcelType>> cloudPtr_;
 
 
 protected:
@@ -103,9 +103,9 @@ public:
         ParticleTracks(const ParticleTracks<CloudType>& ppm);
 
         //- Construct and return a clone
-        virtual autoPtr<CloudFunctionObject<CloudType> > clone() const
+        virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
-            return autoPtr<CloudFunctionObject<CloudType> >
+            return autoPtr<CloudFunctionObject<CloudType>>
             (
                 new ParticleTracks<CloudType>(*this)
             );

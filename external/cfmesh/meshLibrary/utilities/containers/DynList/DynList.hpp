@@ -71,22 +71,39 @@ Istream& operator>>
 
 template<class T, label staticSize = 16>
 class DynList
-:
-    public UList<T>
 {
     // Private data
+    //
+        //- pointer to the data
+        T* dataPtr_;
+
+        //- size of the allocated data
+        label nAllocated_;
+
         //- statically allocated data (used for short lists)
         T staticData_[staticSize];
 
         //- Number of next free element
         label nextFree_;
 
+
     // Private member functions
+
+        //- access to the data pointer
+        inline T* data();
+
+        //- const access to the data pointer
+        inline const T* data() const;
+
         //- allocate list size
         inline void allocateSize(const label);
 
         //- check if index is inside the scope (used for debugging only)
         inline void checkIndex(const label) const;
+
+        //- check if nAllocated_ is greater or equal to nextFree_
+        inline void checkAllocation() const;
+
 
 public:
 
@@ -114,9 +131,8 @@ public:
         //- Construct from Istream. nextFree_ set to size().
         explicit DynList(Istream&);
 
-    // Destructor
-
-        inline ~DynList();
+    //- Destructor
+    inline ~DynList();
 
 
     // Member Functions
@@ -165,7 +181,7 @@ public:
         inline T removeLastElement();
         inline T removeElement(const label i);
 
-        //- return a refence to the element. Resize the list if necessary
+        //- return a reference to the element. Resize the list if necessary
         inline T& newElmt(const label);
 
         //- Return non-const access to an element,
@@ -203,6 +219,10 @@ public:
         template<class ListType>
         inline void operator=(const ListType&);
 
+        //- Compare the list with the another one
+        inline bool operator==(const DynList<T, staticSize>&) const;
+        inline bool operator!=(const DynList<T, staticSize>&) const;
+
 
     // IOstream operators
 
@@ -234,20 +254,15 @@ public:
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-// Construct from Istream
 template<class T, CML::label staticSize>
-CML::DynList<T, staticSize>::DynList(Istream& is)
+CML::DynList<T, staticSize>::DynList(Istream&)
 :
-    UList<T>(),
+    dataPtr_(nullptr),
+    nAllocated_(0),
+    staticData_(),
     nextFree_(0)
 {
-    FatalErrorInFunction
-        << "Not implemented" << exit(FatalError);
-    
-    List<T> helper(is);
-    
-    nextFree_ = helper.size();
-    UList<T>::swap(helper);
+    NotImplemented;
 }
 
 
@@ -258,7 +273,7 @@ CML::Ostream& CML::operator<<
     const CML::DynList<T, staticSize>& DL
 )
 {
-    UList<T> helper(const_cast<T*>(DL.begin()), DL.nextFree_);
+    UList<T> helper(DL.dataPtr_, DL.nextFree_);
     os << helper;
 
     return os;
@@ -272,19 +287,15 @@ CML::Istream& CML::operator>>
     CML::DynList<T, staticSize>& DL
 )
 {
-    FatalErrorInFunction
-        << "Not implemented" << exit(FatalError);
-    
-    is >> static_cast<List<T>&>(DL);
-    DL.nextFree_ = DL.List<T>::size();
+    NotImplemented;
+
+    UList<T> helper(DL.dataPtr_, DL.nextFree_);
+    //is >> static_cast<List<T>&>(DL);
+    is >> helper;
+    DL.nextFree_ = helper.size();
 
     return is;
 }
-
-
-// ************************************************************************* //
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

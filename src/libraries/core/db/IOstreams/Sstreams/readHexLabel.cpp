@@ -40,7 +40,7 @@ CML::label CML::readHexLabel(ISstream& is)
     while (is.get(c) && isspace(c))
     {}
 
-    register label result = 0;
+    label result = 0;
     do
     {
         if (isspace(c) || c == 0) break;

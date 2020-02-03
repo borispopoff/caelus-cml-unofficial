@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -57,35 +57,35 @@ class extrudedMesh
         static bool sameOrder(const face&, const edge&);
 
         //- Construct and return the extruded mesh points
-        template<class Face, template<class> class FaceList, class PointField>
-        Xfer<pointField> extrudedPoints
+        template<class FaceList, class PointField>
+        pointField extrudedPoints
         (
-            const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+            const PrimitivePatch<FaceList, PointField>& extrudePatch,
             const extrudeModel&
         );
 
         //- Construct and return the extruded mesh faces
-        template<class Face, template<class> class FaceList, class PointField>
-        Xfer<faceList> extrudedFaces
+        template<class FaceList, class PointField>
+        faceList extrudedFaces
         (
-            const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+            const PrimitivePatch<FaceList, PointField>& extrudePatch,
             const extrudeModel&
         );
 
         //- Construct and return the extruded mesh cells
-        template<class Face, template<class> class FaceList, class PointField>
-        Xfer<cellList> extrudedCells
+        template<class FaceList, class PointField>
+        cellList extrudedCells
         (
-            const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+            const PrimitivePatch<FaceList, PointField>& extrudePatch,
             const extrudeModel&
         );
 
 
         //- Disallow default bitwise copy construct
-        extrudedMesh(const extrudedMesh&);
+        extrudedMesh(const extrudedMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const extrudedMesh&);
+        void operator=(const extrudedMesh&) = delete;
 
 
 public:
@@ -93,11 +93,11 @@ public:
     // Constructors
 
         //- Construct from the primitivePatch to extrude
-        template<class Face, template<class> class FaceList, class PointField>
+        template<class FaceList, class PointField>
         extrudedMesh
         (
             const IOobject&,
-            const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+            const PrimitivePatch<FaceList, PointField>& extrudePatch,
             const extrudeModel&
         );
 };
@@ -116,15 +116,10 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField
->
-CML::Xfer<CML::pointField> CML::extrudedMesh::extrudedPoints
+template<class FaceList, class PointField>
+CML::pointField CML::extrudedMesh::extrudedPoints
 (
-    const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+    const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
 )
 {
@@ -150,15 +145,14 @@ CML::Xfer<CML::pointField> CML::extrudedMesh::extrudedPoints
         }
     }
 
-    // return points for transferring
-    return xferMove(ePoints);
+    return ePoints;
 }
 
 
-template<class Face, template<class> class FaceList, class PointField>
-CML::Xfer<CML::faceList> CML::extrudedMesh::extrudedFaces
+template<class FaceList, class PointField>
+CML::faceList CML::extrudedMesh::extrudedFaces
 (
-    const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+    const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
 )
 {
@@ -276,15 +270,14 @@ CML::Xfer<CML::faceList> CML::extrudedMesh::extrudedFaces
             );
     }
 
-    // return points for transferring
-    return xferMove(eFaces);
+    return eFaces;
 }
 
 
-template<class Face, template<class> class FaceList, class PointField>
-CML::Xfer<CML::cellList> CML::extrudedMesh::extrudedCells
+template<class FaceList, class PointField>
+CML::cellList CML::extrudedMesh::extrudedCells
 (
-    const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+    const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
 )
 {
@@ -383,23 +376,17 @@ CML::Xfer<CML::cellList> CML::extrudedMesh::extrudedCells
         facei++;
     }
 
-    // return points for transferring
-    return xferMove(eCells);
+    return eCells;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField
->
+template<class FaceList, class PointField>
 CML::extrudedMesh::extrudedMesh
 (
     const IOobject& io,
-    const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+    const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
 )
 :

@@ -34,7 +34,7 @@ SourceFiles
 
 #include <string>
 
-template <class T> class CRegexpT;
+template<class T> class CRegexpT;
 
 namespace CML
 {
@@ -54,14 +54,6 @@ class regExp
 
         //- Precompiled regular expression
         mutable CRegexpT<char>* preg_;
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        regExp(const regExp&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const regExp&);
 
 public:
 
@@ -96,6 +88,10 @@ public:
 
         //- Construct from std::string (or string), optionally ignoring case
         regExp(const std::string&, const bool ignoreCase=false);
+
+        //- Disallow default bitwise copy construct
+        regExp(const regExp&) = delete;
+
 
     // Destructor
     ~regExp();
@@ -161,6 +157,9 @@ public:
         //- Assign and compile pattern from string
         //  Always case sensitive
         void operator=(const std::string&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const regExp&) = delete;
 
 };
 

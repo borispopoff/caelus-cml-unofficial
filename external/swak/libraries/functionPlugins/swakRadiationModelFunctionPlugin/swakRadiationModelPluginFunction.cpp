@@ -165,7 +165,7 @@ public:
                 "zeroGradient"
             )
         );
-        val->dimensionedInternalField()=ruRad;
+        val->ref()=ruRad;
 
         result().setObjectResult(
             val
@@ -211,7 +211,7 @@ public:
             )
         );
 
-        val().internalField()+=radiation().Ru();
+        val().primitiveFieldRef()+=radiation().Ru();
         val().correctBoundaryConditions();
 
         result().setObjectResult(

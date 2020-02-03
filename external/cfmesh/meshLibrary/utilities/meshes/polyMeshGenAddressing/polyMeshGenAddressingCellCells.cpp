@@ -71,23 +71,23 @@ void polyMeshGenAddressing::calcCellCells() const
             # ifdef USE_OMP
             # pragma omp for schedule(static)
             # endif
-            forAll(cells, cellI)
+            forAll(cells, celli)
             {
-                const cell& c = cells[cellI];
+                const cell& c = cells[celli];
 
                 DynList<label> neiCells;
 
                 forAll(c, fI)
                 {
                     label neiCell = own[c[fI]];
-                    if( (neiCell == cellI) && (nei[c[fI]] != -1) )
+                    if( (neiCell == celli) && (nei[c[fI]] != -1) )
                         neiCell = nei[c[fI]];
 
-                    if( neiCell != cellI )
+                    if( neiCell != celli )
                         neiCells.appendIfNotIn(neiCell);
                 }
 
-                nNei[cellI] = neiCells.size();
+                nNei[celli] = neiCells.size();
             }
 
             # ifdef USE_OMP
@@ -103,23 +103,23 @@ void polyMeshGenAddressing::calcCellCells() const
             //- fill the graph with data
             # pragma omp for schedule(static)
             # endif
-            forAll(cells, cellI)
+            forAll(cells, celli)
             {
-                const cell& c = cells[cellI];
+                const cell& c = cells[celli];
 
                 DynList<label> neiCells;
 
                 forAll(c, fI)
                 {
                     label neiCell = own[c[fI]];
-                    if( (neiCell == cellI) && (nei[c[fI]] != -1) )
+                    if( (neiCell == celli) && (nei[c[fI]] != -1) )
                         neiCell = nei[c[fI]];
 
-                    if( neiCell != cellI )
+                    if( neiCell != celli )
                         neiCells.appendIfNotIn(neiCell);
                 }
 
-                cellCellAddr.setRow(cellI, neiCells);
+                cellCellAddr.setRow(celli, neiCells);
             }
         }
     }

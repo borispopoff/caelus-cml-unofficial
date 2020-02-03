@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,10 +58,10 @@ class SMESHsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        SMESHsurfaceFormat(const SMESHsurfaceFormat<Face>&);
+        SMESHsurfaceFormat(const SMESHsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const SMESHsurfaceFormat<Face>&);
+        void operator=(const SMESHsurfaceFormat<Face>&) = delete;
 
 
 public:

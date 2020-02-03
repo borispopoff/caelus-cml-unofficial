@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dynOneEqEddy.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,6 +47,7 @@ void dynOneEqEddy::updateSubGridScaleFields
 {
     nuSgs_ = ck(D, KK)*sqrt(k_)*delta();
     nuSgs_.correctBoundaryConditions();
+    fv::options::New(this->mesh_).correct(this->nuSgs_);
 }
 
 
@@ -140,6 +142,7 @@ dynOneEqEddy::dynOneEqEddy
 
 void dynOneEqEddy::correct(const tmp<volTensorField>& gradU)
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     LESModel::correct(gradU);
 
     const volSymmTensorField D(symm(gradU));
@@ -157,12 +160,14 @@ void dynOneEqEddy::correct(const tmp<volTensorField>& gradU)
     ==
        P
      - fvm::Sp(ce(D, KK)*sqrt(k_)/delta(), k_)
+     + fvOptions(k_)
     );
 
-    kEqn().relax();
-    mesh_.updateFvMatrix(kEqn());
-    kEqn().solve();
-
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
+    mesh_.updateFvMatrix(kEqn.ref());
+    kEqn.ref().solve();
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
     updateSubGridScaleFields(D, KK);

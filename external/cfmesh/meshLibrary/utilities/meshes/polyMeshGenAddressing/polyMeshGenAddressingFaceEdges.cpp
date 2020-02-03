@@ -64,8 +64,8 @@ void polyMeshGenAddressing::calcFaceEdges() const
             # ifdef USE_OMP
             # pragma omp for schedule(static)
             # endif
-            forAll(faces, faceI)
-                nfe[faceI] = faces[faceI].size();
+            forAll(faces, facei)
+                nfe[facei] = faces[facei].size();
 
             # ifdef USE_OMP
             # pragma omp barrier
@@ -86,14 +86,14 @@ void polyMeshGenAddressing::calcFaceEdges() const
 
                 forAllRow(pointFaces, s, pfI)
                 {
-                    const label faceI = pointFaces(s, pfI);
+                    const label facei = pointFaces(s, pfI);
 
-                    const face& f = faces[faceI];
+                    const face& f = faces[facei];
                     forAll(f, eI)
                     {
                         if( f.faceEdge(eI) == ee )
                         {
-                            faceEdgesAddr[faceI][eI] = edgeI;
+                            faceEdgesAddr[facei][eI] = edgeI;
                             break;
                         }
                     }

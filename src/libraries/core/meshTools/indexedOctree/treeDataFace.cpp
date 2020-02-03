@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -36,11 +36,11 @@ namespace CML
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-CML::treeBoundBox CML::treeDataFace::calcBb(const label faceI) const
+CML::treeBoundBox CML::treeDataFace::calcBb(const label facei) const
 {
     const pointField& points = mesh_.points();
 
-    const face& f = mesh_.faces()[faceI];
+    const face& f = mesh_.faces()[facei];
 
     treeBoundBox bb(points[f[0]], points[f[0]]);
 
@@ -96,7 +96,7 @@ CML::treeDataFace::treeDataFace
 (
     const bool cacheBb,
     const primitiveMesh& mesh,
-    const Xfer<labelList>& faceLabels
+    labelList&& faceLabels
 )
 :
     mesh_(mesh),
@@ -175,8 +175,6 @@ CML::pointField CML::treeDataFace::shapePoints() const
 }
 
 
-//- Get type (inside,outside,mixed,unknown) of point w.r.t. surface.
-//  Only makes sense for closed surfaces.
 CML::volumeType CML::treeDataFace::getVolumeType
 (
     const indexedOctree<treeDataFace>& oc,
@@ -206,12 +204,12 @@ CML::volumeType CML::treeDataFace::getVolumeType
 
 
     // Get actual intersection point on face
-    label faceI = faceLabels_[info.index()];
+    label facei = faceLabels_[info.index()];
 
     if (debug & 2)
     {
         Pout<< "getSampleType : sample:" << sample
-            << " nearest face:" << faceI;
+            << " nearest face:" << facei;
     }
 
     const pointField& points = mesh_.points();
@@ -219,9 +217,9 @@ CML::volumeType CML::treeDataFace::getVolumeType
     // Retest to classify where on face info is. Note: could be improved. We
     // already have point.
 
-    const face& f = mesh_.faces()[faceI];
-    const vector& area = mesh_.faceAreas()[faceI];
-    const point& fc = mesh_.faceCentres()[faceI];
+    const face& f = mesh_.faces()[facei];
+    const vector& area = mesh_.faceAreas()[facei];
+    const point& fc = mesh_.faceCentres()[facei];
 
     pointHit curHit = f.nearestPoint(sample, points);
     const point& curPt = curHit.rawPoint();
@@ -264,7 +262,7 @@ CML::volumeType CML::treeDataFace::getVolumeType
             // triangle normals)
             const labelList& pFaces = mesh_.pointFaces()[f[fp]];
 
-            vector pointNormal(vector::zero);
+            vector pointNormal(Zero);
 
             forAll(pFaces, i)
             {
@@ -311,7 +309,7 @@ CML::volumeType CML::treeDataFace::getVolumeType
     // 3] Get the 'real' edge the face intersection is on
     //
 
-    const labelList& myEdges = mesh_.faceEdges()[faceI];
+    const labelList& myEdges = mesh_.faceEdges()[facei];
 
     forAll(myEdges, myEdgeI)
     {
@@ -333,7 +331,7 @@ CML::volumeType CML::treeDataFace::getVolumeType
             // triangle normals)
             const labelList& eFaces = mesh_.edgeFaces()[myEdges[myEdgeI]];
 
-            vector edgeNormal(vector::zero);
+            vector edgeNormal(Zero);
 
             forAll(eFaces, i)
             {
@@ -412,7 +410,7 @@ CML::volumeType CML::treeDataFace::getVolumeType
     if (debug & 2)
     {
         Pout<< "Did not find sample " << sample
-            << " anywhere related to nearest face " << faceI << endl
+            << " anywhere related to nearest face " << facei << endl
             << "Face:";
 
         forAll(f, fp)
@@ -427,7 +425,7 @@ CML::volumeType CML::treeDataFace::getVolumeType
     // - tolerances are wrong. (if e.g. face has zero area)
     // - or (more likely) surface is not closed.
 
-    return volumeType::UNKNOWN;
+    return volumeType::unknown;
 }
 
 
@@ -458,9 +456,9 @@ bool CML::treeDataFace::overlaps
 
 
     // 2. Check if one or more face points inside
-    label faceI = faceLabels_[index];
+    label facei = faceLabels_[index];
 
-    const face& f = mesh_.faces()[faceI];
+    const face& f = mesh_.faces()[facei];
     if (cubeBb.containsAny(points, f))
     {
         return true;
@@ -468,7 +466,7 @@ bool CML::treeDataFace::overlaps
 
     // 3. Difficult case: all points are outside but connecting edges might
     // go through cube. Use triangle-bounding box intersection.
-    const point& fc = mesh_.faceCentres()[faceI];
+    const point& fc = mesh_.faceCentres()[facei];
 
     forAll(f, fp)
     {
@@ -557,17 +555,17 @@ bool CML::treeDataFace::findIntersectOp::operator()
         }
     }
 
-    const label faceI = shape.faceLabels_[index];
+    const label facei = shape.faceLabels_[index];
 
     const vector dir(end - start);
 
-    pointHit inter = shape.mesh_.faces()[faceI].intersection
+    pointHit inter = shape.mesh_.faces()[facei].intersection
     (
         start,
         dir,
-        shape.mesh_.faceCentres()[faceI],
+        shape.mesh_.faceCentres()[facei],
         shape.mesh_.points(),
-        intersection::HALF_RAY
+        intersection::algorithm::halfRay
     );
 
     if (inter.hit() && inter.distance() <= 1)

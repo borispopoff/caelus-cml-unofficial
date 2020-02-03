@@ -91,20 +91,20 @@ bool CML::layerAdditionRemoval::setLayerPairing() const
     label nPointErrors = 0;
     label nFaceErrors = 0;
 
-    forAll(mf, faceI)
+    forAll(mf, facei)
     {
         // Get the local master face
-        face curLocalFace = mlf[faceI];
+        face curLocalFace = mlf[facei];
 
         // Flip face based on flip index to recover original orientation
-        if (mfFlip[faceI])
+        if (mfFlip[facei])
         {
             curLocalFace.flip();
         }
 
         // Get the opposing face from the master cell
         oppositeFace lidFace =
-            cells[mc[faceI]].opposingFace(mf[faceI], faces);
+            cells[mc[facei]].opposingFace(mf[facei], faces);
 
         if (!lidFace.found())
         {
@@ -113,30 +113,30 @@ bool CML::layerAdditionRemoval::setLayerPairing() const
             continue;
         }
 
-// Pout<< "curMasterFace: " << faces[mf[faceI]] << nl
-//     << "cell shape: " << mesh.cellShapes()[mc[faceI]] << nl
+// Pout<< "curMasterFace: " << faces[mf[facei]] << nl
+//     << "cell shape: " << mesh.cellShapes()[mc[facei]] << nl
 //     << "curLocalFace: " << curLocalFace << nl
 //     << "lidFace: " << lidFace
 //     << " master index: " << lidFace.masterIndex()
 //     << " oppositeIndex: " << lidFace.oppositeIndex() << endl;
 
         // Grab the opposite face for face collapse addressing
-        ftc[faceI] = lidFace.oppositeIndex();
+        ftc[facei] = lidFace.oppositeIndex();
 
         // Using the local face insert the points into the lid list
-        forAll(curLocalFace, pointI)
+        forAll(curLocalFace, pointi)
         {
-            const label clp = curLocalFace[pointI];
+            const label clp = curLocalFace[pointi];
 
             if (ptc[clp] == -1)
             {
                 // Point not mapped yet.  Insert the label
-                ptc[clp] = lidFace[pointI];
+                ptc[clp] = lidFace[pointi];
             }
             else
             {
                 // Point mapped from some other face.  Check the label
-                if (ptc[clp] != lidFace[pointI])
+                if (ptc[clp] != lidFace[pointi])
                 {
                     nPointErrors++;
 //                     Pout<< "Topological error in cell layer pairing.  "
@@ -145,7 +145,7 @@ bool CML::layerAdditionRemoval::setLayerPairing() const
 //                         << "consistently.  Please check the "
 //                         << "face zone flip map." << nl
 //                         << "First index: " << ptc[clp]
-//                         << " new index: " << lidFace[pointI] << endl;
+//                         << " new index: " << lidFace[pointi] << endl;
                 }
             }
         }

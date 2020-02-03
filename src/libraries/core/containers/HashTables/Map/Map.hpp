@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -45,14 +45,14 @@ namespace CML
 template<class T>
 class Map
 :
-    public HashTable<T, label, Hash<label> >
+    public HashTable<T, label, Hash<label>>
 {
 
 public:
 
-    typedef typename HashTable<T, label, Hash<label> >::iterator iterator;
+    typedef typename HashTable<T, label, Hash<label>>::iterator iterator;
 
-    typedef typename HashTable<T, label, Hash<label> >::const_iterator
+    typedef typename HashTable<T, label, Hash<label>>::const_iterator
         const_iterator;
 
     // Constructors
@@ -60,33 +60,51 @@ public:
         //- Construct given initial size
         Map(const label size = 128)
         :
-            HashTable<T, label, Hash<label> >(size)
+            HashTable<T, label, Hash<label>>(size)
         {}
 
         //- Construct from Istream
         Map(Istream& is)
         :
-            HashTable<T, label, Hash<label> >(is)
+            HashTable<T, label, Hash<label>>(is)
         {}
 
-        //- Construct as copy
+        //- Copy constructor
         Map(const Map<T>& map)
         :
-            HashTable<T, label, Hash<label> >(map)
+            HashTable<T, label, Hash<label>>(map)
         {}
 
-        //- Construct by transferring the parameter contents
-        Map(const Xfer<Map<T> >& map)
+        //- Move constructor
+        Map(Map<T>&& map)
         :
-            HashTable<T, label, Hash<label> >(map)
+            HashTable<T, label, Hash<label>>(move(map))
         {}
 
-        //- Construct by transferring the parameter contents
-        Map(const Xfer<HashTable<T, label, Hash<label> > >& map)
+        //- Move constructor
+        Map(HashTable<T, label, Hash<label>>&& map)
         :
-            HashTable<T, label, Hash<label> >(map)
+            HashTable<T, label, Hash<label>>(move(map))
         {}
 
+        //- Construct from an initializer list
+        Map(std::initializer_list<Tuple2<label, T>> map)
+        :
+            HashTable<T, label, Hash<label>>(map)
+        {}
+
+
+    // Member operators
+
+        void operator=(const Map<T>& map)
+        {
+            HashTable<T, label, Hash<label>>::operator=(map);
+        }
+
+        void operator=(Map<T>&& map)
+        {
+            HashTable<T, label, Hash<label>>::operator=(move(map));
+        }
 };
 
 

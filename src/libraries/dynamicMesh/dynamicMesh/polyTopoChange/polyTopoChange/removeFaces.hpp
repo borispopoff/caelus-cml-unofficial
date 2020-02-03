@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -74,7 +74,7 @@ class removeFaces
         //  Recurses to cell neighbours.
         void changeCellRegion
         (
-            const label cellI,
+            const label celli,
             const label oldRegion,
             const label newRegion,
             labelList& cellRegion
@@ -86,7 +86,7 @@ class removeFaces
             const labelList& cellRegion,
             const boolList& removedFace,
             const labelList& nFacesPerEdge,
-            const label faceI,
+            const label facei,
             const label newRegion,
             const labelList& fEdges,
             labelList& faceRegion
@@ -122,10 +122,10 @@ class removeFaces
                 polyTopoChange& meshMod
             ) const;
 
-            //- Get patch, zone info for faceI
+            //- Get patch, zone info for facei
             void getFaceInfo
             (
-                const label faceI,
+                const label facei,
                 label& patchID,
                 label& zoneID,
                 label& zoneFlip
@@ -153,10 +153,10 @@ class removeFaces
 
 
         //- Disallow default bitwise copy construct
-        removeFaces(const removeFaces&);
+        removeFaces(const removeFaces&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const removeFaces&);
+        void operator=(const removeFaces&) = delete;
 
 
 public:

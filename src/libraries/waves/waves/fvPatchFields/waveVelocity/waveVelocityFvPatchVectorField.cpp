@@ -39,13 +39,13 @@ waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(p, iF),
-    convexPolyhedral(this->dimensionedInternalField().mesh(), true),
+    convexPolyhedral(this->internalField().mesh(), true),
     waveProps_
     (
         waveTheories::waveTheory::New
         (
             this->patch().name(),
-            this->dimensionedInternalField().mesh()
+            this->internalField().mesh()
         )
     )
 {
@@ -65,7 +65,7 @@ waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(ptf, p, iF, mapper),
-    convexPolyhedral(this->dimensionedInternalField().mesh(), true),
+    convexPolyhedral(this->internalField().mesh(), true),
     waveProps_(ptf.waveProps_)
 {
 }
@@ -79,13 +79,13 @@ waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(p, iF),
-    convexPolyhedral(this->dimensionedInternalField().mesh(), true),
+    convexPolyhedral(this->internalField().mesh(), true),
     waveProps_
     (
         waveTheories::waveTheory::New
         (
             this->patch().name(),
-            this->dimensionedInternalField().mesh()
+            this->internalField().mesh()
         )
     )
 {
@@ -100,13 +100,13 @@ waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(ptf, iF),
-    convexPolyhedral(this->dimensionedInternalField().mesh(), true),
+    convexPolyhedral(this->internalField().mesh(), true),
     waveProps_
     (
         waveTheories::waveTheory::New
         (
             this->patch().name(),
-            this->dimensionedInternalField().mesh()
+            this->internalField().mesh()
         )
     )
 {
@@ -148,7 +148,7 @@ void waveVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const fvMesh& mesh = this->dimensionedInternalField().mesh();
+    const fvMesh& mesh = this->internalField().mesh();
     const word patchName = this->patch().name();
     const label patchID = mesh.boundaryMesh().findPatchID(patchName);
     const scalarField& magSf( mesh.magSf().boundaryField()[patchID] );
@@ -170,7 +170,7 @@ void waveVelocityFvPatchVectorField::updateCoeffs()
                 = waveProps_->windVelocity(db().time().value());
         }
 
-        this->refGrad()[facei] = vector::zero;
+        this->refGrad()[facei] = Zero;
         this->valueFraction()[facei] = 1.0;
     }
 
@@ -205,10 +205,10 @@ void waveVelocityFvPatchVectorField::evaluate()
 void waveVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
-    this->refValue().writeEntry("refValue", os);
-    this->refGrad().writeEntry("refGradient", os);
-    this->valueFraction().writeEntry("valueFraction", os);
-    this->writeEntry("value", os);
+    writeEntry(os, "refValue", this->refValue());
+    writeEntry(os, "refGradient", this->refGrad());
+    writeEntry(os, "valueFraction", this->valueFraction());
+    writeEntry(os, "value");
 }
 
 

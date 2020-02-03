@@ -91,11 +91,11 @@ private:
         );
 
         //- Walk from face across connected faces. Change orientation to be
-        //  consistent with startFaceI.
+        //  consistent with startFacei.
         static void walkSurface
         (
             const triSurface& s,
-            const label startFaceI,
+            const label startFacei,
             labelList& flipState
         );
 
@@ -119,7 +119,7 @@ private:
             const labelList& faceZone,
             const label zoneI,
             const point& visiblePoint,
-            label& zoneFaceI,
+            label& zoneFacei,
             bool& isOutside
         );
 

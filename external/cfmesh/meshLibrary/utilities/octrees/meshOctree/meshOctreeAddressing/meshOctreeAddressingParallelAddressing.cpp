@@ -167,7 +167,7 @@ void meshOctreeAddressing::calcGlobalPointLabels() const
     {
         //- receive the data
         labelList receivedLabels;
-        IPstream fromOtherProc(Pstream::blocking, above[aboveI]);
+        IPstream fromOtherProc(Pstream::commsTypes::blocking, above[aboveI]);
         fromOtherProc >> receivedLabels;
 
         label counter(0);
@@ -235,7 +235,7 @@ void meshOctreeAddressing::calcGlobalPointLabels() const
         }
 
         //- send the data
-        OPstream toOtherProc(Pstream::blocking, neiProc, dts.byteSize());
+        OPstream toOtherProc(Pstream::commsTypes::blocking, neiProc, dts.byteSize());
         toOtherProc << dts;
     }
 
@@ -245,7 +245,7 @@ void meshOctreeAddressing::calcGlobalPointLabels() const
     {
         //- receive the data
         labelList receivedLabels;
-        IPstream fromOtherProc(Pstream::blocking, below[belowI]);
+        IPstream fromOtherProc(Pstream::commsTypes::blocking, below[belowI]);
         fromOtherProc >> receivedLabels;
 
         label counter(0);
@@ -313,7 +313,7 @@ void meshOctreeAddressing::calcGlobalPointLabels() const
         }
 
         //- send the data
-        OPstream toOtherProc(Pstream::blocking, neiProc, dts.byteSize());
+        OPstream toOtherProc(Pstream::commsTypes::blocking, neiProc, dts.byteSize());
         toOtherProc << dts;
     }
 }
@@ -393,11 +393,11 @@ void meshOctreeAddressing::calcGlobalLeafLabels() const
     //- simplify the procedure for generation of mesh templates
 
     //- allocate the map for exchanging of data
-    std::map<label, LongList<meshOctreeCubeBasic> > exchangeData;
+    std::map<label, LongList<meshOctreeCubeBasic>> exchangeData;
     const labelList& neiProcs = octree_.neiProcs();
     forAll(neiProcs, procI)
     {
-        const std::pair<label, LongList<meshOctreeCubeBasic> > pp
+        const std::pair<label, LongList<meshOctreeCubeBasic>> pp
         (
             neiProcs[procI],
             LongList<meshOctreeCubeBasic>()
@@ -421,7 +421,7 @@ void meshOctreeAddressing::calcGlobalLeafLabels() const
 
     //- exchange the data with other processors
     LongList<meshOctreeCubeBasic> rLeaves;
-    help::exchangeMap(exchangeData, rLeaves, Pstream::scheduled);
+    help::exchangeMap(exchangeData, rLeaves, Pstream::commsTypes::scheduled);
 
     //- update the local data
     forAll(rLeaves, i)
@@ -436,7 +436,7 @@ void meshOctreeAddressing::calcGlobalLeafLabels() const
     //- now the global leaf labels shall be sent from the processors
     //- that own the leaves to the processors that also contain them
     std::map<label, labelLongList> exchangeLabels;
-    std::map<label, LongList<meshOctreeCubeBasic> >::iterator it;
+    std::map<label, LongList<meshOctreeCubeBasic>>::iterator it;
     for(it=exchangeData.begin();it!=exchangeData.end();++it)
     {
         it->second.clear();
@@ -463,9 +463,9 @@ void meshOctreeAddressing::calcGlobalLeafLabels() const
 
     //- exchange the data
     rLeaves.clear();
-    help::exchangeMap(exchangeData, rLeaves, Pstream::scheduled);
+    help::exchangeMap(exchangeData, rLeaves, Pstream::commsTypes::scheduled);
     labelLongList rLabels;
-    help::exchangeMap(exchangeLabels, rLabels, Pstream::scheduled);
+    help::exchangeMap(exchangeLabels, rLabels, Pstream::commsTypes::scheduled);
 
     if( rLeaves.size() != rLabels.size() )
         FatalErrorInFunction
@@ -510,7 +510,7 @@ void meshOctreeAddressing::calcGlobalLeafLabels() const
 
     //- exchange the data
     rLabels.clear();
-    help::exchangeMap(exchangeLabels, rLabels, Pstream::scheduled);
+    help::exchangeMap(exchangeLabels, rLabels, Pstream::commsTypes::scheduled);
 
     //- update the local data
     label counter(0);
@@ -574,10 +574,10 @@ void meshOctreeAddressing::calcGlobalLeafLabels() const
             exchangeData[i].append(octree_.returnLeaf(leafI));
         }
 
-    std::map<label, List<meshOctreeCubeBasic> > rMap;
+    std::map<label, List<meshOctreeCubeBasic>> rMap;
     help::exchangeMap(exchangeData, rMap);
 
-    for(std::map<label, List<meshOctreeCubeBasic> >::const_iterator it=rMap.begin();it!=rMap.end();++it)
+    for(std::map<label, List<meshOctreeCubeBasic>>::const_iterator it=rMap.begin();it!=rMap.end();++it)
     {
         const List<meshOctreeCubeBasic>& data = it->second;
 

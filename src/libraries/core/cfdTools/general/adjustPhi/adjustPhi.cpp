@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -39,7 +39,8 @@ bool CML::adjustPhi
         scalar fixedMassOut = 0.0;
         scalar adjustableMassOut = 0.0;
 
-        surfaceScalarField::GeometricBoundaryField& bphi = phi.boundaryField();
+        surfaceScalarField::Boundary& bphi =
+            phi.boundaryFieldRef();
 
         forAll(bphi, patchi)
         {

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -35,24 +35,8 @@ rotatingWallVelocityFvPatchVectorField
 :
     fixedValueFvPatchField<vector>(p, iF),
     origin_(),
-    axis_(vector::zero),
+    axis_(Zero),
     omega_(0)
-{}
-
-
-CML::rotatingWallVelocityFvPatchVectorField::
-rotatingWallVelocityFvPatchVectorField
-(
-    const rotatingWallVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
-    origin_(ptf.origin_),
-    axis_(ptf.axis_),
-    omega_(ptf.omega_().clone().ptr())
 {}
 
 
@@ -64,7 +48,7 @@ rotatingWallVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<vector>(p, iF),
+    fixedValueFvPatchField<vector>(p, iF, dict, false),
     origin_(dict.lookup("origin")),
     axis_(dict.lookup("axis")),
     omega_(DataEntry<scalar>::New("omega", dict))
@@ -82,6 +66,22 @@ rotatingWallVelocityFvPatchVectorField
         updateCoeffs();
     }
 }
+
+
+CML::rotatingWallVelocityFvPatchVectorField::
+rotatingWallVelocityFvPatchVectorField
+(
+    const rotatingWallVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
+    origin_(ptf.origin_),
+    axis_(ptf.axis_),
+    omega_(ptf.omega_().clone().ptr())
+{}
 
 
 CML::rotatingWallVelocityFvPatchVectorField::
@@ -141,10 +141,10 @@ void CML::rotatingWallVelocityFvPatchVectorField::updateCoeffs()
 void CML::rotatingWallVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("origin") << origin_ << token::END_STATEMENT << nl;
-    os.writeKeyword("axis") << axis_ << token::END_STATEMENT << nl;
-    omega_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, "origin", origin_);
+    writeEntry(os, "axis", axis_);
+    writeEntry(os, omega_());
+    writeEntry(os, "value", *this);
 }
 
 

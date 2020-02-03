@@ -48,27 +48,27 @@ namespace CML
 namespace fvm
 {
     template<class Type>
-    tmp<fvMatrix<Type> > ddt
+    tmp<fvMatrix<Type>> ddt
     (
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > ddt
+    tmp<fvMatrix<Type>> ddt
     (
         const one&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > ddt
+    tmp<fvMatrix<Type>> ddt
     (
         const dimensionedScalar&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > ddt
+    tmp<fvMatrix<Type>> ddt
     (
         const volScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
@@ -78,7 +78,7 @@ namespace fvm
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -88,12 +88,12 @@ ddt
     (
         vf.mesh(),
         vf.mesh().ddtScheme("ddt(" + vf.name() + ')')
-    )().fvmDdt(vf);
+    ).ref().fvmDdt(vf);
 }
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const one&,
@@ -105,7 +105,7 @@ ddt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const dimensionedScalar& rho,
@@ -116,12 +116,12 @@ ddt
     (
         vf.mesh(),
         vf.mesh().ddtScheme("ddt(" + rho.name() + ',' + vf.name() + ')')
-    )().fvmDdt(rho, vf);
+    ).ref().fvmDdt(rho, vf);
 }
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 ddt
 (
     const volScalarField& rho,
@@ -132,7 +132,7 @@ ddt
     (
         vf.mesh(),
         vf.mesh().ddtScheme("ddt(" + rho.name() + ',' + vf.name() + ')')
-    )().fvmDdt(rho, vf);
+    ).ref().fvmDdt(rho, vf);
 }
 
 

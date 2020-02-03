@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -25,16 +25,20 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-// NB: values chosen such that bitwise '&' 0x1 yields the bool value
-// INVALID is also evaluates to false, but don't rely on that
-const char* CML::Switch::names[CML::Switch::INVALID+1] =
+const char* CML::Switch::names[nSwitchType] =
 {
-    "false", "true",
-    "off",   "on",
-    "no",    "yes",
-    "n",     "y",
-    "f",     "t",
-    "none",  "true",  // Is there a reasonable counterpart to "none"?
+    "false",
+    "true",
+    "off",
+    "on",
+    "no",
+    "yes",
+    "n",
+    "y",
+    "f",
+    "t",
+    "none",
+    "any",
     "invalid"
 };
 
@@ -47,35 +51,36 @@ CML::Switch::switchType CML::Switch::asEnum
     const bool allowInvalid
 )
 {
-    for (int sw = 0; sw < Switch::INVALID; ++sw)
+    for (switchType sw=switchType::False; sw<switchType::invalid; ++sw)
     {
-        if (str == names[sw])
+        if (str == names[toInt(sw)])
         {
-            // handle aliases
+            // Handle aliases
             switch (sw)
             {
-                case Switch::NO_1:
-                case Switch::NONE:
+                case switchType::n:
+                case switchType::none:
                 {
-                    return Switch::NO;
+                    return switchType::no;
                     break;
                 }
 
-                case Switch::YES_1:
+                case switchType::y:
+                case switchType::any:
                 {
-                    return Switch::YES;
+                    return switchType::yes;
                     break;
                 }
 
-                case Switch::FALSE_1:
+                case switchType::f:
                 {
-                    return Switch::FALSE;
+                    return switchType::False;
                     break;
                 }
 
-                case Switch::TRUE_1:
+                case switchType::t:
                 {
-                    return Switch::TRUE;
+                    return switchType::True;
                     break;
                 }
 
@@ -95,7 +100,7 @@ CML::Switch::switchType CML::Switch::asEnum
             << abort(FatalError);
     }
 
-    return Switch::INVALID;
+    return switchType::invalid;
 }
 
 
@@ -114,13 +119,13 @@ CML::Switch CML::Switch::lookupOrAddToDict
 
 bool CML::Switch::valid() const
 {
-    return switch_ <= Switch::NONE;
+    return switch_ <= switchType::none;
 }
 
 
 const char* CML::Switch::asText() const
 {
-    return names[switch_];
+    return names[toInt(switch_)];
 }
 
 

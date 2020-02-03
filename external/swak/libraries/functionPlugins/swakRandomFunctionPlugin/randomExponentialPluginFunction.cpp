@@ -96,7 +96,7 @@ void randomExponentialPluginFunction<FType,DType>::doEvaluation()
         )
     );
 
-    doEvaluationInternal(pRandom->internalField());
+    doEvaluationInternal(pRandom->primitiveFieldRef());
 
     this->result().setObjectResult(pRandom);
 }

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,10 +47,10 @@ tmp<scalarField> nutUWallFunctionFvPatchScalarField::calcNut() const
     const scalarField& nuw = nu.boundaryField()[patchi];
 
     tmp<scalarField> tyPlus = calcYPlus(magUp);
-    scalarField& yPlus = tyPlus();
+    scalarField& yPlus = tyPlus.ref();
 
     tmp<scalarField> tnutw(new scalarField(patch().size(), 0.0));
-    scalarField& nutw = tnutw();
+    scalarField& nutw = tnutw.ref();
 
     forAll(yPlus, facei)
     {
@@ -80,7 +80,7 @@ tmp<scalarField> nutUWallFunctionFvPatchScalarField::calcYPlus
     const scalarField& nuw = nu.boundaryField()[patchi];
 
     tmp<scalarField> tyPlus(new scalarField(patch().size(), 0.0));
-    scalarField& yPlus = tyPlus();
+    scalarField& yPlus = tyPlus.ref();
 
     forAll(yPlus, facei)
     {
@@ -178,7 +178,7 @@ void nutUWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

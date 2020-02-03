@@ -489,7 +489,7 @@ public:
     );
 
     template<class Type>
-    tmp<Field<Type> > evaluate(const exprString &expr,bool qPoint=false);
+    tmp<Field<Type>> evaluate(const exprString &expr,bool qPoint=false);
 
     template<class Type>
     Type evaluateUniform(const exprString &expr,bool qPoint=false);
@@ -549,7 +549,7 @@ public:
     void setResult(Field<Type> *,bool isPoint=false);
 
     template<class Type>
-    tmp<Field<Type> > getResult(bool qPoint=false);
+    tmp<Field<Type>> getResult(bool qPoint=false);
 
     void outputResult(Ostream &);
 
@@ -565,33 +565,33 @@ public:
     void clearResult();
 
     template <class Op,class Type>
-    tmp<Field<bool> > doCompare(
+    tmp<Field<bool>> doCompare(
         const Field<Type> &a,
         Op op,
         const Field<Type> &b
     );
 
     template <class Op>
-    tmp<Field<bool> > doLogicalOp(
+    tmp<Field<bool>> doLogicalOp(
         const Field<bool> &a,
         Op op,
         const Field<bool> &b
     );
 
-    inline tmp<Field<bool> > doLogicalNot(const Field<bool> &a);
+    inline tmp<Field<bool>> doLogicalNot(const Field<bool> &a);
 
     template<class Type>
-    tmp<Field<Type> > doConditional(
+    tmp<Field<Type>> doConditional(
         const Field<bool> &d,
         const Field<Type> &yes,
         const Field<Type> &no
     );
 
     template<class Type>
-    tmp<Field<Type> > makeField(Type,bool isPoint=false);
+    tmp<Field<Type>> makeField(Type,bool isPoint=false);
 
     template<class Type>
-    tmp<Field<Type> > getVariable(
+    tmp<Field<Type>> getVariable(
         const word &name,
         const label expectedSize
     );
@@ -641,7 +641,7 @@ public:
     //- read some interpolation tables
     void readTables(
         Istream &is,
-        HashTable<interpolationTable<scalar> > &,
+        HashTable<interpolationTable<scalar>> &,
         bool clear=true
     );
 
@@ -673,7 +673,7 @@ public:
     //- write some interpolation tables
     void writeTables(
         Ostream &os,
-        const HashTable<interpolationTable<scalar> > &
+        const HashTable<interpolationTable<scalar>> &
     ) const;
 
     //- is this a lookup table

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ transformVector
 ) const
 {
     tmp<symmTensorField> tfld(new symmTensorField(st.size()));
-    symmTensorField& fld = tfld();
+    symmTensorField& fld = tfld.ref();
 
     forAll(fld, i)
     {
@@ -270,9 +270,9 @@ CML::STARCDCoordinateRotation::STARCDCoordinateRotation
 
 void CML::STARCDCoordinateRotation::write(Ostream& os) const
 {
-     os.writeKeyword("e1") << e1() << token::END_STATEMENT << nl;
-     os.writeKeyword("e2") << e2() << token::END_STATEMENT << nl;
-     os.writeKeyword("e3") << e3() << token::END_STATEMENT << nl;
+     writeEntry(os, "e1", e1());
+     writeEntry(os, "e2", e2());
+     writeEntry(os, "e3", e3());
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -41,7 +41,7 @@ namespace CML
                     Class SortableListDRGEP Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Type>
+template<class Type>
 class SortableListDRGEP
 :
     public List<Type>
@@ -122,7 +122,7 @@ public:
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::SortableListDRGEP<Type>::SortableListDRGEP(const List<Type>& values)
 :
     List<Type>(values),
@@ -132,7 +132,7 @@ CML::SortableListDRGEP<Type>::SortableListDRGEP(const List<Type>& values)
 }
 
 
-template <class Type>
+template<class Type>
 CML::SortableListDRGEP<Type>::SortableListDRGEP(const label size)
 :
     List<Type>(size),
@@ -140,7 +140,7 @@ CML::SortableListDRGEP<Type>::SortableListDRGEP(const label size)
 {}
 
 
-template <class Type>
+template<class Type>
 CML::SortableListDRGEP<Type>::SortableListDRGEP
 (
     const label size,
@@ -152,7 +152,7 @@ CML::SortableListDRGEP<Type>::SortableListDRGEP
 {}
 
 
-template <class Type>
+template<class Type>
 CML::SortableListDRGEP<Type>::SortableListDRGEP
 (
     const SortableListDRGEP<Type>& lst
@@ -165,7 +165,7 @@ CML::SortableListDRGEP<Type>::SortableListDRGEP
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 void CML::SortableListDRGEP<Type>::setSize(const label newSize)
 {
     List<Type>::setSize(newSize);
@@ -173,7 +173,7 @@ void CML::SortableListDRGEP<Type>::setSize(const label newSize)
 }
 
 
-template <class Type>
+template<class Type>
 void CML::SortableListDRGEP<Type>::sort()
 {
     forAll(indices_, i)
@@ -194,7 +194,7 @@ void CML::SortableListDRGEP<Type>::sort()
 }
 
 
-template <class Type>
+template<class Type>
 void CML::SortableListDRGEP<Type>::partialSort(int M)
 {
     forAll(indices_, i)
@@ -212,7 +212,7 @@ void CML::SortableListDRGEP<Type>::partialSort(int M)
 }
 
 
-template <class Type>
+template<class Type>
 void CML::SortableListDRGEP<Type>::stableSort()
 {
     forAll(indices_, i)
@@ -235,7 +235,7 @@ void CML::SortableListDRGEP<Type>::stableSort()
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 void
 CML::SortableListDRGEP<Type>::operator=(const SortableListDRGEP<Type>& rhs)
 {

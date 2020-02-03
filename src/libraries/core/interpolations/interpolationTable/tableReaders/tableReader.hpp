@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -75,7 +75,7 @@ public:
         tableReader(const dictionary& dict);
 
         //- Construct and return a clone
-        virtual autoPtr<tableReader<Type> > clone() const = 0;
+        virtual autoPtr<tableReader<Type>> clone() const = 0;
 
 
     // Selectors
@@ -94,7 +94,7 @@ public:
         virtual void operator()
         (
             const fileName&,
-            List<Tuple2<scalar, Type> >&
+            List<Tuple2<scalar, Type>>&
         ) = 0;
 
         //- Write additional information
@@ -111,7 +111,7 @@ public:
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class Type>
-CML::autoPtr<CML::tableReader<Type> > CML::tableReader<Type>::New
+CML::autoPtr<CML::tableReader<Type>> CML::tableReader<Type>::New
 (
     const dictionary& spec
 )
@@ -136,7 +136,7 @@ CML::autoPtr<CML::tableReader<Type> > CML::tableReader<Type>::New
             << exit(FatalError);
     }
 
-    return autoPtr<tableReader<Type> >(cstrIter()(spec));
+    return autoPtr<tableReader<Type>>(cstrIter()(spec));
 }
 
 
@@ -161,8 +161,7 @@ void CML::tableReader<Type>::write(Ostream& os) const
 {
     if (this->type() != "caelus")
     {
-        os.writeKeyword("readerType")
-            << this->type() << token::END_STATEMENT << nl;
+        writeEntry(os, "readerType", this->type());
     }
 }
 

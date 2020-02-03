@@ -64,7 +64,7 @@ CML::dictionaryListEntry::dictionaryListEntry
         {
             if (!entry::New(*this, is))
             {
-                FatalIOErrorIn("Function",is)
+                FatalIOErrorInFunction(is)
                     << "Failed to read dictionary entry in list"
                     << exit(FatalIOError);
             }
@@ -92,7 +92,7 @@ CML::dictionaryListEntry::dictionaryListEntry
 
             if (!entry::New(*this, is))
             {
-                FatalIOErrorIn("Function",is)
+                FatalIOErrorInFunction(is)
                     << "Failed to read dictionary entry in list"
                     << exit(FatalIOError);
             }
@@ -100,7 +100,7 @@ CML::dictionaryListEntry::dictionaryListEntry
     }
     else
     {
-        FatalIOErrorIn("Function",is)
+        FatalIOErrorInFunction(is)
             << "incorrect first token, expected <int> or '(', found "
             << firstToken.info()
             << exit(FatalIOError);

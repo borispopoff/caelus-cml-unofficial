@@ -34,7 +34,7 @@ Author
 namespace CML
 {
 
-template <typename Flux, typename Limiter>
+template<class Flux, class Limiter>
 class numericFlux : public Flux
 {
 
@@ -128,7 +128,7 @@ public:
 
 }
 
-template <typename Flux, typename Limiter>
+template<class Flux, class Limiter>
 CML::numericFlux<Flux,Limiter>::numericFlux
 (
     volScalarField const& p,
@@ -189,14 +189,14 @@ CML::numericFlux<Flux,Limiter>::numericFlux
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedVector("zero", dimVelocity, vector::zero)
+        dimensionedVector("zero", dimVelocity, Zero)
     ),
     gradp_(fvc::grad(this->p_)),
     gradU_(fvc::grad(this->U_)),
     gradT_(fvc::grad(this->T_))
 {}
 
-template <typename Flux, typename Limiter>
+template<class Flux, class Limiter>
 void CML::numericFlux<Flux,Limiter>::update()
 {
     unallocLabelList const& owner = this->mesh_.owner();
@@ -242,19 +242,19 @@ void CML::numericFlux<Flux,Limiter>::update()
     volVectorField const& ULimiter = vectorULimiter.getPhiLimiter();
     volScalarField const& TLimiter = scalarTLimiter.getPhiLimiter();
 
-    forAll(owner, faceI)
+    forAll(owner, facei)
     {
-        label own = owner[faceI];
-        label nei = neighbour[faceI];
+        label own = owner[facei];
+        label nei = neighbour[facei];
 
-        vector deltaRLeft  = faceCenter[faceI] - cellCenter[own];
-        vector deltaRRight = faceCenter[faceI] - cellCenter[nei];
+        vector deltaRLeft  = faceCenter[facei] - cellCenter[own];
+        vector deltaRRight = faceCenter[facei] - cellCenter[nei];
 
         Flux::evaluateFlux
         (
-            this->rhoFlux_[faceI],
-            this->rhoUFlux_[faceI],
-            this->rhoEFlux_[faceI],
+            this->rhoFlux_[facei],
+            this->rhoUFlux_[facei],
+            this->rhoEFlux_[facei],
             this->p_[own] + pLimiter[own] * (deltaRLeft  & this->gradp_[own]),
             this->p_[nei] + pLimiter[nei] * (deltaRRight & this->gradp_[nei]),
             this->U_[own] + cmptMultiply(ULimiter[own], (deltaRLeft  & this->gradU_[own])),
@@ -265,17 +265,17 @@ void CML::numericFlux<Flux,Limiter>::update()
             R[nei],        
             Cv[own],       
             Cv[nei],       
-            Sf[faceI],      
-            magSf[faceI],   
-            this->dotX_[faceI]    
+            Sf[facei],      
+            magSf[facei],   
+            this->dotX_[facei]    
         );
     }
 
     forAll(T_.boundaryField(), patchi)
     {
-        fvsPatchScalarField& pRhoFlux = this->rhoFlux_.boundaryField()[patchi];
-        fvsPatchVectorField& pRhoUFlux = this->rhoUFlux_.boundaryField()[patchi];
-        fvsPatchScalarField& pRhoEFlux = this->rhoEFlux_.boundaryField()[patchi];
+        fvsPatchScalarField& pRhoFlux = this->rhoFlux_.boundaryFieldRef()[patchi];
+        fvsPatchVectorField& pRhoUFlux = this->rhoUFlux_.boundaryFieldRef()[patchi];
+        fvsPatchScalarField& pRhoEFlux = this->rhoEFlux_.boundaryFieldRef()[patchi];
 
         fvPatchScalarField const& pp = this->p_.boundaryField()[patchi];
         fvPatchVectorField const& pU = this->U_.boundaryField()[patchi];

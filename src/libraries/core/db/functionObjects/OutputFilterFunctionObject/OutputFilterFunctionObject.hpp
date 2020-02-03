@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -38,7 +38,7 @@ Note
 
 #include "functionObject.hpp"
 #include "dictionary.hpp"
-#include "outputFilterOutputControl.hpp"
+#include "outputFilterControl.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,13 +84,13 @@ class OutputFilterFunctionObject
             //- De-activation time - defaults to VGREAT
             scalar timeEnd_;
 
-            //- Number of steps before the dumping time in which the deltaT
-            // will start to change (valid for ocAdjustableTime)
+            //- Number of steps before the dump-time during which deltaT
+            //  may be changed (valid for adjustableRunTime)
             label nStepsToStartTimeChange_;
 
 
         //- Output controls
-        outputFilterOutputControl outputControl_;
+        outputFilterControl writeControl_;
 
         //- Pointer to the output filter
         autoPtr<OutputFilter> ptr_;
@@ -110,12 +110,6 @@ class OutputFilterFunctionObject
         //- Returns true if active (enabled and within time bounds)
         bool active() const;
 
-        //- Disallow default bitwise copy construct
-        OutputFilterFunctionObject(const OutputFilterFunctionObject&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const OutputFilterFunctionObject&);
-
 
 public:
 
@@ -133,49 +127,52 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construct
+        OutputFilterFunctionObject(const OutputFilterFunctionObject&) = delete;
+
 
     // Member Functions
 
         // Access
 
             //- Return time database
-            virtual const Time& time() const
+            inline const Time& time() const
             {
                 return time_;
             }
 
             //- Return the input dictionary
-            virtual const dictionary& dict() const
+            inline const dictionary& dict() const
             {
                 return dict_;
             }
 
             //- Return the region name
-            virtual const word& regionName() const
+            inline const word& regionName() const
             {
                 return regionName_;
             }
 
             //- Return the optional dictionary name
-            virtual const word& dictName() const
+            inline const word& dictName() const
             {
                 return dictName_;
             }
 
             //- Return the enabled flag
-            virtual bool enabled() const
+            inline bool enabled() const
             {
                 return enabled_;
             }
 
             //- Return the output control object
-            virtual const outputFilterOutputControl& outputControl() const
+            inline const outputFilterControl& writeControl() const
             {
-                return outputControl_;
+                return writeControl_;
             }
 
             //- Return the output filter
-            virtual const OutputFilter& outputFilter() const
+            inline const OutputFilter& outputFilter() const
             {
                 return ptr_();
             }
@@ -193,20 +190,25 @@ public:
             //- Called at the start of the time-loop
             virtual bool start();
 
-            //- Called at each ++ or += of the time-loop
-            virtual bool execute(const bool forceWrite);
+            //- Called at each ++ or += of the time-loop.
+            //  forceWrite overrides the usual writeControl behaviour and
+            //  forces writing (used in post-processing mode)
+            virtual bool execute(const bool forceWrite = false);
 
             //- Called when Time::run() determines that the time-loop exits
             virtual bool end();
 
-            //- Called when time was set at the end of the Time::operator++
-            virtual bool timeSet();
-
-            //- Called at the end of Time::adjustDeltaT() if adjustTime is true
-            virtual bool adjustTimeStep();
+            //- Return the time to the next write
+            virtual scalar timeToNextWrite();
 
             //- Read and set the function object if its data have changed
             virtual bool read(const dictionary&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const OutputFilterFunctionObject&) = delete;
 };
 
 
@@ -305,7 +307,7 @@ CML::OutputFilterFunctionObject<OutputFilter>::OutputFilterFunctionObject
     (
         dict.lookupOrDefault("nStepsToStartTimeChange", 3)
     ),
-    outputControl_(t, dict)
+    writeControl_(t, dict)
 {
     readDict();
 }
@@ -356,7 +358,7 @@ bool CML::OutputFilterFunctionObject<OutputFilter>::execute
 
         ptr_->execute();
 
-        if (forceWrite || outputControl_.output())
+        if (forceWrite || writeControl_.execute())
         {
             ptr_->write();
         }
@@ -385,7 +387,7 @@ bool CML::OutputFilterFunctionObject<OutputFilter>::end()
 
         ptr_->end();
 
-        if (outputControl_.output())
+        if (writeControl_.execute())
         {
             ptr_->write();
         }
@@ -400,61 +402,30 @@ bool CML::OutputFilterFunctionObject<OutputFilter>::end()
 }
 
 
-template<class OutputFilter>
-bool CML::OutputFilterFunctionObject<OutputFilter>::timeSet()
-{
-    if (active())
-    {
-        ptr_->timeSet();
-    }
-
-    return true;
-}
-
 
 template<class OutputFilter>
-bool CML::OutputFilterFunctionObject<OutputFilter>::adjustTimeStep()
+CML::scalar CML::OutputFilterFunctionObject<OutputFilter>::timeToNextWrite()
 {
     if
     (
         active()
-     && outputControl_.outputControl()
-     == outputFilterOutputControl::ocAdjustableTime
+     && writeControl_.control()
+     == outputFilterControl::timeControls::adjustableRunTime
     )
     {
-        const label  outputTimeIndex = outputControl_.outputTimeLastDump();
-        const scalar writeInterval = outputControl_.writeInterval();
+        const label  writeTimeIndex = writeControl_.executionIndex();
+        const scalar writeInterval = writeControl_.interval();
 
-        scalar timeToNextWrite = max
-        (
-            0.0,
-            (outputTimeIndex + 1)*writeInterval
-          - (time_.value() - time_.startTime().value())
-        );
-
-        scalar deltaT = time_.deltaTValue();
-
-        scalar nSteps = timeToNextWrite/deltaT - SMALL;
-
-        // function objects modify deltaT inside nStepsToStartTimeChange range
-        // NOTE: Potential problem if two function objects dump inside the same
-        // interval
-        if (nSteps < nStepsToStartTimeChange_)
-        {
-            label nStepsToNextWrite = label(nSteps) + 1;
-
-            scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
-
-            // Adjust time step
-            if (newDeltaT < deltaT)
-            {
-                deltaT = max(newDeltaT, 0.2*deltaT);
-                const_cast<Time&>(time_).setDeltaT(deltaT, false);
-            }
-        }
+        return
+            max
+            (
+                0.0,
+                (writeTimeIndex + 1)*writeInterval
+              - (time_.value() - time_.startTime().value())
+            );
     }
 
-    return true;
+    return VGREAT;
 }
 
 
@@ -467,7 +438,8 @@ bool CML::OutputFilterFunctionObject<OutputFilter>::read
     if (dict != dict_)
     {
         dict_ = dict;
-        outputControl_.read(dict);
+
+        writeControl_.read(dict);
 
         return start();
     }

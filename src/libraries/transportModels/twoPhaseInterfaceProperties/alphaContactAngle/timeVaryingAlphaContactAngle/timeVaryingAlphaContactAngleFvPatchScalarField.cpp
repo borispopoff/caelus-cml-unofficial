@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -127,11 +127,11 @@ void CML::timeVaryingAlphaContactAngleFvPatchScalarField::write
 ) const
 {
     alphaContactAngleFvPatchScalarField::write(os);
-    os.writeKeyword("t0") << t0_ << token::END_STATEMENT << nl;
-    os.writeKeyword("thetaT0") << thetaT0_ << token::END_STATEMENT << nl;
-    os.writeKeyword("te") << te_ << token::END_STATEMENT << nl;
-    os.writeKeyword("thetaTe") << thetaTe_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "t0", t0_);
+    writeEntry(os, "thetaT0", thetaT0_);
+    writeEntry(os, "te", te_);
+    writeEntry(os, "thetaTe", thetaTe_);
+    writeEntry(os, "value", *this);
 }
 
 

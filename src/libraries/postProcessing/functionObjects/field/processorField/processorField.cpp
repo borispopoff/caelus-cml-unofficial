@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -65,7 +65,7 @@ CML::processorField::processorField
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("0", dimless, 0.0)
+                dimensionedScalar("0", dimless, 0)
             )
         );
 
@@ -99,11 +99,8 @@ void CML::processorField::execute()
 {
     if (active_)
     {
-        const volScalarField& procField =
-            obr_.lookupObject<volScalarField>("processorID");
-
-        const_cast<volScalarField&>(procField) ==
-            dimensionedScalar("procI", dimless, Pstream::myProcNo());
+        obr_.lookupObjectRef<volScalarField>("processorID") ==
+            dimensionedScalar("proci", dimless, Pstream::myProcNo());
     }
 }
 

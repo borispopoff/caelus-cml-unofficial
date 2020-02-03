@@ -118,7 +118,7 @@ inline bool CML::patchEdgeFaceRegion::updateEdge
     const polyMesh& mesh,
     const indirectPrimitivePatch& patch,
     const label edgeI,
-    const label faceI,
+    const label facei,
     const patchEdgeFaceRegion& faceInfo,
     const scalar tol,
     TrackingData& td
@@ -148,7 +148,7 @@ inline bool CML::patchEdgeFaceRegion::updateFace
 (
     const polyMesh& mesh,
     const indirectPrimitivePatch& patch,
-    const label faceI,
+    const label facei,
     const label edgeI,
     const patchEdgeFaceRegion& edgeInfo,
     const scalar tol,
@@ -159,7 +159,7 @@ inline bool CML::patchEdgeFaceRegion::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::patchEdgeFaceRegion::equal
 (
     const patchEdgeFaceRegion& rhs,

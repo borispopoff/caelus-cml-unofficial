@@ -29,19 +29,19 @@ namespace CML
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTemplate2TypeNameAndDebug(pointScalarField::DimensionedInternalField, 0);
-defineTemplate2TypeNameAndDebug(pointVectorField::DimensionedInternalField, 0);
+defineTemplate2TypeNameAndDebug(pointScalarField::Internal, 0);
+defineTemplate2TypeNameAndDebug(pointVectorField::Internal, 0);
 defineTemplate2TypeNameAndDebug
 (
-    pointSphericalTensorField::DimensionedInternalField,
+    pointSphericalTensorField::Internal,
     0
 );
 defineTemplate2TypeNameAndDebug
 (
-    pointSymmTensorField::DimensionedInternalField,
+    pointSymmTensorField::Internal,
     0
 );
-defineTemplate2TypeNameAndDebug(pointTensorField::DimensionedInternalField, 0);
+defineTemplate2TypeNameAndDebug(pointTensorField::Internal, 0);
 
 
 defineTemplateTypeNameAndDebug(pointScalarField, 0);

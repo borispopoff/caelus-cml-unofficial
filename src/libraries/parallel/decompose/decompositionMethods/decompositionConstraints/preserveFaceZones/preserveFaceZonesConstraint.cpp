@@ -143,16 +143,16 @@ void CML::decompositionConstraints::preserveFaceZonesConstraint::apply
 
     labelList destProc(mesh.nFaces()-mesh.nInternalFaces(), labelMax);
 
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        const polyPatch& pp = pbm[patchI];
+        const polyPatch& pp = pbm[patchi];
 
         const labelUList& faceCells = pp.faceCells();
 
         forAll(faceCells, i)
         {
-            label bFaceI = pp.start()+i-mesh.nInternalFaces();
-            destProc[bFaceI] = decomposition[faceCells[i]];
+            label bFacei = pp.start()+i-mesh.nInternalFaces();
+            destProc[bFacei] = decomposition[faceCells[i]];
         }
     }
 
@@ -174,13 +174,13 @@ void CML::decompositionConstraints::preserveFaceZonesConstraint::apply
 
         forAll(fz, i)
         {
-            label faceI = fz[i];
+            label facei = fz[i];
 
-            label own = mesh.faceOwner()[faceI];
+            label own = mesh.faceOwner()[facei];
 
-            if (mesh.isInternalFace(faceI))
+            if (mesh.isInternalFace(facei))
             {
-                label nei = mesh.faceNeighbour()[faceI];
+                label nei = mesh.faceNeighbour()[facei];
                 if (decomposition[own] != decomposition[nei])
                 {
                     decomposition[nei] = decomposition[own];
@@ -189,10 +189,10 @@ void CML::decompositionConstraints::preserveFaceZonesConstraint::apply
             }
             else
             {
-                label bFaceI = faceI-mesh.nInternalFaces();
-                if (decomposition[own] != destProc[bFaceI])
+                label bFacei = facei-mesh.nInternalFaces();
+                if (decomposition[own] != destProc[bFacei])
                 {
-                    decomposition[own] = destProc[bFaceI];
+                    decomposition[own] = destProc[bFacei];
                     nChanged++;
                 }
             }

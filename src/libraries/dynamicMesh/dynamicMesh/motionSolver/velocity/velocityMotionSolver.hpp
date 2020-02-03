@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -70,7 +70,7 @@ private:
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const velocityMotionSolver&);
+        void operator=(const velocityMotionSolver&) = delete;
 
 public:
 

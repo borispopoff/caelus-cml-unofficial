@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -1333,7 +1333,7 @@ bool CML::cyclicPolyPatch::order
                 << endl;
 
             // Recalculate untransformed face centres
-            //pointField rawHalf0Ctrs =
+            // pointField rawHalf0Ctrs =
             //    calcFaceCentres(half0Faces, pp.points());
             label vertI = 0;
 
@@ -1420,22 +1420,21 @@ bool CML::cyclicPolyPatch::order
 void CML::cyclicPolyPatch::write(Ostream& os) const
 {
     coupledPolyPatch::write(os);
-    os.writeKeyword("neighbourPatch") << neighbPatchName_
-        << token::END_STATEMENT << nl;
+    if (!neighbPatchName_.empty())
+    {
+        writeEntry(os, "neighbourPatch", neighbPatchName_);
+    }
     switch (transform())
     {
         case ROTATIONAL:
         {
-            os.writeKeyword("rotationAxis") << rotationAxis_
-                << token::END_STATEMENT << nl;
-            os.writeKeyword("rotationCentre") << rotationCentre_
-                << token::END_STATEMENT << nl;
+            writeEntry(os, "rotationAxis", rotationAxis_);
+            writeEntry(os, "rotationCentre", rotationCentre_);
             break;
         }
         case TRANSLATIONAL:
         {
-            os.writeKeyword("separationVector") << separationVector_
-                << token::END_STATEMENT << nl;
+            writeEntry(os, "separationVector", separationVector_);
             break;
         }
         case NOORDERING:

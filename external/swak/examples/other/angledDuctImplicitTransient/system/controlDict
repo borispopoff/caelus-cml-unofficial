@@ -686,7 +686,7 @@ functions
     velocityClass
     {
         type expressionField;
-        outputControl outputTime;
+        outputControl writeTime;
         //        outputInterval 1;
         fieldName velClass;
         lookuptables (

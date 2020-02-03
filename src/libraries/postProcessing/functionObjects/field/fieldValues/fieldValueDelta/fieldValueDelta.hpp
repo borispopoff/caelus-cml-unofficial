@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2013 OpenFOAM Foundation
+Copyright (C) 2012-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -94,13 +94,13 @@ class fieldValueDelta
 {
 public:
         //- Operation type enumeration
-        enum operationType
+        enum class operationType
         {
-            opAdd,
-            opSubtract,
-            opMin,
-            opMax,
-            opAverage
+            add,
+            subtract,
+            min,
+            max,
+            average
         };
 
         //- Operation type names
@@ -223,27 +223,27 @@ Type CML::fieldValues::fieldValueDelta::applyOperation
 
     switch (operation_)
     {
-        case opAdd:
+        case operationType::add:
         {
             result = value1 + value2;
             break;
         }
-        case opSubtract:
+        case operationType::subtract:
         {
             result = value1 - value2;
             break;
         }
-        case opMin:
+        case operationType::min:
         {
             result = min(value1, value2);
             break;
         }
-        case opMax:
+        case operationType::max:
         {
             result = max(value1, value2);
             break;
         }
-        case opAverage:
+        case operationType::average:
         {
             result = 0.5*(value1 + value2);
             break;
@@ -272,8 +272,8 @@ void CML::fieldValues::fieldValueDelta::processFields(bool& found)
     const dictionary& results1 = source1Ptr_->resultDict();
     const dictionary& results2 = source2Ptr_->resultDict();
 
-    Type r1(pTraits<Type>::zero);
-    Type r2(pTraits<Type>::zero);
+    Type r1(Zero);
+    Type r2(Zero);
 
     forAll(fields1, i)
     {

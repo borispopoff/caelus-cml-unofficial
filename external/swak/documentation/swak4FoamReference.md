@@ -1748,7 +1748,7 @@ Variables defined are
 -   **timeName:** Name of the current time as a string
 -   **deltaT:** Time step of the simulation as a float
 -   **endTime:** time at which the simulation is going to end as a float
--   **outputTime:** `bool` that says whether the current time is a
+-   **writeTime:** `bool` that says whether the current time is a
     time at which output is scheduled
 -   **timeDir:** Directory to which current time date would be written
 

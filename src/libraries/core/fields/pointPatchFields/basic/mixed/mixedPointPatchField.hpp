@@ -94,9 +94,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new mixedPointPatchField<Type>
                 (
@@ -113,12 +113,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new mixedPointPatchField<Type>
                 (
@@ -176,7 +176,7 @@ public:
             //- Update the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType=Pstream::commsTypes::blocking
             );
 
 
@@ -185,11 +185,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "pointPatchFieldMapper.hpp"
 
@@ -305,7 +302,7 @@ void CML::mixedPointPatchField<Type>::rmap
 )
 {
     const mixedPointPatchField<Type>& mptf =
-        refCast<const mixedPointPatchField<Type> >(ptf);
+        refCast<const mixedPointPatchField<Type>>(ptf);
 
     Field<Type>::rmap(mptf, addr);
     refValue_.rmap(mptf.refValue_, addr);
@@ -324,7 +321,7 @@ void CML::mixedPointPatchField<Type>::evaluate(const Pstream::commsTypes)
     );
 
     // Get internal field to insert values into
-    Field<Type>& iF = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& iF = const_cast<Field<Type>&>(this->primitiveField());
 
     this->setInInternalField(iF, *this);
 }
@@ -335,14 +332,9 @@ template<class Type>
 void CML::mixedPointPatchField<Type>::write(Ostream& os) const
 {
     pointPatchField<Type>::write(os);
-    refValue_.writeEntry("refValue", os);
-    valueFraction_.writeEntry("valueFraction", os);
+    writeEntry(os, "refValue", refValue_);
+    writeEntry(os, "valueFraction", valueFraction_);
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

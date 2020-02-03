@@ -289,7 +289,7 @@ void CML::rigidBodyMeshMotionSolver::solve()
     );
 
 
-    if (Pstream::master() && motionOutputControl_.output() && model_.report())
+    if (Pstream::master() && motionOutputControl_.execute() && model_.report())
     {
         forAll(bodyMeshes_, bi)
         {
@@ -325,7 +325,7 @@ void CML::rigidBodyMeshMotionSolver::solve()
                .patchInternalField(meshSolver_.points0())
             );
 
-            meshSolver_.pointDisplacement().boundaryField()[patchi] ==
+            meshSolver_.pointDisplacement().boundaryFieldRef()[patchi] ==
             (
                 model_.transformPoints
                 (

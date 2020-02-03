@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,15 +56,6 @@ class multivariateSelectionScheme
         surfaceScalarField weights_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multivariateSelectionScheme(const multivariateSelectionScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateSelectionScheme&);
-
-
 public:
 
     //- Runtime type information
@@ -82,6 +73,12 @@ public:
             const surfaceScalarField& faceFlux,
             Istream& schemeData
         );
+
+        //- Disallow default bitwise copy construct
+        multivariateSelectionScheme
+        (
+            const multivariateSelectionScheme&
+        ) = delete;
 
 
     // Member Operators
@@ -124,16 +121,22 @@ public:
                 }
         };
 
-        tmp<surfaceInterpolationScheme<Type> > operator()
+        tmp<surfaceInterpolationScheme<Type>> operator()
         (
             const GeometricField<Type, fvPatchField, volMesh>& field
         ) const
         {
-            return tmp<surfaceInterpolationScheme<Type> >
+            return tmp<surfaceInterpolationScheme<Type>>
             (
                 new fieldScheme(field, weights_)
             );
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateSelectionScheme&) = delete;
 };
 
 

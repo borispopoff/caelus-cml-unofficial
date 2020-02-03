@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,7 +24,7 @@ Description
     Determines processor-processor connection. After instantiation contains
     on all processors the processor-processor connection table.
 
-    *this[procI] gives the list of neighbouring processors.
+    *this[proci] gives the list of neighbouring processors.
 
     TODO: This does not currently correctly support multiple processor
     patches connecting two processors.
@@ -61,8 +61,8 @@ private:
 
     // Private data
 
-        //- Local map from neighbour proc to patchI. Different per processor!
-        //  -1 or patchI for connection to procID
+        //- Local map from neighbour proc to patchi. Different per processor!
+        //  -1 or patchi for connection to procID
         labelList procPatchMap_;
 
         //- Order in which the patches should be initialised/evaluated
@@ -149,11 +149,11 @@ CML::labelList CML::ProcessorTopology<Patch, ProcPatch>::procNeighbours
 
     nNeighbours = 0;
 
-    forAll(isNeighbourProc, procI)
+    forAll(isNeighbourProc, proci)
     {
-        if (isNeighbourProc[procI])
+        if (isNeighbourProc[proci])
         {
-            neighbours[nNeighbours++] = procI;
+            neighbours[nNeighbours++] = proci;
         }
     }
 
@@ -200,7 +200,11 @@ CML::ProcessorTopology<Patch, ProcPatch>::ProcessorTopology
         Pstream::scatterList(*this);
     }
 
-    if (Pstream::parRun() && Pstream::defaultCommsType == Pstream::scheduled)
+    if
+    (
+        Pstream::parRun()
+     && Pstream::defaultCommsType == Pstream::commsTypes::scheduled
+    )
     {
         label patchEvali = 0;
 
@@ -225,21 +229,21 @@ CML::ProcessorTopology<Patch, ProcPatch>::ProcessorTopology
         // to determine the schedule. Each processor pair stands for both
         // send and receive.
         label nComms = 0;
-        forAll(*this, procI)
+        forAll(*this, proci)
         {
-            nComms += operator[](procI).size();
+            nComms += operator[](proci).size();
         }
         DynamicList<labelPair> comms(nComms);
 
-        forAll(*this, procI)
+        forAll(*this, proci)
         {
-            const labelList& nbrs = operator[](procI);
+            const labelList& nbrs = operator[](proci);
 
             forAll(nbrs, i)
             {
-                if (procI < nbrs[i])
+                if (proci < nbrs[i])
                 {
-                    comms.append(labelPair(procI, nbrs[i]));
+                    comms.append(labelPair(proci, nbrs[i]));
                 }
             }
         }

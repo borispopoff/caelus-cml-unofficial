@@ -31,7 +31,7 @@ CML::vector CML::cellModel::centre
 ) const
 {
     // Estimate centre of cell
-    vector cEst = vector::zero;
+    vector cEst = Zero;
 
     // Sum the points idicated by the label list
     forAll(pointLabels, i)
@@ -46,7 +46,7 @@ CML::vector CML::cellModel::centre
     // Calculate the centre by breaking the cell into pyramids and
     // volume-weighted averaging their centres
     scalar sumV = 0.0;
-    vector sumVc = vector::zero;
+    vector sumVc = Zero;
 
     const faceList cellFaces = faces(pointLabels);
 
@@ -88,7 +88,7 @@ CML::scalar CML::cellModel::mag
 ) const
 {
     // Estimate centre of cell
-    vector cEst = vector::zero;
+    vector cEst = Zero;
 
     // Sum the points idicated by the label list
     forAll(pointLabels, i)

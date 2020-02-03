@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
 
                 if (isA<wallFvPatch>(currPatch))
                 {
-                    wallGradU.boundaryField()[patchi] =
+                    wallGradU.boundaryFieldRef()[patchi] =
                         -U.boundaryField()[patchi].snGrad();
                 }
             }

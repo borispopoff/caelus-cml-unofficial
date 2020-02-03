@@ -45,11 +45,12 @@ namespace CML
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<>
-tmp<GeometricField<scalar, fvPatchField, volMesh> >
+tmp<GeometricField<scalar, fvPatchField, volMesh>>
 GeometricField<scalar, fvPatchField, volMesh>::component
 (
     const direction
 ) const;
+
 
 template<>
 void GeometricField<scalar, fvPatchField, volMesh>::replace
@@ -59,12 +60,19 @@ void GeometricField<scalar, fvPatchField, volMesh>::replace
 );
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Type, template<class> class PatchField, class GeoMesh>
+inline
+const typename
+GeometricField<Type, PatchField, GeoMesh>::Internal&
+GeometricField<Type, PatchField, GeoMesh>::
+v() const
+{
+    static_assert(isVolMesh<GeoMesh>::value, "Only valid for volFields");
+    return *this;
+}
+
 
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-// ************************************************************************* //

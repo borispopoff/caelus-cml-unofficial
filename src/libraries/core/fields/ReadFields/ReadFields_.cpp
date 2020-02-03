@@ -34,7 +34,10 @@ CML::wordList CML::fieldNames
     const bool syncPar
 )
 {
-    wordList masterNames(fieldObjects.names());
+    // Get sorted field names. Sorting needed in parallel since different
+    // processors (using different file servers) might pick up the files
+    // in different order.
+    wordList masterNames(fieldObjects.sortedNames());
 
     if (syncPar && Pstream::parRun())
     {

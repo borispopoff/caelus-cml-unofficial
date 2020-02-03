@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -25,7 +25,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::linearUpwind<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -33,7 +33,7 @@ CML::linearUpwind<Type>::correction
 {
     const fvMesh& mesh = this->mesh();
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsfCorr
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -47,11 +47,11 @@ CML::linearUpwind<Type>::correction
                 false
             ),
             mesh,
-            dimensioned<Type>(vf.name(), vf.dimensions(), pTraits<Type>::zero)
+            dimensioned<Type>(vf.name(), vf.dimensions(), Zero)
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();
 
     const surfaceScalarField& faceFlux = this->faceFlux_;
 
@@ -86,7 +86,7 @@ CML::linearUpwind<Type>::correction
 
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& bSfCorr = sfCorr.boundaryField();
+        Boundary& bSfCorr = sfCorr.boundaryFieldRef();
 
     forAll(bSfCorr, patchi)
     {
@@ -98,7 +98,6 @@ CML::linearUpwind<Type>::correction
                 mesh.boundary()[patchi].faceCells();
 
             const vectorField& pCf = Cf.boundaryField()[patchi];
-
             const scalarField& pFaceFlux = faceFlux.boundaryField()[patchi];
 
             const Field<typename outerProduct<vector, Type>::type> pGradVfNei

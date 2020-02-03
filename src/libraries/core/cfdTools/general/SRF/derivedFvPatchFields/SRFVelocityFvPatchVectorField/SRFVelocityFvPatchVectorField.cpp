@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------* \
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -35,7 +35,7 @@ CML::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
 :
     fixedValueFvPatchVectorField(p, iF),
     relative_(0),
-    inletValue_(p.size(), vector::zero)
+    inletValue_(p.size(), Zero)
 {}
 
 
@@ -60,12 +60,10 @@ CML::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchVectorField(p, iF),
+    fixedValueFvPatchVectorField(p, iF, dict),
     relative_(dict.lookup("relative")),
     inletValue_("inletValue", dict, p.size())
-{
-    fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
-}
+{}
 
 
 CML::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
@@ -151,9 +149,9 @@ void CML::SRFVelocityFvPatchVectorField::updateCoeffs()
 void CML::SRFVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("relative") << relative_ << token::END_STATEMENT << nl;
-    inletValue_.writeEntry("inletValue", os);
-    writeEntry("value", os);
+    writeEntry(os, "relative", relative_);
+    writeEntry(os, "inletValue", inletValue_);
+    writeEntry(os, "value", *this);
 }
 
 

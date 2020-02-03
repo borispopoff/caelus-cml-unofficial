@@ -150,10 +150,10 @@ public:
             (
                 const labelUList& internalData
             ) const;
-    
+
             //- Inherit initInternalFieldTransfer from coupledFvPatch
             using coupledFvPatch::initInternalFieldTransfer;
-    
+
             //- Initialise neighbour field transfer
             virtual void initInternalFieldTransfer
             (

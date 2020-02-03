@@ -450,7 +450,7 @@ void CML::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
-            << this->dimensionedInternalField().name() << " :"
+            << this->internalField().name() << " :"
             << " heat transfer rate:" << Q
             << " walltemperature "
             << " min:" << gMin(*this)
@@ -468,66 +468,61 @@ void CML::externalWallHeatFluxTemperatureFvPatchScalarField::write
 {
     fvPatchScalarField::write(os);
 
-    os.writeKeyword("mode")
-        << operationModeNames[mode_] << token::END_STATEMENT << nl;
+    writeEntry(os, "mode", operationModeNames[mode_]);
     temperatureCoupledBase::write(os);
 
     switch (mode_)
     {
         case fixedPower:
         {
-            os.writeKeyword("Q")
-                << Q_ << token::END_STATEMENT << nl;
+            writeEntry(os, "Q", Q_);
 
             break;
         }
         case fixedHeatFlux:
         {
-            q_.writeEntry("q", os);
+            writeEntry(os, "q", q_);
 
             break;
         }
         case fixedHeatTransferCoeff:
         {
-            h_.writeEntry("h", os);
-            Ta_->writeData(os);
+            writeEntry(os, "h", h_);
+            writeEntry(os, Ta_());
 
             if (relaxation_ < 1)
             {
-                os.writeKeyword("relaxation")
-                    << relaxation_ << token::END_STATEMENT << nl;
+                writeEntry(os, "relaxation", relaxation_);
             }
 
             if (emissivity_ > 0)
             {
-                os.writeKeyword("emissivity")
-                    << emissivity_ << token::END_STATEMENT << nl;
+                writeEntry(os, "emissivity", emissivity_);
             }
 
             if (thicknessLayers_.size())
             {
-                thicknessLayers_.writeEntry("thicknessLayers", os);
-                kappaLayers_.writeEntry("kappaLayers", os);
+                writeEntry(os, "thicknessLayers", thicknessLayers_);
+                writeEntry(os, "kappaLayers", kappaLayers_);
             }
 
             break;
         }
     }
 
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "qr", qrName_);
 
     if (qrName_ != "none")
     {
-        os.writeKeyword("qrRelaxation")
-            << qrRelaxation_ << token::END_STATEMENT << nl;
+        writeEntry(os, "qrRelaxation", qrRelaxation_);
 
-        qrPrevious_.writeEntry("qrPrevious", os);
+        writeEntry(os, "qrPrevious", qrPrevious_);
     }
 
-    refValue().writeEntry("refValue", os);
-    refGrad().writeEntry("refGradient", os);
-    valueFraction().writeEntry("valueFraction", os);
-    writeEntry("value", os);
+    writeEntry(os, "refValue", refValue());
+    writeEntry(os, "refGradient", refGrad());
+    writeEntry(os, "valueFraction", valueFraction());
+    writeEntry(os, "value", *this);
 }
 
 

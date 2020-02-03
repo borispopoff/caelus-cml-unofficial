@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 Copyright (C) 2016 OpenCFD Ltd
 
 -------------------------------------------------------------------------------
@@ -27,8 +27,11 @@ License
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-CML::functionObject*
-CML::functionObjectList::remove(const word& key, label& oldIndex)
+CML::functionObject* CML::functionObjectList::remove
+(
+    const word& key,
+    label& oldIndex
+)
 {
     functionObject* ptr = 0;
 
@@ -39,7 +42,7 @@ CML::functionObjectList::remove(const word& key, label& oldIndex)
     {
         oldIndex = fnd();
 
-        // retrieve the pointer and remove it from the old list
+        // Retrieve the pointer and remove it from the old list
         ptr = this->set(oldIndex, 0).ptr();
         indices_.erase(fnd);
     }
@@ -126,7 +129,7 @@ void CML::functionObjectList::on()
 
 void CML::functionObjectList::off()
 {
-    // for safety, also force a read() when execution is turned back on
+    // For safety, also force a read() when execution is turned back on
     updated_ = execution_ = false;
 }
 
@@ -197,9 +200,9 @@ bool CML::functionObjectList::end()
 }
 
 
-bool CML::functionObjectList::timeSet()
+bool CML::functionObjectList::setTimeStep()
 {
-    bool ok = true;
+    bool set = true;
 
     if (execution_)
     {
@@ -208,19 +211,35 @@ bool CML::functionObjectList::timeSet()
             read();
         }
 
+        wordList names;
+
         forAll(*this, objectI)
         {
-            ok = operator[](objectI).timeSet() && ok;
+            if (operator[](objectI).setTimeStep())
+            {
+                names.append(operator[](objectI).name());
+                set = true;
+            }
+        }
+
+        if (names.size() > 1)
+        {
+            WarningInFunction << "Multiple function objects (" << names[0];
+            for (label i = 1; i < names.size(); ++ i)
+            {
+                WarningInFunction << ", " << names[i];
+            }
+            WarningInFunction << ") are setting the time step." << endl;
         }
     }
 
-    return ok;
+    return set;
 }
 
 
-bool CML::functionObjectList::adjustTimeStep()
+CML::scalar CML::functionObjectList::timeToNextWrite()
 {
-    bool ok = true;
+    scalar result = VGREAT;
 
     if (execution_)
     {
@@ -231,11 +250,11 @@ bool CML::functionObjectList::adjustTimeStep()
 
         forAll(*this, objectI)
         {
-            ok = operator[](objectI).adjustTimeStep() && ok;
+            result = min(result, operator[](objectI).timeToNextWrite());
         }
     }
 
-    return ok;
+    return result;
 }
 
 
@@ -244,10 +263,10 @@ bool CML::functionObjectList::read()
     bool ok = true;
     updated_ = execution_;
 
-    // avoid reading/initializing if execution is off
+    // Avoid reading/initializing if execution is off
     if (!execution_)
     {
-        return ok;
+        return true;
     }
 
     // Update existing and add new functionObjects
@@ -369,8 +388,8 @@ bool CML::functionObjectList::read()
         newPtrs.setSize(nFunc);
         newDigs.setSize(nFunc);
 
-        // updating the PtrList of functionObjects also deletes any existing,
-        // but unused functionObjects
+        // Updating the PtrList of functionObjects deletes any
+        // existing unused functionObjects
         PtrList<functionObject>::transfer(newPtrs);
         digests_.transfer(newDigs);
         indices_.transfer(newIndices);

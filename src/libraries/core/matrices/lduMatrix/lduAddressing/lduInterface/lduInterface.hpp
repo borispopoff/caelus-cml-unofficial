@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,14 +49,6 @@ namespace CML
 
 class lduInterface
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        lduInterface(const lduInterface&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const lduInterface&);
-
 
 public:
 
@@ -69,6 +61,9 @@ public:
         //- Construct null
         lduInterface()
         {}
+
+        //- Disallow default bitwise copy construct
+        lduInterface(const lduInterface&) = delete;
 
 
     //- Destructor
@@ -106,6 +101,12 @@ public:
                 const Pstream::commsTypes commsType,
                 const labelUList& iF
             ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lduInterface&) = delete;
 };
 
 

@@ -25,8 +25,7 @@ Description
     This boundary condition maps the velocity and flux from a neighbour patch
     to this patch
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -34,7 +33,7 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            mappedVelocityFlux;
         phi             phi;
@@ -49,7 +48,7 @@ Note
     This boundary condition can only be applied to patches that are of
     the \c mappedPolyPatch type.
 
-SeeAlso
+See also
     CML::mappedPolyPatch
     CML::mappedFvPatch
     CML::fixedValueFvPatchVectorField
@@ -164,12 +163,7 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-// ************************************************************************* //

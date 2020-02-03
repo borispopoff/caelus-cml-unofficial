@@ -1,5 +1,5 @@
     // Relative momentum predictor
-    tmp<fvVectorMatrix> UrelEqn
+    tmp<fvVectorMatrix> tUrelEqn
     (
         fvm::ddt(Urel)
       + fvm::div(phi, Urel)
@@ -9,10 +9,12 @@
         fvOptions(Urel)
     );
 
-    UrelEqn().relax();
+    fvVectorMatrix& UrelEqn = tUrelEqn.ref();
 
-    fvOptions.constrain(UrelEqn());
+    UrelEqn.relax();
 
-    solve(UrelEqn() == -fvc::grad(p));
+    fvOptions.constrain(UrelEqn);
+
+    solve(UrelEqn == -fvc::grad(p));
 
     fvOptions.correct(Urel);

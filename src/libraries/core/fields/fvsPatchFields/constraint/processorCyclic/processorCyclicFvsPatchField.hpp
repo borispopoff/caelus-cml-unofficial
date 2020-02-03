@@ -49,7 +49,7 @@ class processorCyclicFvsPatchField
 :
     public coupledFvsPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the processor patch
         const processorCyclicFvPatch& procPatch_;
@@ -96,19 +96,19 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         processorCyclicFvsPatchField(const processorCyclicFvsPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type> > clone() const
+        virtual tmp<fvsPatchField<Type>> clone() const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new processorCyclicFvsPatchField<Type>(*this)
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         processorCyclicFvsPatchField
         (
             const processorCyclicFvsPatchField<Type>&,
@@ -116,12 +116,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type> > clone
+        virtual tmp<fvsPatchField<Type>> clone
         (
             const DimensionedField<Type, surfaceMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new processorCyclicFvsPatchField<Type>(*this, iF)
             );
@@ -129,11 +129,10 @@ public:
 
 
     // Destructor
+    virtual ~processorCyclicFvsPatchField();
 
-        ~processorCyclicFvsPatchField();
 
-
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -152,19 +151,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * //
 
 template<class Type>
-processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
+CML::processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -176,7 +169,7 @@ processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 
 
 template<class Type>
-processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
+CML::processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -190,7 +183,7 @@ processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 
 // Construct by mapping given processorCyclicFvsPatchField<Type>
 template<class Type>
-processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
+CML::processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 (
     const processorCyclicFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -214,7 +207,7 @@ processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 
 
 template<class Type>
-processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
+CML::processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -235,7 +228,7 @@ processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 
 
 template<class Type>
-processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
+CML::processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 (
     const processorCyclicFvsPatchField<Type>& ptf
 )
@@ -246,7 +239,7 @@ processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 
 
 template<class Type>
-processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
+CML::processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 (
     const processorCyclicFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -260,17 +253,8 @@ processorCyclicFvsPatchField<Type>::processorCyclicFvsPatchField
 // * * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
 
 template<class Type>
-processorCyclicFvsPatchField<Type>::~processorCyclicFvsPatchField()
+CML::processorCyclicFvsPatchField<Type>::~processorCyclicFvsPatchField()
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

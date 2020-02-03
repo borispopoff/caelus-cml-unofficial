@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -90,7 +90,7 @@ public:
     {
         if (dict.found("coeffs"))
         {
-            List<Tuple2<word, scalar> > coeffs(dict.lookup("coeffs"));
+            List<Tuple2<word, scalar>> coeffs(dict.lookup("coeffs"));
             if (coeffs.size() != species_.size())
             {
                 FatalErrorInFunction
@@ -129,14 +129,14 @@ public:
     //- Write to stream
     inline void write(Ostream& os) const
     {
-        List<Tuple2<word, scalar> > coeffs(species_.size());
+        List<Tuple2<word, scalar>> coeffs(species_.size());
         forAll(coeffs, i)
         {
             coeffs[i].first() = species_[i];
             coeffs[i].second() = operator[](i);
         }
 
-        os.writeKeyword("coeffs") << coeffs << token::END_STATEMENT << nl;
+        writeEntry(os, "coeffs", coeffs);
     }
 
 

@@ -30,7 +30,7 @@ SourceFiles
 \*---------------------------------------------------------------------------*/
 
 #ifndef writePointSet_setSet_H
-#define writePointSet_setSetH
+#define writePointSet_setSet_H
 
 #include "primitiveMesh.hpp"
 #include "pointSet.hpp"

@@ -74,7 +74,7 @@ void vanDriestDelta::calcDelta()
             const scalarField& muw = mu.boundaryField()[patchi];
             const scalarField& muSgsw = muSgs().boundaryField()[patchi];
 
-            ystar.boundaryField()[patchi] =
+            ystar.boundaryFieldRef()[patchi] =
                 muw/(rhow*sqrt((muw + muSgsw)*mag(Uw.snGrad())/rhow + VSMALL));
         }
     }

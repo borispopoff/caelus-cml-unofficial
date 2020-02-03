@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,7 +58,7 @@ class basicChemistryModel
     basicChemistryModel(const basicChemistryModel&);
 
     //- Disallow default bitwise assignment
-    void operator=(const basicChemistryModel&);
+    void operator=(const basicChemistryModel&) = delete;
 
 
 protected:
@@ -76,12 +76,12 @@ protected:
     const scalar deltaTChemMax_;
 
     //- Latest estimation of integration step
-    DimensionedField<scalar, volMesh> deltaTChem_;
+    volScalarField::Internal deltaTChem_;
 
 
     //- Return non-const access to the latest estimation of integration
     //  step, e.g. for multi-chemistry model
-    inline DimensionedField<scalar, volMesh>& deltaTChem()
+    inline volScalarField::Internal& deltaTChem()
     {
         return deltaTChem_;
     }
@@ -136,7 +136,7 @@ public:
     virtual label nReaction() const = 0;
 
     //- Return the latest estimation of integration step
-    inline const DimensionedField<scalar, volMesh>& deltaTChem() const
+    inline const volScalarField::Internal& deltaTChem() const
     {
         return deltaTChem_;
     }
@@ -147,19 +147,19 @@ public:
     // Fields
 
     //- Return const access to chemical source terms [kg/m3/s]
-    virtual const DimensionedField<scalar, volMesh>& RR
+    virtual const volScalarField::Internal& RR
     (
         const label i
     ) const = 0;
 
     //- Return access to chemical source terms [kg/m3/s]
-    virtual DimensionedField<scalar, volMesh>& RR
+    virtual volScalarField::Internal& RR
     (
         const label i
     ) = 0;
 
     //- Return reaction rate of the speciei in reactioni
-    virtual tmp<DimensionedField<scalar, volMesh> > calculateRR
+    virtual tmp<volScalarField::Internal> calculateRR
     (
         const label reactioni,
         const label speciei

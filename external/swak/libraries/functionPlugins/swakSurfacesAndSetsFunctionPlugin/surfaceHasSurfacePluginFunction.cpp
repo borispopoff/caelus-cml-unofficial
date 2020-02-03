@@ -73,10 +73,10 @@ void surfaceHasSurfacePluginFunction::doEvaluation()
     const labelList &cells=meshCells();
 
     forAll(cells,i) {
-        const label cellI=cells[i];
+        const label celli=cells[i];
 
-        if(cellI>=0) {
-            pHasSurface()[cellI]=1;
+        if(celli>=0) {
+            pHasSurface()[celli]=1;
         }
     }
 

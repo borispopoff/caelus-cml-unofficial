@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -238,7 +238,7 @@ public:
 
             //- Return given internal field next to patch as patch field
             template<class Type>
-            tmp<Field<Type> > patchInternalField(const UList<Type>&) const;
+            tmp<Field<Type>> patchInternalField(const UList<Type>&) const;
 
             //- Return given internal field next to patch as patch field
             template<class Type>
@@ -246,9 +246,16 @@ public:
 
             //- Return the corresponding patchField of the named field
             template<class GeometricField, class Type>
-            const typename GeometricField::PatchFieldType& patchField
+            const typename GeometricField::Patch& patchField
             (
                 const GeometricField&
+            ) const;
+
+            //- Return the corresponding patchField reference of the named field
+            template<class GeometricField, class Type>
+            typename GeometricField::Patch& patchField
+            (
+                GeometricField&
             ) const;
 
             //- Lookup and return the patchField of the named field from the
@@ -257,7 +264,7 @@ public:
             //  instantiated within a templated function to avoid a bug in gcc.
             //  See inletOutletFvPatchField.C and outletInletFvPatchField.C
             template<class GeometricField, class Type>
-            const typename GeometricField::PatchFieldType& lookupPatchField
+            const typename GeometricField::Patch& lookupPatchField
             (
                 const word& name,
                 const GeometricField* = nullptr,
@@ -274,13 +281,13 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fvPatch::patchInternalField
+CML::tmp<CML::Field<Type>> CML::fvPatch::patchInternalField
 (
     const UList<Type>& f
 ) const
 {
-    tmp<Field<Type> > tpif(new Field<Type>(size()));
-    Field<Type>& pif = tpif();
+    tmp<Field<Type>> tpif(new Field<Type>(size()));
+    Field<Type>& pif = tpif.ref();
 
     const labelUList& faceCells = this->faceCells();
 
@@ -312,7 +319,7 @@ void CML::fvPatch::patchInternalField
 
 
 template<class GeometricField, class Type>
-const typename GeometricField::PatchFieldType& CML::fvPatch::patchField
+const typename GeometricField::Patch& CML::fvPatch::patchField
 (
     const GeometricField& gf
 ) const
@@ -321,7 +328,14 @@ const typename GeometricField::PatchFieldType& CML::fvPatch::patchField
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class GeometricField, class Type>
+typename GeometricField::Patch& CML::fvPatch::patchField
+(
+    GeometricField& gf
+) const
+{
+    return gf.boundaryFieldRef()[index()];
+}
 
 #endif
 

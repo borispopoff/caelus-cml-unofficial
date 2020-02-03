@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -24,11 +24,12 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object calculates the value and location of scalar minimim
-    and maximum for a list of user-specified fields.  For variables with a rank
-    greater than zero, either the min/max of a component value or the magnitude
-    is reported.  When operating in parallel, the processor owning the value
-    is also given.
+    Calculates the value and location of scalar minimum and maximum for a list
+    of user-specified fields.
+
+    For variables with a rank greater than zero, either the min/max of a
+    component value or the magnitude is reported.  When operating in parallel,
+    the processor owning the value is also given.
 
     Example of function object specification:
     \verbatim
@@ -61,7 +62,7 @@ Description
 
     Output data is written to the file \<timeDir\>/fieldMinMax.dat
 
-SeeAlso
+See also
     CML::functionObject
     CML::OutputFilterFunctionObject
 
@@ -99,10 +100,10 @@ class fieldMinMax
 {
 public:
 
-    enum modeType
+    enum class modeType
     {
-        mdMag,
-        mdCmpt
+        mag,
+        cmpt
     };
 
 protected:
@@ -134,7 +135,7 @@ protected:
         wordList fieldSet_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Helper function to write the output
         template<class Type>
@@ -142,19 +143,21 @@ protected:
         (
             const word& fieldName,
             const word& outputName,
+            const label minCell,
+            const label maxCell,
             const vector& minC,
             const vector& maxC,
-            const label minProcI,
-            const label maxProcI,
+            const label minProci,
+            const label maxProci,
             const Type& minValue,
             const Type& maxValue
         );
 
         //- Disallow default bitwise copy construct
-        fieldMinMax(const fieldMinMax&);
+        fieldMinMax(const fieldMinMax&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fieldMinMax&);
+        void operator=(const fieldMinMax&) = delete;
 
         //- Output file header information
         virtual void writeFileHeader(const label i);
@@ -240,10 +243,12 @@ void CML::fieldMinMax::output
 (
     const word& fieldName,
     const word& outputName,
+    const label minCell,
+    const label maxCell,
     const vector& minC,
     const vector& maxC,
-    const label minProcI,
-    const label maxProcI,
+    const label minProci,
+    const label maxProci,
     const Type& minValue,
     const Type& maxValue
 )
@@ -261,7 +266,7 @@ void CML::fieldMinMax::output
 
         if (Pstream::parRun())
         {
-            file<< token::TAB << minProcI;
+            file<< token::TAB << minProci;
         }
 
         file<< token::TAB << maxValue
@@ -269,35 +274,34 @@ void CML::fieldMinMax::output
 
         if (Pstream::parRun())
         {
-            file<< token::TAB << maxProcI;
+            file<< token::TAB << maxProci;
         }
 
         file<< endl;
 
-        Info(log_)
-            << "    min(" << outputName << ") = " << minValue
+        Info(log_) << "    min(" << outputName << ") = " << minValue
+            << " in cell " << minCell
             << " at location " << minC;
 
         if (Pstream::parRun())
         {
-            Info(log_)<< " on processor " << minProcI;
+            Info(log_) << " on processor " << minProci;
         }
 
-        Info(log_)
-            << nl << "    max(" << outputName << ") = " << maxValue
+        Info(log_) << nl << "    max(" << outputName << ") = " << maxValue
+            << " in cell " << maxCell
             << " at location " << maxC;
 
         if (Pstream::parRun())
         {
-            Info(log_)<< " on processor " << maxProcI;
+            Info(log_)<< " on processor " << maxProci;
         }
     }
     else
     {
         file<< token::TAB << minValue << token::TAB << maxValue;
 
-        Info(log_)
-            << "    min/max(" << outputName << ") = "
+        Info(log_) << "    min/max(" << outputName << ") = "
             << minValue << ' ' << maxValue;
     }
 
@@ -316,79 +320,92 @@ void CML::fieldMinMax::calcMinMaxFields
 
     if (obr_.foundObject<fieldType>(fieldName))
     {
-        const label procI = Pstream::myProcNo();
+        const label proci = Pstream::myProcNo();
 
         const fieldType& field = obr_.lookupObject<fieldType>(fieldName);
         const fvMesh& mesh = field.mesh();
 
-        const volVectorField::GeometricBoundaryField& CfBoundary =
+        const volVectorField::Boundary& CfBoundary =
             mesh.C().boundaryField();
 
         switch (mode)
         {
-            case mdMag:
+            case modeType::mag:
             {
                 const volScalarField magField(mag(field));
-                const volScalarField::GeometricBoundaryField& magFieldBoundary =
+                const volScalarField::Boundary& magFieldBoundary =
                     magField.boundaryField();
 
                 scalarList minVs(Pstream::nProcs());
+                labelList minCells(Pstream::nProcs());
                 List<vector> minCs(Pstream::nProcs());
-                label minProcI = findMin(magField);
-                minVs[procI] = magField[minProcI];
-                minCs[procI] = field.mesh().C()[minProcI];
+                label minProci = findMin(magField);
+                minVs[proci] = magField[minProci];
+                minCells[proci] = minProci;
+                minCs[proci] = field.mesh().C()[minProci];
 
-
-                labelList maxIs(Pstream::nProcs());
                 scalarList maxVs(Pstream::nProcs());
+                labelList maxCells(Pstream::nProcs());
                 List<vector> maxCs(Pstream::nProcs());
-                label maxProcI = findMax(magField);
-                maxVs[procI] = magField[maxProcI];
-                maxCs[procI] = field.mesh().C()[maxProcI];
+                label maxProci = findMax(magField);
+                maxVs[proci] = magField[maxProci];
+                maxCells[proci] = maxProci;
+                maxCs[proci] = field.mesh().C()[maxProci];
 
-                forAll(magFieldBoundary, patchI)
+                forAll(magFieldBoundary, patchi)
                 {
-                    const scalarField& mfp = magFieldBoundary[patchI];
+                    const scalarField& mfp = magFieldBoundary[patchi];
                     if (mfp.size())
                     {
-                        const vectorField& Cfp = CfBoundary[patchI];
+                        const vectorField& Cfp = CfBoundary[patchi];
+
+                        const labelList& faceCells =
+                            magFieldBoundary[patchi].patch().faceCells();
 
                         label minPI = findMin(mfp);
-                        if (mfp[minPI] < minVs[procI])
+                        if (mfp[minPI] < minVs[proci])
                         {
-                            minVs[procI] = mfp[minPI];
-                            minCs[procI] = Cfp[minPI];
+                            minVs[proci] = mfp[minPI];
+                            minCells[proci] = faceCells[minPI];
+                            minCs[proci] = Cfp[minPI];
                         }
 
                         label maxPI = findMax(mfp);
-                        if (mfp[maxPI] > maxVs[procI])
+                        if (mfp[maxPI] > maxVs[proci])
                         {
-                            maxVs[procI] = mfp[maxPI];
-                            maxCs[procI] = Cfp[maxPI];
+                            maxVs[proci] = mfp[maxPI];
+                            maxCells[proci] = faceCells[maxPI];
+                            maxCs[proci] = Cfp[maxPI];
                         }
                     }
                 }
 
                 Pstream::gatherList(minVs);
+                Pstream::gatherList(minCells);
                 Pstream::gatherList(minCs);
 
                 Pstream::gatherList(maxVs);
+                Pstream::gatherList(maxCells);
                 Pstream::gatherList(maxCs);
 
                 if (Pstream::master())
                 {
-                    label minI = findMin(minVs);
-                    scalar minValue = minVs[minI];
+                    const label minI = findMin(minVs);
+                    const scalar minValue = minVs[minI];
+                    const label minCell = minCells[minI];
                     const vector& minC = minCs[minI];
 
-                    label maxI = findMax(maxVs);
-                    scalar maxValue = maxVs[maxI];
+                    const label maxI = findMax(maxVs);
+                    const scalar maxValue = maxVs[maxI];
+                    const label maxCell = maxCells[maxI];
                     const vector& maxC = maxCs[maxI];
 
                     output
                     (
                         fieldName,
                         word("mag(" + fieldName + ")"),
+                        minCell,
+                        maxCell,
                         minC,
                         maxC,
                         minI,
@@ -399,69 +416,82 @@ void CML::fieldMinMax::calcMinMaxFields
                 }
                 break;
             }
-            case mdCmpt:
+            case modeType::cmpt:
             {
-                const typename fieldType::GeometricBoundaryField&
+                const typename fieldType::Boundary&
                     fieldBoundary = field.boundaryField();
 
                 List<Type> minVs(Pstream::nProcs());
+                labelList minCells(Pstream::nProcs());
                 List<vector> minCs(Pstream::nProcs());
-                label minProcI = findMin(field);
-                minVs[procI] = field[minProcI];
-                minCs[procI] = field.mesh().C()[minProcI];
-
-                Pstream::gatherList(minVs);
-                Pstream::gatherList(minCs);
+                label minProci = findMin(field);
+                minVs[proci] = field[minProci];
+                minCells[proci] = minProci;
+                minCs[proci] = field.mesh().C()[minProci];
 
                 List<Type> maxVs(Pstream::nProcs());
+                labelList maxCells(Pstream::nProcs());
                 List<vector> maxCs(Pstream::nProcs());
-                label maxProcI = findMax(field);
-                maxVs[procI] = field[maxProcI];
-                maxCs[procI] = field.mesh().C()[maxProcI];
+                label maxProci = findMax(field);
+                maxVs[proci] = field[maxProci];
+                maxCells[proci] = maxProci;
+                maxCs[proci] = field.mesh().C()[maxProci];
 
-                forAll(fieldBoundary, patchI)
+                forAll(fieldBoundary, patchi)
                 {
-                    const Field<Type>& fp = fieldBoundary[patchI];
+                    const Field<Type>& fp = fieldBoundary[patchi];
+
                     if (fp.size())
                     {
-                        const vectorField& Cfp = CfBoundary[patchI];
+                        const vectorField& Cfp = CfBoundary[patchi];
+
+                        const labelList& faceCells =
+                            fieldBoundary[patchi].patch().faceCells();
 
                         label minPI = findMin(fp);
-                        if (fp[minPI] < minVs[procI])
+                        if (fp[minPI] < minVs[proci])
                         {
-                            minVs[procI] = fp[minPI];
-                            minCs[procI] = Cfp[minPI];
+                            minVs[proci] = fp[minPI];
+                            minCells[proci] = faceCells[minPI];
+                            minCs[proci] = Cfp[minPI];
                         }
 
                         label maxPI = findMax(fp);
-                        if (fp[maxPI] > maxVs[procI])
+                        if (fp[maxPI] > maxVs[proci])
                         {
-                            maxVs[procI] = fp[maxPI];
-                            maxCs[procI] = Cfp[maxPI];
+                            maxVs[proci] = fp[maxPI];
+                            maxCells[proci] = faceCells[maxPI];
+                            maxCs[proci] = Cfp[maxPI];
                         }
                     }
                 }
 
                 Pstream::gatherList(minVs);
+                Pstream::gatherList(minCells);
                 Pstream::gatherList(minCs);
 
                 Pstream::gatherList(maxVs);
+                Pstream::gatherList(maxCells);
                 Pstream::gatherList(maxCs);
 
                 if (Pstream::master())
                 {
                     label minI = findMin(minVs);
                     Type minValue = minVs[minI];
+                    const label minCell = minCells[minI];
                     const vector& minC = minCs[minI];
 
                     label maxI = findMax(maxVs);
                     Type maxValue = maxVs[maxI];
+                    const label maxCell = maxCells[maxI];
                     const vector& maxC = maxCs[maxI];
 
                     output
                     (
                         fieldName,
                         fieldName,
+                        minCell,
+                        maxCell,
                         minC,
                         maxC,
                         minI,

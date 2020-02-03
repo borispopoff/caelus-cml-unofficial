@@ -42,7 +42,7 @@ addToRunTimeSelectionTable
 
 void rawForcesAndMoments::resizeFields
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     vectorField& field0,
     vectorField& field1,
     label N
@@ -59,14 +59,14 @@ void rawForcesAndMoments::resizeFields
 
 void rawForcesAndMoments::writeRawData
 (
-    const List<std::pair<scalar, label> >& timeLabel,
+    const List<std::pair<scalar, label>>& timeLabel,
     const vectorField& forces,
     const vectorField& moments
 )
 {
     // Write the time vector
     scalarField output0(timeLabel.size(), 0.0);
-    vectorField output1(timeLabel.size(), vector::zero);
+    vectorField output1(timeLabel.size(), Zero);
 
     {
         forAll (timeLabel, labeli)
@@ -144,7 +144,7 @@ rawForcesAndMoments::~rawForcesAndMoments()
 
 void rawForcesAndMoments::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     vectorField forces, moments;
 
     readForceAndMomentData(timeLabel, forces, moments);
@@ -155,7 +155,7 @@ void rawForcesAndMoments::evaluate()
 
 void rawForcesAndMoments::readForceAndMomentData
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     vectorField& forces,
     vectorField& moments
 )
@@ -210,7 +210,7 @@ void rawForcesAndMoments::readForceAndMomentData
             timeLabel[Nentries].first = val;
             timeLabel[Nentries].second = Nentries;
 
-            vector temp(vector::zero);
+            vector temp(Zero);
 
             // Reading the first vector component with starting parenteres
             iss >> dummy;

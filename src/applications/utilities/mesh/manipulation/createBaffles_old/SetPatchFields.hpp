@@ -43,7 +43,7 @@ template<class GeoField>
 void SetPatchFields
 (
     PtrList<GeoField>& fields,
-    const label patchI,
+    const label patchi,
     const typename GeoField::value_type& initVal
 );
 
@@ -55,14 +55,14 @@ template<class GeoField>
 void CML::SetPatchFields
 (
     PtrList<GeoField>& fields,
-    const label patchI,
+    const label patchi,
     const typename GeoField::value_type& initVal
 )
 {
     forAll(fields, i)
     {
-        typename GeoField::PatchFieldType& pfld =
-            fields[i].boundaryField()[patchI];
+        typename GeoField::Patch& pfld =
+            fields[i].boundaryFieldRef()[patchi];
         pfld == initVal;
     }
 }

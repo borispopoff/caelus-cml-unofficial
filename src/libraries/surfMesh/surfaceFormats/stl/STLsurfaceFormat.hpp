@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -76,10 +76,10 @@ class STLsurfaceFormat
         );
 
         //- Disallow default bitwise copy construct
-        STLsurfaceFormat(const STLsurfaceFormat<Face>&);
+        STLsurfaceFormat(const STLsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const STLsurfaceFormat<Face>&);
+        void operator=(const STLsurfaceFormat<Face>&) = delete;
 
 
 public:
@@ -93,9 +93,9 @@ public:
     // Selectors
 
         //- Read file and return surface
-        static autoPtr<MeshedSurface<Face> > New(const fileName& name)
+        static autoPtr<MeshedSurface<Face>> New(const fileName& name)
         {
-            return autoPtr<MeshedSurface<Face> >
+            return autoPtr<MeshedSurface<Face>>
             (
                 new STLsurfaceFormat<Face>(name)
             );
@@ -270,9 +270,9 @@ bool CML::fileFormats::STLsurfaceFormat<Face>::read
     this->storedPoints().transfer(reader.points());
 
     // retrieve the original zone information
-    List<word>  names(reader.names().xfer());
-    List<label> sizes(reader.sizes().xfer());
-    List<label> zoneIds(reader.zoneIds().xfer());
+    List<word>  names(move(reader.names()));
+    List<label> sizes(move(reader.sizes()));
+    List<label> zoneIds(move(reader.zoneIds()));
 
     // generate the (sorted) faces
     List<Face> faceLst(zoneIds.size());

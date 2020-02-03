@@ -95,10 +95,10 @@ void CML::pointMVCWeight::calcWeights
 
     forAll(cFaces, iter)
     {
-        label faceI = cFaces[iter];
-        const face& f = mesh.faces()[faceI];
+        label facei = cFaces[iter];
+        const face& f = mesh.faces()[facei];
 
-        //Pout<< "face:" << faceI << " at:"
+        //Pout<< "face:" << facei << " at:"
         //    << pointField(mesh.points(), f)
         //    << endl;
 
@@ -140,7 +140,7 @@ void CML::pointMVCWeight::calcWeights
         v /= vNorm;
 
         // Make sure v points towards the polygon
-        //if (((v&u[0]) < 0) != (mesh.faceOwner()[faceI] != cellIndex_))
+        //if (((v&u[0]) < 0) != (mesh.faceOwner()[facei] != cellIndex_))
         //{
         //    FatalErrorInFunction
         //        << "v:" << v << " u[0]:" << u[0]

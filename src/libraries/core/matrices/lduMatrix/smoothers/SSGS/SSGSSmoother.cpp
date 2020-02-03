@@ -63,21 +63,21 @@ CML::SSGSSmoother::SSGSSmoother
     const scalar* const RESTRICT upperPtr =
         matrix_.upper().begin();
 
-    register label nCells = rD_.size();
-    register label nFaces = matrix_.upper().size();
+    label nCells = rD_.size();
+    label nFaces = matrix_.upper().size();
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         rDPtr[uPtr[face]] -= sqr(upperPtr[face])/(DPtr[lPtr[face]]+SMALL);
     }
 
     // Generate reciprocal diagonal
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         rDPtr[cell] = 1.0/rDPtr[cell];
     }
 
-    for (register label face=0; face<nFaces; face++)
+    for (label face=0; face<nFaces; face++)
     {
         rDuUpperPtr[face] = rDPtr[uPtr[face]]*upperPtr[face];
         rDlUpperPtr[face] = rDPtr[lPtr[face]]*upperPtr[face];
@@ -118,14 +118,14 @@ void CML::SSGSSmoother::smooth
 
         r *= rD_;
 
-        register label nFaces = matrix_.upper().size();
-        for (register label face=0; face<nFaces; face++)
+        label nFaces = matrix_.upper().size();
+        for (label face=0; face<nFaces; face++)
         {
             rPtr[uPtr[face]] -= rDuUpperPtr[face]*rPtr[lPtr[face]];
         }
 
-        register label nFacesM1 = nFaces - 1;
-        for (register label face=nFacesM1; face>=0; face--)
+        label nFacesM1 = nFaces - 1;
+        for (label face=nFacesM1; face>=0; face--)
         {
             rPtr[lPtr[face]] -= rDlUpperPtr[face]*rPtr[uPtr[face]];
         }

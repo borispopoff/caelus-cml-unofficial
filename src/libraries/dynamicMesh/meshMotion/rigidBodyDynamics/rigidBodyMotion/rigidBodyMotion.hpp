@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -102,7 +102,7 @@ class rigidBodyMotion
         rigidBodyMotion(const rigidBodyMotion&);
 
         //- Disallow default bitwise assignment
-        void operator=(const rigidBodyMotion&);
+        void operator=(const rigidBodyMotion&) = delete;
 
 
 public:
@@ -182,7 +182,7 @@ public:
             //- Write the status of the motion of the given body
             void writeState(const label bodyID, autoPtr<OFstream> &stateFilePtr);
             //- Write the status of the Restraints
-            void writeRestState(List<autoPtr<OFstream> > &restraintStateFilePtrs);
+            void writeRestState(List<autoPtr<OFstream>> &restraintStateFilePtrs);
 
 
         // Transformations
@@ -219,7 +219,7 @@ public:
 
 
         //- Write
-        void write(Ostream&) const;
+        virtual void write(Ostream&) const;
 
         //- Read coefficients dictionary and update system parameters,
         //  constraints and restraints but not the current state

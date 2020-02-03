@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -78,8 +78,8 @@ turbulentIntensityKineticEnergyInletFvPatchScalarField
                "of the mean velocity\n"
                "    value given is " << intensity_ << nl
             << "    on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalError);
     }
 
@@ -144,10 +144,10 @@ void CML::turbulentIntensityKineticEnergyInletFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-    os.writeKeyword("intensity") << intensity_ << token::END_STATEMENT << nl;
+    writeEntry(os, "intensity", intensity_);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntryIfDifferent<word>(os, "phi", "phi", this->phiName_);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

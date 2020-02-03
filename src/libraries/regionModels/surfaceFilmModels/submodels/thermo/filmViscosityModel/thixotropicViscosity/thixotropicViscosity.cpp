@@ -119,7 +119,7 @@ void thixotropicViscosity::correct
         alpha*mag(U - Uw)/(delta + film.deltaSmall())
     );
 
-    if (debug && runTime.outputTime())
+    if (debug && runTime.writeTime())
     {
         gDot.write();
     }

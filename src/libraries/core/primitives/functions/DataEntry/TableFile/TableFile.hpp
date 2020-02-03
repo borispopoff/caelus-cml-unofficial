@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -28,7 +28,7 @@ Description
         <entryName> tableFile;
         <entryName>Coeffs
         {
-            fileName            dataFile;    // name of data file
+            file                dataFile;    // name of data file
             outOfBounds         clamp;       // optional out-of-bounds handling
             interpolationScheme linear;      // optional interpolation method
         }
@@ -75,12 +75,6 @@ class TableFile
         fileName fName_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const TableFile<Type>&);
-
-
 public:
 
     //- Runtime type information
@@ -95,12 +89,6 @@ public:
         //- Copy constructor
         TableFile(const TableFile<Type>& tbl);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new TableFile<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~TableFile();
@@ -110,6 +98,12 @@ public:
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const TableFile<Type>&) = delete;
 };
 
 
@@ -138,8 +132,10 @@ CML::DataEntryTypes::TableFile<Type>::TableFile
 
     if (!is.good())
     {
-        FatalIOErrorInFunction(is)
-            << "Cannot open file." << exit(FatalIOError);
+        FatalIOErrorInFunction
+        (
+            is
+        )   << "Cannot open file." << exit(FatalIOError);
     }
 
     is  >> this->table_;
@@ -178,7 +174,7 @@ void CML::DataEntryTypes::TableFile<Type>::writeData(Ostream& os) const
     // the values themselves
     TableBase<Type>::writeEntries(os);
 
-    os.writeKeyword("file")<< fName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "file", fName_);
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 

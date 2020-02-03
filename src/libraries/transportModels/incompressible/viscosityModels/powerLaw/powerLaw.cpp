@@ -61,7 +61,7 @@ CML::viscosityModels::powerLaw::calcNu() const
                     tone*strainRate(),
                     dimensionedScalar("VSMALL", dimless, VSMALL)
                 ),
-                n_.value() - scalar(1.0)
+                n_.value() - scalar(1)
             )
         )
     )/rhoRef_;

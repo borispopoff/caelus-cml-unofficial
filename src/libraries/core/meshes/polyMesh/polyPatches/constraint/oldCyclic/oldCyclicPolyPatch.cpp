@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -569,9 +569,9 @@ CML::oldCyclicPolyPatch::oldCyclicPolyPatch
 :
     coupledPolyPatch(name, size, start, index, bm, patchType, transform),
     featureCos_(0.9),
-    rotationAxis_(vector::zero),
+    rotationAxis_(Zero),
     rotationCentre_(point::zero),
-    separationVector_(vector::zero)
+    separationVector_(Zero)
 {}
 
 
@@ -586,9 +586,9 @@ CML::oldCyclicPolyPatch::oldCyclicPolyPatch
 :
     coupledPolyPatch(name, dict, index, bm, patchType),
     featureCos_(0.9),
-    rotationAxis_(vector::zero),
+    rotationAxis_(Zero),
     rotationCentre_(point::zero),
-    separationVector_(vector::zero)
+    separationVector_(Zero)
 {
     if (dict.found("neighbourPatch"))
     {
@@ -1217,28 +1217,24 @@ bool CML::oldCyclicPolyPatch::order
 void CML::oldCyclicPolyPatch::write(Ostream& os) const
 {
     // Replacement of polyPatch::write to write 'cyclic' instead of type():
-    os.writeKeyword("type") << cyclicPolyPatch::typeName
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "type", cyclicPolyPatch::typeName);
     patchIdentifier::write(os);
-    os.writeKeyword("nFaces") << size() << token::END_STATEMENT << nl;
-    os.writeKeyword("startFace") << start() << token::END_STATEMENT << nl;
+    writeEntry(os, "nFaces", size());
+    writeEntry(os, "startFace", start());
 
 
-    os.writeKeyword("featureCos") << featureCos_ << token::END_STATEMENT << nl;
+    writeEntry(os, "featureCos", featureCos_);
     switch (transform())
     {
         case ROTATIONAL:
         {
-            os.writeKeyword("rotationAxis") << rotationAxis_
-                << token::END_STATEMENT << nl;
-            os.writeKeyword("rotationCentre") << rotationCentre_
-                << token::END_STATEMENT << nl;
+            writeEntry(os, "rotationAxis", rotationAxis_);
+            writeEntry(os, "rotationCentre", rotationCentre_);
             break;
         }
         case TRANSLATIONAL:
         {
-            os.writeKeyword("separationVector") << separationVector_
-                << token::END_STATEMENT << nl;
+            writeEntry(os, "separationVector", separationVector_);
             break;
         }
         default:

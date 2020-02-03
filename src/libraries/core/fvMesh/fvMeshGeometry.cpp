@@ -41,9 +41,7 @@ void fvMesh::makeSf() const
 {
     if (debug)
     {
-        Info<< "void fvMesh::makeSf() : "
-            << "assembling face areas"
-            << endl;
+        InfoInFunction << "Assembling face areas" << endl;
     }
 
     // It is an error to attempt to recalculate
@@ -78,9 +76,7 @@ void fvMesh::makeMagSf() const
 {
     if (debug)
     {
-        Info<< "void fvMesh::makeMagSf() : "
-            << "assembling mag face areas"
-            << endl;
+        InfoInFunction << "Assembling mag face areas" << endl;
     }
 
     // It is an error to attempt to recalculate
@@ -116,9 +112,7 @@ void fvMesh::makeC() const
 {
     if (debug)
     {
-        Info<< "void fvMesh::makeC() : "
-            << "assembling cell centres"
-            << endl;
+        InfoInFunction << "Assembling cell centres" << endl;
     }
 
     // It is an error to attempt to recalculate
@@ -148,8 +142,8 @@ void fvMesh::makeC() const
         dimLength,
         cellCentres(),
         faceCentres(),
-        true,               //preserveCouples
-        true                //preserveProcOnly
+        true,               // preserveCouples
+        true                // preserveProcOnly
     );
 }
 
@@ -231,12 +225,12 @@ void fvMesh::makeDefectCorrVecs() const
     }
 
 
-    forAll(DefectCorrVecs.boundaryField(), patchI)
+    forAll(DefectCorrVecs.boundaryField(), patchi)
     {
         fvPatchVectorField& patchDefectCorrVecs =
-            DefectCorrVecs.boundaryField()[patchI];
+            DefectCorrVecs.boundaryFieldRef()[patchi];
 
-        patchDefectCorrVecs = vector::zero;
+        patchDefectCorrVecs = Zero;
     }
 }
 
@@ -280,18 +274,17 @@ void fvMesh::makeCf() const
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const volScalarField::DimensionedInternalField& fvMesh::V() const
+const volScalarField::Internal& fvMesh::V() const
 {
     if (!VPtr_)
     {
         if (debug)
         {
-            Info<< "fvMesh::V() const: "
-                << "constructing from primitiveMesh::cellVolumes()"
-                << endl;
+            InfoInFunction
+                << "Constructing from primitiveMesh::cellVolumes()" << endl;
         }
 
-        VPtr_ = new slicedVolScalarField::DimensionedInternalField
+        VPtr_ = new slicedVolScalarField::Internal
         (
             IOobject
             (
@@ -308,11 +301,11 @@ const volScalarField::DimensionedInternalField& fvMesh::V() const
         );
     }
 
-    return *static_cast<slicedVolScalarField::DimensionedInternalField*>(VPtr_);
+    return *static_cast<slicedVolScalarField::Internal*>(VPtr_);
 }
 
 
-const volScalarField::DimensionedInternalField& fvMesh::V0() const
+const volScalarField::Internal& fvMesh::V0() const
 {
     if (!V0Ptr_)
     {
@@ -325,7 +318,7 @@ const volScalarField::DimensionedInternalField& fvMesh::V0() const
 }
 
 
-volScalarField::DimensionedInternalField& fvMesh::setV0()
+volScalarField::Internal& fvMesh::setV0()
 {
     if (!V0Ptr_)
     {
@@ -338,15 +331,13 @@ volScalarField::DimensionedInternalField& fvMesh::setV0()
 }
 
 
-const volScalarField::DimensionedInternalField& fvMesh::V00() const
+const volScalarField::Internal& fvMesh::V00() const
 {
     if (!V00Ptr_)
     {
         if (debug)
         {
-            Info<< "fvMesh::V00() const: "
-                << "constructing from V0"
-                << endl;
+            InfoInFunction << "Constructing from V0" << endl;
         }
 
         V00Ptr_ = new DimensionedField<scalar, volMesh>
@@ -362,16 +353,13 @@ const volScalarField::DimensionedInternalField& fvMesh::V00() const
             ),
             V0()
         );
-
-        // If V00 is used then V0 should be stored for restart
-        V0Ptr_->writeOpt() = IOobject::AUTO_WRITE;
     }
 
     return *V00Ptr_;
 }
 
 
-tmp<volScalarField::DimensionedInternalField> fvMesh::Vsc() const
+tmp<volScalarField::Internal> fvMesh::Vsc() const
 {
     if (moving() && time().subCycling())
     {
@@ -399,7 +387,7 @@ tmp<volScalarField::DimensionedInternalField> fvMesh::Vsc() const
 }
 
 
-tmp<volScalarField::DimensionedInternalField> fvMesh::Vsc0() const
+tmp<volScalarField::Internal> fvMesh::Vsc0() const
 {
     if (moving() && time().subCycling())
     {
@@ -521,7 +509,7 @@ tmp<surfaceVectorField> fvMesh::delta() const
             dimLength
         )
     );
-    surfaceVectorField& delta = tdelta();
+    surfaceVectorField& delta = tdelta.ref();
 
     const volVectorField& C = this->C();
     const labelUList& owner = this->owner();
@@ -532,9 +520,12 @@ tmp<surfaceVectorField> fvMesh::delta() const
         delta[facei] = C[neighbour[facei]] - C[owner[facei]];
     }
 
-    forAll(delta.boundaryField(), patchi)
+    surfaceVectorField::Boundary& deltabf =
+        delta.boundaryFieldRef();
+
+    forAll(deltabf, patchi)
     {
-        delta.boundaryField()[patchi] = boundary()[patchi].delta();
+        deltabf[patchi] = boundary()[patchi].delta();
     }
 
     return tdelta;

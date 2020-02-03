@@ -60,15 +60,15 @@ void CML::IDDESDelta::calcDelta()
 
     const cellList& cells = mesh().cells();
 
-    forAll(cells,cellI)
+    forAll(cells,celli)
     {
         scalar deltaMaxTmp = 0.0;
-        const labelList& cFaces = mesh().cells()[cellI];
-        const vector nCell = n[cellI];
-        forAll(cFaces, cFaceI)
+        const labelList& cFaces = mesh().cells()[celli];
+        const vector nCell = n[celli];
+        forAll(cFaces, cFacei)
         {
-            label faceI = cFaces[cFaceI];
-            const point& faceCentreI = mesh().faceCentres()[faceI];
+            label facei = cFaces[cFacei];
+            const point& faceCentreI = mesh().faceCentres()[facei];
             forAll(cFaces, cFaceJ)
             {
                 label faceJ = cFaces[cFaceJ];
@@ -80,12 +80,12 @@ void CML::IDDESDelta::calcDelta()
                 }
             }
         }
-        faceToFacenMax()[cellI] = deltaMaxTmp;
+        faceToFacenMax.ref()[celli] = deltaMaxTmp;
     }
 
     if (nD == 3)
     {
-        delta_.internalField() =
+        delta_.primitiveFieldRef() =
             deltaCoeff_
            *min
             (
@@ -103,7 +103,7 @@ void CML::IDDESDelta::calcDelta()
             << "Case is 2D, LES is not strictly applicable\n"
             << endl;
 
-        delta_.internalField() =
+        delta_.primitiveFieldRef() =
             deltaCoeff_
            *min
             (

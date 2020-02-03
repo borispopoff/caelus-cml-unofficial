@@ -75,7 +75,7 @@ void fvcDivFunctionPlugin<T>::doEvaluation()
 {
     IStringStream spec(specString_);
 
-    tmp<fv::divScheme<T> > scheme(
+    tmp<fv::divScheme<T>> scheme(
         fv::divScheme<T>::New(
             mesh(),
             spec
@@ -91,7 +91,7 @@ void fvcDivFunctionPlugin<T>::doEvaluation()
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            scheme().fvcDiv(original_())
+            scheme.ref().fvcDiv(original_())
         )
     );
 

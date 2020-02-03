@@ -17,10 +17,6 @@ tasks:
       cmd_name: createBaffles
       cmd_args: "-overwrite"
 
-  - run_command:
-      cmd_name: createPatch
-      cmd_args: "-overwrite"
-
   - copy_tree:
       src: "0.org"
       dest: "0"

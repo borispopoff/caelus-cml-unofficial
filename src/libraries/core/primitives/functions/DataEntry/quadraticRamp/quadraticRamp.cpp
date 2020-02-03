@@ -50,12 +50,4 @@ CML::DataEntryTypes::quadraticRamp::~quadraticRamp()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-CML::scalar CML::DataEntryTypes::quadraticRamp::value(const scalar t) const
-{
-    return sqr(linearRamp(t));
-}
-
-
 // ************************************************************************* //

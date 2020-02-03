@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,10 +80,10 @@ class movingConeTopoFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        movingConeTopoFvMesh(const movingConeTopoFvMesh&);
+        movingConeTopoFvMesh(const movingConeTopoFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const movingConeTopoFvMesh&);
+        void operator=(const movingConeTopoFvMesh&) = delete;
 
 
         //- Add mixer zones and modifiers

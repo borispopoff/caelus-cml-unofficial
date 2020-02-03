@@ -50,11 +50,11 @@ const CML::scalar CML::interfaceProperties::convertToRad =
 
 void CML::interfaceProperties::correctContactAngle
 (
-    surfaceVectorField::GeometricBoundaryField& nHatb,
-    surfaceVectorField::GeometricBoundaryField& gradAlphaf
+    surfaceVectorField::Boundary& nHatb,
+    surfaceVectorField::Boundary& gradAlphaf
 ) const
 {
-    const volScalarField::GeometricBoundaryField& abf = alpha1_.boundaryField();
+    const volScalarField::Boundary& abf = alpha1_.boundaryField();
 
     const fvBoundaryMesh& boundary = mesh_.boundary();
 
@@ -120,7 +120,7 @@ void CML::interfaceProperties::calculateK()
 
     // Face unit interface normal
     surfaceVectorField nHatfv(gradAlphaf/(mag(gradAlphaf) + deltaN_));
-    correctContactAngle(nHatfv.boundaryField(), gradAlphaf.boundaryField());
+    correctContactAngle(nHatfv.boundaryFieldRef(), gradAlphaf.boundaryFieldRef());
 
     // Face unit interface normal flux
     nHatf_ = nHatfv & Sf;

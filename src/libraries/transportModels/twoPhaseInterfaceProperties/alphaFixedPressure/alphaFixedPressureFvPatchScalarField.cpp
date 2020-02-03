@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -62,7 +62,7 @@ alphaFixedPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    fixedValueFvPatchScalarField(p, iF, dict, false),
     p_("p", dict, p.size())
 {
     if (dict.found("value"))
@@ -154,8 +154,8 @@ void CML::alphaFixedPressureFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-    p_.writeEntry("p", os);
-    writeEntry("value", os);
+    writeEntry(os, "p", p_);
+    writeEntry(os, "value", *this);
 }
 
 

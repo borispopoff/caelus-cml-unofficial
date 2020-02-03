@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("yPlus", dimless, 0.0)
+            dimensionedScalar("yPlus", dimless, 0)
         );
 
         Info<< "Reading field U\n" << endl;
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
             incompressible::LESModel::New(U, phi, laminarTransport)
         );
 
-        volScalarField::GeometricBoundaryField d = nearWallDist(mesh).y();
+        volScalarField::Boundary d = nearWallDist(mesh).y();
         volScalarField nuEff(sgsModel->nuEff());
 
         const fvPatchList& patches = mesh.boundary();
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 
             if (isA<wallFvPatch>(currPatch))
             {
-                yPlus.boundaryField()[patchi] =
+                yPlus.boundaryFieldRef()[patchi] =
                     d[patchi]
                    *sqrt
                     (

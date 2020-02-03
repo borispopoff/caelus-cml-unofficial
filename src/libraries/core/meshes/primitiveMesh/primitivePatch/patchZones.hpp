@@ -78,8 +78,8 @@ class patchZones
         labelList edgeToFace(const labelList& changedEdges);
 
         //- Fill *this with current zone for every face reachable
-        //  from faceI without crossing edge marked in borderEdge.
-        void markZone(label faceI);
+        //  from facei without crossing edge marked in borderEdge.
+        void markZone(label facei);
 
 public:
 

@@ -42,7 +42,7 @@ CML::vector CML::surfaceLocation::normal(const triSurface& s) const
         }
         else
         {
-            vector edgeNormal(vector::zero);
+            vector edgeNormal(Zero);
 
             forAll(eFaces, i)
             {

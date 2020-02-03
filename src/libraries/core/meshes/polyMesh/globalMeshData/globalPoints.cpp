@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,7 +27,6 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-
 namespace CML
 {
     defineTypeNameAndDebug(globalPoints, 0);
@@ -36,8 +35,6 @@ namespace CML
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Total number of points on coupled patches. Is upper limit for number
-// of shared points
 CML::label CML::globalPoints::countPatchPoints
 (
     const polyBoundaryMesh& patches
@@ -45,9 +42,9 @@ CML::label CML::globalPoints::countPatchPoints
 {
     label nTotPoints = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
         if (pp.coupled())
         {
             nTotPoints += pp.nPoints();
@@ -63,15 +60,15 @@ CML::label CML::globalPoints::findSamePoint
     const labelPair& info
 ) const
 {
-    const label procI = globalIndexAndTransform::processor(info);
-    const label index = globalIndexAndTransform::index(info);
+    const label proci = globalTransforms_.processor(info);
+    const label index = globalTransforms_.index(info);
 
     forAll(allInfo, i)
     {
         if
         (
-            globalIndexAndTransform::processor(allInfo[i]) == procI
-         && globalIndexAndTransform::index(allInfo[i]) == index
+            globalTransforms_.processor(allInfo[i]) == proci
+         && globalTransforms_.index(allInfo[i]) == index
         )
         {
             return i;
@@ -83,32 +80,38 @@ CML::label CML::globalPoints::findSamePoint
 
 CML::labelPairList CML::globalPoints::addSendTransform
 (
-    const label patchI,
+    const label patchi,
     const labelPairList& info
 ) const
 {
+    scalar tol = refCast<const coupledPolyPatch>
+    (
+        mesh_.boundaryMesh()[patchi]
+    ).matchTolerance();
+
     labelPairList sendInfo(info.size());
 
     forAll(info, i)
     {
-        //Pout<< "    adding send transform to" << nl
-        //    << "    proc:" << globalIndexAndTransform::processor(info[i])
+        // Pout<< "    adding send transform to" << nl
+        //    << "    proc:" << globalTransforms_.processor(info[i])
         //    << nl
-        //    << "    index:" << globalIndexAndTransform::index(info[i]) << nl
+        //    << "    index:" << globalTransforms_.index(info[i]) << nl
         //    << "    trafo:"
         //    <<  globalTransforms_.decodeTransformIndex
-        //        (globalIndexAndTransform::transformIndex(info[i]))
+        //        (globalTransforms_.transformIndex(info[i]))
         //    << endl;
 
-        sendInfo[i] = globalIndexAndTransform::encode
+        sendInfo[i] = globalTransforms_.encode
         (
-            globalIndexAndTransform::processor(info[i]),
-            globalIndexAndTransform::index(info[i]),
+            globalTransforms_.processor(info[i]),
+            globalTransforms_.index(info[i]),
             globalTransforms_.addToTransformIndex
             (
-                globalIndexAndTransform::transformIndex(info[i]),
-                patchI,
-                true           // patchI is sending side
+                globalTransforms_.transformIndex(info[i]),
+                patchi,
+                true,           // patchi is sending side
+                tol             // tolerance for comparison
             )
         );
     }
@@ -116,13 +119,10 @@ CML::labelPairList CML::globalPoints::addSendTransform
 }
 
 
-// Collect all topological information about a point on a patch.
-// (this information is the patch faces using the point and the relative
-// position of the point in the face)
 void CML::globalPoints::addToSend
 (
     const polyPatch& pp,
-    const label patchPointI,
+    const label patchPointi,
     const labelPairList& knownInfo,
 
     DynamicList<label>& patchFaces,
@@ -130,20 +130,24 @@ void CML::globalPoints::addToSend
     DynamicList<labelPairList>& allInfo
 ) const
 {
-    label meshPointI = pp.meshPoints()[patchPointI];
+    // Collect all topological information about a point on a patch.  (this
+    // information is the patch faces using the point and the relative position
+    // of the point in the face)
+
+    label meshPointi = pp.meshPoints()[patchPointi];
 
     // Add all faces using the point so we are sure we find it on the
     // other side.
-    const labelList& pFaces = pp.pointFaces()[patchPointI];
+    const labelList& pFaces = pp.pointFaces()[patchPointi];
 
     forAll(pFaces, i)
     {
-        label patchFaceI = pFaces[i];
+        label patchFacei = pFaces[i];
 
-        const face& f = pp[patchFaceI];
+        const face& f = pp[patchFacei];
 
-        patchFaces.append(patchFaceI);
-        indexInFace.append(findIndex(f, meshPointI));
+        patchFaces.append(patchFacei);
+        indexInFace.append(findIndex(f, meshPointi));
 
         // Add patch transformation
         allInfo.append(addSendTransform(pp.index(), knownInfo));
@@ -151,15 +155,16 @@ void CML::globalPoints::addToSend
 }
 
 
-// Add nbrInfo to myInfo. Return true if anything changed.
-// nbrInfo is for a point a list of all the global points using it
 bool CML::globalPoints::mergeInfo
 (
     const labelPairList& nbrInfo,
-    const label localPointI,
+    const label localPointi,
     labelPairList& myInfo
 ) const
 {
+    // Add nbrInfo to myInfo. Return true if anything changed.  nbrInfo is for a
+    // point a list of all the global points using it
+
     bool anyChanged = false;
 
     // Extend to make space for the nbrInfo (trimmed later)
@@ -185,7 +190,7 @@ bool CML::globalPoints::mergeInfo
         }
         else
         {
-            // Same point. So we already have a connection between localPointI
+            // Same point. So we already have a connection between localPointi
             // and the nbrIndex. Two situations:
             // - same transform
             // - one transform takes two steps, the other just a single.
@@ -195,11 +200,11 @@ bool CML::globalPoints::mergeInfo
             }
             else
             {
-                label myTransform = globalIndexAndTransform::transformIndex
+                label myTransform = globalTransforms_.transformIndex
                 (
                     myInfo[index]
                 );
-                label nbrTransform = globalIndexAndTransform::transformIndex
+                label nbrTransform = globalTransforms_.transformIndex
                 (
                     nbrInfo[i]
                 );
@@ -231,14 +236,14 @@ bool CML::globalPoints::mergeInfo
 CML::label CML::globalPoints::meshToLocalPoint
 (
     const Map<label>& meshToPatchPoint, // from mesh point to local numbering
-    const label meshPointI
+    const label meshPointi
 )
 {
     return
     (
         meshToPatchPoint.size() == 0
-      ? meshPointI
-      : meshToPatchPoint[meshPointI]
+      ? meshPointi
+      : meshToPatchPoint[meshPointi]
     );
 }
 
@@ -246,34 +251,35 @@ CML::label CML::globalPoints::meshToLocalPoint
 CML::label CML::globalPoints::localToMeshPoint
 (
     const labelList& patchToMeshPoint,
-    const label localPointI
+    const label localPointi
 )
 {
     return
     (
         patchToMeshPoint.size() == 0
-      ? localPointI
-      : patchToMeshPoint[localPointI]
+      ? localPointi
+      : patchToMeshPoint[localPointi]
     );
 }
 
 
-// Updates database of current information on meshpoints with nbrInfo.
-// Uses mergeInfo above. Returns true if data kept for meshPointI changed.
 bool CML::globalPoints::mergeInfo
 (
     const labelPairList& nbrInfo,
-    const label localPointI
+    const label localPointi
 )
 {
+    // Updates database of current information on meshpoints with nbrInfo.  Uses
+    // mergeInfo above. Returns true if data kept for meshPointi changed.
+
     label infoChanged = false;
 
     // Get the index into the procPoints list.
-    Map<label>::iterator iter = meshToProcPoint_.find(localPointI);
+    Map<label>::iterator iter = meshToProcPoint_.find(localPointi);
 
     if (iter != meshToProcPoint_.end())
     {
-        if (mergeInfo(nbrInfo, localPointI, procPoints_[iter()]))
+        if (mergeInfo(nbrInfo, localPointi, procPoints_[iter()]))
         {
             infoChanged = true;
         }
@@ -284,18 +290,18 @@ bool CML::globalPoints::mergeInfo
         labelPairList knownInfo
         (
             1,
-            globalIndexAndTransform::encode
+            globalTransforms_.encode
             (
                 Pstream::myProcNo(),
-                localPointI,
+                localPointi,
                 globalTransforms_.nullTransformIndex()
             )
         );
 
-        if (mergeInfo(nbrInfo, localPointI, knownInfo))
+        if (mergeInfo(nbrInfo, localPointi, knownInfo))
         {
             // Update addressing from into procPoints
-            meshToProcPoint_.insert(localPointI, procPoints_.size());
+            meshToProcPoint_.insert(localPointi, procPoints_.size());
             // Insert into list of equivalences.
             procPoints_.append(knownInfo);
 
@@ -306,22 +312,23 @@ bool CML::globalPoints::mergeInfo
 }
 
 
-// Updates database of current information on meshpoints with nbrInfo.
-// Uses mergeInfo above. Returns true if data kept for meshPointI changed.
 bool CML::globalPoints::storeInitialInfo
 (
     const labelPairList& nbrInfo,
-    const label localPointI
+    const label localPointi
 )
 {
+    // Updates database of current information on meshpoints with nbrInfo.  Uses
+    // mergeInfo above. Returns true if data kept for meshPointi changed.
+
     label infoChanged = false;
 
     // Get the index into the procPoints list.
-    Map<label>::iterator iter = meshToProcPoint_.find(localPointI);
+    Map<label>::iterator iter = meshToProcPoint_.find(localPointi);
 
     if (iter != meshToProcPoint_.end())
     {
-        if (mergeInfo(nbrInfo, localPointI, procPoints_[iter()]))
+        if (mergeInfo(nbrInfo, localPointi, procPoints_[iter()]))
         {
             infoChanged = true;
         }
@@ -329,7 +336,7 @@ bool CML::globalPoints::storeInitialInfo
     else
     {
         // Update addressing into procPoints
-        meshToProcPoint_.insert(localPointI, procPoints_.size());
+        meshToProcPoint_.insert(localPointi, procPoints_.size());
         // Insert into list of equivalences.
         procPoints_.append(nbrInfo);
 
@@ -345,21 +352,21 @@ void CML::globalPoints::printProcPoint
     const labelPair& pointInfo
 ) const
 {
-    label procI = globalIndexAndTransform::processor(pointInfo);
-    label index = globalIndexAndTransform::index(pointInfo);
-    label trafoI = globalIndexAndTransform::transformIndex(pointInfo);
+    label proci = globalTransforms_.processor(pointInfo);
+    label index = globalTransforms_.index(pointInfo);
+    label trafoI = globalTransforms_.transformIndex(pointInfo);
 
-    Pout<< "    proc:" << procI;
+    Pout<< "    proc:" << proci;
     Pout<< " localpoint:";
     Pout<< index;
     Pout<< " through transform:"
         << trafoI << " bits:"
         << globalTransforms_.decodeTransformIndex(trafoI);
 
-    if (procI == Pstream::myProcNo())
+    if (proci == Pstream::myProcNo())
     {
-        label meshPointI = localToMeshPoint(patchToMeshPoint, index);
-        Pout<< " at:" <<  mesh_.points()[meshPointI];
+        label meshPointi = localToMeshPoint(patchToMeshPoint, index);
+        Pout<< " at:" <<  mesh_.points()[meshPointi];
     }
 }
 
@@ -378,7 +385,6 @@ void CML::globalPoints::printProcPoints
 }
 
 
-// Insert my own points into structure and mark as changed.
 void CML::globalPoints::initOwnPoints
 (
     const Map<label>& meshToPatchPoint,
@@ -388,9 +394,9 @@ void CML::globalPoints::initOwnPoints
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -399,34 +405,34 @@ void CML::globalPoints::initOwnPoints
             if (allPoints)
             {
                 // All points on patch
-                forAll(meshPoints, patchPointI)
+                forAll(meshPoints, patchPointi)
                 {
-                    label meshPointI = meshPoints[patchPointI];
-                    label localPointI = meshToLocalPoint
+                    label meshPointi = meshPoints[patchPointi];
+                    label localPointi = meshToLocalPoint
                     (
                         meshToPatchPoint,
-                        meshPointI
+                        meshPointi
                     );
 
                     labelPairList knownInfo
                     (
                         1,
-                        globalIndexAndTransform::encode
+                        globalTransforms_.encode
                         (
                             Pstream::myProcNo(),
-                            localPointI,
+                            localPointi,
                             globalTransforms_.nullTransformIndex()
                         )
                     );
 
-                    //Pout<< "For point "<< pp.points()[meshPointI]
+                    //Pout<< "For point "<< pp.points()[meshPointi]
                     //    << " inserting info " << knownInfo
                     //    << endl;
 
                     // Update changedpoints info.
-                    if (storeInitialInfo(knownInfo, localPointI))
+                    if (storeInitialInfo(knownInfo, localPointi))
                     {
-                        changedPoints.insert(localPointI);
+                        changedPoints.insert(localPointi);
                     }
                 }
             }
@@ -437,27 +443,27 @@ void CML::globalPoints::initOwnPoints
 
                 forAll(boundaryPoints, i)
                 {
-                    label meshPointI = meshPoints[boundaryPoints[i]];
-                    label localPointI = meshToLocalPoint
+                    label meshPointi = meshPoints[boundaryPoints[i]];
+                    label localPointi = meshToLocalPoint
                     (
                         meshToPatchPoint,
-                        meshPointI
+                        meshPointi
                     );
 
                     labelPairList knownInfo
                     (
                         1,
-                        globalIndexAndTransform::encode
+                        globalTransforms_.encode
                         (
                             Pstream::myProcNo(),
-                            localPointI,
+                            localPointi,
                             globalTransforms_.nullTransformIndex()
                         )
                     );
 
-                    if (storeInitialInfo(knownInfo, localPointI))
+                    if (storeInitialInfo(knownInfo, localPointi))
                     {
-                        changedPoints.insert(localPointI);
+                        changedPoints.insert(localPointi);
                     }
                 }
             }
@@ -466,7 +472,6 @@ void CML::globalPoints::initOwnPoints
 }
 
 
-// Send all my info on changedPoints_ to my neighbours.
 void CML::globalPoints::sendPatchPoints
 (
     const bool mergeSeparated,
@@ -478,9 +483,9 @@ void CML::globalPoints::sendPatchPoints
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
     const labelPairList& patchInfo = globalTransforms_.patchTransformSign();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         // mergeSeparated=true : send from all processor patches
         //               =false: send from ones without transform
@@ -488,7 +493,7 @@ void CML::globalPoints::sendPatchPoints
         if
         (
             (Pstream::parRun() && isA<processorPolyPatch>(pp))
-         && (mergeSeparated || patchInfo[patchI].first() == -1)
+         && (mergeSeparated || patchInfo[patchi].first() == -1)
         )
         {
             const processorPolyPatch& procPatch =
@@ -509,27 +514,27 @@ void CML::globalPoints::sendPatchPoints
 
             const labelList& meshPoints = pp.meshPoints();
 
-            forAll(meshPoints, patchPointI)
+            forAll(meshPoints, patchPointi)
             {
-                label meshPointI = meshPoints[patchPointI];
-                label localPointI = meshToLocalPoint
+                label meshPointi = meshPoints[patchPointi];
+                label localPointi = meshToLocalPoint
                 (
                     meshToPatchPoint,
-                    meshPointI
+                    meshPointi
                 );
 
-                if (changedPoints.found(localPointI))
+                if (changedPoints.found(localPointi))
                 {
-                    label index = meshToProcPoint_[localPointI];
+                    label index = meshToProcPoint_[localPointi];
 
                     const labelPairList& knownInfo = procPoints_[index];
 
-                    // Add my information about localPointI to the
+                    // Add my information about localPointi to the
                     // send buffers. Encode the transformation
                     addToSend
                     (
                         pp,
-                        patchPointI,
+                        patchPointi,
                         knownInfo,
 
                         patchFaces,
@@ -554,11 +559,6 @@ void CML::globalPoints::sendPatchPoints
 }
 
 
-// Receive all my neighbours' information and merge with mine.
-// After finishing will have updated
-// - procPoints_ : all neighbour information merged in.
-// - meshToProcPoint_
-// - changedPoints: all points for which something changed.
 void CML::globalPoints::receivePatchPoints
 (
     const bool mergeSeparated,
@@ -568,20 +568,26 @@ void CML::globalPoints::receivePatchPoints
     labelHashSet& changedPoints
 )
 {
+    // Receive all my neighbours' information and merge with mine.
+    // After finishing will have updated
+    // - procPoints_ : all neighbour information merged in.
+    // - meshToProcPoint_
+    // - changedPoints: all points for which something changed.
+
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
     const labelPairList& patchInfo = globalTransforms_.patchTransformSign();
 
     // Reset changed points
     changedPoints.clear();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if
         (
             (Pstream::parRun() && isA<processorPolyPatch>(pp))
-         && (mergeSeparated || patchInfo[patchI].first() == -1)
+         && (mergeSeparated || patchInfo[patchi].first() == -1)
         )
         {
             const processorPolyPatch& procPatch =
@@ -612,17 +618,17 @@ void CML::globalPoints::receivePatchPoints
                 label index = (f.size() - indexInFace[i]) % f.size();
 
                 // Get the meshpoint on my side
-                label meshPointI = f[index];
+                label meshPointi = f[index];
 
-                label localPointI = meshToLocalPoint
+                label localPointi = meshToLocalPoint
                 (
                     meshToPatchPoint,
-                    meshPointI
+                    meshPointi
                 );
 
-                if (mergeInfo(nbrInfo[i], localPointI))
+                if (mergeInfo(nbrInfo[i], localPointi))
                 {
-                    changedPoints.insert(localPointI);
+                    changedPoints.insert(localPointi);
                 }
             }
         }
@@ -632,7 +638,7 @@ void CML::globalPoints::receivePatchPoints
                 isA<cyclicPolyPatch>(pp)
              && refCast<const cyclicPolyPatch>(pp).owner()
             )
-         && (mergeSeparated || patchInfo[patchI].first() == -1)
+         && (mergeSeparated || patchInfo[patchi].first() == -1)
         )
         {
             // Handle cyclics: send lower half to upper half and vice versa.
@@ -641,7 +647,7 @@ void CML::globalPoints::receivePatchPoints
             const cyclicPolyPatch& cycPatch =
                 refCast<const cyclicPolyPatch>(pp);
 
-            //Pout<< "Patch:" << patchI << " name:" << pp.name() << endl;
+            //Pout<< "Patch:" << patchi << " name:" << pp.name() << endl;
 
             const labelList& meshPoints = pp.meshPoints();
             const labelList coupledMeshPoints(reverseMeshPoints(cycPatch));
@@ -712,24 +718,25 @@ void CML::globalPoints::receivePatchPoints
 }
 
 
-// Remove entries which are handled by normal face-face communication. I.e.
-// those points where the equivalence list is only me and my (face)neighbour
 void CML::globalPoints::remove
 (
     const labelList& patchToMeshPoint,
     const Map<label>& directNeighbours
 )
 {
+    // Remove entries which are handled by normal face-face communication. I.e.
+    // those points where the equivalence list is only me and my (face)neighbour
+
     // Save old ones.
-    Map<label> oldMeshToProcPoint(meshToProcPoint_.xfer());
+    Map<label> oldMeshToProcPoint(move(meshToProcPoint_));
     meshToProcPoint_.resize(oldMeshToProcPoint.size());
-    DynamicList<labelPairList> oldProcPoints(procPoints_.xfer());
+    DynamicList<labelPairList> oldProcPoints(move(procPoints_));
     procPoints_.setCapacity(oldProcPoints.size());
 
     // Go through all equivalences
     forAllConstIter(Map<label>, oldMeshToProcPoint, iter)
     {
-        label localPointI = iter.key();
+        label localPointi = iter.key();
         const labelPairList& pointInfo = oldProcPoints[iter()];
 
         if (pointInfo.size() == 2)
@@ -739,8 +746,8 @@ void CML::globalPoints::remove
             // is in it. This would be an ordinary connection and can be
             // handled by normal face-face connectivity.
 
-            label proc0 = globalIndexAndTransform::processor(pointInfo[0]);
-            label proc1 = globalIndexAndTransform::processor(pointInfo[1]);
+            label proc0 = globalTransforms_.processor(pointInfo[0]);
+            label proc1 = globalTransforms_.processor(pointInfo[1]);
 
             if
             (
@@ -748,14 +755,14 @@ void CML::globalPoints::remove
                     proc0 == Pstream::myProcNo()
                  && directNeighbours.found
                     (
-                        globalIndexAndTransform::index(pointInfo[0])
+                        globalTransforms_.index(pointInfo[0])
                     )
                 )
              || (
                     proc1 == Pstream::myProcNo()
                  && directNeighbours.found
                     (
-                        globalIndexAndTransform::index(pointInfo[1])
+                        globalTransforms_.index(pointInfo[1])
                     )
                 )
             )
@@ -765,14 +772,14 @@ void CML::globalPoints::remove
                 {
                     //Pout<< "Removing direct neighbour:"
                     //    << mesh_.points()
-                    //       [globalIndexAndTransform::index(pointInfo[0])]
+                    //       [globalTransforms_.index(pointInfo[0])]
                     //    << endl;
                 }
                 else if (proc1 == Pstream::myProcNo())
                 {
                     //Pout<< "Removing direct neighbour:"
                     //    << mesh_.points()
-                    //       [globalIndexAndTransform::index(pointInfo[1])]
+                    //       [globalTransforms_.index(pointInfo[1])]
                     //    << endl;
                 }
             }
@@ -790,7 +797,7 @@ void CML::globalPoints::remove
                 // be found if the two domains are face connected at all
                 // (not shown in the picture)
 
-                meshToProcPoint_.insert(localPointI, procPoints_.size());
+                meshToProcPoint_.insert(localPointi, procPoints_.size());
                 procPoints_.append(pointInfo);
             }
         }
@@ -801,21 +808,21 @@ void CML::globalPoints::remove
             // So this meshPoint will have info of size one only.
             if
             (
-                globalIndexAndTransform::processor(pointInfo[0])
+                globalTransforms_.processor(pointInfo[0])
              != Pstream::myProcNo()
              || !directNeighbours.found
                 (
-                    globalIndexAndTransform::index(pointInfo[0])
+                    globalTransforms_.index(pointInfo[0])
                 )
             )
             {
-                meshToProcPoint_.insert(localPointI, procPoints_.size());
+                meshToProcPoint_.insert(localPointi, procPoints_.size());
                 procPoints_.append(pointInfo);
             }
         }
         else
         {
-            meshToProcPoint_.insert(localPointI, procPoints_.size());
+            meshToProcPoint_.insert(localPointi, procPoints_.size());
             procPoints_.append(pointInfo);
         }
     }
@@ -834,9 +841,9 @@ CML::labelList CML::globalPoints::reverseMeshPoints
 
     faceList masterFaces(nbrPatch.size());
 
-    forAll(nbrPatch, faceI)
+    forAll(nbrPatch, facei)
     {
-        masterFaces[faceI] = nbrPatch[faceI].reverseFace();
+        masterFaces[facei] = nbrPatch[facei].reverseFace();
     }
 
     return primitiveFacePatch
@@ -890,8 +897,8 @@ void CML::globalPoints::calculateSharedPoints
         PstreamBuffers pBufs
         (
             (
-                Pstream::defaultCommsType == Pstream::scheduled
-              ? Pstream::nonBlocking
+                Pstream::defaultCommsType == Pstream::commsTypes::scheduled
+              ? Pstream::commsTypes::nonBlocking
               : Pstream::defaultCommsType
             )
         );
@@ -928,8 +935,8 @@ void CML::globalPoints::calculateSharedPoints
         PstreamBuffers pBufs
         (
             (
-                Pstream::defaultCommsType == Pstream::scheduled
-              ? Pstream::nonBlocking
+                Pstream::defaultCommsType == Pstream::commsTypes::scheduled
+              ? Pstream::commsTypes::nonBlocking
               : Pstream::defaultCommsType
             )
         );
@@ -961,7 +968,7 @@ void CML::globalPoints::calculateSharedPoints
     //{
     //    label localI = iter.key();
     //    const labelPairList& pointInfo = procPoints_[iter()];
-    //    Pout<< "pointI:" << localI << " index:" << iter()
+    //    Pout<< "pointi:" << localI << " index:" << iter()
     //        << " coord:"
     //        << mesh_.points()[localToMeshPoint(patchToMeshPoint, localI)]
     //        << endl;
@@ -984,7 +991,7 @@ void CML::globalPoints::calculateSharedPoints
     forAllConstIter(Map<label>, meshToProcPoint_, iter)
     {
         labelPairList& pointInfo = procPoints_[iter()];
-        sort(pointInfo, globalIndexAndTransform::less());
+        sort(pointInfo, globalIndexAndTransform::less(globalTransforms_));
     }
 
 
@@ -1006,10 +1013,10 @@ void CML::globalPoints::calculateSharedPoints
             if
             (
                 (
-                    globalIndexAndTransform::processor(masterInfo)
+                    globalTransforms_.processor(masterInfo)
                  == Pstream::myProcNo()
                 )
-             && (globalIndexAndTransform::index(masterInfo) == iter.key())
+             && (globalTransforms_.index(masterInfo) == iter.key())
             )
             {
                 labelList& pPoints = pointPoints_[iter.key()];
@@ -1024,9 +1031,9 @@ void CML::globalPoints::calculateSharedPoints
                 for (label i = 1; i < pointInfo.size(); i++)
                 {
                     const labelPair& info = pointInfo[i];
-                    label procI = globalIndexAndTransform::processor(info);
-                    label index = globalIndexAndTransform::index(info);
-                    label transform = globalIndexAndTransform::transformIndex
+                    label proci = globalTransforms_.processor(info);
+                    label index = globalTransforms_.index(info);
+                    label transform = globalTransforms_.transformIndex
                     (
                         info
                     );
@@ -1035,7 +1042,7 @@ void CML::globalPoints::calculateSharedPoints
                     {
                         pPoints[nonTransformI++] = globalIndices_.toGlobal
                         (
-                            procI,
+                            proci,
                             index
                         );
                     }
@@ -1052,7 +1059,7 @@ void CML::globalPoints::calculateSharedPoints
     }
 
 
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
     map_.reset
     (
         new mapDistribute
@@ -1078,7 +1085,6 @@ void CML::globalPoints::calculateSharedPoints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from mesh
 CML::globalPoints::globalPoints
 (
     const polyMesh& mesh,
@@ -1107,7 +1113,6 @@ CML::globalPoints::globalPoints
 }
 
 
-// Construct from mesh and patch of coupled faces
 CML::globalPoints::globalPoints
 (
     const polyMesh& mesh,

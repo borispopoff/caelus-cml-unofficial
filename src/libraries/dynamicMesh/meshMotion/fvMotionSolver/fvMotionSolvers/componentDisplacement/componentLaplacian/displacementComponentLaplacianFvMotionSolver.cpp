@@ -110,7 +110,7 @@ displacementComponentLaplacianFvMotionSolver
             )
         );
 
-        //if (debug)
+        // if (debug)
         {
             Info<< "displacementComponentLaplacianFvMotionSolver :"
                 << " Read pointVectorField "
@@ -154,12 +154,12 @@ CML::displacementComponentLaplacianFvMotionSolver::curPoints() const
 
         // Apply pointLocation_ b.c. to mesh points.
 
-        pointLocation_().internalField() = fvMesh_.points();
+        pointLocation_().primitiveFieldRef() = fvMesh_.points();
 
-        pointLocation_().internalField().replace
+        pointLocation_().primitiveFieldRef().replace
         (
             cmpt_,
-            points0_ + pointDisplacement_.internalField()
+            points0_ + pointDisplacement_.primitiveField()
         );
 
         pointLocation_().correctBoundaryConditions();
@@ -171,25 +171,25 @@ CML::displacementComponentLaplacianFvMotionSolver::curPoints() const
 
             forAll(pz, i)
             {
-                label pointI = pz[i];
+                label pointi = pz[i];
 
-                pointLocation_()[pointI][cmpt_] = points0_[pointI];
+                pointLocation_()[pointi][cmpt_] = points0_[pointi];
             }
         }
 
-        twoDCorrectPoints(pointLocation_().internalField());
+        twoDCorrectPoints(pointLocation_().primitiveFieldRef());
 
-        return tmp<pointField>(pointLocation_().internalField());
+        return tmp<pointField>(pointLocation_().primitiveField());
     }
     else
     {
         tmp<pointField> tcurPoints(new pointField(fvMesh_.points()));
-        pointField& curPoints = tcurPoints();
+        pointField& curPoints = tcurPoints.ref();
 
         curPoints.replace
         (
             cmpt_,
-            points0_ + pointDisplacement_.internalField()
+            points0_ + pointDisplacement_.primitiveField()
         );
 
         // Implement frozen points
@@ -199,9 +199,9 @@ CML::displacementComponentLaplacianFvMotionSolver::curPoints() const
 
             forAll(pz, i)
             {
-                label pointI = pz[i];
+                label pointi = pz[i];
 
-                curPoints[pointI][cmpt_] = points0_[pointI];
+                curPoints[pointi][cmpt_] = points0_[pointi];
             }
         }
 
@@ -219,7 +219,7 @@ void CML::displacementComponentLaplacianFvMotionSolver::solve()
     movePoints(fvMesh_.points());
 
     diffusivityPtr_->correct();
-    pointDisplacement_.boundaryField().updateCoeffs();
+    pointDisplacement_.boundaryFieldRef().updateCoeffs();
 
     CML::solve
     (

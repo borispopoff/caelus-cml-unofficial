@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,7 +56,7 @@ class channelIndex
         //- Is mesh symmetric
         const bool symmetric_;
 
-        //- direction to sort
+        //- Direction to sort
         const direction dir_;
 
         //- Per cell the global region
@@ -90,7 +90,7 @@ class channelIndex
         );
 
         //- Disallow default bitwise copy construct and assignment
-        channelIndex(const channelIndex&);
+        channelIndex(const channelIndex&) = delete;
         void operator=(const channelIndex&);
 
 
@@ -119,7 +119,7 @@ public:
             template<class T>
             Field<T> regionSum(const Field<T>& cellField) const;
 
-            //- collapse a field to a line
+            //- Collapse a field to a line
             template<class T>
             Field<T> collapse
             (
@@ -127,7 +127,7 @@ public:
                 const bool asymmetric=false
             ) const;
 
-            //- return the field of Y locations from the cell centres
+            //- Return the field of Y locations from the cell centres
             const scalarField& y() const
             {
                 return y_;
@@ -149,9 +149,9 @@ CML::Field<T> CML::channelIndex::regionSum(const Field<T>& cellField) const
 {
     Field<T> regionField(cellRegion_().nRegions(), pTraits<T>::zero);
 
-    forAll(cellRegion_(), cellI)
+    forAll(cellRegion_(), celli)
     {
-        regionField[cellRegion_()[cellI]] += cellField[cellI];
+        regionField[cellRegion_()[celli]] += cellField[celli];
     }
 
     // Global sum

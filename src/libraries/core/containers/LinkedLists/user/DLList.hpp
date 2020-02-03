@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -17,7 +17,7 @@ License
     You should have received a copy of the GNU General Public License
     along with CAELUS.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
+Alias
     CML::DLList
 
 Description
@@ -35,42 +35,9 @@ Description
 
 namespace CML
 {
-
-/*---------------------------------------------------------------------------*\
-                           Class DLList Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class T>
-class DLList
-:
-    public LList<DLListBase, T>
-{
-
-public:
-
-    // Constructors
-
-        //- Null construct
-        DLList()
-        {}
-
-        //- Construct given initial T
-        DLList(T a)
-        :
-            LList<DLListBase, T>(a)
-        {}
-
-        //- Construct from Istream
-        DLList(Istream& is)
-        :
-            LList<DLListBase, T>(is)
-        {}
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
+    template<class T>
+    using DLList = LList<DLListBase, T>;
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

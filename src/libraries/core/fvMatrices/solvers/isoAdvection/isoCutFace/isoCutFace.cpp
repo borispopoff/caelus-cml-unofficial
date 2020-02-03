@@ -41,8 +41,8 @@ CML::isoCutFace::isoCutFace
     lastEdgeCut_(-1),
     firstFullySubmergedPoint_(-1),
     nFullySubmergedPoints_(0),
-    subFaceCentre_(vector::zero),
-    subFaceArea_(vector::zero),
+    subFaceCentre_(Zero),
+    subFaceArea_(Zero),
     subFacePoints_(10),
     surfacePoints_(4),
     subFaceCentreAndAreaIsCalculated_(false)
@@ -71,9 +71,9 @@ void CML::isoCutFace::calcSubFaceCentreAndArea()
     }
     else if (nPoints > 0)
     {
-        vector sumN = vector::zero;
+        vector sumN = Zero;
         scalar sumA = 0.0;
-        vector sumAc = vector::zero;
+        vector sumAc = Zero;
         const point fCentre = sum(subFacePoints_)/scalar(nPoints);
 
         for (label pi = 0; pi < nPoints; pi++)
@@ -95,7 +95,7 @@ void CML::isoCutFace::calcSubFaceCentreAndArea()
         if (sumA < ROOTVSMALL)
         {
             subFaceCentre_ = fCentre;
-            subFaceArea_ = vector::zero;
+            subFaceArea_ = Zero;
         }
         else
         {
@@ -263,12 +263,12 @@ void CML::isoCutFace::surfacePoints
 
 CML::label CML::isoCutFace::calcSubFace
 (
-    const label faceI,
+    const label facei,
     const scalar isoValue
 )
 {
     clearStorage();
-    const labelList& pLabels = mesh_.faces()[faceI];
+    const labelList& pLabels = mesh_.faces()[facei];
     const pointField& points = mesh_.points();
     return calcSubFace(isoValue, points, f_, pLabels);
 }
@@ -325,8 +325,8 @@ void CML::isoCutFace::clearStorage()
     lastEdgeCut_ = -1;
     firstFullySubmergedPoint_ = -1;
     nFullySubmergedPoints_ = 0;
-    subFaceCentre_ = vector::zero;
-    subFaceArea_ = vector::zero;
+    subFaceCentre_ = Zero;
+    subFaceArea_ = Zero;
     subFacePoints_.clear();
     surfacePoints_.clear();
     subFaceCentreAndAreaIsCalculated_ = false;
@@ -582,7 +582,7 @@ void CML::isoCutFace::quadAreaCoeffs
 
         const scalar Bx = mag(B - A);
 
-        vector xhat(vector::zero);
+        vector xhat(Zero);
         if (Bx > 10*SMALL)
         {
             // If |AB| > 0 ABCD we use AB to define xhat

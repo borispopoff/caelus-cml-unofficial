@@ -143,13 +143,13 @@ protected:
 
         scalarField equidistantTime
         (
-            const List<std::pair<scalar, label > >& timeLabel,
+            const List<std::pair<scalar, label >>& timeLabel,
             const dictionary&
         );
 
         void interpolationWeights
         (
-            const List<std::pair<scalar, label> >&,
+            const List<std::pair<scalar, label>>&,
             const scalarField&,
             scalarField&,
             labelList&,

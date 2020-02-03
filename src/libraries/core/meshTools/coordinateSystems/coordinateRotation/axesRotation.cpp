@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -86,7 +86,7 @@ void CML::axesRotation::calcTransform
                 << "Unhandled axes specifictation" << endl
                 << abort(FatalError);
 
-            Rtr = tensor::zero;
+            Rtr = Zero;
             break;
         }
     }
@@ -227,7 +227,7 @@ CML::tmp<CML::symmTensorField> CML::axesRotation::transformVector
 ) const
 {
     tmp<symmTensorField> tfld(new symmTensorField(st.size()));
-    symmTensorField& fld = tfld();
+    symmTensorField& fld = tfld.ref();
 
     forAll(fld, i)
     {
@@ -292,9 +292,9 @@ void CML::axesRotation::operator=(const dictionary& dict)
 
 void CML::axesRotation::write(Ostream& os) const
 {
-     os.writeKeyword("e1") << e1() << token::END_STATEMENT << nl;
-     os.writeKeyword("e2") << e2() << token::END_STATEMENT << nl;
-     os.writeKeyword("e3") << e3() << token::END_STATEMENT << nl;
+     writeEntry(os, "e1", e1());
+     writeEntry(os, "e2", e2());
+     writeEntry(os, "e3", e3());
 }
 
 

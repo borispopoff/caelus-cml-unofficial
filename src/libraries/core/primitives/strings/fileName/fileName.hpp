@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,6 +60,16 @@ Istream& operator>>(Istream&, fileName&);
 Ostream& operator<<(Ostream&, const fileName&);
 
 
+//- Enumeration of file types
+enum class fileType
+{
+    undefined,
+    file,
+    directory,
+    link
+};
+
+
 /*---------------------------------------------------------------------------*\
                           Class fileName Declaration
 \*---------------------------------------------------------------------------*/
@@ -75,16 +85,6 @@ class fileName
 
 
 public:
-
-    //- Enumerations to handle file types and modes.
-    enum Type
-    {
-        UNDEFINED,
-        FILE,
-        DIRECTORY,
-        LINK
-    };
-
 
     // Static data members
 
@@ -102,6 +102,9 @@ public:
 
         //- Construct as copy
         inline fileName(const fileName&);
+
+        //- Move constructor
+        inline fileName(fileName&&);
 
         //- Construct as copy of word
         inline fileName(const word&);
@@ -128,7 +131,20 @@ public:
         inline static bool valid(char);
 
         //- Cleanup file name
-        //  eg, remove repeated slashes, etc.
+        //
+        // * Removes repeated slashes
+        //       /abc////def        -->   /abc/def
+        //
+        // * Removes '/./'
+        //       /abc/def/./ghi/.   -->   /abc/def/./ghi
+        //       abc/def/./         -->   abc/def
+        //
+        // * Removes '/../'
+        //       /abc/def/../ghi/jkl/nmo/..   -->   /abc/ghi/jkl
+        //       abc/../def/ghi/../jkl        -->   abc/../def/jkl
+        //
+        // * Removes trailing '/'
+        //
         bool clean();
 
         //- Cleanup file name
@@ -138,8 +154,8 @@ public:
 
         // Interrogation
 
-            //- Return the file type: FILE, DIRECTORY or UNDEFINED
-            Type type() const;
+            //- Return the file type: file, directory or undefined
+            fileType type() const;
 
             //- Return true if file name is absolute
             bool isAbsolute() const;
@@ -163,7 +179,7 @@ public:
             //
             word name() const;
 
-            //- Return file name (part beyond last /), subsitute for CAELUS_CASE
+            //- Return file name (part beyond last /), substitute for CAELUS_CASE
             string caseName() const;
 
             //- Return file name, optionally without extension
@@ -209,6 +225,7 @@ public:
         // Assignment
 
             void operator=(const fileName&);
+            void operator=(fileName&&);
             void operator=(const word&);
             void operator=(const string&);
             void operator=(const std::string&);

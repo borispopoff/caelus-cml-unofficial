@@ -307,7 +307,7 @@ void CML::refinementHistory::freeSplitCell(const label index)
     // Make sure parent does not point to me anymore.
     if (split.parent_ >= 0)
     {
-        autoPtr<FixedList<label, 8> >& subCellsPtr =
+        autoPtr<FixedList<label, 8>>& subCellsPtr =
             splitCells_[split.parent_].addedCellsPtr_;
 
         if (subCellsPtr.valid())
@@ -411,9 +411,9 @@ CML::label CML::refinementHistory::markCommonCells
     labelList splitToCluster(splitCells_.size(), -1);
 
     // Pass1: find top of all clusters
-    forAll(visibleCells_, cellI)
+    forAll(visibleCells_, celli)
     {
-        label index = visibleCells_[cellI];
+        label index = visibleCells_[celli];
 
         if (index >= 0)
         {
@@ -435,13 +435,13 @@ CML::label CML::refinementHistory::markCommonCells
     // Pass2: mark all cells with cluster
     cellToCluster.setSize(visibleCells_.size(), -1);
 
-    forAll(visibleCells_, cellI)
+    forAll(visibleCells_, celli)
     {
-        label index = visibleCells_[cellI];
+        label index = visibleCells_[celli];
 
         if (index >= 0)
         {
-            cellToCluster[cellI] = splitToCluster[index];
+            cellToCluster[celli] = splitToCluster[index];
         }
     }
 
@@ -470,16 +470,16 @@ void CML::refinementHistory::add
 
     label nUnblocked = 0;
 
-    forAll(mesh.faceNeighbour(), faceI)
+    forAll(mesh.faceNeighbour(), facei)
     {
-        label ownCluster = cellToCluster[mesh.faceOwner()[faceI]];
-        label neiCluster = cellToCluster[mesh.faceNeighbour()[faceI]];
+        label ownCluster = cellToCluster[mesh.faceOwner()[facei]];
+        label neiCluster = cellToCluster[mesh.faceNeighbour()[facei]];
 
         if (ownCluster != -1 && ownCluster == neiCluster)
         {
-            if (blockedFace[faceI])
+            if (blockedFace[facei])
             {
-                blockedFace[faceI] = false;
+                blockedFace[facei] = false;
                 nUnblocked++;
             }
         }
@@ -517,10 +517,10 @@ void CML::refinementHistory::apply
 
     label nChanged = 0;
 
-    forAll(mesh.faceNeighbour(), faceI)
+    forAll(mesh.faceNeighbour(), facei)
     {
-        label own = mesh.faceOwner()[faceI];
-        label nei = mesh.faceNeighbour()[faceI];
+        label own = mesh.faceOwner()[facei];
+        label nei = mesh.faceNeighbour()[facei];
 
         label ownCluster = cellToCluster[own];
         label neiCluster = cellToCluster[nei];
@@ -683,9 +683,9 @@ CML::refinementHistory::refinementHistory
         visibleCells_.setSize(nCells);
         splitCells_.setCapacity(nCells);
 
-        for (label cellI = 0; cellI < nCells; cellI++)
+        for (label celli = 0; celli < nCells; celli++)
         {
-            visibleCells_[cellI] = cellI;
+            visibleCells_[celli] = celli;
             splitCells_.append(splitCell8());
         }
     }
@@ -940,7 +940,7 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
     // Per splitCell entry the number of live cells that move to that processor
     const labelList& splitCellNum,
 
-    const label procI,
+    const label proci,
 
     // From old to new splitCells
     labelList& oldToNewSplit
@@ -957,20 +957,20 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
 
     forAll(splitCells_, index)
     {
-        if (splitCellProc[index] == procI && splitCellNum[index] == 8)
+        if (splitCellProc[index] == proci && splitCellNum[index] == 8)
         {
-            // Entry moves in its whole to procI
+            // Entry moves in its whole to proci
             oldToNewSplit[index] = newSplitCells.size();
             newSplitCells.append(splitCells_[index]);
         }
     }
 
     // Add live cells that are subsetted.
-    forAll(visibleCells_, cellI)
+    forAll(visibleCells_, celli)
     {
-        label index = visibleCells_[cellI];
+        label index = visibleCells_[celli];
 
-        if (index >= 0 && decomposition[cellI] == procI)
+        if (index >= 0 && decomposition[celli] == proci)
         {
             label parent = splitCells_[index].parent_;
 
@@ -1008,9 +1008,9 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
 
     // Count number of cells
     label nSub = 0;
-    forAll(decomposition, cellI)
+    forAll(decomposition, celli)
     {
-        if (decomposition[cellI] == procI)
+        if (decomposition[celli] == proci)
         {
             nSub++;
         }
@@ -1019,11 +1019,11 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
     labelList newVisibleCells(nSub);
     nSub = 0;
 
-    forAll(visibleCells_, cellI)
+    forAll(visibleCells_, celli)
     {
-        if (decomposition[cellI] == procI)
+        if (decomposition[celli] == proci)
         {
-            label index = visibleCells_[cellI];
+            label index = visibleCells_[celli];
             if (index >= 0)
             {
                 index = oldToNewSplit[index];
@@ -1067,16 +1067,16 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
         // processor
         labelList splitCellNum(splitCells_.size(), 0);
 
-        forAll(visibleCells_, cellI)
+        forAll(visibleCells_, celli)
         {
-            label index = visibleCells_[cellI];
+            label index = visibleCells_[celli];
 
             if (index >= 0)
             {
                 countProc
                 (
                     splitCells_[index].parent_,
-                    decomposition[cellI],
+                    decomposition[celli],
                     splitCellProc,
                     splitCellNum
                 );
@@ -1090,7 +1090,7 @@ CML::autoPtr<CML::refinementHistory> CML::refinementHistory::clone
             decomposition,
             splitCellProc,
             splitCellNum,
-            1,      //procI,
+            1,      //proci,
             oldToNewSplit
         );
     }
@@ -1430,7 +1430,7 @@ void CML::refinementHistory::distribute(const mapDistributePolyMesh& map)
 
 
         // Send to neighbours
-        OPstream toNbr(Pstream::blocking, proci);
+        OPstream toNbr(Pstream::commsTypes::blocking, proci);
         toNbr << newSplitCells << newVisibleCells;
     }
 
@@ -1448,7 +1448,7 @@ void CML::refinementHistory::distribute(const mapDistributePolyMesh& map)
 
     for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
-        IPstream fromNbr(Pstream::blocking, proci);
+        IPstream fromNbr(Pstream::commsTypes::blocking, proci);
         List<splitCell8> newSplitCells(fromNbr);
         labelList newVisibleCells(fromNbr);
 

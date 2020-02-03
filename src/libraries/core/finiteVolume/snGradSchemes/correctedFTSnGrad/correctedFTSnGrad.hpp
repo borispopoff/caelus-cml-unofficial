@@ -56,12 +56,6 @@ class correctedFTSnGrad
 :
     public snGradScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const correctedFTSnGrad&);
-
-
 public:
 
     //- Runtime type information
@@ -107,7 +101,7 @@ public:
 
         //- Return the explicit correction to the correctedFTSnGrad
         //  for the given field using the gradient of the field
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         fullGradCorrection
         (
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -115,8 +109,14 @@ public:
 
         //- Return the explicit correction to the correctedFTSnGrad
         //  for the given field using the gradients of the field components
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const correctedFTSnGrad&) = delete;
 };
 
 
@@ -155,7 +155,7 @@ CML::fv::correctedFTSnGrad<Type>::~correctedFTSnGrad()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::fv::correctedFTSnGrad<Type>::fullGradCorrection
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -164,7 +164,7 @@ CML::fv::correctedFTSnGrad<Type>::fullGradCorrection
     const fvMesh& mesh = this->mesh();
 		
     // construct GeometricField<Type, fvsPatchField, surfaceMesh>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tssf =
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf =
         midPoint<typename outerProduct<vector, Type>::type>(mesh).dotInterpolate
         (
             mesh.nonOrthCorrectionVectors(),
@@ -174,14 +174,14 @@ CML::fv::correctedFTSnGrad<Type>::fullGradCorrection
                 mesh.gradScheme("grad(" + vf.name() + ')')
             )().grad(vf, "grad(" + vf.name() + ')')
         );
-    tssf().rename("snGradCorr(" + vf.name() + ')');
+    tssf.ref().rename("snGradCorr(" + vf.name() + ')');
 
     return tssf;
 }
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::fv::correctedFTSnGrad<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -190,7 +190,7 @@ CML::fv::correctedFTSnGrad<Type>::correction
     const fvMesh& mesh = this->mesh();
 
     // construct GeometricField<Type, fvsPatchField, surfaceMesh>
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tssf
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tssf
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -206,7 +206,7 @@ CML::fv::correctedFTSnGrad<Type>::correction
             vf.dimensions()*mesh.nonOrthDeltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {

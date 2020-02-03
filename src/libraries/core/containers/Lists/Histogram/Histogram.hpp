@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,12 +60,6 @@ class Histogram
 
         void count(const List& bins, const List& l);
 
-        //- Disallow default bitwise copy construct
-        Histogram(const Histogram&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const Histogram&);
-
 
 public:
 
@@ -83,8 +77,11 @@ public:
             const List& l
         );
 
+        //- Disallow default bitwise copy construct
+        Histogram(const Histogram&) = delete;
 
-        // Access
+
+    // Member Functions
 
             //- Return the counts per bin
             inline const labelList& counts() const
@@ -105,6 +102,12 @@ public:
             {
                 return nHigh_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Histogram&) = delete;
 };
 
 

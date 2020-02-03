@@ -143,7 +143,7 @@ partTetMesh::partTetMesh
             const Map<label>& globalToLocal =
                 mesh.addressingData().globalToLocalPointAddressing();
 
-            std::map<label, LongList<label> > eData;
+            std::map<label, LongList<label>> eData;
             forAllConstIter(Map<label>, globalToLocal, iter)
             {
                 const label pointI = iter();
@@ -226,10 +226,10 @@ partTetMesh::partTetMesh
     List<direction> useCell(cells.size(), direction(0));
 
     //- select cells containing at least one vertex of the bad faces
-    forAll(faces, faceI)
-        if( badFaces.found(faceI) )
+    forAll(faces, facei)
+        if( badFaces.found(facei) )
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             forAll(f, pI)
             {
@@ -270,7 +270,7 @@ partTetMesh::partTetMesh
             const Map<label>& globalToLocal =
                 mesh.addressingData().globalToLocalPointAddressing();
 
-            std::map<label, LongList<label> > eData;
+            std::map<label, LongList<label>> eData;
             forAllConstIter(Map<label>, globalToLocal, iter)
             {
                 const label pointI = iter();
@@ -443,7 +443,7 @@ void partTetMesh::updateVertex(const label pointI, const point& newP)
     }
 }
 
-void partTetMesh::updateVerticesSMP(const List<LongList<labelledPoint> >& np)
+void partTetMesh::updateVerticesSMP(const List<LongList<labelledPoint>>& np)
 {
     List<direction> updateType(points_.size(), direction(0));
 
@@ -575,15 +575,15 @@ void partTetMesh::updateOrigMesh(boolList* changedFacePtr)
             const label size = pBnd[patchI].patchSize();
 
             labelLongList sendData;
-            for(label faceI=0;faceI<size;++faceI)
+            for(label facei=0;facei<size;++facei)
             {
-                if( chF[start+faceI] )
-                    sendData.append(faceI);
+                if( chF[start+facei] )
+                    sendData.append(facei);
             }
 
             OPstream toOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 pBnd[patchI].neiProcNo(),
                 sendData.byteSize()
             );
@@ -597,7 +597,7 @@ void partTetMesh::updateOrigMesh(boolList* changedFacePtr)
 
             IPstream fromOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 pBnd[patchI].neiProcNo()
             );
 

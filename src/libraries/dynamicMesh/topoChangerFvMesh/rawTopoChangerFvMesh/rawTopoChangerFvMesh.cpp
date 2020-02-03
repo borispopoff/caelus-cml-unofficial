@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -89,18 +89,18 @@ bool CML::rawTopoChangerFvMesh::update()
         const label nOldInternal = topoChangeMap().oldPatchStarts()[0];
 
         const labelList& faceMap = topoChangeMap().faceMap();
-        for (label faceI = 0; faceI < nInternalFaces(); faceI++)
+        for (label facei = 0; facei < nInternalFaces(); facei++)
         {
-            if (faceMap[faceI] >= 0)
+            if (faceMap[facei] >= 0)
             {
-                mappedFace[faceI] = 1;
+                mappedFace[facei] = 1;
             }
         }
-        for (label faceI = nInternalFaces(); faceI < nFaces(); faceI++)
+        for (label facei = nInternalFaces(); facei < nFaces(); facei++)
         {
-            if (faceMap[faceI] >= 0 && faceMap[faceI] >= nOldInternal)
+            if (faceMap[facei] >= 0 && faceMap[facei] >= nOldInternal)
             {
-                mappedFace[faceI] = 1;
+                mappedFace[facei] = 1;
             }
         }
 
@@ -138,10 +138,7 @@ bool CML::rawTopoChangerFvMesh::update()
         Info<< "rawTopoChangerFvMesh :"
             << " recreating phi for unmapped boundary values." << endl;
         const volVectorField& U = lookupObject<volVectorField>("U");
-        surfaceScalarField& phi = const_cast<surfaceScalarField&>
-        (
-            lookupObject<surfaceScalarField>("phi")
-        );
+        surfaceScalarField& phi = lookupObjectRef<surfaceScalarField>("phi");
         setUnmappedValues
         (
             phi,

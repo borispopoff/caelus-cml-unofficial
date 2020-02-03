@@ -48,7 +48,7 @@ Description
 #include "scalar.hpp"
 #include "Ostream.hpp"
 #include "VectorSpace.hpp"
-#include "StaticAssert.hpp"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,7 +78,7 @@ class Polynomial
     public VectorSpace<Polynomial<PolySize>, scalar, PolySize>
 {
     //- Size must be positive (non-zero)
-    StaticAssert(PolySize > 0);
+    static_assert(PolySize > 0, "Size must be positive (non-zero)");
 
     // Private data
 
@@ -402,7 +402,7 @@ CML::Ostream& CML::operator<<
 )
 {
     os  << static_cast
-            <VectorSpace<Polynomial<PolySize>, scalar, PolySize> >(poly);
+            <VectorSpace<Polynomial<PolySize>, scalar, PolySize>>(poly);
 
     // Check state of Ostream
     os.check

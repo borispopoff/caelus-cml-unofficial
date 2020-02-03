@@ -100,10 +100,10 @@ class GAMGSolver
         PtrList<lduInterfaceFieldPtrsList> interfaceLevels_;
 
         //- Hierarchy of interface boundary coefficients
-        PtrList<FieldField<Field, scalar> > interfaceLevelsBouCoeffs_;
+        PtrList<FieldField<Field, scalar>> interfaceLevelsBouCoeffs_;
 
         //- Hierarchy of interface internal coefficients
-        PtrList<FieldField<Field, scalar> > interfaceLevelsIntCoeffs_;
+        PtrList<FieldField<Field, scalar>> interfaceLevelsIntCoeffs_;
 
         //- LU decompsed coarsest matrix
         autoPtr<LUscalarMatrix> coarsestLUMatrixPtr_;

@@ -164,9 +164,9 @@ public:
         (
             typename CloudType::parcelType& p,
             const List<point>& flatSitePoints,
-            const List<WallSiteData<vector> >& flatSiteData,
+            const List<WallSiteData<vector>>& flatSiteData,
             const List<point>& sharpSitePoints,
-            const List<WallSiteData<vector> >& sharpSiteData
+            const List<WallSiteData<vector>>& sharpSiteData
         ) const;
 };
 
@@ -487,9 +487,9 @@ void CML::WallLocalSpringSliderDashpot<CloudType>::evaluateWall
 (
     typename CloudType::parcelType& p,
     const List<point>& flatSitePoints,
-    const List<WallSiteData<vector> >& flatSiteData,
+    const List<WallSiteData<vector>>& flatSiteData,
     const List<point>& sharpSitePoints,
-    const List<WallSiteData<vector> >& sharpSiteData
+    const List<WallSiteData<vector>>& sharpSiteData
 ) const
 {
     scalar pREff = this->pREff(p);

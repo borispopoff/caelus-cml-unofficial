@@ -42,7 +42,7 @@ cfmesh_env.Append(CPPPATH = [
                      ]
                   )
 
-cfmesh_env.Append(LIBS = ['core','edgeMesh'])
+cfmesh_env.Append(LIBS = ['core'])
 
 if cfmesh_env['OMP']:
     if cfmesh_env['CXX'] == 'g++':

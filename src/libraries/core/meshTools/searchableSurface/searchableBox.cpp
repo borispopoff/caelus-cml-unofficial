@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -71,7 +71,7 @@ CML::pointIndexHit CML::searchableBox::findNearest
 ) const
 {
     // Point can be inside or outside. For every component direction can be
-    // left of min, right of max or inbetween.
+    // left of min, right of max or in between.
     // - outside points: project first one x plane (either min().x()
     // or max().x()), then onto y plane and finally z. You should be left
     // with intersection point
@@ -219,7 +219,7 @@ const CML::wordList& CML::searchableBox::regions() const
 CML::tmp<CML::pointField> CML::searchableBox::coordinates() const
 {
     tmp<pointField> tCtrs = tmp<pointField>(new pointField(6));
-    pointField& ctrs = tCtrs();
+    pointField& ctrs = tCtrs.ref();
 
     const pointField pts(treeBoundBox::points());
     const faceList& fcs = treeBoundBox::faces;
@@ -493,7 +493,7 @@ void CML::searchableBox::findLineAll
 (
     const pointField& start,
     const pointField& end,
-    List<List<pointIndexHit> >& info
+    List<List<pointIndexHit>>& info
 ) const
 {
     info.setSize(start.size());
@@ -515,22 +515,22 @@ void CML::searchableBox::findLineAll
       + vector(ROOTVSMALL,ROOTVSMALL,ROOTVSMALL)
     );
 
-    forAll(start, pointI)
+    forAll(start, pointi)
     {
         // See if any intersection between pt and end
-        pointIndexHit inter = findLine(start[pointI], end[pointI]);
+        pointIndexHit inter = findLine(start[pointi], end[pointi]);
 
         if (inter.hit())
         {
             hits.clear();
             hits.append(inter);
 
-            point pt = inter.hitPoint() + smallVec[pointI];
+            point pt = inter.hitPoint() + smallVec[pointi];
 
-            while (((pt-start[pointI])&dirVec[pointI]) <= magSqrDirVec[pointI])
+            while (((pt-start[pointi])&dirVec[pointi]) <= magSqrDirVec[pointi])
             {
                 // See if any intersection between pt and end
-                pointIndexHit inter = findLine(pt, end[pointI]);
+                pointIndexHit inter = findLine(pt, end[pointi]);
 
                 // Check for not hit or hit same face as before (can happen
                 // if vector along surface of face)
@@ -544,14 +544,14 @@ void CML::searchableBox::findLineAll
                 }
                 hits.append(inter);
 
-                pt = inter.hitPoint() + smallVec[pointI];
+                pt = inter.hitPoint() + smallVec[pointi];
             }
 
-            info[pointI].transfer(hits);
+            info[pointi].transfer(hits);
         }
         else
         {
-            info[pointI].clear();
+            info[pointi].clear();
         }
     }
 }
@@ -575,7 +575,7 @@ void CML::searchableBox::getNormal
 ) const
 {
     normal.setSize(info.size());
-    normal = vector::zero;
+    normal = Zero;
 
     forAll(info, i)
     {
@@ -598,17 +598,17 @@ void CML::searchableBox::getVolumeType
 ) const
 {
     volType.setSize(points.size());
-    volType = volumeType::INSIDE;
+    volType = volumeType::inside;
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         for (direction dir = 0; dir < vector::nComponents; dir++)
         {
             if (pt[dir] < min()[dir] || pt[dir] > max()[dir])
             {
-                volType[pointI] = volumeType::OUTSIDE;
+                volType[pointi] = volumeType::outside;
                 break;
             }
         }

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -81,7 +81,7 @@ protected:
         const word interpolationScheme_;
 
         //- Table data
-        List<Tuple2<scalar, Type> > table_;
+        List<Tuple2<scalar, Type>> table_;
 
         //- Extracted values
         mutable autoPtr<scalarField> tableSamplesPtr_;
@@ -104,7 +104,7 @@ protected:
 private:
 
         //- Disallow default bitwise assignment
-        void operator=(const TableBase<Type>&);
+        void operator=(const TableBase<Type>&) = delete;
 
 
 public:
@@ -155,7 +155,7 @@ public:
         virtual tmp<scalarField> x() const;
 
         //- Return the dependent values
-        virtual tmp<Field<Type> > y() const;
+        virtual tmp<Field<Type>> y() const;
 
         //- Write all table data in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -527,7 +527,7 @@ template<class Type>
 CML::tmp<CML::scalarField> CML::DataEntryTypes::TableBase<Type>::x() const
 {
     tmp<scalarField> tfld(new scalarField(table_.size(), 0.0));
-    scalarField& fld = tfld();
+    scalarField& fld = tfld.ref();
 
     forAll(table_, i)
     {
@@ -539,10 +539,10 @@ CML::tmp<CML::scalarField> CML::DataEntryTypes::TableBase<Type>::x() const
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::DataEntryTypes::TableBase<Type>::y() const
+CML::tmp<CML::Field<Type>> CML::DataEntryTypes::TableBase<Type>::y() const
 {
-    tmp<Field<Type> > tfld(new Field<Type>(table_.size(), Zero));
-    Field<Type>& fld = tfld();
+    tmp<Field<Type>> tfld(new Field<Type>(table_.size(), Zero));
+    Field<Type>& fld = tfld.ref();
 
     forAll(table_, i)
     {
@@ -558,13 +558,11 @@ void CML::DataEntryTypes::TableBase<Type>::writeEntries(Ostream& os) const
 {
     if (boundsHandling_ != CLAMP)
     {
-        os.writeKeyword("outOfBounds") << boundsHandlingToWord(boundsHandling_)
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "outOfBounds", boundsHandlingToWord(boundsHandling_));
     }
     if (interpolationScheme_ != "linear")
     {
-        os.writeKeyword("interpolationScheme") << interpolationScheme_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "interpolationScheme", interpolationScheme_);
     }
 }
 

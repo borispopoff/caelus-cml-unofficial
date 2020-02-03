@@ -62,9 +62,9 @@ public:
         NoCollision(const NoCollision<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<CollisionModel<CloudType> > clone() const
+        virtual autoPtr<CollisionModel<CloudType>> clone() const
         {
-            return autoPtr<CollisionModel<CloudType> >
+            return autoPtr<CollisionModel<CloudType>>
             (
                 new NoCollision<CloudType>(*this)
             );

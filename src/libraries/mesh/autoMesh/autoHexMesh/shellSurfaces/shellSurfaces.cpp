@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,7 +56,7 @@ const NamedEnum<shellSurfaces::refineMode, 3> shellSurfaces::refineModeNames_;
 void CML::shellSurfaces::setAndCheckLevels
 (
     const label shellI,
-    const List<Tuple2<scalar, label> >& distLevels
+    const List<Tuple2<scalar, label>>& distLevels
 )
 {
     if (modes_[shellI] != DISTANCE && distLevels.size() != 1)
@@ -246,14 +246,14 @@ void CML::shellSurfaces::findHigherLevel
         scalarField candidateDistSqr(pt.size());
         label candidateI = 0;
 
-        forAll(maxLevel, pointI)
+        forAll(maxLevel, pointi)
         {
             forAllReverse(levels, levelI)
             {
-                if (levels[levelI] > maxLevel[pointI])
+                if (levels[levelI] > maxLevel[pointi])
                 {
-                    candidates[candidateI] = pt[pointI];
-                    candidateMap[candidateI] = pointI;
+                    candidates[candidateI] = pt[pointi];
+                    candidateMap[candidateI] = pointi;
                     candidateDistSqr[candidateI] = sqr(distances[levelI]);
                     candidateI++;
                     break;
@@ -285,10 +285,10 @@ void CML::shellSurfaces::findHigherLevel
                     mag(nearInfo[candidateI].hitPoint()-candidates[candidateI])
                 );
 
-                label pointI = candidateMap[candidateI];
+                label pointi = candidateMap[candidateI];
 
                 // pt is inbetween shell[minDistI] and shell[minDistI+1]
-                maxLevel[pointI] = levels[minDistI+1];
+                maxLevel[pointi] = levels[minDistI+1];
             }
         }
     }
@@ -303,12 +303,12 @@ void CML::shellSurfaces::findHigherLevel
         labelList candidateMap(pt.size());
         label candidateI = 0;
 
-        forAll(maxLevel, pointI)
+        forAll(maxLevel, pointi)
         {
-            if (levels[0] > maxLevel[pointI])
+            if (levels[0] > maxLevel[pointi])
             {
-                candidates[candidateI] = pt[pointI];
-                candidateMap[candidateI] = pointI;
+                candidates[candidateI] = pt[pointi];
+                candidateMap[candidateI] = pointi;
                 candidateI++;
             }
         }
@@ -321,21 +321,21 @@ void CML::shellSurfaces::findHigherLevel
 
         forAll(volType, i)
         {
-            label pointI = candidateMap[i];
+            label pointi = candidateMap[i];
 
             if
             (
                 (
                     modes_[shellI] == INSIDE
-                 && volType[i] == volumeType::INSIDE
+                 && volType[i] == volumeType::inside
                 )
              || (
                     modes_[shellI] == OUTSIDE
-                 && volType[i] == volumeType::OUTSIDE
+                 && volType[i] == volumeType::outside
                 )
             )
             {
-                maxLevel[pointI] = levels[0];
+                maxLevel[pointi] = levels[0];
             }
         }
     }

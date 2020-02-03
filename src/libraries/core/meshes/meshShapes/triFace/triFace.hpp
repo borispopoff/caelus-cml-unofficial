@@ -143,7 +143,7 @@ public:
         inline tensor inertia
         (
             const pointField&,
-            const point& refPt = vector::zero,
+            const point& refPt = Zero,
             scalar density = 1.0
         ) const;
 
@@ -154,8 +154,8 @@ public:
             const point& p,
             const vector& q,
             const pointField& points,
-            const intersection::algorithm = intersection::FULL_RAY,
-            const intersection::direction dir = intersection::VECTOR
+            const intersection::algorithm = intersection::algorithm::fullRay,
+            const intersection::direction dir = intersection::direction::vector
         ) const;
 
         //- Fast intersection with a ray.

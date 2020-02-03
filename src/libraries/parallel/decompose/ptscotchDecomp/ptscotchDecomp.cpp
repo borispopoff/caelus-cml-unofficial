@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -176,9 +176,9 @@ void CML::ptscotchDecomp::check(const int retVal, const char* str)
 //    globalIndex globalCells(initxadj.size()-1);
 //
 //    bool hasZeroDomain = false;
-//    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+//    for (label proci = 0; proci < Pstream::nProcs(); proci++)
 //    {
-//        if (globalCells.localSize(procI) == 0)
+//        if (globalCells.localSize(proci) == 0)
 //        {
 //            hasZeroDomain = true;
 //            break;
@@ -215,12 +215,12 @@ void CML::ptscotchDecomp::check(const int retVal, const char* str)
 //    // (is same as number of cells next processor has to receive)
 //    List<label> nSendCells(Pstream::nProcs(), 0);
 //
-//    for (label procI = nSendCells.size()-1; procI >=1; procI--)
+//    for (label proci = nSendCells.size()-1; proci >=1; proci--)
 //    {
-//        label nLocalCells = globalCells.localSize(procI);
-//        if (nLocalCells-nSendCells[procI] < 1)
+//        label nLocalCells = globalCells.localSize(proci);
+//        if (nLocalCells-nSendCells[proci] < 1)
 //        {
-//            nSendCells[procI-1] = nSendCells[procI]-nLocalCells+1;
+//            nSendCells[proci-1] = nSendCells[proci]-nLocalCells+1;
 //        }
 //    }
 //
@@ -233,7 +233,8 @@ void CML::ptscotchDecomp::check(const int retVal, const char* str)
 //    if (Pstream::myProcNo() >= 1 && nSendCells[Pstream::myProcNo()-1] > 0)
 //    {
 //        // Receive cells from previous processor
-//        IPstream fromPrevProc(Pstream::blocking, Pstream::myProcNo()-1);
+//        IPstream fromPrevProc(Pstream::commsTypes::blocking,
+//            Pstream::myProcNo()-1);
 //
 //        Field<label> prevXadj(fromPrevProc);
 //        Field<label> prevAdjncy(fromPrevProc);
@@ -263,7 +264,8 @@ void CML::ptscotchDecomp::check(const int retVal, const char* str)
 //    if (nSendCells[Pstream::myProcNo()] > 0)
 //    {
 //        // Send cells to next processor
-//        OPstream toNextProc(Pstream::blocking, Pstream::myProcNo()+1);
+//        OPstream toNextProc(Pstream::commsTypes::blocking,
+//            Pstream::myProcNo()+1);
 //
 //        label nCells = nSendCells[Pstream::myProcNo()];
 //        label startCell = xadj.size()-1 - nCells;
@@ -312,7 +314,8 @@ void CML::ptscotchDecomp::check(const int retVal, const char* str)
 //    // Receive back from next processor if I sent something
 //    if (nSendCells[Pstream::myProcNo()] > 0)
 //    {
-//        IPstream fromNextProc(Pstream::blocking, Pstream::myProcNo()+1);
+//        IPstream fromNextProc(Pstream::commsTypes::blocking,
+//            Pstream::myProcNo()+1);
 //
 //        List<label> nextFinalDecomp(fromNextProc);
 //
@@ -331,7 +334,8 @@ void CML::ptscotchDecomp::check(const int retVal, const char* str)
 //    // Send back to previous processor.
 //    if (Pstream::myProcNo() >= 1 && nSendCells[Pstream::myProcNo()-1] > 0)
 //    {
-//        OPstream toPrevProc(Pstream::blocking, Pstream::myProcNo()-1);
+//        OPstream toPrevProc(Pstream::commsTypes::blocking,
+//            Pstream::myProcNo()-1);
 //
 //        label nToPrevious = nSendCells[Pstream::myProcNo()-1];
 //
@@ -434,10 +438,10 @@ CML::label CML::ptscotchDecomp::decompose
             label baseval = 0;
             // 100*hasVertlabels+10*hasEdgeWeights+1*hasVertWeighs
             str << baseval << ' ' << "000" << nl;
-            for (label cellI = 0; cellI < xadjSize-1; cellI++)
+            for (label celli = 0; celli < xadjSize-1; celli++)
             {
-                label start = xadj[cellI];
-                label end = xadj[cellI+1];
+                label start = xadj[celli];
+                label end = xadj[celli+1];
                 str << end-start;
 
                 for (label i = start; i < end; i++)

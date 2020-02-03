@@ -39,7 +39,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class wedgeFvPatch Declaration
+                       Class wedgeFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -87,9 +87,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new wedgeFvPatchField<Type>(*this)
             );
@@ -103,12 +103,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new wedgeFvPatchField<Type>(*this, iF)
             );
@@ -117,19 +117,17 @@ public:
 
     // Member functions
 
-        // Evaluation functions
+        //- Return gradient at boundary
+        virtual tmp<Field<Type>> snGrad() const;
 
-            //- Return gradient at boundary
-            virtual tmp<Field<Type> > snGrad() const;
+        //- Evaluate the patch field
+        virtual void evaluate
+        (
+            const Pstream::commsTypes commsType=Pstream::commsTypes::blocking
+        );
 
-            //- Evaluate the patch field
-            virtual void evaluate
-            (
-                const Pstream::commsTypes commsType=Pstream::blocking
-            );
-
-            //- Return face-gradient transform diagonal
-            virtual tmp<Field<Type> > snGradTransformDiag() const;
+        //- Return face-gradient transform diagonal
+        virtual tmp<Field<Type>> snGradTransformDiag() const;
 };
 
 
@@ -145,11 +143,8 @@ void wedgeFvPatchField<scalar>::evaluate
 );
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "wedgeFvPatchField.hpp"
 #include "transformField.hpp"
@@ -187,8 +182,8 @@ CML::wedgeFvPatchField<Type>::wedgeFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -210,8 +205,8 @@ CML::wedgeFvPatchField<Type>::wedgeFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 
@@ -243,7 +238,7 @@ CML::wedgeFvPatchField<Type>::wedgeFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::wedgeFvPatchField<Type>::snGrad() const
+CML::tmp<CML::Field<Type>> CML::wedgeFvPatchField<Type>::snGrad() const
 {
     const Field<Type> pif(this->patchInternalField());
 
@@ -274,7 +269,7 @@ void CML::wedgeFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::wedgeFvPatchField<Type>::snGradTransformDiag() const
 {
     const diagTensor diagT =
@@ -282,7 +277,7 @@ CML::wedgeFvPatchField<Type>::snGradTransformDiag() const
 
     const vector diagV(diagT.xx(), diagT.yy(), diagT.zz());
 
-    return tmp<Field<Type> >
+    return tmp<Field<Type>>
     (
         new Field<Type>
         (
@@ -301,9 +296,4 @@ CML::wedgeFvPatchField<Type>::snGradTransformDiag() const
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

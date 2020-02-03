@@ -83,8 +83,8 @@ tmp<volScalarField> distributionContactAngleForce::theta() const
         )
     );
 
-    volScalarField& theta = ttheta();
-    DimensionedField<scalar, volMesh>& thetai = theta.dimensionedInternalField();
+    volScalarField& theta = ttheta.ref();
+    DimensionedField<scalar, volMesh>& thetai = theta.ref();
 
     forAll(thetai, celli)
     {
@@ -95,7 +95,7 @@ tmp<volScalarField> distributionContactAngleForce::theta() const
     {
         if (!filmModel_.isCoupledPatch(patchi))
         {
-            fvPatchField<scalar>& thetaf = theta.boundaryField()[patchi];
+            fvPatchField<scalar>& thetaf = theta.boundaryFieldRef()[patchi];
 
             forAll(thetaf, facei)
             {

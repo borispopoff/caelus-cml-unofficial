@@ -1,4 +1,4 @@
-tmp<fv::convectionScheme<scalar> > divOperator
+tmp<fv::convectionScheme<scalar>> divOperator
 (
     fv::convectionScheme<scalar>::New
     (

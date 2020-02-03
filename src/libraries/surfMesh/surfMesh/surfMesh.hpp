@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,7 +53,7 @@ class surfMesh
 :
     public  surfaceRegistry,
     private MeshedSurfaceIOAllocator,
-    public  PrimitivePatch<face, ::CML::UList, ::CML::SubField<point>, point>
+    public  PrimitivePatch<::CML::UList<face>, ::CML::SubField<point>>
 {
     // friends
     template<class Face> friend class MeshedSurface;
@@ -65,7 +65,7 @@ public:
 
         //- Enumeration defining the state of the mesh after a read update.
         //  Used for post-processing applications, where the mesh
-        //  needs to update based on the files written in time directores
+        //  needs to update based on the files written in time directories
         enum readUpdateState
         {
             UNCHANGED,
@@ -81,14 +81,8 @@ private:
 
         typedef MeshedSurfaceIOAllocator Allocator;
 
-        typedef PrimitivePatch
-        <
-            face,
-            ::CML::UList,
-            ::CML::SubField<point>,
-            point
-        >
-        MeshReference;
+        typedef PrimitivePatch<::CML::UList<face>, ::CML::SubField<point>>
+            MeshReference;
 
 
     // Private Member Functions
@@ -97,7 +91,7 @@ private:
         surfMesh(const surfMesh&);
 
         //- Disallow default bitwise assignment
-        void operator=(const surfMesh&);
+        void operator=(const surfMesh&) = delete;
 
 
 protected:
@@ -158,8 +152,8 @@ public:
         surfMesh
         (
             const IOobject&,
-            const Xfer<pointField>&,
-            const Xfer<faceList>&,
+            pointField&&,
+            faceList&&,
             const word& surfName=""
         );
 
@@ -167,7 +161,7 @@ public:
         surfMesh
         (
             const IOobject&,
-            const Xfer<MeshedSurface<face> >& surf,
+            MeshedSurface<face>&& surf,
             const word& surfName=""
         );
 
@@ -244,9 +238,9 @@ public:
             //- Reset mesh primitive data.
             void resetPrimitives
             (
-                const Xfer<pointField>& points,
-                const Xfer<faceList>& faces,
-                const Xfer<surfZoneList>& zones,
+                pointField&& points,
+                faceList&& faces,
+                surfZoneList&& zones,
                 const bool validate = true
             );
 
@@ -265,9 +259,6 @@ public:
         void write(const fileName&);
 
         //  Storage management
-
-            //- Transfer contents to the Xfer container as a MeshedSurface
-            Xfer<MeshedSurface<face> > xfer();
 
             //- Clear geometry
             void clearGeom();

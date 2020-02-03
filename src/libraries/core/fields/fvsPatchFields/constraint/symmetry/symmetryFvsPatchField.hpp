@@ -87,9 +87,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type> > clone() const
+        virtual tmp<fvsPatchField<Type>> clone() const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new symmetryFvsPatchField<Type>(*this)
             );
@@ -103,12 +103,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type> > clone
+        virtual tmp<fvsPatchField<Type>> clone
         (
             const DimensionedField<Type, surfaceMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new symmetryFvsPatchField<Type>(*this, iF)
             );
@@ -116,19 +116,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-symmetryFvsPatchField<Type>::symmetryFvsPatchField
+CML::symmetryFvsPatchField<Type>::symmetryFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -139,7 +133,7 @@ symmetryFvsPatchField<Type>::symmetryFvsPatchField
 
 
 template<class Type>
-symmetryFvsPatchField<Type>::symmetryFvsPatchField
+CML::symmetryFvsPatchField<Type>::symmetryFvsPatchField
 (
     const symmetryFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -162,7 +156,7 @@ symmetryFvsPatchField<Type>::symmetryFvsPatchField
 
 
 template<class Type>
-symmetryFvsPatchField<Type>::symmetryFvsPatchField
+CML::symmetryFvsPatchField<Type>::symmetryFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -182,7 +176,7 @@ symmetryFvsPatchField<Type>::symmetryFvsPatchField
 
 
 template<class Type>
-symmetryFvsPatchField<Type>::symmetryFvsPatchField
+CML::symmetryFvsPatchField<Type>::symmetryFvsPatchField
 (
     const symmetryFvsPatchField<Type>& ptf
 )
@@ -192,7 +186,7 @@ symmetryFvsPatchField<Type>::symmetryFvsPatchField
 
 
 template<class Type>
-symmetryFvsPatchField<Type>::symmetryFvsPatchField
+CML::symmetryFvsPatchField<Type>::symmetryFvsPatchField
 (
     const symmetryFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -202,11 +196,4 @@ symmetryFvsPatchField<Type>::symmetryFvsPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

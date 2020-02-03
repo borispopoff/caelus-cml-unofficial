@@ -62,10 +62,10 @@ class CASsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        CASsurfaceFormat(const CASsurfaceFormat<Face>&);
+        CASsurfaceFormat(const CASsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const CASsurfaceFormat<Face>&);
+        void operator=(const CASsurfaceFormat<Face>&) = delete;
 
 
 public:
@@ -79,9 +79,9 @@ public:
     // Selectors
 
         //- Read file and return surface
-        static autoPtr<MeshedSurface<Face> > New(const fileName& name)
+        static autoPtr<MeshedSurface<Face>> New(const fileName& name)
         {
-            return autoPtr<MeshedSurface<Face> >
+            return autoPtr<MeshedSurface<Face>>
             (
                 new CASsurfaceFormat<Face>(name)
             );
@@ -184,9 +184,9 @@ bool CML::fileFormats::CASsurfaceFormat<Face>::read
 
         MeshedSurface<face> surf
         (
-            xferMove(this->storedPoints()),
-            xferMove(faceLst),
-            xferMove(this->storedZones())
+            move(this->storedPoints()),
+            move(faceLst),
+            move(this->storedZones())
         );
 
         this->transcribe(surf);
@@ -231,9 +231,9 @@ bool CML::fileFormats::CASsurfaceFormat<Face>::read
 
         MeshedSurface<face> origSurf
         (
-            xferMove(pointLst),
-            xferMove(origFaces),
-            xferMove(zoneLst)
+            move(pointLst),
+            move(origFaces),
+            move(zoneLst)
         );
 
         MeshedSurface<Face> surf;
@@ -273,9 +273,9 @@ bool CML::fileFormats::CASsurfaceFormat<Face>::read
 
     surf.reset
     (
-        xferMove(pointLst),
-        xferMove(faceLst),
-        xferMove(zoneLst)
+        move(pointLst),
+        move(faceLst),
+        move(zoneLst)
     );
 
     return true;
@@ -327,7 +327,7 @@ void CML::fileFormats::CASsurfaceFormat<Face>::write
         os  << "\n// faces:"  << nl
             << faceLst.size() << token::BEGIN_LIST << nl;
 
-        label faceI = 0;
+        label facei = 0;
         forAll(zones, zoneI)
         {
             // Print all faces belonging to this zone
@@ -335,7 +335,7 @@ void CML::fileFormats::CASsurfaceFormat<Face>::write
 
             forAll(zone, localFaceI)
             {
-                os << faceLst[faceMap[faceI++]] << nl;
+                os << faceLst[faceMap[facei++]] << nl;
             }
         }
         os << token::END_LIST << nl;

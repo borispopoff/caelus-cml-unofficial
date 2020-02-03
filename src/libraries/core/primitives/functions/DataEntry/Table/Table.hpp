@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -60,11 +60,6 @@ class Table
 :
     public TableBase<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const Table<Type>&);
-
 
 public:
 
@@ -80,15 +75,15 @@ public:
         //- Copy constructor
         Table(const Table<Type>& tbl);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new Table<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~Table();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Table<Type>&) = delete;
 };
 
 

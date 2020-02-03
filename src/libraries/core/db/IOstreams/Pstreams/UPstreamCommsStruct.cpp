@@ -70,11 +70,11 @@ CML::UPstream::commsStruct::commsStruct
     }
 
     label notI = 0;
-    forAll(inBelow, procI)
+    forAll(inBelow, proci)
     {
-        if ((procI != myProcID) && !inBelow[procI])
+        if ((proci != myProcID) && !inBelow[proci])
         {
-            allNotBelow_[notI++] = procI;
+            allNotBelow_[notI++] = proci;
         }
     }
     if (notI != allNotBelow_.size())

@@ -35,7 +35,7 @@ void StackExpressionResult::pushInternal(ExpressionResult &atEnd)
             << pTraits<T>::typeName << endl;
 
     Field<T> oldValue(getResult<T>(false));
-    autoPtr<Field<T> > pNewValue(new Field<T>(oldValue.size()+1));
+    autoPtr<Field<T>> pNewValue(new Field<T>(oldValue.size()+1));
     Field<T> &newValue=pNewValue();
 
     forAll(oldValue,i) {
@@ -55,7 +55,7 @@ template<class T>
 ExpressionResult StackExpressionResult::popInternal()
 {
     Field<T> oldValue(getResult<T>(false));
-    autoPtr<Field<T> > pNewValue(new Field<T>(oldValue.size()-1));
+    autoPtr<Field<T>> pNewValue(new Field<T>(oldValue.size()-1));
     Field<T> &newValue=pNewValue();
 
     forAll(newValue,i) {

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,15 +53,6 @@ class multivariateUpwind
         const surfaceScalarField& faceFlux_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multivariateUpwind(const multivariateUpwind&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateUpwind&);
-
-
 public:
 
     //- Runtime type information
@@ -89,6 +80,9 @@ public:
             ),
             faceFlux_(faceFlux)
         {}
+
+        //- Disallow default bitwise copy construct
+        multivariateUpwind(const multivariateUpwind&) = delete;
 
 
     // Member Operators
@@ -131,16 +125,22 @@ public:
                 }
         };
 
-        tmp<surfaceInterpolationScheme<Type> > operator()
+        tmp<surfaceInterpolationScheme<Type>> operator()
         (
             const GeometricField<Type, fvPatchField, volMesh>& field
         ) const
         {
-            return tmp<surfaceInterpolationScheme<Type> >
+            return tmp<surfaceInterpolationScheme<Type>>
             (
                 new fieldScheme(field, faceFlux_)
             );
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateUpwind&) = delete;
 };
 
 

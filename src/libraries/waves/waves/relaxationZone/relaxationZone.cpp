@@ -64,12 +64,12 @@ void relaxationZone::resetTargetFields()
 {
     if (targetAlpha_ != nullptr)
     {
-        (*targetAlpha_).internalField() = 0.0;
+        (*targetAlpha_).primitiveFieldRef() = 0.0;
     }
 
     if (targetVelocity_ != nullptr)
     {
-        (*targetVelocity_).internalField() = vector::zero;
+        (*targetVelocity_).primitiveFieldRef() = Zero;
     }
 }
 
@@ -146,7 +146,7 @@ tmp<volScalarField> relaxationZone::numericalBeach()
         )
     );
 
-    volScalarField& artificialViscosity(tartificialViscotity());
+    volScalarField& artificialViscosity(tartificialViscotity.ref());
 
     forAll (relaxSchemePtr_, relaxi)
     {
@@ -201,7 +201,7 @@ const volVectorField& relaxationZone::targetVelocityField()
                 IOobject::AUTO_WRITE
             ),
             mesh_,
-            dimensionedVector("null", dimVelocity, vector::zero),
+            dimensionedVector("null", dimVelocity, Zero),
             "zeroGradient"
         );
     }

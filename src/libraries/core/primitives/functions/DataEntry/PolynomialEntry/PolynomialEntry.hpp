@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -62,16 +62,10 @@ class Polynomial
     // Private data
 
         //- Polynomial coefficients - list of prefactor, exponent
-        List<Tuple2<Type, Type> > coeffs_;
+        List<Tuple2<Type, Type>> coeffs_;
 
         //- Flag to indicate whether poly can be integrated
         bool canIntegrate_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const Polynomial<Type>&);
 
 
 public:
@@ -88,17 +82,11 @@ public:
         Polynomial
         (
             const word& entryName,
-            const List<Tuple2<Type, Type> >&
+            const List<Tuple2<Type, Type>>&
         );
 
         //- Copy constructor
         Polynomial(const Polynomial& poly);
-
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new Polynomial(*this));
-        }
 
 
     //- Destructor
@@ -116,14 +104,20 @@ public:
         // Evaluation
 
             //- Return Polynomial value
-            Type value(const scalar x) const;
+            virtual inline Type value(const scalar x) const;
 
             //- Integrate between two (scalar) values
-            Type integrate(const scalar x1, const scalar x2) const;
+            virtual inline Type integrate(const scalar x1, const scalar x2) const;
 
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Polynomial<Type>&) = delete;
 };
 
 
@@ -184,7 +178,7 @@ template<class Type>
 CML::DataEntryTypes::Polynomial<Type>::Polynomial
 (
     const word& entryName,
-    const List<Tuple2<Type, Type> >& coeffs
+    const List<Tuple2<Type, Type>>& coeffs
 )
 :
     DataEntry<Type>(entryName),
@@ -253,7 +247,7 @@ void CML::DataEntryTypes::Polynomial<Type>::convertTimeBase(const Time& t)
 
 
 template<class Type>
-Type CML::DataEntryTypes::Polynomial<Type>::value(const scalar x) const
+inline Type CML::DataEntryTypes::Polynomial<Type>::value(const scalar x) const
 {
     Type y(Zero);
     forAll(coeffs_, i)
@@ -270,7 +264,7 @@ Type CML::DataEntryTypes::Polynomial<Type>::value(const scalar x) const
 
 
 template<class Type>
-Type CML::DataEntryTypes::Polynomial<Type>::integrate
+inline Type CML::DataEntryTypes::Polynomial<Type>::integrate
 (
     const scalar x1,
     const scalar x2

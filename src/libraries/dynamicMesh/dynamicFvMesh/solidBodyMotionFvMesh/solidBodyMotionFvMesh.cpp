@@ -73,7 +73,7 @@ CML::solidBodyMotionFvMesh::solidBodyMotionFvMesh(const IOobject& io)
     ),
     pointIDs_(),
     moveAllCells_(false),
-    UName_(dynamicMeshCoeffs_.lookupOrDefault<word>("UName", "U"))
+    UName_(dynamicMeshCoeffs_.lookupOrDefault<word>("U", "U"))
 {
     if (undisplacedPoints_.size() != nPoints())
     {
@@ -144,15 +144,15 @@ CML::solidBodyMotionFvMesh::solidBodyMotionFvMesh(const IOobject& io)
 
         forAll(cellIDs, i)
         {
-            label cellI = cellIDs[i];
-            const cell& c = cells()[cellI];
+            label celli = cellIDs[i];
+            const cell& c = cells()[celli];
             forAll(c, j)
             {
                 const face& f = faces()[c[j]];
                 forAll(f, k)
                 {
-                    label pointI = f[k];
-                    movePts[pointI] = true;
+                    label pointi = f[k];
+                    movePts[pointi] = true;
                 }
             }
         }

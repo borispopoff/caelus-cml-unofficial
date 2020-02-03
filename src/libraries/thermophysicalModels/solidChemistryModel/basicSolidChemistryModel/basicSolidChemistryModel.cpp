@@ -47,7 +47,7 @@ const CML::DimensionedField<CML::scalar, CML::volMesh>&
 CML::basicSolidChemistryModel::RR(const label i) const
 {
     NotImplemented;
-    return (DimensionedField<scalar, volMesh>::null());
+    return (volScalarField::Internal::null());
 }
 
 
@@ -56,17 +56,17 @@ CML::basicSolidChemistryModel::RR(const label i)
 {
     NotImplemented;
 
-    return dynamic_cast<DimensionedField<scalar, volMesh>&>
+    return dynamic_cast<volScalarField::Internal&>
     (
-        const_cast<DimensionedField<scalar, volMesh>& >
+        const_cast<volScalarField::Internal& >
         (
-            DimensionedField<scalar, volMesh>::null()
+            volScalarField::Internal::null()
         )
     );
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::basicSolidChemistryModel::calculateRR
 (
     const label reactionI,
@@ -75,11 +75,11 @@ CML::basicSolidChemistryModel::calculateRR
 {
     NotImplemented;
 
-    return dynamic_cast<tmp<DimensionedField<scalar, volMesh> >&>
+    return dynamic_cast<tmp<volScalarField::Internal>&>
     (
-        const_cast<DimensionedField<scalar, volMesh>& >
+        const_cast<volScalarField::Internal& >
         (
-            DimensionedField<scalar, volMesh>::null()
+            volScalarField::Internal::null()
         )
     );
 }

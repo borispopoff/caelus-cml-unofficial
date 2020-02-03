@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -109,7 +109,7 @@ class fvMeshDistribute
             template<class T, class Mesh>
             void saveBoundaryFields
             (
-                PtrList<FieldField<fvsPatchField, T> >& bflds
+                PtrList<FieldField<fvsPatchField, T>>& bflds
             ) const;
 
             //- Map boundary fields
@@ -117,19 +117,19 @@ class fvMeshDistribute
             void mapBoundaryFields
             (
                 const mapPolyMesh& map,
-                const PtrList<FieldField<fvsPatchField, T> >& oldBflds
+                const PtrList<FieldField<fvsPatchField, T>>& oldBflds
             );
 
             //- Save internal fields of surfaceFields
             template<class T>
-            void saveInternalFields(PtrList<Field<T> >& iflds) const;
+            void saveInternalFields(PtrList<Field<T>>& iflds) const;
 
             //- Set value of patch faces resulting from internal faces
             template<class T>
             void mapExposedFaces
             (
                 const mapPolyMesh& map,
-                const PtrList<Field<T> >& oldFlds
+                const PtrList<Field<T>>& oldFlds
             );
 
             //- Init patch fields of certain type
@@ -158,30 +158,33 @@ class fvMeshDistribute
                 labelListList& constructFaceMap
             );
 
-            //- Merge any shared points that are geometrically shared. Needs
-            //  parallel valid mesh - uses globalMeshData.
+            //- Merge any local points that were remotely coupled.
             //  constructPointMap is adapted for the new point labels.
             autoPtr<mapPolyMesh> mergeSharedPoints
             (
+                const labelList& pointToGlobalMaster,
                 labelListList& constructPointMap
             );
+
 
         // Coupling information
 
             //- Construct the local environment of all boundary faces.
-            void getNeighbourData
+            void getCouplingData
             (
                 const labelList& distribution,
                 labelList& sourceFace,
                 labelList& sourceProc,
                 labelList& sourcePatch,
-                labelList& sourceNewProc
+                labelList& sourceNewProc,
+                labelList& sourcePointMaster
             ) const;
 
             // Subset the neighbourCell/neighbourProc fields
-            static void subsetBoundaryData
+            static void subsetCouplingData
             (
                 const fvMesh& mesh,
+                const labelList& pointMap,
                 const labelList& faceMap,
                 const labelList& cellMap,
 
@@ -194,11 +197,13 @@ class fvMeshDistribute
                 const labelList& sourceProc,
                 const labelList& sourcePatch,
                 const labelList& sourceNewProc,
+                const labelList& sourcePointMaster,
 
                 labelList& subFace,
                 labelList& subProc,
                 labelList& subPatch,
-                labelList& subNewProc
+                labelList& subNewProc,
+                labelList& subPointMaster
             );
 
             //- Find cells on mesh whose faceID/procID match the neighbour
@@ -231,6 +236,14 @@ class fvMeshDistribute
                 const labelList& boundaryData1  // added mesh
             );
 
+            //- Map point data to new mesh (resulting from adding two meshes)
+            static labelList mapPointData
+            (
+                const primitiveMesh& mesh,      // mesh after adding
+                const mapAddedPolyMesh& map,
+                const labelList& boundaryData0, // on mesh before adding
+                const labelList& boundaryData1  // on added mesh
+            );
 
         // Other
 
@@ -247,7 +260,7 @@ class fvMeshDistribute
             (
                 const labelList&, // processor that neighbour is now on
                 const labelList&, // -1 or patch that face originated from
-                List<Map<label> >& procPatchID
+                List<Map<label>>& procPatchID
             );
 
             //- Get boundary faces to be repatched. Is -1 or new patchID
@@ -255,7 +268,7 @@ class fvMeshDistribute
             (
                 const labelList& neighbourNewProc,  // new processor per b. face
                 const labelList& referPatchID,      // -1 or original patch
-                const List<Map<label> >& procPatchID// patchID
+                const List<Map<label>>& procPatchID // patchID
             );
 
             //- Send mesh and coupling data.
@@ -270,7 +283,8 @@ class fvMeshDistribute
                 const labelList& sourceProc,
                 const labelList& sourcePatch,
                 const labelList& sourceNewProc,
-                UOPstream& toDomain
+                const labelList& sourcePointMaster,
+                Ostream& toDomain
             );
             //- Send subset of fields
             template<class GeoField>
@@ -279,7 +293,7 @@ class fvMeshDistribute
                 const label domain,
                 const wordList& fieldNames,
                 const fvMeshSubset&,
-                UOPstream& toNbr
+                Ostream& toNbr
             );
 
             //- Receive mesh. Opposite of sendMesh
@@ -294,7 +308,8 @@ class fvMeshDistribute
                 labelList& domainSourceProc,
                 labelList& domainSourcePatch,
                 labelList& domainSourceNewProc,
-                UIPstream& fromNbr
+                labelList& domainSourcePointMaster,
+                Istream& fromNbr
             );
 
             //- Receive fields. Opposite of sendFields
@@ -309,10 +324,10 @@ class fvMeshDistribute
             );
 
             //- Disallow default bitwise copy construct
-            fvMeshDistribute(const fvMeshDistribute&);
+            fvMeshDistribute(const fvMeshDistribute&) = delete;
 
             //- Disallow default bitwise assignment
-            void operator=(const fvMeshDistribute&);
+            void operator=(const fvMeshDistribute&) = delete;
 
 public:
 
@@ -391,10 +406,10 @@ void CML::fvMeshDistribute::printFieldInfo(const fvMesh& mesh)
 }
 
 
-template <class T, class Mesh>
+template<class T, class Mesh>
 void CML::fvMeshDistribute::saveBoundaryFields
 (
-    PtrList<FieldField<fvsPatchField, T> >& bflds
+    PtrList<FieldField<fvsPatchField, T>>& bflds
 ) const
 {
     // Save whole boundary field
@@ -421,11 +436,11 @@ void CML::fvMeshDistribute::saveBoundaryFields
 }
 
 
-template <class T, class Mesh>
+template<class T, class Mesh>
 void CML::fvMeshDistribute::mapBoundaryFields
 (
     const mapPolyMesh& map,
-    const PtrList<FieldField<fvsPatchField, T> >& oldBflds
+    const PtrList<FieldField<fvsPatchField, T>>& oldBflds
 )
 {
     // Map boundary field
@@ -442,7 +457,7 @@ void CML::fvMeshDistribute::mapBoundaryFields
 
     if (flds.size() != oldBflds.size())
     {
-        FatalErrorInFunction << "problem"
+        FatalErrorInFunction
             << abort(FatalError);
     }
 
@@ -451,7 +466,7 @@ void CML::fvMeshDistribute::mapBoundaryFields
     forAllIter(typename HashTable<fldType*>, flds, iter)
     {
         fldType& fld = *iter();
-        typename fldType::GeometricBoundaryField& bfld = fld.boundaryField();
+        typename fldType::Boundary& bfld = fld.boundaryFieldRef();
 
         const FieldField<fvsPatchField, T>& oldBfld = oldBflds[fieldi++];
 
@@ -485,7 +500,7 @@ void CML::fvMeshDistribute::mapBoundaryFields
 template<class T>
 void CML::fvMeshDistribute::saveInternalFields
 (
-    PtrList<Field<T> >& iflds
+    PtrList<Field<T>>& iflds
 ) const
 {
     typedef GeometricField<T, fvsPatchField, surfaceMesh> fldType;
@@ -503,7 +518,7 @@ void CML::fvMeshDistribute::saveInternalFields
     {
         const fldType& fld = *iter();
 
-        iflds.set(i, fld.internalField().clone());
+        iflds.set(i, fld.primitiveField().clone());
 
         i++;
     }
@@ -514,7 +529,7 @@ template<class T>
 void CML::fvMeshDistribute::mapExposedFaces
 (
     const mapPolyMesh& map,
-    const PtrList<Field<T> >& oldFlds
+    const PtrList<Field<T>>& oldFlds
 )
 {
     // Set boundary values of exposed internal faces
@@ -535,14 +550,14 @@ void CML::fvMeshDistribute::mapExposedFaces
     }
 
 
-    label fieldI = 0;
+    label fieldi = 0;
 
     forAllIter(typename HashTable<fldType*>, flds, iter)
     {
         fldType& fld = *iter();
-        typename fldType::GeometricBoundaryField& bfld = fld.boundaryField();
+        typename fldType::Boundary& bfld = fld.boundaryFieldRef();
 
-        const Field<T>& oldInternal = oldFlds[fieldI++];
+        const Field<T>& oldInternal = oldFlds[fieldi++];
 
         // Pull from old internal field into bfld.
 
@@ -552,15 +567,15 @@ void CML::fvMeshDistribute::mapExposedFaces
 
             forAll(patchFld, i)
             {
-                const label faceI = patchFld.patch().start()+i;
+                const label facei = patchFld.patch().start()+i;
 
-                label oldFaceI = faceMap[faceI];
+                label oldFacei = faceMap[facei];
 
-                if (oldFaceI < oldInternal.size())
+                if (oldFacei < oldInternal.size())
                 {
-                    patchFld[i] = oldInternal[oldFaceI];
+                    patchFld[i] = oldInternal[oldFacei];
 
-                    if (map.flipFaceFlux().found(faceI))
+                    if (map.flipFaceFlux().found(facei))
                     {
                         patchFld[i] = flipOp()(patchFld[i]);
                     }
@@ -588,8 +603,8 @@ void CML::fvMeshDistribute::initPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld =
-            fld.boundaryField();
+        typename GeoField::Boundary& bfld =
+            fld.boundaryFieldRef();
 
         forAll(bfld, patchi)
         {
@@ -626,7 +641,7 @@ void CML::fvMeshDistribute::sendFields
     const label domain,
     const wordList& fieldNames,
     const fvMeshSubset& subsetter,
-    UOPstream& toNbr
+    Ostream& toNbr
 )
 {
     // Send fields. Note order supplied so we can receive in exactly the same

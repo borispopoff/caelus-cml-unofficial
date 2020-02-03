@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -126,12 +126,6 @@ class lduAddressing
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        lduAddressing(const lduAddressing&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const lduAddressing&);
-
         //- Calculate losort
         void calcLosort() const;
 
@@ -144,14 +138,18 @@ class lduAddressing
 
 public:
 
-    // Constructor
-    lduAddressing(const label nEqns)
-    :
-        size_(nEqns),
-        losortPtr_(nullptr),
-        ownerStartPtr_(nullptr),
-        losortStartPtr_(nullptr)
-    {}
+    // Constructors
+
+        lduAddressing(const label nEqns)
+        :
+            size_(nEqns),
+            losortPtr_(nullptr),
+            ownerStartPtr_(nullptr),
+            losortStartPtr_(nullptr)
+        {}
+
+        //- Disallow default bitwise copy construct
+        lduAddressing(const lduAddressing&) = delete;
 
 
     //- Destructor
@@ -200,6 +198,12 @@ public:
 
         //- Return off-diagonal index given owner and neighbour label
         label triIndex(const label a, const label b) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lduAddressing&) = delete;
 };
 
 

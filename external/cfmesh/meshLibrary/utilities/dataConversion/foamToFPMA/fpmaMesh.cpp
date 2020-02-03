@@ -64,9 +64,9 @@ void fpmaMesh::writeCells(OFstream& fpmaGeometryFile) const
     const cellListPMG& cells = mesh_.cells();
     
     fpmaGeometryFile << cells.size() << nl;
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const cell& c = cells[cellI];
+        const cell& c = cells[celli];
         
         fpmaGeometryFile << c.size();
         forAll(c, fI)
@@ -79,9 +79,9 @@ void CML::fpmaMesh::writeFaces(OFstream& fpmaGeometryFile) const
 {
     const faceListPMG& faces = mesh_.faces();
     fpmaGeometryFile << faces.size() << nl;
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
         
         fpmaGeometryFile << f.size();
         forAllReverse(f, pI)

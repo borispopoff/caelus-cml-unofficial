@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017-2018 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -127,28 +127,29 @@ class EDC
 :
     public laminar<ReactionThermo>
 {
+    // Private data
 
-    //- The selected model version
-    EDCversions version_;
+        //- The selected model version
+        EDCversions version_;
 
-    scalar C1_;
-    scalar C2_;
-    scalar Cgamma_;
-    scalar Ctau_;
-    scalar exp1_;
-    scalar exp2_;
+        scalar C1_;
+        scalar C2_;
+        scalar Cgamma_;
+        scalar Ctau_;
+        scalar exp1_;
+        scalar exp2_;
 
-    //- Mixing parameter
-    volScalarField kappa_;
+        //- Mixing parameter
+        volScalarField kappa_;
 
 
     // Private Member Functions
 
-    //- Disallow copy construct
-    EDC(const EDC&);
+        //- Disallow copy construct
+        EDC(const EDC&);
 
-    //- Disallow default bitwise assignment
-    void operator=(const EDC&);
+        //- Disallow default bitwise assignment
+        void operator=(const EDC&) = delete;
 
 
 public:
@@ -157,14 +158,16 @@ public:
     TypeName("EDC");
 
 
-    //- Construct from components
-    EDC
-    (
-        const word& modelType,
-        ReactionThermo& type,
-        const compressible::turbulenceModel& turb,
-        const word& combustionProperties
-    );
+    // Constructors
+
+        //- Construct from components
+        EDC
+        (
+            const word& modelType,
+            ReactionThermo& type,
+            const compressible::turbulenceModel& turb,
+            const word& combustionProperties
+        );
 
 
     //- Destructor
@@ -173,18 +176,17 @@ public:
 
     // Member Functions
 
-    //- Correct combustion rate
-    virtual void correct();
+        //- Correct combustion rate
+        virtual void correct();
 
-    //- Fuel consumption rate matrix.
-    virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
+        //- Fuel consumption rate matrix.
+        virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
 
-    //- Heat release rate [kg/m/s3]
-    virtual tmp<volScalarField> Qdot() const;
+        //- Heat release rate [kg/m/s3]
+        virtual tmp<volScalarField> Qdot() const;
 
-    //- Update properties from given dictionary
-    virtual bool read();
-
+        //- Update properties from given dictionary
+        virtual bool read();
 };
 
 

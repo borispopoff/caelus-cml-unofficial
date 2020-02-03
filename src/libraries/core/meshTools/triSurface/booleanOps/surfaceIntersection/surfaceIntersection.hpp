@@ -115,18 +115,18 @@ class surfaceIntersection
             Ostream&
         );
 
-        //- Transfer contents of List<DynamicList<..> > to List<List<..>>
+        //- Transfer contents of List<DynamicList<..>> to List<List<..>>
         template<class T>
-        static void transfer(List<DynamicList<T> >&,  List<List<T> >&);
+        static void transfer(List<DynamicList<T>>&,  List<List<T>>&);
 
         //- Get minimum length of all edges connected to point
-        static scalar minEdgeLen(const triSurface& surf, const label pointI);
+        static scalar minEdgeLen(const triSurface& surf, const label pointi);
 
         //- Get edge label of edge between face vertices fp and fp+1
         static label getEdge
         (
             const triSurface& surf,
-            const label faceI,
+            const label facei,
             const label fp
         );
 
@@ -150,7 +150,7 @@ class surfaceIntersection
         (
             const triSurface& surf,
             const label edgeI,
-            const label faceI,
+            const label facei,
             const scalar tol
         );
 
@@ -212,7 +212,7 @@ class surfaceIntersection
 
             DynamicList<edge>& allCutEdges,
             DynamicList<point>& allCutPoints,
-            List<DynamicList<label> >& surfEdgeCuts
+            List<DynamicList<label>>& surfEdgeCuts
         );
 
         //- Cut edges of surf1 with surface 2.
@@ -225,7 +225,7 @@ class surfaceIntersection
 
             DynamicList<edge>& allCutEdges,
             DynamicList<point>& allCutPoints,
-            List<DynamicList<label> >& surfEdgeCuts
+            List<DynamicList<label>>& surfEdgeCuts
         );
 
 
@@ -295,8 +295,8 @@ public:
 template<class T>
 void CML::surfaceIntersection::transfer
 (
-    List<DynamicList<T> >& srcLst,
-    List<List<T> >& dstLst
+    List<DynamicList<T>>& srcLst,
+    List<List<T>>& dstLst
 )
 {
     dstLst.setSize(srcLst.size());

@@ -194,7 +194,7 @@ void transferModelList::info(Ostream& os)
             << mass[i] << endl;
     }
 
-    if (film().time().outputTime())
+    if (film().time().writeTime())
     {
         setBaseProperty("massTransferred", mass);
         massTransferred_ = 0.0;

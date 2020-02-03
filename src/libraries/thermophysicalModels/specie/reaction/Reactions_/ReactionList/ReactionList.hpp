@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,7 +50,7 @@ namespace CML
 template<class ThermoType>
 class ReactionList
 :
-    public SLPtrList<Reaction<ThermoType> >
+    public SLPtrList<Reaction<ThermoType>>
 {
 
     //- Reference to the table of species
@@ -64,7 +64,7 @@ class ReactionList
 
 
     //- Disallow default bitwise assignment
-    void operator=(const ReactionList&);
+    void operator=(const ReactionList&) = delete;
 
 
 public:
@@ -118,7 +118,7 @@ CML::ReactionList<ThermoType>::ReactionList
     const HashPtrTable<ThermoType>& thermoDb
 )
 :
-    SLPtrList<Reaction<ThermoType> >(),
+    SLPtrList<Reaction<ThermoType>>(),
     species_(species),
     thermoDb_(thermoDb),
     dict_(dictionary::null)
@@ -133,7 +133,7 @@ CML::ReactionList<ThermoType>::ReactionList
     const dictionary& dict
 )
 :
-    SLPtrList<Reaction<ThermoType> >(),
+    SLPtrList<Reaction<ThermoType>>(),
     species_(species),
     thermoDb_(thermoDb),
     dict_(dict)
@@ -145,7 +145,7 @@ CML::ReactionList<ThermoType>::ReactionList
 template<class ThermoType>
 CML::ReactionList<ThermoType>::ReactionList(const ReactionList& reactions)
 :
-    SLPtrList<Reaction<ThermoType> >(reactions),
+    SLPtrList<Reaction<ThermoType>>(reactions),
     species_(reactions.species_),
     thermoDb_(reactions.thermoDb_),
     dict_(reactions.dict_)
@@ -198,12 +198,12 @@ void CML::ReactionList<ThermoType>::write(Ostream& os) const
     os  << "reactions" << nl;
     os  << token::BEGIN_BLOCK << incrIndent << nl;
 
-    forAllConstIter(typename SLPtrList<Reaction<ThermoType> >, *this, iter)
+    forAllConstIter(typename SLPtrList<Reaction<ThermoType>>, *this, iter)
     {
         const Reaction<ThermoType>& r = iter();
         os  << indent << r.name() << nl
             << indent << token::BEGIN_BLOCK << incrIndent << nl;
-        os.writeKeyword("type") << r.type() << token::END_STATEMENT << nl;
+        writeEntry(os, "type", r.type());
         r.write(os);
         os  << decrIndent << indent << token::END_BLOCK << nl;
     }

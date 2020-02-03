@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -71,10 +71,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        kinematicSingleLayer(const kinematicSingleLayer&);
+        kinematicSingleLayer(const kinematicSingleLayer&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const kinematicSingleLayer&);
+        void operator=(const kinematicSingleLayer&) = delete;
 
 
 protected:
@@ -517,16 +517,16 @@ public:
             // Mapped into primary region
 
                 //- Return total mass source - Eulerian phase only
-                virtual tmp<DimensionedField<scalar, volMesh> > Srho() const;
+                virtual tmp<volScalarField::Internal> Srho() const;
 
                 //- Return mass source for specie i - Eulerian phase only
-                virtual tmp<DimensionedField<scalar, volMesh> > Srho
+                virtual tmp<volScalarField::Internal> Srho
                 (
                     const label i
                 ) const;
 
                 //- Return enthalpy source - Eulerian phase only
-                virtual tmp<DimensionedField<scalar, volMesh> > Sh() const;
+                virtual tmp<volScalarField::Internal> Sh() const;
 
 
         // I-O
@@ -548,7 +548,7 @@ void kinematicSingleLayer::constrainFilmField
     forAll(intCoupledPatchIDs_, i)
     {
         label patchi = intCoupledPatchIDs_[i];
-        field.boundaryField()[patchi] = value;
+        field.boundaryFieldRef()[patchi] = value;
         if (debug)
         {
             Info<< "Constraining " << field.name()
@@ -560,7 +560,7 @@ void kinematicSingleLayer::constrainFilmField
     forAll(passivePatchIDs_, i)
     {
         label patchi = passivePatchIDs_[i];
-        field.boundaryField()[patchi] = value;
+        field.boundaryFieldRef()[patchi] = value;
         if (debug)
         {
             Info<< "Constraining " << field.name()
@@ -781,7 +781,7 @@ inline tmp<volScalarField> kinematicSingleLayer::gNormClipped() const
         )
     );
 
-    volScalarField& gNormClipped = tgNormClipped();
+    volScalarField& gNormClipped = tgNormClipped.ref();
     gNormClipped.min(0.0);
 
     return tgNormClipped;

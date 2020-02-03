@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,7 +42,7 @@ namespace CML
 template<class Type>
 class interpolation2DTable
 :
-    public List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >
+    public List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>
 {
 public:
 
@@ -57,7 +57,7 @@ public:
         };
 
         //- Cconvenience typedef
-        typedef List<Tuple2<scalar, List<Tuple2<scalar, Type> > > > table;
+        typedef List<Tuple2<scalar, List<Tuple2<scalar, Type>>>> table;
 
 
 private:
@@ -71,7 +71,7 @@ private:
         fileName fileName_;
 
         //- the actual reader
-        autoPtr<tableReader<Type> > reader_;
+        autoPtr<tableReader<Type>> reader_;
 
 
     // Private Member Functions
@@ -82,7 +82,7 @@ private:
         //- Return interpolated value in List
         Type interpolateValue
         (
-            const List<Tuple2<scalar, Type> >& data,
+            const List<Tuple2<scalar, Type>>& data,
             const scalar
         ) const;
 
@@ -106,7 +106,7 @@ public:
         //- Construct from components
         interpolation2DTable
         (
-            const List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >& values,
+            const List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>& values,
             const boundsHandling bounds,
             const fileName& fName
         );
@@ -143,7 +143,7 @@ public:
     // Member Operators
 
         //- Return an element of constant Tuple2<scalar, Type>
-        const List<Tuple2<scalar, Type> >& operator[](const label) const;
+        const List<Tuple2<scalar, Type>>& operator[](const label) const;
 
         //- Return an interpolated value
         Type operator()(const scalar, const scalar) const;
@@ -176,10 +176,12 @@ void CML::interpolation2DTable<Type>::readTable()
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
 template<class Type>
 CML::interpolation2DTable<Type>::interpolation2DTable()
 :
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(),
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(),
     boundsHandling_(interpolation2DTable::WARN),
     fileName_("fileNameIsUndefined"),
     reader_(nullptr)
@@ -189,12 +191,12 @@ CML::interpolation2DTable<Type>::interpolation2DTable()
 template<class Type>
 CML::interpolation2DTable<Type>::interpolation2DTable
 (
-    const List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >& values,
+    const List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>& values,
     const boundsHandling bounds,
     const fileName& fName
 )
 :
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(values),
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(values),
     boundsHandling_(bounds),
     fileName_(fName),
     reader_(nullptr)
@@ -204,7 +206,7 @@ CML::interpolation2DTable<Type>::interpolation2DTable
 template<class Type>
 CML::interpolation2DTable<Type>::interpolation2DTable(const fileName& fName)
 :
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(),
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(),
     boundsHandling_(interpolation2DTable::WARN),
     fileName_(fName),
     reader_(new openCMLTableReader<Type>(dictionary()))
@@ -216,9 +218,9 @@ CML::interpolation2DTable<Type>::interpolation2DTable(const fileName& fName)
 template<class Type>
 CML::interpolation2DTable<Type>::interpolation2DTable(const dictionary& dict)
 :
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(),
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(),
     boundsHandling_(wordToBoundsHandling(dict.lookup("outOfBounds"))),
-    fileName_(dict.lookup("fileName")),
+    fileName_(dict.lookup("file")),
     reader_(tableReader<Type>::New(dict))
 {
     readTable();
@@ -231,7 +233,7 @@ CML::interpolation2DTable<Type>::interpolation2DTable
      const interpolation2DTable& interpTable
 )
 :
-    List<Tuple2<scalar, List<Tuple2<scalar, Type> > > >(interpTable),
+    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(interpTable),
     boundsHandling_(interpTable.boundsHandling_),
     fileName_(interpTable.fileName_),
     reader_(interpTable.reader_)    // note: steals reader. Used in write().
@@ -239,10 +241,12 @@ CML::interpolation2DTable<Type>::interpolation2DTable
 
 
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 template<class Type>
 Type CML::interpolation2DTable<Type>::interpolateValue
 (
-    const List<Tuple2<scalar, Type> >& data,
+    const List<Tuple2<scalar, Type>>& data,
     const scalar lookupValue
 ) const
 {
@@ -415,6 +419,8 @@ CML::label CML::interpolation2DTable<Type>::Xi
 }
 
 
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
 template<class Type>
 Type CML::interpolation2DTable<Type>::operator()
 (
@@ -432,7 +438,7 @@ Type CML::interpolation2DTable<Type>::operator()
         WarningInFunction
             << "cannot interpolate a zero-sized table - returning zero" << endl;
 
-        return pTraits<Type>::zero;
+        return Zero;
     }
     else if (nX == 1)
     {
@@ -569,10 +575,8 @@ void CML::interpolation2DTable<Type>::checkOrder() const
 template<class Type>
 void CML::interpolation2DTable<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("fileName")
-        << fileName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("outOfBounds")
-        << boundsHandlingToWord(boundsHandling_) << token::END_STATEMENT << nl;
+    writeEntry(os, "file", fileName_);
+    writeEntry(os, "outOfBounds", boundsHandlingToWord(boundsHandling_));
 
     *this >> os;
 }

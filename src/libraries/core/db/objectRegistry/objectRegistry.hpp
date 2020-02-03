@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,7 +42,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class objectRegistry Declaration
+                       Class objectRegistry Declaration
 \*---------------------------------------------------------------------------*/
 
 class objectRegistry
@@ -71,12 +71,6 @@ class objectRegistry
         //  Used to terminate searching within the ancestors
         bool parentNotTime() const;
 
-        //- Disallow Copy constructor
-        objectRegistry(const objectRegistry&);
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const objectRegistry&);
-
 
 public:
 
@@ -101,6 +95,9 @@ public:
             const IOobject& io,
             const label nIoObjects = 128
         );
+
+        //- Disallow Copy constructor
+        objectRegistry(const objectRegistry&);
 
 
     //- Destructor
@@ -177,6 +174,10 @@ public:
             template<class Type>
             const Type& lookupObject(const word& name) const;
 
+            //- Lookup and return the object reference of the given Type
+            template<class Type>
+            Type& lookupObjectRef(const word& name) const;
+
             //- Return new event number.
             label getEvent() const;
 
@@ -222,6 +223,12 @@ public:
                 IOstream::versionNumber ver,
                 IOstream::compressionType cmp
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise copy construct and assignment
+        void operator=(const objectRegistry&) = delete;
 };
 
 
@@ -236,8 +243,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::wordList
-CML::objectRegistry::names() const
+CML::wordList CML::objectRegistry::names() const
 {
     wordList objectNames(size());
 
@@ -257,8 +263,7 @@ CML::objectRegistry::names() const
 
 
 template<class Type>
-CML::wordList
-CML::objectRegistry::names(const wordRe& name) const
+CML::wordList CML::objectRegistry::names(const wordRe& name) const
 {
     wordList objectNames(size());
 
@@ -283,8 +288,7 @@ CML::objectRegistry::names(const wordRe& name) const
 
 
 template<class Type>
-CML::wordList
-CML::objectRegistry::names(const wordReList& patterns) const
+CML::wordList CML::objectRegistry::names(const wordReList& patterns) const
 {
     wordList names(this->names<Type>());
 
@@ -410,11 +414,16 @@ const Type& CML::objectRegistry::lookupObject(const word& name) const
             << abort(FatalError);
     }
 
-    return NullSingletonRef< Type >();
+    return NullSingletonRef<Type>();
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Type>
+Type& CML::objectRegistry::lookupObjectRef(const word& name) const
+{
+    return const_cast<Type&>(lookupObject<Type>(name));
+}
+
 
 #endif
 

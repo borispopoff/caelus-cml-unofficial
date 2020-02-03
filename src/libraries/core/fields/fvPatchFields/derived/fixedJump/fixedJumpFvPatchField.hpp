@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -122,9 +122,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedJumpFvPatchField<Type>(*this)
             );
@@ -138,12 +138,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new fixedJumpFvPatchField<Type>(*this, iF)
             );
@@ -155,7 +155,7 @@ public:
         // Access
 
             //- Return the "jump" across the patch
-            virtual tmp<Field<Type> > jump() const;
+            virtual tmp<Field<Type>> jump() const;
 
 
         // Mapping functions
@@ -179,8 +179,6 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -193,7 +191,7 @@ CML::fixedJumpFvPatchField<Type>::fixedJumpFvPatchField
 )
 :
     jumpCyclicFvPatchField<Type>(p, iF),
-    jump_(this->size(), pTraits<Type>::zero)
+    jump_(this->size(), Zero)
 {}
 
 
@@ -236,7 +234,7 @@ CML::fixedJumpFvPatchField<Type>::fixedJumpFvPatchField
     }
     else
     {
-        this->evaluate(Pstream::blocking);
+        this->evaluate(Pstream::commsTypes::blocking);
     }
 }
 
@@ -267,7 +265,7 @@ CML::fixedJumpFvPatchField<Type>::fixedJumpFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::fixedJumpFvPatchField<Type>::jump() const
+CML::tmp<CML::Field<Type>> CML::fixedJumpFvPatchField<Type>::jump() const
 {
     if (this->cyclicPatch().owner())
     {
@@ -275,7 +273,7 @@ CML::tmp<CML::Field<Type> > CML::fixedJumpFvPatchField<Type>::jump() const
     }
     else
     {
-        return refCast<const fixedJumpFvPatchField<Type> >
+        return refCast<const fixedJumpFvPatchField<Type>>
         (
             this->neighbourPatchField()
         ).jump();
@@ -304,7 +302,7 @@ void CML::fixedJumpFvPatchField<Type>::rmap
     jumpCyclicFvPatchField<Type>::rmap(ptf, addr);
 
     const fixedJumpFvPatchField<Type>& tiptf =
-        refCast<const fixedJumpFvPatchField<Type> >(ptf);
+        refCast<const fixedJumpFvPatchField<Type>>(ptf);
     jump_.rmap(tiptf.jump_, addr);
 }
 
@@ -313,15 +311,14 @@ template<class Type>
 void CML::fixedJumpFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("patchType") << this->interfaceFieldType()
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "patchType", this->interfaceFieldType());
 
     if (this->cyclicPatch().owner())
     {
-        jump_.writeEntry("jump", os);
+        writeEntry(os, "jump", jump_);
     }
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

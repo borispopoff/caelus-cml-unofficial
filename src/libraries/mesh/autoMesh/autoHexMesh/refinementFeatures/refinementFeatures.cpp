@@ -112,11 +112,11 @@ CML::refinementFeatures::refinementFeatures
         // Detect feature points from edges.
         const labelListList& pointEdges = eMesh.pointEdges();
         DynamicList<label> featurePoints;
-        forAll(pointEdges, pointI)
+        forAll(pointEdges, pointi)
         {
-            if (pointEdges[pointI].size() > 2)
+            if (pointEdges[pointi].size() > 2)
             {
-                featurePoints.append(pointI);
+                featurePoints.append(pointi);
             }
         }
 

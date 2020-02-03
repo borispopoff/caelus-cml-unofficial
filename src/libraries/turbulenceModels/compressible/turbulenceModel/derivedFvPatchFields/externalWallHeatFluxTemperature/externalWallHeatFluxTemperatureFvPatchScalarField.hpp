@@ -144,7 +144,7 @@ private:
         scalarField h_;
 
         //- Ambient temperature [K]
-        autoPtr<DataEntry<scalar> > Ta_;
+        autoPtr<DataEntry<scalar>> Ta_;
 
         //- Relaxation for the wall temperature (thermal inertia)
         scalar relaxation_;

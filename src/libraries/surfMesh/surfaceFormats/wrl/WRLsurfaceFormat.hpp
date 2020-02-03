@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,10 +55,10 @@ class WRLsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        WRLsurfaceFormat(const WRLsurfaceFormat<Face>&);
+        WRLsurfaceFormat(const WRLsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const WRLsurfaceFormat<Face>&);
+        void operator=(const WRLsurfaceFormat<Face>&) = delete;
 
 public:
 
