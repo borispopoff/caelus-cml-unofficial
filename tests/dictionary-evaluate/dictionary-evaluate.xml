@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<testproblem>
+  <name>Dictionary evaluate</name>
+  <owner userid="ACCM"/>
+  <tags>unit</tags>
+  <problem_definition length="short" nprocs="1">
+    <command_line>caelus --quiet run Test-Dictionary testDictEval1 testDictEval2 testDictEval3</command_line>
+  </problem_definition>
+  <variables>
+    <variable name="evaluate_correctly" language="python">
+import caelus_test_tools
+evaluate_correctly = caelus_test_tools.compare_output("Test-Dictionary.log", "evaluate-base", 19)
+    </variable>
+  </variables>
+
+  <pass_tests>
+    <test name="Evaluate correctly" language="python">
+assert(evaluate_correctly)
+    </test>
+  </pass_tests>
+  <warn_tests>
+  </warn_tests>
+</testproblem>

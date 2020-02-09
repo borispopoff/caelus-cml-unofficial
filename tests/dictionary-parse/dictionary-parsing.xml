@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<testproblem>
+  <name>Dictionary parsing</name>
+  <owner userid="ACCM"/>
+  <tags>unit</tags>
+
+  <problem_definition length="short" nprocs="1">
+    <command_line>caelus --quiet run Test-Dictionary</command_line>
+  </problem_definition>
+
+  <variables>
+    <variable name="parsed_correctly" language="python">
+import caelus_test_tools
+parsed_correctly = caelus_test_tools.compare_output("Test-Dictionary.log", "parse-base", 15)
+    </variable>
+  </variables>
+
+  <pass_tests>
+    <test name="Parsed correctly" language="python">
+assert(parsed_correctly)
+    </test>
+  </pass_tests>
+
+  <warn_tests>
+  </warn_tests>
+
+</testproblem>
