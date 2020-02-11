@@ -75,7 +75,7 @@ u_range  = caelus_test_tools.CompareVectorNormRange("60/U", "/fs/cluster/caelus/
     </variable>
     <variable name="p_diff_rms" language="python">
 import caelus_test_tools
-p_diff_rms  = caelus_test_tools.CompareFieldDiffRMSS("60/p", "/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/60/p", 0.05)
+p_diff_rms  = caelus_test_tools.CompareFieldDiffRMS("60/p", "/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/60/p", 0.05)
     </variable>
     <variable name="u_diff_rms" language="python">
 import caelus_test_tools
@@ -102,16 +102,16 @@ assert(p_range)
     <test name="U range" language="python">
 assert(u_range)
     </test>
-    <test name="RMS p field difference" language="python">
+    <test name="p field difference RMS" language="python">
 assert(p_diff_rms)
     </test>
-    <test name="RMS U field difference" language="python">
+    <test name="U field difference RMS" language="python">
 assert(u_diff_rms)
     </test>
   </pass_tests>
 
   <warn_tests>
-    <test name="execution time higher" language="python">
+    <test name="Higher execution time" language="python">
 assert(exec_time &lt; exec_time_ref)
     </test>
   </warn_tests>
