@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<testproblem>
+  <name>ACCM_triangularCavity</name>
+
+  <owner userid="ACCM"/>
+
+  <tags>tut</tags>
+
+  <problem_definition length="medium" nprocs="1">
+    <command_line>caelus_tutorials --quiet -f run_validation.yaml</command_line>
+  </problem_definition>
+
+  <variables>
+    <variable name="completed" language="python">
+from caelus.post.logs import SolverLog
+clog = SolverLog(logfile="pimpleSolver.log")
+completed = clog.solve_completed
+    </variable>
+    <variable name="exec_time_ref" language="python">
+import pandas as pd
+time = pd.read_table("/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/logs/clock_time.dat", comment='#', delim_whitespace=True)
+ex_time = time[['Time', 'ExecutionTime']]
+exec_time_ref = ex_time.iloc[-1][1]
+    </variable>
+    <variable name="p_residual_ref" language="python">
+import pandas as pd
+p_ref = pd.read_table("/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/logs/p.dat", comment='#', delim_whitespace=True)
+p_res_ref = p_ref[p_ref.SubIteration == 1][['Time', 'InitialResidual']]
+p_residual_ref = p_res_ref.iloc[-1][1]
+    </variable>
+    <variable name="ux_residual_ref" language="python">
+import pandas as pd
+ux_ref = pd.read_table("/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/logs/Ux.dat", comment='#', delim_whitespace=True)
+ux_res_ref = ux_ref[ux_ref.SubIteration == 1][['Time', 'InitialResidual']]
+ux_residual_ref = ux_res_ref.iloc[-1][1]
+    </variable>
+    <variable name="uy_residual_ref" language="python">
+import pandas as pd
+uy_ref = pd.read_table("/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/logs/Uy.dat", comment='#', delim_whitespace=True)
+uy_res_ref = uy_ref[uy_ref.SubIteration == 1][['Time', 'InitialResidual']]
+uy_residual_ref = uy_res_ref.iloc[-1][1]
+    </variable>
+    <variable name="exec_time" language="python">
+import pandas as pd
+time = pd.read_table("logs/clock_time.dat", comment='#', delim_whitespace=True)
+ex_time = time[['Time', 'ExecutionTime']]
+exec_time = ex_time.iloc[-1][1]
+    </variable>
+    <variable name="p_residual" language="python">
+import pandas as pd
+p = pd.read_table("logs/p.dat", comment='#', delim_whitespace=True)
+p_res = p[p.SubIteration == 1][['Time', 'InitialResidual']]
+p_residual = p_res.iloc[-1][1]
+    </variable>
+    <variable name="ux_residual" language="python">
+import pandas as pd
+ux = pd.read_table("logs/Ux.dat", comment='#', delim_whitespace=True)
+ux_res = ux[ux.SubIteration == 1][['Time', 'InitialResidual']]
+ux_residual = ux_res.iloc[-1][1]
+    </variable>
+    <variable name="uy_residual" language="python">
+import pandas as pd
+uy = pd.read_table("logs/Uy.dat", comment='#', delim_whitespace=True)
+uy_res = uy[uy.SubIteration == 1][['Time', 'InitialResidual']]
+uy_residual = uy_res.iloc[-1][1]
+    </variable>
+    <variable name="p_range" language="python">
+import caelus_test_tools
+p_range  = caelus_test_tools.CompareScalarRange("60/p", "/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/60/p", 0.05)
+    </variable>
+    <variable name="u_range" language="python">
+import caelus_test_tools
+u_range  = caelus_test_tools.CompareVectorNormRange("60/U", "/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/60/U", 0.05)
+    </variable>
+    <variable name="p_diff_rms" language="python">
+import caelus_test_tools
+p_diff_rms  = caelus_test_tools.CompareFieldDiffRMSS("60/p", "/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/60/p", 0.05)
+    </variable>
+    <variable name="u_diff_rms" language="python">
+import caelus_test_tools
+u_diff_rms  = caelus_test_tools.CompareFieldDiffRMS("60/U", "/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/60/U", 0.05)
+    </variable>
+  </variables>
+
+  <pass_tests>
+    <test name="Completed" language="python">
+assert(completed)
+    </test>
+    <test name="p residual" language="python">
+assert(p_residual &lt;= p_residual_ref)
+    </test>
+    <test name="Ux residual" language="python">
+assert(ux_residual &lt;= ux_residual_ref)
+    </test>
+    <test name="Uy residual" language="python">
+assert(uy_residual &lt;= uy_residual_ref)
+    </test>
+    <test name="p range" language="python">
+assert(p_range)
+    </test>
+    <test name="U range" language="python">
+assert(u_range)
+    </test>
+    <test name="RMS p field difference" language="python">
+assert(p_diff_rms)
+    </test>
+    <test name="RMS U field difference" language="python">
+assert(u_diff_rms)
+    </test>
+  </pass_tests>
+
+  <warn_tests>
+    <test name="execution time higher" language="python">
+assert(exec_time &lt; exec_time_ref)
+    </test>
+  </warn_tests>
+
+</testproblem>
