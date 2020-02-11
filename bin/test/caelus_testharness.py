@@ -85,16 +85,16 @@ class TestHarness:
           if os.path.exists(os.path.join(projectdir, directory)):
             dirnames.append(directory)
         testdirs = [ os.path.join( projectdir, x ) for x in dirnames ]
-        for directory in testdirs:
-          subdirs = [ os.path.join(directory, x) for x in os.listdir(directory)]
-          for subdir in subdirs:
-            g = glob.glob1(subdir, "*.xml")
+
+        for rootDir in testdirs:
+          for dirName, subdirList, fileList in os.walk(rootDir):
+            g = glob.glob1(dirName, "*.xml")
             for xml_file in g:
               try:
-                p = etree.parse(os.path.join(subdir, xml_file))
+                p = etree.parse(os.path.join(dirName, xml_file))
                 x = p.getroot()
                 if x.tag == "testproblem":
-                  xml_files.append(os.path.join(subdir, xml_file))
+                  xml_files.append(os.path.join(dirName, xml_file))
               except xml.parsers.expat.ExpatError:
                 print(("Warning: %s mal-formed" % xml_file))
                 traceback.print_exc()
