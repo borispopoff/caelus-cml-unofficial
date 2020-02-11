@@ -5,6 +5,7 @@ from __future__ import print_function
 import os
 import struct
 import numpy as np
+import gzip as gz
 from itertools import islice
 
 
@@ -124,7 +125,12 @@ def parse_field_all(fn):
     if not os.path.exists(fn):
         print("Can not open file " + fn)
         return None
-    with open(fn, "rb") as f:
+    if fn.endswith('gz'):
+      with gz.open(fn, "rb") as f:
+        content = f.readlines()
+        return parse_internal_field_content(content), parse_boundary_content(content)
+    else:
+      with open(fn, "rb") as f:
         content = f.readlines()
         return parse_internal_field_content(content), parse_boundary_content(content)
 
@@ -138,7 +144,12 @@ def parse_internal_field(fn):
     if not os.path.exists(fn):
         print("Can not open file " + fn)
         return None
-    with open(fn, "rb") as f:
+    if fn.endswith('gz'):
+      with gz.open(fn, "rb") as f:
+        content = f.readlines()
+        return parse_internal_field_content(content)
+    else:
+      with open(fn, "rb") as f:
         content = f.readlines()
         return parse_internal_field_content(content)
 
