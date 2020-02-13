@@ -44,7 +44,7 @@ from caelus.config.cmlenv import cml_get_latest_version, cml_get_version
 
 class TestHarness:
     def __init__(self, length="any", parallel="any", exclude_tags=None,
-                 tags=None, file="", from_file=None,
+                 tags=None, file="", ref_path=None, from_file=None,
                  verbose=True, justtest=False,
                  exit_fails=False, xml_outfile=""):
         self.tests = []
@@ -121,8 +121,8 @@ class TestHarness:
                 p = etree.parse(os.path.join(subdir,xml_file))
                 prob_defn = p.findall("problem_definition")[0]
                 prob_nprocs = int(prob_defn.attrib["nprocs"])                
-                testprob = regressiontest.TestProblem(filename=os.path.join(subdir, xml_file),
-                                                      verbose=self.verbose)
+                testprob = regressiontest.TestProblem(os.path.join(subdir, xml_file),
+                                                      projectdir, ref_path, verbose=self.verbose)
                 self.tests.append((subdir, testprob))
                 files.remove(xml_file)
           if files != []:
@@ -197,8 +197,8 @@ class TestHarness:
           p = etree.parse(os.path.join(subdir,xml_file))
           prob_defn = p.findall("problem_definition")[0]
           prob_nprocs = int(prob_defn.attrib["nprocs"])
-          testprob = regressiontest.TestProblem(filename=os.path.join(subdir, xml_file),
-                       verbose=self.verbose)
+          testprob = regressiontest.TestProblem(os.path.join(subdir, xml_file),
+                       projectdir, ref_path, verbose=self.verbose)
           self.tests.append((subdir, testprob))
 
         if len(self.tests) == 0:
@@ -404,6 +404,7 @@ if __name__ == "__main__":
     parser.add_option("-n", "--threads", dest="thread_count", type="int",
                       help="number of tests to run at the same time", default=1)
     parser.add_option("-c", "--clean", action="store_true", dest="clean", default = False)
+    parser.add_option("-r","--reference-path", dest="ref_path", default=None, help="path to reference case data")
     parser.add_option("--just-test", action="store_true", dest="justtest", default=False)
     parser.add_option("--just-list", action="store_true", dest="justlist")
     parser.add_option("-x","--xml-output", dest="xml_outfile", default="", help="filename for xml output")
@@ -435,6 +436,7 @@ if __name__ == "__main__":
                               file=options.file, verbose=True,
                               justtest=options.justtest,
                               from_file=options.from_file,
+                              ref_path=options.ref_path,
                               exit_fails=options.exit_fails,
                               xml_outfile=options.xml_outfile)
 

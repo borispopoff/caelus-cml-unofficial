@@ -9,6 +9,14 @@ import gzip as gz
 from itertools import islice
 
 
+def ReferencePath(projectdir, ref_path):
+  """
+  Determine absolute path to reference case.
+  """
+  rel_path = os.path.relpath(os.getcwd(), projectdir)
+  return os.path.join(ref_path, rel_path)
+
+
 def CompareOutput(current, reference, skip):
   """
   Compare output files. Return True if they are identical an False otherwise.

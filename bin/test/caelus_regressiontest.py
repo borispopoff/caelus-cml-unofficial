@@ -16,7 +16,7 @@ from junit_xml import TestCase
 
 class TestProblem:
     """A test records input information as well as tests for the output."""
-    def __init__(self, filename, verbose=False):
+    def __init__(self, filename, projectdir, ref_path, verbose=False):
         """Read a regression test from filename and record its details."""
         self.name = ""
         self.command_line = ""
@@ -30,6 +30,8 @@ class TestProblem:
         self.warn_status = []
         self.filename = filename.split('/')[-1]
         self.xml_reports=[]
+        self.projectdir = projectdir
+        self.ref_path = ref_path
 
         # add dir to import path
         sys.path.insert(0, os.path.dirname(filename))
@@ -154,6 +156,9 @@ class TestProblem:
         self.log("Assigning variables:")
         for var in self.variables:
             tmpdict  = {}
+            tmpdict["ref_path"] = self.ref_path
+            tmpdict["projectdir"] = self.projectdir
+
             try:
               var.run(tmpdict)
             except:

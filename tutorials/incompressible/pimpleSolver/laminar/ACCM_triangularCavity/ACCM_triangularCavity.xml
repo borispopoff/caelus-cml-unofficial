@@ -19,25 +19,34 @@ completed = clog.solve_completed
     </variable>
     <variable name="exec_time_ref" language="python">
 import pandas as pd
-time = pd.read_table("/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/logs/clock_time.dat", comment='#', delim_whitespace=True)
+import os, caelus_test_tools
+reference_path = caelus_test_tools.ReferencePath(projectdir, ref_path)
+print(reference_path)
+time = pd.read_table(os.path.join(reference_path,"logs/clock_time.dat"), comment='#', delim_whitespace=True)
 ex_time = time[['Time', 'ExecutionTime']]
 exec_time_ref = ex_time.iloc[-1][1]
     </variable>
     <variable name="p_residual_ref" language="python">
 import pandas as pd
-p_ref = pd.read_table("/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/logs/p.dat", comment='#', delim_whitespace=True)
+import os, caelus_test_tools
+reference_path = caelus_test_tools.ReferencePath(projectdir, ref_path)
+p_ref = pd.read_table(os.path.join(reference_path,"logs/p.dat"), comment='#', delim_whitespace=True)
 p_res_ref = p_ref[p_ref.SubIteration == 1][['Time', 'InitialResidual']]
 p_residual_ref = p_res_ref.iloc[-1][1]
     </variable>
     <variable name="ux_residual_ref" language="python">
 import pandas as pd
-ux_ref = pd.read_table("/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/logs/Ux.dat", comment='#', delim_whitespace=True)
+import os, caelus_test_tools
+reference_path = caelus_test_tools.ReferencePath(projectdir, ref_path)
+ux_ref = pd.read_table(os.path.join(reference_path,"logs/Ux.dat"), comment='#', delim_whitespace=True)
 ux_res_ref = ux_ref[ux_ref.SubIteration == 1][['Time', 'InitialResidual']]
 ux_residual_ref = ux_res_ref.iloc[-1][1]
     </variable>
     <variable name="uy_residual_ref" language="python">
 import pandas as pd
-uy_ref = pd.read_table("/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/logs/Uy.dat", comment='#', delim_whitespace=True)
+import os, caelus_test_tools
+reference_path = caelus_test_tools.ReferencePath(projectdir, ref_path)
+uy_ref = pd.read_table(os.path.join(reference_path,"logs/Uy.dat"), comment='#', delim_whitespace=True)
 uy_res_ref = uy_ref[uy_ref.SubIteration == 1][['Time', 'InitialResidual']]
 uy_residual_ref = uy_res_ref.iloc[-1][1]
     </variable>
@@ -66,20 +75,24 @@ uy_res = uy[uy.SubIteration == 1][['Time', 'InitialResidual']]
 uy_residual = uy_res.iloc[-1][1]
     </variable>
     <variable name="p_range" language="python">
-import caelus_test_tools
-p_range  = caelus_test_tools.CompareScalarRange("60/p", "/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/60/p", 0.05)
+import os, caelus_test_tools
+reference_path = caelus_test_tools.ReferencePath(projectdir, ref_path)
+p_range  = caelus_test_tools.CompareScalarRange("60/p", os.path.join(reference_path,"60/p"), 0.05)
     </variable>
     <variable name="u_range" language="python">
-import caelus_test_tools
-u_range  = caelus_test_tools.CompareVectorNormRange("60/U", "/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/60/U", 0.05)
+import os, caelus_test_tools
+reference_path = caelus_test_tools.ReferencePath(projectdir, ref_path)
+u_range  = caelus_test_tools.CompareVectorNormRange("60/U", os.path.join(reference_path,"60/U"), 0.05)
     </variable>
     <variable name="p_diff_rms" language="python">
-import caelus_test_tools
-p_diff_rms  = caelus_test_tools.CompareFieldDiffRMS("60/p", "/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/60/p", 0.05)
+import os, caelus_test_tools
+reference_path = caelus_test_tools.ReferencePath(projectdir, ref_path)
+p_diff_rms  = caelus_test_tools.CompareFieldDiffRMS("60/p", os.path.join(reference_path,"60/p"), 0.05)
     </variable>
     <variable name="u_diff_rms" language="python">
-import caelus_test_tools
-u_diff_rms  = caelus_test_tools.CompareFieldDiffRMS("60/U", "/fs/cluster/caelus/tutorials-8.04/incompressible/pimpleSolver/laminar/ACCM_triangularCavity/60/U", 0.05)
+import os, caelus_test_tools
+reference_path = caelus_test_tools.ReferencePath(projectdir, ref_path)
+u_diff_rms  = caelus_test_tools.CompareFieldDiffRMS("60/U", os.path.join(reference_path,"60/U"), 0.05)
     </variable>
   </variables>
 
