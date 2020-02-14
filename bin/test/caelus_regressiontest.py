@@ -56,7 +56,7 @@ class TestProblem:
                 for var in child.childNodes:
                     try: 
                         self.variables.append(Variable(name=var.getAttribute("name"), language=var.getAttribute("language"),
-                                      code=var.childNodes[0].nodeValue.strip()))
+                                      code=var.childNodes[0].nodeValue.strip(), varlist=var.getAttribute("variable_list")))
                     except AttributeError:
                         continue
             elif tag == "pass_tests":
@@ -171,8 +171,9 @@ class TestProblem:
               self.xml_reports.append(tc)
               return self.pass_status
 
-            varsdict[var.name] = tmpdict[var.name]
-            self.log("Assigning %s = %s" % (str(var.name), Trim(str(varsdict[var.name]))))
+            for variablename in var.varlist:
+              varsdict[variablename] = tmpdict[variablename]
+              self.log("Assigning %s = %s" % (str(variablename), Trim(str(varsdict[variablename]))))
 
         if len(self.pass_tests) != 0:
             self.log("Running failure tests: ")
@@ -260,6 +261,10 @@ class Test(TestOrVariable):
 
 class Variable(TestOrVariable):
     """A variable definition for use in tests"""
+    def __init__(self, name, language, code, varlist):
+        self.varlist = varlist.split(",")
+        super().__init__(name, language, code)
+
     def run_bash(self, varsdict):
         cmd = "bash -c \"%s\"" % self.code
         fd = os.popen(cmd, "r")
@@ -281,10 +286,11 @@ class Variable(TestOrVariable):
             print("-" * 80)
             raise Exception
 
-        if self.name not in varsdict.keys():
-            print("self.name == ", self.name)
+        for varname in self.varlist:
+          if varname not in varsdict:
+            print("varname == ", varname)
             print("varsdict.keys() == ", varsdict.keys())
-            print("self.name not found: does the variable define the right name?")
+            print(varname,"varname not found: did you set all variables?")
             raise Exception
 
 
