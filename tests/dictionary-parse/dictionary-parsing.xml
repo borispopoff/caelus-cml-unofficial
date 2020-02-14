@@ -12,7 +12,7 @@
   <variables>
     <variable name="parsed_correctly" language="python">
 import caelus_test_tools
-parsed_correctly = caelus_test_tools.CompareOutput("Test-Dictionary.log", "parse-base", 15)
+parsed_correctly = caelus_test_tools.CompareOutput("Test-Dictionary.log", "parse-reference", 15)
     </variable>
   </variables>
 
