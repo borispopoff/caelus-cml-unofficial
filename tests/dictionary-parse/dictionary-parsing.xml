@@ -10,9 +10,9 @@
   </problem_definition>
 
   <variables>
-    <variable name="parsed_correctly" language="python">
+    <variable name="parsed_correctly" language="python" variable_list="parsed_correctly">
 import caelus_test_tools
-parsed_correctly = caelus_test_tools.CompareOutput("Test-Dictionary.log", "parse-reference", 15)
+parsed_correctly = caelus_test_tools.CompareOutput("Test-Dictionary.log", "parse-reference", 19)
     </variable>
   </variables>
 

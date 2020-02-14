@@ -8,7 +8,7 @@
     <command_line>caelus --quiet run Test-Dictionary testDictEval1 testDictEval2 testDictEval3</command_line>
   </problem_definition>
   <variables>
-    <variable name="evaluate_correctly" language="python">
+    <variable name="evaluate_correctly" language="python" variable_list="evaluate_correctly">
 import caelus_test_tools
 evaluate_correctly = caelus_test_tools.CompareOutput("Test-Dictionary.log", "evaluate-reference", 19)
     </variable>
