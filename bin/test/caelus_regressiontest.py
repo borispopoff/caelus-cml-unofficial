@@ -20,6 +20,7 @@ class TestProblem:
         """Read a regression test from filename and record its details."""
         self.name = ""
         self.command_line = ""
+        self.clean_command_line = ""
         self.length = ""
         self.nprocs = 1
         self.verbose = verbose
@@ -52,6 +53,8 @@ class TestProblem:
                 self.length = child.getAttribute("length")
                 self.nprocs = int(child.getAttribute("nprocs"))
                 self.command_line = child.getElementsByTagName("command_line")[0].childNodes[0].nodeValue
+                if child.getElementsByTagName("clean_command_line"):
+                  self.clean_command_line = child.getElementsByTagName("clean_command_line")[0].childNodes[0].nodeValue
             elif tag == "variables":
                 for var in child.childNodes:
                     try: 
@@ -101,17 +104,23 @@ class TestProblem:
 #        else:
         return True
 
-    def clean(self): # TODO use caelus clean
+    def clean(self):
         self.log("Cleaning")
 
-        try:
-          os.stat("Makefile")
-          self.log("Calling 'make clean':")
-          ret = os.system("make clean")
-          if not ret == 0:
-            self.log("No clean target")
-        except OSError:
-          self.log("No Makefile, not calling make")
+        if self.clean_command_line == "":
+          # Get a list of all the file paths that ends with .txt from in specified directory
+          fileList = glob.glob("*.log")
+
+          # Iterate over the list of filepaths & remove each file.
+          for filePath in fileList:
+            try:
+              os.remove(filePath)
+            except:
+              print("Error while deleting file : ", filePath)
+        else:
+          self.log(self.clean_command_line)
+          os.system(self.clean_command_line)
+
 
     def run(self, dir):
         self.log("Running")
