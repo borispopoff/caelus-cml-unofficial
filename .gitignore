@@ -70,3 +70,5 @@ src/thermophysicalModels/reactionThermo/chemistryReaders/chemkinReader/posix/
  
 docs/Guides
 external/linux/openmpi-1\.6\.5/bin/
+
+bin/test/.idea/
