@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-
-from __future__ import print_function
-
 import os
 import struct
 import numpy as np
@@ -9,91 +6,91 @@ import gzip as gz
 from itertools import islice
 
 
-def ReferencePath(projectdir, ref_path):
-  """
+def reference_path(projectdir, ref_path):
+    """
   Determine absolute path to reference case.
   """
-  rel_path = os.path.relpath(os.getcwd(), projectdir)
-  return os.path.join(ref_path, rel_path)
+    rel_path = os.path.relpath(os.getcwd(), projectdir)
+    return os.path.join(ref_path, rel_path)
 
 
-def CompareOutput(current, reference, skip):
-  """
+def compare_output(current, reference, skip):
+    """
   Compare output files. Return True if they are identical an False otherwise.
   """
-  with open(current) as f1, open(reference) as f2:
-    f1 = islice(f1, skip, None)
-    f2 = islice(f2, skip, None)
-    return all(x == y for x, y in zip(f1, f2))
+    with open(current) as f1, open(reference) as f2:
+        f1 = islice(f1, skip, None)
+        f2 = islice(f2, skip, None)
+        return all(x == y for x, y in zip(f1, f2))
 
 
-def CompareScalarRange(current, reference, tol):
-  """
+def compare_scalar_range(current, reference, tol):
+    """
   Compare range for scalar fields. Return True if relative difference is less than 
   tol otherwise False.
   """
-  scMin, scMax = GetScalarRange(current)
-  srMin, srMax = GetScalarRange(reference)
-  scRange = scMax - scMin
-  srRange = srMax - srMin
-  
-  return abs(scRange - srRange)/srRange < tol
+    scmin, scmax = get_scalar_range(current)
+    srmin, srmax = get_scalar_range(reference)
+    scrange = scmax - scmin
+    srrange = srmax - srmin
+
+    return abs(scrange - srrange) / srrange < tol
 
 
-def CompareVectorNormRange(current, reference, tol):
-  """
+def compare_vector_norm_range(current, reference, tol):
+    """
   Compare range for norm of vector fields. Return True if relative difference is less than 
   tol otherwise False.
   """
-  vcMin, vcMax = GetVectorNormRange(current)
-  vrMin, vrMax = GetVectorNormRange(reference)
-  vcRange = vcMax - vcMin
-  vrRange = vrMax - vrMin
-  
-  return abs(vcRange - vrRange)/vrRange < tol
+    vcmin, vcmax = get_vector_norm_range(current)
+    vrmin, vrmax = get_vector_norm_range(reference)
+    vcrange = vcmax - vcmin
+    vrrange = vrmax - vrmin
+
+    return abs(vcrange - vrrange) / vrrange < tol
 
 
-def CompareFieldDiffRMS(current, reference, tol):
-  """
+def compare_field_diff_rms(current, reference, tol):
+    """
   Compare RMS of difference between fields. Return True if RMS is less than 
   tol otherwise False.
   """
-  fRMS = DiffFieldRMS(current, reference)
-  
-  return fRMS < tol
+    frms = diff_field_rms(current, reference)
+
+    return frms < tol
 
 
-def GetScalarRange(name):
-  """Returns the range (min, max) of the specified scalar field."""
-  s = parse_internal_field(name)
-  minS = min(s)
-  maxS = max(s)
-  return minS, maxS
+def get_scalar_range(name):
+    """Returns the range (min, max) of the specified scalar field."""
+    s = parse_internal_field(name)
+    mins = min(s)
+    maxs = max(s)
+    return mins, maxs
 
 
-def GetVectorNormRange(name):
-  """Return the range (min, max) of the norm of the specified vector field."""
-  v = parse_internal_field(name)
-  n = []
+def get_vector_norm_range(name):
+    """Return the range (min, max) of the norm of the specified vector field."""
+    v = parse_internal_field(name)
+    n = []
 
-  for x in range(0, v.shape[0]):
-      n.append(np.linalg.norm(v[x]))
- 
-  np.array(n)
-  minN = min(n)
-  maxN = max(n)
-  return minN, maxN
+    for x in range(0, v.shape[0]):
+        n.append(np.linalg.norm(v[x]))
+
+    np.array(n)
+    minn = min(n)
+    maxn = max(n)
+    return minn, maxn
 
 
-def DiffFieldRMS(f1name, f2name):
-  """
+def diff_field_rms(f1name, f2name):
+    """
   Taking the difference between two fields returning the RMS error
   """
-  f1 = parse_internal_field(f1name)
-  f2 = parse_internal_field(f2name)
+    f1 = parse_internal_field(f1name)
+    f2 = parse_internal_field(f2name)
 
-  ferr = np.subtract(f1, f2)
-  return np.sqrt(np.mean(np.square(ferr)))
+    ferr = np.subtract(f1, f2)
+    return np.sqrt(np.mean(np.square(ferr)))
 
 
 """
@@ -133,14 +130,20 @@ def parse_field_all(fn):
     if not os.path.exists(fn):
         print("Can not open file " + fn)
         return None
-    if fn.endswith('gz'):
-      with gz.open(fn, "rb") as f:
-        content = f.readlines()
-        return parse_internal_field_content(content), parse_boundary_content(content)
+    if fn.endswith("gz"):
+        with gz.open(fn, "rb") as f:
+            content = f.readlines()
+            return (
+                parse_internal_field_content(content),
+                parse_boundary_content(content),
+            )
     else:
-      with open(fn, "rb") as f:
-        content = f.readlines()
-        return parse_internal_field_content(content), parse_boundary_content(content)
+        with open(fn, "rb") as f:
+            content = f.readlines()
+            return (
+                parse_internal_field_content(content),
+                parse_boundary_content(content),
+            )
 
 
 def parse_internal_field(fn):
@@ -152,14 +155,14 @@ def parse_internal_field(fn):
     if not os.path.exists(fn):
         print("Can not open file " + fn)
         return None
-    if fn.endswith('gz'):
-      with gz.open(fn, "rb") as f:
-        content = f.readlines()
-        return parse_internal_field_content(content)
+    if fn.endswith("gz"):
+        with gz.open(fn, "rb") as f:
+            content = f.readlines()
+            return parse_internal_field_content(content)
     else:
-      with open(fn, "rb") as f:
-        content = f.readlines()
-        return parse_internal_field_content(content)
+        with open(fn, "rb") as f:
+            content = f.readlines()
+            return parse_internal_field_content(content)
 
 
 def parse_internal_field_content(content):
@@ -170,10 +173,10 @@ def parse_internal_field_content(content):
     """
     is_binary = is_binary_format(content)
     for ln, lc in enumerate(content):
-        if lc.startswith(b'internalField'):
-            if b'nonuniform' in lc:
+        if lc.startswith(b"internalField"):
+            if b"nonuniform" in lc:
                 return parse_data_nonuniform(content, ln, len(content), is_binary)
-            elif b'uniform' in lc:
+            elif b"uniform" in lc:
                 return parse_data_uniform(content[ln])
             break
     return None
@@ -207,7 +210,7 @@ def parse_boundary_content(content):
         n = n1
         while True:
             lc = content[n]
-            if b'nonuniform' in lc:
+            if b"nonuniform" in lc:
                 v = parse_data_nonuniform(content, n, n2, is_binary)
                 pd[lc.split()[0]] = v
                 if not is_binary:
@@ -215,7 +218,7 @@ def parse_boundary_content(content):
                 else:
                     n += 3
                 continue
-            elif b'uniform' in lc:
+            elif b"uniform" in lc:
                 pd[lc.split()[0]] = parse_data_uniform(content[n])
             n += 1
             if n > n2:
@@ -230,9 +233,9 @@ def parse_data_uniform(line):
     :param line: a line include uniform data, eg. "value           uniform (0 0 0);"
     :return: data
     """
-    if b'(' in line:
-        return np.array([float(x) for x in line.split(b'(')[1].split(b')')[0].split()])
-    return float(line.split(b'uniform')[1].split(b';')[0])
+    if b"(" in line:
+        return np.array([float(x) for x in line.split(b"(")[1].split(b")")[0].split()])
+    return float(line.split(b"uniform")[1].split(b";")[0])
 
 
 def parse_data_nonuniform(content, n, n2, is_binary):
@@ -246,21 +249,30 @@ def parse_data_nonuniform(content, n, n2, is_binary):
     """
     num = int(content[n + 1])
     if not is_binary:
-        if b'scalar' in content[n]:
+        if b"scalar" in content[n]:
             data = np.array([float(x) for x in content[n + 3:n + 3 + num]])
         else:
-            data = np.array([ln[1:-2].split() for ln in content[n + 3:n + 3 + num]], dtype=float)
+            data = np.array(
+                [ln[1:-2].split() for ln in content[n + 3:n + 3 + num]], dtype=float
+            )
     else:
         nn = 1
-        if b'vector' in content[n]:
+        if b"vector" in content[n]:
             nn = 3
-        elif b'symmtensor' in content[n]:
+        elif b"symmtensor" in content[n]:
             nn = 6
-        elif b'tensor' in content[n]:
+        elif b"tensor" in content[n]:
             nn = 9
-        buf = b''.join(content[n+2:n2+1])
-        vv = np.array(struct.unpack('{}d'.format(num*nn),
-                                    buf[struct.calcsize('c'):num*nn*struct.calcsize('d')+struct.calcsize('c')]))
+        buf = b"".join(content[n + 2:n2 + 1])
+        vv = np.array(
+            struct.unpack(
+                "{}d".format(num * nn),
+                buf[
+                    struct.calcsize("c"):num * nn * struct.calcsize("d")
+                    + struct.calcsize("c")
+                ],
+            )
+        )
         if nn > 1:
             data = vv.reshape((num, nn))
         else:
@@ -278,48 +290,48 @@ def split_boundary_content(content):
     n = 0
     in_boundary_field = False
     in_patch_field = False
-    current_path = ''
+    current_path = ""
     while True:
         lc = content[n]
-        if lc.startswith(b'boundaryField'):
+        if lc.startswith(b"boundaryField"):
             in_boundary_field = True
-            if content[n+1].startswith(b'{'):
+            if content[n + 1].startswith(b"{"):
                 n += 2
                 continue
-            elif content[n+1].strip() == b'' and content[n+2].startswith(b'{'):
+            elif content[n + 1].strip() == b"" and content[n + 2].startswith(b"{"):
                 n += 3
                 continue
             else:
-                print('no { after boundaryField')
+                print("no { after boundaryField")
                 break
         if in_boundary_field:
-            if lc.rstrip() == b'}':
+            if lc.rstrip() == b"}":
                 break
             if in_patch_field:
-                if lc.strip() == b'}':
-                    bd[current_path][1] = n-1
+                if lc.strip() == b"}":
+                    bd[current_path][1] = n - 1
                     in_patch_field = False
-                    current_path = ''
+                    current_path = ""
                 n += 1
                 continue
-            if lc.strip() == b'':
+            if lc.strip() == b"":
                 n += 1
                 continue
             current_path = lc.strip()
-            if content[n+1].strip() == b'{':
+            if content[n + 1].strip() == b"{":
                 n += 2
-            elif content[n+1].strip() == b'' and content[n+2].strip() == b'{':
+            elif content[n + 1].strip() == b"" and content[n + 2].strip() == b"{":
                 n += 3
             else:
-                print('no { after boundary patch')
+                print("no { after boundary patch")
                 break
             in_patch_field = True
-            bd[current_path] = [n,n]
+            bd[current_path] = [n, n]
             continue
         n += 1
         if n > len(content):
             if in_boundary_field:
-                print('error, boundaryField not end with }')
+                print("error, boundaryField not end with }")
             break
 
     return bd
@@ -333,8 +345,8 @@ def is_binary_format(content, maxline=20):
     :return: binary format or not
     """
     for lc in content[:maxline]:
-        if b'format' in lc:
-            if b'binary' in lc:
+        if b"format" in lc:
+            if b"binary" in lc:
                 return True
             return False
     return False

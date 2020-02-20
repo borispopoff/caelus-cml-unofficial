@@ -10,7 +10,7 @@
   <variables>
     <variable name="evaluate_correctly" language="python" variable_list="evaluate_correctly">
 import caelus_test_tools
-evaluate_correctly = caelus_test_tools.CompareOutput("Test-Dictionary.log", "evaluate-reference", 19)
+evaluate_correctly = caelus_test_tools.compare_output("Test-Dictionary.log", "evaluate-reference", 19)
     </variable>
   </variables>
 

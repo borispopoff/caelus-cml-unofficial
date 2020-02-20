@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <testproblem>
-  <name>ACCM_triangularCavity</name>
+  <name>ACCM_teeJunction</name>
 
   <owner userid="ACCM"/>
 
@@ -17,7 +17,7 @@
 
     <variable name="run_completed" language="python" variable_list="completed">
 from caelus.post.logs import SolverLog
-clog = SolverLog(logfile="pimpleSolver.log")
+clog = SolverLog(logfile="simpleSolver.log")
 completed = clog.solve_completed
     </variable>
 
@@ -58,10 +58,10 @@ uy_residual = uy_res.iloc[-1][1]
     <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms">
 import os, caelus_test_tools
 reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
-p_range  = caelus_test_tools.compare_scalar_range("60/p", os.path.join(reference_path,"60/p"), 0.05)
-u_range  = caelus_test_tools.compare_vector_norm_range("60/U", os.path.join(reference_path,"60/U"), 0.05)
-p_diff_rms  = caelus_test_tools.compare_field_diff_rms("60/p", os.path.join(reference_path,"60/p"), 0.05)
-u_diff_rms  = caelus_test_tools.compare_field_diff_rms("60/U", os.path.join(reference_path,"60/U"), 0.05)
+p_range  = caelus_test_tools.compare_scalar_range("3000/p", os.path.join(reference_path,"3000/p"), 0.05)
+u_range  = caelus_test_tools.compare_vector_norm_range("3000/U", os.path.join(reference_path,"3000/U"), 0.05)
+p_diff_rms  = caelus_test_tools.compare_field_diff_rms("3000/p", os.path.join(reference_path,"3000/p"), 0.05)
+u_diff_rms  = caelus_test_tools.compare_field_diff_rms("3000/U", os.path.join(reference_path,"3000/U"), 0.05)
     </variable>
   </variables>
 
