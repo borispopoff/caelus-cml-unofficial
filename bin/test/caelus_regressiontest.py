@@ -10,7 +10,7 @@ import threading
 import traceback
 
 from io import StringIO
-from junit_xml import TestCase
+from junit_xml import TestCase # TODO need to extend TestCase to record warnings correctly.
 
 
 class TestProblem:
@@ -231,17 +231,27 @@ class TestProblem:
             self.log("Running warning tests: ")
             for test in self.warn_tests:
                 self.log("Running %s:" % test.name)
+                log = StringIO()
+                original_stdout = sys.stdout
+                sys.stdout = log
                 status = test.run(varsdict)
+                tc = TestCase(test.name, "%s.%s" % (self.length, self.filename[:-4]))
                 if status:
                     self.log("success.")
                     self.warn_status.append("P")
                 elif not status:
                     self.log("warning.")
                     self.warn_status.append("W")
+                    tc.add_failure_info("Warning")
                 else:
                     self.log("warning (info == %s)." % status)
                     self.warn_status.append("W")
-
+                    tc.add_failure_info("Warning", status)
+                self.xml_reports.append(tc)
+                sys.stdout = original_stdout
+                log.seek(0)
+                tc.stdout = log.read()
+                print(tc.stdout)
         self.log("".join(self.pass_status + self.warn_status))
         return self.pass_status + self.warn_status
 

@@ -211,7 +211,6 @@ class TestHarness:
             tagged_set = working_set
 
         for (subdir, xml_file) in [os.path.split(x) for x in tagged_set]:
-            # need to grab nprocs here to pass through to modify_command_line
             p = eTree.parse(os.path.join(subdir, xml_file))
             prob_defn = p.findall("problem_definition")[0]
             prob_nprocs = int(prob_defn.attrib["nprocs"])
@@ -265,7 +264,7 @@ class TestHarness:
                     # spin up enough new workers to fully subscribe thread count
                     threadlist.append(
                         multiprocessing.Process(
-                            target=self.threadrun, args=[serial_tests]
+                            target=self.threadrun, args=(serial_tests,)
                         )
                     )
                     threadlist[-1].start()
