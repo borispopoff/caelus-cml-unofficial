@@ -260,7 +260,7 @@ class TestHarness:
                 # collect serial tests to pass to worker threads
                 serial_tests.put(test)
             for nprocs in sorted(list(tests_by_nprocs.keys()), reverse=True):
-                for i in range(len(threadlist), max(0, options.thread_count - nprocs)):
+                for i in range(len(threadlist), max(0, options.processor_count - nprocs)):
                     # spin up enough new workers to fully subscribe thread count
                     threadlist.append(
                         multiprocessing.Process(
@@ -473,8 +473,8 @@ if __name__ == "__main__":
     )
     parser.add_option(
         "-n",
-        "--threads",
-        dest="thread_count",
+        "--nprocs",
+        dest="processor_count",
         type="int",
         help="number of tests to run at the same time",
         default=1,
