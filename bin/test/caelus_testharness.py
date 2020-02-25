@@ -6,7 +6,7 @@ import os.path
 import glob
 import time
 import traceback
-import multiprocessing
+import multiprocessing as mp
 import queue as Queue
 import xml.parsers.expat
 import xml.etree.ElementTree as eTree
@@ -68,11 +68,9 @@ class TestHarness:
         self.justtest = justtest
         self.xml_parser = TestSuite("Caelus-TestHarness", [])
         self.cwd = os.getcwd()
-        self.iolock = multiprocessing.Lock()
+        self.iolock = mp.Lock()
         self.xml_outfile = xml_outfile
         self.exit_fails = exit_fails
-        if not self.justtest:
-            self.test_exception_ids = multiprocessing.Queue()
 
         if file == "":
             print("Test criteria:")
@@ -248,48 +246,50 @@ class TestHarness:
     def run(self):
         self.log(" ")
         if not self.justtest:
-            threadlist = []
             tests_by_nprocs = {}
             for test_id in range(len(self.tests)):
                 # sort tests by number of processes requested
                 tests_by_nprocs.setdefault(self.tests[test_id][1].nprocs, []).append(
                     test_id
                 )
-            serial_tests = multiprocessing.Queue()
-            for test in tests_by_nprocs.get(1, []):
-                # collect serial tests to pass to worker threads
-                serial_tests.put(test)
-            for nprocs in sorted(list(tests_by_nprocs.keys()), reverse=True):
-                for i in range(len(threadlist), max(0, options.processor_count - nprocs)):
-                    # spin up enough new workers to fully subscribe thread count
-                    threadlist.append(
-                        multiprocessing.Process(
-                            target=self.threadrun, args=(serial_tests,)
-                        )
-                    )
-                    threadlist[-1].start()
-                if nprocs == 1:
-                    # remaining tests are serial. Join the workers
-                    self.threadrun(serial_tests)
-                else:
-                    tests = tests_by_nprocs[nprocs]
-                    queue = Queue.Queue()
-                    for test in tests:
-                        queue.put(test)
 
-                    # run the parallel queue on master thread
-                    self.threadrun(queue)
-            for t in threadlist:
-                """Wait until all threads finish"""
-                t.join()
+            m = mp.Manager()
+            test_exception_ids = mp.Queue()
+            items = mp.Queue()
+            rets = mp.Queue()
+            spawn = mp.Process
+            workerlist = []
 
+            available_procs = mp.cpu_count()
+            sim_max_procs = sorted(list(tests_by_nprocs.keys()), reverse=True)[0]
+            requested_procs = options.processor_count
+
+            possible_procs = available_procs // sim_max_procs 
+            nprocs = requested_procs
+            if requested_procs > possible_procs:
+                nprocs = possible_procs
+                print("Requested processor count exceeds available when parallel simulations are running, reducing to:", nprocs)
+
+            # spin up enough new workers to fully subscribe processor count
+            for i in range(nprocs):
+                worker = spawn(target=self.processor_run, args=(items, test_exception_ids, rets))
+                worker.start()
+                workerlist.append(worker)
+
+            # fill the queue
+            for test_id in range(len(self.tests)):
+                items.put(test_id)
+
+            # wait until all workers finish
+            for worker in workerlist:
+                worker.join()
+
+            # get and return exceptions
             exceptions = []
-            while True:
-                try:
-                    test_id, lines = self.test_exception_ids.get(timeout=0.1)
-                    exceptions.append((self.tests[test_id], lines))
-                except Queue.Empty:
-                    break
+            while not test_exception_ids.empty():
+                test_id, lines = test_exception_ids.get(timeout=0.1)
+                exceptions.append((self.tests[test_id], lines))
+
             for e, lines in exceptions:
                 tc = TestCase(e[1].name, "%s.%s" % (e[1].length, e[1].filename[:-4]))
                 tc.add_failure_info("Failure", lines)
@@ -297,6 +297,18 @@ class TestHarness:
                 self.tests.remove(e)
                 self.completed_tests += [e[1]]
 
+            # get and return results as a list
+            ret = []
+            while not rets.empty():
+                test_id, testprob = rets.get(timeout=0.1)
+                ret.append((test_id, testprob))
+
+            for r in ret:
+                test_id = r[0]
+                testprob = r[1]
+                self.tests[test_id][1].xml_reports.append(testprob.xml_reports[0])
+            
+            # run tests
             count = len(self.tests)
             while True:
                 for t in self.tests:
@@ -369,10 +381,9 @@ class TestHarness:
         if self.exit_fails:
             sys.exit(self.failcount)
 
-    def threadrun(self, queue):
+    def processor_run(self, items, test_exception_ids, rets):
         """This is the portion of the loop which actually runs the
-        tests. This is split out so that it can be threaded.
-        Each thread runs tests from the queue until it is exhausted."""
+        tests. Each processor runs tests from the queue until it is exhausted."""
 
         # We use IO locking to attempt to keep output understandable
         # That means writing to a buffer to minimise interactions
@@ -383,8 +394,8 @@ class TestHarness:
             sys.stdout = buf
             try:
                 # pull a test number from the queue
-                test_id = queue.get(timeout=0.1)
-                (directory, test) = self.tests[test_id]
+                test_id = items.get(timeout=0.1)
+                (directory, testprob) = self.tests[test_id]
             except Queue.Empty:
                 # If the queue is empty, we're done.
                 sys.stdout = main_stdout
@@ -394,24 +405,25 @@ class TestHarness:
                 break
 
             try:
-                runtime = test.run(directory)
+                runtime = testprob.run(directory)
+                rets.put((test_id, testprob))
                 if self.length == "short" and runtime > 30.0:
                     self.log(
                         "Warning: short test ran for %f seconds which"
                         + " is longer than the permitted 30s run time" % runtime
                     )
                     self.teststatus += ["W"]
-                    test.pass_status = ["W"]
+                    testprob.pass_status = ["W"]
 
             except:
-                self.log("Error: %s raised an exception while running:" % test.filename)
+                self.log("Error: %s raised an exception while running:" % testprob.filename)
                 lines = traceback.format_exception(
                     sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2]
                 )
                 for line in lines:
                     self.log(line)
-                test.pass_status = ["F"]
-                self.test_exception_ids.put((test_id, lines))
+                testprob.pass_status = ["F"]
+                test_exception_ids.put((test_id, lines))
             finally:
                 sys.stdout = main_stdout
                 buf.seek(0)
