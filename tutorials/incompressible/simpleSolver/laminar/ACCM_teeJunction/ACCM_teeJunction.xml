@@ -70,13 +70,13 @@ u_diff_rms  = caelus_test_tools.compare_field_diff_rms("3000/U", os.path.join(re
 assert(completed)
     </test>
     <test name="p residual" language="python">
-assert(p_residual &lt;= p_residual_ref)
+assert(p_residual &lt;= 1.1*p_residual_ref)
     </test>
     <test name="Ux residual" language="python">
-assert(ux_residual &lt;= ux_residual_ref)
+assert(ux_residual &lt;= 1.1*ux_residual_ref)
     </test>
     <test name="Uy residual" language="python">
-assert(uy_residual &lt;= uy_residual_ref)
+assert(uy_residual &lt;= 1.1*uy_residual_ref)
     </test>
     <test name="p range" language="python">
 assert(p_range)
