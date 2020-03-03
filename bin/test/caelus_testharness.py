@@ -431,6 +431,7 @@ class TestHarness:
                     print(buf.read())
 
     def list(self):
+        print(len(self.tests), "tests found")
         print("List of tests:")
         for (subdir, test) in self.tests:
             print(os.path.join(subdir, test.filename))
@@ -438,6 +439,9 @@ class TestHarness:
 
 if __name__ == "__main__":
     import optparse
+
+    def tag_callback(option, opt, value, parser):
+      setattr(parser.values, option.dest, value.split(','))
 
     parser = optparse.OptionParser()
     parser.add_option(
@@ -457,18 +461,22 @@ if __name__ == "__main__":
     parser.add_option(
         "-e",
         "--exclude-tags",
+        type="string",
         dest="exclude_tags",
         help="run only tests that do not have specific tags (takes precidence over -t)",
         default=[],
-        action="append",
+        action="callback",
+        callback=tag_callback,
     )
     parser.add_option(
         "-t",
         "--tags",
+        type="string",
         dest="tags",
         help="run tests with specific tags",
         default=[],
-        action="append",
+        action="callback",
+        callback=tag_callback,
     )
     parser.add_option(
         "-f",
