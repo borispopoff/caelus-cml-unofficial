@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<testproblem>
+  <name>SIMPLE ACCM_teeJunction</name>
+
+  <owner userid="ACCM"/>
+
+  <tags>tut simple laminar</tags>
+
+  <problem_definition length="medium" nprocs="1">
+
+    <command_line>caelus_tutorials --quiet -f run_validation.yaml</command_line>
+    <clean_command_line>caelus_tutorials --quiet -f run_validation.yaml --clean</clean_command_line>
+  </problem_definition>
+
+  <variables>
+
+    <variable name="run_completed" language="python" variable_list="completed">
+from caelus.post.logs import SolverLog
+clog = SolverLog(logfile="simpleSolver.log")
+completed = clog.solve_completed
+    </variable>
+
+    <variable name="ref_time_residuals" language="python" variable_list="exec_time_ref,p_residual_ref,ux_residual_ref,uy_residual_ref">
+import pandas as pd
+import os, caelus_test_tools
+reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
+time = pd.read_table(os.path.join(reference_path,"logs/clock_time.dat"), comment='#', delim_whitespace=True)
+ex_time = time[['Time', 'ExecutionTime']]
+exec_time_ref = ex_time.iloc[-1][1]
+p_ref = pd.read_table(os.path.join(reference_path,"logs/p.dat"), comment='#', delim_whitespace=True)
+p_res_ref = p_ref[p_ref.SubIteration == 1][['Time', 'InitialResidual']]
+p_residual_ref = p_res_ref.iloc[-1][1]
+ux_ref = pd.read_table(os.path.join(reference_path,"logs/Ux.dat"), comment='#', delim_whitespace=True)
+ux_res_ref = ux_ref[ux_ref.SubIteration == 1][['Time', 'InitialResidual']]
+ux_residual_ref = ux_res_ref.iloc[-1][1]
+uy_ref = pd.read_table(os.path.join(reference_path,"logs/Uy.dat"), comment='#', delim_whitespace=True)
+uy_res_ref = uy_ref[uy_ref.SubIteration == 1][['Time', 'InitialResidual']]
+uy_residual_ref = uy_res_ref.iloc[-1][1]
+    </variable>
+
+    <variable name="time_reisudals" language="python" variable_list="exec_time,p_residual,ux_residual,uy_residual">
+import pandas as pd
+time = pd.read_table("logs/clock_time.dat", comment='#', delim_whitespace=True)
+ex_time = time[['Time', 'ExecutionTime']]
+exec_time = ex_time.iloc[-1][1]
+p = pd.read_table("logs/p.dat", comment='#', delim_whitespace=True)
+p_res = p[p.SubIteration == 1][['Time', 'InitialResidual']]
+p_residual = p_res.iloc[-1][1]
+ux = pd.read_table("logs/Ux.dat", comment='#', delim_whitespace=True)
+ux_res = ux[ux.SubIteration == 1][['Time', 'InitialResidual']]
+ux_residual = ux_res.iloc[-1][1]
+uy = pd.read_table("logs/Uy.dat", comment='#', delim_whitespace=True)
+uy_res = uy[uy.SubIteration == 1][['Time', 'InitialResidual']]
+uy_residual = uy_res.iloc[-1][1]
+    </variable>
+
+    <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms">
+import os, caelus_test_tools
+reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
+p_range  = caelus_test_tools.compare_scalar_range("3000/p", os.path.join(reference_path,"3000/p"), 0.05)
+u_range  = caelus_test_tools.compare_vector_norm_range("3000/U", os.path.join(reference_path,"3000/U"), 0.05)
+p_diff_rms  = caelus_test_tools.compare_field_diff_rms("3000/p", os.path.join(reference_path,"3000/p"), 0.05)
+u_diff_rms  = caelus_test_tools.compare_field_diff_rms("3000/U", os.path.join(reference_path,"3000/U"), 0.05)
+    </variable>
+  </variables>
+
+  <pass_tests>
+    <test name="Completed" language="python">
+assert(completed)
+    </test>
+    <test name="p residual" language="python">
+assert(p_residual &lt;= 1.1*p_residual_ref)
+    </test>
+    <test name="Ux residual" language="python">
+assert(ux_residual &lt;= 1.1*ux_residual_ref)
+    </test>
+    <test name="Uy residual" language="python">
+assert(uy_residual &lt;= 1.1*uy_residual_ref)
+    </test>
+    <test name="p range" language="python">
+assert(p_range)
+    </test>
+    <test name="U range" language="python">
+assert(u_range)
+    </test>
+    <test name="p field difference RMS" language="python">
+assert(p_diff_rms)
+    </test>
+    <test name="U field difference RMS" language="python">
+assert(u_diff_rms)
+    </test>
+  </pass_tests>
+
+  <warn_tests>
+    <test name="Higher execution time" language="python">
+assert(exec_time &lt; exec_time_ref)
+    </test>
+  </warn_tests>
+
+</testproblem>
