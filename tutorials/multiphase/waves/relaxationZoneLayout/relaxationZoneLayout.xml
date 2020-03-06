@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<testproblem>
+  <name>relaxationZoneLayout</name>
+
+  <owner userid="ACCM"/>
+
+  <tags>tut wave</tags>
+
+  <problem_definition length="medium" nprocs="1">
+
+    <command_line>caelus_tutorials --quiet -f run_validation.yaml</command_line>
+    <clean_command_line>caelus_tutorials --quiet -f run_validation.yaml --clean</clean_command_line>
+  </problem_definition>
+
+  <variables>
+
+    <variable name="run_completed" language="python" variable_list="completed">
+from caelus.post.logs import SolverLog
+clog = SolverLog(logfile="pimpleSolver.log")
+completed = clog.solve_completed
+    </variable>
+
+  </variables>
+
+  <pass_tests>
+    <test name="Completed" language="python">
+assert(completed)
+    </test>
+
+
+  </pass_tests>
+
+  <warn_tests>
+  </warn_tests>
+
+</testproblem>

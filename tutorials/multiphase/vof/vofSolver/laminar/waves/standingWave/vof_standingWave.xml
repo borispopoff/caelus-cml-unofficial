@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <testproblem>
-  <name>PIMPLE ACCM_circularCylinder</name>
+  <name>VoF standingWave</name>
 
   <owner userid="ACCM"/>
 
-  <tags>tut pimple laminar validation</tags>
+  <tags>tut vof wave laminar</tags>
 
   <problem_definition length="medium" nprocs="1">
 
@@ -58,10 +58,10 @@ uy_residual = uy_res.iloc[-1][1]
     <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms">
 import os, caelus_test_tools
 reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
-p_range  = caelus_test_tools.compare_scalar_range("360/p", os.path.join(reference_path,"360/p"), 0.05)
-u_range  = caelus_test_tools.compare_vector_norm_range("360/U", os.path.join(reference_path,"360/U"), 0.05)
-p_diff_rms  = caelus_test_tools.compare_field_diff_rms("360/p", os.path.join(reference_path,"360/p"), 0.05)
-u_diff_rms  = caelus_test_tools.compare_field_diff_rms("360/U", os.path.join(reference_path,"360/U"), 0.05)
+p_range  = caelus_test_tools.compare_scalar_range("20/p", os.path.join(reference_path,"20/p"), 0.05)
+u_range  = caelus_test_tools.compare_vector_norm_range("20/U", os.path.join(reference_path,"20/U"), 0.05)
+p_diff_rms  = caelus_test_tools.compare_field_diff_rms("20/p", os.path.join(reference_path,"20/p"), 0.05)
+u_diff_rms  = caelus_test_tools.compare_field_diff_rms("20/U", os.path.join(reference_path,"20/U"), 0.05)
     </variable>
   </variables>
 

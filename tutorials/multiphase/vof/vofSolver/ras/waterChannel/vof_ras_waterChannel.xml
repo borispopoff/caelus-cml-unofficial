@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <testproblem>
-  <name>PIMPLE ACCM_circularCylinder</name>
+  <name>VoF waterChannel</name>
 
   <owner userid="ACCM"/>
 
-  <tags>tut pimple laminar validation</tags>
+  <tags>tut vof ras</tags>
 
   <problem_definition length="medium" nprocs="1">
 
-    <command_line>caelus_tutorials --quiet -f run_validation.yaml</command_line>
-    <clean_command_line>caelus_tutorials --quiet -f run_validation.yaml --clean</clean_command_line>
+    <command_line>caelus_tutorials --quiet -f run_tutorial.yaml</command_line>
+    <clean_command_line>caelus_tutorials --quiet -f run_tutorial.yaml --clean</clean_command_line>
   </problem_definition>
 
   <variables>
@@ -21,7 +21,7 @@ clog = SolverLog(logfile="pimpleSolver.log")
 completed = clog.solve_completed
     </variable>
 
-    <variable name="ref_time_residuals" language="python" variable_list="exec_time_ref,p_residual_ref,ux_residual_ref,uy_residual_ref">
+    <variable name="ref_time_residuals" language="python" variable_list="exec_time_ref,p_residual_ref,ux_residual_ref,uy_residual_ref,k_residual_ref,omega_residual_ref">
 import pandas as pd
 import os, caelus_test_tools
 reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
@@ -37,9 +37,15 @@ ux_residual_ref = ux_res_ref.iloc[-1][1]
 uy_ref = pd.read_table(os.path.join(reference_path,"logs/Uy.dat"), comment='#', delim_whitespace=True)
 uy_res_ref = uy_ref[uy_ref.SubIteration == 1][['Time', 'InitialResidual']]
 uy_residual_ref = uy_res_ref.iloc[-1][1]
+k_ref = pd.read_table(os.path.join(reference_path,"logs/k.dat"), comment='#', delim_whitespace=True)
+k_res_ref = k_ref[k_ref.SubIteration == 1][['Time', 'InitialResidual']]
+k_residual_ref = k_res_ref.iloc[-1][1]
+omega_ref = pd.read_table(os.path.join(reference_path,"logs/omega.dat"), comment='#', delim_whitespace=True)
+omega_res_ref = omega_ref[omega_ref.SubIteration == 1][['Time', 'InitialResidual']]
+omega_residual_ref = omega_res_ref.iloc[-1][1]
     </variable>
 
-    <variable name="time_residuals" language="python" variable_list="exec_time,p_residual,ux_residual,uy_residual">
+    <variable name="time_residuals" language="python" variable_list="exec_time,p_residual,ux_residual,uy_residual,k_residual,omega_residual">
 import pandas as pd
 time = pd.read_table("logs/clock_time.dat", comment='#', delim_whitespace=True)
 ex_time = time[['Time', 'ExecutionTime']]
@@ -53,15 +59,23 @@ ux_residual = ux_res.iloc[-1][1]
 uy = pd.read_table("logs/Uy.dat", comment='#', delim_whitespace=True)
 uy_res = uy[uy.SubIteration == 1][['Time', 'InitialResidual']]
 uy_residual = uy_res.iloc[-1][1]
+k = pd.read_table("logs/k.dat", comment='#', delim_whitespace=True)
+k_res = k[k.SubIteration == 1][['Time', 'InitialResidual']]
+k_residual = k_res.iloc[-1][1]
+omega = pd.read_table("logs/omega.dat", comment='#', delim_whitespace=True)
+omega_res = omega[omega.SubIteration == 1][['Time', 'InitialResidual']]
+omega_residual = omega_res.iloc[-1][1]
     </variable>
 
-    <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms">
+    <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms,k_range,omega_range">
 import os, caelus_test_tools
 reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
-p_range  = caelus_test_tools.compare_scalar_range("360/p", os.path.join(reference_path,"360/p"), 0.05)
-u_range  = caelus_test_tools.compare_vector_norm_range("360/U", os.path.join(reference_path,"360/U"), 0.05)
-p_diff_rms  = caelus_test_tools.compare_field_diff_rms("360/p", os.path.join(reference_path,"360/p"), 0.05)
-u_diff_rms  = caelus_test_tools.compare_field_diff_rms("360/U", os.path.join(reference_path,"360/U"), 0.05)
+p_range  = caelus_test_tools.compare_scalar_range("200/p.gz", os.path.join(reference_path,"200/p.gz"), 0.05)
+u_range  = caelus_test_tools.compare_vector_norm_range("200/U.gz", os.path.join(reference_path,"200/U.gz"), 0.05)
+p_diff_rms  = caelus_test_tools.compare_field_diff_rms("200/p.gz", os.path.join(reference_path,"200/p.gz"), 0.05)
+u_diff_rms  = caelus_test_tools.compare_field_diff_rms("200/U.gz", os.path.join(reference_path,"200/U.gz"), 0.05)
+k_range  = caelus_test_tools.compare_scalar_range("200/k.gz", os.path.join(reference_path,"200/k.gz"), 0.05)
+omega_range  = caelus_test_tools.compare_scalar_range("200/omega.gz", os.path.join(reference_path,"200/omegailon.gz"), 0.05)
     </variable>
   </variables>
 
@@ -78,6 +92,12 @@ assert(ux_residual &lt;= 1.1*ux_residual_ref)
     <test name="Uy residual" language="python">
 assert(uy_residual &lt;= 1.1*uy_residual_ref)
     </test>
+    <test name="k residual" language="python">
+assert(k_residual &lt;= 1.1*k_residual_ref)
+    </test>
+    <test name="omega residual" language="python">
+assert(omega_residual &lt;= 1.1*omega_residual_ref)
+    </test>
     <test name="p range" language="python">
 assert(p_range)
     </test>
@@ -89,6 +109,12 @@ assert(p_diff_rms)
     </test>
     <test name="U field difference RMS" language="python">
 assert(u_diff_rms)
+    </test>
+    <test name="k range" language="python">
+assert(k_range)
+    </test>
+    <test name="omega range" language="python">
+assert(omega_range)
     </test>
   </pass_tests>
 

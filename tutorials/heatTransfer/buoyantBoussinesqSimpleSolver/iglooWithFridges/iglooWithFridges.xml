@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <testproblem>
-  <name>SIMPLE ACCM_convexCurvature2D</name>
+  <name>iglooWithFridges</name>
 
   <owner userid="ACCM"/>
 
-  <tags>tut simple ras validation</tags>
+  <tags>tut simple buoyant ras</tags>
 
   <problem_definition length="medium" nprocs="1">
 
-    <command_line>caelus_tutorials --quiet -f run_validation.yaml</command_line>
-    <clean_command_line>caelus_tutorials --quiet -f run_validation.yaml --clean</clean_command_line>
+    <command_line>caelus_tutorials --quiet -f run_tutorial.yaml</command_line>
+    <clean_command_line>caelus_tutorials --quiet -f run_tutorial.yaml --clean</clean_command_line>
   </problem_definition>
 
   <variables>
@@ -21,7 +21,7 @@ clog = SolverLog(logfile="simpleSolver.log")
 completed = clog.solve_completed
     </variable>
 
-    <variable name="ref_time_residuals" language="python" variable_list="exec_time_ref,p_residual_ref,ux_residual_ref,uy_residual_ref,k_residual_ref,omega_residual_ref">
+    <variable name="ref_residuals" language="python" variable_list="exec_time_ref,p_residual_ref,ux_residual_ref,uy_residual_ref,T_residual,k_residual_ref,eps_residual_ref">
 import pandas as pd
 import os, caelus_test_tools
 reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
@@ -37,15 +37,18 @@ ux_residual_ref = ux_res_ref.iloc[-1][1]
 uy_ref = pd.read_table(os.path.join(reference_path,"logs/Uy.dat"), comment='#', delim_whitespace=True)
 uy_res_ref = uy_ref[uy_ref.SubIteration == 1][['Time', 'InitialResidual']]
 uy_residual_ref = uy_res_ref.iloc[-1][1]
+T_ref = pd.read_table(os.path.join(reference_path,"logs/T.dat"), comment='#', delim_whitespace=True)
+T_res_ref = T_ref[T_ref.SubIteration == 1][['Time', 'InitialResidual']]
+T_residual_ref = T_res_ref.iloc[-1][1]
 k_ref = pd.read_table(os.path.join(reference_path,"logs/k.dat"), comment='#', delim_whitespace=True)
 k_res_ref = k_ref[k_ref.SubIteration == 1][['Time', 'InitialResidual']]
 k_residual_ref = k_res_ref.iloc[-1][1]
-omega_ref = pd.read_table(os.path.join(reference_path,"logs/omega.dat"), comment='#', delim_whitespace=True)
-omega_res_ref = omega_ref[omega_ref.SubIteration == 1][['Time', 'InitialResidual']]
-omega_residual_ref = omega_res_ref.iloc[-1][1]
+eps_ref = pd.read_table(os.path.join(reference_path,"logs/epsilon.dat"), comment='#', delim_whitespace=True)
+eps_res_ref = eps_ref[eps_ref.SubIteration == 1][['Time', 'InitialResidual']]
+eps_residual_ref = eps_res_ref.iloc[-1][1]
     </variable>
 
-    <variable name="time_residuals" language="python" variable_list="exec_time,p_residual,ux_residual,uy_residual,k_residual,omega_residual">
+    <variable name="residuals" language="python" variable_list="exec_time,p_residual,ux_residual,uy_residual,T_residual,k_residual,eps_residual">
 import pandas as pd
 time = pd.read_table("logs/clock_time.dat", comment='#', delim_whitespace=True)
 ex_time = time[['Time', 'ExecutionTime']]
@@ -59,24 +62,28 @@ ux_residual = ux_res.iloc[-1][1]
 uy = pd.read_table("logs/Uy.dat", comment='#', delim_whitespace=True)
 uy_res = uy[uy.SubIteration == 1][['Time', 'InitialResidual']]
 uy_residual = uy_res.iloc[-1][1]
+T = pd.read_table("logs/T.dat", comment='#', delim_whitespace=True)
+T_res = T[T.SubIteration == 1][['Time', 'InitialResidual']]
+T_residual = T_res.iloc[-1][1]
 k = pd.read_table("logs/k.dat", comment='#', delim_whitespace=True)
 k_res = k[k.SubIteration == 1][['Time', 'InitialResidual']]
 k_residual = k_res.iloc[-1][1]
-omega = pd.read_table("logs/omega.dat", comment='#', delim_whitespace=True)
-omega_res = omega[omega.SubIteration == 1][['Time', 'InitialResidual']]
-omega_residual = omega_res.iloc[-1][1]
+eps = pd.read_table("logs/epsilon.dat", comment='#', delim_whitespace=True)
+eps_res = eps[eps.SubIteration == 1][['Time', 'InitialResidual']]
+eps_residual = eps_res.iloc[-1][1]
 
     </variable>
 
-    <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms,k_range,omega_range">
+    <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms,T_range,k_range,eps_range">
 import os, caelus_test_tools
 reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
-p_range  = caelus_test_tools.compare_scalar_range("3000/p.gz", os.path.join(reference_path,"3000/p.gz"), 0.05)
-u_range  = caelus_test_tools.compare_vector_norm_range("3000/U.gz", os.path.join(reference_path,"3000/U.gz"), 0.05)
-p_diff_rms  = caelus_test_tools.compare_field_diff_rms("3000/p.gz", os.path.join(reference_path,"3000/p.gz"), 0.05)
-u_diff_rms  = caelus_test_tools.compare_field_diff_rms("3000/U.gz", os.path.join(reference_path,"3000/U.gz"), 0.05)
-k_range  = caelus_test_tools.compare_scalar_range("3000/k.gz", os.path.join(reference_path,"3000/k.gz"), 0.05)
-omega_range  = caelus_test_tools.compare_scalar_range("3000/omega.gz", os.path.join(reference_path,"3000/omegailon.gz"), 0.05)
+p_range  = caelus_test_tools.compare_scalar_range("2000/p.gz", os.path.join(reference_path,"2000/p.gz"), 0.05)
+u_range  = caelus_test_tools.compare_vector_norm_range("2000/U.gz", os.path.join(reference_path,"2000/U.gz"), 0.05)
+p_diff_rms  = caelus_test_tools.compare_field_diff_rms("2000/p.gz", os.path.join(reference_path,"2000/p.gz"), 0.05)
+u_diff_rms  = caelus_test_tools.compare_field_diff_rms("2000/U.gz", os.path.join(reference_path,"2000/U.gz"), 0.05)
+T_range  = caelus_test_tools.compare_scalar_range("2000/T.gz", os.path.join(reference_path,"2000/T.gz"), 0.05)
+k_range  = caelus_test_tools.compare_scalar_range("2000/k.gz", os.path.join(reference_path,"2000/k.gz"), 0.05)
+eps_range  = caelus_test_tools.compare_scalar_range("2000/epsilon.gz", os.path.join(reference_path,"2000/epsilon.gz"), 0.05)
     </variable>
   </variables>
 
@@ -93,11 +100,14 @@ assert(ux_residual &lt;= 1.1*ux_residual_ref)
     <test name="Uy residual" language="python">
 assert(uy_residual &lt;= 1.1*uy_residual_ref)
     </test>
+    <test name="T residual" language="python">
+assert(T_residual &lt;= 1.1*T_residual_ref)
+    </test>
     <test name="k residual" language="python">
 assert(k_residual &lt;= 1.1*k_residual_ref)
     </test>
-    <test name="omega residual" language="python">
-assert(omega_residual &lt;= 1.1*omega_residual_ref)
+    <test name="epsilon residual" language="python">
+assert(eps_residual &lt;= 1.1*eps_residual_ref)
     </test>
     <test name="p range" language="python">
 assert(p_range)
@@ -111,11 +121,14 @@ assert(p_diff_rms)
     <test name="U field difference RMS" language="python">
 assert(u_diff_rms)
     </test>
+    <test name="T range" language="python">
+assert(T_range)
+    </test>
     <test name="k range" language="python">
 assert(k_range)
     </test>
-    <test name="omega range" language="python">
-assert(omega_range)
+    <test name="epsilon range" language="python">
+assert(eps_range)
     </test>
   </pass_tests>
 

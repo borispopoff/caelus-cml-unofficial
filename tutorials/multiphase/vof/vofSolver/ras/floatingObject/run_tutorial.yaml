@@ -6,7 +6,7 @@ tasks:
       remove_mesh: yes
       remove_extra:
       - constant/dynamicMeshDict
-      preserve: [ "0.org" ]
+      preserve: [ "0.org", "*.xml" ]
 
   - copy_files:
       src: "constant/dynamicMeshDict-SLERP"
