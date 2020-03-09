@@ -203,7 +203,7 @@ void mutUSpaldingWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    writeEntry(os, "value");
+    writeEntry(os, "value", *this);
 }
 
 
