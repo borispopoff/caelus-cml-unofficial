@@ -141,12 +141,12 @@ class TestProblem:
     def run(self, directory):
         self.log("Running")
 
-        start_time = time.clock()
+        start_time = time.process_time()
         wall_time = time.time()
 
         self.log(self.command_line)
         os.system("cd " + directory + "; " + self.command_line)
-        run_time = time.clock() - start_time
+        run_time = time.process_time()  - start_time
 
         self.xml_reports.append(
             TestCase(
