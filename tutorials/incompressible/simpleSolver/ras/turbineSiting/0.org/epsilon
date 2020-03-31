@@ -42,8 +42,9 @@ boundaryField
     {
         type            atmBoundaryLayerInletEpsilon;
         Uref            $Uref;
-        Href            $Href;
-        z               $zDirection;
+        Zref            $Zref;
+        flowDir         $windDirection;
+        zDir            $zDirection;
         z0              $z0;
         value           $internalField;
         zGround         $zGround;
