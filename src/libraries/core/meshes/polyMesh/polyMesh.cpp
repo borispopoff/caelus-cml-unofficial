@@ -1308,7 +1308,7 @@ bool CML::polyMesh::pointInCell
 (
     const point& p,
     label celli,
-    const cellDecomposition  decompMode
+    const cellDecomposition decompMode
 ) const
 {
     switch (decompMode)
@@ -1417,9 +1417,24 @@ bool CML::polyMesh::pointInCell
 CML::label CML::polyMesh::findCell
 (
     const point& p,
-    const cellDecomposition  decompMode
+    const cellDecomposition decompMode
 ) const
 {
+    if
+    (
+        Pstream::parRun()
+     && (decompMode == FACE_DIAG_TRIS || decompMode == CELL_TETS)
+    )
+    {
+        // Force construction of face-diagonal decomposition before testing
+        // for zero cells.
+        //
+        // If parallel running a local domain might have zero cells so never
+        // construct the face-diagonal decomposition which uses parallel
+        // transfers.
+        (void)tetBasePtIs();
+    }
+
     if (nCells() == 0)
     {
         return -1;
@@ -1442,15 +1457,6 @@ CML::label CML::polyMesh::findCell
     {
         // Approximate search avoiding the construction of an octree
         // and cell decomposition
-
-        if (Pstream::parRun() && decompMode == FACE_DIAG_TRIS)
-        {
-            // Force construction of face-diagonal decomposition before testing
-            // for zero cells. If parallel running a local domain might have
-            // zero cells so never construct the face-diagonal decomposition
-            // (which uses parallel transfers)
-            (void)tetBasePtIs();
-        }
 
         // Find the nearest cell centre to this location
         label celli = findNearestCell(p);
