@@ -20,8 +20,6 @@ internalField   uniform $turbulentEpsilon;
 
 boundaryField
 {
-    #include "include/ABLConditions"
-
     "terrain_.*"
     {
         type            epsilonWallFunction;
@@ -41,13 +39,8 @@ boundaryField
     inlet
     {
         type            atmBoundaryLayerInletEpsilon;
-        Uref            $Uref;
-        Zref            $Zref;
-        flowDir         $windDirection;
-        zDir            $zDirection;
-        z0              $z0;
+        #include        "include/ABLConditions"
         value           $internalField;
-        zGround         $zGround;
     }
 
     ground
