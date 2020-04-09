@@ -263,7 +263,7 @@ class TestHarness:
             available_procs = mp.cpu_count()
             sim_max_procs = sorted(list(tests_by_nprocs.keys()), reverse=True)[0]
             requested_procs = options.processor_count
-
+            print("Maximum processors required by any case:", sim_max_procs)
             possible_procs = available_procs // sim_max_procs 
             nprocs = requested_procs
             if requested_procs > possible_procs:

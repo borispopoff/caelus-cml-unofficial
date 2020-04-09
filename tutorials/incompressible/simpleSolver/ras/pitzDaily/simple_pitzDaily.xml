@@ -28,7 +28,7 @@ reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
 time = pd.read_table(os.path.join(reference_path,"logs/clock_time.dat"), comment='#', delim_whitespace=True)
 ex_time = time[['Time', 'ExecutionTime']]
 exec_time_ref = ex_time.iloc[-1][1]
-p_ref = pd.read_table(os.path.join(reference_path,"logs/p.dat"), comment='#', delim_whitespace=True)
+p_ref = pd.read_table(os.path.join(reference_path,"logs/pCorr.dat"), comment='#', delim_whitespace=True)
 p_res_ref = p_ref[p_ref.SubIteration == 1][['Time', 'InitialResidual']]
 p_residual_ref = p_res_ref.iloc[-1][1]
 ux_ref = pd.read_table(os.path.join(reference_path,"logs/Ux.dat"), comment='#', delim_whitespace=True)
@@ -50,7 +50,7 @@ import pandas as pd
 time = pd.read_table("logs/clock_time.dat", comment='#', delim_whitespace=True)
 ex_time = time[['Time', 'ExecutionTime']]
 exec_time = ex_time.iloc[-1][1]
-p = pd.read_table("logs/p.dat", comment='#', delim_whitespace=True)
+p = pd.read_table("logs/pCorr.dat", comment='#', delim_whitespace=True)
 p_res = p[p.SubIteration == 1][['Time', 'InitialResidual']]
 p_residual = p_res.iloc[-1][1]
 ux = pd.read_table("logs/Ux.dat", comment='#', delim_whitespace=True)
@@ -69,14 +69,21 @@ eps_residual = eps_res.iloc[-1][1]
     </variable>
 
     <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms,k_range,eps_range">
+import pandas as pd
 import os, caelus_test_tools
 reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
-p_range  = caelus_test_tools.compare_scalar_range("1000/p.gz", os.path.join(reference_path,"1000/p.gz"), 0.05)
-u_range  = caelus_test_tools.compare_vector_norm_range("1000/U.gz", os.path.join(reference_path,"1000/U.gz"), 0.05)
-p_diff_rms  = caelus_test_tools.compare_field_diff_rms("1000/p.gz", os.path.join(reference_path,"1000/p.gz"), 0.05)
-u_diff_rms  = caelus_test_tools.compare_field_diff_rms("1000/U.gz", os.path.join(reference_path,"1000/U.gz"), 0.05)
-k_range  = caelus_test_tools.compare_scalar_range("1000/k.gz", os.path.join(reference_path,"1000/k.gz"), 0.05)
-eps_range  = caelus_test_tools.compare_scalar_range("1000/epsilon.gz", os.path.join(reference_path,"1000/epsilon.gz"), 0.05)
+time_ref = pd.read_table(os.path.join(reference_path,"logs/clock_time.dat"), comment='#', delim_whitespace=True)
+ex_time = time_ref[['Time', 'ExecutionTime']]
+iters_ref = int(ex_time.iloc[-1][0])
+time = pd.read_table("logs/clock_time.dat", comment='#', delim_whitespace=True)
+ex_time = time[['Time', 'ExecutionTime']]
+iters = int(ex_time.iloc[-1][0])
+p_range  = caelus_test_tools.compare_scalar_range(str(iters)+"/p.gz", os.path.join(reference_path,str(iters_ref)+"/p.gz"), 0.05)
+u_range  = caelus_test_tools.compare_vector_norm_range(str(iters)+"/U.gz", os.path.join(reference_path,str(iters_ref)+"/U.gz"), 0.05)
+p_diff_rms  = caelus_test_tools.compare_field_diff_rms(str(iters)+"/p.gz", os.path.join(reference_path,str(iters_ref)+"/p.gz"), 0.05)
+u_diff_rms  = caelus_test_tools.compare_field_diff_rms(str(iters)+"/U.gz", os.path.join(reference_path,str(iters_ref)+"/U.gz"), 0.05)
+k_range  = caelus_test_tools.compare_scalar_range(str(iters)+"/k.gz", os.path.join(reference_path,str(iters_ref)+"/k.gz"), 0.05)
+eps_range  = caelus_test_tools.compare_scalar_range(str(iters)+"/epsilon.gz", os.path.join(reference_path,str(iters_ref)+"/epsilon.gz"), 0.05)
     </variable>
   </variables>
 

@@ -13,7 +13,7 @@ tasks:
   - run_command:
       cmd_name: simpleSolver
       parallel: True
-      num_ranks: 10
+      num_ranks: 8
 
   - run_command:
       cmd_name: reconstructPar
