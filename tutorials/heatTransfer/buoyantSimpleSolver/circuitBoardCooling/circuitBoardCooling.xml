@@ -74,13 +74,13 @@ timefile_ref = pd.read_table(os.path.join(reference_path,"logs/clock_time.dat"),
 time_ref = timefile_ref[['Time', 'ExecutionTime']]
 last_time_ref = int(time_ref.iloc[-1][0])
 last_time_ref_str = str(last_time_ref)
-p_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/p", os.path.join(reference_path,last_time_ref_str+"/p.gz"), 0.05)
-u_range  = caelus_test_tools.compare_vector_norm_range(last_time_str +"/U", os.path.join(reference_path,last_time_ref_str+"/U.gz"), 0.05)
-p_diff_rms  = caelus_test_tools.compare_field_diff_rms(last_time_str +"/p", os.path.join(reference_path,last_time_ref_str+"/p.gz"), 0.05)
-u_diff_rms  = caelus_test_tools.compare_field_diff_rms(last_time_str +"/U", os.path.join(reference_path,last_time_ref_str+"/U.gz"), 0.05)
-T_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/T", os.path.join(reference_path,last_time_ref_str+"/T.gz"), 0.05)
-k_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/k", os.path.join(reference_path,last_time_ref_str+"/k.gz"), 0.05)
-eps_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/epsilon", os.path.join(reference_path,last_time_ref_str+"/epsilon.gz"), 0.05)
+p_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/p", os.path.join(reference_path,last_time_ref_str+"/p"), 0.05)
+u_range  = caelus_test_tools.compare_vector_norm_range(last_time_str +"/U", os.path.join(reference_path,last_time_ref_str+"/U"), 0.05)
+p_diff_rms  = caelus_test_tools.compare_field_diff_rms(last_time_str +"/p", os.path.join(reference_path,last_time_ref_str+"/p"), 0.05)
+u_diff_rms  = caelus_test_tools.compare_field_diff_rms(last_time_str +"/U", os.path.join(reference_path,last_time_ref_str+"/U"), 0.05)
+T_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/T", os.path.join(reference_path,last_time_ref_str+"/T"), 0.05)
+k_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/k", os.path.join(reference_path,last_time_ref_str+"/k"), 0.05)
+eps_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/epsilon", os.path.join(reference_path,last_time_ref_str+"/epsilon"), 0.05)
     </variable>
   </variables>
 
