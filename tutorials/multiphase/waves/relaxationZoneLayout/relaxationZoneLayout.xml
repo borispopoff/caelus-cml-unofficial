@@ -17,7 +17,7 @@
 
     <variable name="run_completed" language="python" variable_list="completed">
 from caelus.post.logs import SolverLog
-clog = SolverLog(logfile="pimpleSolver.log")
+clog = SolverLog(logfile="relaxationZoneLayout.log")
 completed = clog.solve_completed
     </variable>
 

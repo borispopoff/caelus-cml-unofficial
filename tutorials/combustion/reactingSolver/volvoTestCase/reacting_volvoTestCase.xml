@@ -55,14 +55,14 @@ uy_res = uy[uy.SubIteration == 1][['Time', 'InitialResidual']]
 uy_residual = uy_res.iloc[-1][1]
     </variable>
 
-    <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms,nuSgs_range">
+    <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms,muSgs_range">
 import os, caelus_test_tools
 reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
-p_range  = caelus_test_tools.compare_scalar_range("0.5/p.gz", os.path.join(reference_path,"0.5/p.gz"), 0.05)
-u_range  = caelus_test_tools.compare_vector_norm_range("0.5/U.gz", os.path.join(reference_path,"0.5/U.gz"), 0.05)
-p_diff_rms  = caelus_test_tools.compare_field_diff_rms("0.5/p.gz", os.path.join(reference_path,"0.5/p.gz"), 0.05)
-u_diff_rms  = caelus_test_tools.compare_field_diff_rms("0.5/U.gz", os.path.join(reference_path,"0.5/U.gz"), 0.05)
-nuSgs_range  = caelus_test_tools.compare_scalar_range("0.5/nuSgs.gz", os.path.join(reference_path,"0.5/nuSgs.gz"), 0.05)
+p_range  = caelus_test_tools.compare_scalar_range("0.5/p", os.path.join(reference_path,"0.5/p"), 0.05)
+u_range  = caelus_test_tools.compare_vector_norm_range("0.5/U", os.path.join(reference_path,"0.5/U"), 0.05)
+p_diff_rms  = caelus_test_tools.compare_field_diff_rms("0.5/p", os.path.join(reference_path,"0.5/p"), 0.05)
+u_diff_rms  = caelus_test_tools.compare_field_diff_rms("0.5/U", os.path.join(reference_path,"0.5/U"), 0.05)
+muSgs_range  = caelus_test_tools.compare_scalar_range("0.5/muSgs", os.path.join(reference_path,"0.5/muSgs"), 0.05)
     </variable>
   </variables>
 
@@ -91,8 +91,8 @@ assert(p_diff_rms)
     <test name="U field difference RMS" language="python">
 assert(u_diff_rms)
     </test>
-    <test name="nuSgs range" language="python">
-assert(nuSgs_range)
+    <test name="muSgs range" language="python">
+assert(muSgs_range)
     </test>
   </pass_tests>
 
