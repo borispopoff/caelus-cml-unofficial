@@ -4,7 +4,7 @@ tasks:
       purge_generated: True
       remove_zero: yes
       remove_mesh: yes
-      preserve: [ "0.org" ]
+      preserve: [ "0.org", "*.xml" ]
 
   - copy_tree:
       src: "0.org"

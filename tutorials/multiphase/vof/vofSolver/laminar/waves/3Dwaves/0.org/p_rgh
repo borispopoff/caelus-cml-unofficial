@@ -43,7 +43,6 @@ boundaryField
     atmos
     {
         type            totalPressure;
-        rho             none;
         psi             none;
         gamma           1;
         p0              uniform 0;
