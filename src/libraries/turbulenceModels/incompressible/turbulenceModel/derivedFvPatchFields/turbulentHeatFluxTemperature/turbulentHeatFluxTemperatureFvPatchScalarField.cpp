@@ -223,7 +223,7 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::write(Ostream& os) const
     writeEntry(os, "heatSource", heatSourceTypeNames_[heatSource_]);
     writeEntry(os, "q", q_);
     writeEntry(os, "alphaEff", alphaEffName_);
-    writeEntry(os, "value");
+    writeEntry(os, "value", *this);
 }
 
 
