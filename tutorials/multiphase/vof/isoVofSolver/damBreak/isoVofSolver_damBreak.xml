@@ -5,7 +5,7 @@
 
   <owner userid="ACCM"/>
 
-  <tags>tut vof laminar</tags>
+  <tags>tut multiphase vof laminar</tags>
 
   <problem_definition length="medium" nprocs="1">
 

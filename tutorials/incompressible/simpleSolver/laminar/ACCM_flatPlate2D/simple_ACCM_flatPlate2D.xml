@@ -5,7 +5,7 @@
 
   <owner userid="ACCM"/>
 
-  <tags>tut simple laminar validation</tags>
+  <tags>tut incompressible simple laminar validation</tags>
 
   <problem_definition length="medium" nprocs="1">
 

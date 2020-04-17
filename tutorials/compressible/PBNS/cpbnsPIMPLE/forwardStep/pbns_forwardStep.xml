@@ -5,7 +5,7 @@
 
   <owner userid="ACCM"/>
 
-  <tags>tut pbns laminar</tags>
+  <tags>tut compressible pbns laminar</tags>
 
   <problem_definition length="medium" nprocs="1">
 

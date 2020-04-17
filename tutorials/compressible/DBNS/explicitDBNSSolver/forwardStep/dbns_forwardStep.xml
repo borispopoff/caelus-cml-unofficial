@@ -5,7 +5,7 @@
 
   <owner userid="ACCM"/>
 
-  <tags>tut dbns laminar</tags>
+  <tags>tut compressible dbns laminar</tags>
 
   <problem_definition length="medium" nprocs="1">
 

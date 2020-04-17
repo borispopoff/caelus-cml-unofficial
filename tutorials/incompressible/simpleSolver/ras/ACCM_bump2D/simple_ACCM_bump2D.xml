@@ -5,7 +5,7 @@
 
   <owner userid="ACCM"/>
 
-  <tags>tut simple ras validation</tags>
+  <tags>tut incompressible simple ras validation</tags>
 
   <problem_definition length="medium" nprocs="4">
 

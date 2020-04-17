@@ -5,7 +5,7 @@
 
   <owner userid="ACCM"/>
 
-  <tags>tut pimple ras</tags>
+  <tags>tut incompressible pimple ras</tags>
 
   <problem_definition length="medium" nprocs="1">
 

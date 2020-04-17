@@ -5,7 +5,7 @@
 
   <owner userid="ACCM"/>
 
-  <tags>tut pimple laminar</tags>
+  <tags>tut incompressible pimple laminar</tags>
 
   <problem_definition length="medium" nprocs="4">
 

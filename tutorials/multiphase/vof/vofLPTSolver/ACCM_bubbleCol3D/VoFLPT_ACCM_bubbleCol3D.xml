@@ -5,7 +5,7 @@
 
   <owner userid="ACCM"/>
 
-  <tags>tut vof lpt les validation</tags>
+  <tags>tut multiphase vof lpt les validation</tags>
 
   <problem_definition length="medium" nprocs="10">
 
@@ -64,10 +64,10 @@ uz_residual = uz_res.iloc[-1][1]
     <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms">
 import os, caelus_test_tools
 reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
-p_range  = caelus_test_tools.compare_scalar_range("150/p_rgh", os.path.join(reference_path,"150/p_rgh.gz"), 0.05)
-u_range  = caelus_test_tools.compare_vector_norm_range("150/U", os.path.join(reference_path,"150/U.gz"), 0.05)
-p_diff_rms  = caelus_test_tools.compare_field_diff_rms("150/p_rgh", os.path.join(reference_path,"150/p_rgh.gz"), 0.05)
-u_diff_rms  = caelus_test_tools.compare_field_diff_rms("150/U", os.path.join(reference_path,"150/U.gz"), 0.05)
+p_range  = caelus_test_tools.compare_scalar_range("150/p_rgh.gz", os.path.join(reference_path,"150/p_rgh.gz"), 0.05)
+u_range  = caelus_test_tools.compare_vector_norm_range("150/U.gz", os.path.join(reference_path,"150/U.gz"), 0.05)
+p_diff_rms  = caelus_test_tools.compare_field_diff_rms("150/p_rgh.gz", os.path.join(reference_path,"150/p_rgh.gz"), 0.05)
+u_diff_rms  = caelus_test_tools.compare_field_diff_rms("150/U.gz", os.path.join(reference_path,"150/U.gz"), 0.05)
     </variable>
   </variables>
 
