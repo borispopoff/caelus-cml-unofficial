@@ -132,9 +132,9 @@ functions
         writeInterval 1;
 
         patches     ( "motorBike.*" );
-        pName       p;
-        UName       U;
-        rhoName     rhoInf;      // Indicates incompressible
+        p           p;
+        U           U;
+        rho         rhoInf;      // Indicates incompressible
         log         true;
         rhoInf      1;           // Redundant for incompressible
         liftDir     (0 0 1);

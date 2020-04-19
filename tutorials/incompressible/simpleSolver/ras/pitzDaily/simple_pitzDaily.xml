@@ -128,7 +128,7 @@ assert(eps_range)
 
   <warn_tests>
     <test name="Higher execution time" language="python">
-assert(exec_time &lt; exec_time_ref)
+assert(exec_time &lt; 1.05*exec_time_ref)
     </test>
   </warn_tests>
 
