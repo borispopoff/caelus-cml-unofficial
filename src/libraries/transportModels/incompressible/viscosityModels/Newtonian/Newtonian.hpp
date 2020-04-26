@@ -90,9 +90,7 @@ public:
 
         //- Correct the laminar viscosity (not appropriate, viscosity constant)
         void correct()
-        {    
-            viscosityModel::correct();
-        }
+        {}
 
         //- Read transportProperties dictionary
         bool read(const dictionary& viscosityProperties);
