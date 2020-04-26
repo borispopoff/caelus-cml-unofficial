@@ -1,0 +1,30 @@
+# -*- mode: python -*-
+
+import utils
+from build import build_app
+Import('env')
+
+target = 'surfaceTransformPoints'
+
+sources = Split("""
+surfaceTransformPoints.cpp
+""")
+
+caelus_inc = [
+'surfMesh/lnInclude'
+]
+
+caelus_libs = [
+'core',
+'surfMesh'
+]
+
+ostype = utils.ostype()
+prepend_args = {}
+
+build_app(env,
+          target=target,
+          sources=sources,
+          caelus_inc=caelus_inc,
+          caelus_libs=caelus_libs,
+          prepend_args=prepend_args)

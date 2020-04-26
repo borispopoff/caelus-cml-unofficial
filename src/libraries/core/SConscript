@@ -418,6 +418,7 @@ src_core = Split("""
     fields/Fields/diagTensorField/diagTensorField.cpp
     fields/Fields/symmTensorField/symmTensorField.cpp
     fields/Fields/tensorField/tensorField.cpp
+    fields/Fields/triadField/triadField.cpp
     fields/Fields/complexFields/complexFields.cpp
     fields/Fields/labelField/labelIOField.cpp
     fields/Fields/labelField/labelFieldIOField.cpp
@@ -437,6 +438,7 @@ src_core = Split("""
     fields/Fields/symmTensorField/symmTensorFieldIOField.cpp
     fields/Fields/tensorField/tensorIOField.cpp
     fields/Fields/tensorField/tensorFieldIOField.cpp
+    fields/Fields/triadField/triadIOField.cpp
     fields/Fields/transformField/transformField.cpp
     fields/pointPatchFields/pointPatchField/pointPatchFields.cpp
     fields/pointPatchFields/basic/calculated/calculatedPointPatchFields.cpp

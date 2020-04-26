@@ -113,6 +113,11 @@ subdirs = Split("""
     preProcessing/waves/setWaveField
     preProcessing/waves/setWaveParameters
     preProcessing/waves/waveGaugesNProbes
+    surface/surfaceTransformPoints
+    surface/surfaceCheck
+    surface/surfaceConvert
+    surface/surfaceFeatureConvert
+    surface/surfaceOrient
 """)
 
 for d in subdirs:
