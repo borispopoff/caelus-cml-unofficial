@@ -1011,6 +1011,9 @@ void CML::isoAdvection::advect()
     writeBoundedCells();
 
     advectionTime_ += (mesh_.time().elapsedCpuTime() - advectionStartTime);
+    Info << "isoAdvection: time consumption = "
+        << label(100*advectionTime_/(mesh_.time().elapsedCpuTime() + SMALL))
+        << "%" << endl;
 }
 
 
