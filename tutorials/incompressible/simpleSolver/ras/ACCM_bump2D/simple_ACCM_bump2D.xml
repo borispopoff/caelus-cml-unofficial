@@ -7,7 +7,7 @@
 
   <tags>tut incompressible simple ras validation</tags>
 
-  <problem_definition length="medium" nprocs="4">
+  <problem_definition length="long" nprocs="4">
 
     <command_line>caelus_tutorials --quiet -f run_validation.yaml</command_line>
     <clean_command_line>caelus_tutorials --quiet -f run_validation.yaml --clean</clean_command_line>

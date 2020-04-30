@@ -7,7 +7,7 @@
 
   <tags>tut incompressible simple ras</tags>
 
-  <problem_definition length="medium" nprocs="4">
+  <problem_definition length="short" nprocs="4">
 
     <command_line>caelus_tutorials --quiet -f run_tutorial.yaml</command_line>
     <clean_command_line>caelus_tutorials --quiet -f run_tutorial.yaml --clean</clean_command_line>
