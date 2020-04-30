@@ -97,7 +97,7 @@ assert(uz_residual &lt;= 1.1*uz_residual_ref)
 assert(k_residual &lt;= 1.1*k_residual_ref)
     </test>
     <test name="omega residual" language="python">
-assert(omega_residual &lt;= 1.1*omega_residual_ref)
+assert(omega_residual &lt;= 2*omega_residual_ref)
     </test>
     <test name="p range" language="python">
 assert(p_range)
