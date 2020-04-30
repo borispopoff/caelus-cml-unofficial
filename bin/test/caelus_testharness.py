@@ -10,9 +10,7 @@ import multiprocessing as mp
 import queue as Queue
 import xml.parsers.expat
 import xml.etree.ElementTree as eTree
-
 from io import StringIO
-from junit_xml import TestSuite, TestCase  # conda install -c conda-forge junit-xml
 
 # Make sure we use regressiontest provided with caelus
 sys.path.insert(0, os.getcwd())
@@ -66,7 +64,7 @@ class TestHarness:
         self.teststatus = []
         self.completed_tests = []
         self.justtest = justtest
-        self.xml_parser = TestSuite("Caelus-TestHarness", [])
+        self.xml_parser = regressiontest.TestSuite("Caelus-TestHarness", [])
         self.cwd = os.getcwd()
         self.iolock = mp.Lock()
         self.xml_outfile = xml_outfile
@@ -291,7 +289,7 @@ class TestHarness:
                 exceptions.append((self.tests[test_id], lines))
 
             for e, lines in exceptions:
-                tc = TestCase(e[1].name, "%s.%s" % (e[1].length, e[1].filename[:-4]))
+                tc = regressiontest.TestCase(e[1].name, "%s.%s" % (e[1].length, e[1].filename[:-4]))
                 tc.add_failure_info("Failure", lines)
                 self.xml_parser.test_cases += [tc]
                 self.tests.remove(e)
