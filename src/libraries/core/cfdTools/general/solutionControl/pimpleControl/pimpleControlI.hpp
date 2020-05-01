@@ -83,7 +83,8 @@ inline bool CML::pimpleControl::finalIter() const
 inline bool CML::pimpleControl::finalInnerIter() const
 {
     return
-       corrPISO_ == nCorrPISO_
+       finalIter()
+    && corrPISO_ == nCorrPISO_
     && corrNonOrtho_ == nNonOrthCorr_ + 1;
 }
 
