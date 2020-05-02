@@ -17,11 +17,11 @@
 
     <variable name="run_completed" language="python" variable_list="completed">
 from caelus.post.logs import SolverLog
-clog = SolverLog(logfile="pimpleSolver.log")
+clog = SolverLog(logfile="pimpleParcelSolver.log")
 completed = clog.solve_completed
     </variable>
 
-    <variable name="ref_time_residuals" language="python" variable_list="exec_time_ref,p_residual_ref,ux_residual_ref,uy_residual_ref,k_residual_ref,omega_residual_ref">
+    <variable name="ref_time_residuals" language="python" variable_list="exec_time_ref,p_residual_ref,ux_residual_ref,uy_residual_ref,uz_residual_ref,k_residual_ref,omega_residual_ref">
 import pandas as pd
 import os, caelus_test_tools
 reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
@@ -37,6 +37,9 @@ ux_residual_ref = ux_res_ref.iloc[-1][1]
 uy_ref = pd.read_table(os.path.join(reference_path,"logs/Uy.dat"), comment='#', delim_whitespace=True)
 uy_res_ref = uy_ref[uy_ref.SubIteration == 1][['Time', 'InitialResidual']]
 uy_residual_ref = uy_res_ref.iloc[-1][1]
+uz_ref = pd.read_table(os.path.join(reference_path,"logs/Uz.dat"), comment='#', delim_whitespace=True)
+uz_res_ref = uz_ref[uz_ref.SubIteration == 1][['Time', 'InitialResidual']]
+uz_residual_ref = uz_res_ref.iloc[-1][1]
 k_ref = pd.read_table(os.path.join(reference_path,"logs/k.dat"), comment='#', delim_whitespace=True)
 k_res_ref = k_ref[k_ref.SubIteration == 1][['Time', 'InitialResidual']]
 k_residual_ref = k_res_ref.iloc[-1][1]
@@ -45,7 +48,7 @@ omega_res_ref = omega_ref[omega_ref.SubIteration == 1][['Time', 'InitialResidual
 omega_residual_ref = omega_res_ref.iloc[-1][1]
     </variable>
 
-    <variable name="time_residuals" language="python" variable_list="exec_time,p_residual,ux_residual,uy_residual,k_residual,omega_residual">
+    <variable name="time_residuals" language="python" variable_list="exec_time,p_residual,ux_residual,uy_residual,uz_residual,k_residual,omega_residual">
 import pandas as pd
 time = pd.read_table("logs/clock_time.dat", comment='#', delim_whitespace=True)
 ex_time = time[['Time', 'ExecutionTime']]
@@ -59,6 +62,9 @@ ux_residual = ux_res.iloc[-1][1]
 uy = pd.read_table("logs/Uy.dat", comment='#', delim_whitespace=True)
 uy_res = uy[uy.SubIteration == 1][['Time', 'InitialResidual']]
 uy_residual = uy_res.iloc[-1][1]
+uz = pd.read_table("logs/Uz.dat", comment='#', delim_whitespace=True)
+uz_res = uz[uz.SubIteration == 1][['Time', 'InitialResidual']]
+uz_residual = uz_res.iloc[-1][1]
 k = pd.read_table("logs/k.dat", comment='#', delim_whitespace=True)
 k_res = k[k.SubIteration == 1][['Time', 'InitialResidual']]
 k_residual = k_res.iloc[-1][1]
@@ -74,8 +80,8 @@ p_range  = caelus_test_tools.compare_scalar_range("5/p", os.path.join(reference_
 u_range  = caelus_test_tools.compare_vector_norm_range("5/U", os.path.join(reference_path,"5/U"), 0.05)
 p_diff_rms  = caelus_test_tools.compare_field_diff_rms("5/p", os.path.join(reference_path,"5/p"), 0.05)
 u_diff_rms  = caelus_test_tools.compare_field_diff_rms("5/U", os.path.join(reference_path,"5/U"), 0.05)
-k_range  = caelus_test_tools.compare_scalar_range("5/k.gz", os.path.join(reference_path,"5/k.gz"), 0.05)
-omega_range  = caelus_test_tools.compare_scalar_range("5/omega.gz", os.path.join(reference_path,"5/omegailon.gz"), 0.05)
+k_range  = caelus_test_tools.compare_scalar_range("5/k", os.path.join(reference_path,"5/k"), 0.05)
+omega_range  = caelus_test_tools.compare_scalar_range("5/omega", os.path.join(reference_path,"5/omega"), 0.05)
     </variable>
   </variables>
 
