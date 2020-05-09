@@ -154,7 +154,7 @@ class TestHarness:
             prob_length = prob_defn.attrib["length"]
             prob_nprocs = int(prob_defn.attrib["nprocs"])
             if prob_length == length or (
-                length == "any" and prob_length not in ["special", "long"]
+                length == "any" and prob_length not in ["special"]
             ):
                 if self.parallel == "parallel":
                     if prob_nprocs > 1:
