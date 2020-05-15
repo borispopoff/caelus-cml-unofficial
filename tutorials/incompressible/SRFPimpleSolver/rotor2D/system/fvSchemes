@@ -28,7 +28,7 @@ divSchemes
     div(phi,Urel)   Gauss linearBJ;
     div(phi,k)      Gauss linearBJ;
     div(phi,epsilon) Gauss linearBJ;
-    div((nuEff*dev2(T(grad(Urel))))) Gauss linear;
+    div((nuEff*dev(T(grad(Urel))))) Gauss linear;
 }
 
 laplacianSchemes
