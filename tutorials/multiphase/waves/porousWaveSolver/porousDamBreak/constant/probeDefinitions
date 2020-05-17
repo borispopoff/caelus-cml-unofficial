@@ -23,7 +23,7 @@ surfaceElevation
     axis      y;
     stretch   1.0;
 
-    writeControl adjustableTime;
+    writeControl adjustableRunTime;
     writeInterval 0.01;
 }
 

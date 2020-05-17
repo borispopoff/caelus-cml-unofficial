@@ -199,7 +199,7 @@ void muSgsUSpaldingWallFunctionFvPatchScalarField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "mu", "mu", muName_);
     writeEntry(os, "kappa", kappa_);
     writeEntry(os, "E", E_);
-    writeEntry(os, "value");
+    writeEntry(os, "value", *this);
 }
 
 

@@ -6,7 +6,7 @@ tasks:
       remove_mesh: yes
       remove_extra:
       - constant/waveProperties
-      preserve: [ "0.org" ]
+      preserve: [ "0.org", "*.xml" ]
 
   - copy_tree:
       src: "0.org"

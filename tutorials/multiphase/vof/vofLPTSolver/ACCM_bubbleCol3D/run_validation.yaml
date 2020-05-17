@@ -4,6 +4,7 @@ tasks:
       purge_generated: True
       remove_zero: no
       remove_mesh: yes
+      preserve: [ "*.xml" ]
 
   - copy_files:
       src: "0/alpha1.org"
@@ -31,6 +32,10 @@ tasks:
       cmd_name: vofLPTSolver
       parallel: True
       num_ranks: 10
+
+  - run_command:
+      cmd_name: reconstructPar
+      cmd_args: "-latestTime"
 
   - process_logs:
       log_file: vofLPTSolver.log

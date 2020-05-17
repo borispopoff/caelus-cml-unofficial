@@ -4,7 +4,7 @@ tasks:
       purge_generated: True
       remove_zero: yes
       remove_mesh: no
-      preserve: [ "0.org" ]
+      preserve: [ "0.org","*.xml" ]
 
   - copy_tree:
       src: "0.org"
@@ -30,4 +30,7 @@ tasks:
 
   - process_logs:
       log_file: simpleSolver.log
+      plot_residuals: True
+      plot_continuity_errors: True
+      residuals_fields: [p,Ux,Uy,Uz,k,epsilon]
 

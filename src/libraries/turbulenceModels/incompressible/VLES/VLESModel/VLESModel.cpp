@@ -172,8 +172,8 @@ tmp<fvVectorMatrix> VLESModel::divDevReff(volVectorField& U) const
     return
     (
       - fvm::laplacian(nu(), U)
-      - fvc::div(nu()*dev2(T(fvc::grad(U))))
-      - Fr()*(fvm::laplacian(nut(), U) + fvc::div(nut()*dev2(T(fvc::grad(U)))))
+      - fvc::div(nu()*dev(T(fvc::grad(U))))
+      - Fr()*(fvm::laplacian(nut(), U) + fvc::div(nut()*dev(T(fvc::grad(U)))))
     );
 }
 
@@ -190,9 +190,9 @@ tmp<fvVectorMatrix> VLESModel::divDevRhoReff
     return
     (
       - fvm::laplacian(mu, U)
-      - fvc::div(mu*dev2(T(fvc::grad(U))))
+      - fvc::div(mu*dev(T(fvc::grad(U))))
       - Fr()*fvm::laplacian(mut, U)
-      - Fr()*fvc::div(mut*dev2(T(fvc::grad(U))))
+      - Fr()*fvc::div(mut*dev(T(fvc::grad(U))))
     );
 }
 

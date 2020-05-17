@@ -56,7 +56,7 @@ relaxationFactors
     }
     equations
     {
-        U               0.3;
+        U               0.2;
         T               0.5;
         "(k|epsilon|R)" 0.7;
     }

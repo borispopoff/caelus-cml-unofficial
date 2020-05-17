@@ -30,6 +30,21 @@ Description
 
 CML::dictionaryEntry::dictionaryEntry
 (
+    Istream& is
+)
+:
+    entry(keyType(is)),
+    dictionary(is)
+{
+    is.fatalCheck
+    (
+        "dictionaryEntry::dictionaryEntry(Istream&)"
+    );
+}
+
+
+CML::dictionaryEntry::dictionaryEntry
+(
     const dictionary& parentDict,
     Istream& is
 )

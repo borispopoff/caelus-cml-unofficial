@@ -75,6 +75,9 @@ public:
 
     // Constructors
 
+        //- Construct from Istream
+        dictionaryEntry(Istream&);
+
         //- Construct from the parent dictionary and Istream
         dictionaryEntry(const dictionary& parentDict, Istream&);
 

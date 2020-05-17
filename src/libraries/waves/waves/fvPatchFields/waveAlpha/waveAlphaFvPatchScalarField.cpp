@@ -197,7 +197,7 @@ void waveAlphaFvPatchScalarField::write(Ostream& os) const
     writeEntry(os, "refValue", this->refValue());
     writeEntry(os, "refGradient", this->refGrad());
     writeEntry(os, "valueFraction", this->valueFraction());
-    writeEntry(os, "value");
+    writeEntry(os, "value", *this);
 }
 
 

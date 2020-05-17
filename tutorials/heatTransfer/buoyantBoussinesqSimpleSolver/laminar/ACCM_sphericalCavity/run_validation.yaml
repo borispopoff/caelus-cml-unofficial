@@ -4,7 +4,7 @@ tasks:
       purge_generated: True
       remove_zero: no
       remove_mesh: no
-      preserve: [ "s-cavity-pv.png" ]
+      preserve: [ "s-cavity-pv.png", "*.xml"]
 
   - run_command:
       cmd_name: buoyantBoussinesqSimpleSolver

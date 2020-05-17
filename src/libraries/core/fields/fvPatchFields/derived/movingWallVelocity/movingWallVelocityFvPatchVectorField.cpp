@@ -49,9 +49,8 @@ movingWallVelocityFvPatchVectorField
 :
     fixedValueFvPatchVectorField(p, iF, dict),
     UName_(dict.lookupOrDefault<word>("U", "U"))
-{
-    fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
-}
+{}
+
 
 CML::movingWallVelocityFvPatchVectorField::
 movingWallVelocityFvPatchVectorField
@@ -65,6 +64,8 @@ movingWallVelocityFvPatchVectorField
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
     UName_(ptf.UName_)
 {}
+
+
 CML::movingWallVelocityFvPatchVectorField::
 movingWallVelocityFvPatchVectorField
 (
