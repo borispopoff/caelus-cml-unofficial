@@ -1,0 +1,64 @@
+/*---------------------------------------------------------------------------*\
+ Caelus 9.04                                   
+ Web:      www.caelus-cml.com 
+\*---------------------------------------------------------------------------*/
+Build  : 9.04-79ebaac0d27c
+Exec   : Test-Dictionary testDictEval1 testDictEval2 testDictEval3
+Date   : Feb 09 2020
+Time   : 17:26:10
+Host   : "jarjar"
+PID    : 25214
+Case   : /home/darrin/caelus/caelus-cml-dev-darrin/tests/dictionary-evaluate
+nProcs : 1
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+variable expansion:"DDD1EEE"
+
+CAELUS_CASE="/home/darrin/caelus/caelus-cml-dev-darrin/tests/dictionary-evaluate"
+CAELUS_CASENAME="dictionary-evaluate"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+{
+    eval1           56.1638;
+    eval2           56.1638;
+    eval3           ( 5 , 1.41421 , 3.14159 );
+    eval4           561.638;
+    pi()            3.14159;
+    sinh(0.1)       0.100167;
+    cosh(0.1)       1.005;
+    sqrt100         10;
+    float           12.345;
+    ceil            13;
+    floor           12;
+}
+
+
+{
+    expr1           "hypot(3,4)";
+    expr2           hypot(3,4);
+    expr3           #{  hypot(3,4)  #};
+    eval1           31.4159;
+    eval2           31.4159;
+    eval3           31.4159;
+    factor          "pi()";
+    factor10        10;
+    hypot_a         3;
+    hypot_b         4;
+    eval4           31.4159;
+}
+
+Empty #eval (treat as 0) - line 48 in file "testDictEval3"
+
+{
+    expr1           "hypot(3,4)";
+    expr2           hypot(6,8);
+    eval1           31.4159;
+    eval2           62.8319;
+    eval3           0;
+    eval4           6.28319;
+    eval4b          6.28319;
+    empty           0;
+}
+

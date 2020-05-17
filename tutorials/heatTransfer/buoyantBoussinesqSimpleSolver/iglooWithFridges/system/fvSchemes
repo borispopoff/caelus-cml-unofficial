@@ -25,11 +25,11 @@ gradSchemes
 divSchemes
 {
     default         none;
-    div(phi,U)      Gauss upwind;
-    div(phi,T)      Gauss upwind;
-    div(phi,k)      Gauss upwind;
-    div(phi,epsilon) Gauss upwind;
-    div(phi,R)      Gauss upwind;
+    div(phi,U)      stabilised Gauss upwind;
+    div(phi,T)      stabilised Gauss upwind;
+    div(phi,k)      stabilised Gauss upwind;
+    div(phi,epsilon) stabilised Gauss upwind;
+    div(phi,R)      stabilised Gauss upwind;
     div(R)          Gauss linear;
     div((nuEff*dev(T(grad(U))))) Gauss linear;
 }

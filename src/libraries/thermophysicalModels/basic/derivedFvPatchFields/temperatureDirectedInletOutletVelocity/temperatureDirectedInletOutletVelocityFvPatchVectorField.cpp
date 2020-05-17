@@ -257,7 +257,7 @@ temperatureDirectedInletOutletVelocityFvPatchVectorField::write
     writeEntry(os, "inletDirection", inletDir_);
     writeEntry(os, "cylindricalCCS", cylindricalCCS_);
     writeEntry(os, "omega", omega_);
-    writeEntry(os, "value");
+    writeEntry(os, "value", *this);
 }
 
 

@@ -4,6 +4,7 @@ tasks:
       purge_generated: True
       remove_zero: no
       remove_mesh: no
+      preserve: [ "*.xml" ]
 
   - run_command:
       cmd_name: simpleSolver

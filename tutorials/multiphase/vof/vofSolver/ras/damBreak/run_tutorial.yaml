@@ -6,6 +6,7 @@ tasks:
       remove_mesh: yes
       remove_extra:
       - 0/alpha1
+      preserve: [ "*.xml" ]
 
   - copy_files:
       src: "0/alpha1.org"

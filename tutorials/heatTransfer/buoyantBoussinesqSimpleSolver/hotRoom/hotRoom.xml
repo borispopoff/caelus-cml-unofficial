@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<testproblem>
+  <name>hotRoom</name>
+
+  <owner userid="ACCM"/>
+
+  <tags>tut simple heat_transfer buoyant ras</tags>
+
+  <problem_definition length="medium" nprocs="1">
+
+    <command_line>caelus_tutorials --quiet -f run_tutorial.yaml</command_line>
+    <clean_command_line>caelus_tutorials --quiet -f run_tutorial.yaml --clean</clean_command_line>
+  </problem_definition>
+
+  <variables>
+
+    <variable name="run_completed" language="python" variable_list="completed">
+from caelus.post.logs import SolverLog
+clog = SolverLog(logfile="buoyantBoussinesqSimpleSolver.log")
+completed = clog.solve_completed
+    </variable>
+
+    <variable name="ref_residuals" language="python" variable_list="exec_time_ref,p_rgh_residual_ref,ux_residual_ref,uy_residual_ref,uz_residual_ref,T_residual_ref,k_residual_ref,eps_residual_ref">
+import pandas as pd
+import os, caelus_test_tools
+reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
+time = pd.read_table(os.path.join(reference_path,"logs/clock_time.dat"), comment='#', delim_whitespace=True)
+ex_time = time[['Time', 'ExecutionTime']]
+exec_time_ref = ex_time.iloc[-1][1]
+p_rgh_ref = pd.read_table(os.path.join(reference_path,"logs/p_rgh.dat"), comment='#', delim_whitespace=True)
+p_rgh_res_ref = p_rgh_ref[p_rgh_ref.SubIteration == 1][['Time', 'InitialResidual']]
+p_rgh_residual_ref = p_rgh_res_ref.iloc[-1][1]
+ux_ref = pd.read_table(os.path.join(reference_path,"logs/Ux.dat"), comment='#', delim_whitespace=True)
+ux_res_ref = ux_ref[ux_ref.SubIteration == 1][['Time', 'InitialResidual']]
+ux_residual_ref = ux_res_ref.iloc[-1][1]
+uy_ref = pd.read_table(os.path.join(reference_path,"logs/Uy.dat"), comment='#', delim_whitespace=True)
+uy_res_ref = uy_ref[uy_ref.SubIteration == 1][['Time', 'InitialResidual']]
+uy_residual_ref = uy_res_ref.iloc[-1][1]
+uz_ref = pd.read_table(os.path.join(reference_path,"logs/Uz.dat"), comment='#', delim_whitespace=True)
+uz_res_ref = uz_ref[uz_ref.SubIteration == 1][['Time', 'InitialResidual']]
+uz_residual_ref = uz_res_ref.iloc[-1][1]
+T_ref = pd.read_table(os.path.join(reference_path,"logs/T.dat"), comment='#', delim_whitespace=True)
+T_res_ref = T_ref[T_ref.SubIteration == 1][['Time', 'InitialResidual']]
+T_residual_ref = T_res_ref.iloc[-1][1]
+k_ref = pd.read_table(os.path.join(reference_path,"logs/k.dat"), comment='#', delim_whitespace=True)
+k_res_ref = k_ref[k_ref.SubIteration == 1][['Time', 'InitialResidual']]
+k_residual_ref = k_res_ref.iloc[-1][1]
+eps_ref = pd.read_table(os.path.join(reference_path,"logs/epsilon.dat"), comment='#', delim_whitespace=True)
+eps_res_ref = eps_ref[eps_ref.SubIteration == 1][['Time', 'InitialResidual']]
+eps_residual_ref = eps_res_ref.iloc[-1][1]
+    </variable>
+
+    <variable name="residuals" language="python" variable_list="exec_time,p_rgh_residual,ux_residual,uy_residual,uz_residual,T_residual,k_residual,eps_residual">
+import pandas as pd
+time = pd.read_table("logs/clock_time.dat", comment='#', delim_whitespace=True)
+ex_time = time[['Time', 'ExecutionTime']]
+exec_time = ex_time.iloc[-1][1]
+p_rgh = pd.read_table("logs/p_rgh.dat", comment='#', delim_whitespace=True)
+p_rgh_res = p_rgh[p_rgh.SubIteration == 1][['Time', 'InitialResidual']]
+p_rgh_residual = p_rgh_res.iloc[-1][1]
+ux = pd.read_table("logs/Ux.dat", comment='#', delim_whitespace=True)
+ux_res = ux[ux.SubIteration == 1][['Time', 'InitialResidual']]
+ux_residual = ux_res.iloc[-1][1]
+uy = pd.read_table("logs/Uy.dat", comment='#', delim_whitespace=True)
+uy_res = uy[uy.SubIteration == 1][['Time', 'InitialResidual']]
+uy_residual = uy_res.iloc[-1][1]
+uz = pd.read_table("logs/Uz.dat", comment='#', delim_whitespace=True)
+uz_res = uz[uz.SubIteration == 1][['Time', 'InitialResidual']]
+uz_residual = uz_res.iloc[-1][1]
+T = pd.read_table("logs/T.dat", comment='#', delim_whitespace=True)
+T_res = T[T.SubIteration == 1][['Time', 'InitialResidual']]
+T_residual = T_res.iloc[-1][1]
+k = pd.read_table("logs/k.dat", comment='#', delim_whitespace=True)
+k_res = k[k.SubIteration == 1][['Time', 'InitialResidual']]
+k_residual = k_res.iloc[-1][1]
+eps = pd.read_table("logs/epsilon.dat", comment='#', delim_whitespace=True)
+eps_res = eps[eps.SubIteration == 1][['Time', 'InitialResidual']]
+eps_residual = eps_res.iloc[-1][1]
+
+    </variable>
+
+    <variable name="results" language="python" variable_list="p_range,u_range,p_diff_rms,u_diff_rms,T_range,k_range,eps_range,last_time_ref,last_time">
+import os, caelus_test_tools
+import pandas as pd
+timefile = pd.read_table("logs/clock_time.dat", comment='#', delim_whitespace=True)
+time = timefile[['Time', 'ExecutionTime']]
+last_time = int(time.iloc[-1][0])
+last_time_str = str(last_time)
+reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
+timefile_ref = pd.read_table(os.path.join(reference_path,"logs/clock_time.dat"), comment='#', delim_whitespace=True)
+time_ref = timefile_ref[['Time', 'ExecutionTime']]
+last_time_ref = int(time_ref.iloc[-1][0])
+last_time_ref_str = str(last_time_ref)
+p_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/p.gz", os.path.join(reference_path,last_time_ref_str+"/p.gz"), 0.05)
+u_range  = caelus_test_tools.compare_vector_norm_range(last_time_str +"/U.gz", os.path.join(reference_path,last_time_ref_str+"/U.gz"), 0.05)
+p_diff_rms  = caelus_test_tools.compare_field_diff_rms(last_time_str +"/p.gz", os.path.join(reference_path,last_time_ref_str+"/p.gz"), 0.05)
+u_diff_rms  = caelus_test_tools.compare_field_diff_rms(last_time_str +"/U.gz", os.path.join(reference_path,last_time_ref_str+"/U.gz"), 0.05)
+T_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/T.gz", os.path.join(reference_path,last_time_ref_str+"/T.gz"), 0.05)
+k_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/k.gz", os.path.join(reference_path,last_time_ref_str+"/k.gz"), 0.05)
+eps_range  = caelus_test_tools.compare_scalar_range(last_time_str +"/epsilon.gz", os.path.join(reference_path,"1000/epsilon.gz"), 0.05)
+    </variable>
+  </variables>
+
+  <pass_tests>
+    <test name="Completed" language="python">
+assert(completed)
+    </test>
+    <test name="p_rgh residual" language="python">
+assert(p_rgh_residual &lt;= 1.1*p_rgh_residual_ref)
+    </test>
+    <test name="Ux residual" language="python">
+assert(ux_residual &lt;= 1.1*ux_residual_ref)
+    </test>
+    <test name="Uy residual" language="python">
+assert(uy_residual &lt;= 1.1*uy_residual_ref)
+    </test>
+    <test name="Uz residual" language="python">
+assert(uz_residual &lt;= 1.1*uz_residual_ref)
+    </test>
+    <test name="T residual" language="python">
+assert(T_residual &lt;= 1.1*T_residual_ref)
+    </test>
+    <test name="k residual" language="python">
+assert(k_residual &lt;= 1.1*k_residual_ref)
+    </test>
+    <test name="epsilon residual" language="python">
+assert(eps_residual &lt;= 1.1*eps_residual_ref)
+    </test>
+    <test name="p range" language="python">
+assert(p_range)
+    </test>
+    <test name="U range" language="python">
+assert(u_range)
+    </test>
+    <test name="p field difference RMS" language="python">
+assert(p_diff_rms)
+    </test>
+    <test name="U field difference RMS" language="python">
+assert(u_diff_rms)
+    </test>
+    <test name="T range" language="python">
+assert(T_range)
+    </test>
+    <test name="k range" language="python">
+assert(k_range)
+    </test>
+    <test name="epsilon range" language="python">
+assert(eps_range)
+    </test>
+  </pass_tests>
+
+  <warn_tests>
+    <test name="More iterations" language="python">
+assert(last_time == last_time_ref)
+    </test>
+    <test name="Higher execution time" language="python">
+assert(exec_time &lt; 1.08*exec_time_ref)
+    </test>
+  </warn_tests>
+
+</testproblem>

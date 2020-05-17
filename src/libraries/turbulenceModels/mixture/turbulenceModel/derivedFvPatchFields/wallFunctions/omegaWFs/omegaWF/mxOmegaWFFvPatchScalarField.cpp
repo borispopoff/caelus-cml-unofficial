@@ -236,7 +236,7 @@ void omegaWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fixedInternalValueFvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    writeEntry(os, "value");
+    writeEntry(os, "value", *this);
 }
 
 

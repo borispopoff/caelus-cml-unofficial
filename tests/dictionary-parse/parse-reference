@@ -1,0 +1,237 @@
+/*---------------------------------------------------------------------------*\
+ Caelus 9.04                                   
+ Web:      www.caelus-cml.com 
+\*---------------------------------------------------------------------------*/
+Build  : 9.04-79ebaac0d27c
+Exec   : Test-Dictionary
+Date   : Feb 09 2020
+Time   : 16:21:12
+Host   : "jarjar"
+PID    : 21145
+Case   : /home/darrin/caelus/caelus-cml-dev-darrin/tests/dictionary
+nProcs : 1
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+variable expansion:"DDD1EEE"
+
+CAELUS_CASE="/home/darrin/caelus/caelus-cml-dev-darrin/tests/dictionary-parse"
+CAELUS_CASENAME="dictionary-parse"
+
+dict1: 
+{
+    internalField   uniform 1;
+    dimensions      [ 0 2 -2 0 0 0 0 ];
+    inactive
+    {
+        type            zeroGradient;
+    }
+    varType         active;
+    x               5;
+    varName         x;
+    key             inlet_9;
+    boundaryField
+    {
+        Default_Boundary_Region
+        {
+            type            zeroGradient;
+            value           uniform 1;
+            note            "actually a noslip wall";
+        }
+        inlet_1
+        {
+            type            turbulentIntensityKineticEnergyInlet;
+            intensity       0.1;
+            value           uniform 1;
+        }
+        inlet_2
+        {
+            type            zeroGradient;
+        }
+        inlet_3         "a primitiveEntry squashes directory entry";
+        inlet_4
+        {
+            type            inletOutlet;
+            inletValue      uniform 1;
+            value           uniform 1;
+        }
+        inlet_5
+        {
+            type            zeroGradient;
+        }
+        inlet_6
+        {
+        }
+        inlet_7
+        {
+            type            turbulentIntensityKineticEnergyInlet;
+            intensity       0.1;
+            value           uniform 1;
+        }
+        inlet_8
+        {
+            type            turbulentIntensityKineticEnergyInlet;
+            intensity       0.1;
+            value           uniform 1;
+        }
+        inlet_9
+        {
+            type            zeroGradient;
+        }
+        outlet
+        {
+            type            inletOutlet;
+            inletValue      uniform 1;
+            value           uniform 2;
+            x               5;
+            y               6;
+        }
+    }
+    foo
+    {
+        type            turbulentIntensityKineticEnergyInlet;
+        intensity       0.1;
+        value           uniform 1;
+    }
+    "anynumber.*"
+    {
+        type            turbulentIntensityKineticEnergyInlet;
+        intensity       0.1;
+        value           uniform 1;
+    }
+}
+
+toc: 
+10
+(
+internalField
+dimensions
+inactive
+varType
+x
+varName
+key
+boundaryField
+foo
+anynumber.*
+)
+
+keys: 
+9
+(
+internalField
+dimensions
+inactive
+varType
+x
+varName
+key
+boundaryField
+foo
+)
+
+patterns: 1("anynumber.*")
+dict1.toc(): "testDict" 0()
+dict2.toc(): "testDict" 
+10
+(
+internalField
+dimensions
+inactive
+varType
+x
+varName
+key
+boundaryField
+foo
+anynumber.*
+)
+
+dict1.toc(): "testDict" 
+10
+(
+internalField
+dimensions
+inactive
+varType
+x
+varName
+key
+boundaryField
+foo
+anynumber.*
+)
+
+dictionary construct from pointer
+ok = "testDict::boundaryField" 
+11
+(
+Default_Boundary_Region
+inlet_1
+inlet_2
+inlet_3
+inlet_4
+inlet_5
+inlet_6
+inlet_7
+inlet_8
+inlet_9
+outlet
+)
+
+no = "" 0()
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+dict:
+{
+    ".*"            parentValue1;
+    "[n-z].*"       parentValue2;
+    "f.*"           parentValue3;
+    keyX            parentValue4;
+    keyY            parentValue5;
+    "(.*)Dict"
+    {
+        foo             subdictValue0;
+        "a.*c"          subdictValue3;
+        "ab.*"          subdictValue2;
+        "a.*"           subdictValue1;
+        abcd            \1;
+    }
+    fooba[rz]       anything;
+}
+
+toc: 
+7
+(
+.*
+[n-z].*
+f.*
+keyX
+keyY
+(.*)Dict
+fooba[rz]
+)
+
+keys: 
+3
+(
+keyX
+keyY
+fooba[rz]
+)
+
+patterns: 
+4
+(
+".*"
+"[n-z].*"
+"f.*"
+"(.*)Dict"
+)
+
+Pattern find "abc" in top directory : 1(parentValue1)
+Pattern find "abc" in sub directory : 1(subdictValue1)
+Recursive pattern find "def" in sub directory : 1(parentValue1)
+Recursive pattern find "foo" in sub directory : 1(subdictValue0)
+Recursive pattern find "fooz" in sub directory : 1(parentValue3)
+Recursive pattern find "bar" in sub directory : 1(parentValue1)
+Recursive pattern find "xxx" in sub directory : 1(parentValue2)

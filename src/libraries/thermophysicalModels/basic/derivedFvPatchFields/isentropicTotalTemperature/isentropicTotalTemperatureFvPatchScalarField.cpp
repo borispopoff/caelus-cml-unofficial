@@ -173,7 +173,7 @@ void isentropicTotalTemperatureFvPatchScalarField::write(Ostream& os) const
     writeEntry(os, "p", pName_);
     writeEntry(os, "T0", T0_);
     writeEntry(os, "p0", p0_);
-    writeEntry(os, "value");
+    writeEntry(os, "value", *this);
 }
 
 

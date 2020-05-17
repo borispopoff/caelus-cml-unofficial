@@ -88,9 +88,9 @@ functions
         writeControl    timeStep;
         writeInterval   1;
         patches         ( "motorBike.*" );
-        pName           p;
-        UName           U;
-        rhoName         rhoInf;
+        p               p;
+        U               U;
+        rho             rhoInf;
         log             true;
         rhoInf          1;
         liftDir         ( 0 0 1 );

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2019 OpenFOAM Foundation
+Copyright (C) 2011 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -194,32 +194,17 @@ public:
             surfaceMesh
         > fluxFieldType;
 
-        virtual tmp<surfaceScalarField> fvcDdtPhiCoeff
+        tmp<surfaceScalarField> fvcDdtPhiCoeff
         (
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi,
             const fluxFieldType& phiCorr
         );
 
-        virtual tmp<surfaceScalarField> fvcDdtPhiCoeff
-        (
-            const GeometricField<Type, fvPatchField, volMesh>& U,
-            const fluxFieldType& phi,
-            const fluxFieldType& phiCorr,
-            const volScalarField& rho
-        );
-
-        virtual tmp<surfaceScalarField> fvcDdtPhiCoeff
+        tmp<surfaceScalarField> fvcDdtPhiCoeff
         (
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
-        );
-
-        virtual tmp<surfaceScalarField> fvcDdtPhiCoeff
-        (
-            const GeometricField<Type, fvPatchField, volMesh>& U,
-            const fluxFieldType& phi,
-            const volScalarField& rho
         );
 
         virtual tmp<fluxFieldType> fvcDdtUfCorr
@@ -525,40 +510,47 @@ template<class Type>
 tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 (
     const GeometricField<Type, fvPatchField, volMesh>& U,
-    const fluxFieldType& phi,
-    const fluxFieldType& phiCorr,
-    const volScalarField& rho
-)
-{
-    return fvcDdtPhiCoeff(U, phi, phiCorr/fvc::interpolate(rho));
-}
-
-
-template<class Type>
-tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
-(
-    const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phi
 )
 {
-    return fvcDdtPhiCoeff(U, phi, phi - fvc::dotInterpolate(mesh().Sf(), U));
-}
+    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
+    tmp<surfaceScalarField> tddtCouplingCoeff = scalar(1)
+      - min
+        (
+            mag(phi - fvc::dotInterpolate(mesh().Sf(),U))
+           /(mag(phi) + dimensionedScalar("small", phi.dimensions(), VSMALL)),
+           //(rDeltaT*mesh().magSf()/mesh().deltaCoeffs()),
+            scalar(1)
+        );
 
-template<class Type>
-tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
-(
-    const GeometricField<Type, fvPatchField, volMesh>& U,
-    const fluxFieldType& phi,
-    const volScalarField& rho
-)
-{
-    return fvcDdtPhiCoeff
-    (
-        U,
-        phi,
-        (phi - fvc::dotInterpolate(mesh().Sf(), U))/fvc::interpolate(rho)
-    );
+    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff.ref();
+
+    surfaceScalarField::Boundary& ccbf =
+        ddtCouplingCoeff.boundaryFieldRef();
+
+    forAll(U.boundaryField(), patchi)
+    {
+        if
+        (
+            U.boundaryField()[patchi].fixesValue()
+         || isA<cyclicAMIFvPatch>(mesh().boundary()[patchi])
+        )
+        {
+            ccbf[patchi]  = 0.0;
+        }
+    }
+
+    if (debug > 1)
+    {
+        Info<< "ddtCouplingCoeff mean max min = "
+            << gAverage(ddtCouplingCoeff.internalField())
+            << " " << gMax(ddtCouplingCoeff.internalField())
+            << " " << gMin(ddtCouplingCoeff.internalField())
+            << endl;
+    }
+
+    return tddtCouplingCoeff;
 }
 
 

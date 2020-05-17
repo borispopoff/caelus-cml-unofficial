@@ -4,7 +4,7 @@ tasks:
       purge_generated: True
       remove_zero: yes
       remove_mesh: yes
-      preserve: [ "0.org", "README" ]
+      preserve: [ "0.org", "README", "*.xml" ]
 
   - run_command:
       cmd_name: blockMesh
