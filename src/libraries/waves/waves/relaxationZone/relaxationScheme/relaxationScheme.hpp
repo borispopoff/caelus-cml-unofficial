@@ -191,6 +191,8 @@ public:
 
         virtual void addSup(fvMatrix<vector>& eqn);
 
+        virtual void addSup(volScalarField& rho, fvMatrix<vector>& eqn);
+
         virtual void constrain(fvMatrix<vector>& eqn);
 };
 

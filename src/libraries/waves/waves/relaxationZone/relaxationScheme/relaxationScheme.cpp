@@ -155,6 +155,12 @@ void relaxationScheme::addSup(fvMatrix<vector>& eqn)
 }
 
 
+void relaxationScheme::addSup(volScalarField& rho, fvMatrix<vector>& eqn)
+{
+   // Do nothing
+}
+
+
 void relaxationScheme::constrain(fvMatrix<vector>& eqn)
 {
    // Do nothing
