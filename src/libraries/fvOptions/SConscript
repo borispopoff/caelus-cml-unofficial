@@ -27,6 +27,8 @@ sources/derived/rotorDiskSource/trimModel/fixed/fixedTrim.cpp
 sources/derived/rotorDiskSource/trimModel/targetCoeff/targetCoeffTrim.cpp
 constraints/general/explicitSetValue/explicitSetValue.cpp
 corrections/limitVelocity/limitVelocity.cpp
+sources/derived/damping/damping/damping.cpp
+sources/derived/damping/isotropicDamping/isotropicDamping.cpp
 """)
 
 caelus_inc = [
