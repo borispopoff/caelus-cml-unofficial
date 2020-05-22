@@ -15,8 +15,7 @@ caelus_inc = [
 ]
 
 caelus_libs = [
-'core',
-'edgeMesh'
+'core'
 ]
 
 ostype = utils.ostype()
