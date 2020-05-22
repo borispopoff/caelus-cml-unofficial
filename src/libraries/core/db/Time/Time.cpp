@@ -91,15 +91,23 @@ void CML::Time::adjustDeltaT()
         functionObjects_.timeToNextWrite()
     );
 
-    const scalar nSteps = timeToNextWrite/deltaT_;
+    const scalar nSteps = timeToNextWrite/deltaT_ - SMALL;
 
     // Ensure nStepsToNextWrite does not overflow
     if (nSteps < labelMax)
     {
-        // Allow the time-step to increase by up to 1%
-        // to accommodate the next write time before splitting
-        const label nStepsToNextWrite = label(max(nSteps, 1) + 0.99);
-        deltaT_ = timeToNextWrite/nStepsToNextWrite;
+        const label nStepsToNextWrite = label(nSteps) + 1;
+        const scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
+        // Control the increase of the time step to within a factor of 2
+        // and the decrease within a factor of 5.
+        if (newDeltaT >= deltaT_)
+        {
+            deltaT_ = min(newDeltaT, 2.0*deltaT_);
+        }
+        else
+        {
+            deltaT_ = max(newDeltaT, 0.2*deltaT_);
+        }
     }
 }
 
@@ -123,10 +131,18 @@ void CML::Time::adjustDeltaTFS()
     // Ensure nStepsToNextWrite does not overflow
     if (nSteps < labelMax)
     {
-        // Allow the time-step to increase by up to 1%
-        // to accommodate the next write time before splitting
-        const label nStepsToNextWrite = label(max(nSteps, 1) + 0.99);
-        deltaT_ = timeToNextWrite/nStepsToNextWrite;
+        const label nStepsToNextWrite = label(nSteps) + 1;
+        const scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
+        // Control the increase of the time step to within a factor of 2
+        // and the decrease within a factor of 5.
+        if (newDeltaT >= deltaT_)
+        {
+            deltaT_ = min(newDeltaT, 2.0*deltaT_);
+        }
+        else
+        {
+            deltaT_ = max(newDeltaT, 0.2*deltaT_);
+        }
     }
 }
 
