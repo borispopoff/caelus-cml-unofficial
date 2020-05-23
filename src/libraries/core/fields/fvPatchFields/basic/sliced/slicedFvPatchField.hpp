@@ -344,7 +344,7 @@ CML::slicedFvPatchField<Type>::clone
 
 
 template<class Type>
-CML::slicedFvPatchField<Type>::~slicedFvPatchField<Type>()
+CML::slicedFvPatchField<Type>::~slicedFvPatchField()
 {
     // Set the fvPatchField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.

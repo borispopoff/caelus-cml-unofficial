@@ -1163,11 +1163,8 @@ BINARY_TYPE_FUNCTION(Type, Type, Type, cmptDivide)
 
 UNARY_OPERATOR(Type, Type, -, negate)
 
-#ifndef __INTEL_COMPILER
 BINARY_OPERATOR(Type, Type, scalar, *, multiply)
 BINARY_OPERATOR(Type, scalar, Type, *, multiply)
-#endif
-
 BINARY_OPERATOR(Type, Type, scalar, /, divide)
 
 BINARY_TYPE_OPERATOR_SF(Type, scalar, Type, *, multiply)
