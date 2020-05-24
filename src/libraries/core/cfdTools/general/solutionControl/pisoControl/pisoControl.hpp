@@ -18,7 +18,7 @@ License
     along with Caelus.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::pisoControl
+    CML::pisoControl
 
 Description
     Specialization of the pimpleControl class for PISO control.

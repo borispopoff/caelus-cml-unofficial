@@ -18,7 +18,7 @@ License
     along with Caelus.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::filmViscosityModel
+    CML::regionModels::surfaceFilmModels::filmViscosityModel
 
 Description
     Base class for surface film viscosity models

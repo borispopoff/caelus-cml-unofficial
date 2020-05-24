@@ -70,7 +70,7 @@ Usage
     \endverbatim
 
 See also
-    Foam::fixedValueFvPatchField
+    CML::fixedValueFvPatchField
 
 SourceFiles
     SRFVelocityFvPatchVectorField.cpp

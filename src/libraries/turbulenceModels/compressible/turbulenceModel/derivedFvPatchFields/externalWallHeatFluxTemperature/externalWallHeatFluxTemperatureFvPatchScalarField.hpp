@@ -42,7 +42,7 @@ Description
     The thermal conductivity \c kappa can either be retrieved from various
     possible sources, as detailed in the class temperatureCoupledBase.
 
-    The ambient temperature Ta is specified as a Foam::Function1 of time but
+    The ambient temperature Ta is specified as a CML::DataEntry of time but
     uniform is space.
 
 Usage
@@ -83,8 +83,8 @@ Usage
     \endverbatim
 
 See also
-    Foam::temperatureCoupledBase
-    Foam::mixedFvPatchScalarField
+    CML::temperatureCoupledBase
+    CML::mixedFvPatchScalarField
 
 SourceFiles
     externalWallHeatFluxTemperatureFvPatchScalarField.cpp

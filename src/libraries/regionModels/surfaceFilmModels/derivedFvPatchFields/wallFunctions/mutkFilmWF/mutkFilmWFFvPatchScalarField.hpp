@@ -36,10 +36,10 @@ Usage
     \endverbatim
 
 See also
-    Foam::nutkWallFunctionFvPatchScalarField
+    CML::nutkWallFunctionFvPatchScalarField
 
 SourceFiles
-    mutkFilmWallFunctionFvPatchScalarField.C
+    mutkFilmWallFunctionFvPatchScalarField.cpp
 
 \*---------------------------------------------------------------------------*/
 

@@ -35,7 +35,7 @@ Usage
     \endverbatim
 
 See also
-    Foam::cyclicFvPatchField
+    CML::cyclicFvPatchField
 
 SourceFiles
     cyclicSlipFvPatchField.C

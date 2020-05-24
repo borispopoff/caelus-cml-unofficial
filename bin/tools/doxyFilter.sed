@@ -54,15 +54,15 @@ s/^    /\\relates /
 
 
 # Class
-#     Foam::className
+#     CML::className
 # =>
-# \\class Foam::className
+# \\class CML::className
 #
 # Class
-#     Foam::namespaceName::
+#     CML::namespaceName::
 #         className
 # =>
-# \\class Foam::namespaceName::className
+# \\class CML::namespaceName::className
 #
 /^Class *$/{
 N
@@ -99,9 +99,9 @@ s/^    /\\namespace /
 
 
 # Typedef
-#     Foam::def
+#     CML::def
 # =>
-# \typedef Foam::def
+# \typedef CML::def
 /^Typedef *$/,/^[^ ]/{
 s/^Typedef//
 s/^    /\\typedef /
