@@ -25,6 +25,13 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#ifdef windows
+//Symbol to force loading at runtime
+extern "C"
+void lagrangianTurbulenceLoad()
+{}
+#endif
+
 namespace CML
 {
     makeParcelRASDispersionModels(basicKinematicCloud);
