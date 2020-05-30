@@ -22,6 +22,13 @@ License
 #include "cellSetOption.hpp"
 #include "volFields.hpp"
 
+#ifdef windows
+//Symbol to force loading at runtime
+extern "C"
+void fvOptionsLoad()
+{}
+#endif
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace CML

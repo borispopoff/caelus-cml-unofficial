@@ -44,7 +44,7 @@ else:
 prepend_args = {}
 if ostype == 'windows':
    prepend_args = {'LINKFLAGS' :
-            '-u incompressibleRASModelsLoad -u incompressibleLESModelsLoad -u incompressibleVLESModelsLoad -u interfacePropertiesLoad -u turbulenceDerivedFvPatchFieldsLoad'
+            '-u incompressibleRASModelsLoad -u incompressibleLESModelsLoad -u incompressibleVLESModelsLoad -u interfacePropertiesLoad -u turbulenceDerivedFvPatchFieldsLoad -u fvOptionsLoad'
 }
 
 build_app(env,
