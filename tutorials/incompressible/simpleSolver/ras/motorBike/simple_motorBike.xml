@@ -9,8 +9,8 @@
 
   <problem_definition length="medium" nprocs="4">
 
-    <command_line>caelus_tutorials --quiet -f run_validation.yaml</command_line>
-    <clean_command_line>caelus_tutorials --quiet -f run_validation.yaml --clean</clean_command_line>
+    <command_line>caelus_tutorials --quiet -f run_tutorial.yaml</command_line>
+    <clean_command_line>caelus_tutorials --quiet -f run_tutorial.yaml --clean</clean_command_line>
   </problem_definition>
 
   <variables>
@@ -53,7 +53,7 @@ import pandas as pd
 time = pd.read_table("logs/clock_time.dat", comment='#', delim_whitespace=True)
 ex_time = time[['Time', 'ExecutionTime']]
 exec_time = ex_time.iloc[-1][1]
-p = pd.read_table("logs/p.dat", comment='#', delim_whitespace=True)
+p = pd.read_table("logs/pCorr.dat", comment='#', delim_whitespace=True)
 p_res = p[p.SubIteration == 1][['Time', 'InitialResidual']]
 p_residual = p_res.iloc[-1][1]
 ux = pd.read_table("logs/Ux.dat", comment='#', delim_whitespace=True)
