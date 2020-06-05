@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*------------------------------------------------------------------------------*/
 
@@ -56,7 +56,7 @@ functions
         enabled         true;
 
         // When to output the average fields
-        outputControl   outputTime;
+        writeControl   writeTime;
 
         // Fields to be averaged - runTime modifiable
         fields

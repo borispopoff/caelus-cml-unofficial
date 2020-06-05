@@ -329,7 +329,7 @@ void waxSolventEvaporation::correctModel
             fvm::ddt(deltaRho, Ysolvent_)
           + fvm::div(phi, Ysolvent_)
          ==
-            deltaRho0Bydt*Ysolvent_.dimensionedInternalField()
+            deltaRho0Bydt*Ysolvent_.internalField()
 
           + evapRateInf
 

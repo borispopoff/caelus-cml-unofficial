@@ -80,12 +80,12 @@ tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::calcUTau
     const fvPatchScalarField& rhow = turbModel.rho().boundaryField()[patchi];
 
     tmp<scalarField> tuTau(new scalarField(patch().size(), 0.0));
-    scalarField& uTau = tuTau();
+    scalarField& uTau = tuTau.ref();
 
-    forAll(mutw, faceI)
+    forAll(mutw, facei)
     {
         scalar ut =
-            sqrt((mutw[faceI] + muw[faceI])*magGradU[faceI]/rhow[faceI]);
+            sqrt((mutw[facei] + muw[facei])*magGradU[facei]/rhow[facei]);
 
         if (ut > ROOTVSMALL)
         {
@@ -94,17 +94,17 @@ tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::calcUTau
 
             do
             {
-                scalar kUu = min(kappa_*magUp[faceI]/ut, 50);
+                scalar kUu = min(kappa_*magUp[facei]/ut, 50);
                 scalar fkUu = exp(kUu) - 1 - kUu*(1 + 0.5*kUu);
 
                 scalar f =
-                    - ut*y[faceI]/(muw[faceI]/rhow[faceI])
-                    + magUp[faceI]/ut
+                    - ut*y[facei]/(muw[facei]/rhow[facei])
+                    + magUp[facei]/ut
                     + 1/E_*(fkUu - 1.0/6.0*kUu*sqr(kUu));
 
                 scalar df =
-                    y[faceI]/(muw[faceI]/rhow[faceI])
-                  + magUp[faceI]/sqr(ut)
+                    y[facei]/(muw[facei]/rhow[facei])
+                  + magUp[facei]/sqr(ut)
                   + 1/E_*kUu*fkUu/ut;
 
                 scalar uTauNew = ut + f/df;
@@ -113,7 +113,7 @@ tmp<scalarField> mutUSpaldingWallFunctionFvPatchScalarField::calcUTau
 
             } while (ut > ROOTVSMALL && err > 0.01 && ++iter < 10);
 
-            uTau[faceI] = max(0.0, ut);
+            uTau[facei] = max(0.0, ut);
         }
     }
 
@@ -203,7 +203,7 @@ void mutUSpaldingWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

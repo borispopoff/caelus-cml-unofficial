@@ -131,7 +131,7 @@ public:
 
 
     //- Selector
-    static autoPtr<PhaseChangeModel<CloudType> > New
+    static autoPtr<PhaseChangeModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -216,7 +216,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<reactingCloudType>, 0);             \
                                                                                \
     PhaseChangeModel<reactingCloudType>::                                      \
-        adddictionaryConstructorToTable<SS<reactingCloudType> >                \
+        adddictionaryConstructorToTable<SS<reactingCloudType>>                 \
             add##SS##CloudType##reactingCloudType##ConstructorToTable_;
 
 
@@ -377,7 +377,7 @@ void CML::PhaseChangeModel<CloudType>::info(Ostream& os)
 
 
 template<class CloudType>
-CML::autoPtr<CML::PhaseChangeModel<CloudType> >
+CML::autoPtr<CML::PhaseChangeModel<CloudType>>
 CML::PhaseChangeModel<CloudType>::New
 (
     const dictionary& dict,
@@ -401,7 +401,7 @@ CML::PhaseChangeModel<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<PhaseChangeModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<PhaseChangeModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

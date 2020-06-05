@@ -73,7 +73,7 @@ class AccumulationCalculation
     const Field<bool> mask_;
 
     //- the data that is actually used
-    autoPtr<Field<Type> > usedData_;
+    autoPtr<Field<Type>> usedData_;
 
     //- is this point data?
     const bool isPoint_;
@@ -85,10 +85,10 @@ class AccumulationCalculation
     autoPtr<scalarField> weights_;
 
     //- on demand distribution
-    autoPtr<SimpleDistribution<Type> > distribution_;
+    autoPtr<SimpleDistribution<Type>> distribution_;
 
     //- on demand weighted distribution
-    autoPtr<SimpleDistribution<Type> > weightedDistribution_;
+    autoPtr<SimpleDistribution<Type>> weightedDistribution_;
 
     bool hasWeightSum_;
     scalar weightSum_;

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -181,7 +181,7 @@ private:
             //- Cut edge pairs
             //  For cut points created by intersection two edges,
             //  store the master-slave edge pair used in creation
-            mutable Map<Pair<edge> >* cutPointEdgePairMapPtr_;
+            mutable Map<Pair<edge>>* cutPointEdgePairMapPtr_;
 
             //- Slave point hit.  The index of master point hit by the
             //  slave point in projection.  For no point hit, set to -1
@@ -206,10 +206,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        slidingInterface(const slidingInterface&);
+        slidingInterface(const slidingInterface&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const slidingInterface&);
+        void operator=(const slidingInterface&) = delete;
 
         //- Clear out
         void clearOut() const;
@@ -246,7 +246,7 @@ private:
             const Map<label>& retiredPointMap() const;
 
             //- Cut point edge pair map
-            const Map<Pair<edge> >& cutPointEdgePairMap() const;
+            const Map<Pair<edge>>& cutPointEdgePairMap() const;
 
              //- Clear addressing
              void clearAddressing() const;
@@ -321,7 +321,7 @@ public:
             const word& slavePatchName,
             const typeOfMatch tom,
             const bool coupleDecouple = false,
-            const intersection::algorithm algo = intersection::VISIBLE
+            const intersection::algorithm algo = intersection::algorithm::visible
         );
 
         //- Construct from dictionary

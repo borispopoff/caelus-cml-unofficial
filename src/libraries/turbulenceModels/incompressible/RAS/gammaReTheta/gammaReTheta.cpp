@@ -22,6 +22,7 @@ License
 #include "gammaReTheta.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 #include "wallFvPatch.hpp"
+#include "fvOptions.hpp"
 
 namespace CML
 {
@@ -162,7 +163,7 @@ tmp<volScalarField> gammaReTheta::FThetat() const
         (
             Fwake()*exp(-pow4(magSqr(this->U_)
            /(c7*nu()*magVort*this->ReThetaTilda_))),
-            c8-sqr((this->ce2_*this->intermittency_-scalar(1.0))/(this->ce2_ - c8))
+            c8-sqr((this->ce2_*this->intermittency_-scalar(1))/(this->ce2_ - c8))
         ),
         c8
     );
@@ -174,17 +175,17 @@ void gammaReTheta::ReTheta(volScalarField& ReThetaField) const
     const scalar c9 = 100.0*pTraits<scalar>::one;
     const scalar c10 = 1.5*pTraits<scalar>::one;
 
-    forAll(ReThetaField, cellI)
+    forAll(ReThetaField, celli)
     {
         int iter = 0;
         const scalar c11 = 0.027*pTraits<scalar>::one;
         const scalar Tu = max
         (
-            c9*sqrt(k_[cellI]/c10)/max(mag(U_[cellI]),SMALL),
+            c9*sqrt(k_[celli]/c10)/max(mag(U_[celli]),SMALL),
             c11
         );
 
-        scalar dUds = U2gradU[cellI]/(sqr(max(mag(U_[cellI]),SMALL)));
+        scalar dUds = U2gradU[celli]/(sqr(max(mag(U_[celli]),SMALL)));
 
         // Declare ReThetaOld in this scope
         scalar ReThetaOld;
@@ -205,8 +206,8 @@ void gammaReTheta::ReTheta(volScalarField& ReThetaField) const
             (
                 min
                 (
-                    sqr(ReThetaOld)*nu()()[cellI]*dUds
-                   /(sqr(max(mag(U_[cellI]),SMALL))),
+                    sqr(ReThetaOld)*nu()()[celli]*dUds
+                   /(sqr(max(mag(U_[celli]),SMALL))),
                    c12
                 ),
                 -c12
@@ -215,7 +216,7 @@ void gammaReTheta::ReTheta(volScalarField& ReThetaField) const
             (
                 min
                 (
-                    nu()()[cellI]*dUds/(sqr(max(mag(this->U_[cellI]),SMALL))),
+                    nu()()[celli]*dUds/(sqr(max(mag(this->U_[celli]),SMALL))),
                     scalar(3e-6)
                 ),
                 scalar(-3e-6)
@@ -230,7 +231,7 @@ void gammaReTheta::ReTheta(volScalarField& ReThetaField) const
             }
         } while(mag(ReThetaNew-ReThetaOld) > ReThetaTol);
 
-        ReThetaField[cellI] = ReThetaNew;
+        ReThetaField[celli] = ReThetaNew;
     }
 
 }
@@ -247,15 +248,15 @@ void gammaReTheta::ReTheta(volScalarField& ReThetaField) const
             scalar(0.0962e6)*K+scalar(0.148e12)*sqr(K)
            +scalar(0.0141e18)*pow3(K);
         FlamK = 
-            scalar(1.0)+FK*(scalar(1.0)-exp(-Tu/scalar(1.5)))
-           +scalar(0.556)*(scalar(1.0)-exp(-scalar(23.9)*lambda))
+            scalar(1)+FK*(scalar(1)-exp(-Tu/scalar(1.5)))
+           +scalar(0.556)*(scalar(1)-exp(-scalar(23.9)*lambda))
            *exp(-Tu/scalar(1.5)); 
     }
     else 
     {
         scalar Flam = 
             scalar(10.32)*lambda+scalar(89.47)*sqr(lambda)+265.51*pow3(lambda);
-            FlamK = scalar(1.0)+Flam*exp(-Tu/scalar(3.0));
+            FlamK = scalar(1)+Flam*exp(-Tu/scalar(3));
      }
 
     return FTu*FlamK;
@@ -271,10 +272,10 @@ tmp<volScalarField> gammaReTheta::intermittencySep() const
         (
             sqr(y_)*sqrt(scalar(2))
            *mag(symm(gradU))
-           /(scalar(3.235)*nu()*ReThetac())-scalar(1.0),
-            scalar(0.0)
+           /(scalar(3.235)*nu()*ReThetac())-scalar(1),
+            scalar(0)
         ),
-        scalar(2.0)
+        scalar(2)
     );
 }
 
@@ -680,6 +681,7 @@ bool gammaReTheta::read()
 
 void gammaReTheta::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     RASModel::correct();
 
     if (!turbulence_)
@@ -696,7 +698,7 @@ void gammaReTheta::correct()
     volScalarField G(GName(), nut_*S2);
 
     // Update omega and G at the wall
-    omega_.boundaryField().updateCoeffs();
+    omega_.boundaryFieldRef().updateCoeffs();
 
     volScalarField CDkOmega
     (
@@ -727,13 +729,15 @@ void gammaReTheta::correct()
             (F1 - scalar(1))*CDkOmega/omega_,
             omega_
         )
+      + fvOptions(omega_)
     );
 
-    omegaEqn().relax();
-
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().relax();
+    fvOptions.constrain(omegaEqn.ref());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
 
     solve(omegaEqn);
+    fvOptions.correct(omega_);
     bound(omega_, omegaMin_);
 
 
@@ -765,10 +769,13 @@ void gammaReTheta::correct()
              )*betaStar_*omega_, 
              k_
         )
+      + fvOptions(k_)
     );
     
-    kEqn().relax();
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
 
@@ -806,15 +813,18 @@ void gammaReTheta::correct()
       - fvm::laplacian(DReThetaTildaEff(), ReThetaTilda_)
      ==
         cThetat_*magSqr(U_)
-      * (scalar(1.0)-FThetat())*ReThetaField/(scalar(500.0)*nu())
+      * (scalar(1)-FThetat())*ReThetaField/(scalar(500.0)*nu())
       - fvm::Sp
         (
-            cThetat_*magSqr(U_)*(scalar(1.0)-FThetat())/(scalar(500.0)*nu()), 
+            cThetat_*magSqr(U_)*(scalar(1)-FThetat())/(scalar(500.0)*nu()), 
             ReThetaTilda_
         )
+      + fvOptions(ReThetaTilda_)
     );
 
-    ReThetaTildaEqn().relax();
+    ReThetaTildaEqn.ref().relax();
+    fvOptions.constrain(ReThetaTildaEqn.ref());
+    fvOptions.correct(ReThetaTilda_);
     solve(ReThetaTildaEqn);
 
     bound(ReThetaTilda_,scalar(20));
@@ -841,11 +851,13 @@ void gammaReTheta::correct()
             ce2_*ca2_*sqrt(scalar(2))*mag(skew(fvc::grad(U_)))*Fturb()*intermittency_,
             intermittency_
         )
+      + fvOptions(intermittency_)
     );
 
-    intermittencyEqn().relax();
+    intermittencyEqn.ref().relax();
+    fvOptions.constrain(intermittencyEqn.ref());
     solve(intermittencyEqn);
-
+    fvOptions.correct(intermittency_);
     bound(intermittency_,scalar(0));
 }
 

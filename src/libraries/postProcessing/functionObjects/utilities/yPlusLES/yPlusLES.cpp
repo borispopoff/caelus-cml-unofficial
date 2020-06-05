@@ -60,7 +60,7 @@ void CML::yPlusLES::calcIncompressibleYPlus
     const incompressible::LESModel& model =
         mesh.lookupObject<incompressible::LESModel>("LESProperties");
 
-    volScalarField::GeometricBoundaryField d = nearWallDist(mesh).y();
+    volScalarField::Boundary d = nearWallDist(mesh).y();
     volScalarField nuEff(model.nuEff());
 
     const fvPatchList& patches = mesh.boundary();
@@ -75,7 +75,7 @@ void CML::yPlusLES::calcIncompressibleYPlus
         if (isA<wallFvPatch>(currPatch))
         {
             foundPatch = true;
-            yPlus.boundaryField()[patchi] =
+            yPlus.boundaryFieldRef()[patchi] =
                 d[patchi]
                *sqrt
                 (
@@ -123,7 +123,7 @@ void CML::yPlusLES::calcCompressibleYPlus
     const compressible::LESModel& model =
         mesh.lookupObject<compressible::LESModel>("LESProperties");
 
-    volScalarField::GeometricBoundaryField d = nearWallDist(mesh).y();
+    volScalarField::Boundary d = nearWallDist(mesh).y();
     volScalarField muEff(model.muEff());
     const volScalarField& rho(model.rho());
 
@@ -141,7 +141,7 @@ void CML::yPlusLES::calcCompressibleYPlus
         if (isA<wallFvPatch>(currPatch))
         {
             foundPatch = true;
-            yPlus.boundaryField()[patchi] =
+            yPlus.boundaryFieldRef()[patchi] =
                 d[patchi]
                *sqrt
                 (
@@ -223,7 +223,7 @@ CML::yPlusLES::yPlusLES
                     IOobject::NO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("0", dimless, 0.0)
+                dimensionedScalar("0", dimless, 0)
             )
         );
 
@@ -245,7 +245,7 @@ void CML::yPlusLES::read(const dictionary& dict)
     if (active_)
     {
         log_ = dict.lookupOrDefault<Switch>("log", true);
-        phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
+        phiName_ = dict.lookupOrDefault<word>("phi", "phi");
     }
 }
 
@@ -264,10 +264,7 @@ void CML::yPlusLES::execute()
         const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
         volScalarField& yPlusLES =
-            const_cast<volScalarField&>
-            (
-                mesh.lookupObject<volScalarField>(type())
-            );
+            mesh.lookupObjectRef<volScalarField>(type());
 
         Info(log_)<< type() << " " << name_ << " output:" << nl;
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -67,10 +67,10 @@ class duplicatePoints
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        duplicatePoints(const duplicatePoints&);
+        duplicatePoints(const duplicatePoints&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const duplicatePoints&);
+        void operator=(const duplicatePoints&) = delete;
 
 public:
 

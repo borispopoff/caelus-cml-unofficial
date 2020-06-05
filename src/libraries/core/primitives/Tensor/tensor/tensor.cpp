@@ -84,7 +84,7 @@ CML::vector CML::eigenValues(const tensor& t)
     Roots<3> roots = cubicEqn(1, b, c, d).roots();
 
     // Check the root types
-    vector lambda = vector::zero;
+    vector lambda = Zero;
     forAll(roots, i)
     {
         switch (roots.type(i))

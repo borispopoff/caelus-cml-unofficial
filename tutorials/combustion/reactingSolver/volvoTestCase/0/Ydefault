@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -21,18 +21,22 @@ boundaryField
     triangle
     {
         type            calculated;
+        value           $internalField;
     }
     inlet
     {
         type            calculated;
+        value           $internalField;
     }
     outlet
     {
         type            calculated;
+        value           $internalField;
     }
     walls
     {
         type            calculated;
+        value           $internalField;
     }
     cyc_half0
     {

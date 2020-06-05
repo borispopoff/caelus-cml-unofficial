@@ -107,9 +107,9 @@ public:
         CloudFunctionObject(const CloudFunctionObject<CloudType>& ppm);
 
         //- Construct and return a clone
-        virtual autoPtr<CloudFunctionObject<CloudType> > clone() const
+        virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
-            return autoPtr<CloudFunctionObject<CloudType> >
+            return autoPtr<CloudFunctionObject<CloudType>>
             (
                 new CloudFunctionObject<CloudType>(*this)
             );
@@ -121,7 +121,7 @@ public:
 
 
     //- Selector
-    static autoPtr<CloudFunctionObject<CloudType> > New
+    static autoPtr<CloudFunctionObject<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner,
@@ -171,7 +171,7 @@ public:
             const fileName& outputDir() const;
 
             //- Return the output time path
-            fileName outputTimeDir() const;
+            fileName writeTimeDir() const;
 };
 
 
@@ -202,7 +202,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<kinematicCloudType>, 0);            \
                                                                                \
     CloudFunctionObject<kinematicCloudType>::                                  \
-        adddictionaryConstructorToTable<SS<kinematicCloudType> >               \
+        adddictionaryConstructorToTable<SS<kinematicCloudType>>                \
             add##SS##CloudType##kinematicCloudType##ConstructorToTable_;
 
 
@@ -283,7 +283,7 @@ void CML::CloudFunctionObject<CloudType>::preEvolve()
 template<class CloudType>
 void CML::CloudFunctionObject<CloudType>::postEvolve()
 {
-    if (this->owner().time().outputTime())
+    if (this->owner().time().writeTime())
     {
         this->write();
     }
@@ -328,7 +328,7 @@ const CML::fileName& CML::CloudFunctionObject<CloudType>::outputDir() const
 
 
 template<class CloudType>
-CML::fileName CML::CloudFunctionObject<CloudType>::outputTimeDir() const
+CML::fileName CML::CloudFunctionObject<CloudType>::writeTimeDir() const
 {
     return outputDir_/this->owner().time().timeName();
 }
@@ -337,7 +337,7 @@ CML::fileName CML::CloudFunctionObject<CloudType>::outputTimeDir() const
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::CloudFunctionObject<CloudType> >
+CML::autoPtr<CML::CloudFunctionObject<CloudType>>
 CML::CloudFunctionObject<CloudType>::New
 (
     const dictionary& dict,
@@ -362,7 +362,7 @@ CML::CloudFunctionObject<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<CloudFunctionObject<CloudType> >
+    return autoPtr<CloudFunctionObject<CloudType>>
     (
         cstrIter()
         (

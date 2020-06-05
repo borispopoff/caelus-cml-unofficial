@@ -62,13 +62,13 @@ CML::topoSetSource::addToUsageTable CML::surfaceToCell::usage_
 CML::label CML::surfaceToCell::getNearest
 (
     const triSurfaceSearch& querySurf,
-    const label pointI,
+    const label pointi,
     const point& pt,
     const vector& span,
     Map<label>& cache
 )
 {
-    Map<label>::const_iterator iter = cache.find(pointI);
+    Map<label>::const_iterator iter = cache.find(pointi);
 
     if (iter != cache.end())
     {
@@ -83,7 +83,7 @@ CML::label CML::surfaceToCell::getNearest
         label triI = inter.index();
 
         // Store triangle on point
-        cache.insert(pointI, triI);
+        cache.insert(pointi, triI);
 
         return triI;
     }
@@ -98,7 +98,7 @@ bool CML::surfaceToCell::differingPointNormals
     const triSurfaceSearch& querySurf,
 
     const vector& span,         // Current search span
-    const label cellI,
+    const label celli,
     const label cellTriI,       // Nearest (to cell centre) surface triangle
 
     Map<label>& pointToNearest  // Cache for nearest triangle to point
@@ -110,22 +110,22 @@ bool CML::surfaceToCell::differingPointNormals
     const faceList& faces = mesh().faces();
     const pointField& points = mesh().points();
 
-    const labelList& cFaces = mesh().cells()[cellI];
+    const labelList& cFaces = mesh().cells()[celli];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        const face& f = faces[cFaces[cFaceI]];
+        const face& f = faces[cFaces[cFacei]];
 
         forAll(f, fp)
         {
-            label pointI = f[fp];
+            label pointi = f[fp];
 
             label pointTriI =
                 getNearest
                 (
                     querySurf,
-                    pointI,
-                    points[pointI],
+                    pointi,
+                    points[pointi],
                     span,
                     pointToNearest
                 );
@@ -167,8 +167,8 @@ void CML::surfaceToCell::combine(topoSet& set, const bool add) const
             const point& outsidePoint = outsidePoints_[outsideI];
 
             // Find cell point is in. Linear search.
-            label cellI = queryMesh.findCell(outsidePoint, -1, false);
-            if (returnReduce(cellI, maxOp<label>()) == -1)
+            label celli = queryMesh.findCell(outsidePoint, -1, false);
+            if (returnReduce(celli, maxOp<label>()) == -1)
             {
                 FatalErrorInFunction
                     << "outsidePoint " << outsidePoint
@@ -192,9 +192,9 @@ void CML::surfaceToCell::combine(topoSet& set, const bool add) const
             << timer.cpuTimeIncrement() << " s" << endl << endl;
 
 
-        forAll(cellType, cellI)
+        forAll(cellType, celli)
         {
-            label cType = cellType[cellI];
+            label cType = cellType[celli];
 
             if
             (
@@ -212,7 +212,7 @@ void CML::surfaceToCell::combine(topoSet& set, const bool add) const
                 )
             )
             {
-                addOrDelete(set, cellI, add);
+                addOrDelete(set, celli, add);
             }
         }
     }
@@ -237,15 +237,15 @@ void CML::surfaceToCell::combine(topoSet& set, const bool add) const
 
             // No need to test curvature. Insert near cells into set.
 
-            forAll(ctrs, cellI)
+            forAll(ctrs, celli)
             {
-                const point& c = ctrs[cellI];
+                const point& c = ctrs[celli];
 
                 pointIndexHit inter = querySurf().nearest(c, span);
 
                 if (inter.hit() && (mag(inter.hitPoint() - c) < nearDist_))
                 {
-                    addOrDelete(set, cellI, add);
+                    addOrDelete(set, celli, add);
                 }
             }
 
@@ -264,9 +264,9 @@ void CML::surfaceToCell::combine(topoSet& set, const bool add) const
             // Cache for nearest surface triangle for a point
             Map<label> pointToNearest(mesh_.nCells()/10);
 
-            forAll(ctrs, cellI)
+            forAll(ctrs, celli)
             {
-                const point& c = ctrs[cellI];
+                const point& c = ctrs[celli];
 
                 pointIndexHit inter = querySurf().nearest(c, span);
 
@@ -278,13 +278,13 @@ void CML::surfaceToCell::combine(topoSet& set, const bool add) const
                         (
                             querySurf(),
                             span,
-                            cellI,
+                            celli,
                             inter.index(),      // nearest surface triangle
                             pointToNearest
                         )
                     )
                     {
-                        addOrDelete(set, cellI, add);
+                        addOrDelete(set, celli, add);
                     }
                 }
             }

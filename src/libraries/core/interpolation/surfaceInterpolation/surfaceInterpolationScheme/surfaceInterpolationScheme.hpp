@@ -51,7 +51,7 @@ class fvMesh;
 template<class Type>
 class surfaceInterpolationScheme
 :
-    public refCount
+    public tmp<surfaceInterpolationScheme<Type>>::refCount
 {
     // Private data
 
@@ -114,14 +114,14 @@ public:
     // Selectors
 
         //- Return new tmp interpolation scheme
-        static tmp<surfaceInterpolationScheme<Type> > New
+        static tmp<surfaceInterpolationScheme<Type>> New
         (
             const fvMesh& mesh,
             Istream& schemeData
         );
 
         //- Return new tmp interpolation scheme
-        static tmp<surfaceInterpolationScheme<Type> > New
+        static tmp<surfaceInterpolationScheme<Type>> New
         (
             const fvMesh& mesh,
             const surfaceScalarField& faceFlux,
@@ -144,7 +144,7 @@ public:
 
         //- Return the face-interpolate of the given cell field
         //  with the given owner and neighbour weigting factors
-        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>&,
@@ -173,7 +173,7 @@ public:
 
         //- Return the face-interpolate of the given cell field
         //  with the given weighting factors
-        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>&,
@@ -194,10 +194,10 @@ public:
 
         //- Return the explicit correction to the face-interpolate
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const
         {
-            return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+            return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
             (
                 nullptr
             );
@@ -240,15 +240,15 @@ public:
 
         //- Return the face-interpolate of the given cell field
         //  with explicit correction
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         interpolate(const GeometricField<Type, fvPatchField, volMesh>&) const;
 
         //- Return the face-interpolate of the given tmp cell field
         //  with explicit correction
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         interpolate
         (
-            const tmp<GeometricField<Type, fvPatchField, volMesh> >&
+            const tmp<GeometricField<Type, fvPatchField, volMesh>>&
         ) const;
 };
 
@@ -282,10 +282,10 @@ surfaceInterpolationScheme<scalar>::dotInterpolate
                                                                                \
 defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                              \
                                                                                \
-surfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type> >         \
+surfaceInterpolationScheme<Type>::addMeshConstructorToTable<SS<Type>>         \
     add##SS##Type##MeshConstructorToTable_;                                    \
                                                                                \
-surfaceInterpolationScheme<Type>::addMeshFluxConstructorToTable<SS<Type> >     \
+surfaceInterpolationScheme<Type>::addMeshFluxConstructorToTable<SS<Type>>     \
     add##SS##Type##MeshFluxConstructorToTable_;
 
 #define makeSurfaceInterpolationScheme(SS)                                     \
@@ -313,7 +313,7 @@ namespace CML
 
 // Return weighting factors for scheme given by name in dictionary
 template<class Type>
-tmp<surfaceInterpolationScheme<Type> >
+tmp<surfaceInterpolationScheme<Type>>
 surfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,
@@ -360,7 +360,7 @@ surfaceInterpolationScheme<Type>::New
 
 // Return weighting factors for scheme given by name in dictionary
 template<class Type>
-tmp<surfaceInterpolationScheme<Type> >
+tmp<surfaceInterpolationScheme<Type>>
 surfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,
@@ -419,7 +419,7 @@ surfaceInterpolationScheme<Type>::~surfaceInterpolationScheme()
 //- Return the face-interpolate of the given cell field
 //  with the given owner and neighbour weighting factors
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 surfaceInterpolationScheme<Type>::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
@@ -441,15 +441,15 @@ surfaceInterpolationScheme<Type>::interpolate
     const surfaceScalarField& lambdas = tlambdas();
     const surfaceScalarField& ys = tys();
 
-    const Field<Type>& vfi = vf.internalField();
-    const scalarField& lambda = lambdas.internalField();
-    const scalarField& y = ys.internalField();
+    const Field<Type>& vfi = vf;
+    const scalarField& lambda = lambdas;
+    const scalarField& y = ys;
 
     const fvMesh& mesh = vf.mesh();
     const labelUList& P = mesh.owner();
     const labelUList& N = mesh.neighbour();
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsf
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -463,9 +463,9 @@ surfaceInterpolationScheme<Type>::interpolate
             vf.dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
-    Field<Type>& sfi = sf.internalField();
+    Field<Type>& sfi = sf.primitiveFieldRef();
 
     for (label fi=0; fi<P.size(); fi++)
     {
@@ -475,7 +475,7 @@ surfaceInterpolationScheme<Type>::interpolate
 
     // Interpolate across coupled patches using given lambdas and ys
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& sfbf = sf.boundaryField();
+        Boundary& sfbf = sf.boundaryFieldRef();
 
     forAll(lambdas.boundaryField(), pi)
     {
@@ -537,14 +537,14 @@ surfaceInterpolationScheme<Type>::dotInterpolate
 
     const surfaceScalarField& lambdas = tlambdas();
 
-    const Field<Type>& vfi = vf.internalField();
-    const scalarField& lambda = lambdas.internalField();
+    const Field<Type>& vfi = vf;
+    const scalarField& lambda = lambdas;
 
     const fvMesh& mesh = vf.mesh();
     const labelUList& P = mesh.owner();
     const labelUList& N = mesh.neighbour();
 
-    tmp<GeometricField<RetType, fvsPatchField, surfaceMesh> > tsf
+    tmp<GeometricField<RetType, fvsPatchField, surfaceMesh>> tsf
     (
         new GeometricField<RetType, fvsPatchField, surfaceMesh>
         (
@@ -558,11 +558,11 @@ surfaceInterpolationScheme<Type>::dotInterpolate
             Sf.dimensions()*vf.dimensions()
         )
     );
-    GeometricField<RetType, fvsPatchField, surfaceMesh>& sf = tsf();
+    GeometricField<RetType, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
-    Field<RetType>& sfi = sf.internalField();
+    Field<RetType>& sfi = sf.primitiveFieldRef();
 
-    const typename SFType::InternalField& Sfi = Sf.internalField();
+    const typename SFType::Internal& Sfi = Sf();
 
     for (label fi=0; fi<P.size(); fi++)
     {
@@ -572,12 +572,12 @@ surfaceInterpolationScheme<Type>::dotInterpolate
     // Interpolate across coupled patches using given lambdas
 
     typename GeometricField<RetType, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& sfbf = sf.boundaryField();
+        Boundary& sfbf = sf.boundaryFieldRef();
 
     forAll(lambdas.boundaryField(), pi)
     {
         const fvsPatchScalarField& pLambda = lambdas.boundaryField()[pi];
-        const typename SFType::PatchFieldType& pSf = Sf.boundaryField()[pi];
+        const typename SFType::Patch& pSf = Sf.boundaryField()[pi];
         fvsPatchField<RetType>& psf = sfbf[pi];
 
         if (vf.boundaryField()[pi].coupled())
@@ -604,7 +604,7 @@ surfaceInterpolationScheme<Type>::dotInterpolate
 //- Return the face-interpolate of the given cell field
 //  with the given weigting factors
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 surfaceInterpolationScheme<Type>::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf,
@@ -654,7 +654,7 @@ surfaceInterpolationScheme<Type>::dotInterpolate
 
     if (corrected())
     {
-        tsf() += Sf & correction(vf);
+        tsf.ref() += Sf & correction(vf);
     }
 
     return tsf;
@@ -694,7 +694,7 @@ surfaceInterpolationScheme<Type>::dotInterpolate
 //- Return the face-interpolate of the given cell field
 //  with explicit correction
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 surfaceInterpolationScheme<Type>::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -710,12 +710,12 @@ surfaceInterpolationScheme<Type>::interpolate
             << endl;
     }
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsf
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf
         = interpolate(vf, weights(vf));
 
     if (corrected())
     {
-        tsf() += correction(vf);
+        tsf.ref() += correction(vf);
     }
 
     return tsf;
@@ -725,13 +725,13 @@ surfaceInterpolationScheme<Type>::interpolate
 //- Return the face-interpolate of the given cell field
 //  with explicit correction
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 surfaceInterpolationScheme<Type>::interpolate
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tvf
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvf
 ) const
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tinterpVf
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tinterpVf
         = interpolate(tvf());
     tvf.clear();
     return tinterpVf;

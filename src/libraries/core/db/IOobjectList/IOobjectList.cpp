@@ -58,7 +58,7 @@ CML::IOobjectList::IOobjectList
 
     // Create a list of file names in this directory
     fileNameList ObjectNames =
-        readDir(db.path(newInstance, db.dbDir()/local), fileName::FILE);
+        readDir(db.path(newInstance, db.dbDir()/local), fileType::file);
 
     forAll(ObjectNames, i)
     {

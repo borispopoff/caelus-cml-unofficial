@@ -104,7 +104,7 @@ public:
         inline Tensor(const SymmTensor<Cmpt>&);
 
         //- Construct given triad
-        inline Tensor(const Vector<Vector<Cmpt> >&);
+        inline Tensor(const Vector<Vector<Cmpt>>&);
 
         //- Construct given the three vector components
         inline Tensor
@@ -195,7 +195,7 @@ public:
         inline void operator=(const SymmTensor<Cmpt>&);
 
         //- Assign to a triad
-        inline void operator=(const Vector<Vector<Cmpt> >&);
+        inline void operator=(const Vector<Vector<Cmpt>>&);
 };
 
 
@@ -209,7 +209,7 @@ public:
 
 
 template<class Cmpt>
-class typeOfTranspose<Cmpt, Tensor<Cmpt> >
+class typeOfTranspose<Cmpt, Tensor<Cmpt>>
 {
 public:
 

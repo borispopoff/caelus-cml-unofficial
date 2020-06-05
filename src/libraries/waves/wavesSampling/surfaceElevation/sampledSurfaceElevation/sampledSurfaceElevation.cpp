@@ -127,7 +127,7 @@ void CML::sampledSurfaceElevation::combineSampledSets
         const sampledSet& samplePts = sampledSets[seti];
 
         // Collect data from all processors
-        List<List<point> > gatheredPts(Pstream::nProcs());
+        List<List<point>> gatheredPts(Pstream::nProcs());
         gatheredPts[Pstream::myProcNo()] = samplePts;
         Pstream::gatherList(gatheredPts);
 
@@ -142,9 +142,9 @@ void CML::sampledSurfaceElevation::combineSampledSets
         // Combine processor lists into one big list.
         List<point> allPts
         (
-            ListListOps::combine<List<point> >
+            ListListOps::combine<List<point>>
             (
-                gatheredPts, accessOp<List<point> >()
+                gatheredPts, accessOp<List<point>>()
             )
         );
         labelList allSegments
@@ -275,7 +275,7 @@ void CML::sampledSurfaceElevation::sampleIntegrateAndWrite
         }
 
         // Storage for interpolated values
-        PtrList<volFieldSampler<scalar> > sampledFields(fields.size());
+        PtrList<volFieldSampler<scalar>> sampledFields(fields.size());
 
         forAll (fields, fieldi)
         {
@@ -334,7 +334,7 @@ void CML::sampledSurfaceElevation::sampleIntegrateAndWrite
                         (
                             interpolationScheme_,
                             mesh_.lookupObject
-                            <GeometricField<scalar, fvPatchField, volMesh> >
+                            <GeometricField<scalar, fvPatchField, volMesh>>
                             (fields[fieldi]),
                             *this
                         )
@@ -348,7 +348,7 @@ void CML::sampledSurfaceElevation::sampleIntegrateAndWrite
                         new volFieldSampler<scalar>
                         (
                             mesh_.lookupObject
-                            <GeometricField<scalar, fvPatchField, volMesh> >
+                            <GeometricField<scalar, fvPatchField, volMesh>>
                             (fields[fieldi]),
                             *this
                         )
@@ -359,7 +359,7 @@ void CML::sampledSurfaceElevation::sampleIntegrateAndWrite
 
         // Combine sampled fields from processors.
         // Note: only master results are valid
-        PtrList<volFieldSampler<scalar> > masterFields(sampledFields.size());
+        PtrList<volFieldSampler<scalar>> masterFields(sampledFields.size());
         combineSampledValues(sampledFields, indexSets_, masterFields);
 
         result.setSize(masterSampledSets_.size(), 0.0);

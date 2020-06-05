@@ -227,7 +227,7 @@ Author
     Info << "Numeric flux scheme " << numericFluxScheme << " selected" << endl;
 
     RiemannSolver* const& rs = 
-        mesh.lookupObject<dbRegistrator<RiemannSolver*> >
+        mesh.lookupObject<dbRegistrator<RiemannSolver*>>
         (
             numericFluxScheme
         )(); 

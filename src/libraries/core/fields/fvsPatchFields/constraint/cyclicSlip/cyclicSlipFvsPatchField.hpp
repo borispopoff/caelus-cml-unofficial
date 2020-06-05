@@ -87,9 +87,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type> > clone() const
+        virtual tmp<fvsPatchField<Type>> clone() const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new cyclicSlipFvsPatchField<Type>(*this)
             );
@@ -103,12 +103,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type> > clone
+        virtual tmp<fvsPatchField<Type>> clone
         (
             const DimensionedField<Type, surfaceMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type> >
+            return tmp<fvsPatchField<Type>>
             (
                 new cyclicSlipFvsPatchField<Type>(*this, iF)
             );
@@ -116,19 +116,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
+CML::cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -139,7 +133,7 @@ cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 
 
 template<class Type>
-cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
+CML::cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 (
     const cyclicSlipFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -152,7 +146,7 @@ cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 
 
 template<class Type>
-cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
+CML::cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -164,7 +158,7 @@ cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 
 
 template<class Type>
-cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
+CML::cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 (
     const cyclicSlipFvsPatchField<Type>& ptf
 )
@@ -174,7 +168,7 @@ cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 
 
 template<class Type>
-cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
+CML::cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 (
     const cyclicSlipFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -184,13 +178,4 @@ cyclicSlipFvsPatchField<Type>::cyclicSlipFvsPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

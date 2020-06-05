@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -132,14 +132,6 @@ class OSHA1stream
     public OSstream
 {
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        OSHA1stream(const OSHA1stream&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const OSHA1stream&);
-
 public:
 
     // Constructors
@@ -160,6 +152,9 @@ public:
             )
         {}
 
+        //- Disallow default bitwise copy construct
+        OSHA1stream(const OSHA1stream&) = delete;
+
 
     //- Destructor
     ~OSHA1stream()
@@ -169,8 +164,6 @@ public:
 
 
     // Member functions
-
-    // Access
 
         //- Full access to the sha1
         CML::SHA1& sha1()
@@ -184,14 +177,17 @@ public:
             return sha1().digest();
         }
 
-    // Edit
-
         //- Clear the SHA1 calculation
         void rewind()
         {
             sha1().clear();
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const OSHA1stream&) = delete;
 };
 
 

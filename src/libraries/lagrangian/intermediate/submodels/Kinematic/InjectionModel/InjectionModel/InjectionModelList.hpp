@@ -43,7 +43,7 @@ namespace CML
 template<class CloudType>
 class InjectionModelList
 :
-    public PtrList<InjectionModel<CloudType> >
+    public PtrList<InjectionModel<CloudType>>
 {
 public:
 
@@ -59,9 +59,9 @@ public:
         InjectionModelList(const InjectionModelList<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<InjectionModelList<CloudType> > clone() const
+        virtual autoPtr<InjectionModelList<CloudType>> clone() const
         {
-            return autoPtr<InjectionModelList<CloudType> >
+            return autoPtr<InjectionModelList<CloudType>>
             (
                 new InjectionModelList<CloudType>(*this)
             );
@@ -134,7 +134,7 @@ public:
 template<class CloudType>
 CML::InjectionModelList<CloudType>::InjectionModelList(CloudType& owner)
 :
-    PtrList<InjectionModel<CloudType> >()
+    PtrList<InjectionModel<CloudType>>()
 {}
 
 
@@ -145,7 +145,7 @@ CML::InjectionModelList<CloudType>::InjectionModelList
     CloudType& owner
 )
 :
-    PtrList<InjectionModel<CloudType> >()
+    PtrList<InjectionModel<CloudType>>()
 {
     wordList modelNames(dict.toc());
 
@@ -200,7 +200,7 @@ CML::InjectionModelList<CloudType>::InjectionModelList
     const InjectionModelList<CloudType>& iml
 )
 :
-    PtrList<InjectionModel<CloudType> >(iml)
+    PtrList<InjectionModel<CloudType>>(iml)
 {}
 
 

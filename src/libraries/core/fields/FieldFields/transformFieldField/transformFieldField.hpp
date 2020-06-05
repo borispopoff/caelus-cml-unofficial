@@ -49,31 +49,31 @@ void transform
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
     const FieldField<Field, tensor>&,
     const FieldField<Field, Type>&
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
     const FieldField<Field, tensor>&,
-    const tmp<FieldField<Field, Type> >&
+    const tmp<FieldField<Field, Type>>&
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
-    const tmp<FieldField<Field, tensor> >&,
+    const tmp<FieldField<Field, tensor>>&,
     const FieldField<Field, Type>&
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
-    const tmp<FieldField<Field, tensor> >&,
-    const tmp<FieldField<Field, Type> >&
+    const tmp<FieldField<Field, tensor>>&,
+    const tmp<FieldField<Field, Type>>&
 );
 
 
@@ -86,17 +86,17 @@ void transform
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
     const tensor&,
     const FieldField<Field, Type>&
 );
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
     const tensor&,
-    const tmp<FieldField<Field, Type> >&
+    const tmp<FieldField<Field, Type>>&
 );
 
 
@@ -127,13 +127,13 @@ void transform
 
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
     const FieldField<Field, tensor>& trf,
     const FieldField<Field, Type>& tf
 )
 {
-    tmp<FieldField<Field, Type> > tranf
+    tmp<FieldField<Field, Type>> tranf
     (
         FieldField<Field, Type>::NewCalculatedType(tf)
     );
@@ -143,26 +143,26 @@ tmp<FieldField<Field, Type> > transform
 
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
     const FieldField<Field, tensor>& trf,
-    const tmp<FieldField<Field, Type> >& ttf
+    const tmp<FieldField<Field, Type>>& ttf
 )
 {
-    tmp<FieldField<Field, Type> > tranf(ttf.ptr());
+    tmp<FieldField<Field, Type>> tranf(ttf.ptr());
     transform(tranf(), trf, tranf());
     return tranf;
 }
 
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
-    const tmp<FieldField<Field, tensor> >& ttrf,
+    const tmp<FieldField<Field, tensor>>& ttrf,
     const FieldField<Field, Type>& tf
 )
 {
-    tmp<FieldField<Field, Type> > tranf
+    tmp<FieldField<Field, Type>> tranf
     (
         FieldField<Field, Type>::NewCalculatedType(tf)
     );
@@ -173,13 +173,13 @@ tmp<FieldField<Field, Type> > transform
 
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
-    const tmp<FieldField<Field, tensor> >& ttrf,
-    const tmp<FieldField<Field, Type> >& ttf
+    const tmp<FieldField<Field, tensor>>& ttrf,
+    const tmp<FieldField<Field, Type>>& ttf
 )
 {
-    tmp<FieldField<Field, Type> > tranf(ttf.ptr());
+    tmp<FieldField<Field, Type>> tranf(ttf.ptr());
     transform(tranf(), ttrf(), tranf());
     ttrf.clear();
     return tranf;
@@ -202,13 +202,13 @@ void transform
 
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
     const tensor& t,
     const FieldField<Field, Type>& tf
 )
 {
-    tmp<FieldField<Field, Type> > tranf
+    tmp<FieldField<Field, Type>> tranf
     (
         FieldField<Field, Type>::NewCalculatedType(tf)
     );
@@ -218,13 +218,13 @@ tmp<FieldField<Field, Type> > transform
 
 
 template<template<class> class Field, class Type>
-tmp<FieldField<Field, Type> > transform
+tmp<FieldField<Field, Type>> transform
 (
     const tensor& t,
-    const tmp<FieldField<Field, Type> >& ttf
+    const tmp<FieldField<Field, Type>>& ttf
 )
 {
-    tmp<FieldField<Field, Type> > tranf(ttf.ptr());
+    tmp<FieldField<Field, Type>> tranf(ttf.ptr());
     transform(tranf(), t, tranf());
     return tranf;
 }

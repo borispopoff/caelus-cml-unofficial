@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -51,21 +51,22 @@ class PaSR
 :
     public laminar<ReactionThermo>
 {
+    // Private data
 
-    //- Mixing constant
-    scalar Cmix_;
+        //- Mixing constant
+        scalar Cmix_;
 
-    //- Mixing parameter
-    volScalarField kappa_;
+        //- Mixing parameter
+        volScalarField kappa_;
 
 
     // Private Member Functions
 
-    //- Disallow copy construct
-    PaSR(const PaSR&);
+        //- Disallow copy construct
+        PaSR(const PaSR&);
 
-    //- Disallow default bitwise assignment
-    void operator=(const PaSR&);
+        //- Disallow default bitwise assignment
+        void operator=(const PaSR&) = delete;
 
 
 public:
@@ -74,14 +75,16 @@ public:
     TypeName("PaSR");
 
 
-    //- Construct from components
-    PaSR
-    (
-        const word& modelType,
-        ReactionThermo& thermo,
-        const compressible::turbulenceModel& turb,
-        const word& combustionProperties
-    );
+    // Constructors
+
+        //- Construct from components
+        PaSR
+        (
+            const word& modelType,
+            ReactionThermo& thermo,
+            const compressible::turbulenceModel& turb,
+            const word& combustionProperties
+        );
 
 
     //- Destructor
@@ -91,18 +94,17 @@ public:
 
     // Member Functions
 
-    //- Correct combustion rate
-    virtual void correct();
+        //- Correct combustion rate
+        virtual void correct();
 
-    //- Fuel consumption rate matrix.
-    virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
+        //- Fuel consumption rate matrix.
+        virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
 
-    //- Heat release rate [kg/m/s3]
-    virtual tmp<volScalarField> Qdot() const;
+        //- Heat release rate [kg/m/s3]
+        virtual tmp<volScalarField> Qdot() const;
 
-    //- Update properties from given dictionary
-    virtual bool read();
-
+        //- Update properties from given dictionary
+        virtual bool read();
 };
 
 

@@ -203,16 +203,16 @@ void writeFacetsToVTK
 {
     labelList connectivity(facets.size());
     
-    forAll(facets, faceI)
+    forAll(facets, facei)
     {
-        connectivity[faceI] = 3*(faceI+1);
+        connectivity[facei] = 3*(facei+1);
     }
     
     labelList regionData(facets.size());
     
-    forAll(facets, faceI)
+    forAll(facets, facei)
     {
-        regionData[faceI] =  facets[faceI].region();
+        regionData[facei] =  facets[facei].region();
     }
     
     xmlTag xmlRoot("VTKFile");
@@ -279,9 +279,9 @@ void writeFacetsToVTK
     
     forAll(addr, addrI)
     {
-        label faceI = addr[addrI];
+        label facei = addr[addrI];
         
-        const labelledTri& facet = facets[faceI];
+        const labelledTri& facet = facets[facei];
         const FixedList<label, 3>& pointIds = facet;
         FixedList<label, 3> newPointIds;
         
@@ -392,11 +392,11 @@ int main(int argc, char *argv[])
     
     // Write patches
     // Create patch addressing
-    List<DynamicList<label> > patchAddr(patches.size());
+    List<DynamicList<label>> patchAddr(patches.size());
     
-    forAll(facets, faceI)
+    forAll(facets, facei)
     {
-        patchAddr[facets[faceI].region()].append(faceI);
+        patchAddr[facets[facei].region()].append(facei);
     }
     
     {

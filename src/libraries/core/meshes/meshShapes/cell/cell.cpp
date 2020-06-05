@@ -37,9 +37,9 @@ CML::labelList CML::cell::labels(const faceUList& f) const
 
     const labelList& faces = *this;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        maxVert += f[faces[faceI]].size();
+        maxVert += f[faces[facei]].size();
     }
 
     // set the fill-in list
@@ -48,9 +48,9 @@ CML::labelList CML::cell::labels(const faceUList& f) const
     // in the first face there is no duplicates
     const labelList& first = f[faces[0]];
 
-    forAll(first, pointI)
+    forAll(first, pointi)
     {
-        p[pointI] = first[pointI];
+        p[pointi] = first[pointi];
     }
 
     // re-use maxVert to count the real vertices
@@ -59,17 +59,17 @@ CML::labelList CML::cell::labels(const faceUList& f) const
     // go through the rest of the faces. For each vertex, check if the point is
     // already inserted (up to maxVert, which now carries the number of real
     // points. If not, add it at the end of the list.
-    for (label faceI = 1; faceI < faces.size(); faceI++)
+    for (label facei = 1; facei < faces.size(); facei++)
     {
-        const labelList& curFace = f[faces[faceI]];
+        const labelList& curFace = f[faces[facei]];
 
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
-            const label curPoint = curFace[pointI];
+            const label curPoint = curFace[pointi];
 
             bool found = false;
 
-            for (register label checkI = 0; checkI < maxVert; checkI++)
+            for (label checkI = 0; checkI < maxVert; checkI++)
             {
                 if (curPoint == p[checkI])
                 {
@@ -122,17 +122,17 @@ CML::edgeList CML::cell::edges(const faceUList& f) const
     // create a list of edges
     label maxNoEdges = 0;
 
-    forAll(curFaces, faceI)
+    forAll(curFaces, facei)
     {
-        maxNoEdges += f[curFaces[faceI]].nEdges();
+        maxNoEdges += f[curFaces[facei]].nEdges();
     }
 
     edgeList allEdges(maxNoEdges);
     label nEdges = 0;
 
-    forAll(curFaces, faceI)
+    forAll(curFaces, facei)
     {
-        const edgeList curFaceEdges = f[curFaces[faceI]].edges();
+        const edgeList curFaceEdges = f[curFaces[facei]].edges();
 
         forAll(curFaceEdges, faceEdgeI)
         {
@@ -188,15 +188,15 @@ CML::point CML::cell::centre
 
     // first calculate the approximate cell centre as the average of all
     // face centres
-    vector cEst = vector::zero;
+    vector cEst = Zero;
     scalar sumArea = 0;
 
     const labelList& faces = *this;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        scalar a = f[faces[faceI]].mag(p);
-        cEst += f[faces[faceI]].centre(p)*a;
+        scalar a = f[faces[facei]].mag(p);
+        cEst += f[faces[facei]].centre(p)*a;
         sumArea += a;
     }
 
@@ -204,17 +204,17 @@ CML::point CML::cell::centre
 
     // Calculate the centre by breaking the cell into pyramids and
     // volume-weighted averaging their centres
-    vector sumVc = vector::zero;
+    vector sumVc = Zero;
 
     scalar sumV = 0;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
         // calculate pyramid volume. If it is greater than zero, OK.
         // If not, the pyramid is inside-out. Create a face with the opposite
         // order and recalculate pyramid centre!
-        scalar pyrVol = pyramidPointFaceRef(f[faces[faceI]], cEst).mag(p);
-        vector pyrCentre = pyramidPointFaceRef(f[faces[faceI]], cEst).centre(p);
+        scalar pyrVol = pyramidPointFaceRef(f[faces[facei]], cEst).mag(p);
+        vector pyrCentre = pyramidPointFaceRef(f[faces[facei]], cEst).centre(p);
 
         // if pyramid inside-out because face points inwards invert
         // N.B. pyramid remains unchanged
@@ -247,14 +247,14 @@ CML::scalar CML::cell::mag
 
     // first calculate the approximate cell centre as the average of all
     // face centres
-    vector cEst = vector::zero;
+    vector cEst = Zero;
     scalar nCellFaces = 0;
 
     const labelList& faces = *this;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        cEst += f[faces[faceI]].centre(p);
+        cEst += f[faces[facei]].centre(p);
         nCellFaces += 1;
     }
 
@@ -263,9 +263,9 @@ CML::scalar CML::cell::mag
     // Calculate the magnitude by summing the mags of the pyramids
     scalar v = 0;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        v += ::CML::mag(pyramidPointFaceRef(f[faces[faceI]], cEst).mag(p));
+        v += ::CML::mag(pyramidPointFaceRef(f[faces[facei]], cEst).mag(p));
     }
 
     return v;

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,10 +66,10 @@ class rawTopoChangerFvMesh
         void zeroUnmappedValues(const PackedBoolList&) const;
 
         //- Disallow default bitwise copy construct
-        rawTopoChangerFvMesh(const rawTopoChangerFvMesh&);
+        rawTopoChangerFvMesh(const rawTopoChangerFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const rawTopoChangerFvMesh&);
+        void operator=(const rawTopoChangerFvMesh&) = delete;
 
 public:
 
@@ -110,11 +110,11 @@ void CML::rawTopoChangerFvMesh::setUnmappedValues
 {
     //Pout<< "Checking field " << fld.name() << endl;
 
-    forAll(fld.boundaryField(), patchI)
+    forAll(fld.boundaryField(), patchi)
     {
         PatchField<Type>& fvp = const_cast<PatchField<Type>&>
         (
-            fld.boundaryField()[patchI]
+            fld.boundaryField()[patchi]
         );
 
         const label start = fvp.patch().start();
@@ -125,8 +125,8 @@ void CML::rawTopoChangerFvMesh::setUnmappedValues
                 //Pout<< "** Resetting unassigned value on patch "
                 //    << fvp.patch().name()
                 //    << " localface:" << i
-                //    << " to:" << baseFld.boundaryField()[patchI][i] << endl;
-                fvp[i] = baseFld.boundaryField()[patchI][i];
+                //    << " to:" << baseFld.boundaryField()[patchi][i] << endl;
+                fvp[i] = baseFld.boundaryField()[patchi][i];
             }
         }
     }
@@ -147,10 +147,7 @@ void CML::rawTopoChangerFvMesh::zeroUnmappedValues
     {
         //Pout<< "Checking field " << fldNames[i] << endl;
 
-        FieldType& fld = const_cast<FieldType&>
-        (
-            lookupObject<FieldType>(fldNames[i])
-        );
+        FieldType& fld = lookupObjectRef<FieldType>(fldNames[i]);
 
         setUnmappedValues
         (
@@ -168,7 +165,7 @@ void CML::rawTopoChangerFvMesh::zeroUnmappedValues
                     false
                 ),
                 *this,
-                dimensioned<Type>("0", fld.dimensions(), pTraits<Type>::zero)
+                dimensioned<Type>("0", fld.dimensions(), Zero)
             )
         );
     }

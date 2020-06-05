@@ -186,24 +186,24 @@ scalar getEdgeStats(const primitiveMesh& mesh, const direction excludeCmpt)
 // Adds empty patch if not yet there. Returns patchID.
 label addPatch(polyMesh& mesh, const word& patchName)
 {
-    label patchI = mesh.boundaryMesh().findPatchID(patchName);
+    label patchi = mesh.boundaryMesh().findPatchID(patchName);
 
-    if (patchI == -1)
+    if (patchi == -1)
     {
         const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
         List<polyPatch*> newPatches(patches.size() + 1);
 
         // Add empty patch as 0th entry (Note: only since subsetMesh wants this)
-        patchI = 0;
+        patchi = 0;
 
-        newPatches[patchI] =
+        newPatches[patchi] =
             new emptyPolyPatch
             (
                 CML::word(patchName),
                 0,
                 mesh.nInternalFaces(),
-                patchI,
+                patchi,
                 patches,
                 emptyPolyPatch::typeName
             );
@@ -225,15 +225,15 @@ label addPatch(polyMesh& mesh, const word& patchName)
         mesh.removeBoundary();
         mesh.addPatches(newPatches);
 
-        Info<< "Created patch oldInternalFaces at " << patchI << endl;
+        Info<< "Created patch oldInternalFaces at " << patchi << endl;
     }
     else
     {
-        Info<< "Reusing patch oldInternalFaces at " << patchI << endl;
+        Info<< "Reusing patch oldInternalFaces at " << patchi << endl;
     }
 
 
-    return patchI;
+    return patchi;
 }
 
 
@@ -291,20 +291,20 @@ void addCutNeighbours
 
     forAllConstIter(labelHashSet, cutCells, iter)
     {
-        const label cellI = iter.key();
-        const labelList& cFaces = mesh.cells()[cellI];
+        const label celli = iter.key();
+        const labelList& cFaces = mesh.cells()[celli];
 
         forAll(cFaces, i)
         {
-            const label faceI = cFaces[i];
+            const label facei = cFaces[i];
 
-            if (mesh.isInternalFace(faceI))
+            if (mesh.isInternalFace(facei))
             {
-                label nbr = mesh.faceOwner()[faceI];
+                label nbr = mesh.faceOwner()[facei];
 
-                if (nbr == cellI)
+                if (nbr == celli)
                 {
-                    nbr = mesh.faceNeighbour()[faceI];
+                    nbr = mesh.faceNeighbour()[facei];
                 }
 
                 if (selectInside && inside.found(nbr))
@@ -343,11 +343,11 @@ bool limitRefinementLevel
 )
 {
     // Do simple check on validity of refinement level.
-    forAll(refLevel, cellI)
+    forAll(refLevel, celli)
     {
-        if (!excludeCells.found(cellI))
+        if (!excludeCells.found(celli))
         {
-            const labelList& cCells = mesh.cellCells()[cellI];
+            const labelList& cCells = mesh.cellCells()[celli];
 
             forAll(cCells, i)
             {
@@ -355,13 +355,13 @@ bool limitRefinementLevel
 
                 if (!excludeCells.found(nbr))
                 {
-                    if (refLevel[cellI] - refLevel[nbr] >= limitDiff)
+                    if (refLevel[celli] - refLevel[nbr] >= limitDiff)
                     {
                         FatalErrorInFunction
                             << "Level difference between neighbouring cells "
-                            << cellI << " and " << nbr
+                            << celli << " and " << nbr
                             << " greater than or equal to " << limitDiff << endl
-                            << "refLevels:" << refLevel[cellI] << ' '
+                            << "refLevels:" << refLevel[celli] << ' '
                             <<  refLevel[nbr] << abort(FatalError);
                     }
                 }
@@ -374,9 +374,9 @@ bool limitRefinementLevel
 
     forAllConstIter(labelHashSet, cutCells, iter)
     {
-        // cellI will be refined.
-        const label cellI = iter.key();
-        const labelList& cCells = mesh.cellCells()[cellI];
+        // celli will be refined.
+        const label celli = iter.key();
+        const labelList& cCells = mesh.cellCells()[celli];
 
         forAll(cCells, i)
         {
@@ -384,7 +384,7 @@ bool limitRefinementLevel
 
             if (!excludeCells.found(nbr) && !cutCells.found(nbr))
             {
-                if (refLevel[cellI] + 1 - refLevel[nbr] >= limitDiff)
+                if (refLevel[celli] + 1 - refLevel[nbr] >= limitDiff)
                 {
                     addCutCells.insert(nbr);
                 }
@@ -443,22 +443,22 @@ void doRefinement
 
     refLevel.setSize(mesh.nCells());
 
-    for (label cellI = oldCells; cellI < mesh.nCells(); cellI++)
+    for (label celli = oldCells; celli < mesh.nCells(); celli++)
     {
-        refLevel[cellI] = 0;
+        refLevel[celli] = 0;
     }
 
     const labelListList& addedCells = multiRef.addedCells();
 
-    forAll(addedCells, oldCellI)
+    forAll(addedCells, oldCelli)
     {
-        const labelList& added = addedCells[oldCellI];
+        const labelList& added = addedCells[oldCelli];
 
         if (added.size())
         {
             // Give all cells resulting from split the refinement level
             // of the master.
-            label masterLevel = ++refLevel[oldCellI];
+            label masterLevel = ++refLevel[oldCelli];
 
             forAll(added, i)
             {
@@ -474,7 +474,7 @@ void subsetMesh
 (
     polyMesh& mesh,
     const label writeMesh,
-    const label patchI,                 // patchID for exposed faces
+    const label patchi,                 // patchID for exposed faces
     const labelHashSet& cellsToRemove,
     cellSet& cutCells,
     labelIOList& refLevel
@@ -495,7 +495,7 @@ void subsetMesh
     (
         cellLabels,
         exposedFaces,
-        labelList(exposedFaces.size(), patchI),
+        labelList(exposedFaces.size(), patchi),
         meshMod
     );
 
@@ -622,7 +622,7 @@ int main(int argc, char *argv[])
 #   include "createPolyMesh.hpp"
 
     // If necessary add oldInternalFaces patch
-    label newPatchI = addPatch(mesh, "oldInternalFaces");
+    label newPatchi = addPatch(mesh, "oldInternalFaces");
 
 
     //
@@ -712,7 +712,7 @@ int main(int argc, char *argv[])
     triSurfaceSearch querySurf(surf);
 
     // Search engine on mesh. No face decomposition since mesh unwarped.
-    meshSearch queryMesh(mesh, polyMesh::FACEPLANES);
+    meshSearch queryMesh(mesh, polyMesh::FACE_PLANES);
 
     // Check all 'outside' points
     forAll(outsidePts, outsideI)
@@ -847,7 +847,7 @@ int main(int argc, char *argv[])
         {
             // Subset mesh to remove inside cells altogether. Updates cutCells,
             // refLevel.
-            subsetMesh(mesh, writeMesh, newPatchI, inside, cutCells, refLevel);
+            subsetMesh(mesh, writeMesh, newPatchi, inside, cutCells, refLevel);
         }
 
 

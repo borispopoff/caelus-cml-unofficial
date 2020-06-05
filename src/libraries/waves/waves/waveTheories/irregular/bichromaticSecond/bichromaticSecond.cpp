@@ -322,7 +322,7 @@ vector bichromaticSecond::U
     scalar thetan = argn(x, time);
     scalar thetam = argm(x, time);
 
-    vector res = vector::zero;
+    vector res = Zero;
 
     // HORIZONTAL VELOCITY CONTRIBUTIONS
     // The horizontal velocity is thought of being derived from the velocity

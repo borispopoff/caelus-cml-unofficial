@@ -71,10 +71,10 @@ void polyMeshGenModifier::addProcessorFaces
 
     if( endProcFaces != nFaces )
     {
-        for(label faceI=nFaces-1;faceI>=endProcFaces;--faceI)
+        for(label facei=nFaces-1;facei>=endProcFaces;--facei)
         {
-            newFaceLabel[faceI] = faceI+facePatches.size();
-            faces[faceI+facePatches.size()].transfer(faces[faceI]);
+            newFaceLabel[facei] = facei+facePatches.size();
+            faces[facei+facePatches.size()].transfer(faces[facei]);
         }
     }
 
@@ -87,10 +87,10 @@ void polyMeshGenModifier::addProcessorFaces
 
         if( shift != 0 )
         {
-            for(label faceI=end-1;faceI>=start;--faceI)
+            for(label facei=end-1;facei>=start;--facei)
             {
-                faces[faceI+shift].transfer(faces[faceI]);
-                newFaceLabel[faceI] = faceI+shift;
+                faces[facei+shift].transfer(faces[facei]);
+                newFaceLabel[facei] = facei+shift;
             }
         }
 
@@ -116,9 +116,9 @@ void polyMeshGenModifier::addProcessorFaces
     # ifdef USE_OMP
     # pragma omp parallel for schedule(guided)
     # endif
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        cell& c = cells[cellI];
+        cell& c = cells[celli];
 
         forAll(c, fI)
             if( newFaceLabel[c[fI]] != -1 )

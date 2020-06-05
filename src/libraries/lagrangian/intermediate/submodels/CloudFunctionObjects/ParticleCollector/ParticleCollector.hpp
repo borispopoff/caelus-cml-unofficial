@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012-2018 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -143,7 +143,7 @@ private:
         // Polygon collector
 
             //- Triangulation of faces
-            List<List<face> > faceTris_;
+            List<List<face>> faceTris_;
 
         // Concentric circles collector
 
@@ -208,7 +208,7 @@ private:
         );
 
         //- Initialise polygon collectors
-        void initPolygons(const List<Field<point> >& polygons);
+        void initPolygons(const List<Field<point>>& polygons);
 
         //- Initialise concentric circle collectors
         void initConcentricCircles();
@@ -256,9 +256,9 @@ public:
         ParticleCollector(const ParticleCollector<CloudType>& pc);
 
         //- Construct and return a clone
-        virtual autoPtr<CloudFunctionObject<CloudType> > clone() const
+        virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
-            return autoPtr<CloudFunctionObject<CloudType> >
+            return autoPtr<CloudFunctionObject<CloudType>>
             (
                 new ParticleCollector<CloudType>(*this)
             );
@@ -334,12 +334,12 @@ void CML::ParticleCollector<CloudType>::makeLogFile
         if (Pstream::master())
         {
             // Create directory if does not exist
-            mkDir(this->outputTimeDir());
+            mkDir(this->writeTimeDir());
 
             // Open new file at start up
             outputFilePtr_.reset
             (
-                new OFstream(this->outputTimeDir()/(type() + ".dat"))
+                new OFstream(this->writeTimeDir()/(type() + ".dat"))
             );
 
             outputFilePtr_()
@@ -390,7 +390,7 @@ void CML::ParticleCollector<CloudType>::makeLogFile
 template<class CloudType>
 void CML::ParticleCollector<CloudType>::initPolygons
 (
-    const List<Field<point> >& polygons
+    const List<Field<point>>& polygons
 )
 {
     mode_ = mtPolygon;
@@ -456,19 +456,7 @@ void CML::ParticleCollector<CloudType>::initConcentricCircles()
         // Set 4 quadrants for single sector cases
         nS = 4;
 
-        vector tangent = Zero;
-        scalar magTangent = 0.0;
-
-        Random rnd(1234);
-        while (magTangent < SMALL)
-        {
-            vector v = rnd.sample01<vector>();
-
-            tangent = v - (v & normal_[0])*normal_[0];
-            magTangent = mag(tangent);
-        }
-
-        refDir = tangent/magTangent;
+        refDir = normalised(perpendicular(normal_[0]));
     }
 
     scalar dTheta = 5.0;
@@ -748,7 +736,7 @@ void CML::ParticleCollector<CloudType>::write()
 
             writer->write
             (
-                this->outputTimeDir(),
+                this->writeTimeDir(),
                 "collector",
                 points_,
                 faces_,
@@ -759,7 +747,7 @@ void CML::ParticleCollector<CloudType>::write()
 
             writer->write
             (
-                this->outputTimeDir(),
+                this->writeTimeDir(),
                 "collector",
                 points_,
                 faces_,
@@ -836,7 +824,7 @@ CML::ParticleCollector<CloudType>::ParticleCollector
     word mode(this->coeffDict().lookup("mode"));
     if (mode == "polygon")
     {
-        List<Field<point> > polygons(this->coeffDict().lookup("polygons"));
+        List<Field<point>> polygons(this->coeffDict().lookup("polygons"));
 
         initPolygons(polygons);
 
@@ -845,12 +833,12 @@ CML::ParticleCollector<CloudType>::ParticleCollector
     }
     else if (mode == "polygonWithNormal")
     {
-        List<Tuple2<Field<point>, vector> > polygonAndNormal
+        List<Tuple2<Field<point>, vector>> polygonAndNormal
         (
             this->coeffDict().lookup("polygons")
         );
 
-        List<Field<point> > polygons(polygonAndNormal.size());
+        List<Field<point>> polygons(polygonAndNormal.size());
         normal_.setSize(polygonAndNormal.size());
 
         forAll(polygons, polyI)

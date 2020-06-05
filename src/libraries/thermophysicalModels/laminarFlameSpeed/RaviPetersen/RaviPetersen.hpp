@@ -69,10 +69,10 @@ class RaviPetersen
     List<scalar> EqRPoints_;
 
     //- Correlation alpha coefficients
-    List<List<List<scalar> > > alpha_;
+    List<List<List<scalar>>> alpha_;
 
     //- Correlation beta coefficients
-    List<List<List<scalar> > > beta_;
+    List<List<List<scalar>>> beta_;
 
     //- Reference temperature
     scalar TRef_;
@@ -89,7 +89,7 @@ class RaviPetersen
     void checkCoefficientArrayShape
     (
         const word& name,
-        const List<List<List<scalar> > >& x
+        const List<List<List<scalar>>>& x
     ) const;
 
     //- Find and interpolate a value in the data point arrays

@@ -74,11 +74,11 @@ bool createFundamentalSheetsJFS::isTopologyOk() const
     labelList nBndFacesInCell(mesh_.cells().size(), 0);
 
     bool isOkTopo(true);
-    for(label faceI=start;faceI<end;++faceI)
+    for(label facei=start;facei<end;++facei)
     {
-        ++nBndFacesInCell[owner[faceI]];
+        ++nBndFacesInCell[owner[facei]];
 
-        if( nBndFacesInCell[owner[faceI]] > 1 )
+        if( nBndFacesInCell[owner[facei]] > 1 )
         {
             isOkTopo = false;
             break;
@@ -119,8 +119,8 @@ void createFundamentalSheetsJFS::createInitialSheet()
     # ifdef USE_OMP
     # pragma omp parallel for schedule(guided, 100)
     # endif
-    for(label faceI=start;faceI<end;++faceI)
-        extrudeFaces[faceI-start] = labelPair(faceI, owner[faceI]);
+    for(label facei=start;facei<end;++facei)
+        extrudeFaces[facei-start] = labelPair(facei, owner[facei]);
 
     extrudeLayer(mesh_, extrudeFaces);
 
@@ -158,8 +158,8 @@ void createFundamentalSheetsJFS::createSheetsAtFeatureEdges()
         const label patchStart = boundaries[patchI].patchStart();
         const label patchEnd = patchStart + boundaries[patchI].patchSize();
 
-        for(label faceI=patchStart;faceI<patchEnd;++faceI)
-            facePatch[faceI-start] = patchI;
+        for(label facei=patchStart;facei<patchEnd;++facei)
+            facePatch[facei-start] = patchI;
     }
 
     labelList patchCell(mesh_.cells().size(), -1);
@@ -172,12 +172,12 @@ void createFundamentalSheetsJFS::createSheetsAtFeatureEdges()
         patchSheetId[patchI] =
             mesh_.addCellSubset("sheetPatch_"+help::labelToText(patchI));
 
-    forAll(patchCell, cellI)
+    forAll(patchCell, celli)
     {
-        if( patchCell[cellI] < 0 )
+        if( patchCell[celli] < 0 )
             continue;
 
-        mesh_.addCellToSubset(patchSheetId[patchCell[cellI]], cellI);
+        mesh_.addCellToSubset(patchSheetId[patchCell[celli]], celli);
     }
     # endif
 
@@ -196,10 +196,10 @@ void createFundamentalSheetsJFS::createSheetsAtFeatureEdges()
         # endif
         forAll(facePatch, bfI)
         {
-            const label faceI = start + bfI;
-            const label cellI = owner[faceI];
+            const label facei = start + bfI;
+            const label celli = owner[facei];
 
-            const cell& c = cells[cellI];
+            const cell& c = cells[celli];
             const label patchI = facePatch[bfI];
 
             forAll(c, fI)
@@ -208,11 +208,11 @@ void createFundamentalSheetsJFS::createSheetsAtFeatureEdges()
                     continue;
 
                 label nei = owner[c[fI]];
-                if( nei == cellI )
+                if( nei == celli )
                     nei = neighbour[c[fI]];
 
                 if( patchCell[nei] != patchI )
-                    localFront.append(labelPair(c[fI], cellI));
+                    localFront.append(labelPair(c[fI], celli));
             }
         }
 

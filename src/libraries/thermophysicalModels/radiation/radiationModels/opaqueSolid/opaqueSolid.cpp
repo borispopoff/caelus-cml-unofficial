@@ -94,12 +94,12 @@ CML::tmp<CML::volScalarField> CML::radiation::opaqueSolid::Rp() const
 }
 
 
-CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+CML::tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
 CML::radiation::opaqueSolid::Ru() const
 {
-    return tmp<CML::DimensionedField<CML::scalar, CML::volMesh> >
+    return tmp<CML::DimensionedField<CML::scalar, CML::volMesh>>
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (

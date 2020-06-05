@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,7 +63,7 @@ class solidChemistryModel
     solidChemistryModel(const solidChemistryModel&);
 
     //- Disallow default bitwise assignment
-    void operator=(const solidChemistryModel&);
+    void operator=(const solidChemistryModel&) = delete;
 
 
 protected:
@@ -72,7 +72,7 @@ protected:
     PtrList<volScalarField>& Ys_;
 
     //- Reactions
-    const PtrList<Reaction<SolidThermo> >& reactions_;
+    const PtrList<Reaction<SolidThermo>>& reactions_;
 
     //- Thermodynamic data of solids
     const PtrList<SolidThermo>& solidThermo_;
@@ -84,7 +84,7 @@ protected:
     label nReaction_;
 
     //- List of reaction rate per solid [kg/m3/s]
-    PtrList<DimensionedField<scalar, volMesh> > RRs_;
+    PtrList<volScalarField::Internal> RRs_;
 
     //- List of active reacting cells
     List<bool> reactingCells_;
@@ -93,7 +93,7 @@ protected:
     // Protected Member Functions
 
     //- Write access to source terms for solids
-    inline PtrList<DimensionedField<scalar, volMesh> >& RRs()
+    inline PtrList<volScalarField::Internal>& RRs()
     {
         return RRs_;
     }
@@ -120,7 +120,7 @@ public:
     // Member Functions
 
     //- The reactions
-    inline const PtrList<Reaction<SolidThermo> >& reactions() const
+    inline const PtrList<Reaction<SolidThermo>>& reactions() const
     {
         return reactions_;
     }
@@ -180,7 +180,7 @@ public:
     // Solid Chemistry model functions
 
     //- Return const access to the chemical source terms for solids
-    inline const DimensionedField<scalar, volMesh>& RRs
+    inline const volScalarField::Internal& RRs
     (
         const label i
     ) const
@@ -189,11 +189,11 @@ public:
     }
 
     //- Return total solid source term
-    inline tmp<DimensionedField<scalar, volMesh> > RRs() const
+    inline tmp<volScalarField::Internal> RRs() const
     {
-        tmp<DimensionedField<scalar, volMesh> > tRRs
+        tmp<volScalarField::Internal> tRRs
         (
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -204,13 +204,13 @@ public:
                     IOobject::NO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
             )
         );
 
         if (this->chemistry_)
         {
-            DimensionedField<scalar, volMesh>& RRs = tRRs();
+            volScalarField::Internal& RRs = tRRs.ref();
             for (label i=0; i < nSolids_; i++)
             {
                 RRs += RRs_[i];
@@ -306,7 +306,7 @@ CML::solidChemistryModel<CompType, SolidThermo>::solidChemistryModel
         RRs_.set
         (
             fieldi,
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -317,7 +317,7 @@ CML::solidChemistryModel<CompType, SolidThermo>::solidChemistryModel
                     IOobject::NO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
             )
         );
    }
@@ -364,13 +364,13 @@ CML::solidChemistryModel<CompType, SolidThermo>::Qdot() const
                 false
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0)
         )
     );
 
     if (this->chemistry_)
     {
-        scalarField& Qdot = tQdot();
+        scalarField& Qdot = tQdot.ref();
 
         forAll(Ys_, i)
         {

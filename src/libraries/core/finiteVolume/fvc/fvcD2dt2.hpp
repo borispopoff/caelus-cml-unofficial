@@ -44,13 +44,13 @@ namespace CML
 namespace fvc
 {
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > d2dt2
+    tmp<GeometricField<Type, fvPatchField, volMesh>> d2dt2
     (
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<GeometricField<Type, fvPatchField, volMesh> > d2dt2
+    tmp<GeometricField<Type, fvPatchField, volMesh>> d2dt2
     (
         const volScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
@@ -80,7 +80,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 d2dt2
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -90,12 +90,12 @@ d2dt2
     (
         vf.mesh(),
         vf.mesh().ddtScheme("d2dt2(" + vf.name() + ')')
-    )().fvcD2dt2(vf);
+    ).ref().fvcD2dt2(vf);
 }
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 d2dt2
 (
     const volScalarField& rho,
@@ -106,7 +106,7 @@ d2dt2
     (
         vf.mesh(),
         vf.mesh().ddtScheme("d2dt2(" + rho.name() + ',' + vf.name() + ')')
-    )().fvcD2dt2(rho, vf);
+    ).ref().fvcD2dt2(rho, vf);
 }
 
 

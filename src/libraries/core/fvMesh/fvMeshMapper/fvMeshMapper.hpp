@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -69,15 +69,6 @@ class fvMeshMapper
         fvBoundaryMeshMapper boundaryMap_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        fvMeshMapper(const fvMeshMapper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvMeshMapper&);
-
-
 public:
 
     // Constructors
@@ -91,6 +82,9 @@ public:
             surfaceMap_(mesh, faceMap_),
             boundaryMap_(mesh, faceMap_)
         {}
+
+        //- Disallow default bitwise copy construct
+        fvMeshMapper(const fvMeshMapper&) = delete;
 
 
     // Member Functions
@@ -125,6 +119,13 @@ public:
         {
             return boundaryMap_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvMeshMapper&) = delete;
+
 };
 
 

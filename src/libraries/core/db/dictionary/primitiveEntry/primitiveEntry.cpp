@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,6 +22,7 @@ License
 #include "primitiveEntry.hpp"
 #include "dictionary.hpp"
 #include "OSspecific.hpp"
+#include "stringOps.hpp"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -36,35 +37,66 @@ void CML::primitiveEntry::append(const UList<token>& varTokens)
 
 bool CML::primitiveEntry::expandVariable
 (
-    const word& w,
+    const string& w,
     const dictionary& dict
 )
 {
-    word varName = w(1, w.size()-1);
-
-    // lookup the variable name in the given dictionary....
-    // Note: allow wildcards to match? For now disabled since following
-    // would expand internalField to wildcard match and not expected
-    // internalField:
-    //      internalField XXX;
-    //      boundaryField { ".*" {YYY;} movingWall {value $internalField;}
-    const entry* ePtr = dict.lookupEntryPtr(varName, true, false);
-
-    // ...if defined append its tokens into this
-    if (ePtr)
+    if (w.size() > 2 && w[0] == '$' && w[1] == token::BEGIN_BLOCK)
     {
-        append(ePtr->stream());
+        // Recursive substitution mode. Replace between {} with
+        // expansion.
+        string s(w(2, w.size()-3));
+        // Substitute dictionary and environment variables. Do not allow
+        // empty substitutions.
+        stringOps::inplaceExpand(s, dict, true, false);
+
+        string newW(w);
+        newW.std::string::replace(1, newW.size()-1, s);
+
+        return expandVariable(newW, dict);
     }
     else
     {
-        // not in the dictionary - try an environment variable
-        string envStr = getEnv(varName);
+        string varName = w(1, w.size()-1);
 
-        if (envStr.empty())
+        // Lookup the variable name in the given dictionary....
+        // Note: allow wildcards to match? For now disabled since following
+        // would expand internalField to wildcard match and not expected
+        // internalField:
+        //      internalField XXX;
+        //      boundaryField { ".*" {YYY;} movingWall {value $internalField;}
+        const entry* ePtr = dict.lookupEntryPtr(varName, true, false);
+
+        // ...if defined append its tokens into this
+        if (ePtr)
         {
-            return false;
+            if (ePtr->isDict())
+            {
+                append(ePtr->dict().tokens());
+            }
+            else
+            {
+                append(ePtr->stream());
+            }
         }
-        append(tokenList(IStringStream('(' + envStr + ')')()));
+        else
+        {
+            // Not in the dictionary - try an environment variable
+            string envStr = getEnv(varName);
+
+            if (envStr.empty())
+            {
+                FatalIOErrorInFunction
+                (
+                    dict
+                )   << "Illegal dictionary entry or environment variable name "
+                    << varName << endl << "Valid dictionary entries are "
+                    << dict.toc() << exit(FatalIOError);
+
+                return false;
+            }
+            append(tokenList(IStringStream('(' + envStr + ')')()));
+        }
     }
     return true;
 }
@@ -102,11 +134,11 @@ CML::primitiveEntry::primitiveEntry
 CML::primitiveEntry::primitiveEntry
 (
     const keyType& key,
-    const Xfer<List<token> >& tokens
+    List<token>&& tokens
 )
 :
     entry(key),
-    ITstream(key, tokens)
+    ITstream(key, move(tokens))
 {}
 
 

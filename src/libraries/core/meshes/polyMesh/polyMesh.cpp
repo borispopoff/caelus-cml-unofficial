@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015-2016 Applied CCM
 Copyright (C) 2016 OpenCFD Ltd.
 -------------------------------------------------------------------------------
@@ -346,10 +346,10 @@ CML::polyMesh::polyMesh(const IOobject& io, const bool defectCorr, const scalar 
 CML::polyMesh::polyMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<labelList>& owner,
-    const Xfer<labelList>& neighbour,
+    pointField&& points,
+    faceList&& faces,
+    labelList&& owner,
+    labelList&& neighbour,
     const bool syncPar,
     const bool defectCorr,
     const scalar areaSwitch
@@ -368,7 +368,7 @@ CML::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        points
+        move(points)
     ),
     faces_
     (
@@ -381,7 +381,7 @@ CML::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        faces
+        move(faces)
     ),
     owner_
     (
@@ -394,7 +394,7 @@ CML::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        owner
+        move(owner)
     ),
     neighbour_
     (
@@ -407,7 +407,7 @@ CML::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        neighbour
+        move(neighbour)
     ),
     clearedPrimitives_(false),
     boundary_
@@ -501,9 +501,9 @@ CML::polyMesh::polyMesh
 CML::polyMesh::polyMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<cellList>& cells,
+    pointField&& points,
+    faceList&& faces,
+    cellList&& cells,
     const bool syncPar,
     const bool defectCorr,
     const scalar areaSwitch
@@ -522,7 +522,7 @@ CML::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        points
+        move(points)
     ),
     faces_
     (
@@ -535,7 +535,7 @@ CML::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        faces
+        move(faces)
     ),
     owner_
     (
@@ -648,7 +648,7 @@ CML::polyMesh::polyMesh
     }
 
     // transfer in cell list
-    cellList cLst(cells);
+    cellList cLst(move(cells));
 
     // Check if cells are valid
     forAll(cLst, celli)
@@ -671,10 +671,10 @@ CML::polyMesh::polyMesh
 
 void CML::polyMesh::resetPrimitives
 (
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<labelList>& owner,
-    const Xfer<labelList>& neighbour,
+    pointField&& points,
+    faceList&& faces,
+    labelList&& owner,
+    labelList&& neighbour,
     const labelList& patchSizes,
     const labelList& patchStarts,
     const bool validBoundary
@@ -687,23 +687,23 @@ void CML::polyMesh::resetPrimitives
     // Optimized to avoid overwriting data at all
     if (notNull(points))
     {
-        points_.transfer(points());
+        points_ = move(points);
         bounds_ = boundBox(points_, validBoundary);
     }
 
     if (notNull(faces))
     {
-        faces_.transfer(faces());
+        faces_ = move(faces);
     }
 
     if (notNull(owner))
     {
-        owner_.transfer(owner());
+        owner_ = move(owner);
     }
 
     if (notNull(neighbour))
     {
-        neighbour_.transfer(neighbour());
+        neighbour_ = move(neighbour);
     }
 
 
@@ -892,7 +892,7 @@ CML::polyMesh::cellTree() const
                 (
                     false,      // not cache bb
                     *this,
-                    FACEDIAGTETS   // use tet-decomposition for any inside test
+                    CELL_TETS   // use tet-decomposition for any inside test
                 ),
                 treeBoundBox(points()).extend(1e-4),
                 8,              // maxLevel
@@ -1308,18 +1308,18 @@ bool CML::polyMesh::pointInCell
 (
     const point& p,
     label celli,
-    const cellRepresentation decompMode
+    const cellDecomposition decompMode
 ) const
 {
     switch (decompMode)
     {
-        case FACEPLANES:
+        case FACE_PLANES:
         {
             return primitiveMesh::pointInCell(p, celli);
         }
         break;
 
-        case FACECENTRETETS:
+        case FACE_CENTRE_TRIS:
         {
             // only test that point is on inside of plane defined by cell face
             // triangles
@@ -1367,7 +1367,7 @@ bool CML::polyMesh::pointInCell
         }
         break;
 
-        case FACEDIAGTETS:
+        case FACE_DIAG_TRIS:
         {
             // only test that point is on inside of plane defined by cell face
             // triangles
@@ -1417,13 +1417,13 @@ bool CML::polyMesh::pointInCell
 CML::label CML::polyMesh::findCell
 (
     const point& p,
-    const cellRepresentation decompMode
+    const cellDecomposition decompMode
 ) const
 {
     if
     (
         Pstream::parRun()
-     && decompMode == FACEDIAGTETS
+     && (decompMode == FACE_DIAG_TRIS || decompMode == CELL_TETS)
     )
     {
         // Force construction of face-diagonal decomposition before testing
@@ -1440,27 +1440,46 @@ CML::label CML::polyMesh::findCell
         return -1;
     }
 
-    // Find the nearest cell centre to this location
-    label celli = findNearestCell(p);
-
-    // If point is in the nearest cell return
-    if (pointInCell(p, celli, decompMode))
+    if (decompMode == CELL_TETS)
     {
+        // Advanced search method utilizing an octree
+        // and tet-decomposition of the cells
+
+        label celli;
+        label tetFacei;
+        label tetPti;
+
+        findCellFacePt(p, celli, tetFacei, tetPti);
+
         return celli;
     }
     else
     {
-        // Point is not in the nearest cell so search all cells
+        // Approximate search avoiding the construction of an octree
+        // and cell decomposition
 
-        for (label celli = 0; celli < nCells(); celli++)
+        // Find the nearest cell centre to this location
+        label celli = findNearestCell(p);
+
+        // If point is in the nearest cell return
+        if (pointInCell(p, celli, decompMode))
         {
-            if (pointInCell(p, celli, decompMode))
-            {
-                return celli;
-            }
+            return celli;
         }
+        else
+        {
+            // Point is not in the nearest cell so search all cells
 
-        return -1;
+            for (label celli = 0; celli < nCells(); celli++)
+            {
+                if (pointInCell(p, celli, decompMode))
+                {
+                    return celli;
+                }
+            }
+
+            return -1;
+        }
     }
 }
 

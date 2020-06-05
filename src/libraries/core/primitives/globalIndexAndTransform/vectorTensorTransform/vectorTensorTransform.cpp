@@ -30,15 +30,15 @@ const char* const CML::vectorTensorTransform::typeName =
 
 const CML::vectorTensorTransform CML::vectorTensorTransform::zero
 (
-    vector::zero,
-    tensor::zero,
+    Zero,
+    Zero,
     false
 );
 
 
 const CML::vectorTensorTransform CML::vectorTensorTransform::I
 (
-    vector::zero,
+    Zero,
     sphericalTensor::I,
     false
 );
@@ -65,7 +65,7 @@ CML::word CML::name(const vectorTensorTransform& s)
 
 
 template<>
-CML::tmp<CML::Field<bool> > CML::vectorTensorTransform::transform
+CML::tmp<CML::Field<bool>> CML::vectorTensorTransform::transform
 (
     const Field<bool>& fld
 ) const
@@ -73,7 +73,7 @@ CML::tmp<CML::Field<bool> > CML::vectorTensorTransform::transform
     return fld;
 }
 template<>
-CML::tmp<CML::Field<CML::label> > CML::vectorTensorTransform::transform
+CML::tmp<CML::Field<CML::label>> CML::vectorTensorTransform::transform
 (
     const Field<label>& fld
 ) const
@@ -81,7 +81,7 @@ CML::tmp<CML::Field<CML::label> > CML::vectorTensorTransform::transform
     return fld;
 }
 template<>
-CML::tmp<CML::Field<CML::scalar> > CML::vectorTensorTransform::transform
+CML::tmp<CML::Field<CML::scalar>> CML::vectorTensorTransform::transform
 (
     const Field<scalar>& fld
 ) const

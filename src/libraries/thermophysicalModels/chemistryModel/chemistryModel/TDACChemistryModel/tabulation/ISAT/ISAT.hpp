@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016-2018 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -114,7 +114,7 @@ class ISAT
     // Private Member Functions
 
     //- Disallow default bitwise copy construct
-    ISAT(const ISAT&);
+    ISAT(const ISAT&) = delete;
 
     //- Add a chemPoint to the MRU list
     void addToMRU(chemPointISAT<CompType, ThermoType>* phi0);

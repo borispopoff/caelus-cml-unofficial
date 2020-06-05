@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -33,7 +33,7 @@ SourceFiles
 #define DynamicField_H
 
 #include "Field.hpp"
-#include "StaticAssert.hpp"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,7 +70,11 @@ class DynamicField
     public Field<Type>
 {
     //- Avoid invalid sizing parameters
-    StaticAssert((SizeInc || SizeMult) && SizeDiv);
+    static_assert
+    (
+        (SizeInc || SizeMult) && SizeDiv,
+        "Avoid invalid sizing parameters"
+    );
 
     // Private data
 
@@ -104,8 +108,8 @@ public:
         //  Also constructs from DynamicField with different sizing parameters.
         explicit inline DynamicField(const UList<Type>&);
 
-        //- Construct by transferring the parameter contents
-        explicit inline DynamicField(const Xfer<List<Type> >&);
+        //- Move constructor transferring the list contents
+        explicit inline DynamicField(List<Type>&&);
 
         //- Construct by 1 to 1 mapping from the given field
         inline DynamicField
@@ -122,27 +126,17 @@ public:
             const scalarListList& weights
         );
 
-        //- Construct by mapping from the given field
-        inline DynamicField
-        (
-            const UList<Type>& mapF,
-            const FieldMapper& map
-        );
-
-        //- Construct copy
+        //- Copy constructor
         inline DynamicField(const DynamicField<Type, SizeInc, SizeMult, SizeDiv>&);
 
-        //- Construct by transferring the Field contents
-        inline DynamicField
-        (
-            const Xfer<DynamicField<Type, SizeInc, SizeMult, SizeDiv> >&
-        );
+        //- Move constructor
+        inline DynamicField(DynamicField<Type, SizeInc, SizeMult, SizeDiv>&&);
 
         //- Construct from Istream. Size set to size of list read.
         explicit DynamicField(Istream&);
 
         //- Clone
-        tmp<DynamicField<Type, SizeInc, SizeMult, SizeDiv> > clone() const;
+        tmp<DynamicField<Type, SizeInc, SizeMult, SizeDiv>> clone() const;
 
 
     // Member Functions
@@ -195,9 +189,6 @@ public:
             //  Returns a reference to the DynamicField.
             inline DynamicField<Type, SizeInc, SizeMult, SizeDiv>& shrink();
 
-            //- Transfer contents to the Xfer container as a plain List
-            inline Xfer<List<Type> > xfer();
-
 
         // Member Operators
 
@@ -223,14 +214,23 @@ public:
             //- Assignment of all addressed entries to the given value
             inline void operator=(const Type&);
 
-            //- Assignment from DynamicField
+            //- Assignment operator
             inline void operator=
             (
                 const DynamicField<Type, SizeInc, SizeMult, SizeDiv>&
             );
 
-            //- Assignment from UList
+            //- Move assignment operator
+            inline void operator=
+            (
+                DynamicField<Type, SizeInc, SizeMult, SizeDiv>&&
+            );
+
+            //- Assignment to UList
             inline void operator=(const UList<Type>&);
+
+            //- Move assignment to List
+            inline void operator=(List<Type>&&);
 };
 
 
@@ -278,10 +278,10 @@ inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField
 template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField
 (
-    const Xfer<List<Type> >& lst
+    List<Type>&& lst
 )
 :
-    Field<Type>(lst),
+    Field<Type>(move(lst)),
     capacity_(Field<Type>::size())
 {}
 
@@ -311,19 +311,6 @@ inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField
 {}
 
 
-//- Construct by mapping from the given field
-template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField
-(
-    const UList<Type>& mapF,
-    const FieldMapper& map
-)
-:
-    Field<Type>(mapF, map),
-    capacity_(Field<Type>::size())
-{}
-
-
 template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField
 (
@@ -331,19 +318,21 @@ inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField
 )
 :
     Field<Type>(lst),
-    capacity_(lst.capacity())
+    capacity_(lst.capacity_)
 {}
 
 
 template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField
 (
-    const Xfer<DynamicField<Type, SizeInc, SizeMult, SizeDiv> >& lst
+    DynamicField<Type, SizeInc, SizeMult, SizeDiv>&& lst
 )
 :
-    Field<Type>(lst),
-    capacity_(Field<Type>::size())
-{}
+    Field<Type>(move(lst)),
+    capacity_(lst.capacity_)
+{
+    lst.capacity_ = 0;
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -525,14 +514,6 @@ CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::shrink()
 
 
 template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-inline CML::Xfer<CML::List<Type> >
-CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::xfer()
-{
-    return xferMoveTo< List<Type> >(*this);
-}
-
-
-template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>&
 CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::append
 (
@@ -649,6 +630,24 @@ inline void CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::operator=
 template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline void CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::operator=
 (
+    DynamicField<Type, SizeInc, SizeMult, SizeDiv>&& lst
+)
+{
+    if (this == &lst)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self" << abort(FatalError);
+    }
+
+    Field<Type>::operator=(move(lst));
+    capacity_ = lst.capacity_;
+    lst.capacity_ = 0;
+}
+
+
+template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline void CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::operator=
+(
     const UList<Type>& lst
 )
 {
@@ -669,6 +668,23 @@ inline void CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::operator=
 }
 
 
+template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline void CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::operator=
+(
+    List<Type>&& lst
+)
+{
+    if (this == &lst)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self" << abort(FatalError);
+    }
+
+    Field<Type>::operator=(move(lst));
+    capacity_ = Field<Type>::size();
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
@@ -682,10 +698,10 @@ CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::DynamicField(Istream& is)
 
 
 template<class Type, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-CML::tmp<CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv> >
+CML::tmp<CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>>
 CML::DynamicField<Type, SizeInc, SizeMult, SizeDiv>::clone() const
 {
-    return tmp<DynamicField<Type, SizeInc, SizeMult, SizeDiv> >
+    return tmp<DynamicField<Type, SizeInc, SizeMult, SizeDiv>>
     (
         new DynamicField<Type, SizeInc, SizeMult, SizeDiv>(*this)
     );

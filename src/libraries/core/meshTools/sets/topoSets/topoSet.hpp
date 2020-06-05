@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -100,9 +100,6 @@ protected:
             const label maxLen
         ) const;
 
-
-        //- Disallow default bitwise copy construct
-        topoSet(const topoSet&);
 
 public:
 
@@ -210,6 +207,8 @@ public:
         //- Construct from IOobject and labelHashSet.
         topoSet(const IOobject&, const labelHashSet&);
 
+        //- Disallow default bitwise copy construct
+        topoSet(const topoSet&) = delete;
 
 
         //- Clone

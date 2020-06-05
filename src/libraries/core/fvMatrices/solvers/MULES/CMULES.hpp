@@ -154,18 +154,18 @@ void CML::MULES::correct
 
     if (mesh.moving())
     {
-        psi.internalField() =
+        psi.primitiveFieldRef() =
         (
-            rho.field()*psi.internalField()*rDeltaT
+            rho.field()*psi.primitiveField()*rDeltaT
           + Su.field()
           - psiIf
         )/(rho.field()*rDeltaT - Sp.field());
     }
     else
     {
-        psi.internalField() =
+        psi.primitiveFieldRef() =
         (
-            rho.field()*psi.internalField()*rDeltaT
+            rho.field()*psi.primitiveField()*rDeltaT
           + Su.field()
           - psiIf
         )/(rho.field()*rDeltaT - Sp.field());
@@ -246,7 +246,7 @@ void CML::MULES::limiterCorr
 )
 {
     const scalarField& psiIf = psi;
-    const volScalarField::GeometricBoundaryField& psiBf = psi.boundaryField();
+    const volScalarField::Boundary& psiBf = psi.boundaryField();
 
     const fvMesh& mesh = psi.mesh();
 
@@ -269,14 +269,14 @@ void CML::MULES::limiterCorr
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighb = mesh.neighbour();
-    tmp<volScalarField::DimensionedInternalField> tVsc = mesh.Vsc();
+    tmp<volScalarField::Internal> tVsc = mesh.Vsc();
     const scalarField& V = tVsc();
 
-    const surfaceScalarField::GeometricBoundaryField& phiBf =
+    const surfaceScalarField::Boundary& phiBf =
         phi.boundaryField();
 
     const scalarField& phiCorrIf = phiCorr;
-    const surfaceScalarField::GeometricBoundaryField& phiCorrBf =
+    const surfaceScalarField::Boundary& phiCorrBf =
         phiCorr.boundaryField();
 
     slicedSurfaceScalarField lambda
@@ -297,8 +297,8 @@ void CML::MULES::limiterCorr
     );
 
     scalarField& lambdaIf = lambda;
-    surfaceScalarField::GeometricBoundaryField& lambdaBf =
-        lambda.boundaryField();
+    surfaceScalarField::Boundary& lambdaBf =
+        lambda.boundaryFieldRef();
 
     scalarField psiMaxn(psiIf.size(), psiMin);
     scalarField psiMinn(psiIf.size(), psiMax);
@@ -319,7 +319,7 @@ void CML::MULES::limiterCorr
 
         scalar phiCorrf = phiCorrIf[facei];
 
-        if (phiCorrf > 0.0)
+        if (phiCorrf > 0)
         {
             sumPhip[own] += phiCorrf;
             mSumPhim[nei] += phiCorrf;
@@ -367,7 +367,7 @@ void CML::MULES::limiterCorr
 
             scalar phiCorrf = phiCorrPf[pFacei];
 
-            if (phiCorrf > 0.0)
+            if (phiCorrf > 0)
             {
                 sumPhip[pfCelli] += phiCorrf;
             }
@@ -394,7 +394,7 @@ void CML::MULES::limiterCorr
        *(
            (rho.field()*rDeltaT - Sp.field())*psiMaxn
          - Su.field()
-         - rho.field()*psi.internalField()*rDeltaT
+         - rho.field()*psi.primitiveField()*rDeltaT
         );
 
     psiMinn =
@@ -402,7 +402,7 @@ void CML::MULES::limiterCorr
        *(
            Su.field()
          - (rho.field()*rDeltaT - Sp.field())*psiMinn
-         + rho.field()*psi.internalField()*rDeltaT
+         + rho.field()*psi.primitiveField()*rDeltaT
         );
 
     scalarField sumlPhip(psiIf.size());
@@ -410,8 +410,8 @@ void CML::MULES::limiterCorr
 
     for (int j=0; j<nLimiterIter; j++)
     {
-        sumlPhip = 0.0;
-        mSumlPhim = 0.0;
+        sumlPhip = 0;
+        mSumlPhim = 0;
 
         forAll(lambdaIf, facei)
         {
@@ -420,7 +420,7 @@ void CML::MULES::limiterCorr
 
             scalar lambdaPhiCorrf = lambdaIf[facei]*phiCorrIf[facei];
 
-            if (lambdaPhiCorrf > 0.0)
+            if (lambdaPhiCorrf > 0)
             {
                 sumlPhip[own] += lambdaPhiCorrf;
                 mSumlPhim[nei] += lambdaPhiCorrf;
@@ -445,7 +445,7 @@ void CML::MULES::limiterCorr
 
                 scalar lambdaPhiCorrf = lambdaPf[pFacei]*phiCorrfPf[pFacei];
 
-                if (lambdaPhiCorrf > 0.0)
+                if (lambdaPhiCorrf > 0)
                 {
                     sumlPhip[pfCelli] += lambdaPhiCorrf;
                 }
@@ -480,7 +480,7 @@ void CML::MULES::limiterCorr
 
         forAll(lambdaIf, facei)
         {
-            if (phiCorrIf[facei] > 0.0)
+            if (phiCorrIf[facei] > 0)
             {
                 lambdaIf[facei] = min
                 (
@@ -518,7 +518,7 @@ void CML::MULES::limiterCorr
                 {
                     label pfCelli = pFaceCells[pFacei];
 
-                    if (phiCorrfPf[pFacei] > 0.0)
+                    if (phiCorrfPf[pFacei] > 0)
                     {
                         lambdaPf[pFacei] =
                             min(lambdaPf[pFacei], lambdap[pfCelli]);
@@ -543,7 +543,7 @@ void CML::MULES::limiterCorr
                     {
                         label pfCelli = pFaceCells[pFacei];
 
-                        if (phiCorrfPf[pFacei] > 0.0)
+                        if (phiCorrfPf[pFacei] > 0)
                         {
                             lambdaPf[pFacei] =
                                 min(lambdaPf[pFacei], lambdap[pfCelli]);

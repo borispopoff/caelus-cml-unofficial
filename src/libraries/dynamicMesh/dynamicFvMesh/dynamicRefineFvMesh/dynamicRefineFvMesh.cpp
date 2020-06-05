@@ -76,6 +76,7 @@ CML::label CML::dynamicRefineFvMesh::count
             Info<< "n=" << n << endl;
         }
     }
+
     return n;
 }
 
@@ -204,7 +205,7 @@ void CML::dynamicRefineFvMesh::readDict()
         ).subDict(typeName + "Coeffs")
     );
 
-    List<Pair<word> > fluxVelocities = List<Pair<word> >
+    List<Pair<word>> fluxVelocities = List<Pair<word>>
     (
         refineDict.lookup("correctFluxes")
     );
@@ -245,7 +246,7 @@ CML::dynamicRefineFvMesh::refine
     meshCutter_.setRefinement(cellsToRefine, meshMod);
 
     // Create mesh (with inflation), return map from old to new mesh.
-    //autoPtr<mapPolyMesh> map = meshMod.changeMesh(*this, true);
+    // autoPtr<mapPolyMesh> map = meshMod.changeMesh(*this, true);
     autoPtr<mapPolyMesh> map = meshMod.changeMesh(*this, false);
 
     Info<< "Refined from "
@@ -273,6 +274,7 @@ CML::dynamicRefineFvMesh::refine
 
     // Update fields
     updateMesh(map);
+
 
     // Move mesh
     /*
@@ -387,8 +389,8 @@ CML::dynamicRefineFvMesh::refine
             }
 
             // Recalculate new boundary faces.
-            surfaceScalarField::GeometricBoundaryField& phiBf =
-                phi.boundaryField();
+            surfaceScalarField::Boundary& phiBf =
+                phi.boundaryFieldRef();
             forAll(phiBf, patchi)
             {
                 fvsPatchScalarField& patchPhi = phiBf[patchi];
@@ -440,6 +442,7 @@ CML::dynamicRefineFvMesh::refine
             }
         }
     }
+
 
 
     // Update numbering of cells/vertices.
@@ -576,8 +579,8 @@ CML::dynamicRefineFvMesh::unrefine
             }
 
             surfaceScalarField& phi = *iter();
-            surfaceScalarField::GeometricBoundaryField& phiBf =
-                phi.boundaryField();
+            surfaceScalarField::Boundary& phiBf =
+                phi.boundaryFieldRef();
 
             const surfaceScalarField phiU
             (
@@ -1478,7 +1481,7 @@ bool CML::dynamicRefineFvMesh::writeObject
 
     bool writeOk =
     (
-        dynamicFvMesh::writeObjects(fmt, ver, cmp)
+        dynamicFvMesh::writeObject(fmt, ver, cmp)
      && meshCutter_.write()
     );
 
@@ -1581,7 +1584,7 @@ void CML::dynamicRefineFvMesh::adjustDeltaT()
               if (newDeltaT <= deltaT*scalar(1.01))
               {
                   deltaT = max(newDeltaT, 0.2*deltaT);
-                  const_cast<Time&>(time()).setDeltaT(deltaT, false);
+                  const_cast<Time&>(time()).setDeltaT(deltaT);
                   deltaTchanged_ = true;
                   deltaTSave_ = deltaT;
               }

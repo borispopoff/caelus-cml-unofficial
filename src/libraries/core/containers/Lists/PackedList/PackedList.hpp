@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2017-2018 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Note
 
     The lazy evaluation used means that reading an out-of-range element
     returns zero, but does not affect the list size.  Even in a non-const
-    context, only the assigment itself causes the element to be created.
+    context, only the assignment itself causes the element to be created.
     For example,
     \code
         list.resize(4);
@@ -86,7 +86,7 @@ Note
     \endverbatim
     In both cases, the supplied indices can be randomly ordered.
 
-SeeAlso
+See also
     CML::DynamicList
 
 SourceFiles
@@ -100,7 +100,7 @@ SourceFiles
 
 #include "labelList.hpp"
 #include "UIndirectList.hpp"
-#include "StaticAssert.hpp"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -115,7 +115,11 @@ class Ostream;
 template<unsigned nBits> class PackedList;
 
 template<unsigned nBits>
+void writeEntry(Ostream& os, const PackedList<nBits>&);
+
+template<unsigned nBits>
 Istream& operator>>(Istream&, PackedList<nBits>&);
+
 template<unsigned nBits>
 Ostream& operator<<(Ostream&, const PackedList<nBits>&);
 
@@ -171,7 +175,11 @@ private:
     //  it is more efficient to use a normal list.
     //  Thus max nBits is 1/2 of the base storage size.
     //  For simplicity, assume 8-bit bytes in the assert.
-    StaticAssert(nBits && nBits <= (sizeof(StorageType) << 2));
+    static_assert
+    (
+        nBits && nBits <= (sizeof(StorageType) << 2),
+        "nBits must be positive (non-zero) and fit within the storage"
+    );
 
     // Private data
 
@@ -222,8 +230,8 @@ public:
         //- Copy constructor
         inline PackedList(const PackedList<nBits>&);
 
-        //- Construct by transferring the parameter contents
-        inline PackedList(const Xfer<PackedList<nBits> >&);
+        //- Move constructor
+        inline PackedList(PackedList<nBits>&&);
 
         //- Construct from a list of labels
         explicit inline PackedList(const labelUList&);
@@ -232,7 +240,7 @@ public:
         explicit inline PackedList(const UIndirectList<label>&);
 
         //- Clone
-        inline autoPtr< PackedList<nBits> > clone() const;
+        inline autoPtr<PackedList<nBits>> clone() const;
 
 
     // Member Functions
@@ -281,7 +289,7 @@ public:
             unsigned int count() const;
 
             //- Return the values as a list of labels
-            Xfer<labelList> values() const;
+            labelList values() const;
 
             //- Print bit patterns, optionally output unused elements
             //
@@ -340,9 +348,6 @@ public:
             //  and annul the argument list.
             inline void transfer(PackedList<nBits>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<PackedList<nBits> > xfer();
-
 
         // IO
 
@@ -374,13 +379,6 @@ public:
             //  Using '0' suppresses line-breaks entirely.
             Ostream& writeList(Ostream& os, const label shortListLen=0) const;
 
-            //- Write as a dictionary entry
-            void writeEntry(Ostream&) const;
-
-            //- Write as a dictionary entry with keyword
-            void writeEntry(const word& keyword, Ostream&) const;
-
-
     // Member operators
 
             //- Append a value at the end of the list
@@ -399,16 +397,19 @@ public:
             inline iteratorBase operator[](const label);
 
             //- Assignment of all entries to the given value. Takes linear time.
-            inline PackedList<nBits>& operator=(const unsigned int val);
+            inline void operator=(const unsigned int val);
 
-            //- Assignment operator.
-            PackedList<nBits>& operator=(const PackedList<nBits>&);
+            //- Assignment operator
+            void operator=(const PackedList<nBits>&);
 
-            //- Assignment operator.
-            PackedList<nBits>& operator=(const labelUList&);
+            //- Move assignment operator
+            void operator=(PackedList<nBits>&&);
 
-            //- Assignment operator.
-            PackedList<nBits>& operator=(const UIndirectList<label>&);
+            //- Assignment operator
+            void operator=(const labelUList&);
+
+            //- Assignment operator
+            void operator=(const UIndirectList<label>&);
 
 
     // Iterators and helpers
@@ -469,11 +470,11 @@ public:
 
                 //- Assign value, not position.
                 //  This allows packed[0] = packed[3] for assigning values
-                inline unsigned int operator=(const iteratorBase&);
+                inline void operator=(const iteratorBase&);
 
                 //- Assign value.
                 //  A non-existent entry will be auto-vivified.
-                inline unsigned int operator=(const unsigned int val);
+                inline void operator=(const unsigned int val);
 
                 //- Conversion operator
                 //  Never auto-vivify entries.
@@ -523,7 +524,7 @@ public:
 
                 //- Assign from iteratorBase, eg iter = packedlist[i]
                 //  An out-of-range iterator is assigned end()
-                inline iterator& operator=(const iteratorBase&);
+                inline void operator=(const iteratorBase&);
 
                 //- Return value
                 inline unsigned int operator*() const;
@@ -545,10 +546,10 @@ public:
 
         };
 
-        //- iterator set to the beginning of the PackedList
+        //- Iterator set to the beginning of the PackedList
         inline iterator begin();
 
-        //- iterator set to beyond the end of the PackedList
+        //- Iterator set to beyond the end of the PackedList
         inline iterator end();
 
 
@@ -584,7 +585,7 @@ public:
 
                 //- Assign from iteratorBase or derived
                 //  eg, iter = packedlist[i] or even iter = list.begin()
-                inline const_iterator& operator=(const iteratorBase&);
+                inline void operator=(const iteratorBase&);
 
                 //- Return referenced value directly
                 inline unsigned int operator*() const;
@@ -635,7 +636,6 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "error.hpp"
 #include <climits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -664,7 +664,7 @@ inline unsigned int CML::PackedList<nBits>::packing()
 template<unsigned nBits>
 inline unsigned int CML::PackedList<nBits>::maskLower(unsigned offset)
 {
-    // return (1u << (nBits * offset)) - 1;
+    // Return (1u << (nBits * offset)) - 1;
     // The next one works more reliably with overflows
     // eg, when compiled without optimization
     return (~0u >> ( sizeof(StorageType)*CHAR_BIT - nBits * offset));
@@ -834,9 +834,9 @@ inline CML::PackedList<nBits>::PackedList(const PackedList<nBits>& lst)
 
 
 template<unsigned nBits>
-inline CML::PackedList<nBits>::PackedList(const Xfer<PackedList<nBits> >& lst)
+inline CML::PackedList<nBits>::PackedList(PackedList<nBits>&& lst)
 {
-    transfer(lst());
+    transfer(lst);
 }
 
 
@@ -869,16 +869,14 @@ inline CML::PackedList<nBits>::PackedList(const UIndirectList<label>& lst)
 
 
 template<unsigned nBits>
-inline CML::autoPtr<CML::PackedList<nBits> >
+inline CML::autoPtr<CML::PackedList<nBits>>
 CML::PackedList<nBits>::clone() const
 {
-    return autoPtr<PackedList<nBits> >(new PackedList<nBits>(*this));
+    return autoPtr<PackedList<nBits>>(new PackedList<nBits>(*this));
 }
 
 
 // * * * * * * * * * * * * * * * * Iterators * * * * * * * * * * * * * * * * //
-
-// iteratorBase
 
 template<unsigned nBits>
 inline CML::PackedList<nBits>::iteratorBase::iteratorBase()
@@ -927,7 +925,7 @@ CML::PackedList<nBits>::iteratorBase::set(const unsigned int val)
 
     if (val >= max_value())
     {
-        // overflow is max_value, fill everything
+        // Overflow is max_value, fill everything
         stored |= mask;
     }
     else
@@ -968,27 +966,29 @@ inline bool CML::PackedList<nBits>::iteratorBase::operator!=
 
 
 template<unsigned nBits>
-inline unsigned int
-CML::PackedList<nBits>::iteratorBase::operator=(const iteratorBase& iter)
+inline void CML::PackedList<nBits>::iteratorBase::operator=
+(
+    const iteratorBase& iter
+)
 {
     const unsigned int val = iter.get();
     this->set(val);
-    return val;
 }
 
 
 template<unsigned nBits>
-inline unsigned int
-CML::PackedList<nBits>::iteratorBase::operator=(const unsigned int val)
+inline void CML::PackedList<nBits>::iteratorBase::operator=
+(
+    const unsigned int val
+)
 {
-    // lazy evaluation - increase size on assigment
+    // Lazy evaluation - increase size on assignment
     if (index_ >= list_->size_)
     {
         list_->resize(index_ + 1);
     }
 
     this->set(val);
-    return val;
 }
 
 
@@ -996,7 +996,7 @@ template<unsigned nBits>
 inline CML::PackedList<nBits>::iteratorBase::operator
 unsigned int () const
 {
-    // lazy evaluation - return 0 for out-of-range
+    // Lazy evaluation - return 0 for out-of-range
     if (index_ >= list_->size_)
     {
         return 0;
@@ -1005,8 +1005,6 @@ unsigned int () const
     return this->get();
 }
 
-
-// const_iterator, iterator
 
 template<unsigned nBits>
 inline CML::PackedList<nBits>::iterator::iterator()
@@ -1030,7 +1028,7 @@ inline CML::PackedList<nBits>::iterator::iterator
 :
     iteratorBase(iter)
 {
-    // avoid going past end()
+    // Avoid going past end()
     // eg, iter = iterator(list, Inf)
     if (this->index_ > this->list_->size_)
     {
@@ -1047,7 +1045,7 @@ inline CML::PackedList<nBits>::const_iterator::const_iterator
 :
     iteratorBase(iter)
 {
-    // avoid going past end()
+    // Avoid going past end()
     // eg, iter = iterator(list, Inf)
     if (this->index_ > this->list_->size_)
     {
@@ -1129,38 +1127,38 @@ inline bool CML::PackedList<nBits>::const_iterator::operator!=
 
 
 template<unsigned nBits>
-inline typename CML::PackedList<nBits>::iterator&
-CML::PackedList<nBits>::iterator::operator=(const iteratorBase& iter)
+inline void CML::PackedList<nBits>::iterator::operator=
+(
+    const iteratorBase& iter
+)
 {
     this->list_  = iter.list_;
     this->index_ = iter.index_;
 
-    // avoid going past end()
+    // Avoid going past end()
     // eg, iter = iterator(list, Inf)
     if (this->index_ > this->list_->size_)
     {
         this->index_ = this->list_->size_;
     }
-
-    return *this;
 }
 
 
 template<unsigned nBits>
-inline typename CML::PackedList<nBits>::const_iterator&
-CML::PackedList<nBits>::const_iterator::operator=(const iteratorBase& iter)
+inline void CML::PackedList<nBits>::const_iterator::operator=
+(
+    const iteratorBase& iter
+)
 {
     this->list_  = iter.list_;
     this->index_ = iter.index_;
 
-    // avoid going past end()
+    // Avoid going past end()
     // eg, iter = iterator(list, Inf)
     if (this->index_ > this->list_->size_)
     {
         this->index_ = this->list_->size_;
     }
-
-    return *this;
 }
 
 
@@ -1350,15 +1348,15 @@ inline void CML::PackedList<nBits>::resize
 
     if (size_ > oldSize)
     {
-        // fill new elements or newly exposed elements
+        // Fill new elements or newly exposed elements
         if (val)
         {
-            // fill value for complete segments
+            // Fill value for complete segments
             unsigned int fill = val;
 
             if (val >= max_value())
             {
-                // fill everything
+                // Fill everything
                 fill = maskLower(packing());
             }
             else
@@ -1369,7 +1367,7 @@ inline void CML::PackedList<nBits>::resize
                 }
             }
 
-            // fill in complete segments
+            // Fill in complete segments
             const label oldLen = packedLength(oldSize);
             const label newLen = packedLength(size_);
             for (label i=oldLen; i < newLen; ++i)
@@ -1377,7 +1375,7 @@ inline void CML::PackedList<nBits>::resize
                 StorageList::operator[](i) = fill;
             }
 
-            // finish previous partial segment, preserve existing value
+            // Finish previous partial segment, preserve existing value
             {
                 const unsigned int off = oldSize % packing();
                 if (off)
@@ -1391,7 +1389,7 @@ inline void CML::PackedList<nBits>::resize
             }
 
 
-            // mask off the (new) final partial segment
+            // Mask off the (new) final partial segment
             {
                 const unsigned int off = size_ % packing();
                 if (off)
@@ -1405,10 +1403,10 @@ inline void CML::PackedList<nBits>::resize
     }
     else if (size_ < oldSize)
     {
-        // resize shrinking
+        // Resize shrinking
         // - clear newly exposed elements
 
-        // fill in complete segments
+        // Fill in complete segments
         const label oldLen = packedLength(oldSize);
         const label newLen = packedLength(size_);
         for (label i=newLen; i < oldLen; ++i)
@@ -1416,7 +1414,7 @@ inline void CML::PackedList<nBits>::resize
             StorageList::operator[](i) = 0u;
         }
 
-        // mask off the final partial segment
+        // Mask off the final partial segment
         {
             const unsigned int off = size_ % packing();
             if (off)
@@ -1454,12 +1452,12 @@ inline void CML::PackedList<nBits>::setCapacity(const label nElem)
 {
     StorageList::setSize(packedLength(nElem), 0u);
 
-    // truncate addressed size too
+    // Truncate addressed size too
     if (size_ > nElem)
     {
         size_ = nElem;
 
-        // mask off the final partial segment
+        // Mask off the final partial segment
         const unsigned int off = size_ % packing();
         if (off)
         {
@@ -1476,7 +1474,7 @@ inline void CML::PackedList<nBits>::reserve(const label nElem)
 {
     const label len = packedLength(nElem);
 
-    // need more capacity?
+    // Need more capacity?
     if (len > StorageList::size())
     {
         // Like DynamicList with SizeInc=0, SizeMult=2, SizeDiv=1
@@ -1519,7 +1517,7 @@ inline void CML::PackedList<nBits>::clearStorage()
 template<unsigned nBits>
 inline void CML::PackedList<nBits>::shrink()
 {
-    // any uneed space allocated?
+    // Any uneed space allocated?
     const label len = packedLength();
     if (len < StorageList::size())
     {
@@ -1566,16 +1564,9 @@ inline void CML::PackedList<nBits>::transfer(PackedList<nBits>& lst)
 
 
 template<unsigned nBits>
-inline CML::Xfer<CML::PackedList<nBits> > CML::PackedList<nBits>::xfer()
-{
-    return xferMove(*this);
-}
-
-
-template<unsigned nBits>
 inline unsigned int CML::PackedList<nBits>::get(const label i) const
 {
-    // lazy evaluation - return 0 for out-of-range
+    // Lazy evaluation - return 0 for out-of-range
     if (i < 0 || i >= size_)
     {
         return 0;
@@ -1590,7 +1581,7 @@ inline unsigned int CML::PackedList<nBits>::get(const label i) const
 template<unsigned nBits>
 inline unsigned int CML::PackedList<nBits>::operator[](const label i) const
 {
-    // lazy evaluation - return 0 for out-of-range
+    // Lazy evaluation - return 0 for out-of-range
     if (i < 0 || i >= size_)
     {
         return 0;
@@ -1611,12 +1602,12 @@ inline bool CML::PackedList<nBits>::set
 {
     if (i < 0)
     {
-        // lazy evaluation - ignore out-of-bounds
+        // Lazy evaluation - ignore out-of-bounds
         return false;
     }
     else if (i >= size_)
     {
-        // lazy evaluation - increase size on assigment
+        // Lazy evaluation - increase size on assignment
         resize(i + 1);
     }
 
@@ -1678,8 +1669,7 @@ CML::PackedList<nBits>::operator[](const label i)
 
 
 template<unsigned nBits>
-inline CML::PackedList<nBits>&
-CML::PackedList<nBits>::operator=(const unsigned int val)
+inline void CML::PackedList<nBits>::operator=(const unsigned int val)
 {
     const label packLen = packedLength();
 
@@ -1689,7 +1679,7 @@ CML::PackedList<nBits>::operator=(const unsigned int val)
 
         if (val >= max_value())
         {
-            // fill everything
+            // Fill everything
             fill = maskLower(packing());
         }
         else
@@ -1705,7 +1695,7 @@ CML::PackedList<nBits>::operator=(const unsigned int val)
             StorageList::operator[](i) = fill;
         }
 
-        // mask off the final partial segment
+        // Mask off the final partial segment
         {
             const unsigned int off = size_ % packing();
             if (off)
@@ -1723,8 +1713,6 @@ CML::PackedList<nBits>::operator=(const unsigned int val)
             StorageList::operator[](i) = 0u;
         }
     }
-
-    return *this;
 }
 
 
@@ -1737,37 +1725,37 @@ CML::PackedList<nBits>::operator=(const unsigned int val)
 
 #if (UINT_MAX == 0xFFFFFFFF)
 // 32-bit counting, Hamming weight method
-#   define COUNT_PACKEDBITS(sum, x)                                           \
-{                                                                             \
-    x -= (x >> 1) & 0x55555555;                                               \
-    x = (x & 0x33333333) + ((x >> 2) & 0x33333333);                           \
-    sum += (((x + (x >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;                \
+#define COUNT_PACKEDBITS(sum, x)                                               \
+{                                                                              \
+    x -= (x >> 1) & 0x55555555;                                                \
+    x = (x & 0x33333333) + ((x >> 2) & 0x33333333);                            \
+    sum += (((x + (x >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;                 \
 }
 #elif (UINT_MAX == 0xFFFFFFFFFFFFFFFF)
 // 64-bit counting, Hamming weight method
-#   define COUNT_PACKEDBITS(sum, x)                                           \
-{                                                                             \
-    x -= (x >> 1) & 0x5555555555555555;                                       \
-    x = (x & 0x3333333333333333) + ((x >> 2) & 0x3333333333333333);           \
+#define COUNT_PACKEDBITS(sum, x)                                               \
+{                                                                              \
+    x -= (x >> 1) & 0x5555555555555555;                                        \
+    x = (x & 0x3333333333333333) + ((x >> 2) & 0x3333333333333333);            \
     sum += (((x + (x >> 4)) & 0x0F0F0F0F0F0F0F0F) * 0x0101010101010101) >> 56;\
 }
 #else
 // Arbitrary number of bits, Brian Kernighan's method
-#   define COUNT_PACKEDBITS(sum, x)    for (; x; ++sum) { x &= x - 1; }
+    #define COUNT_PACKEDBITS(sum, x)    for (; x; ++sum) { x &= x - 1; }
 #endif
 
 
 template<unsigned nBits>
 unsigned int CML::PackedList<nBits>::count() const
 {
-    register unsigned int c = 0;
+    unsigned int c = 0;
 
     if (size_)
     {
         const label packLen = packedLength();
         for (label i = 0; i < packLen; ++i)
         {
-            register unsigned int bits = StorageList::operator[](i);
+            unsigned int bits = StorageList::operator[](i);
             COUNT_PACKEDBITS(c, bits);
         }
     }
@@ -1837,7 +1825,7 @@ void CML::PackedList<nBits>::flip()
 
 
 template<unsigned nBits>
-CML::Xfer<CML::labelList> CML::PackedList<nBits>::values() const
+CML::labelList CML::PackedList<nBits>::values() const
 {
     labelList elems(size_);
 
@@ -1846,7 +1834,7 @@ CML::Xfer<CML::labelList> CML::PackedList<nBits>::values() const
         elems[i] = get(i);
     }
 
-    return elems.xfer();
+    return elems;
 }
 
 
@@ -1988,7 +1976,7 @@ CML::Istream& CML::PackedList<nBits>::read(Istream& is)
             {
                 if (delimiter == token::BEGIN_LIST)
                 {
-                    for (register label i=0; i<sz; ++i)
+                    for (label i=0; i<sz; ++i)
                     {
                         lst[i] = lst.readValue(is);
 
@@ -2256,41 +2244,25 @@ CML::Ostream& CML::PackedList<nBits>::write
 }
 
 
-template<unsigned nBits>
-void CML::PackedList<nBits>::writeEntry(Ostream& os) const
-{
-    os  << *this;
-}
-
-
-template<unsigned nBits>
-void CML::PackedList<nBits>::writeEntry
-(
-    const word& keyword,
-    Ostream& os
-) const
-{
-    os.writeKeyword(keyword);
-    writeEntry(os);
-    os  << token::END_STATEMENT << endl;
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<unsigned nBits>
-CML::PackedList<nBits>&
-CML::PackedList<nBits>::operator=(const PackedList<nBits>& lst)
+void CML::PackedList<nBits>::operator=(const PackedList<nBits>& lst)
 {
     StorageList::operator=(lst);
     size_ = lst.size();
-    return *this;
 }
 
 
 template<unsigned nBits>
-CML::PackedList<nBits>&
-CML::PackedList<nBits>::operator=(const labelUList& lst)
+void CML::PackedList<nBits>::operator=(PackedList<nBits>&& lst)
+{
+    transfer(lst);
+}
+
+
+template<unsigned nBits>
+void CML::PackedList<nBits>::operator=(const labelUList& lst)
 {
     setCapacity(lst.size());
     size_ = lst.size();
@@ -2299,13 +2271,11 @@ CML::PackedList<nBits>::operator=(const labelUList& lst)
     {
         set(i, lst[i]);
     }
-    return *this;
 }
 
 
 template<unsigned nBits>
-CML::PackedList<nBits>&
-CML::PackedList<nBits>::operator=(const UIndirectList<label>& lst)
+void CML::PackedList<nBits>::operator=(const UIndirectList<label>& lst)
 {
     setCapacity(lst.size());
     size_ = lst.size();
@@ -2314,7 +2284,15 @@ CML::PackedList<nBits>::operator=(const UIndirectList<label>& lst)
     {
         set(i, lst[i]);
     }
-    return *this;
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<unsigned nBits>
+void CML::writeEntry(Ostream& os, const PackedList<nBits>& l)
+{
+    os << l;
 }
 
 

@@ -62,9 +62,9 @@ void CML::noPreconditioner::precondition
     scalar* RESTRICT wAPtr = wA.begin();
     const scalar* RESTRICT rAPtr = rA.begin();
 
-    register label nCells = wA.size();
+    label nCells = wA.size();
 
-    for (register label cell=0; cell<nCells; cell++)
+    for (label cell=0; cell<nCells; cell++)
     {
         wAPtr[cell] = rAPtr[cell];
     }

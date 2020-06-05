@@ -73,24 +73,24 @@ void meshSurfaceEdgeExtractor::removeOldBoundaryFaces()
     polyMeshGenModifier meshModifier_(mesh_);
     cellListPMG& cells_ = meshModifier_.cellsAccess();
 
-    forAll(cells_, cellI)
+    forAll(cells_, celli)
     {
-        const cell& c = cells_[cellI];
+        const cell& c = cells_[celli];
 
         cell newC(c);
 
         forAll(c, fI)
             if( neighbour_[c[fI]] != -1 )
             {
-                boundaryCell_[cellI] = true;
-                newC[nFacesInCell_[cellI]++] = c[fI];
+                boundaryCell_[celli] = true;
+                newC[nFacesInCell_[celli]++] = c[fI];
             }
 
-        if( nFacesInCell_[cellI] < direction(c.size()) )
+        if( nFacesInCell_[celli] < direction(c.size()) )
         {
-            newC.setSize(nFacesInCell_[cellI]);
+            newC.setSize(nFacesInCell_[celli]);
 
-            cells_[cellI] = newC;
+            cells_[celli] = newC;
         };
     }
 

@@ -128,7 +128,7 @@ void timeManipulationFunctionObject::write()
         &&
         time().value()>=time().endTime().value()
         &&
-        !time().outputTime()
+        !time().writeTime()
     ) {
         WarningInFunction
             << "Forcing write because we (" << name()

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -26,7 +26,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::pointLinear<Type>::
 correction
 (
@@ -40,15 +40,15 @@ correction
         volPointInterpolation::New(mesh).interpolate(vf)
     );
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsfCorr =
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr =
         linearInterpolate(vf);
 
-    Field<Type>& sfCorr = tsfCorr().internalField();
+    Field<Type>& sfCorr = tsfCorr.ref().primitiveFieldRef();
 
     const pointField& points = mesh.points();
-    const pointField& C = mesh.C().internalField();
+    const pointField& C = mesh.C();
     const faceList& faces = mesh.faces();
-    const scalarField& w = mesh.weights().internalField();
+    const scalarField& w = mesh.weights();
     const labelList& owner = mesh.owner();
     const labelList& neighbour = mesh.neighbour();
 
@@ -99,7 +99,7 @@ correction
 
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& bSfCorr = tsfCorr().boundaryField();
+        Boundary& bSfCorr = tsfCorr.ref().boundaryFieldRef();
 
     forAll(bSfCorr, patchi)
     {
@@ -161,7 +161,7 @@ correction
         }
         else
         {
-            pSfCorr = pTraits<Type>::zero;
+            pSfCorr = Zero;
         }
     }
 

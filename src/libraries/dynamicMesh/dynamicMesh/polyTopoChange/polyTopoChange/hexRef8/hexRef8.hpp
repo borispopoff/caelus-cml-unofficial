@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -187,7 +187,7 @@ class hexRef8
         ) const;
 
         ////- Print levels of list of points.
-        //void printLevels(Ostream&, const labelList&) const;
+        // void printLevels(Ostream&, const labelList&) const;
 
         //- debug:check orientation of added internal face
         static void checkInternalOrientation
@@ -270,7 +270,7 @@ class hexRef8
             polyTopoChange& meshMod
         ) const;
 
-        //- Store vertices from startFp upto face split point.
+        //- Store vertices from startFp up to face split point.
         //  Used when splitting face into 4.
         void walkFaceToMid
         (
@@ -333,10 +333,10 @@ class hexRef8
 
 
         //- Disallow default bitwise copy construct
-        hexRef8(const hexRef8&);
+        hexRef8(const hexRef8&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const hexRef8&);
+        void operator=(const hexRef8&) = delete;
 
 
 public:

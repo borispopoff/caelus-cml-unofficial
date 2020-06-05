@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -167,8 +167,8 @@ filmPyrolysisRadiativeCoupledMixedFvPatchScalarField
         FatalErrorInFunction
             << "' not type '" << mappedPatchBase::typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << dimensionedInternalField().name()
-            << " in file " << dimensionedInternalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 
@@ -358,10 +358,10 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::updateCoeffs()
 
         Info<< mesh.name() << ':'
             << patch().name() << ':'
-            << this->dimensionedInternalField().name() << " <- "
+            << this->internalField().name() << " <- "
             << nbrMesh.name() << ':'
             << nbrPatch.name() << ':'
-            << this->dimensionedInternalField().name() << " :" << nl
+            << this->internalField().name() << " :" << nl
             << "     convective heat[W] : " << Qc << nl
             << "     radiative heat [W] : " << qr << nl
             << "     total heat     [W] : " << Qt << nl
@@ -394,14 +394,11 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::write
         "pyrolysisProperties",
         pyrolysisRegionName_
     );
-    os.writeKeyword("Tnbr")<< TnbrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("convectiveScaling") << convectiveScaling_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("filmDeltaDry") << filmDeltaDry_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("filmDeltaWet") << filmDeltaWet_
-        << token::END_STATEMENT << endl;
+    writeEntry(os, "Tnbr", TnbrName_);
+    writeEntry(os, "qr", qrName_);
+    writeEntry(os, "convectiveScaling", convectiveScaling_);
+    writeEntry(os, "filmDeltaDry", filmDeltaDry_);
+    writeEntry(os, "filmDeltaWet", filmDeltaWet_);
     temperatureCoupledBase::write(os);
 }
 

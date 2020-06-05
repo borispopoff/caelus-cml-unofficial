@@ -36,7 +36,7 @@ namespace fv
 {
 
 template<>
-tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
+tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
 (
     const GeometricField<vector, fvPatchField, volMesh>& vf
 ) const
@@ -54,11 +54,11 @@ tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
 
     const fvMesh& mesh = vf.mesh();
 
-    tmp<BlockLduSystem<vector, scalar> > tbs
+    tmp<BlockLduSystem<vector, scalar>> tbs
     (
         new BlockLduSystem<vector, scalar>(mesh)
     );
-    BlockLduSystem<vector, scalar>& bs = tbs();
+    BlockLduSystem<vector, scalar>& bs = tbs.ref();
     scalarField& source = bs.source();
 
     // Grab ldu parts of block matrix as linear always
@@ -75,28 +75,28 @@ tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
     bs.negSumDiag();
 
     // Boundary contributions
-    forAll(vf.boundaryField(), patchI)
+    forAll(vf.boundaryField(), patchi)
     {
-        const fvPatchVectorField& pf = vf.boundaryField()[patchI];
+        const fvPatchVectorField& pf = vf.boundaryField()[patchi];
         const fvPatch& patch = pf.patch();
         const vectorField& Sf = patch.Sf();
-        const fvsPatchScalarField& pw = weights.boundaryField()[patchI];
+        const fvsPatchScalarField& pw = weights.boundaryField()[patchi];
         const unallocLabelList& fc = patch.faceCells();
 
         const vectorField internalCoeffs(pf.valueInternalCoeffs(pw));
 
         // Diag contribution
-        forAll(pf, faceI)
+        forAll(pf, facei)
         {
-            d[fc[faceI]] += cmptMultiply(internalCoeffs[faceI], Sf[faceI]);
+            d[fc[facei]] += cmptMultiply(internalCoeffs[facei], Sf[facei]);
         }
 
         if (patch.coupled())
         {
             CoeffField<vector>::linearTypeField& pcoupleUpper =
-                bs.coupleUpper()[patchI].asLinear();
+                bs.coupleUpper()[patchi].asLinear();
             CoeffField<vector>::linearTypeField& pcoupleLower =
-                bs.coupleLower()[patchI].asLinear();
+                bs.coupleLower()[patchi].asLinear();
 
             const vectorField pcl(-pw*Sf);
             const vectorField pcu(pcl + Sf);
@@ -110,9 +110,9 @@ tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
             const vectorField boundaryCoeffs(pf.valueBoundaryCoeffs(pw));
 
             // Boundary contribution
-            forAll(pf, faceI)
+            forAll(pf, facei)
             {
-                source[fc[faceI]] -= boundaryCoeffs[faceI] & Sf[faceI];
+                source[fc[facei]] -= boundaryCoeffs[facei] & Sf[facei];
             }
         }
     }
@@ -124,7 +124,7 @@ tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
 
 
 template<>
-tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
+tmp<BlockLduSystem<vector, scalar>> blockGaussDivScheme<vector>::fvmUDiv
 (
     const surfaceScalarField& flux,
     const GeometricField<vector, fvPatchField, volMesh>& vf
@@ -143,11 +143,11 @@ tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
 
     const fvMesh& mesh = vf.mesh();
 
-    tmp<BlockLduSystem<vector, scalar> > tbs
+    tmp<BlockLduSystem<vector, scalar>> tbs
     (
         new BlockLduSystem<vector, scalar>(mesh)
     );
-    BlockLduSystem<vector, scalar>& bs = tbs();
+    BlockLduSystem<vector, scalar>& bs = tbs.ref();
     scalarField& source = bs.source();
 
     // Grab ldu parts of block matrix as linear always
@@ -165,34 +165,34 @@ tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
     bs.negSumDiag();
 
     // Boundary contributions
-    forAll(vf.boundaryField(), patchI)
+    forAll(vf.boundaryField(), patchi)
     {
-        const fvPatchVectorField& pf = vf.boundaryField()[patchI];
+        const fvPatchVectorField& pf = vf.boundaryField()[patchi];
         const fvPatch& patch = pf.patch();
         const vectorField& Sf = patch.Sf();
-        const fvsPatchScalarField& pw = weights.boundaryField()[patchI];
+        const fvsPatchScalarField& pw = weights.boundaryField()[patchi];
         const unallocLabelList& fc = patch.faceCells();
 
-        const scalarField& pFlux = flux.boundaryField()[patchI];
+        const scalarField& pFlux = flux.boundaryField()[patchi];
 
         const vectorField internalCoeffs(pf.valueInternalCoeffs(pw));
 
         // Diag contribution
-        forAll(pf, faceI)
+        forAll(pf, facei)
         {
-            d[fc[faceI]] += cmptMultiply
+            d[fc[facei]] += cmptMultiply
             (
-                internalCoeffs[faceI],
-                pFlux[faceI]*Sf[faceI]
+                internalCoeffs[facei],
+                pFlux[facei]*Sf[facei]
             );
         }
 
         if (patch.coupled())
         {
             CoeffField<vector>::linearTypeField& pcoupleUpper =
-                bs.coupleUpper()[patchI].asLinear();
+                bs.coupleUpper()[patchi].asLinear();
             CoeffField<vector>::linearTypeField& pcoupleLower =
-                bs.coupleLower()[patchI].asLinear();
+                bs.coupleLower()[patchi].asLinear();
 
             const vectorField pcl(-pw*pFlux*Sf);
             const vectorField pcu(pcl + pFlux*Sf);
@@ -206,11 +206,11 @@ tmp<BlockLduSystem<vector, scalar> > blockGaussDivScheme<vector>::fvmUDiv
             const vectorField boundaryCoeffs(pf.valueBoundaryCoeffs(pw));
 
             // Boundary contribution
-            forAll(pf, faceI)
+            forAll(pf, facei)
             {
-                source[fc[faceI]] -=
+                source[fc[facei]] -=
                 (
-                    boundaryCoeffs[faceI] & (pFlux[faceI]*Sf[faceI])
+                    boundaryCoeffs[facei] & (pFlux[facei]*Sf[facei])
                 );
             }
         }

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -41,9 +41,9 @@ inline CML::Keyed<T>::Keyed(const T& item, const label key)
 
 
 template<class T>
-inline CML::Keyed<T>::Keyed(const Xfer<T>& item, const label key)
+inline CML::Keyed<T>::Keyed(T&& item, const label key)
 :
-    T(item),
+    T(move(item)),
     key_(key)
 {}
 
@@ -71,10 +71,10 @@ inline CML::label& CML::Keyed<T>::key()
 
 
 template<class T>
-inline CML::List<CML::Keyed<T> >
+inline CML::List<CML::Keyed<T>>
 CML::Keyed<T>::createList(const List<T>& lst, const label key)
 {
-    List<Keyed<T> > newList(lst.size());
+    List<Keyed<T>> newList(lst.size());
 
     forAll(lst, elemI)
     {
@@ -85,7 +85,7 @@ CML::Keyed<T>::createList(const List<T>& lst, const label key)
 
 
 template<class T>
-inline CML::List<CML::Keyed<T> >
+inline CML::List<CML::Keyed<T>>
 CML::Keyed<T>::createList(const List<T>& lst, const labelUList& keys)
 {
     if (lst.size() != keys.size())
@@ -97,7 +97,7 @@ CML::Keyed<T>::createList(const List<T>& lst, const labelUList& keys)
             << abort(FatalError);
     }
 
-    List<Keyed<T> > newList(lst.size());
+    List<Keyed<T>> newList(lst.size());
 
     forAll(lst, elemI)
     {

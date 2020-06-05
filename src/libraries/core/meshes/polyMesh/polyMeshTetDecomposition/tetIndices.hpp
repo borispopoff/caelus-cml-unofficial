@@ -28,9 +28,9 @@ Description
     - cell (of course)
     - face on cell
     - three points on face (faceBasePt, facePtA, facePtB)
-      When constructing from a mesh and index in the face (tetPtI):
+      When constructing from a mesh and index in the face (tetPti):
         - faceBasePt is the mesh.tetBasePtIs() base point
-        - facePtA is tetPtI away from faceBasePt
+        - facePtA is tetPti away from faceBasePt
         - facePtB is next one after/before facePtA
         e.g.:
 
@@ -98,7 +98,7 @@ public:
         tetIndices();
 
         //- Construct from components
-        tetIndices(label celli, label facei, label tetPtI);
+        tetIndices(label celli, label facei, label tetPti);
 
 
     //- Destructor
@@ -121,10 +121,10 @@ public:
             //- Return non-const access to the face
             inline label& face();
 
-            //- Return the characterising tetPtI
+            //- Return the characterising tetPti
             inline label tetPt() const;
 
-            //- Return non-const access to the characterising tetPtI
+            //- Return non-const access to the characterising tetPti
             inline label& tetPt();
 
             //- Return the indices corresponding to the tri on the face for

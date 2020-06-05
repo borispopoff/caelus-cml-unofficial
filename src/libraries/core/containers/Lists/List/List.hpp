@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -35,27 +35,42 @@ Description
 
 #include "UList.hpp"
 #include "autoPtr.hpp"
-#include "Xfer.hpp"
+#include <initializer_list>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace CML
 {
 
+using std::move;
+
+template<class T>
+inline T clone(const T& t)
+{
+    return move(T(t));
+}
+
+// Forward declaration of classes
+
 class Istream;
 class Ostream;
 
 // Forward declaration of friend functions and operators
-
 template<class T> class List;
 
 template<class T> Istream& operator>>(Istream&, List<T>&);
 
 template<class T, unsigned Size> class FixedList;
 template<class T> class PtrList;
-template<class T> class SLList;
+
+class SLListBase;
+template<class LListBase, class T> class LList;
+template<class T>
+using SLList = LList<SLListBase, T>;
+
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-    class DynamicList;
+class DynamicList;
+
 template<class T> class SortableList;
 template<class T> class IndirectList;
 template<class T> class UIndirectList;
@@ -72,11 +87,31 @@ class List
 :
     public UList<T>
 {
+    // Private member functions
+
+        //- Allocate list storage
+        inline void alloc();
+
+        //- Reallocate list storage to the given size
+        inline void reAlloc(const label s);
+
+        //- Copy list of given type
+        template<class List2>
+        inline void copyList(const List2&);
+
+        //- Allocate storage and copy list of given type
+        template<class List2>
+        inline void allocCopyList(const List2&);
+
+        //- Construct given start and end iterators and number of elements
+        template<class InputIterator>
+        inline List(InputIterator first, InputIterator last, const label s);
+
 
 protected:
 
     //- Override size to be inconsistent with allocated storage.
-    //  Use with care.
+    //  Use with care
     inline void size(const label);
 
 
@@ -87,30 +122,38 @@ public:
         //- Return a null List
         inline static const List<T>& null();
 
+
     // Constructors
 
-        //- Null constructor.
+        //- Null constructor
         inline List();
 
-        //- Construct with given size.
+        //- Construct with given size
         explicit List(const label);
 
-        //- Construct with given size and value for all elements.
+        //- Construct with given size and value for all elements
         List(const label, const T&);
 
-        //- Copy constructor.
+        //- Construct with given size initializing all elements to zero
+        List(const label, const zero);
+
+        //- Copy constructor
         List(const List<T>&);
 
-        //- Construct by transferring the parameter contents
-        List(const Xfer<List<T> >&);
+        //- Copy constructor from list containing another type
+        template<class T2>
+        explicit List(const List<T2>&);
 
-        //- Construct as copy or re-use as specified.
-        List(List<T>&, bool reUse);
+        //- Move constructor
+        List(List<T>&&);
 
-        //- Construct as subset.
+        //- Construct as copy or re-use as specified
+        List(List<T>&, bool reuse);
+
+        //- Construct as subset
         List(const UList<T>&, const labelUList& mapAddressing);
 
-        //- Construct given start and end iterators.
+        //- Construct given start and end iterators
         template<class InputIterator>
         List(InputIterator first, InputIterator last);
 
@@ -130,11 +173,14 @@ public:
         //- Construct as copy of BiIndirectList<T>
         explicit List(const BiIndirectList<T>&);
 
-        //- Construct from Istream.
+        //- Construct from an initializer list
+        List(std::initializer_list<T>);
+
+        //- Construct from Istream
         List(Istream&);
 
         //- Clone
-        inline autoPtr<List<T> > clone() const;
+        inline autoPtr<List<T>> clone() const;
 
 
     //- Destructor
@@ -149,26 +195,26 @@ public:
 
     // Member Functions
 
-        //- Return the number of elements in the UList.
+        //- Return the number of elements in the UList
         inline label size() const;
 
 
         // Edit
 
-            //- Reset size of List.
+            //- Alias for setSize(const label)
             inline void resize(const label);
 
-            //- Reset size of List and value for new elements.
+            //- Alias for setSize(const label, const T&)
             inline void resize(const label, const T&);
 
-            //- Reset size of List.
+            //- Reset size of List
             void setSize(const label);
 
-            //- Reset size of List and value for new elements.
+            //- Reset size of List and value for new elements
             void setSize(const label, const T&);
 
-            //- Clear the list, i.e. set size to zero.
-            void clear();
+            //- Clear the list, i.e. set size to zero
+            inline void clear();
 
             //- Append an element at the end of the list
             inline void append(const T&);
@@ -180,43 +226,51 @@ public:
             inline void append(const UIndirectList<T>&);
 
             //- Transfer the contents of the argument List into this list
-            //  and annul the argument list.
+            //  and annul the argument list
             void transfer(List<T>&);
 
             //- Transfer the contents of the argument List into this list
-            //  and annul the argument list.
+            //  and annul the argument list
             template<unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
             void transfer(DynamicList<T, SizeInc, SizeMult, SizeDiv>&);
 
             //- Transfer the contents of the argument List into this list
-            //  and annul the argument list.
+            //  and annul the argument list
             void transfer(SortableList<T>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<List<T> > xfer();
-
-            //- Return subscript-checked element of UList.
+            //- Return subscript-checked element of UList
             inline T& newElmt(const label);
+
+
+        //- Disallow implicit shallowCopy
+        void shallowCopy(const UList<T>&) = delete;
+
 
     // Member operators
 
-        //- Assignment from UList operator. Takes linear time.
+        //- Assignment to UList operator. Takes linear time
         void operator=(const UList<T>&);
 
-        //- Assignment operator. Takes linear time.
+        //- Assignment operator. Takes linear time
         void operator=(const List<T>&);
 
-        //- Assignment from SLList operator. Takes linear time.
+        //- Move assignment operator
+        void operator=(List<T>&&);
+
+        //- Assignment to SLList operator. Takes linear time
         void operator=(const SLList<T>&);
 
-        //- Assignment from UIndirectList operator. Takes linear time.
+        //- Assignment to UIndirectList operator. Takes linear time
         void operator=(const UIndirectList<T>&);
 
-        //- Assignment from BiIndirectList operator. Takes linear time.
+        //- Assignment to BiIndirectList operator. Takes linear time
         void operator=(const BiIndirectList<T>&);
 
+        //- Assignment to an initializer list
+        void operator=(std::initializer_list<T>);
+
         //- Assignment of all entries to the given value
-        inline void operator=(const T& val);
+        inline void operator=(const T&);
 
         //- Assignment of all entries to zero
         inline void operator=(const zero);
@@ -224,26 +278,98 @@ public:
 
     // Istream operator
 
-        //- Read List from Istream, discarding contents of existing List.
+        //- Read List from Istream, discarding contents of existing List
         friend Istream& operator>> <T>
         (Istream&, List<T>&);
 };
 
 
-//- Read a bracket-delimited list, or handle a single value as list of size 1.
+//- Read a bracket-delimited list, or handle a single value as list of size 1
 //  For example,
 //  \code
 //      wList = readList<word>(IStringStream("(patch1 patch2 patch3)")());
 //      wList = readList<word>(IStringStream("patch0")());
 //  \endcode
-//  Mostly useful for handling command-line arguments.
+//  Mostly useful for handling command-line arguments
 template<class T>
 List<T> readList(Istream&);
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class T>
+inline void CML::List<T>::alloc()
+{
+    if (this->size_ > 0)
+    {
+        this->v_ = new T[this->size_];
+    }
+}
+
+
+template<class T>
+inline void CML::List<T>::reAlloc(const label s)
+{
+    if (this->size_ != s)
+    {
+        clear();
+        this->size_ = s;
+        alloc();
+    }
+}
+
+
+template<class T>
+template<class List2>
+inline void CML::List<T>::copyList(const List2& lst)
+{
+    if (this->size_)
+    {
+        forAll(*this, i)
+        {
+            this->operator[](i) = lst[i];
+        }
+    }
+}
+
+
+template<class T>
+template<class List2>
+inline void CML::List<T>::allocCopyList(const List2& lst)
+{
+    if (this->size_)
+    {
+        alloc();
+        copyList(lst);
+    }
+}
+
+
+template<class T>
+template<class InputIterator>
+inline CML::List<T>::List
+(
+    InputIterator first,
+    InputIterator last,
+    const label s
+)
+:
+    UList<T>(nullptr, s)
+{
+    if (this->size_)
+    {
+        alloc();
+
+        InputIterator iter = first;
+        forAll(*this, i)
+        {
+            this->operator[](i) = *iter++;
+        }
+    }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -253,9 +379,9 @@ inline CML::List<T>::List()
 
 
 template<class T>
-inline CML::autoPtr<CML::List<T> > CML::List<T>::clone() const
+inline CML::autoPtr<CML::List<T>> CML::List<T>::clone() const
 {
-    return autoPtr<List<T> >(new List<T>(*this));
+    return autoPtr<List<T>>(new List<T>(*this));
 }
 
 
@@ -264,7 +390,20 @@ inline CML::autoPtr<CML::List<T> > CML::List<T>::clone() const
 template<class T>
 inline const CML::List<T>& CML::List<T>::null()
 {
-    return NullSingletonRef< List<T> >();
+    return NullSingletonRef<List<T>>();
+}
+
+
+template<class T>
+inline void CML::List<T>::clear()
+{
+    if (this->v_)
+    {
+        delete[] this->v_;
+        this->v_ = 0;
+    }
+
+    this->size_ = 0;
 }
 
 
@@ -305,13 +444,6 @@ template<class T>
 inline CML::label CML::List<T>::size() const
 {
     return UList<T>::size_;
-}
-
-
-template<class T>
-inline CML::Xfer<CML::List<T> > CML::List<T>::xfer()
-{
-    return xferMove(*this);
 }
 
 
@@ -362,16 +494,17 @@ inline void CML::List<T>::operator=(const T& t)
     UList<T>::operator=(t);
 }
 
+
 template<class T>
 inline void CML::List<T>::operator=(const zero)
 {
     UList<T>::operator=(Zero);
 }
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "ListLoopM.hpp"
-
 #include "FixedList.hpp"
 #include "PtrList.hpp"
 #include "SLList.hpp"
@@ -380,11 +513,9 @@ inline void CML::List<T>::operator=(const zero)
 #include "BiIndirectList.hpp"
 #include "contiguous.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
-// Construct with length specified
 template<class T>
 CML::List<T>::List(const label s)
 :
@@ -397,14 +528,10 @@ CML::List<T>::List(const label s)
             << abort(FatalError);
     }
 
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-    }
+    alloc();
 }
 
 
-// Construct with length and single value specified
 template<class T>
 CML::List<T>::List(const label s, const T& a)
 :
@@ -417,10 +544,10 @@ CML::List<T>::List(const label s, const T& a)
             << abort(FatalError);
     }
 
+    alloc();
+
     if (this->size_)
     {
-        this->v_ = new T[this->size_];
-
         List_ACCESS(T, (*this), vp);
         List_FOR_ALL((*this), i)
             List_ELEM((*this), vp, i) = a;
@@ -429,7 +556,30 @@ CML::List<T>::List(const label s, const T& a)
 }
 
 
-// Construct as copy
+template<class T>
+CML::List<T>::List(const label s, const zero)
+:
+    UList<T>(nullptr, s)
+{
+    if (this->size_ < 0)
+    {
+        FatalErrorInFunction
+            << "bad size " << this->size_
+            << abort(FatalError);
+    }
+
+    alloc();
+
+    if (this->size_)
+    {
+        List_ACCESS(T, (*this), vp);
+        List_FOR_ALL((*this), i)
+            List_ELEM((*this), vp, i) = Zero;
+        List_END_FOR_ALL
+    }
+}
+
+
 template<class T>
 CML::List<T>::List(const List<T>& a)
 :
@@ -437,15 +587,15 @@ CML::List<T>::List(const List<T>& a)
 {
     if (this->size_)
     {
-        this->v_ = new T[this->size_];
+        alloc();
 
-#       ifdef USEMEMCPY
+        #ifdef USEMEMCPY
         if (contiguous<T>())
         {
             memcpy(this->v_, a.v_, this->byteSize());
         }
         else
-#       endif
+        #endif
         {
             List_ACCESS(T, (*this), vp);
             List_CONST_ACCESS(T, a, ap);
@@ -457,21 +607,38 @@ CML::List<T>::List(const List<T>& a)
 }
 
 
-// Construct by transferring the parameter contents
 template<class T>
-CML::List<T>::List(const Xfer<List<T> >& lst)
+template<class T2>
+CML::List<T>::List(const List<T2>& a)
+:
+    UList<T>(nullptr, a.size())
 {
-    transfer(lst());
+    if (this->size_)
+    {
+        alloc();
+
+        List_ACCESS(T, (*this), vp);
+        List_CONST_ACCESS(T2, a, ap);
+        List_FOR_ALL((*this), i)
+            List_ELEM((*this), vp, i) = T(List_ELEM(a, ap, i));
+        List_END_FOR_ALL
+    }
 }
 
 
-// Construct as copy or re-use as specified.
 template<class T>
-CML::List<T>::List(List<T>& a, bool reUse)
+CML::List<T>::List(List<T>&& lst)
+{
+    transfer(lst);
+}
+
+
+template<class T>
+CML::List<T>::List(List<T>& a, bool reuse)
 :
     UList<T>(nullptr, a.size_)
 {
-    if (reUse)
+    if (reuse)
     {
         this->v_ = a.v_;
         a.v_ = 0;
@@ -479,15 +646,15 @@ CML::List<T>::List(List<T>& a, bool reUse)
     }
     else if (this->size_)
     {
-        this->v_ = new T[this->size_];
+        alloc();
 
-#       ifdef USEMEMCPY
+        #ifdef USEMEMCPY
         if (contiguous<T>())
         {
             memcpy(this->v_, a.v_, this->byteSize());
         }
         else
-#       endif
+        #endif
         {
             List_ACCESS(T, (*this), vp);
             List_CONST_ACCESS(T, a, ap);
@@ -499,7 +666,6 @@ CML::List<T>::List(List<T>& a, bool reUse)
 }
 
 
-// Construct as subset
 template<class T>
 CML::List<T>::List(const UList<T>& a, const labelUList& map)
 :
@@ -509,152 +675,84 @@ CML::List<T>::List(const UList<T>& a, const labelUList& map)
     {
         // Note:cannot use List_ELEM since third argument has to be index.
 
-        this->v_ = new T[this->size_];
+        alloc();
 
         forAll(*this, i)
         {
-            this->v_[i] = a[map[i]];
+            this->operator[](i) = a[map[i]];
         }
     }
 }
 
 
-// Construct given start and end iterators.
 template<class T>
 template<class InputIterator>
 CML::List<T>::List(InputIterator first, InputIterator last)
-{
-    label s = 0;
-    for
-    (
-        InputIterator iter = first;
-        iter != last;
-        ++iter
-    )
-    {
-        s++;
-    }
-
-    setSize(s);
-
-    s = 0;
-
-    for
-    (
-        InputIterator iter = first;
-        iter != last;
-        ++iter
-    )
-    {
-        this->operator[](s++) = *iter;
-    }
-}
+:
+    List<T>(first, last, std::distance(first, last))
+{}
 
 
-// Construct as copy of FixedList<T, Size>
 template<class T>
 template<unsigned Size>
 CML::List<T>::List(const FixedList<T, Size>& lst)
 :
     UList<T>(nullptr, Size)
 {
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        forAll(*this, i)
-        {
-            this->operator[](i) = lst[i];
-        }
-    }
+    allocCopyList(lst);
 }
 
 
-// Construct as copy of PtrList<T>
 template<class T>
 CML::List<T>::List(const PtrList<T>& lst)
 :
     UList<T>(nullptr, lst.size())
 {
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        forAll(*this, i)
-        {
-            this->operator[](i) = lst[i];
-        }
-    }
+    allocCopyList(lst);
 }
 
 
-// Construct as copy of SLList<T>
 template<class T>
 CML::List<T>::List(const SLList<T>& lst)
 :
-    UList<T>(nullptr, lst.size())
-{
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        label i = 0;
-        for
-        (
-            typename SLList<T>::const_iterator iter = lst.begin();
-            iter != lst.end();
-            ++iter
-        )
-        {
-            this->operator[](i++) = iter();
-        }
-    }
-}
+    List<T>(lst.first(), lst.last(), lst.size())
+{}
 
 
-// Construct as copy of UIndirectList<T>
 template<class T>
 CML::List<T>::List(const UIndirectList<T>& lst)
 :
     UList<T>(nullptr, lst.size())
 {
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        forAll(*this, i)
-        {
-            this->operator[](i) = lst[i];
-        }
-    }
+    allocCopyList(lst);
 }
 
 
-// Construct as copy of BiIndirectList<T>
 template<class T>
 CML::List<T>::List(const BiIndirectList<T>& lst)
 :
     UList<T>(nullptr, lst.size())
 {
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        forAll(*this, i)
-        {
-            this->operator[](i) = lst[i];
-        }
-    }
+    allocCopyList(lst);
 }
+
+
+template<class T>
+CML::List<T>::List(std::initializer_list<T> lst)
+:
+    List<T>(lst.begin(), lst.end())
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
-// Destroy list elements
 template<class T>
 CML::List<T>::~List()
 {
-    if (this->v_) delete[] this->v_;
+    if (this->v_)
+    {
+        delete[] this->v_;
+    }
 }
 
 
@@ -666,7 +764,7 @@ void CML::List<T>::setSize(const label newSize)
     if (newSize < 0)
     {
         FatalErrorInFunction
-            << "bad set size " << newSize
+            << "bad size " << newSize
             << abort(FatalError);
     }
 
@@ -678,23 +776,23 @@ void CML::List<T>::setSize(const label newSize)
 
             if (this->size_)
             {
-                register label i = min(this->size_, newSize);
+                label i = min(this->size_, newSize);
 
-#               ifdef USEMEMCPY
+                #ifdef USEMEMCPY
                 if (contiguous<T>())
                 {
                     memcpy(nv, this->v_, i*sizeof(T));
                 }
                 else
-#               endif
+                #endif
                 {
-                    register T* vv = &this->v_[i];
-                    register T* av = &nv[i];
+                    T* vv = &this->v_[i];
+                    T* av = &nv[i];
                     while (i--) *--av = *--vv;
                 }
             }
-            if (this->v_) delete[] this->v_;
 
+            clear();
             this->size_ = newSize;
             this->v_ = nv;
         }
@@ -714,28 +812,17 @@ void CML::List<T>::setSize(const label newSize, const T& a)
 
     if (newSize > oldSize)
     {
-        register label i = newSize - oldSize;
-        register T* vv = &this->v_[newSize];
+        label i = newSize - oldSize;
+        T* vv = &this->v_[newSize];
         while (i--) *--vv = a;
     }
 }
 
 
 template<class T>
-void CML::List<T>::clear()
-{
-    if (this->v_) delete[] this->v_;
-    this->size_ = 0;
-    this->v_ = 0;
-}
-
-
-// Transfer the contents of the argument List into this List
-// and annul the argument list
-template<class T>
 void CML::List<T>::transfer(List<T>& a)
 {
-    if (this->v_) delete[] this->v_;
+    clear();
     this->size_ = a.size_;
     this->v_ = a.v_;
 
@@ -744,25 +831,21 @@ void CML::List<T>::transfer(List<T>& a)
 }
 
 
-// Transfer the contents of the argument DynamicList into this List
-// and annul the argument list
 template<class T>
 template<unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 void CML::List<T>::transfer(DynamicList<T, SizeInc, SizeMult, SizeDiv>& a)
 {
-    // shrink the allocated space to the number of elements used
+    // Shrink the allocated space to the number of elements used
     a.shrink();
     transfer(static_cast<List<T>&>(a));
     a.clearStorage();
 }
 
 
-// Transfer the contents of the argument SortableList into this List
-// and annul the argument list
 template<class T>
 void CML::List<T>::transfer(SortableList<T>& a)
 {
-    // shrink away the sort indices
+    // Shrink away the sort indices
     a.shrink();
     transfer(static_cast<List<T>&>(a));
 }
@@ -770,27 +853,20 @@ void CML::List<T>::transfer(SortableList<T>& a)
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-// Assignment to UList operator. Takes linear time.
 template<class T>
 void CML::List<T>::operator=(const UList<T>& a)
 {
-    if (a.size_ != this->size_)
-    {
-        if (this->v_) delete[] this->v_;
-        this->v_ = 0;
-        this->size_ = a.size_;
-        if (this->size_) this->v_ = new T[this->size_];
-    }
+    reAlloc(a.size_);
 
     if (this->size_)
     {
-#       ifdef USEMEMCPY
+        #ifdef USEMEMCPY
         if (contiguous<T>())
         {
             memcpy(this->v_, a.v_, this->byteSize());
         }
         else
-#       endif
+        #endif
         {
             List_ACCESS(T, (*this), vp);
             List_CONST_ACCESS(T, a, ap);
@@ -802,7 +878,6 @@ void CML::List<T>::operator=(const UList<T>& a)
 }
 
 
-// Assignment operator. Takes linear time.
 template<class T>
 void CML::List<T>::operator=(const List<T>& a)
 {
@@ -817,17 +892,24 @@ void CML::List<T>::operator=(const List<T>& a)
 }
 
 
-// Assignment operator. Takes linear time.
+template<class T>
+void CML::List<T>::operator=(List<T>&& a)
+{
+    if (this == &a)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    transfer(a);
+}
+
+
 template<class T>
 void CML::List<T>::operator=(const SLList<T>& lst)
 {
-    if (lst.size() != this->size_)
-    {
-        if (this->v_) delete[] this->v_;
-        this->v_ = 0;
-        this->size_ = lst.size();
-        if (this->size_) this->v_ = new T[this->size_];
-    }
+    reAlloc(lst.size());
 
     if (this->size_)
     {
@@ -845,42 +927,34 @@ void CML::List<T>::operator=(const SLList<T>& lst)
 }
 
 
-// Assignment operator. Takes linear time.
 template<class T>
 void CML::List<T>::operator=(const UIndirectList<T>& lst)
 {
-    if (lst.size() != this->size_)
-    {
-        if (this->v_) delete[] this->v_;
-        this->v_ = 0;
-        this->size_ = lst.size();
-        if (this->size_) this->v_ = new T[this->size_];
-    }
-
-    forAll(*this, i)
-    {
-        this->operator[](i) = lst[i];
-    }
+    reAlloc(lst.size());
+    copyList(lst);
 }
 
 
-// Assignment operator. Takes linear time.
 template<class T>
 void CML::List<T>::operator=(const BiIndirectList<T>& lst)
 {
-    if (lst.size() != this->size_)
-    {
-        if (this->v_) delete[] this->v_;
-        this->v_ = 0;
-        this->size_ = lst.size();
-        if (this->size_) this->v_ = new T[this->size_];
-    }
+    reAlloc(lst.size());
+    copyList(lst);
+}
 
+
+template<class T>
+void CML::List<T>::operator=(std::initializer_list<T> lst)
+{
+    reAlloc(lst.size());
+
+    typename std::initializer_list<T>::iterator iter = lst.begin();
     forAll(*this, i)
     {
-        this->operator[](i) = lst[i];
+        this->operator[](i) = *iter++;
     }
 }
+
 
 // * * * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * //
 
@@ -891,7 +965,6 @@ void CML::List<T>::operator=(const BiIndirectList<T>& lst)
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-// Construct from Istream
 template<class T>
 CML::List<T>::List(Istream& is)
 :
@@ -917,7 +990,7 @@ CML::Istream& CML::operator>>(Istream& is, List<T>& L)
     {
         L.transfer
         (
-            dynamicCast<token::Compound<List<T> > >
+            dynamicCast<token::Compound<List<T>>>
             (
                 firstToken.transferCompoundToken(is)
             )
@@ -941,7 +1014,7 @@ CML::Istream& CML::operator>>(Istream& is, List<T>& L)
             {
                 if (delimiter == token::BEGIN_LIST)
                 {
-                    for (register label i=0; i<s; i++)
+                    for (label i=0; i<s; i++)
                     {
                         is >> L[i];
 
@@ -962,7 +1035,7 @@ CML::Istream& CML::operator>>(Istream& is, List<T>& L)
                         "reading the single entry"
                     );
 
-                    for (register label i=0; i<s; i++)
+                    for (label i=0; i<s; i++)
                     {
                         L[i] = element;
                     }
@@ -1033,12 +1106,12 @@ CML::List<T> CML::readList(Istream& is)
                 << exit(FatalIOError);
         }
 
-        // read via a singly-linked list
+        // Read via a singly-linked list
         L = SLList<T>(is);
     }
     else
     {
-        // create list with a single item
+        // Create list with a single item
         L.setSize(1);
 
         is >> L[0];
@@ -1047,8 +1120,6 @@ CML::List<T> CML::readList(Istream& is)
     return L;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

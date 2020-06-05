@@ -11,9 +11,9 @@ You should have received a copy of the GNU General Public License along with Cae
 ## Contributors
 see CONTRIBUTORS.md
 
-## COPYRIGHT Applied CCM 2014-2018
+## COPYRIGHT Applied CCM 2014-2020
 
-Current version: Caelus 9.04
+Current version: Caelus 10.04
 
 ## Solvers
 ### basic:
@@ -99,7 +99,7 @@ Installers available for download at <http://www.caelus-cml.com/download/>.
     * smpd -status (should return ‘smpd running on {hostname}’)
 
 ### Linux
-- For Ubuntu 14.04/16.04 the following prerequisites are required (install using apt-get):
+- For Ubuntu 16.04/18.04 the following prerequisites are required (install using apt-get):
     * build-essential
     * flex
     * bison
@@ -213,7 +213,7 @@ Caelus configuration file
 """
 
 PROJECT_NAME = "Caelus"
-PROJECT_VERSION = "9.04"
+PROJECT_VERSION = "10.04"
 
 CC = "gcc"
 CXX = "g++"

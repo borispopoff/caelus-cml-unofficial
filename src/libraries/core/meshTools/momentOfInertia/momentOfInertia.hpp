@@ -108,7 +108,7 @@ public:
     static tensor meshInertia
     (
         const polyMesh& mesh,
-        label cellI
+        label celli
     );
 };
 

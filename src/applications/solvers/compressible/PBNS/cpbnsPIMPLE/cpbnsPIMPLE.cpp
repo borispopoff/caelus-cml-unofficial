@@ -35,7 +35,7 @@ Author
 #include "compressibleTurbulenceModel.hpp"
 #include "fvcSmooth.hpp"
 #include "pimpleControl.hpp"
-#include "fvIOoptionList.hpp"
+#include "fvOptions.hpp"
 #include "bound.hpp"
 
 int main(int argc, char *argv[])

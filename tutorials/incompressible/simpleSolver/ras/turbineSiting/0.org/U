@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -20,8 +20,6 @@ internalField   uniform $flowVelocity;
 
 boundaryField
 {
-    #include "include/ABLConditions"
-
     outlet
     {
         type            inletOutlet;
@@ -32,13 +30,8 @@ boundaryField
     inlet
     {
         type            atmBoundaryLayerInletVelocity;
-        Uref            $Uref;
-        Href            $Href;
-        n               $windDirection;
-        z               $zDirection;
-        z0              $z0;
+        #include        "include/ABLConditions"
         value           $internalField;
-        zGround         $zGround;
     }
 
     "terrain_.*"

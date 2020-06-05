@@ -124,7 +124,7 @@ void relaxationSchemeSpatialInterpolation::correct()
         alphaTarget_.setSize(cells.size(), 0.0);
 
         UTarget_.clear();
-        UTarget_.setSize(cells.size(), vector::zero);
+        UTarget_.setSize(cells.size(), Zero);
     }
 
     // Perform the correction

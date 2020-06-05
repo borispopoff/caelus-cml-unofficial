@@ -73,9 +73,9 @@ void setHasSetPluginFunction::doEvaluation()
     const labelList &cells=theSet().cells();
 
     forAll(cells,i) {
-        const label cellI=cells[i];
+        const label celli=cells[i];
 
-        pHasSet()[cellI]=1;
+        pHasSet()[celli]=1;
     }
 
     pHasSet->correctBoundaryConditions();

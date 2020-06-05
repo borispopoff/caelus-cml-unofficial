@@ -66,11 +66,11 @@ class PatchCollisionDensity
         const scalar minSpeed_;
 
         //- The field of the number of collisions per unit area
-        volScalarField::GeometricBoundaryField collisionDensity_;
+        volScalarField::Boundary collisionDensity_;
 
         //- The field of the number of collisions per unit area at the last
         //  output
-        volScalarField::GeometricBoundaryField collisionDensity0_;
+        volScalarField::Boundary collisionDensity0_;
 
         //- The time at the last output
         scalar time0_;

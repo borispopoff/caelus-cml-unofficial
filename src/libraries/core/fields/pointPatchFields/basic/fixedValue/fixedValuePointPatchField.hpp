@@ -81,9 +81,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new fixedValuePointPatchField<Type>
                 (
@@ -100,12 +100,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new fixedValuePointPatchField<Type>
                 (
@@ -116,7 +116,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -127,35 +127,25 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         // Disable assignment operators
 
-            virtual void operator=(const Field<Type>&)
-            {}
-
-            virtual void operator=(const Type&)
-            {}
+            virtual void operator=(const Field<Type>&){}
+            virtual void operator=(const Type&){}
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "boolList.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+CML::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -166,7 +156,7 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
 
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+CML::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -179,7 +169,7 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
 
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+CML::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const fixedValuePointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -192,7 +182,7 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
 
 
 template<class Type>
-fixedValuePointPatchField<Type>::fixedValuePointPatchField
+CML::fixedValuePointPatchField<Type>::fixedValuePointPatchField
 (
     const fixedValuePointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -202,13 +192,4 @@ fixedValuePointPatchField<Type>::fixedValuePointPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

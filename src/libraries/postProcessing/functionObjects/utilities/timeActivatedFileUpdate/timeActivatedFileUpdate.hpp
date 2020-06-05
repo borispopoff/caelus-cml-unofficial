@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
  -------------------------------------------------------------------------------
  License
     This file is part of Caelus.
@@ -31,8 +31,8 @@ Description
     {
         type              timeActivatedFileUpdate;
         functionObjectLibs ("libutilityFunctionObjects.so");
-        outputControl     timeStep;
-        outputInterval    1;
+        writeControl     timeStep;
+        writeInterval    1;
         fileToUpdate      "$CAELUS_CASE/system/fvSolution";
         timeVsFile
         (
@@ -87,7 +87,7 @@ class timeActivatedFileUpdate
         fileName fileToUpdate_;
 
         //- List of times vs filenames
-        List<Tuple2<scalar, fileName> > timeVsFile_;
+        List<Tuple2<scalar, fileName>> timeVsFile_;
 
         //- Index of last file copied
         label lastIndex_;
@@ -99,10 +99,10 @@ class timeActivatedFileUpdate
         void updateFile();
 
         //- Disallow default bitwise copy construct
-        timeActivatedFileUpdate(const timeActivatedFileUpdate&);
+        timeActivatedFileUpdate(const timeActivatedFileUpdate&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const timeActivatedFileUpdate&);
+        void operator=(const timeActivatedFileUpdate&) = delete;
 
 
 public:

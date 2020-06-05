@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -135,10 +135,10 @@ class multiDirRefinement
 
 
         //- Disallow default bitwise copy construct
-        multiDirRefinement(const multiDirRefinement&);
+        multiDirRefinement(const multiDirRefinement&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const multiDirRefinement&);
+        void operator=(const multiDirRefinement&) = delete;
 
 
 public:

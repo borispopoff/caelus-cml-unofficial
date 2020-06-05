@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,6 +27,20 @@ License
 CML::string::string(Istream& is)
 {
     is >> *this;
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+void CML::writeEntry(Ostream& os, const char* value)
+{
+    os << value;
+}
+
+
+void CML::writeEntry(Ostream& os, const string& value)
+{
+    os << value;
 }
 
 

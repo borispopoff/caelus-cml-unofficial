@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,9 +63,9 @@ public:
         mapDistributeLagrangian
         (
             const label nNewParticles,
-            const Xfer<labelListList>& subParticleMap,
-            const Xfer<labelListList>& constructParticleMap,
-            const Xfer<labelListList>& constructCellLabels
+            labelListList&& subParticleMap,
+            labelListList&& constructParticleMap,
+            labelListList&& constructCellLabels
         )
         :
             particleMap_(nNewParticles, subParticleMap, constructParticleMap),
@@ -92,7 +92,7 @@ public:
 
         // Edit
 
-            //- distribute list of lagrangian data
+            //- Distribute list of lagrangian data
             template<class T>
             void distributeLagrangianData(List<T>& lst) const
             {

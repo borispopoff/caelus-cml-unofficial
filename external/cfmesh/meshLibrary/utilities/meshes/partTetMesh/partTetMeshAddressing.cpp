@@ -57,16 +57,16 @@ void partTetMesh::createPointsAndTets
     labelList usedFace(faces.size(), 0);
 
     //- mark faces
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        if( useCell[owner[faceI]] )
-            ++usedFace[faceI];
+        if( useCell[owner[facei]] )
+            ++usedFace[facei];
 
-        if( neighbour[faceI] < 0 )
+        if( neighbour[facei] < 0 )
             continue;
 
-        if( useCell[neighbour[faceI]] )
-            ++usedFace[faceI];
+        if( useCell[neighbour[facei]] )
+            ++usedFace[facei];
     }
 
     //- send data at processor boundaries
@@ -76,15 +76,15 @@ void partTetMesh::createPointsAndTets
         const label size = procBoundaries[patchI].patchSize();
 
         labelLongList dataToSend;
-        for(label faceI=0;faceI<size;++faceI)
+        for(label facei=0;facei<size;++facei)
         {
-            if( usedFace[start+faceI] )
-                dataToSend.append(faceI);
+            if( usedFace[start+facei] )
+                dataToSend.append(facei);
         }
 
         OPstream toOtherProc
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             procBoundaries[patchI].neiProcNo(),
             dataToSend.byteSize()
         );
@@ -99,15 +99,15 @@ void partTetMesh::createPointsAndTets
 
         IPstream fromOtherProc
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             procBoundaries[patchI].neiProcNo()
         );
 
         fromOtherProc >> receivedData;
 
         const label start = procBoundaries[patchI].patchStart();
-        forAll(receivedData, faceI)
-            ++usedFace[start+receivedData[faceI]];
+        forAll(receivedData, facei)
+            ++usedFace[start+receivedData[facei]];
     }
 
     const vectorField& faceCentres = origMesh_.addressingData().faceCentres();
@@ -127,18 +127,18 @@ void partTetMesh::createPointsAndTets
         const label start = patch.patchStart();
         const label end = start + patch.patchSize();
 
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            if( !usedFace[faceI] )
+            if( !usedFace[facei] )
                 continue;
 
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             if( f.size() > 3 )
             {
                 //- create face centre
-                nodeLabelForFace[faceI] = points_.size();
-                points_.append(faceCentres[faceI]);
+                nodeLabelForFace[facei] = points_.size();
+                points_.append(faceCentres[facei]);
                 smoothVertex_.append(FACECENTRE);
             }
 
@@ -164,23 +164,23 @@ void partTetMesh::createPointsAndTets
         const label start = patch.patchStart();
         const label end = start + patch.patchSize();
 
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            if( !usedFace[faceI] )
+            if( !usedFace[facei] )
                 continue;
 
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             if( f.size() > 3 )
             {
                 //- create face centre
-                nodeLabelForFace[faceI] = points_.size();
-                points_.append(faceCentres[faceI]);
+                nodeLabelForFace[facei] = points_.size();
+                points_.append(faceCentres[facei]);
                 smoothVertex_.append(FACECENTRE);
             }
 
             //- add face corners
-            const direction vType = usedFace[faceI]==2?SMOOTH:NONE;
+            const direction vType = usedFace[facei]==2?SMOOTH:NONE;
             forAll(f, pI)
             {
                 const label pointI = f[pI];
@@ -200,22 +200,22 @@ void partTetMesh::createPointsAndTets
     }
 
     //- create points for internal faces
-    for(label faceI=0;faceI<nInternalFaces;++faceI)
+    for(label facei=0;facei<nInternalFaces;++facei)
     {
-        if( usedFace[faceI] )
+        if( usedFace[facei] )
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             if( f.size() > 3 )
             {
                 //- create face centre
-                nodeLabelForFace[faceI] = points_.size();
-                points_.append(faceCentres[faceI]);
+                nodeLabelForFace[facei] = points_.size();
+                points_.append(faceCentres[facei]);
                 smoothVertex_.append(FACECENTRE);
             }
 
             //- add face corners
-            const direction vType = usedFace[faceI]==2?SMOOTH:NONE;
+            const direction vType = usedFace[facei]==2?SMOOTH:NONE;
             forAll(f, pI)
             {
                 const label pointI = f[pI];

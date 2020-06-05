@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -60,12 +60,6 @@ class Constant
         Type value_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const Constant<Type>&);
-
-
 public:
 
     // Runtime type information
@@ -89,9 +83,9 @@ public:
         Constant(const Constant<Type>& cnst);
 
         //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
+        virtual tmp<DataEntry<Type>> clone() const
         {
-            return tmp<DataEntry<Type> >(new Constant<Type>(*this));
+            return tmp<DataEntry<Type>>(new Constant<Type>(*this));
         }
 
 
@@ -102,14 +96,38 @@ public:
     // Member Functions
 
         //- Return constant value
-        Type value(const scalar) const;
+        virtual inline Type value(const scalar) const;
 
         //- Integrate between two values
-        Type integrate(const scalar x1, const scalar x2) const;
+        virtual inline Type integrate(const scalar x1, const scalar x2) const;
+
+        //- Return value as a function of (scalar) independent variable
+        virtual tmp<Field<Type>> value(const scalarField& x) const;
+
+        //- Integrate between two (scalar) values
+        virtual tmp<Field<Type>> integrate
+        (
+            const scalarField& x1,
+            const scalarField& x2
+        ) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Constant<Type>&) = delete;
 };
+
+
+template<>
+tmp<Field<label>> DataEntryTypes::Constant<label>::integrate
+(
+    const scalarField& x1,
+    const scalarField& x2
+) const;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -178,17 +196,38 @@ CML::DataEntryTypes::Constant<Type>::~Constant()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type CML::DataEntryTypes::Constant<Type>::value(const scalar x) const
+inline Type CML::DataEntryTypes::Constant<Type>::value(const scalar x) const
 {
     return value_;
 }
 
 
 template<class Type>
-Type CML::DataEntryTypes::Constant<Type>::integrate
+CML::tmp<CML::Field<Type>> CML::DataEntryTypes::Constant<Type>::value
+(
+    const scalarField& x
+) const
+{
+    return tmp<Field<Type>>(new Field<Type>(x.size(), value_));
+}
+
+
+template<class Type>
+inline Type CML::DataEntryTypes::Constant<Type>::integrate
 (
     const scalar x1,
     const scalar x2
+) const
+{
+    return (x2 - x1)*value_;
+}
+
+
+template<class Type>
+CML::tmp<CML::Field<Type>> CML::DataEntryTypes::Constant<Type>::integrate
+(
+    const scalarField& x1,
+    const scalarField& x2
 ) const
 {
     return (x2 - x1)*value_;
@@ -205,7 +244,7 @@ void CML::DataEntryTypes::Constant<Type>::writeData(Ostream& os) const
 
 
 template<class Type>
-CML::autoPtr<CML::DataEntry<Type> > CML::DataEntry<Type>::New
+CML::autoPtr<CML::DataEntry<Type>> CML::DataEntry<Type>::New
 (
     const word& entryName,
     const dictionary& dict
@@ -243,7 +282,7 @@ CML::autoPtr<CML::DataEntry<Type> > CML::DataEntry<Type>::New
         if (!firstToken.isWord())
         {
             is.putBack(firstToken);
-            return autoPtr<DataEntry<Type> >
+            return autoPtr<DataEntry<Type>>
             (
                 new DataEntryTypes::Constant<Type>(entryName, is)
             );

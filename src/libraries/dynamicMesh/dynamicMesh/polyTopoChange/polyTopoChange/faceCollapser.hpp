@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -103,16 +103,16 @@ class faceCollapser
         void filterFace
         (
             const Map<labelList>& splitEdges,
-            const label faceI,
+            const label facei,
             polyTopoChange& meshMod
         ) const;
 
 
         //- Disallow default bitwise copy construct
-        faceCollapser(const faceCollapser&);
+        faceCollapser(const faceCollapser&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const faceCollapser&);
+        void operator=(const faceCollapser&) = delete;
 
 
 public:

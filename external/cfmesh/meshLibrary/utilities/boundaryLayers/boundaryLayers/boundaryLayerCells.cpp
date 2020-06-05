@@ -101,7 +101,7 @@ void boundaryLayers::createLayerCells(const labelList& patchLabels)
             const face& f = bFaces[bfI];
             const label pKey = patchKey_[boundaryFacePatches[bfI]];
 
-            DynList<DynList<label> > cellFaces;
+            DynList<DynList<label>> cellFaces;
 
             DynList<label> newF;
 
@@ -183,7 +183,7 @@ void boundaryLayers::createLayerCells(const labelList& patchLabels)
 
     //- data for parallel execution
     boolList procPoint;
-    LongList<DynList<label, 4> > pointProcFaces;
+    LongList<DynList<label, 4>> pointProcFaces;
     LongList<labelPair> faceAtPatches;
     if( Pstream::parRun() )
     {
@@ -347,7 +347,7 @@ void boundaryLayers::createLayerCells(const labelList& patchLabels)
     //- create cells for corner nodes
     typedef std::map<std::pair<label, label>, label> mPairToLabelType;
     typedef std::map<label, mPairToLabelType> mPointsType;
-    typedef std::map<label, DynList<label, 3> > ppType;
+    typedef std::map<label, DynList<label, 3>> ppType;
 
     ppType nodePatches;
     labelHashSet parPoint;
@@ -361,7 +361,7 @@ void boundaryLayers::createLayerCells(const labelList& patchLabels)
 
         std::map<label, labelLongList> facesToSend;
 
-        typedef std::map<label, DynList<DynList<label, 8>, 8> > ppfType;
+        typedef std::map<label, DynList<DynList<label, 8>, 8>> ppfType;
 
         ppfType parPointFaces;
         ppType parPointPatches;
@@ -644,7 +644,7 @@ void boundaryLayers::createLayerCells(const labelList& patchLabels)
 
 void boundaryLayers::createNewFacesFromPointsParallel
 (
-    const LongList<DynList<label, 4> >& faceCandidates,
+    const LongList<DynList<label, 4>>& faceCandidates,
     const LongList<labelPair>& candidatePatches
 )
 {
@@ -703,7 +703,7 @@ void boundaryLayers::createNewFacesFromPointsParallel
     //- the key of the algorithm is the point from which the face was created
     //- by sending the point label and the associated patches, it will be
     //- possible to find the other processor containing that face
-    std::map<label, LongList<labelledPair> > exchangeData;
+    std::map<label, LongList<labelledPair>> exchangeData;
     const DynList<label>& neiProcs = mse.bpNeiProcs();
     forAll(neiProcs, procI)
     {
@@ -738,13 +738,13 @@ void boundaryLayers::createNewFacesFromPointsParallel
     }
 
     //- exchange the data with other processors
-    std::map<label, List<labelledPair> > receivedMap;
+    std::map<label, List<labelledPair>> receivedMap;
     help::exchangeMap(exchangeData, receivedMap);
     exchangeData.clear();
 
     for
     (
-        std::map<label, List<labelledPair> >::const_iterator
+        std::map<label, List<labelledPair>>::const_iterator
         iter=receivedMap.begin();
         iter!=receivedMap.end();
         ++iter

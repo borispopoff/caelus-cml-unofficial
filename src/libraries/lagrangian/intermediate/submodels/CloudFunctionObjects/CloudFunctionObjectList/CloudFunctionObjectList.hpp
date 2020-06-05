@@ -45,7 +45,7 @@ namespace CML
 template<class CloudType>
 class CloudFunctionObjectList
 :
-    public PtrList<CloudFunctionObject<CloudType> >
+    public PtrList<CloudFunctionObject<CloudType>>
 {
 protected:
 
@@ -165,7 +165,7 @@ CML::CloudFunctionObjectList<CloudType>::CloudFunctionObjectList
     CloudType& owner
 )
 :
-    PtrList<CloudFunctionObject<CloudType> >(),
+    PtrList<CloudFunctionObject<CloudType>>(),
     owner_(owner),
     dict_(dictionary::null)
 {}
@@ -179,7 +179,7 @@ CML::CloudFunctionObjectList<CloudType>::CloudFunctionObjectList
     const bool readFields
 )
 :
-    PtrList<CloudFunctionObject<CloudType> >(),
+    PtrList<CloudFunctionObject<CloudType>>(),
     owner_(owner),
     dict_(dict)
 {
@@ -229,7 +229,7 @@ CML::CloudFunctionObjectList<CloudType>::CloudFunctionObjectList
     const CloudFunctionObjectList& cfol
 )
 :
-    PtrList<CloudFunctionObject<CloudType> >(cfol),
+    PtrList<CloudFunctionObject<CloudType>>(cfol),
     owner_(cfol.owner_),
     dict_(cfol.dict_)
 {}

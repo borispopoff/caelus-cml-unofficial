@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,7 +27,7 @@ License
 template<>
 CML::volumeType CML::treeDataPrimitivePatch<CML::triSurface>::getVolumeType
 (
-    const indexedOctree<treeDataPrimitivePatch<triSurface> >& oc,
+    const indexedOctree<treeDataPrimitivePatch<triSurface>>& oc,
     const point& sample
 ) const
 {
@@ -42,32 +42,32 @@ CML::volumeType CML::treeDataPrimitivePatch<CML::triSurface>::getVolumeType
     }
 
     // Get actual intersection point on face
-    label faceI = info.index();
+    label facei = info.index();
 
     triSurfaceTools::sideType t = triSurfaceTools::surfaceSide
     (
         patch_,
         sample,
-        faceI
+        facei
     );
 
     if (t == triSurfaceTools::UNKNOWN)
     {
-        return volumeType::UNKNOWN;
+        return volumeType::unknown;
     }
     else if (t == triSurfaceTools::INSIDE)
     {
-        return volumeType::INSIDE;
+        return volumeType::inside;
     }
     else if (t == triSurfaceTools::OUTSIDE)
     {
-        return volumeType::OUTSIDE;
+        return volumeType::outside;
     }
     else
     {
         FatalErrorInFunction
             << "problem" << abort(FatalError);
-        return volumeType::UNKNOWN;
+        return volumeType::unknown;
     }
 }
 

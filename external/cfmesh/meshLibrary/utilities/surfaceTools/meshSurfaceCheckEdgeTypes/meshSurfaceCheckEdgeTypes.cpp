@@ -159,7 +159,7 @@ void meshSurfaceCheckEdgeTypes::classifyEdges()
         const Map<label>& globalToLocalEdge =
             surfaceEngine_.globalToLocalBndEdgeAddressing();
 
-        std::map<label, LongList<labelledPoint> > exchangeFaceCentres;
+        std::map<label, LongList<labelledPoint>> exchangeFaceCentres;
         forAll(surfaceEngine_.beNeiProcs(), i)
         {
             const label neiProc = surfaceEngine_.beNeiProcs()[i];

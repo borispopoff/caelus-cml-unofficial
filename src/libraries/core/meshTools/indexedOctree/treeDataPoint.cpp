@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -93,7 +93,7 @@ CML::volumeType CML::treeDataPoint::getVolumeType
     const point& sample
 ) const
 {
-    return volumeType::UNKNOWN;
+    return volumeType::unknown;
 }
 
 
@@ -104,8 +104,8 @@ bool CML::treeDataPoint::overlaps
     const treeBoundBox& cubeBb
 ) const
 {
-    label pointI = (useSubset_ ? pointLabels_[index] : index);
-    return cubeBb.contains(points_[pointI]);
+    label pointi = (useSubset_ ? pointLabels_[index] : index);
+    return cubeBb.contains(points_[pointi]);
 }
 
 
@@ -117,9 +117,9 @@ bool CML::treeDataPoint::overlaps
     const scalar radiusSqr
 ) const
 {
-    label pointI = (useSubset_ ? pointLabels_[index] : index);
+    label pointi = (useSubset_ ? pointLabels_[index] : index);
 
-    if (magSqr(points_[pointI] - centre) <= radiusSqr)
+    if (magSqr(points_[pointi] - centre) <= radiusSqr)
     {
         return true;
     }
@@ -143,14 +143,14 @@ void CML::treeDataPoint::findNearestOp::operator()
     forAll(indices, i)
     {
         const label index = indices[i];
-        label pointI =
+        label pointi =
         (
             shape.useSubset()
           ? shape.pointLabels()[index]
           : index
         );
 
-        const point& pt = shape.points()[pointI];
+        const point& pt = shape.points()[pointi];
 
         scalar distSqr = magSqr(pt - sample);
 
@@ -187,14 +187,14 @@ void CML::treeDataPoint::findNearestOp::operator()
     forAll(indices, i)
     {
         const label index = indices[i];
-        label pointI =
+        label pointi =
         (
             shape.useSubset()
           ? shape.pointLabels()[index]
           : index
         );
 
-        const point& shapePt = shape.points()[pointI];
+        const point& shapePt = shape.points()[pointi];
 
         if (tightest.contains(shapePt))
         {

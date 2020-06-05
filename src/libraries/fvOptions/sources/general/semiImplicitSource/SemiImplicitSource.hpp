@@ -38,14 +38,11 @@ Description
     Example of the source specification:
 
     \verbatim
-    <Type>SemiImplicitSourceCoeffs
+    volumeMode      absolute; // specific
+    injectionRateSuSp
     {
-        volumeMode      absolute; // specific
-        injectionRateSuSp
-        {
-            k           (30.7 0);
-            epsilon     (1.5  0);
-        }
+        k           (30.7 0);
+        epsilon     (1.5  0);
     }
     \endverbatim
 
@@ -53,7 +50,7 @@ Description
     - absolute: values are given as \<quantity\>
     - specific: values are given as \<quantity\>/m3
 
-SeeAlso
+See also
     CML::fvOption
 
 SourceFiles
@@ -65,7 +62,7 @@ SourceFiles
 #define SemiImplicitSource_H
 
 #include "Tuple2.hpp"
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -97,7 +94,7 @@ Ostream& operator<<
 template<class Type>
 class SemiImplicitSource
 :
-    public option
+    public cellSetOption
 {
 public:
 
@@ -125,7 +122,7 @@ protected:
         scalar VDash_;
 
         //- Source field values
-        List<Tuple2<Type, scalar> > injectionRate_;
+        List<Tuple2<Type, scalar>> injectionRate_;
 
 
     // Protected functions
@@ -166,7 +163,7 @@ public:
             inline const volumeModeType& volumeMode() const;
 
             //- Return const access to the source field values
-            inline const List<Tuple2<Type, scalar> >& injectionRate() const;
+            inline const List<Tuple2<Type, scalar>>& injectionRate() const;
 
 
         // Edit
@@ -175,7 +172,7 @@ public:
             inline volumeModeType& volumeMode();
 
             //- Return access to the source field values
-            inline List<Tuple2<Type, scalar> >& injectionRate();
+            inline List<Tuple2<Type, scalar>>& injectionRate();
 
 
         // Evaluation
@@ -184,7 +181,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<Type>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
             //- Add explicit contribution to compressible equation
@@ -192,14 +189,11 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<Type>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
 
-        // I-O
-
-            //- Write the source properties
-            virtual void writeData(Ostream&) const;
+        // IO
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
@@ -215,7 +209,6 @@ public:
 
 #include "fvMesh.hpp"
 #include "fvMatrices.hpp"
-#include "DimensionedField.hpp"
 #include "fvmSup.hpp"
 
 // * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
@@ -305,7 +298,7 @@ CML::fv::SemiImplicitSource<Type>::SemiImplicitSource
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh),
+    cellSetOption(name, modelType, dict, mesh),
     volumeMode_(vmAbsolute),
     VDash_(1.0),
     injectionRate_()
@@ -320,7 +313,7 @@ template<class Type>
 void CML::fv::SemiImplicitSource<Type>::addSup
 (
     fvMatrix<Type>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (debug)
@@ -331,11 +324,11 @@ void CML::fv::SemiImplicitSource<Type>::addSup
 
     const GeometricField<Type, fvPatchField, volMesh>& psi = eqn.psi();
 
-    DimensionedField<Type, volMesh> Su
+    typename GeometricField<Type, fvPatchField, volMesh>::Internal Su
     (
         IOobject
         (
-            name_ + fieldNames_[fieldI] + "Su",
+            name_ + fieldNames_[fieldi] + "Su",
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
@@ -346,18 +339,18 @@ void CML::fv::SemiImplicitSource<Type>::addSup
         (
             "zero",
             eqn.dimensions()/dimVolume,
-            pTraits<Type>::zero
+            Zero
         ),
         false
     );
 
-    UIndirectList<Type>(Su, cells_) = injectionRate_[fieldI].first()/VDash_;
+    UIndirectList<Type>(Su, cells_) = injectionRate_[fieldi].first()/VDash_;
 
-    DimensionedField<scalar, volMesh> Sp
+    volScalarField::Internal Sp
     (
         IOobject
         (
-            name_ + fieldNames_[fieldI] + "Sp",
+            name_ + fieldNames_[fieldi] + "Sp",
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
@@ -368,12 +361,12 @@ void CML::fv::SemiImplicitSource<Type>::addSup
         (
             "zero",
             Su.dimensions()/psi.dimensions(),
-            0.0
+            Zero
         ),
         false
     );
 
-    UIndirectList<scalar>(Sp, cells_) = injectionRate_[fieldI].second()/VDash_;
+    UIndirectList<scalar>(Sp, cells_) = injectionRate_[fieldi].second()/VDash_;
 
     eqn += Su + fvm::SuSp(Sp, psi);
 }
@@ -384,7 +377,7 @@ void CML::fv::SemiImplicitSource<Type>::addSup
 (
     const volScalarField& rho,
     fvMatrix<Type>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (debug)
@@ -393,23 +386,15 @@ void CML::fv::SemiImplicitSource<Type>::addSup
             << ">::addSup for source " << name_ << endl;
     }
 
-    return this->addSup(eqn, fieldI);
+    return this->addSup(eqn, fieldi);
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void CML::fv::SemiImplicitSource<Type>::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-}
-
-
-template<class Type>
 bool CML::fv::SemiImplicitSource<Type>::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
         volumeMode_ = wordToVolumeModeType(coeffs_.lookup("volumeMode"));
         setFieldData(coeffs_.subDict("injectionRateSuSp"));
@@ -436,7 +421,7 @@ CML::fv::SemiImplicitSource<Type>::volumeMode() const
 
 
 template<class Type>
-inline const CML::List<CML::Tuple2<Type, CML::scalar> >&
+inline const CML::List<CML::Tuple2<Type, CML::scalar>>&
 CML::fv::SemiImplicitSource<Type>::injectionRate() const
 {
     return injectionRate_;
@@ -453,7 +438,7 @@ CML::fv::SemiImplicitSource<Type>::volumeMode()
 
 template<class Type>
 inline CML::List<CML::Tuple2<Type,
-CML::scalar> >& CML::fv::SemiImplicitSource<Type>::injectionRate()
+CML::scalar>>& CML::fv::SemiImplicitSource<Type>::injectionRate()
 {
     return injectionRate_;
 }

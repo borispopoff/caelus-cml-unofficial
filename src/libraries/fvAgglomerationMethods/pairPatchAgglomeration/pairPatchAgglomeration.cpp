@@ -110,7 +110,7 @@ void CML::pairPatchAgglomeration::setEdgeWeights
     const label nCoarseI =  max(fineToCoarse) + 1;
     labelListList coarseToFine(invertOneToMany(nCoarseI, fineToCoarse));
 
-    HashSet<edge, Hash<edge> > fineFeaturedFaces(coarsePatch.nEdges()/10);
+    HashSet<edge, Hash<edge>> fineFeaturedFaces(coarsePatch.nEdges()/10);
 
     // Map fine faces with featured edge into coarse faces
     forAllConstIter(EdgeMap<scalar>, facePairWeight_, iter)
@@ -250,7 +250,7 @@ void CML::pairPatchAgglomeration::mapBaseToTopAgglom
 )
 {
     const labelList& fineToCoarse = restrictAddressing_[fineLevelIndex];
-    forAll (restrictTopBottomAddressing_, i)
+    forAll(restrictTopBottomAddressing_, i)
     {
         restrictTopBottomAddressing_[i] =
             fineToCoarse[restrictTopBottomAddressing_[i]];
@@ -422,6 +422,8 @@ void CML::pairPatchAgglomeration:: agglomerate()
 
         nCoarseFacesOld = nCoarseFaces;
     }
+
+    compactLevels(nCreatedLevels);
 }
 
 
@@ -434,7 +436,7 @@ CML::tmp<CML::labelField> CML::pairPatchAgglomeration::agglomerateOneLevel
     const label nFineFaces = patch.size();
 
     tmp<labelField> tcoarseCellMap(new labelField(nFineFaces, -1));
-    labelField& coarseCellMap = tcoarseCellMap();
+    labelField& coarseCellMap = tcoarseCellMap.ref();
 
     const labelListList& faceFaces = patch.faceFaces();
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,7 +58,7 @@ namespace fv
 template<class Type>
 class d2dt2Scheme
 :
-    public refCount
+    public tmp<d2dt2Scheme<Type>>::refCount
 {
 
 protected:
@@ -66,15 +66,6 @@ protected:
     // Protected data
 
         const fvMesh& mesh_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        d2dt2Scheme(const d2dt2Scheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const d2dt2Scheme&);
 
 
 public:
@@ -109,11 +100,13 @@ public:
             mesh_(mesh)
         {}
 
+        //- Disallow copy construct
+        d2dt2Scheme(const d2dt2Scheme&);
 
     // Selectors
 
         //- Return a pointer to a new d2dt2Scheme created on freestore
-        static tmp<d2dt2Scheme<Type> > New
+        static tmp<d2dt2Scheme<Type>> New
         (
             const fvMesh& mesh,
             Istream& schemeData
@@ -132,33 +125,39 @@ public:
             return mesh_;
         }
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcD2dt2
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcD2dt2
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmD2dt2
+        virtual tmp<fvMatrix<Type>> fvmD2dt2
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmD2dt2
+        virtual tmp<fvMatrix<Type>> fvmD2dt2
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmD2dt2
+        virtual tmp<fvMatrix<Type>> fvmD2dt2
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const d2dt2Scheme&) = delete;
 };
 
 
@@ -181,7 +180,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            d2dt2Scheme<Type>::addIstreamConstructorToTable<SS<Type> >         \
+            d2dt2Scheme<Type>::addIstreamConstructorToTable<SS<Type>>         \
                 add##SS##Type##IstreamConstructorToTable_;                     \
         }                                                                      \
     }
@@ -213,7 +212,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<d2dt2Scheme<Type> > d2dt2Scheme<Type>::New
+tmp<d2dt2Scheme<Type>> d2dt2Scheme<Type>::New
 (
     const fvMesh& mesh,
     Istream& schemeData
@@ -221,15 +220,15 @@ tmp<d2dt2Scheme<Type> > d2dt2Scheme<Type>::New
 {
     if (fv::debug)
     {
-        Info<< "d2dt2Scheme<Type>::New(const fvMesh&, Istream&) : "
-               "constructing d2dt2Scheme<Type>"
-            << endl;
+        InfoInFunction << "Constructing d2dt2Scheme<Type>" << endl;
     }
 
     if (schemeData.eof())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "D2dt2 scheme not specified" << endl << endl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "D2dt2 scheme not specified" << endl << endl
             << "Valid d2dt2 schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -242,8 +241,10 @@ tmp<d2dt2Scheme<Type> > d2dt2Scheme<Type>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(schemeData)
-            << "Unknown d2dt2 scheme " << schemeName << nl << nl
+        FatalIOErrorInFunction
+        (
+            schemeData
+        )   << "Unknown d2dt2 scheme " << schemeName << nl << nl
             << "Valid d2dt2 schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);

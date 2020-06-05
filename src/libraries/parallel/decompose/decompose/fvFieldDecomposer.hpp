@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -228,10 +228,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        fvFieldDecomposer(const fvFieldDecomposer&);
+        fvFieldDecomposer(const fvFieldDecomposer&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fvFieldDecomposer&);
+        void operator=(const fvFieldDecomposer&) = delete;
 
 
 public:
@@ -257,7 +257,7 @@ public:
 
         //- Decompose volume field
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> >
+        tmp<GeometricField<Type, fvPatchField, volMesh>>
         decomposeField
         (
             const GeometricField<Type, fvPatchField, volMesh>& field,
@@ -266,7 +266,7 @@ public:
 
         //- Decompose surface field
         template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         decomposeField
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>& field
@@ -285,7 +285,7 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvPatchField, CML::volMesh>>
 CML::fvFieldDecomposer::decomposeField
 (
     const GeometricField<Type, fvPatchField, volMesh>& field,
@@ -293,7 +293,7 @@ CML::fvFieldDecomposer::decomposeField
 ) const
 {
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvPatchField<Type> > patchFields(boundaryAddressing_.size());
+    PtrList<fvPatchField<Type>> patchFields(boundaryAddressing_.size());
 
     forAll(boundaryAddressing_, patchi)
     {
@@ -310,7 +310,7 @@ CML::fvFieldDecomposer::decomposeField
     }
 
     // Create the field for the processor
-    tmp<GeometricField<Type, fvPatchField, volMesh> > tresF
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tresF
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -324,18 +324,18 @@ CML::fvFieldDecomposer::decomposeField
             ),
             procMesh_,
             field.dimensions(),
-            Field<Type>(field.internalField(), cellAddressing_),
+            Field<Type>(field.primitiveField(), cellAddressing_),
             patchFields
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& resF = tresF();
+    GeometricField<Type, fvPatchField, volMesh>& resF = tresF.ref();
 
 
     // 2. Change the fvPatchFields to the correct type using a mapper
     //  constructor (with reference to the now correct internal field)
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-        GeometricBoundaryField& bf = resF.boundaryField();
+        Boundary& bf = resF.boundaryFieldRef();
 
     forAll(bf, patchi)
     {
@@ -348,7 +348,7 @@ CML::fvFieldDecomposer::decomposeField
                 (
                     field.boundaryField()[boundaryAddressing_[patchi]],
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     *patchFieldDecomposerPtrs_[patchi]
                 )
             );
@@ -361,10 +361,10 @@ CML::fvFieldDecomposer::decomposeField
                 new processorCyclicFvPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
-                        field.internalField(),
+                        field.primitiveField(),
                         *processorVolPatchFieldDecomposerPtrs_[patchi]
                     )
                 )
@@ -378,10 +378,10 @@ CML::fvFieldDecomposer::decomposeField
                 new processorFvPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
-                        field.internalField(),
+                        field.primitiveField(),
                         *processorVolPatchFieldDecomposerPtrs_[patchi]
                     )
                 )
@@ -395,7 +395,7 @@ CML::fvFieldDecomposer::decomposeField
                 new emptyFvPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField()
+                    resF()
                 )
             );
         }
@@ -412,7 +412,7 @@ CML::fvFieldDecomposer::decomposeField
 
 
 template<class Type>
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>
 CML::fvFieldDecomposer::decomposeField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field
@@ -434,7 +434,7 @@ CML::fvFieldDecomposer::decomposeField
     // Create and map the internal field values
     Field<Type> internalField
     (
-        field.internalField(),
+        field.primitiveField(),
         mapAddr
     );
 
@@ -445,9 +445,9 @@ CML::fvFieldDecomposer::decomposeField
     // (i.e. using slices)
     Field<Type> allFaceField(field.mesh().nFaces());
 
-    forAll(field.internalField(), i)
+    forAll(field.primitiveField(), i)
     {
-        allFaceField[i] = field.internalField()[i];
+        allFaceField[i] = field.primitiveField()[i];
     }
 
     forAll(field.boundaryField(), patchi)
@@ -464,7 +464,7 @@ CML::fvFieldDecomposer::decomposeField
 
 
     // 1. Create the complete field with dummy patch fields
-    PtrList<fvsPatchField<Type> > patchFields(boundaryAddressing_.size());
+    PtrList<fvsPatchField<Type>> patchFields(boundaryAddressing_.size());
 
     forAll(boundaryAddressing_, patchi)
     {
@@ -480,7 +480,7 @@ CML::fvFieldDecomposer::decomposeField
         );
     }
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tresF
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tresF
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -494,18 +494,18 @@ CML::fvFieldDecomposer::decomposeField
             ),
             procMesh_,
             field.dimensions(),
-            Field<Type>(field.internalField(), mapAddr),
+            Field<Type>(field.primitiveField(), mapAddr),
             patchFields
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& resF = tresF();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& resF = tresF.ref();
 
 
     // 2. Change the fvsPatchFields to the correct type using a mapper
     //  constructor (with reference to the now correct internal field)
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& bf = resF.boundaryField();
+        Boundary& bf = resF.boundaryFieldRef();
 
     forAll(boundaryAddressing_, patchi)
     {
@@ -518,7 +518,7 @@ CML::fvFieldDecomposer::decomposeField
                 (
                     field.boundaryField()[boundaryAddressing_[patchi]],
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     *patchFieldDecomposerPtrs_[patchi]
                 )
             );
@@ -531,7 +531,7 @@ CML::fvFieldDecomposer::decomposeField
                 new processorCyclicFvsPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
                         allFaceField,
@@ -548,7 +548,7 @@ CML::fvFieldDecomposer::decomposeField
                 new processorFvsPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
                         allFaceField,
@@ -575,9 +575,9 @@ void CML::fvFieldDecomposer::decomposeFields
     const PtrList<GeoField>& fields
 ) const
 {
-    forAll(fields, fieldI)
+    forAll(fields, fieldi)
     {
-        decomposeField(fields[fieldI])().write();
+        decomposeField(fields[fieldi])().write();
     }
 }
 

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,47 +22,51 @@ Class
     CML::flowRateInletVelocityFvPatchVectorField
 
 Description
-    This boundary condition provides a velocity boundary condition, derived
-    from the flux (volumetric or mass-based), whose direction is assumed
-    to be normal to the patch.
+    Velocity inlet boundary condition either correcting the extrapolated
+    velocity or creating a uniform velocity field normal to the patch adjusted
+    to match the specified flow rate
 
     For a mass-based flux:
     - the flow rate should be provided in kg/s
-    - if \c rhoName is "none" the flow rate is in m3/s
-    - otherwise \c rhoName should correspond to the name of the density field
+    - if \c rho is "none" the flow rate is in m3/s
+    - otherwise \c rho should correspond to the name of the density field
     - if the density field cannot be found in the database, the user must
       specify the inlet density using the \c rhoInlet entry
 
     For a volumetric-based flux:
     - the flow rate is in m3/s
 
-    \heading Patch usage
-
+Usage
     \table
         Property     | Description             | Required    | Default value
         massFlowRate | mass flow rate [kg/s]   | no          |
         volumetricFlowRate | volumetric flow rate [m3/s]| no |
+        rho          | density field name      | no          | rho
         rhoInlet     | inlet density           | no          |
+        extrapolateProfile | Extrapolate velocity profile | no | false
     \endtable
 
     Example of the boundary condition specification for a volumetric flow rate:
     \verbatim
-    myPatch
+    <patchName>
     {
-        type        flowRateInletVelocity;
+        type                flowRateInletVelocity;
         volumetricFlowRate  0.2;
-        value       uniform (0 0 0); // placeholder
+        extrapolateProfile  yes;
+        value               uniform (0 0 0);
     }
     \endverbatim
 
     Example of the boundary condition specification for a mass flow rate:
     \verbatim
-    myPatch
+    <patchName>
     {
         type                flowRateInletVelocity;
         massFlowRate        0.2;
+        extrapolateProfile  yes;
         rho                 rho;
         rhoInlet            1.0;
+        value               uniform (0 0 0);
     }
     \endverbatim
 
@@ -72,9 +76,9 @@ Description
 Note
     - \c rhoInlet is required for the case of a mass flow rate, where the
       density field is not available at start-up
-    - the value is positive into the domain (as an inlet)
-    - may not work correctly for transonic inlets
-    - strange behaviour with potentialFoam since the U equation is not solved
+    - The value is positive into the domain (as an inlet)
+    - May not work correctly for transonic inlets
+    - Strange behaviour with potentialFoam since the U equation is not solved
 
 SeeAlso
     CML::DataEntry
@@ -95,6 +99,7 @@ SourceFiles
 
 namespace CML
 {
+
 /*---------------------------------------------------------------------------*\
            Class flowRateInletVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
@@ -106,7 +111,7 @@ class flowRateInletVelocityFvPatchVectorField
     // Private data
 
         //- Inlet integral flow rate
-        autoPtr<DataEntry<scalar> > flowRate_;
+        autoPtr<DataEntry<scalar>> flowRate_;
 
         //- Is volumetric?
         bool volumetric_;
@@ -116,6 +121,16 @@ class flowRateInletVelocityFvPatchVectorField
 
         //- Rho initialisation value (for start; if value not supplied)
         scalar rhoInlet_;
+
+        //- Set true to extrapolate the velocity profile from the interior
+        Switch extrapolateProfile_;
+
+
+    // Private member functions
+
+        //- Update the patch values given the appropriate density type and value
+        template<class RhoType>
+        void updateValues(const RhoType& rho);
 
 
 public:
@@ -197,12 +212,7 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-// ************************************************************************* //

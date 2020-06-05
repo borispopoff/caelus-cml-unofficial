@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,15 +52,6 @@ class gaussDivScheme
 :
     public fv::divScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        gaussDivScheme(const gaussDivScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const gaussDivScheme&);
-
-
 public:
 
     //- Runtime type information
@@ -81,6 +72,9 @@ public:
             divScheme<Type>(mesh, is)
         {}
 
+        //- Disallow default bitwise copy construct
+        gaussDivScheme(const gaussDivScheme&) = delete;
+
 
     // Member Functions
 
@@ -92,6 +86,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gaussDivScheme&) = delete;
 };
 
 
@@ -143,7 +143,7 @@ gaussDivScheme<Type>::fvcDiv
         )
     );
 
-    tDiv().rename("div(" + vf.name() + ')');
+    tDiv.ref().rename("div(" + vf.name() + ')');
 
     return tDiv;
 }

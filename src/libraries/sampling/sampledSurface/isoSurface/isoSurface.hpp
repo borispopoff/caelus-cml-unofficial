@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -169,18 +169,20 @@ class isoSurface
             const bool neiLower
         ) const;
 
+        //- Get neighbour value and position.
         void getNeighbour
         (
             const labelList& boundaryRegion,
             const volVectorField& meshC,
             const volScalarField& cVals,
-            const label cellI,
-            const label faceI,
+            const label celli,
+            const label facei,
             scalar& nbrValue,
             point& nbrPoint
         ) const;
 
-        //- Set faceCutType,cellCutType.
+        //- Determine for every face/cell whether it (possibly) generates
+        //  triangles.
         void calcCutTypes
         (
             const labelList& boundaryRegion,
@@ -189,19 +191,7 @@ class isoSurface
             const scalarField& pVals
         );
 
-        static labelPair findCommonPoints
-        (
-            const labelledTri&,
-            const labelledTri&
-        );
-
         static point calcCentre(const triSurface&);
-
-        static pointIndexHit collapseSurface
-        (
-            pointField& localPoints,
-            DynamicList<labelledTri, 64>& localTris
-        );
 
         //- Determine per cc whether all near cuts can be snapped to single
         //  point.
@@ -232,7 +222,7 @@ class isoSurface
         //- Return input field with coupled (and empty) patch values rewritten
         template<class Type>
         tmp<SlicedGeometricField
-        <Type, fvPatchField, slicedFvPatchField, volMesh> >
+        <Type, fvPatchField, slicedFvPatchField, volMesh>>
         adaptPatchFields
         (
             const GeometricField<Type, fvPatchField, volMesh>& fld
@@ -253,6 +243,8 @@ class isoSurface
             const Type& snapP1
         ) const;
 
+        //- Note: cannot use simpler isoSurfaceCell::generateTriPoints since
+        //  the need here to sometimes pass in remote 'snappedPoints'
         template<class Type>
         void generateTriPoints
         (
@@ -291,7 +283,7 @@ class isoSurface
             const DynamicList<Type>& snappedPoints,
             const labelList& snappedCc,
             const labelList& snappedPoint,
-            const label faceI,
+            const label facei,
 
             const scalar neiVal,
             const Type& neiPt,
@@ -319,6 +311,14 @@ class isoSurface
             DynamicList<label>& triMeshCells
         ) const;
 
+        template<class Type>
+        static tmp<Field<Type>> interpolate
+        (
+            const label nPoints,
+            const labelList& triPointMergeMap,
+            const DynamicList<Type>& unmergedValues
+        );
+
         triSurface stitchTriPoints
         (
             const bool checkDuplicates,
@@ -330,54 +330,6 @@ class isoSurface
         //- Check single triangle for (topological) validity
         static bool validTri(const triSurface&, const label);
 
-        //- Determine edge-face addressing
-        void calcAddressing
-        (
-            const triSurface& surf,
-            List<FixedList<label, 3> >& faceEdges,
-            labelList& edgeFace0,
-            labelList& edgeFace1,
-            Map<labelList>& edgeFacesRest
-        ) const;
-
-        //- Determine orientation
-        static void walkOrientation
-        (
-            const triSurface& surf,
-            const List<FixedList<label, 3> >& faceEdges,
-            const labelList& edgeFace0,
-            const labelList& edgeFace1,
-            const label seedTriI,
-            labelList& flipState
-        );
-
-        //- Orient surface
-        static void orientSurface
-        (
-            triSurface&,
-            const List<FixedList<label, 3> >& faceEdges,
-            const labelList& edgeFace0,
-            const labelList& edgeFace1,
-            const Map<labelList>& edgeFacesRest
-        );
-
-        //- Is triangle (given by 3 edges) not fully connected?
-        static bool danglingTriangle
-        (
-            const FixedList<label, 3>& fEdges,
-            const labelList& edgeFace1
-        );
-
-        //- Mark all non-fully connected triangles
-        static label markDanglingTriangles
-        (
-            const List<FixedList<label, 3> >& faceEdges,
-            const labelList& edgeFace0,
-            const labelList& edgeFace1,
-            const Map<labelList>& edgeFacesRest,
-            boolList& keepTriangles
-        );
-
         static triSurface subsetMesh
         (
             const triSurface& s,
@@ -387,6 +339,10 @@ class isoSurface
         );
 
 public:
+
+    //- Declare friendship with isoSurfaceCell to share some functionality
+    friend class isoSurfaceCell;
+
 
     //- Runtime type information
     TypeName("isoSurface");
@@ -409,22 +365,16 @@ public:
 
     // Member Functions
 
-        //- For every face original cell in mesh
+        //- For every triangle the original cell in mesh
         const labelList& meshCells() const
         {
             return meshCells_;
         }
 
-        //- For every unmerged triangle point the point in the triSurface
-        const labelList& triPointMergeMap() const
-        {
-            return triPointMergeMap_;
-        }
-
         //- Interpolates cCoords,pCoords. Uses the references to the original
         //  fields used to create the iso surface.
         template<class Type>
-        tmp<Field<Type> > interpolate
+        tmp<Field<Type>> interpolate
         (
             const GeometricField<Type, fvPatchField, volMesh>& cCoords,
             const Field<Type>& pCoords
@@ -454,7 +404,7 @@ CML::tmp<CML::SlicedGeometricField
     CML::fvPatchField,
     CML::slicedFvPatchField,
     CML::volMesh
-> >
+>>
 CML::isoSurface::adaptPatchFields
 (
     const GeometricField<Type, fvPatchField, volMesh>& fld
@@ -485,32 +435,32 @@ CML::isoSurface::adaptPatchFields
             true        // preserveCouples
         )
     );
-    FieldType& sliceFld = tsliceFld();
+    FieldType& sliceFld = tsliceFld.ref();
 
     const fvMesh& mesh = fld.mesh();
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if
         (
             isA<emptyPolyPatch>(pp)
-         && pp.size() != sliceFld.boundaryField()[patchI].size()
+         && pp.size() != sliceFld.boundaryField()[patchi].size()
         )
         {
             // Clear old value. Cannot resize it since is a slice.
-            sliceFld.boundaryField().set(patchI, nullptr);
+            sliceFld.boundaryFieldRef().set(patchi, nullptr);
 
             // Set new value we can change
-            sliceFld.boundaryField().set
+            sliceFld.boundaryFieldRef().set
             (
-                patchI,
+                patchi,
                 new calculatedFvPatchField<Type>
                 (
-                    mesh.boundary()[patchI],
+                    mesh.boundary()[patchi],
                     sliceFld
                 )
             );
@@ -518,9 +468,9 @@ CML::isoSurface::adaptPatchFields
             // Note: cannot use patchInternalField since uses emptyFvPatch::size
             // Do our own internalField instead.
             const labelUList& faceCells =
-                mesh.boundary()[patchI].patch().faceCells();
+                mesh.boundary()[patchi].patch().faceCells();
 
-            Field<Type>& pfld = sliceFld.boundaryField()[patchI];
+            Field<Type>& pfld = sliceFld.boundaryFieldRef()[patchi];
             pfld.setSize(faceCells.size());
             forAll(faceCells, i)
             {
@@ -535,12 +485,12 @@ CML::isoSurface::adaptPatchFields
         {
             fvPatchField<Type>& pfld = const_cast<fvPatchField<Type>&>
             (
-                fld.boundaryField()[patchI]
+                sliceFld.boundaryField()[patchi]
             );
 
-            const scalarField& w = mesh.weights().boundaryField()[patchI];
+            const scalarField& w = mesh.weights().boundaryField()[patchi];
 
-            tmp<Field<Type> > f =
+            tmp<Field<Type>> f =
                 w*pfld.patchInternalField()
               + (1.0-w)*pfld.patchNeighbourField();
 
@@ -655,8 +605,8 @@ void CML::isoSurface::generateTriPoints
         case 0x0F:
         break;
 
-        case 0x0E:
         case 0x01:
+        case 0x0E:
             points.append
             (
                 generatePoint(s0,p0,hasSnap0,snapP0,s1,p1,hasSnap1,snapP1)
@@ -669,10 +619,16 @@ void CML::isoSurface::generateTriPoints
             (
                 generatePoint(s0,p0,hasSnap0,snapP0,s3,p3,hasSnap3,snapP3)
             );
+            if (triIndex == 0x0E)
+            {
+                // Flip normals
+                label sz = points.size();
+                Swap(points[sz-2], points[sz-1]);
+            }
         break;
 
-        case 0x0D:
         case 0x02:
+        case 0x0D:
             points.append
             (
                 generatePoint(s1,p1,hasSnap1,snapP1,s0,p0,hasSnap0,snapP0)
@@ -685,97 +641,133 @@ void CML::isoSurface::generateTriPoints
             (
                 generatePoint(s1,p1,hasSnap1,snapP1,s2,p2,hasSnap2,snapP2)
             );
+            if (triIndex == 0x0D)
+            {
+                // Flip normals
+                label sz = points.size();
+                Swap(points[sz-2], points[sz-1]);
+            }
         break;
 
-        case 0x0C:
         case 0x03:
-        {
-            Type tp1 =
-                generatePoint(s0,p0,hasSnap0,snapP0,s2,p2,hasSnap2,snapP2);
-            Type tp2 =
-                generatePoint(s1,p1,hasSnap1,snapP1,s3,p3,hasSnap3,snapP3);
+        case 0x0C:
+            {
+                Type p0p2 =
+                    generatePoint(s0,p0,hasSnap0,snapP0,s2,p2,hasSnap2,snapP2);
+                Type p1p3 =
+                    generatePoint(s1,p1,hasSnap1,snapP1,s3,p3,hasSnap3,snapP3);
 
-            points.append
-            (
-                generatePoint(s0,p0,hasSnap0,snapP0,s3,p3,hasSnap3,snapP3)
-            );
-            points.append(tp1);
-            points.append(tp2);
-            points.append(tp2);
-            points.append
-            (
-                generatePoint(s1,p1,hasSnap1,snapP1,s2,p2,hasSnap2,snapP2)
-            );
-            points.append(tp1);
-        }
+                points.append
+                (
+                    generatePoint(s0,p0,hasSnap0,snapP0,s3,p3,hasSnap3,snapP3)
+                );
+                points.append(p1p3);
+                points.append(p0p2);
+
+                points.append(p1p3);
+                points.append
+                (
+                    generatePoint(s1,p1,hasSnap1,snapP1,s2,p2,hasSnap2,snapP2)
+                );
+                points.append(p0p2);
+            }
+            if (triIndex == 0x0C)
+            {
+                // Flip normals
+                label sz = points.size();
+                Swap(points[sz-5], points[sz-4]);
+                Swap(points[sz-2], points[sz-1]);
+            }
         break;
 
-        case 0x0B:
         case 0x04:
-        {
-            points.append
-            (
-                generatePoint(s2,p2,hasSnap2,snapP2,s0,p0,hasSnap0,snapP0)
-            );
-            points.append
-            (
-                generatePoint(s2,p2,hasSnap2,snapP2,s1,p1,hasSnap1,snapP1)
-            );
-            points.append
-            (
-                generatePoint(s2,p2,hasSnap2,snapP2,s3,p3,hasSnap3,snapP3)
-            );
-        }
+        case 0x0B:
+            {
+                points.append
+                (
+                    generatePoint(s2,p2,hasSnap2,snapP2,s0,p0,hasSnap0,snapP0)
+                );
+                points.append
+                (
+                    generatePoint(s2,p2,hasSnap2,snapP2,s1,p1,hasSnap1,snapP1)
+                );
+                points.append
+                (
+                    generatePoint(s2,p2,hasSnap2,snapP2,s3,p3,hasSnap3,snapP3)
+                );
+            }
+            if (triIndex == 0x0B)
+            {
+                // Flip normals
+                label sz = points.size();
+                Swap(points[sz-2], points[sz-1]);
+            }
         break;
 
-        case 0x0A:
         case 0x05:
-        {
-            Type tp0 =
-                generatePoint(s0,p0,hasSnap0,snapP0,s1,p1,hasSnap1,snapP1);
-            Type tp1 =
-                generatePoint(s2,p2,hasSnap2,snapP2,s3,p3,hasSnap3,snapP3);
+        case 0x0A:
+            {
+                Type p0p1 =
+                    generatePoint(s0,p0,hasSnap0,snapP0,s1,p1,hasSnap1,snapP1);
+                Type p2p3 =
+                    generatePoint(s2,p2,hasSnap2,snapP2,s3,p3,hasSnap3,snapP3);
 
-            points.append(tp0);
-            points.append(tp1);
-            points.append
-            (
-                generatePoint(s0,p0,hasSnap0,snapP0,s3,p3,hasSnap3,snapP3)
-            );
-            points.append(tp0);
-            points.append
-            (
-                generatePoint(s1,p1,hasSnap1,snapP1,s2,p2,hasSnap2,snapP2)
-            );
-            points.append(tp1);
-        }
+                points.append(p0p1);
+                points.append(p2p3);
+                points.append
+                (
+                    generatePoint(s0,p0,hasSnap0,snapP0,s3,p3,hasSnap3,snapP3)
+                );
+
+                points.append(p0p1);
+                points.append
+                (
+                    generatePoint(s1,p1,hasSnap1,snapP1,s2,p2,hasSnap2,snapP2)
+                );
+                points.append(p2p3);
+            }
+            if (triIndex == 0x0A)
+            {
+                // Flip normals
+                label sz = points.size();
+                Swap(points[sz-5], points[sz-4]);
+                Swap(points[sz-2], points[sz-1]);
+            }
         break;
 
-        case 0x09:
         case 0x06:
-        {
-            Type tp0 =
-                generatePoint(s0,p0,hasSnap0,snapP0,s1,p1,hasSnap1,snapP1);
-            Type tp1 =
-                generatePoint(s2,p2,hasSnap2,snapP2,s3,p3,hasSnap3,snapP3);
+        case 0x09:
+            {
+                Type p0p1 =
+                    generatePoint(s0,p0,hasSnap0,snapP0,s1,p1,hasSnap1,snapP1);
+                Type p2p3 =
+                    generatePoint(s2,p2,hasSnap2,snapP2,s3,p3,hasSnap3,snapP3);
 
-            points.append(tp0);
-            points.append
-            (
-                generatePoint(s1,p1,hasSnap1,snapP1,s3,p3,hasSnap3,snapP3)
-            );
-            points.append(tp1);
-            points.append(tp0);
-            points.append
-            (
-                generatePoint(s0,p0,hasSnap0,snapP0,s2,p2,hasSnap2,snapP2)
-            );
-            points.append(tp1);
-        }
+                points.append(p0p1);
+                points.append
+                (
+                    generatePoint(s1,p1,hasSnap1,snapP1,s3,p3,hasSnap3,snapP3)
+                );
+                points.append(p2p3);
+
+                points.append(p0p1);
+                points.append(p2p3);
+                points.append
+                (
+                    generatePoint(s0,p0,hasSnap0,snapP0,s2,p2,hasSnap2,snapP2)
+                );
+            }
+            if (triIndex == 0x09)
+            {
+                // Flip normals
+                label sz = points.size();
+                Swap(points[sz-5], points[sz-4]);
+                Swap(points[sz-2], points[sz-1]);
+            }
         break;
 
-        case 0x07:
         case 0x08:
+        case 0x07:
             points.append
             (
                 generatePoint(s3,p3,hasSnap3,snapP3,s0,p0,hasSnap0,snapP0)
@@ -788,6 +780,12 @@ void CML::isoSurface::generateTriPoints
             (
                 generatePoint(s3,p3,hasSnap3,snapP3,s1,p1,hasSnap1,snapP1)
             );
+            if (triIndex == 0x07)
+            {
+                // Flip normals
+                label sz = points.size();
+                Swap(points[sz-2], points[sz-1]);
+            }
         break;
     }
 }
@@ -805,7 +803,7 @@ CML::label CML::isoSurface::generateFaceTriPoints
     const DynamicList<Type>& snappedPoints,
     const labelList& snappedCc,
     const labelList& snappedPoint,
-    const label faceI,
+    const label facei,
 
     const scalar neiVal,
     const Type& neiPt,
@@ -816,34 +814,34 @@ CML::label CML::isoSurface::generateFaceTriPoints
     DynamicList<label>& triMeshCells
 ) const
 {
-    label own = mesh_.faceOwner()[faceI];
+    label own = mesh_.faceOwner()[facei];
 
     label oldNPoints = triPoints.size();
 
-    const face& f = mesh_.faces()[faceI];
+    const face& f = mesh_.faces()[facei];
 
     forAll(f, fp)
     {
-        label pointI = f[fp];
-        label nextPointI = f[f.fcIndex(fp)];
+        label pointi = f[fp];
+        label nextPointi = f[f.fcIndex(fp)];
 
         generateTriPoints
         (
-            pVals[pointI],
-            pCoords[pointI],
-            snappedPoint[pointI] != -1,
+            pVals[pointi],
+            pCoords[pointi],
+            snappedPoint[pointi] != -1,
             (
-                snappedPoint[pointI] != -1
-              ? snappedPoints[snappedPoint[pointI]]
+                snappedPoint[pointi] != -1
+              ? snappedPoints[snappedPoint[pointi]]
               : pTraits<Type>::zero
             ),
 
-            pVals[nextPointI],
-            pCoords[nextPointI],
-            snappedPoint[nextPointI] != -1,
+            pVals[nextPointi],
+            pCoords[nextPointi],
+            snappedPoint[nextPointi] != -1,
             (
-                snappedPoint[nextPointI] != -1
-              ? snappedPoints[snappedPoint[nextPointI]]
+                snappedPoint[nextPointi] != -1
+              ? snappedPoints[snappedPoint[nextPointi]]
               : pTraits<Type>::zero
             ),
 
@@ -926,9 +924,9 @@ void CML::isoSurface::generateTriPoints
     triPoints.clear();
     triMeshCells.clear();
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        if (faceCutType_[faceI] != NOTCUT)
+        if (faceCutType_[facei] != NOTCUT)
         {
             generateFaceTriPoints
             (
@@ -941,14 +939,14 @@ void CML::isoSurface::generateTriPoints
                 snappedPoints,
                 snappedCc,
                 snappedPoint,
-                faceI,
+                facei,
 
-                cVals[nei[faceI]],
-                cCoords[nei[faceI]],
-                snappedCc[nei[faceI]] != -1,
+                cVals[nei[facei]],
+                cCoords[nei[facei]],
+                snappedCc[nei[facei]] != -1,
                 (
-                    snappedCc[nei[faceI]] != -1
-                  ? snappedPoints[snappedCc[nei[faceI]]]
+                    snappedCc[nei[facei]] != -1
+                  ? snappedPoints[snappedCc[nei[facei]]]
                   : pTraits<Type>::zero
                 ),
 
@@ -961,25 +959,25 @@ void CML::isoSurface::generateTriPoints
 
     // Determine neighbouring snap status
     boolList neiSnapped(mesh_.nFaces()-mesh_.nInternalFaces(), false);
-    List<Type> neiSnappedPoint(neiSnapped.size(), pTraits<Type>::zero);
-    forAll(patches, patchI)
+    List<Type> neiSnappedPoint(neiSnapped.size(), Zero);
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
-            label faceI = pp.start();
+            label facei = pp.start();
             forAll(pp, i)
             {
-                label bFaceI = faceI-mesh_.nInternalFaces();
-                label snappedIndex = snappedCc[own[faceI]];
+                label bFacei = facei-mesh_.nInternalFaces();
+                label snappedIndex = snappedCc[own[facei]];
 
                 if (snappedIndex != -1)
                 {
-                    neiSnapped[bFaceI] = true;
-                    neiSnappedPoint[bFaceI] = snappedPoints[snappedIndex];
+                    neiSnapped[bFacei] = true;
+                    neiSnappedPoint[bFacei] = snappedPoints[snappedIndex];
                 }
-                faceI++;
+                facei++;
             }
         }
     }
@@ -988,9 +986,9 @@ void CML::isoSurface::generateTriPoints
 
 
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (isA<processorPolyPatch>(pp))
         {
@@ -1001,9 +999,9 @@ void CML::isoSurface::generateTriPoints
 
             forAll(isCollocated, i)
             {
-                label faceI = pp.start()+i;
+                label facei = pp.start()+i;
 
-                if (faceCutType_[faceI] != NOTCUT)
+                if (faceCutType_[facei] != NOTCUT)
                 {
                     if (isCollocated[i])
                     {
@@ -1018,12 +1016,12 @@ void CML::isoSurface::generateTriPoints
                             snappedPoints,
                             snappedCc,
                             snappedPoint,
-                            faceI,
+                            facei,
 
-                            cVals.boundaryField()[patchI][i],
-                            cCoords.boundaryField()[patchI][i],
-                            neiSnapped[faceI-mesh_.nInternalFaces()],
-                            neiSnappedPoint[faceI-mesh_.nInternalFaces()],
+                            cVals.boundaryField()[patchi][i],
+                            cCoords.boundaryField()[patchi][i],
+                            neiSnapped[facei-mesh_.nInternalFaces()],
+                            neiSnappedPoint[facei-mesh_.nInternalFaces()],
 
                             triPoints,
                             triMeshCells
@@ -1042,10 +1040,10 @@ void CML::isoSurface::generateTriPoints
                             snappedPoints,
                             snappedCc,
                             snappedPoint,
-                            faceI,
+                            facei,
 
-                            cVals.boundaryField()[patchI][i],
-                            cCoords.boundaryField()[patchI][i],
+                            cVals.boundaryField()[patchi][i],
+                            cCoords.boundaryField()[patchi][i],
                             false,
                             pTraits<Type>::zero,
 
@@ -1058,11 +1056,11 @@ void CML::isoSurface::generateTriPoints
         }
         else
         {
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                if (faceCutType_[faceI] != NOTCUT)
+                if (faceCutType_[facei] != NOTCUT)
                 {
                     generateFaceTriPoints
                     (
@@ -1075,10 +1073,10 @@ void CML::isoSurface::generateTriPoints
                         snappedPoints,
                         snappedCc,
                         snappedPoint,
-                        faceI,
+                        facei,
 
-                        cVals.boundaryField()[patchI][i],
-                        cCoords.boundaryField()[patchI][i],
+                        cVals.boundaryField()[patchi][i],
+                        cCoords.boundaryField()[patchi][i],
                         false,  // fc not snapped
                         pTraits<Type>::zero,
 
@@ -1086,7 +1084,7 @@ void CML::isoSurface::generateTriPoints
                         triMeshCells
                     );
                 }
-                faceI++;
+                facei++;
             }
         }
     }
@@ -1096,16 +1094,45 @@ void CML::isoSurface::generateTriPoints
 }
 
 
-//template<class Type>
-//CML::tmp<CML::Field<Type> >
-//CML::isoSurface::sample(const Field<Type>& vField) const
-//{
-//    return tmp<Field<Type> >(new Field<Type>(vField, meshCells()));
-//}
+template<class Type>
+CML::tmp<CML::Field<Type>>
+CML::isoSurface::interpolate
+(
+    const label nPoints,
+    const labelList& triPointMergeMap,
+    const DynamicList<Type>& unmergedValues
+)
+{
+    // One value per point
+    tmp<Field<Type> > tvalues(new Field<Type>(nPoints, Zero));
+    Field<Type>& values = tvalues.ref();
+    labelList nValues(values.size(), 0);
+
+    forAll(unmergedValues, i)
+    {
+        label mergedPointI = triPointMergeMap[i];
+
+        if (mergedPointI >= 0)
+        {
+            values[mergedPointI] += unmergedValues[i];
+            nValues[mergedPointI]++;
+        }
+    }
+
+    forAll(values, i)
+    {
+        if (nValues[i] > 0)
+        {
+            values[i] /= scalar(nValues[i]);
+        }
+    }
+
+    return tvalues;
+}
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::isoSurface::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& cCoords,
@@ -1119,10 +1146,10 @@ CML::isoSurface::interpolate
         fvPatchField,
         slicedFvPatchField,
         volMesh
-    > > c2(adaptPatchFields(cCoords));
+    >> c2(adaptPatchFields(cCoords));
 
 
-    DynamicList<Type> triPoints(nCutCells_);
+    DynamicList<Type> triPoints(3*nCutCells_);
     DynamicList<label> triMeshCells(nCutCells_);
 
     // Dummy snap data
@@ -1147,51 +1174,12 @@ CML::isoSurface::interpolate
     );
 
 
-    // One value per point
-    tmp<Field<Type> > tvalues
+    return interpolate
     (
-        new Field<Type>(points().size(), pTraits<Type>::zero)
+        points().size(),
+        triPointMergeMap_,
+        triPoints
     );
-    Field<Type>& values = tvalues();
-    labelList nValues(values.size(), 0);
-
-    forAll(triPoints, i)
-    {
-        label mergedPointI = triPointMergeMap_[i];
-
-        if (mergedPointI >= 0)
-        {
-            values[mergedPointI] += triPoints[i];
-            nValues[mergedPointI]++;
-        }
-    }
-
-    if (debug)
-    {
-        Pout<< "nValues:" << values.size() << endl;
-        label nMult = 0;
-        forAll(nValues, i)
-        {
-            if (nValues[i] == 0)
-            {
-                FatalErrorInFunction
-                    << "point:" << i << " nValues:" << nValues[i]
-                    << abort(FatalError);
-            }
-            else if (nValues[i] > 1)
-            {
-                nMult++;
-            }
-        }
-        Pout<< "Of which mult:" << nMult << endl;
-    }
-
-    forAll(values, i)
-    {
-        values[i] /= scalar(nValues[i]);
-    }
-
-    return tvalues;
 }
 
 

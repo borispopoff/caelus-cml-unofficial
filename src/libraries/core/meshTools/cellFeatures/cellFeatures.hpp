@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -75,7 +75,7 @@ class cellFeatures
         mutable faceList* facesPtr_;
 
         //- New to old face mapping
-        mutable List<DynamicList<label> > faceMap_;
+        mutable List<DynamicList<label>> faceMap_;
 
 
     // Private Member Functions
@@ -94,19 +94,13 @@ class cellFeatures
 
         void walkSuperFace
         (
-            const label faceI,
+            const label facei,
             const label superFaceI,
             Map<label>& toSuperFace
         ) const;
 
         void calcSuperFaces() const;
 
-
-        //- Disallow default bitwise copy construct
-        cellFeatures(const cellFeatures&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellFeatures&);
 
 public:
 
@@ -117,8 +111,11 @@ public:
         (
             const primitiveMesh&,
             const scalar minCos,    // angle to use for feature recognition.
-            const label cellI
+            const label celli
         );
+
+        //- Disallow default bitwise copy construct
+        cellFeatures(const cellFeatures&) = delete;
 
 
     //- Destructor
@@ -144,7 +141,7 @@ public:
             }
 
             //- New to old faceMap. Guaranteed to be shrunk.
-            const List<DynamicList<label> >& faceMap() const
+            const List<DynamicList<label>>& faceMap() const
             {
                 if (!facesPtr_)
                 {
@@ -168,9 +165,15 @@ public:
             //  from one face but not from another.
             bool isFeaturePoint(const label edge0, const label edge1) const;
 
-            //- Is vertexI on faceI used by two edges that form feature
+            //- Is vertexI on facei used by two edges that form feature
             //  point
-            bool isFeatureVertex(const label faceI, const label vertI) const;
+            bool isFeatureVertex(const label facei, const label vertI) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellFeatures&) = delete;
 
 };
 

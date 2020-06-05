@@ -61,9 +61,9 @@ public:
         RanzMarshall(const RanzMarshall<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<HeatTransferModel<CloudType> > clone() const
+        virtual autoPtr<HeatTransferModel<CloudType>> clone() const
         {
-            return autoPtr<HeatTransferModel<CloudType> >
+            return autoPtr<HeatTransferModel<CloudType>>
             (
                 new RanzMarshall<CloudType>(*this)
             );

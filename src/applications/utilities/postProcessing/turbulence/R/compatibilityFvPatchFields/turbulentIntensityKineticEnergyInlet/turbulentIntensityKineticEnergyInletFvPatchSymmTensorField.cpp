@@ -93,7 +93,7 @@ void CML::turbulentIntensityKineticEnergyInletFvPatchSymmTensorField::write
 ) const
 {
     fvPatchSymmTensorField::write(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -29,19 +29,39 @@ namespace CML
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+template<class TypeR>
+tmp<Field<TypeR>> New
+(
+    const tmp<Field<TypeR>>& tf1,
+    const bool initRet = false
+)
+{
+    if (tf1.isTmp())
+    {
+        return tf1;
+    }
+    else
+    {
+        tmp<Field<TypeR>> rtf(new Field<TypeR>(tf1().size()));
+
+        if (initRet)
+        {
+            rtf.ref() = tf1();
+        }
+
+        return rtf;
+    }
+}
+
+
 template<class TypeR, class Type1>
 class reuseTmp
 {
 public:
 
-    static tmp<Field<TypeR> > New(const tmp<Field<Type1> >& tf1)
+    static tmp<Field<TypeR>> New(const tmp<Field<Type1>>& tf1)
     {
-        return tmp<Field<TypeR> >(new Field<TypeR>(tf1().size()));
-    }
-
-    static void clear(const tmp<Field<Type1> >& tf1)
-    {
-        tf1.clear();
+        return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
     }
 };
 
@@ -51,11 +71,7 @@ class reuseTmp<TypeR, TypeR>
 {
 public:
 
-    static tmp<Field<TypeR> > New
-    (
-        const tmp<Field<TypeR> >& tf1,
-        const bool initRet = false
-    )
+    static tmp<Field<TypeR>> New(const tmp<Field<TypeR>>& tf1)
     {
         if (tf1.isTmp())
         {
@@ -63,22 +79,7 @@ public:
         }
         else
         {
-            tmp<Field<TypeR> > rtf(new Field<TypeR>(tf1().size()));
-
-            if (initRet)
-            {
-                rtf() = tf1();
-            }
-
-            return rtf;
-        }
-    }
-
-    static void clear(const tmp<Field<TypeR> >& tf1)
-    {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
+            return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
         }
     }
 };
@@ -89,23 +90,13 @@ class reuseTmpTmp
 {
 public:
 
-    static tmp<Field<TypeR> > New
+    static tmp<Field<TypeR>> New
     (
-        const tmp<Field<Type1> >& tf1,
-        const tmp<Field<Type2> >& tf2
+        const tmp<Field<Type1>>& tf1,
+        const tmp<Field<Type2>>& tf2
     )
     {
-        return tmp<Field<TypeR> >(new Field<TypeR>(tf1().size()));
-    }
-
-    static void clear
-    (
-        const tmp<Field<Type1> >& tf1,
-        const tmp<Field<Type2> >& tf2
-    )
-    {
-        tf1.clear();
-        tf2.clear();
+        return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
     }
 };
 
@@ -115,10 +106,10 @@ class reuseTmpTmp<TypeR, Type1, Type12, TypeR>
 {
 public:
 
-    static tmp<Field<TypeR> > New
+    static tmp<Field<TypeR>> New
     (
-        const tmp<Field<Type1> >& tf1,
-        const tmp<Field<TypeR> >& tf2
+        const tmp<Field<Type1>>& tf1,
+        const tmp<Field<TypeR>>& tf2
     )
     {
         if (tf2.isTmp())
@@ -127,20 +118,7 @@ public:
         }
         else
         {
-            return tmp<Field<TypeR> >(new Field<TypeR>(tf1().size()));
-        }
-    }
-
-    static void clear
-    (
-        const tmp<Field<Type1> >& tf1,
-        const tmp<Field<TypeR> >& tf2
-    )
-    {
-        tf1.clear();
-        if (tf2.isTmp())
-        {
-            tf2.ptr();
+            return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
         }
     }
 };
@@ -151,10 +129,10 @@ class reuseTmpTmp<TypeR, TypeR, TypeR, Type2>
 {
 public:
 
-    static tmp<Field<TypeR> > New
+    static tmp<Field<TypeR>> New
     (
-        const tmp<Field<TypeR> >& tf1,
-        const tmp<Field<Type2> >& tf2
+        const tmp<Field<TypeR>>& tf1,
+        const tmp<Field<Type2>>& tf2
     )
     {
         if (tf1.isTmp())
@@ -163,21 +141,8 @@ public:
         }
         else
         {
-            return tmp<Field<TypeR> >(new Field<TypeR>(tf1().size()));
+            return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
         }
-    }
-
-    static void clear
-    (
-        const tmp<Field<TypeR> >& tf1,
-        const tmp<Field<Type2> >& tf2
-    )
-    {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
-        }
-        tf2.clear();
     }
 };
 
@@ -187,10 +152,10 @@ class reuseTmpTmp<TypeR, TypeR, TypeR, TypeR>
 {
 public:
 
-    static tmp<Field<TypeR> > New
+    static tmp<Field<TypeR>> New
     (
-        const tmp<Field<TypeR> >& tf1,
-        const tmp<Field<TypeR> >& tf2
+        const tmp<Field<TypeR>>& tf1,
+        const tmp<Field<TypeR>>& tf2
     )
     {
         if (tf1.isTmp())
@@ -203,25 +168,7 @@ public:
         }
         else
         {
-            return tmp<Field<TypeR> >(new Field<TypeR>(tf1().size()));
-        }
-    }
-
-    static void clear
-    (
-        const tmp<Field<TypeR> >& tf1,
-        const tmp<Field<TypeR> >& tf2
-    )
-    {
-        if (tf1.isTmp())
-        {
-            tf1.ptr();
-            tf2.clear();
-        }
-        else if (tf2.isTmp())
-        {
-            tf1.clear();
-            tf2.ptr();
+            return tmp<Field<TypeR>>(new Field<TypeR>(tf1().size()));
         }
     }
 };

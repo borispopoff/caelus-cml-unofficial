@@ -130,7 +130,7 @@ CML::AverageIOField<Type>::AverageIOField
 :
     regIOobject(io),
     Field<Type>(size),
-    average_(pTraits<Type>::zero)
+    average_(Zero)
 {}
 
 

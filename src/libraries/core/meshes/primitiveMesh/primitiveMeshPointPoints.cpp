@@ -56,19 +56,19 @@ void CML::primitiveMesh::calcPointPoints() const
         ppPtr_ = new labelListList(pe.size());
         labelListList& pp = *ppPtr_;
 
-        forAll(pe, pointI)
+        forAll(pe, pointi)
         {
-            pp[pointI].setSize(pe[pointI].size());
+            pp[pointi].setSize(pe[pointi].size());
 
-            forAll(pe[pointI], ppi)
+            forAll(pe[pointi], ppi)
             {
-                if (e[pe[pointI][ppi]].start() == pointI)
+                if (e[pe[pointi][ppi]].start() == pointi)
                 {
-                    pp[pointI][ppi] = e[pe[pointI][ppi]].end();
+                    pp[pointi][ppi] = e[pe[pointi][ppi]].end();
                 }
-                else if (e[pe[pointI][ppi]].end() == pointI)
+                else if (e[pe[pointi][ppi]].end() == pointi)
                 {
-                    pp[pointI][ppi] = e[pe[pointI][ppi]].start();
+                    pp[pointi][ppi] = e[pe[pointi][ppi]].start();
                 }
                 else
                 {
@@ -97,18 +97,18 @@ const CML::labelListList& CML::primitiveMesh::pointPoints() const
 
 const CML::labelList& CML::primitiveMesh::pointPoints
 (
-    const label pointI,
+    const label pointi,
     DynamicList<label>& storage
 ) const
 {
     if (hasPointPoints())
     {
-        return pointPoints()[pointI];
+        return pointPoints()[pointi];
     }
     else
     {
         const edgeList& edges = this->edges();
-        const labelList& pEdges = pointEdges()[pointI];
+        const labelList& pEdges = pointEdges()[pointi];
 
         storage.clear();
 
@@ -119,7 +119,7 @@ const CML::labelList& CML::primitiveMesh::pointPoints
 
         forAll(pEdges, i)
         {
-            storage.append(edges[pEdges[i]].otherVertex(pointI));
+            storage.append(edges[pEdges[i]].otherVertex(pointi));
         }
 
         return storage;
@@ -129,10 +129,10 @@ const CML::labelList& CML::primitiveMesh::pointPoints
 
 const CML::labelList& CML::primitiveMesh::pointPoints
 (
-    const label pointI
+    const label pointi
 ) const
 {
-    return pointPoints(pointI, labels_);
+    return pointPoints(pointi, labels_);
 }
 
 

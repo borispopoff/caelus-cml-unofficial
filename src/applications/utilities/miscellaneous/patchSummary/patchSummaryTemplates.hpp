@@ -34,7 +34,7 @@ namespace CML
     (
         PtrList<GeoField>& fieldList,
         const IOobject& obj,
-        const label fieldI,
+        const label fieldi,
         const typename GeoField::Mesh& mesh
     );
 
@@ -42,14 +42,14 @@ namespace CML
     void outputFieldList
     (
         const PtrList<GeoField>& fieldList,
-        const label patchI
+        const label patchi
     );
 
     template<class GeoField>
     void collectFieldList
     (
         const PtrList<GeoField>& fieldList,
-        const label patchI,
+        const label patchi,
         HashTable<word>& fieldToType
     );
 } // End namespace CML
@@ -66,7 +66,7 @@ void CML::addToFieldList
 (
     PtrList<GeoField>& fieldList,
     const IOobject& obj,
-    const label fieldI,
+    const label fieldi,
     const typename GeoField::Mesh& mesh
 )
 {
@@ -75,7 +75,7 @@ void CML::addToFieldList
     {
         fieldList.set
         (
-            fieldI,
+            fieldi,
             new GeoField(obj, mesh)
         );
         Info<< "    " << GeoField::typeName << tab << obj.name() << endl;
@@ -87,17 +87,17 @@ template<class GeoField>
 void CML::outputFieldList
 (
     const PtrList<GeoField>& fieldList,
-    const label patchI
+    const label patchi
 )
 {
-    forAll(fieldList, fieldI)
+    forAll(fieldList, fieldi)
     {
-        if (fieldList.set(fieldI))
+        if (fieldList.set(fieldi))
         {
             Info<< "    " << pTraits<typename GeoField::value_type>::typeName
                 << tab << tab
-                << fieldList[fieldI].name() << tab << tab
-                << fieldList[fieldI].boundaryField()[patchI].type() << nl;
+                << fieldList[fieldi].name() << tab << tab
+                << fieldList[fieldi].boundaryField()[patchi].type() << nl;
         }
     }
 }
@@ -107,18 +107,18 @@ template<class GeoField>
 void CML::collectFieldList
 (
     const PtrList<GeoField>& fieldList,
-    const label patchI,
+    const label patchi,
     HashTable<word>& fieldToType
 )
 {
-    forAll(fieldList, fieldI)
+    forAll(fieldList, fieldi)
     {
-        if (fieldList.set(fieldI))
+        if (fieldList.set(fieldi))
         {
             fieldToType.insert
             (
-                fieldList[fieldI].name(),
-                fieldList[fieldI].boundaryField()[patchI].type()
+                fieldList[fieldi].name(),
+                fieldList[fieldi].boundaryField()[patchi].type()
             );
         }
     }

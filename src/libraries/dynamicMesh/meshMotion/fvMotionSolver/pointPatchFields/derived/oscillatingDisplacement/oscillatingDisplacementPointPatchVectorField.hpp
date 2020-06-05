@@ -85,9 +85,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<vector> > clone() const
+        virtual autoPtr<pointPatchField<vector>> clone() const
         {
-            return autoPtr<pointPatchField<vector> >
+            return autoPtr<pointPatchField<vector>>
             (
                 new oscillatingDisplacementPointPatchVectorField
                 (
@@ -104,12 +104,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<vector> > clone
+        virtual autoPtr<pointPatchField<vector>> clone
         (
             const DimensionedField<vector, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<vector> >
+            return autoPtr<pointPatchField<vector>>
             (
                 new oscillatingDisplacementPointPatchVectorField
                 (

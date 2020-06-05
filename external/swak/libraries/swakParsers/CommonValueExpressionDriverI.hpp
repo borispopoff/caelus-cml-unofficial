@@ -46,7 +46,7 @@ namespace CML {
     }
 
     template<class Type>
-    tmp<Field<Type> > CommonValueExpressionDriver::evaluate(
+    tmp<Field<Type>> CommonValueExpressionDriver::evaluate(
         const exprString &expr,
         bool qPoint
     )
@@ -71,13 +71,13 @@ namespace CML {
     }
 
     template<class Type>
-    tmp<Field<Type> > CommonValueExpressionDriver::makeField(Type val,bool isPoint)
+    tmp<Field<Type>> CommonValueExpressionDriver::makeField(Type val,bool isPoint)
     {
         label size=this->size();
         if(isPoint) {
             size=this->pointSize();
         }
-        return tmp<Field<Type> >(
+        return tmp<Field<Type>>(
             new Field<Type>(size,val)
         );
     }
@@ -89,7 +89,7 @@ namespace CML {
     }
 
     template<class Type>
-    tmp<Field<Type> > CommonValueExpressionDriver::getResult(bool qPoint)
+    tmp<Field<Type>> CommonValueExpressionDriver::getResult(bool qPoint)
     {
         if(qPoint!=result_.isPoint()) {
             FatalErrorInFunction
@@ -585,13 +585,13 @@ namespace CML {
             }
 
             word patchType("calculated");
-            if(T::PatchFieldType::typeName=="fvPatchField") {
+            if(T::Patch::typeName=="fvPatchField") {
                 patchType="zeroGradient";
             }
             if(debug) {
                 Info << "Creating field " << name << " of type "
                     << T::typeName << " with patch type " << patchType
-                    << "(" << T::PatchFieldType::typeName << ")" << endl;
+                    << "(" << T::Patch::typeName << ")" << endl;
             }
             f.set(
                 new T(
@@ -634,7 +634,7 @@ namespace CML {
             bool sameSize=vals.size()==f->size();
             reduce(sameSize,andOp<bool>());
             if(sameSize) {
-                f->internalField()=vals;
+                f->primitiveFieldRef()=vals;
             } else {
                 Type avg=gAverage(vals);
 
@@ -652,7 +652,7 @@ namespace CML {
                     }
                 }
 
-                f->internalField()=avg;
+                f->primitiveFieldRef()=avg;
             }
 
             correctField(f());
@@ -749,7 +749,7 @@ namespace CML {
     }
 
     template<class Type>
-    tmp<Field<Type> > CommonValueExpressionDriver::getVariable(
+    tmp<Field<Type>> CommonValueExpressionDriver::getVariable(
         const word &inName,
         const label expectedSize
     )
@@ -763,7 +763,7 @@ namespace CML {
             name=this->getAlias(name);
         }
 
-        autoPtr<Field<Type> >vals;
+        autoPtr<Field<Type>>vals;
         bool isSingleValue=false;
 
         if(
@@ -793,7 +793,7 @@ namespace CML {
             if(
                 qSize
             ) {
-                return tmp<Field<Type> >(
+                return tmp<Field<Type>>(
                     vals.ptr()
                 );
             } else {
@@ -806,7 +806,7 @@ namespace CML {
                         << "hoping for the best"
                         << endl;
                 }
-                return tmp<Field<Type> >(
+                return tmp<Field<Type>>(
                     new Field<Type>(
                         expectedSize,gAverage(vals())
                     )
@@ -819,7 +819,7 @@ namespace CML {
                     << endl
                     << exit(FatalError);
 
-            return tmp<Field<Type> >(
+            return tmp<Field<Type>>(
                 new Field<Type>(
                     expectedSize,pTraits<Type>::zero
                 )
@@ -1066,7 +1066,7 @@ namespace CML {
     }
 
     template <class Op,class Type>
-    tmp<Field<bool> > CommonValueExpressionDriver::doCompare(
+    tmp<Field<bool>> CommonValueExpressionDriver::doCompare(
         const Field<Type> &a,
         Op op,
         const Field<Type> &b
@@ -1074,19 +1074,19 @@ namespace CML {
     {
         assert(a.size()==b.size());
 
-        tmp<Field<bool> > res(
+        tmp<Field<bool>> res(
             new Field<bool>(a.size(),false)
         );
 
         forAll(res(),i) {
-            res()[i]=op(a[i],b[i]);
+            res.ref()[i]=op(a[i],b[i]);
         }
 
         return res;
     }
 
     template <class Op>
-    tmp<Field<bool> > CommonValueExpressionDriver::doLogicalOp(
+    tmp<Field<bool>> CommonValueExpressionDriver::doLogicalOp(
         const Field<bool> &a,
         Op op,
         const Field<bool> &b
@@ -1094,19 +1094,19 @@ namespace CML {
     {
         assert(a.size()==b.size());
 
-        tmp<Field<bool> > res(
+        tmp<Field<bool>> res(
             new Field<bool>(a.size(),false)
         );
 
         forAll(res(),i) {
-            res()[i]=op(a[i],b[i]);
+            res.ref()[i]=op(a[i],b[i]);
         }
 
         return res;
     }
 
     template<class Type>
-    tmp<Field<Type> > CommonValueExpressionDriver::doConditional(
+    tmp<Field<Type>> CommonValueExpressionDriver::doConditional(
         const Field<bool> &d,
         const Field<Type> &yes,
         const Field<Type> &no
@@ -1114,27 +1114,27 @@ namespace CML {
     {
         assert(yes.size()==no.size() && d.size()==yes.size());
 
-        tmp<Field<Type> > res(
+        tmp<Field<Type>> res(
             new Field<Type>(yes.size())
         );
 
         forAll(res(),i) {
-            res()[i] = d[i] ? yes[i] : no[i];
+            res.ref()[i] = d[i] ? yes[i] : no[i];
         }
 
         return res;
     }
 
-    tmp<Field<bool> > CommonValueExpressionDriver::doLogicalNot(
+    tmp<Field<bool>> CommonValueExpressionDriver::doLogicalNot(
         const Field<bool> &a
     )
     {
-        tmp<Field<bool> > res(
+        tmp<Field<bool>> res(
             new Field<bool>(a.size())
         );;
 
         forAll(res(),i) {
-            res()[i] = a[i];
+            res.ref()[i] = a[i];
         }
 
         return res;

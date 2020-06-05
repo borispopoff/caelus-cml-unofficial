@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -42,7 +42,7 @@ CML::tmp<CML::vectorField> CML::layerAdditionRemoval::extrusionDir() const
     const labelList& mp = masterFaceLayer.meshPoints();
 
     tmp<vectorField> textrusionDir(new vectorField(mp.size()));
-    vectorField& extrusionDir = textrusionDir();
+    vectorField& extrusionDir = textrusionDir.ref();
 
     if (setLayerPairing())
     {
@@ -75,6 +75,7 @@ CML::tmp<CML::vectorField> CML::layerAdditionRemoval::extrusionDir() const
 
         extrusionDir = minLayerThickness_*masterFaceLayer.pointNormals();
     }
+
     return textrusionDir;
 }
 
@@ -121,18 +122,18 @@ void CML::layerAdditionRemoval::addCellLayer
     // Add the new points
     labelList addedPoints(mp.size());
 
-    forAll(mp, pointI)
+    forAll(mp, pointi)
     {
         // Add the point nominal thickness away from the master zone point
         // and grab the label
-        addedPoints[pointI] =
+        addedPoints[pointi] =
             ref.setAction
             (
                 polyAddPoint
                 (
-                    points[mp[pointI]]                  // point
-                  + addDelta_*tpointOffsets()[pointI],
-                    mp[pointI],                         // master point
+                    points[mp[pointi]]                  // point
+                  + addDelta_*tpointOffsets()[pointi],
+                    mp[pointi],                         // master point
                     -1,                                 // zone for point
                     true                                // supports a cell
                 )
@@ -155,16 +156,16 @@ void CML::layerAdditionRemoval::addCellLayer
 
     labelList addedCells(mf.size());
 
-    forAll(mf, faceI)
+    forAll(mf, facei)
     {
-        addedCells[faceI] =
+        addedCells[facei] =
             ref.setAction
             (
                 polyAddCell
                 (
                     -1,           // master point
                     -1,           // master edge
-                    mf[faceI],    // master face
+                    mf[facei],    // master face
                     -1,           // master cell
                     -1            // zone for cell
                 )
@@ -183,15 +184,15 @@ void CML::layerAdditionRemoval::addCellLayer
     // owner: if the master cell is equal to the face owner the flux
     // remains the same; otherwise it is flipped
 
-    forAll(zoneFaces, faceI)
+    forAll(zoneFaces, facei)
     {
-        const face oldFace = zoneFaces[faceI].reverseFace();
+        const face oldFace = zoneFaces[facei].reverseFace();
 
         face newFace(oldFace.size());
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
-            newFace[pointI] = addedPoints[oldFace[pointI]];
+            newFace[pointi] = addedPoints[oldFace[pointi]];
         }
 
         bool flipFaceFlux = false;
@@ -199,8 +200,8 @@ void CML::layerAdditionRemoval::addCellLayer
         // Flip the face as necessary
         if
         (
-           !mesh.isInternalFace(mf[faceI])
-         || mc[faceI] == nei[mf[faceI]]
+           !mesh.isInternalFace(mf[facei])
+         || mc[facei] == nei[mf[facei]]
         )
         {
             flipFaceFlux = true;
@@ -212,11 +213,11 @@ void CML::layerAdditionRemoval::addCellLayer
             polyAddFace
             (
                 newFace,               // face
-                mc[faceI],             // owner
-                addedCells[faceI],     // neighbour
+                mc[facei],             // owner
+                addedCells[facei],     // neighbour
                 -1,                    // master point
                 -1,                    // master edge
-                mf[faceI],             // master face for addition
+                mf[facei],             // master face for addition
                 flipFaceFlux,          // flux flip
                 -1,                    // patch for face
                 -1,                    // zone for face
@@ -225,8 +226,8 @@ void CML::layerAdditionRemoval::addCellLayer
         );
 
         // Pout<< "adding face: " << newFace
-        //     << " own: " << mc[faceI]
-        //     << " nei: " << addedCells[faceI]
+        //     << " own: " << mc[facei]
+        //     << " nei: " << addedCells[facei]
         //     << endl;
     }
 
@@ -236,9 +237,9 @@ void CML::layerAdditionRemoval::addCellLayer
 
     // Pout<< "mfFlip: " << mfFlip << endl;
 
-    forAll(mf, faceI)
+    forAll(mf, facei)
     {
-        const label curfaceID = mf[faceI];
+        const label curfaceID = mf[facei];
 
         // If the face is internal, modify its owner to be the newly
         // created cell.  No flip is necessary
@@ -250,24 +251,24 @@ void CML::layerAdditionRemoval::addCellLayer
                 (
                     faces[curfaceID],            // modified face
                     curfaceID,                   // label of face being modified
-                    addedCells[faceI],           // owner
+                    addedCells[facei],           // owner
                     -1,                          // neighbour
                     false,                       // face flip
                     mesh.boundaryMesh().whichPatch(curfaceID),// patch for face
                     false,                       // remove from zone
                     faceZoneID_.index(),         // zone for face
-                    mfFlip[faceI]                // face flip in zone
+                    mfFlip[facei]                // face flip in zone
                 )
             );
 
             // Pout<< "Modifying a boundary face. Face: " << curfaceID
-            //     << " flip: " << mfFlip[faceI]
+            //     << " flip: " << mfFlip[facei]
             //     << endl;
         }
         // If slave cell is owner, the face remains the same (but with
         // a new neighbour - the newly created cell).  Otherwise, the
         // face is flipped.
-        else if (sc[faceI] == own[curfaceID])
+        else if (sc[facei] == own[curfaceID])
         {
             // Orientation is good, just change neighbour
             ref.setAction
@@ -277,18 +278,18 @@ void CML::layerAdditionRemoval::addCellLayer
                     faces[curfaceID],            // modified face
                     curfaceID,                   // label of face being modified
                     own[curfaceID],              // owner
-                    addedCells[faceI],           // neighbour
+                    addedCells[facei],           // neighbour
                     false,                       // face flip
                     mesh.boundaryMesh().whichPatch(curfaceID),// patch for face
                     false,                       // remove from zone
                     faceZoneID_.index(),         // zone for face
-                    mfFlip[faceI]                // face flip in zone
+                    mfFlip[facei]                // face flip in zone
                 )
             );
 
             // Pout<< "modify face, no flip " << curfaceID
             //     << " own: " << own[curfaceID]
-            //     << " nei: " << addedCells[faceI]
+            //     << " nei: " << addedCells[facei]
             //     << endl;
         }
         else
@@ -301,18 +302,18 @@ void CML::layerAdditionRemoval::addCellLayer
                     faces[curfaceID].reverseFace(), // modified face
                     curfaceID,                   // label of face being modified
                     nei[curfaceID],                 // owner
-                    addedCells[faceI],              // neighbour
+                    addedCells[facei],              // neighbour
                     true,                           // face flip
                     mesh.boundaryMesh().whichPatch(curfaceID), // patch for face
                     false,                          // remove from zone
                     faceZoneID_.index(),            // zone for face
-                    !mfFlip[faceI]                  // face flip in zone
+                    !mfFlip[facei]                  // face flip in zone
                 )
             );
 
             // Pout<< "modify face, with flip " << curfaceID
             //     << " own: " << own[curfaceID]
-            //     << " nei: " << addedCells[faceI]
+            //     << " nei: " << addedCells[facei]
             //     << endl;
         }
     }
@@ -395,9 +396,9 @@ void CML::layerAdditionRemoval::addCellLayer
         label patchID = -1;
         label zoneID = -1;
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            const label cf = curFaces[faceI];
+            const label cf = curFaces[facei];
 
             if (!mesh.isInternalFace(cf))
             {
@@ -462,16 +463,16 @@ void CML::layerAdditionRemoval::addCellLayer
 
     const cellList& cells = mesh.cells();
 
-    forAll(mc, cellI)
+    forAll(mc, celli)
     {
-        const labelList& curFaces = cells[mc[cellI]];
+        const labelList& curFaces = cells[mc[celli]];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
             // Check if the face belongs to the master zone; if not add it
-            if (zoneMesh.whichZone(curFaces[faceI]) != faceZoneID_.index())
+            if (zoneMesh.whichZone(curFaces[facei]) != faceZoneID_.index())
             {
-                masterCellFaceMap.insert(curFaces[faceI]);
+                masterCellFaceMap.insert(curFaces[facei]);
             }
         }
     }
@@ -479,24 +480,24 @@ void CML::layerAdditionRemoval::addCellLayer
     // Create the master layer point map
     Map<label> masterLayerPointMap(2*mp.size());
 
-    forAll(mp, pointI)
+    forAll(mp, pointi)
     {
         masterLayerPointMap.insert
         (
-            mp[pointI],
-            addedPoints[pointI]
+            mp[pointi],
+            addedPoints[pointi]
         );
     }
 
     // Grab the list of faces of the master layer
     const labelList masterCellFaces = masterCellFaceMap.toc();
 
-    forAll(masterCellFaces, faceI)
+    forAll(masterCellFaces, facei)
     {
         // Attempt to renumber the face using the masterLayerPointMap.
         // Missing point remain the same
 
-        const label curFaceID = masterCellFaces[faceI];
+        const label curFaceID = masterCellFaces[facei];
 
         const face& oldFace = faces[curFaceID];
 
@@ -504,17 +505,17 @@ void CML::layerAdditionRemoval::addCellLayer
 
         bool changed = false;
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
-            if (masterLayerPointMap.found(oldFace[pointI]))
+            if (masterLayerPointMap.found(oldFace[pointi]))
             {
                 changed = true;
 
-                newFace[pointI] = masterLayerPointMap.find(oldFace[pointI])();
+                newFace[pointi] = masterLayerPointMap.find(oldFace[pointi])();
             }
             else
             {
-                newFace[pointI] = oldFace[pointI];
+                newFace[pointi] = oldFace[pointi];
             }
         }
 

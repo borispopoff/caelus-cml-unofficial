@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,6 +66,7 @@ class boundaryMesh
         //  the largest distance from face centre to one of its vertices.
         static const scalar distanceTol_;
 
+
     // Private data
 
         //- All boundary mesh data. Reconstructed every time faces are repatched
@@ -83,16 +84,16 @@ class boundaryMesh
         // Edge handling
         //
 
-        //- points referenced by feature edges.
+        //- Points referenced by feature edges.
         pointField featurePoints_;
 
-        //- feature edges. Indices into featurePoints.
+        //- Feature edges. Indices into featurePoints.
         edgeList featureEdges_;
 
-        //- from feature edge to mesh edge.
+        //- From feature edge to mesh edge.
         labelList featureToEdge_;
 
-        //- from mesh edges to featureEdges_;
+        //- From mesh edges to featureEdges_;
         labelList edgeToFeature_;
 
         //- Feature 'segments'. Collections of connected featureEdges.
@@ -106,7 +107,7 @@ class boundaryMesh
     // Private Member Functions
 
         //- Number of connected feature edges.
-        label nFeatureEdges(label pointI) const;
+        label nFeatureEdges(label pointi) const;
 
         //- Step to next feature edge
         label nextFeatureEdge(const label edgeI, const label vertI) const;
@@ -156,22 +157,22 @@ class boundaryMesh
             labelList& faceRegion
         ) const;
 
-        //- Finds area, starting at faceI, delimited by borderEdge. Marks all
+        //- Finds area, starting at facei, delimited by borderEdge. Marks all
         //  faces thus visited with currentZone.
         void markZone
         (
             const boolList& borderEdge,
-            label faceI,
+            label facei,
             label currentZone,
             labelList& faceZone
         ) const;
 
 
         //- Disallow default bitwise copy construct
-        boundaryMesh(const boundaryMesh&);
+        boundaryMesh(const boundaryMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const boundaryMesh&);
+        void operator=(const boundaryMesh&) = delete;
 
 
 public:
@@ -294,7 +295,7 @@ public:
         // Patches
 
             //- Get index of patch face is in
-            label whichPatch(const label faceI) const;
+            label whichPatch(const label facei) const;
 
             //- Get index of patch by name
             label findPatchID(const word& patchName) const;
@@ -331,13 +332,13 @@ public:
 
             //- Simple triangulation of face subset. Returns number of triangles
             //  needed.
-            label getNTris(const label faceI) const;
+            label getNTris(const label facei) const;
 
             //- Simple triangulation of face subset. TotalNTris is total number
             //  of triangles, nTris is per face number of triangles.
             label getNTris
             (
-                const label startFaceI,
+                const label startFacei,
                 const label nFaces,
                 labelList& nTris
             ) const;
@@ -347,20 +348,20 @@ public:
             //  triVerts is triangle vertices, three per triangle.
             void triangulate
             (
-                const label startFaceI,
+                const label startFacei,
                 const label nFaces,
                 const label totalNTris,
                 labelList& triVerts
             ) const;
 
             //- Number of points used in face subset.
-            label getNPoints(const label startFaceI, const label nFaces) const;
+            label getNPoints(const label startFacei, const label nFaces) const;
 
             //- Same as triangulate but in local vertex numbering.
             //  (Map returned).
             void triangulateLocal
             (
-                const label startFaceI,
+                const label startFacei,
                 const label nFaces,
                 const label totalNTris,
                 labelList& triVerts,
@@ -373,7 +374,7 @@ public:
             void markFaces
             (
                 const labelList& protectedEdges,
-                const label faceI,
+                const label facei,
                 boolList& visited
             ) const;
 };

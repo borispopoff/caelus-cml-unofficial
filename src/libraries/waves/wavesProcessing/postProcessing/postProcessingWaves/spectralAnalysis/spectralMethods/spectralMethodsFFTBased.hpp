@@ -120,7 +120,7 @@ public:
             const scalarField&
         );
 
-        List<Field<complex> > fft
+        List<Field<complex>> fft
         (
             const List<scalarField>&
         );

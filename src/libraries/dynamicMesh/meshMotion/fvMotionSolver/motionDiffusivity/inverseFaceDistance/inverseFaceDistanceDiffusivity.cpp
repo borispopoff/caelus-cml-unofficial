@@ -93,11 +93,11 @@ void CML::inverseFaceDistanceDiffusivity::correct()
 
         const vectorField::subField fc(patch.faceCentres());
 
-        forAll(fc, patchFaceI)
+        forAll(fc, patchFacei)
         {
-            changedFaces[nPatchFaces] = patch.start() + patchFaceI;
+            changedFaces[nPatchFaces] = patch.start() + patchFacei;
 
-            faceDist[nPatchFaces] = wallPoint(fc[patchFaceI], 0);
+            faceDist[nPatchFaces] = wallPoint(fc[patchFacei], 0);
 
             nPatchFaces++;
         }
@@ -116,20 +116,20 @@ void CML::inverseFaceDistanceDiffusivity::correct()
     const List<wallPoint>& faceInfo = waveInfo.allFaceInfo();
     const List<wallPoint>& cellInfo = waveInfo.allCellInfo();
 
-    for (label faceI=0; faceI<mesh().nInternalFaces(); faceI++)
+    for (label facei=0; facei<mesh().nInternalFaces(); facei++)
     {
-        scalar dist = faceInfo[faceI].distSqr();
+        scalar dist = faceInfo[facei].distSqr();
 
-        faceDiffusivity_[faceI] = 1.0/sqrt(dist);
+        faceDiffusivity_[facei] = 1.0/sqrt(dist);
     }
 
-    forAll(faceDiffusivity_.boundaryField(), patchI)
+    forAll(faceDiffusivity_.boundaryField(), patchi)
     {
-        fvsPatchScalarField& bfld = faceDiffusivity_.boundaryField()[patchI];
+        fvsPatchScalarField& bfld = faceDiffusivity_.boundaryFieldRef()[patchi];
 
         const labelUList& faceCells = bfld.patch().faceCells();
 
-        if (patchSet.found(patchI))
+        if (patchSet.found(patchi))
         {
             forAll(bfld, i)
             {

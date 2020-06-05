@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,15 +52,6 @@ class blended
         const scalar blendingFactor_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        blended(const blended&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const blended&);
-
-
 public:
 
     //- Runtime type information
@@ -106,6 +97,9 @@ public:
             blendingFactor_(readScalar(is))
         {}
 
+        //- Disallow default bitwise copy construct
+        blended(const blended&) = delete;
+
 
     // Member Functions
 
@@ -146,6 +140,12 @@ public:
                 blendingFactor_*this->mesh().surfaceInterpolation::weights()
               + (1 - blendingFactor_)*pos(this->faceFlux_);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const blended&) = delete;
 };
 
 

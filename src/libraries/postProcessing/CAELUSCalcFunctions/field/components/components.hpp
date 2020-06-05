@@ -122,7 +122,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 void CML::calcTypes::components::writeComponentFields
 (
     const IOobject& header,

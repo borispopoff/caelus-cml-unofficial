@@ -20,6 +20,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "doubleScalar.hpp"
+#include "error.hpp"
+#include "parsing.hpp"
 #include "IOstreams.hpp"
 
 #include <sstream>
@@ -31,7 +33,10 @@ License
 #define ScalarVSMALL doubleScalarVSMALL
 #define ScalarROOTVGREAT doubleScalarROOTVGREAT
 #define ScalarROOTVSMALL doubleScalarROOTVSMALL
-#define readScalar readDoubleScalar
+#define ScalarRead readDouble
+// Convert using larger representation to properly capture underflow
+#define ScalarConvert ::strtold
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace CML
@@ -71,14 +76,73 @@ word name(const Scalar val)
 }
 
 
+Scalar ScalarRead(const char* buf)
+{
+    char* endptr = nullptr;
+    errno = 0;
+    const auto parsed = ScalarConvert(buf, &endptr);
+
+    const parsing::errorType err =
+    (
+        (parsed < -ScalarVGREAT || parsed > ScalarVGREAT)
+      ? parsing::errorType::RANGE
+      : parsing::checkConversion(buf, endptr)
+    );
+
+    if (err != parsing::errorType::NONE)
+    {
+        FatalIOErrorInFunction("unknown")
+            << parsing::errorNames[err] << " '" << buf << "'"
+            << exit(FatalIOError);
+    }
+
+    // Round underflow to zero
+    return
+    (
+        (parsed > -ScalarVSMALL && parsed < ScalarVSMALL)
+      ? 0
+      : Scalar(parsed)
+    );
+}
+
+
+bool ScalarRead(const char* buf, Scalar& val)
+{
+    char* endptr = nullptr;
+    errno = 0;
+    const auto parsed = ScalarConvert(buf, &endptr);
+
+    // Round underflow to zero
+    val =
+    (
+        (parsed >= -ScalarVSMALL && parsed <= ScalarVSMALL)
+      ? 0
+      : Scalar(parsed)
+    );
+
+    return
+    (
+        (parsed < -ScalarVGREAT || parsed > ScalarVGREAT)
+      ? false
+      : (parsing::checkConversion(buf, endptr) == parsing::errorType::NONE)
+    );
+}
+
+
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-Scalar readScalar(Istream& is)
+Scalar ScalarRead(Istream& is)
 {
     Scalar rs;
     is  >> rs;
 
     return rs;
+}
+
+
+void writeEntry(Ostream& os, const Scalar value)
+{
+    os << value;
 }
 
 
@@ -130,6 +194,7 @@ Ostream& operator<<(Ostream& os, const Scalar s)
 #undef ScalarVSMALL
 #undef ScalarROOTVGREAT
 #undef ScalarROOTVSMALL
-#undef readScalar
+#undef ScalarRead
+#undef ScalarConvert
 
 // ************************************************************************* //

@@ -93,16 +93,16 @@ void setValueMinimumPluginFunction<Type>::doEvaluation()
     const Field<Type> vals=this->values();
 
     forAll(cells,i) {
-        const label cellI=cells[i];
+        const label celli=cells[i];
 
-        if(here[cellI]) {
-            pValueMinimum()[cellI]=min(
+        if(here[celli]) {
+            pValueMinimum()[celli]=min(
                 vals[i],
-                pValueMinimum()[cellI]
+                pValueMinimum()[celli]
             );
         } else {
-            here[cellI]=true;
-            pValueMinimum()[cellI]=vals[i];
+            here[celli]=true;
+            pValueMinimum()[celli]=vals[i];
         }
     }
 

@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014-2015 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -26,7 +26,7 @@ Description
 
 SourceFiles
     GeometricField.cpp
-    GeometricBoundaryField.cpp
+    Boundary.cpp
     GeometricFieldFunctions.hpp
 
 \*---------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 Ostream& operator<<
 (
     Ostream&,
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >&
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>&
 );
 
 
@@ -88,21 +88,28 @@ class GeometricField
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
+        //- Type of mesh on which this GeometricField is instantiated
         typedef typename GeoMesh::Mesh Mesh;
+
+        //- Type of boundary mesh on which this
+        //  GeometricField::Boundary is instantiated
         typedef typename GeoMesh::BoundaryMesh BoundaryMesh;
 
-        typedef DimensionedField<Type, GeoMesh> DimensionedInternalField;
-        typedef Field<Type> InternalField;
-        typedef PatchField<Type> PatchFieldType;
+        //- Type of the internal field from which this GeometricField is derived
+        typedef DimensionedField<Type, GeoMesh> Internal;
+
+        //- Type of the patch field of which the
+        //  GeometricField::Boundary is composed
+        typedef PatchField<Type> Patch;
 
 
-    class GeometricBoundaryField
+    class Boundary
     :
         public FieldField<PatchField, Type>
     {
-        // Private data
+        // Private Data
 
             //- Reference to BoundaryMesh for which this field is defined
             const BoundaryMesh& bmesh_;
@@ -112,13 +119,16 @@ public:
 
         // Constructors
 
+            //- Construct from a BoundaryMesh
+            Boundary(const BoundaryMesh&);
+
             //- Construct from a BoundaryMesh,
             //  reference to the internal field
             //  and a patch type
-            GeometricBoundaryField
+            Boundary
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
+                const Internal&,
                 const word&
             );
 
@@ -126,46 +136,56 @@ public:
             //  reference to the internal field
             //  and a wordList of patch types and optional the actual patch
             //  types (to override constraint patches)
-            GeometricBoundaryField
+            Boundary
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
+                const Internal&,
                 const wordList& wantedPatchTypes,
                 const wordList& actualPatchTypes = wordList()
             );
 
             //- Construct from a BoundaryMesh,
             //  reference to the internal field
-            //  and a PtrList<PatchField<Type> >
-            GeometricBoundaryField
+            //  and a PtrList<PatchField<Type>>
+            Boundary
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
-                const PtrList<PatchField<Type> >&
+                const Internal&,
+                const PtrList<PatchField<Type>>&
             );
 
             //- Construct as copy setting the reference to the internal field
-            GeometricBoundaryField
+            Boundary
             (
-                const DimensionedInternalField&,
-                const GeometricBoundaryField&
+                const Internal&,
+                const Boundary&
             );
 
-            //- Construct as copy
+            //- Copy constructor
             //  Dangerous because Field may be set to a field which gets deleted
             //  Need new type of BoundaryField, one which is part of a geometric
             //  field for which snGrad etc. may be called and a free standing
             //  BoundaryField for which such operations are unavailable.
-            GeometricBoundaryField
+            Boundary
             (
-                const GeometricBoundaryField&
+                const Boundary&
+            );
+
+            //- Move constructor
+            //  Dangerous because Field may be set to a field which gets deleted
+            //  Need new type of BoundaryField, one which is part of a geometric
+            //  field for which snGrad etc. may be called and a free standing
+            //  BoundaryField for which such operations are unavailable.
+            Boundary
+            (
+                Boundary&&
             );
 
             //- Construct from dictionary
-            GeometricBoundaryField
+            Boundary
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
+                const Internal&,
                 const dictionary&
             );
 
@@ -183,7 +203,7 @@ public:
 
             //- Return BoundaryField of the cell values neighbouring
             //  the boundary
-            GeometricBoundaryField boundaryInternalField() const;
+            Boundary boundaryInternalField() const;
 
             //- Return a list of pointers for each patch field with only those
             //  pointing to interfaces being set
@@ -198,10 +218,13 @@ public:
             void writeEntry(const word& keyword, Ostream& os) const;
 
 
-        // Member operators
+        // Member Operators
 
-            //- Assignment to BoundaryField<Type, PatchField, BoundaryMesh>
-            void operator=(const GeometricBoundaryField&);
+            //- Assignment operator
+            void operator=(const Boundary&);
+
+            //- Move assignment operator
+            void operator=(Boundary&&);
 
             //- Assignment to FieldField<PatchField, Type>
             void operator=(const FieldField<PatchField, Type>&);
@@ -212,7 +235,7 @@ public:
 
             //- Forced assignment to
             //  BoundaryField<Type, PatchField, BoundaryMesh>
-            void operator==(const GeometricBoundaryField&);
+            void operator==(const Boundary&);
 
             //- Forced assignment to FieldField<PatchField, Type>
             void operator==(const FieldField<PatchField, Type>&);
@@ -224,7 +247,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Current time index.
         //  Used to trigger the storing of the old-time value
@@ -237,16 +260,16 @@ private:
         mutable GeometricField<Type, PatchField, GeoMesh>* fieldPrevIterPtr_;
 
         //- Boundary Type field containing boundary field values
-        GeometricBoundaryField boundaryField_;
+        Boundary boundaryField_;
 
 
     // Private Member Functions
 
         //- Read the field from the dictionary
-        tmp<GeometricBoundaryField> readField(const dictionary&);
+        tmp<Boundary> readField(const dictionary&);
 
         //- Read the field from the given stream
-        tmp<GeometricBoundaryField> readField(Istream& is);
+        tmp<Boundary> readField(Istream& is);
 
 
 public:
@@ -255,7 +278,7 @@ public:
     TypeName("GeometricField");
 
 
-    // Public typedefs
+    // Public Typedefs
 
         typedef typename Field<Type>::cmptType cmptType;
 
@@ -313,10 +336,18 @@ public:
         GeometricField
         (
             const IOobject&,
+            const Internal&,
+            const PtrList<PatchField<Type>>&
+        );
+
+        //- Constructor from components
+        GeometricField
+        (
+            const IOobject&,
             const Mesh&,
             const dimensionSet&,
             const Field<Type>&,
-            const PtrList<PatchField<Type> >&
+            const PtrList<PatchField<Type>>&
         );
 
         //- Construct and read given IOobject
@@ -335,19 +366,23 @@ public:
             const dictionary&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         GeometricField
         (
             const GeometricField<Type, PatchField, GeoMesh>&
         );
 
-        //- Construct as copy of tmp<GeometricField> deleting argument
-        #ifdef ConstructFromTmp
+        //- Move constructor
         GeometricField
         (
-            const tmp<GeometricField<Type, PatchField, GeoMesh> >&
+            GeometricField<Type, PatchField, GeoMesh>&&
         );
-        #endif
+
+        //- Construct as copy of tmp<GeometricField> deleting argument
+        GeometricField
+        (
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+        );
 
         //- Construct as copy resetting IO parameters
         GeometricField
@@ -357,13 +392,11 @@ public:
         );
 
         //- Construct as copy of tmp<GeometricField> resetting IO parameters
-        #ifdef ConstructFromTmp
         GeometricField
         (
             const IOobject&,
-            const tmp<GeometricField<Type, PatchField, GeoMesh> >&
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
         );
-        #endif
 
         //- Construct as copy resetting name
         GeometricField
@@ -373,13 +406,11 @@ public:
         );
 
         //- Construct as copy resetting name
-        #ifdef ConstructFromTmp
         GeometricField
         (
             const word& newName,
-            const tmp<GeometricField<Type, PatchField, GeoMesh> >&
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
         );
-        #endif
 
         //- Construct as copy resetting IO parameters and patch type
         GeometricField
@@ -398,6 +429,17 @@ public:
             const wordList& actualPatchTypes = wordList()
         );
 
+        //- Construct as copy resetting IO parameters and boundary types
+        GeometricField
+        (
+            const IOobject&,
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList()
+        );
+
+        //- Clone
+        tmp<GeometricField<Type, PatchField, GeoMesh>> clone() const;
 
     //- Destructor
     virtual ~GeometricField();
@@ -405,23 +447,32 @@ public:
 
     // Member Functions
 
-        //- Return dimensioned internal field
-        DimensionedInternalField& dimensionedInternalField();
+        //- Return a reference to the dimensioned internal field
+        //  Note: this increments the event counter and checks the
+        //  old-time fields; avoid in loops.
+        Internal& ref();
 
-        //- Return dimensioned internal field
-        inline const DimensionedInternalField& dimensionedInternalField() const;
+        //- Return a const-reference to the dimensioned internal field
+        inline const Internal& internalField() const;
+
+        //- Return a const-reference to the dimensioned internal field
+        //  of a "vol" field.  Useful in the formulation of source-terms
+        //  for FV equations
+        inline const Internal& v() const;
+
+        //- Return a reference to the internal field
+        //  Note: this increments the event counter and checks the
+        //  old-time fields; avoid in loops.
+        typename Internal::FieldType& primitiveFieldRef();
 
         //- Return internal field
-        InternalField& internalField();
+        inline const typename Internal::FieldType& primitiveField() const;
 
-        //- Return internal field
-        inline const InternalField& internalField() const;
+        //- Return reference to Boundary
+        Boundary& boundaryFieldRef();
 
-        //- Return reference to GeometricBoundaryField
-        GeometricBoundaryField& boundaryField();
-
-        //- Return reference to GeometricBoundaryField for const field
-        inline const GeometricBoundaryField& boundaryField() const;
+        //- Return reference to Boundary for const field
+        inline const Boundary& boundaryField() const;
 
         //- Return the time index of the field
         inline label timeIndex() const;
@@ -458,7 +509,7 @@ public:
         bool needReference() const;
 
         //- Return a component of the field
-        tmp<GeometricField<cmptType, PatchField, GeoMesh> > component
+        tmp<GeometricField<cmptType, PatchField, GeoMesh>> component
         (
             const direction
         ) const;
@@ -467,7 +518,7 @@ public:
         bool writeData(Ostream&) const;
 
         //- Return transpose (only if it is a tensor field)
-        tmp<GeometricField<Type, PatchField, GeoMesh> > T() const;
+        tmp<GeometricField<Type, PatchField, GeoMesh>> T() const;
 
         //- Relax field (for steady-state solution).
         //  alpha = 1 : no relaxation
@@ -502,6 +553,7 @@ public:
         );
 
         void max(const dimensioned<Type>&);
+
         void min(const dimensioned<Type>&);
 
         void max
@@ -529,26 +581,33 @@ public:
         );
 
 
-    // Member operators
+    // Member Operators
+
+        //- Return a const-reference to the dimensioned internal field
+        //  Useful in the formulation of source-terms for FV equations
+        inline const Internal& operator()() const;
 
         void operator=(const GeometricField<Type, PatchField, GeoMesh>&);
-        void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh> >&);
+        void operator=(GeometricField<Type, PatchField, GeoMesh>&&);
+        void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
         void operator=(const dimensioned<Type>&);
+        void operator=(const zero&);
 
-        void operator==(const tmp<GeometricField<Type, PatchField, GeoMesh> >&);
+        void operator==(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
         void operator==(const dimensioned<Type>&);
+        void operator==(const zero&);
 
         void operator+=(const GeometricField<Type, PatchField, GeoMesh>&);
-        void operator+=(const tmp<GeometricField<Type, PatchField, GeoMesh> >&);
+        void operator+=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
 
         void operator-=(const GeometricField<Type, PatchField, GeoMesh>&);
-        void operator-=(const tmp<GeometricField<Type, PatchField, GeoMesh> >&);
+        void operator-=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
 
         void operator*=(const GeometricField<scalar, PatchField, GeoMesh>&);
-        void operator*=(const tmp<GeometricField<scalar,PatchField,GeoMesh> >&);
+        void operator*=(const tmp<GeometricField<scalar,PatchField,GeoMesh>>&);
 
         void operator/=(const GeometricField<scalar, PatchField, GeoMesh>&);
-        void operator/=(const tmp<GeometricField<scalar,PatchField,GeoMesh> >&);
+        void operator/=(const tmp<GeometricField<scalar,PatchField,GeoMesh>>&);
 
         void operator+=(const dimensioned<Type>&);
         void operator-=(const dimensioned<Type>&);
@@ -568,7 +627,7 @@ public:
         friend Ostream& operator<< <Type, PatchField, GeoMesh>
         (
             Ostream&,
-            const tmp<GeometricField<Type, PatchField, GeoMesh> >&
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
         );
 };
 
@@ -578,7 +637,7 @@ Ostream& operator<<
 (
     Ostream&,
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField&
+    Boundary&
 );
 
 
@@ -592,16 +651,16 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 inline const CML::GeometricField<Type, PatchField, GeoMesh>&
 CML::GeometricField<Type, PatchField, GeoMesh>::null()
 {
-    return NullSingletonRef< GeometricField<Type, PatchField, GeoMesh> >();
+    return NullSingletonRef<GeometricField<Type, PatchField, GeoMesh>>();
 }
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 inline
 const typename
-CML::GeometricField<Type, PatchField, GeoMesh>::DimensionedInternalField&
+CML::GeometricField<Type, PatchField, GeoMesh>::Internal&
 CML::GeometricField<Type, PatchField, GeoMesh>::
-dimensionedInternalField() const
+internalField() const
 {
     return *this;
 }
@@ -610,8 +669,8 @@ dimensionedInternalField() const
 template<class Type, template<class> class PatchField, class GeoMesh>
 inline
 const typename
-CML::GeometricField<Type, PatchField, GeoMesh>::InternalField&
-CML::GeometricField<Type, PatchField, GeoMesh>::internalField() const
+CML::GeometricField<Type, PatchField, GeoMesh>::Internal::FieldType&
+CML::GeometricField<Type, PatchField, GeoMesh>::primitiveField() const
 {
     return *this;
 }
@@ -619,7 +678,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::internalField() const
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 inline const typename CML::GeometricField<Type, PatchField, GeoMesh>::
-GeometricBoundaryField&
+Boundary&
 CML::GeometricField<Type, PatchField, GeoMesh>::boundaryField() const
 {
     return boundaryField_;
@@ -639,6 +698,17 @@ inline CML::label&
 CML::GeometricField<Type, PatchField, GeoMesh>::timeIndex()
 {
     return timeIndex_;
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+inline
+const typename
+CML::GeometricField<Type, PatchField, GeoMesh>::Internal&
+CML::GeometricField<Type, PatchField, GeoMesh>::
+operator()() const
+{
+    return *this;
 }
 
 
@@ -668,18 +738,18 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 CML::tmp
 <
     typename CML::GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField
+    Boundary
 >
 CML::GeometricField<Type, PatchField, GeoMesh>::readField
 (
     const dictionary& fieldDict
 )
 {
-    DimensionedField<Type, GeoMesh>::readField(fieldDict, "internalField");
+    Internal::readField(fieldDict, "internalField");
 
-    tmp<GeometricBoundaryField> tboundaryField
+    tmp<Boundary> tboundaryField
     (
-        new GeometricBoundaryField
+        new Boundary
         (
             this->mesh().boundary(),
             *this,
@@ -693,7 +763,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::readField
 
         Field<Type>::operator+=(fieldAverage);
 
-        GeometricBoundaryField& boundaryField = tboundaryField();
+        Boundary& boundaryField = tboundaryField.ref();
 
         forAll(boundaryField, patchi)
         {
@@ -709,7 +779,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 CML::tmp
 <
     typename CML::GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField
+    Boundary
 >
 CML::GeometricField<Type, PatchField, GeoMesh>::readField(Istream& is)
 {
@@ -748,7 +818,7 @@ bool CML::GeometricField<Type, PatchField, GeoMesh>::readIfPresent()
     }
     else if (this->readOpt() == IOobject::READ_IF_PRESENT && this->headerOk())
     {
-        boundaryField_.transfer(readField(this->readStream(typeName))());
+        boundaryField_.transfer(readField(this->readStream(typeName)).ref());
         this->close();
 
         // Check compatibility between field and mesh
@@ -788,7 +858,7 @@ bool CML::GeometricField<Type, PatchField, GeoMesh>::readOldTimeIfPresent()
     {
         if (debug)
         {
-            Info<< "Reading old time level for field"
+            InfoInFunction << "Reading old time level for field"
                 << endl << this->info() << endl;
         }
 
@@ -827,7 +897,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const word& patchFieldType
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, ds, false),
+    Internal(io, mesh, ds, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -835,9 +905,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     readIfPresent();
@@ -858,7 +926,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const wordList& actualPatchTypes
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, ds, false),
+    Internal(io, mesh, ds, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -866,9 +934,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     readIfPresent();
@@ -885,7 +951,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const word& patchFieldType
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, dt, false),
+    Internal(io, mesh, dt, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -893,9 +959,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     boundaryField_ == dt.value();
@@ -915,7 +979,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const wordList& actualPatchTypes
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, dt, false),
+    Internal(io, mesh, dt, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -923,9 +987,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     boundaryField_ == dt.value();
@@ -939,13 +1001,37 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 (
     const IOobject& io,
+    const Internal& diField,
+    const PtrList<PatchField<Type>>& ptfl
+)
+:
+    Internal(io, diField),
+    timeIndex_(this->time().timeIndex()),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
+    boundaryField_(this->mesh().boundary(), *this, ptfl)
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing from components" << endl << this->info() << endl;
+    }
+
+    readIfPresent();
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
+(
+    const IOobject& io,
     const Mesh& mesh,
     const dimensionSet& ds,
     const Field<Type>& iField,
-    const PtrList<PatchField<Type> >& ptfl
+    const PtrList<PatchField<Type>>& ptfl
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, ds, iField),
+    Internal(io, mesh, ds, iField),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -953,9 +1039,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing from components"
-            << endl << this->info() << endl;
+        InfoInFunction
+            << "Constructing from components" << endl << this->info() << endl;
     }
 
     readIfPresent();
@@ -970,7 +1055,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const bool readOldTime
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, dimless, false),
+    Internal(io, mesh, dimless, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -995,9 +1080,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     if (debug)
     {
-        Info<< "Finishing read-construct of "
-               "GeometricField<Type, PatchField, GeoMesh>"
-            << endl << this->info() << endl;
+        InfoInFunction
+            << "Finishing read-construction of" << endl << this->info() << endl;
     }
 }
 
@@ -1010,7 +1094,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const dictionary& dict
 )
 :
-    DimensionedField<Type, GeoMesh>(io, mesh, dimless, false),
+    Internal(io, mesh, dimless, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1026,12 +1110,10 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
             << exit(FatalIOError);
     }
 
-    readOldTimeIfPresent();
-
     if (debug)
     {
-        Info<< "Finishing dictionary-construct of "
-               "GeometricField<Type, PatchField, GeoMesh>"
+        InfoInFunction
+            << "Finishing dictionary-construct of "
             << endl << this->info() << endl;
     }
 }
@@ -1044,7 +1126,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 :
-    DimensionedField<Type, GeoMesh>(gf),
+    Internal(gf),
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1052,9 +1134,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy"
-            << endl << this->info() << endl;
+        InfoInFunction
+            << "Constructing as copy" << endl << this->info() << endl;
     }
 
     if (gf.field0Ptr_)
@@ -1068,15 +1149,43 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     this->writeOpt() = IOobject::NO_WRITE;
 }
 
-// construct as copy of tmp<GeometricField> deleting argument
-#ifdef ConstructFromTmp
+
 template<class Type, template<class> class PatchField, class GeoMesh>
 CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    GeometricField<Type, PatchField, GeoMesh>&& gf
 )
 :
-    DimensionedField<Type, GeoMesh>
+    Internal(move(gf)),
+    timeIndex_(gf.timeIndex()),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
+    boundaryField_(move(gf.boundaryField_))
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing by moving" << endl << this->info() << endl;
+    }
+
+    if (gf.field0Ptr_)
+    {
+        field0Ptr_ = gf.field0Ptr_;
+        gf.field0Ptr_ = nullptr;
+    }
+
+    this->writeOpt() = IOobject::NO_WRITE;
+}
+
+
+// construct as copy of tmp<GeometricField> deleting argument
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
+(
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
+)
+:
+    Internal
     (
         const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
         tgf.isTmp()
@@ -1088,16 +1197,14 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy"
-            << endl << this->info() << endl;
+        InfoInFunction
+            << "Constructing from tmp" << endl << this->info() << endl;
     }
 
     this->writeOpt() = IOobject::NO_WRITE;
 
     tgf.clear();
 }
-#endif
 
 
 // construct as copy resetting IO parameters
@@ -1108,7 +1215,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 :
-    DimensionedField<Type, GeoMesh>(io, gf),
+    Internal(io, gf),
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1116,8 +1223,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting IO params"
+        InfoInFunction
+            << "Constructing as copy resetting IO params"
             << endl << this->info() << endl;
     }
 
@@ -1132,15 +1239,14 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 }
 
 
-#ifdef ConstructFromTmp
 template<class Type, template<class> class PatchField, class GeoMesh>
 CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 (
     const IOobject& io,
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 :
-    DimensionedField<Type, GeoMesh>
+    Internal
     (
         io,
         const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
@@ -1153,8 +1259,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing from tmp resetting IO params"
+        InfoInFunction
+            << "Constructing from tmp resetting IO params"
             << endl << this->info() << endl;
     }
 
@@ -1162,7 +1268,6 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     readIfPresent();
 }
-#endif
 
 
 // construct as copy resetting name
@@ -1173,7 +1278,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 :
-    DimensionedField<Type, GeoMesh>(newName, gf),
+    Internal(newName, gf),
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1181,8 +1286,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting name"
+        InfoInFunction
+            << "Constructing as copy resetting name"
             << endl << this->info() << endl;
     }
 
@@ -1198,15 +1303,14 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
 
 // construct as copy resetting name
-#ifdef ConstructFromTmp
 template<class Type, template<class> class PatchField, class GeoMesh>
 CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 (
     const word& newName,
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 :
-    DimensionedField<Type, GeoMesh>
+    Internal
     (
         newName,
         const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
@@ -1219,14 +1323,13 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing from tmp resetting name"
+        InfoInFunction
+            << "Constructing from tmp resetting name"
             << endl << this->info() << endl;
     }
 
     tgf.clear();
 }
-#endif
 
 // construct as copy resetting IO parameters and patch type
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -1237,7 +1340,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const word& patchFieldType
 )
 :
-    DimensionedField<Type, GeoMesh>(io, gf),
+    Internal(io, gf),
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1245,8 +1348,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting IO params"
+        InfoInFunction
+            << "Constructing as copy resetting IO params"
             << endl << this->info() << endl;
     }
 
@@ -1274,7 +1377,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
 )
 :
-    DimensionedField<Type, GeoMesh>(io, gf),
+    Internal(io, gf),
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
@@ -1288,8 +1391,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting IO params"
+        InfoInFunction
+            << "Constructing as copy resetting IO params and patch types"
             << endl << this->info() << endl;
     }
 
@@ -1306,6 +1409,55 @@ CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 }
 
 
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::GeometricField<Type, PatchField, GeoMesh>::GeometricField
+(
+    const IOobject& io,
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf,
+    const wordList& patchFieldTypes,
+    const wordList& actualPatchTypes
+)
+:
+    Internal
+    (
+        io,
+        const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
+        tgf.isTmp()
+    ),
+    timeIndex_(tgf().timeIndex()),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
+    boundaryField_
+    (
+        this->mesh().boundary(),
+        *this,
+        patchFieldTypes,
+        actualPatchTypes
+    )
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing from tmp resetting IO params and patch types"
+            << endl << this->info() << endl;
+    }
+
+    boundaryField_ == tgf().boundaryField_;
+
+    tgf.clear();
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::tmp<CML::GeometricField<Type, PatchField, GeoMesh>>
+CML::GeometricField<Type, PatchField, GeoMesh>::clone() const
+{
+    return tmp<GeometricField<Type, PatchField, GeoMesh>>
+    (
+        new GeometricField<Type, PatchField, GeoMesh>(*this)
+    );
+}
+
 // * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -1320,8 +1472,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::~GeometricField()
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
-CML::GeometricField<Type, PatchField, GeoMesh>::DimensionedInternalField&
-CML::GeometricField<Type, PatchField, GeoMesh>::dimensionedInternalField()
+CML::GeometricField<Type, PatchField, GeoMesh>::Internal&
+CML::GeometricField<Type, PatchField, GeoMesh>::ref()
 {
     this->setUpToDate();
     storeOldTimes();
@@ -1331,8 +1483,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::dimensionedInternalField()
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
-CML::GeometricField<Type, PatchField, GeoMesh>::InternalField&
-CML::GeometricField<Type, PatchField, GeoMesh>::internalField()
+CML::GeometricField<Type, PatchField, GeoMesh>::Internal::FieldType&
+CML::GeometricField<Type, PatchField, GeoMesh>::primitiveFieldRef()
 {
     this->setUpToDate();
     storeOldTimes();
@@ -1340,11 +1492,11 @@ CML::GeometricField<Type, PatchField, GeoMesh>::internalField()
 }
 
 
-// Return reference to GeometricBoundaryField
+// Return reference to Boundary
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField&
-CML::GeometricField<Type, PatchField, GeoMesh>::boundaryField()
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary&
+CML::GeometricField<Type, PatchField, GeoMesh>::boundaryFieldRef()
 {
     this->setUpToDate();
     storeOldTimes();
@@ -1383,7 +1535,8 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::storeOldTime() const
 
         if (debug)
         {
-            Info<< "Storing old time field for field" << endl
+            InfoInFunction
+                << "Storing old time field for field" << endl
                 << this->info() << endl;
         }
 
@@ -1460,7 +1613,8 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::storePrevIter() const
     {
         if (debug)
         {
-            Info<< "Allocating previous iteration field" << endl
+            InfoInFunction
+                << "Allocating previous iteration field" << endl
                 << this->info() << endl;
         }
 
@@ -1597,10 +1751,10 @@ writeData(Ostream& os) const
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::tmp<CML::GeometricField<Type, PatchField, GeoMesh> >
+CML::tmp<CML::GeometricField<Type, PatchField, GeoMesh>>
 CML::GeometricField<Type, PatchField, GeoMesh>::T() const
 {
-    tmp<GeometricField<Type, PatchField, GeoMesh> > result
+    tmp<GeometricField<Type, PatchField, GeoMesh>> result
     (
         new GeometricField<Type, PatchField, GeoMesh>
         (
@@ -1615,8 +1769,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::T() const
         )
     );
 
-    CML::T(result().internalField(), internalField());
-    CML::T(result().boundaryField(), boundaryField());
+    CML::T(result.ref().primitiveFieldRef(), primitiveField());
+    CML::T(result.ref().boundaryFieldRef(), boundaryField());
 
     return result;
 }
@@ -1637,7 +1791,7 @@ CML::GeometricField<Type, PatchField, GeoMesh>::component
     const direction d
 ) const
 {
-    tmp<GeometricField<cmptType, PatchField, GeoMesh> > Component
+    tmp<GeometricField<cmptType, PatchField, GeoMesh>> Component
     (
         new GeometricField<cmptType, PatchField, GeoMesh>
         (
@@ -1652,8 +1806,8 @@ CML::GeometricField<Type, PatchField, GeoMesh>::component
         )
     );
 
-    CML::component(Component().internalField(), internalField(), d);
-    CML::component(Component().boundaryField(), boundaryField(), d);
+    CML::component(Component.ref().primitiveFieldRef(), primitiveField(), d);
+    CML::component(Component.ref().boundaryFieldRef(), boundaryField(), d);
 
     return Component;
 }
@@ -1671,8 +1825,8 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::replace
      >& gcf
 )
 {
-    internalField().replace(d, gcf.internalField());
-    boundaryField().replace(d, gcf.boundaryField());
+    primitiveFieldRef().replace(d, gcf.primitiveField());
+    boundaryFieldRef().replace(d, gcf.boundaryField());
 }
 
 
@@ -1683,8 +1837,8 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::replace
     const dimensioned<cmptType>& ds
 )
 {
-    internalField().replace(d, ds.value());
-    boundaryField().replace(d, ds.value());
+    primitiveFieldRef().replace(d, ds.value());
+    boundaryFieldRef().replace(d, ds.value());
 }
 
 
@@ -1694,8 +1848,8 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::max
     const dimensioned<Type>& dt
 )
 {
-    CML::max(internalField(), internalField(), dt.value());
-    CML::max(boundaryField(), boundaryField(), dt.value());
+    CML::max(primitiveFieldRef(), primitiveField(), dt.value());
+    CML::max(boundaryFieldRef(), boundaryField(), dt.value());
 }
 
 
@@ -1705,16 +1859,16 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::min
     const dimensioned<Type>& dt
 )
 {
-    CML::min(internalField(), internalField(), dt.value());
-    CML::min(boundaryField(), boundaryField(), dt.value());
+    CML::min(primitiveFieldRef(), primitiveField(), dt.value());
+    CML::min(boundaryFieldRef(), boundaryField(), dt.value());
 }
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void CML::GeometricField<Type, PatchField, GeoMesh>::negate()
 {
-    internalField().negate();
-    boundaryField().negate();
+    primitiveFieldRef().negate();
+    boundaryFieldRef().negate();
 }
 
 
@@ -1735,17 +1889,39 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
 
     checkField(*this, gf, "=");
 
-    // only equate field contents not ID
+    // Only assign field contents not ID
 
-    dimensionedInternalField() = gf.dimensionedInternalField();
-    boundaryField() = gf.boundaryField();
+    ref() = gf();
+    boundaryFieldRef() = gf.boundaryField();
 }
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    GeometricField<Type, PatchField, GeoMesh>&& gf
+)
+{
+    if (this == &gf)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    checkField(*this, gf, "=");
+
+    // Only assign field contents not ID
+
+    ref() = move(gf());
+    boundaryFieldRef() = move(gf.boundaryField());
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
+(
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 {
     if (this == &(tgf()))
@@ -1759,17 +1935,24 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
 
     checkField(*this, gf, "=");
 
-    // only equate field contents not ID
+    // Only assign field contents not ID
 
     this->dimensions() = gf.dimensions();
 
-    // This is dodgy stuff, don't try it at home.
-    internalField().transfer
-    (
-        const_cast<Field<Type>&>(gf.internalField())
-    );
+    if (tgf.isTmp())
+    {
+        // Transfer the storage from the tmp
+        primitiveFieldRef().transfer
+        (
+            const_cast<Field<Type>&>(gf.primitiveField())
+        );
+    }
+    else
+    {
+        primitiveFieldRef() = gf.primitiveField();
+    }
 
-    boundaryField() = gf.boundaryField();
+    boundaryFieldRef() = gf.boundaryField();
 
     tgf.clear();
 }
@@ -1781,25 +1964,36 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
     const dimensioned<Type>& dt
 )
 {
-    dimensionedInternalField() = dt;
-    boundaryField() = dt.value();
+    ref() = dt;
+    boundaryFieldRef() = dt.value();
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator=
+(
+    const zero&
+)
+{
+    ref() = Zero;
+    boundaryFieldRef() = Zero;
 }
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 {
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
     checkField(*this, gf, "==");
 
-    // only equate field contents not ID
+    // Only assign field contents not ID
 
-    dimensionedInternalField() = gf.dimensionedInternalField();
-    boundaryField() == gf.boundaryField();
+    ref() = gf();
+    boundaryFieldRef() == gf.boundaryField();
 
     tgf.clear();
 }
@@ -1811,43 +2005,54 @@ void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
     const dimensioned<Type>& dt
 )
 {
-    dimensionedInternalField() = dt;
-    boundaryField() == dt.value();
+    ref() = dt;
+    boundaryFieldRef() == dt.value();
 }
 
 
-#define COMPUTED_ASSIGNMENT(TYPE, op)                                         \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-void CML::GeometricField<Type, PatchField, GeoMesh>::operator op             \
-(                                                                             \
-    const GeometricField<TYPE, PatchField, GeoMesh>& gf                       \
-)                                                                             \
-{                                                                             \
-    checkField(*this, gf, #op);                                               \
-                                                                              \
-    dimensionedInternalField() op gf.dimensionedInternalField();              \
-    boundaryField() op gf.boundaryField();                                    \
-}                                                                             \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-void CML::GeometricField<Type, PatchField, GeoMesh>::operator op             \
-(                                                                             \
-    const tmp<GeometricField<TYPE, PatchField, GeoMesh> >& tgf                \
-)                                                                             \
-{                                                                             \
-    operator op(tgf());                                                       \
-    tgf.clear();                                                              \
-}                                                                             \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-void CML::GeometricField<Type, PatchField, GeoMesh>::operator op             \
-(                                                                             \
-    const dimensioned<TYPE>& dt                                               \
-)                                                                             \
-{                                                                             \
-    dimensionedInternalField() op dt;                                         \
-    boundaryField() op dt.value();                                            \
+template<class Type, template<class> class PatchField, class GeoMesh>
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator==
+(
+    const zero&
+)
+{
+    ref() = Zero;
+    boundaryFieldRef() == Zero;
+}
+
+
+#define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator op               \
+(                                                                              \
+    const GeometricField<TYPE, PatchField, GeoMesh>& gf                        \
+)                                                                              \
+{                                                                              \
+    checkField(*this, gf, #op);                                                \
+                                                                               \
+    ref() op gf();                                                             \
+    boundaryFieldRef() op gf.boundaryField();                                  \
+}                                                                              \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator op               \
+(                                                                              \
+    const tmp<GeometricField<TYPE, PatchField, GeoMesh>>& tgf                  \
+)                                                                              \
+{                                                                              \
+    operator op(tgf());                                                        \
+    tgf.clear();                                                               \
+}                                                                              \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+void CML::GeometricField<Type, PatchField, GeoMesh>::operator op               \
+(                                                                              \
+    const dimensioned<TYPE>& dt                                                \
+)                                                                              \
+{                                                                              \
+    ref() op dt;                                                               \
+    boundaryFieldRef() op dt.value();                                          \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)
@@ -1867,7 +2072,7 @@ CML::Ostream& CML::operator<<
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    gf.dimensionedInternalField().writeData(os, "internalField");
+    gf().writeData(os, "internalField");
     os  << nl;
     gf.boundaryField().writeEntry("boundaryField", os);
 
@@ -1886,7 +2091,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 CML::Ostream& CML::operator<<
 (
     Ostream& os,
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 {
     os << tgf();
@@ -1909,8 +2114,20 @@ CML::Ostream& CML::operator<<
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
+(
+    const BoundaryMesh& bmesh
+)
+:
+    FieldField<PatchField, Type>(bmesh.size()),
+    bmesh_(bmesh)
+{}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh>& field,
@@ -1922,11 +2139,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const BoundaryMesh&, "
-               "const Field<Type>&, const word&)"
-            << endl;
+        InfoInFunction << endl;
     }
 
     forAll(bmesh_, patchi)
@@ -1946,8 +2159,8 @@ GeometricBoundaryField
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh>& field,
@@ -1960,11 +2173,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const BoundaryMesh&, "
-               "const Field<Type>&, const wordList&, const wordList&)"
-            << endl;
+        InfoInFunction << endl;
     }
 
     if
@@ -2018,12 +2227,12 @@ GeometricBoundaryField
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh>& field,
-    const PtrList<PatchField<Type> >& ptfl
+    const PtrList<PatchField<Type>>& ptfl
 )
 :
     FieldField<PatchField, Type>(bmesh.size()),
@@ -2031,11 +2240,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const BoundaryMesh&, "
-               "const Field<Type>&, const PatchField<Type>List&)"
-            << endl;
+        InfoInFunction << endl;
     }
 
     forAll(bmesh_, patchi)
@@ -2046,12 +2251,12 @@ GeometricBoundaryField
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const DimensionedField<Type, GeoMesh>& field,
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField& btf
+    Boundary& btf
 )
 :
     FieldField<PatchField, Type>(btf.size()),
@@ -2059,11 +2264,7 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const GeometricBoundaryField<Type, "
-               "PatchField, BoundaryMesh>&)"
-            << endl;
+        InfoInFunction << endl;
     }
 
     forAll(bmesh_, patchi)
@@ -2075,15 +2276,15 @@ GeometricBoundaryField
 
 // Construct as copy
 // Dangerous because Field may be set to a field which gets deleted.
-// Need new type of GeometricBoundaryField, one which IS part of a geometric
+// Need new type of Boundary, one which IS part of a geometric
 // field for which snGrad etc. may be called and a free standing
-// GeometricBoundaryField for which such operations are unavailable.
+// Boundary for which such operations are unavailable.
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField& btf
+    Boundary& btf
 )
 :
     FieldField<PatchField, Type>(btf),
@@ -2091,18 +2292,32 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const GeometricBoundaryField<Type, "
-               "PatchField, BoundaryMesh>&)"
-            << endl;
+        InfoInFunction << endl;
     }
 }
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
-GeometricBoundaryField
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
+(
+    typename GeometricField<Type, PatchField, GeoMesh>::
+    Boundary&& btf
+)
+:
+    FieldField<PatchField, Type>(move(btf)),
+    bmesh_(btf.bmesh_)
+{
+    if (debug)
+    {
+        InfoInFunction << endl;
+    }
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
 (
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh>& field,
@@ -2115,8 +2330,8 @@ GeometricBoundaryField
     if (debug)
     {
         Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField"
+               "Boundary::"
+               "Boundary"
                "(const BoundaryMesh&, const Field<Type>&, const dictionary&)"
             << endl;
     }
@@ -2170,14 +2385,12 @@ GeometricBoundaryField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 updateCoeffs()
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "updateCoeffs()" << endl;
+        InfoInFunction << endl;
     }
 
     forAll(*this, patchi)
@@ -2188,20 +2401,18 @@ updateCoeffs()
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 evaluate()
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "evaluate()" << endl;
+        InfoInFunction << endl;
     }
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         label nReq = Pstream::nRequests();
@@ -2215,7 +2426,7 @@ evaluate()
         if
         (
             Pstream::parRun()
-         && Pstream::defaultCommsType == Pstream::nonBlocking
+         && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
         )
         {
             Pstream::waitRequests(nReq);
@@ -2226,7 +2437,7 @@ evaluate()
             this->operator[](patchi).evaluate(Pstream::defaultCommsType);
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule =
             bmesh_.mesh().globalData().patchSchedule();
@@ -2236,12 +2447,12 @@ evaluate()
             if (patchSchedule[patchEvali].init)
             {
                 this->operator[](patchSchedule[patchEvali].patch)
-                    .initEvaluate(Pstream::scheduled);
+                    .initEvaluate(Pstream::commsTypes::scheduled);
             }
             else
             {
                 this->operator[](patchSchedule[patchEvali].patch)
-                    .evaluate(Pstream::scheduled);
+                    .evaluate(Pstream::commsTypes::scheduled);
             }
         }
     }
@@ -2257,7 +2468,7 @@ evaluate()
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 CML::wordList
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 types() const
 {
     const FieldField<PatchField, Type>& pff = *this;
@@ -2274,11 +2485,11 @@ types() const
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-typename CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+typename CML::GeometricField<Type, PatchField, GeoMesh>::Boundary
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 boundaryInternalField() const
 {
-    typename GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField
+    typename GeometricField<Type, PatchField, GeoMesh>::Boundary
         BoundaryInternalField(*this);
 
     forAll(BoundaryInternalField, patchi)
@@ -2293,7 +2504,7 @@ boundaryInternalField() const
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 CML::lduInterfaceFieldPtrsList
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 interfaces() const
 {
     lduInterfaceFieldPtrsList interfaces(this->size());
@@ -2316,7 +2527,7 @@ interfaces() const
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename CML::BlockLduInterfaceFieldPtrsList<Type>::Type
-CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 blockInterfaces() const
 {
     typename BlockLduInterfaceFieldPtrsList<Type>::Type interfaces
@@ -2326,12 +2537,12 @@ blockInterfaces() const
 
     forAll (interfaces, patchi)
     {
-        if (isA<BlockLduInterfaceField<Type> >(this->operator[](patchi)))
+        if (isA<BlockLduInterfaceField<Type>>(this->operator[](patchi)))
         {
             interfaces.set
             (
                 patchi,
-                &refCast<const BlockLduInterfaceField<Type> >
+                &refCast<const BlockLduInterfaceField<Type>>
                 (
                     this->operator[](patchi)
                 )
@@ -2344,7 +2555,7 @@ blockInterfaces() const
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 writeEntry(const word& keyword, Ostream& os) const
 {
     os  << keyword << nl << token::BEGIN_BLOCK << incrIndent << nl;
@@ -2362,7 +2573,7 @@ writeEntry(const word& keyword, Ostream& os) const
     // Check state of IOstream
     os.check
     (
-        "GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::"
+        "GeometricField<Type, PatchField, GeoMesh>::Boundary::"
         "writeEntry(const word& keyword, Ostream& os) const"
     );
 }
@@ -2371,11 +2582,11 @@ writeEntry(const word& keyword, Ostream& os) const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator=
 (
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField& bf
+    Boundary& bf
 )
 {
     FieldField<PatchField, Type>::operator=(bf);
@@ -2383,7 +2594,19 @@ operator=
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+operator=
+(
+    typename GeometricField<Type, PatchField, GeoMesh>::
+    Boundary&& bf
+)
+{
+    FieldField<PatchField, Type>::operator=(move(bf));
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator=
 (
     const FieldField<PatchField, Type>& ptff
@@ -2394,7 +2617,7 @@ operator=
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator=
 (
     const Type& t
@@ -2406,44 +2629,44 @@ operator=
 
 // Forced assignments
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator==
 (
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField& bf
+    Boundary& bf
 )
 {
-    forAll((*this), patchI)
+    forAll((*this), patchi)
     {
-        this->operator[](patchI) == bf[patchI];
+        this->operator[](patchi) == bf[patchi];
     }
 }
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator==
 (
     const FieldField<PatchField, Type>& ptff
 )
 {
-    forAll((*this), patchI)
+    forAll((*this), patchi)
     {
-        this->operator[](patchI) == ptff[patchI];
+        this->operator[](patchi) == ptff[patchi];
     }
 }
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void CML::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
+void CML::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 operator==
 (
     const Type& t
 )
 {
-    forAll((*this), patchI)
+    forAll((*this), patchi)
     {
-        this->operator[](patchI) == t;
+        this->operator[](patchi) == t;
     }
 }
 
@@ -2455,7 +2678,7 @@ CML::Ostream& CML::operator<<
 (
     Ostream& os,
     const typename GeometricField<Type, PatchField, GeoMesh>::
-    GeometricBoundaryField& bf
+    Boundary& bf
 )
 {
     os << static_cast<const FieldField<PatchField, Type>&>(bf);
@@ -2489,8 +2712,8 @@ void component
     const direction d
 )
 {
-    component(gcf.internalField(), gf.internalField(), d);
-    component(gcf.boundaryField(), gf.boundaryField(), d);
+    component(gcf.primitiveFieldRef(), gf.primitiveField(), d);
+    component(gcf.boundaryFieldRef(), gf.boundaryField(), d);
 }
 
 
@@ -2501,24 +2724,36 @@ void T
      const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    T(gf.internalField(), gf1.internalField());
-    T(gf.boundaryField(), gf1.boundaryField());
+    T(gf.primitiveFieldRef(), gf1.primitiveField());
+    T(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh, direction r>
+template
+<
+    class Type,
+    template<class> class PatchField,
+    class GeoMesh,
+    direction r
+>
 void pow
 (
     GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh>& gf,
     const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    pow(gf.internalField(), gf1.internalField(), r);
-    pow(gf.boundaryField(), gf1.boundaryField(), r);
+    pow(gf.primitiveFieldRef(), gf1.primitiveField(), r);
+    pow(gf.boundaryFieldRef(), gf1.boundaryField(), r);
 }
 
-template<class Type, template<class> class PatchField, class GeoMesh, direction r>
-tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh> >
+template
+<
+    class Type,
+    template<class> class PatchField,
+    class GeoMesh,
+    direction r
+>
+tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh>>
 pow
 (
     const GeometricField<Type, PatchField, GeoMesh>& gf,
@@ -2527,7 +2762,7 @@ pow
 {
     typedef typename powProduct<Type, r>::type powProductType;
 
-    tmp<GeometricField<powProductType, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<powProductType, PatchField, GeoMesh>> tPow
     (
         new GeometricField<powProductType, PatchField, GeoMesh>
         (
@@ -2544,17 +2779,23 @@ pow
         )
     );
 
-    pow<Type, r, PatchField, GeoMesh>(tPow(), gf);
+    pow<Type, r, PatchField, GeoMesh>(tPow.ref(), gf);
 
     return tPow;
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh, direction r>
-tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh> >
+template
+<
+    class Type,
+    template<class> class PatchField,
+    class GeoMesh,
+    direction r
+>
+tmp<GeometricField<typename powProduct<Type, r>::type, PatchField, GeoMesh>>
 pow
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf,
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf,
     typename powProduct<Type, r>::type
 )
 {
@@ -2562,7 +2803,7 @@ pow
 
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
-    tmp<GeometricField<powProductType, PatchField, GeoMesh> > tPow
+    tmp<GeometricField<powProductType, PatchField, GeoMesh>> tPow
     (
         new GeometricField<powProductType, PatchField, GeoMesh>
         (
@@ -2579,7 +2820,7 @@ pow
         )
     );
 
-    pow<Type, r, PatchField, GeoMesh>(tPow(), gf);
+    pow<Type, r, PatchField, GeoMesh>(tPow.ref(), gf);
 
     tgf.clear();
 
@@ -2595,8 +2836,8 @@ void sqr
     const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    sqr(gf.internalField(), gf1.internalField());
-    sqr(gf.boundaryField(), gf1.boundaryField());
+    sqr(gf.primitiveFieldRef(), gf1.primitiveField());
+    sqr(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -2613,7 +2854,7 @@ sqr(const GeometricField<Type, PatchField, GeoMesh>& gf)
 {
     typedef typename outerProduct<Type, Type>::type outerProductType;
 
-    tmp<GeometricField<outerProductType, PatchField, GeoMesh> > tSqr
+    tmp<GeometricField<outerProductType, PatchField, GeoMesh>> tSqr
     (
         new GeometricField<outerProductType, PatchField, GeoMesh>
         (
@@ -2630,7 +2871,7 @@ sqr(const GeometricField<Type, PatchField, GeoMesh>& gf)
         )
     );
 
-    sqr(tSqr(), gf);
+    sqr(tSqr.ref(), gf);
 
     return tSqr;
 }
@@ -2645,13 +2886,13 @@ tmp
         GeoMesh
     >
 >
-sqr(const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf)
+sqr(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
 {
     typedef typename outerProduct<Type, Type>::type outerProductType;
 
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
-    tmp<GeometricField<outerProductType, PatchField, GeoMesh> > tSqr
+    tmp<GeometricField<outerProductType, PatchField, GeoMesh>> tSqr
     (
         new GeometricField<outerProductType, PatchField, GeoMesh>
         (
@@ -2668,7 +2909,7 @@ sqr(const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf)
         )
     );
 
-    sqr(tSqr(), gf);
+    sqr(tSqr.ref(), gf);
 
     tgf.clear();
 
@@ -2683,17 +2924,17 @@ void magSqr
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    magSqr(gsf.internalField(), gf.internalField());
-    magSqr(gsf.boundaryField(), gf.boundaryField());
+    magSqr(gsf.primitiveFieldRef(), gf.primitiveField());
+    magSqr(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > magSqr
+tmp<GeometricField<scalar, PatchField, GeoMesh>> magSqr
 (
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tMagSqr
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tMagSqr
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -2710,20 +2951,20 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > magSqr
         )
     );
 
-    magSqr(tMagSqr(), gf);
+    magSqr(tMagSqr.ref(), gf);
 
     return tMagSqr;
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > magSqr
+tmp<GeometricField<scalar, PatchField, GeoMesh>> magSqr
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 {
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tMagSqr
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tMagSqr
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -2740,7 +2981,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > magSqr
         )
     );
 
-    magSqr(tMagSqr(), gf);
+    magSqr(tMagSqr.ref(), gf);
 
     tgf.clear();
 
@@ -2755,17 +2996,17 @@ void mag
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    mag(gsf.internalField(), gf.internalField());
-    mag(gsf.boundaryField(), gf.boundaryField());
+    mag(gsf.primitiveFieldRef(), gf.primitiveField());
+    mag(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > mag
+tmp<GeometricField<scalar, PatchField, GeoMesh>> mag
 (
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tMag
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tMag
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -2782,20 +3023,20 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > mag
         )
     );
 
-    mag(tMag(), gf);
+    mag(tMag.ref(), gf);
 
     return tMag;
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh> > mag
+tmp<GeometricField<scalar, PatchField, GeoMesh>> mag
 (
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 {
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
-    tmp<GeometricField<scalar, PatchField, GeoMesh> > tMag
+    tmp<GeometricField<scalar, PatchField, GeoMesh>> tMag
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -2812,7 +3053,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > mag
         )
     );
 
-    mag(tMag(), gf);
+    mag(tMag.ref(), gf);
 
     tgf.clear();
 
@@ -2832,8 +3073,8 @@ void cmptAv
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    cmptAv(gcf.internalField(), gf.internalField());
-    cmptAv(gcf.boundaryField(), gf.boundaryField());
+    cmptAv(gcf.primitiveFieldRef(), gf.primitiveField());
+    cmptAv(gcf.boundaryFieldRef(), gf.boundaryField());
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -2851,7 +3092,7 @@ cmptAv(const GeometricField<Type, PatchField, GeoMesh>& gf)
     typedef typename GeometricField<Type, PatchField, GeoMesh>::cmptType
         cmptType;
 
-    tmp<GeometricField<cmptType, PatchField, GeoMesh> > CmptAv
+    tmp<GeometricField<cmptType, PatchField, GeoMesh>> CmptAv
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -2868,7 +3109,7 @@ cmptAv(const GeometricField<Type, PatchField, GeoMesh>& gf)
         )
     );
 
-    cmptAv(CmptAv(), gf);
+    cmptAv(CmptAv.ref(), gf);
 
     return CmptAv;
 }
@@ -2883,14 +3124,14 @@ tmp
         GeoMesh
     >
 >
-cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf)
+cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
 {
     typedef typename GeometricField<Type, PatchField, GeoMesh>::cmptType
         cmptType;
 
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
-    tmp<GeometricField<cmptType, PatchField, GeoMesh> > CmptAv
+    tmp<GeometricField<cmptType, PatchField, GeoMesh>> CmptAv
     (
         new GeometricField<scalar, PatchField, GeoMesh>
         (
@@ -2907,7 +3148,7 @@ cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf)
         )
     );
 
-    cmptAv(CmptAv(), gf);
+    cmptAv(CmptAv.ref(), gf);
 
     tgf.clear();
 
@@ -2915,31 +3156,31 @@ cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf)
 }
 
 
-#define UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY(returnType, func, gFunc)       \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-dimensioned<returnType> func                                                  \
-(                                                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf                       \
-)                                                                             \
-{                                                                             \
-    return dimensioned<Type>                                                  \
-    (                                                                         \
-        #func "(" + gf.name() + ')',                                          \
-        gf.dimensions(),                                                      \
-        CML::func(gFunc(gf.internalField()), gFunc(gf.boundaryField()))      \
-    );                                                                        \
-}                                                                             \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-dimensioned<returnType> func                                                  \
-(                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
-)                                                                             \
-{                                                                             \
-    dimensioned<returnType> res = func(tgf1());                               \
-    tgf1.clear();                                                             \
-    return res;                                                               \
+#define UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY(returnType, func, gFunc)        \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+dimensioned<returnType> func                                                   \
+(                                                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf                        \
+)                                                                              \
+{                                                                              \
+    return dimensioned<Type>                                                   \
+    (                                                                          \
+        #func "(" + gf.name() + ')',                                           \
+        gf.dimensions(),                                                       \
+        CML::func(gFunc(gf.primitiveField()), gFunc(gf.boundaryField()))       \
+    );                                                                         \
+}                                                                              \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+dimensioned<returnType> func                                                   \
+(                                                                              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1                 \
+)                                                                              \
+{                                                                              \
+    dimensioned<returnType> res = func(tgf1());                                \
+    tgf1.clear();                                                              \
+    return res;                                                                \
 }
 
 UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY(Type, max, gMax)
@@ -2948,31 +3189,31 @@ UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY(Type, min, gMin)
 #undef UNARY_REDUCTION_FUNCTION_WITH_BOUNDARY
 
 
-#define UNARY_REDUCTION_FUNCTION(returnType, func, gFunc)                     \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-dimensioned<returnType> func                                                  \
-(                                                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf                       \
-)                                                                             \
-{                                                                             \
-    return dimensioned<Type>                                                  \
-    (                                                                         \
-        #func "(" + gf.name() + ')',                                          \
-        gf.dimensions(),                                                      \
-        gFunc(gf.internalField())                                             \
-    );                                                                        \
-}                                                                             \
-                                                                              \
-template<class Type, template<class> class PatchField, class GeoMesh>         \
-dimensioned<returnType> func                                                  \
-(                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
-)                                                                             \
-{                                                                             \
-    dimensioned<returnType> res = func(tgf1());                               \
-    tgf1.clear();                                                             \
-    return res;                                                               \
+#define UNARY_REDUCTION_FUNCTION(returnType, func, gFunc)                      \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+dimensioned<returnType> func                                                   \
+(                                                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf                        \
+)                                                                              \
+{                                                                              \
+    return dimensioned<Type>                                                   \
+    (                                                                          \
+        #func "(" + gf.name() + ')',                                           \
+        gf.dimensions(),                                                       \
+        gFunc(gf.primitiveField())                                             \
+    );                                                                         \
+}                                                                              \
+                                                                               \
+template<class Type, template<class> class PatchField, class GeoMesh>          \
+dimensioned<returnType> func                                                   \
+(                                                                              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1                 \
+)                                                                              \
+{                                                                              \
+    dimensioned<returnType> res = func(tgf1());                                \
+    tgf1.clear();                                                              \
+    return res;                                                                \
 }
 
 UNARY_REDUCTION_FUNCTION(Type, sum, gSum)
@@ -2997,10 +3238,8 @@ BINARY_TYPE_FUNCTION(Type, Type, Type, cmptDivide)
 
 UNARY_OPERATOR(Type, Type, -, negate, transform)
 
-#ifndef __INTEL_COMPILER
 BINARY_OPERATOR(Type, Type, scalar, *, '*', multiply)
 BINARY_OPERATOR(Type, scalar, Type, *, '*', multiply)
-#endif
 BINARY_OPERATOR(Type, Type, scalar, /, '|', divide)
 
 BINARY_TYPE_OPERATOR_SF(Type, scalar, Type, *, '*', multiply)
@@ -3011,380 +3250,385 @@ BINARY_TYPE_OPERATOR_FS(Type, Type, scalar, /, '|', divide)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define PRODUCT_OPERATOR(product, op, opFunc)                                 \
-                                                                              \
-template                                                                      \
-<class Type1, class Type2, template<class> class PatchField, class GeoMesh>   \
-void opFunc                                                                   \
-(                                                                             \
-    GeometricField                                                            \
-    <typename product<Type1, Type2>::type, PatchField, GeoMesh>& gf,          \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                    \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                     \
-)                                                                             \
-{                                                                             \
-    CML::opFunc(gf.internalField(), gf1.internalField(), gf2.internalField());\
-    CML::opFunc(gf.boundaryField(), gf1.boundaryField(), gf2.boundaryField());\
-}                                                                             \
-                                                                              \
-template                                                                      \
-<class Type1, class Type2, template<class> class PatchField, class GeoMesh>   \
-tmp                                                                           \
-<                                                                             \
-    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh> \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                    \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                     \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Type1, Type2>::type productType;                 \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes               \
-    (                                                                         \
-        new GeometricField<productType, PatchField, GeoMesh>                  \
-        (                                                                     \
-            IOobject                                                          \
-            (                                                                 \
-                '(' + gf1.name() + #op + gf2.name() + ')',                    \
-                gf1.instance(),                                               \
-                gf1.db(),                                                     \
-                IOobject::NO_READ,                                            \
-                IOobject::NO_WRITE                                            \
-            ),                                                                \
-            gf1.mesh(),                                                       \
-            gf1.dimensions() op gf2.dimensions()                              \
-        )                                                                     \
-    );                                                                        \
-                                                                              \
-    CML::opFunc(tRes(), gf1, gf2);                                           \
-                                                                              \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template                                                                      \
-<class Type1, class Type2, template<class> class PatchField, class GeoMesh>   \
-tmp                                                                           \
-<                                                                             \
-    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh> \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                    \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh> >& tgf2              \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Type1, Type2>::type productType;                 \
-                                                                              \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();           \
-                                                                              \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes =             \
-        reuseTmpGeometricField<productType, Type2, PatchField, GeoMesh>::New  \
-        (                                                                     \
-            tgf2,                                                             \
-            '(' + gf1.name() + #op + gf2.name() + ')',                        \
-            gf1.dimensions() op gf2.dimensions()                              \
-        );                                                                    \
-                                                                              \
-    CML::opFunc(tRes(), gf1, gf2);                                           \
-                                                                              \
-    reuseTmpGeometricField<productType, Type2, PatchField, GeoMesh>           \
-    ::clear(tgf2);                                                            \
-                                                                              \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template                                                                      \
-<class Type1, class Type2, template<class> class PatchField, class GeoMesh>   \
-tmp                                                                           \
-<                                                                             \
-    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh> \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1,             \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                     \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Type1, Type2>::type productType;                 \
-                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();           \
-                                                                              \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes =             \
-        reuseTmpGeometricField<productType, Type1, PatchField, GeoMesh>::New  \
-        (                                                                     \
-            tgf1,                                                             \
-            '(' + gf1.name() + #op + gf2.name() + ')',                        \
-            gf1.dimensions() op gf2.dimensions()                              \
-        );                                                                    \
-                                                                              \
-    CML::opFunc(tRes(), gf1, gf2);                                           \
-                                                                              \
-    reuseTmpGeometricField<productType, Type1, PatchField, GeoMesh>           \
-    ::clear(tgf1);                                                            \
-                                                                              \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template                                                                      \
-<class Type1, class Type2, template<class> class PatchField, class GeoMesh>   \
-tmp                                                                           \
-<                                                                             \
-    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh> \
->                                                                             \
-operator op                                                                   \
-(                                                                             \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1,             \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh> >& tgf2              \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Type1, Type2>::type productType;                 \
-                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();           \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();           \
-                                                                              \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes =             \
-        reuseTmpTmpGeometricField                                             \
-        <productType, Type1, Type1, Type2, PatchField, GeoMesh>::New          \
-        (                                                                     \
-            tgf1,                                                             \
-            tgf2,                                                             \
-            '(' + gf1.name() + #op + gf2.name() + ')',                        \
-            gf1.dimensions() op gf2.dimensions()                              \
-        );                                                                    \
-                                                                              \
-    CML::opFunc(tRes(), gf1, gf2);                                           \
-                                                                              \
-    reuseTmpTmpGeometricField                                                 \
-        <productType, Type1, Type1, Type2, PatchField, GeoMesh>               \
-    ::clear(tgf1, tgf2);                                                      \
-                                                                              \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-void opFunc                                                                   \
-(                                                                             \
-    GeometricField                                                            \
-    <typename product<Type, Form>::type, PatchField, GeoMesh>& gf,            \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1,                     \
-    const dimensioned<Form>& dvs                                              \
-)                                                                             \
-{                                                                             \
-    CML::opFunc(gf.internalField(), gf1.internalField(), dvs.value());       \
-    CML::opFunc(gf.boundaryField(), gf1.boundaryField(), dvs.value());       \
-}                                                                             \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh> > \
-operator op                                                                   \
-(                                                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1,                     \
-    const dimensioned<Form>& dvs                                              \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Type, Form>::type productType;                   \
-                                                                              \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes               \
-    (                                                                         \
-        new GeometricField<productType, PatchField, GeoMesh>                  \
-        (                                                                     \
-            IOobject                                                          \
-            (                                                                 \
-                '(' + gf1.name() + #op + dvs.name() + ')',                    \
-                gf1.instance(),                                               \
-                gf1.db(),                                                     \
-                IOobject::NO_READ,                                            \
-                IOobject::NO_WRITE                                            \
-            ),                                                                \
-            gf1.mesh(),                                                       \
-            gf1.dimensions() op dvs.dimensions()                              \
-        )                                                                     \
-    );                                                                        \
-                                                                              \
-    CML::opFunc(tRes(), gf1, dvs);                                            \
-                                                                              \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template                                                                      \
-<                                                                             \
-    class Form,                                                               \
-    class Cmpt,                                                               \
-    direction nCmpt,                                                          \
-    class Type, template<class> class PatchField,                             \
-    class GeoMesh                                                             \
->                                                                             \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
-operator op                                                                   \
-(                                                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1,                     \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs                                    \
-)                                                                             \
-{                                                                             \
-    return gf1 op dimensioned<Form>(static_cast<const Form&>(vs));            \
-}                                                                             \
-                                                                              \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh> > \
-operator op                                                                   \
-(                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1,              \
-    const dimensioned<Form>& dvs                                              \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Type, Form>::type productType;                   \
-                                                                              \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1 = tgf1();            \
-                                                                              \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes =             \
-        reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>::New   \
-        (                                                                     \
-            tgf1,                                                             \
-            '(' + gf1.name() + #op + dvs.name() + ')',                        \
-            gf1.dimensions() op dvs.dimensions()                              \
-        );                                                                    \
-                                                                              \
-    CML::opFunc(tRes(), gf1, dvs);                                            \
-                                                                              \
-    reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>            \
-    ::clear(tgf1);                                                            \
-                                                                              \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template                                                                      \
-<                                                                             \
-    class Form,                                                               \
-    class Cmpt,                                                               \
-    direction nCmpt,                                                          \
-    class Type, template<class> class PatchField,                             \
-    class GeoMesh                                                             \
->                                                                             \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
-operator op                                                                   \
-(                                                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1,              \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs                                    \
-)                                                                             \
-{                                                                             \
-    return tgf1 op dimensioned<Form>(static_cast<const Form&>(vs));           \
-}                                                                             \
-                                                                              \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-void opFunc                                                                   \
-(                                                                             \
-    GeometricField                                                            \
-    <typename product<Form, Type>::type, PatchField, GeoMesh>& gf,            \
-    const dimensioned<Form>& dvs,                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1                      \
-)                                                                             \
-{                                                                             \
-    CML::opFunc(gf.internalField(), dvs.value(), gf1.internalField());       \
-    CML::opFunc(gf.boundaryField(), dvs.value(), gf1.boundaryField());       \
-}                                                                             \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
-operator op                                                                   \
-(                                                                             \
-    const dimensioned<Form>& dvs,                                             \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1                      \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Form, Type>::type productType;                   \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes               \
-    (                                                                         \
-        new GeometricField<productType, PatchField, GeoMesh>                  \
-        (                                                                     \
-            IOobject                                                          \
-            (                                                                 \
-                '(' + dvs.name() + #op + gf1.name() + ')',                    \
-                gf1.instance(),                                               \
-                gf1.db(),                                                     \
-                IOobject::NO_READ,                                            \
-                IOobject::NO_WRITE                                            \
-            ),                                                                \
-            gf1.mesh(),                                                       \
-            dvs.dimensions() op gf1.dimensions()                              \
-        )                                                                     \
-    );                                                                        \
-                                                                              \
-    CML::opFunc(tRes(), dvs, gf1);                                            \
-                                                                              \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template                                                                      \
-<                                                                             \
-    class Form,                                                               \
-    class Cmpt,                                                               \
-    direction nCmpt,                                                          \
-    class Type, template<class> class PatchField,                             \
-    class GeoMesh                                                             \
->                                                                             \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
-operator op                                                                   \
-(                                                                             \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                   \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1                      \
-)                                                                             \
-{                                                                             \
-    return dimensioned<Form>(static_cast<const Form&>(vs)) op gf1;            \
-}                                                                             \
-                                                                              \
-template                                                                      \
-<class Form, class Type, template<class> class PatchField, class GeoMesh>     \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
-operator op                                                                   \
-(                                                                             \
-    const dimensioned<Form>& dvs,                                             \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
-)                                                                             \
-{                                                                             \
-    typedef typename product<Form, Type>::type productType;                   \
-                                                                              \
-    const GeometricField<Type, PatchField, GeoMesh>& gf1 = tgf1();            \
-                                                                              \
-    tmp<GeometricField<productType, PatchField, GeoMesh> > tRes =             \
-        reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>::New   \
-        (                                                                     \
-            tgf1,                                                             \
-            '(' + dvs.name() + #op + gf1.name() + ')',                        \
-            dvs.dimensions() op gf1.dimensions()                              \
-        );                                                                    \
-                                                                              \
-    CML::opFunc(tRes(), dvs, gf1);                                            \
-                                                                              \
-    reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>            \
-    ::clear(tgf1);                                                            \
-                                                                              \
-    return tRes;                                                              \
-}                                                                             \
-                                                                              \
-template                                                                      \
-<                                                                             \
-    class Form,                                                               \
-    class Cmpt,                                                               \
-    direction nCmpt,                                                          \
-    class Type, template<class> class PatchField,                             \
-    class GeoMesh                                                             \
->                                                                             \
-tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh> > \
-operator op                                                                   \
-(                                                                             \
-    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                   \
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf1               \
-)                                                                             \
-{                                                                             \
-    return dimensioned<Form>(static_cast<const Form&>(vs)) op tgf1;           \
+#define PRODUCT_OPERATOR(product, op, opFunc)                                  \
+                                                                               \
+template                                                                       \
+<class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
+void opFunc                                                                    \
+(                                                                              \
+    GeometricField                                                             \
+    <typename product<Type1, Type2>::type, PatchField, GeoMesh>& gf,           \
+    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+)                                                                              \
+{                                                                              \
+    CML::opFunc                                                                \
+    (                                                                          \
+        gf.primitiveFieldRef(),                                                \
+        gf1.primitiveField(),                                                  \
+        gf2.primitiveField()                                                   \
+    );                                                                         \
+    CML::opFunc                                                                \
+    (                                                                          \
+        gf.boundaryFieldRef(),                                                 \
+        gf1.boundaryField(),                                                   \
+        gf2.boundaryField()                                                    \
+    );                                                                         \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
+tmp                                                                            \
+<                                                                              \
+    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh>  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Type1, Type2>::type productType;                  \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes                 \
+    (                                                                          \
+        new GeometricField<productType, PatchField, GeoMesh>                   \
+        (                                                                      \
+            IOobject                                                           \
+            (                                                                  \
+                '(' + gf1.name() + #op + gf2.name() + ')',                     \
+                gf1.instance(),                                                \
+                gf1.db(),                                                      \
+                IOobject::NO_READ,                                             \
+                IOobject::NO_WRITE                                             \
+            ),                                                                 \
+            gf1.mesh(),                                                        \
+            gf1.dimensions() op gf2.dimensions()                               \
+        )                                                                      \
+    );                                                                         \
+                                                                               \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                         \
+                                                                               \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
+tmp                                                                            \
+<                                                                              \
+    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh>  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Type1, Type2>::type productType;                  \
+                                                                               \
+    const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();            \
+                                                                               \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes =               \
+        reuseTmpGeometricField<productType, Type2, PatchField, GeoMesh>::New   \
+        (                                                                      \
+            tgf2,                                                              \
+            '(' + gf1.name() + #op + gf2.name() + ')',                         \
+            gf1.dimensions() op gf2.dimensions()                               \
+        );                                                                     \
+                                                                               \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                         \
+                                                                               \
+    tgf2.clear();                                                              \
+                                                                               \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
+tmp                                                                            \
+<                                                                              \
+    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh>  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
+    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Type1, Type2>::type productType;                  \
+                                                                               \
+    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();            \
+                                                                               \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes =               \
+        reuseTmpGeometricField<productType, Type1, PatchField, GeoMesh>::New   \
+        (                                                                      \
+            tgf1,                                                              \
+            '(' + gf1.name() + #op + gf2.name() + ')',                         \
+            gf1.dimensions() op gf2.dimensions()                               \
+        );                                                                     \
+                                                                               \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                         \
+                                                                               \
+    tgf1.clear();                                                              \
+                                                                               \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<class Type1, class Type2, template<class> class PatchField, class GeoMesh>    \
+tmp                                                                            \
+<                                                                              \
+    GeometricField<typename product<Type1, Type2>::type, PatchField, GeoMesh>  \
+>                                                                              \
+operator op                                                                    \
+(                                                                              \
+    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
+    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Type1, Type2>::type productType;                  \
+                                                                               \
+    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();            \
+    const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();            \
+                                                                               \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes =               \
+        reuseTmpTmpGeometricField                                              \
+        <productType, Type1, Type1, Type2, PatchField, GeoMesh>::New           \
+        (                                                                      \
+            tgf1,                                                              \
+            tgf2,                                                              \
+            '(' + gf1.name() + #op + gf2.name() + ')',                         \
+            gf1.dimensions() op gf2.dimensions()                               \
+        );                                                                     \
+                                                                               \
+    CML::opFunc(tRes.ref(), gf1, gf2);                                         \
+                                                                               \
+    tgf1.clear();                                                              \
+    tgf2.clear();                                                              \
+                                                                               \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+void opFunc                                                                    \
+(                                                                              \
+    GeometricField                                                             \
+    <typename product<Type, Form>::type, PatchField, GeoMesh>& gf,             \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1,                      \
+    const dimensioned<Form>& dvs                                               \
+)                                                                              \
+{                                                                              \
+    CML::opFunc(gf.primitiveFieldRef(), gf1.primitiveField(), dvs.value());    \
+    CML::opFunc(gf.boundaryFieldRef(), gf1.boundaryField(), dvs.value());      \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh>>   \
+operator op                                                                    \
+(                                                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1,                      \
+    const dimensioned<Form>& dvs                                               \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Type, Form>::type productType;                    \
+                                                                               \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes                 \
+    (                                                                          \
+        new GeometricField<productType, PatchField, GeoMesh>                   \
+        (                                                                      \
+            IOobject                                                           \
+            (                                                                  \
+                '(' + gf1.name() + #op + dvs.name() + ')',                     \
+                gf1.instance(),                                                \
+                gf1.db(),                                                      \
+                IOobject::NO_READ,                                             \
+                IOobject::NO_WRITE                                             \
+            ),                                                                 \
+            gf1.mesh(),                                                        \
+            gf1.dimensions() op dvs.dimensions()                               \
+        )                                                                      \
+    );                                                                         \
+                                                                               \
+    CML::opFunc(tRes.ref(), gf1, dvs);                                         \
+                                                                               \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type, template<class> class PatchField,                              \
+    class GeoMesh                                                              \
+>                                                                              \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
+operator op                                                                    \
+(                                                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1,                      \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
+)                                                                              \
+{                                                                              \
+    return gf1 op dimensioned<Form>(static_cast<const Form&>(vs));             \
+}                                                                              \
+                                                                               \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+tmp<GeometricField<typename product<Type, Form>::type, PatchField, GeoMesh>>   \
+operator op                                                                    \
+(                                                                              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,                \
+    const dimensioned<Form>& dvs                                               \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Type, Form>::type productType;                    \
+                                                                               \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1 = tgf1();             \
+                                                                               \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes =               \
+        reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>::New    \
+        (                                                                      \
+            tgf1,                                                              \
+            '(' + gf1.name() + #op + dvs.name() + ')',                         \
+            gf1.dimensions() op dvs.dimensions()                               \
+        );                                                                     \
+                                                                               \
+    CML::opFunc(tRes.ref(), gf1, dvs);                                         \
+                                                                               \
+    tgf1.clear();                                                              \
+                                                                               \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type, template<class> class PatchField,                              \
+    class GeoMesh                                                              \
+>                                                                              \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
+operator op                                                                    \
+(                                                                              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1,                \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
+)                                                                              \
+{                                                                              \
+    return tgf1 op dimensioned<Form>(static_cast<const Form&>(vs));            \
+}                                                                              \
+                                                                               \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+void opFunc                                                                    \
+(                                                                              \
+    GeometricField                                                             \
+    <typename product<Form, Type>::type, PatchField, GeoMesh>& gf,             \
+    const dimensioned<Form>& dvs,                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1                       \
+)                                                                              \
+{                                                                              \
+    CML::opFunc(gf.primitiveFieldRef(), dvs.value(), gf1.primitiveField());    \
+    CML::opFunc(gf.boundaryFieldRef(), dvs.value(), gf1.boundaryField());      \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
+operator op                                                                    \
+(                                                                              \
+    const dimensioned<Form>& dvs,                                              \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1                       \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Form, Type>::type productType;                    \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes                 \
+    (                                                                          \
+        new GeometricField<productType, PatchField, GeoMesh>                   \
+        (                                                                      \
+            IOobject                                                           \
+            (                                                                  \
+                '(' + dvs.name() + #op + gf1.name() + ')',                     \
+                gf1.instance(),                                                \
+                gf1.db(),                                                      \
+                IOobject::NO_READ,                                             \
+                IOobject::NO_WRITE                                             \
+            ),                                                                 \
+            gf1.mesh(),                                                        \
+            dvs.dimensions() op gf1.dimensions()                               \
+        )                                                                      \
+    );                                                                         \
+                                                                               \
+    CML::opFunc(tRes.ref(), dvs, gf1);                                         \
+                                                                               \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type, template<class> class PatchField,                              \
+    class GeoMesh                                                              \
+>                                                                              \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
+operator op                                                                    \
+(                                                                              \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1                       \
+)                                                                              \
+{                                                                              \
+    return dimensioned<Form>(static_cast<const Form&>(vs)) op gf1;             \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<class Form, class Type, template<class> class PatchField, class GeoMesh>      \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
+operator op                                                                    \
+(                                                                              \
+    const dimensioned<Form>& dvs,                                              \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1                 \
+)                                                                              \
+{                                                                              \
+    typedef typename product<Form, Type>::type productType;                    \
+                                                                               \
+    const GeometricField<Type, PatchField, GeoMesh>& gf1 = tgf1();             \
+                                                                               \
+    tmp<GeometricField<productType, PatchField, GeoMesh>> tRes =               \
+        reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>::New    \
+        (                                                                      \
+            tgf1,                                                              \
+            '(' + dvs.name() + #op + gf1.name() + ')',                         \
+            dvs.dimensions() op gf1.dimensions()                               \
+        );                                                                     \
+                                                                               \
+    CML::opFunc(tRes.ref(), dvs, gf1);                                         \
+                                                                               \
+    tgf1.clear();                                                              \
+                                                                               \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type, template<class> class PatchField,                              \
+    class GeoMesh                                                              \
+>                                                                              \
+tmp<GeometricField<typename product<Form, Type>::type, PatchField, GeoMesh>>   \
+operator op                                                                    \
+(                                                                              \
+    const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf1                 \
+)                                                                              \
+{                                                                              \
+    return dimensioned<Form>(static_cast<const Form&>(vs)) op tgf1;            \
 }
 
 PRODUCT_OPERATOR(typeOfSum, +, add)

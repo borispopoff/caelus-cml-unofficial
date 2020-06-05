@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -97,7 +97,7 @@ class displacementLayeredMotionMotionSolver
             const labelList& meshPoints,
             const dictionary& dict,
             const PtrList<pointVectorField>& patchDisp,
-            const label patchI
+            const label patchi
         ) const;
 
         void cellZoneSolve
@@ -111,10 +111,10 @@ class displacementLayeredMotionMotionSolver
         displacementLayeredMotionMotionSolver
         (
             const displacementLayeredMotionMotionSolver&
-        );
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementLayeredMotionMotionSolver&);
+        void operator=(const displacementLayeredMotionMotionSolver&) = delete;
 
 
 public:

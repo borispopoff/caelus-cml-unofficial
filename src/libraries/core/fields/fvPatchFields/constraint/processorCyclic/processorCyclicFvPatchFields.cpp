@@ -31,11 +31,6 @@ namespace CML
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 makePatchFields(processorCyclic);
-// makeTemplatePatchTypeField
-// (
-//     fvPatchScalarField,
-//     processorCyclicFvPatchScalarField
-// );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

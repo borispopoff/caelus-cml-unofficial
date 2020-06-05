@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -59,7 +59,7 @@ functions
         type            streamLine;
 
         // Output every
-        writeControl   outputTime;
+        writeControl   writeTime;
         // writeInterval 10;
 
         setFormat       vtk; //gnuplot; //xmgr; //raw; //jplot;
@@ -101,7 +101,7 @@ functions
     {
         type            surfaces;
         functionObjectLibs ("libsampling.so");
-        writeControl   outputTime;
+        writeControl   writeTime;
 
         surfaceFormat   vtk;
         fields          ( p U );
@@ -132,9 +132,9 @@ functions
         writeInterval 1;
 
         patches     ( "motorBike.*" );
-        pName       p;
-        UName       U;
-        rhoName     rhoInf;      // Indicates incompressible
+        p           p;
+        U           U;
+        rho         rhoInf;      // Indicates incompressible
         log         true;
         rhoInf      1;           // Redundant for incompressible
         liftDir     (0 0 1);

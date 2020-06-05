@@ -25,8 +25,8 @@ Description
     associated points
 
 SourceFiles
-    referredWallFaceI.H
-    referredWallFace.C
+    referredWallFaceI.hpp
+    referredWallFace.cpp
 
 \*---------------------------------------------------------------------------*/
 

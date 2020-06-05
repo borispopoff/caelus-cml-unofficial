@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -69,10 +69,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        curvatureSeparation(const curvatureSeparation&);
+        curvatureSeparation(const curvatureSeparation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const curvatureSeparation&);
+        void operator=(const curvatureSeparation&) = delete;
 
 
 protected:
@@ -87,7 +87,7 @@ protected:
 
         //- List of radii for patches - if patch not defined, radius
         // calculated based on mesh geometry
-        List<Tuple2<label, scalar> > definedPatchRadii_;
+        List<Tuple2<label, scalar>> definedPatchRadii_;
 
         //- Magnitude of gravity vector
         scalar magG_;

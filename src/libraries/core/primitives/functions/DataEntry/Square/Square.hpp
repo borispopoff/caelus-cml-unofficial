@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -100,25 +100,22 @@ class Square
         scalar markSpace_;
 
         //- Scalar amplitude of the square function
-        autoPtr<DataEntry<scalar> > amplitude_;
+        autoPtr<DataEntry<scalar>> amplitude_;
 
         //- Frequency of the square function
-        autoPtr<DataEntry<scalar> > frequency_;
+        autoPtr<DataEntry<scalar>> frequency_;
 
         //- Scaling factor of the square function
-        autoPtr<DataEntry<Type> > scale_;
+        autoPtr<DataEntry<Type>> scale_;
 
         //- Level to which the square function is added
-        autoPtr<DataEntry<Type> > level_;
+        autoPtr<DataEntry<Type>> level_;
 
 
     // Private Member Functions
 
         //- Read the coefficients from the given dictionary
         void read(const dictionary& coeffs);
-
-        //- Disallow default bitwise assignment
-        void operator=(const Square<Type>&);
 
 
 public:
@@ -139,12 +136,6 @@ public:
         //- Copy constructor
         Square(const Square<Type>& se);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new Square<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~Square();
@@ -153,10 +144,16 @@ public:
     // Member Functions
 
         //- Return value for time t
-        Type value(const scalar t) const;
+        virtual inline Type value(const scalar t) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Square<Type>&) = delete;
 };
 
 
@@ -216,7 +213,7 @@ CML::DataEntryTypes::Square<Type>::~Square()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type CML::DataEntryTypes::Square<Type>::value(const scalar t) const
+inline Type CML::DataEntryTypes::Square<Type>::value(const scalar t) const
 {
     // Number of waves including fractions
     scalar waves = frequency_->value(t)*(t - t0_);
@@ -245,8 +242,8 @@ void CML::DataEntryTypes::Square<Type>::writeData(Ostream& os) const
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    os.writeKeyword("t0") << t0_ << token::END_STATEMENT << nl;
-    os.writeKeyword("markSpace") << markSpace_ << token::END_STATEMENT << nl;
+    writeEntry(os, "t0", t0_);
+    writeEntry(os, "markSpace", markSpace_);
     amplitude_->writeData(os);
     frequency_->writeData(os);
     scale_->writeData(os);

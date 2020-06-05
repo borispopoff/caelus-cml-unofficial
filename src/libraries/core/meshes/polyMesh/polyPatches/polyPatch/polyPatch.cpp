@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -273,7 +273,7 @@ const CML::vectorField::subField CML::polyPatch::faceAreas() const
 CML::tmp<CML::vectorField> CML::polyPatch::faceCellCentres() const
 {
     tmp<vectorField> tcc(new vectorField(size()));
-    vectorField& cc = tcc();
+    vectorField& cc = tcc.ref();
 
     // get reference to global cell centres
     const vectorField& gcc = boundaryMesh_.mesh().cellCentres();
@@ -292,7 +292,7 @@ CML::tmp<CML::vectorField> CML::polyPatch::faceCellCentres() const
 CML::tmp<CML::scalarField> CML::polyPatch::areaFraction() const
 {
     tmp<scalarField> tfraction(new scalarField(size()));
-    scalarField& fraction = tfraction();
+    scalarField& fraction = tfraction.ref();
 
     const vectorField::subField faceAreas = this->faceAreas();
     const pointField& points = this->points();
@@ -352,10 +352,10 @@ void CML::polyPatch::clearAddressing()
 
 void CML::polyPatch::write(Ostream& os) const
 {
-    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
     patchIdentifier::write(os);
-    os.writeKeyword("nFaces") << size() << token::END_STATEMENT << nl;
-    os.writeKeyword("startFace") << start() << token::END_STATEMENT << nl;
+    writeEntry(os, "nFaces", size());
+    writeEntry(os, "startFace", start());
 }
 
 

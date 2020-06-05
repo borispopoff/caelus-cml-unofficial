@@ -108,21 +108,21 @@ void extrudeLayer::createDuplicateFrontFaces(const LongList<labelPair>& front)
     # ifdef USE_OMP
     # pragma omp parallel for if( faceInFront.size() > 100 ) schedule(guided)
     # endif
-    forAll(faceInFront, faceI)
+    forAll(faceInFront, facei)
     {
-        if( faceInFront[faceI] < 0 )
+        if( faceInFront[facei] < 0 )
             continue;
 
-        const label fOwn = newFaceLabels[faceInFront[faceI]].first();
-        const label fNei = newFaceLabels[faceInFront[faceI]].second();
+        const label fOwn = newFaceLabels[faceInFront[facei]].first();
+        const label fNei = newFaceLabels[faceInFront[facei]].second();
 
-        if( neighbour[faceI] < 0 )
+        if( neighbour[facei] < 0 )
         {
             //- boundary faces
             if( fOwn != -1 )
             {
-                faces[nOrigFaces_+fOwn] = faces[faceI];
-                extrudedFaces_[fOwn] = labelPair(nOrigFaces_+fOwn, faceI);
+                faces[nOrigFaces_+fOwn] = faces[facei];
+                extrudedFaces_[fOwn] = labelPair(nOrigFaces_+fOwn, facei);
                 pairOrientation_[fOwn] = true;
             }
         }
@@ -133,38 +133,38 @@ void extrudeLayer::createDuplicateFrontFaces(const LongList<labelPair>& front)
             {
                 if( fOwn < fNei )
                 {
-                    faces[nOrigFaces_+fOwn] = faces[faceI];
-                    extrudedFaces_[fOwn] = labelPair(nOrigFaces_+fOwn, faceI);
+                    faces[nOrigFaces_+fOwn] = faces[facei];
+                    extrudedFaces_[fOwn] = labelPair(nOrigFaces_+fOwn, facei);
                     pairOrientation_[fOwn] = true;
 
-                    faces[nOrigFaces_+fNei] = faces[faceI].reverseFace();
-                    extrudedFaces_[fNei] = labelPair(nOrigFaces_+fNei, faceI);
+                    faces[nOrigFaces_+fNei] = faces[facei].reverseFace();
+                    extrudedFaces_[fNei] = labelPair(nOrigFaces_+fNei, facei);
                     pairOrientation_[fNei] = false;
                 }
                 else
                 {
-                    faces[nOrigFaces_+fOwn].transfer(faces[faceI]);
-                    extrudedFaces_[fOwn] = labelPair(nOrigFaces_+fOwn, faceI);
+                    faces[nOrigFaces_+fOwn].transfer(faces[facei]);
+                    extrudedFaces_[fOwn] = labelPair(nOrigFaces_+fOwn, facei);
                     pairOrientation_[fOwn] = false;
 
-                    faces[faceI] = faces[nOrigFaces_+fOwn].reverseFace();
+                    faces[facei] = faces[nOrigFaces_+fOwn].reverseFace();
 
-                    faces[nOrigFaces_+fNei] = faces[faceI];
-                    extrudedFaces_[fNei] = labelPair(nOrigFaces_+fNei, faceI);
+                    faces[nOrigFaces_+fNei] = faces[facei];
+                    extrudedFaces_[fNei] = labelPair(nOrigFaces_+fNei, facei);
                     pairOrientation_[fNei] = true;
                 }
             }
             else if( fOwn != -1 )
             {
-                faces[nOrigFaces_+fOwn].transfer(faces[faceI]);
-                faces[faceI] = faces[nOrigFaces_+fOwn].reverseFace();
-                extrudedFaces_[fOwn] = labelPair(nOrigFaces_+fOwn, faceI);
+                faces[nOrigFaces_+fOwn].transfer(faces[facei]);
+                faces[facei] = faces[nOrigFaces_+fOwn].reverseFace();
+                extrudedFaces_[fOwn] = labelPair(nOrigFaces_+fOwn, facei);
                 pairOrientation_[fOwn] = false;
             }
             else if( fNei != -1 )
             {
-                faces[nOrigFaces_+fNei] = faces[faceI].reverseFace();
-                extrudedFaces_[fNei] = labelPair(nOrigFaces_+fNei, faceI);
+                faces[nOrigFaces_+fNei] = faces[facei].reverseFace();
+                extrudedFaces_[fNei] = labelPair(nOrigFaces_+fNei, facei);
                 pairOrientation_[fNei] = false;
             }
         }
@@ -174,27 +174,27 @@ void extrudeLayer::createDuplicateFrontFaces(const LongList<labelPair>& front)
     # ifdef USE_OMP
     # pragma omp parallel for if( faceInFront.size() > 100 ) schedule(guided)
     # endif
-    forAll(faceInFront, faceI)
+    forAll(faceInFront, facei)
     {
-        if( faceInFront[faceI] < 0 )
+        if( faceInFront[facei] < 0 )
             continue;
 
-        const labelPair& lp = newFaceLabels[faceInFront[faceI]];
+        const labelPair& lp = newFaceLabels[faceInFront[facei]];
 
         if( lp.first() != -1 )
         {
-            cell& c = cells[owner[faceI]];
+            cell& c = cells[owner[facei]];
 
             forAll(c, fI)
-                if( c[fI] == faceI )
+                if( c[fI] == facei )
                     c[fI] = nOrigFaces_ + lp.first();
         }
         if( lp.second() != -1 )
         {
-            cell& c = cells[neighbour[faceI]];
+            cell& c = cells[neighbour[facei]];
 
             forAll(c, fI)
-                if( c[fI] == faceI )
+                if( c[fI] == facei )
                     c[fI] = nOrigFaces_ + lp.second();
         }
     }
@@ -303,7 +303,7 @@ void extrudeLayer::createNewVertices()
         //- create the information which faces are attached to points
         //- at parallel boundaries in dual form where each edge represents
         //- global labels of cells sharing a face
-        typedef std::map<label, DynList<edge> > dualEdgesMap;
+        typedef std::map<label, DynList<edge>> dualEdgesMap;
         dualEdgesMap procPointsDual;
 
         //- fill in local data
@@ -316,17 +316,17 @@ void extrudeLayer::createNewVertices()
 
                 forAllRow(pointFaces, pointI, pfI)
                 {
-                    const label faceI = pointFaces(pointI, pfI);
+                    const label facei = pointFaces(pointI, pfI);
 
                     //- do not store faces at processor boundaries
                     //- and newly created faces
-                    if( (neighbour[faceI] < 0) || (owner[faceI] < 0) )
+                    if( (neighbour[facei] < 0) || (owner[facei] < 0) )
                         continue;
 
                     const edge e
                     (
-                        globalCellLabel[owner[faceI]],
-                        globalCellLabel[neighbour[faceI]]
+                        globalCellLabel[owner[facei]],
+                        globalCellLabel[neighbour[facei]]
                     );
 
                     pEdges.append(e);
@@ -370,7 +370,7 @@ void extrudeLayer::createNewVertices()
 
             OPstream toOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo(),
                 globalLabels.byteSize()
             );
@@ -386,7 +386,7 @@ void extrudeLayer::createNewVertices()
             labelList receivedData;
             IPstream fromOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo()
             );
 
@@ -538,12 +538,12 @@ void extrudeLayer::createNewVertices()
 
             forAllRow(pointFaces, pointI, pfI)
             {
-                const label faceI = pointFaces(pointI, pfI);
+                const label facei = pointFaces(pointI, pfI);
 
-                if( owner[faceI] < 0 )
+                if( owner[facei] < 0 )
                     continue;
 
-                const label own = globalCellLabel[owner[faceI]];
+                const label own = globalCellLabel[owner[facei]];
 
                 forAll(dEdges, eI)
                 {
@@ -745,7 +745,7 @@ void extrudeLayer::movePoints()
         std::map<label, scalar> distances;
 
         //- create a map for exchanging data
-        std::map<label, LongList<labelledPointScalar> > exchangeData;
+        std::map<label, LongList<labelledPointScalar>> exchangeData;
         forAll(pProcs, i)
             exchangeData.insert
             (
@@ -769,11 +769,11 @@ void extrudeLayer::movePoints()
 
                 forAllRow(pointFaces, pointI, pfI)
                 {
-                    const label faceI = pointFaces(pointI, pfI);
+                    const label facei = pointFaces(pointI, pfI);
 
-                    if( faceI >= nOrigFaces_ )
+                    if( facei >= nOrigFaces_ )
                     {
-                        const face& f = faces[faceI];
+                        const face& f = faces[facei];
 
                         lps.coordinates() -= f.normal(points);
 
@@ -859,11 +859,11 @@ void extrudeLayer::movePoints()
 
             forAllRow(pointFaces, pointI, pfI)
             {
-                const label faceI = pointFaces(pointI, pfI);
+                const label facei = pointFaces(pointI, pfI);
 
-                if( faceI >= nOrigFaces_ )
+                if( facei >= nOrigFaces_ )
                 {
-                    const face& f = faces[faceI];
+                    const face& f = faces[facei];
 
                     normal -= f.normal(points);
 
@@ -944,7 +944,7 @@ void extrudeLayer::createLayerCells()
         const face& of = faces[extrudedFaces_[extrudedI].second()];
 
         //- create new cell from the front pair
-        DynList<DynList<label, 4> > newCell;
+        DynList<DynList<label, 4>> newCell;
         newCell.setSize(f.size()+2);
 
         newCell[0] = f;
@@ -1251,12 +1251,12 @@ void extrudeLayer::updateBoundary()
     const labelList& owner = mesh_.owner();
     const labelList& neighbour = mesh_.neighbour();
 
-    for(label faceI=nOrigFaces_;faceI<faces.size();++faceI)
+    for(label facei=nOrigFaces_;facei<faces.size();++facei)
     {
-        if( neighbour[faceI] >= 0 )
+        if( neighbour[facei] >= 0 )
             continue;
 
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         if( f.size() != 4 )
             continue;
@@ -1322,7 +1322,7 @@ void extrudeLayer::updateBoundary()
         {
             //- append boundary face
             newBoundaryFaces.appendList(f);
-            newBoundaryOwners.append(owner[faceI]);
+            newBoundaryOwners.append(owner[facei]);
             newBoundaryPatches.append(patch);
         }
     }

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -84,7 +84,7 @@ class refineCell;
 class splitCell;
 
 /*---------------------------------------------------------------------------*\
-                           Class undoableMeshCutter Declaration
+                     Class undoableMeshCutter Declaration
 \*---------------------------------------------------------------------------*/
 
 class undoableMeshCutter
@@ -125,10 +125,10 @@ class undoableMeshCutter
 
 
         //- Disallow default bitwise copy construct
-        undoableMeshCutter(const undoableMeshCutter&);
+        undoableMeshCutter(const undoableMeshCutter&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const undoableMeshCutter&);
+        void operator=(const undoableMeshCutter&) = delete;
 
 
 public:
@@ -188,7 +188,7 @@ public:
             //- Remove some refinement. Needs to be supplied subset of
             //  getSplitFaces() output. Returns list of faces removed
             //  (can be more or equal but never less than splitFaces - since
-            //  removeFaces might decide to take down unnessecary faces)
+            //  removeFaces might decide to take down unnecessary faces)
             //  Only call if undoable set.
             labelList removeSplitFaces
             (

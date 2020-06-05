@@ -117,7 +117,7 @@ CML::triSurfaceRegionSearch::treeByRegion() const
             );
 
             // Calculate bb without constructing local point numbering.
-            treeBoundBox bb(vector::zero, vector::zero);
+            treeBoundBox bb(Zero, Zero);
 
             if (indirectRegionPatches_[regionI].size())
             {

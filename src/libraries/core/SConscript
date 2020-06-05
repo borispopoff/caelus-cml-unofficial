@@ -206,7 +206,7 @@ src_core = Split("""
     db/functionObjects/functionObject/functionObject.cpp
     db/functionObjects/functionObjectList/functionObjectList.cpp
     db/functionObjects/functionObjectFile/functionObjectFile.cpp
-    db/functionObjects/outputFilterOutputControl/outputFilterOutputControl.cpp
+    db/functionObjects/outputFilterControl/outputFilterControl.cpp
     db/Time/TimePaths.cpp
     db/Time/TimeState.cpp
     db/Time/Time.cpp
@@ -418,13 +418,16 @@ src_core = Split("""
     fields/Fields/diagTensorField/diagTensorField.cpp
     fields/Fields/symmTensorField/symmTensorField.cpp
     fields/Fields/tensorField/tensorField.cpp
+    fields/Fields/triadField/triadField.cpp
     fields/Fields/complexFields/complexFields.cpp
     fields/Fields/labelField/labelIOField.cpp
     fields/Fields/labelField/labelFieldIOField.cpp
     fields/Fields/scalarField/scalarIOField.cpp
     fields/Fields/scalarField/scalarFieldIOField.cpp
+    fields/Fields/vectorField/vectorField.cpp
     fields/Fields/vectorField/vectorIOField.cpp
     fields/Fields/vectorField/vectorFieldIOField.cpp
+    fields/Fields/vector2DField/vector2DField.cpp
     fields/Fields/vector2DField/vector2DIOField.cpp
     fields/Fields/vector2DField/vector2DFieldIOField.cpp
     fields/Fields/sphericalTensorField/sphericalTensorIOField.cpp
@@ -435,6 +438,7 @@ src_core = Split("""
     fields/Fields/symmTensorField/symmTensorFieldIOField.cpp
     fields/Fields/tensorField/tensorIOField.cpp
     fields/Fields/tensorField/tensorFieldIOField.cpp
+    fields/Fields/triadField/triadIOField.cpp
     fields/Fields/transformField/transformField.cpp
     fields/pointPatchFields/pointPatchField/pointPatchFields.cpp
     fields/pointPatchFields/basic/calculated/calculatedPointPatchFields.cpp
@@ -543,6 +547,22 @@ src_core = Split("""
     meshTools/coordinateSystems/coordinateRotation/STARCDCoordinateRotation.cpp
     meshTools/coordinateSystems/coordinateRotation/localAxesRotation.cpp
     meshTools/edgeFaceCirculator/edgeFaceCirculator.cpp
+    meshTools/edgeMesh/edgeMesh.cpp
+    meshTools/edgeMesh/edgeMeshIO.cpp
+    meshTools/edgeMesh/edgeMeshNew.cpp
+    meshTools/edgeMesh/edgeFormats/edgeFormatsCore.cpp
+    meshTools/edgeMesh/edgeFormats/emesh/EMESHedgeFormat.cpp
+    meshTools/edgeMesh/edgeFormats/emesh/EMESHedgeFormatRunTime.cpp
+    meshTools/edgeMesh/edgeFormats/nas/NASedgeFormat.cpp
+    meshTools/edgeMesh/edgeFormats/nas/NASedgeFormatRunTime.cpp
+    meshTools/edgeMesh/edgeFormats/obj/OBJedgeFormat.cpp
+    meshTools/edgeMesh/edgeFormats/obj/OBJedgeFormatRunTime.cpp
+    meshTools/edgeMesh/edgeFormats/starcd/STARCDedgeFormat.cpp
+    meshTools/edgeMesh/edgeFormats/starcd/STARCDedgeFormatRunTime.cpp
+    meshTools/edgeMesh/edgeFormats/vtk/VTKedgeFormat.cpp
+    meshTools/edgeMesh/edgeFormats/vtk/VTKedgeFormatRunTime.cpp
+    meshTools/edgeMesh/extendedFeatureEdgeMesh/extendedFeatureEdgeMesh.cpp
+    meshTools/edgeMesh/featureEdgeMesh/featureEdgeMesh.cpp
     meshTools/polyMeshZipUpCells/polyMeshZipUpCells.cpp
     meshTools/primitiveMeshGeometry/primitiveMeshGeometry.cpp
     meshTools/meshSearch/meshSearch.cpp
@@ -562,6 +582,7 @@ src_core = Split("""
     meshTools/indexedOctree/treeDataTriSurface.cpp
     meshTools/searchableSurface/searchableBox.cpp
     meshTools/searchableSurface/searchableRotatedBox.cpp
+    meshTools/searchableSurface/searchableCone.cpp
     meshTools/searchableSurface/searchableCylinder.cpp
     meshTools/searchableSurface/searchableDisk.cpp
     meshTools/searchableSurface/searchablePlane.cpp
@@ -643,13 +664,21 @@ src_core = Split("""
     meshTools/triSurface/triSurfaceTools/geompack/geompack.cpp
     meshTools/triSurface/triSurfaceTools/pointToPointPlanarInterpolation.cpp
     meshTools/twoDPointCorrector/twoDPointCorrector.cpp
-    meshTools/AMIInterpolation/AMIInterpolation/AMIInterpolationName.cpp
-    meshTools/AMIInterpolation/AMIInterpolation/AMIPatchToPatchInterpolation.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIInterpolation.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIInterpolationParallelOps.cpp
     meshTools/AMIInterpolation/faceAreaIntersect/faceAreaIntersect.cpp
     meshTools/AMIInterpolation/GAMG/interfaces/cyclicAMIGAMGInterface/cyclicAMIGAMGInterface.cpp
     meshTools/AMIInterpolation/GAMG/interfaceFields/cyclicAMIGAMGInterfaceField/cyclicAMIGAMGInterfaceField.cpp
-    meshTools/AMIInterpolation//GAMG/interfaces/cyclicACMIGAMGInterface/cyclicACMIGAMGInterface.cpp
-    meshTools/AMIInterpolation//GAMG/interfaceFields/cyclicACMIGAMGInterfaceField/cyclicACMIGAMGInterfaceField.cpp
+    meshTools/AMIInterpolation/GAMG/interfaces/cyclicACMIGAMGInterface/cyclicACMIGAMGInterface.cpp
+    meshTools/AMIInterpolation/GAMG/interfaceFields/cyclicACMIGAMGInterfaceField/cyclicACMIGAMGInterfaceField.cpp
+    meshTools/AMIInterpolation/GAMG/interfaces/cyclicRepeatAMIGAMGInterface/cyclicRepeatAMIGAMGInterface.cpp
+    meshTools/AMIInterpolation/GAMG/interfaceFields/cyclicRepeatAMIGAMGInterfaceField/cyclicRepeatAMIGAMGInterfaceField.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/AMIMethod/AMIMethod.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/directAMI/directAMI.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/faceAreaWeightAMI/faceAreaWeightAMI.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/mapNearestAMI/mapNearestAMI.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/partialFaceAreaWeightAMI/partialFaceAreaWeightAMI.cpp
+    meshTools/AMIInterpolation/AMIInterpolation/AMIMethod/sweptFaceAreaWeightAMI/sweptFaceAreaWeightAMI.cpp
     meshTools/AMIInterpolation/patches/cyclicAMI/cyclicAMILduInterfaceField/cyclicAMILduInterface.cpp
     meshTools/AMIInterpolation/patches/cyclicAMI/cyclicAMILduInterfaceField/cyclicAMILduInterfaceField.cpp
     meshTools/AMIInterpolation/patches/cyclicAMI/cyclicAMIPolyPatch/cyclicAMIPolyPatch.cpp
@@ -660,6 +689,11 @@ src_core = Split("""
     meshTools/AMIInterpolation/patches/cyclicACMI/cyclicACMIPolyPatch/cyclicACMIPolyPatch.cpp
     meshTools/AMIInterpolation/patches/cyclicACMI/cyclicACMIPointPatch/cyclicACMIPointPatch.cpp
     meshTools/AMIInterpolation/patches/cyclicACMI/cyclicACMIPointPatchField/cyclicACMIPointPatchFields.cpp
+    meshTools/AMIInterpolation/patches/cyclicRepeatAMI/cyclicRepeatAMILduInterfaceField/cyclicRepeatAMILduInterface.cpp
+    meshTools/AMIInterpolation/patches/cyclicRepeatAMI/cyclicRepeatAMILduInterfaceField/cyclicRepeatAMILduInterfaceField.cpp
+    meshTools/AMIInterpolation/patches/cyclicRepeatAMI/cyclicRepeatAMIPolyPatch/cyclicRepeatAMIPolyPatch.cpp
+    meshTools/AMIInterpolation/patches/cyclicRepeatAMI/cyclicRepeatAMIPointPatch/cyclicRepeatAMIPointPatch.cpp
+    meshTools/AMIInterpolation/patches/cyclicRepeatAMI/cyclicRepeatAMIPointPatchField/cyclicRepeatAMIPointPatchFields.cpp
     meshTools/mappedPatches/mappedPolyPatch/mappedPatchBase.cpp
     meshTools/mappedPatches/mappedPolyPatch/mappedPolyPatch.cpp
     meshTools/mappedPatches/mappedPolyPatch/mappedWallPolyPatch.cpp
@@ -678,6 +712,7 @@ src_core = Split("""
     fvMesh/fvPatches/constraint/cyclic/cyclicFvPatch.cpp
     fvMesh/fvPatches/constraint/cyclicAMI/cyclicAMIFvPatch.cpp
     fvMesh/fvPatches/constraint/cyclicACMI/cyclicACMIFvPatch.cpp
+    fvMesh/fvPatches/constraint/cyclicRepeatAMI/cyclicRepeatAMIFvPatch.cpp
     fvMesh/fvPatches/constraint/cyclicSlip/cyclicSlipFvPatch.cpp
     fvMesh/fvPatches/constraint/empty/emptyFvPatch.cpp
     fvMesh/fvPatches/constraint/nonuniformTransformCyclic/nonuniformTransformCyclicFvPatch.cpp
@@ -740,6 +775,7 @@ src_core = Split("""
     fields/fvPatchFields/constraint/cyclic/cyclicFvPatchFields.cpp
     fields/fvPatchFields/constraint/cyclicAMI/cyclicAMIFvPatchFields.cpp
     fields/fvPatchFields/constraint/cyclicACMI/cyclicACMIFvPatchFields.cpp
+    fields/fvPatchFields/constraint/cyclicRepeatAMI/cyclicRepeatAMIFvPatchFields.cpp
     fields/fvPatchFields/constraint/cyclicSlip/cyclicSlipFvPatchFields.cpp
     fields/fvPatchFields/constraint/empty/emptyFvPatchFields.cpp
     fields/fvPatchFields/constraint/jumpCyclic/jumpCyclicFvPatchFields.cpp
@@ -802,6 +838,7 @@ src_core = Split("""
     fields/fvsPatchFields/constraint/cyclic/cyclicFvsPatchFields.cpp
     fields/fvsPatchFields/constraint/cyclicAMI/cyclicAMIFvsPatchFields.cpp
     fields/fvsPatchFields/constraint/cyclicACMI/cyclicACMIFvsPatchFields.cpp
+    fields/fvsPatchFields/constraint/cyclicRepeatAMI/cyclicRepeatAMIFvsPatchFields.cpp
     fields/fvsPatchFields/constraint/cyclicSlip/cyclicSlipFvsPatchFields.cpp
     fields/fvsPatchFields/constraint/empty/emptyFvsPatchFields.cpp
     fields/fvsPatchFields/constraint/nonuniformTransformCyclic/nonuniformTransformCyclicFvsPatchFields.cpp
@@ -965,8 +1002,13 @@ src_core = Split("""
     cfdTools/general/bound/bound.cpp
     cfdTools/general/constrainHbyA/constrainHbyA.cpp
     cfdTools/general/CorrectPhi/correctUphiBCs.cpp
+    cfdTools/general/fvOptions/fvOption.cpp
+    cfdTools/general/fvOptions/fvOptionIO.cpp
+    cfdTools/general/fvOptions/fvOptionList.cpp
+    cfdTools/general/fvOptions/fvOptions.cpp
     cfdTools/general/solutionControl/solutionControl/solutionControl.cpp
     cfdTools/general/solutionControl/simpleControl/simpleControl.cpp
+    cfdTools/general/solutionControl/pisoControl/pisoControl.cpp
     cfdTools/general/solutionControl/pimpleControl/pimpleControl.cpp
     cfdTools/general/MRF/MRFZone.cpp
     cfdTools/general/MRF/MRFZoneList.cpp
@@ -1033,6 +1075,12 @@ src_core = Split("""
     blockCoupled/finiteVolume/blockGradSchemes/limitedBlockGradSchemes/cellLimitedBlockGrad/cellLimitedBlockGrads.cpp
     blockCoupled/finiteVolume/blockGradSchemes/blockLeastSquaresGrad/blockLeastSquaresGrads.cpp
     blockCoupled/finiteVolume/blockGradSchemes/blockLeastSquaresGrad/scalarBlockLeastSquaresGrad.cpp
+    primitives/strings/parsing/parsing.cpp
+    primitives/strings/parsing/genericRagelLemonDriver.cpp
+    primitives/strings/stringOps/toScalar/evalStringToScalarDriver.cpp
+    primitives/strings/stringOps/toScalar/evalStringToScalarScanner.cc
+    primitives/strings/stringOps/toScalar/evalStringToScalarLemonParser.cc
+    db/dictionary/functionEntries/evalEntry/evalEntry.cpp
 """)
 
 target = 'core'

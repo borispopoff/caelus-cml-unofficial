@@ -35,7 +35,7 @@ Description
 #include <cstring>
 
 #if defined (__GLIBC__)
-#  include <endian.h>
+    #include <endian.h>
 #endif
 
 
@@ -52,30 +52,10 @@ static const unsigned char fillbuf[64] = { 0x80, 0 /* , 0, 0, ...  */ };
 
 inline uint32_t CML::SHA1::swapBytes(uint32_t n)
 {
-#ifdef __BYTE_ORDER
-# if (__BYTE_ORDER == __BIG_ENDIAN)
-    return n;
-# else
-    return
-    (
-        ((n) << 24)
-      | (((n) & 0xff00) << 8)
-      | (((n) >> 8) & 0xff00)
-      | ((n) >> 24)
-    );
-# endif
-
-#else
-
-    const short x = 0x0100;
-
-    // yields 0x01 for big endian
-    if (*(reinterpret_cast<const char*>(&x)))
-    {
+    #ifdef __BYTE_ORDER
+        #if (__BYTE_ORDER == __BIG_ENDIAN)
         return n;
-    }
-    else
-    {
+        #else
         return
         (
             ((n) << 24)
@@ -83,20 +63,36 @@ inline uint32_t CML::SHA1::swapBytes(uint32_t n)
           | (((n) >> 8) & 0xff00)
           | ((n) >> 24)
         );
-    }
-#endif
+        #endif
+    #else
+        const short x = 0x0100;
+
+        // yields 0x01 for big endian
+        if (*(reinterpret_cast<const char*>(&x)))
+        {
+            return n;
+        }
+        else
+        {
+            return
+            (
+                ((n) << 24)
+              | (((n) & 0xff00) << 8)
+              | (((n) >> 8) & 0xff00)
+              | ((n) >> 24)
+            );
+        }
+    #endif
 }
 
 
-inline void
-CML::SHA1::set_uint32(unsigned char *cp, uint32_t v)
+inline void CML::SHA1::set_uint32(unsigned char *cp, uint32_t v)
 {
     memcpy(cp, &v, sizeof(uint32_t));
 }
 
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
-
 
 void CML::SHA1::processBytes(const void *data, size_t len)
 {
@@ -178,8 +174,7 @@ void CML::SHA1::processBytes(const void *data, size_t len)
 // Process LEN bytes of BUFFER, it is assumed that LEN % 64 == 0.
 // Most of this code comes from GnuPG's cipher/sha1.c
 
-void
-CML::SHA1::processBlock(const void *data, size_t len)
+void CML::SHA1::processBlock(const void *data, size_t len)
 {
     const uint32_t *words = reinterpret_cast<const uint32_t*>(data);
     size_t nwords = len / sizeof(uint32_t);
@@ -412,5 +407,21 @@ CML::SHA1Digest CML::SHA1::digest() const
     return dig;
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#undef K1
+#undef K2
+#undef K3
+#undef K4
+
+#undef F1
+#undef F2
+#undef F3
+#undef F4
+
+#undef rol_uint32
+#undef M
+#undef R
 
 // ************************************************************************* //

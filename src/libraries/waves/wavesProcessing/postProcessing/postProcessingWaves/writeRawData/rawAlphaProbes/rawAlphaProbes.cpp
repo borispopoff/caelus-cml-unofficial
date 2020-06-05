@@ -42,7 +42,7 @@ addToRunTimeSelectionTable
 
 void rawAlphaProbes::resizeFields
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     List<scalarField>& alphas,
     label N
 )
@@ -60,7 +60,7 @@ void rawAlphaProbes::resizeFields
 
 void rawAlphaProbes::writeRawData
 (
-    const List<std::pair<scalar, label> >& timeLabel,
+    const List<std::pair<scalar, label>>& timeLabel,
     const scalarField& x,
     const scalarField& y,
     const scalarField& z,
@@ -133,7 +133,7 @@ rawAlphaProbes::~rawAlphaProbes()
 
 void rawAlphaProbes::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     scalarField x, y, z;
     List<scalarField> alphas;
 
@@ -145,7 +145,7 @@ void rawAlphaProbes::evaluate()
 
 void rawAlphaProbes::readAlphaProbesData
 (
-    List<std::pair<scalar, label> >& timeLabel,
+    List<std::pair<scalar, label>>& timeLabel,
     scalarField& x,
     scalarField& y,
     scalarField& z,

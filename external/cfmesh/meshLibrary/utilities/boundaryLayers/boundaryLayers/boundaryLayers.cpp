@@ -128,7 +128,7 @@ void boundaryLayers::findPatchesToBeTreatedTogether()
     meshSurfaceCheckInvertedVertices vertexCheck(mse);
     const labelHashSet& invertedVertices = vertexCheck.invertedVertices();
 
-    std::map<std::pair<label, label>, Pair<label> > edgeClassification;
+    std::map<std::pair<label, label>, Pair<label>> edgeClassification;
     forAll(eFaces, eI)
     {
         if( eFaces.sizeOfRow(eI) != 2 )
@@ -195,7 +195,7 @@ void boundaryLayers::findPatchesToBeTreatedTogether()
         const Map<label>& globalPointToLocal =
             mse.globalToLocalBndPointAddressing();
 
-        std::map<label, LongList<labelledPoint> > exchangePoints;
+        std::map<label, LongList<labelledPoint>> exchangePoints;
         forAll(neiProcs, procI)
         {
             exchangePoints.insert
@@ -328,7 +328,7 @@ void boundaryLayers::findPatchesToBeTreatedTogether()
         mesh_.points().setSize(nPoints_);
     }
 
-    std::map<std::pair<label, label>, Pair<label> >::const_iterator it;
+    std::map<std::pair<label, label>, Pair<label>>::const_iterator it;
     for(it=edgeClassification.begin();it!=edgeClassification.end();++it)
     {
         const std::pair<label, label>& edgePair = it->first;

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,7 +54,7 @@ CML::UIPstream::UIPstream
     setOpened();
     setGood();
 
-    if (commsType == UPstream::nonBlocking)
+    if (commsType == commsTypes::nonBlocking)
     {
         // Message is already received into externalBuf
     }
@@ -121,7 +121,11 @@ CML::UIPstream::UIPstream(const int fromProcNo, PstreamBuffers& buffers)
     clearAtEnd_(true),
     messageSize_(0)
 {
-    if (commsType() != UPstream::scheduled && !buffers.finishedSendsCalled_)
+    if
+    (
+        commsType() != UPstream::commsTypes::scheduled
+     && !buffers.finishedSendsCalled_
+    )
     {
         FatalErrorInFunction
             << "PstreamBuffers::finishedSends() never called." << endl
@@ -133,7 +137,7 @@ CML::UIPstream::UIPstream(const int fromProcNo, PstreamBuffers& buffers)
     setOpened();
     setGood();
 
-    if (commsType() == UPstream::nonBlocking)
+    if (commsType() == commsTypes::nonBlocking)
     {
         // Message is already received into externalBuf
         messageSize_ = buffers.recvBuf_[fromProcNo].size();
@@ -217,7 +221,7 @@ CML::label CML::UIPstream::read
             << CML::endl;
     }
 
-    if (commsType == blocking || commsType == scheduled)
+    if (commsType == commsTypes::blocking || commsType == commsTypes::scheduled)
     {
         MPI_Status status;
 
@@ -268,7 +272,7 @@ CML::label CML::UIPstream::read
 
         return messageSize;
     }
-    else if (commsType == nonBlocking)
+    else if (commsType == commsTypes::nonBlocking)
     {
         MPI_Request request;
 
@@ -312,7 +316,7 @@ CML::label CML::UIPstream::read
     {
         FatalErrorInFunction
             << "Unsupported communications type "
-            << commsType
+            << int(commsType)
             << CML::abort(FatalError);
 
         return 0;

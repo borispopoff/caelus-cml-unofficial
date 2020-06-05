@@ -43,7 +43,7 @@ bool reusable(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
         {
             const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
             const typename GeometricField<Type, PatchField, GeoMesh>::
-                GeometricBoundaryField& gbf = gf.boundaryField();
+                Boundary& gbf = gf.boundaryField();
 
             forAll(gbf, patchi)
             {
@@ -71,6 +71,51 @@ bool reusable(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
 }
 
 
+template<class TypeR, template<class> class PatchField, class GeoMesh>
+tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
+(
+    const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf1,
+    const word& name,
+    const dimensionSet& dimensions,
+    const bool initRet = false
+)
+{
+    GeometricField<TypeR, PatchField, GeoMesh>& gf1 =
+        const_cast<GeometricField<TypeR, PatchField, GeoMesh>& >(tgf1());
+
+    if (reusable(tgf1))
+    {
+        gf1.rename(name);
+        gf1.dimensions().reset(dimensions);
+        return tgf1;
+    }
+    else
+    {
+        tmp<GeometricField<TypeR, PatchField, GeoMesh>> rtgf
+        (
+            new GeometricField<TypeR, PatchField, GeoMesh>
+            (
+                IOobject
+                (
+                    name,
+                    gf1.instance(),
+                    gf1.db()
+                ),
+                gf1.mesh(),
+                dimensions
+            )
+        );
+
+        if (initRet)
+        {
+            rtgf.ref() == tgf1();
+        }
+
+        return rtgf;
+    }
+}
+
+
 template
 <
     class TypeR,
@@ -82,16 +127,16 @@ class reuseTmpGeometricField
 {
 public:
 
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh> > New
+    static tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
     (
-        const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1,
+        const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,
         const word& name,
         const dimensionSet& dimensions
     )
     {
         const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();
 
-        return tmp<GeometricField<TypeR, PatchField, GeoMesh> >
+        return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
         (
             new GeometricField<TypeR, PatchField, GeoMesh>
             (
@@ -106,69 +151,8 @@ public:
             )
         );
     }
-
-    static void clear
-    (
-        const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1
-    )
-    {
-        tgf1.clear();
-    }
 };
 
-/*
-template<class TypeR, template<class> class PatchField, class GeoMesh>
-class reuseTmpGeometricField<TypeR, TypeR, PatchField, GeoMesh>
-{
-public:
-
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh> > New
-    (
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh> >& tgf1,
-        const word& name,
-        const dimensionSet& dimensions
-    )
-    {
-        GeometricField<TypeR, PatchField, GeoMesh>& gf1 =
-            const_cast<GeometricField<TypeR, PatchField, GeoMesh>& >(tgf1());
-
-        if (tgf1.isTmp())
-        {
-            gf1.rename(name);
-            gf1.dimensions().reset(dimensions);
-            return tgf1;
-        }
-        else
-        {
-            return tmp<GeometricField<TypeR, PatchField, GeoMesh> >
-            (
-                new GeometricField<TypeR, PatchField, GeoMesh>
-                (
-                    IOobject
-                    (
-                        name,
-                        gf1.instance(),
-                        gf1.db()
-                    ),
-                    gf1.mesh(),
-                    dimensions
-                )
-            );
-        }
-    }
-
-    static void clear
-    (
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh> >& tgf1
-    )
-    {
-        if (tgf1.isTmp())
-        {
-            tgf1.ptr();
-        }
-    }
-};
-*/
 
 template<class TypeR, template<class> class PatchField, class GeoMesh>
 class reuseTmpGeometricField<TypeR, TypeR, PatchField, GeoMesh>
@@ -179,8 +163,7 @@ public:
     (
         const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf1,
         const word& name,
-        const dimensionSet& dimensions,
-        const bool initRet = false
+        const dimensionSet& dimensions
     )
     {
         GeometricField<TypeR, PatchField, GeoMesh>& gf1 =
@@ -194,7 +177,7 @@ public:
         }
         else
         {
-            tmp<GeometricField<TypeR, PatchField, GeoMesh>> rtgf
+            return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
             (
                 new GeometricField<TypeR, PatchField, GeoMesh>
                 (
@@ -208,24 +191,6 @@ public:
                     dimensions
                 )
             );
-
-            if (initRet)
-            {
-                rtgf() == tgf1();
-            }
-
-            return rtgf;
-        }
-    }
-
-    static void clear
-    (
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf1
-    )
-    {
-        if (reusable(tgf1))
-        {
-            tgf1.ptr();
         }
     }
 };
@@ -244,17 +209,17 @@ class reuseTmpTmpGeometricField
 {
 public:
 
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh> > New
+    static tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
     (
-        const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1,
-        const tmp<GeometricField<Type2, PatchField, GeoMesh> >& tgf2,
+        const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,
+        const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2,
         const word& name,
         const dimensionSet& dimensions
     )
     {
         const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();
 
-        return tmp<GeometricField<TypeR, PatchField, GeoMesh> >
+        return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
         (
             new GeometricField<TypeR, PatchField, GeoMesh>
             (
@@ -268,16 +233,6 @@ public:
                 dimensions
             )
         );
-    }
-
-    static void clear
-    (
-        const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1,
-        const tmp<GeometricField<Type2, PatchField, GeoMesh> >& tgf2
-    )
-    {
-        tgf1.clear();
-        tgf2.clear();
     }
 };
 
@@ -295,10 +250,10 @@ class reuseTmpTmpGeometricField
 {
 public:
 
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh> > New
+    static tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
     (
-        const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1,
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh> >& tgf2,
+        const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,
+        const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf2,
         const word& name,
         const dimensionSet& dimensions
     )
@@ -307,7 +262,7 @@ public:
         GeometricField<TypeR, PatchField, GeoMesh>& gf2 =
             const_cast<GeometricField<TypeR, PatchField, GeoMesh>& >(tgf2());
 
-        if (tgf2.isTmp())
+        if (reusable(tgf2))
         {
             gf2.rename(name);
             gf2.dimensions().reset(dimensions);
@@ -315,7 +270,7 @@ public:
         }
         else
         {
-            return tmp<GeometricField<TypeR, PatchField, GeoMesh> >
+            return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
             (
                 new GeometricField<TypeR, PatchField, GeoMesh>
                 (
@@ -329,19 +284,6 @@ public:
                     dimensions
                 )
             );
-        }
-    }
-
-    static void clear
-    (
-        const tmp<GeometricField<Type1, PatchField, GeoMesh> >& tgf1,
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh> >& tgf2
-    )
-    {
-        tgf1.clear();
-        if (tgf2.isTmp())
-        {
-            tgf2.ptr();
         }
     }
 };
@@ -358,10 +300,10 @@ class reuseTmpTmpGeometricField<TypeR, TypeR, TypeR, Type2, PatchField, GeoMesh>
 {
 public:
 
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh> > New
+    static tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
     (
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh> >& tgf1,
-        const tmp<GeometricField<Type2, PatchField, GeoMesh> >& tgf2,
+        const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf1,
+        const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2,
         const word& name,
         const dimensionSet& dimensions
     )
@@ -369,7 +311,7 @@ public:
         GeometricField<TypeR, PatchField, GeoMesh>& gf1 =
             const_cast<GeometricField<TypeR, PatchField, GeoMesh>& >(tgf1());
 
-        if (tgf1.isTmp())
+        if (reusable(tgf1))
         {
             gf1.rename(name);
             gf1.dimensions().reset(dimensions);
@@ -377,7 +319,7 @@ public:
         }
         else
         {
-            return tmp<GeometricField<TypeR, PatchField, GeoMesh> >
+            return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
             (
                 new GeometricField<TypeR, PatchField, GeoMesh>
                 (
@@ -392,19 +334,6 @@ public:
                 )
             );
         }
-    }
-
-    static void clear
-    (
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh> >& tgf1,
-        const tmp<GeometricField<Type2, PatchField, GeoMesh> >& tgf2
-    )
-    {
-        if (tgf1.isTmp())
-        {
-            tgf1.ptr();
-        }
-        tgf2.clear();
     }
 };
 
@@ -414,10 +343,10 @@ class reuseTmpTmpGeometricField<TypeR, TypeR, TypeR, TypeR, PatchField, GeoMesh>
 {
 public:
 
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh> > New
+    static tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
     (
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh> >& tgf1,
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh> >& tgf2,
+        const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf1,
+        const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf2,
         const word& name,
         const dimensionSet& dimensions
     )
@@ -427,13 +356,13 @@ public:
         GeometricField<TypeR, PatchField, GeoMesh>& gf2 =
             const_cast<GeometricField<TypeR, PatchField, GeoMesh>& >(tgf2());
 
-        if (tgf1.isTmp())
+        if (reusable(tgf1))
         {
             gf1.rename(name);
             gf1.dimensions().reset(dimensions);
             return tgf1;
         }
-        else if (tgf2.isTmp())
+        else if (reusable(tgf2))
         {
             gf2.rename(name);
             gf2.dimensions().reset(dimensions);
@@ -441,7 +370,7 @@ public:
         }
         else
         {
-            return tmp<GeometricField<TypeR, PatchField, GeoMesh> >
+            return tmp<GeometricField<TypeR, PatchField, GeoMesh>>
             (
                 new GeometricField<TypeR, PatchField, GeoMesh>
                 (
@@ -455,24 +384,6 @@ public:
                     dimensions
                 )
             );
-        }
-    }
-
-    static void clear
-    (
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh> >& tgf1,
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh> >& tgf2
-    )
-    {
-        if (tgf1.isTmp())
-        {
-            tgf1.ptr();
-            tgf2.clear();
-        }
-        else if (tgf2.isTmp())
-        {
-            tgf1.clear();
-            tgf2.ptr();
         }
     }
 };

@@ -193,7 +193,7 @@ namespace CML
 
 //- Inner-product between two tensors
 template<class Cmpt>
-inline typename innerProduct<Tensor2D<Cmpt>, Tensor2D<Cmpt> >::type
+inline typename innerProduct<Tensor2D<Cmpt>, Tensor2D<Cmpt>>::type
 operator&(const Tensor2D<Cmpt>& t1, const Tensor2D<Cmpt>& t2)
 {
     return Tensor2D<Cmpt>
@@ -208,7 +208,7 @@ operator&(const Tensor2D<Cmpt>& t1, const Tensor2D<Cmpt>& t2)
 
 //- Inner-product between a tensor and a vector
 template<class Cmpt>
-inline typename innerProduct<Tensor2D<Cmpt>, Vector2D<Cmpt> >::type
+inline typename innerProduct<Tensor2D<Cmpt>, Vector2D<Cmpt>>::type
 operator&(const Tensor2D<Cmpt>& t, const Vector2D<Cmpt>& v)
 {
     return Vector2D<Cmpt>
@@ -220,7 +220,7 @@ operator&(const Tensor2D<Cmpt>& t, const Vector2D<Cmpt>& v)
 
 //- Inner-product between a vector and a tensor
 template<class Cmpt>
-inline typename innerProduct<Vector2D<Cmpt>, Tensor2D<Cmpt> >::type
+inline typename innerProduct<Vector2D<Cmpt>, Tensor2D<Cmpt>>::type
 operator&(const Vector2D<Cmpt>& v, const Tensor2D<Cmpt>& t)
 {
     return Vector2D<Cmpt>
@@ -232,7 +232,7 @@ operator&(const Vector2D<Cmpt>& v, const Tensor2D<Cmpt>& t)
 
 //- Outer-product between two vectors
 template<class Cmpt>
-inline typename outerProduct<Vector2D<Cmpt>, Vector2D<Cmpt> >::type
+inline typename outerProduct<Vector2D<Cmpt>, Vector2D<Cmpt>>::type
 operator*(const Vector2D<Cmpt>& v1, const Vector2D<Cmpt>& v2)
 {
     return Tensor2D<Cmpt>
@@ -585,7 +585,7 @@ operator&&(const Tensor2D<Cmpt>& t1, const SymmTensor2D<Cmpt>& st2)
 
 
 template<class Cmpt>
-class typeOfSum<SphericalTensor2D<Cmpt>, Tensor2D<Cmpt> >
+class typeOfSum<SphericalTensor2D<Cmpt>, Tensor2D<Cmpt>>
 {
 public:
 
@@ -593,7 +593,7 @@ public:
 };
 
 template<class Cmpt>
-class typeOfSum<Tensor2D<Cmpt>, SphericalTensor2D<Cmpt> >
+class typeOfSum<Tensor2D<Cmpt>, SphericalTensor2D<Cmpt>>
 {
 public:
 
@@ -602,7 +602,7 @@ public:
 
 
 template<class Cmpt>
-class innerProduct<Tensor2D<Cmpt>, Tensor2D<Cmpt> >
+class innerProduct<Tensor2D<Cmpt>, Tensor2D<Cmpt>>
 {
 public:
 
@@ -610,7 +610,7 @@ public:
 };
 
 template<class Cmpt>
-class innerProduct<SphericalTensor2D<Cmpt>, Tensor2D<Cmpt> >
+class innerProduct<SphericalTensor2D<Cmpt>, Tensor2D<Cmpt>>
 {
 public:
 
@@ -618,7 +618,7 @@ public:
 };
 
 template<class Cmpt>
-class innerProduct<Tensor2D<Cmpt>, SphericalTensor2D<Cmpt> >
+class innerProduct<Tensor2D<Cmpt>, SphericalTensor2D<Cmpt>>
 {
 public:
 
@@ -626,7 +626,7 @@ public:
 };
 
 template<class Cmpt>
-class innerProduct<Tensor2D<Cmpt>, Vector2D<Cmpt> >
+class innerProduct<Tensor2D<Cmpt>, Vector2D<Cmpt>>
 {
 public:
 
@@ -634,7 +634,7 @@ public:
 };
 
 template<class Cmpt>
-class innerProduct<Vector2D<Cmpt>, Tensor2D<Cmpt> >
+class innerProduct<Vector2D<Cmpt>, Tensor2D<Cmpt>>
 {
 public:
 
@@ -643,7 +643,7 @@ public:
 
 
 template<class Cmpt>
-class outerProduct<Vector2D<Cmpt>, Vector2D<Cmpt> >
+class outerProduct<Vector2D<Cmpt>, Vector2D<Cmpt>>
 {
 public:
 

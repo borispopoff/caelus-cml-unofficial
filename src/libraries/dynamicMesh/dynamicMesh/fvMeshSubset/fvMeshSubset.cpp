@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -103,7 +103,7 @@ void CML::fvMeshSubset::doCoupledPatches
 
     if (syncPar && Pstream::parRun())
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         // Send face usage across processor patches
         forAll(oldPatches, oldPatchi)
@@ -435,9 +435,9 @@ CML::labelList CML::fvMeshSubset::getCellsToRemove
 {
     // Count
     label nKeep = 0;
-    forAll(region, cellI)
+    forAll(region, celli)
     {
-        if (region[cellI] == currentRegion)
+        if (region[celli] == currentRegion)
         {
             nKeep++;
         }
@@ -448,11 +448,11 @@ CML::labelList CML::fvMeshSubset::getCellsToRemove
     labelList cellsToRemove(nRemove);
 
     nRemove = 0;
-    forAll(region, cellI)
+    forAll(region, celli)
     {
-        if (region[cellI] != currentRegion)
+        if (region[celli] != currentRegion)
         {
-            cellsToRemove[nRemove++] = cellI;
+            cellsToRemove[nRemove++] = celli;
         }
     }
 
@@ -811,9 +811,9 @@ void CML::fvMeshSubset::setCellSubset
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            xferMove(newPoints),
-            xferMove(newFaces),
-            xferMove(newCells)
+            move(newPoints),
+            move(newFaces),
+            move(newCells)
         )
     );
 
@@ -1195,9 +1195,9 @@ void CML::fvMeshSubset::setLargeCellSubset
         }
     }
 
-    //Pout<< "Number of cells in new mesh : " << cellMap_.size() << endl;
-    //Pout<< "Number of faces in new mesh : " << faceMap_.size() << endl;
-    //Pout<< "Number of points in new mesh: " << pointMap_.size() << endl;
+    // Pout<< "Number of cells in new mesh : " << cellMap_.size() << endl;
+    // Pout<< "Number of faces in new mesh : " << faceMap_.size() << endl;
+    // Pout<< "Number of points in new mesh: " << pointMap_.size() << endl;
 
     // Make a new mesh
     pointField newPoints(pointMap_.size());
@@ -1309,9 +1309,9 @@ void CML::fvMeshSubset::setLargeCellSubset
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            xferMove(newPoints),
-            xferMove(newFaces),
-            xferMove(newCells),
+            move(newPoints),
+            move(newFaces),
+            move(newCells),
             syncPar           // parallel synchronisation
         )
     );
@@ -1419,7 +1419,7 @@ void CML::fvMeshSubset::setLargeCellSubset
                 emptyPolyPatch::typeName
             );
 
-            //Pout<< "    oldInternalFaces : "
+            // Pout<< "    oldInternalFaces : "
             //    << boundaryPatchSizes[oldInternalPatchID] << endl;
 
             // The index for the first patch is -1 as it originates from
@@ -1450,7 +1450,7 @@ void CML::fvMeshSubset::setLargeCellSubset
             patchStart
         ).ptr();
 
-        //Pout<< "    " << oldPatches[oldPatchi].name() << " : "
+        // Pout<< "    " << oldPatches[oldPatchi].name() << " : "
         //    << newSize << endl;
 
         patchStart += newSize;
@@ -1611,14 +1611,14 @@ const labelList& CML::fvMeshSubset::faceFlipMap() const
         }
         for (label subFaceI = subInt; subFaceI < subOwn.size(); subFaceI++)
         {
-            label faceI = subToBaseFace[subFaceI];
-            if (subToBaseCell[subOwn[subFaceI]] == own[faceI])
+            label facei = subToBaseFace[subFaceI];
+            if (subToBaseCell[subOwn[subFaceI]] == own[facei])
             {
-                faceFlipMap[subFaceI] = faceI+1;
+                faceFlipMap[subFaceI] = facei+1;
             }
             else
             {
-                faceFlipMap[subFaceI] = -faceI-1;
+                faceFlipMap[subFaceI] = -facei-1;
             }
         }
     }

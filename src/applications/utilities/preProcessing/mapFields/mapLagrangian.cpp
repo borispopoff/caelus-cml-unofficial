@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -37,11 +37,11 @@ static label findCell(const Cloud<passiveParticle>& cloud, const point& pt)
 {
     label celli = -1;
     label tetFacei = -1;
-    label tetPtI = -1;
+    label tetPti = -1;
 
     const polyMesh& mesh = cloud.pMesh();
 
-    mesh.findCellFacePt(pt, celli, tetFacei, tetPtI);
+    mesh.findCellFacePt(pt, celli, tetFacei, tetPti);
 
     if (celli >= 0)
     {
@@ -55,7 +55,7 @@ static label findCell(const Cloud<passiveParticle>& cloud, const point& pt)
         meshSearch meshSearcher
         (
             mesh,
-            polyMesh::FACEPLANES    // no decomposition needed
+            polyMesh::FACE_PLANES    // no decomposition needed
         );
 
         label facei = meshSearcher.findNearestBoundaryFace(pt);
@@ -66,7 +66,7 @@ static label findCell(const Cloud<passiveParticle>& cloud, const point& pt)
 
             const point perturbPt = (1-perturbFactor)*pt+perturbFactor*cc;
 
-            mesh.findCellFacePt(perturbPt, celli, tetFacei, tetPtI);
+            mesh.findCellFacePt(perturbPt, celli, tetFacei, tetPti);
 
             return celli;
         }
@@ -92,7 +92,7 @@ void mapLagrangian(const meshToMesh& interp)
         readDir
         (
             meshSource.time().timePath()/cloud::prefix,
-            fileName::DIRECTORY
+            fileType::directory
         )
     );
 

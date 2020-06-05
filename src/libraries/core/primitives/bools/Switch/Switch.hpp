@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -36,6 +36,7 @@ SourceFiles
 
 #include "bool.hpp"
 #include "word.hpp"
+#include "scalar.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,7 +44,6 @@ namespace CML
 {
 
 // Forward declaration of friend functions and operators
-
 class Switch;
 class dictionary;
 
@@ -57,51 +57,60 @@ Ostream& operator<<(Ostream&, const Switch&);
 
 class Switch
 {
-    // Private data
-
-        //- The logic and enumerated text representation stored as a single byte
-        unsigned char switch_;
-
 public:
 
     // Public data types
 
-        // avoid issues with pre-processor defines
-        #undef FALSE
-        #undef TRUE
-        #undef OFF
-        #undef ON
-        #undef NO
-        #undef YES
-        #undef NO_1
-        #undef YES_1
-        #undef FALSE_1
-        #undef TRUE_1
-        #undef NONE
-        #undef PLACEHOLDER
-        #undef INVALID
-
         //- The various text representations for a switch value.
         //  These also correspond to the entries in names.
-        enum switchType
+        enum class switchType : unsigned char
         {
-            FALSE   = 0,  TRUE   = 1,
-            OFF     = 2,  ON     = 3,
-            NO      = 4,  YES    = 5,
-            NO_1    = 6,  YES_1  = 7,
-            FALSE_1 = 8,  TRUE_1 = 9,
-            NONE    = 10, PLACEHOLDER = 11,
-            INVALID
+            False   = 0,
+            True    = 1,
+            off     = 2,
+            on      = 3,
+            no      = 4,
+            yes     = 5,
+            n       = 6,
+            y       = 7,
+            f       = 8,
+            t       = 9,
+            none    = 10,
+            any     = 11,
+            invalid
         };
+
+        //- Number of switchTypes
+        static const unsigned char nSwitchType =
+            static_cast<unsigned char>(switchType::invalid) + 1;
+
+        //- Convert switchType to integer (unsigned char)
+        inline static unsigned char toInt(const switchType x)
+        {
+            return static_cast<unsigned char>(x);
+        }
+
+        //- Increment the switchType counter
+        inline friend switchType operator++(switchType& x)
+        {
+            return x = switchType(toInt(x) + 1);
+        }
+
+
+private:
+
+    // Private data
+
+        //- The logic and enumerated text representation stored as a single byte
+        switchType switch_;
+
 
     // Static data members
 
         //- The set of names corresponding to the switchType enumeration
         //  Includes an extra entry for "invalid".
-        static const char* names[INVALID+1];
+        static const char* names[nSwitchType];
 
-
-private:
 
     // Static Member Functions
 
@@ -116,7 +125,7 @@ public:
         //- Construct null as false
         Switch()
         :
-            switch_(Switch::FALSE)
+            switch_(switchType::False)
         {}
 
         //- Construct from enumerated value
@@ -128,13 +137,27 @@ public:
         //- Construct from bool
         Switch(const bool b)
         :
-            switch_(b ? Switch::TRUE : Switch::FALSE)
+            switch_(b ? switchType::True : switchType::False)
         {}
 
         //- Construct from integer values (treats integer as bool value)
         Switch(const int i)
         :
-            switch_(i ? Switch::TRUE : Switch::FALSE)
+            switch_(i ? switchType::True : switchType::False)
+        {}
+
+        //- Construct from float with rounding to zero given by
+        //- the tolerance (default: 0.5)
+        Switch(const float val, const float tol=0.5)
+        :
+            switch_((mag(val) > tol) ? switchType::True : switchType::False)
+        {}
+
+        //- Construct from double with rounding to zero given by
+        //- the tolerance (default: 0.5)
+        Switch(const double val, const double tol=0.5)
+        :
+            switch_((mag(val) > tol) ? switchType::True : switchType::False)
         {}
 
         //- Construct from std::string, string, word
@@ -181,19 +204,19 @@ public:
         //- Conversion to bool
         operator bool() const
         {
-            return (switch_ & 0x1);
+            return (toInt(switch_) & 0x1);
         }
 
-        //- Assignment from enumerated value
+        //- Assignment to enumerated value
         void operator=(const switchType sw)
         {
             switch_ = sw;
         }
 
-        //- Assignment from bool
+        //- Assignment to bool
         void operator=(const bool b)
         {
-            switch_ = (b ? Switch::TRUE : Switch::FALSE);
+            switch_ = (b ? switchType::True : switchType::False);
         }
 
 

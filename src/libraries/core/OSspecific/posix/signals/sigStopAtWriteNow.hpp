@@ -51,11 +51,15 @@ class sigStopAtWriteNow
 {
     // Private data
 
-        //- number of signal to use
+        //- Number of signal to use
         static int signal_;
+
+        //- Pointer to Time
+        static Time const* runTimePtr_;
 
         //- Saved old signal trapping setting
         static struct sigaction oldAction_;
+
 
     // Private Member Functions
 

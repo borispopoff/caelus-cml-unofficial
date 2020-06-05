@@ -127,5 +127,4 @@ mesh.setFluxRequired(p_rgh.name());
 
 mesh.setFluxRequired(alpha1.name());
 
-fv::IOoptionList fvOptions(mesh);
 #include "createIsoAdvection.hpp"

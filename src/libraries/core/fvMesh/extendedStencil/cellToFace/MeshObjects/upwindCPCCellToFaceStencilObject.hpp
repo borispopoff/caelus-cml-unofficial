@@ -55,7 +55,7 @@ public:
     // Constructors
 
         //- Construct from uncompacted face stencil
-        explicit upwindCPCCellToFaceStencilObject
+        upwindCPCCellToFaceStencilObject
         (
             const fvMesh& mesh,
             const bool pureUpwind,

@@ -55,7 +55,7 @@ multivariateSurfaceInterpolationScheme
 
 // Return weighting factors for scheme given by name in dictionary
 template<class Type>
-tmp<multivariateSurfaceInterpolationScheme<Type> >
+tmp<multivariateSurfaceInterpolationScheme<Type>>
 multivariateSurfaceInterpolationScheme<Type>::New
 (
     const fvMesh& mesh,

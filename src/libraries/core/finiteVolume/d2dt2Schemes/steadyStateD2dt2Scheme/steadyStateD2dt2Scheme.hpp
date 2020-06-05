@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,15 +50,6 @@ class steadyStateD2dt2Scheme
 :
     public fv::d2dt2Scheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        steadyStateD2dt2Scheme(const steadyStateD2dt2Scheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const steadyStateD2dt2Scheme&);
-
-
 public:
 
     //- Runtime type information
@@ -79,6 +70,9 @@ public:
             d2dt2Scheme<Type>(mesh, is)
         {}
 
+        //- Disallow default bitwise copy construct
+        steadyStateD2dt2Scheme(const steadyStateD2dt2Scheme&) = delete;
+
 
     // Member Functions
 
@@ -88,33 +82,39 @@ public:
             return fv::d2dt2Scheme<Type>::mesh();
         }
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcD2dt2
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcD2dt2
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmD2dt2
+        tmp<fvMatrix<Type>> fvmD2dt2
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmD2dt2
+        tmp<fvMatrix<Type>> fvmD2dt2
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmD2dt2
+        tmp<fvMatrix<Type>> fvmD2dt2
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const steadyStateD2dt2Scheme&) = delete;
 };
 
 
@@ -144,13 +144,13 @@ namespace fv
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 steadyStateD2dt2Scheme<Type>::fvcD2dt2
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -167,7 +167,7 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
             (
                 "0",
                 vf.dimensions()/dimTime/dimTime,
-                pTraits<Type>::zero
+                Zero
             )
         )
     );
@@ -175,14 +175,14 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 steadyStateD2dt2Scheme<Type>::fvcD2dt2
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -199,7 +199,7 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
             (
                 "0",
                 rho.dimensions()*vf.dimensions()/dimTime/dimTime,
-                pTraits<Type>::zero
+                Zero
             )
         )
     );
@@ -207,13 +207,13 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 steadyStateD2dt2Scheme<Type>::fvmD2dt2
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -227,14 +227,14 @@ steadyStateD2dt2Scheme<Type>::fvmD2dt2
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 steadyStateD2dt2Scheme<Type>::fvmD2dt2
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -248,14 +248,14 @@ steadyStateD2dt2Scheme<Type>::fvmD2dt2
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 steadyStateD2dt2Scheme<Type>::fvmD2dt2
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (

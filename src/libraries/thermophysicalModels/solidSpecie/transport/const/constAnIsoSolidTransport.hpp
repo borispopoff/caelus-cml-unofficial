@@ -100,7 +100,7 @@ public:
         const dictionary& dict
     )
     {
-        return autoPtr<constAnIsoSolidTransport<Thermo> >
+        return autoPtr<constAnIsoSolidTransport<Thermo>>
         (
             new constAnIsoSolidTransport<Thermo>(dict)
         );

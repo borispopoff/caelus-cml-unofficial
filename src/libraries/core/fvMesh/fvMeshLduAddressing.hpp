@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -62,15 +62,6 @@ class fvMeshLduAddressing
         const lduSchedule& patchSchedule_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        fvMeshLduAddressing(const fvMeshLduAddressing&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvMeshLduAddressing&);
-
-
 public:
 
     // Constructors
@@ -91,11 +82,14 @@ public:
             patchAddr_(mesh.boundary().size()),
             patchSchedule_(mesh.globalData().patchSchedule())
         {
-            forAll(mesh.boundary(), patchI)
+            forAll(mesh.boundary(), patchi)
             {
-                patchAddr_[patchI] = &mesh.boundary()[patchI].faceCells();
+                patchAddr_[patchi] = &mesh.boundary()[patchi].faceCells();
             }
         }
+
+        //- Disallow default bitwise copy construct
+        fvMeshLduAddressing(const fvMeshLduAddressing&) = delete;
 
 
     //- Destructor
@@ -139,6 +133,12 @@ public:
         {
             return patchSchedule_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvMeshLduAddressing&) = delete;
 };
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,7 +63,7 @@ class anisotropicFilter
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        anisotropicFilter(const anisotropicFilter&);
+        anisotropicFilter(const anisotropicFilter&) = delete;
         void operator=(const anisotropicFilter&);
 
 

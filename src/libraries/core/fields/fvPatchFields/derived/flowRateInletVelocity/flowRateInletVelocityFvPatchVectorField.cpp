@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- Copyright (C) 2011-2015 OpenFOAM Foundation
+ Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -21,6 +21,7 @@ License
 
 #include "flowRateInletVelocityFvPatchVectorField.hpp"
 #include "volFields.hpp"
+#include "one.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 #include "fvPatchFieldMapper.hpp"
 #include "surfaceFields.hpp"
@@ -38,24 +39,8 @@ flowRateInletVelocityFvPatchVectorField
     flowRate_(),
     volumetric_(false),
     rhoName_("rho"),
-    rhoInlet_(0.0)
-{}
-
-
-CML::flowRateInletVelocityFvPatchVectorField::
-flowRateInletVelocityFvPatchVectorField
-(
-    const flowRateInletVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
-    flowRate_(ptf.flowRate_().clone().ptr()),
-    volumetric_(ptf.volumetric_),
-    rhoName_(ptf.rhoName_),
-    rhoInlet_(ptf.rhoInlet_)
+    rhoInlet_(0.0),
+    extrapolateProfile_(false)
 {}
 
 
@@ -67,8 +52,12 @@ flowRateInletVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<vector>(p, iF),
-    rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", -VGREAT))
+    fixedValueFvPatchField<vector>(p, iF, dict, false),
+    rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", -VGREAT)),
+    extrapolateProfile_
+    (
+        dict.lookupOrDefault<Switch>("extrapolateProfile", false)
+    )
 {
     if (dict.found("volumetricFlowRate"))
     {
@@ -84,8 +73,10 @@ flowRateInletVelocityFvPatchVectorField
     }
     else
     {
-        FatalIOErrorInFunction(dict)
-            << "Please supply either 'volumetricFlowRate' or"
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "Please supply either 'volumetricFlowRate' or"
             << " 'massFlowRate' and 'rho'" << exit(FatalIOError);
     }
 
@@ -99,9 +90,27 @@ flowRateInletVelocityFvPatchVectorField
     }
     else
     {
-        evaluate(Pstream::blocking);
+        evaluate(Pstream::commsTypes::blocking);
     }
 }
+
+
+CML::flowRateInletVelocityFvPatchVectorField::
+flowRateInletVelocityFvPatchVectorField
+(
+    const flowRateInletVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
+    flowRate_(ptf.flowRate_().clone().ptr()),
+    volumetric_(ptf.volumetric_),
+    rhoName_(ptf.rhoName_),
+    rhoInlet_(ptf.rhoInlet_),
+    extrapolateProfile_(ptf.extrapolateProfile_)
+{}
 
 
 CML::flowRateInletVelocityFvPatchVectorField::
@@ -114,7 +123,8 @@ flowRateInletVelocityFvPatchVectorField
     flowRate_(ptf.flowRate_().clone().ptr()),
     volumetric_(ptf.volumetric_),
     rhoName_(ptf.rhoName_),
-    rhoInlet_(ptf.rhoInlet_)
+    rhoInlet_(ptf.rhoInlet_),
+    extrapolateProfile_(ptf.extrapolateProfile_)
 {}
 
 
@@ -129,11 +139,61 @@ flowRateInletVelocityFvPatchVectorField
     flowRate_(ptf.flowRate_().clone().ptr()),
     volumetric_(ptf.volumetric_),
     rhoName_(ptf.rhoName_),
-    rhoInlet_(ptf.rhoInlet_)
+    rhoInlet_(ptf.rhoInlet_),
+    extrapolateProfile_(ptf.extrapolateProfile_)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class RhoType>
+void CML::flowRateInletVelocityFvPatchVectorField::updateValues
+(
+    const RhoType& rho
+)
+{
+    const scalar t = db().time().timeOutputValue();
+
+    const vectorField n(patch().nf());
+
+    if (extrapolateProfile_)
+    {
+        vectorField Up(this->patchInternalField());
+
+        // Patch normal extrapolated velocity
+        scalarField nUp(n & Up);
+
+        // Remove the normal component of the extrapolate patch velocity
+        Up -= nUp*n;
+
+        // Remove any reverse flow
+        nUp = min(nUp, 0.0);
+
+        const scalar flowRate = flowRate_->value(t);
+        const scalar estimatedFlowRate = -gSum(rho*(this->patch().magSf()*nUp));
+
+        if (estimatedFlowRate/flowRate > 0.5)
+        {
+            nUp *= (mag(flowRate)/mag(estimatedFlowRate));
+        }
+        else
+        {
+            nUp -= ((flowRate - estimatedFlowRate)/gSum(rho*patch().magSf()));
+        }
+
+        // Add the corrected normal component of velocity to the patch velocity
+        Up += nUp*n;
+
+        // Correct the patch velocity
+        this->operator==(Up);
+    }
+    else
+    {
+        const scalar avgU = -flowRate_->value(t)/gSum(rho*patch().magSf());
+        operator==(avgU*n);
+    }
+}
+
 
 void CML::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
 {
@@ -142,27 +202,19 @@ void CML::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = db().time().timeOutputValue();
-
-    // a simpler way of doing this would be nice
-    const scalar avgU = -flowRate_->value(t)/gSum(patch().magSf());
-
-    tmp<vectorField> n = patch().nf();
-
     if (volumetric_ || rhoName_ == "none")
     {
-        // volumetric flow-rate or density not given
-        operator==(n*avgU);
+        updateValues(one());
     }
     else
     {
-        // mass flow-rate
+        // Mass flow-rate
         if (db().foundObject<volScalarField>(rhoName_))
         {
             const fvPatchField<scalar>& rhop =
                 patch().lookupPatchField<volScalarField, scalar>(rhoName_);
 
-            operator==(n*avgU/rhop);
+            updateValues(rhop);
         }
         else
         {
@@ -174,7 +226,8 @@ void CML::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
                     << " and no constant density 'rhoInlet' specified"
                     << exit(FatalError);
             }
-            operator==(n*avgU/rhoInlet_);
+
+            updateValues(rhoInlet_);
         }
     }
 
@@ -185,13 +238,14 @@ void CML::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
 void CML::flowRateInletVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
-    flowRate_->writeData(os);
+    writeEntry(os, flowRate_());
     if (!volumetric_)
     {
         writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
         writeEntryIfDifferent<scalar>(os, "rhoInlet", -VGREAT, rhoInlet_);
     }
-    writeEntry("value", os);
+    writeEntry(os, "extrapolateProfile", extrapolateProfile_);
+    writeEntry(os, "value", *this);
 }
 
 

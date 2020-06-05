@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
-Caelus 9.04
- Web:      www.caelus-cml.com 
+Caelus 10.04
+Web:      www.caelus-cml.com 
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -32,7 +32,7 @@ purgeWrite      0;
 
 writeFormat     ascii;
 
-writePrecision  7;
+writePrecision  8;
 
 writeCompression uncompressed;
 

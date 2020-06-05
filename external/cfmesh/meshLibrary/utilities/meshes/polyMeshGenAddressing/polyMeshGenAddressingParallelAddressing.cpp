@@ -62,23 +62,23 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
         mesh_.procBoundaries();
 
     //- find which processors contain a given bnd point
-    List<std::map<label, std::pair<label, label> > > patchPoints;
+    List<std::map<label, std::pair<label, label>>> patchPoints;
     patchPoints.setSize(procBoundaries.size());
     forAll(procBoundaries, patchI)
     {
         const label start = procBoundaries[patchI].patchStart();
         const label end = start + procBoundaries[patchI].patchSize();
 
-        std::map<label, std::pair<label, label> >& patchPointsMap =
+        std::map<label, std::pair<label, label>>& patchPointsMap =
             patchPoints[patchI];
 
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             forAll(f, pI)
             {
-                std::map<label, std::pair<label, label> >::iterator it =
+                std::map<label, std::pair<label, label>>::iterator it =
                     patchPointsMap.find(f[pI]);
 
                 if( it != patchPointsMap.end() )
@@ -86,7 +86,7 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
 
                 const std::pair<label, label> pp
                 (
-                    faceI-start,
+                    facei-start,
                     (f.size()-pI)%f.size()
                 );
                 patchPointsMap.insert(std::make_pair(f[pI], pp));
@@ -106,9 +106,9 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
 
         forAll(procBoundaries, patchI)
         {
-            const std::map<label, std::pair<label, label> >& patchPointsMap =
+            const std::map<label, std::pair<label, label>>& patchPointsMap =
                 patchPoints[patchI];
-            std::map<label, std::pair<label, label> >::const_iterator it;
+            std::map<label, std::pair<label, label>>::const_iterator it;
 
             labelLongList dataToSend;
             for(it=patchPointsMap.begin();it!=patchPointsMap.end();++it)
@@ -127,7 +127,7 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
 
             OPstream toOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo(),
                 dataToSend.byteSize()
             );
@@ -138,7 +138,7 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
         {
             IPstream fromOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo()
             );
             labelList receivedData;
@@ -211,9 +211,9 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
 
         forAll(procBoundaries, patchI)
         {
-            const std::map<label, std::pair<label, label> >& patchPointsMap =
+            const std::map<label, std::pair<label, label>>& patchPointsMap =
                 patchPoints[patchI];
-            std::map<label, std::pair<label, label> >::const_iterator it;
+            std::map<label, std::pair<label, label>>::const_iterator it;
 
             labelLongList dataToSend;
             for(it=patchPointsMap.begin();it!=patchPointsMap.end();++it)
@@ -232,7 +232,7 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
 
             OPstream toOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo(),
                 dataToSend.byteSize()
             );
@@ -243,7 +243,7 @@ void polyMeshGenAddressing::calcGlobalPointLabels() const
         {
             IPstream fromOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo()
             );
             labelList receivedData;
@@ -319,8 +319,8 @@ void polyMeshGenAddressing::calcGlobalFaceLabels() const
         startFace += numberOfInternalFaces[i];
 
     //- calculate labels for internal faces
-    for(label faceI=0;faceI<nIntFaces;++faceI)
-        globalFaceLabel[faceI] = startFace++;
+    for(label facei=0;facei<nIntFaces;++facei)
+        globalFaceLabel[facei] = startFace++;
 
     //- calculate labels for processor boundaries
     forAll(procBoundaries, patchI)
@@ -337,7 +337,7 @@ void polyMeshGenAddressing::calcGlobalFaceLabels() const
 
             OPstream toOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo(),
                 dataToSend.byteSize()
             );
@@ -351,7 +351,7 @@ void polyMeshGenAddressing::calcGlobalFaceLabels() const
         {
             IPstream fromOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo()
             );
 
@@ -417,8 +417,8 @@ void polyMeshGenAddressing::calcGlobalCellLabels() const
     for(label i=0;i<Pstream::myProcNo();++i)
         startLabel += nCellsAtProc[i];
 
-    forAll(globalCellLabel, cellI)
-        globalCellLabel[cellI] = startLabel++;
+    forAll(globalCellLabel, celli)
+        globalCellLabel[celli] = startLabel++;
 }
 
 void polyMeshGenAddressing::calcGlobalEdgeLabels() const
@@ -457,18 +457,18 @@ void polyMeshGenAddressing::calcGlobalEdgeLabels() const
     {
         const label start = procBoundaries[patchI].patchStart();
         const label end = start + procBoundaries[patchI].patchSize();
-        for(label faceI=start;faceI<end;++faceI)
+        for(label facei=start;facei<end;++facei)
         {
-            forAllRow(faceEdges, faceI, eI)
+            forAllRow(faceEdges, facei, eI)
             {
                 eProcs.appendIfNotIn
                 (
-                    faceEdges(faceI, eI),
+                    faceEdges(facei, eI),
                     procBoundaries[patchI].myProcNo()
                 );
                 eProcs.appendIfNotIn
                 (
-                    faceEdges(faceI, eI),
+                    faceEdges(facei, eI),
                     procBoundaries[patchI].neiProcNo()
                 );
             }
@@ -488,29 +488,29 @@ void polyMeshGenAddressing::calcGlobalEdgeLabels() const
             const label end = start + procBoundaries[patchI].patchSize();
 
 /*            label nToSend(0);
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                forAllRow(faceEdges, faceI, eI)
+                forAllRow(faceEdges, facei, eI)
                 {
                     nToSend += 3;
-                    nToSend += eProcs.sizeOfRow(faceEdges(faceI, eI));
+                    nToSend += eProcs.sizeOfRow(faceEdges(facei, eI));
                 }
             }
 */
             labelLongList dataToSend;
             //nToSend = 0;
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                forAllRow(faceEdges, faceI, eI)
+                forAllRow(faceEdges, facei, eI)
                 {
-                    const label edgeI = faceEdges(faceI, eI);
-                    const face& f = faces[faceI];
+                    const label edgeI = faceEdges(facei, eI);
+                    const face& f = faces[facei];
                     //- data is sent as follows
                     //- 1. face position in patch
                     //- 2. local edge position in face
                     //- 3. number of processors for edge
                     //- 4. processor labels
-                    dataToSend.append(faceI-start);
+                    dataToSend.append(facei-start);
                     dataToSend.append((f.size()-eI-1)%f.size());
                     dataToSend.append(eProcs.sizeOfRow(edgeI));
                     forAllRow(eProcs, edgeI, i)
@@ -520,7 +520,7 @@ void polyMeshGenAddressing::calcGlobalEdgeLabels() const
 
             OPstream toOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo(),
                 dataToSend.byteSize()
             );
@@ -531,7 +531,7 @@ void polyMeshGenAddressing::calcGlobalEdgeLabels() const
         {
             IPstream fromOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo()
             );
             labelList receivedData;
@@ -542,10 +542,10 @@ void polyMeshGenAddressing::calcGlobalEdgeLabels() const
             label counter(0);
             while( counter < receivedData.size() )
             {
-                const label faceI = start+receivedData[counter++];
+                const label facei = start+receivedData[counter++];
                 const label eI = receivedData[counter++];
 
-                const label edgeI = faceEdges(faceI, eI);
+                const label edgeI = faceEdges(facei, eI);
 
                 const label nProcs = receivedData[counter++];
                 for(label i=0;i<nProcs;++i)
@@ -612,19 +612,19 @@ void polyMeshGenAddressing::calcGlobalEdgeLabels() const
             const label end = start + procBoundaries[patchI].patchSize();
 
             labelLongList dataToSend;
-            for(label faceI=start;faceI<end;++faceI)
+            for(label facei=start;facei<end;++facei)
             {
-                forAllRow(faceEdges, faceI, eI)
+                forAllRow(faceEdges, facei, eI)
                 {
-                    const label edgeI = faceEdges(faceI, eI);
+                    const label edgeI = faceEdges(facei, eI);
                     if( globalEdgeLabel[edgeI] != -1 )
                     {
-                        const face& f = faces[faceI];
+                        const face& f = faces[facei];
                         //- data is sent as follows
                         //- 1. face position in patch
                         //- 2. local edge position in face
                         //- 3. number global label for the edge
-                        dataToSend.append(faceI-start);
+                        dataToSend.append(facei-start);
                         dataToSend.append((f.size()-eI-1)%f.size());
                         dataToSend.append(globalEdgeLabel[edgeI]);
                     }
@@ -633,7 +633,7 @@ void polyMeshGenAddressing::calcGlobalEdgeLabels() const
 
             OPstream toOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo(),
                 dataToSend.byteSize()
             );
@@ -644,7 +644,7 @@ void polyMeshGenAddressing::calcGlobalEdgeLabels() const
         {
             IPstream fromOtherProc
             (
-                Pstream::blocking,
+                Pstream::commsTypes::blocking,
                 procBoundaries[patchI].neiProcNo()
             );
             labelList receivedData;
@@ -655,10 +655,10 @@ void polyMeshGenAddressing::calcGlobalEdgeLabels() const
             label counter(0);
             while( counter < receivedData.size() )
             {
-                const label faceI = start+receivedData[counter++];
+                const label facei = start+receivedData[counter++];
                 const label eI = receivedData[counter++];
 
-                const label edgeI = faceEdges(faceI, eI);
+                const label edgeI = faceEdges(facei, eI);
 
                 const label globalLabel = receivedData[counter++];
 

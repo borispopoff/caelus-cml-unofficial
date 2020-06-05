@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017-2018 OpenFOAM Foundation
+Copyright (C) 2017-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -63,10 +63,10 @@ class transferModel
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        transferModel(const transferModel&);
+        transferModel(const transferModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const transferModel&);
+        void operator=(const transferModel&) = delete;
 
 
 protected:

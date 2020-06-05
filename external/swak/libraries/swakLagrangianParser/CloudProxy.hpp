@@ -138,40 +138,40 @@ public:
     }
 
     bool isScalarField(const word &name) const;
-    virtual tmp<Field<scalar> > getScalarField(
+    virtual tmp<Field<scalar>> getScalarField(
         const word &name
     ) const = 0;
 
     bool isVectorField(const word &name) const;
-    virtual tmp<Field<vector> > getVectorField(
+    virtual tmp<Field<vector>> getVectorField(
         const word &name
     ) const = 0;
 
     bool isTensorField(const word &name) const;
-    virtual tmp<Field<tensor> > getTensorField(
+    virtual tmp<Field<tensor>> getTensorField(
         const word &name
     ) const = 0;
 
     bool isSymmTensorField(const word &name) const;
-    virtual tmp<Field<symmTensor> > getSymmTensorField(
+    virtual tmp<Field<symmTensor>> getSymmTensorField(
         const word &name
     ) const = 0;
 
     bool isSphericalTensorField(const word &name) const;
-    virtual tmp<Field<sphericalTensor> > getSphericalTensorField(
+    virtual tmp<Field<sphericalTensor>> getSphericalTensorField(
         const word &name
     ) const = 0;
 
     bool isBoolField(const word &name) const;
-    virtual tmp<Field<bool> > getBoolField(
+    virtual tmp<Field<bool>> getBoolField(
         const word &name
     ) const = 0;
 
-    virtual tmp<Field<vector> > getPositions() const = 0;
+    virtual tmp<Field<vector>> getPositions() const = 0;
 
-    virtual tmp<Field<label> > getCells() const = 0;
+    virtual tmp<Field<label>> getCells() const = 0;
 
-    virtual tmp<Field<scalar> > weights() const = 0;
+    virtual tmp<Field<scalar>> weights() const = 0;
 
     virtual label size() const = 0;
 
@@ -181,13 +181,13 @@ public:
 
 #define addCloudProxyToTable(ProxyType,CloudType)\
     CloudProxy::addcloudConstructorToTable                              \
-    <ProxyType<CloudType> >                                             \
+    <ProxyType<CloudType>>                                             \
     add##ProxyType##CloudType##cloudConstructorToCloudProxyTable(       \
         Cloud<CloudType::particleType>::typeName)
 
 #define addCloudProxyToTable2(ProxyType,CloudType,ParcelType)              \
     CloudProxy::addcloudConstructorToTable                              \
-    <ProxyType<CloudType> >                                             \
+    <ProxyType<CloudType>>                                             \
     add##ProxyType##CloudType##cloudConstructorToCloudProxyTable(       \
         Cloud<ParcelType>::typeName)
 

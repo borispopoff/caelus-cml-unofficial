@@ -32,7 +32,7 @@ Description
 
     After construction:
       - schedule() gives the order in which the input communication should occur
-      - procSchedule()[procI] gives per procI
+      - procSchedule()[proci] gives per proci
 
     Does not care whether 'talking' is first send, second receive or maybe
     full swap. This is all responsibility of caller. See ProcessorTopology
@@ -88,7 +88,7 @@ public:
         //  determines an order for it such that any processor is only talking
         //  to one other at a time. After construction:
         //  - schedule is the order in which comms is done.
-        //  - procSchedule[procI] is for procI the order in which comms is done.
+        //  - procSchedule[proci] is for proci the order in which comms is done.
         commSchedule(const label nProcs, const List<labelPair>& comms);
 
 

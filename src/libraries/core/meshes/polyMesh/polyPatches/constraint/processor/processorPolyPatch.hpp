@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -39,6 +39,7 @@ SourceFiles
 #include "coupledPolyPatch.hpp"
 #include "polyBoundaryMesh.hpp"
 #include "faceListFwd.hpp"
+#include "polyMesh.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -76,6 +77,23 @@ class processorPolyPatch
         mutable autoPtr<labelList> neighbEdgesPtr_;
 
 protected:
+
+    // Protected constructors
+
+        //- Construct from components with specified name
+        processorPolyPatch
+        (
+            const word& name,
+            const label size,
+            const label start,
+            const label index,
+            const polyBoundaryMesh& bm,
+            const int myProcNo,
+            const int neighbProcNo,
+            const transformType transform = UNKNOWN,  // transformation type
+            const word& patchType = typeName
+        );
+
 
     // Protected Member functions
 
@@ -122,10 +140,9 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from components with automatically generated standard name
         processorPolyPatch
         (
-            const word& name,
             const label size,
             const label start,
             const label index,
@@ -248,7 +265,7 @@ public:
             return myProcNo_;
         }
 
-        //- Return neighbour processor number
+        //- Return neigbour processor number
         int neighbProcNo() const
         {
             return neighbProcNo_;
@@ -265,6 +282,14 @@ public:
         {
             return !owner();
         }
+
+        //- Return the name of a processorPolyPatch
+        //  constructed from the processor IDs
+        static word newName
+        (
+            const label myProcNo,
+            const label neighbProcNo
+        );
 
         //- Return processor-neighbbour patch face centres
         const vectorField& neighbFaceCentres() const

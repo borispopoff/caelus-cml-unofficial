@@ -194,14 +194,14 @@ void CML::pointToPointPlanarInterpolation::calcWeights
         (
             referenceCS_.localPosition(sourcePoints)
         );
-        vectorField& localVertices = tlocalVertices();
+        vectorField& localVertices = tlocalVertices.ref();
 
         const boundBox bb(localVertices, true);
         const point bbMid(bb.midpoint());
 
         if (debug)
         {
-            Info<< "pointToPointPlanarInterpolation::calcWeights :"
+            InfoInFunction
                 << " Perturbing points with " << perturb_
                 << " fraction of a random position inside " << bb
                 << " to break any ties on regular meshes."

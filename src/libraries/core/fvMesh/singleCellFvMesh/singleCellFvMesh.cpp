@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -40,19 +40,19 @@ void CML::singleCellFvMesh::agglomerateMesh
     // Check agglomeration within patch face range and continuous
     labelList nAgglom(oldPatches.size(), 0);
 
-    forAll(oldPatches, patchI)
+    forAll(oldPatches, patchi)
     {
-        const polyPatch& pp = oldPatches[patchI];
+        const polyPatch& pp = oldPatches[patchi];
         if (pp.size() > 0)
         {
-            nAgglom[patchI] = max(agglom[patchI])+1;
+            nAgglom[patchi] = max(agglom[patchi])+1;
 
             forAll(pp, i)
             {
-                if (agglom[patchI][i] < 0  || agglom[patchI][i] >= pp.size())
+                if (agglom[patchi][i] < 0  || agglom[patchi][i] >= pp.size())
                 {
                     FatalErrorInFunction
-                        << "agglomeration on patch " << patchI
+                        << "agglomeration on patch " << patchi
                         << " is out of range 0.." << pp.size()-1
                         << exit(FatalError);
                 }
@@ -64,16 +64,16 @@ void CML::singleCellFvMesh::agglomerateMesh
     {
         // Get neighbouring agglomeration
         labelList nbrAgglom(mesh.nFaces()-mesh.nInternalFaces());
-        forAll(oldPatches, patchI)
+        forAll(oldPatches, patchi)
         {
-            const polyPatch& pp = oldPatches[patchI];
+            const polyPatch& pp = oldPatches[patchi];
 
             if (pp.coupled())
             {
                 label offset = pp.start()-mesh.nInternalFaces();
                 forAll(pp, i)
                 {
-                    nbrAgglom[offset+i] = agglom[patchI][i];
+                    nbrAgglom[offset+i] = agglom[patchi][i];
                 }
             }
         }
@@ -83,9 +83,9 @@ void CML::singleCellFvMesh::agglomerateMesh
         // Get correspondence between this agglomeration and remote one
         Map<label> localToNbr(nbrAgglom.size()/10);
 
-        forAll(oldPatches, patchI)
+        forAll(oldPatches, patchi)
         {
-            const polyPatch& pp = oldPatches[patchI];
+            const polyPatch& pp = oldPatches[patchi];
 
             if (pp.coupled())
             {
@@ -93,9 +93,9 @@ void CML::singleCellFvMesh::agglomerateMesh
 
                 forAll(pp, i)
                 {
-                    label bFaceI = offset+i;
-                    label myZone = agglom[patchI][i];
-                    label nbrZone = nbrAgglom[bFaceI];
+                    label bFacei = offset+i;
+                    label myZone = agglom[patchi][i];
+                    label nbrZone = nbrAgglom[bFacei];
 
                     Map<label>::const_iterator iter = localToNbr.find(myZone);
 
@@ -126,9 +126,9 @@ void CML::singleCellFvMesh::agglomerateMesh
 
 
     label coarseI = 0;
-    forAll(nAgglom, patchI)
+    forAll(nAgglom, patchi)
     {
-        coarseI += nAgglom[patchI];
+        coarseI += nAgglom[patchi];
     }
     // New faces
     faceList patchFaces(coarseI);
@@ -147,38 +147,38 @@ void CML::singleCellFvMesh::agglomerateMesh
     coarseI = 0;
 
 
-    forAll(oldPatches, patchI)
+    forAll(oldPatches, patchi)
     {
-        patchStarts[patchI] = coarseI;
+        patchStarts[patchi] = coarseI;
 
-        const polyPatch& pp = oldPatches[patchI];
+        const polyPatch& pp = oldPatches[patchi];
 
         if (pp.size() > 0)
         {
-            patchFaceMap_[patchI].setSize(nAgglom[patchI]);
+            patchFaceMap_[patchi].setSize(nAgglom[patchi]);
 
             // Patchfaces per agglomeration
             labelListList agglomToPatch
             (
-                invertOneToMany(nAgglom[patchI], agglom[patchI])
+                invertOneToMany(nAgglom[patchi], agglom[patchi])
             );
 
             // From agglomeration to compact patch face
-            labelList agglomToFace(nAgglom[patchI], -1);
+            labelList agglomToFace(nAgglom[patchi], -1);
 
             forAll(pp, i)
             {
-                label myAgglom = agglom[patchI][i];
+                label myAgglom = agglom[patchi][i];
 
                 if (agglomToFace[myAgglom] == -1)
                 {
                     // Agglomeration not yet done. We now have:
                     // - coarseI                  : current coarse mesh face
-                    // - patchStarts[patchI]      : coarse mesh patch start
+                    // - patchStarts[patchi]      : coarse mesh patch start
                     // - myAgglom                 : agglomeration
                     // -  agglomToPatch[myAgglom] : fine mesh faces for zone
-                    label coarsePatchFaceI = coarseI - patchStarts[patchI];
-                    patchFaceMap_[patchI][coarsePatchFaceI] = myAgglom;
+                    label coarsePatchFaceI = coarseI - patchStarts[patchi];
+                    patchFaceMap_[patchi][coarsePatchFaceI] = myAgglom;
                     agglomToFace[myAgglom] = coarsePatchFaceI;
 
                     const labelList& fineFaces = agglomToPatch[myAgglom];
@@ -202,7 +202,7 @@ void CML::singleCellFvMesh::agglomerateMesh
                             << "agglomeration does not create a"
                             << " single, non-manifold"
                             << " face for agglomeration " << myAgglom
-                            << " on patch " <<  patchI
+                            << " on patch " <<  patchi
                             << exit(FatalError);
                     }
 
@@ -218,11 +218,11 @@ void CML::singleCellFvMesh::agglomerateMesh
             }
         }
 
-        patchSizes[patchI] = coarseI-patchStarts[patchI];
+        patchSizes[patchi] = coarseI-patchStarts[patchi];
     }
 
-    //Pout<< "patchStarts:" << patchStarts << endl;
-    //Pout<< "patchSizes:" << patchSizes << endl;
+    // Pout<< "patchStarts:" << patchStarts << endl;
+    // Pout<< "patchSizes:" << patchSizes << endl;
 
     // Compact numbering for points
     reversePointMap_.setSize(mesh.nPoints());
@@ -251,12 +251,12 @@ void CML::singleCellFvMesh::agglomerateMesh
 
     // Add patches (on still zero sized mesh)
     List<polyPatch*> newPatches(oldPatches.size());
-    forAll(oldPatches, patchI)
+    forAll(oldPatches, patchi)
     {
-        newPatches[patchI] = oldPatches[patchI].clone
+        newPatches[patchi] = oldPatches[patchi].clone
         (
             boundaryMesh(),
-            patchI,
+            patchi,
             0,
             0
         ).ptr();
@@ -271,13 +271,13 @@ void CML::singleCellFvMesh::agglomerateMesh
     // actually change the mesh
     resetPrimitives
     (
-        xferMove(boundaryPoints),
-        xferMove(patchFaces),
-        xferMove(owner),
-        xferMove(neighbour),
+        move(boundaryPoints),
+        move(patchFaces),
+        move(owner),
+        move(neighbour),
         patchSizes,
         patchStarts,
-        true                //syncPar
+        true                // syncPar
     );
 
 
@@ -291,10 +291,10 @@ void CML::singleCellFvMesh::agglomerateMesh
 
             DynamicList<label> newAddressing;
 
-            //Note: uncomment if you think it makes sense. Note that value
+            // Note: uncomment if you think it makes sense. Note that value
             // of cell0 is the average.
             //// Was old cell0 in this cellZone?
-            //if (oldFz.localID(0) != -1)
+            // if (oldFz.localID(0) != -1)
             //{
             //    newAddressing.append(0);
             //}
@@ -324,11 +324,11 @@ void CML::singleCellFvMesh::agglomerateMesh
 
             forAll(oldFz, i)
             {
-                label newFaceI = reverseFaceMap_[oldFz[i]];
+                label newFacei = reverseFaceMap_[oldFz[i]];
 
-                if (newFaceI != -1)
+                if (newFacei != -1)
                 {
-                    newAddressing.append(newFaceI);
+                    newAddressing.append(newFacei);
                     newFlipMap.append(oldFz.flipMap()[i]);
                 }
             }
@@ -359,10 +359,10 @@ void CML::singleCellFvMesh::agglomerateMesh
 
             forAll(oldFz, i)
             {
-                label newPointI  = reversePointMap_[oldFz[i]];
-                if (newPointI != -1)
+                label newPointi  = reversePointMap_[oldFz[i]];
+                if (newPointi != -1)
                 {
-                    newAddressing.append(newPointI);
+                    newAddressing.append(newPointi);
                 }
             }
 
@@ -392,11 +392,11 @@ CML::singleCellFvMesh::singleCellFvMesh
     fvMesh
     (
         io,
-        xferCopy(pointField()), //points
-        xferCopy(faceList()),   //faces
-        xferCopy(labelList()),  //allOwner
-        xferCopy(labelList()),  //allNeighbour
-        false                   //syncPar
+        pointField(), // points
+        faceList(),   // faces
+        labelList(),  // allOwner
+        labelList(),  // allNeighbour
+        false         // syncPar
     ),
     patchFaceAgglomeration_
     (
@@ -468,9 +468,9 @@ CML::singleCellFvMesh::singleCellFvMesh
 
     labelListList agglom(oldPatches.size());
 
-    forAll(oldPatches, patchI)
+    forAll(oldPatches, patchi)
     {
-        agglom[patchI] = identity(oldPatches[patchI].size());
+        agglom[patchi] = identity(oldPatches[patchi].size());
     }
 
     agglomerateMesh(mesh, agglom);
@@ -487,11 +487,11 @@ CML::singleCellFvMesh::singleCellFvMesh
     fvMesh
     (
         io,
-        xferCopy(pointField()), //points
-        xferCopy(faceList()),   //faces
-        xferCopy(labelList()),  //allOwner
-        xferCopy(labelList()),  //allNeighbour
-        false                   //syncPar
+        pointField(), // points
+        faceList(),   // faces
+        labelList(),  // allOwner
+        labelList(),  // allNeighbour
+        false         // syncPar
     ),
     patchFaceAgglomeration_
     (

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,19 +68,20 @@ static inline int findParameterAlternative
 
 CML::string CML::stringOps::expand
 (
-    const string& original,
+    const std::string& original,
     const HashTable<string, word, string::hash>& mapping,
     const char sigil
 )
 {
     string s(original);
-    return inplaceExpand(s, mapping);
+    inplaceExpand(s, mapping);
+    return s;
 }
 
 
-CML::string& CML::stringOps::inplaceExpand
+void CML::stringOps::inplaceExpand
 (
-    string& s,
+    std::string& s,
     const HashTable<string, word, string::hash>& mapping,
     const char sigil
 )
@@ -227,8 +228,6 @@ CML::string& CML::stringOps::inplaceExpand
             ++begVar;
         }
     }
-
-    return s;
 }
 
 
@@ -265,16 +264,23 @@ CML::string CML::stringOps::getVariable
         OStringStream buf;
         // Force floating point numbers to be printed with at least
         // some decimal digits.
-        buf << fixed;
+        buf << scientific;
         buf.precision(IOstream::defaultPrecision());
 
-        // fail for non-primitiveEntry
-        dynamicCast<const primitiveEntry>
-        (
-            *ePtr
-        ).write(buf, true);
+        // Fail for non-primitiveEntry
+        const primitiveEntry& pe =
+            dynamicCast<const primitiveEntry>(*ePtr);
 
-        value = buf.str();
+        if (pe.size() == 1 && pe[0].isAnyString())
+        {
+            // Already a string-type (WORD, STRING, ...). Just copy.
+            value = pe[0].anyStringToken();
+        }
+        else
+        {
+            pe.write(buf, true);
+            value = buf.str();
+        }
     }
     else if (allowEnvVars)
     {
@@ -282,15 +288,19 @@ CML::string CML::stringOps::getVariable
 
         if (value.empty())
         {
-            FatalIOErrorInFunction(dict)
-                << "Cannot find dictionary or environment variable "
+            FatalIOErrorInFunction
+            (
+                dict
+            )   << "Cannot find dictionary or environment variable "
                 << name << exit(FatalIOError);
         }
     }
     else
     {
-        FatalIOErrorInFunction(dict)
-            << "Cannot find dictionary variable "
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "Cannot find dictionary variable "
             << name << exit(FatalIOError);
     }
 
@@ -332,9 +342,9 @@ CML::string CML::stringOps::expand
 }
 
 
-CML::string& CML::stringOps::inplaceExpand
+void CML::stringOps::inplaceExpand
 (
-    string& s,
+    std::string& s,
     const dictionary& dict,
     const bool allowEnvVars,
     const bool allowEmpty,
@@ -484,8 +494,6 @@ CML::string& CML::stringOps::inplaceExpand
             }
         }
     }
-
-    return s;
 }
 
 
@@ -576,7 +584,7 @@ CML::string& CML::stringOps::inplaceExpand
                     OStringStream buf;
                     // Force floating point numbers to be printed with at least
                     // some decimal digits.
-                    buf << fixed;
+                    buf << scientific;
                     buf.precision(IOstream::defaultPrecision());
                     if (ePtr->isDict())
                     {
@@ -854,7 +862,7 @@ CML::string CML::stringOps::trimLeft(const string& s)
 }
 
 
-CML::string& CML::stringOps::inplaceTrimLeft(string& s)
+void CML::stringOps::inplaceTrimLeft(string& s)
 {
     if (!s.empty())
     {
@@ -869,8 +877,6 @@ CML::string& CML::stringOps::inplaceTrimLeft(string& s)
             s.erase(0, beg);
         }
     }
-
-    return s;
 }
 
 
@@ -894,7 +900,7 @@ CML::string CML::stringOps::trimRight(const string& s)
 }
 
 
-CML::string& CML::stringOps::inplaceTrimRight(string& s)
+void CML::stringOps::inplaceTrimRight(string& s)
 {
     if (!s.empty())
     {
@@ -906,8 +912,6 @@ CML::string& CML::stringOps::inplaceTrimRight(string& s)
 
         s.resize(sz);
     }
-
-    return s;
 }
 
 
@@ -917,12 +921,114 @@ CML::string CML::stringOps::trim(const string& original)
 }
 
 
-CML::string& CML::stringOps::inplaceTrim(string& s)
+void CML::stringOps::inplaceTrim(string& s)
 {
     inplaceTrimRight(s);
     inplaceTrimLeft(s);
+}
 
+
+CML::string CML::stringOps::removeComments(const std::string& str)
+{
+    string s(str);
+    inplaceRemoveComments(s);
     return s;
+}
+
+
+void CML::stringOps::inplaceRemoveComments(std::string& s)
+{
+    const string::size_type len = s.length();
+
+    if (len < 2)
+    {
+        return;
+    }
+
+    std::string::size_type n = 0;
+
+    for (std::string::size_type i = 0; i < len; ++i)
+    {
+        char c = s[i];
+
+        if (n != i)
+        {
+            s[n] = c;
+        }
+        ++n;
+
+        // The start of a C/C++ comment?
+        if (c == '/')
+        {
+            ++i;
+
+            if (i == len)
+            {
+                // No further characters
+                break;
+            }
+
+            c = s[i];
+
+            if (c == '/')
+            {
+                // C++ comment - remove to end-of-line
+
+                --n;
+                s[n] = '\n';
+
+                // Backtrack to eliminate leading spaces,
+                // up to the previous newline
+
+                while (n && std::isspace(s[n-1]))
+                {
+                    --n;
+
+                    if (s[n] == '\n')
+                    {
+                        break;
+                    }
+
+                    s[n] = '\n';
+                }
+
+                i = s.find('\n', ++i);
+
+                if (i == std::string::npos)
+                {
+                    // Trucated - done
+                    break;
+                }
+
+                ++n;  // Include newline in output
+            }
+            else if (c == '*')
+            {
+                // C comment - search for '*/'
+                --n;
+                i = s.find("*/", ++i, 2);
+
+                if (i == std::string::npos)
+                {
+                    // Trucated - done
+                    break;
+                }
+
+                ++i;  // Index past first of "*/", loop increment does the rest
+            }
+            else
+            {
+                // Not a C/C++ comment
+                if (n != i)
+                {
+                    s[n] = c;
+                }
+                ++n;
+            }
+        }
+    }
+
+    s.erase(n);
 }
 
 

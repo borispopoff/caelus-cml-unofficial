@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -88,8 +88,11 @@ public:
             LListBase(a)
         {}
 
-        //- Construct as copy
+        //- Copy constructor
         UILList(const UILList<LListBase, T>&);
+
+        //- Move constructor
+        UILList(UILList<LListBase, T>&&);
 
 
     // Member Functions
@@ -144,7 +147,11 @@ public:
 
     // Member operators
 
+        //- Assignment operator
         void operator=(const UILList<LListBase, T>&);
+
+        //- Move assignment operator
+        void operator=(UILList<LListBase, T> &&);
 
 
     // STL type definitions
@@ -289,6 +296,13 @@ CML::UILList<LListBase, T>::UILList(const UILList<LListBase, T>& lst)
 }
 
 
+template<class LListBase, class T>
+CML::UILList<LListBase, T>::UILList(UILList<LListBase, T>&& lst)
+{
+    transfer(lst);
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class LListBase, class T>
@@ -300,6 +314,13 @@ void CML::UILList<LListBase, T>::operator=(const UILList<LListBase, T>& rhs)
     {
         this->append(&iter());
     }
+}
+
+
+template<class LListBase, class T>
+void CML::UILList<LListBase, T>::operator=(UILList<LListBase, T>&& rhs)
+{
+    transfer(rhs);
 }
 
 

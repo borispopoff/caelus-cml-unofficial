@@ -127,7 +127,7 @@ protected:
 
     //- get field values from the continous phase
     template <typename Type>
-    tmp<Field<Type> > getFluidField(
+    tmp<Field<Type>> getFluidField(
         const word &name
     );
 public:
@@ -187,8 +187,8 @@ public:
 
     tmp<scalarField> makeIdField();
 
-    tmp<Field<bool> > makeCellSetField(const word &name);
-    tmp<Field<bool> > makeCellZoneField(const word &name);
+    tmp<Field<bool>> makeCellSetField(const word &name);
+    tmp<Field<bool>> makeCellZoneField(const word &name);
 
     const CloudProxy &proxy() const
         { return proxy_(); }
@@ -206,27 +206,27 @@ public:
     bool isSphericalTensorField(const word &name);
     bool isBoolField(const word &name);
 
-    tmp<Field<scalar> > getScalarField(
+    tmp<Field<scalar>> getScalarField(
         const word &name
     );
 
-    tmp<Field<vector> > getVectorField(
+    tmp<Field<vector>> getVectorField(
         const word &name
     );
 
-    tmp<Field<tensor> > getTensorField(
+    tmp<Field<tensor>> getTensorField(
         const word &name
     );
 
-    tmp<Field<symmTensor> > getSymmTensorField(
+    tmp<Field<symmTensor>> getSymmTensorField(
         const word &name
     );
 
-    tmp<Field<sphericalTensor> > getSphericalTensorField(
+    tmp<Field<sphericalTensor>> getSphericalTensorField(
         const word &name
     );
 
-    tmp<Field<bool> > getBoolField(
+    tmp<Field<bool>> getBoolField(
         const word &name
     );
 
@@ -251,7 +251,7 @@ public:
 
     //- execute a plugin-function
     template<class T>
-    autoPtr<Field<T> > evaluatePluginFunction(
+    autoPtr<Field<T>> evaluatePluginFunction(
         const word &name,
         const parserCloud::location &loc,
         int &scanned,

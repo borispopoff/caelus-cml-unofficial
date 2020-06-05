@@ -81,8 +81,8 @@ private:
     void updateSubGridScaleFields();
 
     // Disallow default bitwise copy construct and assignment
-    oneEqEddy(const oneEqEddy&);
-    oneEqEddy& operator=(const oneEqEddy&);
+    oneEqEddy(const oneEqEddy&) = delete;
+    oneEqEddy& operator=(const oneEqEddy&) = delete;
 
 
 public:

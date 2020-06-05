@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -138,7 +138,7 @@ bool CML::fileFormats::STLsurfaceFormatCore::readBINARY
 
     label ptI = 0;
     label zoneI = -1;
-    forAll(zoneIds_, faceI)
+    forAll(zoneIds_, facei)
     {
         // Read an STL triangle
         STLtriangle stlTri(is);
@@ -148,7 +148,7 @@ bool CML::fileFormats::STLsurfaceFormatCore::readBINARY
         points_[ptI++] = stlTri.b();
         points_[ptI++] = stlTri.c();
 
-        // interprete stl attribute as a zone
+        // interpret stl attribute as a zone
         const label origId = stlTri.attrib();
 
         Map<label>::const_iterator fnd = lookup.find(origId);
@@ -168,7 +168,7 @@ bool CML::fileFormats::STLsurfaceFormatCore::readBINARY
             dynSizes.append(0);
         }
 
-        zoneIds_[faceI] = zoneI;
+        zoneIds_[facei] = zoneI;
         dynSizes[zoneI]++;
 
 #ifdef DEBUG_STLBINARY
@@ -235,7 +235,7 @@ CML::fileFormats::STLsurfaceFormatCore::STLsurfaceFormatCore
 }
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 CML::fileFormats::STLsurfaceFormatCore::~STLsurfaceFormatCore()
 {}

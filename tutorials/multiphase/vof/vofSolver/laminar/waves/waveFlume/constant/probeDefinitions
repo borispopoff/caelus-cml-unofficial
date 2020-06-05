@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -23,7 +23,7 @@ surfaceElevation
     axis      y;
     stretch 1.;
 
-    writeControl adjustableTime;
+    writeControl adjustableRunTime;
     writeInterval 0.025;
 }
 

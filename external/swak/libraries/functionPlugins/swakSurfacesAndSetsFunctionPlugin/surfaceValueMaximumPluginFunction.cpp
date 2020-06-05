@@ -93,17 +93,17 @@ void surfaceValueMaximumPluginFunction<Type>::doEvaluation()
     const Field<Type> vals=this->values();
 
     forAll(cells,i) {
-        const label cellI=cells[i];
+        const label celli=cells[i];
 
-        if(cellI>=0) {
-            if(here[cellI]) {
-                pValueMaximum()[cellI]=max(
+        if(celli>=0) {
+            if(here[celli]) {
+                pValueMaximum()[celli]=max(
                     vals[i],
-                    pValueMaximum()[cellI]
+                    pValueMaximum()[celli]
                 );
             } else {
-                here[cellI]=true;
-                pValueMaximum()[cellI]=vals[i];
+                here[celli]=true;
+                pValueMaximum()[celli]=vals[i];
             }
         }
     }

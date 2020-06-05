@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -122,10 +122,10 @@ protected:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        partialWrite(const partialWrite&);
+        partialWrite(const partialWrite&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const partialWrite&);
+        void operator=(const partialWrite&) = delete;
 
 
         //- Load objects in the objectNames
@@ -133,15 +133,15 @@ protected:
         void loadField
         (
             const word&,
-            UPtrList<GeometricField<Type, fvPatchField, volMesh> >&,
-            UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+            UPtrList<GeometricField<Type, fvPatchField, volMesh>>&,
+            UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
         ) const;
 
         template<class Type>
         void changeWriteOptions
         (
-            UPtrList<GeometricField<Type, fvPatchField, volMesh> >&,
-            UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >&,
+            UPtrList<GeometricField<Type, fvPatchField, volMesh>>&,
+            UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&,
             const IOobject::writeOption
         ) const;
 
@@ -219,8 +219,8 @@ template<class Type>
 void CML::partialWrite::loadField
 (
     const word& fieldName,
-    UPtrList<GeometricField<Type, fvPatchField, volMesh> >& vflds,
-    UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& sflds
+    UPtrList<GeometricField<Type, fvPatchField, volMesh>>& vflds,
+    UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;
@@ -270,8 +270,8 @@ void CML::partialWrite::loadField
 template<class Type>
 void CML::partialWrite::changeWriteOptions
 (
-    UPtrList<GeometricField<Type, fvPatchField, volMesh> >& vflds,
-    UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& sflds,
+    UPtrList<GeometricField<Type, fvPatchField, volMesh>>& vflds,
+    UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds,
     const IOobject::writeOption wOption
 ) const
 {

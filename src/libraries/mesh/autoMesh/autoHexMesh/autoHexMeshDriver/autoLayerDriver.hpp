@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -130,7 +130,7 @@ class autoLayerDriver
                 //- Unset extrusion on point. Returns true if anything unset.
                 static bool unmarkExtrusion
                 (
-                    const label patchPointI,
+                    const label patchPointi,
                     pointField& patchDisp,
                     labelList& patchNLayers,
                     List<extrudeMode>& extrudeStatus
@@ -282,7 +282,7 @@ class autoLayerDriver
                 (
                     const indirectPrimitivePatch& pp,
                     const labelListList& globalEdgeFaces,
-                    const label faceI,
+                    const label facei,
                     const label edgeI,
                     const label myGlobFaceI,
                     const label nbrGlobFaceI,
@@ -498,10 +498,10 @@ class autoLayerDriver
 
 
         //- Disallow default bitwise copy construct
-        autoLayerDriver(const autoLayerDriver&);
+        autoLayerDriver(const autoLayerDriver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const autoLayerDriver&);
+        void operator=(const autoLayerDriver&) = delete;
 
 
 public:
@@ -575,7 +575,7 @@ void CML::autoLayerDriver::averageNeighbours
 {
     const pointField& pts = mesh.points();
 
-    average = pTraits<Type>::zero;
+    average = Type(Zero);
 
     forAll(edges, edgeI)
     {
@@ -609,7 +609,7 @@ void CML::autoLayerDriver::averageNeighbours
         meshPoints,
         average,
         plusEqOp<Type>(),
-        pTraits<Type>::zero     // null value
+        Type(Zero)     // null value
     );
 
     average *= invSumWeight;

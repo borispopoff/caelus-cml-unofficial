@@ -22,7 +22,6 @@ caelus_inc = [
 'thermophysicalModels/chemistryModel/lnInclude',
 'combustionModels/lnInclude',
 'transportModels/basic/lnInclude',
-'fvOptions/lnInclude',
 'sampling/lnInclude',
 'thermophysicalModels/numericFluxes/DBNS/numericFlux/lnInclude',
 'ODE/lnInclude'
@@ -50,7 +49,7 @@ ostype = utils.ostype()
 prepend_args = {}
 if ostype == 'windows':
    prepend_args = {'LINKFLAGS' :
-            '-u compressibleRASModelsLoad -u compressibleLESModelsLoad -u compressibleVLESModelsLoad -u turbulenceDerivedFvPatchFieldsLoad'
+            '-u compressibleRASModelsLoad -u compressibleLESModelsLoad -u compressibleVLESModelsLoad -u turbulenceDerivedFvPatchFieldsLoad -u fvOptionsLoad'
 }
 
 build_app(env,

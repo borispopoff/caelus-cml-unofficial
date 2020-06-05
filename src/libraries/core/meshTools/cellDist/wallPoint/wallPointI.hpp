@@ -273,7 +273,7 @@ inline bool CML::wallPoint::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::wallPoint::equal
 (
     const wallPoint& rhs,

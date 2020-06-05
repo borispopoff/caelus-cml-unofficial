@@ -59,7 +59,7 @@ Ostream& operator<<
 Ostream& operator<<
 (
     Ostream&,
-    const tmp<CoeffField<scalar> >&
+    const tmp<CoeffField<scalar>>&
 );
 
 
@@ -105,7 +105,7 @@ public:
     blockCoeffBase::activeLevel activeType() const;
 
     //- Return the field transpose
-    tmp<CoeffField<scalar> > transpose() const;
+    tmp<CoeffField<scalar>> transpose() const;
 
     // Return as typed.  Fails when asked for the incorrect type
     //- Return as scalar field
@@ -191,14 +191,14 @@ public:
     friend Ostream& operator<<
     (
         Ostream&,
-        const tmp<CoeffField<scalar> >&
+        const tmp<CoeffField<scalar>>&
     );
 };
 
 /* * * * * * * * * * * * * * * * Global operators  * * * * * * * * * * * * * */
 
 template<>
-tmp<CoeffField<scalar> > inv(const CoeffField<scalar>& f);
+tmp<CoeffField<scalar>> inv(const CoeffField<scalar>& f);
 
 
 template<>

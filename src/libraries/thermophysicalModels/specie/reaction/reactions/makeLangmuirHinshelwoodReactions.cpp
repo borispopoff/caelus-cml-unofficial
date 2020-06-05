@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,6 +24,12 @@ License
 #include "LangmuirHinshelwoodReactionRate.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<>
+const char* const CML::Tuple2<CML::word, CML::scalar>::typeName
+(
+    "Tuple2<word,scalar>"
+);
 
 namespace CML
 {

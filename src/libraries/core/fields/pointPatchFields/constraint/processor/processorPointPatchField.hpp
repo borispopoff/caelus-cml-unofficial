@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,7 +51,6 @@ class processorPointPatchField
         //- Local reference to processor patch
         const processorPointPatch& procPatch_;
 
-
 public:
 
     //- Runtime type information
@@ -85,9 +84,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new processorPointPatchField<Type>
                 (
@@ -104,12 +103,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new processorPointPatchField<Type>
                 (
@@ -152,7 +151,7 @@ public:
             }
 
 
-        //- Constraint handling
+        // Constraint handling
 
             //- Return the constraint type this pointPatchField implements
             virtual const word& constraintType() const
@@ -166,7 +165,8 @@ public:
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             )
             {}
 
@@ -180,23 +180,16 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "processorPolyPatch.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * //
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+CML::processorPointPatchField<Type>::processorPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -208,7 +201,7 @@ processorPointPatchField<Type>::processorPointPatchField
 
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+CML::processorPointPatchField<Type>::processorPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -221,7 +214,7 @@ processorPointPatchField<Type>::processorPointPatchField
 
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+CML::processorPointPatchField<Type>::processorPointPatchField
 (
     const processorPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -235,7 +228,7 @@ processorPointPatchField<Type>::processorPointPatchField
 
 
 template<class Type>
-processorPointPatchField<Type>::processorPointPatchField
+CML::processorPointPatchField<Type>::processorPointPatchField
 (
     const processorPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -249,16 +242,8 @@ processorPointPatchField<Type>::processorPointPatchField
 // * * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
 
 template<class Type>
-processorPointPatchField<Type>::~processorPointPatchField()
+CML::processorPointPatchField<Type>::~processorPointPatchField()
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

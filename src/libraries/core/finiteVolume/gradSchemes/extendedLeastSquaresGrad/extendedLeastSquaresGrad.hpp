@@ -56,15 +56,6 @@ class extendedLeastSquaresGrad
         scalar minDet_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        extendedLeastSquaresGrad(const extendedLeastSquaresGrad&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const extendedLeastSquaresGrad&);
-
-
 public:
 
     //- Runtime type information
@@ -88,6 +79,9 @@ public:
             }
         }
 
+        //- Disallow default bitwise copy construct
+        extendedLeastSquaresGrad(const extendedLeastSquaresGrad&) = delete;
+
 
     // Member Functions
 
@@ -102,6 +96,12 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>& vsf,
             const word& name
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extendedLeastSquaresGrad&) = delete;
 };
 
 
@@ -145,7 +145,7 @@ CML::fv::extendedLeastSquaresGrad<Type>::calcGrad
 
     const fvMesh& mesh = vsf.mesh();
 
-    tmp<GeometricField<GradType, fvPatchField, volMesh> > tlsGrad
+    tmp<GeometricField<GradType, fvPatchField, volMesh>> tlsGrad
     (
         new GeometricField<GradType, fvPatchField, volMesh>
         (
@@ -167,7 +167,7 @@ CML::fv::extendedLeastSquaresGrad<Type>::calcGrad
             zeroGradientFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad.ref();
 
     // Get reference to least square vectors
     const extendedLeastSquaresVectors& lsv = extendedLeastSquaresVectors::New
@@ -208,22 +208,22 @@ CML::fv::extendedLeastSquaresGrad<Type>::calcGrad
                 vsf.boundaryField()[patchi].patchNeighbourField()
             );
 
-            forAll(neiVsf, patchFaceI)
+            forAll(neiVsf, patchFacei)
             {
-                lsGrad[faceCells[patchFaceI]] +=
-                    patchOwnLs[patchFaceI]
-                   *(neiVsf[patchFaceI] - vsf[faceCells[patchFaceI]]);
+                lsGrad[faceCells[patchFacei]] +=
+                    patchOwnLs[patchFacei]
+                   *(neiVsf[patchFacei] - vsf[faceCells[patchFacei]]);
             }
         }
         else
         {
             const fvPatchField<Type>& patchVsf = vsf.boundaryField()[patchi];
 
-            forAll(patchVsf, patchFaceI)
+            forAll(patchVsf, patchFacei)
             {
-                lsGrad[faceCells[patchFaceI]] +=
-                     patchOwnLs[patchFaceI]
-                    *(patchVsf[patchFaceI] - vsf[faceCells[patchFaceI]]);
+                lsGrad[faceCells[patchFacei]] +=
+                     patchOwnLs[patchFacei]
+                    *(patchVsf[patchFacei] - vsf[faceCells[patchFacei]]);
             }
         }
     }

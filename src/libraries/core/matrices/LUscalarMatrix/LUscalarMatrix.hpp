@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -145,7 +145,7 @@ void CML::LUscalarMatrix::solve
             (
                 X,
                 x.size()
-            ).assign(x);
+            ) = x;
 
             for
             (
@@ -156,7 +156,7 @@ void CML::LUscalarMatrix::solve
             {
                 IPstream::read
                 (
-                    Pstream::scheduled,
+                    Pstream::commsTypes::scheduled,
                     slave,
                     reinterpret_cast<char*>
                     (
@@ -170,7 +170,7 @@ void CML::LUscalarMatrix::solve
         {
             OPstream::write
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 reinterpret_cast<const char*>(x.begin()),
                 x.byteSize()
@@ -196,7 +196,7 @@ void CML::LUscalarMatrix::solve
             {
                 OPstream::write
                 (
-                    Pstream::scheduled,
+                    Pstream::commsTypes::scheduled,
                     slave,
                     reinterpret_cast<const char*>
                     (
@@ -210,7 +210,7 @@ void CML::LUscalarMatrix::solve
         {
             IPstream::read
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 reinterpret_cast<char*>(x.begin()),
                 x.byteSize()
@@ -225,12 +225,12 @@ void CML::LUscalarMatrix::solve
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::LUscalarMatrix::solve
+CML::tmp<CML::Field<Type>> CML::LUscalarMatrix::solve
 (
     const Field<Type>& source
 ) const
 {
-    tmp<Field<Type> > tx(new Field<Type>(m()));
+    tmp<Field<Type>> tx(new Field<Type>(m()));
     Field<Type>& x = tx();
 
     solve(x, source);

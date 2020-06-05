@@ -97,14 +97,14 @@ CML::velocityComponentLaplacianFvMotionSolver::curPoints() const
 
     tmp<pointField> tcurPoints(new pointField(fvMesh_.points()));
 
-    tcurPoints().replace
+    tcurPoints.ref().replace
     (
         cmpt_,
         tcurPoints().component(cmpt_)
-      + fvMesh_.time().deltaTValue()*pointMotionU_.internalField()
+      + fvMesh_.time().deltaTValue()*pointMotionU_.primitiveField()
     );
 
-    twoDCorrectPoints(tcurPoints());
+    twoDCorrectPoints(tcurPoints.ref());
 
     return tcurPoints;
 }
@@ -117,7 +117,7 @@ void CML::velocityComponentLaplacianFvMotionSolver::solve()
     movePoints(fvMesh_.points());
 
     diffusivityPtr_->correct();
-    pointMotionU_.boundaryField().updateCoeffs();
+    pointMotionU_.boundaryFieldRef().updateCoeffs();
 
     CML::solve
     (

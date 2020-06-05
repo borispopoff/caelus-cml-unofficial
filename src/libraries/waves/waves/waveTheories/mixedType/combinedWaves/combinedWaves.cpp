@@ -126,7 +126,7 @@ vector combinedWaves::U
     const scalar& time
 ) const
 {
-    vector U(vector::zero);
+    vector U(Zero);
 
     forAll (combinedWavesPtr_, cI)
     {

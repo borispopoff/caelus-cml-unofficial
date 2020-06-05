@@ -22,6 +22,7 @@ License
 
 
 #include "SpalartAllmarasDES.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -36,7 +37,7 @@ addToRunTimeSelectionTable(LESModel, SpalartAllmarasDES, dictionary);
 
 void SpalartAllmarasDES::updateSubGridScaleFields()
 {
-    nuSgs_.internalField() = fv1()*nuTilda_.internalField();
+    nuSgs_.primitiveFieldRef() = fv1()*nuTilda_.primitiveField();
     nuSgs_.correctBoundaryConditions();
 }
 
@@ -55,7 +56,7 @@ tmp<volScalarField> SpalartAllmarasDES::fv1() const
 
 tmp<volScalarField> SpalartAllmarasDES::fv2() const
 {
-    return (scalar(1.0) - chi()/(scalar(1.0)+chi()*fv1()));
+    return (scalar(1) - chi()/(scalar(1)+chi()*fv1()));
 }
 
 // Magnitude of vorticity 
@@ -251,12 +252,13 @@ SpalartAllmarasDES::SpalartAllmarasDES
 
 void SpalartAllmarasDES::correct(const tmp<volTensorField>& gradU)
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     LESModel::correct(gradU);
 
     if (mesh_.changing())
     {
         y_.correct();
-        y_.boundaryField() = max(y_.boundaryField(), VSMALL);
+        y_.boundaryFieldRef() = max(y_.boundaryField(), VSMALL);
     }
 
     const volScalarField S(this->S(gradU));
@@ -277,12 +279,14 @@ void SpalartAllmarasDES::correct(const tmp<volTensorField>& gradU)
      ==
         Cb1_*STilda*nuTilda_
       - fvm::Sp(Cw1_*fw(STilda, dTilda)*nuTilda_/sqr(dTilda), nuTilda_)
+      + fvOptions(nuTilda_)
     );
 
-    nuTildaEqn().relax();
-    mesh_.updateFvMatrix(nuTildaEqn());
-    nuTildaEqn().solve();
-
+    nuTildaEqn.ref().relax();
+    fvOptions.constrain(nuTildaEqn.ref());
+    mesh_.updateFvMatrix(nuTildaEqn.ref());
+    nuTildaEqn.ref().solve();
+    fvOptions.correct(nuTilda_);
     bound(nuTilda_, dimensionedScalar("zero", nuTilda_.dimensions(), 0.0));
     nuTilda_.correctBoundaryConditions();
 

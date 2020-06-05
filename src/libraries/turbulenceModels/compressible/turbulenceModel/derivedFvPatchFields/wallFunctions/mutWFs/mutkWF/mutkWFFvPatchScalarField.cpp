@@ -68,30 +68,30 @@ scalar mutkWallFunctionFvPatchScalarField::calcYPlusLam
 
 tmp<scalarField> mutkWallFunctionFvPatchScalarField::calcMut() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
-    const scalarField& y = turbModel.y()[patchI];
-    const scalarField& rhow = turbModel.rho().boundaryField()[patchI];
+    const scalarField& y = turbModel.y()[patchi];
+    const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
     const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
-    const scalarField& muw = turbModel.mu().boundaryField()[patchI];
+    const scalarField& muw = turbModel.mu().boundaryField()[patchi];
 
     const scalar Cmu25 = pow025(Cmu_);
 
     tmp<scalarField> tmutw(new scalarField(patch().size(), 0.0));
-    scalarField& mutw = tmutw();
+    scalarField& mutw = tmutw.ref();
 
-    forAll(mutw, faceI)
+    forAll(mutw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
         scalar yPlus =
-            Cmu25*y[faceI]*sqrt(k[faceCellI])/(muw[faceI]/rhow[faceI]);
+            Cmu25*y[facei]*sqrt(k[faceCellI])/(muw[facei]/rhow[facei]);
 
         if (yPlus > yPlusLam_)
         {
-            mutw[faceI] = muw[faceI]*(yPlus*kappa_/log(E_*yPlus) - 1);
+            mutw[facei] = muw[facei]*(yPlus*kappa_/log(E_*yPlus) - 1);
         }
     }
 
@@ -101,9 +101,9 @@ tmp<scalarField> mutkWallFunctionFvPatchScalarField::calcMut() const
 
 void mutkWallFunctionFvPatchScalarField::writeLocalEntries(Ostream& os) const
 {
-    os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
-    os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
-    os.writeKeyword("E") << E_ << token::END_STATEMENT << nl;
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "kappa", kappa_ );
+    writeEntry(os, "E", E_);
 }
 
 
@@ -198,17 +198,17 @@ void mutkWallFunctionFvPatchScalarField::updateCoeffs()
 
 tmp<scalarField> mutkWallFunctionFvPatchScalarField::yPlus() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbModel =
         db().lookupObject<turbulenceModel>("turbulenceModel");
-    const scalarField& y = turbModel.y()[patchI];
+    const scalarField& y = turbModel.y()[patchi];
 
     const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
-    const scalarField kwc(k.boundaryField()[patchI].patchInternalField());
-    const scalarField& muw = turbModel.mu().boundaryField()[patchI];
-    const scalarField& rhow = turbModel.rho().boundaryField()[patchI];
+    const scalarField kwc(k.boundaryField()[patchi].patchInternalField());
+    const scalarField& muw = turbModel.mu().boundaryField()[patchi];
+    const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
 
     return pow025(Cmu_)*y*sqrt(kwc)/(muw/rhow);
 }
@@ -218,7 +218,7 @@ void mutkWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

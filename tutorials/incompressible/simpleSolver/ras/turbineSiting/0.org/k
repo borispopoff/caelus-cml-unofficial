@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -19,8 +19,6 @@ internalField   uniform $turbulentKE;
 
 boundaryField
 {
-    #include "include/ABLConditions"
-
     outlet
     {
         type            inletOutlet;
@@ -30,8 +28,8 @@ boundaryField
 
     inlet
     {
-        type            uniformFixedValue;
-        uniformValue    constant $turbulentKE;
+        type            atmBoundaryLayerInletK;
+        #include        "include/ABLConditions"
         value           uniform $turbulentKE;
     }
 

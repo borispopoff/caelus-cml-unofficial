@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
   
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,9 @@ Description
     PIMPLE control class to supply convergence information/checks for
     the PIMPLE loop.
 
+    May also be used to for PISO-based algorithms as PISO controls are a
+    sub-set of PIMPLE controls.
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef pimpleControl_H
@@ -45,15 +48,6 @@ class pimpleControl
 :
     public solutionControl
 {
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        pimpleControl(const pimpleControl&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pimpleControl&);
-
-
 protected:
 
     // Protected data
@@ -95,8 +89,11 @@ public:
 
     // Constructors
 
-        //- Construct from mesh
-        pimpleControl(fvMesh& mesh);
+        //- Construct from mesh and the name of control sub-dictionary
+        pimpleControl(fvMesh& mesh, const word& dictName="PIMPLE");
+
+        //- Disallow default bitwise copy construct
+        pimpleControl(const pimpleControl&) = delete;
 
 
     //- Destructor
@@ -139,6 +136,12 @@ public:
 
             //- Helper function to identify whether to solve for turbulence
             inline bool turbCorr() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pimpleControl&) = delete;
 };
 
 

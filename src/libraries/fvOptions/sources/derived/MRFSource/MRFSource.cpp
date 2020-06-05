@@ -77,9 +77,9 @@ CML::fv::MRFSource::MRFSource
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh),
+    cellSetOption(name, modelType, dict, mesh),
     mrfPtr_(nullptr),
-    UName_(coeffs_.lookupOrDefault<word>("UName", "U"))
+    UName_(coeffs_.lookupOrDefault<word>("U", "U"))
 {
     initialise();
 }
@@ -88,7 +88,7 @@ CML::fv::MRFSource::MRFSource
 void CML::fv::MRFSource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // Update the velocity boundary conditions for changes in rotation speed
@@ -103,7 +103,7 @@ void CML::fv::MRFSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     // Update the velocity boundary conditions for changes in rotation speed
@@ -166,7 +166,7 @@ bool CML::fv::MRFSource::read(const dictionary& dict)
 {
     if (option::read(dict))
     {
-        coeffs_.readIfPresent("UName", UName_);
+        coeffs_.readIfPresent("U", UName_);
 
         initialise();
 

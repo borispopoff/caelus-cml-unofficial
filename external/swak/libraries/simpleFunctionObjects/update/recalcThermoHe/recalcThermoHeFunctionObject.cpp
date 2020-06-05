@@ -76,17 +76,17 @@ void recalcThermoHeFunctionObject::recalc()
     volScalarField &h=thermo.he();
 
     labelList allCells(T.size());
-    forAll(allCells,cellI) {
-        allCells[cellI]=cellI;
+    forAll(allCells,celli) {
+        allCells[celli]=celli;
     }
-    h.internalField()=thermo.he(
-        p.internalField(),
-        T.internalField(),
+    h.primitiveFieldRef()=thermo.he(
+        p.primitiveField(),
+        T.primitiveField(),
         allCells
     );
     forAll(h.boundaryField(), patchi)
     {
-        h.boundaryField()[patchi] ==
+        h.boundaryFieldRef()[patchi] ==
             thermo.he(
                 p.boundaryField()[patchi],
                 T.boundaryField()[patchi],
@@ -95,7 +95,7 @@ void recalcThermoHeFunctionObject::recalc()
     }
 
     // hBoundaryCorrection
-    volScalarField::GeometricBoundaryField& hbf = h.boundaryField();
+    volScalarField::Boundary& hbf = h.boundaryFieldRef();
 
     forAll(hbf, patchi)
     {

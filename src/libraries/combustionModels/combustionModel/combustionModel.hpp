@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
 
@@ -47,34 +47,37 @@ class combustionModel
 :
     public IOdictionary
 {
+    // Private Member Functions
 
-    //- Disallow copy construct
-    combustionModel(const combustionModel&);
+        //- Disallow copy construct
+        combustionModel(const combustionModel&);
 
-    //- Disallow default bitwise assignment
-    void operator=(const combustionModel&);
+        //- Disallow default bitwise assignment
+        void operator=(const combustionModel&) = delete;
 
-    //- Construct the base IO object
-    IOobject createIOobject
-    (
-        basicThermo& thermo,
-        const word& combustionProperties
-    ) const;
+        //- Construct the base IO object
+        IOobject createIOobject
+        (
+            basicThermo& thermo,
+            const word& combustionProperties
+        ) const;
 
 
 protected:
 
-    //- Reference to the mesh database
-    const fvMesh& mesh_;
+    // Protected data
 
-    //- Reference to the turbulence model
-    const compressible::turbulenceModel& turb_;
+        //- Reference to the mesh database
+        const fvMesh& mesh_;
 
-    //- Dictionary of the model
-    dictionary coeffs_;
+        //- Reference to the turbulence model
+        const compressible::turbulenceModel& turb_;
 
-    //- Model type
-    const word modelType_;
+        //- Dictionary of the model
+        dictionary coeffs_;
+
+        //- Model type
+        const word modelType_;
 
 
 public:
@@ -85,26 +88,29 @@ public:
     //- Default combustionProperties dictionary name
     static const word combustionPropertiesName;
 
-    //- Construct from components
-    combustionModel
-    (
-        const word& modelType,
-        basicThermo& thermo,
-        const compressible::turbulenceModel& turb,
-        const word& combustionProperties=combustionPropertiesName
-    );
+
+    // Constructors
+
+        //- Construct from components
+        combustionModel
+        (
+            const word& modelType,
+            basicThermo& thermo,
+            const compressible::turbulenceModel& turb,
+            const word& combustionProperties=combustionPropertiesName
+        );
 
 
     // Selectors
 
-    //- Generic New for each of the related chemistry model
-    template<class CombustionModel>
-    static autoPtr<CombustionModel> New
-    (
-        typename CombustionModel::reactionThermo& thermo,
-        const compressible::turbulenceModel& turb,
-        const word& combustionProperties
-    );
+        //- Generic New for each of the related chemistry model
+        template<class CombustionModel>
+        static autoPtr<CombustionModel> New
+        (
+            typename CombustionModel::reactionThermo& thermo,
+            const compressible::turbulenceModel& turb,
+            const word& combustionProperties
+        );
 
 
     //- Destructor
@@ -114,48 +120,47 @@ public:
 
     // Member Functions
 
-    //- Return const access to the mesh database
-    inline const fvMesh& mesh() const
-    {
-        return mesh_;
-    }
+        //- Return const access to the mesh database
+        inline const fvMesh& mesh() const
+        {
+            return mesh_;
+        }
 
-    //- Return access to turbulence
-    inline const compressible::turbulenceModel& turbulence() const
-    {
-        return turb_;
-    }
+        //- Return access to turbulence
+        inline const compressible::turbulenceModel& turbulence() const
+        {
+            return turb_;
+        }
 
-    //- Return const access to rho
-    inline const volScalarField& rho() const
-    {
-        return turbulence().rho();
-    }
+        //- Return const access to rho
+        inline const volScalarField& rho() const
+        {
+            return turbulence().rho();
+        }
 
-    //- Return const access to phi
-    inline tmp<surfaceScalarField> phi() const
-    {
-        return turbulence().phi();
-    }
+        //- Return const access to phi
+        inline tmp<surfaceScalarField> phi() const
+        {
+            return turbulence().phi();
+        }
 
-    //- Return const dictionary of the model
-    inline const dictionary& coeffs() const
-    {
-        return coeffs_;
-    }
+        //- Return const dictionary of the model
+        inline const dictionary& coeffs() const
+        {
+            return coeffs_;
+        }
 
-    //- Correct combustion rate
-    virtual void correct() = 0;
+        //- Correct combustion rate
+        virtual void correct() = 0;
 
-    //- Fuel consumption rate matrix, i.e. source term for fuel equation
-    virtual tmp<fvScalarMatrix> R(volScalarField& Y) const = 0;
+        //- Fuel consumption rate matrix, i.e. source term for fuel equation
+        virtual tmp<fvScalarMatrix> R(volScalarField& Y) const = 0;
 
-    //- Heat release rate [kg/m/s3]
-    virtual tmp<volScalarField> Qdot() const = 0;
+        //- Heat release rate [kg/m/s3]
+        virtual tmp<volScalarField> Qdot() const = 0;
 
-    //- Update properties from given dictionary
-    virtual bool read();
-
+        //- Update properties from given dictionary
+        virtual bool read();
 };
 
 

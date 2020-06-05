@@ -219,7 +219,7 @@ void CML::pointConstraints::makePatchPatchAddressing()
 
                 if (iter == patchPatchPointSet.end())
                 {
-                    //Pout<< indent << "on meshpoint:" << meshPointi
+                    // Pout<< indent << "on meshpoint:" << meshPointi
                     //    << " coupled:" << coupledPointi
                     //    << " at:" << mesh.points()[meshPointi]
                     //    << " have new constraint:"
@@ -237,7 +237,7 @@ void CML::pointConstraints::makePatchPatchAddressing()
                 }
                 else
                 {
-                    //Pout<< indent << "on meshpoint:" << meshPointi
+                    // Pout<< indent << "on meshpoint:" << meshPointi
                     //    << " coupled:" << coupledPointi
                     //    << " at:" << mesh.points()[meshPointi]
                     //    << " have possibly extended constraint:"
@@ -374,7 +374,7 @@ void CML::pointConstraints::constrainDisplacement
     syncUntransformedData
     (
         pf.mesh()(),
-        pf.internalField(),
+        pf.primitiveFieldRef(),
         maxMagSqrEqOp<vector>()
     );
 
@@ -386,7 +386,7 @@ void CML::pointConstraints::constrainDisplacement
     twoDPointCorrector::New(mesh()()).correctDisplacement
     (
         mesh()().points(),
-        pf.internalField()
+        pf.primitiveFieldRef()
     );
 
     if (overrideFixedValue)

@@ -80,9 +80,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new emptyPointPatchField<Type>
                 (
@@ -99,12 +99,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new emptyPointPatchField<Type>
                 (
@@ -127,21 +127,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-emptyPointPatchField<Type>::emptyPointPatchField
+CML::emptyPointPatchField<Type>::emptyPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -152,7 +144,7 @@ emptyPointPatchField<Type>::emptyPointPatchField
 
 
 template<class Type>
-emptyPointPatchField<Type>::emptyPointPatchField
+CML::emptyPointPatchField<Type>::emptyPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -172,7 +164,7 @@ emptyPointPatchField<Type>::emptyPointPatchField
 
 
 template<class Type>
-emptyPointPatchField<Type>::emptyPointPatchField
+CML::emptyPointPatchField<Type>::emptyPointPatchField
 (
     const emptyPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -195,7 +187,7 @@ emptyPointPatchField<Type>::emptyPointPatchField
 
 
 template<class Type>
-emptyPointPatchField<Type>::emptyPointPatchField
+CML::emptyPointPatchField<Type>::emptyPointPatchField
 (
     const emptyPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -205,12 +197,4 @@ emptyPointPatchField<Type>::emptyPointPatchField
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

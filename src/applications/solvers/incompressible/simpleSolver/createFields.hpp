@@ -12,7 +12,7 @@ volScalarField p
     mesh
 );
 
-volScalarField::GeometricBoundaryField const& pGBF = p.boundaryField();
+volScalarField::Boundary const& pGBF = p.boundaryField();
 wordList const pBT = pGBF.types();
         
 volScalarField pCorr
@@ -26,7 +26,7 @@ volScalarField pCorr
         IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar("zero", p.dimensions(), 0.0),
+    dimensionedScalar("zero", p.dimensions(), 0),
     pBT
 );
 
@@ -43,10 +43,10 @@ forAll(pCorr.boundaryField(), patchi)
         fixedValueFvPatchScalarField& pCorrB =
             refCast<fixedValueFvPatchScalarField>
             (
-                pCorr.boundaryField()[patchi]
+                pCorr.boundaryFieldRef()[patchi]
             );
         
-        pCorrB == scalarField(pCorrB.size(),scalar(0.0));
+        pCorrB == scalarField(pCorrB.size(),scalar(0));
     }
 }
 

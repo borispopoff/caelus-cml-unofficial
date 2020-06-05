@@ -72,9 +72,9 @@ void polyMeshGenAddressing::calcEdgeFaces() const
 
                 forAllRow(pointFaces, s, pfI)
                 {
-                    const label faceI = pointFaces(s, pfI);
+                    const label facei = pointFaces(s, pfI);
 
-                    const face& f = faces[faceI];
+                    const face& f = faces[facei];
 
                     forAll(f, eI)
                     {
@@ -107,15 +107,15 @@ void polyMeshGenAddressing::calcEdgeFaces() const
                 DynList<label> eFaces;
                 forAllRow(pointFaces, s, pfI)
                 {
-                    const label faceI = pointFaces(s, pfI);
+                    const label facei = pointFaces(s, pfI);
 
-                    const face& f = faces[faceI];
+                    const face& f = faces[facei];
 
                     forAll(f, eI)
                     {
                         if( f.faceEdge(eI) == ee )
                         {
-                            eFaces.append(faceI);
+                            eFaces.append(facei);
                             break;
                         }
                     }

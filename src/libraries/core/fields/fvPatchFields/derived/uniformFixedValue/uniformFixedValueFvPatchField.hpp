@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2018 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,7 @@ Class
 Description
     This boundary condition provides a uniform fixed value condition.
 
-    \heading Patch usage
-
+Usage
     \table
         Property       | Description             | Required    | Default value
         uniformValue   | uniform value           | yes         |
@@ -47,7 +46,7 @@ Note
     constant value.
 
 SeeAlso
-    CML::DataEntry
+    CML::DataEntryTypes
     CML::fixedValueFvPatchField
 
 SourceFiles
@@ -78,7 +77,7 @@ class uniformFixedValueFvPatchField
 {
     // Private data
 
-        autoPtr<DataEntry<Type> > uniformValue_;
+        autoPtr<DataEntry<Type>> uniformValue_;
 
         // Include diffusion (default on)
         Switch inletDiffusion_;
@@ -132,9 +131,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new uniformFixedValueFvPatchField<Type>(*this)
             );
@@ -148,12 +147,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new uniformFixedValueFvPatchField<Type>(*this, iF)
             );
@@ -170,11 +169,11 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const;
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
         //- Write
@@ -182,19 +181,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -207,7 +200,7 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 
 
 template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -221,7 +214,23 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 
 
 template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<Type>(p, iF, dict, false),
+    uniformValue_(DataEntry<Type>::New("uniformValue", dict)),
+    inletDiffusion_(dict.lookupOrDefault("inlet-diffusion", true))
+{
+    this->evaluate();
+}
+
+
+template<class Type>
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const uniformFixedValueFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -229,42 +238,17 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),  // bypass mapper
+    fixedValueFvPatchField<Type>(ptf, p, iF, mapper, false), // Don't map
     uniformValue_(ptf.uniformValue_().clone().ptr()),
     inletDiffusion_(ptf.inletDiffusion_)
 {
     // Evaluate since value not mapped
-    const scalar t = this->db().time().timeOutputValue();
-    fvPatchField<Type>::operator==(uniformValue_->value(t));
+    this->evaluate();
 }
 
 
 template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<Type>(p, iF),
-    uniformValue_(DataEntry<Type>::New("uniformValue", dict)),
-    inletDiffusion_(dict.lookupOrDefault("inlet-diffusion", true))
-{
-    if (dict.found("value"))
-    {
-        fvPatchField<Type>::operator==(Field<Type>("value", dict, p.size()));
-    }
-    else
-    {
-        const scalar t = this->db().time().timeOutputValue();
-        fvPatchField<Type>::operator==(uniformValue_->value(t));
-    }
-}
-
-
-template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const uniformFixedValueFvPatchField<Type>& ptf
 )
@@ -281,7 +265,7 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 
 
 template<class Type>
-uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
+CML::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const uniformFixedValueFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -296,12 +280,10 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
     ),
     inletDiffusion_(ptf.inletDiffusion_)
 {
-    // For safety re-evaluate
-    const scalar t = this->db().time().timeOutputValue();
-
+    // Evaluate the profile if defined
     if (ptf.uniformValue_.valid())
     {
-        fvPatchField<Type>::operator==(uniformValue_->value(t));
+        this->evaluate();
     }
 }
 
@@ -309,7 +291,7 @@ uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void uniformFixedValueFvPatchField<Type>::updateCoeffs()
+void CML::uniformFixedValueFvPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
     {
@@ -324,7 +306,8 @@ void uniformFixedValueFvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-tmp<Field<Type> > uniformFixedValueFvPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::uniformFixedValueFvPatchField<Type>::gradientInternalCoeffs() const
 {
     if (inletDiffusion_)
     {
@@ -332,16 +315,17 @@ tmp<Field<Type> > uniformFixedValueFvPatchField<Type>::gradientInternalCoeffs() 
     }
     else
     {
-        return tmp<Field<Type> >
+        return tmp<Field<Type>>
         (
-            new Field<Type>(this->size(), pTraits<Type>::zero)
+            new Field<Type>(this->size(), Zero)
         );
     }
 }
 
 
 template<class Type>
-tmp<Field<Type> > uniformFixedValueFvPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::uniformFixedValueFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     if (inletDiffusion_)
     {
@@ -349,29 +333,23 @@ tmp<Field<Type> > uniformFixedValueFvPatchField<Type>::gradientBoundaryCoeffs() 
     }
     else
     {
-        return tmp<Field<Type> >
+        return tmp<Field<Type>>
         (
-            new Field<Type>(this->size(), pTraits<Type>::zero)
+            new Field<Type>(this->size(), Zero)
         );
     }
 }
 
 
 template<class Type>
-void uniformFixedValueFvPatchField<Type>::write(Ostream& os) const
+void CML::uniformFixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     // Note: do not write value
     fvPatchField<Type>::write(os);
-    uniformValue_->writeData(os);
-    os.writeKeyword("inlet-diffusion") << inletDiffusion_ << token::END_STATEMENT << nl;
+    writeEntry(os, uniformValue_());
+    writeEntry(os, "inlet-diffusion", inletDiffusion_);
+    writeEntry(os, "value", *this);
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-// ************************************************************************* //

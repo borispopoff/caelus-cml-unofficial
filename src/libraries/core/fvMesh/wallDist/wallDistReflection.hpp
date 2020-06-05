@@ -47,7 +47,7 @@ namespace CML
 class wallDistReflection
 :
     public reflectionVectors,
-    public wallDistData<wallPointData<vector> >
+    public wallDistData<wallPointData<vector>>
 {
     // Private Member Functions
 

@@ -94,19 +94,19 @@ class PatchValueExpressionDriver
     const word getInterpolationScheme(const word &name);
 
     //- HashPtrTable of interpolations
-    HashPtrTable<interpolation<scalar> > interpolationScalar_;
-    HashPtrTable<interpolation<vector> > interpolationVector_;
-    HashPtrTable<interpolation<tensor> > interpolationTensor_;
-    HashPtrTable<interpolation<symmTensor> > interpolationSymmTensor_;
-    HashPtrTable<interpolation<sphericalTensor> > interpolationSphericalTensor_;
+    HashPtrTable<interpolation<scalar>> interpolationScalar_;
+    HashPtrTable<interpolation<vector>> interpolationVector_;
+    HashPtrTable<interpolation<tensor>> interpolationTensor_;
+    HashPtrTable<interpolation<symmTensor>> interpolationSymmTensor_;
+    HashPtrTable<interpolation<sphericalTensor>> interpolationSphericalTensor_;
 
     //- table with the interpolation scheme (depending on the type)
     template <class Type>
-    HashPtrTable<interpolation<Type> > &interpolations();
+    HashPtrTable<interpolation<Type>> &interpolations();
 
     //- map a field that is as long as the patch
     template<class T>
-    tmp<Field<T> > mapField(tmp<Field<T> > orig);
+    tmp<Field<T>> mapField(tmp<Field<T>> orig);
 
 protected:
 
@@ -128,7 +128,7 @@ protected:
 
     //- execute a plugin-function
     template<class T>
-    autoPtr<Field<T> > evaluatePluginFunction(
+    autoPtr<Field<T>> evaluatePluginFunction(
         const word &name,
         const parserPatch::location &loc,
         int &scanned,
@@ -225,25 +225,25 @@ public:
     tmp<scalarField> makeNearDistField();
 
     template<class Type>
-    tmp<Field<Type> > getField(const word &name);
+    tmp<Field<Type>> getField(const word &name);
 
     template<class Type>
-    tmp<Field<Type> > getOldTimeField(const word &name);
+    tmp<Field<Type>> getOldTimeField(const word &name);
 
     template<class Type>
-    tmp<Field<Type> > getSurfaceNormalField(const word &name);
+    tmp<Field<Type>> getSurfaceNormalField(const word &name);
 
     template<class Type>
-    tmp<Field<Type> > getPatchInternalField(const word &name);
+    tmp<Field<Type>> getPatchInternalField(const word &name);
 
     template<class Type>
-    tmp<Field<Type> > getPatchNeighbourField(const word &name);
+    tmp<Field<Type>> getPatchNeighbourField(const word &name);
 
     template<class Type>
-    tmp<Field<Type> > toFace(const Field<Type> &);
+    tmp<Field<Type>> toFace(const Field<Type> &);
 
     template<class Type>
-    tmp<Field<Type> > toPoint(const Field<Type> &);
+    tmp<Field<Type>> toPoint(const Field<Type> &);
 
     //- return a new plugin-function
     virtual autoPtr<CommonPluginFunction> newPluginFunction(
@@ -257,11 +257,11 @@ public:
 
     //- for a mapped patch returns the mapped field from "the other side""
     template<class T>
-    tmp<Field<T> > mapField(const word &name,bool internalField=false);
+    tmp<Field<T>> mapField(const word &name,bool internalField=false);
 
     //- for a mapped point-patch returns the mapped field from "the other side""
     template<class T>
-    tmp<Field<T> > mapPointField(const word &name);
+    tmp<Field<T>> mapPointField(const word &name);
 
     // allow access of protected methods
     friend class parserPatch::PatchValueExpressionParser;

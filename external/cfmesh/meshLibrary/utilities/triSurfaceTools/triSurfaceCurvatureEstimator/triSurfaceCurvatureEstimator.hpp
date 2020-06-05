@@ -56,12 +56,12 @@ class triSurfaceCurvatureEstimator
 
         //- curvatures of other points
         FRWGraph<label, 3> patchPositions_;
-        List<DynList<scalar, 1> > gaussianCurvature_;
-        List<DynList<scalar, 1> > meanCurvature_;
-        List<DynList<scalar, 1> > maxCurvature_;
-        List<DynList<scalar, 1> > minCurvature_;
-        List<DynList<vector, 1> > maxCurvatureVector_;
-        List<DynList<vector, 1> > minCurvatureVector_;
+        List<DynList<scalar, 1>> gaussianCurvature_;
+        List<DynList<scalar, 1>> meanCurvature_;
+        List<DynList<scalar, 1>> maxCurvature_;
+        List<DynList<scalar, 1>> minCurvature_;
+        List<DynList<vector, 1>> maxCurvatureVector_;
+        List<DynList<vector, 1>> minCurvatureVector_;
 
     // Private member functions
         //- calculate curvature of feature edges

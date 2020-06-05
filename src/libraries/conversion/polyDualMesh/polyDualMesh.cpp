@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -313,7 +313,7 @@ CML::labelList CML::polyDualMesh::collectPatchSideFace
         reverse(dualFace);
     }
 
-    return dualFace;
+    return move(dualFace);
 }
 
 
@@ -1327,8 +1327,8 @@ void CML::polyDualMesh::calcDual
         (
             boundaryMesh(),
             patchi,
-            0, //patchSizes[patchi],
-            0  //patchStarts[patchi]
+            0, // patchSizes[patchi],
+            0  // patchStarts[patchi]
         ).ptr();
     }
     addPatches(dualPatches);
@@ -1336,10 +1336,10 @@ void CML::polyDualMesh::calcDual
     // Assign to mesh.
     resetPrimitives
     (
-        xferMove(dualPoints),
-        xferMove(dualFaces),
-        xferMove(dualOwner),
-        xferMove(dualNeighbour),
+        move(dualPoints),
+        move(dualFaces),
+        move(dualOwner),
+        move(dualNeighbour),
         patchSizes,
         patchStarts
     );
@@ -1390,9 +1390,9 @@ CML::polyDualMesh::polyDualMesh
     polyMesh
     (
         mesh,
-        xferCopy(pointField()),// to prevent any warnings "points not allocated"
-        xferCopy(faceList()),  // to prevent any warnings "faces  not allocated"
-        xferCopy(cellList())
+        pointField(),
+        faceList(),
+        cellList()
     ),
     cellPoint_
     (
@@ -1435,9 +1435,9 @@ CML::polyDualMesh::polyDualMesh
     polyMesh
     (
         mesh,
-        xferCopy(pointField()),// to prevent any warnings "points not allocated"
-        xferCopy(faceList()),  // to prevent any warnings "faces  not allocated"
-        xferCopy(cellList())
+        pointField(),
+        faceList(),
+        cellList()
     ),
     cellPoint_
     (

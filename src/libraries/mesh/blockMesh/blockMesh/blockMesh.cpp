@@ -79,12 +79,12 @@ CML::PtrList<CML::dictionary> CML::blockMesh::patchDicts() const
 
     PtrList<dictionary> patchDicts(patchTopologies.size());
 
-    forAll(patchTopologies, patchI)
+    forAll(patchTopologies, patchi)
     {
         OStringStream os;
-        patchTopologies[patchI].write(os);
+        patchTopologies[patchi].write(os);
         IStringStream is(os.str());
-        patchDicts.set(patchI, new dictionary(is));
+        patchDicts.set(patchi, new dictionary(is));
     }
     return patchDicts;
 }

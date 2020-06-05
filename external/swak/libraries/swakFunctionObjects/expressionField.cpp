@@ -92,7 +92,7 @@ void CML::expressionField::storeField(
     if(
         this->autowrite_
         &&
-        this->obr_.time().outputTime()
+        this->obr_.time().writeTime()
     ) {
         field_->write();
     }

@@ -100,16 +100,16 @@ const CML::vectorField& CML::fvPatch::Cf() const
 CML::tmp<CML::vectorField> CML::fvPatch::Cn() const
 {
     tmp<vectorField> tcc(new vectorField(size()));
-    vectorField& cc = tcc();
+    vectorField& cc = tcc.ref();
 
     const labelUList& faceCells = this->faceCells();
 
     // get reference to global cell centres
     const vectorField& gcc = boundaryMesh().mesh().cellCentres();
 
-    forAll(faceCells, faceI)
+    forAll(faceCells, facei)
     {
-        cc[faceI] = gcc[faceCells[faceI]];
+        cc[facei] = gcc[faceCells[facei]];
     }
 
     return tcc;

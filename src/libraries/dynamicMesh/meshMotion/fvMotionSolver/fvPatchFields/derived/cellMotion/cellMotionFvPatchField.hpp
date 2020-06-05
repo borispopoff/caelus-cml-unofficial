@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -90,9 +90,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cellMotionFvPatchField<Type>(*this)
             );
@@ -106,12 +106,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new cellMotionFvPatchField<Type>(*this, iF)
             );
@@ -167,10 +167,8 @@ CML::cellMotionFvPatchField<Type>::cellMotionFvPatchField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<Type>(p, iF)
-{
-    fvPatchField<Type>::operator=(Field<Type>("value", dict, p.size()));
-}
+    fixedValueFvPatchField<Type>(p, iF, dict)
+{}
 
 
 template<class Type>
@@ -206,15 +204,15 @@ void CML::cellMotionFvPatchField<Type>::updateCoeffs()
 
     const fvPatch& p = this->patch();
     const polyPatch& pp = p.patch();
-    const fvMesh& mesh = this->dimensionedInternalField().mesh();
+    const fvMesh& mesh = this->internalField().mesh();
     const pointField& points = mesh.points();
 
-    word pfName = this->dimensionedInternalField().name();
+    word pfName = this->internalField().name();
     pfName.replace("cell", "point");
 
     const GeometricField<Type, pointPatchField, pointMesh>& pointMotion =
         this->db().objectRegistry::template
-            lookupObject<GeometricField<Type, pointPatchField, pointMesh> >
+            lookupObject<GeometricField<Type, pointPatchField, pointMesh>>
             (pfName);
 
     forAll(p, i)
@@ -230,7 +228,7 @@ template<class Type>
 void CML::cellMotionFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 #endif

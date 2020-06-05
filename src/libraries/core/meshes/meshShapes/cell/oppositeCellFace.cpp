@@ -50,15 +50,15 @@ CML::label CML::cell::opposingFaceLabel
 
     label oppositeFaceLabel = -1;
 
-    forAll(curFaceLabels, faceI)
+    forAll(curFaceLabels, facei)
     {
         // Compare the face with the master
-        const face& curFace = meshFaces[curFaceLabels[faceI]];
+        const face& curFace = meshFaces[curFaceLabels[facei]];
 
         // Skip the master face
         if
         (
-            curFaceLabels[faceI] != masterFaceLabel
+            curFaceLabels[facei] != masterFaceLabel
          && curFace.size() == masterFace.size()
         )
         {
@@ -66,13 +66,13 @@ CML::label CML::cell::opposingFaceLabel
 
             // Compare every vertex of the current face against the
             // vertices of the master face
-            forAll(curFace, pointI)
+            forAll(curFace, pointi)
             {
-                const label l = curFace[pointI];
+                const label l = curFace[pointi];
 
-                forAll(masterFace, masterPointI)
+                forAll(masterFace, masterPointi)
                 {
-                    if (masterFace[masterPointI] == l)
+                    if (masterFace[masterPointi] == l)
                     {
                         sharedPoint = true;
                         break;
@@ -88,7 +88,7 @@ CML::label CML::cell::opposingFaceLabel
                 if (oppositeFaceLabel == -1)
                 {
                     // Found opposite face
-                    oppositeFaceLabel = curFaceLabels[faceI];
+                    oppositeFaceLabel = curFaceLabels[facei];
                 }
                 else
                 {
@@ -96,7 +96,7 @@ CML::label CML::cell::opposingFaceLabel
                     // Non-prismatic cell
                     Info<< "Multiple faces not sharing vertex: "
                         << oppositeFaceLabel << " and "
-                        << curFaceLabels[faceI] << endl;
+                        << curFaceLabels[facei] << endl;
                     return -1;
                 }
             }
@@ -145,7 +145,7 @@ CML::oppositeFace CML::cell::opposingFace
             oppFaceLabel
         );
 
-        forAll(masterFace, pointI)
+        forAll(masterFace, pointi)
         {
             // Go through the list of edges and find the edge from this vertex
             // to the slave face
@@ -155,19 +155,19 @@ CML::oppositeFace CML::cell::opposingFace
                 {
                     // Get the other vertex
                     label otherVertex =
-                        e[edgeI].otherVertex(masterFace[pointI]);
+                        e[edgeI].otherVertex(masterFace[pointi]);
 
                     if (otherVertex != -1)
                     {
                         // Found an edge coming from this vertex.
                         // Check all vertices of the slave to find out
                         // if it exists.
-                        forAll(slaveFace, slavePointI)
+                        forAll(slaveFace, slavePointi)
                         {
-                            if (slaveFace[slavePointI] == otherVertex)
+                            if (slaveFace[slavePointi] == otherVertex)
                             {
                                 usedEdges[edgeI] = true;
-                                oppFace[pointI] = otherVertex;
+                                oppFace[pointi] = otherVertex;
 
                                 break;
                             }

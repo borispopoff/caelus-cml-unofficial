@@ -115,7 +115,7 @@ void tetMeshOptimisation::optimiseUsingKnuppMetric(const label nIterations)
             unifyNegativePoints(negativeNode);
 
         //- smooth the mesh
-        List<LongList<labelledPoint> > newPositions;
+        List<LongList<labelledPoint>> newPositions;
         # ifdef USE_OMP
         # pragma omp parallel if( smoothVertex.size() > 100 )
         # endif
@@ -251,7 +251,7 @@ void tetMeshOptimisation::optimiseUsingMeshUntangler(const label nIterations)
             unifyNegativePoints(negativeNode);
 
         //- smooth the mesh
-        List<LongList<labelledPoint> > newPositions;
+        List<LongList<labelledPoint>> newPositions;
         # ifdef USE_OMP
         # pragma omp parallel if( smoothVertex.size() > 100 )
         # endif
@@ -337,7 +337,7 @@ void tetMeshOptimisation::optimiseUsingVolumeOptimizer(const label nIterations)
     //- use mesh optimizer to improve the result
     for(label i=0;i<nIterations;++i)
     {
-        List<LongList<labelledPoint> > newPositions;
+        List<LongList<labelledPoint>> newPositions;
 
         # ifdef USE_OMP
         # pragma omp parallel if( smoothVertex.size() > 100 )
@@ -408,7 +408,7 @@ void tetMeshOptimisation::optimiseBoundaryVolumeOptimizer
 
     for(label i=0;i<nIterations;++i)
     {
-        List<LongList<labelledPoint> > newPositions(nThreads);
+        List<LongList<labelledPoint>> newPositions(nThreads);
 
         # ifdef USE_OMP
         # pragma omp parallel num_threads(nThreads)
@@ -555,7 +555,7 @@ void tetMeshOptimisation::optimiseBoundarySurfaceLaplace
 
     for(label i=0;i<nIterations;++i)
     {
-        List<LongList<labelledPoint> > newPositions(nThreads);
+        List<LongList<labelledPoint>> newPositions(nThreads);
 
         # ifdef USE_OMP
         # pragma omp parallel num_threads(nThreads)

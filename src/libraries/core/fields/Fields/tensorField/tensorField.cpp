@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -102,15 +102,15 @@ void inv(Field<tensor>& tf, const UList<tensor>& tf1)
 tmp<tensorField> inv(const UList<tensor>& tf)
 {
     tmp<tensorField> result(new tensorField(tf.size()));
-    inv(result(), tf);
+    inv(result.ref(), tf);
     return result;
 }
 
 tmp<tensorField> inv(const tmp<tensorField>& tf)
 {
-    tmp<tensorField> tRes = reuseTmp<tensor, tensor>::New(tf);
-    inv(tRes(), tf());
-    reuseTmp<tensor, tensor>::clear(tf);
+    tmp<tensorField> tRes = New(tf);
+    inv(tRes.ref(), tf());
+    tf.clear();
     return tRes;
 }
 
@@ -122,24 +122,24 @@ UNARY_FUNCTION(tensor, symmTensor, eigenVectors)
 
 
 template<>
-tmp<Field<tensor> > transformFieldMask<tensor>
+tmp<Field<tensor>> transformFieldMask<tensor>
 (
     const symmTensorField& stf
 )
 {
     tmp<tensorField> tRes(new tensorField(stf.size()));
-    tensorField& res = tRes();
+    tensorField& res = tRes.ref();
     TFOR_ALL_F_OP_F(tensor, res, =, symmTensor, stf)
     return tRes;
 }
 
 template<>
-tmp<Field<tensor> > transformFieldMask<tensor>
+tmp<Field<tensor>> transformFieldMask<tensor>
 (
     const tmp<symmTensorField>& tstf
 )
 {
-    tmp<Field<tensor> > ret = transformFieldMask<tensor>(tstf());
+    tmp<Field<tensor>> ret = transformFieldMask<tensor>(tstf());
     tstf.clear();
     return ret;
 }

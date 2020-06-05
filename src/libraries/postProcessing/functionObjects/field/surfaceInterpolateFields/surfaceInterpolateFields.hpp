@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -100,7 +100,7 @@ protected:
 
         //- Fields to process
         //wordList fieldSet_;
-        List<Tuple2<word, word> > fieldSet_;
+        List<Tuple2<word, word>> fieldSet_;
 
         //- Locally constructed fields
         PtrList<surfaceScalarField> ssf_;
@@ -112,19 +112,21 @@ protected:
 
     // Protected Member Functions
 
-        //- Disallow default bitwise copy construct
-        surfaceInterpolateFields(const surfaceInterpolateFields&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceInterpolateFields&);
-
         template<class Type>
         void interpolateFields
         (
-            PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >&
+            PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
         ) const;
 
+private:
 
+    // Private member functions
+
+        //- Disallow default bitwise copy construct
+        surfaceInterpolateFields(const surfaceInterpolateFields&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceInterpolateFields&) = delete;
 public:
 
     //- Runtime type information
@@ -196,7 +198,7 @@ public:
 template<class Type>
 void CML::surfaceInterpolateFields::interpolateFields
 (
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& sflds
+    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;

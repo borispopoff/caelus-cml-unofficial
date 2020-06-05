@@ -33,6 +33,14 @@ SourceFiles
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#endif
+namespace CML
+{
 
-// ************************************************************************* //
+
+tmp<vector2DField> zip(const tmp<scalarField>& x, const tmp<scalarField>& y);
+
+
+} // End namespace CML
+
+
+#endif

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -39,15 +39,14 @@ namespace CML
 
 const char* const CML::faceZone::labelsName = "faceLabels";
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void CML::faceZone::calcFaceZonePatch() const
 {
     if (debug)
     {
-        Info<< "void faceZone::calcFaceZonePatch() const : "
-            << "Calculating primitive patch"
-            << endl;
+        InfoInFunction << "Calculating primitive patch" << endl;
     }
 
     if (patchPtr_)
@@ -71,23 +70,21 @@ void CML::faceZone::calcFaceZonePatch() const
     const labelList& addr = *this;
     const boolList& flip = flipMap();
 
-    forAll(addr, faceI)
+    forAll(addr, facei)
     {
-        if (flip[faceI])
+        if (flip[facei])
         {
-            patch[faceI] = f[addr[faceI]].reverseFace();
+            patch[facei] = f[addr[facei]].reverseFace();
         }
         else
         {
-            patch[faceI] = f[addr[faceI]];
+            patch[facei] = f[addr[facei]];
         }
     }
 
     if (debug)
     {
-        Info<< "void faceZone::calcFaceZonePatch() const : "
-            << "Finished calculating primitive patch"
-            << endl;
+        InfoInFunction << "Finished calculating primitive patch" << endl;
     }
 }
 
@@ -96,9 +93,7 @@ void CML::faceZone::calcCellLayers() const
 {
     if (debug)
     {
-        Info<< "void CML::faceZone::calcCellLayers() const : "
-            << "calculating master cells"
-            << endl;
+        InfoInFunction << "Calculating master cells" << endl;
     }
 
     // It is an error to attempt to recalculate edgeCells
@@ -127,30 +122,28 @@ void CML::faceZone::calcCellLayers() const
         slaveCellsPtr_ = new labelList(mf.size());
         labelList& sc = *slaveCellsPtr_;
 
-        forAll(mf, faceI)
+        forAll(mf, facei)
         {
-            label ownCellI = own[mf[faceI]];
-            label neiCellI =
+            label ownCelli = own[mf[facei]];
+            label neiCelli =
             (
-                zoneMesh().mesh().isInternalFace(mf[faceI])
-              ? nei[mf[faceI]]
+                zoneMesh().mesh().isInternalFace(mf[facei])
+              ? nei[mf[facei]]
               : -1
             );
 
-            if (!faceFlip[faceI])
+            if (!faceFlip[facei])
             {
                 // Face is oriented correctly, no flip needed
-                mc[faceI] = neiCellI;
-                sc[faceI] = ownCellI;
+                mc[facei] = neiCelli;
+                sc[facei] = ownCelli;
             }
             else
             {
-                mc[faceI] = ownCellI;
-                sc[faceI] = neiCellI;
+                mc[facei] = ownCelli;
+                sc[facei] = neiCelli;
             }
         }
-        //Info<< "masterCells: " << mc << endl;
-        //Info<< "slaveCells: " << sc << endl;
     }
 }
 
@@ -195,14 +188,14 @@ CML::faceZone::faceZone
 CML::faceZone::faceZone
 (
     const word& name,
-    const Xfer<labelList>& addr,
-    const Xfer<boolList>& fm,
-    const label index,
-    const faceZoneMesh& zm
+    labelList&& addr,
+    boolList&& fm,
+    const faceZoneMesh& zm,
+    const label index
 )
 :
-    zone(name, addr, index),
-    flipMap_(fm),
+    zone(name, move(addr), index),
+    flipMap_(move(fm)),
     zoneMesh_(zm),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -257,14 +250,14 @@ CML::faceZone::faceZone
 CML::faceZone::faceZone
 (
     const faceZone& fz,
-    const Xfer<labelList>& addr,
-    const Xfer<boolList>& fm,
+    labelList&& addr,
+    boolList&& fm,
     const label index,
     const faceZoneMesh& zm
 )
 :
-    zone(fz, addr, index),
-    flipMap_(fm),
+    zone(fz, move(addr), index),
+    flipMap_(move(fm)),
     zoneMesh_(zm),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -334,28 +327,6 @@ const CML::labelList& CML::faceZone::meshEdges() const
 {
     if (!mePtr_)
     {
-        //labelList faceCells(size());
-        //
-        //const labelList& own = zoneMesh().mesh().faceOwner();
-        //
-        //const labelList& faceLabels = *this;
-        //
-        //forAll(faceCells, faceI)
-        //{
-        //    faceCells[faceI] = own[faceLabels[faceI]];
-        //}
-        //
-        //mePtr_ =
-        //    new labelList
-        //    (
-        //        operator()().meshEdges
-        //        (
-        //            zoneMesh().mesh().edges(),
-        //            zoneMesh().mesh().cellEdges(),
-        //            faceCells
-        //        )
-        //    );
-
         mePtr_ =
             new labelList
             (
@@ -408,11 +379,11 @@ void CML::faceZone::updateMesh(const mapPolyMesh& mpm)
 
     forAll(*this, i)
     {
-        const label faceI = operator[](i);
+        const label facei = operator[](i);
 
-        if (faceMap[faceI] >= 0)
+        if (faceMap[facei] >= 0)
         {
-            newAddressing[nFaces] = faceMap[faceI];
+            newAddressing[nFaces] = faceMap[facei];
             newFlipMap[nFaces] = flipMap_[i];       // Keep flip map.
             nFaces++;
         }
@@ -448,12 +419,12 @@ bool CML::faceZone::checkParallelSync(const bool report) const
         boolList neiZoneFlip(mesh.nFaces()-mesh.nInternalFaces(), false);
         forAll(*this, i)
         {
-            const label faceI = operator[](i);
+            const label facei = operator[](i);
 
-            if (!mesh.isInternalFace(faceI))
+            if (!mesh.isInternalFace(facei))
             {
-                neiZoneFace[faceI-mesh.nInternalFaces()] = true;
-                neiZoneFlip[faceI-mesh.nInternalFaces()] = flipMap()[i];
+                neiZoneFace[facei-mesh.nInternalFaces()] = true;
+                neiZoneFlip[facei-mesh.nInternalFaces()] = flipMap()[i];
             }
         }
         boolList myZoneFace(neiZoneFace);
@@ -463,15 +434,15 @@ bool CML::faceZone::checkParallelSync(const bool report) const
 
         forAll(*this, i)
         {
-            const label faceI = operator[](i);
-            const label patchI = bm.whichPatch(faceI);
+            const label facei = operator[](i);
+            const label patchi = bm.whichPatch(facei);
 
-            if (patchI != -1 && bm[patchI].coupled())
+            if (patchi != -1 && bm[patchi].coupled())
             {
-                const label bFaceI = faceI-mesh.nInternalFaces();
+                const label bFacei = facei-mesh.nInternalFaces();
 
                 // Check face in zone on both sides
-                if (myZoneFace[bFaceI] != neiZoneFace[bFaceI])
+                if (myZoneFace[bFacei] != neiZoneFace[bFacei])
                 {
                     hasError = true;
 
@@ -479,9 +450,9 @@ bool CML::faceZone::checkParallelSync(const bool report) const
                     {
                         Pout<< " ***Problem with faceZone " << index()
                             << " named " << name()
-                            << ". Face " << faceI
+                            << ". Face " << facei
                             << " on coupled patch "
-                            << bm[patchI].name()
+                            << bm[patchi].name()
                             << " is not consistent with its coupled neighbour."
                             << endl;
                     }
@@ -491,7 +462,7 @@ bool CML::faceZone::checkParallelSync(const bool report) const
                         break;
                     }
                 }
-                else if (myZoneFlip[bFaceI] == neiZoneFlip[bFaceI])
+                else if (myZoneFlip[bFacei] == neiZoneFlip[bFacei])
                 {
                     // Flip state should be opposite.
                     hasError = true;
@@ -500,9 +471,9 @@ bool CML::faceZone::checkParallelSync(const bool report) const
                     {
                         Pout<< " ***Problem with faceZone " << index()
                             << " named " << name()
-                            << ". Face " << faceI
+                            << ". Face " << facei
                             << " on coupled patch "
-                            << bm[patchI].name()
+                            << bm[patchi].name()
                             << " does not have consistent flipMap"
                             << " across coupled faces."
                             << endl;
@@ -542,10 +513,28 @@ void CML::faceZone::writeDict(Ostream& os) const
     os  << nl << name() << nl << token::BEGIN_BLOCK << nl
         << "    type " << type() << token::END_STATEMENT << nl;
 
-    writeEntry(this->labelsName, os);
-    flipMap().writeEntry("flipMap", os);
+    writeEntry(os, this->labelsName, *this);
+    writeEntry(os, "flipMap", flipMap());
 
     os  << token::END_BLOCK << endl;
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+void CML::faceZone::operator=(const faceZone& zn)
+{
+    clearAddressing();
+    zone::operator=(zn);
+    flipMap_ = zn.flipMap_;
+}
+
+
+void CML::faceZone::operator=(faceZone&& zn)
+{
+    clearAddressing();
+    zone::operator=(move(zn));
+    flipMap_ = move(zn.flipMap_);
 }
 
 

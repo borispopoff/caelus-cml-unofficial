@@ -60,15 +60,15 @@ void CML::slidingInterface::calcAttachedAddressing() const
         masterFaceCellsPtr_ = new labelList(masterPatchFaces.size());
         labelList& mfc = *masterFaceCellsPtr_;
 
-        forAll(masterPatchFaces, faceI)
+        forAll(masterPatchFaces, facei)
         {
-            if (masterFlip[faceI])
+            if (masterFlip[facei])
             {
-                mfc[faceI] = nei[masterPatchFaces[faceI]];
+                mfc[facei] = nei[masterPatchFaces[facei]];
             }
             else
             {
-                mfc[faceI] = own[masterPatchFaces[faceI]];
+                mfc[facei] = own[masterPatchFaces[facei]];
             }
         }
 
@@ -86,15 +86,15 @@ void CML::slidingInterface::calcAttachedAddressing() const
         slaveFaceCellsPtr_ = new labelList(slavePatchFaces.size());
         labelList& sfc = *slaveFaceCellsPtr_;
 
-        forAll(slavePatchFaces, faceI)
+        forAll(slavePatchFaces, facei)
         {
-            if (slaveFlip[faceI])
+            if (slaveFlip[facei])
             {
-                sfc[faceI] = nei[slavePatchFaces[faceI]];
+                sfc[facei] = nei[slavePatchFaces[facei]];
             }
             else
             {
-                sfc[faceI] = own[slavePatchFaces[faceI]];
+                sfc[facei] = own[slavePatchFaces[facei]];
             }
         }
 
@@ -103,27 +103,27 @@ void CML::slidingInterface::calcAttachedAddressing() const
         {
             if (debug)
             {
-                forAll(mfc, faceI)
+                forAll(mfc, facei)
                 {
-                    if (mfc[faceI] < 0)
+                    if (mfc[facei] < 0)
                     {
-                        Pout<< "No cell next to master patch face " << faceI
-                            << ".  Global face no: " << mfc[faceI]
-                            << " own: " << own[masterPatchFaces[faceI]]
-                            << " nei: " << nei[masterPatchFaces[faceI]]
-                            << " flip: " << masterFlip[faceI] << endl;
+                        Pout<< "No cell next to master patch face " << facei
+                            << ".  Global face no: " << mfc[facei]
+                            << " own: " << own[masterPatchFaces[facei]]
+                            << " nei: " << nei[masterPatchFaces[facei]]
+                            << " flip: " << masterFlip[facei] << endl;
                     }
                 }
 
-                forAll(sfc, faceI)
+                forAll(sfc, facei)
                 {
-                    if (sfc[faceI] < 0)
+                    if (sfc[facei] < 0)
                     {
-                        Pout<< "No cell next to slave patch face " << faceI
-                            << ".  Global face no: " << sfc[faceI]
-                            << " own: " << own[slavePatchFaces[faceI]]
-                            << " nei: " << nei[slavePatchFaces[faceI]]
-                            << " flip: " << slaveFlip[faceI] << endl;
+                        Pout<< "No cell next to slave patch face " << facei
+                            << ".  Global face no: " << sfc[facei]
+                            << " own: " << own[slavePatchFaces[facei]]
+                            << " nei: " << nei[slavePatchFaces[facei]]
+                            << " flip: " << slaveFlip[facei] << endl;
                     }
                 }
             }
@@ -145,21 +145,21 @@ void CML::slidingInterface::calcAttachedAddressing() const
 
         const labelList& masterMeshPoints = masterPatch.meshPoints();
 
-        forAll(masterMeshPoints, pointI)
+        forAll(masterMeshPoints, pointi)
         {
-            const labelList& curFaces = pointFaces[masterMeshPoints[pointI]];
+            const labelList& curFaces = pointFaces[masterMeshPoints[pointi]];
 
-            forAll(curFaces, faceI)
+            forAll(curFaces, facei)
             {
                 // Check if the face belongs to the master face zone;
                 // if not add it
                 if
                 (
-                    faceZones.whichZone(curFaces[faceI])
+                    faceZones.whichZone(curFaces[facei])
                  != masterFaceZoneID_.index()
                 )
                 {
-                    masterStickOutFaceMap.insert(curFaces[faceI]);
+                    masterStickOutFaceMap.insert(curFaces[facei]);
                 }
             }
         }
@@ -174,21 +174,21 @@ void CML::slidingInterface::calcAttachedAddressing() const
 
         const labelList& slaveMeshPoints = slavePatch.meshPoints();
 
-        forAll(slaveMeshPoints, pointI)
+        forAll(slaveMeshPoints, pointi)
         {
-            const labelList& curFaces = pointFaces[slaveMeshPoints[pointI]];
+            const labelList& curFaces = pointFaces[slaveMeshPoints[pointi]];
 
-            forAll(curFaces, faceI)
+            forAll(curFaces, facei)
             {
                 // Check if the face belongs to the slave face zone;
                 // if not add it
                 if
                 (
-                    faceZones.whichZone(curFaces[faceI])
+                    faceZones.whichZone(curFaces[facei])
                  != slaveFaceZoneID_.index()
                 )
                 {
-                    slaveStickOutFaceMap.insert(curFaces[faceI]);
+                    slaveStickOutFaceMap.insert(curFaces[facei]);
                 }
             }
         }
@@ -207,7 +207,7 @@ void CML::slidingInterface::calcAttachedAddressing() const
         // Ditto for cut point edge map.  This is a rough guess of its size
         //
         cutPointEdgePairMapPtr_ =
-            new Map<Pair<edge> >
+            new Map<Pair<edge>>
             (
                 faceZones[slaveFaceZoneID_.index()]().nEdges()
             );
@@ -263,13 +263,13 @@ void CML::slidingInterface::renumberAttachedAddressing
     const labelList& mfzRenumber =
         m.faceZoneFaceMap()[masterFaceZoneID_.index()];
 
-    forAll(mfc, faceI)
+    forAll(mfc, facei)
     {
-        label newCellI = reverseCellMap[mfc[mfzRenumber[faceI]]];
+        label newCelli = reverseCellMap[mfc[mfzRenumber[facei]]];
 
-        if (newCellI >= 0)
+        if (newCelli >= 0)
         {
-            newMfc[faceI] = newCellI;
+            newMfc[facei] = newCelli;
         }
     }
 
@@ -280,13 +280,13 @@ void CML::slidingInterface::renumberAttachedAddressing
     const labelList& sfzRenumber =
         m.faceZoneFaceMap()[slaveFaceZoneID_.index()];
 
-    forAll(sfc, faceI)
+    forAll(sfc, facei)
     {
-        label newCellI = reverseCellMap[sfc[sfzRenumber[faceI]]];
+        label newCelli = reverseCellMap[sfc[sfzRenumber[facei]]];
 
-        if (newCellI >= 0)
+        if (newCelli >= 0)
         {
-            newSfc[faceI] = newCellI;
+            newSfc[facei] = newCelli;
         }
     }
 
@@ -313,13 +313,13 @@ void CML::slidingInterface::renumberAttachedAddressing
     labelList* newMsofPtr = new labelList(msof.size(), -1);
     labelList& newMsof = *newMsofPtr;
 
-    forAll(msof, faceI)
+    forAll(msof, facei)
     {
-        label newFaceI = reverseFaceMap[msof[faceI]];
+        label newFacei = reverseFaceMap[msof[facei]];
 
-        if (newFaceI >= 0)
+        if (newFacei >= 0)
         {
-            newMsof[faceI] = newFaceI;
+            newMsof[facei] = newFacei;
         }
     }
 //     Pout<< "newMsof: " << newMsof << endl;
@@ -329,13 +329,13 @@ void CML::slidingInterface::renumberAttachedAddressing
     labelList* newSsofPtr = new labelList(ssof.size(), -1);
     labelList& newSsof = *newSsofPtr;
 
-    forAll(ssof, faceI)
+    forAll(ssof, facei)
     {
-        label newFaceI = reverseFaceMap[ssof[faceI]];
+        label newFacei = reverseFaceMap[ssof[facei]];
 
-        if (newFaceI >= 0)
+        if (newFacei >= 0)
         {
-            newSsof[faceI] = newFaceI;
+            newSsof[facei] = newFacei;
         }
     }
 //     Pout<< "newSsof: " << newSsof << endl;
@@ -388,10 +388,10 @@ void CML::slidingInterface::renumberAttachedAddressing
     }
 
     // Renumber the cut point edge pair map. Need to take a copy!
-    const Map<Pair<edge> > cpepm = cutPointEdgePairMap();
+    const Map<Pair<edge>> cpepm = cutPointEdgePairMap();
 
-    Map<Pair<edge> >* newCpepmPtr = new Map<Pair<edge> >(cpepm.size());
-    Map<Pair<edge> >& newCpepm = *newCpepmPtr;
+    Map<Pair<edge>>* newCpepmPtr = new Map<Pair<edge>>(cpepm.size());
+    Map<Pair<edge>>& newCpepm = *newCpepmPtr;
 
     const labelList cpepmToc = cpepm.toc();
 
@@ -442,12 +442,12 @@ void CML::slidingInterface::renumberAttachedAddressing
     const labelList& sfzPointRenumber =
         m.faceZonePointMap()[slaveFaceZoneID_.index()];
 
-    forAll(newProjectedSlavePoints, pointI)
+    forAll(newProjectedSlavePoints, pointi)
     {
-        if (sfzPointRenumber[pointI] > -1)
+        if (sfzPointRenumber[pointi] > -1)
         {
-            newProjectedSlavePoints[pointI] =
-                projectedSlavePoints[sfzPointRenumber[pointI]];
+            newProjectedSlavePoints[pointi] =
+                projectedSlavePoints[sfzPointRenumber[pointi]];
         }
     }
 
@@ -537,7 +537,7 @@ const CML::Map<CML::label>& CML::slidingInterface::retiredPointMap() const
 }
 
 
-const CML::Map<CML::Pair<CML::edge> >&
+const CML::Map<CML::Pair<CML::edge>>&
 CML::slidingInterface::cutPointEdgePairMap() const
 {
     if (!cutPointEdgePairMapPtr_)

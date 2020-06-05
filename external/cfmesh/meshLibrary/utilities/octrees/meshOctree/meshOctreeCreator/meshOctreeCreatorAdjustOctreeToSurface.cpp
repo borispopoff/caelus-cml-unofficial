@@ -95,7 +95,7 @@ void meshOctreeCreator::refineBoundary()
                 forAllRow(containedTriangles, elRowI, tI)
                 {
                     const label triI = containedTriangles(elRowI, tI);
-                    DynList<std::pair<direction, scalar> >& refRequests =
+                    DynList<std::pair<direction, scalar>>& refRequests =
                         surfRefLevel_[triI];
 
                     forAllReverse(refRequests, i)

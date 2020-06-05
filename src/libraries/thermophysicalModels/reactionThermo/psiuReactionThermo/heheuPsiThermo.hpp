@@ -154,15 +154,15 @@ public:
 template<class BasicPsiThermo, class MixtureType>
 void CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
 {
-    const scalarField& hCells = this->he_.internalField();
-    const scalarField& heuCells = this->heu_.internalField();
-    const scalarField& pCells = this->p_.internalField();
+    const scalarField& hCells = this->he_;
+    const scalarField& heuCells = this->heu_;
+    const scalarField& pCells = this->p_;
 
-    scalarField& TCells = this->T_.internalField();
-    scalarField& TuCells = this->Tu_.internalField();
-    scalarField& psiCells = this->psi_.internalField();
-    scalarField& muCells = this->mu_.internalField();
-    scalarField& alphaCells = this->alpha_.internalField();
+    scalarField& TCells = this->T_.primitiveFieldRef();
+    scalarField& TuCells = this->Tu_.primitiveFieldRef();
+    scalarField& psiCells = this->psi_.primitiveFieldRef();
+    scalarField& muCells = this->mu_.primitiveFieldRef();
+    scalarField& alphaCells = this->alpha_.primitiveFieldRef();
 
     forAll(TCells, celli)
     {
@@ -189,29 +189,29 @@ void CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
         );
     }
 
-    volScalarField::GeometricBoundaryField& pBf =
-        this->p_.boundaryField();
+    volScalarField::Boundary& pBf =
+        this->p_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& TBf =
-        this->T_.boundaryField();
+    volScalarField::Boundary& TBf =
+        this->T_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& TuBf =
-        this->Tu_.boundaryField();
+    volScalarField::Boundary& TuBf =
+        this->Tu_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& psiBf =
-        this->psi_.boundaryField();
+    volScalarField::Boundary& psiBf =
+        this->psi_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& heBf =
-        this->he().boundaryField();
+    volScalarField::Boundary& heBf =
+        this->he().boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& heuBf =
-        this->heu().boundaryField();
+    volScalarField::Boundary& heuBf =
+        this->heu().boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& muBf =
-        this->mu_.boundaryField();
+    volScalarField::Boundary& muBf =
+        this->mu_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& alphaBf =
-        this->alpha_.boundaryField();
+    volScalarField::Boundary& alphaBf =
+        this->alpha_.boundaryFieldRef();
 
     forAll(this->T_.boundaryField(), patchi)
     {
@@ -282,7 +282,6 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
         ),
         mesh
     ),
-
     heu_
     (
         IOobject
@@ -298,9 +297,9 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
         this->heuBoundaryTypes()
     )
 {
-    scalarField& heuCells = this->heu_.internalField();
-    const scalarField& pCells = this->p_.internalField();
-    const scalarField& TuCells = this->Tu_.internalField();
+    scalarField& heuCells = this->heu_.primitiveFieldRef();
+    const scalarField& pCells = this->p_;
+    const scalarField& TuCells = this->Tu_;
 
     forAll(heuCells, celli)
     {
@@ -311,7 +310,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
         );
     }
 
-    volScalarField::GeometricBoundaryField& heuBf = heu_.boundaryField();
+    volScalarField::Boundary& heuBf = heu_.boundaryFieldRef();
 
     forAll(heuBf, patchi)
     {
@@ -368,7 +367,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
 ) const
 {
     tmp<scalarField> theu(new scalarField(Tu.size()));
-    scalarField& heu = theu();
+    scalarField& heu = theu.ref();
 
     forAll(Tu, celli)
     {
@@ -389,7 +388,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
 ) const
 {
     tmp<scalarField> theu(new scalarField(Tu.size()));
-    scalarField& heu = theu();
+    scalarField& heu = theu.ref();
 
     forAll(Tu, facei)
     {
@@ -422,11 +421,11 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::Tb() const
         )
     );
 
-    volScalarField& Tb_ = tTb();
-    scalarField& TbCells = Tb_.internalField();
-    const scalarField& pCells = this->p_.internalField();
-    const scalarField& TCells = this->T_.internalField();
-    const scalarField& hCells = this->he_.internalField();
+    volScalarField& Tb_ = tTb.ref();
+    scalarField& TbCells = Tb_.primitiveFieldRef();
+    const scalarField& pCells = this->p_;
+    const scalarField& TCells = this->T_;
+    const scalarField& hCells = this->he_;
 
     forAll(TbCells, celli)
     {
@@ -438,7 +437,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::Tb() const
         );
     }
 
-    volScalarField::GeometricBoundaryField& TbBf = Tb_.boundaryField();
+    volScalarField::Boundary& TbBf = Tb_.boundaryFieldRef();
 
     forAll(TbBf, patchi)
     {
@@ -482,10 +481,10 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::psiu() const
         )
     );
 
-    volScalarField& psiu = tpsiu();
-    scalarField& psiuCells = psiu.internalField();
-    const scalarField& TuCells = this->Tu_.internalField();
-    const scalarField& pCells = this->p_.internalField();
+    volScalarField& psiu = tpsiu.ref();
+    scalarField& psiuCells = psiu.primitiveFieldRef();
+    const scalarField& TuCells = this->Tu_;
+    const scalarField& pCells = this->p_;
 
     forAll(psiuCells, celli)
     {
@@ -493,7 +492,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::psiu() const
             this->cellReactants(celli).psi(pCells[celli], TuCells[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& psiuBf = psiu.boundaryField();
+    volScalarField::Boundary& psiuBf = psiu.boundaryFieldRef();
 
     forAll(psiuBf, patchi)
     {
@@ -536,11 +535,11 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::psib() const
         )
     );
 
-    volScalarField& psib = tpsib();
-    scalarField& psibCells = psib.internalField();
+    volScalarField& psib = tpsib.ref();
+    scalarField& psibCells = psib.primitiveFieldRef();
     const volScalarField Tb_(Tb());
-    const scalarField& TbCells = Tb_.internalField();
-    const scalarField& pCells = this->p_.internalField();
+    const scalarField& TbCells = Tb_;
+    const scalarField& pCells = this->p_;
 
     forAll(psibCells, celli)
     {
@@ -548,7 +547,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::psib() const
             this->cellReactants(celli).psi(pCells[celli], TbCells[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& psibBf = psib.boundaryField();
+    volScalarField::Boundary& psibBf = psib.boundaryFieldRef();
 
     forAll(psibBf, patchi)
     {
@@ -591,10 +590,10 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::muu() const
         )
     );
 
-    volScalarField& muu_ = tmuu();
-    scalarField& muuCells = muu_.internalField();
-    const scalarField& pCells = this->p_.internalField();
-    const scalarField& TuCells = this->Tu_.internalField();
+    volScalarField& muu_ = tmuu.ref();
+    scalarField& muuCells = muu_.primitiveFieldRef();
+    const scalarField& pCells = this->p_;
+    const scalarField& TuCells = this->Tu_;
 
     forAll(muuCells, celli)
     {
@@ -605,7 +604,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::muu() const
         );
     }
 
-    volScalarField::GeometricBoundaryField& muuBf = muu_.boundaryField();
+    volScalarField::Boundary& muuBf = muu_.boundaryFieldRef();
 
     forAll(muuBf, patchi)
     {
@@ -649,11 +648,11 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::mub() const
         )
     );
 
-    volScalarField& mub_ = tmub();
-    scalarField& mubCells = mub_.internalField();
+    volScalarField& mub_ = tmub.ref();
+    scalarField& mubCells = mub_.primitiveFieldRef();
     const volScalarField Tb_(Tb());
-    const scalarField& pCells = this->p_.internalField();
-    const scalarField& TbCells = Tb_.internalField();
+    const scalarField& pCells = this->p_;
+    const scalarField& TbCells = Tb_;
 
     forAll(mubCells, celli)
     {
@@ -664,7 +663,7 @@ CML::heheuPsiThermo<BasicPsiThermo, MixtureType>::mub() const
         );
     }
 
-    volScalarField::GeometricBoundaryField& mubBf = mub_.boundaryField();
+    volScalarField::Boundary& mubBf = mub_.boundaryFieldRef();
 
     forAll(mubBf, patchi)
     {

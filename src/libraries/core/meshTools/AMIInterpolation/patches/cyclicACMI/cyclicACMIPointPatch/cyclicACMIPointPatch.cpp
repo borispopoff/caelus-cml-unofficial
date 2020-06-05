@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -20,7 +20,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cyclicACMIPointPatch.hpp"
-#include "pointBoundaryMesh.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -37,42 +36,6 @@ namespace CML
 }
 
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-void CML::cyclicACMIPointPatch::initGeometry(PstreamBuffers&)
-{}
-
-
-void CML::cyclicACMIPointPatch::calcGeometry(PstreamBuffers&)
-{}
-
-
-void CML::cyclicACMIPointPatch::initMovePoints
-(
-    PstreamBuffers&,
-    const pointField&
-)
-{}
-
-
-void CML::cyclicACMIPointPatch::movePoints(PstreamBuffers&, const pointField&)
-{}
-
-
-void CML::cyclicACMIPointPatch::initUpdateMesh(PstreamBuffers& pBufs)
-{
-    facePointPatch::initUpdateMesh(pBufs);
-//    cyclicACMIPointPatch::initGeometry(pBufs);
-}
-
-
-void CML::cyclicACMIPointPatch::updateMesh(PstreamBuffers& pBufs)
-{
-    facePointPatch::updateMesh(pBufs);
-//    cyclicACMIPointPatch::calcGeometry(pBufs);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 CML::cyclicACMIPointPatch::cyclicACMIPointPatch
@@ -81,8 +44,7 @@ CML::cyclicACMIPointPatch::cyclicACMIPointPatch
     const pointBoundaryMesh& bm
 )
 :
-    coupledFacePointPatch(patch, bm),
-    cyclicACMIPolyPatch_(refCast<const cyclicACMIPolyPatch>(patch))
+    cyclicAMIPointPatch(patch, bm)
 {}
 
 

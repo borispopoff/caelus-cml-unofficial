@@ -87,7 +87,7 @@ private:
     const basicSpecieMixture& mixture_;
 
     //- List of solid species data
-    List<FixedList<scalar, 2> > solidData_;
+    List<FixedList<scalar, 2>> solidData_;
 
 
     //- Calculate the volumetric fraction of Yj

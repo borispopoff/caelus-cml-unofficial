@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -66,8 +66,8 @@ namespace CML
 
 void CML::fvMesh::clearGeomNotOldVol()
 {
-    slicedVolScalarField::DimensionedInternalField* VPtr =
-        static_cast<slicedVolScalarField::DimensionedInternalField*>(VPtr_);
+    slicedVolScalarField::Internal* VPtr =
+        static_cast<slicedVolScalarField::Internal*>(VPtr_);
     deleteDemandDrivenData(VPtr);
     VPtr_ = nullptr;
 
@@ -189,7 +189,7 @@ const CML::scalarField CML::fvMesh::patchWeights(const fvPatch& patch) const
          << "patch: " << patch.name() << " is not a wall patch"
          << abort(FatalError);
 
-   scalarField weights(patch.size(), scalar(1.0));
+   scalarField weights(patch.size(), scalar(1));
 
    return weights;
 }
@@ -258,7 +258,7 @@ CML::fvMesh::fvMesh(const IOobject& io, const bool defectCorr, const scalar area
                 *this,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
-                false
+                true
             ),
             *this
         );
@@ -291,7 +291,7 @@ CML::fvMesh::fvMesh(const IOobject& io, const bool defectCorr, const scalar area
 CML::fvMesh::fvMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
+    pointField&& points,
     const cellShapeList& shapes,
     const faceListList& boundaryFaces,
     const wordList& boundaryPatchNames,
@@ -306,7 +306,7 @@ CML::fvMesh::fvMesh
     polyMesh
     (
         io,
-        points,
+        move(points),
         shapes,
         boundaryFaces,
         boundaryPatchNames,
@@ -345,16 +345,26 @@ CML::fvMesh::fvMesh
 CML::fvMesh::fvMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<labelList>& allOwner,
-    const Xfer<labelList>& allNeighbour,
+    pointField&& points,
+    faceList&& faces,
+    labelList&& allOwner,
+    labelList&& allNeighbour,
     const bool syncPar,
     const bool defectCorr,
     const scalar areaSwitch
 )
 :
-    polyMesh(io, points, faces, allOwner, allNeighbour, syncPar, defectCorr, areaSwitch),
+    polyMesh
+    (
+        io,
+        move(points),
+        move(faces),
+        move(allOwner),
+        move(allNeighbour),
+        syncPar,
+        defectCorr,
+        areaSwitch
+    ),
     surfaceInterpolation(*this),
     fvSchemes(static_cast<const objectRegistry&>(*this)),
     fvSolution(static_cast<const objectRegistry&>(*this)),
@@ -383,15 +393,15 @@ CML::fvMesh::fvMesh
 CML::fvMesh::fvMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<cellList>& cells,
+    pointField&& points,
+    faceList&& faces,
+    cellList&& cells,
     const bool syncPar,
     const bool defectCorr,
     const scalar areaSwitch
 )
 :
-    polyMesh(io, points, faces, cells, syncPar, defectCorr, areaSwitch),
+    polyMesh(io, move(points), move(faces), move(cells), syncPar, defectCorr, areaSwitch),
     surfaceInterpolation(*this),
     fvSchemes(static_cast<const objectRegistry&>(*this)),
     fvSolution(static_cast<const objectRegistry&>(*this)),
@@ -670,7 +680,6 @@ CML::tmp<CML::scalarField> CML::fvMesh::movePoints(const pointField& p)
         curTimeIndex_ = time().timeIndex();
     }
 
-
     if (!phiPtr_)
     {
         // Create mesh motion flux
@@ -683,7 +692,7 @@ CML::tmp<CML::scalarField> CML::fvMesh::movePoints(const pointField& p)
                 *this,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                true
             ),
             *this,
             dimVolume/dimTime
@@ -705,17 +714,20 @@ CML::tmp<CML::scalarField> CML::fvMesh::movePoints(const pointField& p)
     scalar rDeltaT = 1.0/time().deltaTValue();
 
     tmp<scalarField> tsweptVols = polyMesh::movePoints(p);
-    scalarField& sweptVols = tsweptVols();
+    scalarField& sweptVols = tsweptVols.ref();
 
-    phi.internalField() = scalarField::subField(sweptVols, nInternalFaces());
-    phi.internalField() *= rDeltaT;
+    phi.primitiveFieldRef() =
+        scalarField::subField(sweptVols, nInternalFaces());
+    phi.primitiveFieldRef() *= rDeltaT;
 
     const fvPatchList& patches = boundary();
 
-    forAll(patches, patchI)
+    surfaceScalarField::Boundary& phibf = phi.boundaryFieldRef();
+
+    forAll(patches, patchi)
     {
-        phi.boundaryField()[patchI] = patches[patchI].patchSlice(sweptVols);
-        phi.boundaryField()[patchI] *= rDeltaT;
+        phibf[patchi] = patches[patchi].patchSlice(sweptVols);
+        phibf[patchi] *= rDeltaT;
     }
 
     // Update or delete the local geometric properties as early as possible so
@@ -765,19 +777,12 @@ void CML::fvMesh::updateMesh(const mapPolyMesh& mpm)
 }
 
 
-bool CML::fvMesh::writeObjects
+bool CML::fvMesh::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp
 ) const
-{
-    return polyMesh::writeObject(fmt, ver, cmp);
-}
-
-
-//- Write mesh using IO settings from the time
-bool CML::fvMesh::write() const
 {
     bool ok = true;
     if (phiPtr_)
@@ -785,7 +790,19 @@ bool CML::fvMesh::write() const
         ok = phiPtr_->write();
     }
 
-    return ok && polyMesh::write();
+    // Write V0 only if V00 exists
+    if (V00Ptr_)
+    {
+        ok = ok && V0Ptr_->write();
+    }
+
+    return ok && polyMesh::writeObject(fmt, ver, cmp);
+}
+
+
+bool CML::fvMesh::write() const
+{
+    return polyMesh::write();
 }
 
 

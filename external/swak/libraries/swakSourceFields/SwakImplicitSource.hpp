@@ -181,8 +181,8 @@ void CML::fv::SwakImplicitSource<T>::addSup(fvMatrix<T>& eqn, const label fieldI
     result.dimensions().reset(this->dimensions_[fieldI]);
     volScalarField usedResult(result*0);
     forAll(this->cells_,i) {
-        label cellI=this->cells_[i];
-        usedResult[cellI]=result[cellI];
+        label celli=this->cells_[i];
+        usedResult[celli]=result[celli];
     }
 
     if(switchExplicitImplicit_) {

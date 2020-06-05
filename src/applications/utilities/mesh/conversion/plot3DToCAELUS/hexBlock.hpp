@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
@@ -64,10 +64,10 @@ class hexBlock
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        hexBlock(const hexBlock&);
+        hexBlock(const hexBlock&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const hexBlock&);
+        void operator=(const hexBlock&) = delete;
 
         //- Vertex addressing inside the block
         inline label vtxLabel(label i, label j, label k) const;

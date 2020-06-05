@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -33,10 +33,10 @@ inline CML::IndirectListAddressing::IndirectListAddressing
 
 inline CML::IndirectListAddressing::IndirectListAddressing
 (
-    const Xfer<List<label> >& addr
+    List<label>&& addr
 )
 :
-    addressing_(addr)
+    addressing_(move(addr))
 {}
 
 
@@ -60,10 +60,10 @@ template<class T>
 inline CML::IndirectList<T>::IndirectList
 (
     const UList<T>& completeList,
-    const Xfer<List<label> >& addr
+    List<label>&& addr
 )
 :
-    IndirectListAddressing(addr),
+    IndirectListAddressing(move(addr)),
     UIndirectList<T>
     (
         completeList,
@@ -117,15 +117,6 @@ inline void CML::IndirectListAddressing::resetAddressing
 )
 {
     addressing_ = addr;
-}
-
-
-inline void CML::IndirectListAddressing::resetAddressing
-(
-    const Xfer<List<label> >& addr
-)
-{
-    addressing_.transfer(addr());
 }
 
 

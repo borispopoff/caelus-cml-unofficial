@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -93,25 +93,22 @@ class Sine
         scalar t0_;
 
         //- Scalar amplitude of the sin function
-        autoPtr<DataEntry<scalar> > amplitude_;
+        autoPtr<DataEntry<scalar>> amplitude_;
 
         //- Frequency of the sin function
-        autoPtr<DataEntry<scalar> > frequency_;
+        autoPtr<DataEntry<scalar>> frequency_;
 
         //- Scaling factor of the sin function
-        autoPtr<DataEntry<Type> > scale_;
+        autoPtr<DataEntry<Type>> scale_;
 
         //- Level to which the sin function is added
-        autoPtr<DataEntry<Type> > level_;
+        autoPtr<DataEntry<Type>> level_;
 
 
     // Private Member Functions
 
         //- Read the coefficients from the given dictionary
         void read(const dictionary& coeffs);
-
-        //- Disallow default bitwise assignment
-        void operator=(const Sine<Type>&);
 
 
 public:
@@ -132,12 +129,6 @@ public:
         //- Copy constructor
         Sine(const Sine<Type>& se);
 
-        //- Construct and return a clone
-        virtual tmp<DataEntry<Type> > clone() const
-        {
-            return tmp<DataEntry<Type> >(new Sine<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~Sine();
@@ -146,10 +137,16 @@ public:
     // Member Functions
 
         //- Return value for time t
-        Type value(const scalar t) const;
+        virtual inline Type value(const scalar t) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Sine<Type>&) = delete;
 };
 
 
@@ -227,7 +224,7 @@ void CML::DataEntryTypes::Sine<Type>::writeData(Ostream& os) const
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    os.writeKeyword("t0") << t0_ << token::END_STATEMENT << nl;
+    writeEntry(os, "t0", t0_);
     amplitude_->writeData(os);
     frequency_->writeData(os);
     scale_->writeData(os);

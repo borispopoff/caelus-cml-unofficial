@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016-2018 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -75,10 +75,10 @@ class BrunDrippingInjection
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        BrunDrippingInjection(const BrunDrippingInjection&);
+        BrunDrippingInjection(const BrunDrippingInjection&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const BrunDrippingInjection&);
+        void operator=(const BrunDrippingInjection&) = delete;
 
 
 protected:

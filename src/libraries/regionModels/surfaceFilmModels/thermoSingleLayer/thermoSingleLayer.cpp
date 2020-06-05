@@ -92,7 +92,7 @@ void thermoSingleLayer::resetPrimaryRegionSourceTerms()
 
     kinematicSingleLayer::resetPrimaryRegionSourceTerms();
 
-    hsSpPrimary_ == dimensionedScalar("zero", hsSp_.dimensions(), 0.0);
+    hsSpPrimary_ == dimensionedScalar("zero", hsSp_.dimensions(), 0);
 }
 
 
@@ -112,9 +112,9 @@ void thermoSingleLayer::correctHsForMappedT()
     forAll(T_.boundaryField(), patchi)
     {
         const fvPatchField<scalar>& Tp = T_.boundaryField()[patchi];
-        if (isA<mappedFieldFvPatchField<scalar> >(Tp))
+        if (isA<mappedFieldFvPatchField<scalar>>(Tp))
         {
-            hs_.boundaryField()[patchi] == hs(Tp, patchi);
+            hs_.boundaryFieldRef()[patchi] == hs(Tp, patchi);
         }
     }
 }
@@ -177,7 +177,7 @@ void thermoSingleLayer::transferPrimaryRegionSourceFields()
             (1.0/deltaT)/primaryMesh().magSf().boundaryField()[patchi]
         );
 
-        hsSpPrimary_.boundaryField()[patchi] *= rpriMagSfdeltaT;
+        hsSpPrimary_.boundaryFieldRef()[patchi] *= rpriMagSfdeltaT;
     }
 
     // Retrieve the source fields from the primary region via direct mapped
@@ -325,7 +325,7 @@ thermoSingleLayer::thermoSingleLayer
             IOobject::AUTO_WRITE
         ),
         regionMesh(),
-        dimensionedScalar("Cp", dimEnergy/dimMass/dimTemperature, 0.0),
+        dimensionedScalar("Cp", dimEnergy/dimMass/dimTemperature, 0),
         zeroGradientFvPatchScalarField::typeName
     ),
     kappa_
@@ -397,7 +397,7 @@ thermoSingleLayer::thermoSingleLayer
             IOobject::NO_WRITE
         ),
         regionMesh(),
-        dimensionedScalar("zero", dimEnergy/dimMass, 0.0),
+        dimensionedScalar("zero", dimEnergy/dimMass, 0),
         hsBoundaryTypes()
     ),
 
@@ -432,7 +432,7 @@ thermoSingleLayer::thermoSingleLayer
             IOobject::NO_WRITE
         ),
         regionMesh(),
-        dimensionedScalar("zero", dimEnergy/dimArea/dimTime, 0.0),
+        dimensionedScalar("zero", dimEnergy/dimArea/dimTime, 0),
         this->mappedPushedFieldPatchTypes<scalar>()
     ),
 
@@ -447,7 +447,7 @@ thermoSingleLayer::thermoSingleLayer
             IOobject::NO_WRITE
         ),
         primaryMesh(),
-        dimensionedScalar("zero", hsSp_.dimensions(), 0.0)
+        dimensionedScalar("zero", hsSp_.dimensions(), 0)
     ),
 
     TPrimary_
@@ -461,7 +461,7 @@ thermoSingleLayer::thermoSingleLayer
             IOobject::NO_WRITE
         ),
         regionMesh(),
-        dimensionedScalar("zero", dimTemperature, 0.0),
+        dimensionedScalar("zero", dimTemperature, 0),
         this->mappedFieldAndInternalPatchTypes<scalar>()
     ),
 
@@ -511,7 +511,7 @@ thermoSingleLayer::thermoSingleLayer
                         IOobject::NO_WRITE
                     ),
                     regionMesh(),
-                    dimensionedScalar("zero", dimless, 0.0),
+                    dimensionedScalar("zero", dimless, 0),
                     pSp_.boundaryField().types()
                 )
             );
@@ -592,7 +592,7 @@ void thermoSingleLayer::addSources
         Info<< "    energy   = " << energySource << nl << endl;
     }
 
-    hsSpPrimary_.boundaryField()[patchi][facei] -= energySource;
+    hsSpPrimary_.boundaryFieldRef()[patchi][facei] -= energySource;
 }
 
 
@@ -604,7 +604,7 @@ void thermoSingleLayer::preEvolveRegion()
     }
 
     kinematicSingleLayer::preEvolveRegion();
-    primaryEnergyTrans_ == dimensionedScalar("zero", dimEnergy, 0.0);
+    primaryEnergyTrans_ == dimensionedScalar("zero", dimEnergy, 0);
 }
 
 
@@ -717,11 +717,11 @@ void thermoSingleLayer::info()
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho() const
+tmp<volScalarField::Internal> thermoSingleLayer::Srho() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tSrho
+    tmp<volScalarField::Internal> tSrho
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -733,11 +733,11 @@ tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho() const
                 false
             ),
             primaryMesh(),
-            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
         )
     );
 
-    scalarField& Srho = tSrho();
+    scalarField& Srho = tSrho.ref();
     const scalarField& V = primaryMesh().V();
     const scalar dt = time_.deltaTValue();
 
@@ -764,16 +764,16 @@ tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho() const
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho
+tmp<volScalarField::Internal> thermoSingleLayer::Srho
 (
     const label i
 ) const
 {
     const label vapId = thermo_.carrierId(filmThermo_->name());
 
-    tmp<DimensionedField<scalar, volMesh> > tSrho
+    tmp<volScalarField::Internal> tSrho
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -785,13 +785,13 @@ tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho
                 false
             ),
             primaryMesh(),
-            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
         )
     );
 
     if (vapId == i)
     {
-        scalarField& Srho = tSrho();
+        scalarField& Srho = tSrho.ref();
         const scalarField& V = primaryMesh().V();
         const scalar dt = time().deltaTValue();
 
@@ -819,11 +819,11 @@ tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Srho
 }
 
 
-tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Sh() const
+tmp<volScalarField::Internal> thermoSingleLayer::Sh() const
 {
-    tmp<DimensionedField<scalar, volMesh> > tSh
+    tmp<volScalarField::Internal> tSh
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -835,11 +835,11 @@ tmp<DimensionedField<scalar, volMesh> > thermoSingleLayer::Sh() const
                 false
             ),
             primaryMesh(),
-            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0)
         )
     );
 
-    scalarField& Sh = tSh();
+    scalarField& Sh = tSh.ref();
     const scalarField& V = primaryMesh().V();
     const scalar dt = time_.deltaTValue();
 

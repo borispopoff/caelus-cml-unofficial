@@ -20,7 +20,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "quarterCosineRamp.hpp"
-#include "mathematicalConstants.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -49,17 +48,6 @@ CML::DataEntryTypes::quarterCosineRamp::quarterCosineRamp
 
 CML::DataEntryTypes::quarterCosineRamp::~quarterCosineRamp()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-CML::scalar CML::DataEntryTypes::quarterCosineRamp::value
-(
-    const scalar t
-) const
-{
-    return 1 - cos(0.5*constant::mathematical::pi*linearRamp(t));
-}
 
 
 // ************************************************************************* //

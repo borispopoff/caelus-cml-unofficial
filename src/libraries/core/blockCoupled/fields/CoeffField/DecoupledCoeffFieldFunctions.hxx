@@ -34,7 +34,7 @@ License
 /* * * * * * * * * * * * * * * * Global functions  * * * * * * * * * * * * * */
 
 template<class Type>
-CML::tmp<CML::DecoupledCoeffField<Type> > CML::inv
+CML::tmp<CML::DecoupledCoeffField<Type>> CML::inv
 (
     const DecoupledCoeffField<Type>& f
 )
@@ -47,11 +47,11 @@ CML::tmp<CML::DecoupledCoeffField<Type> > CML::inv
     typedef typename DecoupledCoeffField<Type>::linearType linearType;
 
     // Create result
-    tmp<DecoupledCoeffField<Type> > tresult
+    tmp<DecoupledCoeffField<Type>> tresult
     (
         new DecoupledCoeffField<Type>(f.size())
     );
-    DecoupledCoeffField<Type>& result = tresult();
+    DecoupledCoeffField<Type>& result = tresult.ref();
 
     if (f.activeType() == blockCoeffBase::SCALAR)
     {
@@ -134,7 +134,7 @@ void CML::multiply
 #define UNARY_OPERATOR(op, opFunc)                                            \
                                                                               \
 template<class Type>                                                          \
-void CML::opFunc                                                             \
+void CML::opFunc                                                              \
 (                                                                             \
     DecoupledCoeffField<Type>& f,                                             \
     const DecoupledCoeffField<Type>& f1                                       \
@@ -161,12 +161,12 @@ void CML::opFunc                                                             \
                                                                               \
                                                                               \
 template<class Type>                                                          \
-CML::tmp<CML::DecoupledCoeffField<Type> > CML::operator op                 \
+CML::tmp<CML::DecoupledCoeffField<Type>> CML::operator op                     \
 (                                                                             \
     const DecoupledCoeffField<Type>& f1                                       \
 )                                                                             \
 {                                                                             \
-    tmp<DecoupledCoeffField<Type> > tf                                        \
+    tmp<DecoupledCoeffField<Type>> tf                                         \
     (                                                                         \
         new DecoupledCoeffField<Type>(f1.size())                              \
     );                                                                        \
@@ -176,12 +176,12 @@ CML::tmp<CML::DecoupledCoeffField<Type> > CML::operator op                 \
                                                                               \
                                                                               \
 template<class Type>                                                          \
-CML::tmp<CML::DecoupledCoeffField<Type> > CML::operator op                 \
+CML::tmp<CML::DecoupledCoeffField<Type>> CML::operator op                     \
 (                                                                             \
-    const tmp<DecoupledCoeffField<Type> >& tf1                                \
+    const tmp<DecoupledCoeffField<Type>>& tf1                                 \
 )                                                                             \
 {                                                                             \
-    tmp<DecoupledCoeffField<Type> > tf(tf1.ptr());                            \
+    tmp<DecoupledCoeffField<Type>> tf(tf1.ptr());                             \
     opFunc(tf(), tf());                                                       \
     return tf;                                                                \
 }
@@ -194,39 +194,39 @@ UNARY_OPERATOR(-, negate)
 #define BINARY_OPERATOR_FF(Type1, Type2, op, opFunc)                          \
                                                                               \
 template<class Type>                                                          \
-CML::tmp<CML::Field<Type> > CML::operator op                               \
+CML::tmp<CML::Field<Type>> CML::operator op                                   \
 (                                                                             \
     const DecoupledCoeffField<Type1>& f1,                                     \
     const Type2& f2                                                           \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(new Field<Type>(f1.size()));                         \
+    tmp<Field<Type>> tf(new Field<Type>(f1.size()));                          \
     opFunc(tf(), f1, f2);                                                     \
     return tf;                                                                \
 }                                                                             \
                                                                               \
                                                                               \
 template<class Type>                                                          \
-CML::tmp<CML::Field<Type> > CML::operator op                               \
+CML::tmp<CML::Field<Type>> CML::operator op                                   \
 (                                                                             \
     const DecoupledCoeffField<Type1>& f1,                                     \
     const Field<Type2>& f2                                                    \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(new Field<Type>(f1.size()));                         \
+    tmp<Field<Type>> tf(new Field<Type>(f1.size()));                          \
     opFunc(tf(), f1, f2);                                                     \
     return tf;                                                                \
 }                                                                             \
                                                                               \
                                                                               \
 template<class Type>                                                          \
-CML::tmp<CML::Field<Type> > CML::operator op                               \
+CML::tmp<CML::Field<Type>> CML::operator op                                   \
 (                                                                             \
     const Field<Type2>& f1,                                                   \
     const DecoupledCoeffField<Type1>& f2                                      \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(new Field<Type>(f1.size()));                         \
+    tmp<Field<Type>> tf(new Field<Type>(f1.size()));                          \
     opFunc(tf(), f1, f2);                                                     \
     return tf;                                                                \
 }
@@ -234,13 +234,13 @@ CML::tmp<CML::Field<Type> > CML::operator op                               \
 
 #define BINARY_OPERATOR_FTR(Type1, Type2, op, opFunc)                         \
 template<class Type>                                                          \
-CML::tmp<CML::Field<Type> > CML::operator op                               \
+CML::tmp<CML::Field<Type>> CML::operator op                                   \
 (                                                                             \
     const DecoupledCoeffField<Type1>& f1,                                     \
-    const tmp<Field<Type2> >& tf2                                             \
+    const tmp<Field<Type2>>& tf2                                              \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(tf2.ptr());                                          \
+    tmp<Field<Type>> tf(tf2.ptr());                                           \
     opFunc(tf(), f1, tf());                                                   \
     return tf;                                                                \
 }
@@ -248,13 +248,13 @@ CML::tmp<CML::Field<Type> > CML::operator op                               \
 
 #define BINARY_OPERATOR_FT(Type1, Type2, op, opFunc)                          \
 template<class Type>                                                          \
-CML::tmp<CML::Field<Type> > CML::operator op                               \
+CML::tmp<CML::Field<Type>> CML::operator op                                   \
 (                                                                             \
     const Field<Type1>& f1,                                                   \
-    const tmp<DecoupledCoeffField<Type2> >& tf2                               \
+    const tmp<DecoupledCoeffField<Type2>>& tf2                                \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf = f1 op tf2();                                       \
+    tmp<Field<Type>> tf = f1 op tf2();                                        \
     tf2.clear();                                                              \
     return tf;                                                                \
 }
@@ -262,13 +262,13 @@ CML::tmp<CML::Field<Type> > CML::operator op                               \
 
 #define BINARY_OPERATOR_TRF(Type1, Type2, op, opFunc)                         \
 template<class Type>                                                          \
-CML::tmp<CML::Field<Type> > CML::operator op                               \
+CML::tmp<CML::Field<Type>> CML::operator op                                   \
 (                                                                             \
-    const tmp<DecoupledCoeffField<Type1> >& tf1,                              \
+    const tmp<DecoupledCoeffField<Type1>>& tf1,                               \
     const Field<Type2>& f2                                                    \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(tf1.ptr());                                          \
+    tmp<Field<Type>> tf(tf1.ptr());                                           \
     opFunc(tf(), tf(), f2);                                                   \
     return tf;                                                                \
 }
@@ -276,13 +276,13 @@ CML::tmp<CML::Field<Type> > CML::operator op                               \
 
 #define BINARY_OPERATOR_TF(Type1, Type2, op, opFunc)                          \
 template<class Type>                                                          \
-CML::tmp<CML::Field<Type> > CML::operator op                               \
+CML::tmp<CML::Field<Type>> CML::operator op                                   \
 (                                                                             \
-    const tmp<DecoupledCoeffField<Type1> >& tf1,                              \
+    const tmp<DecoupledCoeffField<Type1>>& tf1,                               \
     const Field<Type2>& f2                                                    \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf = tf1() op f2;                                       \
+    tmp<Field<Type>> tf = tf1() op f2;                                        \
     tf1.clear();                                                              \
     return tf;                                                                \
 }
@@ -290,13 +290,13 @@ CML::tmp<CML::Field<Type> > CML::operator op                               \
 
 #define BINARY_OPERATOR_TRT(Type1, Type2, op, opFunc)                         \
 template<class Type>                                                          \
-CML::tmp<CML::Field<Type> > CML::operator op                               \
+CML::tmp<CML::Field<Type>> CML::operator op                                   \
 (                                                                             \
-    const tmp<DecoupledCoeffField<Type1> >& tf1,                              \
-    const tmp<Field<Type2> >& tf2                                             \
+    const tmp<DecoupledCoeffField<Type1>>& tf1,                               \
+    const tmp<Field<Type2>>& tf2                                              \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(tf1.ptr());                                          \
+    tmp<Field<Type>> tf(tf1.ptr());                                           \
     opFunc(tf(), tf(), tf2());                                                \
     tf2.clear();                                                              \
     return tf;                                                                \
@@ -305,13 +305,13 @@ CML::tmp<CML::Field<Type> > CML::operator op                               \
 
 #define BINARY_OPERATOR_TTR(Type1, Type2, op, opFunc)                         \
 template<class Type>                                                          \
-CML::tmp<CML::Field<Type> > CML::operator op                               \
+CML::tmp<CML::Field<Type>> CML::operator op                                   \
 (                                                                             \
-    const tmp<Field<Type1> >& tf1,                                            \
-    const tmp<DecoupledCoeffField<Type2> >& tf2                               \
+    const tmp<Field<Type1>>& tf1,                                             \
+    const tmp<DecoupledCoeffField<Type2>>& tf2                                \
 )                                                                             \
 {                                                                             \
-    tmp<Field<Type> > tf(tf2.ptr());                                          \
+    tmp<Field<Type>> tf(tf2.ptr());                                           \
     opFunc(tf(), tf1(), tf());                                                \
     tf1.clear();                                                              \
     return tf;                                                                \

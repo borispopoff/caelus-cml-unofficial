@@ -92,9 +92,9 @@ public:
         LocalInteraction(const LocalInteraction<CloudType>& pim);
 
         //- Construct and return a clone using supplied owner cloud
-        virtual autoPtr<PatchInteractionModel<CloudType> > clone() const
+        virtual autoPtr<PatchInteractionModel<CloudType>> clone() const
         {
-            return autoPtr<PatchInteractionModel<CloudType> >
+            return autoPtr<PatchInteractionModel<CloudType>>
             (
                 new LocalInteraction<CloudType>(*this)
             );
@@ -239,7 +239,7 @@ CML::volScalarField& CML::LocalInteraction<CloudType>::massEscape()
                     IOobject::AUTO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimMass, 0.0)
+                dimensionedScalar("zero", dimMass, 0)
             )
         );
     }
@@ -268,7 +268,7 @@ CML::volScalarField& CML::LocalInteraction<CloudType>::massStick()
                     IOobject::AUTO_WRITE
                 ),
                 mesh,
-                dimensionedScalar("zero", dimMass, 0.0)
+                dimensionedScalar("zero", dimMass, 0)
             )
         );
     }
@@ -317,7 +317,7 @@ bool CML::LocalInteraction<CloudType>::correct
                 {
                     label pI = pp.index();
                     label fI = pp.whichFace(p.face());
-                    massEscape().boundaryField()[pI][fI] += dm;
+                    massEscape().boundaryFieldRef()[pI][fI] += dm;
                 }
                 break;
             }
@@ -334,7 +334,7 @@ bool CML::LocalInteraction<CloudType>::correct
                 {
                     label pI = pp.index();
                     label fI = pp.whichFace(p.face());
-                    massStick().boundaryField()[pI][fI] += dm;
+                    massStick().boundaryFieldRef()[pI][fI] += dm;
                 }
                 break;
             }

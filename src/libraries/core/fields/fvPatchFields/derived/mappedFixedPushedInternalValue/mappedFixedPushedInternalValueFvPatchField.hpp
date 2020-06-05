@@ -119,9 +119,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mappedFixedPushedInternalValueFvPatchField<Type>
                 (
@@ -138,12 +138,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mappedFixedPushedInternalValueFvPatchField<Type>
                 (
@@ -166,11 +166,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "UIndirectList.hpp"
 
@@ -252,7 +249,7 @@ void CML::mappedFixedPushedInternalValueFvPatchField<Type>::updateCoeffs()
     mappedFixedValueFvPatchField<Type>::updateCoeffs();
 
     // Assign the patch internal field to its boundary value
-    Field<Type>& intFld = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& intFld = const_cast<Field<Type>&>(this->primitiveField());
     UIndirectList<Type>(intFld, this->patch().faceCells()) = *this;
 }
 
@@ -267,9 +264,4 @@ void CML::mappedFixedPushedInternalValueFvPatchField<Type>::write
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

@@ -104,7 +104,7 @@ public:
             bool accessed,
             label origProcOfOther,
             label origIdOfOther,
-            const Type& data = pTraits<Type>::zero
+            const Type& data = Type(Zero)
         );
 
         //- Construct from Istream

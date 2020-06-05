@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -614,10 +614,24 @@ CML::triSurface::triSurface
     List<labelledTri>& triangles,
     const geometricSurfacePatchList& patches,
     pointField& points,
-    const bool reUse
+    const bool reuse
 )
 :
-    ParentType(triangles, points, reUse),
+    ParentType(triangles, points, reuse),
+    patches_(patches),
+    sortedEdgeFacesPtr_(nullptr),
+    edgeOwnerPtr_(nullptr)
+{}
+
+
+CML::triSurface::triSurface
+(
+    List<labelledTri>&& triangles,
+    const geometricSurfacePatchList& patches,
+    List<point>&& points
+)
+:
+    ParentType(move(triangles), move(points)),
     patches_(patches),
     sortedEdgeFacesPtr_(nullptr),
     edgeOwnerPtr_(nullptr)
@@ -705,6 +719,15 @@ CML::triSurface::triSurface(const triSurface& ts)
 :
     ParentType(ts, ts.points()),
     patches_(ts.patches()),
+    sortedEdgeFacesPtr_(nullptr),
+    edgeOwnerPtr_(nullptr)
+{}
+
+
+CML::triSurface::triSurface(triSurface&& ts)
+:
+    ParentType(move(ts), move(ts.points())),
+    patches_(move(ts.patches())),
     sortedEdgeFacesPtr_(nullptr),
     edgeOwnerPtr_(nullptr)
 {}
@@ -1054,7 +1077,7 @@ CML::tmp<CML::vectorField> CML::triSurface::pointNormals2() const
     (
         new vectorField(nPoints(), Zero)
     );
-    vectorField& pointNormals = tpointNormals();
+    vectorField& pointNormals = tpointNormals.ref();
 
     const pointField& points = this->points();
     const labelListList& pointFaces = this->pointFaces();
@@ -1157,6 +1180,15 @@ void CML::triSurface::operator=(const triSurface& ts)
     clearOut();
     storedPoints() = ts.points();
     patches_ = ts.patches();
+}
+
+
+void CML::triSurface::operator=(triSurface&& ts)
+{
+    List<labelledTri>::operator=(move(ts));
+    clearOut();
+    storedPoints() = move(ts.points());
+    patches_ = move(ts.patches());
 }
 
 

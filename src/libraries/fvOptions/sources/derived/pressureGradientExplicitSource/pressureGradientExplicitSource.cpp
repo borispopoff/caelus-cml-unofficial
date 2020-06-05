@@ -51,7 +51,7 @@ void CML::fv::pressureGradientExplicitSource::writeProps
 ) const
 {
     // Only write on output time
-    if (mesh_.time().outputTime())
+    if (mesh_.time().writeTime())
     {
         IOdictionary propsDict
         (
@@ -81,7 +81,7 @@ CML::fv::pressureGradientExplicitSource::pressureGradientExplicitSource
     const fvMesh& mesh
 )
 :
-    option(sourceName, modelType, dict, mesh),
+    cellSetOption(sourceName, modelType, dict, mesh),
     Ubar_(coeffs_.lookup("Ubar")),
     gradP0_(0.0),
     dGradP_(0.0),
@@ -128,10 +128,10 @@ void CML::fv::pressureGradientExplicitSource::correct(volVectorField& U)
     const scalarField& cv = mesh_.V();
     forAll(cells_, i)
     {
-        label cellI = cells_[i];
-        scalar volCell = cv[cellI];
-        magUbarAve += (flowDir_ & U[cellI])*volCell;
-        rAUave += rAU[cellI]*volCell;
+        label celli = cells_[i];
+        scalar volCell = cv[celli];
+        magUbarAve += (flowDir_ & U[celli])*volCell;
+        rAUave += rAU[celli]*volCell;
     }
 
     // Collect across all processors
@@ -149,8 +149,8 @@ void CML::fv::pressureGradientExplicitSource::correct(volVectorField& U)
     // Apply correction to velocity field
     forAll(cells_, i)
     {
-        label cellI = cells_[i];
-        U[cellI] += flowDir_*rAU[cellI]*dGradP_;
+        label celli = cells_[i];
+        U[celli] += flowDir_*rAU[celli]*dGradP_;
     }
 
     scalar gradP = gradP0_ + dGradP_;
@@ -165,21 +165,21 @@ void CML::fv::pressureGradientExplicitSource::correct(volVectorField& U)
 void CML::fv::pressureGradientExplicitSource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     DimensionedField<vector, volMesh> Su
     (
         IOobject
         (
-            name_ + fieldNames_[fieldI] + "Sup",
+            name_ + fieldNames_[fieldi] + "Sup",
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedVector("zero", eqn.dimensions()/dimVolume, vector::zero)
+        dimensionedVector("zero", eqn.dimensions()/dimVolume, Zero)
     );
 
     scalar gradP = gradP0_ + dGradP_;
@@ -194,10 +194,10 @@ void CML::fv::pressureGradientExplicitSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    this->addSup(eqn, fieldI);
+    this->addSup(eqn, fieldi);
 }
 
 

@@ -70,7 +70,7 @@ class polyBoundaryMesh
         mutable autoPtr<HashTable<labelList, word>> groupPatchIDsPtr_;
 
         //- Edges of neighbouring patches
-        mutable autoPtr<List<labelPairList> > neighbourEdgesPtr_;
+        mutable autoPtr<List<labelPairList>> neighbourEdgesPtr_;
 
 
     // Private Member Functions

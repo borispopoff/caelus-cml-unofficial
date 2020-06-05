@@ -139,11 +139,11 @@ void CML::mixerFvMesh::addZonesAndModifiers()
     labelList movingCells(nCells());
     label nMovingCells = 0;
 
-    forAll(rs, cellI)
+    forAll(rs, celli)
     {
-        if (rs[cellI] == originRegion)
+        if (rs[celli] == originRegion)
         {
-            movingCells[nMovingCells] = cellI;
+            movingCells[nMovingCells] = celli;
             nMovingCells++;
         }
     }
@@ -213,18 +213,18 @@ void CML::mixerFvMesh::calcMovingMasks() const
 
     const labelList& cellAddr = cellZones()["movingCells"];
 
-    forAll(cellAddr, cellI)
+    forAll(cellAddr, celli)
     {
-        const cell& curCell = c[cellAddr[cellI]];
+        const cell& curCell = c[cellAddr[celli]];
 
-        forAll(curCell, faceI)
+        forAll(curCell, facei)
         {
             // Mark all the points as moving
-            const face& curFace = f[curCell[faceI]];
+            const face& curFace = f[curCell[facei]];
 
-            forAll(curFace, pointI)
+            forAll(curFace, pointi)
             {
-                movingPointsMask[curFace[pointI]] = 1;
+                movingPointsMask[curFace[pointi]] = 1;
             }
         }
     }
@@ -237,13 +237,13 @@ void CML::mixerFvMesh::calcMovingMasks() const
 
     const labelList& innerSliderAddr = faceZones()[innerSliderZoneName];
 
-    forAll(innerSliderAddr, faceI)
+    forAll(innerSliderAddr, facei)
     {
-        const face& curFace = f[innerSliderAddr[faceI]];
+        const face& curFace = f[innerSliderAddr[facei]];
 
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
-            movingPointsMask[curFace[pointI]] = 1;
+            movingPointsMask[curFace[pointi]] = 1;
         }
     }
 
@@ -255,13 +255,13 @@ void CML::mixerFvMesh::calcMovingMasks() const
 
     const labelList& outerSliderAddr = faceZones()[outerSliderZoneName];
 
-    forAll(outerSliderAddr, faceI)
+    forAll(outerSliderAddr, facei)
     {
-        const face& curFace = f[outerSliderAddr[faceI]];
+        const face& curFace = f[outerSliderAddr[facei]];
 
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
-            movingPointsMask[curFace[pointI]] = 0;
+            movingPointsMask[curFace[pointi]] = 0;
         }
     }
 }

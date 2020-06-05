@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -51,7 +51,7 @@ class splitCell
 
         //- Unsplit cell label. Only uptodate if this cell is 'live'
         //  (i.e. no master or slave)
-        label cellI_;
+        label celli_;
 
         //- Parent splitCell or null
         splitCell* parent_;
@@ -65,10 +65,10 @@ class splitCell
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        splitCell(const splitCell&);
+        splitCell(const splitCell&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const splitCell&);
+        void operator=(const splitCell&) = delete;
 
 
 public:
@@ -76,7 +76,7 @@ public:
     // Constructors
 
         //- Construct from cell number and parent
-        splitCell(const label cellI, splitCell* parent);
+        splitCell(const label celli, splitCell* parent);
 
 
     //- Destructor
@@ -89,12 +89,12 @@ public:
 
             label cellLabel() const
             {
-                return cellI_;
+                return celli_;
             }
 
             label& cellLabel()
             {
-                return cellI_;
+                return celli_;
             }
 
             splitCell* parent() const

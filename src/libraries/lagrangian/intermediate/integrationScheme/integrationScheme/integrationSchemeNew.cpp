@@ -22,6 +22,13 @@ License
 #include "integrationScheme.hpp"
 #include "error.hpp"
 
+#ifdef windows
+//Symbol to force loading at runtime
+extern "C"
+void lagrangianIntermediateLoad()
+{}
+#endif
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 CML::autoPtr<CML::integrationScheme>

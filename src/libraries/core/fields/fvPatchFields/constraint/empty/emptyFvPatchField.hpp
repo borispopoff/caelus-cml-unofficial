@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,8 +22,22 @@ Class
     CML::emptyFvPatchField
 
 Description
-    CML::emptyFvPatchField
+    This boundary condition provides an 'empty' condition for reduced
+    dimensions cases, i.e. 1- and 2-D geometries.  Apply this condition to
+    patches whose normal is aligned to geometric directions that do not
+    constitue solution directions.
 
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            empty;
+    }
+    \endverbatim
+
+SourceFiles
+    emptyFvPatchField.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -87,9 +101,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new emptyFvPatchField<Type>(*this)
             );
@@ -103,12 +117,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new emptyFvPatchField<Type>(*this, iF)
             );
@@ -145,57 +159,50 @@ public:
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const
             {
-                return tmp<Field<Type> >(new Field<Type>(0));
+                return tmp<Field<Type>>(new Field<Type>(0));
             }
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const
             {
-                return tmp<Field<Type> >(new Field<Type>(0));
+                return tmp<Field<Type>>(new Field<Type>(0));
             }
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            tmp<Field<Type> > gradientInternalCoeffs() const
+            tmp<Field<Type>> gradientInternalCoeffs() const
             {
-                return tmp<Field<Type> >(new Field<Type>(0));
+                return tmp<Field<Type>>(new Field<Type>(0));
             }
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            tmp<Field<Type> > gradientBoundaryCoeffs() const
+            tmp<Field<Type>> gradientBoundaryCoeffs() const
             {
-                return tmp<Field<Type> >(new Field<Type>(0));
+                return tmp<Field<Type>>(new Field<Type>(0));
             }
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fvPatchFieldMapper.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+CML::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -206,7 +213,7 @@ emptyFvPatchField<Type>::emptyFvPatchField
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+CML::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const emptyFvPatchField<Type>&,
     const fvPatch& p,
@@ -222,15 +229,15 @@ emptyFvPatchField<Type>::emptyFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+CML::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -245,15 +252,15 @@ emptyFvPatchField<Type>::emptyFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+CML::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const emptyFvPatchField<Type>& ptf
 )
@@ -261,14 +268,14 @@ emptyFvPatchField<Type>::emptyFvPatchField
     fvPatchField<Type>
     (
         ptf.patch(),
-        ptf.dimensionedInternalField(),
+        ptf.internalField(),
         Field<Type>(0)
     )
 {}
 
 
 template<class Type>
-emptyFvPatchField<Type>::emptyFvPatchField
+CML::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const emptyFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -281,14 +288,14 @@ emptyFvPatchField<Type>::emptyFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void emptyFvPatchField<Type>::updateCoeffs()
+void CML::emptyFvPatchField<Type>::updateCoeffs()
 {
     //- Check moved to checkMesh. Test here breaks down if multiple empty
     //  patches.
     //if
     //(
     //    this->patch().patch().size()
-    //  % this->dimensionedInternalField().mesh().nCells()
+    //  % this->internalField().mesh().nCells()
     //)
     //{
     //    FatalErrorInFunction
@@ -301,12 +308,4 @@ void emptyFvPatchField<Type>::updateCoeffs()
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

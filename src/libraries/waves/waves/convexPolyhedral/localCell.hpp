@@ -124,9 +124,9 @@ public:
             }
         }
 
-        void addNeg( const label faceI )
+        void addNeg( const label facei )
         {
-            ccNeg_[negCount_++] = faceI;
+            ccNeg_[negCount_++] = facei;
         }
 
         void addPos( const face f )
@@ -140,9 +140,9 @@ public:
             }
         }
 
-        void addPos(const label faceI)
+        void addPos(const label facei)
         {
-            ccPos_[posCount_++] = faceI;
+            ccPos_[posCount_++] = facei;
         }
 
         void fullNeg()
@@ -186,20 +186,20 @@ public:
         const faceList& faces() const {return fL_;};
         faceList& faces() {return fL_;};
 
-        const face& faces(const label faceI) const {return fL_[faceI];};
+        const face& faces(const label facei) const {return fL_[facei];};
 
         const face iface() const {return fL_[ccNeg_[ccNeg_.size() - 1]];};
 
     // Access functions used for testing
 
-        scalar fmag(const label faceI) const {return fL_[faceI].mag(pp_);};
-        vector fcentre(const label faceI) const
+        scalar fmag(const label facei) const {return fL_[facei].mag(pp_);};
+        vector fcentre(const label facei) const
         {
-            return fL_[faceI].centre(pp_);
+            return fL_[facei].centre(pp_);
         };
-        vector fnormal(const label faceI) const
+        vector fnormal(const label facei) const
         {
-            return fL_[faceI].normal(pp_);
+            return fL_[facei].normal(pp_);
         };
 
     // Write

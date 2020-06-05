@@ -48,7 +48,7 @@ class deferredCorrectionScheme
     public fv::convectionScheme<Type>
 {
 
-    tmp<fv::convectionScheme<Type> > scheme_;
+    tmp<fv::convectionScheme<Type>> scheme_;
     scalar r_;
 
     //- Disallow default bitwise copy construct
@@ -77,7 +77,7 @@ public:
     {
         if(is.eof())
         {
-            r_ = scalar(1.0);
+            r_ = scalar(1);
         }
         else
         {
@@ -92,25 +92,25 @@ public:
         }
     }
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > interpolate
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> interpolate
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     ) const;
 
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > flux
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     ) const;
 
-    tmp<fvMatrix<Type> > fvmDiv
+    tmp<fvMatrix<Type>> fvmDiv
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     ) const;
 
-    tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDiv
+    tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDiv
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
@@ -132,7 +132,7 @@ namespace fv
 {
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 deferredCorrectionScheme<Type>::interpolate
 (
     const surfaceScalarField& phi,
@@ -143,7 +143,7 @@ deferredCorrectionScheme<Type>::interpolate
 }
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 deferredCorrectionScheme<Type>::flux
 (
     const surfaceScalarField& faceFlux,
@@ -154,14 +154,14 @@ deferredCorrectionScheme<Type>::flux
 }
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 deferredCorrectionScheme<Type>::fvmDiv
 (
     const surfaceScalarField& faceFlux,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > sd = 
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> sd = 
         this->scheme_().interpScheme()().correction(vf);
 
     return
@@ -170,14 +170,14 @@ deferredCorrectionScheme<Type>::fvmDiv
 }
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 deferredCorrectionScheme<Type>::fvcDiv
 (
     const surfaceScalarField& faceFlux,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 ) const
 {
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > sd = 
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> sd = 
         this->scheme_().interpScheme()().correction(vf);
 
     return 

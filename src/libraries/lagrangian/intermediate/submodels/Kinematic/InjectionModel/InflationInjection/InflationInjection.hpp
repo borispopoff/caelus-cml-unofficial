@@ -52,7 +52,7 @@ namespace CML
 // + diameter = vectorPairScalarPair::second().first()
 // + target diameter = vectorPairScalarPair::second().second()
 // One structure to allow single operation parallel comms
-typedef Tuple2<Pair<vector>, Pair<scalar> > vectorPairScalarPair;
+typedef Tuple2<Pair<vector>, Pair<scalar>> vectorPairScalarPair;
 
 
 /*---------------------------------------------------------------------------*\
@@ -130,9 +130,9 @@ public:
         InflationInjection(const InflationInjection<CloudType>& im);
 
         //- Construct and return a clone
-        virtual autoPtr<InjectionModel<CloudType> > clone() const
+        virtual autoPtr<InjectionModel<CloudType>> clone() const
         {
-            return autoPtr<InjectionModel<CloudType> >
+            return autoPtr<InjectionModel<CloudType>>
             (
                 new InflationInjection<CloudType>(*this)
             );
@@ -341,7 +341,7 @@ CML::label CML::InflationInjection<CloudType>::parcelsToInject
 {
     const polyMesh& mesh = this->owner().mesh();
 
-    List<DynamicList<typename CloudType::parcelType*> >& cellOccupancy =
+    List<DynamicList<typename CloudType::parcelType*>>& cellOccupancy =
         this->owner().cellOccupancy();
 
     scalar gR = growthRate_.value(time1);
@@ -546,7 +546,7 @@ CML::label CML::InflationInjection<CloudType>::parcelsToInject
 
     if (Pstream::parRun())
     {
-        List<List<vectorPairScalarPair> > gatheredNewParticles
+        List<List<vectorPairScalarPair>> gatheredNewParticles
         (
             Pstream::nProcs()
         );
@@ -559,10 +559,10 @@ CML::label CML::InflationInjection<CloudType>::parcelsToInject
         // Combine
         List<vectorPairScalarPair> combinedNewParticles
         (
-            ListListOps::combine<List<vectorPairScalarPair> >
+            ListListOps::combine<List<vectorPairScalarPair>>
             (
                 gatheredNewParticles,
-                accessOp<List<vectorPairScalarPair> >()
+                accessOp<List<vectorPairScalarPair>>()
             )
         );
 

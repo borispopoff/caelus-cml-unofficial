@@ -84,7 +84,7 @@ CML::polynomial::polynomial(const word& entryName, const dictionary& dict)
 CML::polynomial::polynomial
 (
     const word& entryName,
-    const List<Tuple2<scalar, scalar> >& coeffs
+    const List<Tuple2<scalar, scalar>>& coeffs
 )
 :
     scalarDataEntry(entryName),

@@ -33,7 +33,7 @@ int CML::sigWriteNow::signal_
     debug::optimisationSwitch("writeNowSignal", -1)
 );
 
-static CML::Time* runTimePtr_ = nullptr;
+CML::Time* CML::sigWriteNow::runTimePtr_ = nullptr;
 
 
 struct sigaction CML::sigWriteNow::oldAction_;

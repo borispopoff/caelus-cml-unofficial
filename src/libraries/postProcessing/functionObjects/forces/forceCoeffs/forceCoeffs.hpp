@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
- 
+
     Caelus is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -136,10 +136,10 @@ class forceCoeffs
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        forceCoeffs(const forceCoeffs&);
+        forceCoeffs(const forceCoeffs&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const forceCoeffs&);
+        void operator=(const forceCoeffs&) = delete;
 
 
 protected:

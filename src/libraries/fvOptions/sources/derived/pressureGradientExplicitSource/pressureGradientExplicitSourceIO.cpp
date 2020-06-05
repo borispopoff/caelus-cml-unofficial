@@ -23,12 +23,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void CML::fv::pressureGradientExplicitSource::writeData(Ostream& os) const
-{
-    NotImplemented;
-}
-
-
 bool CML::fv::pressureGradientExplicitSource::read(const dictionary& dict)
 {
     NotImplemented;

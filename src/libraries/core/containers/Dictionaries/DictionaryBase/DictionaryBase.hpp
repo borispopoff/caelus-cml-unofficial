@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -32,7 +32,7 @@ Note
     gcc 2.95.2 so it has to be instantiated for T when an instantiation of
     DictionaryBase is requested
 
-See Also
+See also
     Dictionary and UDictionary
 
 
@@ -88,8 +88,11 @@ public:
         //- Construct given initial table size
         DictionaryBase(const label size = 128);
 
-        //- Copy construct
+        //- Copy constructor
         DictionaryBase(const DictionaryBase&);
+
+        //- Move constructor
+        DictionaryBase(DictionaryBase&&);
 
         //- Construct from Istream using given Istream constructor class
         template<class INew>
@@ -212,6 +215,17 @@ CML::DictionaryBase<IDLListType, T>::DictionaryBase
 {
     addEntries();
 }
+
+
+template<class IDLListType, class T>
+CML::DictionaryBase<IDLListType, T>::DictionaryBase
+(
+    DictionaryBase&& dict
+)
+:
+    IDLListType(move(dict)),
+    hashedTs_(move(dict.hashedTs_))
+{}
 
 
 template<class IDLListType, class T>

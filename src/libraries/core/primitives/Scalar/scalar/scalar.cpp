@@ -37,6 +37,7 @@ scalar readScalar(Istream& is)
     return rs;
 }
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace CML

@@ -48,9 +48,9 @@ License
 //
 //    forAll(patchIDs, i)
 //    {
-//        label patchI = patchIDs[i];
+//        label patchi = patchIDs[i];
 //
-//        const polyPatch& patch = patches[patchI];
+//        const polyPatch& patch = patches[patchi];
 //
 //        if (!patch.coupled())
 //        {
@@ -118,10 +118,10 @@ License
 //        {
 //            label oldMasterI = mergeSets[setI][0];
 //
-//            label faceI = map().reverseFaceMap()[oldMasterI];
+//            label facei = map().reverseFaceMap()[oldMasterI];
 //
-//            // faceI is always uncoupled boundary face
-//            const cell& cFaces = mesh_.cells()[mesh_.faceOwner()[faceI]];
+//            // facei is always uncoupled boundary face
+//            const cell& cFaces = mesh_.cells()[mesh_.faceOwner()[facei]];
 //
 //            forAll(cFaces, i)
 //            {
@@ -165,15 +165,15 @@ License
 //        {
 //            const faceList& faces = mesh_.faces();
 //
-//            forAll(faces, faceI)
+//            forAll(faces, facei)
 //            {
-//                const face& f = faces[faceI];
+//                const face& f = faces[facei];
 //
 //                forAll(f, fp)
 //                {
 //                    if (pointCanBeDeleted[f[fp]])
 //                    {
-//                        retestOldFaces.insert(faceI);
+//                        retestOldFaces.insert(facei);
 //                        break;
 //                    }
 //                }
@@ -214,18 +214,18 @@ License
 //
 //        forAllConstIter(labelHashSet, retestOldFaces, iter)
 //        {
-//            label faceI = map().reverseFaceMap()[iter.key()];
+//            label facei = map().reverseFaceMap()[iter.key()];
 //
-//            const cell& ownFaces = cells[mesh_.faceOwner()[faceI]];
+//            const cell& ownFaces = cells[mesh_.faceOwner()[facei]];
 //
 //            forAll(ownFaces, i)
 //            {
 //                retestFaces.insert(ownFaces[i]);
 //            }
 //
-//            if (mesh_.isInternalFace(faceI))
+//            if (mesh_.isInternalFace(facei))
 //            {
-//                const cell& neiFaces = cells[mesh_.faceNeighbour()[faceI]];
+//                const cell& neiFaces = cells[mesh_.faceNeighbour()[facei]];
 //
 //                forAll(neiFaces, i)
 //                {
@@ -259,9 +259,9 @@ CML::label CML::meshRefinement::mergePatchFacesUndo
 
         forAll(patchIDs, i)
         {
-            label patchI = patchIDs[i];
+            label patchi = patchIDs[i];
 
-            const polyPatch& patch = patches[patchI];
+            const polyPatch& patch = patches[patchi];
 
             if (!patch.coupled())
             {
@@ -628,10 +628,10 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRemovePoints
     labelHashSet retestFaces(pointRemover.savedFaceLabels().size());
     forAll(pointRemover.savedFaceLabels(), i)
     {
-        label faceI = pointRemover.savedFaceLabels()[i];
-        if (faceI >= 0)
+        label facei = pointRemover.savedFaceLabels()[i];
+        if (facei >= 0)
         {
-            retestFaces.insert(faceI);
+            retestFaces.insert(facei);
         }
     }
     updateMesh(map, growFaceCellFace(retestFaces));
@@ -699,10 +699,10 @@ CML::autoPtr<CML::mapPolyMesh> CML::meshRefinement::doRestorePoints
     labelHashSet retestFaces(2*facesToRestore.size());
     forAll(facesToRestore, i)
     {
-        label faceI = map().reverseFaceMap()[facesToRestore[i]];
-        if (faceI >= 0)
+        label facei = map().reverseFaceMap()[facesToRestore[i]];
+        if (facei >= 0)
         {
-            retestFaces.insert(faceI);
+            retestFaces.insert(facei);
         }
     }
     updateMesh(map, growFaceCellFace(retestFaces));
@@ -732,11 +732,11 @@ CML::labelList CML::meshRefinement::collectFaces
 
     forAll(candidateFaces, i)
     {
-        label faceI = candidateFaces[i];
+        label facei = candidateFaces[i];
 
-        if (set.found(faceI))
+        if (set.found(facei))
         {
-            selected[faceI] = true;
+            selected[facei] = true;
         }
     }
     syncTools::syncFaceList
@@ -762,9 +762,9 @@ CML::labelList CML::meshRefinement::growFaceCellFace
 
     forAllConstIter(faceSet, set, iter)
     {
-        label faceI = iter.key();
+        label facei = iter.key();
 
-        label own = mesh_.faceOwner()[faceI];
+        label own = mesh_.faceOwner()[facei];
 
         const cell& ownFaces = mesh_.cells()[own];
         forAll(ownFaces, ownFaceI)
@@ -772,9 +772,9 @@ CML::labelList CML::meshRefinement::growFaceCellFace
             selected[ownFaces[ownFaceI]] = true;
         }
 
-        if (mesh_.isInternalFace(faceI))
+        if (mesh_.isInternalFace(facei))
         {
-            label nbr = mesh_.faceNeighbour()[faceI];
+            label nbr = mesh_.faceNeighbour()[facei];
 
             const cell& nbrFaces = mesh_.cells()[nbr];
             forAll(nbrFaces, nbrFaceI)

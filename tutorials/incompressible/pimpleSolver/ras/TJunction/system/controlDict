@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -59,7 +59,7 @@ functions
         name            probes;
 
         // Write at same frequency as fields
-        writeControl   outputTime;
+        writeControl   writeTime;
         writeInterval  1;
 
         // Fields to be probed

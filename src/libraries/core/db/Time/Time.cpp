@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2015-2016 OpenCFD Ltd
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -29,7 +29,6 @@ License
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
-
 namespace CML
 {
     defineTypeNameAndDebug(Time, 0);
@@ -37,7 +36,7 @@ namespace CML
     template<>
     const char* CML::NamedEnum
     <
-        CML::Time::stopAtControls,
+        CML::Time::stopAtControl,
         4
     >::names[] =
     {
@@ -50,86 +49,101 @@ namespace CML
     template<>
     const char* CML::NamedEnum
     <
-        CML::Time::writeControls,
-        5
+        CML::Time::writeControl,
+        6
     >::names[] =
     {
         "timeStep",
         "runTime",
         "adjustableRunTime",
+        "adjustableRunTimeFixedSchedule",
         "clockTime",
         "cpuTime"
     };
 }
 
-const CML::NamedEnum<CML::Time::stopAtControls, 4>
+const CML::NamedEnum<CML::Time::stopAtControl, 4>
     CML::Time::stopAtControlNames_;
 
-const CML::NamedEnum<CML::Time::writeControls, 5>
+const CML::NamedEnum<CML::Time::writeControl, 6>
     CML::Time::writeControlNames_;
 
-CML::Time::fmtflags CML::Time::format_(CML::Time::general);
+CML::Time::format CML::Time::format_(CML::Time::format::general);
+
 int CML::Time::precision_(6);
+
+const int CML::Time::maxPrecision_(3 - log10(SMALL));
 
 CML::word CML::Time::controlDictName("controlDict");
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void CML::Time::adjustDeltaT()
 {
-    bool adjustTime = false;
-    scalar timeToNextWrite = VGREAT;
-
-    if (writeControl_ == wcAdjustableRunTime)
-    {
-        adjustTime = true;
-        timeToNextWrite = max
+    const scalar timeToNextWrite = min
+    (
+        max
         (
-            0.0,
-            (outputTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
-        );
-    }
-    if (secondaryWriteControl_ == wcAdjustableRunTime)
-    {
-        adjustTime = true;
-        timeToNextWrite = max
-        (
-            0.0,
-            min
-            (
-                timeToNextWrite,
-                (secondaryOutputTimeIndex_ + 1)*secondaryWriteInterval_
-              - (value() - startTime_)
-            )
-        );
-    }
+            0,
+            (writeTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
+        ),
+        functionObjects_.timeToNextWrite()
+    );
 
-    if (adjustTime)
-    {
-        scalar nSteps = timeToNextWrite/deltaT_ - SMALL;
+    const scalar nSteps = timeToNextWrite/deltaT_ - SMALL;
 
-        // For tiny deltaT the label can overflow!
-        if (nSteps < labelMax)
+    // Ensure nStepsToNextWrite does not overflow
+    if (nSteps < labelMax)
+    {
+        const label nStepsToNextWrite = label(nSteps) + 1;
+        const scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
+        // Control the increase of the time step to within a factor of 2
+        // and the decrease within a factor of 5.
+        if (newDeltaT >= deltaT_)
         {
-            label nStepsToNextWrite = label(nSteps) + 1;
-
-            scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
-
-            // Control the increase of the time step to within a factor of 2
-            // and the decrease within a factor of 5.
-            if (newDeltaT >= deltaT_)
-            {
-                deltaT_ = min(newDeltaT, 2.0*deltaT_);
-            }
-            else
-            {
-                deltaT_ = max(newDeltaT, 0.2*deltaT_);
-            }
+            deltaT_ = min(newDeltaT, 2.0*deltaT_);
+        }
+        else
+        {
+            deltaT_ = max(newDeltaT, 0.2*deltaT_);
         }
     }
+}
 
-    functionObjects_.adjustTimeStep();
+
+void CML::Time::adjustDeltaTFS()
+{
+    label startIndex = label((startTime_ + 0.5*deltaT_)/ writeInterval_);
+
+    const scalar timeToNextWrite = min
+    (
+        max
+        (
+            0,
+            (writeTimeIndex_ + startIndex + 1)*writeInterval_ - value()
+        ),
+        functionObjects_.timeToNextWrite()
+    );
+
+    const scalar nSteps = timeToNextWrite/deltaT_;
+
+    // Ensure nStepsToNextWrite does not overflow
+    if (nSteps < labelMax)
+    {
+        const label nStepsToNextWrite = label(nSteps) + 1;
+        const scalar newDeltaT = timeToNextWrite/nStepsToNextWrite;
+        // Control the increase of the time step to within a factor of 2
+        // and the decrease within a factor of 5.
+        if (newDeltaT >= deltaT_)
+        {
+            deltaT_ = min(newDeltaT, 2.0*deltaT_);
+        }
+        else
+        {
+            deltaT_ = max(newDeltaT, 0.2*deltaT_);
+        }
+    }
 }
 
 
@@ -186,6 +200,64 @@ void CML::Time::setControls()
     readDict();
     deltaTSave_ = deltaT_;
     deltaT0_ = deltaT_;
+
+    // Check if time directory exists
+    // If not increase time precision to see if it is formatted differently.
+    if (!exists(timePath(), false))
+    {
+        int oldPrecision = precision_;
+        int requiredPrecision = -1;
+        bool found = false;
+        word oldTime(timeName());
+        for
+        (
+            precision_ = maxPrecision_;
+            precision_ > oldPrecision;
+            precision_--
+        )
+        {
+            // Update the time formatting
+            setTime(startTime_, 0);
+
+            word newTime(timeName());
+            if (newTime == oldTime)
+            {
+                break;
+            }
+            oldTime = newTime;
+
+            // Check the existence of the time directory with the new format
+            found = exists(timePath(), false);
+
+            if (found)
+            {
+                requiredPrecision = precision_;
+            }
+        }
+
+        if (requiredPrecision > 0)
+        {
+            // Update the time precision
+            precision_ = requiredPrecision;
+
+            // Update the time formatting
+            setTime(startTime_, 0);
+
+            WarningInFunction
+                << "Increasing the timePrecision from " << oldPrecision
+                << " to " << precision_
+                << " to support the formatting of the current time directory "
+                << timeName() << nl << endl;
+        }
+        else
+        {
+            // Could not find time directory so assume it is not present
+            precision_ = oldPrecision;
+
+            // Revert the time formatting
+            setTime(startTime_, 0);
+        }
+    }
 
     if (Pstream::parRun())
     {
@@ -392,11 +464,9 @@ CML::Time::Time
     startTime_(0),
     endTime_(0),
 
-    stopAt_(saEndTime),
-    writeControl_(wcTimeStep),
+    stopAt_(stopAtControl::endTime),
+    writeControl_(writeControl::timeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0), // bit less to allow calculations
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -461,11 +531,9 @@ CML::Time::Time
     startTime_(0),
     endTime_(0),
 
-    stopAt_(saEndTime),
-    writeControl_(wcTimeStep),
+    stopAt_(stopAtControl::endTime),
+    writeControl_(writeControl::timeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0),
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -533,11 +601,9 @@ CML::Time::Time
     startTime_(0),
     endTime_(0),
 
-    stopAt_(saEndTime),
-    writeControl_(wcTimeStep),
+    stopAt_(stopAtControl::endTime),
+    writeControl_(writeControl::timeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0),
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -605,11 +671,9 @@ CML::Time::Time
     startTime_(0),
     endTime_(0),
 
-    stopAt_(saEndTime),
-    writeControl_(wcTimeStep),
+    stopAt_(stopAtControl::endTime),
+    writeControl_(writeControl::timeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0),
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
@@ -636,7 +700,7 @@ CML::Time::~Time()
         removeWatch(controlDict_.watchIndex());
     }
 
-    // destroy function objects first
+    // Destroy function objects first
     functionObjects_.clear();
 
     // cleanup profiling
@@ -678,11 +742,11 @@ void CML::Time::setUnmodified(const label watchFd) const
 }
 
 
-CML::word CML::Time::timeName(const scalar t)
+CML::word CML::Time::timeName(const scalar t, const int precision)
 {
     std::ostringstream buf;
     buf.setf(ios_base::fmtflags(format_), ios_base::floatfield);
-    buf.precision(precision_);
+    buf.precision(precision);
     buf << t;
     return buf.str();
 }
@@ -694,7 +758,6 @@ CML::word CML::Time::timeName() const
 }
 
 
-// Search the construction path for times
 CML::instantList CML::Time::times() const
 {
     return findTimes(path(), constant());
@@ -707,8 +770,10 @@ CML::word CML::Time::findInstancePath
     const instant& t
 ) const
 {
+    const word& constantName = constant();
+
     // Read directory entries into a list
-    fileNameList dirEntries(readDir(directory, fileName::DIRECTORY));
+    fileNameList dirEntries(readDir(directory, fileType::directory));
 
     forAll(dirEntries, i)
     {
@@ -721,8 +786,6 @@ CML::word CML::Time::findInstancePath
 
     if (t.equal(0.0))
     {
-        const word& constantName = constant();
-
         // Looking for 0 or constant. 0 already checked above.
         if (isDir(directory/constantName))
         {
@@ -744,7 +807,7 @@ CML::instant CML::Time::findClosestTime(const scalar t) const
 {
     instantList timeDirs = findTimes(path(), constant());
 
-    // there is only one time (likely "constant") so return it
+    // There is only one time (likely "constant") so return it
     if (timeDirs.size() == 1)
     {
         return timeDirs[0];
@@ -762,29 +825,19 @@ CML::instant CML::Time::findClosestTime(const scalar t) const
     label nearestIndex = -1;
     scalar deltaT = GREAT;
 
-    for (label timeI=1; timeI < timeDirs.size(); ++timeI)
+    for (label timei=1; timei < timeDirs.size(); ++timei)
     {
-        scalar diff = mag(timeDirs[timeI].value() - t);
+        scalar diff = mag(timeDirs[timei].value() - t);
         if (diff < deltaT)
         {
             deltaT = diff;
-            nearestIndex = timeI;
+            nearestIndex = timei;
         }
     }
 
     return timeDirs[nearestIndex];
 }
 
-
-// This should work too,
-// if we don't worry about checking "constant" explicitly
-//
-// CML::instant CML::Time::findClosestTime(const scalar t) const
-// {
-//     instantList timeDirs = findTimes(path(), constant());
-//     label timeIndex = min(findClosestTimeIndex(timeDirs, t), 0, constant());
-//     return timeDirs[timeIndex];
-// }
 
 CML::label CML::Time::findClosestTimeIndex
 (
@@ -796,15 +849,15 @@ CML::label CML::Time::findClosestTimeIndex
     label nearestIndex = -1;
     scalar deltaT = GREAT;
 
-    forAll(timeDirs, timeI)
+    forAll(timeDirs, timei)
     {
-        if (timeDirs[timeI].name() == constantName) continue;
+        if (timeDirs[timei].name() == constantName) continue;
 
-        scalar diff = mag(timeDirs[timeI].value() - t);
+        scalar diff = mag(timeDirs[timei].value() - t);
         if (diff < deltaT)
         {
             deltaT = diff;
-            nearestIndex = timeI;
+            nearestIndex = timei;
         }
     }
 
@@ -830,9 +883,15 @@ CML::dimensionedScalar CML::Time::endTime() const
 }
 
 
+bool CML::Time::running() const
+{
+    return value() < (endTime_ - 0.5*deltaT_);
+}
+
+
 bool CML::Time::run() const
 {
-    bool running = value() < (endTime_ - 0.5*deltaT_);
+    bool running = this->running();
 
     if (!subCycling_)
     {
@@ -870,9 +929,8 @@ bool CML::Time::run() const
             }
         }
 
-        // Update the "running" status following the
-        // possible side-effects from functionObjects
-        running = value() < (endTime_ - 0.5*deltaT_);
+        // Re-evaluate if running in case a function object has changed things
+        running = this->running();
     }
 
     return running;
@@ -898,13 +956,13 @@ bool CML::Time::end() const
 }
 
 
-bool CML::Time::stopAt(const stopAtControls sa) const
+bool CML::Time::stopAt(const stopAtControl sa) const
 {
     const bool changed = (stopAt_ != sa);
     stopAt_ = sa;
 
     // adjust endTime
-    if (sa == saEndTime)
+    if (sa == stopAtControl::endTime)
     {
         controlDict_.lookup("endTime") >> endTime_;
     }
@@ -976,25 +1034,34 @@ void CML::Time::setEndTime(const scalar endTime)
 }
 
 
-void CML::Time::setDeltaT
-(
-    const dimensionedScalar& deltaT,
-    const bool bAdjustDeltaT
-)
+void CML::Time::setDeltaT(const dimensionedScalar& deltaT)
 {
-    setDeltaT(deltaT.value(), bAdjustDeltaT);
+    setDeltaT(deltaT.value());
 }
 
 
-void CML::Time::setDeltaT(const scalar deltaT, const bool bAdjustDeltaT)
+void CML::Time::setDeltaT(const scalar deltaT)
 {
-    deltaT_ = deltaT;
-    deltaTchanged_ = true;
+    setDeltaTNoAdjust(deltaT);
 
-    if (bAdjustDeltaT)
+    functionObjects_.setTimeStep();
+
+    if (writeControl_ == writeControl::adjustableRunTime)
     {
         adjustDeltaT();
     }
+
+    if (writeControl_ == writeControl::adjustableRunTimeFixedSchedule)
+    {
+        adjustDeltaTFS();
+    }
+}
+
+
+void CML::Time::setDeltaTNoAdjust(const scalar deltaT)
+{
+    deltaT_ = deltaT;
+    deltaTchanged_ = true;
 }
 
 
@@ -1043,9 +1110,11 @@ CML::Time& CML::Time::operator++()
     deltaT0_ = deltaTSave_;
     deltaTSave_ = deltaT_;
 
-    // Save old time name
+    // Save old time value and name
+    const scalar oldTimeValue = timeToUserTime(value());
     const word oldTimeName = dimensionedScalar::name();
 
+    // Increment time
     setTime(value() + deltaT_, timeIndex_ + 1);
 
     if (!subCycling_)
@@ -1055,48 +1124,18 @@ CML::Time& CML::Time::operator++()
         {
             setTime(0.0, timeIndex_);
         }
-    }
 
-
-    // Check that new time representation differs from old one
-    if (dimensionedScalar::name() == oldTimeName)
-    {
-        int oldPrecision = precision_;
-        do
-        {
-            precision_++;
-            setTime(value(), timeIndex());
-        }
-        while (precision_ < 100 && dimensionedScalar::name() == oldTimeName);
-
-        WarningInFunction
-            << "Increased the timePrecision from " << oldPrecision
-            << " to " << precision_
-            << " to distinguish between timeNames at time " << value()
-            << endl;
-
-        if (precision_ == 100 && precision_ != oldPrecision)
-        {
-            // Reached limit.
-            WarningInFunction
-                << "Current time name " << dimensionedScalar::name()
-                << " is the old as the previous one " << oldTimeName
-                << endl
-                << "    This might result in overwriting old results."
-                << endl;
-        }
-    }
-
-
-    if (!subCycling_)
-    {
         if (sigStopAtWriteNow_.active() || sigWriteNow_.active())
         {
             // A signal might have been sent on one processor only
             // Reduce so all decide the same.
 
             label flag = 0;
-            if (sigStopAtWriteNow_.active() && stopAt_ == saWriteNow)
+            if
+            (
+                sigStopAtWriteNow_.active()
+             && stopAt_ == stopAtControl::writeNow
+            )
             {
                 flag += 1;
             }
@@ -1108,7 +1147,7 @@ CML::Time& CML::Time::operator++()
 
             if (flag & 1)
             {
-                stopAt_ = saWriteNow;
+                stopAt_ = stopAtControl::writeNow;
             }
             if (flag & 2)
             {
@@ -1116,148 +1155,197 @@ CML::Time& CML::Time::operator++()
             }
         }
 
-
-        outputTime_ = false;
+        writeTime_ = false;
 
         switch (writeControl_)
         {
-            case wcTimeStep:
-                outputTime_ = !(timeIndex_ % label(writeInterval_));
+            case writeControl::timeStep:
+                writeTime_ = !(timeIndex_ % label(writeInterval_));
             break;
 
-            case wcRunTime:
-            case wcAdjustableRunTime:
+            case writeControl::runTime:
+            case writeControl::adjustableRunTime:
             {
-                label outputIndex = label
+                label writeIndex = label
                 (
                     ((value() - startTime_) + 0.5*deltaT_)
                   / writeInterval_
                 );
 
-                if (outputIndex > outputTimeIndex_)
+                if (writeIndex > writeTimeIndex_)
                 {
-                    outputTime_ = true;
-                    outputTimeIndex_ = outputIndex;
+                    writeTime_ = true;
+                    writeTimeIndex_ = writeIndex;
                 }
             }
             break;
 
-            case wcCpuTime:
+            case writeControl::adjustableRunTimeFixedSchedule:
             {
-                label outputIndex = label
+                // This option uses the startTime specified in the control dictionary
+                // to work out write time schedule. This allows intermediate time folders that are 
+                // not in the schedule of writing. This can happen when the solver is requested
+                // stop and write at a time that is not in the fixed write schedule.
+
+                // Start time from control dictionary
+                scalar cdStartTime;
+
+                label startIndex = label
+                (
+                    (startTime_ + 0.5*deltaT_)
+                  / writeInterval_
+                );
+
+                controlDict_.lookup("startTime") >> cdStartTime;
+
+                label writeIndex = label
+                (
+                    ((value() - cdStartTime) + 0.5*deltaT_)
+                  / writeInterval_
+                ) - startIndex;
+
+                if (writeIndex > writeTimeIndex_)
+                {
+                    writeTime_ = true;
+                    writeTimeIndex_ = writeIndex;
+                }
+            }
+            break;
+
+            case writeControl::cpuTime:
+            {
+                label writeIndex = label
                 (
                     returnReduce(elapsedCpuTime(), maxOp<double>())
                   / writeInterval_
                 );
-                if (outputIndex > outputTimeIndex_)
+                if (writeIndex > writeTimeIndex_)
                 {
-                    outputTime_ = true;
-                    outputTimeIndex_ = outputIndex;
+                    writeTime_ = true;
+                    writeTimeIndex_ = writeIndex;
                 }
             }
             break;
 
-            case wcClockTime:
+            case writeControl::clockTime:
             {
-                label outputIndex = label
+                label writeIndex = label
                 (
                     returnReduce(label(elapsedClockTime()), maxOp<label>())
                   / writeInterval_
                 );
-                if (outputIndex > outputTimeIndex_)
+                if (writeIndex > writeTimeIndex_)
                 {
-                    outputTime_ = true;
-                    outputTimeIndex_ = outputIndex;
+                    writeTime_ = true;
+                    writeTimeIndex_ = writeIndex;
                 }
             }
             break;
         }
 
 
-        // Adapt for secondaryWrite controls
-        switch (secondaryWriteControl_)
-        {
-            case wcTimeStep:
-                outputTime_ =
-                    outputTime_
-                || !(timeIndex_ % label(secondaryWriteInterval_));
-            break;
-
-            case wcRunTime:
-            case wcAdjustableRunTime:
-            {
-                label outputIndex = label
-                (
-                    ((value() - startTime_) + 0.5*deltaT_)
-                  / secondaryWriteInterval_
-                );
-
-                if (outputIndex > secondaryOutputTimeIndex_)
-                {
-                    outputTime_ = true;
-                    secondaryOutputTimeIndex_ = outputIndex;
-                }
-            }
-            break;
-
-            case wcCpuTime:
-            {
-                label outputIndex = label
-                (
-                    returnReduce(elapsedCpuTime(), maxOp<double>())
-                  / secondaryWriteInterval_
-                );
-                if (outputIndex > secondaryOutputTimeIndex_)
-                {
-                    outputTime_ = true;
-                    secondaryOutputTimeIndex_ = outputIndex;
-                }
-            }
-            break;
-
-            case wcClockTime:
-            {
-                label outputIndex = label
-                (
-                    returnReduce(label(elapsedClockTime()), maxOp<label>())
-                  / secondaryWriteInterval_
-                );
-                if (outputIndex > secondaryOutputTimeIndex_)
-                {
-                    outputTime_ = true;
-                    secondaryOutputTimeIndex_ = outputIndex;
-                }
-            }
-            break;
-        }
-
-
-        // see if endTime needs adjustment to stop at the next run()/end() check
+        // Check if endTime needs adjustment to stop at the next run()/end()
         if (!end())
         {
-            if (stopAt_ == saNoWriteNow)
+            if (stopAt_ == stopAtControl::noWriteNow)
             {
                 endTime_ = value();
             }
-            else if (stopAt_ == saWriteNow)
+            else if (stopAt_ == stopAtControl::writeNow)
             {
                 endTime_ = value();
-                outputTime_ = true;
+                writeTime_ = true;
             }
-            else if (stopAt_ == saNextWrite && outputTime_ == true)
+            else if (stopAt_ == stopAtControl::nextWrite && writeTime_ == true)
             {
                 endTime_ = value();
             }
         }
 
-        // Override outputTime if one-shot writing
+        // Override writeTime if one-shot writing
         if (writeOnce_)
         {
-            outputTime_ = true;
+            writeTime_ = true;
             writeOnce_ = false;
         }
 
-        functionObjects_.timeSet();
+        // Adjust the precision of the time directory name if necessary
+        if (writeTime_)
+        {
+            // Tolerance used when testing time equivalence
+            const scalar timeTol =
+                max(min(pow(10.0, -precision_), 0.1*deltaT_), SMALL);
+
+            // User-time equivalent of deltaT
+            const scalar userDeltaT = timeToUserTime(deltaT_);
+
+            // Time value obtained by reading timeName
+            scalar timeNameValue = -VGREAT;
+
+            // Check that new time representation differs from old one
+            // reinterpretation of the word
+            if
+            (
+                readScalar(dimensionedScalar::name().c_str(), timeNameValue)
+             && (mag(timeNameValue - oldTimeValue - userDeltaT) > timeTol)
+            )
+            {
+                int oldPrecision = precision_;
+                while
+                (
+                    precision_ < maxPrecision_
+                 && readScalar(dimensionedScalar::name().c_str(), timeNameValue)
+                 && (mag(timeNameValue - oldTimeValue - userDeltaT) > timeTol)
+                )
+                {
+                    precision_++;
+                    setTime(value(), timeIndex());
+                }
+
+                if (precision_ != oldPrecision)
+                {
+                    WarningInFunction
+                        << "Increased the timePrecision from " << oldPrecision
+                        << " to " << precision_
+                        << " to distinguish between timeNames at time "
+                        << dimensionedScalar::name()
+                        << endl;
+
+                    if (precision_ == maxPrecision_)
+                    {
+                        // Reached maxPrecision limit
+                        WarningInFunction
+                            << "Current time name " << dimensionedScalar::name()
+                            << nl
+                            << "    The maximum time precision has been reached"
+                               " which might result in overwriting previous"
+                               " results."
+                            << endl;
+                    }
+
+                    // Check if round-off error caused time-reversal
+                    scalar oldTimeNameValue = -VGREAT;
+                    if
+                    (
+                        readScalar(oldTimeName.c_str(), oldTimeNameValue)
+                     && (
+                            sign(timeNameValue - oldTimeNameValue)
+                         != sign(deltaT_)
+                        )
+                    )
+                    {
+                        WarningInFunction
+                            << "Current time name " << dimensionedScalar::name()
+                            << " is set to an instance prior to the "
+                               "previous one "
+                            << oldTimeName << nl
+                            << "    This might result in temporal "
+                               "discontinuities."
+                            << endl;
+                    }
+                }
+            }
+        }
     }
 
     return *this;

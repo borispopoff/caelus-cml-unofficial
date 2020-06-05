@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -78,48 +78,49 @@ class FSD
 :
     public singleStepCombustion <ReactionThermo, ThermoType>
 {
+    // Private data
 
-    //- Auto pointer to consumption speed per unit of flame area model
-    autoPtr<reactionRateFlameArea> reactionRateFlameArea_;
+        //- Auto pointer to consumption speed per unit of flame area model
+        autoPtr<reactionRateFlameArea> reactionRateFlameArea_;
 
-    //- Mixture fraction
-    volScalarField ft_;
+        //- Mixture fraction
+        volScalarField ft_;
 
-    //- Fuel mass concentration on the fuel stream
-    dimensionedScalar YFuelFuelStream_;
+        //- Fuel mass concentration on the fuel stream
+        dimensionedScalar YFuelFuelStream_;
 
-    //- Oxygen mass concentration on the oxydizer stream
-    dimensionedScalar YO2OxiStream_;
+        //- Oxygen mass concentration on the oxydizer stream
+        dimensionedScalar YO2OxiStream_;
 
-    //- Similarity constant for the sub-grid ft fluctuations
-    scalar Cv_;
+        //- Similarity constant for the sub-grid ft fluctuations
+        scalar Cv_;
 
-    //- Model constant
-    scalar C_;
+        //- Model constant
+        scalar C_;
 
-    //- Lower flammability limit
-    scalar ftMin_;
+        //- Lower flammability limit
+        scalar ftMin_;
 
-    //- Upper flammability limit
-    scalar ftMax_;
+        //- Upper flammability limit
+        scalar ftMax_;
 
-    //- Dimension of the ft space. Used to integrate the beta-pdf
-    scalar ftDim_;
+        //- Dimension of the ft space. Used to integrate the beta-pdf
+        scalar ftDim_;
 
-    //- Minimum mixture freaction variance to calculate pdf
-    scalar ftVarMin_;
+        //- Minimum mixture freaction variance to calculate pdf
+        scalar ftVarMin_;
 
 
     // Private Member Functions
 
-    //- Calculate the normalised fuel source term
-    void calculateSourceNorm();
+        //- Calculate the normalised fuel source term
+        void calculateSourceNorm();
 
-    //- Disallow copy construct
-    FSD(const FSD&);
+        //- Disallow copy construct
+        FSD(const FSD&);
 
-    //- Disallow default bitwise assignment
-    void operator=(const FSD&);
+        //- Disallow default bitwise assignment
+        void operator=(const FSD&) = delete;
 
 
 public:
@@ -128,14 +129,14 @@ public:
     TypeName("FSD");
 
 
-    //- Construct from components
-    FSD
-    (
-        const word& modelType,
-        ReactionThermo& thermo,
-        const compressible::turbulenceModel& turb,
-        const word& combustionProperties
-    );
+        //- Construct from components
+        FSD
+        (
+            const word& modelType,
+            ReactionThermo& thermo,
+            const compressible::turbulenceModel& turb,
+            const word& combustionProperties
+        );
 
 
     //- Destructor
@@ -144,12 +145,11 @@ public:
 
     // Member Functions
 
-    //- Correct combustion rate
-    virtual void correct();
+        //- Correct combustion rate
+        virtual void correct();
 
-    //- Update properties
-    virtual bool read();
-
+        //- Update properties
+        virtual bool read();
 };
 
 
@@ -191,7 +191,7 @@ FSD<ReactionThermo, ThermoType>::FSD
             IOobject::AUTO_WRITE
         ),
         this->mesh(),
-        dimensionedScalar("zero", dimless, 0.0)
+        dimensionedScalar("zero", dimless, 0)
     ),
     YFuelFuelStream_(dimensionedScalar("YFuelStream", dimless, 1.0)),
     YO2OxiStream_(dimensionedScalar("YOxiStream", dimless, 0.23)),
@@ -282,7 +282,7 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
         )
     );
 
-    volScalarField& pc = tPc();
+    volScalarField& pc = tPc.ref();
 
     tmp<volScalarField> tomegaFuel
     (
@@ -306,7 +306,7 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
         )
     );
 
-    volScalarField& omegaFuelBar = tomegaFuel();
+    volScalarField& omegaFuelBar = tomegaFuel.ref();
 
     // Calculation of the mixture fraction variance (ftVar)
     const compressible::LESModel& lesModel =
@@ -429,7 +429,7 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
         )
     );
 
-    volScalarField& products = tproducts();
+    volScalarField& products = tproducts.ref();
 
     forAll(productsIndex, j)
     {
@@ -455,7 +455,7 @@ template<class ReactionThermo, class ThermoType>
 void FSD<ReactionThermo, ThermoType>::correct()
 {
     this->wFuel_ ==
-        dimensionedScalar("zero", dimMass/pow3(dimLength)/dimTime, 0.0);
+        dimensionedScalar("zero", dimMass/pow3(dimLength)/dimTime, 0);
 
     calculateSourceNorm();
 }

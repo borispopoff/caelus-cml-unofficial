@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -21,7 +21,56 @@ Class
     CML::SRFVelocityFvPatchVectorField
 
 Description
-    Velocity patch to be used with SRF model
+    Velocity condition to be used in conjunction with the single
+    rotating frame (SRF) model (see: SRFModel class)
+
+    Given the free stream velocity in the absolute frame, the condition
+    applies the appropriate rotation transformation in time and space to
+    determine the local velocity.
+
+    The optional \c relative flag switches the behaviour of the patch
+    such that:
+
+        - relative = yes: inlet velocity applied 'as is':
+
+        \f[
+            U_p = U_{in}
+        \f]
+
+        - relative = no : SRF velocity is subtracted from the inlet velocity:
+
+        \f[
+            U_p = U_{in} - U_{p,srf}
+        \f]
+
+    where
+    \vartable
+        U_p     = patch velocity [m/s]
+        U_{in}  = user-specified inlet velocity
+        U_{p,srf} = SRF velocity
+    \endvartable
+
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        inletValue   | inlet velocity          | yes         |
+        relative     | inletValue relative motion to the SRF? | yes     |
+    \endtable
+
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            SRFVelocity;
+        inletValue      uniform (0 0 0);
+        relative        yes;
+        value           uniform (0 0 0);    // initial value
+    }
+    \endverbatim
+
+See also
+    CML::fixedValueFvPatchField
 
 SourceFiles
     SRFVelocityFvPatchVectorField.cpp
@@ -53,7 +102,7 @@ class SRFVelocityFvPatchVectorField
         //- Is the supplied inlet value relative to the SRF
         Switch relative_;
 
-        //- Inlet value
+        //- Inlet value [m/s]
         vectorField inletValue_;
 
 

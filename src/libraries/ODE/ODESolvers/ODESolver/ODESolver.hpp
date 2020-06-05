@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -79,10 +79,10 @@ protected:
     ) const;
 
     //- Disallow default bitwise copy construct
-    ODESolver(const ODESolver&);
+    ODESolver(const ODESolver&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const ODESolver&);
+    void operator=(const ODESolver&) = delete;
 
 
 public:
@@ -234,7 +234,7 @@ public:
 template<class Type>
 inline void CML::ODESolver::resizeField(UList<Type>& f, const label n)
 {
-    f = UList<Type>(f.begin(), n);
+    f.shallowCopy(UList<Type>(f.begin(), n));
 }
 
 

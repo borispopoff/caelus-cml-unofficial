@@ -64,10 +64,10 @@ CML::Ostream& CML::OSstream::write(const string& str)
 {
     os_ << token::BEGIN_STRING;
 
-    register int backslash = 0;
+    int backslash = 0;
     for (string::const_iterator iter = str.begin(); iter != str.end(); ++iter)
     {
-        register char c = *iter;
+        char c = *iter;
 
         if (c == '\\')
         {
@@ -115,7 +115,7 @@ CML::Ostream& CML::OSstream::writeQuoted
     {
         os_ << token::BEGIN_STRING;
 
-        register int backslash = 0;
+        int backslash = 0;
         for
         (
             string::const_iterator iter = str.begin();
@@ -123,7 +123,7 @@ CML::Ostream& CML::OSstream::writeQuoted
             ++iter
         )
         {
-            register char c = *iter;
+            char c = *iter;
 
             if (c == '\\')
             {
@@ -212,7 +212,7 @@ CML::Ostream& CML::OSstream::write(const char* buf, std::streamsize count)
 
 void CML::OSstream::indent()
 {
-    for (register unsigned short i = 0; i < indentLevel_*indentSize_; i++)
+    for (unsigned short i = 0; i < indentLevel_*indentSize_; i++)
     {
         os_ << ' ';
     }

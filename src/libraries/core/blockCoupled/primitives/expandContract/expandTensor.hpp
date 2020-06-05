@@ -44,7 +44,7 @@ namespace CML
 {
 
 //- Return the diagonal of a tensor as a scalar
-template <class Cmpt>
+template<class Cmpt>
 inline void contractScalar(Cmpt& result, const Tensor<Cmpt>& t)
 {
     result = 1.0/3.0*(t.xx() + t.yy() + t.zz());
@@ -52,7 +52,7 @@ inline void contractScalar(Cmpt& result, const Tensor<Cmpt>& t)
 
 
 //- Return the diagonal of a tensor as a scalar
-template <class Cmpt>
+template<class Cmpt>
 inline Cmpt contractScalar(const Tensor<Cmpt>& t)
 {
     Cmpt result;
@@ -62,7 +62,7 @@ inline Cmpt contractScalar(const Tensor<Cmpt>& t)
 
 
 //- Return the diagonal of a tensor as a vector
-template <class Cmpt>
+template<class Cmpt>
 inline void contractLinear(Vector<Cmpt>& result, const Tensor<Cmpt>& t)
 {
     result = Vector<Cmpt>(t.xx(), t.yy(), t.zz());
@@ -70,7 +70,7 @@ inline void contractLinear(Vector<Cmpt>& result, const Tensor<Cmpt>& t)
 
 
 //- Return the diagonal of a tensor as a vector
-template <class Cmpt>
+template<class Cmpt>
 inline Vector<Cmpt> contractLinear(const Tensor<Cmpt>& t)
 {
     Vector<Cmpt> result;
@@ -80,7 +80,7 @@ inline Vector<Cmpt> contractLinear(const Tensor<Cmpt>& t)
 
 
 //- Return the vector given a scalar
-template <class Cmpt>
+template<class Cmpt>
 inline void expandScalar(Vector<Cmpt>& result, const Cmpt& v)
 {
     result = Vector<Cmpt>(v, v, v);
@@ -88,7 +88,7 @@ inline void expandScalar(Vector<Cmpt>& result, const Cmpt& v)
 
 
 //- Return the tensor given a scalar
-template <class Cmpt>
+template<class Cmpt>
 inline void expandScalar(Tensor<Cmpt>& result, const Cmpt& v)
 {
     result = Tensor<Cmpt>
@@ -101,7 +101,7 @@ inline void expandScalar(Tensor<Cmpt>& result, const Cmpt& v)
 
 
 //- Return the tensor given a diagonal vector
-template <class Cmpt>
+template<class Cmpt>
 inline void expandLinear(Tensor<Cmpt>& result, const Vector<Cmpt>& v)
 {
     result = Tensor<Cmpt>
@@ -114,7 +114,7 @@ inline void expandLinear(Tensor<Cmpt>& result, const Vector<Cmpt>& v)
 
 
 //- Sum row elements of a tensor as a vector
-template <class Cmpt>
+template<class Cmpt>
 inline void sumToDiag(Vector<Cmpt>& result, const Tensor<Cmpt>& t)
 {
     result = Vector<Cmpt>
@@ -127,7 +127,7 @@ inline void sumToDiag(Vector<Cmpt>& result, const Tensor<Cmpt>& t)
 
 
 //- Sum row elements of a hyperTensor as a hyperVector
-template <class Cmpt>
+template<class Cmpt>
 inline Vector<Cmpt> sumToDiag(const Tensor<Cmpt>& t)
 {
     Vector<Cmpt> result;
@@ -137,7 +137,7 @@ inline Vector<Cmpt> sumToDiag(const Tensor<Cmpt>& t)
 
 
 //- Sum row elements of a tensor as a vector
-template <class Cmpt>
+template<class Cmpt>
 inline void sumMagToDiag(Vector<Cmpt>& result, const Tensor<Cmpt>& t)
 {
     result = Vector<Cmpt>
@@ -150,7 +150,7 @@ inline void sumMagToDiag(Vector<Cmpt>& result, const Tensor<Cmpt>& t)
 
 
 //- Sum magnitudes of row elements of a hyperTensor as a hyperVector
-template <class Cmpt>
+template<class Cmpt>
 inline Vector<Cmpt> sumMagToDiag(const Tensor<Cmpt>& t)
 {
     Vector<Cmpt> result;

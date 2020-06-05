@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -18,12 +18,13 @@ mainrotor
     active          on;
     timeStart       0.0;
     duration        100000.0;
-    selectionMode   cellZone;
-    cellZone        fluid-rot;
+
 
     rotorDiskCoeffs
     {
-        fieldNames      (U);
+        selectionMode   cellZone;
+        cellZone        fluid-rot;
+        fields          (U);
 
         rhoName         none;
         rhoRef          1.225;

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -122,10 +122,10 @@ class autoRefineDriver
 
 
         //- Disallow default bitwise copy construct
-        autoRefineDriver(const autoRefineDriver&);
+        autoRefineDriver(const autoRefineDriver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const autoRefineDriver&);
+        void operator=(const autoRefineDriver&) = delete;
 
 
 public:

@@ -56,7 +56,7 @@ class BlockBiCGStabSolver
 {
 
     //- Preconditioner
-    autoPtr<BlockLduPrecon<Type> > preconPtr_;
+    autoPtr<BlockLduPrecon<Type>> preconPtr_;
 
     //- Disallow default bitwise copy construct
     BlockBiCGStabSolver(const BlockBiCGStabSolver<Type>&);

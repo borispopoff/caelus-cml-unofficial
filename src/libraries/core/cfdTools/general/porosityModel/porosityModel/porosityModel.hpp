@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -53,17 +53,6 @@ class porosityModel
 :
     public regIOobject
 {
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        porosityModel(const porosityModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const porosityModel&);
-
-
 protected:
 
     // Protected data
@@ -97,7 +86,7 @@ protected:
 
 
         //- Transform the model data wrt mesh changes
-        virtual void calcTranformModelData() = 0;
+        virtual void calcTransformModelData() = 0;
 
         //- Adjust negative resistance values to be multiplier of max value
         void adjustNegativeResistance(dimensionedVector& resist);
@@ -160,6 +149,9 @@ public:
         const dictionary& dict,
         const word& cellZoneName = word::null
     );
+
+    //- Disallow default bitwise copy construct
+    porosityModel(const porosityModel&) = delete;
 
     //- Return pointer to new porosityModel object created on the freestore
     //  from an Istream
@@ -262,6 +254,12 @@ public:
     
         //- Read porosity dictionary
         virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const porosityModel&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

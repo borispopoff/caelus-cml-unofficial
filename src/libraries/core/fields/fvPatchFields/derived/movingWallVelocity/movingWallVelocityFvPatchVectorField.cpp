@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -20,11 +20,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "movingWallVelocityFvPatchVectorField.hpp"
-#include "addToRunTimeSelectionTable.hpp"
 #include "volFields.hpp"
 #include "surfaceFields.hpp"
 #include "fvcMeshPhi.hpp"
-
+#include "addToRunTimeSelectionTable.hpp"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -43,6 +42,19 @@ movingWallVelocityFvPatchVectorField
 CML::movingWallVelocityFvPatchVectorField::
 movingWallVelocityFvPatchVectorField
 (
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchVectorField(p, iF, dict),
+    UName_(dict.lookupOrDefault<word>("U", "U"))
+{}
+
+
+CML::movingWallVelocityFvPatchVectorField::
+movingWallVelocityFvPatchVectorField
+(
     const movingWallVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -52,21 +64,6 @@ movingWallVelocityFvPatchVectorField
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
     UName_(ptf.UName_)
 {}
-
-
-CML::movingWallVelocityFvPatchVectorField::
-movingWallVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchVectorField(p, iF),
-    UName_(dict.lookupOrDefault<word>("U", "U"))
-{
-    fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
-}
 
 
 CML::movingWallVelocityFvPatchVectorField::
@@ -101,7 +98,7 @@ void CML::movingWallVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const fvMesh& mesh = dimensionedInternalField().mesh();
+    const fvMesh& mesh = internalField().mesh();
 
     if (mesh.moving())
     {
@@ -142,7 +139,7 @@ void CML::movingWallVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

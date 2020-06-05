@@ -100,8 +100,8 @@ CML::Istream& CML::operator>>(Istream& is, referredWallFace& rWF)
     // Check state of Istream
     is.check
     (
-        "Foam::Istream& "
-        "Foam::operator>>(Foam::Istream&, Foam::referredWallFace&)"
+        "CML::Istream& "
+        "CML::operator>>(CML::Istream&, CML::referredWallFace&)"
     );
 
     return is;
@@ -117,8 +117,8 @@ CML::Ostream& CML::operator<<(Ostream& os, const referredWallFace& rWF)
     // Check state of Ostream
     os.check
     (
-        "Foam::Ostream& Foam::operator<<(Foam::Ostream&, "
-        "const Foam::referredWallFace&)"
+        "CML::Ostream& CML::operator<<(CML::Ostream&, "
+        "const CML::referredWallFace&)"
     );
 
     return os;

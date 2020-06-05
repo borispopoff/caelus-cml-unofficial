@@ -84,7 +84,7 @@ public:
 
 
     //- Selector
-    static autoPtr<BasicChemistryModel<ReactionThermo> > New
+    static autoPtr<BasicChemistryModel<ReactionThermo>> New
     (
         ReactionThermo& thermo
     );
@@ -131,10 +131,10 @@ CML::BasicChemistryModel<ReactionThermo>::BasicChemistryModel
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-CML::autoPtr<CML::BasicChemistryModel<ReactionThermo> >
+CML::autoPtr<CML::BasicChemistryModel<ReactionThermo>>
 CML::BasicChemistryModel<ReactionThermo>::New(ReactionThermo& thermo)
 {
-    return basicChemistryModel::New<BasicChemistryModel<ReactionThermo> >
+    return basicChemistryModel::New<BasicChemistryModel<ReactionThermo>>
     (
         thermo
     );

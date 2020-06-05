@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -151,11 +151,10 @@ void turbulentMixingLengthFrequencyInletFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-    os.writeKeyword("mixingLength")
-        << mixingLength_ << token::END_STATEMENT << nl;
-    os.writeKeyword("phi") << this->phiName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("k") << kName_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "mixingLength", mixingLength_);
+    writeEntry(os, "phi", this->phiName_);
+    writeEntry(os, "k", kName_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -141,10 +141,10 @@ inline CML::SquareMatrix<Type>::SquareMatrix(Istream& is)
 
 
 template<class Type>
-inline CML::autoPtr<CML::SquareMatrix<Type> >
+inline CML::autoPtr<CML::SquareMatrix<Type>>
 CML::SquareMatrix<Type>::clone() const
 {
-    return autoPtr<SquareMatrix<Type> >(new SquareMatrix<Type>(*this));
+    return autoPtr<SquareMatrix<Type>>(new SquareMatrix<Type>(*this));
 }
 
 

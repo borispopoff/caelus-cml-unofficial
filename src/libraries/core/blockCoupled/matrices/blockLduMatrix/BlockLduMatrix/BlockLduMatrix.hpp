@@ -895,7 +895,7 @@ void BlockLduMatrix<Type>::sumDiag()
             const squareTypeField& activeUpper = Upper.asSquare();
             squareTypeField& activeDiag = Diag.asSquare();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] += activeUpper[coeffI].T();
                 activeDiag[u[coeffI]] += activeUpper[coeffI];
@@ -910,7 +910,7 @@ void BlockLduMatrix<Type>::sumDiag()
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeDiag = Diag.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] += activeUpper[coeffI];
                 activeDiag[u[coeffI]] += activeUpper[coeffI];
@@ -925,7 +925,7 @@ void BlockLduMatrix<Type>::sumDiag()
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeDiag = Diag.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] += activeUpper[coeffI];
                 activeDiag[u[coeffI]] += activeUpper[coeffI];
@@ -952,7 +952,7 @@ void BlockLduMatrix<Type>::sumDiag()
             const squareTypeField& activeUpper = Upper.asSquare();
             squareTypeField& activeDiag = Diag.asSquare();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] += activeLower[coeffI];
                 activeDiag[u[coeffI]] += activeUpper[coeffI];
@@ -969,7 +969,7 @@ void BlockLduMatrix<Type>::sumDiag()
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeDiag = Diag.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] += activeLower[coeffI];
                 activeDiag[u[coeffI]] += activeUpper[coeffI];
@@ -986,7 +986,7 @@ void BlockLduMatrix<Type>::sumDiag()
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeDiag = Diag.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] += activeLower[coeffI];
                 activeDiag[u[coeffI]] += activeUpper[coeffI];
@@ -1029,7 +1029,7 @@ void BlockLduMatrix<Type>::negSumDiag()
             const squareTypeField& activeUpper = Upper.asSquare();
             squareTypeField& activeDiag = Diag.asSquare();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] -= activeUpper[coeffI].T();
                 activeDiag[u[coeffI]] -= activeUpper[coeffI];
@@ -1044,7 +1044,7 @@ void BlockLduMatrix<Type>::negSumDiag()
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeDiag = Diag.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] -= activeUpper[coeffI];
                 activeDiag[u[coeffI]] -= activeUpper[coeffI];
@@ -1059,7 +1059,7 @@ void BlockLduMatrix<Type>::negSumDiag()
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeDiag = Diag.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] -= activeUpper[coeffI];
                 activeDiag[u[coeffI]] -= activeUpper[coeffI];
@@ -1086,7 +1086,7 @@ void BlockLduMatrix<Type>::negSumDiag()
             const squareTypeField& activeUpper = Upper.asSquare();
             squareTypeField& activeDiag = Diag.asSquare();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] -= activeLower[coeffI];
                 activeDiag[u[coeffI]] -= activeUpper[coeffI];
@@ -1103,7 +1103,7 @@ void BlockLduMatrix<Type>::negSumDiag()
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeDiag = Diag.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] -= activeLower[coeffI];
                 activeDiag[u[coeffI]] -= activeUpper[coeffI];
@@ -1120,7 +1120,7 @@ void BlockLduMatrix<Type>::negSumDiag()
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeDiag = Diag.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] -= activeLower[coeffI];
                 activeDiag[u[coeffI]] -= activeUpper[coeffI];
@@ -1195,7 +1195,7 @@ void BlockLduMatrix<Type>::check() const
             // into the linear form
             const squareTypeField& activeUpper = Upper.asSquare();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeSumOffDiag[l[coeffI]] +=
                     sumMagToDiag(activeUpper[coeffI].T());
@@ -1227,7 +1227,7 @@ void BlockLduMatrix<Type>::check() const
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeSumOffDiag = SumOffDiag.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeSumOffDiag[l[coeffI]] += cmptMag(activeUpper[coeffI]);
                 activeSumOffDiag[u[coeffI]] += cmptMag(activeUpper[coeffI]);
@@ -1254,7 +1254,7 @@ void BlockLduMatrix<Type>::check() const
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeSumOffDiag = SumOffDiag.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeSumOffDiag[l[coeffI]] += cmptMag(activeUpper[coeffI]);
                 activeSumOffDiag[u[coeffI]] += cmptMag(activeUpper[coeffI]);
@@ -1311,7 +1311,7 @@ void BlockLduMatrix<Type>::check() const
             const squareTypeField& activeLower = Lower.asSquare();
             const squareTypeField& activeUpper = Upper.asSquare();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeSumOffDiag[l[coeffI]] +=
                     sumMagToDiag(activeLower[coeffI]);
@@ -1345,7 +1345,7 @@ void BlockLduMatrix<Type>::check() const
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeSumOffDiag = SumOffDiag.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeSumOffDiag[l[coeffI]] += cmptMag(activeLower[coeffI]);
                 activeSumOffDiag[u[coeffI]] += cmptMag(activeUpper[coeffI]);
@@ -1374,7 +1374,7 @@ void BlockLduMatrix<Type>::check() const
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeSumOffDiag = SumOffDiag.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeSumOffDiag[l[coeffI]] += cmptMag(activeLower[coeffI]);
                 activeSumOffDiag[u[coeffI]] += cmptMag(activeUpper[coeffI]);
@@ -1451,7 +1451,7 @@ void BlockLduMatrix<Type>::relax
                 pTraits<typename TypeCoeffField::squareType>::zero
             );
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 sumOff[u[coeffI]] += cmptMag(activeUpper[coeffI].T());
                 sumOff[l[coeffI]] += cmptMag(activeUpper[coeffI]);
@@ -1486,7 +1486,7 @@ void BlockLduMatrix<Type>::relax
                 pTraits<typename TypeCoeffField::linearType>::zero
             );
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 sumOff[u[coeffI]] += cmptMag(activeUpper[coeffI]);
                 sumOff[l[coeffI]] += cmptMag(activeUpper[coeffI]);
@@ -1519,7 +1519,7 @@ void BlockLduMatrix<Type>::relax
                 pTraits<typename TypeCoeffField::scalarType>::zero
             );
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 sumOff[u[coeffI]] += mag(activeUpper[coeffI]);
                 sumOff[l[coeffI]] += mag(activeUpper[coeffI]);
@@ -1568,7 +1568,7 @@ void BlockLduMatrix<Type>::relax
                 pTraits<typename TypeCoeffField::squareType>::zero
             );
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 sumOff[u[coeffI]] += cmptMag(activeLower[coeffI]);
                 sumOff[l[coeffI]] += cmptMag(activeUpper[coeffI]);
@@ -1605,7 +1605,7 @@ void BlockLduMatrix<Type>::relax
                 pTraits<typename TypeCoeffField::linearType>::zero
             );
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 sumOff[u[coeffI]] += cmptMag(activeLower[coeffI]);
                 sumOff[l[coeffI]] += cmptMag(activeUpper[coeffI]);
@@ -1640,7 +1640,7 @@ void BlockLduMatrix<Type>::relax
                 pTraits<typename TypeCoeffField::scalarType>::zero
             );
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 sumOff[u[coeffI]] += mag(activeLower[coeffI]);
                 sumOff[l[coeffI]] += mag(activeUpper[coeffI]);
@@ -1684,7 +1684,7 @@ void BlockLduMatrix<Type>::setValue
 
 
 template<class Type>
-tmp<Field<Type> > BlockLduMatrix<Type>::residual
+tmp<Field<Type>> BlockLduMatrix<Type>::residual
 (
     const Field<Type>& x
 ) const
@@ -1696,7 +1696,7 @@ tmp<Field<Type> > BlockLduMatrix<Type>::residual
 
 
 template<class Type>
-typename CML::tmp<Field<Type> > BlockLduMatrix<Type>::residual
+typename CML::tmp<Field<Type>> BlockLduMatrix<Type>::residual
 (
     const Field<Type>& x,
     const Field<Type>& b
@@ -1866,7 +1866,7 @@ void BlockLduMatrix<Type>::operator*=(const scalarField& sf)
         {
             scalarTypeField& activeUpper = Upper.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeUpper[coeffI] *= sf[l[coeffI]];
             }
@@ -1875,7 +1875,7 @@ void BlockLduMatrix<Type>::operator*=(const scalarField& sf)
         {
             linearTypeField& activeUpper = Upper.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeUpper[coeffI] *= sf[l[coeffI]];
             }
@@ -1884,7 +1884,7 @@ void BlockLduMatrix<Type>::operator*=(const scalarField& sf)
         {
             squareTypeField& activeUpper = Upper.asSquare();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeUpper[coeffI] *= sf[l[coeffI]];
             }
@@ -1901,7 +1901,7 @@ void BlockLduMatrix<Type>::operator*=(const scalarField& sf)
         {
             scalarTypeField& activeLower = Lower.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 activeLower[coeffI] *= sf[u[coeffI]];
             }
@@ -1910,7 +1910,7 @@ void BlockLduMatrix<Type>::operator*=(const scalarField& sf)
         {
             linearTypeField& activeLower = Lower.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 activeLower[coeffI] *= sf[u[coeffI]];
             }
@@ -1919,7 +1919,7 @@ void BlockLduMatrix<Type>::operator*=(const scalarField& sf)
         {
             squareTypeField& activeLower = Lower.asSquare();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 activeLower[coeffI] *= sf[u[coeffI]];
             }
@@ -1963,8 +1963,8 @@ void BlockLduMatrix<Type>::initInterfaces
 {
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll (interfaces_, interfaceI)
@@ -1982,7 +1982,7 @@ void BlockLduMatrix<Type>::initInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
@@ -2003,7 +2003,7 @@ void BlockLduMatrix<Type>::initInterfaces
                     psi,
                     *this,
                     interfaceCoeffs[interfaceI],
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }
@@ -2026,7 +2026,7 @@ void BlockLduMatrix<Type>::updateInterfaces
     const TypeField& psi
 ) const
 {
-    if (Pstream::defaultCommsType == Pstream::blocking)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::blocking)
     {
         forAll (interfaces_, interfaceI)
         {
@@ -2043,7 +2043,7 @@ void BlockLduMatrix<Type>::updateInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::nonBlocking)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking)
     {
         // Block until all sends/receives have been finished
         IPstream::waitRequests();
@@ -2064,7 +2064,7 @@ void BlockLduMatrix<Type>::updateInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
@@ -2083,7 +2083,7 @@ void BlockLduMatrix<Type>::updateInterfaces
                         psi,
                         *this,
                         interfaceCoeffs[interfaceI],
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
                 else
@@ -2094,7 +2094,7 @@ void BlockLduMatrix<Type>::updateInterfaces
                         psi,
                         *this,
                         interfaceCoeffs[interfaceI],
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
             }
@@ -2117,7 +2117,7 @@ void BlockLduMatrix<Type>::updateInterfaces
                     psi,
                     *this,
                     interfaceCoeffs[interfaceI],
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }
@@ -2132,7 +2132,7 @@ void BlockLduMatrix<Type>::updateInterfaces
 }
 
 /*
-template <typename Type>
+template<class Type>
 void
 CML::BlockLduMatrix<Type>::updateMatrixInterfaces
 (
@@ -2142,7 +2142,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
     Field<Type>& result
 ) const
 {
-    if (Pstream::defaultCommsType == Pstream::blocking)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::blocking)
     {
         forAll(interfaces, interfaceI)
         {
@@ -2158,7 +2158,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::nonBlocking)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking)
     {
         // Try and consume interfaces as they become available
         bool allUpdated = false;
@@ -2235,7 +2235,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
@@ -2253,7 +2253,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
                         result,
                         psiif,
                         coupleCoeffs[interfaceI],
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
                 else
@@ -2263,7 +2263,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
                         result,
                         psiif,
                         coupleCoeffs[interfaceI],
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
             }
@@ -2285,7 +2285,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
                     result,
                     psiif,
                     coupleCoeffs[interfaceI],
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }
@@ -2300,7 +2300,7 @@ CML::BlockLduMatrix<Type>::updateMatrixInterfaces
 }
 */
 /*
-template <typename Type>
+template<class Type>
 void
 BlockLduMatrix<Type>::initMatrixInterfaces
 (
@@ -2313,8 +2313,8 @@ BlockLduMatrix<Type>::initMatrixInterfaces
 {
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(interfaces, interfaceI)
@@ -2331,7 +2331,7 @@ BlockLduMatrix<Type>::initMatrixInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
@@ -2351,7 +2351,7 @@ BlockLduMatrix<Type>::initMatrixInterfaces
                     result,
                     psiif,
                     coupleCoeffs[interfaceI],
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }
@@ -2419,7 +2419,7 @@ void BlockLduMatrix<Type>::AmulCore
         {
             const scalarTypeField& activeLower = Lower.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Ax[u[coeffI]] += mult(activeLower[coeffI], x[l[coeffI]]);
             }
@@ -2428,7 +2428,7 @@ void BlockLduMatrix<Type>::AmulCore
         {
             const linearTypeField& activeLower = Lower.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Ax[u[coeffI]] += mult(activeLower[coeffI], x[l[coeffI]]);
             }
@@ -2437,7 +2437,7 @@ void BlockLduMatrix<Type>::AmulCore
         {
             const squareTypeField& activeLower = Lower.asSquare();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Ax[u[coeffI]] += mult(activeLower[coeffI], x[l[coeffI]]);
             }
@@ -2449,7 +2449,7 @@ void BlockLduMatrix<Type>::AmulCore
     {
         const scalarTypeField& activeUpper = Upper.asScalar();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             Ax[l[coeffI]] += mult(activeUpper[coeffI], x[u[coeffI]]);
         }
@@ -2458,7 +2458,7 @@ void BlockLduMatrix<Type>::AmulCore
     {
         const linearTypeField& activeUpper = Upper.asLinear();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             Ax[l[coeffI]] += mult(activeUpper[coeffI], x[u[coeffI]]);
         }
@@ -2467,7 +2467,7 @@ void BlockLduMatrix<Type>::AmulCore
     {
         const squareTypeField& activeUpper = Upper.asSquare();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             Ax[l[coeffI]] += mult(activeUpper[coeffI], x[u[coeffI]]);
         }
@@ -2521,7 +2521,7 @@ void BlockLduMatrix<Type>::TmulCore
     {
         const scalarTypeField& activeUpper = Upper.asScalar();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             Tx[u[coeffI]] += mult(activeUpper[coeffI], x[l[coeffI]]);
         }
@@ -2530,7 +2530,7 @@ void BlockLduMatrix<Type>::TmulCore
     {
         const linearTypeField& activeUpper = Upper.asLinear();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             Tx[u[coeffI]] += mult(activeUpper[coeffI], x[l[coeffI]]);
         }
@@ -2539,7 +2539,7 @@ void BlockLduMatrix<Type>::TmulCore
     {
         const squareTypeField& activeUpper = Upper.asSquare();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             // Bug fix: Missing transpose. VV, 31/Aug/2015.
             Tx[u[coeffI]] += mult(activeUpper[coeffI].T(), x[l[coeffI]]);
@@ -2553,7 +2553,7 @@ void BlockLduMatrix<Type>::TmulCore
         {
             const scalarTypeField& activeUpper = Upper.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Tx[l[coeffI]] += mult(activeUpper[coeffI], x[u[coeffI]]);
             }
@@ -2562,7 +2562,7 @@ void BlockLduMatrix<Type>::TmulCore
         {
             const linearTypeField& activeUpper = Upper.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Tx[l[coeffI]] += mult(activeUpper[coeffI], x[u[coeffI]]);
             }
@@ -2571,7 +2571,7 @@ void BlockLduMatrix<Type>::TmulCore
         {
             const squareTypeField& activeUpper = Upper.asSquare();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 // Use transpose upper coefficient
                 Tx[l[coeffI]] +=
@@ -2587,7 +2587,7 @@ void BlockLduMatrix<Type>::TmulCore
         {
             const scalarTypeField& activeLower = Lower.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Tx[l[coeffI]] += mult(activeLower[coeffI], x[u[coeffI]]);
             }
@@ -2596,7 +2596,7 @@ void BlockLduMatrix<Type>::TmulCore
         {
             const linearTypeField& activeLower = Lower.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Tx[l[coeffI]] += mult(activeLower[coeffI], x[u[coeffI]]);
             }
@@ -2605,7 +2605,7 @@ void BlockLduMatrix<Type>::TmulCore
         {
             const squareTypeField& activeLower = Lower.asSquare();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 // Bug fix: Missing transpose. VV, 31/Aug/2015.
                 Tx[l[coeffI]] += mult(activeLower[coeffI].T(), x[u[coeffI]]);
@@ -2659,7 +2659,7 @@ void BlockLduMatrix<Type>::segregateB
             linearType lt;
             squareType st;
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 contractLinear(lt, activeLower[coeffI]);
                 expandLinear(st, lt);
@@ -2680,7 +2680,7 @@ void BlockLduMatrix<Type>::segregateB
             linearType lt;
             squareType st;
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 contractLinear(lt, activeUpper[coeffI]);
                 expandLinear(st, lt);
@@ -2692,7 +2692,7 @@ void BlockLduMatrix<Type>::segregateB
             // is also needed
             if (symmetric())
             {
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     // Use transpose upper coefficient
                     contractLinear(lt, activeUpper[coeffI]);
@@ -2708,7 +2708,7 @@ void BlockLduMatrix<Type>::segregateB
 
 // BlockLduMatrixHOps.C
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 BlockLduMatrix<Type>::H(const Field<Type>& x) const
 {
     typedef typename TypeCoeffField::scalarTypeField scalarTypeField;
@@ -2716,7 +2716,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
     typedef typename TypeCoeffField::squareTypeField squareTypeField;
 
     // Create result
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>(lduAddr().size(), pTraits<Type>::zero)
     );
@@ -2738,7 +2738,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
             {
                 const scalarTypeField& activeUpper = Upper.asScalar();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     result[u[coeffI]] -=
                         mult(activeUpper[coeffI], x[l[coeffI]]);
@@ -2748,7 +2748,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
             {
                 const linearTypeField& activeUpper = Upper.asLinear();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     result[u[coeffI]] -=
                         mult(activeUpper[coeffI], x[l[coeffI]]);
@@ -2758,7 +2758,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
             {
                 const squareTypeField& activeUpper = Upper.asSquare();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     // Use transpose upper coefficient
                     result[u[coeffI]] -=
@@ -2774,7 +2774,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
             {
                 const scalarTypeField& activeLower = Lower.asScalar();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     result[u[coeffI]] -=
                         mult(activeLower[coeffI], x[l[coeffI]]);
@@ -2784,7 +2784,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
             {
                 const linearTypeField& activeLower = Lower.asLinear();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     result[u[coeffI]] -=
                         mult(activeLower[coeffI], x[l[coeffI]]);
@@ -2794,7 +2794,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
             {
                 const squareTypeField& activeLower = Lower.asSquare();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     result[u[coeffI]] -=
                         mult(activeLower[coeffI], x[l[coeffI]]);
@@ -2807,7 +2807,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
         {
             const scalarTypeField& activeUpper = Upper.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 result[l[coeffI]] -= mult(activeUpper[coeffI], x[u[coeffI]]);
             }
@@ -2816,7 +2816,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
         {
             const linearTypeField& activeUpper = Upper.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 result[l[coeffI]] -= mult(activeUpper[coeffI], x[u[coeffI]]);
             }
@@ -2825,7 +2825,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
         {
             const squareTypeField& activeUpper = Upper.asSquare();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 result[l[coeffI]] -= mult(activeUpper[coeffI], x[u[coeffI]]);
             }
@@ -2837,7 +2837,7 @@ BlockLduMatrix<Type>::H(const Field<Type>& x) const
 
 
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 BlockLduMatrix<Type>::faceH(const Field<Type>& x) const
 {
     typedef typename TypeCoeffField::scalarTypeField scalarTypeField;
@@ -2848,7 +2848,7 @@ BlockLduMatrix<Type>::faceH(const Field<Type>& x) const
     const unallocLabelList& l = lduAddr().lowerAddr();
 
     // Create result
-    tmp<Field<Type> > tresult(new Field<Type>(u.size(), pTraits<Type>::zero));
+    tmp<Field<Type>> tresult(new Field<Type>(u.size(), pTraits<Type>::zero));
     Field<Type>& result = tresult();
 
     if (this->thereIsUpper())
@@ -2865,7 +2865,7 @@ BlockLduMatrix<Type>::faceH(const Field<Type>& x) const
             {
                 const scalarTypeField& activeUpper = Upper.asScalar();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     // This can be optimised with a subtraction.
                     // Currently not done for clarity.  HJ, 31/Oct/2007
@@ -2878,7 +2878,7 @@ BlockLduMatrix<Type>::faceH(const Field<Type>& x) const
             {
                 const linearTypeField& activeUpper = Upper.asLinear();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     // This can be optimised with a subtraction.
                     // Currently not done for clarity.  HJ, 31/Oct/2007
@@ -2891,7 +2891,7 @@ BlockLduMatrix<Type>::faceH(const Field<Type>& x) const
             {
                 const squareTypeField& activeUpper = Upper.asSquare();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     // Use transpose upper coefficient
                     result[coeffI] =
@@ -2909,7 +2909,7 @@ BlockLduMatrix<Type>::faceH(const Field<Type>& x) const
                 const scalarTypeField& activeUpper = Upper.asScalar();
                 const scalarTypeField& activeLower = Lower.asScalar();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     result[coeffI] =
                         mult(activeUpper[coeffI], x[u[coeffI]])
@@ -2921,7 +2921,7 @@ BlockLduMatrix<Type>::faceH(const Field<Type>& x) const
                 const linearTypeField& activeUpper = Upper.asLinear();
                 const linearTypeField& activeLower = Lower.asLinear();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     result[coeffI] =
                         mult(activeUpper[coeffI], x[u[coeffI]])
@@ -2933,7 +2933,7 @@ BlockLduMatrix<Type>::faceH(const Field<Type>& x) const
                 const squareTypeField& activeUpper = Upper.asSquare();
                 const squareTypeField& activeLower = Lower.asSquare();
 
-                for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+                for (label coeffI = 0; coeffI < u.size(); coeffI++)
                 {
                     result[coeffI] =
                         mult(activeUpper[coeffI], x[u[coeffI]])
@@ -2974,7 +2974,7 @@ void BlockLduMatrix<Type>::decoupledSumDiag()
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeDiag = Diag.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] += activeUpper[coeffI];
                 activeDiag[u[coeffI]] += activeUpper[coeffI];
@@ -2989,7 +2989,7 @@ void BlockLduMatrix<Type>::decoupledSumDiag()
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeDiag = Diag.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] += activeUpper[coeffI];
                 activeDiag[u[coeffI]] += activeUpper[coeffI];
@@ -3016,7 +3016,7 @@ void BlockLduMatrix<Type>::decoupledSumDiag()
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeDiag = Diag.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] += activeLower[coeffI];
                 activeDiag[u[coeffI]] += activeUpper[coeffI];
@@ -3033,7 +3033,7 @@ void BlockLduMatrix<Type>::decoupledSumDiag()
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeDiag = Diag.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] += activeLower[coeffI];
                 activeDiag[u[coeffI]] += activeUpper[coeffI];
@@ -3075,7 +3075,7 @@ void BlockLduMatrix<Type>::decoupledNegSumDiag()
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeDiag = Diag.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] -= activeUpper[coeffI];
                 activeDiag[u[coeffI]] -= activeUpper[coeffI];
@@ -3090,7 +3090,7 @@ void BlockLduMatrix<Type>::decoupledNegSumDiag()
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeDiag = Diag.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] -= activeUpper[coeffI];
                 activeDiag[u[coeffI]] -= activeUpper[coeffI];
@@ -3117,7 +3117,7 @@ void BlockLduMatrix<Type>::decoupledNegSumDiag()
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeDiag = Diag.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] -= activeLower[coeffI];
                 activeDiag[u[coeffI]] -= activeUpper[coeffI];
@@ -3134,7 +3134,7 @@ void BlockLduMatrix<Type>::decoupledNegSumDiag()
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeDiag = Diag.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiag[l[coeffI]] -= activeLower[coeffI];
                 activeDiag[u[coeffI]] -= activeUpper[coeffI];
@@ -3176,7 +3176,7 @@ void BlockLduMatrix<Type>::decoupledCheck() const
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeDiagCopy = DiagCopy.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiagCopy[l[coeffI]] += activeUpper[coeffI];
                 activeDiagCopy[u[coeffI]] += activeUpper[coeffI];
@@ -3198,7 +3198,7 @@ void BlockLduMatrix<Type>::decoupledCheck() const
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeDiagCopy = DiagCopy.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiagCopy[l[coeffI]] += activeUpper[coeffI];
                 activeDiagCopy[u[coeffI]] += activeUpper[coeffI];
@@ -3229,7 +3229,7 @@ void BlockLduMatrix<Type>::decoupledCheck() const
             const linearTypeField& activeUpper = Upper.asLinear();
             linearTypeField& activeDiagCopy = DiagCopy.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiagCopy[l[coeffI]] += activeLower[coeffI];
                 activeDiagCopy[u[coeffI]] += activeUpper[coeffI];
@@ -3253,7 +3253,7 @@ void BlockLduMatrix<Type>::decoupledCheck() const
             const scalarTypeField& activeUpper = Upper.asScalar();
             scalarTypeField& activeDiagCopy = DiagCopy.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeDiagCopy[l[coeffI]] += activeLower[coeffI];
                 activeDiagCopy[u[coeffI]] += activeUpper[coeffI];
@@ -3326,7 +3326,7 @@ void BlockLduMatrix<Type>::decoupledRelax
                 pTraits<typename TypeCoeffField::linearType>::zero
             );
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 sumOff[u[coeffI]] += cmptMag(activeUpper[coeffI]);
                 sumOff[l[coeffI]] += cmptMag(activeUpper[coeffI]);
@@ -3359,7 +3359,7 @@ void BlockLduMatrix<Type>::decoupledRelax
                 pTraits<typename TypeCoeffField::scalarType>::zero
             );
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 sumOff[u[coeffI]] += mag(activeUpper[coeffI]);
                 sumOff[l[coeffI]] += mag(activeUpper[coeffI]);
@@ -3401,7 +3401,7 @@ void BlockLduMatrix<Type>::decoupledRelax
                 pTraits<typename TypeCoeffField::linearType>::zero
             );
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 sumOff[u[coeffI]] += cmptMag(activeLower[coeffI]);
                 sumOff[l[coeffI]] += cmptMag(activeUpper[coeffI]);
@@ -3430,7 +3430,7 @@ void BlockLduMatrix<Type>::decoupledRelax
                 pTraits<typename TypeCoeffField::scalarType>::zero
             );
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 sumOff[u[coeffI]] += mag(activeLower[coeffI]);
                 sumOff[l[coeffI]] += mag(activeUpper[coeffI]);
@@ -3469,7 +3469,7 @@ void BlockLduMatrix<Type>::decoupledMultEqOp(const scalarField& sf)
         {
             scalarTypeField& activeUpper = Upper.asScalar();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeUpper[coeffI] *= sf[l[coeffI]];
             }
@@ -3478,7 +3478,7 @@ void BlockLduMatrix<Type>::decoupledMultEqOp(const scalarField& sf)
         {
             linearTypeField& activeUpper = Upper.asLinear();
 
-            for (register label coeffI = 0; coeffI < l.size(); coeffI++)
+            for (label coeffI = 0; coeffI < l.size(); coeffI++)
             {
                 activeUpper[coeffI] *= sf[l[coeffI]];
             }
@@ -3495,7 +3495,7 @@ void BlockLduMatrix<Type>::decoupledMultEqOp(const scalarField& sf)
         {
             scalarTypeField& activeLower = Lower.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 activeLower[coeffI] *= sf[u[coeffI]];
             }
@@ -3504,7 +3504,7 @@ void BlockLduMatrix<Type>::decoupledMultEqOp(const scalarField& sf)
         {
             linearTypeField& activeLower = Lower.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 activeLower[coeffI] *= sf[u[coeffI]];
             }
@@ -3544,7 +3544,7 @@ void BlockLduMatrix<Type>::decoupledAmulCore
         {
             const scalarTypeField& activeUpper = Upper.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Ax[u[coeffI]] += mult(activeUpper[coeffI], x[l[coeffI]]);
             }
@@ -3553,7 +3553,7 @@ void BlockLduMatrix<Type>::decoupledAmulCore
         {
             const linearTypeField& activeUpper = Upper.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Ax[u[coeffI]] += mult(activeUpper[coeffI], x[l[coeffI]]);
             }
@@ -3567,7 +3567,7 @@ void BlockLduMatrix<Type>::decoupledAmulCore
         {
             const scalarTypeField& activeLower = Lower.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Ax[u[coeffI]] += mult(activeLower[coeffI], x[l[coeffI]]);
             }
@@ -3576,7 +3576,7 @@ void BlockLduMatrix<Type>::decoupledAmulCore
         {
             const linearTypeField& activeLower = Lower.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Ax[u[coeffI]] += mult(activeLower[coeffI], x[l[coeffI]]);
             }
@@ -3588,7 +3588,7 @@ void BlockLduMatrix<Type>::decoupledAmulCore
     {
         const scalarTypeField& activeUpper = Upper.asScalar();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             Ax[l[coeffI]] += mult(activeUpper[coeffI], x[u[coeffI]]);
         }
@@ -3597,7 +3597,7 @@ void BlockLduMatrix<Type>::decoupledAmulCore
     {
         const linearTypeField& activeUpper = Upper.asLinear();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             Ax[l[coeffI]] += mult(activeUpper[coeffI], x[u[coeffI]]);
         }
@@ -3634,7 +3634,7 @@ void BlockLduMatrix<Type>::decoupledTmulCore
     {
         const scalarTypeField& activeUpper = Upper.asScalar();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             Tx[u[coeffI]] += mult(activeUpper[coeffI], x[l[coeffI]]);
         }
@@ -3643,7 +3643,7 @@ void BlockLduMatrix<Type>::decoupledTmulCore
     {
         const linearTypeField& activeUpper = Upper.asLinear();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             Tx[u[coeffI]] += mult(activeUpper[coeffI], x[l[coeffI]]);
         }
@@ -3656,7 +3656,7 @@ void BlockLduMatrix<Type>::decoupledTmulCore
         {
             const scalarTypeField& activeUpper = Upper.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Tx[l[coeffI]] += mult(activeUpper[coeffI], x[u[coeffI]]);
             }
@@ -3665,7 +3665,7 @@ void BlockLduMatrix<Type>::decoupledTmulCore
         {
             const linearTypeField& activeUpper = Upper.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Tx[l[coeffI]] += mult(activeUpper[coeffI], x[u[coeffI]]);
             }
@@ -3679,7 +3679,7 @@ void BlockLduMatrix<Type>::decoupledTmulCore
         {
             const scalarTypeField& activeLower = Lower.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Tx[l[coeffI]] += mult(activeLower[coeffI], x[u[coeffI]]);
             }
@@ -3688,7 +3688,7 @@ void BlockLduMatrix<Type>::decoupledTmulCore
         {
             const linearTypeField& activeLower = Lower.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 Tx[l[coeffI]] += mult(activeLower[coeffI], x[u[coeffI]]);
             }
@@ -3699,14 +3699,14 @@ void BlockLduMatrix<Type>::decoupledTmulCore
 
 // BlockLduMatrixDecoupledHOps.C
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 BlockLduMatrix<Type>::decoupledH(const Field<Type>& x) const
 {
     typedef typename TypeCoeffField::scalarTypeField scalarTypeField;
     typedef typename TypeCoeffField::linearTypeField linearTypeField;
 
     // Create result
-    tmp<Field<Type> > tresult
+    tmp<Field<Type>> tresult
     (
         new Field<Type>(lduAddr().size(), pTraits<Type>::zero)
     );
@@ -3727,7 +3727,7 @@ BlockLduMatrix<Type>::decoupledH(const Field<Type>& x) const
         {
             const scalarTypeField& activeUpper = Upper.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 result[u[coeffI]] -= mult(activeUpper[coeffI], x[l[coeffI]]);
             }
@@ -3736,7 +3736,7 @@ BlockLduMatrix<Type>::decoupledH(const Field<Type>& x) const
         {
             const linearTypeField& activeUpper = Upper.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 result[u[coeffI]] -= mult(activeUpper[coeffI], x[l[coeffI]]);
             }
@@ -3750,7 +3750,7 @@ BlockLduMatrix<Type>::decoupledH(const Field<Type>& x) const
         {
             const scalarTypeField& activeLower = Lower.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 result[u[coeffI]] -= mult(activeLower[coeffI], x[l[coeffI]]);
             }
@@ -3759,7 +3759,7 @@ BlockLduMatrix<Type>::decoupledH(const Field<Type>& x) const
         {
             const linearTypeField& activeLower = Lower.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 result[u[coeffI]] -= mult(activeLower[coeffI], x[l[coeffI]]);
             }
@@ -3771,7 +3771,7 @@ BlockLduMatrix<Type>::decoupledH(const Field<Type>& x) const
     {
         const scalarTypeField& activeUpper = Upper.asScalar();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             result[l[coeffI]] -= mult(activeUpper[coeffI], x[u[coeffI]]);
         }
@@ -3780,7 +3780,7 @@ BlockLduMatrix<Type>::decoupledH(const Field<Type>& x) const
     {
         const linearTypeField& activeUpper = Upper.asLinear();
 
-        for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+        for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
             result[l[coeffI]] -= mult(activeUpper[coeffI], x[u[coeffI]]);
         }
@@ -3791,7 +3791,7 @@ BlockLduMatrix<Type>::decoupledH(const Field<Type>& x) const
 
 
 template<class Type>
-tmp<Field<Type> >
+tmp<Field<Type>>
 BlockLduMatrix<Type>::decoupledFaceH(const Field<Type>& x) const
 {
     typedef typename TypeCoeffField::scalarTypeField scalarTypeField;
@@ -3801,7 +3801,7 @@ BlockLduMatrix<Type>::decoupledFaceH(const Field<Type>& x) const
     const unallocLabelList& l = lduAddr().lowerAddr();
 
     // Create result
-    tmp<Field<Type> > tresult(new Field<Type>(u.size(), pTraits<Type>::zero));
+    tmp<Field<Type>> tresult(new Field<Type>(u.size(), pTraits<Type>::zero));
     Field<Type>& result = tresult();
 
     const TypeCoeffField& Upper = this->upper();
@@ -3816,7 +3816,7 @@ BlockLduMatrix<Type>::decoupledFaceH(const Field<Type>& x) const
         {
             const scalarTypeField& activeUpper = Upper.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 // This can be optimised with a subtraction.
                 // Currently not done for clarity.  HJ, 31/Oct/2007
@@ -3829,7 +3829,7 @@ BlockLduMatrix<Type>::decoupledFaceH(const Field<Type>& x) const
         {
             const linearTypeField& activeUpper = Upper.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 // This can be optimised with a subtraction.
                 // Currently not done for clarity.  HJ, 31/Oct/2007
@@ -3848,7 +3848,7 @@ BlockLduMatrix<Type>::decoupledFaceH(const Field<Type>& x) const
             const scalarTypeField& activeUpper = Upper.asScalar();
             const scalarTypeField& activeLower = Lower.asScalar();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 result[coeffI] =
                     mult(activeUpper[coeffI], x[u[coeffI]])
@@ -3860,7 +3860,7 @@ BlockLduMatrix<Type>::decoupledFaceH(const Field<Type>& x) const
             const linearTypeField& activeUpper = Upper.asLinear();
             const linearTypeField& activeLower = Lower.asLinear();
 
-            for (register label coeffI = 0; coeffI < u.size(); coeffI++)
+            for (label coeffI = 0; coeffI < u.size(); coeffI++)
             {
                 result[coeffI] =
                     mult(activeUpper[coeffI], x[u[coeffI]])

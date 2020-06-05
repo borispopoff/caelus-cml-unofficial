@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,10 +52,10 @@ class surfaceFilmModel
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        surfaceFilmModel(const surfaceFilmModel&);
+        surfaceFilmModel(const surfaceFilmModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const surfaceFilmModel&);
+        void operator=(const surfaceFilmModel&) = delete;
 
 
 public:
@@ -114,16 +114,16 @@ public:
         // Primary region source fields
 
             //- Return total mass source - Eulerian phase only
-            virtual tmp<DimensionedField<scalar, volMesh> > Srho() const = 0;
+            virtual tmp<volScalarField::Internal> Srho() const = 0;
 
             //- Return mass source for specie i - Eulerian phase only
-            virtual tmp<DimensionedField<scalar, volMesh> > Srho
+            virtual tmp<volScalarField::Internal> Srho
             (
                 const label i
             ) const = 0;
 
             //- Return enthalpy source - Eulerian phase only
-            virtual tmp<DimensionedField<scalar, volMesh> > Sh() const = 0;
+            virtual tmp<volScalarField::Internal> Sh() const = 0;
 
 
         // Evolution

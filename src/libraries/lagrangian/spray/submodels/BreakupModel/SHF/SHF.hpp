@@ -115,9 +115,9 @@ public:
         SHF(const SHF<CloudType>& bum);
 
         //- Construct and return a clone
-        virtual autoPtr<BreakupModel<CloudType> > clone() const
+        virtual autoPtr<BreakupModel<CloudType>> clone() const
         {
-            return autoPtr<BreakupModel<CloudType> >
+            return autoPtr<BreakupModel<CloudType>>
             (
                 new SHF<CloudType>(*this)
             );
@@ -164,7 +164,7 @@ public:
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template <class CloudType>
+template<class CloudType>
 CML::SHF<CloudType>::SHF
 (
     const dictionary& dict,

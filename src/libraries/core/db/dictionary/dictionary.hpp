@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,6 +56,8 @@ SourceFiles
 #include "wordList.hpp"
 #include "className.hpp"
 
+#include "VectorSpace.hpp"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace CML
@@ -75,7 +77,7 @@ Ostream& operator<<(Ostream&, const dictionary&);
 
 class dictionaryName
 {
-    // Private data
+    // Private Data
 
         fileName name_;
 
@@ -94,8 +96,14 @@ public:
             name_(name)
         {}
 
+        //- Move constructor
+        dictionaryName(dictionaryName&& name)
+        :
+            name_(move(name.name_))
+        {}
 
-    // Member functions
+
+    // Member Functions
 
         //- Return the dictionary name
         const fileName& name() const
@@ -125,6 +133,19 @@ public:
                 return scopedName.substr(i + 1, scopedName.npos);
             }
         }
+
+
+    // Member Operators
+
+        void operator=(const dictionaryName& name)
+        {
+            name_ = name.name_;
+        }
+
+        void operator=(dictionaryName&& name)
+        {
+            name_ = move(name.name_);
+        }
 };
 
 
@@ -137,7 +158,7 @@ class dictionary
     public dictionaryName,
     public IDLList<entry>
 {
-    // Private data
+    // Private Data
 
         //- HashTable of the entries held on the DL-list for quick lookup
         HashTable<entry*> hashedEntries_;
@@ -149,7 +170,7 @@ class dictionary
         DLList<entry*> patternEntries_;
 
         //- Patterns as precompiled regular expressions
-        DLList<autoPtr<regExp> > patternRegexps_;
+        DLList<autoPtr<regExp>> patternRegexps_;
 
 
    // Private Member Functions
@@ -160,7 +181,7 @@ class dictionary
             const bool patternMatch,
             const word& Keyword,
             DLList<entry*>::const_iterator& wcLink,
-            DLList<autoPtr<regExp> >::const_iterator& reLink
+            DLList<autoPtr<regExp>>::const_iterator& reLink
         ) const;
 
         //- Search patterns table for exact match or regular expression match
@@ -169,7 +190,7 @@ class dictionary
             const bool patternMatch,
             const word& Keyword,
             DLList<entry*>::iterator& wcLink,
-            DLList<autoPtr<regExp> >::iterator& reLink
+            DLList<autoPtr<regExp>>::iterator& reLink
         );
 
 
@@ -222,11 +243,12 @@ public:
         //  A null pointer is treated like an empty dictionary.
         dictionary(const dictionary*);
 
-        //- Construct by transferring parameter contents given parent dictionary
-        dictionary(const dictionary& parentDict, const Xfer<dictionary>&);
+        //- Move constructor transferring parameter contents
+        //  given parent dictionary
+        dictionary(const dictionary& parentDict, dictionary&&);
 
-        //- Construct top-level dictionary by transferring parameter contents
-        dictionary(const Xfer<dictionary>&);
+        //- Move constructor
+        dictionary(dictionary&&);
 
         //- Construct and return clone
         autoPtr<dictionary> clone() const;
@@ -239,7 +261,7 @@ public:
     virtual ~dictionary();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the parent dictionary
         const dictionary& parent() const
@@ -265,6 +287,8 @@ public:
         //- Return the SHA1 digest of the dictionary contents
         SHA1Digest digest() const;
 
+        //- Return the dictionary as a list of tokens
+        tokenList tokens() const;
 
 
         // Search and lookup
@@ -501,9 +525,6 @@ public:
             //- Transfer the contents of the argument and annul the argument.
             void transfer(dictionary&);
 
-            //- Transfer contents to the Xfer container
-            Xfer<dictionary> xfer();
-
 
         // Read
 
@@ -527,6 +548,8 @@ public:
 
         void operator=(const dictionary&);
 
+        void operator=(dictionary&&);
+
         //- Include entries from the given dictionary.
         //  Warn, but do not overwrite existing entries.
         void operator+=(const dictionary&);
@@ -540,7 +563,7 @@ public:
         void operator<<=(const dictionary&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read dictionary from Istream
         friend Istream& operator>>(Istream&, dictionary&);
@@ -561,6 +584,27 @@ dictionary operator+(const dictionary& dict1, const dictionary& dict2);
 //  Starting from the entries in dict1 and then including those from dict2.
 //  Do not overwrite the entries from dict1.
 dictionary operator|(const dictionary& dict1, const dictionary& dict2);
+
+
+// Global Functions
+
+//- Write a dictionary entry
+void writeEntry(Ostream& os, const dictionary& dict);
+
+//- Helper function to write the keyword and entry
+template<class EntryType>
+void writeEntry(Ostream& os, const word& entryName, const EntryType& value);
+
+//- Helper function to write the keyword and entry only if the
+//  values are not equal. The value is then output as value2
+template<class EntryType>
+void writeEntryIfDifferent
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value1,
+    const EntryType& value2
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -585,8 +629,10 @@ T CML::dictionary::lookupType
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction(*this)
-            << "keyword " << keyword << " is undefined in dictionary "
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "keyword " << keyword << " is undefined in dictionary "
             << name()
             << exit(FatalIOError);
     }
@@ -676,6 +722,37 @@ void CML::dictionary::set(const keyType& k, const T& t)
     set(new primitiveEntry(k, t));
 }
 
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class EntryType>
+void CML::writeEntry
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value
+)
+{
+    os.writeKeyword(entryName);
+    writeEntry(os, value);
+    os << token::END_STATEMENT << endl;
+}
+
+
+template<class EntryType>
+void CML::writeEntryIfDifferent
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value1,
+    const EntryType& value2
+)
+{
+    if (value1 != value2)
+    {
+        writeEntry(os, entryName, value2);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

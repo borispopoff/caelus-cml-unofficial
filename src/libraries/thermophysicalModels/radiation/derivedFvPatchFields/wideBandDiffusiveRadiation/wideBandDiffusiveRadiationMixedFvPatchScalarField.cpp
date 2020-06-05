@@ -163,7 +163,7 @@ updateCoeffs()
 
     label rayId = -1;
     label lambdaId = -1;
-    dom.setRayIdLambdaId(dimensionedInternalField().name(), rayId, lambdaId);
+    dom.setRayIdLambdaId(internalField().name(), rayId, lambdaId);
 
     const label patchi = patch().index();
 
@@ -182,7 +182,7 @@ updateCoeffs()
 
     const scalarField nAve(n & ray.dAve());
 
-    ray.qr().boundaryField()[patchi] += Iw*nAve;
+    ray.qr().boundaryFieldRef()[patchi] += Iw*nAve;
 
     const scalarField Eb
     (
@@ -191,8 +191,8 @@ updateCoeffs()
 
     scalarField temissivity = emissivity();
 
-    scalarField& qem = ray.qem().boundaryField()[patchi];
-    scalarField& qin = ray.qin().boundaryField()[patchi];
+    scalarField& qem = ray.qem().boundaryFieldRef()[patchi];
+    scalarField& qin = ray.qin().boundaryFieldRef()[patchi];
 
     // Use updated Ir while iterating over rays
     // avoids to used lagged qin

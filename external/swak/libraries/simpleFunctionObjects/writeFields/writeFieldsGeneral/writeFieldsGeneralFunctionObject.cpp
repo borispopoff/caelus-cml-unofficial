@@ -57,10 +57,10 @@ bool writeFieldsGeneralFunctionObject::start()
     return true;
 }
 
-// bool writeFieldsGeneralFunctionObject::outputTime()
+// bool writeFieldsGeneralFunctionObject::writeTime()
 // {
 //     return (
-//         time().outputTime()
+//         time().writeTime()
 //         &&
 //         time().time().value()>=after());
 // }

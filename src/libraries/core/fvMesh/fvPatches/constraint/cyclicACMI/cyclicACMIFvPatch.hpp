@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -31,10 +31,8 @@ SourceFiles
 #ifndef cyclicACMIFvPatch_H
 #define cyclicACMIFvPatch_H
 
-#include "coupledFvPatch.hpp"
-#include "cyclicACMILduInterface.hpp"
+#include "cyclicAMIFvPatch.hpp"
 #include "cyclicACMIPolyPatch.hpp"
-#include "fvBoundaryMesh.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,23 +45,22 @@ namespace CML
 
 class cyclicACMIFvPatch
 :
-    public coupledFvPatch,
-    public cyclicACMILduInterface
+    public cyclicAMIFvPatch
 {
-    // Private data
+private:
 
-        const cyclicACMIPolyPatch& cyclicACMIPolyPatch_;
+    // Private member functions
+
+        //- Update the patch areas after AMI update
+        void updateAreas() const;
 
 
 protected:
 
     // Protected Member functions
 
-        //- Update the patch areas after AMI update
-        void updateAreas() const;
-
         //- Make patch weighting factors
-        void makeWeights(scalarField&) const;
+        virtual void makeWeights(scalarField&) const;
 
 
 public:
@@ -77,9 +74,7 @@ public:
         //- Construct from polyPatch
         cyclicACMIFvPatch(const polyPatch& patch, const fvBoundaryMesh& bm)
         :
-            coupledFvPatch(patch, bm),
-            cyclicACMILduInterface(),
-            cyclicACMIPolyPatch_(refCast<const cyclicACMIPolyPatch>(patch))
+           cyclicAMIFvPatch(patch, bm)
         {}
 
 
@@ -87,172 +82,51 @@ public:
 
         // Access
 
-            //- Return local reference cast into the cyclic patch
-            const cyclicACMIPolyPatch& cyclicACMIPatch() const
+            //- Return a reference to the AMI interpolators
+            virtual const PtrList<AMIInterpolation>& AMIs() const
             {
-                return cyclicACMIPolyPatch_;
-            }
-
-            //- Return neighbour
-            virtual label neighbPatchID() const
-            {
-                return cyclicACMIPolyPatch_.neighbPatchID();
-            }
-
-            virtual bool owner() const
-            {
-                return cyclicACMIPolyPatch_.owner();
-            }
-
-            //- Return neighbour fvPatch
-            virtual const cyclicACMIFvPatch& neighbPatch() const
-            {
-                return refCast<const cyclicACMIFvPatch>
-                (
-                    this->boundaryMesh()[cyclicACMIPolyPatch_.neighbPatchID()]
-                );
-            }
-
-            //- Return neighbour
-            virtual label nonOverlapPatchID() const
-            {
-                return cyclicACMIPolyPatch_.nonOverlapPatchID();
-            }
-
-            //- Return non-overlapping fvPatch
-            virtual const fvPatch& nonOverlapPatch() const
-            {
-                return this->boundaryMesh()[nonOverlapPatchID()];
-            }
-
-            //- Return a reference to the AMI interpolator
-            virtual const AMIPatchToPatchInterpolation& AMI() const
-            {
-                const AMIPatchToPatchInterpolation& AMI =
-                    cyclicACMIPolyPatch_.AMI();
+                const PtrList<AMIInterpolation>& AMIs =
+                    cyclicAMIFvPatch::AMIs();
 
                 updateAreas();
 
-                return AMI;
+                return AMIs;
             }
 
-            //- Are the cyclic planes parallel
-            virtual bool parallel() const
+            //- Return a reference to the AMI transformations
+            virtual const List<vectorTensorTransform>& AMITransforms() const
             {
-                return cyclicACMIPolyPatch_.parallel();
+                const List<vectorTensorTransform>& AMITransforms =
+                    cyclicAMIFvPatch::AMITransforms();
+
+                updateAreas();
+
+                return AMITransforms;
             }
 
-            //- Return face transformation tensor
-            virtual const tensorField& forwardT() const
+            //- Return the poly patch
+            const cyclicACMIPolyPatch& cyclicACMIPatch() const
             {
-                return cyclicACMIPolyPatch_.forwardT();
+                return refCast<const cyclicACMIPolyPatch>(this->patch());
             }
 
-            //- Return neighbour-cell transformation tensor
-            virtual const tensorField& reverseT() const
-            {
-                return cyclicACMIPolyPatch_.reverseT();
-            }
-
+            //- Return the neighbour patch
             const cyclicACMIFvPatch& neighbFvPatch() const
             {
                 return refCast<const cyclicACMIFvPatch>
                 (
-                    this->boundaryMesh()[cyclicACMIPolyPatch_.neighbPatchID()]
+                    this->boundaryMesh()[this->cyclicAMIPatch().neighbPatchID()]
                 );
             }
 
-            //- Return true if this patch is coupled. This is equivalent
-            //  to the coupledPolyPatch::coupled() if parallel running or
-            //  both sides present, false otherwise
-            virtual bool coupled() const;
-
-            //- Return delta (P to N) vectors across coupled patch
-            virtual tmp<vectorField> delta() const;
-
-            //- Return delta (P to N) vectors across coupled patch
-            virtual tmp<vectorField> deltaFull() const;
-
-            template<class Type>
-            tmp<Field<Type> > interpolate
-            (
-                const Field<Type>& fldCoupled
-            ) const
+            //- Return the non-overlap patch
+            const fvPatch& nonOverlapFvPatch() const
             {
-                updateAreas();
-
-                return
-                    cyclicACMIPolyPatch_.cyclicAMIPolyPatch::interpolate
-                    (
-                        fldCoupled
-                    );
+                return this->boundaryMesh()
+                [
+                    cyclicACMIPatch().nonOverlapPatchID()
+                ];
             }
-
-            template<class Type>
-            tmp<Field<Type> > interpolate
-            (
-                const tmp<Field<Type> >& tfldCoupled
-            ) const
-            {
-                updateAreas();
-
-                return
-                    cyclicACMIPolyPatch_.cyclicAMIPolyPatch::interpolate
-                    (
-                        tfldCoupled
-                    );
-            }
-
-            template<class Type>
-            tmp<Field<Type> > interpolate
-            (
-                const Field<Type>& fldCoupled,
-                const Field<Type>& fldNonOverlap
-            ) const
-            {
-                updateAreas();
-
-                return
-                    cyclicACMIPolyPatch_.interpolate
-                    (
-                        fldCoupled,
-                        fldNonOverlap
-                    );
-            }
-
-            template<class Type>
-            tmp<Field<Type> > interpolate
-            (
-                const tmp<Field<Type> >& tFldCoupled,
-                const tmp<Field<Type> >& tFldNonOverlap
-            ) const
-            {
-                updateAreas();
-
-                return
-                    cyclicACMIPolyPatch_.interpolate
-                    (
-                        tFldCoupled,
-                        tFldNonOverlap
-                    );
-            }
-
-
-        // Interface transfer functions
-
-            //- Return the values of the given internal data adjacent to
-            //  the interface as a field
-            virtual tmp<labelField> interfaceInternalField
-            (
-                const labelUList& internalData
-            ) const;
-
-            //- Return neighbour field
-            virtual tmp<labelField> internalFieldTransfer
-            (
-                const Pstream::commsTypes commsType,
-                const labelUList& internalData
-            ) const;
 };
 
 

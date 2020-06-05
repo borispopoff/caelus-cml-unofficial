@@ -126,8 +126,8 @@ bool CML::sampledPatch::update()
     label sz = 0;
     forAll(patchIDs(), i)
     {
-        label patchI = patchIDs()[i];
-        const polyPatch& pp = mesh().boundaryMesh()[patchI];
+        label patchi = patchIDs()[i];
+        const polyPatch& pp = mesh().boundaryMesh()[patchi];
 
         if (isA<emptyPolyPatch>(pp))
         {
@@ -150,11 +150,11 @@ bool CML::sampledPatch::update()
 
     forAll(patchIDs(), i)
     {
-        label patchI = patchIDs()[i];
+        label patchi = patchIDs()[i];
 
         patchStart_[i] = sz;
 
-        const polyPatch& pp = mesh().boundaryMesh()[patchI];
+        const polyPatch& pp = mesh().boundaryMesh()[patchi];
 
         forAll(pp, j)
         {

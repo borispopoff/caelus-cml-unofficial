@@ -69,7 +69,7 @@ inline CML::scalar CML::meshToMesh::V() const
 }
 
 
-inline const CML::PtrList<CML::AMIPatchToPatchInterpolation>&
+inline const CML::PtrList<CML::AMIInterpolation>&
 CML::meshToMesh::patchAMIs() const
 {
     return patchAMIs_;

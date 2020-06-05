@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -105,6 +105,12 @@ public:
 
         //- Construct from std::string
         inline string(const std::string&);
+
+        //- Copy constructor
+        inline string(const string&);
+
+        //- Move constructor
+        inline string(string&&);
 
         //- Construct as copy of character array
         inline string(const char*);
@@ -213,12 +219,19 @@ public:
             const size_type n
         ) const;
 
+        inline void operator=(const string&);
+        inline void operator=(string&&);
+
 
     // IOstream Operators
 
         friend Istream& operator>>(Istream&, string&);
         friend Ostream& operator<<(Ostream&, const string&);
 };
+
+
+void writeEntry(Ostream& os, const char* value);
+void writeEntry(Ostream& os, const string& value);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

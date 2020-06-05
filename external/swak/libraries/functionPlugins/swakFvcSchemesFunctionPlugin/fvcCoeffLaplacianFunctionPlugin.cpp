@@ -36,7 +36,7 @@ namespace CML {
 (baseType,thisType,Targ1,Targ2,argNames,lookup)                          \
                                                                               \
     /* Add the thisType constructor function to the table, find by lookup */  \
-    baseType::add##argNames##ConstructorToTable< thisType< Targ1,Targ2 > >   \
+    baseType::add##argNames##ConstructorToTable< thisType< Targ1,Targ2 >>   \
         add_##lookup##_##thisType##Targ1##Targ2##argNames##ConstructorTo##baseType##Table_(#lookup)
 
     // scalar
@@ -184,7 +184,7 @@ void fvcCoeffLaplacianFunctionPlugin<T,GT>::doEvaluation()
 {
     IStringStream spec(specString_);
 
-    tmp<fv::laplacianScheme<T,GT> > scheme(
+    tmp<fv::laplacianScheme<T,GT>> scheme(
         fv::laplacianScheme<T,GT>::New(
             mesh(),
             spec
@@ -200,7 +200,7 @@ void fvcCoeffLaplacianFunctionPlugin<T,GT>::doEvaluation()
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            scheme().fvcLaplacian(coeff_(),original_())
+            scheme.ref().fvcLaplacian(coeff_(),original_())
         )
     );
 

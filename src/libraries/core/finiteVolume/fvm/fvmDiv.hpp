@@ -49,7 +49,7 @@ namespace CML
 namespace fvm
 {
     template<class Type>
-    tmp<fvMatrix<Type> > div
+    tmp<fvMatrix<Type>> div
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&,
@@ -57,7 +57,7 @@ namespace fvm
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > div
+    tmp<fvMatrix<Type>> div
     (
         const tmp<surfaceScalarField>&,
         const GeometricField<Type, fvPatchField, volMesh>&,
@@ -66,14 +66,14 @@ namespace fvm
 
 
     template<class Type>
-    tmp<fvMatrix<Type> > div
+    tmp<fvMatrix<Type>> div
     (
         const surfaceScalarField&,
         const GeometricField<Type, fvPatchField, volMesh>&
     );
 
     template<class Type>
-    tmp<fvMatrix<Type> > div
+    tmp<fvMatrix<Type>> div
     (
         const tmp<surfaceScalarField>&,
         const GeometricField<Type, fvPatchField, volMesh>&
@@ -84,7 +84,7 @@ namespace fvm
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 div
 (
     const surfaceScalarField& flux,
@@ -101,7 +101,7 @@ div
 }
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 div
 (
     const tmp<surfaceScalarField>& tflux,
@@ -109,14 +109,14 @@ div
     const word& name
 )
 {
-    tmp<fvMatrix<Type> > Div(fvm::div(tflux(), vf, name));
+    tmp<fvMatrix<Type>> Div(fvm::div(tflux(), vf, name));
     tflux.clear();
     return Div;
 }
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 div
 (
     const surfaceScalarField& flux,
@@ -127,14 +127,14 @@ div
 }
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 div
 (
     const tmp<surfaceScalarField>& tflux,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > Div(fvm::div(tflux(), vf));
+    tmp<fvMatrix<Type>> Div(fvm::div(tflux(), vf));
     tflux.clear();
     return Div;
 }

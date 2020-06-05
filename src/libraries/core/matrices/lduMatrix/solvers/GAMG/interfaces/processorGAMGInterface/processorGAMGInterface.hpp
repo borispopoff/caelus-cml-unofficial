@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,15 +56,6 @@ class processorGAMGInterface
         const processorLduInterface& fineProcInterface_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        processorGAMGInterface(const processorGAMGInterface&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorGAMGInterface&);
-
-
 public:
 
     //- Runtime type information
@@ -82,6 +73,9 @@ public:
             const labelField& restrictAddressing,
             const labelField& neighbourRestrictAddressing
         );
+
+        //- Disallow default bitwise copy construct
+        processorGAMGInterface(const processorGAMGInterface&) = delete;
 
 
     //- Destructor
@@ -132,6 +126,12 @@ public:
             {
                 return fineProcInterface_.tag();
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorGAMGInterface&) = delete;
 };
 
 

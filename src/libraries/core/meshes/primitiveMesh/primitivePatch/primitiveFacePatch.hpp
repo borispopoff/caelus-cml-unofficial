@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -37,8 +37,7 @@ Description
 
 namespace CML
 {
-    typedef PrimitivePatch<face, List, const pointField&>
-        primitiveFacePatch;
+    typedef PrimitivePatch<List<face>, const pointField&> primitiveFacePatch;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

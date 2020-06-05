@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -67,10 +67,10 @@ class OFFsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        OFFsurfaceFormat(const OFFsurfaceFormat&);
+        OFFsurfaceFormat(const OFFsurfaceFormat&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const OFFsurfaceFormat&);
+        void operator=(const OFFsurfaceFormat&) = delete;
 
 
 public:
@@ -84,9 +84,9 @@ public:
     // Selectors
 
         //- Read file and return surface
-        static autoPtr<MeshedSurface<Face> > New(const fileName& name)
+        static autoPtr<MeshedSurface<Face>> New(const fileName& name)
         {
-            return autoPtr<MeshedSurface<Face> >
+            return autoPtr<MeshedSurface<Face>>
             (
                 new OFFsurfaceFormat(name)
             );
@@ -172,7 +172,7 @@ bool CML::fileFormats::OFFsurfaceFormat<Face>::read
 
     // Read points
     pointField pointLst(nPoints);
-    forAll(pointLst, pointI)
+    forAll(pointLst, pointi)
     {
         scalar x, y, z;
         line = this->getLineNoComment(is);
@@ -180,14 +180,14 @@ bool CML::fileFormats::OFFsurfaceFormat<Face>::read
             IStringStream lineStream(line);
             lineStream >> x >> y >> z;
         }
-        pointLst[pointI] = point(x, y, z);
+        pointLst[pointi] = point(x, y, z);
     }
 
     // Read faces - ignore optional zone information
     // use a DynamicList for possible on-the-fly triangulation
     DynamicList<Face>  dynFaces(nElems);
 
-    for (label faceI = 0; faceI < nElems; ++faceI)
+    for (label facei = 0; facei < nElems; ++facei)
     {
         line = this->getLineNoComment(is);
 
@@ -225,7 +225,7 @@ bool CML::fileFormats::OFFsurfaceFormat<Face>::read
     }
 
     // transfer to normal lists, no zone information
-    this->reset(pointLst.xfer(), dynFaces.xfer(), Xfer<surfZoneList>());
+    this->reset(move(pointLst), move(dynFaces), NullSingletonMove<surfZoneList>());
 
     return true;
 }

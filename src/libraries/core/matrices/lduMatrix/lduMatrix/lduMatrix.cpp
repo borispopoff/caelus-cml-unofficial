@@ -69,14 +69,14 @@ CML::lduMatrix::lduMatrix(const lduMatrix& A)
 }
 
 
-CML::lduMatrix::lduMatrix(lduMatrix& A, bool reUse)
+CML::lduMatrix::lduMatrix(lduMatrix& A, bool reuse)
 :
     lduMesh_(A.lduMesh_),
     lowerPtr_(nullptr),
     diagPtr_(nullptr),
     upperPtr_(nullptr)
 {
-    if (reUse)
+    if (reuse)
     {
         if (A.lowerPtr_)
         {

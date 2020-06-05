@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2014 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -74,8 +74,8 @@ class SpalartAllmarasIDDES
         tmp<volScalarField> fd(const volScalarField& S) const;
 
         // Disallow default bitwise copy construct and assignment
-        SpalartAllmarasIDDES(const SpalartAllmarasIDDES&);
-        SpalartAllmarasIDDES& operator=(const SpalartAllmarasIDDES&);
+        SpalartAllmarasIDDES(const SpalartAllmarasIDDES&) = delete;
+        SpalartAllmarasIDDES& operator=(const SpalartAllmarasIDDES&) = delete;
 
 
 protected:

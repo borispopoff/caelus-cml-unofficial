@@ -241,9 +241,9 @@ public:
                 mesh_(mesh)
             {}
 
-            autoPtr<CollidingParcel<ParcelType> > operator()(Istream& is) const
+            autoPtr<CollidingParcel<ParcelType>> operator()(Istream& is) const
             {
-                return autoPtr<CollidingParcel<ParcelType> >
+                return autoPtr<CollidingParcel<ParcelType>>
                 (
                     new CollidingParcel<ParcelType>(mesh_, is, true)
                 );

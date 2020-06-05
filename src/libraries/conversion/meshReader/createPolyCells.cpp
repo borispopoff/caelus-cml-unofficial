@@ -45,11 +45,11 @@ void CML::meshReader::createPolyCells()
 
     label maxFaces = 0;
 
-    forAll(cellPolys_, cellI)
+    forAll(cellPolys_, celli)
     {
-        cellPolys_[cellI].setSize(cFaces[cellI].size(), -1);
+        cellPolys_[celli].setSize(cFaces[celli].size(), -1);
 
-        maxFaces += cFaces[cellI].size();
+        maxFaces += cFaces[celli].size();
     }
 
     Info<< "Maximum possible number of faces in mesh: " << maxFaces << endl;
@@ -71,10 +71,10 @@ void CML::meshReader::createPolyCells()
     // To prevent internal faces, we'll mark the cell faces
     // with negative cell ids (offset by nCells).
     // eg,
-    //    cellI = -(nCells + baffleI)
+    //    celli = -(nCells + baffleI)
     //
     // To distinguish these from the normal '-1' marker, we require
-    //    cellI = -(nCells + baffleI) < -1
+    //    celli = -(nCells + baffleI) < -1
     //
     // This condition is met provided that nCells > 1.
     // ie., baffles require at least 2 volume cells
@@ -82,7 +82,7 @@ void CML::meshReader::createPolyCells()
     label baffleOffset = cFaces.size();
     forAll(baffleFaces_, baffleI)
     {
-        label cellI = -(baffleOffset + baffleI);
+        label celli = -(baffleOffset + baffleI);
         const face& curFace = baffleFaces_[baffleI];
 
         // get the list of labels
@@ -102,9 +102,9 @@ void CML::meshReader::createPolyCells()
             // get the list of search faces
             const faceList& searchFaces = cFaces[curNei];
 
-            forAll(searchFaces, neiFaceI)
+            forAll(searchFaces, neiFacei)
             {
-                int cmp = face::compare(curFace, searchFaces[neiFaceI]);
+                int cmp = face::compare(curFace, searchFaces[neiFacei]);
 
                 if (cmp)
                 {
@@ -120,7 +120,7 @@ void CML::meshReader::createPolyCells()
 
 #ifdef DEBUG_FACE_ORDERING
                     Info<< "cmp " << cmp << " matched " << curFace
-                        << " with " << searchFaces[neiFaceI]
+                        << " with " << searchFaces[neiFacei]
                         << endl;
 
 
@@ -128,9 +128,9 @@ void CML::meshReader::createPolyCells()
                         << " (" << origCellId_[baffleOffset+baffleI] << ")"
                         << " side " << side
                         << " against cell " << curNei
-                        << " face " << neiFaceI
+                        << " face " << neiFacei
                         << " curFace " << curFace[1]
-                        << " neiFace " << searchFaces[neiFaceI][1]
+                        << " neiFace " << searchFaces[neiFacei][1]
                         << endl;
 #endif
 
@@ -139,7 +139,7 @@ void CML::meshReader::createPolyCells()
                         baffleIds_[baffleI][side] = cellFaceIdentifier
                         (
                             curNei,
-                            neiFaceI
+                            neiFacei
                         );
 
                         nNeighbours++;
@@ -167,7 +167,7 @@ void CML::meshReader::createPolyCells()
 
                 if (baffleIds_[baffleI][side].used())
                 {
-                    cellPolys_[neiCell][neiFace] = cellI;
+                    cellPolys_[neiCell][neiFace] = celli;
                 }
             }
         }
@@ -193,7 +193,7 @@ void CML::meshReader::createPolyCells()
 
     nInternalFaces_ = 0;
 
-    forAll(cFaces, cellI)
+    forAll(cFaces, celli)
     {
         // Note:
         // Insertion cannot be done in one go as the faces need to be
@@ -201,7 +201,7 @@ void CML::meshReader::createPolyCells()
         // cells.  Therefore, all neighbours will be detected first
         // and then added in the correct order.
 
-        const faceList& curFaces = cFaces[cellI];
+        const faceList& curFaces = cFaces[celli];
 
         // Record the neighbour cell
         labelList neiCells(curFaces.size(), -1);
@@ -212,23 +212,23 @@ void CML::meshReader::createPolyCells()
         label nNeighbours = 0;
 
         // For all faces ...
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
             // Skip already matched faces or those tagged by baffles
-            if (cellPolys_[cellI][faceI] != -1) continue;
+            if (cellPolys_[celli][facei] != -1) continue;
 
             found = false;
 
-            const face& curFace = curFaces[faceI];
+            const face& curFace = curFaces[facei];
 
             // get the list of labels
             const labelList& curPoints = curFace;
 
             // For all points
-            forAll(curPoints, pointI)
+            forAll(curPoints, pointi)
             {
                 // get the list of cells sharing this point
-                const labelList& curNeighbours = ptCells[curPoints[pointI]];
+                const labelList& curNeighbours = ptCells[curPoints[pointi]];
 
                 // For all neighbours
                 forAll(curNeighbours, neiI)
@@ -237,25 +237,25 @@ void CML::meshReader::createPolyCells()
 
                     // reject neighbours with the lower label. This should
                     // also reject current cell.
-                    if (curNei > cellI)
+                    if (curNei > celli)
                     {
                         // get the list of search faces
                         const faceList& searchFaces = cFaces[curNei];
 
-                        forAll(searchFaces, neiFaceI)
+                        forAll(searchFaces, neiFacei)
                         {
-                            if (searchFaces[neiFaceI] == curFace)
+                            if (searchFaces[neiFacei] == curFace)
                             {
                                 // Record the neighbour cell and face
-                                neiCells[faceI] = curNei;
-                                faceOfNeiCell[faceI] = neiFaceI;
+                                neiCells[facei] = curNei;
+                                faceOfNeiCell[facei] = neiFacei;
                                 nNeighbours++;
 #ifdef DEBUG_FACE_ORDERING
-                                Info<< " cell " << cellI
-                                    << " face " << faceI
-                                    << " point " << pointI
+                                Info<< " cell " << celli
+                                    << " face " << facei
+                                    << " point " << pointi
                                     << " nei " << curNei
-                                    << " neiFace " << neiFaceI
+                                    << " neiFace " << neiFacei
                                     << endl;
 #endif
                                 found = true;
@@ -292,7 +292,7 @@ void CML::meshReader::createPolyCells()
                 meshFaces_[nInternalFaces_] = curFaces[nextNei];
 
                 // Mark for owner
-                cellPolys_[cellI][nextNei] = nInternalFaces_;
+                cellPolys_[celli][nextNei] = nInternalFaces_;
 
                 // Mark for neighbour
                 cellPolys_[neiCells[nextNei]][faceOfNeiCell[nextNei]] =

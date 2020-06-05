@@ -98,7 +98,7 @@ public:
         slicedFvsPatchField(const slicedFvsPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type> > clone() const;
+        virtual tmp<fvsPatchField<Type>> clone() const;
 
         //- Construct as copy setting internal field reference
         slicedFvsPatchField
@@ -108,7 +108,7 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type> > clone
+        virtual tmp<fvsPatchField<Type>> clone
         (
             const DimensionedField<Type, surfaceMesh>& iF
         ) const;
@@ -155,19 +155,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -177,12 +171,12 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
     fvsPatchField<Type>(p, iF, Field<Type>())
 {
     // Set the fvsPatchField to a slice of the given complete field
-    UList<Type>::operator=(p.patchSlice(completeField));
+    UList<Type>::shallowCopy(p.patchSlice(completeField));
 }
 
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -193,7 +187,7 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
 
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const slicedFvsPatchField<Type>& ptf,
     const fvPatch& p,
@@ -208,7 +202,7 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
 
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
@@ -222,7 +216,7 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
 
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const slicedFvsPatchField<Type>& ptf,
     const DimensionedField<Type, surfaceMesh>& iF
@@ -231,13 +225,15 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
     fvsPatchField<Type>(ptf.patch(), iF, Field<Type>())
 {
     // Transfer the slice from the argument
-    UList<Type>::operator=(ptf);
+    UList<Type>::shallowCopy(ptf);
 }
 
+
 template<class Type>
-tmp<fvsPatchField<Type> > slicedFvsPatchField<Type>::clone() const
+CML::tmp<CML::fvsPatchField<Type>>
+CML::slicedFvsPatchField<Type>::clone() const
 {
-    return tmp<fvsPatchField<Type> >
+    return tmp<fvsPatchField<Type>>
     (
         new slicedFvsPatchField<Type>(*this)
     );
@@ -245,7 +241,7 @@ tmp<fvsPatchField<Type> > slicedFvsPatchField<Type>::clone() const
 
 
 template<class Type>
-slicedFvsPatchField<Type>::slicedFvsPatchField
+CML::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const slicedFvsPatchField<Type>& ptf
 )
@@ -253,22 +249,23 @@ slicedFvsPatchField<Type>::slicedFvsPatchField
     fvsPatchField<Type>
     (
         ptf.patch(),
-        ptf.dimensionedInternalField(),
+        ptf.internalField(),
         Field<Type>()
     )
 {
     // Transfer the slice from the argument
-    UList<Type>::operator=(ptf);
+    UList<Type>::shallowCopy(ptf);
 }
 
 
 template<class Type>
-tmp<fvsPatchField<Type> > slicedFvsPatchField<Type>::clone
+CML::tmp<CML::fvsPatchField<Type>>
+CML::slicedFvsPatchField<Type>::clone
 (
     const DimensionedField<Type, surfaceMesh>& iF
 ) const
 {
-    return tmp<fvsPatchField<Type> >
+    return tmp<fvsPatchField<Type>>
     (
         new slicedFvsPatchField<Type>(*this, iF)
     );
@@ -276,21 +273,12 @@ tmp<fvsPatchField<Type> > slicedFvsPatchField<Type>::clone
 
 
 template<class Type>
-slicedFvsPatchField<Type>::~slicedFvsPatchField<Type>()
+CML::slicedFvsPatchField<Type>::~slicedFvsPatchField()
 {
     // Set the fvsPatchField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
-    UList<Type>::operator=(UList<Type>(nullptr, 0));
+    UList<Type>::shallowCopy(UList<Type>(nullptr, 0));
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

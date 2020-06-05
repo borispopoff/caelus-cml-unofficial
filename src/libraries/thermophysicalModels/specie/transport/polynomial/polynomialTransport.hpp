@@ -238,10 +238,10 @@ inline CML::polynomialTransport<Thermo, PolySize>::polynomialTransport
 
 
 template<class Thermo, int PolySize>
-inline CML::autoPtr<CML::polynomialTransport<Thermo, PolySize> >
+inline CML::autoPtr<CML::polynomialTransport<Thermo, PolySize>>
 CML::polynomialTransport<Thermo, PolySize>::clone() const
 {
-    return autoPtr<polynomialTransport<Thermo, PolySize> >
+    return autoPtr<polynomialTransport<Thermo, PolySize>>
     (
         new polynomialTransport<Thermo, PolySize>(*this)
     );
@@ -249,10 +249,10 @@ CML::polynomialTransport<Thermo, PolySize>::clone() const
 
 
 template<class Thermo, int PolySize>
-inline CML::autoPtr<CML::polynomialTransport<Thermo, PolySize> >
+inline CML::autoPtr<CML::polynomialTransport<Thermo, PolySize>>
 CML::polynomialTransport<Thermo, PolySize>::New(const dictionary& dict)
 {
-    return autoPtr<polynomialTransport<Thermo, PolySize> >
+    return autoPtr<polynomialTransport<Thermo, PolySize>>
     (
         new polynomialTransport<Thermo, PolySize>(dict)
     );

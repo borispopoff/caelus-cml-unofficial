@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -63,8 +63,8 @@ void CML::localAxesRotation::init
         tensorField& R = Rptr_();
         forAll(cells, i)
         {
-            label cellI = cells[i];
-            vector dir = cc[cellI] - origin_;
+            label celli = cells[i];
+            vector dir = cc[celli] - origin_;
             dir /= mag(dir) + VSMALL;
 
             R[i] = axesRotation(e3_, dir).R();
@@ -75,12 +75,12 @@ void CML::localAxesRotation::init
         Rptr_.reset(new tensorField(mesh.nCells()));
 
         tensorField& R = Rptr_();
-        forAll(cc, cellI)
+        forAll(cc, celli)
         {
-            vector dir = cc[cellI] - origin_;
+            vector dir = cc[celli] - origin_;
             dir /= mag(dir) + VSMALL;
 
-            R[cellI] = axesRotation(e3_, dir).R();
+            R[celli] = axesRotation(e3_, dir).R();
         }
     }
 }
@@ -96,7 +96,7 @@ CML::localAxesRotation::localAxesRotation
 :
     Rptr_(),
     origin_(point::zero),
-    e3_(vector::zero)
+    e3_(Zero)
 {
     // If origin is specified in the coordinateSystem
     if (dict.parent().found("origin"))
@@ -161,8 +161,8 @@ CML::localAxesRotation::localAxesRotation(const dictionary& dict)
 CML::localAxesRotation::localAxesRotation(const tensorField& R)
 :
     Rptr_(),
-    origin_(vector::zero),
-    e3_(vector::zero)
+    origin_(Zero),
+    e3_(Zero)
 {
     Rptr_() = R;
 }
@@ -190,11 +190,11 @@ void CML::localAxesRotation::updateCells
 
     forAll(cells, i)
     {
-        label cellI = cells[i];
-        vector dir = cc[cellI] - origin_;
+        label celli = cells[i];
+        vector dir = cc[celli] - origin_;
         dir /= mag(dir) + VSMALL;
 
-        R[cellI] = axesRotation(e3_, dir).R();
+        R[celli] = axesRotation(e3_, dir).R();
     }
 }
 
@@ -218,7 +218,7 @@ CML::tmp<CML::vectorField> CML::localAxesRotation::transform
 CML::vector CML::localAxesRotation::transform(const vector& v) const
 {
     NotImplemented;
-    return vector::zero;
+    return Zero;
 }
 
 
@@ -244,7 +244,7 @@ CML::tmp<CML::vectorField> CML::localAxesRotation::invTransform
 CML::vector CML::localAxesRotation::invTransform(const vector& v) const
 {
     NotImplemented;
-    return vector::zero;
+    return Zero;
 }
 
 
@@ -280,7 +280,7 @@ CML::tensor CML::localAxesRotation::transformTensor
 {
     NotImplemented;
 
-    return tensor::zero;
+    return Zero;
 }
 
 
@@ -300,11 +300,11 @@ CML::tmp<CML::tensorField> CML::localAxesRotation::transformTensor
     const tensorField& R = Rptr_();
     const tensorField Rtr(R.T());
     tmp<tensorField> tt(new tensorField(cellMap.size()));
-    tensorField& t = tt();
+    tensorField& t = tt.ref();
     forAll(cellMap, i)
     {
-        const label cellI = cellMap[i];
-        t[i] = R[cellI] & tf[i] & Rtr[cellI];
+        const label celli = cellMap[i];
+        t[i] = R[celli] & tf[i] & Rtr[celli];
     }
 
     return tt;
@@ -324,7 +324,7 @@ CML::tmp<CML::symmTensorField> CML::localAxesRotation::transformVector
     }
 
     tmp<symmTensorField> tfld(new symmTensorField(Rptr_->size()));
-    symmTensorField& fld = tfld();
+    symmTensorField& fld = tfld.ref();
 
     const tensorField& R = Rptr_();
     forAll(fld, i)
@@ -347,7 +347,7 @@ CML::symmTensor CML::localAxesRotation::transformVector
 
 void CML::localAxesRotation::write(Ostream& os) const
 {
-     os.writeKeyword("e3") << e3() << token::END_STATEMENT << nl;
+     writeEntry(os, "e3", e3());
 }
 
 

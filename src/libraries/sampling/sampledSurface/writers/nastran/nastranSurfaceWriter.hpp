@@ -96,7 +96,7 @@ private:
         void writeCoord
         (
             const point& p,
-            const label pointI,
+            const label pointi,
             OFstream& os
         ) const;
 
@@ -114,7 +114,7 @@ private:
         (
             const pointField& points,
             const faceList& faces,
-            List<DynamicList<face> >& decomposedFaces,
+            List<DynamicList<face>>& decomposedFaces,
             OFstream& os
         ) const;
 
@@ -399,7 +399,7 @@ void CML::nastranSurfaceWriter::writeTemplate
         << "$" << nl
         << "BEGIN BULK" << nl;
 
-    List<DynamicList<face> > decomposedFaces(faces.size());
+    List<DynamicList<face>> decomposedFaces(faces.size());
 
     writeGeometry(points, faces, decomposedFaces, os);
 
@@ -415,10 +415,10 @@ void CML::nastranSurfaceWriter::writeTemplate
         forAll(decomposedFaces, i)
         {
             const DynamicList<face>& dFaces = decomposedFaces[i];
-            forAll(dFaces, faceI)
+            forAll(dFaces, facei)
             {
                 Type v = pTraits<Type>::zero;
-                const face& f = dFaces[faceI];
+                const face& f = dFaces[facei];
 
                 forAll(f, fptI)
                 {
@@ -438,9 +438,9 @@ void CML::nastranSurfaceWriter::writeTemplate
         {
             const DynamicList<face>& dFaces = decomposedFaces[i];
 
-            forAll(dFaces, faceI)
+            forAll(dFaces, facei)
             {
-                writeFaceValue(nasFieldName, values[faceI], ++n, os);
+                writeFaceValue(nasFieldName, values[facei], ++n, os);
             }
         }
     }

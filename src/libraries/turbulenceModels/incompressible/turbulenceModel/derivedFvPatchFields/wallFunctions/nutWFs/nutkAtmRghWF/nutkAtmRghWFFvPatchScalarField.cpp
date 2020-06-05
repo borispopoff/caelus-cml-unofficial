@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -36,39 +36,39 @@ namespace incompressible
 
 tmp<scalarField> nutkAtmRoughWallFunctionFvPatchScalarField::calcNut() const
 {
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbulence =
         db().lookupObject<turbulenceModel>("turbulenceModel");
-    const scalarField& y = turbulence.y()[patchI];
+    const scalarField& y = turbulence.y()[patchi];
     const tmp<volScalarField> tk = turbulence.k();
     const volScalarField& k = tk();
     const tmp<volScalarField> tnu = turbulence.nu();
     const volScalarField& nu = tnu();
-    const scalarField& nuw = nu.boundaryField()[patchI];
+    const scalarField& nuw = nu.boundaryField()[patchi];
 
     const scalar Cmu25 = pow025(Cmu_);
 
     tmp<scalarField> tnutw(new scalarField(*this));
-    scalarField& nutw = tnutw();
+    scalarField& nutw = tnutw.ref();
 
-    forAll(nutw, faceI)
+    forAll(nutw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
         scalar uStar = Cmu25*sqrt(k[faceCellI]);
-        scalar yPlus = uStar*y[faceI]/nuw[faceI];
+        scalar yPlus = uStar*y[facei]/nuw[facei];
 
-        scalar Edash = (y[faceI] + z0_[faceI])/(z0_[faceI] + 1e-4);
+        scalar Edash = (y[facei] + z0_[facei])/(z0_[facei] + 1e-4);
 
-        nutw[faceI] =
-            nuw[faceI]*(yPlus*kappa_/log(max(Edash, 1 + 1e-4)) - 1);
+        nutw[facei] =
+            nuw[facei]*(yPlus*kappa_/log(max(Edash, 1 + 1e-4)) - 1);
 
         if (debug)
         {
             Info<< "yPlus = " << yPlus
                 << ", Edash = " << Edash
-                << ", nutw = " << nutw[faceI]
+                << ", nutw = " << nutw[facei]
                 << endl;
         }
     }
@@ -172,8 +172,8 @@ void nutkAtmRoughWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    z0_.writeEntry("z0", os);
-    writeEntry("value", os);
+    writeEntry(os, "z0", z0_);
+    writeEntry(os, "value", *this);
 }
 
 

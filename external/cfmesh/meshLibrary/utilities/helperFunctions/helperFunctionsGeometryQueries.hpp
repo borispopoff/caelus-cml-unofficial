@@ -95,7 +95,7 @@ namespace help
     // cut by more than on boundary regions
     inline faceList mergePatchFaces
     (
-        const List< DynList<label> >& pfcs,
+        const List< DynList<label>>& pfcs,
         const pointField& polyPoints
     );
 
@@ -498,17 +498,17 @@ inline scalar angleBetweenFaces
 
 inline faceList mergePatchFaces
 (
-    const List< DynList<label> >& pfcs,
+    const List< DynList<label>>& pfcs,
     const pointField& polyPoints
 )
 {
     //- merge faces which share a common edge
     faceList patchFaces(pfcs.size());
     label counter(0);
-    forAll(pfcs, faceI)
-        if( pfcs[faceI].size() > 2 )
+    forAll(pfcs, facei)
+        if( pfcs[facei].size() > 2 )
         {
-            const DynList<label>& f = pfcs[faceI];
+            const DynList<label>& f = pfcs[facei];
             face f_(f.size());
             forAll(f_, fJ)
                 f_[fJ] = f[fJ];

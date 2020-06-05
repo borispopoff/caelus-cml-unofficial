@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -75,8 +75,8 @@ class polyDualMesh
         static void getPointEdges
         (
             const primitivePatch& patch,
-            const label faceI,
-            const label pointI,
+            const label facei,
+            const label pointi,
             label& e0,
             label& e1
         );
@@ -87,7 +87,7 @@ class polyDualMesh
             const label patchToDualOffset,
             const labelList& edgeToDualPoint,
             const labelList& pointToDualPoint,
-            const label pointI,
+            const label pointi,
 
             label& edgeI
         );
@@ -98,7 +98,7 @@ class polyDualMesh
             const label patchToDualOffset,
             const labelList& edgeToDualPoint,
 
-            const label pointI,
+            const label pointi,
             const label startEdgeI,
 
             labelList& dualFace2,
@@ -110,7 +110,7 @@ class polyDualMesh
             const polyPatch& patch,
             const labelList& pointToDualPoint,
 
-            const label pointI,
+            const label pointi,
             const labelList& dualFace,
             const labelList& featEdgeIndices,
 
@@ -144,10 +144,10 @@ class polyDualMesh
 
 
         //- Disallow default bitwise copy construct
-        polyDualMesh(const polyDualMesh&);
+        polyDualMesh(const polyDualMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const polyDualMesh&);
+        void operator=(const polyDualMesh&) = delete;
 
 
 public:

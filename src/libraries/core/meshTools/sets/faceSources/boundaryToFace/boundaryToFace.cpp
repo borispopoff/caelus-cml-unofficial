@@ -52,12 +52,12 @@ void CML::boundaryToFace::combine(topoSet& set, const bool add) const
 {
     for
     (
-        label faceI = mesh().nInternalFaces();
-        faceI < mesh().nFaces();
-        faceI++
+        label facei = mesh().nInternalFaces();
+        facei < mesh().nFaces();
+        facei++
     )
     {
-        addOrDelete(set, faceI, add);
+        addOrDelete(set, facei, add);
     }
 }
 

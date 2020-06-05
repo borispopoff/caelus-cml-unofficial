@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,7 +53,7 @@ class processorCyclicPointPatchField
 
         //- Receive buffer for non-blocking communication
         mutable Field<Type> receiveBuf_;
- 
+
 
 public:
 
@@ -88,9 +88,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new processorCyclicPointPatchField<Type>
                 (
@@ -107,12 +107,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new processorCyclicPointPatchField<Type>
                 (
@@ -123,9 +123,8 @@ public:
         }
 
 
-    // Destructor
-
-        ~processorCyclicPointPatchField();
+    //- Destructor
+    virtual ~processorCyclicPointPatchField();
 
 
     // Member functions
@@ -161,7 +160,8 @@ public:
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             )
             {}
 
@@ -181,11 +181,8 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "transformField.hpp"
 #include "processorPolyPatch.hpp"
@@ -276,7 +273,7 @@ void CML::processorCyclicPointPatchField<Type>::initSwapAddSeparated
             )
         );
 
-        if (commsType == Pstream::nonBlocking)
+        if (commsType == Pstream::commsTypes::nonBlocking)
         {
             receiveBuf_.setSize(pf.size());
             IPstream::read
@@ -311,7 +308,7 @@ void CML::processorCyclicPointPatchField<Type>::swapAddSeparated
     if (Pstream::parRun())
     {
         // If nonblocking data has already been received into receiveBuf_
-        if (commsType != Pstream::nonBlocking)
+        if (commsType != Pstream::commsTypes::nonBlocking)
         {
             receiveBuf_.setSize(this->size());
             IPstream::read
@@ -339,10 +336,4 @@ void CML::processorCyclicPointPatchField<Type>::swapAddSeparated
 }
 
 
-// ************************************************************************* //
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

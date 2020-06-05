@@ -265,7 +265,7 @@ int main(int argc, char *argv[])
 
 
     autoPtr<surfaceWriter> surfWriter;
-    autoPtr<writer<scalar> > setWriter;
+    autoPtr<writer<scalar>> setWriter;
     if (writeSets)
     {
         surfWriter = surfaceWriter::New(surfaceFormat);

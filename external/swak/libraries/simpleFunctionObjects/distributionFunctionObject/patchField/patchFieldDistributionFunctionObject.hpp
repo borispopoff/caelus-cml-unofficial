@@ -64,7 +64,7 @@ class patchFieldDistributionFunctionObject
     labelList patchIDs_;
 
     template <typename T>
-    void getDistributionInternal(autoPtr<SimpleDistribution<T> > &dist);
+    void getDistributionInternal(autoPtr<SimpleDistribution<T>> &dist);
 protected:
 
     word dirName();
@@ -112,7 +112,7 @@ namespace CML
 
 template <typename T>
 void patchFieldDistributionFunctionObject::getDistributionInternal(
-    autoPtr<SimpleDistribution<T> > &dist
+    autoPtr<SimpleDistribution<T>> &dist
 ) {
     const fvMesh &mesh=refCast<const fvMesh>(obr_);
 
@@ -124,7 +124,7 @@ void patchFieldDistributionFunctionObject::getDistributionInternal(
 
     forAll(patchIDs_,i) {
         label patchID=patchIDs_[i];
-        autoPtr<SimpleDistribution<T> > partial;
+        autoPtr<SimpleDistribution<T>> partial;
 
         if(mesh.foundObject<volTField>(fieldName())) {
             partial=setDataScalar(

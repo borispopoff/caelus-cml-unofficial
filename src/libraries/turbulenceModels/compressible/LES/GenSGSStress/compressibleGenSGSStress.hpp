@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,8 +58,8 @@ class GenSGSStress
     // Private Member Functions
 
         // Disallow default bitwise copy construct and assignment
-        GenSGSStress(const GenSGSStress&);
-        GenSGSStress& operator=(const GenSGSStress&);
+        GenSGSStress(const GenSGSStress&) = delete;
+        GenSGSStress& operator=(const GenSGSStress&) = delete;
 
 
 protected:

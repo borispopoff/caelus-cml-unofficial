@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -55,10 +55,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        liquidViscosity(const liquidViscosity&);
+        liquidViscosity(const liquidViscosity&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const liquidViscosity&);
+        void operator=(const liquidViscosity&) = delete;
 
 
 protected:

@@ -29,7 +29,7 @@ License
 namespace CML
 {
     template<>
-    const char* NamedEnum<fieldValues::cellSource::sourceType, 2>::names[] =
+    const char* NamedEnum<fieldValues::cellSource::sourceTypes, 2>::names[] =
     {
         "cellZone",
         "all"
@@ -37,13 +37,14 @@ namespace CML
 
 
     template<>
-    const char* NamedEnum<fieldValues::cellSource::operationType, 10>::names[] =
+    const char* NamedEnum<fieldValues::cellSource::operationType, 11>::names[] =
     {
         "none",
         "sum",
         "sumMag",
         "average",
         "weightedAverage",
+        "weightedVolAverage",
         "volAverage",
         "volIntegrate",
         "min",
@@ -59,10 +60,10 @@ namespace CML
 }
 
 
-const CML::NamedEnum<CML::fieldValues::cellSource::sourceType, 2>
+const CML::NamedEnum<CML::fieldValues::cellSource::sourceTypes, 2>
     CML::fieldValues::cellSource::sourceTypeNames_;
 
-const CML::NamedEnum<CML::fieldValues::cellSource::operationType, 10>
+const CML::NamedEnum<CML::fieldValues::cellSource::operationType, 11>
     CML::fieldValues::cellSource::operationTypeNames_;
 
 
@@ -72,7 +73,7 @@ void CML::fieldValues::cellSource::setCellZoneCells()
 {
     switch (source_)
     {
-        case stCellZone:
+        case sourceTypes::cellZone:
         {
             dict().lookup("sourceName") >> sourceName_;
 
@@ -91,7 +92,7 @@ void CML::fieldValues::cellSource::setCellZoneCells()
             break;
         }
 
-        case stAll:
+        case sourceTypes::all:
         {
             cellId_ = identity(mesh().nCells());
             nCells_ = returnReduce(cellId_.size(), sumOp<label>());

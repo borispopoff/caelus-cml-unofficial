@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VLESkOmegaSST.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -474,6 +475,7 @@ bool VLESKOmegaSST::read()
 
 void VLESKOmegaSST::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     VLESModel::correct();
 
     if (!turbulence_)
@@ -505,7 +507,7 @@ void VLESKOmegaSST::correct()
 
     if (nD == 3)
     {
-        Lc.internalField() = Cx_*pow(mesh_.V(), 1.0/3.0);
+        Lc.primitiveFieldRef() = Cx_*pow(mesh_.V(), 1.0/3.0);
     }
     else if (nD == 2)
     {
@@ -521,7 +523,7 @@ void VLESKOmegaSST::correct()
             }
         }
 
-        Lc.internalField() = Cx_*sqrt(mesh_.V()/thickness);
+        Lc.primitiveFieldRef() = Cx_*sqrt(mesh_.V()/thickness);
     }
     else
     {
@@ -539,7 +541,7 @@ void VLESKOmegaSST::correct()
     volScalarField G(GName(), nut_*S2);
 
     // Update omega and G at the wall
-    omega_.boundaryField().updateCoeffs();
+    omega_.boundaryFieldRef().updateCoeffs();
 
     volScalarField const CDkOmega
     (
@@ -566,12 +568,12 @@ void VLESKOmegaSST::correct()
         volScalarField const rStar(sqrt(sqrS)/sqrt(sqrOmega+smallOmega));
         volSymmTensorField const DSijDt(fvc::DDt(this->phi_,Sij));
         volScalarField const rTilda(  
-            (scalar(2.0)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
-        volScalarField const frotation ((scalar(1.0) + Cr1_)
-            *scalar(2.0)*rStar/(scalar(1.0) + rStar)*
-            (scalar(1.0)-Cr3_*atan(Cr2_*rTilda)) - Cr1_);
+            (scalar(2)/sqr(sqrD))*(Omegaij && (Sij & DSijDt)));
+        volScalarField const frotation ((scalar(1) + Cr1_)
+            *scalar(2)*rStar/(scalar(1) + rStar)*
+            (scalar(1)-Cr3_*atan(Cr2_*rTilda)) - Cr1_);
         volScalarField const frTilda(max(min(frotation, frMax_), scalar(0))); 
-        fr1_ = max(scalar(0.0), scalar(1.0) + Cscale_*(frTilda - scalar(1.0)));
+        fr1_ = max(scalar(0), scalar(1) + Cscale_*(frTilda - scalar(1)));
     }
 
     // Turbulent frequency equation
@@ -584,14 +586,16 @@ void VLESKOmegaSST::correct()
         gamma(F1)* min(fr1_*G, c1_*betaStar_*k_*omega_)/(nut_ + nutMin)
       - fvm::Sp(beta(F1)*omega_, omega_)
       + 2*(1-F1)*alphaOmega2_*(fvc::grad(k_)&fvc::grad(omega_))/omega_
+      + fvOptions(omega_)
     );
 
-    omegaEqn().relax();
-
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
+    omegaEqn.ref().relax();
+    fvOptions.constrain(omegaEqn.ref());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
     
-    mesh_.updateFvMatrix(omegaEqn());
+    mesh_.updateFvMatrix(omegaEqn.ref());
     solve(omegaEqn);
+    fvOptions.correct(omega_);
     bound(omega_, omegaMin_);
 
     // Turbulent kinetic energy equation
@@ -603,11 +607,14 @@ void VLESKOmegaSST::correct()
      ==
         min(fr1_*G, c1_*betaStar_*k_*omega_)
       - fvm::Sp(betaStar_*omega_, k_)
+      + fvOptions(k_)
     );
 
-    kEqn().relax();
-    mesh_.updateFvMatrix(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
+    mesh_.updateFvMatrix(kEqn.ref());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
     // Re-calculate viscosity
@@ -618,16 +625,16 @@ void VLESKOmegaSST::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-(1-F1)*exp(-0.002*Lc/Lk()))
+                    (scalar(1)-(1-F1)*exp(-0.002*Lc/Lk()))
                     /
-                    (scalar(1.0)-(1-F1)*exp(-0.002*Li()/Lk())),
+                    (scalar(1)-(1-F1)*exp(-0.002*Li()/Lk())),
                     2.0
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
     else
@@ -636,16 +643,16 @@ void VLESKOmegaSST::correct()
         (
             min
             (
-                scalar(1.0),
+                scalar(1),
                 pow
                 (
-                    (scalar(1.0)-exp(-0.002*Lc/Lk()))
+                    (scalar(1)-exp(-0.002*Lc/Lk()))
                     /
-                    (scalar(1.0)-exp(-0.002*Li()/Lk())),
+                    (scalar(1)-exp(-0.002*Li()/Lk())),
                     2.0
                 )
             ),
-            scalar(0.0)
+            scalar(0)
         );
     }
 

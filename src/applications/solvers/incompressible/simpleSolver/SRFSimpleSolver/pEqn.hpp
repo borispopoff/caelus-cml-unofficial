@@ -1,9 +1,9 @@
 {
-    p.boundaryField().updateCoeffs();
+    p.boundaryFieldRef().updateCoeffs();
 
-    volScalarField rAUrel(1.0/UrelEqn().A());
-    Urel = rAUrel*UrelEqn().H();
-    UrelEqn.clear();
+    volScalarField rAUrel(1.0/UrelEqn.A());
+    Urel = rAUrel*UrelEqn.H();
+    tUrelEqn.clear();
 
     phi = fvc::interpolate(Urel, "interpolate(HbyA)") & mesh.Sf();
     adjustPhi(phi, Urel, p);

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -25,10 +25,9 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-
 namespace CML
 {
-defineTypeNameAndDebug(mapDistribute, 0);
+    defineTypeNameAndDebug(mapDistribute, 0);
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -125,6 +124,7 @@ void CML::mapDistribute::transform::operator()
 ) const
 {}
 
+
 void CML::mapDistribute::printLayout(Ostream& os) const
 {
     mapDistributeBase::printLayout(os);
@@ -143,19 +143,17 @@ void CML::mapDistribute::printLayout(Ostream& os) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-//- Construct null
 CML::mapDistribute::mapDistribute()
 :
     mapDistributeBase()
 {}
 
 
-//- Construct from components
 CML::mapDistribute::mapDistribute
 (
     const label constructSize,
-    const Xfer<labelListList>& subMap,
-    const Xfer<labelListList>& constructMap,
+    labelListList&& subMap,
+    labelListList&& constructMap,
     const bool subHasFlip,
     const bool constructHasFlip
 )
@@ -163,22 +161,21 @@ CML::mapDistribute::mapDistribute
     mapDistributeBase
     (
         constructSize,
-        subMap,
-        constructMap,
+        move(subMap),
+        move(constructMap),
         subHasFlip,
         constructHasFlip
     )
 {}
 
 
-//- Construct from components
 CML::mapDistribute::mapDistribute
 (
     const label constructSize,
-    const Xfer<labelListList>& subMap,
-    const Xfer<labelListList>& constructMap,
-    const Xfer<labelListList>& transformElements,
-    const Xfer<labelList>& transformStart,
+    labelListList&& subMap,
+    labelListList&& constructMap,
+    labelListList&& transformElements,
+    labelList&& transformStart,
     const bool subHasFlip,
     const bool constructHasFlip
 )
@@ -186,13 +183,13 @@ CML::mapDistribute::mapDistribute
     mapDistributeBase
     (
         constructSize,
-        subMap,
-        constructMap,
+        move(subMap),
+        move(constructMap),
         subHasFlip,
         constructHasFlip
     ),
-    transformElements_(transformElements),
-    transformStart_(transformStart)
+    transformElements_(move(transformElements)),
+    transformStart_(move(transformStart))
 {}
 
 
@@ -210,7 +207,7 @@ CML::mapDistribute::mapDistribute
 (
     const globalIndex& globalNumbering,
     labelList& elements,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -228,7 +225,7 @@ CML::mapDistribute::mapDistribute
 (
     const globalIndex& globalNumbering,
     labelListList& cellCells,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -242,7 +239,6 @@ CML::mapDistribute::mapDistribute
 {}
 
 
-
 CML::mapDistribute::mapDistribute
 (
     const globalIndex& globalNumbering,
@@ -250,7 +246,7 @@ CML::mapDistribute::mapDistribute
     const globalIndexAndTransform& globalTransforms,
     const labelPairList& transformedElements,
     labelList& transformedIndices,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -270,10 +266,10 @@ CML::mapDistribute::mapDistribute
     forAll(transformedElements, i)
     {
         labelPair elem = transformedElements[i];
-        label proci = globalIndexAndTransform::processor(elem);
+        label proci = globalTransforms.processor(elem);
         if (proci != Pstream::myProcNo())
         {
-            label index = globalIndexAndTransform::index(elem);
+            label index = globalTransforms.index(elem);
             label nCompact = compactMap[proci].size();
             compactMap[proci].insert(index, nCompact);
         }
@@ -301,7 +297,7 @@ CML::mapDistribute::mapDistribute
     forAll(transformedElements, i)
     {
         labelPair elem = transformedElements[i];
-        label trafoI = globalIndexAndTransform::transformIndex(elem);
+        label trafoI = globalTransforms.transformIndex(elem);
         nPerTransform[trafoI]++;
     }
     // Offset per transformIndex
@@ -321,9 +317,9 @@ CML::mapDistribute::mapDistribute
     forAll(transformedElements, i)
     {
         labelPair elem = transformedElements[i];
-        label proci = globalIndexAndTransform::processor(elem);
-        label index = globalIndexAndTransform::index(elem);
-        label trafoI = globalIndexAndTransform::transformIndex(elem);
+        label proci = globalTransforms.processor(elem);
+        label index = globalTransforms.index(elem);
+        label trafoI = globalTransforms.transformIndex(elem);
 
         // Get compact index for untransformed element
         label rawElemI =
@@ -355,7 +351,7 @@ CML::mapDistribute::mapDistribute
     const globalIndexAndTransform& globalTransforms,
     const List<labelPairList>& transformedElements,
     labelListList& transformedIndices,
-    List<Map<label> >& compactMap,
+    List<Map<label>>& compactMap,
     const int tag
 )
 :
@@ -378,10 +374,10 @@ CML::mapDistribute::mapDistribute
 
         forAll(elems, i)
         {
-            label proci = globalIndexAndTransform::processor(elems[i]);
+            label proci = globalTransforms.processor(elems[i]);
             if (proci != Pstream::myProcNo())
             {
-                label index = globalIndexAndTransform::index(elems[i]);
+                label index = globalTransforms.index(elems[i]);
                 label nCompact = compactMap[proci].size();
                 compactMap[proci].insert(index, nCompact);
             }
@@ -413,7 +409,7 @@ CML::mapDistribute::mapDistribute
 
         forAll(elems, i)
         {
-            label trafoI = globalIndexAndTransform::transformIndex(elems[i]);
+            label trafoI = globalTransforms.transformIndex(elems[i]);
             nPerTransform[trafoI]++;
         }
     }
@@ -438,9 +434,9 @@ CML::mapDistribute::mapDistribute
 
         forAll(elems, i)
         {
-            label proci = globalIndexAndTransform::processor(elems[i]);
-            label index = globalIndexAndTransform::index(elems[i]);
-            label trafoI = globalIndexAndTransform::transformIndex(elems[i]);
+            label proci = globalTransforms.processor(elems[i]);
+            label index = globalTransforms.index(elems[i]);
+            label trafoI = globalTransforms.transformIndex(elems[i]);
 
             // Get compact index for untransformed element
             label rawElemI =
@@ -474,18 +470,11 @@ CML::mapDistribute::mapDistribute(const mapDistribute& map)
 {}
 
 
-CML::mapDistribute::mapDistribute(const Xfer<mapDistribute>& map)
+CML::mapDistribute::mapDistribute(mapDistribute&& map)
 :
-    mapDistributeBase
-    (
-        map().constructSize_,
-        map().subMap_.xfer(),
-        map().constructMap_.xfer(),
-        map().subHasFlip(),
-        map().constructHasFlip()
-    ),
-    transformElements_(map().transformElements_.xfer()),
-    transformStart_(map().transformStart_.xfer())
+    mapDistributeBase(move(map)),
+    transformElements_(move(map.transformElements_)),
+    transformStart_(move(map.transformStart_))
 {}
 
 
@@ -515,12 +504,6 @@ void CML::mapDistribute::transfer(mapDistribute& rhs)
     mapDistributeBase::transfer(rhs);
     transformElements_.transfer(rhs.transformElements_);
     transformStart_.transfer(rhs.transformStart_);
-}
-
-
-CML::Xfer<CML::mapDistribute> CML::mapDistribute::xfer()
-{
-    return xferMove(*this);
 }
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2013 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,6 @@ void CML::fv::rotorDiskSource::checkData()
                 }
                 case ifLocal:
                 {
-                    // Do nothing
                     break;
                 }
                 default:
@@ -250,7 +249,7 @@ void CML::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
             mesh_,
             dimensionedScalar("0", dimArea, 0)
         );
-        UIndirectList<scalar>(area.internalField(), cells_) = area_;
+        UIndirectList<scalar>(area.primitiveField(), cells_) = area_;
 
         Info<< type() << ": " << name_ << " writing field " << area.name()
             << endl;
@@ -486,7 +485,7 @@ CML::tmp<CML::vectorField> CML::fv::rotorDiskSource::inflowVelocity
         }
         case ifLocal:
         {
-            return U.internalField();
+            return U.primitiveField();
 
             break;
         }
@@ -512,7 +511,7 @@ CML::fv::rotorDiskSource::rotorDiskSource
 
 )
 :
-    option(name, modelType, dict, mesh),
+    cellSetOption(name, modelType, dict, mesh),
     rhoRef_(1.0),
     rotorDebug_(false),
     rotorURF_(1.0),
@@ -599,7 +598,7 @@ void CML::fv::rotorDiskSource::addSup
     // Add source to rhs of eqn
     eqn -= force;
 
-    if (mesh_.time().outputTime())
+    if (mesh_.time().writeTime())
     {
         force.write();
     }
@@ -659,25 +658,18 @@ void CML::fv::rotorDiskSource::addSup
     // Add source to rhs of eqn
     eqn -= force;
 
-    if (mesh_.time().outputTime())
+    if (mesh_.time().writeTime())
     {
         force.write();
     }
 }
 
 
-void CML::fv::rotorDiskSource::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-}
-
-
 bool CML::fv::rotorDiskSource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (cellSetOption::read(dict))
     {
-        coeffs_.lookup("fieldNames") >> fieldNames_;
+        coeffs_.lookup("fields") >> fieldNames_;
         applied_.setSize(fieldNames_.size(), false);
 
         // Read if rotorDebug is active

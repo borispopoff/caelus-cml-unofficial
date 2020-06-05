@@ -94,23 +94,23 @@ void lcLocalAveragePluginFunction::doCellCalculation(volScalarField &field)
     const labelList &own=field.mesh().owner();
     const labelList &nei=field.mesh().neighbour();
 
-    forAll(field,cellI) {
+    forAll(field,celli) {
         scalar sum=0;
         label nr=0;
 
         if(useCellItself_) {
-            sum+=o[cellI];
+            sum+=o[celli];
             nr++;
         }
-        const cell &c=cl[cellI];
+        const cell &c=cl[celli];
         forAll(c,i) {
-            const label faceI=c[i];
-            if(faceI<field.mesh().nInternalFaces()) {
+            const label facei=c[i];
+            if(facei<field.mesh().nInternalFaces()) {
                 label otherCell=-1;
-                if(own[faceI]==cellI) {
-                    otherCell=nei[faceI];
+                if(own[facei]==celli) {
+                    otherCell=nei[facei];
                 } else {
-                    otherCell=own[faceI];
+                    otherCell=own[facei];
                 }
                 sum+=o[otherCell];
                 nr++;
@@ -118,10 +118,10 @@ void lcLocalAveragePluginFunction::doCellCalculation(volScalarField &field)
         }
 
         if(nr>0) {
-            field[cellI]=sum/nr;
+            field[celli]=sum/nr;
         } else {
             FatalErrorInFunction
-                << "Cell " << cellI << " doesn't have neighbours. Strange"
+                << "Cell " << celli << " doesn't have neighbours. Strange"
                 << endl
                 << exit(FatalError);
         }

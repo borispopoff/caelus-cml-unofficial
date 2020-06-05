@@ -221,7 +221,7 @@ void CML::parLagrangianRedistributor::redistributeLagrangianFields
 {
     const wordList objectNames
     (
-        filterObjects<IOField<Type> >
+        filterObjects<IOField<Type>>
         (
             objects,
             selectedFields
@@ -272,7 +272,7 @@ void CML::parLagrangianRedistributor::redistributeLagrangianFields
                         IOobject::NO_WRITE,
                         false
                     ),
-                    xferMove<Field<Type> >(field)
+                    std::move(field)
                 ).write();
             }
         }
@@ -293,7 +293,7 @@ void CML::parLagrangianRedistributor::redistributeLagrangianFieldFields
 {
     wordList objectNames
     (
-        filterObjects<CompactIOField<Field<Type>, Type> >
+        filterObjects<CompactIOField<Field<Type>, Type>>
         (
             objects,
             selectedFields
@@ -304,7 +304,7 @@ void CML::parLagrangianRedistributor::redistributeLagrangianFieldFields
     {
         const wordList ioFieldNames
         (
-            filterObjects<IOField<Field<Type> > >
+            filterObjects<IOField<Field<Type>>>
             (
                 objects,
                 selectedFields
@@ -359,7 +359,7 @@ void CML::parLagrangianRedistributor::redistributeLagrangianFieldFields
                         IOobject::NO_WRITE,
                         false
                     ),
-                    xferMove<Field<Field<Type> > >(field)
+                    std::move(field)
                 ).write();
             }
         }
@@ -456,7 +456,7 @@ void CML::parLagrangianRedistributor::redistributeStoredLagrangianFields
                         IOobject::NO_WRITE,
                         false
                     ),
-                    xferMove<Field<typename Container::value_type> >(field)
+                    std::move(field)
                 ).write();
             }
         }

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,42 +27,44 @@ License
 
 void CML::processorMeshes::read()
 {
-    forAll(databases_, procI)
+    // Make sure to clear (and hence unregister) any previously loaded meshes
+    // and fields
+    forAll(databases_, proci)
     {
-        meshes_.set(procI, nullptr);
-        pointProcAddressing_.set(procI, nullptr);
-        faceProcAddressing_.set(procI, nullptr);
-        cellProcAddressing_.set(procI, nullptr);
-        boundaryProcAddressing_.set(procI, nullptr);
+        boundaryProcAddressing_.set(proci, nullptr);
+        cellProcAddressing_.set(proci, nullptr);
+        faceProcAddressing_.set(proci, nullptr);
+        pointProcAddressing_.set(proci, nullptr);
+        meshes_.set(proci, nullptr);
     }
 
-    forAll(databases_, procI)
+    forAll(databases_, proci)
     {
         meshes_.set
         (
-            procI,
+            proci,
             new fvMesh
             (
                 IOobject
                 (
                     meshName_,
-                    databases_[procI].timeName(),
-                    databases_[procI]
+                    databases_[proci].timeName(),
+                    databases_[proci]
                 )
             )
         );
 
         pointProcAddressing_.set
         (
-            procI,
+            proci,
             new labelIOList
             (
                 IOobject
                 (
                     "pointProcAddressing",
-                    meshes_[procI].facesInstance(),
-                    meshes_[procI].meshSubDir,
-                    meshes_[procI],
+                    meshes_[proci].facesInstance(),
+                    meshes_[proci].meshSubDir,
+                    meshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 )
@@ -71,15 +73,15 @@ void CML::processorMeshes::read()
 
         faceProcAddressing_.set
         (
-            procI,
+            proci,
             new labelIOList
             (
                 IOobject
                 (
                     "faceProcAddressing",
-                    meshes_[procI].facesInstance(),
-                    meshes_[procI].meshSubDir,
-                    meshes_[procI],
+                    meshes_[proci].facesInstance(),
+                    meshes_[proci].meshSubDir,
+                    meshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 )
@@ -88,15 +90,15 @@ void CML::processorMeshes::read()
 
         cellProcAddressing_.set
         (
-            procI,
+            proci,
             new labelIOList
             (
                 IOobject
                 (
                     "cellProcAddressing",
-                    meshes_[procI].facesInstance(),
-                    meshes_[procI].meshSubDir,
-                    meshes_[procI],
+                    meshes_[proci].facesInstance(),
+                    meshes_[proci].meshSubDir,
+                    meshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 )
@@ -105,15 +107,15 @@ void CML::processorMeshes::read()
 
         boundaryProcAddressing_.set
         (
-            procI,
+            proci,
             new labelIOList
             (
                 IOobject
                 (
                     "boundaryProcAddressing",
-                    meshes_[procI].facesInstance(),
-                    meshes_[procI].meshSubDir,
-                    meshes_[procI],
+                    meshes_[proci].facesInstance(),
+                    meshes_[proci].meshSubDir,
+                    meshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 )
@@ -149,16 +151,16 @@ CML::fvMesh::readUpdateState CML::processorMeshes::readUpdate()
 {
     fvMesh::readUpdateState stat = fvMesh::UNCHANGED;
 
-    forAll(databases_, procI)
+    forAll(databases_, proci)
     {
         // Check if any new meshes need to be read.
-        fvMesh::readUpdateState procStat = meshes_[procI].readUpdate();
+        fvMesh::readUpdateState procStat = meshes_[proci].readUpdate();
 
         /*
         if (procStat != fvMesh::UNCHANGED)
         {
-            Info<< "Processor " << procI
-                << " at time " << databases_[procI].timeName()
+            Info<< "Processor " << proci
+                << " at time " << databases_[proci].timeName()
                 << " detected mesh change " << procStat
                 << endl;
         }
@@ -172,11 +174,11 @@ CML::fvMesh::readUpdateState CML::processorMeshes::readUpdate()
         else if (stat != procStat)
         {
             FatalErrorInFunction
-                << "Processor " << procI
+                << "Processor " << proci
                 << " has a different polyMesh at time "
-                << databases_[procI].timeName()
+                << databases_[proci].timeName()
                 << " compared to any previous processors." << nl
-                << "Please check time " << databases_[procI].timeName()
+                << "Please check time " << databases_[proci].timeName()
                 << " directories on all processors for consistent"
                 << " mesh files."
                 << exit(FatalError);
@@ -201,19 +203,19 @@ void CML::processorMeshes::reconstructPoints(fvMesh& mesh)
     // Read the field for all the processors
     PtrList<pointIOField> procsPoints(meshes_.size());
 
-    forAll(meshes_, procI)
+    forAll(meshes_, proci)
     {
         procsPoints.set
         (
-            procI,
+            proci,
             new pointIOField
             (
                 IOobject
                 (
                     "points",
-                    meshes_[procI].time().timeName(),
+                    meshes_[proci].time().timeName(),
                     polyMesh::meshSubDir,
-                    meshes_[procI],
+                    meshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 )
@@ -224,13 +226,13 @@ void CML::processorMeshes::reconstructPoints(fvMesh& mesh)
     // Create the new points
     vectorField newPoints(mesh.nPoints());
 
-    forAll(meshes_, procI)
+    forAll(meshes_, proci)
     {
-        const vectorField& procPoints = procsPoints[procI];
+        const vectorField& procPoints = procsPoints[proci];
 
         // Set the cell values in the reconstructed field
 
-        const labelList& pointProcAddressingI = pointProcAddressing_[procI];
+        const labelList& pointProcAddressingI = pointProcAddressing_[proci];
 
         if (pointProcAddressingI.size() != procPoints.size())
         {
@@ -241,9 +243,9 @@ void CML::processorMeshes::reconstructPoints(fvMesh& mesh)
                 << abort(FatalError);
         }
 
-        forAll(pointProcAddressingI, pointI)
+        forAll(pointProcAddressingI, pointi)
         {
-            newPoints[pointProcAddressingI[pointI]] = procPoints[pointI];
+            newPoints[pointProcAddressingI[pointi]] = procPoints[pointi];
         }
     }
 

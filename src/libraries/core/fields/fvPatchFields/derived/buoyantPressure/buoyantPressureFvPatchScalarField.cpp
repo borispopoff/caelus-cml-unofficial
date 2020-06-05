@@ -113,9 +113,9 @@ void CML::buoyantPressureFvPatchScalarField::updateCoeffs()
     // Otherwise assume the variable is the static pressure.
     if
     (
-        dimensionedInternalField().name() == "p_rgh"
-     || dimensionedInternalField().name() == "ph_rgh"
-     || dimensionedInternalField().name() == "pd"
+        internalField().name() == "p_rgh"
+     || internalField().name() == "ph_rgh"
+     || internalField().name() == "pd"
     )
     {
         gradient() = -rho.snGrad()*(g.value() & patch().Cf());
@@ -133,7 +133,7 @@ void CML::buoyantPressureFvPatchScalarField::write(Ostream& os) const
 {
     fixedGradientFvPatchScalarField::write(os);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

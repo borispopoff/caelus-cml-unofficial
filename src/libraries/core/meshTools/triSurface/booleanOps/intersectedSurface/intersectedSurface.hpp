@@ -163,10 +163,10 @@ private:
         );
 
         //- Calculate point-edge addressing for single face only.
-        static Map<DynamicList<label> > calcPointEdgeAddressing
+        static Map<DynamicList<label>> calcPointEdgeAddressing
         (
             const edgeSurface&,
-            const label faceI
+            const label facei
         );
 
         //- Choose edge out of candidates (facePointEdges) according to
@@ -175,9 +175,9 @@ private:
         (
             const edgeSurface& eSurf,
             const Map<label>& visited,
-            const label faceI,
+            const label facei,
             const vector& n,                // original triangle normal
-            const Map<DynamicList<label> >& facePointEdges,
+            const Map<DynamicList<label>>& facePointEdges,
             const label prevEdgeI,
             const label prevVertI
         );
@@ -186,9 +186,9 @@ private:
         static face walkFace
         (
             const edgeSurface& eSurf,
-            const label faceI,
+            const label facei,
             const vector& n,
-            const Map<DynamicList<label> >& facePointEdges,
+            const Map<DynamicList<label>>& facePointEdges,
 
             const label startEdgeI,
             const label startVertI,
@@ -201,8 +201,8 @@ private:
         static void findNearestVisited
         (
             const edgeSurface& eSurf,
-            const label faceI,
-            const Map<DynamicList<label> >& facePointEdges,
+            const label facei,
+            const Map<DynamicList<label>>& facePointEdges,
             const Map<label>& pointVisited,
             const point& pt,
             const label excludeFaceI,
@@ -216,8 +216,8 @@ private:
         static faceList resplitFace
         (
             const triSurface& surf,
-            const label faceI,
-            const Map<DynamicList<label> >& facePointEdges,
+            const label facei,
+            const Map<DynamicList<label>>& facePointEdges,
             const Map<label>& visited,
             edgeSurface& eSurf
         );
@@ -227,7 +227,7 @@ private:
         static faceList splitFace
         (
             const triSurface& surf,
-            const label faceI,
+            const label facei,
             edgeSurface& eSurf
         );
 
@@ -280,9 +280,9 @@ public:
         }
 
         //- Is point coming from original surface?
-        bool isSurfacePoint(const label pointI) const
+        bool isSurfacePoint(const label pointi) const
         {
-            return pointI < nSurfacePoints_;
+            return pointi < nSurfacePoints_;
         }
 };
 

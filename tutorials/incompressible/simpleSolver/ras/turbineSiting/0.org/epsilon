@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -20,8 +20,6 @@ internalField   uniform $turbulentEpsilon;
 
 boundaryField
 {
-    #include "include/ABLConditions"
-
     "terrain_.*"
     {
         type            epsilonWallFunction;
@@ -41,12 +39,8 @@ boundaryField
     inlet
     {
         type            atmBoundaryLayerInletEpsilon;
-        Uref            $Uref;
-        Href            $Href;
-        z               $zDirection;
-        z0              $z0;
+        #include        "include/ABLConditions"
         value           $internalField;
-        zGround         $zGround;
     }
 
     ground

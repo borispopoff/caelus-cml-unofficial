@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -222,7 +222,7 @@ void CML::GAMGAgglomeration::agglomerateLduAddressing
         {
             fineInterfaces[inti].initInternalFieldTransfer
             (
-                Pstream::nonBlocking,
+                Pstream::commsTypes::nonBlocking,
                 restrictMap
             );
         }
@@ -249,7 +249,7 @@ void CML::GAMGAgglomeration::agglomerateLduAddressing
                     fineInterfaces[inti].interfaceInternalField(restrictMap),
                     fineInterfaces[inti].internalFieldTransfer
                     (
-                        Pstream::nonBlocking,
+                        Pstream::commsTypes::nonBlocking,
                         restrictMap
                     )
                 ).ptr()

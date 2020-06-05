@@ -159,7 +159,7 @@ namespace CML
     template<class GradBC>
     inline void setSnGrad
     (
-        volScalarField::GeometricBoundaryField& bf,
+        volScalarField::Boundary& bf,
         const FieldField<fvsPatchField, scalar>& snGrad
     )
     {
@@ -175,8 +175,8 @@ namespace CML
     template<class GradBC>
     inline void setSnGrad
     (
-        volScalarField::GeometricBoundaryField& bf,
-        const tmp<FieldField<fvsPatchField, scalar> >& tsnGrad
+        volScalarField::Boundary& bf,
+        const tmp<FieldField<fvsPatchField, scalar>>& tsnGrad
     )
     {
         setSnGrad<GradBC>(bf, tsnGrad());

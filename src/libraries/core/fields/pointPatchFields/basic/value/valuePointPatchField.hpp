@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -85,9 +85,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new valuePointPatchField<Type>
                 (
@@ -104,12 +104,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> > clone
+        virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new valuePointPatchField<Type>
                 (
@@ -156,7 +156,8 @@ public:
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             );
 
 
@@ -203,7 +204,7 @@ public:
 // which enables simple backward compatability with verions using
 // referenceLevel in GeometicField
 template<class Type>
-tmp<Field<Type> > operator+
+tmp<Field<Type>> operator+
 (
     const valuePointPatchField<Type>& vsppf,
     const Type& t
@@ -213,11 +214,8 @@ tmp<Field<Type> > operator+
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "pointPatchFieldMapper.hpp"
 
@@ -272,12 +270,14 @@ CML::valuePointPatchField<Type>::valuePointPatchField
     }
     else if (!valueRequired)
     {
-        Field<Type>::operator=(pTraits<Type>::zero);
+        Field<Type>::operator=(Zero);
     }
     else
     {
-        FatalIOErrorInFunction(dict)
-            << "Essential entry 'value' missing"
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "Essential entry 'value' missing"
             << exit(FatalIOError);
     }
 }
@@ -292,7 +292,7 @@ CML::valuePointPatchField<Type>::valuePointPatchField
     const pointPatchFieldMapper& mapper
 )
 :
-    pointPatchField<Type>(p, iF),
+    pointPatchField<Type>(ptf, p, iF, mapper),
     Field<Type>(ptf, mapper)
 {}
 
@@ -330,7 +330,7 @@ void CML::valuePointPatchField<Type>::rmap
 {
     Field<Type>::rmap
     (
-        refCast<const valuePointPatchField<Type> >
+        refCast<const valuePointPatchField<Type>>
         (
             ptf
         ),
@@ -348,7 +348,7 @@ void CML::valuePointPatchField<Type>::updateCoeffs()
     }
 
     // Get internal field to insert values into
-    Field<Type>& iF = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& iF = const_cast<Field<Type>&>(this->primitiveField());
 
     this->setInInternalField(iF, *this);
 
@@ -360,7 +360,7 @@ template<class Type>
 void CML::valuePointPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     // Get internal field to insert values into
-    Field<Type>& iF = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& iF = const_cast<Field<Type>&>(this->primitiveField());
 
     this->setInInternalField(iF, *this);
 
@@ -372,7 +372,7 @@ template<class Type>
 void CML::valuePointPatchField<Type>::write(Ostream& os) const
 {
     pointPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", static_cast<const Field<Type>&>(*this));
 }
 
 
@@ -394,7 +394,7 @@ void CML::valuePointPatchField<Type>::operator=
     const pointPatchField<Type>& ptf
 )
 {
-    Field<Type>::operator=(ptf.patchInternalField());
+    Field<Type>::operator=(this->patchInternalField());
 }
 
 
@@ -418,7 +418,6 @@ void CML::valuePointPatchField<Type>::operator=
 }
 
 
-// Force an assignment
 template<class Type>
 void CML::valuePointPatchField<Type>::operator==
 (
@@ -435,7 +434,7 @@ void CML::valuePointPatchField<Type>::operator==
     const pointPatchField<Type>& ptf
 )
 {
-    Field<Type>::operator=(ptf.patchInternalField());
+    Field<Type>::operator=(this->patchInternalField());
 }
 
 
@@ -459,9 +458,4 @@ void CML::valuePointPatchField<Type>::operator==
 }
 
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

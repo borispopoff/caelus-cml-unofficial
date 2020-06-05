@@ -50,7 +50,7 @@ CML::fv::cellMDLimitedGrad<CML::scalar>::calcGrad
         return tGrad;
     }
 
-    volVectorField& g = tGrad();
+    volVectorField& g = tGrad.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -58,8 +58,8 @@ CML::fv::cellMDLimitedGrad<CML::scalar>::calcGrad
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    scalarField maxVsf(vsf.internalField());
-    scalarField minVsf(vsf.internalField());
+    scalarField maxVsf(vsf.primitiveField());
+    scalarField minVsf(vsf.primitiveField());
 
     forAll(owner, facei)
     {
@@ -77,7 +77,7 @@ CML::fv::cellMDLimitedGrad<CML::scalar>::calcGrad
     }
 
 
-    const volScalarField::GeometricBoundaryField& bsf = vsf.boundaryField();
+    const volScalarField::Boundary& bsf = vsf.boundaryField();
 
     forAll(bsf, patchi)
     {
@@ -120,8 +120,8 @@ CML::fv::cellMDLimitedGrad<CML::scalar>::calcGrad
         maxVsf += maxMinVsf;
         minVsf -= maxMinVsf;
 
-        //maxVsf *= 1.0/k_;
-        //minVsf *= 1.0/k_;
+        // maxVsf *= 1.0/k_;
+        // minVsf *= 1.0/k_;
     }
 
 
@@ -193,7 +193,7 @@ CML::fv::cellMDLimitedGrad<CML::vector>::calcGrad
         return tGrad;
     }
 
-    volTensorField& g = tGrad();
+    volTensorField& g = tGrad.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -201,8 +201,8 @@ CML::fv::cellMDLimitedGrad<CML::vector>::calcGrad
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    vectorField maxVsf(vsf.internalField());
-    vectorField minVsf(vsf.internalField());
+    vectorField maxVsf(vsf.primitiveField());
+    vectorField minVsf(vsf.primitiveField());
 
     forAll(owner, facei)
     {
@@ -220,7 +220,7 @@ CML::fv::cellMDLimitedGrad<CML::vector>::calcGrad
     }
 
 
-    const volVectorField::GeometricBoundaryField& bsf = vsf.boundaryField();
+    const volVectorField::Boundary& bsf = vsf.boundaryField();
 
     forAll(bsf, patchi)
     {
@@ -262,8 +262,8 @@ CML::fv::cellMDLimitedGrad<CML::vector>::calcGrad
         maxVsf += maxMinVsf;
         minVsf -= maxMinVsf;
 
-        //maxVsf *= 1.0/k_;
-        //minVsf *= 1.0/k_;
+        // maxVsf *= 1.0/k_;
+        // minVsf *= 1.0/k_;
     }
 
 

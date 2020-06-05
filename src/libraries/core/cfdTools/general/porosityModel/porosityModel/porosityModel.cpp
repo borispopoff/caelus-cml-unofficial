@@ -133,7 +133,7 @@ void CML::porosityModel::transformModelData()
 {
     if (!mesh_.upToDatePoints(*this))
     {
-        calcTranformModelData();
+        calcTransformModelData();
 
         // set model up-to-date wrt points
         mesh_.setUpToDatePoints(*this);
@@ -150,11 +150,11 @@ CML::tmp<CML::vectorField> CML::porosityModel::porosityModel::force
 {
     transformModelData();
 
-    tmp<vectorField> tforce(new vectorField(U.size(), vector::zero));
+    tmp<vectorField> tforce(new vectorField(U.size(), Zero));
 
     if (!cellZoneIDs_.empty())
     {
-        this->calcForce(U, rho, mu, tforce());
+        this->calcForce(U, rho, mu, tforce.ref());
     }
 
     return tforce;

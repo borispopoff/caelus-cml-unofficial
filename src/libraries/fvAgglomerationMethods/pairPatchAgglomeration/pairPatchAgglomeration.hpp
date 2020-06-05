@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -39,7 +39,7 @@ SourceFiles
 
 namespace CML
 {
-    typedef PrimitivePatch<face, List, const pointField> bPatch;
+    typedef PrimitivePatch<faceList, const pointField> bPatch;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -124,10 +124,10 @@ private:
         void mapBaseToTopAgglom(const label fineLevelIndex);
 
         //- Disallow default bitwise copy construct
-        pairPatchAgglomeration(const pairPatchAgglomeration&);
+        pairPatchAgglomeration(const pairPatchAgglomeration&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pairPatchAgglomeration&);
+        void operator=(const pairPatchAgglomeration&) = delete;
 
 
 public:
@@ -225,7 +225,7 @@ void CML::pairPatchAgglomeration::restrictField
             << abort(FatalError);
     }
 
-    cf = pTraits<Type>::zero;
+    cf = Zero;
 
     forAll(ff, i)
     {

@@ -51,7 +51,7 @@ void boundaryLayers::checkTopologyOfBoundaryFaces(const labelList& patchLabels)
 
     //- create a set of patch pairs. These are pairs at which the layers
     //- shall be terminated
-    std::set<std::pair<label, label> > terminatedPairs;
+    std::set<std::pair<label, label>> terminatedPairs;
     forAll(treatPatchesWithPatch_, patchI)
     {
         const DynList<label>& otherPatches = treatPatchesWithPatch_[patchI];

@@ -94,7 +94,7 @@ CML::tmp<CML::volScalarField> CML::scalarTransport::D
                     IOobject::NO_WRITE
                 ),
                 mesh_,
-                dimensionedScalar(Dname, phi.dimensions()/dimLength, 0.0)
+                dimensionedScalar(Dname, phi.dimensions()/dimLength, 0)
             )
         );
     }
@@ -148,8 +148,8 @@ void CML::scalarTransport::read(const dictionary& dict)
     {
         Info<< type() << ":" << nl;
 
-        phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
-        rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
+        phiName_ = dict.lookupOrDefault<word>("phi", "phi");
+        rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
         schemesField_ = dict.lookupOrDefault<word>("schemesField", fieldName_);
 
         constantD_ = dict.readIfPresent("D", D_);

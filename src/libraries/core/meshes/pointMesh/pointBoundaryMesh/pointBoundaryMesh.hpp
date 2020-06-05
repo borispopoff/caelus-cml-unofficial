@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -61,12 +61,6 @@ class pointBoundaryMesh
         //- Calculate the geometry for the patches (transformation tensors etc.)
         void calcGeometry();
 
-        //- Disallow default bitwise copy construct
-        pointBoundaryMesh(const pointBoundaryMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointBoundaryMesh&);
-
 
 public:
 
@@ -83,6 +77,9 @@ public:
             const polyBoundaryMesh&
         );
 
+        //- Disallow default bitwise copy construct
+        pointBoundaryMesh(const pointBoundaryMesh&) = delete;
+
 
     // Member functions
 
@@ -97,6 +94,11 @@ public:
 
         //- Correct polyBoundaryMesh after topology update
         void updateMesh();
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointBoundaryMesh&) = delete;
 };
 
 

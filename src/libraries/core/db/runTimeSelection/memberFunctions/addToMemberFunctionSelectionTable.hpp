@@ -61,7 +61,7 @@ Description
                                                                               \
     /* Add the thisType memberFunction to the table */                        \
     baseType::add##memberFunction##argNames##                                 \
-    MemberFunctionToTable<thisType<Targ> >                                    \
+    MemberFunctionToTable<thisType<Targ>>                                     \
     add##thisType##Targ##memberFunction##argNames##MemberFunctionTo##         \
     baseType##Table_
 
@@ -73,7 +73,7 @@ Description
                                                                               \
     /* Add the thisType memberFunction to the table, find by lookup name */   \
     baseType::add##memberFunction##argNames##                                 \
-    MemberFunctionToTable<thisType<Targ> >                                    \
+    MemberFunctionToTable<thisType<Targ>>                                     \
     add_##lookup##_##thisType##Targ##memberFunction##argNames##               \
     MemberFunctionTo##baseType##Table_(#lookup)
 
@@ -83,7 +83,7 @@ Description
                                                                               \
     /* Add the thisType memberFunction to the table */                        \
     baseType<Targ>::add##memberFunction##argNames##                           \
-    MemberFunctionToTable<thisType<Targ> >                                    \
+    MemberFunctionToTable<thisType<Targ>>                                     \
     add##thisType##Targ##memberFunction##argNames##MemberFunctionTo##         \
     baseType##Targ##Table_
 
@@ -93,7 +93,7 @@ Description
                                                                               \
     /* Add the thisType memberFunction to the table, find by lookup name */   \
     baseType<Targ>::add##memberFunction##argNames##                           \
-    MemberFunctionToTable<thisType<Targ> >                                    \
+    MemberFunctionToTable<thisType<Targ>>                                     \
     add_##lookup##_##thisType##Targ##memberFunction##argNames##               \
     MemberFunctionTo##baseType##Targ##Table_(#lookup)
 
@@ -108,7 +108,7 @@ Description
                                                                               \
     /* Add the thisType memberFunction to the table */                        \
     baseType<Targ>::add##memberFunction##argNames##                           \
-    MemberFunctionToTable<thisType<Targ> >                                    \
+    MemberFunctionToTable<thisType<Targ>>                                    \
     add##thisType##Targ##memberFunction##argNames##MemberFunctionTo##         \
     baseType##Targ##Table_
 
@@ -120,7 +120,7 @@ Description
                                                                               \
     /* Add the thisType memberFunction to the table, find by lookup name */   \
     baseType<Targ>::add##memberFunction##argNames##                           \
-    MemberFunctionToTable<thisType<Targ> >                                    \
+    MemberFunctionToTable<thisType<Targ>>                                    \
     add_##lookup##_##thisType##Targ##memberFunction##argNames##               \
     MemberFunctionTo##baseType##Targ##Table_(#lookup)
 

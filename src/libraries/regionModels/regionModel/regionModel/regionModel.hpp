@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -60,10 +60,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        regionModel(const regionModel&);
+        regionModel(const regionModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const regionModel&);
+        void operator=(const regionModel&) = delete;
 
         //- Construct region mesh and fields
         void constructMeshObjects();
@@ -120,8 +120,7 @@ protected:
             mutable wordList interRegionAMINames_;
 
             //- List of AMI objects per coupled region
-            mutable PtrList<PtrList<AMIPatchToPatchInterpolation> >
-                interRegionAMI_;
+            mutable PtrList<PtrList<AMIInterpolation>> interRegionAMI_;
 
 
     // Protected member functions
@@ -133,7 +132,7 @@ protected:
         virtual bool read(const dictionary& dict);
 
         //- Create or return a new inter-region AMI object
-        virtual const AMIPatchToPatchInterpolation& interRegionAMI
+        virtual const AMIInterpolation& interRegionAMI
         (
             const regionModel& nbrRegion,
             const label regionPatchi,
@@ -249,7 +248,7 @@ public:
 
             //- Map patch field from another region model to local patch
             template<class Type>
-            tmp<CML::Field<Type> > mapRegionPatchField
+            tmp<CML::Field<Type>> mapRegionPatchField
             (
                 const regionModel& nbrRegion,
                 const label regionPatchi,
@@ -260,7 +259,7 @@ public:
 
             //- Map patch field from another region model to local patch
             template<class Type>
-            tmp<Field<Type> > mapRegionPatchField
+            tmp<Field<Type>> mapRegionPatchField
             (
                 const regionModel& nbrRegion,
                 const word& fieldName,
@@ -271,7 +270,7 @@ public:
             //- Map patch internal field from another region model to local
             //  patch
             template<class Type>
-            tmp<Field<Type> > mapRegionPatchInternalField
+            tmp<Field<Type>> mapRegionPatchInternalField
             (
                 const regionModel& nbrRegion,
                 const word& fieldName,
@@ -518,7 +517,7 @@ inline CML::label CML::regionModels::regionModel::regionPatchID
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::regionModels::regionModel::mapRegionPatchField
 (
     const regionModel& nbrRegion,
@@ -531,10 +530,10 @@ CML::regionModels::regionModel::mapRegionPatchField
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag + 1;
 
-    const AMIPatchToPatchInterpolation& ami =
+    const AMIInterpolation& ami =
         interRegionAMI(nbrRegion, regionPatchi, nbrPatchi, flip);
 
-    tmp<Field<Type> > tresult(ami.interpolateToSource(nbrField));
+    tmp<Field<Type>> tresult(ami.interpolateToSource(nbrField));
 
     UPstream::msgType() = oldTag;
 
@@ -543,7 +542,7 @@ CML::regionModels::regionModel::mapRegionPatchField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::regionModels::regionModel::mapRegionPatchField
 (
     const regionModel& nbrRegion,
@@ -563,7 +562,7 @@ CML::regionModels::regionModel::mapRegionPatchField
         int oldTag = UPstream::msgType();
         UPstream::msgType() = oldTag + 1;
 
-        const AMIPatchToPatchInterpolation& ami =
+        const AMIInterpolation& ami =
             interRegionAMI(nbrRegion, regionPatchi, nbrPatchi, flip);
 
         const fieldType& nbrField =
@@ -571,7 +570,7 @@ CML::regionModels::regionModel::mapRegionPatchField
 
         const Field<Type>& nbrFieldp = nbrField.boundaryField()[nbrPatchi];
 
-        tmp<Field<Type> > tresult(ami.interpolateToSource(nbrFieldp));
+        tmp<Field<Type>> tresult(ami.interpolateToSource(nbrFieldp));
 
         UPstream::msgType() = oldTag;
 
@@ -582,7 +581,7 @@ CML::regionModels::regionModel::mapRegionPatchField
         const polyPatch& p = regionMesh().boundaryMesh()[regionPatchi];
 
         return
-            tmp<Field<Type> >
+            tmp<Field<Type>>
             (
                 new Field<Type>
                 (
@@ -595,7 +594,7 @@ CML::regionModels::regionModel::mapRegionPatchField
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> >
+CML::tmp<CML::Field<Type>>
 CML::regionModels::regionModel::mapRegionPatchInternalField
 (
     const regionModel& nbrRegion,
@@ -615,7 +614,7 @@ CML::regionModels::regionModel::mapRegionPatchInternalField
         int oldTag = UPstream::msgType();
         UPstream::msgType() = oldTag + 1;
 
-        const AMIPatchToPatchInterpolation& ami =
+        const AMIInterpolation& ami =
             interRegionAMI(nbrRegion, regionPatchi, nbrPatchi, flip);
 
         const fieldType& nbrField =
@@ -624,7 +623,7 @@ CML::regionModels::regionModel::mapRegionPatchInternalField
         const fvPatchField<Type>& nbrFieldp =
             nbrField.boundaryField()[nbrPatchi];
 
-        tmp<Field<Type> > tresult
+        tmp<Field<Type>> tresult
         (
             ami.interpolateToSource(nbrFieldp.patchInternalField())
         );
@@ -638,7 +637,7 @@ CML::regionModels::regionModel::mapRegionPatchInternalField
         const polyPatch& p = regionMesh().boundaryMesh()[regionPatchi];
 
         return
-            tmp<Field<Type> >
+            tmp<Field<Type>>
             (
                 new Field<Type>
                 (

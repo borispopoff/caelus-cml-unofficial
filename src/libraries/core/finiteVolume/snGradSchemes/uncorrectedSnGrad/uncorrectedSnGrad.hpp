@@ -50,12 +50,6 @@ class uncorrectedSnGrad
 :
     public snGradScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const uncorrectedSnGrad&);
-
-
 public:
 
     //- Runtime type information
@@ -101,8 +95,14 @@ public:
 
         //- Return the explicit correction to the uncorrectedSnGrad
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const uncorrectedSnGrad&) = delete;
 };
 
 
@@ -139,14 +139,14 @@ uncorrectedSnGrad<Type>::~uncorrectedSnGrad()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 uncorrectedSnGrad<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>&
 ) const
 {
     NotImplemented;
-    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >(nullptr);
+    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>(nullptr);
 }
 
 

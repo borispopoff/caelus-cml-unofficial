@@ -43,7 +43,7 @@ namespace CML
 template<class T>
 class EdgeMap
 :
-    public HashTable<T, edge, Hash<edge> >
+    public HashTable<T, edge, Hash<edge>>
 {
 
 public:
@@ -53,19 +53,19 @@ public:
         //- Construct given initial map size
         EdgeMap(const label size = 128)
         :
-            HashTable<T, edge, Hash<edge> >(size)
+            HashTable<T, edge, Hash<edge>>(size)
         {}
 
         //- Construct from Istream
         EdgeMap(Istream& is)
         :
-            HashTable<T, edge, Hash<edge> >(is)
+            HashTable<T, edge, Hash<edge>>(is)
         {}
 
         //- Construct as copy
         EdgeMap(const EdgeMap<T>& map)
         :
-            HashTable<T, edge, Hash<edge> >(map)
+            HashTable<T, edge, Hash<edge>>(map)
         {}
 };
 

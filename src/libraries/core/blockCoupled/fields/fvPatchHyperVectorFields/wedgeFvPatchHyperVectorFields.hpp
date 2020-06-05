@@ -50,7 +50,7 @@ namespace CML
 
 #define doMakeHyperVectorTensorWedgeFuncDefs(type, Type, args...)             \
 template<>                                                                    \
-tmp<Field<type > > wedgeFvPatchField<type >::snGrad() const;                  \
+tmp<Field<type >> wedgeFvPatchField<type >::snGrad() const;                   \
                                                                               \
                                                                               \
 template<>                                                                    \
@@ -61,7 +61,7 @@ void wedgeFvPatchField<type >::evaluate                                       \
                                                                               \
                                                                               \
 template<>                                                                    \
-tmp<Field<type > >                                                            \
+tmp<Field<type >>                                                             \
 wedgeFvPatchField<type >::snGradTransformDiag() const;
 
 forAllHyperVectorTypes(doMakeHyperVectorTensorWedgeFuncDefs)

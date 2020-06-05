@@ -61,7 +61,7 @@ interpolateOvertopping::~interpolateOvertopping()
 
 void interpolateOvertopping::evaluate()
 {
-    List<std::pair<scalar, label> > timeLabel;
+    List<std::pair<scalar, label>> timeLabel;
     wordList OTnames;
     List<vectorField> OTs;
 
@@ -77,7 +77,7 @@ void interpolateOvertopping::evaluate()
 
     interpolationWeights(timeLabel, t, weights, leftData, rightData);
 
-    vectorField output(weights.size(), vector::zero);
+    vectorField output(weights.size(), Zero);
 
     forAll (OTs, OTI)
     {

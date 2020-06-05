@@ -125,9 +125,9 @@ void CML::caelusFileSurfaceWriter::write
     // for e.g. timeVaryingMapped bc.
     pointField faceCentres(faces.size(),point::zero);
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        faceCentres[faceI] = faces[faceI].centre(points);
+        faceCentres[facei] = faces[facei].centre(points);
     }
 
     OFstream(surfaceDir/"faceCentres")() << faceCentres;

@@ -109,7 +109,7 @@ void boundaryLayerOptimisation::calculateNormalVectors
         const DynList<label>& neiProcs = mse.bpNeiProcs();
         const VRWGraph& bpAtProcs = mse.bpAtProcs();
 
-        std::map<label, LongList<refLabelledPointScalar> > exchangeData;
+        std::map<label, LongList<refLabelledPointScalar>> exchangeData;
         forAll(neiProcs, i)
             exchangeData[neiProcs[i]].clear();
 
@@ -436,7 +436,7 @@ void boundaryLayerOptimisation::calculateHairVectorsAtTheBoundary
         const DynList<label>& eNeiProcs =
             mesh_.addressingData().edgeNeiProcs();
 
-        std::map<label, LongList<labelledPoint> > exchangeData;
+        std::map<label, LongList<labelledPoint>> exchangeData;
         forAll(eNeiProcs, i)
             exchangeData[eNeiProcs[i]].clear();
 
@@ -669,7 +669,7 @@ void boundaryLayerOptimisation::optimiseHairNormalsAtTheBoundary()
             const DynList<label>& eNeiProcs =
                 mesh_.addressingData().edgeNeiProcs();
 
-            std::map<label, LongList<labelledPoint> > exchangeData;
+            std::map<label, LongList<labelledPoint>> exchangeData;
             forAll(eNeiProcs, i)
                 exchangeData[eNeiProcs[i]].clear();
 
@@ -1018,7 +1018,7 @@ void boundaryLayerOptimisation::optimiseHairNormalsInside()
             const DynList<label>& eNeiProcs =
                 mesh_.addressingData().edgeNeiProcs();
 
-            std::map<label, LongList<labelledPoint> > exchangeData;
+            std::map<label, LongList<labelledPoint>> exchangeData;
             forAll(eNeiProcs, i)
                 exchangeData[eNeiProcs[i]].clear();
 

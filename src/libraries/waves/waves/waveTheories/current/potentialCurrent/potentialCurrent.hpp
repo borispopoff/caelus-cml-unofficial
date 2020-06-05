@@ -23,7 +23,7 @@ Class
 Description
     Implementation of a potential current velocity profile, e.g. uniform
     velocity distribution over the vertical. In the special case of
-    U = vector::zero it can be used as outlet sponge layer wave type.
+    U = Zero it can be used as outlet sponge layer wave type.
 
     A description of the general wave framework is given in
 

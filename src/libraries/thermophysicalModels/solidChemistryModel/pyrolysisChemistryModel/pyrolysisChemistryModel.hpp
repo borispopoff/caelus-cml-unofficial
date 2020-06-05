@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2018 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -54,8 +54,8 @@ class pyrolysisChemistryModel
 {
     // Private Member Functions
 
-    //- Disallow default bitwise assignment
-    void operator=(const pyrolysisChemistryModel&);
+        //- Disallow default bitwise assignment
+        void operator=(const pyrolysisChemistryModel&) = delete;
 
 
 protected:
@@ -73,13 +73,13 @@ protected:
     label nSpecie_;
 
     //- List of reaction rate per gas [kg/m3/s]
-    PtrList<DimensionedField<scalar, volMesh> > RRg_;
+    PtrList<volScalarField::Internal> RRg_;
 
 
     // Protected Member Functions
 
     //- Write access to source terms for gases
-    inline PtrList<DimensionedField<scalar, volMesh> >& RRg()
+    inline PtrList<volScalarField::Internal>& RRg()
     {
         return RRg_;
     }
@@ -188,7 +188,7 @@ public:
     // Chemistry model functions
 
     //- Return const access to the chemical source terms for gases
-    inline const DimensionedField<scalar, volMesh>& RRg
+    inline const volScalarField::Internal& RRg
     (
         const label i
     ) const
@@ -197,11 +197,11 @@ public:
     }
 
     //- Return total gas source term
-    inline tmp<DimensionedField<scalar, volMesh> > RRg() const
+    inline tmp<volScalarField::Internal> RRg() const
     {
-        tmp<DimensionedField<scalar, volMesh> > tRRg
+        tmp<volScalarField::Internal> tRRg
         (
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -212,13 +212,13 @@ public:
                     IOobject::NO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
             )
         );
     
         if (this->chemistry_)
         {
-            DimensionedField<scalar, volMesh>& RRg = tRRg();
+            volScalarField::Internal& RRg = tRRg.ref();
             for (label i=0; i < nGases_; i++)
             {
                 RRg += RRg_[i];
@@ -366,7 +366,7 @@ pyrolysisChemistryModel
             );
 
             // Calculate initial values of Ysi0 = rho*delta*Yi
-            Ys0_[fieldi].internalField() =
+            Ys0_[fieldi].primitiveFieldRef() =
                 this->solidThermo().rho()
                *max(this->Ys_[fieldi], scalar(0.001))*this->mesh().V();
         }
@@ -377,7 +377,7 @@ pyrolysisChemistryModel
         RRg_.set
         (
             fieldi,
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -388,7 +388,7 @@ pyrolysisChemistryModel
                     IOobject::NO_WRITE
                 ),
                 this->mesh(),
-                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
+                dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0)
             )
         );
     }
@@ -885,11 +885,11 @@ CML::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::gasHs
                 false
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimEnergy/dimMass, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimMass, 0)
         )
     );
 
-    DimensionedField<scalar, volMesh>& gasHs = tHs();
+    volScalarField::Internal& gasHs = tHs.ref();
 
     const GasThermo& mixture = gasThermo_[index];
 

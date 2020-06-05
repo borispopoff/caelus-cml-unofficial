@@ -60,7 +60,7 @@ waveTheory::waveTheory
 
     PI_(M_PI),
 
-    wind_( lookupOrDefault<vector>("wind", vector::zero ))
+    wind_( lookupOrDefault<vector>("wind", Zero ))
 {
     {
         IOdictionary transProp
@@ -148,7 +148,7 @@ vectorField waveTheory::U
     const scalar& time
 ) const
 {
-    vectorField temp(x.size(),vector::zero);
+    vectorField temp(x.size(), Zero);
 
     forAll (x,ii)
     {

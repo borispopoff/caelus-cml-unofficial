@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,8 +66,14 @@ public:
         //- Construct from IOobject and a List
         IOList(const IOobject&, const List<T>&);
 
-        //- Construct by transferring the List contents
-        IOList(const IOobject&, const Xfer<List<T> >&);
+        //- Move construct by transferring the List contents
+        IOList(const IOobject&, List<T>&&);
+
+        //- Copy constructor
+        IOList(const IOList<T>&);
+
+        //- Move constructor
+        IOList(IOList<T>&&);
 
 
     //- Destructor
@@ -82,8 +88,10 @@ public:
     // Member operators
 
         void operator=(const IOList<T>&);
+        void operator=(IOList<T>&&);
 
         void operator=(const List<T>&);
+        void operator=(List<T>&&);
 };
 
 
@@ -192,9 +200,10 @@ CML::IOList<T>::IOList(const IOobject& io, const List<T>& list)
 
 
 template<class T>
-CML::IOList<T>::IOList(const IOobject& io, const Xfer<List<T> >& list)
+CML::IOList<T>::IOList(const IOobject& io, List<T>&& list)
 :
-    regIOobject(io)
+    regIOobject(io),
+    List<T>(move(list))
 {
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
@@ -205,8 +214,6 @@ CML::IOList<T>::IOList(const IOobject& io, const Xfer<List<T> >& list)
             " but IOList does not support automatic rereading."
             << endl;
     }
-
-    List<T>::transfer(list());
 
     if
     (
@@ -221,6 +228,22 @@ CML::IOList<T>::IOList(const IOobject& io, const Xfer<List<T> >& list)
         close();
     }
 }
+
+
+template<class T>
+CML::IOList<T>::IOList(const IOList<T>& f)
+:
+    regIOobject(f),
+    List<T>(f)
+{}
+
+
+template<class T>
+CML::IOList<T>::IOList(IOList<T>&& f)
+:
+    regIOobject(move(f)),
+    List<T>(move(f))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -250,15 +273,25 @@ void CML::IOList<T>::operator=(const IOList<T>& rhs)
 
 
 template<class T>
+void CML::IOList<T>::operator=(IOList<T>&& rhs)
+{
+    List<T>::operator=(move(rhs));
+}
+
+
+template<class T>
 void CML::IOList<T>::operator=(const List<T>& rhs)
 {
     List<T>::operator=(rhs);
 }
 
 
+template<class T>
+void CML::IOList<T>::operator=(List<T>&& rhs)
+{
+    List<T>::operator=(move(rhs));
+}
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

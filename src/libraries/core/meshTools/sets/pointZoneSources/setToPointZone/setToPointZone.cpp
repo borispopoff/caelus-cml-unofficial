@@ -121,11 +121,11 @@ void CML::setToPointZone::applyToSet
 
             forAllConstIter(pointSet, fSet, iter)
             {
-                label pointI = iter.key();
+                label pointi = iter.key();
 
-                if (!fzSet.found(pointI))
+                if (!fzSet.found(pointi))
                 {
-                    newAddressing.append(pointI);
+                    newAddressing.append(pointi);
                 }
             }
 

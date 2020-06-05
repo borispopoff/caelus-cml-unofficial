@@ -73,7 +73,7 @@
 #include "swakChecks.hpp"
 namespace CML {
     template<class T>
-    autoPtr<Field<T> > PatchValueExpressionDriver::evaluatePluginFunction(
+    autoPtr<Field<T>> PatchValueExpressionDriver::evaluatePluginFunction(
         const word &name,
         const parserPatch::location &loc,
         int &scanned,
@@ -95,7 +95,7 @@ namespace CML {
 
         //    scanned+=1;
 
-        autoPtr<Field<T> > result(
+        autoPtr<Field<T>> result(
             theFunction->evaluate<T>(
                 this->content().substr(
                     loc.end.column-1

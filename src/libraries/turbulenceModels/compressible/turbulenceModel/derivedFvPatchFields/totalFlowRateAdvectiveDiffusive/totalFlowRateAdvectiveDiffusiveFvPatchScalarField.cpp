@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -142,7 +142,7 @@ void CML::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const compressible::turbulenceModel& turbulence =
         db().lookupObject<compressible::turbulenceModel>
@@ -153,7 +153,7 @@ void CML::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    const scalarField alphap(turbulence.alphaEff(patchI));
+    const scalarField alphap(turbulence.alphaEff(patchi));
 
     refValue() = 1.0;
     refGrad() = 0.0;
@@ -174,7 +174,7 @@ void CML::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
-            << this->dimensionedInternalField().name() << " :"
+            << this->internalField().name() << " :"
             << " mass flux[Kg/s]:" << phi
             << endl;
     }
@@ -185,9 +185,9 @@ void CML::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::
 write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    os.writeKeyword("phi") << phiName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("rho") << rhoName_ << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "phi", phiName_);
+    writeEntry(os, "rho", rhoName_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -41,7 +41,7 @@ surfaceScalarField cSf
     mesh.magSf()
 );
 
-if (mesh.nInternalFaces())
+
 {
     surfaceScalarField cSfbyDelta
     (

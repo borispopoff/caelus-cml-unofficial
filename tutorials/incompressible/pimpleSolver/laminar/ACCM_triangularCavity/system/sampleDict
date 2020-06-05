@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------*
-Caelus 4.10
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*------------------------------------------------------------------------------*/
 
@@ -14,9 +14,9 @@ FoamFile
 
 //--------------------------------------------------------------------------------
 
-interpolationScheme			cellPoint;
+interpolationScheme	cellPoint;
 
-setFormat					raw;
+setFormat		raw;
 
 sets
 
@@ -24,15 +24,13 @@ sets
 
 	cavity
 	{	
-		type				uniform;
-		axis				y;
-		start				(0 -4.0 0);
-		end					(0 0.0 0);
-		nPoints				100;
+		type	uniform;
+		axis	y;
+		start	(0 -4.0 0);
+		end	(0 0.0 0);
+		nPoints	100;
 	}
 );
 
-fields						(
-							U
-							);
+fields	(U);
 		

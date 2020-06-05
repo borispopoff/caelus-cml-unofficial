@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -49,7 +49,7 @@ TemplateName(MeshWave);
                            Class MeshWave Declaration
 \*---------------------------------------------------------------------------*/
 
-template <class Type, class TrackingData = int>
+template<class Type, class TrackingData = int>
 class MeshWave
 :
     public MeshWaveName
@@ -66,12 +66,6 @@ class MeshWave
         FaceCellWave<Type, TrackingData> calc_;
 
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        MeshWave(const MeshWave&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const MeshWave&);
 
       // Private static data
 
@@ -108,6 +102,9 @@ public:
             const label maxIter,
             TrackingData& td = dummyTrackData_
         );
+
+        //- Disallow default bitwise copy construct
+        MeshWave(const MeshWave&) = delete;
 
 
     // Member Functions
@@ -152,6 +149,12 @@ public:
         {
             return calc_.getUnsetFaces();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const MeshWave&) = delete;
 };
 
 
@@ -167,7 +170,7 @@ public:
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 int CML::MeshWave<Type, TrackingData>::dummyTrackData_ = 12345;
 
 
@@ -175,7 +178,7 @@ int CML::MeshWave<Type, TrackingData>::dummyTrackData_ = 12345;
 
 // Iterate, propagating changedFacesInfo across mesh, until no change (or
 // maxIter reached).
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::MeshWave<Type, TrackingData>::MeshWave
 (
     const polyMesh& mesh,
@@ -202,7 +205,7 @@ CML::MeshWave<Type, TrackingData>::MeshWave
 
 // Iterate, propagating changedFacesInfo across mesh, until no change (or
 // maxIter reached). Initial cell values specified.
-template <class Type, class TrackingData>
+template<class Type, class TrackingData>
 CML::MeshWave<Type, TrackingData>::MeshWave
 (
     const polyMesh& mesh,

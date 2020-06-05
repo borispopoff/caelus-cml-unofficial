@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -23,7 +23,7 @@ rigidBodyMotionCoeffs
 
     outputControl
     {         
-        writeControl timeStep; // Possible options: timeStep, outputTime, adjustableTime, runTime, clockTime, cpuTime 
+        writeControl timeStep; // Possible options: timeStep, writeTime, adjustableTime, runTime, clockTime, cpuTime 
         writeInterval        1; // Only used with adjustableTime, runTime, clockTime, cpuTime
     }
 

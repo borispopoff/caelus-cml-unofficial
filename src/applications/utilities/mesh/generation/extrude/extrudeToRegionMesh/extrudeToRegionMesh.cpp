@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -148,7 +148,7 @@ void trimPatchFields(fvMesh& mesh, const label nPatches)
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryField();
+        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
 
         bfld.setSize(nPatches);
     }
@@ -168,7 +168,7 @@ void reorderPatchFields(fvMesh& mesh, const labelList& oldToNew)
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld = fld.boundaryField();
+        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
 
         bfld.reorder(oldToNew);
     }
@@ -1035,12 +1035,10 @@ void addCoupledPatches
             else
             {
                 // Processor patch
-
-                word name =
-                    "procBoundary"
-                  + CML::name(Pstream::myProcNo())
-                  + "to"
-                  + CML::name(nbrProci);
+                word name
+                (
+                    processorPolyPatch::newName(Pstream::myProcNo(), nbrProci)
+                );
 
                 sidePatchID[edgeI] = findPatchID(newPatches, name);
 
@@ -1231,7 +1229,7 @@ tmp<pointField> calcOffset
     vectorField::subField fc = pp.faceCentres();
 
     tmp<pointField> toffsets(new pointField(fc.size()));
-    pointField& offsets = toffsets();
+    pointField& offsets = toffsets.ref();
 
     forAll(fc, i)
     {
@@ -1668,7 +1666,7 @@ int main(int argc, char *argv[])
             }
         }
     }
-    const primitiveFacePatch extrudePatch(zoneFaces.xfer(), mesh.points());
+    const primitiveFacePatch extrudePatch(move(zoneFaces), mesh.points());
 
 
     Pstream::listCombineGather(isInternal, orEqOp<bool>());
@@ -1718,7 +1716,7 @@ int main(int argc, char *argv[])
             extrudeMeshEdges
         )
     );
-    List<Map<label> > compactMap;
+    List<Map<label>> compactMap;
     const mapDistribute extrudeEdgeFacesMap
     (
         globalExtrudeFaces,
@@ -2193,10 +2191,10 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE,
             false
         ),
-        xferCopy(pointField()),
-        xferCopy(faceList()),
-        xferCopy(labelList()),
-        xferCopy(labelList()),
+        pointField(),
+        faceList(),
+        labelList(),
+        labelList(),
         false
     );
 

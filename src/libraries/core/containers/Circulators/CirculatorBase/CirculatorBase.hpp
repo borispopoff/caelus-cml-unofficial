@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2012 OpenFOAM Foundation
+Copyright (C) 2012-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -45,19 +45,19 @@ public:
     // Public data
 
         //- Direction type enumeration
-        enum direction
+        enum class direction
         {
-            NONE,
-            CLOCKWISE,
-            ANTICLOCKWISE
+            none,
+            clockwise,
+            anticlockwise
         };
 
 
     // Constructors
 
         //- Construct null
-        CirculatorBase(){};
-
+        CirculatorBase()
+        {}
 };
 
 

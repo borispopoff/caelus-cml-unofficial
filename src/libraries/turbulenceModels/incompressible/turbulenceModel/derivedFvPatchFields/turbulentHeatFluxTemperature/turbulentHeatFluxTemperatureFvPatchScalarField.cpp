@@ -220,11 +220,10 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
 void turbulentHeatFluxTemperatureFvPatchScalarField::write(Ostream& os) const
 {
     fixedGradientFvPatchScalarField::write(os);
-    os.writeKeyword("heatSource") << heatSourceTypeNames_[heatSource_]
-        << token::END_STATEMENT << nl;
-    q_.writeEntry("q", os);
-    os.writeKeyword("alphaEff") << alphaEffName_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "heatSource", heatSourceTypeNames_[heatSource_]);
+    writeEntry(os, "q", q_);
+    writeEntry(os, "alphaEff", alphaEffName_);
+    writeEntry(os, "value", *this);
 }
 
 

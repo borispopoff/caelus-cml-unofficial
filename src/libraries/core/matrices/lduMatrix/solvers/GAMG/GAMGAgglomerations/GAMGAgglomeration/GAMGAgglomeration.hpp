@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -98,15 +98,6 @@ protected:
         bool continueAgglomerating(const label nCoarseCells) const;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GAMGAgglomeration(const GAMGAgglomeration&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const GAMGAgglomeration&);
-
-
 public:
 
     //- Runtime type information
@@ -157,6 +148,9 @@ public:
             const lduMesh& mesh,
             const dictionary& controlDict
         );
+
+        //- Disallow default bitwise copy construct
+        GAMGAgglomeration(const GAMGAgglomeration&) = delete;
 
 
     // Selectors
@@ -239,6 +233,12 @@ public:
                 const Field<Type>& cf,
                 const label coarseLevelIndex
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GAMGAgglomeration&) = delete;
 };
 
 
@@ -269,7 +269,7 @@ void CML::GAMGAgglomeration::restrictField
             << abort(FatalError);
     }
 
-    cf = pTraits<Type>::zero;
+    cf = Zero;
 
     forAll(ff, i)
     {
@@ -288,7 +288,7 @@ void CML::GAMGAgglomeration::restrictFaceField
 {
     const labelList& fineToCoarse = faceRestrictAddressing_[fineLevelIndex];
 
-    cf = pTraits<Type>::zero;
+    cf = Zero;
 
     forAll(fineToCoarse, ffacei)
     {

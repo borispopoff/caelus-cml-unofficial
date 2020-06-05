@@ -112,12 +112,6 @@ class localEulerDdtScheme
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        localEulerDdtScheme(const localEulerDdtScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const localEulerDdtScheme&);
-
         //- Return the reciprocal of the local time-step
         const volScalarField& localRDeltaT() const;
 
@@ -145,6 +139,9 @@ public:
             ddtScheme<Type>(mesh, is)
         {}
 
+        //- Disallow default bitwise copy construct
+        localEulerDdtScheme(const localEulerDdtScheme&) = delete;
+
 
     // Member Functions
 
@@ -154,58 +151,58 @@ public:
             return fv::ddtScheme<Type>::mesh();
         }
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const dimensioned<Type>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const volScalarField& alpha,
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& psi
         );
 
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > fvcDdt
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvcDdt
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmDdt
+        tmp<fvMatrix<Type>> fvmDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmDdt
+        tmp<fvMatrix<Type>> fvmDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmDdt
+        tmp<fvMatrix<Type>> fvmDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        tmp<fvMatrix<Type> > fvmDdt
+        tmp<fvMatrix<Type>> fvmDdt
         (
             const volScalarField& alpha,
             const volScalarField& rho,
@@ -244,6 +241,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const localEulerDdtScheme&) = delete;
 };
 
 
@@ -318,7 +321,7 @@ const surfaceScalarField& localEulerDdtScheme<Type>::localRDeltaTf() const
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 localEulerDdtScheme<Type>::fvcDdt
 (
     const dimensioned<Type>& dt
@@ -331,7 +334,7 @@ localEulerDdtScheme<Type>::fvcDdt
         mesh()
     );
 
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -341,7 +344,7 @@ localEulerDdtScheme<Type>::fvcDdt
             (
                 "0",
                 dt.dimensions()/dimTime,
-                pTraits<Type>::zero
+                Zero
             ),
             calculatedFvPatchField<Type>::typeName
         )
@@ -350,7 +353,7 @@ localEulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 localEulerDdtScheme<Type>::fvcDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -365,7 +368,7 @@ localEulerDdtScheme<Type>::fvcDdt
         mesh()
     );
 
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -377,7 +380,7 @@ localEulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 localEulerDdtScheme<Type>::fvcDdt
 (
     const dimensionedScalar& rho,
@@ -393,7 +396,7 @@ localEulerDdtScheme<Type>::fvcDdt
         mesh()
     );
 
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -405,7 +408,7 @@ localEulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 localEulerDdtScheme<Type>::fvcDdt
 (
     const volScalarField& rho,
@@ -421,7 +424,7 @@ localEulerDdtScheme<Type>::fvcDdt
         mesh()
     );
 
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -433,7 +436,7 @@ localEulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 localEulerDdtScheme<Type>::fvcDdt
 (
     const volScalarField& alpha,
@@ -450,7 +453,7 @@ localEulerDdtScheme<Type>::fvcDdt
         mesh()
     );
 
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         new GeometricField<Type, fvPatchField, volMesh>
         (
@@ -466,7 +469,7 @@ localEulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 localEulerDdtScheme<Type>::fvcDdt
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sf
@@ -481,7 +484,7 @@ localEulerDdtScheme<Type>::fvcDdt
         mesh()
     );
 
-    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
     (
         new GeometricField<Type, fvsPatchField, surfaceMesh>
         (
@@ -493,13 +496,13 @@ localEulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 localEulerDdtScheme<Type>::fvmDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -508,26 +511,26 @@ localEulerDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
-    const scalarField& rDeltaT = localRDeltaT().internalField();
+    const scalarField& rDeltaT = localRDeltaT();
 
     fvm.diag() = rDeltaT*mesh().Vsc();
-    fvm.source() = rDeltaT*vf.oldTime().internalField()*mesh().Vsc();
+    fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 localEulerDdtScheme<Type>::fvmDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -535,28 +538,28 @@ localEulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
-    const scalarField& rDeltaT = localRDeltaT().internalField();
+    const scalarField& rDeltaT = localRDeltaT();
 
     fvm.diag() = rDeltaT*rho.value()*mesh().Vsc();
 
     fvm.source() =
-        rDeltaT*rho.value()*vf.oldTime().internalField()*mesh().Vsc();
+        rDeltaT*rho.value()*vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 localEulerDdtScheme<Type>::fvmDdt
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -564,22 +567,22 @@ localEulerDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
-    const scalarField& rDeltaT = localRDeltaT().internalField();
+    const scalarField& rDeltaT = localRDeltaT();
 
-    fvm.diag() = rDeltaT*rho.internalField()*mesh().Vsc();
+    fvm.diag() = rDeltaT*rho.primitiveField()*mesh().Vsc();
 
     fvm.source() = rDeltaT
-       *rho.oldTime().internalField()
-       *vf.oldTime().internalField()*mesh().Vsc();
+       *rho.oldTime().primitiveField()
+       *vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
 
 
 template<class Type>
-tmp<fvMatrix<Type> >
+tmp<fvMatrix<Type>>
 localEulerDdtScheme<Type>::fvmDdt
 (
     const volScalarField& alpha,
@@ -587,7 +590,7 @@ localEulerDdtScheme<Type>::fvmDdt
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    tmp<fvMatrix<Type> > tfvm
+    tmp<fvMatrix<Type>> tfvm
     (
         new fvMatrix<Type>
         (
@@ -595,16 +598,16 @@ localEulerDdtScheme<Type>::fvmDdt
             alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
-    const scalarField& rDeltaT = localRDeltaT().internalField();
+    const scalarField& rDeltaT = localRDeltaT();
 
-    fvm.diag() = rDeltaT*alpha.internalField()*rho.internalField()*mesh().Vsc();
+    fvm.diag() = rDeltaT*alpha.primitiveField()*rho.primitiveField()*mesh().Vsc();
 
     fvm.source() = rDeltaT
-       *alpha.oldTime().internalField()
-       *rho.oldTime().internalField()
-       *vf.oldTime().internalField()*mesh().Vsc();
+       *alpha.oldTime().primitiveField()
+       *rho.oldTime().primitiveField()
+       *vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
@@ -816,7 +819,7 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::meshPhi
                 false
             ),
             mesh(),
-            dimensionedScalar("0", dimVolume/dimTime, 0.0)
+            dimensionedScalar("0", dimVolume/dimTime, 0)
         )
     );
 }

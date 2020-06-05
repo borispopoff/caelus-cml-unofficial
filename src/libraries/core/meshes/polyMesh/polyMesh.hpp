@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2014-2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -91,13 +91,13 @@ public:
             TOPO_PATCH_CHANGE
         };
 
-        //- Enumeration defining the representation of the cell for
+        //- Enumeration defining the decomposition of the cell for
         //  inside/outside test
-        enum cellRepresentation
+        enum cellDecomposition 
         {
-            FACEPLANES,     // cell bound by planes of faces
-            FACECENTRETETS, // tet decomposition using facectr and cellctr
-            FACEDIAGTETS,   // tet decomposition using face diagonal and cellctr
+            FACE_PLANES,     // cell bound by planes of faces
+            FACE_CENTRE_TRIS, // tet decomposition using facectr and cellctr
+            FACE_DIAG_TRIS,   // tet decomposition using face diagonal and cellctr
             CELL_TETS       // Cell decomposed into tets
         };
 
@@ -143,7 +143,7 @@ private:
             mutable autoPtr<labelIOList> tetBasePtIsPtr_;
 
             //- Search tree to allow spatial cell searching
-            mutable autoPtr<indexedOctree<treeDataCell> > cellTreePtr_;
+            mutable autoPtr<indexedOctree<treeDataCell>> cellTreePtr_;
 
 
         // Zoning information
@@ -184,12 +184,6 @@ private:
 
 
     // Private Member Functions
-
-        //- Disallow construct as copy
-        polyMesh(const polyMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyMesh&);
 
         //- Initialise the polyMesh from the primitive data
         void initMesh();
@@ -314,38 +308,39 @@ public:
         //- Construct from IOobject
         explicit polyMesh(const IOobject& io, const bool defectCorr = false, const scalar areaSwitch = 1e-8);
 
-        //- Construct from IOobject or from components.
+        //- Move construct from IOobject or from components.
         //  Boundary is added using addPatches() member function
         polyMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<labelList>& owner,
-            const Xfer<labelList>& neighbour,
+            pointField&& points,
+            faceList&& faces,
+            labelList&& owner,
+            labelList&& neighbour,
             const bool syncPar = true,
             const bool defectCorr = false,
             const scalar areaSwitch = 1e-8
         );
 
-        //- Construct without boundary with cells rather than owner/neighbour.
+        //- Move construct without boundary with cells rather than
+        //  owner/neighbour.
         //  Boundary is added using addPatches() member function
         polyMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<cellList>& cells,
+            pointField&& points,
+            faceList&& faces,
+            cellList&& cells,
             const bool syncPar = true,
             const bool defectCorr = false,
             const scalar areaSwitch = 1e-8
         );
 
-        //- Construct from cell shapes
+        //- Move construct from cell shapes
         polyMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
+            pointField&& points,
             const cellShapeList& shapes,
             const faceListList& boundaryFaces,
             const wordList& boundaryPatchNames,
@@ -358,12 +353,12 @@ public:
             const scalar areaSwitch = 1e-8
         );
 
-        //- Construct from cell shapes with patch information in dictionary
+        //- Move construct from cell shapes with patch information in dictionary
         //  format.
         polyMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
+            pointField&& points,
             const cellShapeList& shapes,
             const faceListList& boundaryFaces,
             const wordList& boundaryPatchNames,
@@ -374,6 +369,9 @@ public:
             const bool defectCorr = false,
             const scalar areaSwitch = 1e-8
         );
+
+        //- Disallow construct as copy
+        polyMesh(const polyMesh&);
 
 
     //- Destructor
@@ -591,10 +589,10 @@ public:
             //  validBoundary=false
             void resetPrimitives
             (
-                const Xfer<pointField>& points,
-                const Xfer<faceList>& faces,
-                const Xfer<labelList>& owner,
-                const Xfer<labelList>& neighbour,
+                pointField&& points,
+                faceList&& faces,
+                labelList&& owner,
+                labelList&& neighbour,
                 const labelList& patchSizes,
                 const labelList& patchStarts,
                 const bool validBoundary = true
@@ -695,7 +693,7 @@ public:
             ) const;
 
             //- Find the tetFacei and tetPti for point p in celli.
-            //  tetFacei and tetPtI are set to -1 if not found
+            //  tetFacei and tetPti are set to -1 if not found
             void findTetFacePt
             (
                 const label celli,
@@ -709,15 +707,21 @@ public:
             (
                 const point& p,
                 label celli,
-                const cellRepresentation = CELL_TETS
+                const cellDecomposition = CELL_TETS
             ) const;
 
             //- Find cell enclosing this location (-1 if not in mesh)
             virtual label findCell
             (
                 const point& p,
-                const cellRepresentation = CELL_TETS
+                const cellDecomposition = CELL_TETS
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyMesh&) = delete;
 };
 
 

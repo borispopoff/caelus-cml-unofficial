@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -61,10 +61,10 @@ class AC3DsurfaceFormat
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        AC3DsurfaceFormat(const AC3DsurfaceFormat<Face>&);
+        AC3DsurfaceFormat(const AC3DsurfaceFormat<Face>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const AC3DsurfaceFormat<Face>&);
+        void operator=(const AC3DsurfaceFormat<Face>&) = delete;
 
 
 public:
@@ -78,9 +78,9 @@ public:
     // Selectors
 
         //- Read file and return surface
-        static autoPtr<MeshedSurface<Face> > New(const fileName& name)
+        static autoPtr<MeshedSurface<Face>> New(const fileName& name)
         {
-            return autoPtr<MeshedSurface<Face> >
+            return autoPtr<MeshedSurface<Face>>
             (
                 new AC3DsurfaceFormat<Face>(name)
             );
@@ -268,11 +268,11 @@ bool CML::fileFormats::AC3DsurfaceFormat<Face>::read
             {
                 label nFaces = parse<int>(args);
 
-                for (label faceI = 0; faceI < nFaces; ++faceI)
+                for (label facei = 0; facei < nFaces; ++facei)
                 {
                     static string errorMsg =
                         string(" while reading face ")
-                            + CML::name(faceI) + " on zone "
+                            + CML::name(facei) + " on zone "
                             + CML::name(zoneI)
                             + " from file " + filename;
 
@@ -391,7 +391,7 @@ void CML::fileFormats::AC3DsurfaceFormat<Face>::write
 
         // Temporary PrimitivePatch to calculate compact points & faces
         // use 'UList' to avoid allocations!
-        PrimitivePatch<Face, CML::UList, const pointField&> patch
+        PrimitivePatch<UList<Face>, const pointField&> patch
         (
             SubList<Face>
             (
@@ -413,9 +413,9 @@ void CML::fileFormats::AC3DsurfaceFormat<Face>::write
 
         os << "numsurf " << patch.localFaces().size() << endl;
 
-        forAll(patch.localFaces(), localFaceI)
+        forAll(patch.localFaces(), localFacei)
         {
-            const Face& f = patch.localFaces()[localFaceI];
+            const Face& f = patch.localFaces()[localFacei];
 
             os  << "SURF 0x20" << nl          // polygon
                 << "mat " << zoneI << nl
@@ -478,10 +478,10 @@ void CML::fileFormats::AC3DsurfaceFormat<Face>::write
             // Create zone with only zone faces included for ease of addressing
             labelHashSet include(surf.size());
 
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
-                const label faceI = faceMap[faceIndex++];
-                include.insert(faceI);
+                const label facei = faceMap[faceIndex++];
+                include.insert(facei);
             }
 
             UnsortedMeshedSurface<Face> subm = surf.subsetMesh(include);
@@ -498,9 +498,9 @@ void CML::fileFormats::AC3DsurfaceFormat<Face>::write
 
             os << "numsurf " << subm.localFaces().size() << endl;
 
-            forAll(subm.localFaces(), localFaceI)
+            forAll(subm.localFaces(), localFacei)
             {
-                const Face& f = subm.localFaces()[localFaceI];
+                const Face& f = subm.localFaces()[localFacei];
 
                 os  << "SURF 0x20" << nl          // polygon
                     << "mat " << zoneI << nl

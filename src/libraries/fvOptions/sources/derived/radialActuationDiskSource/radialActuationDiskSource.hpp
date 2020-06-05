@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -46,20 +46,16 @@ Description
         thrust(r) = T (C_0 + C_1 r^2 + C_2 r^4)
     \f]
 
-    \heading Source usage
-
+Usage
     Example usage:
     \verbatim
-    actuationDiskSourceCoeffs
-    {
-        fieldName       U;          // name of field to apply source
-        diskDir         (-1 0 0);   // disk direction
-        Cp              0.1;        // power coefficient
-        Ct              0.5;        // thrust coefficient
-        diskArea        5.0;        // disk area
-        coeffs          (0.1 0.5 0.01); // radial distribution coefficients
-        upstreamPoint   (0 0 0);    // upstream point
-    }
+    fieldName       U;          // name of field to apply source
+    diskDir         (-1 0 0);   // disk direction
+    Cp              0.1;        // power coefficient
+    Ct              0.5;        // thrust coefficient
+    diskArea        5.0;        // disk area
+    coeffs          (0.1 0.5 0.01); // radial distribution coefficients
+    upstreamPoint   (0 0 0);    // upstream point
     \endverbatim
 
 
@@ -109,10 +105,10 @@ class radialActuationDiskSource
         ) const;
 
         //- Disallow default bitwise copy construct
-        radialActuationDiskSource(const radialActuationDiskSource&);
+        radialActuationDiskSource(const radialActuationDiskSource&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const radialActuationDiskSource&);
+        void operator=(const radialActuationDiskSource&) = delete;
 
 
 public:
@@ -144,7 +140,7 @@ public:
         virtual void addSup
         (
             fvMatrix<vector>& eqn,
-            const label fieldI
+            const label fieldi
         );
 
         //- Source term to compressible momentum equation
@@ -152,14 +148,11 @@ public:
         (
             const volScalarField& rho,
             fvMatrix<vector>& eqn,
-            const label fieldI
+            const label fieldi
         );
 
 
-    // I-O
-
-        //- Write data
-        virtual void writeData(Ostream&) const;
+    // IO
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
@@ -195,7 +188,7 @@ addRadialActuationDiskAxialInertialResistance
     scalarField Tr(cells.size());
     const vector uniDiskDir = diskDir_/mag(diskDir_);
 
-    tensor E(tensor::zero);
+    tensor E(Zero);
     E.xx() = uniDiskDir.x();
     E.yy() = uniDiskDir.y();
     E.zz() = uniDiskDir.z();

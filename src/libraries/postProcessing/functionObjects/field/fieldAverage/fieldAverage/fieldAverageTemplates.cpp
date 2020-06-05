@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -27,12 +27,12 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void CML::fieldAverage::addMeanFieldType(const label fieldI)
+void CML::fieldAverage::addMeanFieldType(const label fieldi)
 {
-    faItems_[fieldI].active() = true;
+    faItems_[fieldi].active() = true;
 
-    const word& fieldName = faItems_[fieldI].fieldName();
-    const word& meanFieldName = faItems_[fieldI].meanFieldName();
+    const word& fieldName = faItems_[fieldi].fieldName();
+    const word& meanFieldName = faItems_[fieldi].meanFieldName();
 
     Info<< "    Reading/initialising field " << meanFieldName << endl;
 
@@ -46,7 +46,7 @@ void CML::fieldAverage::addMeanFieldType(const label fieldI)
             << " since an object with that name already exists."
             << " Disabling averaging for field." << endl;
 
-        faItems_[fieldI].mean() = false;
+        faItems_[fieldi].mean() = false;
     }
     else
     {
@@ -75,33 +75,33 @@ void CML::fieldAverage::addMeanFieldType(const label fieldI)
 
 
 template<class Type>
-void CML::fieldAverage::addMeanField(const label fieldI)
+void CML::fieldAverage::addMeanField(const label fieldi)
 {
-    if (faItems_[fieldI].mean())
+    if (faItems_[fieldi].mean())
     {
         typedef GeometricField<Type, fvPatchField, volMesh> volFieldType;
         typedef GeometricField<Type, fvsPatchField, surfaceMesh> surfFieldType;
 
-        const word& fieldName = faItems_[fieldI].fieldName();
+        const word& fieldName = faItems_[fieldi].fieldName();
 
         if (obr_.foundObject<volFieldType>(fieldName))
         {
-            addMeanFieldType<volFieldType>(fieldI);
+            addMeanFieldType<volFieldType>(fieldi);
         }
         else if (obr_.foundObject<surfFieldType>(fieldName))
         {
-            addMeanFieldType<surfFieldType>(fieldI);
+            addMeanFieldType<surfFieldType>(fieldi);
         }
     }
 }
 
 
 template<class Type1, class Type2>
-void CML::fieldAverage::addPrime2MeanFieldType(const label fieldI)
+void CML::fieldAverage::addPrime2MeanFieldType(const label fieldi)
 {
-    const word& fieldName = faItems_[fieldI].fieldName();
-    const word& meanFieldName = faItems_[fieldI].meanFieldName();
-    const word& prime2MeanFieldName = faItems_[fieldI].prime2MeanFieldName();
+    const word& fieldName = faItems_[fieldi].fieldName();
+    const word& meanFieldName = faItems_[fieldi].meanFieldName();
+    const word& prime2MeanFieldName = faItems_[fieldi].prime2MeanFieldName();
 
     Info<< "    Reading/initialising field " << prime2MeanFieldName << nl;
 
@@ -115,7 +115,7 @@ void CML::fieldAverage::addPrime2MeanFieldType(const label fieldI)
             << " since an object with that name already exists."
             << " Disabling averaging for field." << nl;
 
-        faItems_[fieldI].prime2Mean() = false;
+        faItems_[fieldi].prime2Mean() = false;
     }
     else
     {
@@ -145,7 +145,7 @@ void CML::fieldAverage::addPrime2MeanFieldType(const label fieldI)
 
 
 template<class Type1, class Type2>
-void CML::fieldAverage::addPrime2MeanField(const label fieldI)
+void CML::fieldAverage::addPrime2MeanField(const label fieldi)
 {
     typedef GeometricField<Type1, fvPatchField, volMesh> volFieldType1;
     typedef GeometricField<Type1, fvsPatchField, surfaceMesh> surfFieldType1;
@@ -153,11 +153,11 @@ void CML::fieldAverage::addPrime2MeanField(const label fieldI)
     typedef GeometricField<Type2, fvPatchField, volMesh> volFieldType2;
     typedef GeometricField<Type2, fvsPatchField, surfaceMesh> surfFieldType2;
 
-    if (faItems_[fieldI].prime2Mean())
+    if (faItems_[fieldi].prime2Mean())
     {
-        const word& fieldName = faItems_[fieldI].fieldName();
+        const word& fieldName = faItems_[fieldi].fieldName();
 
-        if (!faItems_[fieldI].mean())
+        if (!faItems_[fieldi].mean())
         {
             FatalErrorInFunction
                 << "To calculate the prime-squared average, the "
@@ -167,45 +167,43 @@ void CML::fieldAverage::addPrime2MeanField(const label fieldI)
 
         if (obr_.foundObject<volFieldType1>(fieldName))
         {
-            addPrime2MeanFieldType<volFieldType1, volFieldType2>(fieldI);
+            addPrime2MeanFieldType<volFieldType1, volFieldType2>(fieldi);
         }
         else if (obr_.foundObject<surfFieldType1>(fieldName))
         {
-            addPrime2MeanFieldType<surfFieldType1, surfFieldType2>(fieldI);
+            addPrime2MeanFieldType<surfFieldType1, surfFieldType2>(fieldi);
         }
     }
 }
 
 
 template<class Type>
-void CML::fieldAverage::calculateMeanFieldType(const label fieldI) const
+void CML::fieldAverage::calculateMeanFieldType(const label fieldi) const
 {
-    const word& fieldName = faItems_[fieldI].fieldName();
+    const word& fieldName = faItems_[fieldi].fieldName();
 
     if (obr_.foundObject<Type>(fieldName))
     {
         const Type& baseField = obr_.lookupObject<Type>(fieldName);
 
-        Type& meanField = const_cast<Type&>
-        (
-            obr_.lookupObject<Type>(faItems_[fieldI].meanFieldName())
-        );
+        Type& meanField =
+            obr_.lookupObjectRef<Type>(faItems_[fieldi].meanFieldName());
 
         scalar dt = obr_.time().deltaTValue();
-        scalar Dt = totalTime_[fieldI];
+        scalar Dt = totalTime_[fieldi];
 
-        if (faItems_[fieldI].iterBase())
+        if (faItems_[fieldi].iterBase())
         {
-            dt = 1.0;
-            Dt = scalar(totalIter_[fieldI]);
+            dt = 1;
+            Dt = scalar(totalIter_[fieldi]);
         }
 
         scalar alpha = (Dt - dt)/Dt;
         scalar beta = dt/Dt;
 
-        if (faItems_[fieldI].window() > 0)
+        if (faItems_[fieldi].window() > 0)
         {
-            const scalar w = faItems_[fieldI].window();
+            const scalar w = faItems_[fieldi].window();
 
             if (Dt - dt >= w)
             {
@@ -237,36 +235,34 @@ void CML::fieldAverage::calculateMeanFields() const
 
 
 template<class Type1, class Type2>
-void CML::fieldAverage::calculatePrime2MeanFieldType(const label fieldI) const
+void CML::fieldAverage::calculatePrime2MeanFieldType(const label fieldi) const
 {
-    const word& fieldName = faItems_[fieldI].fieldName();
+    const word& fieldName = faItems_[fieldi].fieldName();
 
     if (obr_.foundObject<Type1>(fieldName))
     {
         const Type1& baseField = obr_.lookupObject<Type1>(fieldName);
         const Type1& meanField =
-            obr_.lookupObject<Type1>(faItems_[fieldI].meanFieldName());
+            obr_.lookupObject<Type1>(faItems_[fieldi].meanFieldName());
 
-        Type2& prime2MeanField = const_cast<Type2&>
-        (
-            obr_.lookupObject<Type2>(faItems_[fieldI].prime2MeanFieldName())
-        );
+        Type2& prime2MeanField =
+            obr_.lookupObjectRef<Type2>(faItems_[fieldi].prime2MeanFieldName());
 
         scalar dt = obr_.time().deltaTValue();
-        scalar Dt = totalTime_[fieldI];
+        scalar Dt = totalTime_[fieldi];
 
-        if (faItems_[fieldI].iterBase())
+        if (faItems_[fieldi].iterBase())
         {
-            dt = 1.0;
-            Dt = scalar(totalIter_[fieldI]);
+            dt = 1;
+            Dt = scalar(totalIter_[fieldi]);
         }
 
         scalar alpha = (Dt - dt)/Dt;
         scalar beta = dt/Dt;
 
-        if (faItems_[fieldI].window() > 0)
+        if (faItems_[fieldi].window() > 0)
         {
-            const scalar w = faItems_[fieldI].window();
+            const scalar w = faItems_[fieldi].window();
 
             if (Dt - dt >= w)
             {
@@ -304,19 +300,17 @@ void CML::fieldAverage::calculatePrime2MeanFields() const
 
 
 template<class Type1, class Type2>
-void CML::fieldAverage::addMeanSqrToPrime2MeanType(const label fieldI) const
+void CML::fieldAverage::addMeanSqrToPrime2MeanType(const label fieldi) const
 {
-    const word& fieldName = faItems_[fieldI].fieldName();
+    const word& fieldName = faItems_[fieldi].fieldName();
 
     if (obr_.foundObject<Type1>(fieldName))
     {
         const Type1& meanField =
-            obr_.lookupObject<Type1>(faItems_[fieldI].meanFieldName());
+            obr_.lookupObject<Type1>(faItems_[fieldi].meanFieldName());
 
-        Type2& prime2MeanField = const_cast<Type2&>
-        (
-            obr_.lookupObject<Type2>(faItems_[fieldI].prime2MeanFieldName())
-        );
+        Type2& prime2MeanField =
+            obr_.lookupObjectRef<Type2>(faItems_[fieldi].prime2MeanFieldName());
 
         prime2MeanField += sqr(meanField);
     }

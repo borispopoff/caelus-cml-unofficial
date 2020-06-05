@@ -166,7 +166,7 @@ inline void CML::refinementDistanceData::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -193,7 +193,7 @@ inline void CML::refinementDistanceData::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -256,7 +256,7 @@ inline bool CML::refinementDistanceData::updateFace
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::refinementDistanceData::equal
 (
     const refinementDistanceData& rhs,

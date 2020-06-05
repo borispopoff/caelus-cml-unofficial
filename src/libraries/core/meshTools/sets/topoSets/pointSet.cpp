@@ -128,11 +128,11 @@ void pointSet::sync(const polyMesh& mesh)
 
     labelHashSet newContents(size());
 
-    forAll(contents, pointI)
+    forAll(contents, pointi)
     {
-        if (contents[pointI])
+        if (contents[pointi])
         {
-            newContents.insert(pointI);
+            newContents.insert(pointi);
         }
     }
 

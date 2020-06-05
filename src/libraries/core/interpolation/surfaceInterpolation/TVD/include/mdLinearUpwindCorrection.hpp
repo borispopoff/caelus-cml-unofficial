@@ -26,7 +26,7 @@ Author
 
 #define makeMDLinearUpwindCorrection(limiterType)                              \
 template<class Type>                                                           \
-CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh> >     \
+CML::tmp<CML::GeometricField<Type, CML::fvsPatchField, CML::surfaceMesh>>      \
 CML::linearUpwindMD##limiterType<Type>::correction                             \
 (                                                                              \
     const GeometricField<Type, fvPatchField, volMesh>& vf                      \
@@ -34,7 +34,7 @@ CML::linearUpwindMD##limiterType<Type>::correction                             \
 {                                                                              \
     fvMesh const& mesh = this->mesh();                                         \
                                                                                \
-    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsfCorr             \
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr              \
     (                                                                          \
         new GeometricField<Type, fvsPatchField, surfaceMesh>                   \
         (                                                                      \
@@ -57,7 +57,7 @@ CML::linearUpwindMD##limiterType<Type>::correction                             \
         )                                                                      \
     );                                                                         \
                                                                                \
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr();      \
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();  \
                                                                                \
     surfaceScalarField const& faceFlux = this->faceFlux_;                      \
                                                                                \
@@ -120,7 +120,7 @@ CML::linearUpwindMD##limiterType<Type>::correction                             \
     }                                                                          \
                                                                                \
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::                \
-        GeometricBoundaryField& bSfCorr = sfCorr.boundaryField();              \
+        Boundary& bSfCorr = sfCorr.boundaryFieldRef();                         \
                                                                                \
     forAll(bSfCorr, patchi)                                                    \
     {                                                                          \

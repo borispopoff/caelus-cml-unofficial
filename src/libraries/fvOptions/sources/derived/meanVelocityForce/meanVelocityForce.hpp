@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -26,15 +26,13 @@ Description
 
     Note: Currently only handles kinematic pressure (incompressible solvers).
 
-    \heading Source usage
+Usage
     Example usage:
     \verbatim
-    meanVelocityForceCoeffs
-    {
-        fieldNames      (U);                    // Name of velocity field
-        Ubar            (10.0 0 0);             // Desired mean velocity
-        relaxation      0.2;                    // Optional relaxation factor
-    }
+    selectionMode   all;                    // Apply force to all cells
+    fields          (U);                    // Name of velocity field
+    Ubar            (10.0 0 0);             // Desired mean velocity
+    relaxation      0.2;                    // Optional relaxation factor
     \endverbatim
 
 SourceFiles
@@ -50,7 +48,7 @@ SourceFiles
 #include "cellSet.hpp"
 #include "fvMesh.hpp"
 #include "volFields.hpp"
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,7 +63,7 @@ namespace fv
 
 class meanVelocityForce
 :
-    public option
+    public cellSetOption
 {
 protected:
 
@@ -102,10 +100,10 @@ protected:
 private:
 
     //- Disallow default bitwise copy construct
-    meanVelocityForce(const meanVelocityForce&);
+    meanVelocityForce(const meanVelocityForce&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const meanVelocityForce&);
+    void operator=(const meanVelocityForce&) = delete;
 
 public:
 
@@ -134,7 +132,7 @@ public:
     virtual void addSup
     (
         fvMatrix<vector>& eqn,
-        const label fieldI
+        const label fieldi
     );
 
     //- Add explicit contribution to compressible momentum equation
@@ -142,14 +140,14 @@ public:
     (
         const volScalarField& rho,
         fvMatrix<vector>& eqn,
-        const label fieldI
+        const label fieldi
     );
 
     //- Set 1/A coefficient
     virtual void setValue
     (
         fvMatrix<vector>& eqn,
-        const label fieldI
+        const label fieldi
     );
 
     //- Write the source properties

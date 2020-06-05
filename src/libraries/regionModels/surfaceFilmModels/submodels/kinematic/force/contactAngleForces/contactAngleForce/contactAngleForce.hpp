@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,10 +68,10 @@ class contactAngleForce
         void initialise();
 
         //- Disallow default bitwise copy construct
-        contactAngleForce(const contactAngleForce&);
+        contactAngleForce(const contactAngleForce&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const contactAngleForce&);
+        void operator=(const contactAngleForce&) = delete;
 
 
 protected:

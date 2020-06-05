@@ -24,7 +24,7 @@ License
 
 // * * * * * * * * * * * *  Private Member Functions * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 void CML::uniformInterpolationTable<Type>::checkTable() const
 {
     if (size() < 2)
@@ -40,7 +40,7 @@ void CML::uniformInterpolationTable<Type>::checkTable() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 (
     const IOobject& io,
@@ -69,7 +69,7 @@ CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 }
 
 
-template <class Type>
+template<class Type>
 CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 (
     const word& tableName,
@@ -108,7 +108,7 @@ CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 }
 
 
-template <class Type>
+template<class Type>
 CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 (
     const uniformInterpolationTable& uit
@@ -127,14 +127,14 @@ CML::uniformInterpolationTable<Type>::uniformInterpolationTable
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::uniformInterpolationTable<Type>::~uniformInterpolationTable()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 Type CML::uniformInterpolationTable<Type>::interpolate(scalar x) const
 {
     if (bound_)
@@ -178,7 +178,7 @@ Type CML::uniformInterpolationTable<Type>::interpolate(scalar x) const
 }
 
 
-template <class Type>
+template<class Type>
 Type CML::uniformInterpolationTable<Type>::interpolateLog10
 (
     scalar x
@@ -207,7 +207,7 @@ Type CML::uniformInterpolationTable<Type>::interpolateLog10
 }
 
 
-template <class Type>
+template<class Type>
 void CML::uniformInterpolationTable<Type>::write() const
 {
     IOdictionary dict(*this);

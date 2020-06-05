@@ -22,6 +22,7 @@ License
 
 
 #include "kOmegaSSTSAS.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -387,6 +388,7 @@ bool kOmegaSSTSAS::read()
 
 void kOmegaSSTSAS::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     RASModel::correct();
 
     if (!turbulence_)
@@ -404,7 +406,7 @@ void kOmegaSSTSAS::correct()
     volScalarField G(GName(), nut_*S2);
 
     // Update omega and G at the wall
-    omega_.boundaryField().updateCoeffs();
+    omega_.boundaryFieldRef().updateCoeffs();
 
     const volScalarField CDkOmega
     (
@@ -443,7 +445,7 @@ void kOmegaSSTSAS::correct()
         )
     );
 
-    volScalarField& LvK = tmpLvK();
+    volScalarField& LvK = tmpLvK.ref();
     
     tmp<volScalarField> tmpDelta 
     ( 
@@ -468,8 +470,8 @@ void kOmegaSSTSAS::correct()
     );
 
     // Cell size
-    volScalarField& delta = tmpDelta(); 
-    scalarField& iDelta = delta.internalField();
+    volScalarField& delta = tmpDelta.ref(); 
+    scalarField& iDelta = delta.primitiveFieldRef();
     iDelta = pow(this->mesh_.V(), 1/3);
 
     dimensionedScalar LapSmall
@@ -514,14 +516,16 @@ void kOmegaSSTSAS::correct()
       - fvm::Sp(beta(F1)*omega_, omega_)
       + 2*(1-F1)*alphaOmega2_*(fvc::grad(k_)&fvc::grad(omega_))/omega_
       + Qsas
+      + fvOptions(omega_)
     );
 
-    omegaEqn().relax();
+    omegaEqn.ref().relax();
+    fvOptions.constrain(omegaEqn.ref());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
 
-    omegaEqn().boundaryManipulate(omega_.boundaryField());
-
-    mesh_.updateFvMatrix(omegaEqn());
+    mesh_.updateFvMatrix(omegaEqn.ref());
     solve(omegaEqn);
+    fvOptions.correct(omega_);
     bound(omega_, omegaMin_);
 
     // Turbulent kinetic energy equation
@@ -533,11 +537,14 @@ void kOmegaSSTSAS::correct()
      ==
         min(G, c1_*betaStar_*k_*omega_)
       - fvm::Sp(betaStar_*omega_, k_)
+      + fvOptions(k_)
     );
 
-    kEqn().relax();
-    mesh_.updateFvMatrix(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
+    mesh_.updateFvMatrix(kEqn.ref());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
 

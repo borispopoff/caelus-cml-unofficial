@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -98,9 +98,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mixedFixedValueSlipFvPatchField<Type>(*this)
             );
@@ -114,12 +114,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new mixedFixedValueSlipFvPatchField<Type>(*this, iF)
             );
@@ -167,16 +167,16 @@ public:
         // Evaluation functions
 
             //- Return gradient at boundary
-            virtual tmp<Field<Type> > snGrad() const;
+            virtual tmp<Field<Type>> snGrad() const;
 
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType=Pstream::commsTypes::blocking
             );
 
             //- Return face-gradient transform diagonal
-            virtual tmp<Field<Type> > snGradTransformDiag() const;
+            virtual tmp<Field<Type>> snGradTransformDiag() const;
 
 
         //- Write
@@ -207,23 +207,16 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "symmTransformField.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+CML::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -236,7 +229,21 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 
 
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+CML::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    transformFvPatchField<Type>(p, iF),
+    refValue_("refValue", dict, p.size()),
+    valueFraction_("valueFraction", dict, p.size())
+{}
+
+
+template<class Type>
+CML::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const mixedFixedValueSlipFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -251,21 +258,7 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 
 
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    transformFvPatchField<Type>(p, iF),
-    refValue_("refValue", dict, p.size()),
-    valueFraction_("valueFraction", dict, p.size())
-{}
-
-
-template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+CML::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const mixedFixedValueSlipFvPatchField<Type>& ptf
 )
@@ -275,8 +268,9 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
     valueFraction_(ptf.valueFraction_)
 {}
 
+
 template<class Type>
-mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
+CML::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 (
     const mixedFixedValueSlipFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -287,11 +281,11 @@ mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
     valueFraction_(ptf.valueFraction_)
 {}
 
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Map from self
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::autoMap
+void CML::mixedFixedValueSlipFvPatchField<Type>::autoMap
 (
     const fvPatchFieldMapper& m
 )
@@ -302,9 +296,8 @@ void mixedFixedValueSlipFvPatchField<Type>::autoMap
 }
 
 
-// Reverse-map the given fvPatchField onto this fvPatchField
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::rmap
+void CML::mixedFixedValueSlipFvPatchField<Type>::rmap
 (
     const fvPatchField<Type>& ptf,
     const labelList& addr
@@ -313,16 +306,16 @@ void mixedFixedValueSlipFvPatchField<Type>::rmap
     transformFvPatchField<Type>::rmap(ptf, addr);
 
     const mixedFixedValueSlipFvPatchField<Type>& dmptf =
-        refCast<const mixedFixedValueSlipFvPatchField<Type> >(ptf);
+        refCast<const mixedFixedValueSlipFvPatchField<Type>>(ptf);
 
     refValue_.rmap(dmptf.refValue_, addr);
     valueFraction_.rmap(dmptf.valueFraction_, addr);
 }
 
 
-// Return gradient at boundary
 template<class Type>
-tmp<Field<Type> > mixedFixedValueSlipFvPatchField<Type>::snGrad() const
+CML::tmp<CML::Field<Type>>
+CML::mixedFixedValueSlipFvPatchField<Type>::snGrad() const
 {
     tmp<vectorField> nHat = this->patch().nf();
     Field<Type> pif(this->patchInternalField());
@@ -335,9 +328,11 @@ tmp<Field<Type> > mixedFixedValueSlipFvPatchField<Type>::snGrad() const
 }
 
 
-// Evaluate the field on the patch
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::evaluate(const Pstream::commsTypes)
+void CML::mixedFixedValueSlipFvPatchField<Type>::evaluate
+(
+    const Pstream::commsTypes
+)
 {
     if (!this->updated())
     {
@@ -358,10 +353,9 @@ void mixedFixedValueSlipFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 }
 
 
-// Return defining fields
 template<class Type>
-tmp<Field<Type> >
-mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
+CML::tmp<CML::Field<Type>>
+CML::mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
 {
     vectorField nHat(this->patch().nf());
     vectorField diag(nHat.size());
@@ -374,7 +368,7 @@ mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
 #   ifdef _WIN32
     typedef typename powProduct<vector, pTraits<Type>::rank>::type prodType;
 
-     tmp<Field<prodType> > a =
+     tmp<Field<prodType>> a =
           pow<vector, pTraits<Type>::rank>(diag, pTraits<prodType>::zero);
 
     return
@@ -389,23 +383,13 @@ mixedFixedValueSlipFvPatchField<Type>::snGradTransformDiag() const
 }
 
 
-// Write
 template<class Type>
-void mixedFixedValueSlipFvPatchField<Type>::write(Ostream& os) const
+void CML::mixedFixedValueSlipFvPatchField<Type>::write(Ostream& os) const
 {
     transformFvPatchField<Type>::write(os);
-    refValue_.writeEntry("refValue", os);
-    valueFraction_.writeEntry("valueFraction", os);
+    writeEntry(os, "refValue", refValue_);
+    writeEntry(os, "valueFraction", valueFraction_);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -70,10 +70,10 @@ class STLsurfaceFormatCore
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        STLsurfaceFormatCore(const STLsurfaceFormatCore&);
+        STLsurfaceFormatCore(const STLsurfaceFormatCore&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const STLsurfaceFormatCore&);
+        void operator=(const STLsurfaceFormatCore&) = delete;
 
         //- Determine the file type
         static int detectBINARY(const fileName&);

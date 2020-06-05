@@ -21,6 +21,8 @@ License
 
 #include "cyclicAMIPointPatch.hpp"
 #include "pointBoundaryMesh.hpp"
+#include "pointMesh.hpp"
+#include "Time.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -90,6 +92,16 @@ CML::cyclicAMIPointPatch::cyclicAMIPointPatch
 
 CML::cyclicAMIPointPatch::~cyclicAMIPointPatch()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool CML::cyclicAMIPointPatch::coupled() const
+{
+    return
+        Pstream::parRun()
+     || !this->boundaryMesh().mesh().mesh().time().processorCase();
+}
 
 
 // ************************************************************************* //

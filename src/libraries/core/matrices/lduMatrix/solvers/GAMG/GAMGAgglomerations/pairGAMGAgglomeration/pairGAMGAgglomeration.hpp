@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -75,12 +75,6 @@ protected:
 
         void combineLevels(const label curLevel);
 
-        //- Disallow default bitwise copy construct
-        pairGAMGAgglomeration(const pairGAMGAgglomeration&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pairGAMGAgglomeration&);
-
 
 public:
 
@@ -96,6 +90,15 @@ public:
             const lduMesh& mesh,
             const dictionary& controlDict
         );
+
+        //- Disallow default bitwise copy construct
+        pairGAMGAgglomeration(const pairGAMGAgglomeration&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pairGAMGAgglomeration&) = delete;
 };
 
 

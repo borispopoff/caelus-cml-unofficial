@@ -161,7 +161,7 @@ CML::edgeSurface::edgeSurface
 
     DynamicList<edge> allEdges(surf.nEdges() + inter.cutEdges().size());
     DynamicList<label> allParentEdges(surf.nEdges());
-    List<DynamicList<label> > allFaceEdges(surf.size());
+    List<DynamicList<label>> allFaceEdges(surf.size());
 
 
     // Copy surface edges (can be split!)

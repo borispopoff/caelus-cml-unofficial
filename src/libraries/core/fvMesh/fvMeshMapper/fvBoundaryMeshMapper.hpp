@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -44,15 +44,6 @@ class fvBoundaryMeshMapper
 :
     public PtrList<fvPatchMapper>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        fvBoundaryMeshMapper(const fvBoundaryMeshMapper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvBoundaryMeshMapper&);
-
-
 public:
 
     // Constructors
@@ -68,19 +59,28 @@ public:
         {
             const fvBoundaryMesh& patches = mesh.boundary();
 
-            forAll(patches, patchI)
+            forAll(patches, patchi)
             {
                 set
                 (
-                    patchI,
+                    patchi,
                     new fvPatchMapper
                     (
-                        patches[patchI],
+                        patches[patchi],
                         faceMap
                     )
                 );
             }
         }
+
+        //- Disallow default bitwise copy construct
+        fvBoundaryMeshMapper(const fvBoundaryMeshMapper&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvBoundaryMeshMapper&) = delete;
 };
 
 

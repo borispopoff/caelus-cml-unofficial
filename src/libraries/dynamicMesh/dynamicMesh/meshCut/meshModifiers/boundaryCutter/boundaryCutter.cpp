@@ -46,7 +46,7 @@ namespace CML
 
 void CML::boundaryCutter::getFaceInfo
 (
-    const label faceI,
+    const label facei,
     label& patchID,
     label& zoneID,
     label& zoneFlip
@@ -54,12 +54,12 @@ void CML::boundaryCutter::getFaceInfo
 {
     patchID = -1;
 
-    if (!mesh_.isInternalFace(faceI))
+    if (!mesh_.isInternalFace(facei))
     {
-        patchID = mesh_.boundaryMesh().whichPatch(faceI);
+        patchID = mesh_.boundaryMesh().whichPatch(facei);
     }
 
-    zoneID = mesh_.faceZones().whichZone(faceI);
+    zoneID = mesh_.faceZones().whichZone(facei);
 
     zoneFlip = false;
 
@@ -67,7 +67,7 @@ void CML::boundaryCutter::getFaceInfo
     {
         const faceZone& fZone = mesh_.faceZones()[zoneID];
 
-        zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
     }
 }
 
@@ -76,13 +76,13 @@ void CML::boundaryCutter::getFaceInfo
 // are not split but still might use edge that has been cut.
 CML::face CML::boundaryCutter::addEdgeCutsToFace
 (
-    const label faceI,
+    const label facei,
     const Map<labelList>& edgeToAddedPoints
 ) const
 {
     const edgeList& edges = mesh_.edges();
-    const face& f = mesh_.faces()[faceI];
-    const labelList& fEdges = mesh_.faceEdges()[faceI];
+    const face& f = mesh_.faces()[facei];
+    const labelList& fEdges = mesh_.faceEdges()[facei];
 
     // Storage for face
     DynamicList<label> newFace(2 * f.size());
@@ -139,18 +139,18 @@ CML::face CML::boundaryCutter::addEdgeCutsToFace
 
 void CML::boundaryCutter::addFace
 (
-    const label faceI,
+    const label facei,
     const face& newFace,
 
-    bool& modifiedFace,     // have we already 'used' faceI
+    bool& modifiedFace,     // have we already 'used' facei
     polyTopoChange& meshMod
 ) const
 {
     // Information about old face
     label patchID, zoneID, zoneFlip;
-    getFaceInfo(faceI, patchID, zoneID, zoneFlip);
-    label own = mesh_.faceOwner()[faceI];
-    label masterPoint = mesh_.faces()[faceI][0];
+    getFaceInfo(facei, patchID, zoneID, zoneFlip);
+    label own = mesh_.faceOwner()[facei];
+    label masterPoint = mesh_.faces()[facei][0];
 
     if (!modifiedFace)
     {
@@ -159,7 +159,7 @@ void CML::boundaryCutter::addFace
             polyModifyFace
             (
                 newFace,       // face
-                faceI,
+                facei,
                 own,           // owner
                 -1,            // neighbour
                 false,         // flux flip
@@ -198,15 +198,15 @@ void CML::boundaryCutter::addFace
 // Splits a face using the cut edges and modified points
 bool CML::boundaryCutter::splitFace
 (
-    const label faceI,
+    const label facei,
     const Map<point>& pointToPos,
     const Map<labelList>& edgeToAddedPoints,
     polyTopoChange& meshMod
 ) const
 {
     const edgeList& edges = mesh_.edges();
-    const face& f = mesh_.faces()[faceI];
-    const labelList& fEdges = mesh_.faceEdges()[faceI];
+    const face& f = mesh_.faces()[facei];
+    const labelList& fEdges = mesh_.faceEdges()[facei];
 
     // Count number of split edges and total number of splits.
     label nSplitEdges = 0;
@@ -237,7 +237,7 @@ bool CML::boundaryCutter::splitFace
 
     if (debug)
     {
-        Pout<< "Face:" << faceI
+        Pout<< "Face:" << facei
             << " nModPoints:" << nModPoints
             << " nSplitEdges:" << nSplitEdges
             << " nTotalSplits:" << nTotalSplits << endl;
@@ -245,7 +245,7 @@ bool CML::boundaryCutter::splitFace
 
     if (nSplitEdges == 0 && nModPoints == 0)
     {
-        FatalErrorInFunction << "Problem : face:" << faceI
+        FatalErrorInFunction << "Problem : face:" << facei
             << " nSplitEdges:" << nSplitEdges
             << " nTotalSplits:" << nTotalSplits
             << abort(FatalError);
@@ -255,7 +255,7 @@ bool CML::boundaryCutter::splitFace
     {
         // single or multiple cuts on a single edge or single modified point
         // Don't cut and let caller handle this.
-        Warning << "Face " << faceI << " has only one edge cut " << endl;
+        Warning << "Face " << facei << " has only one edge cut " << endl;
         return false;
     }
     else
@@ -267,10 +267,10 @@ bool CML::boundaryCutter::splitFace
 
         // Information about old face
         label patchID, zoneID, zoneFlip;
-        getFaceInfo(faceI, patchID, zoneID, zoneFlip);
+        getFaceInfo(facei, patchID, zoneID, zoneFlip);
 
         // Get face with new points on cut edges for ease of looping
-        face extendedFace(addEdgeCutsToFace(faceI, edgeToAddedPoints));
+        face extendedFace(addEdgeCutsToFace(facei, edgeToAddedPoints));
 
         // Find first added point. This is the starting vertex for splitting.
         label startFp = -1;
@@ -335,16 +335,16 @@ bool CML::boundaryCutter::splitFace
 
         forAll(extendedFace, i)
         {
-            label pointI = extendedFace[fp];
+            label pointi = extendedFace[fp];
 
-            newFace.append(pointI);
+            newFace.append(pointi);
 
             if
             (
                 newFace.size() > 2
              && (
-                    pointI >= mesh_.nPoints()
-                 || pointToPos.found(pointI)
+                    pointi >= mesh_.nPoints()
+                 || pointToPos.found(pointi)
                 )
             )
             {
@@ -353,7 +353,7 @@ bool CML::boundaryCutter::splitFace
                 tmpFace.transfer(newFace);
 
                 // Add face tmpFace
-                addFace(faceI, tmpFace, modifiedFace, meshMod);
+                addFace(facei, tmpFace, modifiedFace, meshMod);
 
                 // Starting point is also the starting point for the new face
                 newFace.append(extendedFace[startFp]);
@@ -371,7 +371,7 @@ bool CML::boundaryCutter::splitFace
             tmpFace.transfer(newFace);
 
             // Add face tmpFace
-            addFace(faceI, tmpFace, modifiedFace, meshMod);
+            addFace(facei, tmpFace, modifiedFace, meshMod);
         }
 
         // Split something
@@ -402,7 +402,7 @@ CML::boundaryCutter::~boundaryCutter()
 void CML::boundaryCutter::setRefinement
 (
     const Map<point>& pointToPos,
-    const Map<List<point> >& edgeToCuts,
+    const Map<List<point>>& edgeToCuts,
     const Map<labelPair>& faceToSplit,
     const Map<point>& faceToFeaturePoint,
     polyTopoChange& meshMod
@@ -443,7 +443,7 @@ void CML::boundaryCutter::setRefinement
     // Map from edge label to sorted list of points
     Map<labelList> edgeToAddedPoints(edgeToCuts.size());
 
-    forAllConstIter(Map<List<point> >, edgeToCuts, iter)
+    forAllConstIter(Map<List<point>>, edgeToCuts, iter)
     {
         label edgeI = iter.key();
 
@@ -457,7 +457,7 @@ void CML::boundaryCutter::setRefinement
             // point on feature to move to
             const point& featurePoint = cuts[cutI];
 
-            label addedPointI =
+            label addedPointi =
                 meshMod.setAction
                 (
                     polyAddPoint
@@ -477,16 +477,16 @@ void CML::boundaryCutter::setRefinement
 
                 label sz = addedPoints.size();
                 addedPoints.setSize(sz+1);
-                addedPoints[sz] = addedPointI;
+                addedPoints[sz] = addedPointi;
             }
             else
             {
-                edgeToAddedPoints.insert(edgeI, labelList(1, addedPointI));
+                edgeToAddedPoints.insert(edgeI, labelList(1, addedPointi));
             }
 
             if (debug)
             {
-                Pout<< "Added point " << addedPointI << " for edge " << edgeI
+                Pout<< "Added point " << addedPointi << " for edge " << edgeI
                     << " with cuts:" << edgeToAddedPoints[edgeI] << endl;
             }
         }
@@ -499,28 +499,28 @@ void CML::boundaryCutter::setRefinement
 
     forAllConstIter(Map<point>, faceToFeaturePoint, iter)
     {
-        label faceI = iter.key();
+        label facei = iter.key();
 
-        const face& f = mesh_.faces()[faceI];
+        const face& f = mesh_.faces()[facei];
 
-        if (faceToSplit.found(faceI))
+        if (faceToSplit.found(facei))
         {
             FatalErrorInFunction
-                << "Face " << faceI << " vertices " << f
+                << "Face " << facei << " vertices " << f
                 << " is both marked for face-centre decomposition and"
                 << " diagonal splitting."
                 << abort(FatalError);
         }
 
-        if (mesh_.isInternalFace(faceI))
+        if (mesh_.isInternalFace(facei))
         {
             FatalErrorInFunction
-                << "Face " << faceI << " vertices " << f
+                << "Face " << facei << " vertices " << f
                 << " is not an external face. Cannot split it"
                 << abort(FatalError);
         }
 
-        label addedPointI =
+        label addedPointi =
             meshMod.setAction
             (
                 polyAddPoint
@@ -531,13 +531,13 @@ void CML::boundaryCutter::setRefinement
                     true    // supports a cell
                 )
             );
-        faceAddedPoint_.insert(faceI, addedPointI);
+        faceAddedPoint_.insert(facei, addedPointi);
 
         if (debug)
         {
-            Pout<< "Added point " << addedPointI << " for feature point "
-                << iter() << " on face " << faceI << " with centre "
-                << mesh_.faceCentres()[faceI] << endl;
+            Pout<< "Added point " << addedPointi << " for feature point "
+                << iter() << " on face " << facei << " with centre "
+                << mesh_.faceCentres()[facei] << endl;
         }
     }
 
@@ -555,18 +555,18 @@ void CML::boundaryCutter::setRefinement
     // Triangulate faces containing feature points
     forAllConstIter(Map<label>, faceAddedPoint_, iter)
     {
-        label faceI = iter.key();
+        label facei = iter.key();
 
         // Get face with new points on cut edges.
-        face newFace(addEdgeCutsToFace(faceI, edgeToAddedPoints));
+        face newFace(addEdgeCutsToFace(facei, edgeToAddedPoints));
 
-        label addedPointI = iter();
+        label addedPointi = iter();
 
         // Information about old face
         label patchID, zoneID, zoneFlip;
-        getFaceInfo(faceI, patchID, zoneID, zoneFlip);
-        label own = mesh_.faceOwner()[faceI];
-        label masterPoint = mesh_.faces()[faceI][0];
+        getFaceInfo(facei, patchID, zoneID, zoneFlip);
+        label own = mesh_.faceOwner()[facei];
+        label masterPoint = mesh_.faces()[facei][0];
 
         // Triangulate face around mid point
 
@@ -578,7 +578,7 @@ void CML::boundaryCutter::setRefinement
 
             tri[0] = newFace[fp];
             tri[1] = nextV;
-            tri[2] = addedPointI;
+            tri[2] = addedPointi;
 
             if (fp == 0)
             {
@@ -588,7 +588,7 @@ void CML::boundaryCutter::setRefinement
                     polyModifyFace
                     (
                         tri,                        // face
-                        faceI,
+                        facei,
                         own,                        // owner
                         -1,                         // neighbour
                         false,                      // flux flip
@@ -621,21 +621,21 @@ void CML::boundaryCutter::setRefinement
             }
         }
 
-        faceUptodate[faceI] = true;
+        faceUptodate[facei] = true;
     }
 
 
     // Diagonally split faces
     forAllConstIter(Map<labelPair>, faceToSplit, iter)
     {
-        label faceI = iter.key();
+        label facei = iter.key();
 
-        const face& f = mesh_.faces()[faceI];
+        const face& f = mesh_.faces()[facei];
 
-        if (faceAddedPoint_.found(faceI))
+        if (faceAddedPoint_.found(facei))
         {
             FatalErrorInFunction
-                << "Face " << faceI << " vertices " << f
+                << "Face " << facei << " vertices " << f
                 << " is both marked for face-centre decomposition and"
                 << " diagonal splitting."
                 << abort(FatalError);
@@ -643,13 +643,13 @@ void CML::boundaryCutter::setRefinement
 
 
         // Get face with new points on cut edges.
-        face newFace(addEdgeCutsToFace(faceI, edgeToAddedPoints));
+        face newFace(addEdgeCutsToFace(facei, edgeToAddedPoints));
 
         // Information about old face
         label patchID, zoneID, zoneFlip;
-        getFaceInfo(faceI, patchID, zoneID, zoneFlip);
-        label own = mesh_.faceOwner()[faceI];
-        label masterPoint = mesh_.faces()[faceI][0];
+        getFaceInfo(facei, patchID, zoneID, zoneFlip);
+        label own = mesh_.faceOwner()[facei];
+        label masterPoint = mesh_.faces()[facei][0];
 
         // Split face from one side of diagonal to other.
         const labelPair& diag = iter();
@@ -660,7 +660,7 @@ void CML::boundaryCutter::setRefinement
         if (fp0 == -1 || fp1 == -1 || fp0 == fp1)
         {
             FatalErrorInFunction
-                << "Problem : Face " << faceI << " vertices " << f
+                << "Problem : Face " << facei << " vertices " << f
                 << " newFace:" << newFace << " diagonal:" << f[diag[0]]
                 << ' ' << f[diag[1]]
                 << abort(FatalError);
@@ -691,7 +691,7 @@ void CML::boundaryCutter::setRefinement
             polyModifyFace
             (
                 face(newVerts.shrink()),    // face
-                faceI,
+                facei,
                 own,                        // owner
                 -1,                         // neighbour
                 false,                      // flux flip
@@ -735,7 +735,7 @@ void CML::boundaryCutter::setRefinement
             )
         );
 
-        faceUptodate[faceI] = true;
+        faceUptodate[facei] = true;
     }
 
 
@@ -749,15 +749,15 @@ void CML::boundaryCutter::setRefinement
 
         forAll(eFaces, i)
         {
-            label faceI = eFaces[i];
+            label facei = eFaces[i];
 
-            if (!faceUptodate[faceI] && !mesh_.isInternalFace(faceI))
+            if (!faceUptodate[facei] && !mesh_.isInternalFace(facei))
             {
                 // Is external face so split
-                if (splitFace(faceI, pointToPos, edgeToAddedPoints, meshMod))
+                if (splitFace(facei, pointToPos, edgeToAddedPoints, meshMod))
                 {
                     // Successful split
-                    faceUptodate[faceI] = true;
+                    faceUptodate[facei] = true;
                 }
             }
         }
@@ -775,31 +775,31 @@ void CML::boundaryCutter::setRefinement
 
         forAll(eFaces, i)
         {
-            label faceI = eFaces[i];
+            label facei = eFaces[i];
 
-            if (!faceUptodate[faceI])
+            if (!faceUptodate[facei])
             {
                 // Renumber face to include split edges.
-                face newFace(addEdgeCutsToFace(faceI, edgeToAddedPoints));
+                face newFace(addEdgeCutsToFace(facei, edgeToAddedPoints));
 
-                label own = mesh_.faceOwner()[faceI];
+                label own = mesh_.faceOwner()[facei];
 
                 label nei = -1;
 
-                if (mesh_.isInternalFace(faceI))
+                if (mesh_.isInternalFace(facei))
                 {
-                    nei = mesh_.faceNeighbour()[faceI];
+                    nei = mesh_.faceNeighbour()[facei];
                 }
 
                 label patchID, zoneID, zoneFlip;
-                getFaceInfo(faceI, patchID, zoneID, zoneFlip);
+                getFaceInfo(facei, patchID, zoneID, zoneFlip);
 
                 meshMod.setAction
                 (
                     polyModifyFace
                     (
                         newFace,            // modified face
-                        faceI,              // label of face being modified
+                        facei,              // label of face being modified
                         own,                // owner
                         nei,                // neighbour
                         false,              // face flip
@@ -810,7 +810,7 @@ void CML::boundaryCutter::setRefinement
                     )
                 );
 
-                faceUptodate[faceI] = true;
+                faceUptodate[facei] = true;
             }
         }
     }
@@ -840,17 +840,17 @@ void CML::boundaryCutter::updateMesh(const mapPolyMesh& morphMap)
 
         forAllConstIter(Map<label>, faceAddedPoint_, iter)
         {
-            label oldFaceI = iter.key();
+            label oldFacei = iter.key();
 
-            label newFaceI = morphMap.reverseFaceMap()[oldFaceI];
+            label newFacei = morphMap.reverseFaceMap()[oldFacei];
 
-            label oldPointI = iter();
+            label oldPointi = iter();
 
-            label newPointI = morphMap.reversePointMap()[oldPointI];
+            label newPointi = morphMap.reversePointMap()[oldPointi];
 
-            if (newFaceI >= 0 && newPointI >= 0)
+            if (newFacei >= 0 && newPointi >= 0)
             {
-                newAddedPoints.insert(newFaceI, newPointI);
+                newAddedPoints.insert(newFacei, newPointi);
             }
         }
 
@@ -866,12 +866,12 @@ void CML::boundaryCutter::updateMesh(const mapPolyMesh& morphMap)
 
     {
         // Create copy since we're deleting entries
-        HashTable<labelList, edge, Hash<edge> >
+        HashTable<labelList, edge, Hash<edge>>
             newEdgeAddedPoints(edgeAddedPoints_.size());
 
         for
         (
-            HashTable<labelList, edge, Hash<edge> >::const_iterator iter =
+            HashTable<labelList, edge, Hash<edge>>::const_iterator iter =
                 edgeAddedPoints_.begin();
             iter != edgeAddedPoints_.end();
             ++iter

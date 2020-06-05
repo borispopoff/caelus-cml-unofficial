@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -27,9 +27,9 @@ CML::globalIndex::globalIndex()
 {}
 
 
-CML::globalIndex::globalIndex(const Xfer<labelList>& offsets)
+CML::globalIndex::globalIndex(labelList&& offsets)
 :
-    offsets_(offsets)
+    offsets_(move(offsets))
 {}
 
 

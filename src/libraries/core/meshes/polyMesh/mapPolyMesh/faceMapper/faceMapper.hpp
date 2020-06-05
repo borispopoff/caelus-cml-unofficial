@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -85,13 +85,6 @@ class faceMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        faceMapper(const faceMapper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceMapper&);
-
-
         //- Calculate addressing for mapping with inserted faces
         void calcAddressing() const;
 
@@ -107,6 +100,9 @@ public:
 
         //- Construct from mapPolyMesh
         faceMapper(const mapPolyMesh& mpm);
+
+        //- Disallow default bitwise copy construct
+        faceMapper(const faceMapper&) = delete;
 
 
     //- Destructor
@@ -164,6 +160,12 @@ public:
 
         //- Return list of inserted faces
         virtual const labelList& insertedObjectLabels() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const faceMapper&) = delete;
 };
 
 

@@ -102,9 +102,9 @@ public:
     );
 
     //- Construct and return a clone
-    virtual tmp<fvPatchField<Type> > clone() const
+    virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
                 (
                     new groovyBCFvPatchField<Type>(*this)
                 );
@@ -118,12 +118,12 @@ public:
     );
 
     //- Construct and return a clone setting internal field reference
-    virtual tmp<fvPatchField<Type> > clone
+    virtual tmp<fvPatchField<Type>> clone
     (
         const DimensionedField<Type, volMesh>& iF
     ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
                 (
                     new groovyBCFvPatchField<Type>(*this, iF)
                 );
@@ -230,7 +230,7 @@ groovyBCFvPatchField<Type>::groovyBCFvPatchField
     {
         fvPatchField<Type>::operator=(this->refValue());
         WarningInFunction
-            << "No value defined for " << this->dimensionedInternalField().name()
+            << "No value defined for " << this->internalField().name()
             << " on " << this->patch().name() << " therefore using "
             << this->refValue()
             << endl;

@@ -82,10 +82,10 @@ CML::labelList CML::meshRefinement::getChangedFaces
 
         // 1. Internal faces
 
-        for (label faceI = 0; faceI < nInternalFaces; faceI++)
+        for (label facei = 0; facei < nInternalFaces; facei++)
         {
-            label oldOwn = map.cellMap()[faceOwner[faceI]];
-            label oldNei = map.cellMap()[faceNeighbour[faceI]];
+            label oldOwn = map.cellMap()[faceOwner[facei]];
+            label oldNei = map.cellMap()[faceNeighbour[facei]];
 
             if
             (
@@ -99,7 +99,7 @@ CML::labelList CML::meshRefinement::getChangedFaces
             }
             else
             {
-                refinedInternalFace.set(faceI, 1u);
+                refinedInternalFace.set(facei, 1u);
             }
         }
 
@@ -108,15 +108,15 @@ CML::labelList CML::meshRefinement::getChangedFaces
 
         boolList refinedBoundaryFace(mesh.nFaces()-nInternalFaces, false);
 
-        forAll(mesh.boundaryMesh(), patchI)
+        forAll(mesh.boundaryMesh(), patchi)
         {
-            const polyPatch& pp = mesh.boundaryMesh()[patchI];
+            const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                label oldOwn = map.cellMap()[faceOwner[faceI]];
+                label oldOwn = map.cellMap()[faceOwner[facei]];
 
                 if (oldOwn >= 0 && oldRefineCell.get(oldOwn) == 0u)
                 {
@@ -124,9 +124,9 @@ CML::labelList CML::meshRefinement::getChangedFaces
                 }
                 else
                 {
-                    refinedBoundaryFace[faceI-nInternalFaces] = true;
+                    refinedBoundaryFace[facei-nInternalFaces] = true;
                 }
-                faceI++;
+                facei++;
             }
         }
 
@@ -144,16 +144,16 @@ CML::labelList CML::meshRefinement::getChangedFaces
         //    - refinedBoundaryFace
         boolList changedFace(mesh.nFaces(), false);
 
-        forAll(refinedInternalFace, faceI)
+        forAll(refinedInternalFace, facei)
         {
-            if (refinedInternalFace.get(faceI) == 1u)
+            if (refinedInternalFace.get(facei) == 1u)
             {
-                const cell& ownFaces = cells[faceOwner[faceI]];
+                const cell& ownFaces = cells[faceOwner[facei]];
                 forAll(ownFaces, ownI)
                 {
                     changedFace[ownFaces[ownI]] = true;
                 }
-                const cell& neiFaces = cells[faceNeighbour[faceI]];
+                const cell& neiFaces = cells[faceNeighbour[facei]];
                 forAll(neiFaces, neiI)
                 {
                     changedFace[neiFaces[neiI]] = true;
@@ -189,9 +189,9 @@ CML::labelList CML::meshRefinement::getChangedFaces
         // Count changed master faces.
         nMasterChanged = 0;
 
-        forAll(changedFace, faceI)
+        forAll(changedFace, facei)
         {
-            if (changedFace[faceI] && isMasterFace[faceI])
+            if (changedFace[facei] && isMasterFace[facei])
             {
                 nMasterChanged++;
             }
@@ -435,10 +435,10 @@ void CML::meshRefinement::markFeatureCellLevel
         const trackedParticle& startTp = iter();
 
         label featI = startTp.i();
-        label pointI = startTp.j();
+        label pointi = startTp.j();
 
         const featureEdgeMesh& featureMesh = features_[featI];
-        const labelList& pEdges = featureMesh.pointEdges()[pointI];
+        const labelList& pEdges = featureMesh.pointEdges()[pointi];
 
         // Now shoot particles down all pEdges.
         forAll(pEdges, pEdgeI)
@@ -451,7 +451,7 @@ void CML::meshRefinement::markFeatureCellLevel
                 // on the edge.
 
                 const edge& e = featureMesh.edges()[edgeI];
-                label otherPointi = e.otherVertex(pointI);
+                label otherPointi = e.otherVertex(pointi);
 
                 trackedParticle* tp(new trackedParticle(startTp));
                 tp->start() = tp->position();
@@ -461,7 +461,7 @@ void CML::meshRefinement::markFeatureCellLevel
 
                 if (debug)
                 {
-                    Pout<< "Adding particle for point:" << pointI
+                    Pout<< "Adding particle for point:" << pointi
                         << " coord:" << tp->position()
                         << " feature:" << featI
                         << " to track to:" << tp->end()
@@ -493,12 +493,12 @@ void CML::meshRefinement::markFeatureCellLevel
             trackedParticle& tp = iter();
 
             label featI = tp.i();
-            label pointI = tp.j();
+            label pointi = tp.j();
 
             const featureEdgeMesh& featureMesh = features_[featI];
-            const labelList& pEdges = featureMesh.pointEdges()[pointI];
+            const labelList& pEdges = featureMesh.pointEdges()[pointi];
 
-            // Particle now at pointI. Check connected edges to see which one
+            // Particle now at pointi. Check connected edges to see which one
             // we have to visit now.
 
             bool keepParticle = false;
@@ -513,7 +513,7 @@ void CML::meshRefinement::markFeatureCellLevel
                     // on the edge.
 
                     const edge& e = featureMesh.edges()[edgeI];
-                    label otherPointi = e.otherVertex(pointI);
+                    label otherPointi = e.otherVertex(pointi);
 
                     tp.start() = tp.position();
                     tp.end() = featureMesh.points()[otherPointi];
@@ -1020,7 +1020,7 @@ CML::label CML::meshRefinement::markSurfaceCurvatureRefinement
     // minLevel) and cache per cell the max surface level and the local normal
     // on that surface.
     labelList cellMaxLevel(mesh_.nCells(), -1);
-    vectorField cellMaxNormal(mesh_.nCells(), vector::zero);
+    vectorField cellMaxNormal(mesh_.nCells(), Zero);
 
     {
         // Per segment the normals of the surfaces

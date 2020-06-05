@@ -19,7 +19,6 @@ caelus_inc = [
 'transportModels/incompressible/singlePhaseTransportModel',
 'transportModels/incompressible/lnInclude',
 'transportModels/interfaceProperties/lnInclude',
-'fvOptions/lnInclude',
 'sampling/lnInclude',
 'dynamicMesh/dynamicMesh/lnInclude',
 'dynamicMesh/dynamicFvMesh/lnInclude',
@@ -54,7 +53,7 @@ ostype = utils.ostype()
 prepend_args = {}
 if ostype == 'windows':
    prepend_args = {'LINKFLAGS' :
-            '-u incompressibleRASModelsLoad -u incompressibleLESModelsLoad -u incompressibleVLESModelsLoad -u interfacePropertiesLoad -u turbulenceDerivedFvPatchFieldsLoad'
+            '-u incompressibleRASModelsLoad -u incompressibleLESModelsLoad -u incompressibleVLESModelsLoad -u interfacePropertiesLoad -u turbulenceDerivedFvPatchFieldsLoad -u fvOptionsLoad'
 }
 
 build_app(env,

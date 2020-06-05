@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -86,7 +86,7 @@ class hierarchGeomDecomp
             scalarField& sortedWeightedSizes
         );
 
-        //- Find index of t in list inbetween indices left and right
+        //- Find index of t in list in between indices left and right
         static label findLower
         (
             const List<scalar>&,
@@ -138,7 +138,7 @@ class hierarchGeomDecomp
         );
 
         //- Recursively sort in x,y,z (or rather acc. to decompOrder_)
-        //- using weighted points.
+        //- Using weighted points.
         void sortComponent
         (
             const label sizeTol,
@@ -151,7 +151,7 @@ class hierarchGeomDecomp
         );
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const hierarchGeomDecomp&);
+        void operator=(const hierarchGeomDecomp&) = delete;
         hierarchGeomDecomp(const hierarchGeomDecomp&);
 
 
@@ -174,7 +174,7 @@ public:
 
     // Member Functions
 
-        //- hierarchgeom is aware of processor boundaries
+        //- Hierarchgeom is aware of processor boundaries
         virtual bool parallelAware() const
         {
             return true;

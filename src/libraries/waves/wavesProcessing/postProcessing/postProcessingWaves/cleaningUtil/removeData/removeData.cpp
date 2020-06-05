@@ -111,7 +111,7 @@ void removeData::evaluate()
     {
         Info << "        - Removing data in ascii format" << endl;
 
-        fileNameList fnl = CML::readDir(fn, CML::fileName::FILE);
+        fileNameList fnl = CML::readDir(fn, CML::fileType::file);
 
         forAll (fnl, fi)
         {

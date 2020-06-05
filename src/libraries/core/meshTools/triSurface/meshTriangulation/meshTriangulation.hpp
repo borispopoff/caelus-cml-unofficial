@@ -70,7 +70,7 @@ class meshTriangulation
         (
             const primitiveMesh&,
             const boolList& includedCell,
-            const label faceI
+            const label facei
         );
 
         //- find boundary faces of subset.
@@ -87,7 +87,7 @@ class meshTriangulation
         void insertTriangles
         (
             const triFaceList&,
-            const label faceI,
+            const label facei,
             const label regionI,
             const bool reverse,
 

@@ -90,7 +90,7 @@ void phaseChangeModel::correct
         dEnergy
     );
 
-    latestMassPC_ = sum(dMass.internalField());
+    latestMassPC_ = sum(dMass.primitiveField());
     totalMassPC_ += latestMassPC_;
 
     availableMass -= dMass;

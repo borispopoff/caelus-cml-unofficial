@@ -1611,20 +1611,20 @@ DebugSwitches
     pointMesh                                           0;
     pointPatchField                                     0;
     pointScalarField                                    0;
-    pointScalarField::DimensionedInternalField          0;
+    pointScalarField::Internal                          0;
     pointSet                                            0;
     pointSphericalTensorField                           0;
-    pointSphericalTensorField::DimensionedInternalField 0;
+    pointSphericalTensorField::Internal                 0;
     pointSymmTensorField                                0;
-    pointSymmTensorField::DimensionedInternalField      0;
+    pointSymmTensorField::Internal                      0;
     pointTensorField                                    0;
-    pointTensorField::DimensionedInternalField          0;
+    pointTensorField::Internal                          0;
     pointToCell                                         0;
     pointToFace                                         0;
     pointToPoint                                        0;
     pointToPointPlanarInterpolation                     0;
     pointVectorField                                    0;
-    pointVectorField::DimensionedInternalField          0;
+    pointVectorField::Internal                          0;
     pointZone                                           0;
     pointZoneSet                                        0;
     polyBoundaryMesh                                    0;
@@ -1830,29 +1830,29 @@ DebugSwitches
     surfaceReactionModel                                0;
     surfaceRegistry                                     0;
     surfaceScalarField                                  0;
-    surfaceScalarField::DimensionedInternalField        0;
+    surfaceScalarField::Internal                        0;
     surfaceSlipDisplacement                             0;
     surfaceSphericalTensorField                         0;
-    surfaceSphericalTensorField::DimensionedInternalField 0;
+    surfaceSphericalTensorField::Internal               0;
     surfaceSymmTensorField                              0;
-    surfaceSymmTensorField::DimensionedInternalField    0;
+    surfaceSymmTensorField::Internal                    0;
     surfaceTensorField                                  0;
-    surfaceTensorField::DimensionedInternalField        0;
+    surfaceTensorField::Internal                        0;
     surfaceToCell                                       0;
     surfaceToPoint                                      0;
     surfaceVectorField                                  0;
-    surfaceVectorField::DimensionedInternalField        0;
+    surfaceVectorField::Internal                        0;
     surfaceWriter                                       0;
     surfacehyperVector2Field                            0;
-    surfacehyperVector2Field::DimensionedInternalField  0;
+    surfacehyperVector2Field::Internal                  0;
     surfacehyperVector3Field                            0;
-    surfacehyperVector3Field::DimensionedInternalField  0;
+    surfacehyperVector3Field::Internal                  0;
     surfacehyperVector4Field                            0;
-    surfacehyperVector4Field::DimensionedInternalField  0;
+    surfacehyperVector4Field::Internal                  0;
     surfacehyperVector6Field                            0;
-    surfacehyperVector6Field::DimensionedInternalField  0;
+    surfacehyperVector6Field::Internal                  0;
     surfacehyperVector8Field                            0;
-    surfacehyperVector8Field::DimensionedInternalField  0;
+    surfacehyperVector8Field::Internal                  0;
     surfaces                                            0;
     swirlFlowRateInletVelocity                          0;
     symGaussSeidel                                      0;
@@ -1952,15 +1952,15 @@ DebugSwitches
     virtualMass                                         0;
     voidFraction                                        0;
     volhyperVector2Field                                0;
-    volhyperVector2Field::DimensionedInternalField      0;
+    volhyperVector2Field::Internal                      0;
     volhyperVector3Field                                0;
-    volhyperVector3Field::DimensionedInternalField      0;
+    volhyperVector3Field::Internal                      0;
     volhyperVector4Field                                0;
-    volhyperVector4Field::DimensionedInternalField      0;
+    volhyperVector4Field::Internal                      0;
     volhyperVector6Field                                0;
-    volhyperVector6Field::DimensionedInternalField      0;
+    volhyperVector6Field::Internal                      0;
     volhyperVector8Field                                0;
-    volhyperVector8Field::DimensionedInternalField      0;
+    volhyperVector8Field::Internal                      0;
     vorticity                                           0;
     vtkUnstructuredReader                               0;
     wallLocalSpringSliderDashpot                        0;
@@ -1987,15 +1987,15 @@ DebugSwitches
     viscosityModel                                      0;
     volPointInterpolation                               0;
     volScalarField                                      0;
-    volScalarField::DimensionedInternalField            0;
+    volScalarField::Internal                            0;
     volSphericalTensorField                             0;
-    volSphericalTensorField::DimensionedInternalField   0;
+    volSphericalTensorField::Internal                   0;
     volSymmTensorField                                  0;
-    volSymmTensorField::DimensionedInternalField        0;
+    volSymmTensorField::Internal                        0;
     volTensorField                                      0;
-    volTensorField::DimensionedInternalField            0;
+    volTensorField::Internal                            0;
     volVectorField                                      0;
-    volVectorField::DimensionedInternalField            0;
+    volVectorField::Internal                            0;
     vtk                                                 0;
     walkPatch                                           0;
     wall                                                0;
@@ -2046,7 +2046,7 @@ DimensionedConstants
         standard
         {
             //- Standard pressure [Pa]
-            Pstd            Pstd [1 -1 -2 0 0 0 0] 100000;
+            Pstd            Pstd [1 -1 -2 0 0 0 0] 1e5;
             //- Standard temperature [degK]
             Tstd            Tstd [0 0 0 1 0 0 0] 298.15;
         }
@@ -2083,13 +2083,65 @@ DimensionedConstants
     }
 }
 
-//- Tell ParallelRunner how to run parallel jobs
-// You can use %(NPROCS)d, %(APPLICATION)s, %(ARGS)s
-// and %(PAROPTS)s as placeholders for the number
-// of  processors, the application to run, its arguments
-// and additional options you want to pass to parallel
-// runner (such as "-hostfile machines")
-parRunTemplate "mpiexec -n %(NPROCS)d %(PAROPTS)s  %(APPLICATION)s  %(ARGS)s -parallel";
-parRunWinTemplate "mpiexec -localonly %(NPROCS)d %(PAROPTS)s  %(APPLICATION)s  %(ARGS)s -parallel";
+
+DimensionSets
+{
+    unitSet             SI; // USCS
+
+    SICoeffs
+    {
+        // Basic units
+        kg  kg  [1 0 0 0 0 0 0] 1.0;
+        m   m   [0 1 0 0 0 0 0] 1.0;
+        s   s   [0 0 1 0 0 0 0] 1.0;
+        K   K   [0 0 0 1 0 0 0] 1.0;
+        mol mol [0 0 0 0 1 0 0] 1.0;
+        A   A   [0 0 0 0 0 1 0] 1.0;
+        Cd  Cd  [0 0 0 0 0 0 1] 1.0;
+
+        // Derived units
+        Hz  Hz  [s^-1] 1.0;
+        N   N   [kg m s^-2] 1.0;
+        Pa  Pa  [N m^-2] 1.0;
+        J   J   [N m] 1.0;
+        W   W   [J s^-1] 1.0;
+
+        // Some non-symbolic ones
+        area area [m^2] 1.0;
+        volume volume [m^3] 1.0;
+        density density [kg m^-3] 1.0;
+        acceleration acceleration  [m s^-2] 1.0;
+        kinematicPressure kinematicPressure [Pa density^-1] 1.0;
+
+        // Scaled units. Only allowed in dimensionedType (dimensionedScalar,
+        // dimensionedVector etc.) and UniformDimensionedField, not
+        // in DimensionedField or GeometricField
+        cm  cm  [m] 1e-2;
+        mm  mm  [m] 1e-3;
+        km  km  [m] 1e3;
+
+        // Set of units used for printing. Can be any basic or derived
+        // but not scaled (only supported for dimensionedScalar, etc)
+        // writeUnits (kg m s K mol A Cd);
+    }
+
+    USCSCoeffs
+    {
+        // Basic units
+        lb  lb  [1 0 0 0 0 0 0] 1.0;
+        ft  ft  [0 1 0 0 0 0 0] 1.0;
+        s   s   [0 0 1 0 0 0 0] 1.0;
+        R   R   [0 0 0 1 0 0 0] 1.0;
+        mol mol [0 0 0 0 1 0 0] 1.0;
+        A   A   [0 0 0 0 0 1 0] 1.0;
+        Cd  Cd  [0 0 0 0 0 0 1] 1.0;
+
+        // Set of units used for printing. Can be any basic or derived
+        // but not scaled (only supported for dimensionedScalar, etc)
+        // writeUnits (lb ft s R mol A Cd);
+    }
+}
+
+
 
 // ************************************************************************* //

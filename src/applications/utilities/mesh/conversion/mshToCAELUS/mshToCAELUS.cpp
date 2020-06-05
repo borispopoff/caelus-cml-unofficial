@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -86,24 +86,24 @@ int main(int argc, char *argv[])
 
     if (readHex)
     {
-        for (label cellI = 0; cellI < nCells; cellI++)
+        for (label celli = 0; celli < nCells; celli++)
         {
             for (label cp = 0; cp < 8; cp++)
             {
                 mshStream >> hexPoints[cp];
             }
-            cells[cellI] = cellShape(hex, hexPoints);
+            cells[celli] = cellShape(hex, hexPoints);
         }
     }
     else
     {
-        for (label cellI = 0; cellI < nCells; cellI++)
+        for (label celli = 0; celli < nCells; celli++)
         {
             for (label cp = 0; cp < 4; cp++)
             {
                 mshStream >> tetPoints[cp];
             }
-            cells[cellI] = cellShape(tet, tetPoints);
+            cells[celli] = cellShape(tet, tetPoints);
         }
     }
 
@@ -117,13 +117,13 @@ int main(int argc, char *argv[])
     pointField points(nPoints);
 
 
-    for (label pointI = 0; pointI < nPoints; pointI++)
+    for (label pointi = 0; pointi < nPoints; pointi++)
     {
         scalar x, y, z;
 
         mshStream >> x >> y >> z;
 
-        points[pointI] = point(x, y, z);
+        points[pointi] = point(x, y, z);
     }
 
 
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
             runTime.constant(),
             runTime
         ),
-        xferMove(points),
+        move(points),
         cells,
         faceListList(0),
         wordList(0),

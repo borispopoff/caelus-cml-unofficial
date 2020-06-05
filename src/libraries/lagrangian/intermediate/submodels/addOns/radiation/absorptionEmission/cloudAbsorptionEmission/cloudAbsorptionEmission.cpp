@@ -80,7 +80,7 @@ CML::radiation::cloudAbsorptionEmission::aDisp(const label) const
                 false
             ),
             mesh_,
-            dimensionedScalar("a", dimless/dimLength, 0.0)
+            dimensionedScalar("a", dimless/dimLength, 0)
         )
     );
 
@@ -91,7 +91,7 @@ CML::radiation::cloudAbsorptionEmission::aDisp(const label) const
             mesh_.objectRegistry::lookupObject<thermoCloud>(cloudNames_[i])
         );
 
-        ta() += tc.ap();
+        ta.ref() += tc.ap();
     }
 
     return ta;
@@ -115,7 +115,7 @@ CML::radiation::cloudAbsorptionEmission::eDisp(const label bandI) const
                 false
             ),
             mesh_,
-            dimensionedScalar("e", dimless/dimLength, 0.0)
+            dimensionedScalar("e", dimless/dimLength, 0)
         )
     );
 
@@ -140,7 +140,7 @@ CML::radiation::cloudAbsorptionEmission::EDisp(const label bandI) const
                 false
             ),
             mesh_,
-            dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0.0)
+            dimensionedScalar("E", dimMass/dimLength/pow3(dimTime), 0)
         )
     );
 
@@ -151,7 +151,7 @@ CML::radiation::cloudAbsorptionEmission::EDisp(const label bandI) const
             mesh_.objectRegistry::lookupObject<thermoCloud>(cloudNames_[i])
         );
 
-        tE() += tc.Ep();
+        tE.ref() += tc.Ep();
     }
 
     // Total emission is 4 times the projected emission

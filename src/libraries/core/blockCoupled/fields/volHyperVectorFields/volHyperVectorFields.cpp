@@ -45,7 +45,7 @@ namespace CML
 
 #define doMakeVolFields(type, Type, args...)                                  \
     defineTemplateTypeNameAndDebug(                                           \
-        vol##Type##Field::DimensionedInternalField, 0);                       \
+        vol##Type##Field::Internal, 0);                                       \
                                                                               \
     defineTemplateTypeNameAndDebug(vol##Type##Field, 0);
 

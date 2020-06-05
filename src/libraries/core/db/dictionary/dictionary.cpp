@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -24,6 +24,7 @@ License
 #include "dictionaryEntry.hpp"
 #include "regExp.hpp"
 #include "OSHA1stream.hpp"
+#include "DynamicList.hpp"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -35,6 +36,7 @@ namespace CML
     const dictionary dictionary::null;
 }
 
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 bool CML::dictionary::findInPatterns
@@ -42,7 +44,7 @@ bool CML::dictionary::findInPatterns
     const bool patternMatch,
     const word& Keyword,
     DLList<entry*>::const_iterator& wcLink,
-    DLList<autoPtr<regExp> >::const_iterator& reLink
+    DLList<autoPtr<regExp>>::const_iterator& reLink
 ) const
 {
     if (patternEntries_.size())
@@ -73,7 +75,7 @@ bool CML::dictionary::findInPatterns
     const bool patternMatch,
     const word& Keyword,
     DLList<entry*>::iterator& wcLink,
-    DLList<autoPtr<regExp> >::iterator& reLink
+    DLList<autoPtr<regExp>>::iterator& reLink
 )
 {
     if (patternEntries_.size())
@@ -167,6 +169,20 @@ CML::dictionary::dictionary
 
 CML::dictionary::dictionary
 (
+    dictionary&& dict
+)
+:
+    dictionaryName(move(dict.name())),
+    IDLList<entry>(move(dict)),
+    hashedEntries_(move(dict.hashedEntries_)),
+    parent_(dict.parent_),
+    patternEntries_(move(dict.patternEntries_)),
+    patternRegexps_(move(dict.patternRegexps_))
+{}
+
+
+CML::dictionary::dictionary
+(
     const dictionary* dictPtr
 )
 :
@@ -182,24 +198,17 @@ CML::dictionary::dictionary
 CML::dictionary::dictionary
 (
     const dictionary& parentDict,
-    const Xfer<dictionary>& dict
+    dictionary&& dict
 )
 :
-    parent_(parentDict)
+    dictionaryName(move(dict.name())),
+    IDLList<entry>(move(dict)),
+    hashedEntries_(move(dict.hashedEntries_)),
+    parent_(parentDict),
+    patternEntries_(move(dict.patternEntries_)),
+    patternRegexps_(move(dict.patternRegexps_))
 {
-    transfer(dict());
     name() = parentDict.name() + "::" + name();
-}
-
-
-CML::dictionary::dictionary
-(
-    const Xfer<dictionary>& dict
-)
-:
-    parent_(dictionary::null)
-{
-    transfer(dict());
 }
 
 
@@ -264,13 +273,32 @@ CML::SHA1Digest CML::dictionary::digest() const
 {
     OSHA1stream os;
 
-    // process entries
+    // Process entries
     forAllConstIter(IDLList<entry>, *this, iter)
     {
         os << *iter;
     }
 
     return os.digest();
+}
+
+
+CML::tokenList CML::dictionary::tokens() const
+{
+    // Serialize dictionary into a string
+    OStringStream os;
+    write(os, false);
+    IStringStream is(os.str());
+
+    // Parse string as tokens
+    DynamicList<token> tokens;
+    token t;
+    while (is.read(t))
+    {
+        tokens.append(t);
+    }
+
+    return tokenList(move(tokens));
 }
 
 
@@ -291,7 +319,7 @@ bool CML::dictionary::found
         {
             DLList<entry*>::const_iterator wcLink =
                 patternEntries_.begin();
-            DLList<autoPtr<regExp> >::const_iterator reLink =
+            DLList<autoPtr<regExp>>::const_iterator reLink =
                 patternRegexps_.begin();
 
             // Find in patterns using regular expressions only
@@ -328,7 +356,7 @@ const CML::entry* CML::dictionary::lookupEntryPtr
         {
             DLList<entry*>::const_iterator wcLink =
                 patternEntries_.begin();
-            DLList<autoPtr<regExp> >::const_iterator reLink =
+            DLList<autoPtr<regExp>>::const_iterator reLink =
                 patternRegexps_.begin();
 
             // Find in patterns using regular expressions only
@@ -367,7 +395,7 @@ CML::entry* CML::dictionary::lookupEntryPtr
         {
             DLList<entry*>::iterator wcLink =
                 patternEntries_.begin();
-            DLList<autoPtr<regExp> >::iterator reLink =
+            DLList<autoPtr<regExp>>::iterator reLink =
                 patternRegexps_.begin();
 
             // Find in patterns using regular expressions only
@@ -407,8 +435,10 @@ const CML::entry& CML::dictionary::lookupEntry
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction(*this)
-            << "keyword " << keyword << " is undefined in dictionary "
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "keyword " << keyword << " is undefined in dictionary "
             << name()
             << exit(FatalIOError);
     }
@@ -447,7 +477,7 @@ const CML::entry* CML::dictionary::lookupScopedEntryPtr
         // At top. Recurse to find entries
         return dictPtr->lookupScopedEntryPtr
         (
-            keyword.substr(1, keyword.size()-1),
+            keyword.substr(1, keyword.size() - 1),
             false,
             patternMatch
         );
@@ -543,7 +573,7 @@ const CML::entry* CML::dictionary::lookupScopedEntryPtr
 
 bool CML::dictionary::substituteScopedKeyword(const word& keyword)
 {
-    word varName = keyword(1, keyword.size()-1);
+    word varName = keyword(1, keyword.size() - 1);
 
     // Lookup the variable name in the given dictionary
     const entry* ePtr = lookupScopedEntryPtr(varName, true, true);
@@ -602,8 +632,10 @@ const CML::dictionary& CML::dictionary::subDict(const word& keyword) const
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction(*this)
-            << "keyword " << keyword << " is undefined in dictionary "
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "keyword " << keyword << " is undefined in dictionary "
             << name()
             << exit(FatalIOError);
     }
@@ -617,8 +649,10 @@ CML::dictionary& CML::dictionary::subDict(const word& keyword)
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction(*this)
-            << "keyword " << keyword << " is undefined in dictionary "
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "keyword " << keyword << " is undefined in dictionary "
             << name()
             << exit(FatalIOError);
     }
@@ -638,8 +672,10 @@ CML::dictionary CML::dictionary::subOrEmptyDict
     {
         if (mustRead)
         {
-            FatalIOErrorInFunction(*this)
-                << "keyword " << keyword << " is undefined in dictionary "
+            FatalIOErrorInFunction
+            (
+                *this
+            )   << "keyword " << keyword << " is undefined in dictionary "
                 << name()
                 << exit(FatalIOError);
             return entryPtr->dict();
@@ -721,7 +757,7 @@ bool CML::dictionary::add(entry* entryPtr, bool mergeEntry)
 
     if (mergeEntry && iter != hashedEntries_.end())
     {
-        // merge dictionary with dictionary
+        // Merge dictionary with dictionary
         if (iter()->isDict() && entryPtr->isDict())
         {
             iter()->dict().merge(entryPtr->dict());
@@ -731,7 +767,7 @@ bool CML::dictionary::add(entry* entryPtr, bool mergeEntry)
         }
         else
         {
-            // replace existing dictionary with entry or vice versa
+            // Replace existing dictionary with entry or vice versa
             IDLList<entry>::replace(iter(), entryPtr);
             delete iter();
             hashedEntries_.erase(iter);
@@ -873,7 +909,7 @@ bool CML::dictionary::remove(const word& Keyword)
         // Delete from patterns first
         DLList<entry*>::iterator wcLink =
             patternEntries_.begin();
-        DLList<autoPtr<regExp> >::iterator reLink =
+        DLList<autoPtr<regExp>>::iterator reLink =
             patternRegexps_.begin();
 
         // Find in pattern using exact match only
@@ -911,7 +947,7 @@ bool CML::dictionary::changeKeyword
 
     HashTable<entry*>::iterator iter = hashedEntries_.find(oldKeyword);
 
-    // oldKeyword not found - do nothing
+    // OldKeyword not found - do nothing
     if (iter == hashedEntries_.end())
     {
         return false;
@@ -919,8 +955,10 @@ bool CML::dictionary::changeKeyword
 
     if (iter()->keyword().isPattern())
     {
-        FatalIOErrorInFunction(*this)
-            << "Old keyword "<< oldKeyword
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "Old keyword "<< oldKeyword
             << " is a pattern."
             << "Pattern replacement not yet implemented."
             << exit(FatalIOError);
@@ -939,7 +977,7 @@ bool CML::dictionary::changeKeyword
                 // Delete from patterns first
                 DLList<entry*>::iterator wcLink =
                     patternEntries_.begin();
-                DLList<autoPtr<regExp> >::iterator reLink =
+                DLList<autoPtr<regExp>>::iterator reLink =
                     patternRegexps_.begin();
 
                 // Find in patterns using exact match only
@@ -957,8 +995,10 @@ bool CML::dictionary::changeKeyword
         }
         else
         {
-            IOWarningInFunction(*this)
-                << "cannot rename keyword "<< oldKeyword
+            IOWarningInFunction
+            (
+                *this
+            )   << "cannot rename keyword "<< oldKeyword
                 << " to existing keyword " << newKeyword
                 << " in dictionary " << name() << endl;
             return false;
@@ -1051,12 +1091,6 @@ void CML::dictionary::transfer(dictionary& dict)
 }
 
 
-CML::Xfer<CML::dictionary> CML::dictionary::xfer()
-{
-    return xferMove(*this);
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 CML::ITstream& CML::dictionary::operator[](const word& keyword) const
@@ -1085,6 +1119,24 @@ void CML::dictionary::operator=(const dictionary& rhs)
     {
         add(iter().clone(*this).ptr());
     }
+}
+
+
+void CML::dictionary::operator=(dictionary&& rhs)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalIOErrorInFunction(*this)
+            << "attempted assignment to self for dictionary " << name()
+            << abort(FatalIOError);
+    }
+
+    dictionaryName::operator=(move(rhs));
+    IDLList<entry>::operator=(move(rhs));
+    hashedEntries_ = move(rhs.hashedEntries_);
+    patternEntries_ = move(rhs.patternEntries_);
+    patternRegexps_ = move(rhs.patternRegexps_);
 }
 
 

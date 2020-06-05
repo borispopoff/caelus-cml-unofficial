@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -33,8 +33,7 @@ namespace compressible
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-alphatWallFunctionFvPatchScalarField::
-alphatWallFunctionFvPatchScalarField
+alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
@@ -46,8 +45,7 @@ alphatWallFunctionFvPatchScalarField
 {}
 
 
-alphatWallFunctionFvPatchScalarField::
-alphatWallFunctionFvPatchScalarField
+alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 (
     const alphatWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
@@ -61,8 +59,7 @@ alphatWallFunctionFvPatchScalarField
 {}
 
 
-alphatWallFunctionFvPatchScalarField::
-alphatWallFunctionFvPatchScalarField
+alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -75,8 +72,7 @@ alphatWallFunctionFvPatchScalarField
 {}
 
 
-alphatWallFunctionFvPatchScalarField::
-alphatWallFunctionFvPatchScalarField
+alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 (
     const alphatWallFunctionFvPatchScalarField& awfpsf
 )
@@ -87,8 +83,7 @@ alphatWallFunctionFvPatchScalarField
 {}
 
 
-alphatWallFunctionFvPatchScalarField::
-alphatWallFunctionFvPatchScalarField
+alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 (
     const alphatWallFunctionFvPatchScalarField& awfpsf,
     const DimensionedField<scalar, volMesh>& iF
@@ -122,8 +117,8 @@ void alphatWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeEntryIfDifferent<word>(os, "mut", "mut", mutName_);
-    os.writeKeyword("Prt") << Prt_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "Prt", Prt_);
+    writeEntry(os, "value", *this);
 }
 
 

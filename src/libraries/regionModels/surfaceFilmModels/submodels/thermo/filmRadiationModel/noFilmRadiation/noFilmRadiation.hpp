@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,10 +56,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        noRadiation(const noRadiation&);
+        noRadiation(const noRadiation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const noRadiation&);
+        void operator=(const noRadiation&) = delete;
 
 
 public:

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2016 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -47,11 +47,6 @@ namespace CML
 
 class subModelBase
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const subModelBase&);
-
 
 protected:
 
@@ -109,7 +104,7 @@ public:
             const word& modelType
         );
 
-        //- Construct as copy
+        //- Copy constructor
         subModelBase(const subModelBase& smb);
 
 
@@ -149,7 +144,7 @@ public:
             virtual void cacheFields(const bool store);
 
             //- Flag to indicate when to write a property
-            virtual bool outputTime() const;
+            virtual bool writeTime() const;
 
 
         // Edit
@@ -196,6 +191,12 @@ public:
 
             //- Write
             virtual void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const subModelBase&) = delete;
 };
 
 

@@ -158,9 +158,9 @@ public:
     //- Third-body efficiencies (beta = 1-alpha)
     //  non-empty only for third-body reactions
     //  with enhanced molecularity (alpha != 1)
-    inline const List<Tuple2<label, scalar> >& beta() const
+    inline const List<Tuple2<label, scalar>>& beta() const
     {
-        return NullSingletonRef<List<Tuple2<label, scalar> > >();
+        return NullSingletonRef<List<Tuple2<label, scalar>>>();
     }
 
     //- Species concentration derivative of the pressure dependent term

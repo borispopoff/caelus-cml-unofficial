@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -33,9 +33,9 @@ Description
 
     Storage is allocated on free-store during construction.
 
-    As a special case a null-contructed CompactListList has an empty
+    As a special case a null-constructed CompactListList has an empty
     offsets_ (instead of size 1).
- 
+
 
 \*---------------------------------------------------------------------------*/
 
@@ -69,7 +69,7 @@ template<class T, class Container> Ostream& operator<<
                        Class CompactListList Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class T, class Container = List<T> >
+template<class T, class Container = List<T>>
 class CompactListList
 {
     // Private data
@@ -90,21 +90,25 @@ public:
         //- Return a null CompactListList
         inline static const CompactListList<T, Container>& null();
 
+
     // Constructors
 
         //- Null constructor.
         inline CompactListList();
 
-        //- Construct by converting given List<List<T> >
+        //- Move constructor
+        CompactListList(CompactListList<T, Container>&&);
+
+        //- Construct by converting given List<List<T>>
         explicit CompactListList(const List<Container>&);
 
         //- Construct given size of offset table (number of rows)
         //  and number of data.
-        inline CompactListList(const label nRows, const label nData);
+        inline CompactListList(const label mRows, const label nData);
 
         //- Construct given size of offset table (number of rows),
         //  the number of data and a value for all elements.
-        inline CompactListList(const label nRows, const label nData, const T&);
+        inline CompactListList(const label mRows, const label nData, const T&);
 
         //- Construct given list of row-sizes.
         explicit CompactListList(const labelUList& rowSizes);
@@ -112,17 +116,14 @@ public:
         //- Construct given list of row-sizes
         CompactListList(const labelUList& rowSizes, const T&);
 
-        //- Construct by transferring the parameter contents
-        explicit CompactListList(const Xfer<CompactListList<T, Container> >&);
-
         //- Construct as copy or re-use as specified.
-        CompactListList(CompactListList<T, Container>&, bool reUse);
+        CompactListList(CompactListList<T, Container>&, bool reuse);
 
         //- Construct from Istream.
         CompactListList(Istream&);
 
         //- Clone
-        inline autoPtr<CompactListList<T, Container> > clone() const;
+        inline autoPtr<CompactListList<T, Container>> clone() const;
 
 
     // Member Functions
@@ -152,26 +153,26 @@ public:
 
             //- Reset size of CompactListList.
             //  This form only allows contraction of the CompactListList.
-            void setSize(const label nRows);
+            void setSize(const label mRows);
 
             //- Reset size of CompactListList.
-            void setSize(const label nRows, const label nData);
+            void setSize(const label mRows, const label nData);
 
             //- Reset sizes of CompactListList and value for new elements.
-            void setSize(const label nRows, const label nData, const T&);
+            void setSize(const label mRows, const label nData, const T&);
 
             //- Reset size of CompactListList.
             void setSize(const labelUList& rowSizes);
 
             //- Reset size of CompactListList.
             //  This form only allows contraction of the CompactListList.
-            inline void resize(const label nRows);
+            inline void resize(const label mRows);
 
             //- Reset size of CompactListList.
-            inline void resize(const label nRows, const label nData);
+            inline void resize(const label mRows, const label nData);
 
             //- Reset sizes of CompactListList and value for new elements.
-            inline void resize(const label nRows, const label nData, const T&);
+            inline void resize(const label mRows, const label nData, const T&);
 
             //- Reset size of CompactListList.
             inline void resize(const labelUList& rowSizes);
@@ -186,8 +187,6 @@ public:
             //  into this CompactListList and annul the argument list.
             void transfer(CompactListList<T, Container>&);
 
-            //- Transfer the contents to the Xfer container
-            inline Xfer<CompactListList<T, Container> > xfer();
 
         // Other
 
@@ -217,6 +216,9 @@ public:
 
         //- Return as List<Container>
         List<Container> operator()() const;
+
+        //- Move assignment operator
+        inline void operator=(CompactListList<T, Container>&&);
 
         //- Assignment of all entries to the given value
         inline void operator=(const T&);
@@ -262,12 +264,12 @@ inline CML::CompactListList<T, Container>::CompactListList()
 template<class T, class Container>
 inline CML::CompactListList<T, Container>::CompactListList
 (
-    const label nRows,
+    const label mRows,
     const label nData
 )
 :
-    size_(nRows),
-    offsets_(nRows+1, 0),
+    size_(mRows),
+    offsets_(mRows+1, 0),
     m_(nData)
 {}
 
@@ -275,22 +277,22 @@ inline CML::CompactListList<T, Container>::CompactListList
 template<class T, class Container>
 inline CML::CompactListList<T, Container>::CompactListList
 (
-    const label nRows,
+    const label mRows,
     const label nData,
     const T& t
 )
 :
-    size_(nRows),
-    offsets_(nRows+1, 0),
+    size_(mRows),
+    offsets_(mRows+1, 0),
     m_(nData, t)
 {}
 
 
 template<class T, class Container>
-inline CML::autoPtr<CML::CompactListList<T, Container> >
+inline CML::autoPtr<CML::CompactListList<T, Container>>
 CML::CompactListList<T, Container>::clone() const
 {
-    return autoPtr<CompactListList<T, Container> >
+    return autoPtr<CompactListList<T, Container>>
     (
         new CompactListList<T, Container>(*this)
     );
@@ -303,7 +305,7 @@ template<class T, class Container>
 inline const CML::CompactListList<T, Container>&
 CML::CompactListList<T, Container>::null()
 {
-    return NullSingletonRef< CompactListList<T, Container> >();
+    return NullSingletonRef<CompactListList<T, Container>>();
 }
 
 
@@ -389,40 +391,32 @@ inline CML::label CML::CompactListList<T, Container>::whichColumn
 
 
 template<class T, class Container>
-inline CML::Xfer<CML::CompactListList<T, Container> >
-CML::CompactListList<T, Container>::xfer()
+inline void CML::CompactListList<T, Container>::resize(const label mRows)
 {
-    return xferMove(*this);
-}
-
-
-template<class T, class Container>
-inline void CML::CompactListList<T, Container>::resize(const label nRows)
-{
-    this->setSize(nRows);
+    this->setSize(mRows);
 }
 
 
 template<class T, class Container>
 inline void CML::CompactListList<T, Container>::resize
 (
-    const label nRows,
+    const label mRows,
     const label nData
 )
 {
-    this->setSize(nRows, nData);
+    this->setSize(mRows, nData);
 }
 
 
 template<class T, class Container>
 inline void CML::CompactListList<T, Container>::resize
 (
-    const label nRows,
+    const label mRows,
     const label nData,
     const T& t
 )
 {
-    this->setSize(nRows, nData, t);
+    this->setSize(mRows, nData, t);
 }
 
 
@@ -484,6 +478,16 @@ inline const T& CML::CompactListList<T, Container>::operator()
 ) const
 {
     return m_[index(i, j)];
+}
+
+
+template<class T, class Container>
+inline void CML::CompactListList<T, Container>::operator=
+(
+    CompactListList<T, Container>&& cll
+)
+{
+    transfer(cll);
 }
 
 
@@ -571,10 +575,10 @@ CML::CompactListList<T, Container>::CompactListList
 template<class T, class Container>
 CML::CompactListList<T, Container>::CompactListList
 (
-    const Xfer<CompactListList<T, Container> >& lst
+    CompactListList<T, Container>&& lst
 )
 {
-    transfer(lst());
+    transfer(lst);
 }
 
 
@@ -582,35 +586,35 @@ template<class T, class Container>
 CML::CompactListList<T, Container>::CompactListList
 (
     CompactListList<T, Container>& lst,
-    bool reUse
+    bool reuse
 )
 :
     size_(lst.size()),
-    offsets_(lst.offsets_, reUse),
-    m_(lst.m_, reUse)
+    offsets_(lst.offsets_, reuse),
+    m_(lst.m_, reuse)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T, class Container>
-void CML::CompactListList<T, Container>::setSize(const label nRows)
+void CML::CompactListList<T, Container>::setSize(const label mRows)
 {
-    if (nRows == 0)
+    if (mRows == 0)
     {
         clear();
     }
-    if (nRows < size())
+    if (mRows < size())
     {
-        size_ = nRows;
-        offsets_.setSize(nRows+1);
-        m_.setSize(offsets_[nRows]);
+        size_ = mRows;
+        offsets_.setSize(mRows+1);
+        m_.setSize(offsets_[mRows]);
     }
-    else if (nRows > size())
+    else if (mRows > size())
     {
         FatalErrorInFunction
             << "Cannot be used to extend the list from " << offsets_.size()
-            << " to " << nRows << nl
+            << " to " << mRows << nl
             << "    Please use one of the other setSize member functions"
             << abort(FatalError);
     }
@@ -620,12 +624,12 @@ void CML::CompactListList<T, Container>::setSize(const label nRows)
 template<class T, class Container>
 void CML::CompactListList<T, Container>::setSize
 (
-    const label nRows,
+    const label mRows,
     const label nData
 )
 {
-    size_ = nRows;
-    offsets_.setSize(nRows+1);
+    size_ = mRows;
+    offsets_.setSize(mRows+1);
     m_.setSize(nData);
 }
 
@@ -633,13 +637,13 @@ void CML::CompactListList<T, Container>::setSize
 template<class T, class Container>
 void CML::CompactListList<T, Container>::setSize
 (
-    const label nRows,
+    const label mRows,
     const label nData,
     const T& t
 )
 {
-    size_ = nRows;
-    offsets_.setSize(nRows+1);
+    size_ = mRows;
+    offsets_.setSize(mRows+1);
     m_.setSize(nData, t);
 }
 
@@ -696,6 +700,8 @@ void CML::CompactListList<T, Container>::transfer
     size_ = a.size_;
     offsets_.transfer(a.offsets_);
     m_.transfer(a.m_);
+
+    a.size_ = 0;
 }
 
 

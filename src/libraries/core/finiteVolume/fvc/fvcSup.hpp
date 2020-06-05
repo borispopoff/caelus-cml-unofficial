@@ -46,16 +46,16 @@ namespace fvc
    // Explicit source
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> > Su
+        tmp<GeometricField<Type, fvPatchField, volMesh>> Su
         (
             const GeometricField<Type, fvPatchField, volMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> > Su
+        tmp<GeometricField<Type, fvPatchField, volMesh>> Su
         (
-            const tmp<GeometricField<Type, fvPatchField, volMesh> >&,
+            const tmp<GeometricField<Type, fvPatchField, volMesh>>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
@@ -63,14 +63,14 @@ namespace fvc
     // Implicit source
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> > Sp
+        tmp<GeometricField<Type, fvPatchField, volMesh>> Sp
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> > Sp
+        tmp<GeometricField<Type, fvPatchField, volMesh>> Sp
         (
             const tmp<volScalarField>&,
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -78,7 +78,7 @@ namespace fvc
 
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> > Sp
+        tmp<GeometricField<Type, fvPatchField, volMesh>> Sp
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -88,14 +88,14 @@ namespace fvc
     // Implicit/Explicit source depending on sign of coefficient
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> > SuSp
+        tmp<GeometricField<Type, fvPatchField, volMesh>> SuSp
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh> > SuSp
+        tmp<GeometricField<Type, fvPatchField, volMesh>> SuSp
         (
             const tmp<volScalarField>&,
             const GeometricField<Type, fvPatchField, volMesh>&
@@ -125,7 +125,7 @@ namespace fvc
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 Su
 (
     const GeometricField<Type, fvPatchField, volMesh>& su,
@@ -136,10 +136,10 @@ Su
 }
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 Su
 (
-    const tmp<GeometricField<Type, fvPatchField, volMesh> >& tsu,
+    const tmp<GeometricField<Type, fvPatchField, volMesh>>& tsu,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
@@ -148,7 +148,7 @@ Su
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 Sp
 (
     const volScalarField& sp,
@@ -159,7 +159,7 @@ Sp
 }
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 Sp
 (
     const tmp<volScalarField>& tsp,
@@ -171,7 +171,7 @@ Sp
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 Sp
 (
     const dimensionedScalar& sp,
@@ -183,7 +183,7 @@ Sp
 
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 SuSp
 (
     const volScalarField& sp,
@@ -194,7 +194,7 @@ SuSp
 }
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> >
+tmp<GeometricField<Type, fvPatchField, volMesh>>
 SuSp
 (
     const tmp<volScalarField>& tsp,

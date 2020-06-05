@@ -41,7 +41,7 @@ const CML::scalarSquareMatrix& CML::RBFInterpolation::B() const
 
 
 void CML::RBFInterpolation::calcB() const
-{
+{ 
     // Determine inverse of boundary connectivity matrix
     label polySize(4);
 
@@ -113,9 +113,6 @@ void CML::RBFInterpolation::calcB() const
             }
         }
     }
-
-    // Collect ALL control points from ALL CPUs
-    // Create an identical inverse for all CPUs
 
     Info<< "Inverting RBF motion matrix" << endl;
 

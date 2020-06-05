@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,20 +55,6 @@ inline CML::PackedBoolList::PackedBoolList(const PackedList<1>& lst)
 {}
 
 
-inline CML::PackedBoolList::PackedBoolList(const Xfer<PackedBoolList>& lst)
-:
-    PackedList<1>()
-{
-    transfer(lst());
-}
-
-
-inline CML::PackedBoolList::PackedBoolList(const Xfer<PackedList<1> >& lst)
-:
-    PackedList<1>(lst)
-{}
-
-
 inline CML::PackedBoolList::PackedBoolList(const CML::UList<bool>& lst)
 :
     PackedList<1>()
@@ -114,55 +100,37 @@ inline void CML::PackedBoolList::transfer(PackedList<1>& lst)
 }
 
 
-inline CML::Xfer<CML::PackedBoolList> CML::PackedBoolList::xfer()
-{
-    return xferMove(*this);
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline CML::PackedBoolList&
-CML::PackedBoolList::operator=(const bool val)
+inline void CML::PackedBoolList::operator=(const bool val)
 {
     PackedList<1>::operator=(val);
-    return *this;
 }
 
 
-inline CML::PackedBoolList&
-CML::PackedBoolList::operator=(const PackedBoolList& lst)
+inline void CML::PackedBoolList::operator=(const PackedBoolList& lst)
 {
     PackedList<1>::operator=(lst);
-    return *this;
 }
 
 
-inline CML::PackedBoolList&
-CML::PackedBoolList::operator=(const PackedList<1>& lst)
+inline void CML::PackedBoolList::operator=(const PackedList<1>& lst)
 {
     PackedList<1>::operator=(lst);
-    return *this;
 }
 
 
-inline CML::PackedBoolList&
-CML::PackedBoolList::operator=(const labelUList& indices)
+inline void CML::PackedBoolList::operator=(const labelUList& indices)
 {
     clear();
     set(indices);
-
-    return *this;
 }
 
 
-inline CML::PackedBoolList&
-CML::PackedBoolList::operator=(const UIndirectList<label>& indices)
+inline void CML::PackedBoolList::operator=(const UIndirectList<label>& indices)
 {
     clear();
     set(indices);
-
-    return *this;
 }
 
 

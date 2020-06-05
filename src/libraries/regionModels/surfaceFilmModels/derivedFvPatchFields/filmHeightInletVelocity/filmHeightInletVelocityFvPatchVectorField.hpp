@@ -21,12 +21,50 @@ Class
     CML::filmHeightInletVelocityFvPatchVectorField
 
 Description
-    Velocity inlet boundary condition for patches where the film height is
-    specified. The inflow velocity is obtained from the flux with a direction
-    normal to the patch faces.
+    This boundary condition is designed to be used in conjunction with
+    surface film modelling.  It provides a velocity inlet boundary condition
+    for patches where the film height is specified.  The inflow velocity is
+    obtained from the flux with a direction normal to the patch faces using:
+
+    \f[
+        U_p = \frac{n \phi}{\rho |Sf| \delta}
+    \f]
+
+    where
+    \vartable
+        U_p    | patch velocity [m/s]
+        n      | patch normal vector
+        \phi   | mass flux [kg/s]
+        \rho   | density [kg/m^3]
+        Sf     | patch face area vectors [m^2]
+        \delta | film height [m]
+    \endvartable
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        phi          | Flux field name         | no          | phi
+        rho          | density field name      | no          | rho
+        deltaf       | height field name       | no          | deltaf
+    \endtable
+
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            filmHeightInletVelocity;
+        phi             phi;
+        rho             rho;
+        deltaf          deltaf;
+        value           uniform (0 0 0); // initial velocity / [m/s]
+    }
+    \endverbatim
+
+See also
+    CML::fixedValueFvPatchField
 
 SourceFiles
-    filmHeightInletVelocityFvPatchVectorField.C
+    filmHeightInletVelocityFvPatchVectorField.cpp
 
 \*---------------------------------------------------------------------------*/
 
@@ -49,7 +87,7 @@ class filmHeightInletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Name of flux field
         word phiName_;
@@ -94,7 +132,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         filmHeightInletVelocityFvPatchVectorField
         (
             const filmHeightInletVelocityFvPatchVectorField&
@@ -109,7 +147,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         filmHeightInletVelocityFvPatchVectorField
         (
             const filmHeightInletVelocityFvPatchVectorField&,
@@ -129,7 +167,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -138,6 +176,7 @@ public:
             {
                 return true;
             }
+
 
         // Access
 
@@ -185,7 +224,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const fvPatchField<vector>& pvf);
 };

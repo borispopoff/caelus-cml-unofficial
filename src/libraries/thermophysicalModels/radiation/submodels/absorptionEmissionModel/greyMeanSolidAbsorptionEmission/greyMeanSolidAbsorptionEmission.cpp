@@ -51,10 +51,10 @@ greyMeanSolidAbsorptionEmission::X(const word specie) const
     const volScalarField& p = thermo_.p();
 
     tmp<scalarField> tXj(new scalarField(T.internalField().size(), 0.0));
-    scalarField& Xj = tXj();
+    scalarField& Xj = tXj.ref();
 
     tmp<scalarField> tRhoInv(new scalarField(T.internalField().size(), 0.0));
-    scalarField& rhoInv = tRhoInv();
+    scalarField& rhoInv = tRhoInv.ref();
 
     forAll(mixture_.Y(), specieI)
     {
@@ -147,12 +147,12 @@ calc(const label propertyId) const
                 IOobject::NO_WRITE
             ),
             mesh(),
-            dimensionedScalar("a", dimless/dimLength, 0.0),
+            dimensionedScalar("a", dimless/dimLength, 0),
             extrapolatedCalculatedFvPatchVectorField::typeName
         )
     );
 
-    scalarField& a = ta().internalField();
+    scalarField& a = ta.ref().primitiveFieldRef();
 
     forAllConstIter(HashTable<label>, speciesNames_, iter)
     {
@@ -162,7 +162,7 @@ calc(const label propertyId) const
         }
     }
 
-    ta().correctBoundaryConditions();
+    ta.ref().correctBoundaryConditions();
     return ta;
 }
 

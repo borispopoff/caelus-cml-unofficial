@@ -117,9 +117,9 @@ void CML::targetCoeffTrim::correctTrim
         // Iterate to find new pitch angles to achieve target force
         scalar err = GREAT;
         label iter = 0;
-        tensor J(tensor::zero);
+        tensor J(Zero);
 
-        vector old = vector::zero;
+        vector old = Zero;
         while ((err > tol_) && (iter < nIter_))
         {
             // Cache initial theta vector
@@ -258,7 +258,7 @@ CML::tmp<CML::scalarField> CML::targetCoeffTrim::thetag() const
     const List<vector>& x = rotor_.x();
 
     tmp<scalarField> ttheta(new scalarField(x.size()));
-    scalarField& t = ttheta();
+    scalarField& t = ttheta.ref();
 
     forAll(t, i)
     {

@@ -136,7 +136,7 @@ CML::rigidBodyMeshMotion::bodyMesh::bodyMesh
             false
         ),
         pointMesh::New(mesh),
-        dimensionedScalar("zero", dimless, 0.0)
+        dimensionedScalar("zero", dimless, 0)
     )
 {}
 
@@ -226,12 +226,12 @@ CML::rigidBodyMeshMotion::rigidBodyMeshMotion
         pointScalarField& scale = bodyMeshes_[bi].weight_;
 
         // Scaling: 1 up to di then linear down to 0 at do away from patches
-        scale.internalField() =
+        scale.primitiveFieldRef() =
             min
             (
                 max
                 (
-                    (bodyMeshes_[bi].do_ - pDist.internalField())
+                    (bodyMeshes_[bi].do_ - pDist.primitiveField())
                    /(bodyMeshes_[bi].do_ - bodyMeshes_[bi].di_),
                     scalar(0)
                 ),
@@ -239,14 +239,14 @@ CML::rigidBodyMeshMotion::rigidBodyMeshMotion
             );
 
         // Convert the scale function to a cosine
-        scale.internalField() =
+        scale.primitiveFieldRef() =
             min
             (
                 max
                 (
                     0.5
                   - 0.5
-                   *cos(scale.internalField()
+                   *cos(scale.primitiveField()
                    *CML::constant::mathematical::pi),
                     scalar(0)
                 ),
@@ -271,7 +271,7 @@ CML::rigidBodyMeshMotion::~rigidBodyMeshMotion()
 CML::tmp<CML::pointField>
 CML::rigidBodyMeshMotion::curPoints() const
 {
-    return points0() + pointDisplacement_.internalField();
+    return points0() + pointDisplacement_.primitiveField();
 }
 
 
@@ -327,7 +327,7 @@ void CML::rigidBodyMeshMotion::solve()
         fx
     );
 
-    if (Pstream::master() && motionOutputControl_.output() && model_.report())
+    if (Pstream::master() && motionOutputControl_.execute() && model_.report())
     {
         forAll(bodyMeshes_, bi)
         {
@@ -353,7 +353,7 @@ void CML::rigidBodyMeshMotion::solve()
     // Update the displacements
     if (bodyMeshes_.size() == 1)
     {
-        pointDisplacement_.internalField() = model_.transformPoints
+        pointDisplacement_.primitiveFieldRef() = model_.transformPoints
         (
             bodyMeshes_[0].bodyID_,
             bodyMeshes_[0].weight_,
@@ -370,7 +370,7 @@ void CML::rigidBodyMeshMotion::solve()
             weights[bi] = &bodyMeshes_[bi].weight_;
         }
 
-        pointDisplacement_.internalField() =
+        pointDisplacement_.primitiveFieldRef() =
             model_.transformPoints(bodyIDs, weights, points0()) - points0();
     }
 

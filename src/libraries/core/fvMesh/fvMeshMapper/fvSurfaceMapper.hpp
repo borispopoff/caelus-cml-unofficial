@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -79,13 +79,6 @@ class fvSurfaceMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        fvSurfaceMapper(const fvSurfaceMapper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvSurfaceMapper&);
-
-
         //- Calculate addressing
         void calcAddressing() const;
 
@@ -103,6 +96,9 @@ public:
             const fvMesh& mesh,
             const faceMapper& fMapper
         );
+
+        //- Disallow default bitwise copy construct
+        fvSurfaceMapper(const fvSurfaceMapper&) = delete;
 
 
     //- Destructor
@@ -158,6 +154,12 @@ public:
         {
             return faceMap_.flipFaceFlux();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvSurfaceMapper&) = delete;
 };
 
 

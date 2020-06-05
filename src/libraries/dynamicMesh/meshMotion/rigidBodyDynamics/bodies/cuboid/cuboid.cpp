@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -58,14 +58,11 @@ CML::RBD::cuboid::~cuboid()
 
 void CML::RBD::cuboid::write(Ostream& os) const
 {
-    os.writeKeyword("type")
-        << type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
 
-    os.writeKeyword("mass")
-        << m() << token::END_STATEMENT << nl;
+    writeEntry(os, "mass", m());
 
-    os.writeKeyword("L")
-        << L() << token::END_STATEMENT << nl;
+    writeEntry(os, "L", L());
 }
 
 

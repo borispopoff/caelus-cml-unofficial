@@ -201,7 +201,7 @@ CML::chemistryReductionMethods::DRGEP<CompType, ThermoType>::DRGEP
         NGroupBased_ = readLabel(this->coeffsDict_.lookup("NGroupBased"));
     }
 
-    const List<List<specieElement> >& specieComposition =
+    const List<List<specieElement>>& specieComposition =
         this->chemistry_.specieComp();
     for (label i=0; i<this->nSpecie_; i++)
     {

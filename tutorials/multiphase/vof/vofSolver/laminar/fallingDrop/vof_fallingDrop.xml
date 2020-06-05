@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<testproblem>
+  <name>VoF fallingDrop</name>
+
+  <owner userid="ACCM"/>
+
+  <tags>tut multiphase vof laminar</tags>
+
+  <problem_definition length="medium" nprocs="4">
+
+    <command_line>caelus_tutorials --quiet -f run_tutorial.yaml</command_line>
+    <clean_command_line>caelus_tutorials --quiet -f run_tutorial.yaml --clean</clean_command_line>
+  </problem_definition>
+
+  <variables>
+
+    <variable name="run_completed" language="python" variable_list="completed">
+from caelus.post.logs import SolverLog
+clog = SolverLog(logfile="vofSolver.log")
+completed = clog.solve_completed
+    </variable>
+
+    <variable name="ref_time_residuals" language="python" variable_list="exec_time_ref,p_residual_ref">
+import pandas as pd
+import os, caelus_test_tools
+reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
+time = pd.read_table(os.path.join(reference_path,"logs/clock_time.dat"), comment='#', delim_whitespace=True)
+ex_time = time[['Time', 'ExecutionTime']]
+exec_time_ref = ex_time.iloc[-1][1]
+p_ref = pd.read_table(os.path.join(reference_path,"logs/p_rgh.dat"), comment='#', delim_whitespace=True)
+p_res_ref = p_ref[p_ref.SubIteration == 1][['Time', 'InitialResidual']]
+p_residual_ref = p_res_ref.iloc[-1][1]
+    </variable>
+
+    <variable name="time_residuals" language="python" variable_list="exec_time,p_residual">
+import pandas as pd
+time = pd.read_table("logs/clock_time.dat", comment='#', delim_whitespace=True)
+ex_time = time[['Time', 'ExecutionTime']]
+exec_time = ex_time.iloc[-1][1]
+p = pd.read_table("logs/p_rgh.dat", comment='#', delim_whitespace=True)
+p_res = p[p.SubIteration == 1][['Time', 'InitialResidual']]
+p_residual = p_res.iloc[-1][1]
+    </variable>
+
+    <variable name="results" language="python" variable_list="p_range,u_range">
+import os, caelus_test_tools
+reference_path = caelus_test_tools.reference_path(project_dir, ref_path)
+p_range  = caelus_test_tools.compare_scalar_range("0.006/p_rgh", os.path.join(reference_path,"0.006/p_rgh"), 0.05)
+u_range  = caelus_test_tools.compare_vector_norm_range("0.006/U", os.path.join(reference_path,"0.006/U"), 0.05)
+    </variable>
+  </variables>
+
+  <pass_tests>
+    <test name="Completed" language="python">
+assert(completed)
+    </test>
+    <test name="p residual" language="python">
+assert(p_residual &lt;= 1.1*p_residual_ref)
+    </test>
+    <test name="p range" language="python">
+assert(p_range)
+    </test>
+    <test name="U range" language="python">
+assert(u_range)
+    </test>
+  </pass_tests>
+
+  <warn_tests>
+    <test name="Higher execution time" language="python">
+assert(exec_time &lt; 1.05*exec_time_ref)
+    </test>
+  </warn_tests>
+
+</testproblem>

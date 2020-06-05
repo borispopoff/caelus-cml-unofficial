@@ -28,7 +28,7 @@ License
 template<class Type>
 void CML::surfaceInterpolateFields::interpolateFields
 (
-    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh> >& sflds
+    PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 ) const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;

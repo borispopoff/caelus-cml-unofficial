@@ -1,7 +1,7 @@
 <project>
     <shortName>Caelus</shortName>
-    <fullName>Caelus 9.04</fullName>
-    <version>9.04</version>
+    <fullName>Caelus 10.04</fullName>
+    <version>10.04</version>
     <installerFilename>${project.shortName}-${project.version}-${platform_name}-${buildtype}-installer.${platform_exec_suffix}</installerFilename>
     <readmeFile>../README.md</readmeFile>
     <wrapLicenseFileText>0</wrapLicenseFileText>

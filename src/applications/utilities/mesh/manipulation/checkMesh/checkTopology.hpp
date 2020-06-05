@@ -35,6 +35,6 @@ namespace CML
         const bool,
         const bool,
         const autoPtr<surfaceWriter>&,
-        const autoPtr<writer<scalar> >&
+        const autoPtr<writer<scalar>>&
     );
 }

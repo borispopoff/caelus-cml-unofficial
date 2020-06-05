@@ -32,6 +32,7 @@ submodels/sootModel/sootModel/sootModel.cpp
 submodels/sootModel/sootModel/sootModelNew.cpp
 submodels/sootModel/mixtureFractionSoot/mixtureFractionSoots.cpp
 submodels/sootModel/noSoot/noSoot.cpp
+fvOptions/radiation/radiation.cpp
 derivedFvPatchFields/MarshakRadiation/MarshakRadiationMixedFvPatchScalarField.cpp
 derivedFvPatchFields/MarshakRadiationFixedT/MarshakRadiationFixedTMixedFvPatchScalarField.cpp
 derivedFvPatchFields/greyDiffusiveRadiation/greyDiffusiveRadiationMixedFvPatchScalarField.cpp

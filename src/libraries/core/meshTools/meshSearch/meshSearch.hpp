@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -59,14 +59,14 @@ class meshSearch
         const polyMesh& mesh_;
 
         //- Whether to use cell decomposition for all geometric tests
-        const polyMesh::cellRepresentation cellDecompMode_;
+        const polyMesh::cellDecomposition cellDecompMode_;
 
-        //- data bounding box
+        //- Data bounding box
         mutable autoPtr<treeBoundBox> overallBbPtr_;
 
-        //- demand driven octrees
-        mutable autoPtr<indexedOctree<treeDataFace> > boundaryTreePtr_;
-        mutable autoPtr<indexedOctree<treeDataCell> > cellTreePtr_;
+        //- Demand driven octrees
+        mutable autoPtr<indexedOctree<treeDataFace>> boundaryTreePtr_;
+        mutable autoPtr<indexedOctree<treeDataCell>> cellTreePtr_;
 
 
     // Private Member Functions
@@ -93,20 +93,20 @@ class meshSearch
 
         // Cells
 
-            //- nearest cell centre using octree
+            //- Nearest cell centre using octree
             label findNearestCellTree(const point&) const;
 
-            //- nearest cell centre going through all cells
+            //- Nearest cell centre going through all cells
             label findNearestCellLinear(const point&) const;
 
-            //- walk from seed. Does not 'go around' boundary, just returns
+            //- Walk from seed. Does not 'go around' boundary, just returns
             //  last cell before boundary.
             label findNearestCellWalk(const point&, const label) const;
 
-            //- cell containing location. Linear search.
+            //- Cell containing location. Linear search.
             label findCellLinear(const point&) const;
 
-            //- walk from seed. Does not 'go around' boundary, just returns
+            //- Walk from seed. Does not 'go around' boundary, just returns
             //  last cell before boundary.
             label findCellWalk(const point&, const label) const;
 
@@ -123,12 +123,12 @@ class meshSearch
 
         // Boundary faces
 
-            //- walk from seed to find nearest boundary face. Gets stuck in
+            //- Walk from seed to find nearest boundary face. Gets stuck in
             //  local minimum.
             label findNearestBoundaryFaceWalk
             (
                 const point& location,
-                const label seedFaceI
+                const label seedFacei
             ) const;
 
             //- Calculate offset vector in direction dir with as length a
@@ -136,16 +136,9 @@ class meshSearch
             vector offset
             (
                 const point& bPoint,
-                const label bFaceI,
+                const label bFacei,
                 const vector& dir
             ) const;
-
-
-        //- Disallow default bitwise copy construct
-        meshSearch(const meshSearch&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshSearch&);
 
 
 public:
@@ -156,7 +149,7 @@ public:
 
     // Static data members
 
-        //- tolerance on linear dimensions
+        //- Tolerance on linear dimensions
         static scalar tol_;
 
 
@@ -167,7 +160,7 @@ public:
         meshSearch
         (
             const polyMesh& mesh,
-            const polyMesh::cellRepresentation = polyMesh::FACEDIAGTETS
+            const polyMesh::cellDecomposition = polyMesh::CELL_TETS
         );
 
         //- Construct with a custom bounding box. Any mesh element outside
@@ -177,8 +170,12 @@ public:
         (
             const polyMesh& mesh,
             const treeBoundBox& bb,
-            const polyMesh::cellRepresentation = polyMesh::FACEDIAGTETS
+            const polyMesh::cellDecomposition = polyMesh::CELL_TETS
         );
+
+        //- Disallow default bitwise copy construct
+        meshSearch(const meshSearch&) = delete;
+
 
     //- Destructor
     ~meshSearch();
@@ -193,7 +190,7 @@ public:
                 return mesh_;
             }
 
-            polyMesh::cellRepresentation decompMode() const
+            polyMesh::cellDecomposition decompMode() const
             {
                 return cellDecompMode_;
             }
@@ -217,14 +214,14 @@ public:
             label findNearestCell
             (
                 const point& location,
-                const label seedCellI = -1,
+                const label seedCelli = -1,
                 const bool useTreeSearch = true
             ) const;
 
             label findNearestFace
             (
                 const point& location,
-                const label seedFaceI = -1,
+                const label seedFacei = -1,
                 const bool useTreeSearch = true
             ) const;
 
@@ -235,7 +232,7 @@ public:
             label findCell
             (
                 const point& location,
-                const label seedCellI = -1,
+                const label seedCelli = -1,
                 const bool useTreeSearch = true
             ) const;
 
@@ -246,7 +243,7 @@ public:
             label findNearestBoundaryFace
             (
                 const point& location,
-                const label seedFaceI = -1,
+                const label seedFacei = -1,
                 const bool useTreeSearch = true
             ) const;
 
@@ -267,11 +264,16 @@ public:
             bool isInside(const point&) const;
 
 
-        //- delete all storage
+        //- Delete all storage
         void clearOut();
 
         //- Correct for mesh geom/topo changes
         void correct();
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshSearch&) = delete;
 };
 
 

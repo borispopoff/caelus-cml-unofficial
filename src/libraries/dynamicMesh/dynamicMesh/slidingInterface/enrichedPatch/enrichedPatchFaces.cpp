@@ -73,12 +73,12 @@ void CML::enrichedPatch::calcEnrichedFaces
 
     // Add slave faces into the enriched faces list
 
-    forAll(slavePatch_, faceI)
+    forAll(slavePatch_, facei)
     {
-        const face oldFace = slavePatch_[faceI];
-        const face oldLocalFace = slaveLocalFaces[faceI];
-//         Info<< "old slave face " << faceI << ": " << oldFace << endl;
-        const labelList& curEdges = slaveFaceEdges[faceI];
+        const face oldFace = slavePatch_[facei];
+        const face oldLocalFace = slaveLocalFaces[facei];
+//         Info<< "old slave face " << facei << ": " << oldFace << endl;
+        const labelList& curEdges = slaveFaceEdges[facei];
 
         DynamicList<label> newFace(oldFace.size()*enrichedFaceRatio_);
 
@@ -169,7 +169,7 @@ void CML::enrichedPatch::calcEnrichedFaces
                         FatalErrorInFunction
                             << "Invalid point edge weights.  Some of points are"
                             << " not on the edge for edge " << curEdges[i]
-                            << " of face " << faceI << " in slave patch." << nl
+                            << " of face " << facei << " in slave patch." << nl
                             << "Min weight: " << min(edgePointWeights)
                             << " Max weight: " << max(edgePointWeights)
                             << abort(FatalError);
@@ -209,7 +209,7 @@ void CML::enrichedPatch::calcEnrichedFaces
                 }
             }
         }
-        // Info<< "New slave face " << faceI << ": " << newFace << endl;
+        // Info<< "New slave face " << facei << ": " << newFace << endl;
 
         // Add the new face to the list
         enrichedFaces[nEnrichedFaces].transfer(newFace);
@@ -218,12 +218,12 @@ void CML::enrichedPatch::calcEnrichedFaces
 
     // Add master faces into the enriched faces list
 
-    forAll(masterPatch_, faceI)
+    forAll(masterPatch_, facei)
     {
-        const face& oldFace = masterPatch_[faceI];
-        const face& oldLocalFace = masterLocalFaces[faceI];
+        const face& oldFace = masterPatch_[facei];
+        const face& oldLocalFace = masterLocalFaces[facei];
 //         Info<< "old master face: " << oldFace << endl;
-        const labelList& curEdges = masterFaceEdges[faceI];
+        const labelList& curEdges = masterFaceEdges[facei];
 
         DynamicList<label> newFace(oldFace.size()*enrichedFaceRatio_);
 
@@ -306,7 +306,7 @@ void CML::enrichedPatch::calcEnrichedFaces
                         FatalErrorInFunction
                             << "Invalid point edge weights.  Some of points are"
                             << " not on the edge for edge " << curEdges[i]
-                            << " of face " << faceI << " in master patch." << nl
+                            << " of face " << facei << " in master patch." << nl
                             << "Min weight: " << min(edgePointWeights)
                             << " Max weight: " << max(edgePointWeights)
                             << abort(FatalError);

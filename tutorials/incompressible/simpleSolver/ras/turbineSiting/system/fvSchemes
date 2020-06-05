@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -26,8 +26,8 @@ divSchemes
     default             none;
     div(phi,U)          Gauss upwind;
     div((nuEff*dev(T(grad(U)))))    Gauss linear;
-    div(phi,epsilon)    Gauss upwind;
-    div(phi,k)          Gauss upwind;
+    div(phi,epsilon)    stabilised Gauss upwind;
+    div(phi,k)          stabilised Gauss upwind;
 }
 
 laplacianSchemes

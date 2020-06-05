@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -61,15 +61,6 @@ class processorGAMGInterfaceField
         int rank_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        processorGAMGInterfaceField(const processorGAMGInterfaceField&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorGAMGInterfaceField&);
-
-
 public:
 
     //- Runtime type information
@@ -92,6 +83,12 @@ public:
             const bool doTransform,
             const int rank
         );
+
+        //- Disallow default bitwise copy construct
+        processorGAMGInterfaceField
+        (
+            const processorGAMGInterfaceField&
+        ) = delete;
 
 
     //- Destructor
@@ -165,6 +162,12 @@ public:
             {
                 return rank_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorGAMGInterfaceField&) = delete;
 };
 
 

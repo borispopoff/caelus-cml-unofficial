@@ -73,7 +73,7 @@ class writeAdditionalFieldsFunctionObject
 protected:
 
     // //- Overwrite the default output time
-    // virtual bool outputTime();
+    // virtual bool writeTime();
 public:
 
     //- Runtime type information

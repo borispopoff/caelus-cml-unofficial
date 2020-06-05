@@ -104,9 +104,9 @@ label mergeEdges
 
     label nCollapsed = 0;
 
-    forAll(pointEdges, pointI)
+    forAll(pointEdges, pointi)
     {
-        const labelList& pEdges = pointEdges[pointI];
+        const labelList& pEdges = pointEdges[pointi];
 
         if (pEdges.size() == 2)
         {
@@ -114,15 +114,15 @@ label mergeEdges
             const edge& rightE = edges[pEdges[1]];
 
             // Get the two vertices on both sides of the point
-            label leftV = leftE.otherVertex(pointI);
-            label rightV = rightE.otherVertex(pointI);
+            label leftV = leftE.otherVertex(pointi);
+            label rightV = rightE.otherVertex(pointi);
 
             // Collapse only if none of the points part of merge network
             // or all of networks with different masters.
             label midMaster = -1;
-            if (region[pointI] != -1)
+            if (region[pointi] != -1)
             {
-                midMaster = master[region[pointI]];
+                midMaster = master[region[pointi]];
             }
 
             label leftMaster = -2;
@@ -145,10 +145,10 @@ label mergeEdges
             )
             {
                 // Check if the two edge are in line
-                vector leftVec = points[pointI] - points[leftV];
+                vector leftVec = points[pointi] - points[leftV];
                 leftVec /= mag(leftVec) + VSMALL;
 
-                vector rightVec = points[rightV] - points[pointI];
+                vector rightVec = points[rightV] - points[pointi];
                 rightVec /= mag(rightVec) + VSMALL;
 
                 if ((leftVec & rightVec) > maxCos)
@@ -270,14 +270,14 @@ label collapseHighAspectFaces
 
     label nCollapsed = 0;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        if (magArea[faceI] < minArea)
+        if (magArea[facei] < minArea)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             // Get the edges in face point order
-            labelList fEdges(getSortedEdges(edges, f, faceEdges[faceI]));
+            labelList fEdges(getSortedEdges(edges, f, faceEdges[facei]));
 
             SortableList<scalar> lengths(fEdges.size());
             forAll(fEdges, i)
@@ -359,22 +359,22 @@ label simplifyFaces
 
     boolList protectedEdge(mesh.nEdges(), false);
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         if
         (
             f.size() > minSize
-         && cells[faceOwner[faceI]].size() >= 6
+         && cells[faceOwner[facei]].size() >= 6
          && (
-                mesh.isInternalFace(faceI)
-             && cells[faceNeighbour[faceI]].size() >= 6
+                mesh.isInternalFace(facei)
+             && cells[faceNeighbour[facei]].size() >= 6
             )
         )
         {
             // Get the edges in face point order
-            labelList fEdges(getSortedEdges(edges, f, faceEdges[faceI]));
+            labelList fEdges(getSortedEdges(edges, f, faceEdges[facei]));
 
             SortableList<scalar> lengths(fEdges.size());
             forAll(fEdges, i)
@@ -482,9 +482,9 @@ int main(int argc, char *argv[])
         PackedBoolList boundaryPoint(mesh.nPoints());
 
         label nIntFaces = mesh.nInternalFaces();
-        for (label faceI = nIntFaces; faceI < mesh.nFaces(); faceI++)
+        for (label facei = nIntFaces; facei < mesh.nFaces(); facei++)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             forAll(f, fp)
             {

@@ -229,8 +229,8 @@ void CML::overtopping::computeAndWriteBoundary
     label facePatchId = mesh_.boundaryMesh().whichPatch(faceI);
     label faceId(-1);
 
-    q = vector::zero;
-    f = vector::zero;
+    q = Zero;
+    f = Zero;
 
     const polyPatch& pp = mesh_.boundaryMesh()[facePatchId];
 
@@ -249,10 +249,10 @@ void CML::overtopping::computeAndWriteBoundary
     // so redundant
 //    else if (isA<cyclicPolyPatch>(pp))
 //    {
-//        label patchFaceI = faceI - pp.start();
-//        if (patchFaceI < pp.size()/2)
+//        label patchFacei = faceI - pp.start();
+//        if (patchFacei < pp.size()/2)
 //        {
-//            faceId = patchFaceI;
+//            faceId = patchFacei;
 //        }
 //        else
 //        {
@@ -294,8 +294,8 @@ void CML::overtopping::computeAndWrite
     const surfaceVectorField& Sf(mesh_.Sf());
     const surfaceScalarField& magSf(mesh_.magSf());
 
-    vectorField q(fz.size(), vector::zero);
-    vectorField f(fz.size(), vector::zero);
+    vectorField q(fz.size(), Zero);
+    vectorField f(fz.size(), Zero);
 
     forAll (fz, facei)
     {

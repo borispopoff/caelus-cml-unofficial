@@ -48,11 +48,11 @@ CML::label CML::meshWriters::STARCD::findDefaultBoundary() const
     label id = -1;
 
     // find Default_Boundary_Region if it exists
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (defaultBoundaryName == patches[patchI].name())
+        if (defaultBoundaryName == patches[patchi].name())
         {
-            id = patchI;
+            id = patchi;
             break;
         }
     }
@@ -294,10 +294,10 @@ void CML::meshWriters::STARCD::writeCells(const fileName& prefix) const
 
             label count = indices.size();
             // determine the total number of vertices
-            forAll(cFaces, faceI)
+            forAll(cFaces, facei)
             {
-                count += faces[cFaces[faceI]].size();
-                indices[faceI+1] = count;
+                count += faces[cFaces[facei]].size();
+                indices[facei+1] = count;
             }
 
             os  << cellId + 1
@@ -321,9 +321,9 @@ void CML::meshWriters::STARCD::writeCells(const fileName& prefix) const
             }
 
             // write faces - max 8 per line
-            forAll(cFaces, faceI)
+            forAll(cFaces, facei)
             {
-                label meshFace = cFaces[faceI];
+                label meshFace = cFaces[facei];
                 face f;
 
                 if (owner[meshFace] == cellId)
@@ -384,9 +384,9 @@ void CML::meshWriters::STARCD::writeBoundary(const fileName& prefix) const
     // write boundary faces - skip Default_Boundary_Region entirely
     //
     label boundId = 0;
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        label regionId = patchI;
+        label regionId = patchi;
         if (regionId == defaultId)
         {
             continue;  // skip - already written
@@ -396,24 +396,24 @@ void CML::meshWriters::STARCD::writeBoundary(const fileName& prefix) const
             regionId++;
         }
 
-        label patchStart = patches[patchI].start();
-        label patchSize  = patches[patchI].size();
-        word  bndType = boundaryRegion_.boundaryType(patches[patchI].name());
+        label patchStart = patches[patchi].start();
+        label patchSize  = patches[patchi].size();
+        word  bndType = boundaryRegion_.boundaryType(patches[patchi].name());
 
         for
         (
-            label faceI = patchStart;
-            faceI < (patchStart + patchSize);
-            ++faceI
+            label facei = patchStart;
+            facei < (patchStart + patchSize);
+            ++facei
         )
         {
-            label cellId = owner[faceI];
+            label cellId = owner[facei];
             const labelList& cFaces  = cells[cellId];
             const cellShape& shape = shapes[cellId];
-            label cellFaceId = findIndex(cFaces, faceI);
+            label cellFaceId = findIndex(cFaces, facei);
 
-            //      Info<< "cell " << cellId + 1 << " face " << faceI
-            //          << " == " << faces[faceI]
+            //      Info<< "cell " << cellId + 1 << " face " << facei
+            //          << " == " << faces[facei]
             //          << " is index " << cellFaceId << " from " << cFaces;
 
             // Unfortunately, the order of faces returned by
@@ -431,7 +431,7 @@ void CML::meshWriters::STARCD::writeBoundary(const fileName& prefix) const
                 const faceList sFaces = shape.faces();
                 forAll(sFaces, sFaceI)
                 {
-                    if (faces[faceI] == sFaces[sFaceI])
+                    if (faces[facei] == sFaces[sFaceI])
                     {
                         cellFaceId = sFaceI;
                         break;

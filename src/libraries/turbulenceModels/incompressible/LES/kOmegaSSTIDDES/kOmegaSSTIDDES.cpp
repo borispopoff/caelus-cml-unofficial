@@ -119,7 +119,7 @@ tmp<volScalarField> kOmegaSSTIDDES::LIDDES() const
     // Simplified formulation from Gritskevich et al. paper (2011) where fe = 0
     if (simplified_)
     {
-        fe() *= scalar(0);
+        fe.ref() *= scalar(0);
     }
 
     const volScalarField fdTilda(max(1 - fdt(S), fB));
@@ -138,7 +138,7 @@ tmp<volScalarField> kOmegaSSTIDDES::FDES() const
     return max
     (
         Lt()/LIDDES(),
-        scalar(1.0)
+        scalar(1)
     );
 }
 

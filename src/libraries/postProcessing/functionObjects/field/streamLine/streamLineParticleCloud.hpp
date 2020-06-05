@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -50,10 +50,10 @@ class streamLineParticleCloud
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        streamLineParticleCloud(const streamLineParticleCloud&);
+        streamLineParticleCloud(const streamLineParticleCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const streamLineParticleCloud&);
+        void operator=(const streamLineParticleCloud&) = delete;
 
 
 public:

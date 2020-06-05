@@ -59,20 +59,20 @@ tmp<Field> FieldValueExpressionDriver::doCompare(const Field &a,Op op,const Fiel
 {
     tmp<Field> res=makeLogicalField<Field>(0.);
 
-    forAll(res(),cellI) {
-        if( op(a[cellI],b[cellI]) ) {
-            res()[cellI]=1;
+    forAll(res(),celli) {
+        if( op(a[celli],b[celli]) ) {
+            const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res()[cellI]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 
     forAll(res->boundaryField(),pI) {
         forAll(res->boundaryField()[pI],fI) {
             if( op(getFaceValue(a),getFaceValue(b)) ) {
-                getFaceValue(res())=1;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=1;
             } else {
-                getFaceValue(res())=0;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=0;
             }
         }
     }
@@ -85,11 +85,11 @@ tmp<Field> FieldValueExpressionDriver::doPointCompare(const Field &a,Op op,const
 {
     tmp<Field> res=makeLogicalField<Field>(0.);
 
-    forAll(res(),cellI) {
-        if( op(a[cellI],b[cellI]) ) {
-            res()[cellI]=1;
+    forAll(res(),celli) {
+        if( op(a[celli],b[celli]) ) {
+           const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res()[cellI]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 
@@ -101,14 +101,14 @@ tmp<Field> FieldValueExpressionDriver::doLogicalOp(const Field &a,Op op,const Fi
 {
     tmp<Field> res=makeLogicalField<Field>(0.);
 
-    forAll(res(),cellI) {
-        bool av= a[cellI] ? true : false;
-        bool bv= b[cellI] ? true : false;
+    forAll(res(),celli) {
+        bool av= a[celli] ? true : false;
+        bool bv= b[celli] ? true : false;
 
         if( op(av,bv) ) {
-            res()[cellI]=1;
+            const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res()[cellI]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 
@@ -117,9 +117,9 @@ tmp<Field> FieldValueExpressionDriver::doLogicalOp(const Field &a,Op op,const Fi
             bool av= getFaceValue(a) ? true : false;
             bool bv= getFaceValue(b) ? true : false;
             if( op(av,bv) ) {
-                getFaceValue(res())=1;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=1;
             } else {
-                getFaceValue(res())=0;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=0;
             }
         }
     }
@@ -136,14 +136,14 @@ tmp<Field> FieldValueExpressionDriver::doPointLogicalOp(
 {
     tmp<Field> res=makeLogicalField<Field>(0.);
 
-    forAll(res(),cellI) {
-        bool av= a[cellI] ? true : false;
-        bool bv= b[cellI] ? true : false;
+    forAll(res(),celli) {
+        bool av= a[celli] ? true : false;
+        bool bv= b[celli] ? true : false;
 
         if( op(av,bv) ) {
-            res()[cellI]=1;
+            const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res()[cellI]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 
@@ -161,12 +161,12 @@ tmp<T>  FieldValueExpressionDriver::doConditional(
         pTraits<typename T::value_type>::zero
     );
 
-    forAll(result(),cellI) {
-        bool c=cond[cellI] ? true : false;
+    forAll(result(),celli) {
+        bool c=cond[celli] ? true : false;
         if(c) {
-            result()[cellI]=yes[cellI];
+            const_cast<typename T::value_type&>(result()[celli])=yes[celli];
         } else {
-            result()[cellI]=no[cellI];
+            const_cast<typename T::value_type&>(result()[celli])=no[celli];
         }
     }
 
@@ -174,9 +174,9 @@ tmp<T>  FieldValueExpressionDriver::doConditional(
         forAll(result().boundaryField()[pI],fI) {
             bool c= getFaceValue(cond) ? true : false;
             if(c) {
-                getFaceValue(result())=getFaceValue(yes);
+                const_cast<typename T::value_type&>(getFaceValue(result()))=getFaceValue(yes);
             } else {
-                getFaceValue(result())=getFaceValue(no);
+               const_cast<typename T::value_type&>(getFaceValue(result()))=getFaceValue(no);
             }
         }
     }
@@ -195,12 +195,12 @@ tmp<T>  FieldValueExpressionDriver::doConditional(
         pTraits<typename T::value_type>::zero
     );
 
-    forAll(result(),cellI) {
-        bool c=cond[cellI] ? true : false;
+    forAll(result(),celli) {
+        bool c=cond[celli] ? true : false;
         if(c) {
-            result()[cellI]=yes[cellI];
+            const_cast<typename T::value_type&>(result()[celli])=yes[celli];
         } else {
-            result()[cellI]=no[cellI];
+            const_cast<typename T::value_type&>(result()[celli])=no[celli];
         }
     }
 
@@ -212,13 +212,13 @@ tmp<Field> FieldValueExpressionDriver::doLogicalNot(const Field &a)
 {
     tmp<Field> res=makeLogicalField<Field>(0.);
 
-    forAll(res(),cellI) {
-        bool av= a[cellI] ? true : false;
+    forAll(res(),celli) {
+        bool av= a[celli] ? true : false;
 
         if( !av ) {
-            res()[cellI]=1;
+            const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res()[cellI]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 
@@ -226,9 +226,9 @@ tmp<Field> FieldValueExpressionDriver::doLogicalNot(const Field &a)
         forAll(res->boundaryField()[pI],fI) {
             bool av= getFaceValue(a) ? true : false;
             if( !av ) {
-                getFaceValue(res())=1;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=1;
             } else {
-                getFaceValue(res())=0;
+                const_cast<typename Field::value_type&>(getFaceValue(res()))=0;
             }
         }
     }
@@ -241,13 +241,13 @@ tmp<Field> FieldValueExpressionDriver::doPointLogicalNot(const Field &a)
 {
     tmp<Field> res=makeLogicalField<Field>(0.);
 
-    forAll(res(),cellI) {
-        bool av= a[cellI] ? true : false;
+    forAll(res(),celli) {
+        bool av= a[celli] ? true : false;
 
         if( !av ) {
-            res()[cellI]=1;
+            const_cast<typename Field::value_type&>(res()[celli])=1;
         } else {
-            res()[cellI]=0;
+            const_cast<typename Field::value_type&>(res()[celli])=0;
         }
     }
 

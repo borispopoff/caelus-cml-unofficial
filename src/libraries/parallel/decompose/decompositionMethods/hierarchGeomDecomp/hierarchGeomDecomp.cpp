@@ -139,8 +139,8 @@ void CML::hierarchGeomDecomp::calculateSortedWeightedSizes
     sortedWeightedSizes[0] = 0;
     forAll(current, i)
     {
-        label pointI = current[indices[i]];
-        sortedWeightedSizes[i + 1] = sortedWeightedSizes[i] + weights[pointI];
+        label pointi = current[indices[i]];
+        sortedWeightedSizes[i + 1] = sortedWeightedSizes[i] + weights[pointi];
     }
     // Non-dimensionalise and multiply by size.
     scalar globalCurrentLength = returnReduce
@@ -333,9 +333,9 @@ void CML::hierarchGeomDecomp::sortComponent
 
     forAll(current, i)
     {
-        label pointI = current[i];
+        label pointi = current[i];
 
-        sortedCoord[i] = points[pointI][compI];
+        sortedCoord[i] = points[pointi][compI];
     }
     sortedCoord.sort();
 
@@ -440,13 +440,13 @@ void CML::hierarchGeomDecomp::sortComponent
 
         forAll(slice, i)
         {
-            label pointI = current[sortedCoord.indices()[leftIndex+i]];
+            label pointi = current[sortedCoord.indices()[leftIndex+i]];
 
             // Mark point into correct bin
-            finalDecomp[pointI] += bin*mult;
+            finalDecomp[pointi] += bin*mult;
 
             // And collect for next sorting action
-            slice[i] = pointI;
+            slice[i] = pointi;
         }
 
         // Sort slice in next component
@@ -508,9 +508,9 @@ void CML::hierarchGeomDecomp::sortComponent
 
     forAll(current, i)
     {
-        label pointI = current[i];
+        label pointi = current[i];
 
-        sortedCoord[i] = points[pointI][compI];
+        sortedCoord[i] = points[pointi][compI];
     }
     sortedCoord.sort();
 
@@ -623,13 +623,13 @@ void CML::hierarchGeomDecomp::sortComponent
 
         forAll(slice, i)
         {
-            label pointI = current[sortedCoord.indices()[leftIndex+i]];
+            label pointi = current[sortedCoord.indices()[leftIndex+i]];
 
             // Mark point into correct bin
-            finalDecomp[pointI] += bin*mult;
+            finalDecomp[pointi] += bin*mult;
 
             // And collect for next sorting action
-            slice[i] = pointI;
+            slice[i] = pointi;
         }
 
         // Sort slice in next component

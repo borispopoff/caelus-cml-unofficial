@@ -111,11 +111,11 @@ CML::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh, true),
+    interRegionOption(name, modelType, dict, mesh),
     porosityPtr_(nullptr),
     firstIter_(-1),
-    UName_(coeffs_.lookupOrDefault<word>("UName", "U")),
-    muName_(coeffs_.lookupOrDefault<word>("muName", "thermo:mu"))
+    UName_(coeffs_.lookupOrDefault<word>("U", "U")),
+    muName_(coeffs_.lookupOrDefault<word>("mu", "thermo:mu"))
 {
     if (active_)
     {
@@ -130,7 +130,7 @@ CML::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
 void CML::fv::interRegionExplicitPorositySource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     initialise();
@@ -150,7 +150,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
             IOobject::NO_WRITE
         ),
         nbrMesh,
-        dimensionedVector("zero", U.dimensions(), vector::zero)
+        dimensionedVector("zero", U.dimensions(), Zero)
     );
 
     // map local velocity onto neighbour region
@@ -158,7 +158,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         U.internalField(),
         plusEqOp<vector>(),
-        UNbr.internalField()
+        UNbr.primitiveFieldRef()
     );
 
     fvMatrix<vector> nbrEqn(UNbr, eqn.dimensions());
@@ -171,7 +171,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     vectorField& Usource = porosityEqn.source();
 
     Udiag.setSize(eqn.diag().size(), 0.0);
-    Usource.setSize(eqn.source().size(), vector::zero);
+    Usource.setSize(eqn.source().size(), Zero);
 
     meshInterp().mapTgtToSrc(nbrEqn.diag(), plusEqOp<scalar>(), Udiag);
     meshInterp().mapTgtToSrc(nbrEqn.source(), plusEqOp<vector>(), Usource);
@@ -184,7 +184,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     initialise();
@@ -204,7 +204,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
             IOobject::NO_WRITE
         ),
         nbrMesh,
-        dimensionedVector("zero", U.dimensions(), vector::zero)
+        dimensionedVector("zero", U.dimensions(), Zero)
     );
 
     // map local velocity onto neighbour region
@@ -212,7 +212,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         U.internalField(),
         plusEqOp<vector>(),
-        UNbr.internalField()
+        UNbr.primitiveFieldRef()
     );
 
     fvMatrix<vector> nbrEqn(UNbr, eqn.dimensions());
@@ -228,7 +228,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
             IOobject::NO_WRITE
         ),
         nbrMesh,
-        dimensionedScalar("zero", dimDensity, 0.0)
+        dimensionedScalar("zero", dimDensity, 0)
     );
 
     volScalarField muNbr
@@ -242,7 +242,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
             IOobject::NO_WRITE
         ),
         nbrMesh,
-        dimensionedScalar("zero", dimViscosity, 0.0)
+        dimensionedScalar("zero", dimViscosity, 0)
     );
 
     const volScalarField& mu =
@@ -253,7 +253,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         rho.internalField(),
         plusEqOp<scalar>(),
-        rhoNbr.internalField()
+        rhoNbr.primitiveFieldRef()
     );
 
     // map local mu onto neighbour region
@@ -261,7 +261,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     (
         mu.internalField(),
         plusEqOp<scalar>(),
-        muNbr.internalField()
+        muNbr.primitiveFieldRef()
     );
 
     porosityPtr_->addResistance(nbrEqn, rhoNbr, muNbr);
@@ -272,7 +272,7 @@ void CML::fv::interRegionExplicitPorositySource::addSup
     vectorField& Usource = porosityEqn.source();
 
     Udiag.setSize(eqn.diag().size(), 0.0);
-    Usource.setSize(eqn.source().size(), vector::zero);
+    Usource.setSize(eqn.source().size(), Zero);
 
     meshInterp().mapTgtToSrc(nbrEqn.diag(), plusEqOp<scalar>(), Udiag);
     meshInterp().mapTgtToSrc(nbrEqn.source(), plusEqOp<vector>(), Usource);
@@ -281,21 +281,14 @@ void CML::fv::interRegionExplicitPorositySource::addSup
 }
 
 
-void CML::fv::interRegionExplicitPorositySource::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-}
-
-
 bool CML::fv::interRegionExplicitPorositySource::read(const dictionary& dict)
 {
-    if (option::read(dict))
+    if (interRegionOption::read(dict))
     {
-        coeffs_.readIfPresent("UName", UName_);
-        coeffs_.readIfPresent("muName", muName_);
+        coeffs_.readIfPresent("U", UName_);
+        coeffs_.readIfPresent("mu", muName_);
 
-        // reset the porosity model?
+        // Reset the porosity model?
 
         return true;
     }

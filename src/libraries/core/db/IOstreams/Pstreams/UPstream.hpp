@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -54,7 +54,7 @@ class UPstream
 public:
 
     //- Types of communications
-    enum commsTypes
+    enum class commsTypes
     {
         blocking,
         scheduled,
@@ -203,7 +203,7 @@ private:
         static void collectReceives
         (
             const label procID,
-            const List<DynamicList<label> >& receives,
+            const List<DynamicList<label>>& receives,
             DynamicList<label>& allReceives
         );
 

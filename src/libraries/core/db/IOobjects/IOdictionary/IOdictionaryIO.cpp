@@ -94,7 +94,7 @@ void CML::IOdictionary::readFile(const bool masterOnly)
             // not currently supported
             IPstream fromAbove
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 myComm.above(),
                 0,
                 Pstream::msgType(),
@@ -115,7 +115,7 @@ void CML::IOdictionary::readFile(const bool masterOnly)
             }
             OPstream toBelow
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 myComm.below()[belowI],
                 0,
                 Pstream::msgType(),

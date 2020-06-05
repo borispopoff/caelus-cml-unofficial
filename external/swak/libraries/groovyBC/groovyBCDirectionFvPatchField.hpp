@@ -102,9 +102,9 @@ public:
     );
 
     //- Construct and return a clone
-    virtual tmp<fvPatchField<Type> > clone() const
+    virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
                 (
                     new groovyBCDirectionFvPatchField<Type>(*this)
                 );
@@ -118,12 +118,12 @@ public:
     );
 
     //- Construct and return a clone setting internal field reference
-    virtual tmp<fvPatchField<Type> > clone
+    virtual tmp<fvPatchField<Type>> clone
     (
         const DimensionedField<Type, volMesh>& iF
     ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
                 (
                     new groovyBCDirectionFvPatchField<Type>(*this, iF)
                 );
@@ -234,7 +234,7 @@ groovyBCDirectionFvPatchField<Type>::groovyBCDirectionFvPatchField
     {
         fvPatchField<Type>::operator=(this->refValue());
         WarningInFunction
-            << "No value defined for " << this->dimensionedInternalField().name()
+            << "No value defined for " << this->internalField().name()
             << " on " << this->patch().name() << " therefore using "
             << this->refValue()
             << endl;
@@ -262,12 +262,12 @@ groovyBCDirectionFvPatchField<Type>::groovyBCDirectionFvPatchField
             this->directionMixedFvPatchField<Type>::updateCoeffs();
         }
 
-        tmp<Field<Type> > normalValue = transform(this->valueFraction(), this->refValue());
+        tmp<Field<Type>> normalValue = transform(this->valueFraction(), this->refValue());
 
-        tmp<Field<Type> > gradValue =
+        tmp<Field<Type>> gradValue =
             this->patchInternalField() + this->refGrad()/this->patch().deltaCoeffs();
         
-        tmp<Field<Type> > transformGradValue =
+        tmp<Field<Type>> transformGradValue =
             transform(I - this->valueFraction(), gradValue);
         
         Field<Type>::operator=(normalValue + transformGradValue);

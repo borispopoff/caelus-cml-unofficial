@@ -38,7 +38,7 @@ Author(s)
 #include "turbulenceModel.hpp"
 #include "basicKinematicCloud.hpp"
 #include "pimpleControl.hpp"
-#include "fvIOoptionList.hpp"
+#include "fvOptions.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

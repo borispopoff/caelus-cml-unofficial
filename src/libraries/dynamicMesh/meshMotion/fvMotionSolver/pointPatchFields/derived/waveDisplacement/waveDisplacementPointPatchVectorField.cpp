@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -40,9 +40,9 @@ waveDisplacementPointPatchVectorField
 )
 :
     fixedValuePointPatchField<vector>(p, iF),
-    amplitude_(vector::zero),
+    amplitude_(Zero),
     omega_(0.0),
-    waveNumber_(vector::zero)
+    waveNumber_(Zero)
 {}
 
 
@@ -57,7 +57,7 @@ waveDisplacementPointPatchVectorField
     fixedValuePointPatchField<vector>(p, iF, dict),
     amplitude_(dict.lookup("amplitude")),
     omega_(readScalar(dict.lookup("omega"))),
-    waveNumber_(dict.lookupOrDefault<vector>("waveLength", vector::zero))
+    waveNumber_(dict.lookupOrDefault<vector>("waveLength", Zero))
 {
     if (!dict.found("value"))
     {
@@ -105,10 +105,10 @@ void waveDisplacementPointPatchVectorField::updateCoeffs()
         return;
     }
 
-    const polyMesh& mesh = this->dimensionedInternalField().mesh()();
+    const polyMesh& mesh = this->internalField().mesh()();
     const Time& t = mesh.time();
 
-    const scalarField points( waveNumber_ & patch().localPoints());
+    const scalarField points(waveNumber_ & patch().localPoints());
 
     Field<vector>::operator=
     (
@@ -122,13 +122,10 @@ void waveDisplacementPointPatchVectorField::updateCoeffs()
 void waveDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     pointPatchField<vector>::write(os);
-    os.writeKeyword("amplitude")
-        << amplitude_ << token::END_STATEMENT << nl;
-    os.writeKeyword("omega")
-        << omega_ << token::END_STATEMENT << nl;
-    os.writeKeyword("waveNumber")
-        << waveNumber_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "amplitude", amplitude_);
+    writeEntry(os, "omega", omega_);
+    writeEntry(os, "waveNumber", waveNumber_);
+    writeEntry(os, "value", *this);
 }
 
 

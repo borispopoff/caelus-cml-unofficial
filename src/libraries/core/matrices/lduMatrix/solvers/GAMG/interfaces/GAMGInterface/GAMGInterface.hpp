@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -66,17 +66,6 @@ protected:
         labelField faceRestrictAddressing_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GAMGInterface(const GAMGInterface&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const GAMGInterface&);
-
-
 public:
 
     //- Runtime type information
@@ -138,6 +127,9 @@ public:
             coarseInterfaces_(coarseInterfaces)
         {}
 
+        //- Disallow default bitwise copy construct
+        GAMGInterface(const GAMGInterface&) = delete;
+
 
     // Member Functions
 
@@ -179,7 +171,7 @@ public:
 
             //- Return the interface internal field of the given field
             template<class Type>
-            tmp<Field<Type> > interfaceInternalField
+            tmp<Field<Type>> interfaceInternalField
             (
                 const UList<Type>& internalData
             ) const;
@@ -204,6 +196,11 @@ public:
             (
                 const scalarField& fineCoeffs
             ) const;
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GAMGInterface&) = delete;
 };
 
 
@@ -214,13 +211,13 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::GAMGInterface::interfaceInternalField
+CML::tmp<CML::Field<Type>> CML::GAMGInterface::interfaceInternalField
 (
     const UList<Type>& iF
 ) const
 {
-    tmp<Field<Type> > tresult(new Field<Type>(size()));
-    Field<Type>& result = tresult();
+    tmp<Field<Type>> tresult(new Field<Type>(size()));
+    Field<Type>& result = tresult.ref();
 
     forAll(result, elemI)
     {

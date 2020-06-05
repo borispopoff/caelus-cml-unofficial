@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -110,9 +110,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new freestreamFvPatchField<Type>(*this)
             );
@@ -126,12 +126,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new freestreamFvPatchField<Type>(*this, iF)
             );
@@ -158,19 +158,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-freestreamFvPatchField<Type>::freestreamFvPatchField
+CML::freestreamFvPatchField<Type>::freestreamFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -181,7 +175,7 @@ freestreamFvPatchField<Type>::freestreamFvPatchField
 
 
 template<class Type>
-freestreamFvPatchField<Type>::freestreamFvPatchField
+CML::freestreamFvPatchField<Type>::freestreamFvPatchField
 (
     const freestreamFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -194,7 +188,7 @@ freestreamFvPatchField<Type>::freestreamFvPatchField
 
 
 template<class Type>
-freestreamFvPatchField<Type>::freestreamFvPatchField
+CML::freestreamFvPatchField<Type>::freestreamFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -222,7 +216,7 @@ freestreamFvPatchField<Type>::freestreamFvPatchField
 
 
 template<class Type>
-freestreamFvPatchField<Type>::freestreamFvPatchField
+CML::freestreamFvPatchField<Type>::freestreamFvPatchField
 (
     const freestreamFvPatchField<Type>& ptf
 )
@@ -232,7 +226,7 @@ freestreamFvPatchField<Type>::freestreamFvPatchField
 
 
 template<class Type>
-freestreamFvPatchField<Type>::freestreamFvPatchField
+CML::freestreamFvPatchField<Type>::freestreamFvPatchField
 (
     const freestreamFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -245,26 +239,16 @@ freestreamFvPatchField<Type>::freestreamFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void freestreamFvPatchField<Type>::write(Ostream& os) const
+void CML::freestreamFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
     if (this->phiName_ != "phi")
     {
-        os.writeKeyword("phi")
-            << this->phiName_ << token::END_STATEMENT << nl;
+        writeEntry(os, "phi", this->phiName_);
     }
-    freestreamValue().writeEntry("freestreamValue", os);
-    this->writeEntry("value", os);
+    writeEntry(os, "freestreamValue", freestreamValue());
+    writeEntry(os, "value", *this);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

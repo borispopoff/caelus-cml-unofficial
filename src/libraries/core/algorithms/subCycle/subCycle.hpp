@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                          Class subCycle Declaration
+                         Class subCycle Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class GeometricField>
@@ -106,14 +106,6 @@ class subCycle
     public subCycleField<GeometricField>,
     public subCycleTime
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        subCycle(const subCycle<GeometricField>&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const subCycle<GeometricField>&);
-
 
 public:
 
@@ -129,6 +121,9 @@ public:
             this->updateTimeIndex();
         }
 
+        //- Disallow default bitwise copy construct
+        subCycle(const subCycle<GeometricField>&) = delete;
+
 
     //- Destructor
     //  End the subCycleTime, which restores the time state
@@ -136,6 +131,12 @@ public:
     {
         endSubCycle();
     }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const subCycle<GeometricField>&) = delete;
 };
 
 

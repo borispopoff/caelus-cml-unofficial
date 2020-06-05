@@ -64,7 +64,7 @@ void makeGraph
     makeGraph
     (
         x,
-        vsf.internalField(),
+        vsf.primitiveField(),
         name,
         path,
         graphFormat

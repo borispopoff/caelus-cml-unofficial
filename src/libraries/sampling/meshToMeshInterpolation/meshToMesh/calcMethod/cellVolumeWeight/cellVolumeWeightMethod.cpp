@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -58,8 +58,10 @@ bool CML::cellVolumeWeightMethod::findInitialSeeds
 
         if (mapFlag[srcI])
         {
-            const pointField
-                pts(srcCells[srcI].points(srcFaces, srcPts).xfer());
+            const pointField pts
+            (
+                srcCells[srcI].points(srcFaces, srcPts)
+            );
 
             forAll(pts, ptI)
             {
@@ -102,11 +104,11 @@ void CML::cellVolumeWeightMethod::calculateAddressing
     label srcCellI = srcSeedI;
     label tgtCellI = tgtSeedI;
 
-    List<DynamicList<label> > srcToTgtAddr(src_.nCells());
-    List<DynamicList<scalar> > srcToTgtWght(src_.nCells());
+    List<DynamicList<label>> srcToTgtAddr(src_.nCells());
+    List<DynamicList<scalar>> srcToTgtWght(src_.nCells());
 
-    List<DynamicList<label> > tgtToSrcAddr(tgt_.nCells());
-    List<DynamicList<scalar> > tgtToSrcWght(tgt_.nCells());
+    List<DynamicList<label>> tgtToSrcAddr(tgt_.nCells());
+    List<DynamicList<scalar>> tgtToSrcWght(tgt_.nCells());
 
     // list of tgt cell neighbour cells
     DynamicList<label> nbrTgtCells(10);

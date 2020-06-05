@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -38,7 +38,7 @@ namespace CML
     bool fieldOk(const IOobjectList& cloudObjs, const word& name);
 
     template<class Type>
-    tmp<Field<Type> > readParticleField
+    tmp<Field<Type>> readParticleField
     (
         const word& name,
         const IOobjectList cloudObjs
@@ -47,7 +47,7 @@ namespace CML
     template<class Type>
     void readFields
     (
-        PtrList<List<Type> >& values,
+        PtrList<List<Type>>& values,
         const List<word>& fields,
         const IOobjectList& cloudObjs
     );
@@ -59,15 +59,15 @@ namespace CML
     void writeVTKFields
     (
         OFstream& os,
-        const PtrList<List<Type> >& values,
-        const List<SortableList<scalar> >& agePerTrack,
+        const PtrList<List<Type>>& values,
+        const List<SortableList<scalar>>& agePerTrack,
         const List<word>& fieldNames
     );
 
     void processFields
     (
         OFstream& os,
-        const List<SortableList<scalar> >& agePerTrack,
+        const List<SortableList<scalar>>& agePerTrack,
         const List<word>& userFieldNames,
         const IOobjectList& cloudObjs
     );
@@ -93,7 +93,7 @@ bool fieldOk(const IOobjectList& cloudObjs, const word& name)
 
 
 template<class Type>
-tmp<Field<Type> > readParticleField
+tmp<Field<Type>> readParticleField
 (
     const word& name,
     const IOobjectList cloudObjs
@@ -105,7 +105,7 @@ tmp<Field<Type> > readParticleField
     if (obj != nullptr)
     {
         IOField<Type> newField(*obj);
-        return tmp<Field<Type> >(new Field<Type>(newField.xfer()));
+        return tmp<Field<Type>>(new Field<Type>(move(newField)));
     }
 
     FatalErrorInFunction
@@ -119,7 +119,7 @@ tmp<Field<Type> > readParticleField
 template<class Type>
 void readFields
 (
-    PtrList<List<Type> >& values,
+    PtrList<List<Type>>& values,
     const List<word>& fieldNames,
     const IOobjectList& cloudObjs
 )
@@ -133,7 +133,7 @@ void readFields
         {
             Info<< "        reading field " << fieldNames[j] << endl;
             IOField<Type> newField(*obj);
-            values.set(j, new List<Type>(newField.xfer()));
+            values.set(j, new List<Type>(move(newField)));
         }
         else
         {
@@ -160,24 +160,24 @@ template<class Type>
 void writeVTKFields
 (
     OFstream& os,
-    const PtrList<List<Type> >& values,
-    const List<List<label> >& addr,
+    const PtrList<List<Type>>& values,
+    const List<List<label>>& addr,
     const List<word>& fieldNames
 )
 {
     label step = max(floor(8/pTraits<Type>::nComponents), 1);
 
-    forAll(values, fieldI)
+    forAll(values, fieldi)
     {
-        Info<< "        writing field " << fieldNames[fieldI] << endl;
-        os  << nl << fieldNames[fieldI] << ' ' << pTraits<Type>::nComponents
-            << ' ' << values[fieldI].size() << " float" << nl;
+        Info<< "        writing field " << fieldNames[fieldi] << endl;
+        os  << nl << fieldNames[fieldi] << ' ' << pTraits<Type>::nComponents
+            << ' ' << values[fieldi].size() << " float" << nl;
         label offset = 0;
         forAll(addr, trackI)
         {
             const List<label> ids(addr[trackI]);
 
-            List<Type> data(UIndirectList<Type>(values[fieldI], ids));
+            List<Type> data(UIndirectList<Type>(values[fieldi], ids));
             label nData = data.size() - 1;
             forAll(data, i)
             {
@@ -201,7 +201,7 @@ template<class Type>
 void processFields
 (
     OFstream& os,
-    const List<List<label> >& addr,
+    const List<List<label>>& addr,
     const List<word>& userFieldNames,
     const IOobjectList& cloudObjs
 )
@@ -221,7 +221,7 @@ void processFields
         }
         fieldNames.shrink();
 
-        PtrList<List<Type> > values(fieldNames.size());
+        PtrList<List<Type>> values(fieldNames.size());
         readFields<Type>(values, fieldNames, cloudObjs);
 
         writeVTKFields<Type>

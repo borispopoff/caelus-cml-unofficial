@@ -89,9 +89,9 @@ void setField
 
     label setCells=0;
 
-    forAll(*pTemp,cellI) {
-        if(cond[cellI]!=0) {
-            (*pTemp)[cellI]=result[cellI];
+    forAll(*pTemp,celli) {
+        if(cond[celli]!=0) {
+            (*pTemp)[celli]=result[celli];
             setCells++;
         }
     }
@@ -103,11 +103,11 @@ void setField
     FieldValueExpressionDriver::setValuePatches(*pTemp,keepPatches,valuePatches);
 
     forAll(result.boundaryField(),patchI) {
-        typename T::PatchFieldType &pf=
-            const_cast<typename T::PatchFieldType&>(
+        typename T::Patch &pf=
+            const_cast<typename T::Patch&>(
                 pTemp->boundaryField()[patchI]
             );
-        const typename T::PatchFieldType &pfOrig=result.boundaryField()[patchI];
+        const typename T::Patch &pfOrig=result.boundaryField()[patchI];
 
         if(pf.patch().coupled()) {
             pf==pfOrig;

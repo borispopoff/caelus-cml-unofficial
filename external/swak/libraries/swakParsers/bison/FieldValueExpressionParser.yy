@@ -1197,7 +1197,7 @@ fsexp:  TOKEN_surf '(' scalar ')'           {
         | fsexp '/' fsexp 		    {
             sameSize($1,$3);
             $$ = new CML::surfaceScalarField(*$1);
-	    (*$$).internalField()/=(*$3).internalField();
+	    (*$$).primitiveFieldRef()/=(*$3).primitiveField();
             delete $1; delete $3;
           }
         | fsexp '-' fsexp 		    {
@@ -1494,7 +1494,7 @@ fsexp:  TOKEN_surf '(' scalar ')'           {
 //          }
         | TOKEN_tr '(' fhexp ')'            {
             $$ = driver.makeField<CML::surfaceScalarField>(
-                CML::tr($3->internalField())
+                CML::tr($3->primitiveField())
             ).ptr();
             delete $3;
           }
@@ -1508,7 +1508,7 @@ fsexp:  TOKEN_surf '(' scalar ')'           {
           }
         | TOKEN_det '(' fhexp ')'           {
             $$ = driver.makeField<CML::surfaceScalarField>(
-                CML::det($3->internalField())
+                CML::det($3->primitiveField())
             ).ptr();
             delete $3;
           }
@@ -1632,7 +1632,7 @@ fvexp:  fvector                            { $$ = $1; }
             sameSize($1,$3);
             //$$ = new CML::surfaceVectorField(*$1 / *$3);
 	    $$ = new CML::surfaceVectorField(*$1);
-	    (*$$).internalField()/=(*$3).internalField();
+	    (*$$).primitiveFieldRef()/=(*$3).primitiveField();
             delete $1; delete $3;
           }
         | fvexp '-' fvexp 		   {
@@ -2148,7 +2148,7 @@ exp:    TOKEN_NUM                                   {
           }
         | TOKEN_tr '(' hexp ')'                    {
             $$ = driver.makeField<CML::volScalarField>(
-                CML::tr($3->internalField())
+                CML::tr($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -2165,7 +2165,7 @@ exp:    TOKEN_NUM                                   {
           }
         | TOKEN_det '(' hexp ')'                   {
             $$ = driver.makeField<CML::volScalarField>(
-                CML::det($3->internalField())
+                CML::det($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -2853,7 +2853,7 @@ texp:   tensor                  { $$ = $1; }
           }
         | TOKEN_eigenVectors '(' yexp ')'       {
             $$ = driver.makeField<CML::volTensorField>(
-                CML::eigenVectors($3->internalField())
+                CML::eigenVectors($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -2865,7 +2865,7 @@ texp:   tensor                  { $$ = $1; }
           }
         | TOKEN_cof '(' texp ')' 	            {
             $$ = driver.makeField<CML::volTensorField>(
-                CML::cof($3->internalField())
+                CML::cof($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -3174,7 +3174,7 @@ yexp:   symmTensor                  { $$ = $1; }
           }
         | TOKEN_cof '(' yexp ')' 	            {
             $$ = driver.makeField<CML::volSymmTensorField>(
-                CML::cof($3->internalField())
+                CML::cof($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -3424,28 +3424,28 @@ hexp:   sphericalTensor                  { $$ = $1; }
         | '(' hexp ')'		        { $$ = $2; }
         | TOKEN_sph '(' texp ')'              {
             $$ = driver.makeField<CML::volSphericalTensorField>(
-                CML::sph($3->internalField())
+                CML::sph($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
           }
         | TOKEN_sph '(' yexp ')'              {
             $$ = driver.makeField<CML::volSphericalTensorField>(
-                CML::sph($3->internalField())
+                CML::sph($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
           }
         | TOKEN_sph '(' hexp ')'              {
             $$ = driver.makeField<CML::volSphericalTensorField>(
-                CML::sph($3->internalField())
+                CML::sph($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
           }
         | TOKEN_inv '(' hexp ')' 	           {
             $$ = driver.makeField<CML::volSphericalTensorField>(
-                CML::inv($3->internalField())
+                CML::inv($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -3737,7 +3737,7 @@ ftexp:   ftensor                  { $$ = $1; }
             sameSize($1,$3);
             //$$ = new CML::surfaceTensorField(*$1 / *$3);
 	    $$ = new CML::surfaceTensorField(*$1);
-	    (*$$).internalField()/(*$3).internalField();
+	    (*$$).primitiveFieldRef()/(*$3).primitiveField();
 	    delete $1; delete $3;
             driver.setCalculatedPatches(*$$);
           }
@@ -3789,7 +3789,7 @@ ftexp:   ftensor                  { $$ = $1; }
           }
         | TOKEN_eigenVectors '(' fyexp ')'       {
             $$ = driver.makeField<CML::surfaceTensorField>(
-                CML::eigenVectors($3->internalField())
+                CML::eigenVectors($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -3801,7 +3801,7 @@ ftexp:   ftensor                  { $$ = $1; }
           }
         | TOKEN_cof '(' ftexp ')' 	            {
             $$ = driver.makeField<CML::surfaceTensorField>(
-                CML::cof($3->internalField())
+                CML::cof($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -3959,7 +3959,7 @@ fyexp:   fsymmTensor                  { $$ = $1; }
             sameSize($1,$3);
             //$$ = new CML::surfaceSymmTensorField(*$1 / *$3);
 	    $$ = new CML::surfaceSymmTensorField(*$1);
-	    (*$$).internalField()/=(*$3).internalField();
+	    (*$$).primitiveFieldRef()/=(*$3).primitiveField();
             delete $1; delete $3;
             driver.setCalculatedPatches(*$$);
           }
@@ -4014,7 +4014,7 @@ fyexp:   fsymmTensor                  { $$ = $1; }
           }
         | TOKEN_cof '(' fyexp ')' 	            {
             $$ = driver.makeField<CML::surfaceSymmTensorField>(
-                CML::cof($3->internalField())
+                CML::cof($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -4152,7 +4152,7 @@ fhexp:   fsphericalTensor                  { $$ = $1; }
             sameSize($1,$3);
             //$$ = new CML::surfaceSphericalTensorField(*$1 / *$3);
 	    $$ = new CML::surfaceSphericalTensorField(*$1);
-	    (*$$).internalField()/=(*$3).internalField();
+	    (*$$).primitiveFieldRef()/=(*$3).primitiveField();
             delete $1; delete $3;
             driver.setCalculatedPatches(*$$);
           }
@@ -4170,28 +4170,28 @@ fhexp:   fsphericalTensor                  { $$ = $1; }
         | '(' fhexp ')'		        { $$ = $2; }
         | TOKEN_sph '(' ftexp ')'              {
             $$ = driver.makeField<CML::surfaceSphericalTensorField>(
-                CML::sph($3->internalField())
+                CML::sph($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
           }
         | TOKEN_sph '(' fyexp ')'              {
             $$ = driver.makeField<CML::surfaceSphericalTensorField>(
-                CML::sph($3->internalField())
+                CML::sph($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
           }
         | TOKEN_sph '(' fhexp ')'              {
             $$ = driver.makeField<CML::surfaceSphericalTensorField>(
-                CML::sph($3->internalField())
+                CML::sph($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
           }
         | TOKEN_inv '(' fhexp ')' 	           {
             $$ = driver.makeField<CML::surfaceSphericalTensorField>(
-                CML::inv($3->internalField())
+                CML::inv($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -4297,7 +4297,7 @@ psexp:  TOKEN_point '(' scalar ')'            {
         | psexp '*' psexp 		    {
             sameSize($1,$3);
             $$ = driver.makePointField<CML::pointScalarField>(
-                $1->internalField() * $3->internalField()
+                $1->primitiveField() * $3->primitiveField()
             ).ptr();
             delete $1; delete $3;
           }
@@ -4355,7 +4355,7 @@ psexp:  TOKEN_point '(' scalar ')'            {
             sameSize($1,$3);
             //$$ = new CML::pointScalarField(*$1 / *$3);
 	    $$ = new CML::pointScalarField(*$1);
-	    (*$$).internalField()/=(*$3).internalField();
+	    (*$$).primitiveFieldRef()/=(*$3).primitiveField();
             delete $1; delete $3;
           }
         | psexp '-' psexp 		    {
@@ -4364,199 +4364,199 @@ psexp:  TOKEN_point '(' scalar ')'            {
             delete $1; delete $3;}
         | TOKEN_pow '(' psexp ',' scalar ')' {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::pow($3->internalField(),$5)()
+                CML::pow($3->primitiveField(),$5)()
             ).ptr();
             delete $3;
           }
         | TOKEN_pow '(' psexp ',' psexp ')' {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::pow($3->internalField(),$5->internalField())()
+                CML::pow($3->primitiveField(),$5->primitiveField())()
             ).ptr();
             delete $3; delete $5;
           }
         | TOKEN_log '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::log($3->internalField())()
+                CML::log($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_exp '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::exp($3->internalField())()
+                CML::exp($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_sqr '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::sqr($3->internalField())()
+                CML::sqr($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_sqrt '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::sqrt($3->internalField())()
+                CML::sqrt($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_sin '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::sin($3->internalField())()
+                CML::sin($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_cos '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::cos($3->internalField())()
+                CML::cos($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_tan '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::tan($3->internalField())()
+                CML::tan($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_log10 '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::log10($3->internalField())()
+                CML::log10($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_asin '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(CML::asin(
-                $3->internalField())()
+                $3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_acos '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::acos($3->internalField())()
+                CML::acos($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_atan '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(CML::atan(
-                $3->internalField())()
+                $3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_sinh '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(CML::sinh(
-                $3->internalField())()
+                $3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_cosh '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(CML::cosh(
-                $3->internalField())()
+                $3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_tanh '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(CML::tanh(
-                $3->internalField())()
+                $3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_asinh '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::asinh($3->internalField())()
+                CML::asinh($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_acosh '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(CML::acosh(
-                $3->internalField())()
+                $3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_atanh '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::atanh($3->internalField())()
+                CML::atanh($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_erf '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::erf($3->internalField())()
+                CML::erf($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_erfc '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::erfc($3->internalField())()
+                CML::erfc($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_lgamma '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::lgamma($3->internalField())()
+                CML::lgamma($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_besselJ1 '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::j1($3->internalField())()
+                CML::j1($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_besselJ0 '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::j0($3->internalField())()
+                CML::j0($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_besselY0 '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::y0($3->internalField())()
+                CML::y0($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_besselY1 '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::y1($3->internalField())()
+                CML::y1($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_sign '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::sign($3->internalField())()
+                CML::sign($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_pos '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::pos($3->internalField())()
+                CML::pos($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_neg '(' psexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::neg($3->internalField())()
+                CML::neg($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_min '(' psexp ',' psexp  ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::min($3->internalField(),$5->internalField())
+                CML::min($3->primitiveField(),$5->primitiveField())
             ).ptr();
             delete $3; delete $5;
           }
         | TOKEN_max '(' psexp ',' psexp  ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::max($3->internalField(),$5->internalField())
+                CML::max($3->primitiveField(),$5->primitiveField())
             ).ptr();
             delete $3; delete $5;
           }
         | TOKEN_min '(' psexp ')'            {
             $$ = driver.makePointConstantField<CML::pointScalarField>(
-                CML::gMin($3->internalField())
+                CML::gMin($3->primitiveField())
             ).ptr();
             delete $3;
           }
         | TOKEN_max '(' psexp ')'            {
             $$ = driver.makePointConstantField<CML::pointScalarField>(
-                CML::gMax($3->internalField())
+                CML::gMax($3->primitiveField())
             ).ptr();
             delete $3;
           }
@@ -4574,7 +4574,7 @@ psexp:  TOKEN_point '(' scalar ')'            {
           }
         | '-' psexp %prec TOKEN_NEG          {
             $$ = driver.makePointField<CML::pointScalarField>(
-                -$2->internalField()
+                -$2->primitiveField()
             ).ptr();
             delete $2;
           }
@@ -4704,37 +4704,37 @@ psexp:  TOKEN_point '(' scalar ')'            {
           }
         | TOKEN_tr '(' ptexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::tr($3->internalField())()
+                CML::tr($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_tr '(' pyexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::tr($3->internalField())()
+                CML::tr($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_tr '(' phexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::tr($3->internalField())()
+                CML::tr($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_det '(' ptexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::det($3->internalField())()
+                CML::det($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_det '(' pyexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::det($3->internalField())()
+                CML::det($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_det '(' phexp ')'            {
             $$ = driver.makePointField<CML::pointScalarField>(
-                CML::det($3->internalField())()
+                CML::det($3->primitiveField())()
             ).ptr();
             delete $3;
           }
@@ -4829,7 +4829,7 @@ pvexp:  pvector                            { $$ = $1; }
             sameSize($1,$3);
             //$$ = new CML::pointVectorField(*$1 / *$3);
 	    $$ = new CML::pointVectorField(*$1);
-	    (*$$).internalField()/=(*$3).internalField();
+	    (*$$).primitiveFieldRef()/=(*$3).primitiveField();
             delete $1; delete $3;
           }
         | pvexp '-' pvexp 		   {
@@ -4838,33 +4838,33 @@ pvexp:  pvector                            { $$ = $1; }
             delete $1; delete $3;}
         | '-' pvexp %prec TOKEN_NEG          {
             $$ = driver.makePointField<CML::pointVectorField>(
-                -$2->internalField()
+                -$2->primitiveField()
             ).ptr();
             delete $2;
           }
         | '*' ptexp %prec TOKEN_HODGE 	        {
             $$ = driver.makePointField<CML::pointVectorField>(
-                *($2->internalField())
+                *($2->primitiveField())
             ).ptr();
             delete $2;
           }
         | '*' pyexp %prec TOKEN_HODGE 	        {
             $$ = driver.makePointField<CML::pointVectorField>(
-                *($2->internalField())
+                *($2->primitiveField())
             ).ptr();
             delete $2;
           }
         | '(' pvexp ')'		           { $$ = $2; }
         | TOKEN_eigenValues '(' ptexp ')'       {
             $$ = driver.makePointField<CML::pointVectorField>(
-                CML::eigenValues($3->internalField())
+                CML::eigenValues($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
           }
         | TOKEN_eigenValues '(' pyexp ')'       {
             $$ = driver.makePointField<CML::pointVectorField>(
-                CML::eigenValues($3->internalField())
+                CML::eigenValues($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -4929,7 +4929,7 @@ pvexp:  pvector                            { $$ = $1; }
         | TOKEN_min '(' pvexp ',' pvexp  ')'            {
             $$ = driver.makePointField<CML::pointVectorField>(
                 CML::min(
-                    $3->internalField(),$5->internalField()
+                    $3->primitiveField(),$5->primitiveField()
                 )
             ).ptr();
             delete $3; delete $5;
@@ -4937,14 +4937,14 @@ pvexp:  pvector                            { $$ = $1; }
         | TOKEN_max '(' pvexp ',' pvexp  ')'            {
             $$ = driver.makePointField<CML::pointVectorField>(
                 CML::max(
-                    $3->internalField(),$5->internalField()
+                    $3->primitiveField(),$5->primitiveField()
                 )
             ).ptr();
             delete $3; delete $5;
           }
         | TOKEN_min '(' pvexp ')'            {
             $$ = driver.makePointConstantField<CML::pointVectorField>(
-                CML::gMin($3->internalField())
+                CML::gMin($3->primitiveField())
             ).ptr();
             delete $3;
           }
@@ -4959,7 +4959,7 @@ pvexp:  pvector                            { $$ = $1; }
         }
         | TOKEN_max '(' pvexp ')'            {
             $$ = driver.makePointConstantField<CML::pointVectorField>(
-                CML::gMax($3->internalField())
+                CML::gMax($3->primitiveField())
             ).ptr();
             delete $3;
           }
@@ -5093,7 +5093,7 @@ ptexp:   ptensor                  { $$ = $1; }
             sameSize($1,$3);
 	    // $$ = new CML::pointTensorField(*$1 / *$3);
 	    $$ = new CML::pointTensorField(*$1);
-	    (*$$).internalField()/=(*$3).internalField();
+	    (*$$).primitiveFieldRef()/=(*$3).primitiveField();
             delete $1; delete $3;
             driver.setCalculatedPatches(*$$);
           }
@@ -5129,7 +5129,7 @@ ptexp:   ptensor                  { $$ = $1; }
           }
         | '-' ptexp %prec TOKEN_NEG          {
             $$ = driver.makePointField<CML::pointTensorField>(
-                -$2->internalField()
+                -$2->primitiveField()
             ).ptr();
             delete $2;
           }
@@ -5146,7 +5146,7 @@ ptexp:   ptensor                  { $$ = $1; }
           }
         | TOKEN_eigenVectors '(' pyexp ')'       {
             $$ = driver.makePointField<CML::pointTensorField>(
-                CML::eigenVectors($3->internalField())
+                CML::eigenVectors($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -5158,7 +5158,7 @@ ptexp:   ptensor                  { $$ = $1; }
           }
         | TOKEN_cof '(' ptexp ')' 	            {
             $$ = driver.makePointField<CML::pointTensorField>(
-                CML::cof($3->internalField())
+                CML::cof($3->primitiveField())
             ).ptr();
             delete $3;
             driver.setCalculatedPatches(*$$);
@@ -5192,7 +5192,7 @@ ptexp:   ptensor                  { $$ = $1; }
         | TOKEN_min '(' ptexp ',' ptexp  ')'            {
             $$ = driver.makePointField<CML::pointTensorField>(
                 CML::min(
-                    $3->internalField(),$5->internalField()
+                    $3->primitiveField(),$5->primitiveField()
                 )
             ).ptr();
             delete $3; delete $5;
@@ -5200,20 +5200,20 @@ ptexp:   ptensor                  { $$ = $1; }
         | TOKEN_max '(' ptexp ',' ptexp  ')'            {
             $$ = driver.makePointField<CML::pointTensorField>(
                 CML::max(
-                    $3->internalField(),$5->internalField()
+                    $3->primitiveField(),$5->primitiveField()
                 )
             ).ptr();
             delete $3; delete $5;
           }
         | TOKEN_min '(' ptexp ')'            {
             $$ = driver.makePointConstantField<CML::pointTensorField>(
-                CML::gMin($3->internalField())
+                CML::gMin($3->primitiveField())
             ).ptr();
             delete $3;
           }
         | TOKEN_max '(' ptexp ')'            {
             $$ = driver.makePointConstantField<CML::pointTensorField>(
-                CML::gMax($3->internalField())
+                CML::gMax($3->primitiveField())
             ).ptr();
             delete $3;
           }
@@ -5310,7 +5310,7 @@ pyexp:   psymmTensor                  { $$ = $1; }
             sameSize($1,$3);
             //$$ = new CML::pointSymmTensorField(*$1 / *$3);
 	    $$ = new CML::pointSymmTensorField(*$1);
-	    (*$$).internalField()/=(*$3).internalField();
+	    (*$$).primitiveFieldRef()/=(*$3).primitiveField();
             delete $1; delete $3;
             driver.setCalculatedPatches(*$$);
           }
@@ -5334,7 +5334,7 @@ pyexp:   psymmTensor                  { $$ = $1; }
           }
         | '-' pyexp %prec TOKEN_NEG          {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
-                -$2->internalField()
+                -$2->primitiveField()
             ).ptr();
             delete $2;
           }
@@ -5342,55 +5342,55 @@ pyexp:   psymmTensor                  { $$ = $1; }
           }
         | TOKEN_symm '(' ptexp ')'            {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
-                CML::symm($3->internalField())()
+                CML::symm($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_symm '(' pyexp ')'            {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
-                CML::symm($3->internalField())()
+                CML::symm($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_twoSymm '(' ptexp ')'            {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
-                CML::twoSymm($3->internalField())()
+                CML::twoSymm($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_twoSymm '(' pyexp ')'            {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
-                CML::twoSymm($3->internalField())()
+                CML::twoSymm($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_inv '(' pyexp ')'            {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
-                CML::inv($3->internalField())()
+                CML::inv($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_cof '(' pyexp ')'            {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
-                CML::cof($3->internalField())
+                CML::cof($3->primitiveField())
             ).ptr();
             delete $3;
           }
         | TOKEN_dev '(' pyexp ')'            {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
-                CML::dev($3->internalField())()
+                CML::dev($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_dev2 '(' pyexp ')'            {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
-                CML::dev2($3->internalField())()
+                CML::dev2($3->primitiveField())()
             ).ptr();
             delete $3;
           }
         | TOKEN_sqr '(' pvexp ')'            {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
-                CML::sqr($3->internalField())()
+                CML::sqr($3->primitiveField())()
             ).ptr();
             delete $3;
           }
@@ -5410,27 +5410,27 @@ pyexp:   psymmTensor                  { $$ = $1; }
           }
         | TOKEN_min '(' pyexp ',' pyexp  ')'            {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
-                CML::min($3->internalField(),$5->internalField())
+                CML::min($3->primitiveField(),$5->primitiveField())
             ).ptr();
             delete $3; delete $5;
           }
         | TOKEN_max '(' pyexp ',' pyexp  ')'            {
             $$ = driver.makePointField<CML::pointSymmTensorField>(
                 CML::max(
-                    $3->internalField(),$5->internalField()
+                    $3->primitiveField(),$5->primitiveField()
                 )
             ).ptr();
             delete $3; delete $5;
           }
         | TOKEN_min '(' pyexp ')'            {
             $$ = driver.makePointConstantField<CML::pointSymmTensorField>(
-                CML::gMin($3->internalField())
+                CML::gMin($3->primitiveField())
             ).ptr();
             delete $3;
           }
         | TOKEN_max '(' pyexp ')'            {
             $$ = driver.makePointConstantField<CML::pointSymmTensorField>(
-                CML::gMax($3->internalField())
+                CML::gMax($3->primitiveField())
             ).ptr();
             delete $3;
           }
@@ -5501,7 +5501,7 @@ phexp:   psphericalTensor                  { $$ = $1; }
             sameSize($1,$3);
 	    // $$ = new CML::pointSphericalTensorField(*$1 / *$3);
 	    $$ = new CML::pointSphericalTensorField(*$1);
-	    (*$$).internalField()/=(*$3).internalField();
+	    (*$$).primitiveFieldRef()/=(*$3).primitiveField();
             delete $1; delete $3;
             driver.setCalculatedPatches(*$$);
           }
@@ -5513,32 +5513,32 @@ phexp:   psphericalTensor                  { $$ = $1; }
           }
         | '-' phexp %prec TOKEN_NEG          {
             $$ = driver.makePointField<CML::pointSphericalTensorField>(
-                -$2->internalField()
+                -$2->primitiveField()
             ).ptr();
             delete $2;
           }
         | '(' phexp ')'		        { $$ = $2; }
         | TOKEN_sph '(' ptexp ')'              {
             $$ = driver.makePointField<CML::pointSphericalTensorField>(
-                CML::sph($3->internalField())
+                CML::sph($3->primitiveField())
             ).ptr();
             delete $3;
           }
         | TOKEN_sph '(' pyexp ')'              {
             $$ = driver.makePointField<CML::pointSphericalTensorField>(
-                CML::sph($3->internalField())
+                CML::sph($3->primitiveField())
             ).ptr();
             delete $3;
           }
         | TOKEN_sph '(' phexp ')'              {
             $$ = driver.makePointField<CML::pointSphericalTensorField>(
-                CML::sph($3->internalField())
+                CML::sph($3->primitiveField())
             ).ptr();
             delete $3;
           }
         | TOKEN_inv '(' phexp ')'            {
             $$ = driver.makePointField<CML::pointSphericalTensorField>(
-                CML::inv($3->internalField())()
+                CML::inv($3->primitiveField())()
             ).ptr();
             delete $3;
           }
@@ -5559,7 +5559,7 @@ phexp:   psphericalTensor                  { $$ = $1; }
         | TOKEN_min '(' phexp ',' phexp  ')'            {
             $$ = driver.makePointField<CML::pointSphericalTensorField>(
                 CML::min(
-                    $3->internalField(),$5->internalField()
+                    $3->primitiveField(),$5->primitiveField()
                 )
             ).ptr();
             delete $3; delete $5;
@@ -5567,7 +5567,7 @@ phexp:   psphericalTensor                  { $$ = $1; }
         | TOKEN_max '(' phexp ',' phexp  ')'            {
             $$ = driver.makePointField<CML::pointSphericalTensorField>(
                 CML::max(
-                    $3->internalField(),$5->internalField()
+                    $3->primitiveField(),$5->primitiveField()
                 )
             ).ptr();
             delete $3; delete $5;
@@ -5575,7 +5575,7 @@ phexp:   psphericalTensor                  { $$ = $1; }
         | TOKEN_min '(' phexp ')'            {
             $$ = driver.makePointConstantField<CML::pointSphericalTensorField>(
                 CML::gMin(
-                    $3->internalField()
+                    $3->primitiveField()
                 )
             ).ptr();
             delete $3;
@@ -5583,7 +5583,7 @@ phexp:   psphericalTensor                  { $$ = $1; }
         | TOKEN_max '(' phexp ')'            {
             $$ = driver.makePointConstantField<CML::pointSphericalTensorField>(
                 CML::gMax(
-                    $3->internalField()
+                    $3->primitiveField()
                 )
             ).ptr();
             delete $3;

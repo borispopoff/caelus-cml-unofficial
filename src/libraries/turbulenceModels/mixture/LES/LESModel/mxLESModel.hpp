@@ -88,10 +88,10 @@ protected:
 private:
 
     //- Disallow default bitwise copy construct
-    LESModel(const LESModel&);
+    LESModel(const LESModel&) = delete;
 
     //- Disallow default bitwise assignment
-    LESModel& operator=(const LESModel&);
+    LESModel& operator=(const LESModel&) = delete;
 
 
 public:

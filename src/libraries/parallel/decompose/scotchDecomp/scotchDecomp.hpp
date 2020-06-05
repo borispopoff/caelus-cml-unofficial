@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -72,7 +72,7 @@ class scotchDecomp
         );
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const scotchDecomp&);
+        void operator=(const scotchDecomp&) = delete;
         scotchDecomp(const scotchDecomp&);
 
 
@@ -100,7 +100,7 @@ public:
             // Knows about coupled boundaries
             return true;
         }
-    
+
         //- Inherit decompose from decompositionMethod
         using decompositionMethod::decompose;
 

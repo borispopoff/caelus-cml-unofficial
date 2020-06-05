@@ -64,10 +64,10 @@ void meshOctreeAddressing::checkAndFixIrregularConnections()
         //- find boundary faces
         boundaryFace = false;
 
-        forAll(owner, faceI)
+        forAll(owner, facei)
         {
-            const label own = owner[faceI];
-            const label nei = neighbour[faceI];
+            const label own = owner[facei];
+            const label nei = neighbour[facei];
 
             if( nei < 0 )
             {
@@ -80,7 +80,7 @@ void meshOctreeAddressing::checkAndFixIrregularConnections()
                     ((boxType[nei] & BOUNDARY) && (boxType[own] & MESHCELL))
                 ||  ((boxType[own] & BOUNDARY) && (boxType[nei] & MESHCELL))
                 )
-                    boundaryFace[faceI] = true;
+                    boundaryFace[facei] = true;
             }
         }
 
@@ -90,9 +90,9 @@ void meshOctreeAddressing::checkAndFixIrregularConnections()
             label nBoundaryFaces(0);
             forAllRow(edgeFaces, edgeI, efI)
             {
-                const label faceI = edgeFaces(edgeI, efI);
+                const label facei = edgeFaces(edgeI, efI);
 
-                if( boundaryFace[faceI] )
+                if( boundaryFace[facei] )
                     ++nBoundaryFaces;
             }
 
@@ -116,9 +116,9 @@ void meshOctreeAddressing::checkAndFixIrregularConnections()
             labelHashSet bndFacesAtNode(pointFaces.sizeOfRow(pI));
             forAllRow(pointFaces, pI, pfI)
             {
-                const label faceI = pointFaces(pI, pfI);
-                if( boundaryFace[faceI] )
-                    bndFacesAtNode.insert(faceI);
+                const label facei = pointFaces(pI, pfI);
+                if( boundaryFace[facei] )
+                    bndFacesAtNode.insert(facei);
             }
 
             //- find the number of face groups at a given vertex
@@ -169,23 +169,23 @@ void meshOctreeAddressing::checkAndFixIrregularConnections()
                 //- this vertex has two groups of faces connected to it
                 forAllRow(pointFaces, pI, pfI)
                 {
-                    const label faceI = pointFaces(pI, pfI);
-                    if( boundaryFace[faceI] )
+                    const label facei = pointFaces(pI, pfI);
+                    if( boundaryFace[facei] )
                     {
                         //- set BOUNDARY flag to all boxes connected to it
-                        if( boxType[owner[faceI]] & MESHCELL )
+                        if( boxType[owner[facei]] & MESHCELL )
                         {
-                            changedBoxType.insert(owner[faceI]);
-                            boxType[owner[faceI]] = BOUNDARY;
+                            changedBoxType.insert(owner[facei]);
+                            boxType[owner[facei]] = BOUNDARY;
                         }
 
-                        if( neighbour[faceI] == -1 )
+                        if( neighbour[facei] == -1 )
                             continue;
 
-                        if( boxType[neighbour[faceI]] & MESHCELL )
+                        if( boxType[neighbour[facei]] & MESHCELL )
                         {
-                            changedBoxType.insert(neighbour[faceI]);
-                            boxType[neighbour[faceI]] = BOUNDARY;
+                            changedBoxType.insert(neighbour[facei]);
+                            boxType[neighbour[facei]] = BOUNDARY;
                         }
                     }
                 }

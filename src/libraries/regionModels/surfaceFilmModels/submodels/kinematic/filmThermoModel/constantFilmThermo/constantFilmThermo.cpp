@@ -268,13 +268,13 @@ tmp<volScalarField> constantFilmThermo::rho() const
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("0", dimDensity, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedScalar("0", dimDensity, 0),
+            extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    trho().internalField() = this->rho(0, 0);
-    trho().correctBoundaryConditions();
+    trho.ref().primitiveFieldRef() = this->rho(0, 0);
+    trho.ref().correctBoundaryConditions();
 
     return trho;
 }
@@ -295,13 +295,13 @@ tmp<volScalarField> constantFilmThermo::mu() const
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("0", dimPressure*dimTime, 0.0),
+            dimensionedScalar("0", dimPressure*dimTime, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    tmu().internalField() = this->mu(0, 0);
-    tmu().correctBoundaryConditions();
+    tmu.ref().primitiveFieldRef() = this->mu(0, 0);
+    tmu.ref().correctBoundaryConditions();
 
     return tmu;
 }
@@ -322,13 +322,13 @@ tmp<volScalarField> constantFilmThermo::sigma() const
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("0", dimMass/sqr(dimTime), 0.0),
+            dimensionedScalar("0", dimMass/sqr(dimTime), 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    tsigma().internalField() = this->sigma(0, 0);
-    tsigma().correctBoundaryConditions();
+    tsigma.ref().primitiveFieldRef() = this->sigma(0, 0);
+    tsigma.ref().correctBoundaryConditions();
 
     return tsigma;
 }
@@ -349,13 +349,13 @@ tmp<volScalarField> constantFilmThermo::Cp() const
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("0", dimEnergy/dimMass/dimTemperature, 0.0),
+            dimensionedScalar("0", dimEnergy/dimMass/dimTemperature, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    tCp().internalField() = this->Cp(0, 0);
-    tCp().correctBoundaryConditions();
+    tCp.ref().primitiveFieldRef() = this->Cp(0, 0);
+    tCp.ref().correctBoundaryConditions();
 
     return tCp;
 }
@@ -376,13 +376,13 @@ tmp<volScalarField> constantFilmThermo::kappa() const
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("0", dimPower/dimLength/dimTemperature, 0.0),
+            dimensionedScalar("0", dimPower/dimLength/dimTemperature, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    tkappa().internalField() = this->kappa(0, 0);
-    tkappa().correctBoundaryConditions();
+    tkappa.ref().primitiveFieldRef() = this->kappa(0, 0);
+    tkappa.ref().correctBoundaryConditions();
 
     return tkappa;
 }

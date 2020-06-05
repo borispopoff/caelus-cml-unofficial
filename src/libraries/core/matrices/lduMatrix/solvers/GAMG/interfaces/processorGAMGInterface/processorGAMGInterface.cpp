@@ -68,7 +68,7 @@ CML::processorGAMGInterface::processorGAMGInterface
     );
 
     // From coarse cell pair to coarse face
-    HashTable<label, labelPair, labelPair::Hash<> > cellsToCoarseFace
+    HashTable<label, labelPair, labelPair::Hash<>> cellsToCoarseFace
     (
         2*localRestrictAddressing.size()
     );
@@ -98,7 +98,7 @@ CML::processorGAMGInterface::processorGAMGInterface
             );
         }
 
-        HashTable<label, labelPair, labelPair::Hash<> >::const_iterator fnd =
+        HashTable<label, labelPair, labelPair::Hash<>>::const_iterator fnd =
             cellsToCoarseFace.find(cellPair);
 
         if (fnd == cellsToCoarseFace.end())

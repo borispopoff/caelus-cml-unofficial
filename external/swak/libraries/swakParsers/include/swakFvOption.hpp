@@ -37,11 +37,11 @@ Contributors/Copyright:
 #include "swakVersion.hpp"
 #include "DebugOStream.hpp"
 
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 #include "makeFvOption.hpp"
 
 namespace CML {
-    typedef fv::option swakFvOptionType;
+    typedef fv::cellSetOption swakFvOptionType;
 }
 
 #define makeSwakFvOption makeFvOption

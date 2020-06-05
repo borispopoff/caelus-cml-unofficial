@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -91,10 +91,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        turbulenceModel(const turbulenceModel&);
+        turbulenceModel(const turbulenceModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const turbulenceModel&);
+        void operator=(const turbulenceModel&) = delete;
 
 
 public:
@@ -218,13 +218,13 @@ public:
         virtual tmp<volScalarField> alphaEff() const = 0;
 
         //- Return the effective turbulence thermal diffusivity for a patch
-        virtual tmp<scalarField> alphaEff(const label patchI) const = 0;
+        virtual tmp<scalarField> alphaEff(const label patchi) const = 0;
 
         //- Return the effective turbulence temperature diffusivity
         virtual tmp<volScalarField> kappaEff() const = 0;
 
         //- Return the effective turbulence temperature diffusivity for a patch
-        virtual tmp<scalarField> kappaEff(const label patchI) const = 0;
+        virtual tmp<scalarField> kappaEff(const label patchi) const = 0;
 
         //- Return the turbulence kinetic energy
         virtual tmp<volScalarField> k() const = 0;

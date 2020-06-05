@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -115,17 +115,13 @@ void CML::RBD::rigidBody::merge(const subBody& subBody)
 
 void CML::RBD::rigidBody::write(Ostream& os) const
 {
-    os.writeKeyword("type")
-        << type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
 
-    os.writeKeyword("mass")
-        << m() << token::END_STATEMENT << nl;
+    writeEntry(os, "mass", m());
 
-    os.writeKeyword("centreOfMass")
-        << c() << token::END_STATEMENT << nl;
+    writeEntry(os, "centreOfMass", c());
 
-    os.writeKeyword("inertia")
-        << Ic() << token::END_STATEMENT << nl;
+    writeEntry(os, "inertia", Ic());
 }
 
 

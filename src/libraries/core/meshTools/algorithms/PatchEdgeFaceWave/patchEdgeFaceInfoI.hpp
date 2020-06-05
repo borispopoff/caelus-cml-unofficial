@@ -182,7 +182,7 @@ inline bool CML::patchEdgeFaceInfo::updateEdge
     const polyMesh& mesh,
     const primitivePatch& patch,
     const label edgeI,
-    const label faceI,
+    const label facei,
     const patchEdgeFaceInfo& faceInfo,
     const scalar tol,
     TrackingData& td
@@ -219,18 +219,18 @@ inline bool CML::patchEdgeFaceInfo::updateFace
 (
     const polyMesh& mesh,
     const primitivePatch& patch,
-    const label faceI,
+    const label facei,
     const label edgeI,
     const patchEdgeFaceInfo& edgeInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(patch.faceCentres()[faceI], edgeInfo, tol, td);
+    return update(patch.faceCentres()[facei], edgeInfo, tol, td);
 }
 
 
-template <class TrackingData>
+template<class TrackingData>
 inline bool CML::patchEdgeFaceInfo::equal
 (
     const patchEdgeFaceInfo& rhs,

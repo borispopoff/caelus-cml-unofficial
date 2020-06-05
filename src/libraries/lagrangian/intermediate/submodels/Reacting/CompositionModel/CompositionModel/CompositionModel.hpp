@@ -104,7 +104,7 @@ public:
         CompositionModel(const CompositionModel<CloudType>& cm);
 
         //- Construct and return a clone
-        virtual autoPtr<CompositionModel<CloudType> > clone() const = 0;
+        virtual autoPtr<CompositionModel<CloudType>> clone() const = 0;
 
 
     //- Destructor
@@ -112,7 +112,7 @@ public:
 
 
     //- Selector
-    static autoPtr<CompositionModel<CloudType> > New
+    static autoPtr<CompositionModel<CloudType>> New
     (
         const dictionary& dict,
         CloudType& owner
@@ -283,7 +283,7 @@ public:
     defineNamedTemplateTypeNameAndDebug(SS<reactingCloudType>, 0);             \
                                                                                \
     CompositionModel<reactingCloudType>::                                      \
-        adddictionaryConstructorToTable<SS<reactingCloudType> >                \
+        adddictionaryConstructorToTable<SS<reactingCloudType>>                 \
             add##SS##CloudType##reactingCloudType##ConstructorToTable_;
 
 
@@ -803,7 +803,7 @@ CML::scalar CML::CompositionModel<CloudType>::L
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-CML::autoPtr<CML::CompositionModel<CloudType> >
+CML::autoPtr<CML::CompositionModel<CloudType>>
 CML::CompositionModel<CloudType>::New
 (
     const dictionary& dict,
@@ -827,7 +827,7 @@ CML::CompositionModel<CloudType>::New
             << exit(FatalError);
     }
 
-    return autoPtr<CompositionModel<CloudType> >(cstrIter()(dict, owner));
+    return autoPtr<CompositionModel<CloudType>>(cstrIter()(dict, owner));
 }
 
 

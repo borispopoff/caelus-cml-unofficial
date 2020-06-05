@@ -180,7 +180,7 @@ const CML::cellShape& CML::blockDescriptor::blockShape() const
 }
 
 
-const CML::List< CML::List< CML::point > >&
+const CML::List<CML::List< CML::point >>&
 CML::blockDescriptor::blockEdgePoints() const
 {
     return edgePoints_;

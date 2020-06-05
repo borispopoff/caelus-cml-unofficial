@@ -76,17 +76,17 @@ class swakExpressionDistributionFunctionObject
 
     template <typename T>
     void getDistributionInternal(
-        autoPtr<SimpleDistribution<T> > &dist,
-        autoPtr<Field<T> > &sameWeight
+        autoPtr<SimpleDistribution<T>> &dist,
+        autoPtr<Field<T>> &sameWeight
     );
 
-    autoPtr<Field<scalar> > weightValuesScalar_;
-    autoPtr<Field<vector> > weightValuesVector_;
-    autoPtr<Field<tensor> > weightValuesTensor_;
-    autoPtr<Field<symmTensor> > weightValuesSymmTensor_;
-    autoPtr<Field<sphericalTensor> > weightValuesSphericalTensor_;
+    autoPtr<Field<scalar>> weightValuesScalar_;
+    autoPtr<Field<vector>> weightValuesVector_;
+    autoPtr<Field<tensor>> weightValuesTensor_;
+    autoPtr<Field<symmTensor>> weightValuesSymmTensor_;
+    autoPtr<Field<sphericalTensor>> weightValuesSphericalTensor_;
 
-    autoPtr<Field<bool> > maskValues_;
+    autoPtr<Field<bool>> maskValues_;
 
 protected:
 
@@ -135,8 +135,8 @@ namespace CML
 
 template <typename T>
 void swakExpressionDistributionFunctionObject::getDistributionInternal(
-    autoPtr<SimpleDistribution<T> > &dist,
-    autoPtr<Field<T> > &sameWeight
+    autoPtr<SimpleDistribution<T>> &dist,
+    autoPtr<Field<T>> &sameWeight
 ) {
     if(sameWeight.valid()) {
         dist=setData(

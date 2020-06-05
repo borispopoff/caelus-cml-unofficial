@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -44,7 +44,7 @@ CML::tmp<CML::vectorField> CML::transform
 )
 {
     tmp<vectorField > tranf(new vectorField(tf.size()));
-    transform(tranf(), q, tf);
+    transform(tranf.ref(), q, tf);
     return tranf;
 }
 
@@ -55,9 +55,9 @@ CML::tmp<CML::vectorField> CML::transform
     const tmp<vectorField>& ttf
 )
 {
-    tmp<vectorField > tranf = reuseTmp<vector, vector>::New(ttf);
-    transform(tranf(), q, ttf());
-    reuseTmp<vector, vector>::clear(ttf);
+    tmp<vectorField > tranf = New(ttf);
+    transform(tranf.ref(), q, ttf());
+    ttf.clear();
     return tranf;
 }
 
@@ -96,7 +96,7 @@ CML::tmp<CML::vectorField> CML::transformPoints
 )
 {
     tmp<vectorField > tranf(new vectorField(tf.size()));
-    transformPoints(tranf(), tr, tf);
+    transformPoints(tranf.ref(), tr, tf);
     return tranf;
 }
 
@@ -107,9 +107,9 @@ CML::tmp<CML::vectorField> CML::transformPoints
     const tmp<vectorField>& ttf
 )
 {
-    tmp<vectorField > tranf = reuseTmp<vector, vector>::New(ttf);
-    transformPoints(tranf(), tr, ttf());
-    reuseTmp<vector, vector>::clear(ttf);
+    tmp<vectorField > tranf = New(ttf);
+    transformPoints(tranf.ref(), tr, ttf());
+    ttf.clear();
     return tranf;
 }
 

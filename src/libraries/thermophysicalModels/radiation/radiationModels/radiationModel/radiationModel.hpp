@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -71,28 +71,29 @@ class radiationModel
 {
 protected:
 
+    // Protected data
 
-    //- Reference to the mesh database
-    const fvMesh& mesh_;
+        //- Reference to the mesh database
+        const fvMesh& mesh_;
 
-    //- Reference to the time database
-    const Time& time_;
+        //- Reference to the time database
+        const Time& time_;
 
-    //- Reference to the temperature field
-    const volScalarField& T_;
+        //- Reference to the temperature field
+        const volScalarField& T_;
 
-    //- Radiation model dictionary
-    dictionary coeffs_;
+        //- Radiation model dictionary
+        dictionary coeffs_;
 
-    //- Radiation solver frequency - number flow solver iterations per
-    //  radiation solver iteration
-    label solverFreq_;
+        //- Radiation solver frequency - number flow solver iterations per
+        //  radiation solver iteration
+        label solverFreq_;
 
-    //- Flag to enable radiation model to be evaluated on first iteration
-    bool firstIter_;
+        //- Flag to enable radiation model to be evaluated on first iteration
+        bool firstIter_;
 
 
-    // References to the radiation sub-models
+        // References to the radiation sub-models
 
     //- Absorption/emission model
     autoPtr<absorptionEmissionModel> absorptionEmission_;
@@ -106,17 +107,19 @@ protected:
 
 private:
 
-    //- Create IO object if dictionary is present
-    IOobject createIOobject(const fvMesh& mesh) const;
+    // Private Member Functions
 
-    //- Initialise
-    void initialise();
+        //- Create IO object if dictionary is present
+        IOobject createIOobject(const fvMesh& mesh) const;
 
-    //- Disallow default bitwise copy construct
-    radiationModel(const radiationModel&);
+        //- Initialise
+        void initialise();
 
-    //- Disallow default bitwise assignment
-    void operator=(const radiationModel&);
+        //- Disallow default bitwise copy construct
+        radiationModel(const radiationModel&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const radiationModel&) = delete;
 
 
 public:
@@ -202,7 +205,7 @@ public:
     virtual tmp<volScalarField> Rp() const = 0;
 
     //- Source term component (constant)
-    virtual tmp<DimensionedField<scalar, volMesh> > Ru() const = 0;
+    virtual tmp<volScalarField::Internal> Ru() const = 0;
 
     //- Energy source term
     virtual tmp<fvScalarMatrix> Sh

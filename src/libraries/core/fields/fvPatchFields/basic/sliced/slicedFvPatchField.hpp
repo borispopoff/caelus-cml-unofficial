@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -44,7 +44,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class slicedFvPatch Declaration
+                        Class slicedFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -98,7 +98,7 @@ public:
         slicedFvPatchField(const slicedFvPatchField<Type>&);
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const;
+        virtual tmp<fvPatchField<Type>> clone() const;
 
         //- Construct as copy setting internal field reference
         slicedFvPatchField
@@ -108,7 +108,7 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const;
@@ -120,7 +120,7 @@ public:
 
     // Member functions
 
-        // Access
+        // Attributes
 
             //- Return true if this patch field fixes a value.
             //  Needed to check if a level has to be specified while solving
@@ -140,60 +140,62 @@ public:
         // Evaluation functions
 
             //- Return patch-normal gradient
-            virtual tmp<Field<Type> > snGrad() const;
+            virtual tmp<Field<Type>> snGrad() const;
 
             //- Update the coefficients associated with the patch field
             //  Sets Updated to true
             virtual void updateCoeffs();
 
             //- Return internal field next to patch as patch field
-            virtual tmp<Field<Type> > patchInternalField() const;
+            virtual tmp<Field<Type>> patchInternalField() const;
 
             //- Return neighbour coupled given internal cell data
-            virtual tmp<Field<Type> > patchNeighbourField
+            virtual tmp<Field<Type>> patchNeighbourField
             (
                 const Field<Type>& iField
             ) const;
 
             //- Return patchField of the values on the patch or on the
             //  opposite patch
-            virtual tmp<Field<Type> > patchNeighbourField() const;
+            virtual tmp<Field<Type>> patchNeighbourField() const;
 
             //- Initialise the evaluation of the patch field
             virtual void initEvaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             )
             {}
 
             //- Evaluate the patch field, sets Updated to false
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             )
             {}
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const;
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 
 
         //- Write
@@ -224,19 +226,13 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
+CML::slicedFvPatchField<Type>::slicedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -246,12 +242,12 @@ slicedFvPatchField<Type>::slicedFvPatchField
     fvPatchField<Type>(p, iF, Field<Type>())
 {
     // Set the fvPatchField to a slice of the given complete field
-    UList<Type>::operator=(p.patchSlice(completeField));
+    UList<Type>::shallowCopy(p.patchSlice(completeField));
 }
 
 
 template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
+CML::slicedFvPatchField<Type>::slicedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -262,7 +258,21 @@ slicedFvPatchField<Type>::slicedFvPatchField
 
 
 template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
+CML::slicedFvPatchField<Type>::slicedFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvPatchField<Type>(p, iF, dict, false)
+{
+    NotImplemented;
+}
+
+
+template<class Type>
+CML::slicedFvPatchField<Type>::slicedFvPatchField
 (
     const slicedFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -277,21 +287,7 @@ slicedFvPatchField<Type>::slicedFvPatchField
 
 
 template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvPatchField<Type>(p, iF, dict)
-{
-    NotImplemented;
-}
-
-
-template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
+CML::slicedFvPatchField<Type>::slicedFvPatchField
 (
     const slicedFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
@@ -300,13 +296,15 @@ slicedFvPatchField<Type>::slicedFvPatchField
     fvPatchField<Type>(ptf.patch(), iF, Field<Type>())
 {
     // Transfer the slice from the argument
-    UList<Type>::operator=(ptf);
+    UList<Type>::shallowCopy(ptf);
 }
 
+
 template<class Type>
-tmp<fvPatchField<Type> > slicedFvPatchField<Type>::clone() const
+CML::tmp<CML::fvPatchField<Type>>
+CML::slicedFvPatchField<Type>::clone() const
 {
-    return tmp<fvPatchField<Type> >
+    return tmp<fvPatchField<Type>>
     (
         new slicedFvPatchField<Type>(*this)
     );
@@ -314,7 +312,7 @@ tmp<fvPatchField<Type> > slicedFvPatchField<Type>::clone() const
 
 
 template<class Type>
-slicedFvPatchField<Type>::slicedFvPatchField
+CML::slicedFvPatchField<Type>::slicedFvPatchField
 (
     const slicedFvPatchField<Type>& ptf
 )
@@ -322,22 +320,23 @@ slicedFvPatchField<Type>::slicedFvPatchField
     fvPatchField<Type>
     (
         ptf.patch(),
-        ptf.dimensionedInternalField(),
+        ptf.internalField(),
         Field<Type>()
     )
 {
     // Transfer the slice from the argument
-    UList<Type>::operator=(ptf);
+    UList<Type>::shallowCopy(ptf);
 }
 
 
 template<class Type>
-tmp<fvPatchField<Type> > slicedFvPatchField<Type>::clone
+CML::tmp<CML::fvPatchField<Type>>
+CML::slicedFvPatchField<Type>::clone
 (
     const DimensionedField<Type, volMesh>& iF
 ) const
 {
-    return tmp<fvPatchField<Type> >
+    return tmp<fvPatchField<Type>>
     (
         new slicedFvPatchField<Type>(*this, iF)
     );
@@ -345,18 +344,18 @@ tmp<fvPatchField<Type> > slicedFvPatchField<Type>::clone
 
 
 template<class Type>
-slicedFvPatchField<Type>::~slicedFvPatchField<Type>()
+CML::slicedFvPatchField<Type>::~slicedFvPatchField()
 {
     // Set the fvPatchField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
-    UList<Type>::operator=(UList<Type>(nullptr, 0));
+    UList<Type>::shallowCopy(UList<Type>(nullptr, 0));
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::snGrad() const
+CML::tmp<CML::Field<Type>> CML::slicedFvPatchField<Type>::snGrad() const
 {
     NotImplemented;
 
@@ -365,14 +364,15 @@ tmp<Field<Type> > slicedFvPatchField<Type>::snGrad() const
 
 
 template<class Type>
-void slicedFvPatchField<Type>::updateCoeffs()
+void CML::slicedFvPatchField<Type>::updateCoeffs()
 {
     NotImplemented;
 }
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::patchInternalField() const
+CML::tmp<CML::Field<Type>>
+CML::slicedFvPatchField<Type>::patchInternalField() const
 {
     NotImplemented;
 
@@ -381,7 +381,8 @@ tmp<Field<Type> > slicedFvPatchField<Type>::patchInternalField() const
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::patchNeighbourField
+CML::tmp<CML::Field<Type>>
+CML::slicedFvPatchField<Type>::patchNeighbourField
 (
     const Field<Type>& iField
 ) const
@@ -393,7 +394,8 @@ tmp<Field<Type> > slicedFvPatchField<Type>::patchNeighbourField
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::patchNeighbourField() const
+CML::tmp<CML::Field<Type>>
+CML::slicedFvPatchField<Type>::patchNeighbourField() const
 {
     NotImplemented;
 
@@ -402,7 +404,8 @@ tmp<Field<Type> > slicedFvPatchField<Type>::patchNeighbourField() const
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::valueInternalCoeffs
+CML::tmp<CML::Field<Type>>
+CML::slicedFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -414,7 +417,8 @@ tmp<Field<Type> > slicedFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::valueBoundaryCoeffs
+CML::tmp<CML::Field<Type>>
+CML::slicedFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
@@ -426,7 +430,8 @@ tmp<Field<Type> > slicedFvPatchField<Type>::valueBoundaryCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::slicedFvPatchField<Type>::gradientInternalCoeffs() const
 {
     NotImplemented;
 
@@ -435,7 +440,8 @@ tmp<Field<Type> > slicedFvPatchField<Type>::gradientInternalCoeffs() const
 
 
 template<class Type>
-tmp<Field<Type> > slicedFvPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::slicedFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
     NotImplemented;
 
@@ -444,19 +450,11 @@ tmp<Field<Type> > slicedFvPatchField<Type>::gradientBoundaryCoeffs() const
 
 
 template<class Type>
-void slicedFvPatchField<Type>::write(Ostream& os) const
+void CML::slicedFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

@@ -81,11 +81,11 @@ void CML::expressionToCell::combine(topoSet& set, const bool add) const
     }
     const volScalarField &condition=driver.getResult<volScalarField>();
 
-    forAll(condition, cellI)
+    forAll(condition, celli)
     {
-        if (condition[cellI])
+        if (condition[celli])
         {
-            addOrDelete(set, cellI, add);
+            addOrDelete(set, celli, add);
         }
     }
 }

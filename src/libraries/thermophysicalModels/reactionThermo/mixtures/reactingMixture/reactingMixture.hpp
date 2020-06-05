@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -43,9 +43,9 @@ template<class ThermoType>
 class reactingMixture
 :
     public speciesTable,
-    public autoPtr<chemistryReader<ThermoType> >,
+    public autoPtr<chemistryReader<ThermoType>>,
     public multiComponentMixture<ThermoType>,
-    public PtrList<Reaction<ThermoType> >
+    public PtrList<Reaction<ThermoType>>
 {
 
     //- Table of species composition
@@ -53,10 +53,10 @@ class reactingMixture
 
 
     //- Disallow default bitwise copy construct
-    reactingMixture(const reactingMixture&);
+    reactingMixture(const reactingMixture&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const reactingMixture&);
+    void operator=(const reactingMixture&) = delete;
 
 
 public:
@@ -87,17 +87,17 @@ public:
 
     label size() const
     {
-        return PtrList<Reaction<ThermoType> >::size();
+        return PtrList<Reaction<ThermoType>>::size();
     }
 
     Reaction<ThermoType>& operator [] (const label i)
     {
-        return PtrList<Reaction<ThermoType> >::operator[](i);
+        return PtrList<Reaction<ThermoType>>::operator[](i);
     }
 
     const Reaction<ThermoType>& operator[](const label i) const
     {
-        return PtrList<Reaction<ThermoType> >::operator[](i);
+        return PtrList<Reaction<ThermoType>>::operator[](i);
     }
 
     //- Table of species composition
@@ -124,7 +124,7 @@ CML::reactingMixture<ThermoType>::reactingMixture
 )
 :
     speciesTable(),
-    autoPtr<chemistryReader<ThermoType> >
+    autoPtr<chemistryReader<ThermoType>>
     (
         chemistryReader<ThermoType>::New(thermoDict, *this)
     ),
@@ -132,20 +132,20 @@ CML::reactingMixture<ThermoType>::reactingMixture
     (
         thermoDict,
         *this,
-        autoPtr<chemistryReader<ThermoType> >::operator()().speciesThermo(),
+        autoPtr<chemistryReader<ThermoType>>::operator()().speciesThermo(),
         mesh,
         phaseName
     ),
-    PtrList<Reaction<ThermoType> >
+    PtrList<Reaction<ThermoType>>
     (
-        autoPtr<chemistryReader<ThermoType> >::operator()().reactions()
+        autoPtr<chemistryReader<ThermoType>>::operator()().reactions()
     ),
     speciesComposition_
     (
-        autoPtr<chemistryReader<ThermoType> >::operator()().specieComposition()
+        autoPtr<chemistryReader<ThermoType>>::operator()().specieComposition()
     )
 {
-    autoPtr<chemistryReader<ThermoType> >::clear();
+    autoPtr<chemistryReader<ThermoType>>::clear();
 }
 
 

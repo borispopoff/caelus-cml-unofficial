@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -48,10 +48,10 @@ class kinematicCloud
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        kinematicCloud(const kinematicCloud&);
+        kinematicCloud(const kinematicCloud&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const kinematicCloud&);
+        void operator=(const kinematicCloud&) = delete;
 
 
 public:

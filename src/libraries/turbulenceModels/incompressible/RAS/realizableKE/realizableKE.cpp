@@ -21,6 +21,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "realizableKE.hpp"
+#include "fvOptions.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 namespace CML
@@ -268,6 +269,7 @@ bool realizableKE::read()
 
 void realizableKE::correct()
 {
+    fv::options& fvOptions(fv::options::New(this->mesh_));
     RASModel::correct();
 
     if (!turbulence_)
@@ -285,7 +287,7 @@ void realizableKE::correct()
     volScalarField G(GName(), nut_*S2);
 
     // Update epsilon and G at the wall
-    epsilon_.boundaryField().updateCoeffs();
+    epsilon_.boundaryFieldRef().updateCoeffs();
 
 
     // Dissipation equation
@@ -302,14 +304,16 @@ void realizableKE::correct()
             C2_*epsilon_/(k_ + sqrt(nu()*epsilon_)),
             epsilon_
         )
+      + fvOptions(epsilon_)
     );
 
-    epsEqn().relax();
+    epsEqn.ref().relax();
+    fvOptions.constrain(epsEqn.ref());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
 
-    epsEqn().boundaryManipulate(epsilon_.boundaryField());
-
-    mesh_.updateFvMatrix(epsEqn());
+    mesh_.updateFvMatrix(epsEqn.ref());
     solve(epsEqn);
+    fvOptions.correct(epsilon_);
     bound(epsilon_, epsilonMin_);
 
 
@@ -322,11 +326,14 @@ void realizableKE::correct()
       - fvm::laplacian(DkEff(), k_)
      ==
         G - fvm::Sp(epsilon_/k_, k_)
+      + fvOptions(k_)
     );
 
-    kEqn().relax();
-    mesh_.updateFvMatrix(kEqn());
+    kEqn.ref().relax();
+    fvOptions.constrain(kEqn.ref());
+    mesh_.updateFvMatrix(kEqn.ref());
     solve(kEqn);
+    fvOptions.correct(k_);
     bound(k_, kMin_);
 
 

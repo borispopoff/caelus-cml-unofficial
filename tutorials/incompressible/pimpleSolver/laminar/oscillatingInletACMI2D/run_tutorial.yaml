@@ -4,7 +4,7 @@ tasks:
       purge_generated: True
       remove_zero: yes
       remove_mesh: yes
-      preserve: [ "0.org", "README" ]
+      preserve: [ "0.org", "README", "*.xml" ]
 
   - run_command:
       cmd_name: blockMesh
@@ -15,10 +15,6 @@ tasks:
 
   - run_command:
       cmd_name: createBaffles
-      cmd_args: "-overwrite"
-
-  - run_command:
-      cmd_name: createPatch
       cmd_args: "-overwrite"
 
   - copy_tree:

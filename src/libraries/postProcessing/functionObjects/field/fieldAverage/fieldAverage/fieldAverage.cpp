@@ -65,28 +65,28 @@ void CML::fieldAverage::initialize()
     Info<< type() << " " << name_ << ":" << nl;
 
     // Add mean fields to the field lists
-    forAll(faItems_, fieldI)
+    forAll(faItems_, fieldi)
     {
-        addMeanField<scalar>(fieldI);
-        addMeanField<vector>(fieldI);
-        addMeanField<sphericalTensor>(fieldI);
-        addMeanField<symmTensor>(fieldI);
-        addMeanField<tensor>(fieldI);
+        addMeanField<scalar>(fieldi);
+        addMeanField<vector>(fieldi);
+        addMeanField<sphericalTensor>(fieldi);
+        addMeanField<symmTensor>(fieldi);
+        addMeanField<tensor>(fieldi);
     }
 
     // Add prime-squared mean fields to the field lists
-    forAll(faItems_, fieldI)
+    forAll(faItems_, fieldi)
     {
-        addPrime2MeanField<scalar, scalar>(fieldI);
-        addPrime2MeanField<vector, symmTensor>(fieldI);
+        addPrime2MeanField<scalar, scalar>(fieldi);
+        addPrime2MeanField<vector, symmTensor>(fieldi);
     }
 
-    forAll(faItems_, fieldI)
+    forAll(faItems_, fieldi)
     {
-        if (!faItems_[fieldI].active())
+        if (!faItems_[fieldi].active())
         {
             WarningInFunction
-                << "Field " << faItems_[fieldI].fieldName()
+                << "Field " << faItems_[fieldi].fieldName()
                 << " not found in database for averaging";
         }
     }
@@ -135,10 +135,10 @@ void CML::fieldAverage::calcAverages()
     calculatePrime2MeanFields<scalar, scalar>();
     calculatePrime2MeanFields<vector, symmTensor>();
 
-    forAll(faItems_, fieldI)
+    forAll(faItems_, fieldi)
     {
-        totalIter_[fieldI]++;
-        totalTime_[fieldI] += obr_.time().deltaTValue();
+        totalIter_[fieldi]++;
+        totalTime_[fieldi] += obr_.time().deltaTValue();
     }
 }
 
@@ -171,12 +171,12 @@ void CML::fieldAverage::writeAveragingProperties() const
         )
     );
 
-    forAll(faItems_, fieldI)
+    forAll(faItems_, fieldi)
     {
-        const word& fieldName = faItems_[fieldI].fieldName();
+        const word& fieldName = faItems_[fieldi].fieldName();
         propsDict.add(fieldName, dictionary());
-        propsDict.subDict(fieldName).add("totalIter", totalIter_[fieldI]);
-        propsDict.subDict(fieldName).add("totalTime", totalTime_[fieldI]);
+        propsDict.subDict(fieldName).add("totalIter", totalIter_[fieldi]);
+        propsDict.subDict(fieldName).add("totalTime", totalTime_[fieldi]);
     }
 
     propsDict.regIOobject::write();
@@ -219,18 +219,18 @@ void CML::fieldAverage::readAveragingProperties()
         IOdictionary propsDict(propsDictHeader);
 
         Info<< "    Restarting averaging for fields:" << nl;
-        forAll(faItems_, fieldI)
+        forAll(faItems_, fieldi)
         {
-            const word& fieldName = faItems_[fieldI].fieldName();
+            const word& fieldName = faItems_[fieldi].fieldName();
             if (propsDict.found(fieldName))
             {
                 dictionary fieldDict(propsDict.subDict(fieldName));
 
-                totalIter_[fieldI] = readLabel(fieldDict.lookup("totalIter"));
-                totalTime_[fieldI] = readScalar(fieldDict.lookup("totalTime"));
+                totalIter_[fieldi] = readLabel(fieldDict.lookup("totalIter"));
+                totalTime_[fieldi] = readScalar(fieldDict.lookup("totalTime"));
                 Info<< "        " << fieldName
-                    << " iters = " << totalIter_[fieldI]
-                    << " time = " << totalTime_[fieldI] << nl;
+                    << " iters = " << totalIter_[fieldi]
+                    << " time = " << totalTime_[fieldi] << nl;
             }
         }
     }

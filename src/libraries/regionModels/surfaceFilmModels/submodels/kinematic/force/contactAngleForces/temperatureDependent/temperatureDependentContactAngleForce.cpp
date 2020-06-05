@@ -80,7 +80,7 @@ tmp<volScalarField> temperatureDependentContactAngleForce::theta() const
         )
     );
 
-    volScalarField& theta = ttheta();
+    volScalarField& theta = ttheta.ref();
 
     const volScalarField& T = filmModel_.T();
 
@@ -90,7 +90,7 @@ tmp<volScalarField> temperatureDependentContactAngleForce::theta() const
     {
         if (!filmModel_.isCoupledPatch(patchi))
         {
-            theta.boundaryField()[patchi] =
+            theta.boundaryFieldRef()[patchi] =
                 thetaPtr_->value(T.boundaryField()[patchi]);
         }
     }

@@ -44,7 +44,7 @@ SourceFiles
 #ifndef MRFSource_HPP
 #define MRFSource_HPP
 
-#include "fvOption.hpp"
+#include "cellSetOption.hpp"
 
 namespace CML
 {
@@ -60,7 +60,7 @@ namespace fv
 
 class MRFSource
 :
-    public option
+    public cellSetOption
 {
 
 
@@ -86,10 +86,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MRFSource(const MRFSource&);
+        MRFSource(const MRFSource&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MRFSource&);
+        void operator=(const MRFSource&) = delete;
 
 
 public:
@@ -123,7 +123,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
 
@@ -134,7 +134,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
 

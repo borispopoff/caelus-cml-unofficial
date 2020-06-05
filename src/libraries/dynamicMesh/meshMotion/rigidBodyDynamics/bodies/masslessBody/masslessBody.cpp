@@ -64,8 +64,7 @@ bool CML::RBD::masslessBody::massless() const
 
 void CML::RBD::masslessBody::write(Ostream& os) const
 {
-    os.writeKeyword("type")
-        << type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
 }
 
 

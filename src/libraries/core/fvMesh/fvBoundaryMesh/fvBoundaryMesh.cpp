@@ -32,9 +32,9 @@ void CML::fvBoundaryMesh::addPatches(const polyBoundaryMesh& basicBdry)
     // Set boundary patches
     fvPatchList& Patches = *this;
 
-    forAll(Patches, patchI)
+    forAll(Patches, patchi)
     {
-        Patches.set(patchI, fvPatch::New(basicBdry[patchI], *this));
+        Patches.set(patchi, fvPatch::New(basicBdry[patchi], *this));
     }
 }
 
@@ -70,11 +70,11 @@ CML::label CML::fvBoundaryMesh::findPatchID(const word& patchName) const
 {
     const fvPatchList& patches = *this;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (patches[patchI].name() == patchName)
+        if (patches[patchi].name() == patchName)
         {
-            return patchI;
+            return patchi;
         }
     }
 
@@ -85,14 +85,14 @@ CML::label CML::fvBoundaryMesh::findPatchID(const word& patchName) const
 
 void CML::fvBoundaryMesh::movePoints()
 {
-    forAll(*this, patchI)
+    forAll(*this, patchi)
     {
-        operator[](patchI).initMovePoints();
+        operator[](patchi).initMovePoints();
     }
 
-    forAll(*this, patchI)
+    forAll(*this, patchi)
     {
-        operator[](patchI).movePoints();
+        operator[](patchi).movePoints();
     }
 }
 
@@ -101,14 +101,14 @@ CML::lduInterfacePtrsList CML::fvBoundaryMesh::interfaces() const
 {
     lduInterfacePtrsList interfaces(size());
 
-    forAll(interfaces, patchI)
+    forAll(interfaces, patchi)
     {
-        if (isA<lduInterface>(this->operator[](patchI)))
+        if (isA<lduInterface>(this->operator[](patchi)))
         {
             interfaces.set
             (
-                patchI,
-               &refCast<const lduInterface>(this->operator[](patchI))
+                patchi,
+               &refCast<const lduInterface>(this->operator[](patchi))
             );
         }
     }
@@ -131,16 +131,16 @@ const CML::fvPatch& CML::fvBoundaryMesh::operator[]
     const word& patchName
 ) const
 {
-    const label patchI = findPatchID(patchName);
+    const label patchi = findPatchID(patchName);
 
-    if (patchI < 0)
+    if (patchi < 0)
     {
         FatalErrorInFunction
             << "Patch named " << patchName << " not found." << nl
             << abort(FatalError);
     }
 
-    return operator[](patchI);
+    return operator[](patchi);
 }
 
 
@@ -149,16 +149,16 @@ CML::fvPatch& CML::fvBoundaryMesh::operator[]
     const word& patchName
 )
 {
-    const label patchI = findPatchID(patchName);
+    const label patchi = findPatchID(patchName);
 
-    if (patchI < 0)
+    if (patchi < 0)
     {
         FatalErrorInFunction
             << "Patch named " << patchName << " not found." << nl
             << abort(FatalError);
     }
 
-    return operator[](patchI);
+    return operator[](patchi);
 }
 
 

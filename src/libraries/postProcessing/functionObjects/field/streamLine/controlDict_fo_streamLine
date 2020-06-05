@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*------------------------------------------------------------------------------*/
 
@@ -52,13 +52,13 @@ functions
         functionObjectLibs ("libfieldFunctionObjects.so");
 
         // Output every
-        outputControl   outputTime;
-        // outputInterval 10;
+        writeControl   writeTime;
+        // writeInterval 10;
 
         setFormat       vtk; //gnuplot, raw etc. See sampleDict.
 
         // Velocity field to use for tracking.
-        UName U;
+        U U;
 
         // Interpolation method. Default is cellPoint. See sampleDict.
         //interpolationScheme pointMVC;
@@ -83,7 +83,7 @@ functions
             nSubCycle 5;
 
         // Cloud name to use
-        cloudName       particleTracks;
+        cloud       particleTracks;
 
         // Seeding method. See the sampleSets in sampleDict.
         seedSampleSet   uniform;  //cloud;//triSurfaceMeshPointSet;

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2014 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -55,8 +55,8 @@ protected:
         //- Return the true if cells intersect
         virtual bool intersect
         (
-            const label srcCellI,
-            const label tgtCellI
+            const label srcCelli,
+            const label tgtCelli
         ) const;
 
         //- Find indices of overlapping cells in src and tgt meshes - returns
@@ -94,11 +94,16 @@ protected:
             label& tgtSeedI
         ) const;
 
+
+private:
+
+    // Private member functions
+
         //- Disallow default bitwise copy construct
-        directMethod(const directMethod&);
+        directMethod(const directMethod&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const directMethod&);
+        void operator=(const directMethod&) = delete;
 
 
 public:

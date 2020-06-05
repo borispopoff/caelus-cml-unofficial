@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -84,17 +84,6 @@ protected:
         dimensionedVector omega_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        SRFModel(const SRFModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const SRFModel&);
-
-
 public:
 
     //- Runtime type information
@@ -124,6 +113,8 @@ public:
             const volVectorField& Urel
         );
 
+        //- Disallow default bitwise copy construct
+        SRFModel(const SRFModel&) = delete;
 
     // Selectors
 
@@ -158,13 +149,13 @@ public:
             const dimensionedVector& omega() const;
 
             //- Return the coriolis force
-            tmp<DimensionedField<vector, volMesh> > Fcoriolis() const;
+            tmp<volVectorField::Internal> Fcoriolis() const;
 
             //- Return the centrifugal force
-            tmp<DimensionedField<vector, volMesh> > Fcentrifugal() const;
+            tmp<volVectorField::Internal> Fcentrifugal() const;
 
             //- Source term component for momentum equation
-            tmp<DimensionedField<vector, volMesh> > Su() const;
+            tmp<volVectorField::Internal> Su() const;
 
             //- Return velocity vector from positions
             vectorField velocity(const vectorField& positions) const;
@@ -174,6 +165,12 @@ public:
 
             //- Return absolute velocity for complete mesh
             tmp<volVectorField> Uabs() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SRFModel&) = delete;
 };
 
 

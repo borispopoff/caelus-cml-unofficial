@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -31,9 +31,6 @@ namespace CML
 {
 namespace compressible
 {
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -95,8 +92,8 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
         FatalErrorInFunction
             << "' not type '" << mappedPatchBase::typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << dimensionedInternalField().name()
-            << " in file " << dimensionedInternalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 
@@ -184,7 +181,7 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
     if (!isA<thisType>(nbrTp))
     {
         FatalErrorInFunction
-            << "Patch field for " << dimensionedInternalField().name() << " on "
+            << "Patch field for " << internalField().name() << " on "
             << patch().name() << " is of type " << thisType::typeName
             << endl << "The neighbouring patch field " << TnbrName_ << " on "
             << nbrPatch.name() << " is required to be the same, but is "
@@ -199,17 +196,17 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
 
     if (contactRes_ == 0.0)
     {
-        nbrIntFld() = nbrField.patchInternalField();
-        nbrKDelta() = nbrField.kappa(nbrField)*nbrPatch.deltaCoeffs();
+        nbrIntFld.ref() = nbrField.patchInternalField();
+        nbrKDelta.ref() = nbrField.kappa(nbrField)*nbrPatch.deltaCoeffs();
     }
     else
     {
-        nbrIntFld() = nbrField;
-        nbrKDelta() = contactRes_;
+        nbrIntFld.ref() = nbrField;
+        nbrKDelta.ref() = contactRes_;
     }
 
-    mpp.distribute(nbrIntFld());
-    mpp.distribute(nbrKDelta());
+    mpp.distribute(nbrIntFld.ref());
+    mpp.distribute(nbrKDelta.ref());
 
     tmp<scalarField> myKDelta = kappa(*this)*patch().deltaCoeffs();
 
@@ -241,10 +238,10 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::updateCoeffs()
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
-            << this->dimensionedInternalField().name() << " <- "
+            << this->internalField().name() << " <- "
             << nbrMesh.name() << ':'
             << nbrPatch.name() << ':'
-            << this->dimensionedInternalField().name() << " :"
+            << this->internalField().name() << " :"
             << " heat transfer rate:" << Q
             << " walltemperature "
             << " min:" << gMin(*this)
@@ -264,10 +261,9 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::write
 ) const
 {
     mixedFvPatchScalarField::write(os);
-    os.writeKeyword("Tnbr")<< TnbrName_
-        << token::END_STATEMENT << nl;
-    thicknessLayers_.writeEntry("thicknessLayers", os);
-    kappaLayers_.writeEntry("kappaLayers", os);
+    writeEntry(os, "Tnbr", TnbrName_);
+    writeEntry(os, "thicknessLayers", thicknessLayers_);
+    writeEntry(os, "kappaLayers", kappaLayers_);
 
     temperatureCoupledBase::write(os);
 }

@@ -80,9 +80,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type> > clone() const
+        virtual autoPtr<pointPatchField<Type>> clone() const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new calculatedPointPatchField<Type>
                 (
@@ -99,10 +99,10 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<Type> >
+        virtual autoPtr<pointPatchField<Type>>
         clone(const DimensionedField<Type, pointMesh>& iF) const
         {
-            return autoPtr<pointPatchField<Type> >
+            return autoPtr<pointPatchField<Type>>
             (
                 new calculatedPointPatchField<Type>
                 (
@@ -114,17 +114,11 @@ public:
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 template<class Type>
-const word& pointPatchField<Type>::calculatedType()
+const CML::word& CML::pointPatchField<Type>::calculatedType()
 {
     return calculatedPointPatchField<Type>::typeName;
 }
@@ -133,7 +127,7 @@ const word& pointPatchField<Type>::calculatedType()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-calculatedPointPatchField<Type>::calculatedPointPatchField
+CML::calculatedPointPatchField<Type>::calculatedPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF
@@ -144,7 +138,7 @@ calculatedPointPatchField<Type>::calculatedPointPatchField
 
 
 template<class Type>
-calculatedPointPatchField<Type>::calculatedPointPatchField
+CML::calculatedPointPatchField<Type>::calculatedPointPatchField
 (
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -156,7 +150,7 @@ calculatedPointPatchField<Type>::calculatedPointPatchField
 
 
 template<class Type>
-calculatedPointPatchField<Type>::calculatedPointPatchField
+CML::calculatedPointPatchField<Type>::calculatedPointPatchField
 (
     const calculatedPointPatchField<Type>& ptf,
     const pointPatch& p,
@@ -169,7 +163,7 @@ calculatedPointPatchField<Type>::calculatedPointPatchField
 
 
 template<class Type>
-calculatedPointPatchField<Type>::calculatedPointPatchField
+CML::calculatedPointPatchField<Type>::calculatedPointPatchField
 (
     const calculatedPointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
@@ -181,8 +175,8 @@ calculatedPointPatchField<Type>::calculatedPointPatchField
 
 template<class Type>
 template<class Type2>
-autoPtr<pointPatchField<Type> >
-pointPatchField<Type>::NewCalculatedType
+CML::autoPtr<CML::pointPatchField<Type>>
+CML::pointPatchField<Type>::NewCalculatedType
 (
     const pointPatchField<Type2>& pf
 )
@@ -192,7 +186,7 @@ pointPatchField<Type>::NewCalculatedType
 
     if (patchTypeCstrIter != pointPatchConstructorTablePtr_->end())
     {
-        return autoPtr<pointPatchField<Type> >
+        return autoPtr<pointPatchField<Type>>
         (
             patchTypeCstrIter()
             (
@@ -203,7 +197,7 @@ pointPatchField<Type>::NewCalculatedType
     }
     else
     {
-        return autoPtr<pointPatchField<Type> >
+        return autoPtr<pointPatchField<Type>>
         (
             new calculatedPointPatchField<Type>
             (
@@ -215,13 +209,4 @@ pointPatchField<Type>::NewCalculatedType
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #endif
-
-// ************************************************************************* //

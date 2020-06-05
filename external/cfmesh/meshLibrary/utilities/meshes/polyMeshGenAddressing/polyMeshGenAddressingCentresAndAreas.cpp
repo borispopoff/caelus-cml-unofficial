@@ -69,17 +69,17 @@ void polyMeshGenAddressing::makeFaceCentresAndAreas
     # ifdef USE_OMP
     # pragma omp parallel for if( nFaces > 1000 )
     # endif
-    for(label faceI=0;faceI<nFaces;++faceI)
+    for(label facei=0;facei<nFaces;++facei)
     {
-        const face& f = fs[faceI];
+        const face& f = fs[facei];
         label nPoints = f.size();
 
         // If the face is a triangle, do a direct calculation for efficiency
         // and to avoid round-off error-related problems
         if (nPoints == 3)
         {
-            fCtrs[faceI] = (1.0/3.0)*(p[f[0]] + p[f[1]] + p[f[2]]);
-            fAreas[faceI] = 0.5*((p[f[1]] - p[f[0]])^(p[f[2]] - p[f[0]]));
+            fCtrs[facei] = (1.0/3.0)*(p[f[0]] + p[f[1]] + p[f[2]]);
+            fAreas[facei] = 0.5*((p[f[1]] - p[f[0]])^(p[f[2]] - p[f[0]]));
         }
         else
         {
@@ -108,8 +108,8 @@ void polyMeshGenAddressing::makeFaceCentresAndAreas
                 sumAc += a*c;
             }
 
-            fCtrs[faceI] = (1.0/3.0)*sumAc/(sumA + VSMALL);
-            fAreas[faceI] = 0.5*sumN;
+            fCtrs[facei] = (1.0/3.0)*sumAc/(sumA + VSMALL);
+            fAreas[facei] = 0.5*sumN;
         }
     }
 }

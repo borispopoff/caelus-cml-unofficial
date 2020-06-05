@@ -61,7 +61,7 @@ namespace fv
 template<class Type>
 class ddtScheme
 :
-    public refCount
+    public tmp<ddtScheme<Type>>::refCount
 {
 
 protected:
@@ -69,15 +69,6 @@ protected:
     // Protected data
 
         const fvMesh& mesh_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        ddtScheme(const ddtScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ddtScheme&);
 
 
 public:
@@ -112,11 +103,14 @@ public:
             mesh_(mesh)
         {}
 
+        //- Disallow copy construct
+        ddtScheme(const ddtScheme&);
+
 
     // Selectors
 
         //- Return a pointer to a new ddtScheme created on freestore
-        static tmp<ddtScheme<Type> > New
+        static tmp<ddtScheme<Type>> New
         (
             const fvMesh& mesh,
             Istream& schemeData
@@ -135,58 +129,58 @@ public:
             return mesh_;
         }
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const dimensioned<Type>&
         ) = 0;
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh>> fvcDdt
         (
             const volScalarField& alpha,
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > fvcDdt
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvcDdt
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>&
         );
 
-        virtual tmp<fvMatrix<Type> > fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
-        virtual tmp<fvMatrix<Type> > fvmDdt
+        virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const volScalarField& alpha,
             const volScalarField& rho,
@@ -243,6 +237,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ddtScheme&) = delete;
 };
 
 
@@ -265,7 +265,7 @@ public:
     {                                                                          \
         namespace fv                                                           \
         {                                                                      \
-            ddtScheme<Type>::addIstreamConstructorToTable<SS<Type> >           \
+            ddtScheme<Type>::addIstreamConstructorToTable<SS<Type>>           \
                 add##SS##Type##IstreamConstructorToTable_;                     \
         }                                                                      \
     }
@@ -353,7 +353,7 @@ namespace fv
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<ddtScheme<Type> > ddtScheme<Type>::New
+tmp<ddtScheme<Type>> ddtScheme<Type>::New
 (
     const fvMesh& mesh,
     Istream& schemeData
@@ -405,7 +405,7 @@ ddtScheme<Type>::~ddtScheme()
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvPatchField, volMesh> > ddtScheme<Type>::fvcDdt
+tmp<GeometricField<Type, fvPatchField, volMesh>> ddtScheme<Type>::fvcDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -414,7 +414,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > ddtScheme<Type>::fvcDdt
 {
     NotImplemented;
 
-    return tmp<GeometricField<Type, fvPatchField, volMesh> >
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
         GeometricField<Type, fvPatchField, volMesh>::null()
     );
@@ -422,7 +422,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> > ddtScheme<Type>::fvcDdt
 
 
 template<class Type>
-tmp<fvMatrix<Type> > ddtScheme<Type>::fvmDdt
+tmp<fvMatrix<Type>> ddtScheme<Type>::fvmDdt
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -431,7 +431,7 @@ tmp<fvMatrix<Type> > ddtScheme<Type>::fvmDdt
 {
     NotImplemented;
 
-    return tmp<fvMatrix<Type> >
+    return tmp<fvMatrix<Type>>
     (
         new fvMatrix<Type>
         (
@@ -444,14 +444,14 @@ tmp<fvMatrix<Type> > ddtScheme<Type>::fvmDdt
 
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > ddtScheme<Type>::fvcDdt
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> ddtScheme<Type>::fvcDdt
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sf
 )
 {
     NotImplemented;
 
-    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
     (
         GeometricField<Type, fvsPatchField, surfaceMesh>::null()
     );
@@ -475,7 +475,10 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
             scalar(1)
         );
 
-    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff();
+    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff.ref();
+
+    surfaceScalarField::Boundary& ccbf =
+        ddtCouplingCoeff.boundaryFieldRef();
 
     forAll(U.boundaryField(), patchi)
     {
@@ -485,16 +488,17 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
          || isA<cyclicAMIFvPatch>(mesh().boundary()[patchi])
         )
         {
-            ddtCouplingCoeff.boundaryField()[patchi] = 0.0;
+            ccbf[patchi] = 0.0;
         }
     }
 
     if (debug > 1)
     {
-        Info<< "ddtCouplingCoeff mean max min = "
-            << gAverage(ddtCouplingCoeff.internalField())
-            << " " << gMax(ddtCouplingCoeff.internalField())
-            << " " << gMin(ddtCouplingCoeff.internalField())
+        InfoInFunction
+            << "ddtCouplingCoeff mean max min = "
+            << gAverage(ddtCouplingCoeff.primitiveField())
+            << " " << gMax(ddtCouplingCoeff.primitiveField())
+            << " " << gMin(ddtCouplingCoeff.primitiveField())
             << endl;
     }
 
@@ -520,7 +524,10 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
             scalar(1)
         );
 
-    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff();
+    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff.ref();
+
+    surfaceScalarField::Boundary& ccbf =
+        ddtCouplingCoeff.boundaryFieldRef();
 
     forAll(U.boundaryField(), patchi)
     {
@@ -530,7 +537,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
          || isA<cyclicAMIFvPatch>(mesh().boundary()[patchi])
         )
         {
-            ddtCouplingCoeff.boundaryField()[patchi] = 0.0;
+            ccbf[patchi]  = 0.0;
         }
     }
 

@@ -48,7 +48,7 @@ namespace CML
 template<class T>
 struct BlockLduInterfaceFieldPtrsList
 {
-    typedef UPtrList<const BlockLduInterfaceField<T> > Type;
+    typedef UPtrList<const BlockLduInterfaceField<T>> Type;
 };
 
 template<class T>

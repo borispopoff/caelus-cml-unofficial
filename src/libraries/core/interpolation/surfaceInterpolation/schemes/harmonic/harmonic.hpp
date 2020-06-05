@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -52,10 +52,6 @@ class harmonic
 :
     public surfaceInterpolationScheme<scalar>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const harmonic&);
 
 
 public:
@@ -110,7 +106,7 @@ public:
         }
 
         //- Return the face-interpolate of the given cell field
-        virtual tmp<GeometricField<scalar, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<scalar, fvsPatchField, surfaceMesh>>
         interpolate
         (
             const GeometricField<scalar, fvPatchField, volMesh>& vf
@@ -118,6 +114,12 @@ public:
         {
             return 1.0/(reverseLinear<scalar>(vf.mesh()).interpolate(1.0/vf));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const harmonic&) = delete;
 };
 
 

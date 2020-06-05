@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -34,7 +34,7 @@ CML::cloudSolution::cloudSolution(const fvMesh& mesh, const dictionary& dict)
     calcFrequency_(1),
     maxCo_(0.3),
     iter_(1),
-    trackTime_(0),
+    trackTime_(0.0),
     coupled_(false),
     cellValueSourceCorrection_(false),
     maxTrackTime_(0),
@@ -216,7 +216,12 @@ bool CML::cloudSolution::semiImplicit(const word& fieldName) const
 
 bool CML::cloudSolution::solveThisStep() const
 {
-    return active_ && (mesh_.time().timeIndex() % calcFrequency_ == 0);
+    return
+        active_
+     && (
+            mesh_.time().writeTime()
+         || (mesh_.time().timeIndex() % calcFrequency_ == 0)
+        );
 }
 
 
@@ -237,7 +242,7 @@ bool CML::cloudSolution::canEvolve()
 
 bool CML::cloudSolution::output() const
 {
-    return active_ && mesh_.time().outputTime();
+    return active_ && mesh_.time().writeTime();
 }
 
 

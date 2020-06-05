@@ -313,8 +313,8 @@ void CML::MRFZone::addCoriolis
     }
 
     const labelList& cells = mesh_.cellZones()[cellZoneID_];
-    vectorField& ddtUc = ddtU.internalField();
-    const vectorField& Uc = U.internalField();
+    vectorField& ddtUc = ddtU.primitiveFieldRef();
+    const vectorField& Uc = U;
 
     const vector Omega = this->Omega();
 
@@ -418,7 +418,7 @@ void CML::MRFZone::makeRelative(volVectorField& U) const
 
     // Included patches
 
-    volVectorField::GeometricBoundaryField& Ubf = U.boundaryField();
+    volVectorField::Boundary& Ubf = U.boundaryFieldRef();
 
     forAll(includedFaces_, patchi)
     {
@@ -491,7 +491,7 @@ void CML::MRFZone::makeAbsolute(volVectorField& U) const
     }
 
     // Included patches
-    volVectorField::GeometricBoundaryField& Ubf = U.boundaryField();
+    volVectorField::Boundary& Ubf = U.boundaryFieldRef();
 
     forAll(includedFaces_, patchi)
     {
@@ -542,7 +542,7 @@ void CML::MRFZone::correctBoundaryVelocity(volVectorField& U) const
     const vector Omega = this->Omega();
 
     // Included patches
-    volVectorField::GeometricBoundaryField& Ubf = U.boundaryField();
+    volVectorField::Boundary& Ubf = U.boundaryFieldRef();
 
     forAll(includedFaces_, patchi)
     {

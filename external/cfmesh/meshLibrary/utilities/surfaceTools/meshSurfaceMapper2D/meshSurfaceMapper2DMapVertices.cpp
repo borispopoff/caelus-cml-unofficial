@@ -90,7 +90,7 @@ void meshSurfaceMapper2D::findMappingDistance
             surfaceEngine_.globalToLocalBndEdgeAddressing();
 
         //- create the map for exchanging data
-        std::map<label, DynList<labelledScalar> > exchangeData;
+        std::map<label, DynList<labelledScalar>> exchangeData;
         const DynList<label>& neiProcs = surfaceEngine_.beNeiProcs();
         forAll(neiProcs, i)
             exchangeData.insert
@@ -137,7 +137,7 @@ void meshSurfaceMapper2D::mapToSmallestDistance(LongList<parMapperHelper>& parE)
     if( !Pstream::parRun() )
         return;
 
-    std::map<label, LongList<parMapperHelper> > exchangeData;
+    std::map<label, LongList<parMapperHelper>> exchangeData;
     const DynList<label>& neiProcs = surfaceEngine_.beNeiProcs();
     forAll(neiProcs, i)
         exchangeData.insert

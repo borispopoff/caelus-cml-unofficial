@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -70,14 +70,6 @@ class searchableSurface
 
         boundBox bounds_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        searchableSurface(const searchableSurface&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSurface&);
-
 
 public:
 
@@ -129,6 +121,9 @@ public:
     // Constructors
 
         searchableSurface(const IOobject& io);
+
+        //- Disallow default bitwise copy construct
+        searchableSurface(const searchableSurface&) = delete;
 
         //- Clone
         virtual autoPtr<searchableSurface> clone() const
@@ -300,7 +295,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const = 0;
 
             //- From a set of points and indices get the region
@@ -364,6 +359,12 @@ public:
             {
                 values.clear();
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSurface&) = delete;
 };
 
 

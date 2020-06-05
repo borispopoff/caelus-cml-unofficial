@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2015 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ template<class Face> class UnsortedMeshedSurface;
 template<class Face>
 class MeshedSurface
 :
-    public PrimitivePatch<Face, ::CML::List, pointField, point>,
+    public PrimitivePatch<::CML::List<Face>, pointField>,
     public fileFormats::surfaceFormatsCore
 {
     // friends - despite different face representationsx
@@ -92,14 +92,7 @@ private:
 
     // Private typedefs for convenience
 
-        typedef PrimitivePatch
-        <
-            Face,
-            ::CML::List,
-            pointField,
-            point
-        >
-        ParentType;
+        typedef PrimitivePatch<::CML::List<Face>, pointField> ParentType;
 
         typedef UnsortedMeshedSurface<Face>  FriendType;
         typedef MeshedSurfaceProxy<Face>     ProxyType;
@@ -119,7 +112,7 @@ protected:
         //- Transfer points/zones and transcribe face -> triFace
         void transcribe(MeshedSurface<face>&);
 
-        //- basic sanity check on zones
+        //- Basic sanity check on zones
         void checkZones();
 
         //- Non-const access to global points
@@ -140,11 +133,11 @@ protected:
             return zones_;
         }
 
-        //- sort faces by zones and store sorted faces
+        //- Sort faces by zones and store sorted faces
         void sortFacesAndStore
         (
-            const Xfer<List<Face> >& unsortedFaces,
-            const Xfer<List<label> >& zoneIds,
+            List<Face>&& unsortedFaces,
+            List<label>&& zoneIds,
             const bool sorted
         );
 
@@ -189,17 +182,17 @@ public:
         //- Construct by transferring components (points, faces, zones).
         MeshedSurface
         (
-            const Xfer<pointField>&,
-            const Xfer<List<Face> >&,
-            const Xfer<surfZoneList>&
+            pointField&&,
+            List<Face>&&,
+            surfZoneList&&
         );
 
         //- Construct by transferring components (points, faces).
         //  Use zone information if available
         MeshedSurface
         (
-            const Xfer<pointField>&,
-            const Xfer<List<Face> >&,
+            pointField&&,
+            List<Face>&&,
             const labelUList& zoneSizes = labelUList(),
             const UList<word>& zoneNames = UList<word>()
         );
@@ -221,10 +214,10 @@ public:
         MeshedSurface(const surfMesh&);
 
         //- Construct by transferring the contents from a UnsortedMeshedSurface
-        MeshedSurface(const Xfer<UnsortedMeshedSurface<Face> >&);
+        MeshedSurface(UnsortedMeshedSurface<Face>&&);
 
         //- Construct by transferring the contents from a MeshedSurface
-        MeshedSurface(const Xfer<MeshedSurface<Face> >&);
+        MeshedSurface(MeshedSurface<Face>&&);
 
         //- Construct from file name (uses extension to determine type)
         MeshedSurface(const fileName&);
@@ -348,21 +341,21 @@ public:
             virtual void scalePoints(const scalar);
 
             //- Reset primitive data (points, faces and zones)
-            //  Note, optimized to avoid overwriting data (with Xfer::null)
+            //  Note, optimized to avoid overwriting data (with null)
             virtual void reset
             (
-                const Xfer<pointField >& points,
-                const Xfer<List<Face> >& faces,
-                const Xfer<surfZoneList>& zones
+                pointField&& points,
+                List<Face>&& faces,
+                surfZoneList&& zones
             );
 
             //- Reset primitive data (points, faces and zones)
-            //  Note, optimized to avoid overwriting data (with Xfer::null)
+            //  Note, optimized to avoid overwriting data (with null)
             virtual void reset
             (
-                const Xfer<List<point> >& points,
-                const Xfer<List<Face> >& faces,
-                const Xfer<surfZoneList >& zones
+                List<point>&& points,
+                List<Face>&& faces,
+                surfZoneList&& zones
             );
 
             //- Remove invalid faces
@@ -408,9 +401,6 @@ public:
 
             //- Transfer the contents of the argument and annul the argument
             void transfer(UnsortedMeshedSurface<Face>&);
-
-            //- Transfer contents to the Xfer container
-            Xfer<MeshedSurface<Face> > xfer();
 
 
         // Read
@@ -623,30 +613,30 @@ CML::MeshedSurface<Face>::MeshedSurface()
 template<class Face>
 CML::MeshedSurface<Face>::MeshedSurface
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face> >& faceLst,
-    const Xfer<surfZoneList>& zoneLst
+    pointField&& pointLst,
+    List<Face>&& faceLst,
+    surfZoneList&& zoneLst
 )
 :
     ParentType(List<Face>(), pointField()),
     zones_()
 {
-    reset(pointLst, faceLst, zoneLst);
+    reset(move(pointLst), move(faceLst), move(zoneLst));
 }
 
 
 template<class Face>
 CML::MeshedSurface<Face>::MeshedSurface
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face> >& faceLst,
+    pointField&& pointLst,
+    List<Face>&& faceLst,
     const labelUList& zoneSizes,
     const UList<word>& zoneNames
 )
 :
     ParentType(List<Face>(), pointField())
 {
-    reset(pointLst, faceLst, Xfer<surfZoneList>());
+    reset(move(pointLst), move(faceLst), surfZoneList());
 
     if (zoneSizes.size())
     {
@@ -688,9 +678,9 @@ CML::MeshedSurface<Face>::MeshedSurface
     List<Face> newFaces(origFaces.size());
 
     // this is somewhat like ListOps reorder and/or IndirectList
-    forAll(newFaces, faceI)
+    forAll(newFaces, facei)
     {
-        newFaces[faceI] = origFaces[faceMap[faceI]];
+        newFaces[facei] = origFaces[faceMap[facei]];
     }
 
     this->storedFaces().transfer(newFaces);
@@ -705,9 +695,9 @@ CML::MeshedSurface<Face>::MeshedSurface(const surfMesh& mesh)
     // same face type as surfMesh
     MeshedSurface<face> surf
     (
-        xferCopy(mesh.points()),
-        xferCopy(mesh.faces()),
-        xferCopy(mesh.surfZones())
+        clone(mesh.points()),
+        clone(mesh.faces()),
+        clone(mesh.surfZones())
     );
 
     this->transcribe(surf);
@@ -754,11 +744,11 @@ CML::MeshedSurface<Face>::MeshedSurface
     // create zone list
     surfZoneList newZones(bPatches.size());
 
-    label startFaceI = 0;
+    label startFacei = 0;
     label nZone = 0;
-    forAll(bPatches, patchI)
+    forAll(bPatches, patchi)
     {
-        const polyPatch& p = bPatches[patchI];
+        const polyPatch& p = bPatches[patchi];
 
         if (p.size())
         {
@@ -766,12 +756,12 @@ CML::MeshedSurface<Face>::MeshedSurface
             (
                 p.name(),
                 p.size(),
-                startFaceI,
+                startFacei,
                 nZone
             );
 
             nZone++;
-            startFaceI += p.size();
+            startFacei += p.size();
         }
     }
 
@@ -780,9 +770,9 @@ CML::MeshedSurface<Face>::MeshedSurface
     // same face type as the polyBoundaryMesh
     MeshedSurface<face> surf
     (
-        xferCopy(bPoints),
-        xferCopy(bFaces),
-        xferMove(newZones)
+        pointField(bPoints),
+        faceList(bFaces),
+        move(newZones)
     );
 
     this->transcribe(surf);
@@ -837,38 +827,13 @@ CML::MeshedSurface<Face>::MeshedSurface
     // same face type as surfMesh
     MeshedSurface<face> surf
     (
-        xferMove(mesh.storedPoints()),
-        xferMove(mesh.storedFaces()),
-        xferMove(mesh.storedZones())
+        move(mesh.storedPoints()),
+        move(mesh.storedFaces()),
+        move(mesh.storedZones())
     );
 
     this->transcribe(surf);
 }
-
-
-template<class Face>
-CML::MeshedSurface<Face>::MeshedSurface
-(
-    const Xfer<UnsortedMeshedSurface<Face> >& surf
-)
-:
-    ParentType(List<Face>(), pointField())
-{
-    transfer(surf());
-}
-
-
-template<class Face>
-CML::MeshedSurface<Face>::MeshedSurface
-(
-    const Xfer<MeshedSurface<Face> >& surf
-)
-:
-    ParentType(List<Face>(), pointField())
-{
-    transfer(surf());
-}
-
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -898,21 +863,21 @@ void CML::MeshedSurface<Face>::remapFaces
         }
         else if (zones.size())
         {
-            label newFaceI = 0;
+            label newFacei = 0;
             label origEndI = 0;
             forAll(zones, zoneI)
             {
                 surfZone& zone = zones[zoneI];
 
                 // adjust zone start
-                zone.start() = newFaceI;
+                zone.start() = newFacei;
                 origEndI += zone.size();
 
-                for (label faceI = newFaceI; faceI < faceMap.size(); ++faceI)
+                for (label facei = newFacei; facei < faceMap.size(); ++facei)
                 {
-                    if (faceMap[faceI] < origEndI)
+                    if (faceMap[facei] < origEndI)
                     {
-                        ++newFaceI;
+                        ++newFacei;
                     }
                     else
                     {
@@ -921,7 +886,7 @@ void CML::MeshedSurface<Face>::remapFaces
                 }
 
                 // adjust zone size
-                zone.size() = newFaceI - zone.start();
+                zone.size() = newFacei - zone.start();
             }
         }
     }
@@ -971,9 +936,9 @@ void CML::MeshedSurface<Face>::scalePoints(const scalar scaleFactor)
 template<class Face>
 void CML::MeshedSurface<Face>::reset
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<List<Face> >& faceLst,
-    const Xfer<surfZoneList>& zoneLst
+    pointField&& pointLst,
+    List<Face>&& faceLst,
+    surfZoneList&& zoneLst
 )
 {
     ParentType::clearOut();
@@ -982,17 +947,17 @@ void CML::MeshedSurface<Face>::reset
     // Optimized to avoid overwriting data at all
     if (notNull(pointLst))
     {
-        storedPoints().transfer(pointLst());
+        storedPoints().transfer(pointLst);
     }
 
     if (notNull(faceLst))
     {
-        storedFaces().transfer(faceLst());
+        storedFaces().transfer(faceLst);
     }
 
     if (notNull(zoneLst))
     {
-        storedZones().transfer(zoneLst());
+        storedZones().transfer(zoneLst);
     }
 }
 
@@ -1000,9 +965,9 @@ void CML::MeshedSurface<Face>::reset
 template<class Face>
 void CML::MeshedSurface<Face>::reset
 (
-    const Xfer<List<point> >& pointLst,
-    const Xfer<List<Face> >& faceLst,
-    const Xfer<surfZoneList>& zoneLst
+    List<point>&& pointLst,
+    List<Face>&& faceLst,
+    surfZoneList&& zoneLst
 )
 {
     ParentType::clearOut();
@@ -1011,17 +976,17 @@ void CML::MeshedSurface<Face>::reset
     // Optimized to avoid overwriting data at all
     if (notNull(pointLst))
     {
-        storedPoints().transfer(pointLst());
+        storedPoints().transfer(pointLst);
     }
 
     if (notNull(faceLst))
     {
-        storedFaces().transfer(faceLst());
+        storedFaces().transfer(faceLst);
     }
 
     if (notNull(zoneLst))
     {
-        storedZones().transfer(zoneLst());
+        storedZones().transfer(zoneLst);
     }
 }
 
@@ -1060,8 +1025,7 @@ bool CML::MeshedSurface<Face>::stitchFaces
 
     if (verbose)
     {
-        Info<< "MeshedSurface::stitchFaces : Renumbering all faces"
-            << endl;
+        InfoInFunction<< "Renumbering all faces" << endl;
     }
 
     // Set the coordinates to the merged ones
@@ -1072,10 +1036,10 @@ bool CML::MeshedSurface<Face>::stitchFaces
     List<label> faceMap(faceLst.size());
 
     // Reset the point labels to the unique points array
-    label newFaceI = 0;
-    forAll(faceLst, faceI)
+    label newFacei = 0;
+    forAll(faceLst, facei)
     {
-        Face& f = faceLst[faceI];
+        Face& f = faceLst[facei];
         forAll(f, fp)
         {
             f[fp] = pointMap[f[fp]];
@@ -1084,32 +1048,32 @@ bool CML::MeshedSurface<Face>::stitchFaces
         // for extra safety: collapse face as well
         if (f.collapse() >= 3)
         {
-            if (newFaceI != faceI)
+            if (newFacei != facei)
             {
-                faceLst[newFaceI] = f;
+                faceLst[newFacei] = f;
             }
-            faceMap[newFaceI] = faceI;
-            newFaceI++;
+            faceMap[newFacei] = facei;
+            newFacei++;
         }
         else if (verbose)
         {
             Pout<< "MeshedSurface::stitchFaces : "
-                << "Removing collapsed face " << faceI << endl
+                << "Removing collapsed face " << facei << endl
                 << "    vertices   :" << f << endl;
         }
     }
     pointMap.clear();
 
-    if (newFaceI != faceLst.size())
+    if (newFacei != faceLst.size())
     {
         if (verbose)
         {
             Pout<< "MeshedSurface::stitchFaces : "
-                << "Removed " << faceLst.size() - newFaceI
+                << "Removed " << faceLst.size() - newFacei
                 << " faces" << endl;
         }
-        faceLst.setSize(newFaceI);
-        faceMap.setSize(newFaceI);
+        faceLst.setSize(newFacei);
+        faceMap.setSize(newFacei);
         remapFaces(faceMap);
     }
     faceMap.clear();
@@ -1132,12 +1096,12 @@ bool CML::MeshedSurface<Face>::checkFaces
 
     List<label> faceMap(faceLst.size());
 
-    label newFaceI = 0;
+    label newFacei = 0;
     // Detect badly labelled faces and mark degenerate faces
     const label maxPointI = this->points().size() - 1;
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
-        Face& f = faceLst[faceI];
+        Face& f = faceLst[facei];
 
         // avoid degenerate faces
         if (f.collapse() >= 3)
@@ -1154,19 +1118,19 @@ bool CML::MeshedSurface<Face>::checkFaces
                 }
             }
 
-            faceMap[faceI] = faceI;
-            newFaceI++;
+            faceMap[facei] = facei;
+            newFacei++;
         }
         else
         {
             // mark as bad face
-            faceMap[faceI] = -1;
+            faceMap[facei] = -1;
 
             changed = true;
             if (verbose)
             {
                 WarningInFunction
-                    << "face[" << faceI << "] = " << f
+                    << "face[" << facei << "] = " << f
                     << " does not have three unique vertices" << endl;
             }
         }
@@ -1175,35 +1139,35 @@ bool CML::MeshedSurface<Face>::checkFaces
     // Detect doubled faces
     // do not touch the faces
     const labelListList& fFaces = this->faceFaces();
-    newFaceI = 0;
-    forAll(faceLst, faceI)
+    newFacei = 0;
+    forAll(faceLst, facei)
     {
         // skip already collapsed faces:
-        if (faceMap[faceI] < 0)
+        if (faceMap[facei] < 0)
         {
             continue;
         }
 
-        const Face& f = faceLst[faceI];
+        const Face& f = faceLst[facei];
 
         // duplicate face check
         bool okay = true;
-        const labelList& neighbours = fFaces[faceI];
+        const labelList& neighbours = fFaces[facei];
 
         // Check if faceNeighbours use same points as this face.
         // Note: discards normal information - sides of baffle are merged.
         forAll(neighbours, neighI)
         {
-            const label neiFaceI = neighbours[neighI];
+            const label neiFacei = neighbours[neighI];
 
-            if (neiFaceI <= faceI || faceMap[neiFaceI] < 0)
+            if (neiFacei <= facei || faceMap[neiFacei] < 0)
             {
                 // lower numbered faces already checked
                 // skip neighbours that are themselves collapsed
                 continue;
             }
 
-            const Face& nei = faceLst[neiFaceI];
+            const Face& nei = faceLst[neiFacei];
 
             if (f == nei)
             {
@@ -1213,8 +1177,8 @@ bool CML::MeshedSurface<Face>::checkFaces
                 {
                     WarningInFunction
                         << "faces share the same vertices:" << nl
-                        << "    face[" << faceI << "] : " << f << nl
-                        << "    face[" << neiFaceI << "] : " << nei << endl;
+                        << "    face[" << facei << "] : " << f << nl
+                        << "    face[" << neiFacei << "] : " << nei << endl;
                     // printFace(Warning, "    ", f, points());
                     // printFace(Warning, "    ", nei, points());
                 }
@@ -1225,45 +1189,45 @@ bool CML::MeshedSurface<Face>::checkFaces
 
         if (okay)
         {
-            faceMap[faceI] = faceI;
-            newFaceI++;
+            faceMap[facei] = facei;
+            newFacei++;
         }
         else
         {
-            faceMap[faceI] = -1;
+            faceMap[facei] = -1;
         }
     }
 
     // Phase 1: pack
     // Done to keep numbering constant in phase 1
 
-    if (changed || newFaceI < faceLst.size())
+    if (changed || newFacei < faceLst.size())
     {
         changed = true;
 
         if (verbose)
         {
             WarningInFunction
-                << "Removed " << faceLst.size() - newFaceI
+                << "Removed " << faceLst.size() - newFacei
                 << " illegal faces." << endl;
         }
 
         // compress the face list
-        newFaceI = 0;
-        forAll(faceLst, faceI)
+        newFacei = 0;
+        forAll(faceLst, facei)
         {
-            if (faceMap[faceI] >= 0)
+            if (faceMap[facei] >= 0)
             {
-                if (newFaceI != faceI)
+                if (newFacei != facei)
                 {
-                    faceLst[newFaceI] = faceLst[faceI];
+                    faceLst[newFacei] = faceLst[facei];
                 }
-                faceMap[newFaceI] = faceI;
-                newFaceI++;
+                faceMap[newFacei] = facei;
+                newFacei++;
             }
         }
 
-        faceLst.setSize(newFaceI);
+        faceLst.setSize(newFacei);
         remapFaces(faceMap);
     }
     faceMap.clear();
@@ -1295,9 +1259,9 @@ CML::label CML::MeshedSurface<Face>::triangulate
     List<Face>& faceLst = this->storedFaces();
 
     // determine how many triangles will be needed
-    forAll(faceLst, faceI)
+    forAll(faceLst, facei)
     {
-        const label n = faceLst[faceI].nTriangles();
+        const label n = faceLst[facei].nTriangles();
         if (maxTri < n)
         {
             maxTri = n;
@@ -1332,18 +1296,18 @@ CML::label CML::MeshedSurface<Face>::triangulate
     {
         // triangulate without points
         // simple face triangulation around f[0]
-        label newFaceI = 0;
-        forAll(faceLst, faceI)
+        label newFacei = 0;
+        forAll(faceLst, facei)
         {
-            const Face& f = faceLst[faceI];
+            const Face& f = faceLst[facei];
 
             for (label fp = 1; fp < f.size() - 1; ++fp)
             {
                 label fp1 = f.fcIndex(fp);
 
-                newFaces[newFaceI] = triFace(f[0], f[fp], f[fp1]);
-                faceMap[newFaceI] = faceI;
-                newFaceI++;
+                newFaces[newFacei] = triFace(f[0], f[fp], f[fp1]);
+                faceMap[newFacei] = facei;
+                newFacei++;
             }
         }
     }
@@ -1352,22 +1316,22 @@ CML::label CML::MeshedSurface<Face>::triangulate
         // triangulate with points
         List<face> tmpTri(maxTri);
 
-        label newFaceI = 0;
-        forAll(faceLst, faceI)
+        label newFacei = 0;
+        forAll(faceLst, facei)
         {
             // 'face' not '<Face>'
-            const face& f = faceLst[faceI];
+            const face& f = faceLst[facei];
 
             label nTmp = 0;
             f.triangles(this->points(), nTmp, tmpTri);
             for (label triI = 0; triI < nTmp; triI++)
             {
-                newFaces[newFaceI] = Face
+                newFaces[newFacei] = Face
                 (
                     static_cast<labelUList&>(tmpTri[triI])
                 );
-                faceMap[newFaceI] = faceI;
-                newFaceI++;
+                faceMap[newFacei] = facei;
+                newFacei++;
             }
         }
     }
@@ -1408,10 +1372,10 @@ CML::MeshedSurface<Face> CML::MeshedSurface<Face>::subsetMesh
     // Create compact coordinate list and forward mapping array
     pointField newPoints(pointMap.size());
     labelList oldToNew(locPoints.size());
-    forAll(pointMap, pointI)
+    forAll(pointMap, pointi)
     {
-        newPoints[pointI] = locPoints[pointMap[pointI]];
-        oldToNew[pointMap[pointI]] = pointI;
+        newPoints[pointi] = locPoints[pointMap[pointi]];
+        oldToNew[pointMap[pointi]] = pointi;
     }
 
     // create/copy a new zones list, each zone with zero size
@@ -1423,13 +1387,13 @@ CML::MeshedSurface<Face> CML::MeshedSurface<Face>::subsetMesh
 
     // Renumber face node labels
     List<Face> newFaces(faceMap.size());
-    forAll(faceMap, faceI)
+    forAll(faceMap, facei)
     {
-        const label origFaceI = faceMap[faceI];
-        newFaces[faceI] = Face(locFaces[origFaceI]);
+        const label origFaceI = faceMap[facei];
+        newFaces[facei] = Face(locFaces[origFaceI]);
 
         // Renumber labels for face
-        Face& f = newFaces[faceI];
+        Face& f = newFaces[facei];
         forAll(f, fp)
         {
             f[fp] = oldToNew[f[fp]];
@@ -1438,7 +1402,7 @@ CML::MeshedSurface<Face> CML::MeshedSurface<Face>::subsetMesh
     oldToNew.clear();
 
     // recalculate the zones start/size
-    label newFaceI = 0;
+    label newFacei = 0;
     label origEndI = 0;
 
     // adjust zone sizes
@@ -1447,14 +1411,14 @@ CML::MeshedSurface<Face> CML::MeshedSurface<Face>::subsetMesh
         surfZone& zone = newZones[zoneI];
 
         // adjust zone start
-        zone.start() = newFaceI;
+        zone.start() = newFacei;
         origEndI += zone.size();
 
-        for (label faceI = newFaceI; faceI < faceMap.size(); ++faceI)
+        for (label facei = newFacei; facei < faceMap.size(); ++facei)
         {
-            if (faceMap[faceI] < origEndI)
+            if (faceMap[facei] < origEndI)
             {
-                ++newFaceI;
+                ++newFacei;
             }
             else
             {
@@ -1463,16 +1427,16 @@ CML::MeshedSurface<Face> CML::MeshedSurface<Face>::subsetMesh
         }
 
         // adjust zone size
-        zone.size() = newFaceI - zone.start();
+        zone.size() = newFacei - zone.start();
     }
 
 
     // construct a sub-surface
     return MeshedSurface
     (
-        xferMove(newPoints),
-        xferMove(newFaces),
-        xferMove(newZones)
+        move(newPoints),
+        move(newFaces),
+        move(newZones)
     );
 }
 
@@ -1497,9 +1461,9 @@ void CML::MeshedSurface<Face>::transfer
 {
     reset
     (
-        xferMove(surf.storedPoints()),
-        xferMove(surf.storedFaces()),
-        xferMove(surf.storedZones())
+        move(surf.storedPoints()),
+        move(surf.storedFaces()),
+        move(surf.storedZones())
     );
 }
 
@@ -1519,9 +1483,9 @@ void CML::MeshedSurface<Face>::transfer
     {
         reset
         (
-            xferMove(surf.storedPoints()),
-            xferMove(surf.storedFaces()),
-            Xfer<surfZoneList>()
+            move(surf.storedPoints()),
+            move(surf.storedFaces()),
+            surfZoneList()
         );
     }
     else
@@ -1529,28 +1493,21 @@ void CML::MeshedSurface<Face>::transfer
         List<Face>& oldFaces = surf.storedFaces();
         List<Face> newFaces(faceMap.size());
 
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
-            newFaces[faceI].transfer(oldFaces[faceMap[faceI]]);
+            newFaces[facei].transfer(oldFaces[faceMap[facei]]);
         }
 
         reset
         (
-            xferMove(surf.storedPoints()),
-            xferMove(newFaces),
-            xferMove(zoneLst)
+            move(surf.storedPoints()),
+            move(newFaces),
+            move(zoneLst)
         );
     }
 
     faceMap.clear();
     surf.clear();
-}
-
-
-template<class Face>
-CML::Xfer<CML::MeshedSurface<Face> > CML::MeshedSurface<Face>::xfer()
-{
-    return xferMove(*this);
 }
 
 
@@ -1662,8 +1619,8 @@ void CML::MeshedSurface<Face>::checkZones()
 template<class Face>
 void CML::MeshedSurface<Face>::sortFacesAndStore
 (
-    const Xfer<List<Face> >& unsortedFaces,
-    const Xfer<List<label> >& zoneIds,
+    List<Face>&& unsortedFaces,
+    List<label>&& zoneIds,
     const bool sorted
 )
 {
@@ -1685,10 +1642,10 @@ void CML::MeshedSurface<Face>::sortFacesAndStore
 
         // sorted faces
         List<Face> newFaces(faceMap.size());
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
             // use transfer to recover memory where possible
-            newFaces[faceI].transfer(oldFaces[faceMap[faceI]]);
+            newFaces[facei].transfer(oldFaces[faceMap[facei]]);
         }
         this->storedFaces().transfer(newFaces);
     }
@@ -1832,7 +1789,7 @@ void CML::MeshedSurface<Face>::writeStats(Ostream& os) const
 
 
 template<class Face>
-CML::autoPtr< CML::MeshedSurface<Face> >
+CML::autoPtr< CML::MeshedSurface<Face>>
 CML::MeshedSurface<Face>::New(const fileName& name, const word& ext)
 {
     if (debug)
@@ -1852,7 +1809,7 @@ CML::MeshedSurface<Face>::New(const fileName& name, const word& ext)
         if (supported.found(ext))
         {
             // create indirectly
-            autoPtr< MeshedSurface<Face> > surf(new MeshedSurface<Face>);
+            autoPtr< MeshedSurface<Face>> surf(new MeshedSurface<Face>);
             surf().transfer(FriendType::New(name, ext)());
 
             return surf;
@@ -1868,12 +1825,12 @@ CML::MeshedSurface<Face>::New(const fileName& name, const word& ext)
             << exit(FatalError);
     }
 
-    return autoPtr< MeshedSurface<Face> >(cstrIter()(name));
+    return autoPtr< MeshedSurface<Face>>(cstrIter()(name));
 }
 
 
 template<class Face>
-CML::autoPtr< CML::MeshedSurface<Face> >
+CML::autoPtr< CML::MeshedSurface<Face>>
 CML::MeshedSurface<Face>::New(const fileName& name)
 {
     word ext = name.ext();

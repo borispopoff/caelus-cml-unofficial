@@ -173,8 +173,8 @@ void CML::fv::SwakExplicitSource<T>::addSup(fvMatrix<T>& eqn, const label fieldI
     result.dimensions().reset(this->dimensions_[fieldI]);
     typename SwakExplicitSource<T>::resultField usedResult(result*0);
     forAll(this->cells_,i) {
-        label cellI=this->cells_[i];
-        usedResult[cellI]=result[cellI];
+        label celli=this->cells_[i];
+        usedResult[celli]=result[celli];
     }
     eqn+=usedResult;
 }

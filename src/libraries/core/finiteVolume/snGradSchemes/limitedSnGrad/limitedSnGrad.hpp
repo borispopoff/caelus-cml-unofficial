@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 Copyright (C) 2016 Applied CCM
 -------------------------------------------------------------------------------
 License
@@ -75,26 +75,23 @@ class limitedSnGrad
 {
     // Private data
 
-        tmp<snGradScheme<Type> > correctedScheme_;
+        tmp<snGradScheme<Type>> correctedScheme_;
 
         scalar limitCoeff_;
 
 
     // Private Member Functions
 
-        //- Disallow default bitwise assignment
-        void operator=(const limitedSnGrad&);
-
         //- Lookup function for the corrected to support backward compatibility
         //  of dictionary specification
-        tmp<snGradScheme<Type> > lookupCorrectedScheme(Istream& is)
+        tmp<snGradScheme<Type>> lookupCorrectedScheme(Istream& is)
         {
             token nextToken(is);
 
             if (nextToken.isNumber())
             {
                 limitCoeff_ = nextToken.number();
-                return tmp<snGradScheme<Type> >
+                return tmp<snGradScheme<Type>>
                 (
                     new correctedSnGrad<Type>(this->mesh())
                 );
@@ -102,7 +99,7 @@ class limitedSnGrad
             else
             {
                 is.putBack(nextToken);
-                tmp<snGradScheme<Type> > tcorrectedScheme
+                tmp<snGradScheme<Type>> tcorrectedScheme
                 (
                     fv::snGradScheme<Type>::New(this->mesh(), is)
                 );
@@ -170,8 +167,14 @@ public:
 
         //- Return the explicit correction to the limitedSnGrad
         //  for the given field
-        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitedSnGrad&) = delete;
 };
 
 
@@ -204,7 +207,7 @@ limitedSnGrad<Type>::~limitedSnGrad()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
 limitedSnGrad<Type>::correction
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -231,9 +234,9 @@ limitedSnGrad<Type>::correction
 
     if (fv::debug)
     {
-        Info<< "limitedSnGrad :: limiter min: " << min(limiter.internalField())
-            << " max: "<< max(limiter.internalField())
-            << " avg: " << average(limiter.internalField()) << endl;
+        Info<< "limitedSnGrad :: limiter min: " << min(limiter.primitiveField())
+            << " max: "<< max(limiter.primitiveField())
+            << " avg: " << average(limiter.primitiveField()) << endl;
     }
 
     return limiter*corr;

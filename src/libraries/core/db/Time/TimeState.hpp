@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -43,7 +43,6 @@ namespace CML
                            Class TimeState Declaration
 \*---------------------------------------------------------------------------*/
 
-
 class TimeState
 :
     public dimensionedScalar
@@ -56,10 +55,9 @@ protected:
         scalar deltaTSave_;
         scalar deltaT0_;
         bool deltaTchanged_;
+        label writeTimeIndex_;
+        bool writeTime_;
 
-        label outputTimeIndex_;
-        label secondaryOutputTimeIndex_;
-        bool  outputTime_;
 
 public:
 
@@ -83,10 +81,16 @@ public:
             virtual scalar timeToUserTime(const scalar t) const;
 
             //- Return current time value
-            scalar timeOutputValue() const;
+            inline scalar timeOutputValue() const
+            {
+                return timeToUserTime(value());
+            }
 
             //- Return current time index
-            label timeIndex() const;
+            inline label timeIndex() const
+            {
+                return timeIndex_;
+            }
 
             //- Return time step value
             inline scalar deltaTValue() const
@@ -101,16 +105,32 @@ public:
             }
 
             //- Return time step
-            dimensionedScalar deltaT() const;
+            inline dimensionedScalar deltaT() const
+            {
+                return dimensionedScalar("deltaT", dimTime, deltaT_);
+            }
 
             //- Return old time step
-            dimensionedScalar deltaT0() const;
+            inline dimensionedScalar deltaT0() const
+            {
+                return dimensionedScalar("deltaT0", dimTime, deltaT0_);
+            }
 
 
         // Check
 
-            //- Return true if this is an output time
-            bool outputTime() const;
+            //- Return true if this is a write time
+            inline bool writeTime() const
+            {
+                return writeTime_;
+            }
+
+            //- Return true if this is a write time.
+            //  Provided for backward-compatibility
+            inline bool outputTime() const
+            {
+                return writeTime_;
+            }
 };
 
 

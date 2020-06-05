@@ -86,7 +86,7 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
             false
         ),
         mesh_,
-        dimensionedVector("zero", dimless/dimLength, vector::zero)
+        dimensionedVector("zero", dimless/dimLength, Zero)
     );
     surfaceVectorField& lsP = *pVectorsPtr_;
 
@@ -102,7 +102,7 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
             false
         ),
         mesh_,
-        dimensionedVector("zero", dimless/dimLength, vector::zero)
+        dimensionedVector("zero", dimless/dimLength, Zero)
     );
     surfaceVectorField& lsN = *nVectorsPtr_;
 
@@ -160,7 +160,7 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
 
     // Visit the boundaries. Coupled boundaries are taken into account
     // in the construction of d vectors.
-    surfaceVectorField::GeometricBoundaryField& blsP = lsP.boundaryField();
+    surfaceVectorField::Boundary& blsP = lsP.boundaryFieldRef();
 
     forAll(blsP, patchi)
     {
@@ -170,10 +170,10 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
         // Build the d-vectors
         vectorField pd(p.delta());
 
-        forAll(pd, patchFaceI)
+        forAll(pd, patchFacei)
         {
-            dd[faceCells[patchFaceI]] +=
-                (1.0/magSqr(pd[patchFaceI]))*sqr(pd[patchFaceI]);
+            dd[faceCells[patchFacei]] +=
+                (1.0/magSqr(pd[patchFacei]))*sqr(pd[patchFacei]);
         }
     }
 
@@ -183,19 +183,19 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
     // affect the determinant)
     if (nDims == 2)
     {
-        forAll(dd, cellI)
+        forAll(dd, celli)
         {
             if (twoD == 0)
             {
-                dd[cellI].xx() = 1;
+                dd[celli].xx() = 1;
             }
             else if (twoD == 1)
             {
-                dd[cellI].yy() = 1;
+                dd[celli].yy() = 1;
             }
             else
             {
-                dd[cellI].zz() = 1;
+                dd[celli].zz() = 1;
             }
         }
     }
@@ -342,9 +342,9 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
         lsN[facei] = ((-1.0)/magSqr(d))*(invDd[nei] & d);
     }
 
-    forAll(blsP, patchI)
+    forAll(blsP, patchi)
     {
-        fvsPatchVectorField& patchLsP = blsP[patchI];
+        fvsPatchVectorField& patchLsP = blsP[patchi];
 
         const fvPatch& p = patchLsP.patch();
         const labelUList& faceCells = p.faceCells();
@@ -352,11 +352,11 @@ void CML::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
         // Build the d-vectors
         vectorField pd(p.delta());
 
-        forAll(p, patchFaceI)
+        forAll(p, patchFacei)
         {
-            patchLsP[patchFaceI] =
-                (1.0/magSqr(pd[patchFaceI]))
-               *(invDd[faceCells[patchFaceI]] & pd[patchFaceI]);
+            patchLsP[patchFacei] =
+                (1.0/magSqr(pd[patchFacei]))
+               *(invDd[faceCells[patchFacei]] & pd[patchFacei]);
         }
     }
 

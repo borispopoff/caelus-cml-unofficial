@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2016 OpenFOAM Foundation
+Copyright (C) 2016-2019 OpenFOAM Foundation
 Copyright (C) 2017 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ SourceFiles
 #include "displacementMotionSolver.hpp"
 #include "rigidBodyMotion.hpp"
 #include "OFstream.hpp"
-#include "outputFilterOutputControl.hpp"
+#include "outputFilterControl.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -115,13 +115,13 @@ class rigidBodyMeshMotion
         label curTimeIndex_;
 
         //- Output controls
-        outputFilterOutputControl motionOutputControl_;
+        outputFilterControl motionOutputControl_;
         
         //- List of stateFiles for bodies
-		List<autoPtr<OFstream> > bodyStateFilePtrs_; 
+		List<autoPtr<OFstream>> bodyStateFilePtrs_; 
 		
 		//- List of stateFiles for restraints
-		List<autoPtr<OFstream> > restraintStateFilePtrs_; 
+		List<autoPtr<OFstream>> restraintStateFilePtrs_; 
 
 
     // Private Member Functions
@@ -133,7 +133,7 @@ class rigidBodyMeshMotion
         );
 
         //- Disallow default bitwise assignment
-        void operator=(const rigidBodyMeshMotion&);
+        void operator=(const rigidBodyMeshMotion&) = delete;
 
 
 public:

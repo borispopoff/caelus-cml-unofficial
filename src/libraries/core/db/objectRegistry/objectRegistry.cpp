@@ -52,7 +52,7 @@ CML::objectRegistry::objectRegistry
         IOobject
         (
             string::validate<word>(t.caseName()),
-            "",
+            t.path(),
             t,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE,

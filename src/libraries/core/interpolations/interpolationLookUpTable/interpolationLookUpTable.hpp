@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -281,7 +281,7 @@ inline CML::word CML::interpolationLookUpTable<Type>::tableName() const
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-template <class Type>
+template<class Type>
 CML::label CML::interpolationLookUpTable<Type>::index
 (
     const List<scalar>& indices,
@@ -325,7 +325,7 @@ CML::label CML::interpolationLookUpTable<Type>::index
 }
 
 
-template <class Type>
+template<class Type>
 CML::label CML::interpolationLookUpTable<Type>::index
 (
     const scalar indice
@@ -539,7 +539,7 @@ CML::interpolationLookUpTable<Type>::interpolationLookUpTable
 )
 :
     List<scalarField>(),
-    fileName_(fileName(dict.lookup("fileName")).expand()),
+    fileName_(fileName(dict.lookup("file")).expand()),
     dim_(0),
     min_(0.0),
     delta_(0.0),
@@ -609,19 +609,16 @@ void CML::interpolationLookUpTable<Type>::write
 
     control.writeHeader(os);
 
-    os.writeKeyword("fields")
-        << entries_ << token::END_STATEMENT << nl;
+    writeEntry(os, "fields", entries_);
 
-    os.writeKeyword("output")
-        << output_ << token::END_STATEMENT << nl;
+    writeEntry(os, "output", output_);
 
     if (this->size() == 0)
     {
         FatalErrorInFunction
             << "table is empty" << nl << exit(FatalError);
     }
-    os.writeKeyword("values")
-        << *this << token::END_STATEMENT << nl;
+    writeEntry(os, "values", *this);
 }
 
 

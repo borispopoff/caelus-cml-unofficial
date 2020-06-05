@@ -52,7 +52,7 @@ void meshSurfaceOptimizer::nodeDisplacementLaplacianParallel
     std::map<label, labelledPoint> localData;
 
     //- exchange data with other processors
-    std::map<label, LongList<refLabelledPoint> > exchangeData;
+    std::map<label, LongList<refLabelledPoint>> exchangeData;
 
     const pointField& points = surfaceEngine_.points();
     const labelList& bPoints = surfaceEngine_.boundaryPoints();
@@ -172,7 +172,7 @@ void meshSurfaceOptimizer::nodeDisplacementLaplacianFCParallel
     std::map<label, labelledPoint> localData;
 
     //- exchange data with other processors
-    std::map<label, LongList<refLabelledPoint> > exchangeData;
+    std::map<label, LongList<refLabelledPoint>> exchangeData;
 
     const pointField& points = surfaceEngine_.points();
     const labelList& bPoints = surfaceEngine_.boundaryPoints();
@@ -286,7 +286,7 @@ void meshSurfaceOptimizer::edgeNodeDisplacementParallel
     const labelLongList& nodesToSmooth
 )
 {
-    std::map<label, DynList<labelledPoint, 2> > mPts;
+    std::map<label, DynList<labelledPoint, 2>> mPts;
 
     //- insert labels into the map
     const labelList& globalPointLabel =
@@ -338,7 +338,7 @@ void meshSurfaceOptimizer::edgeNodeDisplacementParallel
     const DynList<label>& neiProcs = surfaceEngine_.bpNeiProcs();
     const VRWGraph& bpAtProcs = surfaceEngine_.bpAtProcs();
 
-    std::map<label, LongList<refLabelledPoint> > mProcs;
+    std::map<label, LongList<refLabelledPoint>> mProcs;
     forAll(neiProcs, procI)
     {
         const label neiProc = neiProcs[procI];
@@ -422,14 +422,14 @@ void meshSurfaceOptimizer::edgeNodeDisplacementParallel
 void meshSurfaceOptimizer::exchangeData
 (
     const labelLongList& /*nodesToSmooth*/,
-    std::map<label, DynList<parTriFace> >& /*m*/
+    std::map<label, DynList<parTriFace>>& /*m*/
 ) const
 {
     /*
     const VRWGraph& bpAtProcs = surfaceEngine_.bpAtProcs();
     const DynList<label>& neiProcs = surfaceEngine_.bpNeiProcs();
 
-    std::map<label, LongList<parTriFace> > shareData;
+    std::map<label, LongList<parTriFace>> shareData;
     forAll(neiProcs, procI)
     {
         const label neiProc = neiProcs[procI];
@@ -449,7 +449,7 @@ void meshSurfaceOptimizer::exchangeData
     const VRWGraph& pTriangles = pointTriangles();
 
     m.clear();
-    std::map<label, DynList<parTriFace> >::iterator pIter;
+    std::map<label, DynList<parTriFace>>::iterator pIter;
     forAll(nodesToSmooth, nI)
     {
         const label bpI = nodesToSmooth[nI];

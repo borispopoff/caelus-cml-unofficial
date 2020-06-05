@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2015-2017 OpenFOAM Foundation
+Copyright (C) 2015-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -71,10 +71,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        hexRef8Data(const hexRef8Data&);
+        hexRef8Data(const hexRef8Data&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const hexRef8Data&);
+        void operator=(const hexRef8Data&) = delete;
 
 
 public:

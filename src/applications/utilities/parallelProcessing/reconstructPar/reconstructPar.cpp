@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 Copyright (C) 2015 OpenCFD Ltd.
 -------------------------------------------------------------------------------
 License
@@ -554,7 +554,7 @@ int main(int argc, char *argv[])
                             databases[proci].timePath()
                           / regionDir
                           / cloud::prefix,
-                            fileName::DIRECTORY
+                            fileType::directory
                         )
                     );
 
@@ -922,13 +922,13 @@ int main(int argc, char *argv[])
             {
                 PtrList<hexRef8Data> procData(procMeshes.meshes().size());
 
-                forAll(procMeshes.meshes(), procI)
+                forAll(procMeshes.meshes(), proci)
                 {
-                    const fvMesh& procMesh = procMeshes.meshes()[procI];
+                    const fvMesh& procMesh = procMeshes.meshes()[proci];
 
                     procData.set
                     (
-                        procI,
+                        proci,
                         new hexRef8Data
                         (
                             IOobject

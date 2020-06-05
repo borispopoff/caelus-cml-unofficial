@@ -23,7 +23,7 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template <class T>
+template<class T>
 CML::List<T> CML::transform
 (
     const tensor& rotTensor,
@@ -41,7 +41,7 @@ CML::List<T> CML::transform
 }
 
 
-template <class T>
+template<class T>
 void CML::transformList(const tensor& rotTensor, UList<T>& field)
 {
     forAll(field, i)
@@ -51,7 +51,7 @@ void CML::transformList(const tensor& rotTensor, UList<T>& field)
 }
 
 
-template <class T>
+template<class T>
 void CML::transformList(const tensorField& rotTensor, UList<T>& field)
 {
     if (rotTensor.size() == 1)
@@ -78,7 +78,7 @@ void CML::transformList(const tensorField& rotTensor, UList<T>& field)
 }
 
 
-template <class T>
+template<class T>
 void CML::transformList(const tensor& rotTensor, Map<T>& field)
 {
     forAllIter(typename Map<T>, field, iter)
@@ -88,7 +88,7 @@ void CML::transformList(const tensor& rotTensor, Map<T>& field)
 }
 
 
-template <class T>
+template<class T>
 void CML::transformList(const tensorField& rotTensor, Map<T>& field)
 {
     if (rotTensor.size() == 1)
@@ -108,7 +108,7 @@ void CML::transformList(const tensorField& rotTensor, Map<T>& field)
 }
 
 
-template <class T>
+template<class T>
 void CML::transformList(const tensor& rotTensor, EdgeMap<T>& field)
 {
     forAllIter(typename EdgeMap<T>, field, iter)
@@ -118,7 +118,7 @@ void CML::transformList(const tensor& rotTensor, EdgeMap<T>& field)
 }
 
 
-template <class T>
+template<class T>
 void CML::transformList(const tensorField& rotTensor, EdgeMap<T>& field)
 {
     if (rotTensor.size() == 1)

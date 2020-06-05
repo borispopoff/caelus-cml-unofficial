@@ -90,7 +90,7 @@ public:
         );
 
         //- Construct by concatenation
-        template <direction M>
+        template<direction M>
         inline Roots(const Roots<M>& xs, const Roots<N - M>& ys);
 
 
@@ -109,7 +109,7 @@ public:
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template <CML::direction N>
+template<CML::direction N>
 inline CML::Roots<N>::Roots()
 :
     types_(0)
@@ -121,7 +121,7 @@ inline CML::Roots<N>::Roots()
 }
 
 
-template <CML::direction N>
+template<CML::direction N>
 inline CML::Roots<N>::Roots(const rootType t, const scalar x)
 :
     types_(0)
@@ -134,7 +134,7 @@ inline CML::Roots<N>::Roots(const rootType t, const scalar x)
 }
 
 
-template <CML::direction N>
+template<CML::direction N>
 inline CML::Roots<N>::Roots
 (
     const rootType t,
@@ -154,7 +154,7 @@ inline CML::Roots<N>::Roots
 }
 
 
-template <CML::direction N>
+template<CML::direction N>
 inline CML::Roots<N>::Roots
 (
     const Roots<N - 1>& xs,
@@ -174,8 +174,8 @@ inline CML::Roots<N>::Roots
 }
 
 
-template <CML::direction N>
-template <CML::direction M>
+template<CML::direction N>
+template<CML::direction M>
 inline CML::Roots<N>::Roots
 (
     const Roots<M>& xs,
@@ -199,7 +199,7 @@ inline CML::Roots<N>::Roots
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template <CML::direction N>
+template<CML::direction N>
 inline void CML::Roots<N>::type
 (
     const direction i,
@@ -210,7 +210,7 @@ inline void CML::Roots<N>::type
 }
 
 
-template <CML::direction N>
+template<CML::direction N>
 inline CML::rootType CML::Roots<N>::type(const direction i) const
 {
     return static_cast<rootType>((types_ >> 3*i) & 7);

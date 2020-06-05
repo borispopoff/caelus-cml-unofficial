@@ -53,7 +53,7 @@ CML::calcTypes::div::~div()
 void CML::calcTypes::div::init()
 {
     argList::validArgs.append("div");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 

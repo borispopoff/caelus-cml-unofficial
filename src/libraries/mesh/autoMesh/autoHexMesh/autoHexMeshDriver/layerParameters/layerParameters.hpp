@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -146,10 +146,10 @@ private:
         ) const;
 
         //- Disallow default bitwise copy construct
-        layerParameters(const layerParameters&);
+        layerParameters(const layerParameters&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const layerParameters&);
+        void operator=(const layerParameters&) = delete;
 
 
 public:

@@ -48,19 +48,19 @@ defineTypeNameAndDebug(removeFaces, 0);
 // only small area of faces removed in one go.
 void CML::removeFaces::changeCellRegion
 (
-    const label cellI,
+    const label celli,
     const label oldRegion,
     const label newRegion,
     labelList& cellRegion
 ) const
 {
-    if (cellRegion[cellI] == oldRegion)
+    if (cellRegion[celli] == oldRegion)
     {
-        cellRegion[cellI] = newRegion;
+        cellRegion[celli] = newRegion;
 
         // Step to neighbouring cells
 
-        const labelList& cCells = mesh_.cellCells()[cellI];
+        const labelList& cCells = mesh_.cellCells()[celli];
 
         forAll(cCells, i)
         {
@@ -76,7 +76,7 @@ CML::label CML::removeFaces::changeFaceRegion
     const labelList& cellRegion,
     const boolList& removedFace,
     const labelList& nFacesPerEdge,
-    const label faceI,
+    const label facei,
     const label newRegion,
     const labelList& fEdges,
     labelList& faceRegion
@@ -84,9 +84,9 @@ CML::label CML::removeFaces::changeFaceRegion
 {
     label nChanged = 0;
 
-    if (faceRegion[faceI] == -1 && !removedFace[faceI])
+    if (faceRegion[facei] == -1 && !removedFace[facei])
     {
-        faceRegion[faceI] = newRegion;
+        faceRegion[facei] = newRegion;
 
         nChanged = 1;
 
@@ -144,17 +144,17 @@ CML::boolList CML::removeFaces::getFacesAffected
     boolList affectedFace(mesh_.nFaces(), false);
 
     // Mark faces affected by removal of cells
-    forAll(cellRegion, cellI)
+    forAll(cellRegion, celli)
     {
-        label region = cellRegion[cellI];
+        label region = cellRegion[celli];
 
-        if (region != -1 && (cellI != cellRegionMaster[region]))
+        if (region != -1 && (celli != cellRegionMaster[region]))
         {
-            const labelList& cFaces = mesh_.cells()[cellI];
+            const labelList& cFaces = mesh_.cells()[celli];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                affectedFace[cFaces[cFaceI]] = true;
+                affectedFace[cFaces[cFacei]] = true;
             }
         }
     }
@@ -179,9 +179,9 @@ CML::boolList CML::removeFaces::getFacesAffected
     // Mark faces affected by removal of points
     forAllConstIter(labelHashSet, pointsToRemove, iter)
     {
-        label pointI = iter.key();
+        label pointi = iter.key();
 
-        const labelList& pFaces = mesh_.pointFaces()[pointI];
+        const labelList& pFaces = mesh_.pointFaces()[pointi];
 
         forAll(pFaces, pFaceI)
         {
@@ -275,9 +275,9 @@ void CML::removeFaces::mergeFaces
     // Find face among pFaces which uses edgeLoop[1]
     forAll(pFaces, i)
     {
-        label faceI = pFaces[i];
+        label facei = pFaces[i];
 
-        const face& f = fp.localFaces()[faceI];
+        const face& f = fp.localFaces()[facei];
 
         label index1 = findIndex(f, edgeLoop[1]);
 
@@ -290,13 +290,13 @@ void CML::removeFaces::mergeFaces
             {
                 if (index1 == f.fcIndex(index0))
                 {
-                    masterIndex = faceI;
+                    masterIndex = facei;
                     reverseLoop = false;
                     break;
                 }
                 else if (index1 == f.rcIndex(index0))
                 {
-                    masterIndex = faceI;
+                    masterIndex = facei;
                     reverseLoop = true;
                     break;
                 }
@@ -316,9 +316,9 @@ void CML::removeFaces::mergeFaces
     // ~~~~~~~~~~~~~~~~~~~~~~~
 
     // Modify first face.
-    label faceI = faceLabels[masterIndex];
+    label facei = faceLabels[masterIndex];
 
-    label own = mesh_.faceOwner()[faceI];
+    label own = mesh_.faceOwner()[facei];
 
     if (cellRegion[own] != -1)
     {
@@ -327,13 +327,13 @@ void CML::removeFaces::mergeFaces
 
     label patchID, zoneID, zoneFlip;
 
-    getFaceInfo(faceI, patchID, zoneID, zoneFlip);
+    getFaceInfo(facei, patchID, zoneID, zoneFlip);
 
     label nei = -1;
 
-    if (mesh_.isInternalFace(faceI))
+    if (mesh_.isInternalFace(facei))
     {
-        nei = mesh_.faceNeighbour()[faceI];
+        nei = mesh_.faceNeighbour()[facei];
 
         if (cellRegion[nei] != -1)
         {
@@ -346,16 +346,16 @@ void CML::removeFaces::mergeFaces
 
     forAll(edgeLoop, i)
     {
-        label pointI = fp.meshPoints()[edgeLoop[i]];
+        label pointi = fp.meshPoints()[edgeLoop[i]];
 
-        if (pointsToRemove.found(pointI))
+        if (pointsToRemove.found(pointi))
         {
-            //Pout<< "**Removing point " << pointI << " from "
+            //Pout<< "**Removing point " << pointi << " from "
             //    << edgeLoop << endl;
         }
         else
         {
-            faceVerts.append(pointI);
+            faceVerts.append(pointi);
         }
     }
 
@@ -368,7 +368,7 @@ void CML::removeFaces::mergeFaces
     }
 
     //{
-    //    Pout<< "Modifying masterface " << faceI
+    //    Pout<< "Modifying masterface " << facei
     //        << " from faces:" << faceLabels
     //        << " old verts:" << UIndirectList<face>(mesh_.faces(), faceLabels)
     //        << " for new verts:"
@@ -381,7 +381,7 @@ void CML::removeFaces::mergeFaces
     modFace
     (
         mergedFace,         // modified face
-        faceI,              // label of face being modified
+        facei,              // label of face being modified
         own,                // owner
         nei,                // neighbour
         false,              // face flip
@@ -395,22 +395,22 @@ void CML::removeFaces::mergeFaces
 
 
     // Remove all but master face.
-    forAll(faceLabels, patchFaceI)
+    forAll(faceLabels, patchFacei)
     {
-        if (patchFaceI != masterIndex)
+        if (patchFacei != masterIndex)
         {
-            //Pout<< "Removing face " << faceLabels[patchFaceI] << endl;
+            //Pout<< "Removing face " << faceLabels[patchFacei] << endl;
 
-            meshMod.setAction(polyRemoveFace(faceLabels[patchFaceI], faceI));
+            meshMod.setAction(polyRemoveFace(faceLabels[patchFacei], facei));
         }
     }
 }
 
 
-// Get patch, zone info for faceI
+// Get patch, zone info for facei
 void CML::removeFaces::getFaceInfo
 (
-    const label faceI,
+    const label facei,
 
     label& patchID,
     label& zoneID,
@@ -419,12 +419,12 @@ void CML::removeFaces::getFaceInfo
 {
     patchID = -1;
 
-    if (!mesh_.isInternalFace(faceI))
+    if (!mesh_.isInternalFace(facei))
     {
-        patchID = mesh_.boundaryMesh().whichPatch(faceI);
+        patchID = mesh_.boundaryMesh().whichPatch(facei);
     }
 
-    zoneID = mesh_.faceZones().whichZone(faceI);
+    zoneID = mesh_.faceZones().whichZone(facei);
 
     zoneFlip = false;
 
@@ -432,7 +432,7 @@ void CML::removeFaces::getFaceInfo
     {
         const faceZone& fZone = mesh_.faceZones()[zoneID];
 
-        zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
     }
 }
 
@@ -441,10 +441,10 @@ void CML::removeFaces::getFaceInfo
 CML::face CML::removeFaces::filterFace
 (
     const labelHashSet& pointsToRemove,
-    const label faceI
+    const label facei
 ) const
 {
-    const face& f = mesh_.faces()[faceI];
+    const face& f = mesh_.faces()[facei];
 
     labelList newFace(f.size(), -1);
 
@@ -487,7 +487,7 @@ void CML::removeFaces::modFace
 //        if (debug)
 //        {
 //            Pout<< "ModifyFace (unreversed) :"
-//                << "  faceI:" << masterFaceID
+//                << "  facei:" << masterFaceID
 //                << "  f:" << f
 //                << "  own:" << own
 //                << "  nei:" << nei
@@ -520,7 +520,7 @@ void CML::removeFaces::modFace
 //        if (debug)
 //        {
 //            Pout<< "ModifyFace (!reversed) :"
-//                << "  faceI:" << masterFaceID
+//                << "  facei:" << masterFaceID
 //                << "  f:" << f.reverseFace()
 //                << "  own:" << nei
 //                << "  nei:" << own
@@ -594,17 +594,17 @@ CML::label CML::removeFaces::compatibleRemoves
 
     forAll(facesToRemove, i)
     {
-        label faceI = facesToRemove[i];
+        label facei = facesToRemove[i];
 
-        if (!mesh_.isInternalFace(faceI))
+        if (!mesh_.isInternalFace(facei))
         {
             FatalErrorInFunction
-                << "Not internal face:" << faceI << abort(FatalError);
+                << "Not internal face:" << facei << abort(FatalError);
         }
 
 
-        label own = faceOwner[faceI];
-        label nei = faceNeighbour[faceI];
+        label own = faceOwner[facei];
+        label nei = faceNeighbour[facei];
 
         label region0 = cellRegion[own];
         label region1 = cellRegion[nei];
@@ -689,18 +689,18 @@ CML::label CML::removeFaces::compatibleRemoves
     {
         labelList nCells(regionMaster.size(), 0);
 
-        forAll(cellRegion, cellI)
+        forAll(cellRegion, celli)
         {
-            label r = cellRegion[cellI];
+            label r = cellRegion[celli];
 
             if (r != -1)
             {
                 nCells[r]++;
 
-                if (cellI < regionMaster[r])
+                if (celli < regionMaster[r])
                 {
                     FatalErrorInFunction
-                        << "Not lowest numbered : cell:" << cellI
+                        << "Not lowest numbered : cell:" << celli
                         << " region:" << r
                         << " regionmaster:" << regionMaster[r]
                         << abort(FatalError);
@@ -735,16 +735,16 @@ CML::label CML::removeFaces::compatibleRemoves
     // Recreate facesToRemove to be consistent with the cellRegions.
     DynamicList<label> allFacesToRemove(facesToRemove.size());
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        label own = faceOwner[faceI];
-        label nei = faceNeighbour[faceI];
+        label own = faceOwner[facei];
+        label nei = faceNeighbour[facei];
 
         if (cellRegion[own] != -1 && cellRegion[own] == cellRegion[nei])
         {
             // Both will become the same cell so add face to list of faces
             // to be removed.
-            allFacesToRemove.append(faceI);
+            allFacesToRemove.append(facei);
         }
     }
 
@@ -775,16 +775,16 @@ void CML::removeFaces::setRefinement
 
     forAll(faceLabels, i)
     {
-        label faceI = faceLabels[i];
+        label facei = faceLabels[i];
 
-        if (!mesh_.isInternalFace(faceI))
+        if (!mesh_.isInternalFace(facei))
         {
             FatalErrorInFunction
-                << "Face to remove is not internal face:" << faceI
+                << "Face to remove is not internal face:" << facei
                 << abort(FatalError);
         }
 
-        removedFace[faceI] = true;
+        removedFace[facei] = true;
     }
 
 
@@ -817,9 +817,9 @@ void CML::removeFaces::setRefinement
         // Count usage of edges by non-removed faces.
         forAll(faceLabels, i)
         {
-            label faceI = faceLabels[i];
+            label facei = faceLabels[i];
 
-            const labelList& fEdges = mesh_.faceEdges(faceI, fe);
+            const labelList& fEdges = mesh_.faceEdges(facei, fe);
 
             forAll(fEdges, i)
             {
@@ -916,17 +916,17 @@ void CML::removeFaces::setRefinement
 
                 forAll(eFaces, i)
                 {
-                    label faceI = eFaces[i];
+                    label facei = eFaces[i];
 
-                    if (!removedFace[faceI] && !mesh_.isInternalFace(faceI))
+                    if (!removedFace[facei] && !mesh_.isInternalFace(facei))
                     {
                         if (f0 == -1)
                         {
-                            f0 = faceI;
+                            f0 = facei;
                         }
                         else
                         {
-                            f1 = faceI;
+                            f1 = facei;
                             break;
                         }
                     }
@@ -1113,20 +1113,20 @@ void CML::removeFaces::setRefinement
         // Walk to fill faceRegion with faces that will be connected across
         // edges that will be removed.
 
-        label startFaceI = 0;
+        label startFacei = 0;
 
         while (true)
         {
             // Find unset region.
-            for (; startFaceI < mesh_.nFaces(); startFaceI++)
+            for (; startFacei < mesh_.nFaces(); startFacei++)
             {
-                if (faceRegion[startFaceI] == -1 && !removedFace[startFaceI])
+                if (faceRegion[startFacei] == -1 && !removedFace[startFacei])
                 {
                     break;
                 }
             }
 
-            if (startFaceI == mesh_.nFaces())
+            if (startFacei == mesh_.nFaces())
             {
                 break;
             }
@@ -1139,9 +1139,9 @@ void CML::removeFaces::setRefinement
                 cellRegion,
                 removedFace,
                 nFacesPerEdge,
-                startFaceI,
+                startFacei,
                 nRegions,
-                mesh_.faceEdges(startFaceI, fe),
+                mesh_.faceEdges(startFacei, fe),
                 faceRegion
             );
 
@@ -1152,7 +1152,7 @@ void CML::removeFaces::setRefinement
             else if (nRegion == 1)
             {
                 // Reset face to be single region.
-                faceRegion[startFaceI] = -2;
+                faceRegion[startFacei] = -2;
             }
             else
             {
@@ -1177,14 +1177,14 @@ void CML::removeFaces::setRefinement
 
         for
         (
-            label faceI = mesh_.nInternalFaces();
-            faceI < mesh_.nFaces();
-            faceI++
+            label facei = mesh_.nInternalFaces();
+            facei < mesh_.nFaces();
+            facei++
         )
         {
             // Get the neighbouring region.
-            label nbrRegion = nbrFaceRegion[faceI];
-            label myRegion = faceRegion[faceI];
+            label nbrRegion = nbrFaceRegion[facei];
+            label myRegion = faceRegion[facei];
 
             if (myRegion <= -1 || nbrRegion <= -1)
             {
@@ -1193,7 +1193,7 @@ void CML::removeFaces::setRefinement
                     FatalErrorInFunction
                         << "Inconsistent face region across coupled patches."
                         << endl
-                        << "This side has for faceI:" << faceI
+                        << "This side has for facei:" << facei
                         << " region:" << myRegion << endl
                         << "The other side has region:" << nbrRegion
                         << endl
@@ -1214,7 +1214,7 @@ void CML::removeFaces::setRefinement
                     FatalErrorInFunction
                         << "Inconsistent face region across coupled patches."
                         << endl
-                        << "This side has for faceI:" << faceI
+                        << "This side has for facei:" << facei
                         << " region:" << myRegion
                         << " with coupled neighbouring regions:"
                         << toNbrRegion[myRegion] << " and "
@@ -1251,9 +1251,9 @@ void CML::removeFaces::setRefinement
 
         const labelListList& pointEdges = mesh_.pointEdges();
 
-        forAll(pointEdges, pointI)
+        forAll(pointEdges, pointi)
         {
-            nEdgesPerPoint[pointI] = pointEdges[pointI].size();
+            nEdgesPerPoint[pointi] = pointEdges[pointi].size();
         }
 
         forAllConstIter(labelHashSet, edgesToRemove, iter)
@@ -1268,14 +1268,14 @@ void CML::removeFaces::setRefinement
         }
 
         // Check locally (before synchronizing) for strangeness
-        forAll(nEdgesPerPoint, pointI)
+        forAll(nEdgesPerPoint, pointi)
         {
-            if (nEdgesPerPoint[pointI] == 1)
+            if (nEdgesPerPoint[pointi] == 1)
             {
                 FatalErrorInFunction
                     << "Problem : point would get 1 edge using it only."
-                    << " pointI:" << pointI
-                    << " coord:" << mesh_.points()[pointI]
+                    << " pointi:" << pointi
+                    << " coord:" << mesh_.points()[pointi]
                     << abort(FatalError);
             }
         }
@@ -1290,20 +1290,20 @@ void CML::removeFaces::setRefinement
             labelMin
         );
 
-        forAll(nEdgesPerPoint, pointI)
+        forAll(nEdgesPerPoint, pointi)
         {
-            if (nEdgesPerPoint[pointI] == 0)
+            if (nEdgesPerPoint[pointi] == 0)
             {
-                pointsToRemove.insert(pointI);
+                pointsToRemove.insert(pointi);
             }
-            else if (nEdgesPerPoint[pointI] == 1)
+            else if (nEdgesPerPoint[pointi] == 1)
             {
                 // Already checked before
             }
-            else if (nEdgesPerPoint[pointI] == 2)
+            else if (nEdgesPerPoint[pointi] == 2)
             {
                 // Remove point and merge edges.
-                pointsToRemove.insert(pointI);
+                pointsToRemove.insert(pointi);
             }
         }
     }
@@ -1356,15 +1356,15 @@ void CML::removeFaces::setRefinement
     // Remove split faces.
     forAll(faceLabels, labelI)
     {
-        label faceI = faceLabels[labelI];
+        label facei = faceLabels[labelI];
 
         // Remove face if not yet uptodate (which is never; but want to be
         // consistent with rest of face removals/modifications)
-        if (affectedFace[faceI])
+        if (affectedFace[facei])
         {
-            affectedFace[faceI] = false;
+            affectedFace[facei] = false;
 
-            meshMod.setAction(polyRemoveFace(faceI, -1));
+            meshMod.setAction(polyRemoveFace(facei, -1));
         }
     }
 
@@ -1372,20 +1372,20 @@ void CML::removeFaces::setRefinement
     // Remove points.
     forAllConstIter(labelHashSet, pointsToRemove, iter)
     {
-        label pointI = iter.key();
+        label pointi = iter.key();
 
-        meshMod.setAction(polyRemovePoint(pointI, -1));
+        meshMod.setAction(polyRemovePoint(pointi, -1));
     }
 
 
     // Remove cells.
-    forAll(cellRegion, cellI)
+    forAll(cellRegion, celli)
     {
-        label region = cellRegion[cellI];
+        label region = cellRegion[celli];
 
-        if (region != -1 && (cellI != cellRegionMaster[region]))
+        if (region != -1 && (celli != cellRegionMaster[region]))
         {
-            meshMod.setAction(polyRemoveCell(cellI, cellRegionMaster[region]));
+            meshMod.setAction(polyRemoveCell(celli, cellRegionMaster[region]));
         }
     }
 
@@ -1433,15 +1433,15 @@ void CML::removeFaces::setRefinement
 
     // Check if any remaining faces have not been updated for new slave/master
     // or points removed.
-    forAll(affectedFace, faceI)
+    forAll(affectedFace, facei)
     {
-        if (affectedFace[faceI])
+        if (affectedFace[facei])
         {
-            affectedFace[faceI] = false;
+            affectedFace[facei] = false;
 
-            face f(filterFace(pointsToRemove, faceI));
+            face f(filterFace(pointsToRemove, facei));
 
-            label own = mesh_.faceOwner()[faceI];
+            label own = mesh_.faceOwner()[facei];
 
             if (cellRegion[own] != -1)
             {
@@ -1450,13 +1450,13 @@ void CML::removeFaces::setRefinement
 
             label patchID, zoneID, zoneFlip;
 
-            getFaceInfo(faceI, patchID, zoneID, zoneFlip);
+            getFaceInfo(facei, patchID, zoneID, zoneFlip);
 
             label nei = -1;
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
-                nei = mesh_.faceNeighbour()[faceI];
+                nei = mesh_.faceNeighbour()[facei];
 
                 if (cellRegion[nei] != -1)
                 {
@@ -1466,8 +1466,8 @@ void CML::removeFaces::setRefinement
 
 //            if (debug)
 //            {
-//                Pout<< "Modifying " << faceI
-//                    << " old verts:" << mesh_.faces()[faceI]
+//                Pout<< "Modifying " << facei
+//                    << " old verts:" << mesh_.faces()[facei]
 //                    << " for new verts:" << f
 //                    << " or for new owner " << own << " or for new nei "
 //                    << nei
@@ -1477,7 +1477,7 @@ void CML::removeFaces::setRefinement
             modFace
             (
                 f,                  // modified face
-                faceI,              // label of face being modified
+                facei,              // label of face being modified
                 own,                // owner
                 nei,                // neighbour
                 false,              // face flip

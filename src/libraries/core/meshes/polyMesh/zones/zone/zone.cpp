@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -50,9 +50,7 @@ void CML::zone::calcLookupMap() const
 {
     if (debug)
     {
-        Info<< "void zone::calcLookupMap() const: "
-            << "Calculating lookup map"
-            << endl;
+        InfoInFunction << "Calculating lookup map" << endl;
     }
 
     if (lookupMapPtr_)
@@ -74,9 +72,7 @@ void CML::zone::calcLookupMap() const
 
     if (debug)
     {
-        Info<< "void zone::calcLookupMap() const: "
-            << "Finished calculating lookup map"
-            << endl;
+        InfoInFunction << "Finished calculating lookup map" << endl;
     }
 }
 
@@ -100,11 +96,11 @@ CML::zone::zone
 CML::zone::zone
 (
     const word& name,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index
 )
 :
-    labelList(addr),
+    labelList(move(addr)),
     name_(name),
     index_(index),
     lookupMapPtr_(nullptr)
@@ -143,11 +139,11 @@ CML::zone::zone
 CML::zone::zone
 (
     const zone& z,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index
 )
 :
-    labelList(addr),
+    labelList(move(addr)),
     name_(z.name()),
     index_(index),
     lookupMapPtr_(nullptr)
@@ -235,6 +231,32 @@ void CML::zone::write(Ostream& os) const
 {
     os  << nl << name_
         << nl << static_cast<const labelList&>(*this);
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+void CML::zone::operator=(const zone& zn)
+{
+    labelList::operator=(zn);
+}
+
+
+void CML::zone::operator=(zone&& zn)
+{
+    labelList::operator=(move(zn));
+}
+
+
+void CML::zone::operator=(const labelUList& addr)
+{
+    labelList::operator=(addr);
+}
+
+
+void CML::zone::operator=(labelList&& addr)
+{
+    labelList::operator=(move(addr));
 }
 
 

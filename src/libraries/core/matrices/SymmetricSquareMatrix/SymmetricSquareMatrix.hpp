@@ -94,9 +94,9 @@ public:
     {}
 
     //- Clone
-    inline autoPtr<SymmetricSquareMatrix<Type> > clone() const
+    inline autoPtr<SymmetricSquareMatrix<Type>> clone() const
     {
-        return autoPtr<SymmetricSquareMatrix<Type> >
+        return autoPtr<SymmetricSquareMatrix<Type>>
         (
             new SymmetricSquareMatrix<Type>(*this)
         );

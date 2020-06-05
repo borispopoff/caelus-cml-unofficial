@@ -34,7 +34,7 @@ CML::extendedCentredCellToFaceStencil::extendedCentredCellToFaceStencil
     stencil_(stencil)
 {
     // Calculate distribute map (also renumbers elements in stencil)
-    List<Map<label> > compactMap(Pstream::nProcs());
+    List<Map<label>> compactMap(Pstream::nProcs());
     mapPtr_.reset
     (
         new mapDistribute
@@ -54,9 +54,9 @@ void CML::extendedCentredCellToFaceStencil::compact()
 {
     boolList isInStencil(map().constructSize(), false);
 
-    forAll(stencil_, faceI)
+    forAll(stencil_, facei)
     {
-        const labelList& stencilCells = stencil_[faceI];
+        const labelList& stencilCells = stencil_[facei];
 
         forAll(stencilCells, i)
         {

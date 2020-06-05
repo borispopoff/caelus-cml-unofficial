@@ -38,22 +38,22 @@ void CML::patchWave::setChangedFaces
 
     label nChangedFaces = 0;
 
-    forAll(mesh.boundaryMesh(), patchI)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh.boundaryMesh()[patchI];
+            const polyPatch& patch = mesh.boundaryMesh()[patchi];
 
-            forAll(patch.faceCentres(), patchFaceI)
+            forAll(patch.faceCentres(), patchFacei)
             {
-                label meshFaceI = patch.start() + patchFaceI;
+                label meshFacei = patch.start() + patchFacei;
 
-                changedFaces[nChangedFaces] = meshFaceI;
+                changedFaces[nChangedFaces] = meshFacei;
 
                 faceDist[nChangedFaces] =
                     wallPoint
                     (
-                        patch.faceCentres()[patchFaceI],
+                        patch.faceCentres()[patchFacei],
                         0.0
                     );
 
@@ -74,49 +74,49 @@ CML::label CML::patchWave::getValues(const MeshWave<wallPoint>& waveInfo)
     // Copy cell values
     distance_.setSize(cellInfo.size());
 
-    forAll(cellInfo, cellI)
+    forAll(cellInfo, celli)
     {
-        scalar dist = cellInfo[cellI].distSqr();
+        scalar dist = cellInfo[celli].distSqr();
 
-        if (cellInfo[cellI].valid(waveInfo.data()))
+        if (cellInfo[celli].valid(waveInfo.data()))
         {
-            distance_[cellI] = CML::sqrt(dist);
+            distance_[celli] = CML::sqrt(dist);
         }
         else
         {
-            distance_[cellI] = dist;
+            distance_[celli] = dist;
 
             nIllegal++;
         }
     }
 
     // Copy boundary values
-    forAll(patchDistance_, patchI)
+    forAll(patchDistance_, patchi)
     {
-        const polyPatch& patch = mesh().boundaryMesh()[patchI];
+        const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
         // Allocate storage for patchDistance
         scalarField* patchDistPtr = new scalarField(patch.size());
 
-        patchDistance_.set(patchI, patchDistPtr);
+        patchDistance_.set(patchi, patchDistPtr);
 
         scalarField& patchField = *patchDistPtr;
 
-        forAll(patchField, patchFaceI)
+        forAll(patchField, patchFacei)
         {
-            label meshFaceI = patch.start() + patchFaceI;
+            label meshFacei = patch.start() + patchFacei;
 
-            scalar dist = faceInfo[meshFaceI].distSqr();
+            scalar dist = faceInfo[meshFacei].distSqr();
 
-            if (faceInfo[meshFaceI].valid(waveInfo.data()))
+            if (faceInfo[meshFacei].valid(waveInfo.data()))
             {
                 // Adding SMALL to avoid problems with /0 in the turbulence
                 // models
-                patchField[patchFaceI] = CML::sqrt(dist) + SMALL;
+                patchField[patchFacei] = CML::sqrt(dist) + SMALL;
             }
             else
             {
-                patchField[patchFaceI] = dist;
+                patchField[patchFacei] = dist;
 
                 nIllegal++;
             }

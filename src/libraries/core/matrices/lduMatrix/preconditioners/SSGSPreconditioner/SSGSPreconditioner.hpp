@@ -60,12 +60,6 @@ class SSGSPreconditioner : public lduMatrix::preconditioner
     scalarField rDuUpper_;
     scalarField rDlUpper_;
 
-    //- Disallow default bitwise copy construct
-    SSGSPreconditioner(const SSGSPreconditioner&);
-
-    //- Disallow default bitwise assignment
-    void operator=(const SSGSPreconditioner&);
-
 public:
 
     //- Runtime type information
@@ -79,6 +73,10 @@ public:
         lduMatrix::solver const&,
         dictionary const& solverControlsUnused
     );
+
+    //- Disallow default bitwise copy construct
+    SSGSPreconditioner(const SSGSPreconditioner&) = delete;
+
 
     //- Destructor
     virtual ~SSGSPreconditioner()
@@ -95,6 +93,12 @@ public:
         scalarField const& r,
         direction const cmpt=0
     ) const;
+
+
+    // Member Operators
+
+    //- Disallow default bitwise assignment
+    void operator=(const SSGSPreconditioner&) = delete;
 };
 
 }

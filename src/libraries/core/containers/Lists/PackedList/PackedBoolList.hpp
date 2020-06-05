@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -31,7 +31,7 @@ SourceFiles
     PackedBoolListI.hpp
     PackedBoolList.cpp
 
-SeeAlso
+See also
     CML::PackedList
 
 \*---------------------------------------------------------------------------*/
@@ -105,12 +105,6 @@ public:
         //- Copy constructor
         explicit inline PackedBoolList(const PackedList<1>&);
 
-        //- Construct by transferring the parameter contents
-        inline PackedBoolList(const Xfer<PackedBoolList>&);
-
-        //- Construct by transferring the parameter contents
-        inline PackedBoolList(const Xfer<PackedList<1> >&);
-
         //- Construct from a list of bools
         explicit inline PackedBoolList(const CML::UList<bool>&);
 
@@ -166,9 +160,8 @@ public:
             //  Return number of elements subsetted.
             label subset(const UIndirectList<label>& indices);
 
-
             //- Return indices of the used (true) elements as a list of labels
-            Xfer<labelList> used() const;
+            labelList used() const;
 
 
         // Edit
@@ -181,31 +174,28 @@ public:
             //  and annul the argument list.
             inline void transfer(PackedList<1>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<PackedBoolList> xfer();
-
 
     // Member Operators
 
             //- Assignment of all entries to the given value.
-            inline PackedBoolList& operator=(const bool val);
+            inline void operator=(const bool val);
 
             //- Assignment operator.
-            inline PackedBoolList& operator=(const PackedBoolList&);
+            inline void operator=(const PackedBoolList&);
 
             //- Assignment operator.
-            inline PackedBoolList& operator=(const PackedList<1>&);
+            inline void operator=(const PackedList<1>&);
 
             //- Assignment operator.
-             PackedBoolList& operator=(const CML::UList<bool>&);
+            void operator=(const CML::UList<bool>&);
 
             //- Assignment operator,
             //  using the labels as indices to indicate which bits are set
-            inline PackedBoolList& operator=(const labelUList& indices);
+            inline void operator=(const labelUList& indices);
 
             //- Assignment operator,
             //  using the labels as indices to indicate which bits are set
-            inline PackedBoolList& operator=(const UIndirectList<label>&);
+            inline void operator=(const UIndirectList<label>&);
 
             //- Complement operator
             inline PackedBoolList operator~() const;

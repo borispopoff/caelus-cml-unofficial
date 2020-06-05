@@ -26,8 +26,8 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 const char* const CML::quaternion::typeName = "quaternion";
-const CML::quaternion CML::quaternion::zero(0, vector::zero);
-const CML::quaternion CML::quaternion::I(1, vector::zero);
+const CML::quaternion CML::quaternion::zero(0, Zero);
+const CML::quaternion CML::quaternion::I(1, Zero);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -96,7 +96,7 @@ CML::quaternion CML::exp(const quaternion& q)
 
     if (magV == 0)
     {
-        return quaternion(1, vector::zero);
+        return quaternion(1, Zero);
     }
 
     const scalar expW = exp(q.w());

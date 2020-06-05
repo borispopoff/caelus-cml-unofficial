@@ -57,11 +57,11 @@ void polyMeshGenModifier::addBufferCells()
     {
         labelHashSet pointsToSend;
         
-        label faceI = procBoundaries[patchI].patchStart();
-        const label end = faceI + procBoundaries[patchI].patchSize();
-        for(;faceI<end;++faceI)
+        label facei = procBoundaries[patchI].patchStart();
+        const label end = facei + procBoundaries[patchI].patchSize();
+        for(;facei<end;++facei)
         {
-            const cell& c = cells[owner[faceI]];
+            const cell& c = cells[owner[facei]];
             forAll(c, fI)
             {
                 const face& f = faces[c[fI]];
@@ -71,10 +71,10 @@ void polyMeshGenModifier::addBufferCells()
             }
         }
         
-        faceI = 0;
+        facei = 0;
         List<labelledPoint> ptsToSend(pointsToSend.size());
         forAllConstIter(labelHashSet, pointsToSend, it)
-            ptsToSend[faceI++] =
+            ptsToSend[facei++] =
             labelledPoint
             (
                 globalPointLabel[it.key()],
@@ -83,7 +83,7 @@ void polyMeshGenModifier::addBufferCells()
         
         OPstream toOtherProc
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             procBoundaries[patchI].neiProcNo()
         );
         
@@ -96,7 +96,7 @@ void polyMeshGenModifier::addBufferCells()
         List<labelledPoint> receivedPoints;
         IPstream fromOtherProc
         (
-            IPstream::blocking,
+            IPstream::commsTypes::blocking,
             procBoundaries[patchI].neiProcNo()
         );
         
@@ -123,10 +123,10 @@ void polyMeshGenModifier::addBufferCells()
     {
         labelHashSet cellsToSend;
         
-        label faceI = procBoundaries[patchI].patchStart();
-        const label end = faceI + procBoundaries[patchI].patchSize();
-        for(;faceI<end;++faceI)
-            cellsToSend.insert(owner[faceI]);
+        label facei = procBoundaries[patchI].patchStart();
+        const label end = facei + procBoundaries[patchI].patchSize();
+        for(;facei<end;++facei)
+            cellsToSend.insert(owner[facei]);
         
         labelLongList flattenedCells;
         forAllConstIter(labelHashSet, cellsToSend, it)
@@ -150,7 +150,7 @@ void polyMeshGenModifier::addBufferCells()
         
         OPstream toOtherProc
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             procBoundaries[patchI].neiProcNo()
         );
         
@@ -167,7 +167,7 @@ void polyMeshGenModifier::addBufferCells()
         
         IPstream fromOtherProc
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             procBoundaries[patchI].neiProcNo()
         );
         

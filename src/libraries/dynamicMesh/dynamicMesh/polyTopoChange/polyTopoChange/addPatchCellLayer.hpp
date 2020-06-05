@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -182,7 +182,7 @@ class addPatchCellLayer
         (
             const labelListList& edgeFaces,
             const label edgeI,
-            const label faceI
+            const label facei
         );
 
         //- Add vertex to face if unique.
@@ -193,8 +193,8 @@ class addPatchCellLayer
             const indirectPrimitivePatch& pp,
             const labelListList& globalEdgeFaces,
             const boolList& doneEdge,
-            const label thisGlobalFaceI,
-            const label nbrGlobalFaceI,
+            const label thisGlobalFacei,
+            const label nbrGlobalFacei,
             const label edgeI
         ) const;
 
@@ -203,8 +203,8 @@ class addPatchCellLayer
             const indirectPrimitivePatch& pp,
             const labelListList& globalEdgeFaces,
             const boolList& doneEdge,
-            const label patchFaceI,
-            const label globalFaceI
+            const label patchFacei,
+            const label globalFacei
         ) const;
 
 
@@ -217,8 +217,8 @@ class addPatchCellLayer
             const face& newFace,
             const label newPatchID,
 
-            const label ownFaceI,
-            const label nbrFaceI,
+            const label ownFacei,
+            const label nbrFacei,
             const label meshEdgeI,
             const label layerI,
             const label numEdgeFaces,
@@ -240,10 +240,10 @@ class addPatchCellLayer
         );
 
         //- Disallow default bitwise copy construct
-        addPatchCellLayer(const addPatchCellLayer&);
+        addPatchCellLayer(const addPatchCellLayer&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const addPatchCellLayer&);
+        void operator=(const addPatchCellLayer&) = delete;
 
 
 public:
@@ -284,7 +284,7 @@ public:
                 const labelListList& layerFaces
             );
 
-            //- added cells given current mesh & layerfaces.
+            //- Added cells given current mesh & layerfaces.
             labelListList addedCells() const;
 
 
@@ -301,7 +301,7 @@ public:
 
             //- Boundary edges get extruded into boundary faces. Determine patch
             //  for these faces. This might be a to-be-created processor patch
-            //  (patchI >= mesh.boundaryMesh().size()) in which case the
+            //  (patchi >= mesh.boundaryMesh().size()) in which case the
             //  nbrProcToPatch, patchToNbrProc give the correspondence. nPatches
             //  is the new number of patches.
             static void calcSidePatch

@@ -60,7 +60,7 @@ public:
     // Constructors
 
         //- Construct from ioobject and overloaded typename.
-        explicit fieldDictionary(const IOobject& io, const word& type)
+        fieldDictionary(const IOobject& io, const word& type)
         :
             regIOobject(io),
             dictionary(readStream(type)),

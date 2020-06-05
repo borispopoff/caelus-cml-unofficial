@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2012 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -53,10 +53,10 @@ void omegaWallFunctionFvPatchScalarField::checkType()
 
 void omegaWallFunctionFvPatchScalarField::writeLocalEntries(Ostream& os) const
 {
-    os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
-    os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
-    os.writeKeyword("E") << E_ << token::END_STATEMENT << nl;
-    os.writeKeyword("beta1") << beta1_ << token::END_STATEMENT << nl;
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "kappa", kappa_);
+    writeEntry(os, "E", E_);
+    writeEntry(os, "beta1", beta1_);
 }
 
 
@@ -158,11 +158,11 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const turbulenceModel& turbulence =
         db().lookupObject<turbulenceModel>(turbulenceModel::typeName);
-    const scalarField& y = turbulence.y()[patchI];
+    const scalarField& y = turbulence.y()[patchi];
 
     const scalar Cmu25 = pow025(Cmu_);
 
@@ -172,39 +172,39 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
     DimensionedField<scalar, volMesh>& omega =
         const_cast<DimensionedField<scalar, volMesh>&>
         (
-            dimensionedInternalField()
+            internalField()
         );
 
     const tmp<volScalarField> tk = turbulence.k();
     const volScalarField& k = tk();
 
     const tmp<volScalarField> tnu = turbulence.nu();
-    const scalarField& nuw = tnu().boundaryField()[patchI];
+    const scalarField& nuw = tnu().boundaryField()[patchi];
 
     const tmp<volScalarField> tnut = turbulence.nut();
     const volScalarField& nut = tnut();
-    const scalarField& nutw = nut.boundaryField()[patchI];
+    const scalarField& nutw = nut.boundaryField()[patchi];
 
-    const fvPatchVectorField& Uw = turbulence.U().boundaryField()[patchI];
+    const fvPatchVectorField& Uw = turbulence.U().boundaryField()[patchi];
 
     const scalarField magGradUw(mag(Uw.snGrad()));
 
     // Set omega and G
-    forAll(nutw, faceI)
+    forAll(nutw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
-        scalar omegaVis = 6.0*nuw[faceI]/(beta1_*sqr(y[faceI]));
+        scalar omegaVis = 6.0*nuw[facei]/(beta1_*sqr(y[facei]));
 
-        scalar omegaLog = sqrt(k[faceCellI])/(Cmu25*kappa_*y[faceI]);
+        scalar omegaLog = sqrt(k[faceCellI])/(Cmu25*kappa_*y[facei]);
 
         omega[faceCellI] = sqrt(sqr(omegaVis) + sqr(omegaLog));
 
         G[faceCellI] =
-            (nutw[faceI] + nuw[faceI])
-           *magGradUw[faceI]
+            (nutw[facei] + nuw[facei])
+           *magGradUw[facei]
            *Cmu25*sqrt(k[faceCellI])
-           /(kappa_*y[faceI]);
+           /(kappa_*y[facei]);
     }
 
     fixedInternalValueFvPatchField<scalar>::updateCoeffs();
@@ -217,7 +217,7 @@ void omegaWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fixedInternalValueFvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

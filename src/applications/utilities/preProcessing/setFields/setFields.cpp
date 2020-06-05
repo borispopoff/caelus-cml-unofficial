@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -50,6 +50,7 @@ bool setCellFieldType
 
     word fieldName(fieldValueStream);
 
+    // Check the current time directory
     IOobject fieldHeader
     (
         fieldName,
@@ -71,7 +72,7 @@ bool setCellFieldType
 
         if (selectedCells.size() == field.size())
         {
-            field.internalField() = value;
+            field.primitiveFieldRef() = value;
         }
         else
         {
@@ -83,7 +84,7 @@ bool setCellFieldType
 
         forAll(field.boundaryField(), patchi)
         {
-            field.boundaryField()[patchi] =
+            field.boundaryFieldRef()[patchi] =
                 field.boundaryField()[patchi].patchInternalField();
         }
 
@@ -174,6 +175,7 @@ bool setFaceFieldType
 
     word fieldName(fieldValueStream);
 
+    // Check the current time directory
     IOobject fieldHeader
     (
         fieldName,
@@ -203,7 +205,7 @@ bool setFaceFieldType
                 field.boundaryField()[patchi].size(),
                 field.boundaryField()[patchi].patch().start()
               - mesh.nInternalFaces()
-            ).assign(field.boundaryField()[patchi]);
+            ) = field.boundaryField()[patchi];
         }
 
         // Override
@@ -218,9 +220,9 @@ bool setFaceFieldType
             }
             else
             {
-                label bFaceI = facei-mesh.nInternalFaces();
-                allBoundaryValues[bFaceI] = value;
-                nChanged[mesh.boundaryMesh().patchID()[bFaceI]]++;
+                label bFacei = facei-mesh.nInternalFaces();
+                allBoundaryValues[bFacei] = value;
+                nChanged[mesh.boundaryMesh().patchID()[bFacei]]++;
             }
         }
 
@@ -235,7 +237,7 @@ bool setFaceFieldType
                 Info<< "    On patch "
                     << field.boundaryField()[patchi].patch().name()
                     << " set " << nChanged[patchi] << " values" << endl;
-                field.boundaryField()[patchi] == SubField<Type>
+                field.boundaryFieldRef()[patchi] == SubField<Type>
                 (
                     allBoundaryValues,
                     field.boundaryField()[patchi].size(),

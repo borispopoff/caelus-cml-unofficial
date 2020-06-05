@@ -33,7 +33,7 @@ namespace CML
 defineNamedTemplateTypeNameAndDebug(multivariateSelectionScheme<scalar>, 0);
 
 multivariateSurfaceInterpolationScheme<scalar>::addIstreamConstructorToTable
-    <multivariateSelectionScheme<scalar> >
+    <multivariateSelectionScheme<scalar>>
     addMultivariateSelectionSchemeScalarConstructorToTable_;
 
 

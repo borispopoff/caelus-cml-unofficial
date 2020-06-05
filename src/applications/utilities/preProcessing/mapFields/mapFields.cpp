@@ -132,11 +132,11 @@ wordList addProcessorPatches
 
     const polyBoundaryMesh& pbm = meshTarget.boundaryMesh();
 
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        if (isA<processorPolyPatch>(pbm[patchI]))
+        if (isA<processorPolyPatch>(pbm[patchi]))
         {
-            const word& patchName = pbm[patchI].name();
+            const word& patchName = pbm[patchi].name();
             cuttingPatchTable.insert(patchName);
         }
     }
@@ -255,7 +255,7 @@ int main(int argc, char *argv[])
         meshToMesh::interpolationMethod method =
             meshToMesh::interpolationMethodNames_[mapMethod];
 
-        patchMapMethod = AMIPatchToPatchInterpolation::interpolationMethodToWord
+        patchMapMethod = AMIInterpolation::interpolationMethodToWord
         (
             meshToMesh::interpolationMethodAMI(method)
         );

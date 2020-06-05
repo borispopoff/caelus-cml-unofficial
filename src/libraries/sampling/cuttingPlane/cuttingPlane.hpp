@@ -93,7 +93,7 @@ class cuttingPlane
         (
             const primitiveMesh&,
             const labelUList& edgePoint,
-            const label cellI,
+            const label celli,
             const label startEdgeI,
             DynamicList<label>& faceVerts
         );
@@ -165,10 +165,10 @@ public:
 
         //- Sample the cell field
         template<class Type>
-        tmp<Field<Type> > sample(const Field<Type>&) const;
+        tmp<Field<Type>> sample(const Field<Type>&) const;
 
         template<class Type>
-        tmp<Field<Type> > sample(const tmp<Field<Type> >&) const;
+        tmp<Field<Type>> sample(const tmp<Field<Type>>&) const;
 
 
     // Member Operators
@@ -184,22 +184,22 @@ public:
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::cuttingPlane::sample
+CML::tmp<CML::Field<Type>> CML::cuttingPlane::sample
 (
     const Field<Type>& fld
 ) const
 {
-    return tmp<Field<Type> >(new Field<Type>(fld, cutCells()));
+    return tmp<Field<Type>>(new Field<Type>(fld, cutCells()));
 }
 
 
 template<class Type>
-CML::tmp<CML::Field<Type> > CML::cuttingPlane::sample
+CML::tmp<CML::Field<Type>> CML::cuttingPlane::sample
 (
-    const tmp<Field<Type> >& tfld
+    const tmp<Field<Type>>& tfld
 ) const
 {
-    tmp<Field<Type> > tsf = sample(tfld());
+    tmp<Field<Type>> tsf = sample(tfld());
     tfld.clear();
     return tsf;
 }

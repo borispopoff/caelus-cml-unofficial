@@ -35,7 +35,7 @@ License
 namespace CML
 {
     template<>
-    const char* NamedEnum<fieldValues::faceSource::sourceType, 3>::names[] =
+    const char* NamedEnum<fieldValues::faceSource::sourceTypes, 3>::names[] =
     {
         "faceZone",
         "patch",
@@ -44,7 +44,7 @@ namespace CML
 
 
     template<>
-    const char* NamedEnum<fieldValues::faceSource::operationType, 14>::names[] =
+    const char* NamedEnum<fieldValues::faceSource::operationType, 15>::names[] =
     {
         "none",
         "sum",
@@ -54,6 +54,7 @@ namespace CML
         "average",
         "weightedAverage",
         "areaAverage",
+        "weightedAreaAverage",
         "areaIntegrate",
         "min",
         "max",
@@ -70,10 +71,10 @@ namespace CML
 }
 
 
-const CML::NamedEnum<CML::fieldValues::faceSource::sourceType, 3>
+const CML::NamedEnum<CML::fieldValues::faceSource::sourceTypes, 3>
     CML::fieldValues::faceSource::sourceTypeNames_;
 
-const CML::NamedEnum<CML::fieldValues::faceSource::operationType, 14>
+const CML::NamedEnum<CML::fieldValues::faceSource::operationType, 15>
     CML::fieldValues::faceSource::operationTypeNames_;
 
 
@@ -101,24 +102,24 @@ void CML::fieldValues::faceSource::setFaceZoneFaces()
 
     forAll(fZone, i)
     {
-        label faceI = fZone[i];
+        label facei = fZone[i];
 
         label faceId = -1;
         label facePatchId = -1;
-        if (mesh().isInternalFace(faceI))
+        if (mesh().isInternalFace(facei))
         {
-            faceId = faceI;
+            faceId = facei;
             facePatchId = -1;
         }
         else
         {
-            facePatchId = mesh().boundaryMesh().whichPatch(faceI);
+            facePatchId = mesh().boundaryMesh().whichPatch(facei);
             const polyPatch& pp = mesh().boundaryMesh()[facePatchId];
             if (isA<coupledPolyPatch>(pp))
             {
                 if (refCast<const coupledPolyPatch>(pp).owner())
                 {
-                    faceId = pp.whichFace(faceI);
+                    faceId = pp.whichFace(facei);
                 }
                 else
                 {
@@ -127,7 +128,7 @@ void CML::fieldValues::faceSource::setFaceZoneFaces()
             }
             else if (!isA<emptyPolyPatch>(pp))
             {
-                faceId = faceI - pp.start();
+                faceId = facei - pp.start();
             }
             else
             {
@@ -192,11 +193,11 @@ void CML::fieldValues::faceSource::setPatchFaces()
     faceSign_.setSize(nFaces);
     nFaces_ = returnReduce(faceId_.size(), sumOp<label>());
 
-    forAll(faceId_, faceI)
+    forAll(faceId_, facei)
     {
-        faceId_[faceI] = faceI;
-        facePatchId_[faceI] = patchId;
-        faceSign_[faceI] = 1;
+        faceId_[facei] = facei;
+        facePatchId_[facei] = patchId;
+        faceSign_[facei] = 1;
     }
 }
 
@@ -228,8 +229,8 @@ void CML::fieldValues::faceSource::combineMeshGeometry
     {
         if (facePatchId_[i] != -1)
         {
-            label patchI = facePatchId_[i];
-            globalFacesIs[i] += mesh().boundaryMesh()[patchI].start();
+            label patchi = facePatchId_[i];
+            globalFacesIs[i] += mesh().boundaryMesh()[patchi].start();
         }
     }
 
@@ -248,10 +249,10 @@ void CML::fieldValues::faceSource::combineMeshGeometry
     // Renumber and flatten
     label nFaces = 0;
     label nPoints = 0;
-    forAll(allFaces, procI)
+    forAll(allFaces, proci)
     {
-        nFaces += allFaces[procI].size();
-        nPoints += allPoints[procI].size();
+        nFaces += allFaces[proci].size();
+        nPoints += allPoints[proci].size();
     }
 
     faces.setSize(nFaces);
@@ -282,11 +283,11 @@ void CML::fieldValues::faceSource::combineMeshGeometry
     }
 
     // Other proc data follows
-    forAll(allFaces, procI)
+    forAll(allFaces, proci)
     {
-        if (procI != Pstream::myProcNo())
+        if (proci != Pstream::myProcNo())
         {
-            const faceList& fcs = allFaces[procI];
+            const faceList& fcs = allFaces[proci];
             forAll(fcs, i)
             {
                 const face& f = fcs[i];
@@ -298,7 +299,7 @@ void CML::fieldValues::faceSource::combineMeshGeometry
                 }
             }
 
-            const pointField& pts = allPoints[procI];
+            const pointField& pts = allPoints[proci];
             forAll(pts, i)
             {
                 points[nPoints++] = pts[i];
@@ -399,17 +400,17 @@ void CML::fieldValues::faceSource::initialise(const dictionary& dict)
 
     switch (source_)
     {
-        case stFaceZone:
+        case sourceTypes::faceZone:
         {
             setFaceZoneFaces();
             break;
         }
-        case stPatch:
+        case sourceTypes::patch:
         {
             setPatchFaces();
             break;
         }
-        case stSampledSurface:
+        case sourceTypes::sampledSurface:
         {
             sampledSurfaceFaces(dict);
             break;
@@ -452,7 +453,7 @@ void CML::fieldValues::faceSource::initialise(const dictionary& dict)
     {
         Info<< "    weight field = " << weightFieldName_ << nl;
 
-        if (source_ == stSampledSurface)
+        if (source_ == sourceTypes::sampledSurface)
         {
             FatalIOErrorInFunction(dict)
                 << "Cannot use weightField for a sampledSurface"
@@ -544,12 +545,12 @@ CML::scalar CML::fieldValues::faceSource::processValues
 {
     switch (operation_)
     {
-        case opSumDirection:
+        case operationType::sumDirection:
         {
             vector n(dict_.lookup("direction"));
             return sum(pos(values*(Sf & n))*mag(values));
         }
-        case opSumDirectionBalance:
+        case operationType::sumDirectionBalance:
         {
             vector n(dict_.lookup("direction"));
             const scalarField nv(values*(Sf & n));
@@ -575,7 +576,7 @@ CML::vector CML::fieldValues::faceSource::processValues
 {
     switch (operation_)
     {
-        case opSumDirection:
+        case operationType::sumDirection:
         {
             vector n(dict_.lookup("direction"));
             n /= mag(n) + ROOTVSMALL;
@@ -583,7 +584,7 @@ CML::vector CML::fieldValues::faceSource::processValues
 
             return sum(pos(nv)*n*(nv));
         }
-        case opSumDirectionBalance:
+        case operationType::sumDirectionBalance:
         {
             vector n(dict_.lookup("direction"));
             n /= mag(n) + ROOTVSMALL;
@@ -591,12 +592,12 @@ CML::vector CML::fieldValues::faceSource::processValues
 
             return sum(pos(nv)*n*(nv));
         }
-        case opAreaNormalAverage:
+        case operationType::areaNormalAverage:
         {
             scalar result = sum(values & Sf)/sum(mag(Sf));
             return vector(result, 0.0, 0.0);
         }
-        case opAreaNormalIntegrate:
+        case operationType::areaNormalIntegrate:
         {
             scalar result = sum(values & Sf);
             return vector(result, 0.0, 0.0);

@@ -50,7 +50,7 @@ CML::fv::faceLimitedGrad<CML::scalar>::calcGrad
         return tGrad;
     }
 
-    volVectorField& g = tGrad();
+    volVectorField& g = tGrad.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -59,7 +59,7 @@ CML::fv::faceLimitedGrad<CML::scalar>::calcGrad
     const surfaceVectorField& Cf = mesh.Cf();
 
     // create limiter
-    scalarField limiter(vsf.internalField().size(), 1.0);
+    scalarField limiter(vsf.primitiveField().size(), 1.0);
 
     scalar rk = (1.0/k_ - 1.0);
 
@@ -94,7 +94,7 @@ CML::fv::faceLimitedGrad<CML::scalar>::calcGrad
         );
     }
 
-    const volScalarField::GeometricBoundaryField& bsf = vsf.boundaryField();
+    const volScalarField::Boundary& bsf = vsf.boundaryField();
 
     forAll(bsf, patchi)
     {
@@ -161,7 +161,7 @@ CML::fv::faceLimitedGrad<CML::scalar>::calcGrad
             << " average: " << gAverage(limiter) << endl;
     }
 
-    g.internalField() *= limiter;
+    g.primitiveFieldRef() *= limiter;
     g.correctBoundaryConditions();
     gaussGrad<scalar>::correctBoundaryConditions(vsf, g);
 
@@ -186,7 +186,7 @@ CML::fv::faceLimitedGrad<CML::vector>::calcGrad
         return tGrad;
     }
 
-    volTensorField& g = tGrad();
+    volTensorField& g = tGrad.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -195,7 +195,7 @@ CML::fv::faceLimitedGrad<CML::vector>::calcGrad
     const surfaceVectorField& Cf = mesh.Cf();
 
     // create limiter
-    scalarField limiter(vvf.internalField().size(), 1.0);
+    scalarField limiter(vvf.primitiveField().size(), 1.0);
 
     scalar rk = (1.0/k_ - 1.0);
 
@@ -245,7 +245,7 @@ CML::fv::faceLimitedGrad<CML::vector>::calcGrad
     }
 
 
-    const volVectorField::GeometricBoundaryField& bvf = vvf.boundaryField();
+    const volVectorField::Boundary& bvf = vvf.boundaryField();
 
     forAll(bvf, patchi)
     {
@@ -322,7 +322,7 @@ CML::fv::faceLimitedGrad<CML::vector>::calcGrad
             << " average: " << gAverage(limiter) << endl;
     }
 
-    g.internalField() *= limiter;
+    g.primitiveFieldRef() *= limiter;
     g.correctBoundaryConditions();
     gaussGrad<vector>::correctBoundaryConditions(vvf, g);
 

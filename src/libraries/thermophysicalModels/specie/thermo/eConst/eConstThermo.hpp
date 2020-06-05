@@ -120,7 +120,7 @@ public:
     //- Construct and return a clone
     inline autoPtr<eConstThermo> clone() const
     {
-        return autoPtr<eConstThermo<EquationOfState> >
+        return autoPtr<eConstThermo<EquationOfState>>
         (
             new eConstThermo<EquationOfState>(*this)
         );
@@ -129,7 +129,7 @@ public:
     // Selector from dictionary
     inline static autoPtr<eConstThermo> New(const dictionary& dict)
     {
-        return autoPtr<eConstThermo<EquationOfState> >
+        return autoPtr<eConstThermo<EquationOfState>>
         (
             new eConstThermo<EquationOfState>(dict)
         );

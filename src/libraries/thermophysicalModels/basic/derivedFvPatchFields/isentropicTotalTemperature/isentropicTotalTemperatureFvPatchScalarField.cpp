@@ -148,7 +148,7 @@ void isentropicTotalTemperatureFvPatchScalarField::updateCoeffs()
 
     tmp<volScalarField> gamma = thermo.Cp()/thermo.Cv();
 
-    tmp<fvPatchField<scalar> > const& gammap =
+    tmp<fvPatchField<scalar>> const& gammap =
       patch().patchField<volScalarField, scalar>(gamma());
 
     tmp<scalarField> gM1ByG = (gammap() - 1.0)/gammap();
@@ -170,10 +170,10 @@ void isentropicTotalTemperatureFvPatchScalarField::updateCoeffs
 void isentropicTotalTemperatureFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
-    os.writeKeyword("p") << pName_ << token::END_STATEMENT << nl;
-    T0_.writeEntry("T0", os);
-    p0_.writeEntry("p0", os);
-    writeEntry("value", os);
+    writeEntry(os, "p", pName_);
+    writeEntry(os, "T0", T0_);
+    writeEntry(os, "p0", p0_);
+    writeEntry(os, "value", *this);
 }
 
 

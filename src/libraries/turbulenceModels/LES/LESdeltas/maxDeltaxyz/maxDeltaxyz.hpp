@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -41,7 +41,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class maxDeltaxyz Declaration
+                         Class maxDeltaxyz Declaration
 \*---------------------------------------------------------------------------*/
 
 class maxDeltaxyz
@@ -50,13 +50,14 @@ class maxDeltaxyz
 {
     // Private data
 
-        scalar deltaCoeff_; //
+        //- Model coefficient
+        scalar deltaCoeff_;
 
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        maxDeltaxyz(const maxDeltaxyz&);
+        maxDeltaxyz(const maxDeltaxyz&) = delete;
         void operator=(const maxDeltaxyz&);
 
         // Calculate the delta values

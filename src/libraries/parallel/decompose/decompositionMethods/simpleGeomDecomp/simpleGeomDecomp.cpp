@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -64,7 +64,7 @@ void CML::simpleGeomDecomp::assignToProcessorGroup
     // one extra cell each
     for (j=0; j<fstProcessorGroup; j++)
     {
-        for (register label k=0; k<jumpb; k++)
+        for (label k=0; k<jumpb; k++)
         {
             processorGroup[ind++] = j;
         }
@@ -73,7 +73,7 @@ void CML::simpleGeomDecomp::assignToProcessorGroup
     // and now to the `normal' processor groups
     for (; j<nProcGroup; j++)
     {
-        for (register label k=0; k<jump; k++)
+        for (label k=0; k<jump; k++)
         {
             processorGroup[ind++] = j;
         }
@@ -321,20 +321,20 @@ CML::labelList CML::simpleGeomDecomp::decompose
 
             label nTotalPoints = 0;
             // Master first
-            SubField<point>(allPoints, points.size()).assign(points);
+            SubField<point>(allPoints, points.size()) = points;
             nTotalPoints += points.size();
 
             // Add slaves
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 pointField nbrPoints(fromSlave);
                 SubField<point>
                 (
                     allPoints,
                     nbrPoints.size(),
                     nTotalPoints
-                ).assign(nbrPoints);
+                ) = nbrPoints;
                 nTotalPoints += nbrPoints.size();
             }
 
@@ -344,7 +344,7 @@ CML::labelList CML::simpleGeomDecomp::decompose
             // Send back
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                OPstream toSlave(Pstream::scheduled, slave);
+                OPstream toSlave(Pstream::commsTypes::scheduled, slave);
                 toSlave << SubField<label>
                 (
                     finalDecomp,
@@ -361,12 +361,20 @@ CML::labelList CML::simpleGeomDecomp::decompose
         {
             // Send my points
             {
-                OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::scheduled,
+                    Pstream::masterNo()
+                );
                 toMaster<< points;
             }
 
             // Receive back decomposition
-            IPstream fromMaster(Pstream::scheduled, Pstream::masterNo());
+            IPstream fromMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             labelList finalDecomp(fromMaster);
 
             return finalDecomp;
@@ -397,14 +405,14 @@ CML::labelList CML::simpleGeomDecomp::decompose
 
             label nTotalPoints = 0;
             // Master first
-            SubField<point>(allPoints, points.size()).assign(points);
-            SubField<scalar>(allWeights, points.size()).assign(weights);
+            SubField<point>(allPoints, points.size()) = points;
+            SubField<scalar>(allWeights, points.size()) = weights;
             nTotalPoints += points.size();
 
             // Add slaves
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 pointField nbrPoints(fromSlave);
                 scalarField nbrWeights(fromSlave);
                 SubField<point>
@@ -412,13 +420,13 @@ CML::labelList CML::simpleGeomDecomp::decompose
                     allPoints,
                     nbrPoints.size(),
                     nTotalPoints
-                ).assign(nbrPoints);
+                ) = nbrPoints;
                 SubField<scalar>
                 (
                     allWeights,
                     nbrWeights.size(),
                     nTotalPoints
-                ).assign(nbrWeights);
+                ) = nbrWeights;
                 nTotalPoints += nbrPoints.size();
             }
 
@@ -428,7 +436,7 @@ CML::labelList CML::simpleGeomDecomp::decompose
             // Send back
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                OPstream toSlave(Pstream::scheduled, slave);
+                OPstream toSlave(Pstream::commsTypes::scheduled, slave);
                 toSlave << SubField<label>
                 (
                     finalDecomp,
@@ -445,12 +453,20 @@ CML::labelList CML::simpleGeomDecomp::decompose
         {
             // Send my points
             {
-                OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::scheduled,
+                    Pstream::masterNo()
+                );
                 toMaster<< points << weights;
             }
 
             // Receive back decomposition
-            IPstream fromMaster(Pstream::scheduled, Pstream::masterNo());
+            IPstream fromMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             labelList finalDecomp(fromMaster);
 
             return finalDecomp;

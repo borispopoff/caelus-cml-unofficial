@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2017 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -22,7 +22,17 @@ Class
     CML::zeroGradientFvPatchField
 
 Description
-    CML::zeroGradientFvPatchField
+    This boundary condition applies a zero-gradient condition from the patch
+    internal field onto the patch faces.
+
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            zeroGradient;
+    }
+    \endverbatim
 
 
 \*---------------------------------------------------------------------------*/
@@ -38,7 +48,7 @@ namespace CML
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class zeroGradientFvPatch Declaration
+                 Class zeroGradientFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -87,9 +97,9 @@ public:
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<Type>> clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new zeroGradientFvPatchField<Type>(*this)
             );
@@ -103,12 +113,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<Type>> clone
         (
             const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<Type>>
             (
                 new zeroGradientFvPatchField<Type>(*this, iF)
             );
@@ -125,61 +135,55 @@ public:
         // Evaluation functions
 
             //- Return gradient at boundary
-            virtual tmp<Field<Type> > snGrad() const
+            virtual tmp<Field<Type>> snGrad() const
             {
-                return tmp<Field<Type> >
+                return tmp<Field<Type>>
                 (
-                    new Field<Type>(this->size(), pTraits<Type>::zero)
+                    new Field<Type>(this->size(), Zero)
                 );
             }
 
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             );
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueInternalCoeffs
+            virtual tmp<Field<Type>> valueInternalCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the value of this patchField with given weights
-            virtual tmp<Field<Type> > valueBoundaryCoeffs
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
             (
                 const tmp<scalarField>&
             ) const;
 
             //- Return the matrix diagonal coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientInternalCoeffs() const;
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const;
 
             //- Return the matrix source coefficients corresponding to the
             //  evaluation of the gradient of this patchField
-            virtual tmp<Field<Type> > gradientBoundaryCoeffs() const;
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const;
 };
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 } // End namespace CML
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fvPatchFieldMapper.hpp"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace CML
-{
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
+CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF
@@ -190,7 +194,21 @@ zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 
 
 template<class Type>
-zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
+CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvPatchField<Type>(p, iF, dict, false)
+{
+    fvPatchField<Type>::operator=(this->patchInternalField());
+}
+
+
+template<class Type>
+CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 (
     const zeroGradientFvPatchField<Type>& ptf,
     const fvPatch& p,
@@ -203,21 +221,7 @@ zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 
 
 template<class Type>
-zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvPatchField<Type>(p, iF, dict)
-{
-    fvPatchField<Type>::operator=(this->patchInternalField());
-}
-
-
-template<class Type>
-zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
+CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 (
     const zeroGradientFvPatchField& zgpf
 )
@@ -227,7 +231,7 @@ zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 
 
 template<class Type>
-zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
+CML::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 (
     const zeroGradientFvPatchField& zgpf,
     const DimensionedField<Type, volMesh>& iF
@@ -240,7 +244,7 @@ zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void zeroGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
+void CML::zeroGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     if (!this->updated())
     {
@@ -253,12 +257,13 @@ void zeroGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 
 
 template<class Type>
-tmp<Field<Type> > zeroGradientFvPatchField<Type>::valueInternalCoeffs
+CML::tmp<CML::Field<Type>>
+CML::zeroGradientFvPatchField<Type>::valueInternalCoeffs
 (
     const tmp<scalarField>&
 ) const
 {
-    return tmp<Field<Type> >
+    return tmp<Field<Type>>
     (
         new Field<Type>(this->size(), pTraits<Type>::one)
     );
@@ -266,45 +271,39 @@ tmp<Field<Type> > zeroGradientFvPatchField<Type>::valueInternalCoeffs
 
 
 template<class Type>
-tmp<Field<Type> > zeroGradientFvPatchField<Type>::valueBoundaryCoeffs
+CML::tmp<CML::Field<Type>>
+CML::zeroGradientFvPatchField<Type>::valueBoundaryCoeffs
 (
     const tmp<scalarField>&
 ) const
 {
-    return tmp<Field<Type> >
+    return tmp<Field<Type>>
     (
-        new Field<Type>(this->size(), pTraits<Type>::zero)
+        new Field<Type>(this->size(), Zero)
     );
 }
 
 
 template<class Type>
-tmp<Field<Type> > zeroGradientFvPatchField<Type>::gradientInternalCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::zeroGradientFvPatchField<Type>::gradientInternalCoeffs() const
 {
-    return tmp<Field<Type> >
+    return tmp<Field<Type>>
     (
-        new Field<Type>(this->size(), pTraits<Type>::zero)
+        new Field<Type>(this->size(), Zero)
     );
 }
 
 
 template<class Type>
-tmp<Field<Type> > zeroGradientFvPatchField<Type>::gradientBoundaryCoeffs() const
+CML::tmp<CML::Field<Type>>
+CML::zeroGradientFvPatchField<Type>::gradientBoundaryCoeffs() const
 {
-    return tmp<Field<Type> >
+    return tmp<Field<Type>>
     (
-        new Field<Type>(this->size(), pTraits<Type>::zero)
+        new Field<Type>(this->size(), Zero)
     );
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace CML
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-// ************************************************************************* //

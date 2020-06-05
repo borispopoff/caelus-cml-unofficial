@@ -50,17 +50,17 @@ void modifyOrAddFace
 (
     polyTopoChange& meshMod,
     const face& f,
-    const label faceI,
+    const label facei,
     const label own,
     const bool flipFaceFlux,
-    const label newPatchI,
+    const label newPatchi,
     const label zoneID,
     const bool zoneFlip,
 
     PackedBoolList& modifiedFace
 )
 {
-    if (!modifiedFace[faceI])
+    if (!modifiedFace[facei])
     {
         // First usage of face. Modify.
         meshMod.setAction
@@ -68,17 +68,17 @@ void modifyOrAddFace
             polyModifyFace
             (
                 f,                          // modified face
-                faceI,                      // label of face
+                facei,                      // label of face
                 own,                        // owner
                 -1,                         // neighbour
                 flipFaceFlux,               // face flip
-                newPatchI,                  // patch for face
+                newPatchi,                  // patch for face
                 false,                      // remove from zone
                 zoneID,                     // zone for face
                 zoneFlip                    // face flip in zone
             )
         );
-        modifiedFace[faceI] = 1;
+        modifiedFace[facei] = 1;
     }
     else
     {
@@ -92,9 +92,9 @@ void modifyOrAddFace
                 -1,                         // neighbour
                 -1,                         // master point
                 -1,                         // master edge
-                faceI,                      // master face
+                facei,                      // master face
                 flipFaceFlux,               // face flip
-                newPatchI,                  // patch for face
+                newPatchi,                  // patch for face
                 zoneID,                     // zone for face
                 zoneFlip                    // face flip in zone
             )
@@ -105,16 +105,16 @@ void modifyOrAddFace
 
 label findPatchID(const polyMesh& mesh, const word& name)
 {
-    const label patchI = mesh.boundaryMesh().findPatchID(name);
+    const label patchi = mesh.boundaryMesh().findPatchID(name);
 
-    if (patchI == -1)
+    if (patchi == -1)
     {
         FatalErrorInFunction
             << "Cannot find patch " << name << endl
             << "Valid patches are " << mesh.boundaryMesh().names()
             << exit(FatalError);
     }
-    return patchI;
+    return patchi;
 }
 
 
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
     // Additional patches
     if (args.optionFound("additionalPatches"))
     {
-        const List<Pair<word> > patchNames
+        const List<Pair<word>> patchNames
         (
             args.optionLookup("additionalPatches")()
         );
@@ -285,21 +285,21 @@ int main(int argc, char *argv[])
         // Pass 1. Do selected side of zone
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+        for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
         {
-            label zoneFaceI = fZone.whichFace(faceI);
+            label zoneFacei = fZone.whichFace(facei);
 
-            if (zoneFaceI != -1)
+            if (zoneFacei != -1)
             {
-                if (!fZone.flipMap()[zoneFaceI])
+                if (!fZone.flipMap()[zoneFacei])
                 {
                     // Use owner side of face
                     modifyOrAddFace
                     (
                         meshMod,
-                        mesh.faces()[faceI],    // modified face
-                        faceI,                  // label of face
-                        mesh.faceOwner()[faceI],// owner
+                        mesh.faces()[facei],    // modified face
+                        facei,                  // label of face
+                        mesh.faceOwner()[facei],// owner
                         false,                  // face flip
                         newMasterPatches[i],    // patch for face
                         zoneID.index(),         // zone for face
@@ -313,9 +313,9 @@ int main(int argc, char *argv[])
                     modifyOrAddFace
                     (
                         meshMod,
-                        mesh.faces()[faceI].reverseFace(),  // modified face
-                        faceI,                      // label of face
-                        mesh.faceNeighbour()[faceI],// owner
+                        mesh.faces()[facei].reverseFace(),  // modified face
+                        facei,                      // label of face
+                        mesh.faceNeighbour()[facei],// owner
                         true,                       // face flip
                         newMasterPatches[i],        // patch for face
                         zoneID.index(),             // zone for face
@@ -332,21 +332,21 @@ int main(int argc, char *argv[])
         // Pass 2. Do other side of zone
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+        for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
         {
-            label zoneFaceI = fZone.whichFace(faceI);
+            label zoneFacei = fZone.whichFace(facei);
 
-            if (zoneFaceI != -1)
+            if (zoneFacei != -1)
             {
-                if (!fZone.flipMap()[zoneFaceI])
+                if (!fZone.flipMap()[zoneFacei])
                 {
                     // Use neighbour side of face
                     modifyOrAddFace
                     (
                         meshMod,
-                        mesh.faces()[faceI].reverseFace(),  // modified face
-                        faceI,                              // label of face
-                        mesh.faceNeighbour()[faceI],        // owner
+                        mesh.faces()[facei].reverseFace(),  // modified face
+                        facei,                              // label of face
+                        mesh.faceNeighbour()[facei],        // owner
                         true,                               // face flip
                         newSlavePatches[i],                 // patch for face
                         zoneID.index(),                     // zone for face
@@ -360,9 +360,9 @@ int main(int argc, char *argv[])
                     modifyOrAddFace
                     (
                         meshMod,
-                        mesh.faces()[faceI],    // modified face
-                        faceI,                  // label of face
-                        mesh.faceOwner()[faceI],// owner
+                        mesh.faces()[facei],    // modified face
+                        facei,                  // label of face
+                        mesh.faceOwner()[facei],// owner
                         false,                  // face flip
                         newSlavePatches[i],     // patch for face
                         zoneID.index(),         // zone for face
@@ -388,13 +388,13 @@ int main(int argc, char *argv[])
         // For warning once per patch.
         labelHashSet patchWarned;
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
-            label newPatchI = newMasterPatches[i];
+            label newPatchi = newMasterPatches[i];
 
-            if (pp.coupled() && patches[newPatchI].coupled())
+            if (pp.coupled() && patches[newPatchi].coupled())
             {
                 // Do not allow coupled faces to be moved to different coupled
                 // patches.
@@ -403,19 +403,19 @@ int main(int argc, char *argv[])
             {
                 forAll(pp, i)
                 {
-                    label faceI = pp.start()+i;
+                    label facei = pp.start()+i;
 
-                    label zoneFaceI = fZone.whichFace(faceI);
+                    label zoneFacei = fZone.whichFace(facei);
 
-                    if (zoneFaceI != -1)
+                    if (zoneFacei != -1)
                     {
-                        if (patchWarned.insert(patchI))
+                        if (patchWarned.insert(patchi))
                         {
                             WarningInFunction
                                 << "Found boundary face (in patch " << pp.name()
                                 << ") in faceZone " << fZone.name()
                                 << " to convert to baffle patch "
-                                << patches[newPatchI].name()
+                                << patches[newPatchi].name()
                                 << endl
                                 << "    Run with -internalFacesOnly option"
                                 << " if you don't wish to convert"
@@ -425,13 +425,13 @@ int main(int argc, char *argv[])
                         modifyOrAddFace
                         (
                             meshMod,
-                            mesh.faces()[faceI],        // modified face
-                            faceI,                      // label of face
-                            mesh.faceOwner()[faceI],    // owner
+                            mesh.faces()[facei],        // modified face
+                            facei,                      // label of face
+                            mesh.faceOwner()[facei],    // owner
                             false,                      // face flip
-                            newPatchI,                  // patch for face
+                            newPatchi,                  // patch for face
                             zoneID.index(),             // zone for face
-                            fZone.flipMap()[zoneFaceI], // face flip in zone
+                            fZone.flipMap()[zoneFacei], // face flip in zone
                             modifiedFace                // modify or add status
                         );
                         nModified++;
@@ -462,8 +462,8 @@ int main(int argc, char *argv[])
         bool hasWarned = false;
         forAll(newMasterPatches, i)
         {
-            label patchI = newMasterPatches[i];
-            const fvPatchMapper& pm = mapper.boundaryMap()[patchI];
+            label patchi = newMasterPatches[i];
+            const fvPatchMapper& pm = mapper.boundaryMap()[patchi];
             if (pm.sizeBeforeMapping() == 0)
             {
                 if (!hasWarned)
@@ -474,36 +474,36 @@ int main(int argc, char *argv[])
                         << "You might have to edit these fields." << endl;
                 }
 
-                SetPatchFields(vsFlds, patchI, pTraits<scalar>::zero);
-                SetPatchFields(vvFlds, patchI, pTraits<vector>::zero);
-                SetPatchFields(vstFlds, patchI, pTraits<sphericalTensor>::zero);
-                SetPatchFields(vsymtFlds, patchI, pTraits<symmTensor>::zero);
-                SetPatchFields(vtFlds, patchI, pTraits<tensor>::zero);
+                SetPatchFields(vsFlds, patchi, pTraits<scalar>::zero);
+                SetPatchFields(vvFlds, patchi, pTraits<vector>::zero);
+                SetPatchFields(vstFlds, patchi, pTraits<sphericalTensor>::zero);
+                SetPatchFields(vsymtFlds, patchi, pTraits<symmTensor>::zero);
+                SetPatchFields(vtFlds, patchi, pTraits<tensor>::zero);
 
-                SetPatchFields(ssFlds, patchI, pTraits<scalar>::zero);
-                SetPatchFields(svFlds, patchI, pTraits<vector>::zero);
-                SetPatchFields(sstFlds, patchI, pTraits<sphericalTensor>::zero);
-                SetPatchFields(ssymtFlds, patchI, pTraits<symmTensor>::zero);
-                SetPatchFields(stFlds, patchI, pTraits<tensor>::zero);
+                SetPatchFields(ssFlds, patchi, pTraits<scalar>::zero);
+                SetPatchFields(svFlds, patchi, pTraits<vector>::zero);
+                SetPatchFields(sstFlds, patchi, pTraits<sphericalTensor>::zero);
+                SetPatchFields(ssymtFlds, patchi, pTraits<symmTensor>::zero);
+                SetPatchFields(stFlds, patchi, pTraits<tensor>::zero);
             }
         }
         forAll(newSlavePatches, i)
         {
-            label patchI = newSlavePatches[i];
-            const fvPatchMapper& pm = mapper.boundaryMap()[patchI];
+            label patchi = newSlavePatches[i];
+            const fvPatchMapper& pm = mapper.boundaryMap()[patchi];
             if (pm.sizeBeforeMapping() == 0)
             {
-                SetPatchFields(vsFlds, patchI, pTraits<scalar>::zero);
-                SetPatchFields(vvFlds, patchI, pTraits<vector>::zero);
-                SetPatchFields(vstFlds, patchI, pTraits<sphericalTensor>::zero);
-                SetPatchFields(vsymtFlds, patchI, pTraits<symmTensor>::zero);
-                SetPatchFields(vtFlds, patchI, pTraits<tensor>::zero);
+                SetPatchFields(vsFlds, patchi, pTraits<scalar>::zero);
+                SetPatchFields(vvFlds, patchi, pTraits<vector>::zero);
+                SetPatchFields(vstFlds, patchi, pTraits<sphericalTensor>::zero);
+                SetPatchFields(vsymtFlds, patchi, pTraits<symmTensor>::zero);
+                SetPatchFields(vtFlds, patchi, pTraits<tensor>::zero);
 
-                SetPatchFields(ssFlds, patchI, pTraits<scalar>::zero);
-                SetPatchFields(svFlds, patchI, pTraits<vector>::zero);
-                SetPatchFields(sstFlds, patchI, pTraits<sphericalTensor>::zero);
-                SetPatchFields(ssymtFlds, patchI, pTraits<symmTensor>::zero);
-                SetPatchFields(stFlds, patchI, pTraits<tensor>::zero);
+                SetPatchFields(ssFlds, patchi, pTraits<scalar>::zero);
+                SetPatchFields(svFlds, patchi, pTraits<vector>::zero);
+                SetPatchFields(sstFlds, patchi, pTraits<sphericalTensor>::zero);
+                SetPatchFields(ssymtFlds, patchi, pTraits<symmTensor>::zero);
+                SetPatchFields(stFlds, patchi, pTraits<tensor>::zero);
             }
         }
     }

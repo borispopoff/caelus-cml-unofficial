@@ -50,7 +50,7 @@ template<class T> Ostream& operator<<(Ostream&, const UIndirectList<T>&);
 template<class T>
 class UIndirectList
 {
-    // Private data
+    // Private Data
 
         UList<T>& completeList_;
         const labelUList& addressing_;
@@ -104,10 +104,10 @@ public:
             //- Return const access to an element
             inline const T& operator[](const label) const;
 
-            //- Assignment from UList of addressed elements
+            //- Assignment to UList of addressed elements
             inline void operator=(const UList<T>&);
 
-            //- Assignment from UIndirectList of addressed elements
+            //- Assignment to UIndirectList of addressed elements
             inline void operator=(const UIndirectList<T>&);
 
             //- Assignment of all entries to the given value

@@ -4164,7 +4164,7 @@ namespace parserField {
     {
             sameSize((yysemantic_stack_[(3) - (1)].fsfield),(yysemantic_stack_[(3) - (3)].fsfield));
             (yyval.fsfield) = new CML::surfaceScalarField(*(yysemantic_stack_[(3) - (1)].fsfield));
-	    (*(yyval.fsfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
+	    (*(yyval.fsfield)).primitiveFieldRef()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).primitiveField();
             delete (yysemantic_stack_[(3) - (1)].fsfield); delete (yysemantic_stack_[(3) - (3)].fsfield);
           }
     break;
@@ -4884,7 +4884,7 @@ namespace parserField {
 #line 1499 "../FieldValueExpressionParser.yy"
     {
             (yyval.fsfield) = driver.makeField<CML::surfaceScalarField>(
-                CML::tr((yysemantic_stack_[(4) - (3)].fhfield)->internalField())
+                CML::tr((yysemantic_stack_[(4) - (3)].fhfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].fhfield);
           }
@@ -4916,7 +4916,7 @@ namespace parserField {
 #line 1513 "../FieldValueExpressionParser.yy"
     {
             (yyval.fsfield) = driver.makeField<CML::surfaceScalarField>(
-                CML::det((yysemantic_stack_[(4) - (3)].fhfield)->internalField())
+                CML::det((yysemantic_stack_[(4) - (3)].fhfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].fhfield);
           }
@@ -5159,7 +5159,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].fvfield),(yysemantic_stack_[(3) - (3)].fsfield));
             //$$ = new CML::surfaceVectorField(*$1 / *$3);
 	    (yyval.fvfield) = new CML::surfaceVectorField(*(yysemantic_stack_[(3) - (1)].fvfield));
-	    (*(yyval.fvfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
+	    (*(yyval.fvfield)).primitiveFieldRef()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).primitiveField();
             delete (yysemantic_stack_[(3) - (1)].fvfield); delete (yysemantic_stack_[(3) - (3)].fsfield);
           }
     break;
@@ -6239,7 +6239,7 @@ namespace parserField {
 #line 2153 "../FieldValueExpressionParser.yy"
     {
             (yyval.sfield) = driver.makeField<CML::volScalarField>(
-                CML::tr((yysemantic_stack_[(4) - (3)].hfield)->internalField())
+                CML::tr((yysemantic_stack_[(4) - (3)].hfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].hfield);
             driver.setCalculatedPatches(*(yyval.sfield));
@@ -6274,7 +6274,7 @@ namespace parserField {
 #line 2170 "../FieldValueExpressionParser.yy"
     {
             (yyval.sfield) = driver.makeField<CML::volScalarField>(
-                CML::det((yysemantic_stack_[(4) - (3)].hfield)->internalField())
+                CML::det((yysemantic_stack_[(4) - (3)].hfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].hfield);
             driver.setCalculatedPatches(*(yyval.sfield));
@@ -7635,7 +7635,7 @@ namespace parserField {
 #line 2862 "../FieldValueExpressionParser.yy"
     {
             (yyval.tfield) = driver.makeField<CML::volTensorField>(
-                CML::eigenVectors((yysemantic_stack_[(4) - (3)].yfield)->internalField())
+                CML::eigenVectors((yysemantic_stack_[(4) - (3)].yfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].yfield);
             driver.setCalculatedPatches(*(yyval.tfield));
@@ -7659,7 +7659,7 @@ namespace parserField {
 #line 2874 "../FieldValueExpressionParser.yy"
     {
             (yyval.tfield) = driver.makeField<CML::volTensorField>(
-                CML::cof((yysemantic_stack_[(4) - (3)].tfield)->internalField())
+                CML::cof((yysemantic_stack_[(4) - (3)].tfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].tfield);
             driver.setCalculatedPatches(*(yyval.tfield));
@@ -8248,7 +8248,7 @@ namespace parserField {
 #line 3187 "../FieldValueExpressionParser.yy"
     {
             (yyval.yfield) = driver.makeField<CML::volSymmTensorField>(
-                CML::cof((yysemantic_stack_[(4) - (3)].yfield)->internalField())
+                CML::cof((yysemantic_stack_[(4) - (3)].yfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].yfield);
             driver.setCalculatedPatches(*(yyval.yfield));
@@ -8717,7 +8717,7 @@ namespace parserField {
 #line 3437 "../FieldValueExpressionParser.yy"
     {
             (yyval.hfield) = driver.makeField<CML::volSphericalTensorField>(
-                CML::sph((yysemantic_stack_[(4) - (3)].tfield)->internalField())
+                CML::sph((yysemantic_stack_[(4) - (3)].tfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].tfield);
             driver.setCalculatedPatches(*(yyval.hfield));
@@ -8730,7 +8730,7 @@ namespace parserField {
 #line 3444 "../FieldValueExpressionParser.yy"
     {
             (yyval.hfield) = driver.makeField<CML::volSphericalTensorField>(
-                CML::sph((yysemantic_stack_[(4) - (3)].yfield)->internalField())
+                CML::sph((yysemantic_stack_[(4) - (3)].yfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].yfield);
             driver.setCalculatedPatches(*(yyval.hfield));
@@ -8743,7 +8743,7 @@ namespace parserField {
 #line 3451 "../FieldValueExpressionParser.yy"
     {
             (yyval.hfield) = driver.makeField<CML::volSphericalTensorField>(
-                CML::sph((yysemantic_stack_[(4) - (3)].hfield)->internalField())
+                CML::sph((yysemantic_stack_[(4) - (3)].hfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].hfield);
             driver.setCalculatedPatches(*(yyval.hfield));
@@ -8756,7 +8756,7 @@ namespace parserField {
 #line 3458 "../FieldValueExpressionParser.yy"
     {
             (yyval.hfield) = driver.makeField<CML::volSphericalTensorField>(
-                CML::inv((yysemantic_stack_[(4) - (3)].hfield)->internalField())
+                CML::inv((yysemantic_stack_[(4) - (3)].hfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].hfield);
             driver.setCalculatedPatches(*(yyval.hfield));
@@ -9266,7 +9266,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].ftfield),(yysemantic_stack_[(3) - (3)].fsfield));
             //$$ = new CML::surfaceTensorField(*$1 / *$3);
 	    (yyval.ftfield) = new CML::surfaceTensorField(*(yysemantic_stack_[(3) - (1)].ftfield));
-	    (*(yyval.ftfield)).internalField()/(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
+	    (*(yyval.ftfield)).primitiveFieldRef()/(*(yysemantic_stack_[(3) - (3)].fsfield)).primitiveField();
 	    delete (yysemantic_stack_[(3) - (1)].ftfield); delete (yysemantic_stack_[(3) - (3)].fsfield);
             driver.setCalculatedPatches(*(yyval.ftfield));
           }
@@ -9378,7 +9378,7 @@ namespace parserField {
 #line 3802 "../FieldValueExpressionParser.yy"
     {
             (yyval.ftfield) = driver.makeField<CML::surfaceTensorField>(
-                CML::eigenVectors((yysemantic_stack_[(4) - (3)].fyfield)->internalField())
+                CML::eigenVectors((yysemantic_stack_[(4) - (3)].fyfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].fyfield);
             driver.setCalculatedPatches(*(yyval.ftfield));
@@ -9402,7 +9402,7 @@ namespace parserField {
 #line 3814 "../FieldValueExpressionParser.yy"
     {
             (yyval.ftfield) = driver.makeField<CML::surfaceTensorField>(
-                CML::cof((yysemantic_stack_[(4) - (3)].ftfield)->internalField())
+                CML::cof((yysemantic_stack_[(4) - (3)].ftfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].ftfield);
             driver.setCalculatedPatches(*(yyval.ftfield));
@@ -9705,7 +9705,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].fyfield),(yysemantic_stack_[(3) - (3)].fsfield));
             //$$ = new CML::surfaceSymmTensorField(*$1 / *$3);
 	    (yyval.fyfield) = new CML::surfaceSymmTensorField(*(yysemantic_stack_[(3) - (1)].fyfield));
-	    (*(yyval.fyfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
+	    (*(yyval.fyfield)).primitiveFieldRef()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).primitiveField();
             delete (yysemantic_stack_[(3) - (1)].fyfield); delete (yysemantic_stack_[(3) - (3)].fsfield);
             driver.setCalculatedPatches(*(yyval.fyfield));
           }
@@ -9826,7 +9826,7 @@ namespace parserField {
 #line 4031 "../FieldValueExpressionParser.yy"
     {
             (yyval.fyfield) = driver.makeField<CML::surfaceSymmTensorField>(
-                CML::cof((yysemantic_stack_[(4) - (3)].fyfield)->internalField())
+                CML::cof((yysemantic_stack_[(4) - (3)].fyfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].fyfield);
             driver.setCalculatedPatches(*(yyval.fyfield));
@@ -10088,7 +10088,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].fhfield),(yysemantic_stack_[(3) - (3)].fsfield));
             //$$ = new CML::surfaceSphericalTensorField(*$1 / *$3);
 	    (yyval.fhfield) = new CML::surfaceSphericalTensorField(*(yysemantic_stack_[(3) - (1)].fhfield));
-	    (*(yyval.fhfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).internalField();
+	    (*(yyval.fhfield)).primitiveFieldRef()/=(*(yysemantic_stack_[(3) - (3)].fsfield)).primitiveField();
             delete (yysemantic_stack_[(3) - (1)].fhfield); delete (yysemantic_stack_[(3) - (3)].fsfield);
             driver.setCalculatedPatches(*(yyval.fhfield));
           }
@@ -10130,7 +10130,7 @@ namespace parserField {
 #line 4187 "../FieldValueExpressionParser.yy"
     {
             (yyval.fhfield) = driver.makeField<CML::surfaceSphericalTensorField>(
-                CML::sph((yysemantic_stack_[(4) - (3)].ftfield)->internalField())
+                CML::sph((yysemantic_stack_[(4) - (3)].ftfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].ftfield);
             driver.setCalculatedPatches(*(yyval.fhfield));
@@ -10143,7 +10143,7 @@ namespace parserField {
 #line 4194 "../FieldValueExpressionParser.yy"
     {
             (yyval.fhfield) = driver.makeField<CML::surfaceSphericalTensorField>(
-                CML::sph((yysemantic_stack_[(4) - (3)].fyfield)->internalField())
+                CML::sph((yysemantic_stack_[(4) - (3)].fyfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].fyfield);
             driver.setCalculatedPatches(*(yyval.fhfield));
@@ -10156,7 +10156,7 @@ namespace parserField {
 #line 4201 "../FieldValueExpressionParser.yy"
     {
             (yyval.fhfield) = driver.makeField<CML::surfaceSphericalTensorField>(
-                CML::sph((yysemantic_stack_[(4) - (3)].fhfield)->internalField())
+                CML::sph((yysemantic_stack_[(4) - (3)].fhfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].fhfield);
             driver.setCalculatedPatches(*(yyval.fhfield));
@@ -10169,7 +10169,7 @@ namespace parserField {
 #line 4208 "../FieldValueExpressionParser.yy"
     {
             (yyval.fhfield) = driver.makeField<CML::surfaceSphericalTensorField>(
-                CML::inv((yysemantic_stack_[(4) - (3)].fhfield)->internalField())
+                CML::inv((yysemantic_stack_[(4) - (3)].fhfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].fhfield);
             driver.setCalculatedPatches(*(yyval.fhfield));
@@ -10366,7 +10366,7 @@ namespace parserField {
     {
             sameSize((yysemantic_stack_[(3) - (1)].psfield),(yysemantic_stack_[(3) - (3)].psfield));
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                (yysemantic_stack_[(3) - (1)].psfield)->internalField() * (yysemantic_stack_[(3) - (3)].psfield)->internalField()
+                (yysemantic_stack_[(3) - (1)].psfield)->primitiveField() * (yysemantic_stack_[(3) - (3)].psfield)->primitiveField()
             ).ptr();
             delete (yysemantic_stack_[(3) - (1)].psfield); delete (yysemantic_stack_[(3) - (3)].psfield);
           }
@@ -10490,7 +10490,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].psfield),(yysemantic_stack_[(3) - (3)].psfield));
             //$$ = new CML::pointScalarField(*$1 / *$3);
 	    (yyval.psfield) = new CML::pointScalarField(*(yysemantic_stack_[(3) - (1)].psfield));
-	    (*(yyval.psfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
+	    (*(yyval.psfield)).primitiveFieldRef()/=(*(yysemantic_stack_[(3) - (3)].psfield)).primitiveField();
             delete (yysemantic_stack_[(3) - (1)].psfield); delete (yysemantic_stack_[(3) - (3)].psfield);
           }
     break;
@@ -10511,7 +10511,7 @@ namespace parserField {
 #line 4381 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::pow((yysemantic_stack_[(6) - (3)].psfield)->internalField(),(yysemantic_stack_[(6) - (5)].val))()
+                CML::pow((yysemantic_stack_[(6) - (3)].psfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].val))()
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].psfield);
           }
@@ -10523,7 +10523,7 @@ namespace parserField {
 #line 4387 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::pow((yysemantic_stack_[(6) - (3)].psfield)->internalField(),(yysemantic_stack_[(6) - (5)].psfield)->internalField())()
+                CML::pow((yysemantic_stack_[(6) - (3)].psfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].psfield); delete (yysemantic_stack_[(6) - (5)].psfield);
           }
@@ -10535,7 +10535,7 @@ namespace parserField {
 #line 4393 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::log((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::log((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10547,7 +10547,7 @@ namespace parserField {
 #line 4399 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::exp((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::exp((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10559,7 +10559,7 @@ namespace parserField {
 #line 4405 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::sqr((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::sqr((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10571,7 +10571,7 @@ namespace parserField {
 #line 4411 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::sqrt((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::sqrt((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10583,7 +10583,7 @@ namespace parserField {
 #line 4417 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::sin((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::sin((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10595,7 +10595,7 @@ namespace parserField {
 #line 4423 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::cos((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::cos((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10607,7 +10607,7 @@ namespace parserField {
 #line 4429 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::tan((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::tan((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10619,7 +10619,7 @@ namespace parserField {
 #line 4435 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::log10((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::log10((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10631,7 +10631,7 @@ namespace parserField {
 #line 4441 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(CML::asin(
-                (yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                (yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10643,7 +10643,7 @@ namespace parserField {
 #line 4447 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::acos((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::acos((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10655,7 +10655,7 @@ namespace parserField {
 #line 4453 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(CML::atan(
-                (yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                (yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10667,7 +10667,7 @@ namespace parserField {
 #line 4459 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(CML::sinh(
-                (yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                (yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10679,7 +10679,7 @@ namespace parserField {
 #line 4465 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(CML::cosh(
-                (yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                (yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10691,7 +10691,7 @@ namespace parserField {
 #line 4471 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(CML::tanh(
-                (yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                (yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10703,7 +10703,7 @@ namespace parserField {
 #line 4477 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::asinh((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::asinh((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10715,7 +10715,7 @@ namespace parserField {
 #line 4483 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(CML::acosh(
-                (yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                (yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10727,7 +10727,7 @@ namespace parserField {
 #line 4489 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::atanh((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::atanh((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10739,7 +10739,7 @@ namespace parserField {
 #line 4495 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::erf((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::erf((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10751,7 +10751,7 @@ namespace parserField {
 #line 4501 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::erfc((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::erfc((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10763,7 +10763,7 @@ namespace parserField {
 #line 4507 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::lgamma((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::lgamma((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10775,7 +10775,7 @@ namespace parserField {
 #line 4513 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::j1((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::j1((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10787,7 +10787,7 @@ namespace parserField {
 #line 4519 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::j0((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::j0((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10799,7 +10799,7 @@ namespace parserField {
 #line 4525 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::y0((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::y0((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10811,7 +10811,7 @@ namespace parserField {
 #line 4531 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::y1((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::y1((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10823,7 +10823,7 @@ namespace parserField {
 #line 4537 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::sign((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::sign((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10835,7 +10835,7 @@ namespace parserField {
 #line 4543 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::pos((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::pos((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10847,7 +10847,7 @@ namespace parserField {
 #line 4549 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::neg((yysemantic_stack_[(4) - (3)].psfield)->internalField())()
+                CML::neg((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10859,7 +10859,7 @@ namespace parserField {
 #line 4555 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::min((yysemantic_stack_[(6) - (3)].psfield)->internalField(),(yysemantic_stack_[(6) - (5)].psfield)->internalField())
+                CML::min((yysemantic_stack_[(6) - (3)].psfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].psfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].psfield); delete (yysemantic_stack_[(6) - (5)].psfield);
           }
@@ -10871,7 +10871,7 @@ namespace parserField {
 #line 4561 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::max((yysemantic_stack_[(6) - (3)].psfield)->internalField(),(yysemantic_stack_[(6) - (5)].psfield)->internalField())
+                CML::max((yysemantic_stack_[(6) - (3)].psfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].psfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].psfield); delete (yysemantic_stack_[(6) - (5)].psfield);
           }
@@ -10883,7 +10883,7 @@ namespace parserField {
 #line 4567 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointConstantField<CML::pointScalarField>(
-                CML::gMin((yysemantic_stack_[(4) - (3)].psfield)->internalField())
+                CML::gMin((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10895,7 +10895,7 @@ namespace parserField {
 #line 4573 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointConstantField<CML::pointScalarField>(
-                CML::gMax((yysemantic_stack_[(4) - (3)].psfield)->internalField())
+                CML::gMax((yysemantic_stack_[(4) - (3)].psfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].psfield);
           }
@@ -10931,7 +10931,7 @@ namespace parserField {
 #line 4591 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                -(yysemantic_stack_[(2) - (2)].psfield)->internalField()
+                -(yysemantic_stack_[(2) - (2)].psfield)->primitiveField()
             ).ptr();
             delete (yysemantic_stack_[(2) - (2)].psfield);
           }
@@ -11253,7 +11253,7 @@ namespace parserField {
 #line 4721 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::tr((yysemantic_stack_[(4) - (3)].ptfield)->internalField())()
+                CML::tr((yysemantic_stack_[(4) - (3)].ptfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].ptfield);
           }
@@ -11265,7 +11265,7 @@ namespace parserField {
 #line 4727 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::tr((yysemantic_stack_[(4) - (3)].pyfield)->internalField())()
+                CML::tr((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
           }
@@ -11277,7 +11277,7 @@ namespace parserField {
 #line 4733 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::tr((yysemantic_stack_[(4) - (3)].phfield)->internalField())()
+                CML::tr((yysemantic_stack_[(4) - (3)].phfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].phfield);
           }
@@ -11289,7 +11289,7 @@ namespace parserField {
 #line 4739 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::det((yysemantic_stack_[(4) - (3)].ptfield)->internalField())()
+                CML::det((yysemantic_stack_[(4) - (3)].ptfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].ptfield);
           }
@@ -11301,7 +11301,7 @@ namespace parserField {
 #line 4745 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::det((yysemantic_stack_[(4) - (3)].pyfield)->internalField())()
+                CML::det((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
           }
@@ -11313,7 +11313,7 @@ namespace parserField {
 #line 4751 "../FieldValueExpressionParser.yy"
     {
             (yyval.psfield) = driver.makePointField<CML::pointScalarField>(
-                CML::det((yysemantic_stack_[(4) - (3)].phfield)->internalField())()
+                CML::det((yysemantic_stack_[(4) - (3)].phfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].phfield);
           }
@@ -11504,7 +11504,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].pvfield),(yysemantic_stack_[(3) - (3)].psfield));
             //$$ = new CML::pointVectorField(*$1 / *$3);
 	    (yyval.pvfield) = new CML::pointVectorField(*(yysemantic_stack_[(3) - (1)].pvfield));
-	    (*(yyval.pvfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
+	    (*(yyval.pvfield)).primitiveFieldRef()/=(*(yysemantic_stack_[(3) - (3)].psfield)).primitiveField();
             delete (yysemantic_stack_[(3) - (1)].pvfield); delete (yysemantic_stack_[(3) - (3)].psfield);
           }
     break;
@@ -11525,7 +11525,7 @@ namespace parserField {
 #line 4861 "../FieldValueExpressionParser.yy"
     {
             (yyval.pvfield) = driver.makePointField<CML::pointVectorField>(
-                -(yysemantic_stack_[(2) - (2)].pvfield)->internalField()
+                -(yysemantic_stack_[(2) - (2)].pvfield)->primitiveField()
             ).ptr();
             delete (yysemantic_stack_[(2) - (2)].pvfield);
           }
@@ -11537,7 +11537,7 @@ namespace parserField {
 #line 4867 "../FieldValueExpressionParser.yy"
     {
             (yyval.pvfield) = driver.makePointField<CML::pointVectorField>(
-                *((yysemantic_stack_[(2) - (2)].ptfield)->internalField())
+                *((yysemantic_stack_[(2) - (2)].ptfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(2) - (2)].ptfield);
           }
@@ -11549,7 +11549,7 @@ namespace parserField {
 #line 4873 "../FieldValueExpressionParser.yy"
     {
             (yyval.pvfield) = driver.makePointField<CML::pointVectorField>(
-                *((yysemantic_stack_[(2) - (2)].pyfield)->internalField())
+                *((yysemantic_stack_[(2) - (2)].pyfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(2) - (2)].pyfield);
           }
@@ -11568,7 +11568,7 @@ namespace parserField {
 #line 4880 "../FieldValueExpressionParser.yy"
     {
             (yyval.pvfield) = driver.makePointField<CML::pointVectorField>(
-                CML::eigenValues((yysemantic_stack_[(4) - (3)].ptfield)->internalField())
+                CML::eigenValues((yysemantic_stack_[(4) - (3)].ptfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].ptfield);
             driver.setCalculatedPatches(*(yyval.pvfield));
@@ -11581,7 +11581,7 @@ namespace parserField {
 #line 4887 "../FieldValueExpressionParser.yy"
     {
             (yyval.pvfield) = driver.makePointField<CML::pointVectorField>(
-                CML::eigenValues((yysemantic_stack_[(4) - (3)].pyfield)->internalField())
+                CML::eigenValues((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
             driver.setCalculatedPatches(*(yyval.pvfield));
@@ -11700,7 +11700,7 @@ namespace parserField {
     {
             (yyval.pvfield) = driver.makePointField<CML::pointVectorField>(
                 CML::min(
-                    (yysemantic_stack_[(6) - (3)].pvfield)->internalField(),(yysemantic_stack_[(6) - (5)].pvfield)->internalField()
+                    (yysemantic_stack_[(6) - (3)].pvfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].pvfield)->primitiveField()
                 )
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].pvfield); delete (yysemantic_stack_[(6) - (5)].pvfield);
@@ -11714,7 +11714,7 @@ namespace parserField {
     {
             (yyval.pvfield) = driver.makePointField<CML::pointVectorField>(
                 CML::max(
-                    (yysemantic_stack_[(6) - (3)].pvfield)->internalField(),(yysemantic_stack_[(6) - (5)].pvfield)->internalField()
+                    (yysemantic_stack_[(6) - (3)].pvfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].pvfield)->primitiveField()
                 )
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].pvfield); delete (yysemantic_stack_[(6) - (5)].pvfield);
@@ -11727,7 +11727,7 @@ namespace parserField {
 #line 4967 "../FieldValueExpressionParser.yy"
     {
             (yyval.pvfield) = driver.makePointConstantField<CML::pointVectorField>(
-                CML::gMin((yysemantic_stack_[(4) - (3)].pvfield)->internalField())
+                CML::gMin((yysemantic_stack_[(4) - (3)].pvfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pvfield);
           }
@@ -11754,7 +11754,7 @@ namespace parserField {
 #line 4982 "../FieldValueExpressionParser.yy"
     {
             (yyval.pvfield) = driver.makePointConstantField<CML::pointVectorField>(
-                CML::gMax((yysemantic_stack_[(4) - (3)].pvfield)->internalField())
+                CML::gMax((yysemantic_stack_[(4) - (3)].pvfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pvfield);
           }
@@ -12008,7 +12008,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].ptfield),(yysemantic_stack_[(3) - (3)].psfield));
 	    // $$ = new CML::pointTensorField(*$1 / *$3);
 	    (yyval.ptfield) = new CML::pointTensorField(*(yysemantic_stack_[(3) - (1)].ptfield));
-	    (*(yyval.ptfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
+	    (*(yyval.ptfield)).primitiveFieldRef()/=(*(yysemantic_stack_[(3) - (3)].psfield)).primitiveField();
             delete (yysemantic_stack_[(3) - (1)].ptfield); delete (yysemantic_stack_[(3) - (3)].psfield);
             driver.setCalculatedPatches(*(yyval.ptfield));
           }
@@ -12080,7 +12080,7 @@ namespace parserField {
 #line 5206 "../FieldValueExpressionParser.yy"
     {
             (yyval.ptfield) = driver.makePointField<CML::pointTensorField>(
-                -(yysemantic_stack_[(2) - (2)].ptfield)->internalField()
+                -(yysemantic_stack_[(2) - (2)].ptfield)->primitiveField()
             ).ptr();
             delete (yysemantic_stack_[(2) - (2)].ptfield);
           }
@@ -12121,7 +12121,7 @@ namespace parserField {
 #line 5223 "../FieldValueExpressionParser.yy"
     {
             (yyval.ptfield) = driver.makePointField<CML::pointTensorField>(
-                CML::eigenVectors((yysemantic_stack_[(4) - (3)].pyfield)->internalField())
+                CML::eigenVectors((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
             driver.setCalculatedPatches(*(yyval.ptfield));
@@ -12145,7 +12145,7 @@ namespace parserField {
 #line 5235 "../FieldValueExpressionParser.yy"
     {
             (yyval.ptfield) = driver.makePointField<CML::pointTensorField>(
-                CML::cof((yysemantic_stack_[(4) - (3)].ptfield)->internalField())
+                CML::cof((yysemantic_stack_[(4) - (3)].ptfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].ptfield);
             driver.setCalculatedPatches(*(yyval.ptfield));
@@ -12215,7 +12215,7 @@ namespace parserField {
     {
             (yyval.ptfield) = driver.makePointField<CML::pointTensorField>(
                 CML::min(
-                    (yysemantic_stack_[(6) - (3)].ptfield)->internalField(),(yysemantic_stack_[(6) - (5)].ptfield)->internalField()
+                    (yysemantic_stack_[(6) - (3)].ptfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].ptfield)->primitiveField()
                 )
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].ptfield); delete (yysemantic_stack_[(6) - (5)].ptfield);
@@ -12229,7 +12229,7 @@ namespace parserField {
     {
             (yyval.ptfield) = driver.makePointField<CML::pointTensorField>(
                 CML::max(
-                    (yysemantic_stack_[(6) - (3)].ptfield)->internalField(),(yysemantic_stack_[(6) - (5)].ptfield)->internalField()
+                    (yysemantic_stack_[(6) - (3)].ptfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].ptfield)->primitiveField()
                 )
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].ptfield); delete (yysemantic_stack_[(6) - (5)].ptfield);
@@ -12242,7 +12242,7 @@ namespace parserField {
 #line 5284 "../FieldValueExpressionParser.yy"
     {
             (yyval.ptfield) = driver.makePointConstantField<CML::pointTensorField>(
-                CML::gMin((yysemantic_stack_[(4) - (3)].ptfield)->internalField())
+                CML::gMin((yysemantic_stack_[(4) - (3)].ptfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].ptfield);
           }
@@ -12254,7 +12254,7 @@ namespace parserField {
 #line 5290 "../FieldValueExpressionParser.yy"
     {
             (yyval.ptfield) = driver.makePointConstantField<CML::pointTensorField>(
-                CML::gMax((yysemantic_stack_[(4) - (3)].ptfield)->internalField())
+                CML::gMax((yysemantic_stack_[(4) - (3)].ptfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].ptfield);
           }
@@ -12421,7 +12421,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].pyfield),(yysemantic_stack_[(3) - (3)].psfield));
             //$$ = new CML::pointSymmTensorField(*$1 / *$3);
 	    (yyval.pyfield) = new CML::pointSymmTensorField(*(yysemantic_stack_[(3) - (1)].pyfield));
-	    (*(yyval.pyfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
+	    (*(yyval.pyfield)).primitiveFieldRef()/=(*(yysemantic_stack_[(3) - (3)].psfield)).primitiveField();
             delete (yysemantic_stack_[(3) - (1)].pyfield); delete (yysemantic_stack_[(3) - (3)].psfield);
             driver.setCalculatedPatches(*(yyval.pyfield));
           }
@@ -12469,7 +12469,7 @@ namespace parserField {
 #line 5439 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
-                -(yysemantic_stack_[(2) - (2)].pyfield)->internalField()
+                -(yysemantic_stack_[(2) - (2)].pyfield)->primitiveField()
             ).ptr();
             delete (yysemantic_stack_[(2) - (2)].pyfield);
           }
@@ -12489,7 +12489,7 @@ namespace parserField {
 #line 5447 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
-                CML::symm((yysemantic_stack_[(4) - (3)].ptfield)->internalField())()
+                CML::symm((yysemantic_stack_[(4) - (3)].ptfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].ptfield);
           }
@@ -12501,7 +12501,7 @@ namespace parserField {
 #line 5453 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
-                CML::symm((yysemantic_stack_[(4) - (3)].pyfield)->internalField())()
+                CML::symm((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
           }
@@ -12513,7 +12513,7 @@ namespace parserField {
 #line 5459 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
-                CML::twoSymm((yysemantic_stack_[(4) - (3)].ptfield)->internalField())()
+                CML::twoSymm((yysemantic_stack_[(4) - (3)].ptfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].ptfield);
           }
@@ -12525,7 +12525,7 @@ namespace parserField {
 #line 5465 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
-                CML::twoSymm((yysemantic_stack_[(4) - (3)].pyfield)->internalField())()
+                CML::twoSymm((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
           }
@@ -12537,7 +12537,7 @@ namespace parserField {
 #line 5471 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
-                CML::inv((yysemantic_stack_[(4) - (3)].pyfield)->internalField())()
+                CML::inv((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
           }
@@ -12549,7 +12549,7 @@ namespace parserField {
 #line 5477 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
-                CML::cof((yysemantic_stack_[(4) - (3)].pyfield)->internalField())
+                CML::cof((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
           }
@@ -12561,7 +12561,7 @@ namespace parserField {
 #line 5483 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
-                CML::dev((yysemantic_stack_[(4) - (3)].pyfield)->internalField())()
+                CML::dev((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
           }
@@ -12573,7 +12573,7 @@ namespace parserField {
 #line 5489 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
-                CML::dev2((yysemantic_stack_[(4) - (3)].pyfield)->internalField())()
+                CML::dev2((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
           }
@@ -12585,7 +12585,7 @@ namespace parserField {
 #line 5495 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
-                CML::sqr((yysemantic_stack_[(4) - (3)].pvfield)->internalField())()
+                CML::sqr((yysemantic_stack_[(4) - (3)].pvfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pvfield);
           }
@@ -12629,7 +12629,7 @@ namespace parserField {
 #line 5515 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
-                CML::min((yysemantic_stack_[(6) - (3)].pyfield)->internalField(),(yysemantic_stack_[(6) - (5)].pyfield)->internalField())
+                CML::min((yysemantic_stack_[(6) - (3)].pyfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].pyfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].pyfield); delete (yysemantic_stack_[(6) - (5)].pyfield);
           }
@@ -12642,7 +12642,7 @@ namespace parserField {
     {
             (yyval.pyfield) = driver.makePointField<CML::pointSymmTensorField>(
                 CML::max(
-                    (yysemantic_stack_[(6) - (3)].pyfield)->internalField(),(yysemantic_stack_[(6) - (5)].pyfield)->internalField()
+                    (yysemantic_stack_[(6) - (3)].pyfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].pyfield)->primitiveField()
                 )
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].pyfield); delete (yysemantic_stack_[(6) - (5)].pyfield);
@@ -12655,7 +12655,7 @@ namespace parserField {
 #line 5529 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointConstantField<CML::pointSymmTensorField>(
-                CML::gMin((yysemantic_stack_[(4) - (3)].pyfield)->internalField())
+                CML::gMin((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
           }
@@ -12667,7 +12667,7 @@ namespace parserField {
 #line 5535 "../FieldValueExpressionParser.yy"
     {
             (yyval.pyfield) = driver.makePointConstantField<CML::pointSymmTensorField>(
-                CML::gMax((yysemantic_stack_[(4) - (3)].pyfield)->internalField())
+                CML::gMax((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
           }
@@ -12798,7 +12798,7 @@ namespace parserField {
             sameSize((yysemantic_stack_[(3) - (1)].phfield),(yysemantic_stack_[(3) - (3)].psfield));
 	    // $$ = new CML::pointSphericalTensorField(*$1 / *$3);
 	    (yyval.phfield) = new CML::pointSphericalTensorField(*(yysemantic_stack_[(3) - (1)].phfield));
-	    (*(yyval.phfield)).internalField()/=(*(yysemantic_stack_[(3) - (3)].psfield)).internalField();
+	    (*(yyval.phfield)).primitiveFieldRef()/=(*(yysemantic_stack_[(3) - (3)].psfield)).primitiveField();
             delete (yysemantic_stack_[(3) - (1)].phfield); delete (yysemantic_stack_[(3) - (3)].psfield);
             driver.setCalculatedPatches(*(yyval.phfield));
           }
@@ -12822,7 +12822,7 @@ namespace parserField {
 #line 5624 "../FieldValueExpressionParser.yy"
     {
             (yyval.phfield) = driver.makePointField<CML::pointSphericalTensorField>(
-                -(yysemantic_stack_[(2) - (2)].phfield)->internalField()
+                -(yysemantic_stack_[(2) - (2)].phfield)->primitiveField()
             ).ptr();
             delete (yysemantic_stack_[(2) - (2)].phfield);
           }
@@ -12841,7 +12841,7 @@ namespace parserField {
 #line 5631 "../FieldValueExpressionParser.yy"
     {
             (yyval.phfield) = driver.makePointField<CML::pointSphericalTensorField>(
-                CML::sph((yysemantic_stack_[(4) - (3)].ptfield)->internalField())
+                CML::sph((yysemantic_stack_[(4) - (3)].ptfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].ptfield);
           }
@@ -12853,7 +12853,7 @@ namespace parserField {
 #line 5637 "../FieldValueExpressionParser.yy"
     {
             (yyval.phfield) = driver.makePointField<CML::pointSphericalTensorField>(
-                CML::sph((yysemantic_stack_[(4) - (3)].pyfield)->internalField())
+                CML::sph((yysemantic_stack_[(4) - (3)].pyfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].pyfield);
           }
@@ -12865,7 +12865,7 @@ namespace parserField {
 #line 5643 "../FieldValueExpressionParser.yy"
     {
             (yyval.phfield) = driver.makePointField<CML::pointSphericalTensorField>(
-                CML::sph((yysemantic_stack_[(4) - (3)].phfield)->internalField())
+                CML::sph((yysemantic_stack_[(4) - (3)].phfield)->primitiveField())
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].phfield);
           }
@@ -12877,7 +12877,7 @@ namespace parserField {
 #line 5649 "../FieldValueExpressionParser.yy"
     {
             (yyval.phfield) = driver.makePointField<CML::pointSphericalTensorField>(
-                CML::inv((yysemantic_stack_[(4) - (3)].phfield)->internalField())()
+                CML::inv((yysemantic_stack_[(4) - (3)].phfield)->primitiveField())()
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].phfield);
           }
@@ -12922,7 +12922,7 @@ namespace parserField {
     {
             (yyval.phfield) = driver.makePointField<CML::pointSphericalTensorField>(
                 CML::min(
-                    (yysemantic_stack_[(6) - (3)].phfield)->internalField(),(yysemantic_stack_[(6) - (5)].phfield)->internalField()
+                    (yysemantic_stack_[(6) - (3)].phfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].phfield)->primitiveField()
                 )
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].phfield); delete (yysemantic_stack_[(6) - (5)].phfield);
@@ -12936,7 +12936,7 @@ namespace parserField {
     {
             (yyval.phfield) = driver.makePointField<CML::pointSphericalTensorField>(
                 CML::max(
-                    (yysemantic_stack_[(6) - (3)].phfield)->internalField(),(yysemantic_stack_[(6) - (5)].phfield)->internalField()
+                    (yysemantic_stack_[(6) - (3)].phfield)->primitiveField(),(yysemantic_stack_[(6) - (5)].phfield)->primitiveField()
                 )
             ).ptr();
             delete (yysemantic_stack_[(6) - (3)].phfield); delete (yysemantic_stack_[(6) - (5)].phfield);
@@ -12950,7 +12950,7 @@ namespace parserField {
     {
             (yyval.phfield) = driver.makePointConstantField<CML::pointSphericalTensorField>(
                 CML::gMin(
-                    (yysemantic_stack_[(4) - (3)].phfield)->internalField()
+                    (yysemantic_stack_[(4) - (3)].phfield)->primitiveField()
                 )
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].phfield);
@@ -12964,7 +12964,7 @@ namespace parserField {
     {
             (yyval.phfield) = driver.makePointConstantField<CML::pointSphericalTensorField>(
                 CML::gMax(
-                    (yysemantic_stack_[(4) - (3)].phfield)->internalField()
+                    (yysemantic_stack_[(4) - (3)].phfield)->primitiveField()
                 )
             ).ptr();
             delete (yysemantic_stack_[(4) - (3)].phfield);

@@ -10,11 +10,11 @@ p.correctBoundaryConditions();
 
 thermo.correct();
 
-rho.boundaryField() = thermo.rho()().boundaryField();
+rho.boundaryFieldRef() = thermo.rho()().boundaryField();
 
-rhoU.boundaryField() = rho.boundaryField()*U.boundaryField();
+rhoU.boundaryFieldRef() = rho.boundaryField()*U.boundaryField();
 
-rhoE.boundaryField() = rho.boundaryField()
+rhoE.boundaryFieldRef() = rho.boundaryField()
                      * (h.boundaryField() + 0.5*magSqr(U.boundaryField())) 
                      - p.boundaryField();
 

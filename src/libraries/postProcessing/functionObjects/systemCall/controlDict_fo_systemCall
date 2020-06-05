@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*------------------------------------------------------------------------------*/
 
@@ -49,7 +49,7 @@ functions
         type            systemCall;
         functionObjectLibs ("libsystemCall.so");
         enabled         true;
-        outputControl   outputTime;
+        writeControl   writeTime;
 
         // called every time step
         executeCalls
@@ -65,7 +65,7 @@ functions
             "echo \*\*\* done \*\*\*"
         );
 
-        // called every output time
+        // called every ouput time
         writeCalls
         (
             "echo \*\*\* writing data \*\*\*"

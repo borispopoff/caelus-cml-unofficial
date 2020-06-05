@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013 OpenFOAM Foundation
+Copyright (C) 2013-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -123,11 +123,16 @@ protected:
             volVectorField& shearStress
         );
 
+
+private:
+
+    // Private member functions
+
         //- Disallow default bitwise copy construct
-        wallShearStress(const wallShearStress&);
+        wallShearStress(const wallShearStress&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const wallShearStress&);
+        void operator=(const wallShearStress&) = delete;
 
 
 public:

@@ -309,10 +309,7 @@ void CML::Cloud<ParticleType>::checkPatches() const
             const cyclicAMIPolyPatch& cami =
                 refCast<const cyclicAMIPolyPatch>(pbm[patchi]);
 
-            if (cami.owner())
-            {
-                ok = ok && (cami.AMI().singlePatchProc() != -1);
-            }
+            ok = ok && cami.singlePatchProc() != -1;
         }
     }
 
@@ -439,20 +436,20 @@ void CML::Cloud<ParticleType>::move
 
     // List of lists of particles to be transfered for all of the
     // neighbour processors
-    List<IDLList<ParticleType> > particleTransferLists
+    List<IDLList<ParticleType>> particleTransferLists
     (
         neighbourProcs.size()
     );
 
     // List of destination processorPatches indices for all of the
     // neighbour processors
-    List<DynamicList<label> > patchIndexTransferLists
+    List<DynamicList<label>> patchIndexTransferLists
     (
         neighbourProcs.size()
     );
 
     // Allocate transfer buffers
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
     // Clear the global positions as there are about to change
     globalPositionsPtr_.clear();
@@ -763,7 +760,7 @@ void CML::Cloud<ParticleType>::initCloud(const bool checkClass)
 {
     readCloudUniformProperties();
 
-    IOPosition<Cloud<ParticleType> > ioP(*this);
+    IOPosition<Cloud<ParticleType>> ioP(*this);
 
     if (ioP.headerOk())
     {

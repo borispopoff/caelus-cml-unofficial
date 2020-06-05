@@ -225,7 +225,7 @@ bool EvolveCloudFunctionObject<CloudType>::execute(bool forceWrite)
     cloud_->evolve();
 
     if(
-        obr().time().outputTime()
+        obr().time().writeTime()
         ||
         forceWrite
     ) {

@@ -78,13 +78,13 @@ public:
 
     //- Return the BlockLduSystem corresponding to the implicit div
     // discretization. For block coupled system.
-    tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type> >
+    tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type>>
     fvmUDiv
     (
         const GeometricField<Type, fvPatchField, volMesh>&
     ) const;
 
-    tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type> >
+    tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type>>
     fvmUDiv
     (
         const surfaceScalarField& flux,
@@ -94,7 +94,7 @@ public:
 
 
 template<class Type>
-tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type> >
+tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type>>
 blockGaussDivScheme<Type>::fvmUDiv
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
@@ -106,7 +106,7 @@ blockGaussDivScheme<Type>::fvmUDiv
 
     typedef typename innerProduct<vector, Type>::type DivType;
 
-    tmp<BlockLduSystem<vector, DivType> > tbs
+    tmp<BlockLduSystem<vector, DivType>> tbs
     (
         new BlockLduSystem<vector, DivType>(vf.mesh())
     );
@@ -116,7 +116,7 @@ blockGaussDivScheme<Type>::fvmUDiv
 
 
 template<class Type>
-tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type> >
+tmp<BlockLduSystem<vector, typename innerProduct<vector, Type>::type>>
 blockGaussDivScheme<Type>::fvmUDiv
 (
     const surfaceScalarField& flux,
@@ -129,7 +129,7 @@ blockGaussDivScheme<Type>::fvmUDiv
 
     typedef typename innerProduct<vector, Type>::type DivType;
 
-    tmp<BlockLduSystem<vector, DivType> > tbs
+    tmp<BlockLduSystem<vector, DivType>> tbs
     (
         new BlockLduSystem<vector, DivType>(vf.mesh())
     );

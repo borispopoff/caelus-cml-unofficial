@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -380,9 +380,9 @@ bool CML::domainDecomposition::writeDecomposition(const bool decomposeSets)
                         facesInstance(),
                         processorDb
                     ),
-                    xferMove(facesInstancePoints),
-                    xferMove(procFaces),
-                    xferMove(procCells)
+                    move(facesInstancePoints),
+                    move(procFaces),
+                    move(procCells)
                 )
             );
         }
@@ -402,9 +402,9 @@ bool CML::domainDecomposition::writeDecomposition(const bool decomposeSets)
                         facesInstance(),
                         processorDb
                     ),
-                    xferMove(procPoints),
-                    xferMove(procFaces),
-                    xferMove(procCells)
+                    move(procPoints),
+                    move(procFaces),
+                    move(procCells)
                 )
             );
         }
@@ -500,9 +500,6 @@ bool CML::domainDecomposition::writeDecomposition(const bool decomposeSets)
                     procPatches[nPatches] =
                         new processorPolyPatch
                         (
-                            word("procBoundary") + CML::name(proci)
-                          + "to"
-                          + CML::name(curNeighbourProcessors[procPatchi]),
                             size,
                             curStart,
                             nPatches,
@@ -513,19 +510,15 @@ bool CML::domainDecomposition::writeDecomposition(const bool decomposeSets)
                 }
                 else
                 {
-                    const coupledPolyPatch& pcPatch = refCast<const coupledPolyPatch>(boundaryMesh()[subPatchID[i]]);
-
-                    // From cyclic
-                    const word& referPatch = boundaryMesh()[subPatchID[i]].name();
+                    const coupledPolyPatch& pcPatch
+                        = refCast<const coupledPolyPatch>
+                          (
+                              boundaryMesh()[subPatchID[i]]
+                          );
 
                     procPatches[nPatches] =
                         new processorCyclicPolyPatch
                         (
-                            word("procBoundary") + CML::name(proci)
-                          + "to"
-                          + CML::name(curNeighbourProcessors[procPatchi])
-                          + "through"
-                          + referPatch,
                             size,
                             curStart,
                             nPatches,
@@ -555,7 +548,7 @@ bool CML::domainDecomposition::writeDecomposition(const bool decomposeSets)
             // Go through all the zoned points and find out if they
             // belong to a zone.  If so, add it to the zone as
             // necessary
-            List<DynamicList<label> > zonePoints(pz.size());
+            List<DynamicList<label>> zonePoints(pz.size());
 
             // Estimate size
             forAll(zonePoints, zoneI)
@@ -621,8 +614,8 @@ bool CML::domainDecomposition::writeDecomposition(const bool decomposeSets)
             // Go through all the zoned face and find out if they
             // belong to a zone.  If so, add it to the zone as
             // necessary
-            List<DynamicList<label> > zoneFaces(fz.size());
-            List<DynamicList<bool> > zoneFaceFlips(fz.size());
+            List<DynamicList<label>> zoneFaces(fz.size());
+            List<DynamicList<bool>> zoneFaceFlips(fz.size());
 
             // Estimate size
             forAll(zoneFaces, zoneI)
@@ -715,7 +708,7 @@ bool CML::domainDecomposition::writeDecomposition(const bool decomposeSets)
             // Go through all the zoned cells and find out if they
             // belong to a zone.  If so, add it to the zone as
             // necessary
-            List<DynamicList<label> > zoneCells(cz.size());
+            List<DynamicList<label>> zoneCells(cz.size());
 
             // Estimate size
             forAll(zoneCells, zoneI)
@@ -792,7 +785,7 @@ bool CML::domainDecomposition::writeDecomposition(const bool decomposeSets)
                     IOobject::NO_WRITE,
                     false
                 ),
-                xferMove(procPoints)
+                move(procPoints)
             );
             pointsInstancePoints.write();
         }

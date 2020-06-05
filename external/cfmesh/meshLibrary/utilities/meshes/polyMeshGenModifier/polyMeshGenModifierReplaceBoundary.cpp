@@ -48,8 +48,8 @@ void polyMeshGenModifier::replaceBoundary
     cellListPMG& cells = this->cellsAccess();
 
     labelLongList newFaceLabel(faces.size(), -1);
-    for(label faceI=0;faceI<nIntFaces;++faceI)
-        newFaceLabel[faceI] = faceI;
+    for(label facei=0;facei<nIntFaces;++facei)
+        newFaceLabel[facei] = facei;
 
     if( Pstream::parRun() )
     {
@@ -71,10 +71,10 @@ void polyMeshGenModifier::replaceBoundary
             {
                 const label start = procBoundaries[patchI].patchStart();
                 const label end = procBoundaries[patchI].patchSize() + start;
-                for(label faceI=end-1;faceI>=start;--faceI)
+                for(label facei=end-1;facei>=start;--facei)
                 {
-                    faces[faceI+shift].transfer(faces[faceI]);
-                    newFaceLabel[faceI] = faceI+shift;
+                    faces[facei+shift].transfer(faces[facei]);
+                    newFaceLabel[facei] = facei+shift;
                 }
 
                 procBoundaries[patchI].patchStart() += shift;
@@ -86,10 +86,10 @@ void polyMeshGenModifier::replaceBoundary
             {
                 const label start = procBoundaries[patchI].patchStart();
                 const label end = procBoundaries[patchI].patchSize() + start;
-                for(label faceI=start;faceI<end;++faceI)
+                for(label facei=start;facei<end;++facei)
                 {
-                    faces[faceI+shift].transfer(faces[faceI]);
-                    newFaceLabel[faceI] = faceI+shift;
+                    faces[facei+shift].transfer(faces[facei]);
+                    newFaceLabel[facei] = facei+shift;
                 }
 
                 procBoundaries[patchI].patchStart() += shift;
@@ -111,16 +111,16 @@ void polyMeshGenModifier::replaceBoundary
 
     //- change cells according to the new face ordering
     List<direction> nFacesInCell(cells.size(), direction(0));
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const cell& c = cells[cellI];
+        const cell& c = cells[celli];
 
         cell newC(c.size());
         forAll(c, fI)
         if( newFaceLabel[c[fI]] != -1 )
-            newC[nFacesInCell[cellI]++] = newFaceLabel[c[fI]];
+            newC[nFacesInCell[celli]++] = newFaceLabel[c[fI]];
 
-        cells[cellI].transfer(newC);
+        cells[celli].transfer(newC);
     }
 
     mesh_.updateFaceSubsets(newFaceLabel);
@@ -138,21 +138,21 @@ void polyMeshGenModifier::replaceBoundary
 
     //- store boundary faces
     newPatchSize = 0;
-    forAll(boundaryFaces, faceI)
+    forAll(boundaryFaces, facei)
     {
-        const label fPatch = facePatches[faceI];
-        const label fOwn = faceOwners[faceI];
+        const label fPatch = facePatches[facei];
+        const label fOwn = faceOwners[facei];
 
         const label fLabel = newPatchStart[fPatch] + newPatchSize[fPatch]++;
 
         cells[fOwn].newElmt(nFacesInCell[fOwn]++) = fLabel;
-        faces[fLabel].setSize(boundaryFaces.sizeOfRow(faceI));
-        forAllRow(boundaryFaces, faceI, pI)
-            faces[fLabel][pI] = boundaryFaces(faceI, pI);
+        faces[fLabel].setSize(boundaryFaces.sizeOfRow(facei));
+        forAllRow(boundaryFaces, facei, pI)
+            faces[fLabel][pI] = boundaryFaces(facei, pI);
     }
 
-    forAll(cells, cellI)
-        cells[cellI].setSize(nFacesInCell[cellI]);
+    forAll(cells, celli)
+        cells[celli].setSize(nFacesInCell[celli]);
 
     PtrList<boundaryPatch>& boundaries = mesh_.boundaries_;
     if( boundaries.size() == patchNames.size() )

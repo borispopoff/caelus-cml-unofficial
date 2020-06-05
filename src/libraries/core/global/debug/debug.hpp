@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -72,6 +72,8 @@ namespace debug
     //- Internal function to lookup a sub-dictionary from controlDict.
     dictionary& switchSet(const char* subDictName, dictionary*& subDictPtr);
 
+    //- List debug switches
+    void listSwitches(const bool unset);
 
 
     // Registered debug switches
@@ -79,9 +81,36 @@ namespace debug
         //- Register debug switch read/write object
         void addDebugObject(const char* name, simpleRegIOobject* obj);
 
+        //- Register info switch read/write object
+        void addInfoObject(const char* name, simpleRegIOobject* obj);
+
+        //- Register optimisation switch read/write object
+        void addOptimisationObject(const char* name, simpleRegIOobject* obj);
+
+        //- Register DimensionSets read/write object
+        void addDimensionSetObject(const char* name, simpleRegIOobject* obj);
+
+        //- Register DimensionedConstant read/write object
+        void addDimensionedConstantObject(const char* name, simpleRegIOobject*);
+
+
         //- Get access to registered debug switch objects
         simpleObjectRegistry& debugObjects();
 
+        //- Get access to registered info switch objects
+        simpleObjectRegistry& infoObjects();
+
+        //- Get access to registered optimisation switch objects
+        simpleObjectRegistry& optimisationObjects();
+
+        //- Get access to registered dimensionSets switch objects
+        simpleObjectRegistry& dimensionSetObjects();
+
+        //- Get access to registered dimensionedConstant switch objects
+        simpleObjectRegistry& dimensionedConstantObjects();
+
+        //- List registered debug switches
+        void listRegisteredSwitches(const bool unset);
 
 } // End namespace debug
 

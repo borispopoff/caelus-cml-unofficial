@@ -31,6 +31,8 @@ SourceFiles
 #ifndef profilingSysInfo_HPP
 #define profilingSysInfo_HPP
 
+#include "dictionary.hpp"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace CML

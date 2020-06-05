@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Tyler Voskuilen
-Copyright (C) 2018 Applied CCM Pty Ltd
+Copyright (C) 2018-2019 Applied CCM Pty Ltd
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -66,7 +66,7 @@ private:
     volScalarField* internalRefinementFieldPtr_;
 
     //- Hash table of gradieint fields
-    HashTable< Pair<scalar> > gradFields_;
+    HashTable<Pair<scalar>> gradFields_;
 
     //- Hash table of regions
     PtrList<entry> refinedRegions_;
@@ -78,10 +78,10 @@ private:
     Switch dumpCellDist_;
 
     //- Disallow default bitwise copy construct
-    dynamicRefineBalancedFvMesh(const dynamicRefineBalancedFvMesh&);
+    dynamicRefineBalancedFvMesh(const dynamicRefineBalancedFvMesh&) = delete;
 
     //- Disallow default bitwise assignment
-    void operator=(const dynamicRefineBalancedFvMesh&);
+    void operator=(const dynamicRefineBalancedFvMesh&) = delete;
 
     // Return parent cellID for this cell
     label topParentID(label p);
@@ -148,8 +148,8 @@ void CML::dynamicRefineBalancedFvMesh::correctBoundaries()
         // and only for blocking or nonBlocking comms (no scheduled comms)
         if
         (
-            Pstream::defaultCommsType == Pstream::blocking
-         || Pstream::defaultCommsType == Pstream::nonBlocking
+            Pstream::defaultCommsType == Pstream::commsTypes::blocking
+         || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
         )
         {
             label nReq = Pstream::nRequests();
@@ -158,7 +158,7 @@ void CML::dynamicRefineBalancedFvMesh::correctBoundaries()
             {
                 if (fld.boundaryField()[patchi].coupled())
                 {
-                    fld.boundaryField()[patchi].initEvaluate
+                    fld.boundaryFieldRef()[patchi].initEvaluate
                     (
                         Pstream::defaultCommsType
                     );
@@ -169,7 +169,7 @@ void CML::dynamicRefineBalancedFvMesh::correctBoundaries()
             if
             (
                 Pstream::parRun()
-             && Pstream::defaultCommsType == Pstream::nonBlocking
+             && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
             )
             {
                 Pstream::waitRequests(nReq);
@@ -179,7 +179,7 @@ void CML::dynamicRefineBalancedFvMesh::correctBoundaries()
             {
                 if (fld.boundaryField()[patchi].coupled())
                 {
-                    fld.boundaryField()[patchi].evaluate
+                    fld.boundaryFieldRef()[patchi].evaluate
                     (
                         Pstream::defaultCommsType
                     );

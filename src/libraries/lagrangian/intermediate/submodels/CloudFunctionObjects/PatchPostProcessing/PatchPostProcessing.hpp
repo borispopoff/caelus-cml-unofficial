@@ -63,10 +63,10 @@ class PatchPostProcessing
         labelList patchIDs_;
 
         //- List of time for each data record
-        List<DynamicList<scalar> > times_;
+        List<DynamicList<scalar>> times_;
 
         //- List of output data per patch
-        List<DynamicList<string> > patchData_;
+        List<DynamicList<string>> patchData_;
 
 
     // Private Member Functions
@@ -103,9 +103,9 @@ public:
         PatchPostProcessing(const PatchPostProcessing<CloudType>& ppm);
 
         //- Construct and return a clone
-        virtual autoPtr<CloudFunctionObject<CloudType> > clone() const
+        virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
-            return autoPtr<CloudFunctionObject<CloudType> >
+            return autoPtr<CloudFunctionObject<CloudType>>
             (
                 new PatchPostProcessing<CloudType>(*this)
             );
@@ -186,11 +186,11 @@ void CML::PatchPostProcessing<CloudType>::write()
 {
     forAll(patchData_, i)
     {
-        List<List<scalar> > procTimes(Pstream::nProcs());
+        List<List<scalar>> procTimes(Pstream::nProcs());
         procTimes[Pstream::myProcNo()] = times_[i];
         Pstream::gatherList(procTimes);
 
-        List<List<string> > procData(Pstream::nProcs());
+        List<List<string>> procData(Pstream::nProcs());
         procData[Pstream::myProcNo()] = patchData_[i];
         Pstream::gatherList(procData);
 
@@ -199,30 +199,30 @@ void CML::PatchPostProcessing<CloudType>::write()
             const fvMesh& mesh = this->owner().mesh();
 
             // Create directory if it doesn't exist
-            mkDir(this->outputTimeDir());
+            mkDir(this->writeTimeDir());
 
             const word& patchName = mesh.boundaryMesh()[patchIDs_[i]].name();
 
             OFstream patchOutFile
             (
-                this->outputTimeDir()/patchName + ".post",
+                this->writeTimeDir()/patchName + ".post",
                 IOstream::ASCII,
                 IOstream::currentVersion,
                 mesh.time().writeCompression()
             );
 
             List<string> globalData;
-            globalData = ListListOps::combine<List<string> >
+            globalData = ListListOps::combine<List<string>>
             (
                 procData,
-                accessOp<List<string> >()
+                accessOp<List<string>>()
             );
 
             List<scalar> globalTimes;
-            globalTimes = ListListOps::combine<List<scalar> >
+            globalTimes = ListListOps::combine<List<scalar>>
             (
                 procTimes,
-                accessOp<List<scalar> >()
+                accessOp<List<scalar>>()
             );
 
             labelList indices;

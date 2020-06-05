@@ -158,6 +158,7 @@ utilities/octrees/meshOctree/refinementControls/objectRefinement/sphereRefinemen
 utilities/octrees/meshOctree/refinementControls/objectRefinement/lineRefinement.cpp
 utilities/octrees/meshOctree/refinementControls/objectRefinement/coneRefinement.cpp
 utilities/octrees/meshOctree/refinementControls/objectRefinement/boxRefinement.cpp
+utilities/octrees/meshOctree/refinementControls/objectRefinement/rotatedBoxRefinement.cpp
 utilities/octrees/meshOctree/refinementControls/objectRefinement/hollowConeRefinement.cpp
 voronoiMesh/voronoiMeshExtractor/voronoiMeshExtractor.cpp
 voronoiMesh/voronoiMeshExtractor/voronoiMeshExtractorAddressing.cpp

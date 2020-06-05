@@ -46,9 +46,9 @@ CML::labelList CML::patchZones::faceToEdge
 
     forAll(changedFaces, i)
     {
-        label faceI = changedFaces[i];
+        label facei = changedFaces[i];
 
-        const labelList& fEdges = pp_.faceEdges()[faceI];
+        const labelList& fEdges = pp_.faceEdges()[facei];
 
         forAll(fEdges, fEdgeI)
         {
@@ -83,13 +83,13 @@ CML::labelList CML::patchZones::edgeToFace(const labelList& changedEdges)
 
         forAll(eFaces, eFaceI)
         {
-            label faceI = eFaces[eFaceI];
+            label facei = eFaces[eFaceI];
 
-            if (operator[](faceI) == -1)
+            if (operator[](facei) == -1)
             {
-                operator[](faceI) = nZones_;
+                operator[](facei) = nZones_;
 
-                changedFaces[changedI++] = faceI;
+                changedFaces[changedI++] = facei;
             }
         }
     }
@@ -100,11 +100,11 @@ CML::labelList CML::patchZones::edgeToFace(const labelList& changedEdges)
 }
 
 
-// Finds area, starting at faceI, delimited by borderEdge
-void CML::patchZones::markZone(label faceI)
+// Finds area, starting at facei, delimited by borderEdge
+void CML::patchZones::markZone(label facei)
 {
     // List of faces whose faceZone has been set.
-    labelList changedFaces(1, faceI);
+    labelList changedFaces(1, facei);
     // List of edges whose faceZone has been set.
     labelList changedEdges;
 
@@ -170,24 +170,24 @@ CML::patchZones::patchZones
             << abort(FatalError);
     }
 
-    label faceI = 0;
+    label facei = 0;
 
     while (true)
     {
         // Find first non-visited face
-        for (; faceI < pp_.size(); faceI++)
+        for (; facei < pp_.size(); facei++)
         {
-            if (operator[](faceI) == -1)
+            if (operator[](facei) == -1)
             {
-                operator[](faceI) = nZones_;
+                operator[](facei) = nZones_;
 
-                markZone(faceI);
+                markZone(facei);
 
                 break;
             }
         }
 
-        if (faceI == pp_.size())
+        if (facei == pp_.size())
         {
             // Finished.
             break;

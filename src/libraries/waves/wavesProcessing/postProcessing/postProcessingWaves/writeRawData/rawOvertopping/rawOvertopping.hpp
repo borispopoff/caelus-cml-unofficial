@@ -69,14 +69,14 @@ private:
     // Private Member Functions
         void resizeFields
         (
-            List<std::pair<scalar, label> >&,
+            List<std::pair<scalar, label>>&,
             List<vectorField>&,
             label
         );
 
         void writeRawData
         (
-            const List<std::pair<scalar, label> >&,
+            const List<std::pair<scalar, label>>&,
             const wordList&,
             const List<vectorField>&
         );
@@ -114,7 +114,7 @@ public:
 
         void readOvertoppingData
         (
-            List<std::pair<scalar, label> >&,
+            List<std::pair<scalar, label>>&,
             wordList&,
             List<vectorField>&
         );

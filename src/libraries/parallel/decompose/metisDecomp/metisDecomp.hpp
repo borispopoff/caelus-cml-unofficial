@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,7 +56,7 @@ class metisDecomp
         );
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const metisDecomp&);
+        void operator=(const metisDecomp&) = delete;
         metisDecomp(const metisDecomp&);
 
 
@@ -84,10 +84,10 @@ public:
             // Metis does not know about proc boundaries
             return false;
         }
-    
+
         //- Inherit decompose from decompositionMethod
         using decompositionMethod::decompose;
-    
+
         //- Return for every coordinate the wanted processor number. Use the
         //  mesh connectivity (if needed)
         //  Weights get normalised so the minimum value is 1 before truncation

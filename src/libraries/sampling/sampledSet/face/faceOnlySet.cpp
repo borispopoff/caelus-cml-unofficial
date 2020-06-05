@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -32,6 +32,8 @@ namespace CML
 {
     defineTypeNameAndDebug(faceOnlySet, 0);
     addToRunTimeSelectionTable(sampledSet, faceOnlySet, word);
+
+    const scalar faceOnlySet::tol = 1e-6;
 }
 
 
@@ -41,16 +43,13 @@ bool CML::faceOnlySet::trackToBoundary
 (
     passiveParticleCloud& particleCloud,
     passiveParticle& singleParticle,
+    const scalar smallDist,
     DynamicList<point>& samplingPts,
     DynamicList<label>& samplingCells,
     DynamicList<label>& samplingFaces,
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
-    // distance vector between sampling points
-    const vector offset = end_ - start_;
-    const vector smallVec = tol*offset;
-    const scalar smallDist = mag(smallVec);
 
     particle::trackingData td(particleCloud);
 
@@ -163,9 +162,11 @@ void CML::faceOnlySet::calcSamples
         // Line start_ - end_ does not intersect domain at all.
         // (or is along edge)
         // Set points and cell/face labels to empty lists
-        //Info<< "calcSamples : Both start_ and end_ outside domain"
-        //    << endl;
 
+        // Pout<< "calcSamples : Both start_ and end_ outside domain"
+        //     << endl;
+
+        const_cast<polyMesh&>(mesh()).moving(oldMoving);
         return;
     }
 
@@ -217,6 +218,7 @@ void CML::faceOnlySet::calcSamples
         (
             particleCloud,
             singleParticle,
+            smallDist,
             samplingPts,
             samplingCells,
             samplingFaces,
@@ -236,11 +238,6 @@ void CML::faceOnlySet::calcSamples
             //     << endl;
             break;
         }
-
-
-        // Go past boundary intersection where tracking stopped
-        // Use coordinate comparison instead of face comparison for
-        // accuracy reasons
 
         bool foundValidB = false;
 
@@ -268,7 +265,7 @@ void CML::faceOnlySet::calcSamples
             }
         }
 
-        if (!foundValidB)
+        if (!foundValidB || bHitI == bHits.size() - 1)
         {
             // No valid boundary intersection found beyond tracking position
             break;

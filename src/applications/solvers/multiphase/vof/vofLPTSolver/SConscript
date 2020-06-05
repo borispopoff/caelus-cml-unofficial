@@ -21,7 +21,6 @@ caelus_inc = [
 'lagrangian/intermediate/lnInclude',
 'regionModels/regionModel/lnInclude',
 'regionModels/surfaceFilmModels/lnInclude',
-'fvOptions/lnInclude',
 'sampling/lnInclude',
 'dynamicMesh/dynamicFvMesh/lnInclude',
 'dynamicMesh/dynamicMesh/lnInclude'
@@ -57,7 +56,7 @@ ostype = utils.ostype()
 prepend_args = {}
 if ostype == 'windows':
    prepend_args = {'LINKFLAGS' :
-            '-u incompressibleRASModelsLoad -u incompressibleLESModelsLoad -u incompressibleVLESModelsLoad -u interfacePropertiesLoad -u turbulenceDerivedFvPatchFieldsLoad -u lagrangianIntermediateLoad'
+            '-u incompressibleRASModelsLoad -u incompressibleLESModelsLoad -u incompressibleVLESModelsLoad -u interfacePropertiesLoad -u turbulenceDerivedFvPatchFieldsLoad -u lagrangianIntermediateLoad -u lagrangianTurbulenceLoad -u fvOptionsLoad'
 }
 
 build_app(env,

@@ -34,29 +34,29 @@ void CML::triSurface::writeSTLASCII(Ostream& os) const
     surfacePatchList myPatches(calcPatches(faceMap));
 
     label faceIndex = 0;
-    forAll(myPatches, patchI)
+    forAll(myPatches, patchi)
     {
         // Print all faces belonging to this region
-        const surfacePatch& patch = myPatches[patchI];
+        const surfacePatch& patch = myPatches[patchi];
 
         os  << "solid " << patch.name() << endl;
 
         for
         (
-            label patchFaceI = 0;
-            patchFaceI < patch.size();
-            patchFaceI++
+            label patchFacei = 0;
+            patchFacei < patch.size();
+            patchFacei++
         )
         {
-            const label faceI = faceMap[faceIndex++];
+            const label facei = faceMap[faceIndex++];
 
-            const vector& n = faceNormals()[faceI];
+            const vector& n = faceNormals()[facei];
 
             os  << "  facet normal "
                 << n.x() << ' ' << n.y() << ' ' << n.z() << nl
                 << "    outer loop" << endl;
 
-            const labelledTri& f = (*this)[faceI];
+            const labelledTri& f = (*this)[facei];
             const point& pa = points()[f[0]];
             const point& pb = points()[f[1]];
             const point& pc = points()[f[2]];
@@ -87,12 +87,12 @@ void CML::triSurface::writeSTLBINARY(std::ostream& os) const
 
     const vectorField& normals = faceNormals();
 
-    forAll(*this, faceI)
+    forAll(*this, facei)
     {
-        const labelledTri& f = (*this)[faceI];
+        const labelledTri& f = (*this)[facei];
 
         // Convert vector into STL single precision
-        STLpoint n(normals[faceI]);
+        STLpoint n(normals[facei]);
         STLpoint pa(points()[f[0]]);
         STLpoint pb(points()[f[1]]);
         STLpoint pc(points()[f[2]]);

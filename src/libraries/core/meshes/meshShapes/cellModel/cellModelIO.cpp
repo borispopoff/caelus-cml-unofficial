@@ -35,7 +35,7 @@ namespace CML
 
 cellModel::cellModel(Istream& is)
 {
-    dictionaryEntry entry(dictionary::null, is);
+    dictionaryEntry entry(is);
     name_ = entry.keyword();
     entry.lookup("index") >> index_;
     entry.lookup("numberOfPoints") >> nPoints_;

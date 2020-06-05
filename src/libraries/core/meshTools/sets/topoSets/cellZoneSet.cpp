@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -135,9 +135,9 @@ void cellZoneSet::invert(const label maxLen)
     // Count
     label n = 0;
 
-    for (label cellI = 0; cellI < maxLen; cellI++)
+    for (label celli = 0; celli < maxLen; celli++)
     {
-        if (!found(cellI))
+        if (!found(celli))
         {
             n++;
         }
@@ -147,11 +147,11 @@ void cellZoneSet::invert(const label maxLen)
     addressing_.setSize(n);
     n = 0;
 
-    for (label cellI = 0; cellI < maxLen; cellI++)
+    for (label celli = 0; celli < maxLen; celli++)
     {
-        if (!found(cellI))
+        if (!found(celli))
         {
-            addressing_[n] = cellI;
+            addressing_[n] = celli;
             n++;
         }
     }
@@ -168,11 +168,11 @@ void cellZoneSet::subset(const topoSet& set)
 
     forAll(fSet.addressing(), i)
     {
-        label cellI = fSet.addressing()[i];
+        label celli = fSet.addressing()[i];
 
-        if (found(cellI))
+        if (found(celli))
         {
-            newAddressing.append(cellI);
+            newAddressing.append(celli);
         }
     }
 
@@ -189,11 +189,11 @@ void cellZoneSet::addSet(const topoSet& set)
 
     forAll(fSet.addressing(), i)
     {
-        label cellI = fSet.addressing()[i];
+        label celli = fSet.addressing()[i];
 
-        if (!found(cellI))
+        if (!found(celli))
         {
-            newAddressing.append(cellI);
+            newAddressing.append(celli);
         }
     }
 
@@ -210,12 +210,12 @@ void cellZoneSet::deleteSet(const topoSet& set)
 
     forAll(addressing_, i)
     {
-        label cellI = addressing_[i];
+        label celli = addressing_[i];
 
-        if (!fSet.found(cellI))
+        if (!fSet.found(celli))
         {
             // Not found in fSet so add
-            newAddressing.append(cellI);
+            newAddressing.append(celli);
         }
     }
 
@@ -225,7 +225,13 @@ void cellZoneSet::deleteSet(const topoSet& set)
 
 
 void cellZoneSet::sync(const polyMesh& mesh)
-{}
+{
+    cellSet::sync(mesh);
+
+    // Take over contents of cellSet into addressing.
+    addressing_ = sortedToc();
+    updateSet();
+}
 
 
 label cellZoneSet::maxSize(const polyMesh& mesh) const
@@ -234,7 +240,6 @@ label cellZoneSet::maxSize(const polyMesh& mesh) const
 }
 
 
-//- Write using given format, version and compression
 bool cellZoneSet::writeObject
 (
     IOstream::streamFormat s,
@@ -287,11 +292,11 @@ void cellZoneSet::updateMesh(const mapPolyMesh& morphMap)
     label n = 0;
     forAll(addressing_, i)
     {
-        label cellI = addressing_[i];
-        label newCellI = morphMap.reverseCellMap()[cellI];
-        if (newCellI >= 0)
+        label celli = addressing_[i];
+        label newCelli = morphMap.reverseCellMap()[celli];
+        if (newCelli >= 0)
         {
-            newAddressing[n] = newCellI;
+            newAddressing[n] = newCelli;
             n++;
         }
     }

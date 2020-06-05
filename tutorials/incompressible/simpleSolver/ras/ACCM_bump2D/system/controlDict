@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------*
-Caelus 9.04
+Caelus 10.04
 Web:   www.caelus-cml.com
 \*------------------------------------------------------------------------------*/
 
@@ -57,7 +57,7 @@ functions
         functionObjectLibs	("libforces.so");
         patches     		( wall );
         CofR      			(0 0 0);
-        rhoName         	rhoInf;
+        rho              	rhoInf;
         rhoInf          	0.80822;
         writeControl   	 	timeStep;
         writeInterval   	50;

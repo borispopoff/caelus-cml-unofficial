@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2018 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -86,13 +86,11 @@ void CML::patchIdentifier::write(Ostream& os) const
 {
     if (physicalType_.size())
     {
-        os.writeKeyword("physicalType") << physicalType_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "physicalType", physicalType_);
     }
     if (inGroups_.size())
     {
-        os.writeKeyword("inGroups") << inGroups_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "inGroups", inGroups_);
     }
 }
 

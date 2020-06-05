@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -68,12 +68,6 @@ private:
         //- Return the boundBox of the plane
         boundBox calcBounds() const;
 
-        //- Disallow default bitwise copy construct
-        searchablePlane(const searchablePlane&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchablePlane&);
-
 
 public:
 
@@ -97,6 +91,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construct
+        searchablePlane(const searchablePlane&) = delete;
+
 
     //- Destructor
     virtual ~searchablePlane();
@@ -178,7 +176,7 @@ public:
             (
                 const pointField& start,
                 const pointField& end,
-                List<List<pointIndexHit> >&
+                List<List<pointIndexHit>>&
             ) const;
 
             //- From a set of points and indices get the region
@@ -212,6 +210,11 @@ public:
                 return false;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchablePlane&) = delete;
 };
 
 

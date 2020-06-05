@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2015 OpenFOAM Foundation
+Copyright (C) 2015-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -20,6 +20,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "patchMeanVelocityForce.hpp"
+#include "processorCyclicPolyPatch.hpp"
 #include "addToRunTimeSelectionTable.hpp"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -38,6 +39,7 @@ namespace fv
     );
 }
 }
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -69,10 +71,45 @@ CML::scalar CML::fv::patchMeanVelocityForce::magUbarAve
     const volVectorField& U
 ) const
 {
-    return
-        gSum
+    vector2D sumAmagUsumA
+    (
+        sum
         (
             (flowDir_ & U.boundaryField()[patchi_])
            *mesh_.boundary()[patchi_].magSf()
-        )/gSum(mesh_.boundary()[patchi_].magSf());
+        ),
+        sum(mesh_.boundary()[patchi_].magSf())
+    );
+
+
+    // If the mean velocity force is applied to a cyclic patch
+    // for parallel runs include contributions from processorCyclic patches
+    // generated from the decomposition of the cyclic patch
+    const polyBoundaryMesh& patches = mesh_.boundaryMesh();
+
+    if (Pstream::parRun() && isA<cyclicPolyPatch>(patches[patchi_]))
+    {
+        labelList processorCyclicPatches
+        (
+            processorCyclicPolyPatch::patchIDs(patch_, patches)
+        );
+
+        forAll(processorCyclicPatches, pcpi)
+        {
+            const label patchi = processorCyclicPatches[pcpi];
+
+            sumAmagUsumA.x() +=
+                sum
+                (
+                    (flowDir_ & U.boundaryField()[patchi])
+                   *mesh_.boundary()[patchi].magSf()
+                );
+
+            sumAmagUsumA.y() += sum(mesh_.boundary()[patchi].magSf());
+        }
+    }
+
+    reduce(sumAmagUsumA, sumOp<vector2D>());
+
+    return sumAmagUsumA.x()/sumAmagUsumA.y();
 }

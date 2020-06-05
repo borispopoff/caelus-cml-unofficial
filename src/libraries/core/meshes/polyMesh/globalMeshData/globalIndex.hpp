@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
 Copyright (C) 2014 Applied CCM
-Copyright (C) 2011-2017 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -26,7 +26,7 @@ Description
     for processor + local index. E.g.
 
     globalIndex globalFaces(mesh.nFaces());
-    label globalFaceI = globalFaces.toGlobal(faceI);
+    label globalFacei = globalFaces.toGlobal(facei);
 
 
 SourceFiles
@@ -77,8 +77,8 @@ public:
         //- Construct from components
         globalIndex(const labelList& offsets);
 
-        //- Construct from components
-        inline globalIndex(const Xfer<labelList>& offsets);
+        //- Move constructor from components
+        inline globalIndex(labelList&& offsets);
 
         //- Construct from Istream
         globalIndex(Istream& is);
@@ -144,7 +144,8 @@ public:
                 const UList<Type>& fld,
                 List<Type>& allFld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType = Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             );
 
             //- Collect data in processor order on master (== procIDs[0]).
@@ -156,7 +157,8 @@ public:
                 const UList<Type>& fld,
                 List<Type>& allFld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType = Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             ) const
             {
                 gather(offsets_, procIDs, fld, allFld, tag, commsType);
@@ -171,7 +173,8 @@ public:
                 const labelList& procIDs,
                 List<Type>& fld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType = Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             );
 
             //- Inplace collect data in processor order on master
@@ -182,7 +185,8 @@ public:
                 const labelList& procIDs,
                 List<Type>& fld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType = Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             ) const
             {
                 gather(offsets_, procIDs, fld, tag, commsType);
@@ -197,7 +201,8 @@ public:
                 const UList<Type>& allFld,
                 UList<Type>& fld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType = Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             );
 
             //- Distribute data in processor order. Requires fld to be sized!
@@ -208,7 +213,8 @@ public:
                 const UList<Type>& allFld,
                 UList<Type>& fld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType = Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             ) const
             {
                 scatter(offsets_, procIDs, allFld, fld, tag, commsType);
@@ -246,7 +252,11 @@ void CML::globalIndex::gather
         // Assign my local data
         SubList<Type>(allFld, fld.size(), 0) = fld;
 
-        if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
+        if
+        (
+            commsType == Pstream::commsTypes::scheduled
+         || commsType == Pstream::commsTypes::blocking
+        )
         {
             for (label i = 1; i < procIDs.size(); i++)
             {
@@ -310,7 +320,11 @@ void CML::globalIndex::gather
     }
     else
     {
-        if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
+        if
+        (
+            commsType == Pstream::commsTypes::scheduled
+         || commsType == Pstream::commsTypes::blocking
+        )
         {
             if (contiguous<Type>())
             {
@@ -401,7 +415,11 @@ void CML::globalIndex::scatter
     {
         fld.deepCopy(SubList<Type>(allFld, off[1]-off[0]));
 
-        if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
+        if
+        (
+            commsType == Pstream::commsTypes::scheduled
+         || commsType == Pstream::commsTypes::blocking
+        )
         {
             for (label i = 1; i < procIDs.size(); i++)
             {
@@ -475,7 +493,11 @@ void CML::globalIndex::scatter
     }
     else
     {
-        if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
+        if
+        (
+            commsType == Pstream::commsTypes::scheduled
+         || commsType == Pstream::commsTypes::blocking
+        )
         {
             if (contiguous<Type>())
             {

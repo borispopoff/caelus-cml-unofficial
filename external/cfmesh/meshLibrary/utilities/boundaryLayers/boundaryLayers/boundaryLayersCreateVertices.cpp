@@ -674,7 +674,7 @@ void boundaryLayers::createNewPartitionVerticesParallel
 
     scalarField penetrationDistances(bPoints.size(), VGREAT);
 
-    std::map<label, LongList<labelledScalar> > exchangeDistances;
+    std::map<label, LongList<labelledScalar>> exchangeDistances;
 
     forAll(procPoints, pointI)
     {
@@ -894,7 +894,7 @@ void boundaryLayers::createNewEdgeVerticesParallel
     }
 
     //- prepare normals and v for sending to other procs
-    std::map<label, LongList<labelledPoint> > exchangeNormals;
+    std::map<label, LongList<labelledPoint>> exchangeNormals;
     forAll(neiProcs, procI)
         exchangeNormals.insert
         (
@@ -1017,7 +1017,7 @@ void boundaryLayers::createNewEdgeVerticesParallel
     }
 
     //- exchange distances with other processors
-    std::map<label, LongList<labelledScalar> > exchangeDistances;
+    std::map<label, LongList<labelledScalar>> exchangeDistances;
     forAll(neiProcs, procI)
         exchangeDistances.insert
         (

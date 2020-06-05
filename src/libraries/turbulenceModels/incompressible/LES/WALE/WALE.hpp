@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2018 OpenFOAM Foundation
-Copyright (C) Applied CCM
+Copyright (C) 2018-2019 OpenFOAM Foundation
+Copyright (C) 2018-2019 Applied CCM
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -61,8 +61,8 @@ class WALE : public GenEddyVisc
     void updateSubGridScaleFields(volTensorField const& gradU);
 
     // Disallow default bitwise copy construct and assignment
-    WALE(WALE const&);
-    WALE& operator=(WALE const&);
+    WALE(WALE const&) = delete;
+    WALE& operator=(WALE const&) = delete;
 
 
 public:

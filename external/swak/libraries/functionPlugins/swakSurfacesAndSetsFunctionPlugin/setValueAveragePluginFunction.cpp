@@ -93,15 +93,15 @@ void setValueAveragePluginFunction<Type>::doEvaluation()
     const Field<Type> vals=this->values();
 
     forAll(cells,i) {
-        const label cellI=cells[i];
+        const label celli=cells[i];
 
-        pValueAverage()[cellI]+=vals[i];
-        nr[cellI]++;
+        pValueAverage()[celli]+=vals[i];
+        nr[celli]++;
     }
 
-    forAll(nr,cellI) {
-        if(nr[cellI]>SMALL) {
-            pValueAverage->internalField()[cellI]/=nr[cellI];
+    forAll(nr,celli) {
+        if(nr[celli]>SMALL) {
+            pValueAverage->primitiveFieldRef()[celli]/=nr[celli];
         }
     }
 

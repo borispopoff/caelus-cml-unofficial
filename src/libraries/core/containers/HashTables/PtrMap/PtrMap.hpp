@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -45,7 +45,7 @@ namespace CML
 template<class T>
 class PtrMap
 :
-    public HashPtrTable<T, label, Hash<label> >
+    public HashPtrTable<T, label, Hash<label>>
 {
 
 public:
@@ -55,20 +55,39 @@ public:
         //- Construct given initial map size
         PtrMap(const label size = 128)
         :
-            HashPtrTable<T, label, Hash<label> >(size)
+            HashPtrTable<T, label, Hash<label>>(size)
         {}
 
         //- Construct from Istream
         PtrMap(Istream& is)
         :
-            HashPtrTable<T, label, Hash<label> >(is)
+            HashPtrTable<T, label, Hash<label>>(is)
         {}
 
-        //- Construct as copy
+        //- Copy construct
         PtrMap(const PtrMap<T>& map)
         :
-            HashPtrTable<T, label, Hash<label> >(map)
+            HashPtrTable<T, label, Hash<label>>(map)
         {}
+
+        //- Move constructor
+        PtrMap(PtrMap<T>&& map)
+        :
+            HashPtrTable<T, label, Hash<label>>(move(map))
+        {}
+
+
+    // Member operators
+
+        void operator=(const PtrMap<T>& map)
+        {
+            HashPtrTable<T, label, Hash<label>>::operator=(map);
+        }
+
+        void operator=(PtrMap<T>&& map)
+        {
+            HashPtrTable<T, label, Hash<label>>::operator=(move(map));
+        }
 };
 
 

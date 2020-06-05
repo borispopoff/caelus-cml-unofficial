@@ -36,7 +36,7 @@ Description
 
 namespace CML
 {
-    typedef KinematicCloud<Cloud<basicKinematicParcel> > basicKinematicCloud;
+    typedef KinematicCloud<Cloud<basicKinematicParcel>> basicKinematicCloud;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

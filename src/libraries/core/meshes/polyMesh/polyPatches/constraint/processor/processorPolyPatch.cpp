@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011-2015 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -30,7 +30,7 @@ License
 #include "Time.hpp"
 #include "transformList.hpp"
 #include "PstreamBuffers.hpp"
-#include "const_circulator.hpp"
+#include "ConstCirculator.hpp"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,6 +57,36 @@ CML::processorPolyPatch::processorPolyPatch
 )
 :
     coupledPolyPatch(name, size, start, index, bm, patchType, transform),
+    myProcNo_(myProcNo),
+    neighbProcNo_(neighbProcNo),
+    neighbFaceCentres_(),
+    neighbFaceAreas_(),
+    neighbFaceCellCentres_()
+{}
+
+
+CML::processorPolyPatch::processorPolyPatch
+(
+    const label size,
+    const label start,
+    const label index,
+    const polyBoundaryMesh& bm,
+    const int myProcNo,
+    const int neighbProcNo,
+    const transformType transform,
+    const word& patchType
+)
+:
+    coupledPolyPatch
+    (
+        newName(myProcNo, neighbProcNo),
+        size,
+        start,
+        index,
+        bm,
+        patchType,
+        transform
+    ),
     myProcNo_(myProcNo),
     neighbProcNo_(neighbProcNo),
     neighbFaceCentres_(),
@@ -145,6 +175,20 @@ CML::processorPolyPatch::~processorPolyPatch()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+CML::word CML::processorPolyPatch::newName
+(
+    const label myProcNo,
+    const label neighbProcNo
+)
+{
+    return
+        "procBoundary"
+      + CML::name(myProcNo)
+      + "to"
+      + CML::name(neighbProcNo);
+}
+
+
 void CML::processorPolyPatch::initGeometry(PstreamBuffers& pBufs)
 {
     if (Pstream::parRun())
@@ -225,10 +269,10 @@ void CML::processorPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 
                 label vertI = 0;
 
-                forAll(faceCentres(), faceI)
+                forAll(faceCentres(), facej)
                 {
-                    const point& c0 = neighbFaceCentres_[faceI];
-                    const point& c1 = faceCentres()[faceI];
+                    const point& c0 = neighbFaceCentres_[facej];
+                    const point& c1 = faceCentres()[facej];
 
                     writeOBJ(ccStr, c0, c1, vertI);
                 }
@@ -306,15 +350,15 @@ void CML::processorPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
         labelList pointFace(nPoints());
         labelList pointIndex(nPoints());
 
-        for (label patchPointI = 0; patchPointI < nPoints(); patchPointI++)
+        for (label patchPointi = 0; patchPointi < nPoints(); patchPointi++)
         {
-            label faceI = pointFaces()[patchPointI][0];
+            label facei = pointFaces()[patchPointi][0];
 
-            pointFace[patchPointI] = faceI;
+            pointFace[patchPointi] = facei;
 
-            const face& f = localFaces()[faceI];
+            const face& f = localFaces()[facei];
 
-            pointIndex[patchPointI] = findIndex(f, patchPointI);
+            pointIndex[patchPointi] = findIndex(f, patchPointi);
         }
 
         // Express all edges as patch face and index in face.
@@ -323,11 +367,11 @@ void CML::processorPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
 
         for (label patchEdgeI = 0; patchEdgeI < nEdges(); patchEdgeI++)
         {
-            label faceI = edgeFaces()[patchEdgeI][0];
+            label facei = edgeFaces()[patchEdgeI][0];
 
-            edgeFace[patchEdgeI] = faceI;
+            edgeFace[patchEdgeI] = facei;
 
-            const labelList& fEdges = faceEdges()[faceI];
+            const labelList& fEdges = faceEdges()[facei];
 
             edgeIndex[patchEdgeI] = findIndex(fEdges, patchEdgeI);
         }
@@ -385,32 +429,32 @@ void CML::processorPolyPatch::updateMesh(PstreamBuffers& pBufs)
         neighbPointsPtr_.reset(new labelList(nPoints(), -1));
         labelList& neighbPoints = neighbPointsPtr_();
 
-        forAll(nbrPointFace, nbrPointI)
+        forAll(nbrPointFace, nbrPointi)
         {
             // Find face and index in face on this side.
-            const face& f = localFaces()[nbrPointFace[nbrPointI]];
+            const face& f = localFaces()[nbrPointFace[nbrPointi]];
 
-            label index = (f.size() - nbrPointIndex[nbrPointI]) % f.size();
-            label patchPointI = f[index];
+            label index = (f.size() - nbrPointIndex[nbrPointi]) % f.size();
+            label patchPointi = f[index];
 
-            if (neighbPoints[patchPointI] == -1)
+            if (neighbPoints[patchPointi] == -1)
             {
                 // First reference of point
-                neighbPoints[patchPointI] = nbrPointI;
+                neighbPoints[patchPointi] = nbrPointi;
             }
-            else if (neighbPoints[patchPointI] >= 0)
+            else if (neighbPoints[patchPointi] >= 0)
             {
                 // Point already visited. Mark as duplicate.
-                neighbPoints[patchPointI] = -2;
+                neighbPoints[patchPointi] = -2;
             }
         }
 
         // Reset all duplicate entries to -1.
-        forAll(neighbPoints, patchPointI)
+        forAll(neighbPoints, patchPointi)
         {
-            if (neighbPoints[patchPointI] == -2)
+            if (neighbPoints[patchPointi] == -2)
             {
-                neighbPoints[patchPointI] = -1;
+                neighbPoints[patchPointi] = -1;
             }
         }
 
@@ -517,9 +561,9 @@ void CML::processorPolyPatch::initOrder
             << "Dumping " << fc.size()
             << " local faceCentres to " << localStr.name() << endl;
 
-        forAll(fc, faceI)
+        forAll(fc, facei)
         {
-            writeOBJ(localStr, fc[faceI]);
+            writeOBJ(localStr, fc[facei]);
         }
     }
 
@@ -583,20 +627,19 @@ CML::label CML::processorPolyPatch::matchFace
         return -1;
     }
 
-    enum CirculatorBase::direction circulateDirection
-        = CirculatorBase::CLOCKWISE;
+    CirculatorBase::direction circulateDirection = CirculatorBase::direction::clockwise;
 
     if (!sameOrientation)
     {
-        circulateDirection = CirculatorBase::ANTICLOCKWISE;
+        circulateDirection = CirculatorBase::direction::anticlockwise;
     }
 
     label matchFp = -1;
 
     scalar closestMatchDistSqr = sqr(GREAT);
 
-    const_circulator<face> aCirc(a);
-    const_circulator<face> bCirc(b);
+    ConstCirculator<face> aCirc(a);
+    ConstCirculator<face> bCirc(b);
 
     do
     {
@@ -605,7 +648,7 @@ CML::label CML::processorPolyPatch::matchFace
         if (diffSqr < absTolSqr)
         {
             // Found a matching point. Set the fulcrum of b to the iterator
-            const_circulator<face> bCirc2 = bCirc;
+            ConstCirculator<face> bCirc2 = bCirc;
             ++aCirc;
 
             bCirc2.setFulcrumToIterator();
@@ -635,7 +678,7 @@ CML::label CML::processorPolyPatch::matchFace
             }
             while
             (
-                aCirc.circulate(CirculatorBase::CLOCKWISE),
+                aCirc.circulate(CirculatorBase::direction::clockwise),
                 bCirc2.circulate(circulateDirection)
             );
 
@@ -708,9 +751,9 @@ bool CML::processorPolyPatch::order
     {
         // Do nothing (i.e. identical mapping, zero rotation).
         // See comment at top.
-        forAll(faceMap, patchFaceI)
+        forAll(faceMap, patchFacei)
         {
-            faceMap[patchFaceI] = patchFaceI;
+            faceMap[patchFacei] = patchFacei;
         }
 
         if (transform() != COINCIDENTFULLMATCH)
@@ -725,19 +768,19 @@ bool CML::processorPolyPatch::order
                 matchTolerance()*calcFaceTol(pp, pp.points(), pp.faceCentres())
             );
 
-            forAll(faceMap, patchFaceI)
+            forAll(faceMap, patchFacei)
             {
-                const point& wantedAnchor = anchors[patchFaceI];
+                const point& wantedAnchor = anchors[patchFacei];
 
-                rotation[patchFaceI] = getRotation
+                rotation[patchFacei] = getRotation
                 (
                     ppPoints,
-                    pp[patchFaceI],
+                    pp[patchFacei],
                     wantedAnchor,
-                    tols[patchFaceI]
+                    tols[patchFacei]
                 );
 
-                if (rotation[patchFaceI] > 0)
+                if (rotation[patchFacei] > 0)
                 {
                     change = true;
                 }
@@ -748,6 +791,12 @@ bool CML::processorPolyPatch::order
     }
     else
     {
+        // Calculate the absolute matching tolerance
+        scalarField tols
+        (
+            matchTolerance()*calcFaceTol(pp, pp.points(), pp.faceCentres())
+        );
+
         if (transform() == COINCIDENTFULLMATCH)
         {
             vectorField masterPts;
@@ -763,21 +812,21 @@ bool CML::processorPolyPatch::order
 
             label nMatches = 0;
 
-            forAll(pp, lFaceI)
+            forAll(pp, lFacei)
             {
-                const face& localFace = localFaces[lFaceI];
+                const face& localFace = localFaces[lFacei];
                 label faceRotation = -1;
 
-                const scalar absTolSqr = sqr(SMALL);
+                const scalar absTolSqr = sqr(tols[lFacei]);
 
                 scalar closestMatchDistSqr = sqr(GREAT);
                 scalar matchDistSqr = sqr(GREAT);
                 label closestFaceMatch = -1;
                 label closestFaceRotation = -1;
 
-                forAll(masterFaces, mFaceI)
+                forAll(masterFaces, mFacei)
                 {
-                    const face& masterFace = masterFaces[mFaceI];
+                    const face& masterFace = masterFaces[mFacei];
 
                     faceRotation = matchFace
                     (
@@ -797,7 +846,7 @@ bool CML::processorPolyPatch::order
                     )
                     {
                         closestMatchDistSqr = matchDistSqr;
-                        closestFaceMatch = mFaceI;
+                        closestFaceMatch = mFacei;
                         closestFaceRotation = faceRotation;
                     }
 
@@ -807,13 +856,17 @@ bool CML::processorPolyPatch::order
                     }
                 }
 
-                if (closestFaceRotation != -1 && closestMatchDistSqr == 0)
+                if
+                (
+                    closestFaceRotation != -1
+                 && closestMatchDistSqr < absTolSqr
+                )
                 {
-                    faceMap[lFaceI] = closestFaceMatch;
+                    faceMap[lFacei] = closestFaceMatch;
 
-                    rotation[lFaceI] = closestFaceRotation;
+                    rotation[lFacei] = closestFaceRotation;
 
-                    if (lFaceI != closestFaceMatch || closestFaceRotation > 0)
+                    if (lFacei != closestFaceMatch || closestFaceRotation > 0)
                     {
                         change = true;
                     }
@@ -854,12 +907,6 @@ bool CML::processorPolyPatch::order
                               >> masterAnchors >> masterFacePointAverages;
             }
 
-            // Calculate typical distance from face centre
-            scalarField tols
-            (
-                matchTolerance()*calcFaceTol(pp, pp.points(), pp.faceCentres())
-            );
-
             if (debug || masterCtrs.size() != pp.size())
             {
                 {
@@ -871,9 +918,9 @@ bool CML::processorPolyPatch::order
                     Pout<< "processorPolyPatch::order : "
                         << "Dumping neighbour faceCentres to " << nbrStr.name()
                         << endl;
-                    forAll(masterCtrs, faceI)
+                    forAll(masterCtrs, facei)
                     {
-                        writeOBJ(nbrStr, masterCtrs[faceI]);
+                        writeOBJ(nbrStr, masterCtrs[facei]);
                     }
                 }
 
@@ -909,7 +956,7 @@ bool CML::processorPolyPatch::order
             {
                 const pointField& ppPoints = pp.points();
 
-                pointField facePointAverages(pp.size(), point::zero);
+                pointField facePointAverages(pp.size(), Zero);
                 forAll(pp, fI)
                 {
                     const labelList& facePoints = pp[fI];
@@ -939,19 +986,19 @@ bool CML::processorPolyPatch::order
                     faceMap2
                 );
 
-                forAll(faceMap, oldFaceI)
+                forAll(faceMap, oldFacei)
                 {
-                    if (faceMap[oldFaceI] == -1)
+                    if (faceMap[oldFacei] == -1)
                     {
-                        faceMap[oldFaceI] = faceMap2[oldFaceI];
+                        faceMap[oldFacei] = faceMap2[oldFacei];
                     }
                 }
 
                 matchedAll = true;
 
-                forAll(faceMap, oldFaceI)
+                forAll(faceMap, oldFacei)
                 {
-                    if (faceMap[oldFaceI] == -1)
+                    if (faceMap[oldFacei] == -1)
                     {
                         matchedAll = false;
                     }
@@ -984,14 +1031,14 @@ bool CML::processorPolyPatch::order
 
                 label vertI = 0;
 
-                forAll(pp.faceCentres(), faceI)
+                forAll(pp.faceCentres(), facei)
                 {
-                    label masterFaceI = faceMap[faceI];
+                    label masterFacei = faceMap[facei];
 
-                    if (masterFaceI != -1)
+                    if (masterFacei != -1)
                     {
-                        const point& c0 = masterCtrs[masterFaceI];
-                        const point& c1 = pp.faceCentres()[faceI];
+                        const point& c0 = masterCtrs[masterFacei];
+                        const point& c1 = pp.faceCentres()[facei];
                         writeOBJ(ccStr, c0, c1, vertI);
                     }
                 }
@@ -1015,32 +1062,32 @@ bool CML::processorPolyPatch::order
             }
 
             // Set rotation.
-            forAll(faceMap, oldFaceI)
+            forAll(faceMap, oldFacei)
             {
-                // The face f will be at newFaceI (after morphing) and we want
+                // The face f will be at newFacei (after morphing) and we want
                 // its anchorPoint (= f[0]) to align with the anchorpoint for
                 // the corresponding face on the other side.
 
-                label newFaceI = faceMap[oldFaceI];
+                label newFacei = faceMap[oldFacei];
 
-                const point& wantedAnchor = masterAnchors[newFaceI];
+                const point& wantedAnchor = masterAnchors[newFacei];
 
-                rotation[newFaceI] = getRotation
+                rotation[newFacei] = getRotation
                 (
                     pp.points(),
-                    pp[oldFaceI],
+                    pp[oldFacei],
                     wantedAnchor,
-                    tols[oldFaceI]
+                    tols[oldFacei]
                 );
 
-                if (rotation[newFaceI] == -1)
+                if (rotation[newFacei] == -1)
                 {
                     SeriousErrorInFunction
                         << "in patch " << name()
                         << " : "
-                        << "Cannot find point on face " << pp[oldFaceI]
+                        << "Cannot find point on face " << pp[oldFacei]
                         << " with vertices "
-                        << UIndirectList<point>(pp.points(), pp[oldFaceI])()
+                        << UIndirectList<point>(pp.points(), pp[oldFacei])()
                         << " that matches point " << wantedAnchor
                         << " when matching the halves of processor patch "
                         << name()
@@ -1051,9 +1098,9 @@ bool CML::processorPolyPatch::order
                 }
             }
 
-            forAll(faceMap, faceI)
+            forAll(faceMap, facei)
             {
-                if (faceMap[faceI] != faceI || rotation[faceI] != 0)
+                if (faceMap[facei] != facei || rotation[facei] != 0)
                 {
                     return true;
                 }
@@ -1068,10 +1115,8 @@ bool CML::processorPolyPatch::order
 void CML::processorPolyPatch::write(Ostream& os) const
 {
     coupledPolyPatch::write(os);
-    os.writeKeyword("myProcNo") << myProcNo_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("neighbProcNo") << neighbProcNo_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "myProcNo", myProcNo_);
+    writeEntry(os, "neighbProcNo", neighbProcNo_);
 }
 
 

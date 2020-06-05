@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -57,10 +57,10 @@ class mirrorFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        mirrorFvMesh(const mirrorFvMesh&);
+        mirrorFvMesh(const mirrorFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const mirrorFvMesh&);
+        void operator=(const mirrorFvMesh&) = delete;
 
 
 public:

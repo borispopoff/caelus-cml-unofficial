@@ -44,11 +44,11 @@ Author
 namespace CML
 {
 
-template <typename LimiterFunctionType, typename FieldType>
+template<class LimiterFunctionType, class FieldType>
 class MDLimiter
 {};
 
-template <typename LimiterFunctionType>
+template<class LimiterFunctionType>
 class MDLimiter<LimiterFunctionType,volScalarField>
 {
     fvMesh           const& mesh_;
@@ -92,7 +92,7 @@ public:
                 IOobject::AUTO_WRITE
             ),
             this->mesh_,
-            dimensionedScalar("pMinValue", dimless, 0.0),
+            dimensionedScalar("pMinValue", dimless, 0),
             zeroGradientFvPatchScalarField::typeName
 	),
         phiMaxValue_
@@ -106,17 +106,17 @@ public:
                 IOobject::AUTO_WRITE
              ),
              this->mesh_,
-             dimensionedScalar("pMaxValue", dimless, 0.0),
+             dimensionedScalar("pMaxValue", dimless, 0),
              zeroGradientFvPatchScalarField::typeName
         )
     {
         unallocLabelList const& owner = this->mesh_.owner();
         unallocLabelList const& neighbour = this->mesh_.neighbour();
 
-        forAll (owner, faceI)
+        forAll (owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
             // min values
             this->phiMinValue_[own] = min(phi_[own], phi_[nei]);
@@ -145,10 +145,10 @@ public:
         
         this->phiLimiter_ = 1.0;
 
-        forAll(owner, faceI)
+        forAll(owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
 	    // min values
             this->phiMinValue_[own] = min(this->phiMinValue_[own], phi_[nei]);
@@ -178,7 +178,7 @@ public:
             zeroGradientFvPatchScalarField::typeName
         );
 
-        cellVolume.internalField() = this->mesh_.V();
+        cellVolume.primitiveFieldRef() = this->mesh_.V();
         cellVolume.correctBoundaryConditions();
 
         volVectorField const& cellCenter = mesh_.C();
@@ -187,13 +187,13 @@ public:
         LimiterFunctionType limitFunction;
 
         // Compute limiter values
-        forAll(owner, faceI)
+        forAll(owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
-            vector const deltaRLeft  = faceCenter[faceI] - cellCenter[own];
-            vector const deltaRRight = faceCenter[faceI] - cellCenter[nei];
+            vector const deltaRLeft  = faceCenter[facei] - cellCenter[own];
+            vector const deltaRRight = faceCenter[facei] - cellCenter[nei];
 
 	    scalar phiOwnerLimiter = limitFunction.limiter
             (
@@ -227,7 +227,7 @@ public:
     }
 };
 
-template <typename LimiterFunctionType>
+template<class LimiterFunctionType>
 class MDLimiter<LimiterFunctionType,volVectorField>
 {
     fvMesh           const& mesh_;
@@ -271,7 +271,7 @@ public:
                 IOobject::AUTO_WRITE
             ),
             this->mesh_,
-            dimensionedVector("phiMinValue", dimless, vector::zero),
+            dimensionedVector("phiMinValue", dimless, Zero),
             zeroGradientFvPatchScalarField::typeName
 	),
         phiMaxValue_
@@ -285,17 +285,17 @@ public:
                 IOobject::AUTO_WRITE
              ),
              this->mesh_,
-	    dimensionedVector("phiMaxValue", dimless, vector::zero),
+	    dimensionedVector("phiMaxValue", dimless, Zero),
              zeroGradientFvPatchScalarField::typeName
         )
     {
         unallocLabelList const& owner = this->mesh_.owner();
         unallocLabelList const& neighbour = this->mesh_.neighbour();
 
-        forAll (owner, faceI)
+        forAll (owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
             // min values
             this->phiMinValue_[own] = min(phi_[own], phi_[nei]);
@@ -324,10 +324,10 @@ public:
         
         this->phiLimiter_ = vector::one;
 
-        forAll(owner, faceI)
+        forAll(owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
 	    // min values
             this->phiMinValue_[own] = min(this->phiMinValue_[own], phi_[nei]);
@@ -357,7 +357,7 @@ public:
             zeroGradientFvPatchScalarField::typeName
         );
 
-        cellVolume.internalField() = this->mesh_.V();
+        cellVolume.primitiveFieldRef() = this->mesh_.V();
         cellVolume.correctBoundaryConditions();
 
         volVectorField const& cellCenter = mesh_.C();
@@ -366,13 +366,13 @@ public:
         LimiterFunctionType limitFunction;
 
         // Compute limiter values
-        forAll(owner, faceI)
+        forAll(owner, facei)
         {
-            label const own = owner[faceI];
-            label const nei = neighbour[faceI];
+            label const own = owner[facei];
+            label const nei = neighbour[facei];
 
-            vector const deltaRLeft  = faceCenter[faceI] - cellCenter[own];
-            vector const deltaRRight = faceCenter[faceI] - cellCenter[nei];
+            vector const deltaRLeft  = faceCenter[facei] - cellCenter[own];
+            vector const deltaRRight = faceCenter[facei] - cellCenter[nei];
 
 	    vector phiOwnerLimiter = limitFunction.limiter
             (

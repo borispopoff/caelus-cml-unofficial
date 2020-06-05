@@ -247,12 +247,12 @@ tmp<volScalarField> liquidFilmThermo::rho() const
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("0", dimDensity, 0.0),
+            dimensionedScalar("0", dimDensity, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    scalarField& rho = trho().internalField();
+    scalarField& rho = trho.ref().primitiveFieldRef();
 
     if (useReferenceValues_)
     {
@@ -274,7 +274,7 @@ tmp<volScalarField> liquidFilmThermo::rho() const
         }
     }
 
-    trho().correctBoundaryConditions();
+    trho.ref().correctBoundaryConditions();
 
     return trho;
 }
@@ -295,12 +295,12 @@ tmp<volScalarField> liquidFilmThermo::mu() const
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("0", dimPressure*dimTime, 0.0),
+            dimensionedScalar("0", dimPressure*dimTime, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    scalarField& mu = tmu().internalField();
+    scalarField& mu = tmu.ref().primitiveFieldRef();
 
     if (useReferenceValues_)
     {
@@ -322,7 +322,7 @@ tmp<volScalarField> liquidFilmThermo::mu() const
         }
     }
 
-    tmu().correctBoundaryConditions();
+    tmu.ref().correctBoundaryConditions();
 
     return tmu;
 }
@@ -343,12 +343,12 @@ tmp<volScalarField> liquidFilmThermo::sigma() const
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("0", dimMass/sqr(dimTime), 0.0),
+            dimensionedScalar("0", dimMass/sqr(dimTime), 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    scalarField& sigma = tsigma().internalField();
+    scalarField& sigma = tsigma.ref().primitiveFieldRef();
 
     if (useReferenceValues_)
     {
@@ -370,7 +370,7 @@ tmp<volScalarField> liquidFilmThermo::sigma() const
         }
     }
 
-    tsigma().correctBoundaryConditions();
+    tsigma.ref().correctBoundaryConditions();
 
     return tsigma;
 }
@@ -391,12 +391,12 @@ tmp<volScalarField> liquidFilmThermo::Cp() const
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("0", dimEnergy/dimMass/dimTemperature, 0.0),
+            dimensionedScalar("0", dimEnergy/dimMass/dimTemperature, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    scalarField& Cp = tCp().internalField();
+    scalarField& Cp = tCp.ref().primitiveFieldRef();
 
     if (useReferenceValues_)
     {
@@ -418,7 +418,7 @@ tmp<volScalarField> liquidFilmThermo::Cp() const
         }
     }
 
-    tCp().correctBoundaryConditions();
+    tCp.ref().correctBoundaryConditions();
 
     return tCp;
 }
@@ -439,12 +439,12 @@ tmp<volScalarField> liquidFilmThermo::kappa() const
                 IOobject::NO_WRITE
             ),
             film().regionMesh(),
-            dimensionedScalar("0", dimPower/dimLength/dimTemperature, 0.0),
+            dimensionedScalar("0", dimPower/dimLength/dimTemperature, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    scalarField& kappa = tkappa().internalField();
+    scalarField& kappa = tkappa.ref().primitiveFieldRef();
 
     if (useReferenceValues_)
     {
@@ -466,7 +466,7 @@ tmp<volScalarField> liquidFilmThermo::kappa() const
         }
     }
 
-    tkappa().correctBoundaryConditions();
+    tkappa.ref().correctBoundaryConditions();
 
     return tkappa;
 }

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -64,15 +64,6 @@ class lduPrimitiveMesh
         lduSchedule patchSchedule_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        lduPrimitiveMesh(const lduPrimitiveMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const lduPrimitiveMesh&);
-
-
 public:
 
     // Constructors
@@ -84,12 +75,12 @@ public:
             const label nCells,
             labelList& l,
             labelList& u,
-            bool reUse
+            bool reuse
         )
         :
             lduAddressing(nCells),
-            lowerAddr_(l, reUse),
-            upperAddr_(u, reUse)
+            lowerAddr_(l, reuse),
+            upperAddr_(u, reuse)
         {}
 
         //- Add interfaces to a mesh constructed without
@@ -146,16 +137,19 @@ public:
             labelListList& pa,
             lduInterfacePtrsList interfaces,
             const lduSchedule& ps,
-            bool reUse
+            bool reuse
         )
         :
             lduAddressing(nCells),
-            lowerAddr_(l, reUse),
-            upperAddr_(u, reUse),
-            patchAddr_(pa, reUse),
-            interfaces_(interfaces, reUse),
+            lowerAddr_(l, reuse),
+            upperAddr_(u, reuse),
+            patchAddr_(pa, reuse),
+            interfaces_(interfaces, reuse),
             patchSchedule_(ps)
         {}
+
+        //- Disallow default bitwise copy construct
+        lduPrimitiveMesh(const lduPrimitiveMesh&) = delete;
 
 
     //- Destructor
@@ -214,6 +208,12 @@ public:
             {
                 return patchSchedule_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lduPrimitiveMesh&) = delete;
 };
 
 

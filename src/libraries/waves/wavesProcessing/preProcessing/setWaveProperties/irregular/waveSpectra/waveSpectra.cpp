@@ -85,10 +85,10 @@ void waveSpectra::writeSpectrum
 {
     if (dict_.subDict("frequencyAxis").lookupOrDefault<Switch>("writeSpectrum",false))
     {
-        S.writeEntry("spectramValues", os);
+        writeEntry(os, "spectramValues", S);
         os << nl;
 
-        freq.writeEntry("fspectrum", os);
+        writeEntry(os, "fspectrum", freq);
         os << nl;
     }
 }

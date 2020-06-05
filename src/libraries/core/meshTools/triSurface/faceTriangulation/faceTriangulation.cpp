@@ -51,7 +51,7 @@ CML::tmp<CML::vectorField> CML::faceTriangulation::calcEdges
 )
 {
     tmp<vectorField> tedges(new vectorField(f.size()));
-    vectorField& edges = tedges();
+    vectorField& edges = tedges.ref();
 
     forAll(f, i)
     {
@@ -214,7 +214,7 @@ void CML::faceTriangulation::findDiagonal
 
     label faceVertI = f.fcIndex(startIndex);
 
-    pointHit minInter(false, vector::zero, GREAT, true);
+    pointHit minInter(false, Zero, GREAT, true);
     label minIndex = -1;
     scalar minPosOnEdge = GREAT;
 

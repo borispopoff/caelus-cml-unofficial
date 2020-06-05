@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2019 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -80,10 +80,10 @@ class refinementParameters
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        refinementParameters(const refinementParameters&);
+        refinementParameters(const refinementParameters&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const refinementParameters&);
+        void operator=(const refinementParameters&) = delete;
 
 
 public:

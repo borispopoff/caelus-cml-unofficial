@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2013-2016 OpenFOAM Foundation
+Copyright (C) 2013-2018 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of Caelus.
@@ -266,15 +266,15 @@ void CML::pointConstraints::setPatchFields
 )
 {
     typename GeometricField<Type, pointPatchField, pointMesh>::
-        GeometricBoundaryField& pfbf = pf.boundaryField();
+        Boundary& pfbf = pf.boundaryFieldRef();
 
     forAll(pfbf, patchi)
     {
         pointPatchField<Type>& ppf = pfbf[patchi];
 
-        if (isA<valuePointPatchField<Type> >(ppf))
+        if (isA<valuePointPatchField<Type>>(ppf))
         {
-            refCast<valuePointPatchField<Type> >(ppf) =
+            refCast<valuePointPatchField<Type>>(ppf) =
                 ppf.patchInternalField();
         }
     }
@@ -314,7 +314,7 @@ void CML::pointConstraints::constrain
     syncUntransformedData
     (
         mesh()(),
-        pf.internalField(),
+        pf.primitiveFieldRef(),
         maxMagSqrEqOp<Type>()
     );
 
