@@ -83,6 +83,7 @@ class interfaceProperties
         // Interface curvature
         volScalarField K_;
 
+		const int nSmoothIter_;
 
     // Private Member Functions
 

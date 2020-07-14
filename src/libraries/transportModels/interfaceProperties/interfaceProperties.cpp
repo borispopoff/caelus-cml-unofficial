@@ -112,8 +112,20 @@ void CML::interfaceProperties::calculateK()
 {
     const surfaceVectorField& Sf = mesh_.Sf();
 
+    volScalarField curvAlpha(alpha1_);
+
+    if (nSmoothIter_ > 1)
+    {
+        for (int iter = 0; iter < nSmoothIter_; iter++)
+        {
+            if (debug) {Info<<"smoothing iteration "<<iter<<endl;}
+            curvAlpha = fvc::average(fvc::interpolate(curvAlpha));
+		    curvAlpha.correctBoundaryConditions();
+        }
+    }
+
     // Cell gradient of alpha
-    const volVectorField gradAlpha(fvc::grad(alpha1_, "nHat"));
+    const volVectorField gradAlpha(fvc::grad(curvAlpha, "nHat"));
 
     // Interpolated face-gradient of alpha
     surfaceVectorField gradAlphaf(fvc::interpolate(gradAlpha));
@@ -173,8 +185,13 @@ CML::interfaceProperties::interfaceProperties
         ),
         mesh_,
         dimensionedScalar("K", dimless/dimLength, 0.0)
-    )
+    ),
+    nSmoothIter_(dict.lookupOrDefault<int>("curvature_nSmoothIter", 1))
 {
+    if (nSmoothIter_ > 1)
+    {
+        Info<<"Curvature smoothing iterations = "<<nSmoothIter_<<endl;
+    }
     calculateK();
 }
 
