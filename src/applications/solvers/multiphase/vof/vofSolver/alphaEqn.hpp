@@ -2,46 +2,50 @@
     word alphaScheme("div(phi,alpha)");
     word alpharScheme("div(phirb,alpha)");
 
-    tmp<fv::ddtScheme<scalar> > ddtAlpha
-    (
-        fv::ddtScheme<scalar>::New
-        (
-            mesh,
-            mesh.ddtScheme("ddt(alpha)")
-        )
-    );
-
     // Set the off-centering coefficient according to ddt scheme
     scalar ocCoeff = 0;
-    if
-    (
-        isType<fv::EulerDdtScheme<scalar> >(ddtAlpha())
-     || isType<fv::localEulerDdtScheme<scalar> >(ddtAlpha())
-    )
     {
-        ocCoeff = 0;
-    }
-    else if (isType<fv::CrankNicolsonDdtScheme<scalar> >(ddtAlpha()))
-    {
-        if (nAlphaSubCycles > 1)
+        tmp<fv::ddtScheme<scalar>> tddtAlpha
+        (
+            fv::ddtScheme<scalar>::New
+            (
+                mesh,
+                mesh.ddtScheme("ddt(alpha)")
+            )
+        );
+        const fv::ddtScheme<scalar>& ddtAlpha = tddtAlpha();
+
+        if
+        (
+            isType<fv::EulerDdtScheme<scalar>>(ddtAlpha)
+         || isType<fv::localEulerDdtScheme<scalar>>(ddtAlpha)
+        )
+        {
+            ocCoeff = 0;
+        }
+        else if (isType<fv::CrankNicolsonDdtScheme<scalar>>(ddtAlpha))
+        {
+            if (nAlphaSubCycles > 1)
+            {
+                FatalErrorInFunction
+                    << "Sub-cycling is not supported "
+                       "with the CrankNicolson ddt scheme"
+                    << exit(FatalError);
+            }
+
+            ocCoeff =
+                refCast<const fv::CrankNicolsonDdtScheme<scalar>>(ddtAlpha)
+               .ocCoeff();
+        }
+        else
         {
             FatalErrorInFunction
-                << "Sub-cycling is not supported "
-                   "with the CrankNicolson ddt scheme"
+                << "Only Euler and CrankNicolson ddt schemes are supported"
                 << exit(FatalError);
         }
-
-        ocCoeff =
-            refCast<const fv::CrankNicolsonDdtScheme<scalar> >(ddtAlpha())
-           .ocCoeff();
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Only Euler and CrankNicolson ddt schemes are supported"
-            << exit(FatalError);
     }
 
+    // Set the time blending factor, 1 for Euler
     scalar cnCoeff = 1.0/(1.0 + ocCoeff);
 
     tmp<surfaceScalarField> phiCN(phi);
@@ -77,19 +81,19 @@
             << "  Max(" << alpha1.name() << ") = " << max(alpha1).value()
             << endl;
 
-        tmp<surfaceScalarField> talphaPhiUD(alpha1Eqn.flux());
-        alphaPhi = talphaPhiUD();
+        tmp<surfaceScalarField> talphaPhi1UD(alpha1Eqn.flux());
+        alphaPhi10 = talphaPhi1UD();
 
-        if (alphaApplyPrevCorr && talphaPhiCorr0.valid())
+        if (alphaApplyPrevCorr && talphaPhi1Corr0.valid())
         {
             Info<< "Applying the previous iteration compression flux" << endl;
-            MULES::correct(alpha1, alphaPhi, talphaPhiCorr0(), 1, 0);
+            MULES::correct(alpha1, alphaPhi10, talphaPhi1Corr0(), 1, 0);
 
-            alphaPhi += talphaPhiCorr0();
+            alphaPhi10 += talphaPhi1Corr0();
         }
 
         // Cache the upwind-flux
-        talphaPhiCorr0 = talphaPhiUD;
+        talphaPhi1Corr0 = talphaPhi1UD;
 
         mixture.correct();
         interface.correct();
@@ -100,12 +104,12 @@
     {
         surfaceScalarField phir(interface.phir());
 
-        tmp<surfaceScalarField> talphaPhiUn
+        tmp<surfaceScalarField> talphaPhi1Un
         (
             fvc::flux
             (
-                phi,
-                alpha1,
+                phiCN(),
+                cnCoeff*alpha1 + (1.0 - cnCoeff)*alpha1.oldTime(),
                 alphaScheme
             )
           + fvc::flux
@@ -116,36 +120,43 @@
             )
         );
 
-        // Calculate the Crank-Nicolson off-centred alpha flux
-        if (ocCoeff > 0)
-        {
-            talphaPhiUn =
-                cnCoeff*talphaPhiUn + (1.0 - cnCoeff)*alphaPhi.oldTime();
-        }
-
         if (MULESCorr)
         {
-            tmp<surfaceScalarField> talphaPhiCorr(talphaPhiUn() - alphaPhi);
+            tmp<surfaceScalarField> talphaPhi1Corr(talphaPhi1Un() - alphaPhi10);
             volScalarField alpha10("alpha10", alpha1);
 
-            MULES::correct(alpha1, talphaPhiUn(), talphaPhiCorr(), 1, 0);
+            MULES::correct
+            (
+                alpha1,
+                talphaPhi1Un(),
+                talphaPhi1Corr(),
+                1,
+                0
+            );
 
             // Under-relax the correction for all but the 1st corrector
             if (aCorr == 0)
             {
-                alphaPhi += talphaPhiCorr();
+                alphaPhi10 += talphaPhi1Corr();
             }
             else
             {
                 alpha1 = 0.5*alpha1 + 0.5*alpha10;
-                alphaPhi += 0.5*talphaPhiCorr();
+                alphaPhi10 += 0.5*talphaPhi1Corr();
             }
         }
         else
         {
-            alphaPhi = talphaPhiUn;
+            alphaPhi10 = talphaPhi1Un;
 
-            MULES::explicitSolve(alpha1, phiCN, alphaPhi, 1, 0);
+            MULES::explicitSolve
+            (
+                alpha1,
+                phiCN,
+                alphaPhi10,
+                1,
+                0
+            );
         }
 
         mixture.correct();
@@ -154,27 +165,36 @@
 
     if (alphaApplyPrevCorr && MULESCorr)
     {
-        talphaPhiCorr0 = alphaPhi - talphaPhiCorr0;
+        talphaPhi1Corr0 = alphaPhi10 - talphaPhi1Corr0;
+        talphaPhi1Corr0().rename("alphaPhi1Corr0");
     }
+    else
+    {
+        talphaPhi1Corr0.clear();
+    }
+
 
     if
     (
         word(mesh.ddtScheme("ddt(rho,U)"))
      == fv::EulerDdtScheme<vector>::typeName
+     || word(mesh.ddtScheme("ddt(rho,U)"))
+     == fv::localEulerDdtScheme<vector>::typeName
     )
     {
-        rhoPhi = alphaPhi*(rho1 - rho2) + phiCN*rho2;
+        rhoPhi = alphaPhi10*(rho1 - rho2) + phiCN*rho2;
     }
     else
     {
         if (ocCoeff > 0)
         {
             // Calculate the end-of-time-step alpha flux
-            alphaPhi = (alphaPhi - (1.0 - cnCoeff)*alphaPhi.oldTime())/cnCoeff;
+            alphaPhi10 =
+                (alphaPhi10 - (1.0 - cnCoeff)*alphaPhi10.oldTime())/cnCoeff;
         }
 
         // Calculate the end-of-time-step mass flux
-        rhoPhi = alphaPhi*(rho1 - rho2) + phi*rho2;
+        rhoPhi = alphaPhi10*(rho1 - rho2) + phi*rho2;
     }
 
     Info<< "Phase-1 volume fraction = "

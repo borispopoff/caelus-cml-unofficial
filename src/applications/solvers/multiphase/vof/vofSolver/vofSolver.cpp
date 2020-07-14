@@ -77,7 +77,6 @@ int main(int argc, char *argv[])
     }
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
     Info<< "\nStarting time loop\n" << endl;
 
     while (runTime.run())
@@ -123,7 +122,7 @@ int main(int argc, char *argv[])
                     // if the mesh topology changed
                     if (mesh.topoChanging())
                     {
-                        talphaPhiCorr0.clear();
+                        talphaPhi1Corr0.clear();
                     }
 
                     gh = g & mesh.C();
@@ -159,6 +158,7 @@ int main(int argc, char *argv[])
             }
 
             mixture.correct();
+            interface.correct();
 
             #include "UEqn.hpp"
 

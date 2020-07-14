@@ -7,17 +7,15 @@
     {
         rAU = 1.0/UEqn.A();
     }
+
     surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU()));
-
     volVectorField HbyA(constrainHbyA(rAU()*UEqn.H(), U, p_rgh));
-
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
         fvc::flux(HbyA)
       + MRF.zeroFilter(fvc::interpolate(rho*rAU())*fvc::ddtCorr(U, phi))
     );
-
     MRF.makeRelative(phiHbyA);
 
     if (p_rgh.needReference())
