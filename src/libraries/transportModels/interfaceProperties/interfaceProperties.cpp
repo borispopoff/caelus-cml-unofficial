@@ -118,7 +118,7 @@ void CML::interfaceProperties::calculateK()
     {
         for (int iter = 0; iter < nSmoothIter_; iter++)
         {
-            if (debug) {Info<<"smoothing iteration "<<iter<<endl;}
+//            Info<<"smoothing iteration "<<iter<<endl;
             curvAlpha = fvc::average(fvc::interpolate(curvAlpha));
 		    curvAlpha.correctBoundaryConditions();
         }
