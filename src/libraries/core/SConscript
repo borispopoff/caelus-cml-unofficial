@@ -557,6 +557,7 @@ src_core = Split("""
     meshTools/algorithms/MeshWave/MeshWaveName.cpp
     meshTools/algorithms/MeshWave/FaceCellWaveName.cpp
     meshTools/regionSplit/regionSplit.cpp
+    meshTools/regionSplit2D/regionSplit2D.cpp
     meshTools/indexedOctree/treeDataEdge.cpp
     meshTools/indexedOctree/treeDataFace.cpp
     meshTools/indexedOctree/treeDataPoint.cpp
