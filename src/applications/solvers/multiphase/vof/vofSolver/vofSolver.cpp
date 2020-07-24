@@ -160,6 +160,11 @@ int main(int argc, char *argv[])
             mixture.correct();
             interface.correct();
 
+            if (frozenFlow)
+            {
+                continue;
+            }
+
             #include "UEqn.hpp"
 
             // --- Pressure corrector loop

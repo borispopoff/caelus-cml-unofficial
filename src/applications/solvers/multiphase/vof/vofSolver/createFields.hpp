@@ -125,6 +125,8 @@ if (p_rgh.needReference())
     p_rgh = p - rho*gh;
 }
 
+bool  frozenFlow =  mesh.solutionDict().subDict("PIMPLE").lookupOrDefault("frozenFlow", false);
+
 // MULES flux from previous time-step
 surfaceScalarField alphaPhi10
 (
