@@ -356,7 +356,7 @@ bool CML::OutputFilterFunctionObject<OutputFilter>::execute
 
         ptr_->execute();
 
-        if (forceWrite)
+        if (forceWrite || outputControl_.output())
         {
             ptr_->write();
         }
@@ -384,11 +384,6 @@ bool CML::OutputFilterFunctionObject<OutputFilter>::end()
         }
 
         ptr_->end();
-
-        if (outputControl_.output())
-        {
-            ptr_->write();
-        }
 
         if (!storeFilter_)
         {
