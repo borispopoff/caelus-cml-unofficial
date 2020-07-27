@@ -363,6 +363,7 @@ void uniformFixedValueFvPatchField<Type>::write(Ostream& os) const
     // Note: do not write value
     fvPatchField<Type>::write(os);
     uniformValue_->writeData(os);
+    this->writeEntry("value", os);
     os.writeKeyword("inlet-diffusion") << inletDiffusion_ << token::END_STATEMENT << nl;
 }
 
