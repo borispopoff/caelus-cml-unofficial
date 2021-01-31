@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2011 OpenFOAM Foundation
+Copyright (C) 2011-2016 OpenFOAM Foundation
 -------------------------------------------------------------------------------
 License
     This file is part of CAELUS.
@@ -56,7 +56,7 @@ class sampledIsoSurface
         //- Field to get isoSurface of
         const word isoField_;
 
-        //- iso value
+        //- Iso value
         const scalar isoVal_;
 
         //- Merge tolerance
@@ -68,15 +68,15 @@ class sampledIsoSurface
         //- Whether to recalculate cell values as average of point values
         const Switch average_;
 
-        //- zone name/index (if restricted to zones)
+        //- Zone name/index (if restricted to zones)
         mutable cellZoneID zoneID_;
 
-        //- for zones: patch to put exposed faces into
+        //- For zones: patch to put exposed faces into
         mutable word exposedPatchName_;
 
         mutable autoPtr<isoSurface> surfPtr_;
 
-        //- triangles converted to faceList
+        //- Triangles converted to faceList
         mutable autoPtr<faceList> facesPtr_;
 
 
@@ -90,7 +90,6 @@ class sampledIsoSurface
             mutable const volScalarField* volFieldPtr_;
 
             //- Cached pointfield
-            mutable autoPtr<pointScalarField> storedPointFieldPtr_;
             mutable const pointScalarField* pointFieldPtr_;
 
             // And on subsetted mesh
@@ -117,7 +116,7 @@ class sampledIsoSurface
         //  Do nothing (and return false) if no update was needed
         bool updateGeometry() const;
 
-        //- sample field on faces
+        //- Sample field on faces
         template<class Type>
         tmp<Field<Type> > sampleField
         (
@@ -199,62 +198,62 @@ public:
         void getIsoField();
 
 
-        //- sample field on surface
+        //- Sample field on surface
         virtual tmp<scalarField> sample
         (
             const volScalarField&
         ) const;
 
-        //- sample field on surface
+        //- Sample field on surface
         virtual tmp<vectorField> sample
         (
             const volVectorField&
         ) const;
 
-        //- sample field on surface
+        //- Sample field on surface
         virtual tmp<sphericalTensorField> sample
         (
             const volSphericalTensorField&
         ) const;
 
-        //- sample field on surface
+        //- Sample field on surface
         virtual tmp<symmTensorField> sample
         (
             const volSymmTensorField&
         ) const;
 
-        //- sample field on surface
+        //- Sample field on surface
         virtual tmp<tensorField> sample
         (
             const volTensorField&
         ) const;
 
 
-        //- interpolate field on surface
+        //- Interpolate field on surface
         virtual tmp<scalarField> interpolate
         (
             const interpolation<scalar>&
         ) const;
 
-        //- interpolate field on surface
+        //- Interpolate field on surface
         virtual tmp<vectorField> interpolate
         (
             const interpolation<vector>&
         ) const;
 
-        //- interpolate field on surface
+        //- Interpolate field on surface
         virtual tmp<sphericalTensorField> interpolate
         (
             const interpolation<sphericalTensor>&
         ) const;
 
-        //- interpolate field on surface
+        //- Interpolate field on surface
         virtual tmp<symmTensorField> interpolate
         (
             const interpolation<symmTensor>&
         ) const;
 
-        //- interpolate field on surface
+        //- Interpolate field on surface
         virtual tmp<tensorField> interpolate
         (
             const interpolation<tensor>&
