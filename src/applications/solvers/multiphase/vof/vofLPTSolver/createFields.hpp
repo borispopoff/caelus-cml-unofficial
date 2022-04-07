@@ -124,7 +124,7 @@ if (p_rgh.needReference())
 }
 
 // MULES flux from previous time-step
-surfaceScalarField alphaPhi
+surfaceScalarField alphaPhi10
 (
     IOobject
     (
@@ -142,7 +142,7 @@ mesh.setFluxRequired(p_rgh.name());
 mesh.setFluxRequired(alpha1.name());
 
 // MULES Correction
-tmp<surfaceScalarField> talphaPhiCorr0;
+tmp<surfaceScalarField> talphaPhi1Corr0;
 
 // Dispersed volume fraction on mesh
 Info << "Creating field alphaD\n" << endl;

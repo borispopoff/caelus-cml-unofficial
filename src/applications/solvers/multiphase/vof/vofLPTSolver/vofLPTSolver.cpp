@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
                     // if the mesh topology changed
                     if (mesh.topoChanging())
                     {
-                        talphaPhiCorr0.clear();
+                        talphaPhi1Corr0.clear();
                     }
 
                     gh = g & mesh.C();

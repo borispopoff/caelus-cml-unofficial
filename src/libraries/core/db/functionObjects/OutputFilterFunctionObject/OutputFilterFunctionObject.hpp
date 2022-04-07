@@ -385,11 +385,6 @@ bool CML::OutputFilterFunctionObject<OutputFilter>::end()
 
         ptr_->end();
 
-        if (outputControl_.output())
-        {
-            ptr_->write();
-        }
-
         if (!storeFilter_)
         {
             destroyFilter();

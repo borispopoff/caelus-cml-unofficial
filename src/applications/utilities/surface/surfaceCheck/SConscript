@@ -1,0 +1,34 @@
+# -*- mode: python -*-
+
+import utils
+from build import build_app
+Import('env')
+
+target = 'surfaceCheck'
+
+sources = Split("""
+surfaceCheck.cpp
+""")
+
+caelus_inc = [
+'surfMesh/lnInclude',
+'sampling/lnInclude',
+'surfMesh/lnInclude',
+'dynamicMesh/dynamicMesh/lnInclude'
+]
+
+caelus_libs = [
+'core',
+'sampling',
+'surfMesh',
+]
+
+ostype = utils.ostype()
+prepend_args = {}
+
+build_app(env,
+          target=target,
+          sources=sources,
+          caelus_inc=caelus_inc,
+          caelus_libs=caelus_libs,
+          prepend_args=prepend_args)

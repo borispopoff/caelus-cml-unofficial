@@ -125,8 +125,10 @@ if (p_rgh.needReference())
     p_rgh = p - rho*gh;
 }
 
+bool  frozenFlow =  mesh.solutionDict().subDict("PIMPLE").lookupOrDefault("frozenFlow", false);
+
 // MULES flux from previous time-step
-surfaceScalarField alphaPhi
+surfaceScalarField alphaPhi10
 (
     IOobject
     (
@@ -144,7 +146,7 @@ mesh.setFluxRequired(p_rgh.name());
 mesh.setFluxRequired(alpha1.name());
 
 // MULES Correction
-tmp<surfaceScalarField> talphaPhiCorr0;
+tmp<surfaceScalarField> talphaPhi1Corr0;
 
 autoPtr<CML::relaxationZone> relaxing;
 

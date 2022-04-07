@@ -109,11 +109,20 @@ void relaxationZone::correct()
          << " s" << endl;
 }
 
+
 void relaxationZone::addSup(fvMatrix<vector>& eqn)
 {
     forAll (relaxSchemePtr_, relaxi)
     {
         relaxSchemePtr_[relaxi]->addSup(eqn);
+    }
+}
+
+void relaxationZone::addSup(volScalarField& rho, fvMatrix<vector>& eqn)
+{
+    forAll (relaxSchemePtr_, relaxi)
+    {
+        relaxSchemePtr_[relaxi]->addSup(rho, eqn);
     }
 }
 

@@ -418,6 +418,7 @@ src_core = Split("""
     fields/Fields/diagTensorField/diagTensorField.cpp
     fields/Fields/symmTensorField/symmTensorField.cpp
     fields/Fields/tensorField/tensorField.cpp
+    fields/Fields/triadField/triadField.cpp
     fields/Fields/complexFields/complexFields.cpp
     fields/Fields/labelField/labelIOField.cpp
     fields/Fields/labelField/labelFieldIOField.cpp
@@ -435,6 +436,7 @@ src_core = Split("""
     fields/Fields/symmTensorField/symmTensorFieldIOField.cpp
     fields/Fields/tensorField/tensorIOField.cpp
     fields/Fields/tensorField/tensorFieldIOField.cpp
+    fields/Fields/triadField/triadIOField.cpp
     fields/Fields/transformField/transformField.cpp
     fields/pointPatchFields/pointPatchField/pointPatchFields.cpp
     fields/pointPatchFields/basic/calculated/calculatedPointPatchFields.cpp
@@ -555,6 +557,7 @@ src_core = Split("""
     meshTools/algorithms/MeshWave/MeshWaveName.cpp
     meshTools/algorithms/MeshWave/FaceCellWaveName.cpp
     meshTools/regionSplit/regionSplit.cpp
+    meshTools/regionSplit2D/regionSplit2D.cpp
     meshTools/indexedOctree/treeDataEdge.cpp
     meshTools/indexedOctree/treeDataFace.cpp
     meshTools/indexedOctree/treeDataPoint.cpp
@@ -562,6 +565,7 @@ src_core = Split("""
     meshTools/indexedOctree/treeDataTriSurface.cpp
     meshTools/searchableSurface/searchableBox.cpp
     meshTools/searchableSurface/searchableRotatedBox.cpp
+    meshTools/searchableSurface/searchableCone.cpp
     meshTools/searchableSurface/searchableCylinder.cpp
     meshTools/searchableSurface/searchableDisk.cpp
     meshTools/searchableSurface/searchablePlane.cpp
